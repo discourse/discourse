@@ -10,13 +10,14 @@ de:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Ermöglicht KI-Suche"
-              stream_completion: "Ermöglicht das Streamen von KI-Persona-Vervollständigungen"
-              update_personas: "Ermöglicht die Aktualisierung von KI-Personas"
+              stream_completion: "Ermöglicht das Streamen von KI-Agent-Vervollständigungen"
+              update_agents: "Ermöglicht die Aktualisierung von KI-Agenten"
+              manage_artifacts: "Ermöglicht die Verwaltung von KI-Artefakten (auflisten, anzeigen, erstellen, aktualisieren, löschen)"
       site_settings:
         categories:
-          discourse_ai: "Discourse-KI"
+          discourse_ai: "Discourse KI"
       dashboard:
         emotion:
           title: "Emotion"
@@ -35,15 +36,16 @@ de:
             create_ai_llm_model: "LLM-Modell erstellen"
             update_ai_llm_model: "LLM-Modell aktualisieren"
             delete_ai_llm_model: "LLM-Modell löschen"
-            create_ai_persona: "KI-Persona erstellen"
-            update_ai_persona: "KI-Persona aktualisieren"
-            delete_ai_persona: "KI-Persona löschen"
+            delete_ai_agent: "KI-Agent löschen"
             create_ai_tool: "KI-Tool erstellen"
             update_ai_tool: "KI-Tool aktualisieren"
             delete_ai_tool: "KI-Tool löschen"
             create_ai_embedding: "KI-Einbettung erstellen"
             update_ai_embedding: "KI-Einbettung aktualisieren"
             delete_ai_embedding: "KI-Einbettung löschen"
+            create_ai_secret: "KI-Geheimschlüssel erstellen"
+            update_ai_secret: "KI-Geheimschlüssel aktualisieren"
+            delete_ai_secret: "KI-Geheimschlüssel löschen"
             update_ai_spam_settings: "KI-Spam-Einstellungen aktualisieren"
   js:
     discourse_automation:
@@ -110,9 +112,8 @@ de:
             top_p:
               label: "Top P"
               description: "Top P für die LLM, erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
-            persona_id:
-              label: "Persona"
-              description: "KI Persona zur Berichtserstellung"
+            agent_id:
+              label: "Agent"
         ai_tool_action:
           fields:
             tool:
@@ -121,22 +122,18 @@ de:
             llm_model:
               label: "LLM-Modell"
               description: "Sprachmodell für Werkzeuge, die llm.generate() verwenden (optional)"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Persona"
-              description: "KI-Persona, die für die Sichtung verwendet werden soll (Standard-LLM und -Benutzer müssen eingestellt sein)"
+            agent:
+              label: "Agent"
             whisper:
               label: "Als Flüstern antworten"
-              description: "Ob die Antwort der Persona ein Flüstern sein soll"
             silent_mode:
               label: "Stiller Modus"
-              description: "Im stillen Modus empfängt die Persona den Inhalt, schreibt aber nichts in das Forum – nützlich bei der Sichtung mit Tools"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
-              description: "Persona, die für die Triage verwendet wird. Achte darauf, dass sie mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
+            triage_agent:
+              label: "Agent"
             max_post_tokens:
               label: "Max. Beitrags-Token"
               description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
@@ -182,9 +179,6 @@ de:
             whisper:
               label: "Als Flüstern antworten"
               description: "Ob die Antwort der KI ein Flüstern sein soll"
-            reply_persona:
-              label: "Antwort-Persona"
-              description: "KI-Persona, die für Antworten verwendet werden soll (muss Standard-LLM haben), wird gegenüber vorgefertigten Antworten bevorzugt"
             max_output_tokens:
               label: "Maximale Ausgabetoken"
               description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
@@ -193,9 +187,8 @@ de:
             manual: "Spezifische Schlagwort-Liste verwenden (unten konfiguriert)"
             discover: "Lassen die KI beliebige Schlagwörter auf der Website entdecken und verwenden"
           fields:
-            tagger_persona:
-              label: "KI-Persona"
-              description: "Die KI-Persona, die Themen analysiert und Schlagwörter hinzufügt"
+            tagger_agent:
+              label: "KI-Agent"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -210,7 +203,7 @@ de:
               description: "Maximale Anzahl an Schlagwörtern, mit denen ein einzelner Beitrag versehen werden kann"
             max_post_tokens:
               label: "Maximale Beitrags-Token"
-              description: "Maximale Anzahl von Token aus dem Beitrags-Inhalt, die analysiert werden sollen"
+              description: "Maximale Anzahl von Token aus dem Beitragsinhalt, die analysiert werden sollen"
             allow_restricted_tags:
               label: "Eingeschränkte Schlagwörter zulassen"
               description: "Erlaube der KI, Schlagwörter mit eingeschränkten Berechtigungen oder Sichtbarkeit vorzuschlagen und anzuwenden."
@@ -224,24 +217,22 @@ de:
       title: "KI"
       default_llm:
         title: "Standard-LLM-Modell"
-        description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder Persona kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
       llm_selector:
-        none: "Keiner"
+        none: "Keine Auswahl"
+        saved: "Standard-LLM-Modell erfolgreich aktualisiert"
       features:
         short_title: "Funktionen"
-        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
-        back: "Zurück"
         settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
-        persona:
-          one: "Persona:"
-          other: "Personas:"
+        agent:
+          one: "Agent:"
+          other: "Agenten:"
         groups: "Gruppen:"
         llm:
           one: "LLM:"
           other: "LLM:"
         no_llm: "Kein LLM ausgewählt"
-        no_persona: "Nicht festgelegt"
+        no_agent: "Nicht festgelegt"
         no_groups: "Keine"
         edit: "Einstellungen"
         expand_list:
@@ -262,7 +253,6 @@ de:
           unconfigured: "Nicht konfiguriert"
         filters:
           all: "Gesamt"
-          text: "Suche nach Funktionen, Personas, LLMs oder Gruppen …"
           no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
           reset: "Zurücksetzen"
         no_automations: "Es gibt noch keine Automatisierungen"
@@ -295,7 +285,7 @@ de:
           search: "Discord-Suche"
           setting_groups:
             settings: "Grundlegende Einstellungen"
-            discord_configuration: "Discord Konfiguration"
+            discord_configuration: "Discord-Konfiguration"
         inference:
           name: "Abgeleitete Konzepte"
           description: "Ordnet Themen und Beiträge in Interessensgebiete/Labels."
@@ -306,9 +296,9 @@ de:
             settings: "Grundlegende Einstellungen"
             topic_criteria: "Kriterien für Themen"
             post_criteria: "Kriterien für Beiträge"
-            personas: "Personas"
+            agents: "Agenten"
         ai_helper:
-          name: "Helfer"
+          name: "KI-Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
           proofread: Text korrekturlesen
           title_suggestions: "Titel vorschlagen"
@@ -326,7 +316,7 @@ de:
             access_permissions: "Zugriff & Berechtigungen"
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
-            personas: "Personas"
+            agents: "Agenten"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -341,7 +331,7 @@ de:
           schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
           setting_groups:
             settings: "Grundlegende Einstellungen"
-            personas: "Personas"
+            agents: "Agenten"
             backfill_and_limits: "Rückwirkende Übersetzung & Grenzwerte"
         spam:
           name: "Spam"
@@ -369,8 +359,6 @@ de:
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
-          complete_language_detection_description: "Alle %{total} geeigneten Beiträge wurden auf ihre Sprache hin überprüft."
-          incomplete_language_detection_description: "%{done} von %{total} geeigneten Beiträgen wurden auf ihre Sprache hin überprüft."
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
           backfill_message: "<a href='%{settingsUrl}'>Die Einstellungen für die rückwirkende Übersetzung</a> sind so konfiguriert, dass alle Beiträge nach %{date} übersetzt werden – dies wird voraussichtlich %{eta} dauern."
           eta_minutes:
@@ -384,7 +372,7 @@ de:
             other: "%{count} Tage"
         progress_chart:
           title: "Übersetzungsfortschritt"
-          data_label: "%{percentage}%"
+          data_label: "%{percentage} %"
           tooltip_translated: "%{done} von %{total} nicht-%{language}en Beiträgen übersetzt"
           bar_done:
             one: "%{count} Beitrag"
@@ -395,13 +383,12 @@ de:
             title: "Übersetzt diesen Beitrag in alle unterstützten Sprachen"
             confirm: "Dadurch werden alle vorhandenen Übersetzungen in diesem Beitrag aktualisiert. Bist du sicher?"
             success: "Der Beitrag wurde zur Übersetzung gesendet"
-        credit_limit_warning: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben um %{reset_time} zurückgesetzt wird."
+        credit_limit_warning: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben am %{reset_time} zurückgesetzt wird."
         credit_limit_warning_no_time: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben zurückgesetzt wird."
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
         select_llm: "LLM auswählen"
-        select_persona: "Persona auswählen"
         custom_instructions: "Benutzerdefinierte Anweisungen"
         custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
         last_seven_days: "Letzte 7 Tage"
@@ -487,27 +474,24 @@ de:
           last_month: "Letzter Monat"
           custom: "Benutzerdefiniert …"
         credit_allocations: "Guthabenzuweisungen"
-      ai_persona:
+      ai_agent:
         ai_tools: "Tools"
         tool_strategies:
           all: "Auf alle Antworten anwenden"
           replies:
             one: "Nur auf die erste Antwort anwenden"
             other: "Auf die ersten %{count} Antworten anwenden"
-        back: "Zurück"
         name: "Name"
         edit: "Bearbeiten"
         export: "Exportieren"
         import: "Importieren"
-        import_error_conflict: "Beim Importieren von %{name} wurde ein Konflikt erkannt. Möchtest du die vorhandene Persona aktualisieren?"
         overwrite: "Überschreiben"
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
-        use_parent_llm: "Persona-Sprachmodell verwenden"
         max_context_posts: "Max. Kontext-Beiträge"
         max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
         vision_enabled: Sehen aktiviert
-        vision_enabled_help: Wenn diese Funktion aktiviert ist, versucht die KI, die Bilder zu verstehen, die Nutzer im Thema posten (abhängig davon, ob das verwendete Modell Sehen unterstützt). Unterstützt von den neuesten Modellen von Anthropic, Google und OpenAI.
+        vision_enabled_help: Wenn diese Funktion aktiviert ist, versucht die KI, die Bilder zu verstehen, die Benutzer im Thema posten (abhängig davon, ob das verwendete Modell Sehen unterstützt). Unterstützt von den neuesten Modellen von Anthropic, Google und OpenAI.
         vision_max_pixels: Unterstützte Bildgröße
         vision_max_pixel_sizes:
           low: Niedrige Qualität – am günstigsten (256 x 256)
@@ -516,47 +500,37 @@ de:
         show_thinking: Denken anzeigen
         show_thinking_help: Zeigt den Endbenutzern die internen Denkprozesse und Werkzeugaufrufe des Sprachmodells.
         mentionable: Erwähnungen zulassen
-        mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
         user: Benutzer
         create_user: Benutzer erstellen
-        create_user_help: Du kannst dieser Persona optional einen Nutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
         default_llm: Standard-Sprachmodell
-        default_llm_help: Das Standard-Sprachmodell, das für diese Persona verwendet werden soll. Erforderlich, wenn du die Persona in öffentlichen Beiträgen erwähnen möchtest.
         question_consolidator_llm: Sprachmodell für Fragenkonsolidierer
         question_consolidator_llm_help: Das Sprachmodell, das für den Fragenkonsolidierer verwendet werden soll. Du kannst ein weniger leistungsfähiges Modell wählen, um Kosten zu sparen.
         system_prompt: System-Eingabeaufforderung
         forced_tool_strategy: Erzwungene Tool-Strategie
         allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"
-        allow_chat_direct_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen Direktnachrichten an diese Person senden."
         allow_chat_channel_mentions: "Chat-Kanal-Erwähnungen zulassen"
-        allow_chat_channel_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diese Persona in Chatkanälen erwähnen."
         allow_personal_messages: "Persönliche Nachrichten zulassen"
-        allow_personal_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen persönliche Nachrichten an diese Persona senden."
         allow_topic_mentions: "Themenerwähnungen zulassen"
-        allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diese Persona in Themen erwähnen."
         force_default_llm: "Immer das Standard-Sprachmodell verwenden"
         save: "Speichern"
-        saved: "Persona gespeichert"
+        saved: "Agent gespeichert"
         enabled: "Aktiviert?"
         tools: "Aktivierte Tools"
+        tokens: "Token"
         forced_tools: "Erzwungene Tools"
         allowed_groups: "Zulässige Gruppen"
-        confirm_delete: "Bist du sicher, dass du diese Persona löschen willst?"
-        new: "Neue Persona"
-        no_personas: "Du hast noch keine Personas erstellt"
-        title: "Personas"
-        short_title: "Personas"
+        new: "Neuer Agent"
+        title: "Agenten"
+        short_title: "Agenten"
         delete: "Löschen"
         temperature: "Temperatur"
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
         priority: "Priorität"
-        priority_help: "Personas mit Priorität werden den Benutzern am Anfang der Persona-Liste angezeigt. Wenn mehrere Personas Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
         rag_conversation_chunks: "Suchunterhaltungs-Chunks"
         rag_conversation_chunks_help: "Die Anzahl der Chunks, die für die RAG-Modell-Suche verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann."
-        persona_description: "Personas sind eine leistungsstarke Funktion, mit der du das Verhalten der KI-Engine in deinem Discourse-Forum anpassen kannst. Sie fungieren als „Systemnachricht“, welche die Antworten und Interaktionen der KI steuert und dazu beiträgt, ein persönlicheres und ansprechenderes Erlebnis für Benutzer zu schaffen."
         response_format:
           title: "JSON-Antwortformat"
           no_format: "Kein JSON-Format angegeben"
@@ -576,11 +550,8 @@ de:
           enabled: "KI-Bot?"
         ai_bot:
           title: "KI-Bot-Optionen"
-          save_first: "Weitere KI-Bot-Optionen werden verfügbar, sobald du die Persona gespeichert hast."
         filters:
-          text: "Finde eine Persona"
           reset: "Zurücksetzen"
-          no_results: "Es wurden keine Personas gefunden, die deinen Filtern entsprechen."
           all_features: "Jede Funktion"
         features_list:
           one: "Funktion:"
@@ -609,7 +580,6 @@ de:
           uploading: "Wird hochgeladen …"
           remove: "Upload entfernen"
       tools:
-        back: "Zurück"
         short_title: "Tools"
         export: "Exportieren"
         import: "Importieren"
@@ -620,7 +590,6 @@ de:
         name_help: "Der Name wird in der Discourse-Benutzeroberfläche angezeigt und ist die Kurzkennung, die du verwendest, um das Tool in verschiedenen Einstellungen zu finden. Er sollte eindeutig sein (er ist erforderlich)."
         new: "Neues Tool"
         tool_name: "Name des Tools"
-        tool_name_help: "Der Werkzeugname wird dem großen Sprachmodell präsentiert. Es ist nicht eindeutig, aber es ist von Person zu Person unterschiedlich. (Persona wird beim Speichern validiert)"
         description: "Beschreibung"
         description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
         subheader_description: "Tools erweitern die Fähigkeiten von KI-Bots mit benutzerdefinierten JavaScript-Funktionen."
@@ -638,8 +607,14 @@ de:
         parameter_description: "Parameterbeschreibung"
         enum_value: "Aufzählungswert"
         add_enum_value: "Aufzählungswert hinzufügen"
+        secret_alias: "Alias für Anmeldedaten"
+        secret_alias_help: "Alias, auf den in Skripten über secrets.get(\"alias_name\") verwiesen wird. Verwende Buchstaben, Zahlen und Unterstriche."
+        secret_credential: "Anmeldedaten"
+        add_secret_contract: "Anmeldedaten hinzufügen"
+        remove_secret_contract: "Anmeldedaten entfernen"
+        credential_not_set: "(nicht festgelegt)"
         edit: "Bearbeiten"
-        test: "Test ausführen"
+        test: "Testen"
         delete: "Löschen"
         saved: "Tool gespeichert"
         confirm_delete: "Bist du sicher, dass du dieses Tool löschen willst?"
@@ -649,13 +624,28 @@ de:
           result: "Testergebnis"
       secrets:
         short_title: "Anmeldedaten"
+        description: "Verwalte Authentifizierungsdaten, die von allen LLMs, Einbettungen und Tools gemeinsam genutzt werden."
         name: "Name"
         secret: "Wert"
-        back: "Zurück"
+        select_secret: "Wähle Anmeldedaten aus …"
+        create_new: "Neue Anmeldedaten"
+        add_secret: "Anmeldedaten hinzufügen"
+        saved: "Anmeldedaten gespeichert"
+        confirm_delete: "Bist du sicher, dass du diese Anmeldedaten löschen möchtest?"
+        delete_failed_in_use: "Diese Anmeldedaten werden derzeit verwendet und können nicht gelöscht werden."
+        no_secrets: "Noch keine Anmeldedaten"
+        new_title: "Neue Anmeldedaten"
+        edit_title: "Anmeldedaten bearbeiten"
         save: "Speichern"
         edit: "Bearbeiten"
         delete: "Löschen"
+        used_by: "Verwendet von"
+        not_used: "Nicht in Verwendung"
         embedding: "Einbettung"
+        cannot_delete_in_use: "Diese Anmeldedaten können nicht gelöscht werden. Sie werden verwendet von:"
+        tool: "Tool"
+        modal:
+          title: "Neue Anmeldedaten erstellen"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -679,7 +669,6 @@ de:
         save: "Speichern"
         edit: "Bearbeiten"
         saved: "LLM-Modell gespeichert"
-        back: "Zurück"
         confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
         delete: Löschen
         quotas:
@@ -704,25 +693,24 @@ de:
           max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
         credit_allocation:
           credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
-          soft_limit_warning: "Für dieses Modell sind heute noch %{percentage}% des KI-Guthabens übrig."
-          hard_limit_warning: "Du hast keine KI-Guthaben mehr für dieses Modell. Die KI-Funktionen, die dieses Modell nutzen, sind bis %{reset_date} nicht mehr verfügbar."
+          soft_limit_warning: "Für dieses Modell sind heute noch %{percentage} % des KI-Guthabens übrig."
+          hard_limit_warning: "Du hast kein KI-Guthaben mehr für dieses Modell. Die KI-Funktionen, die dieses Modell nutzen, sind bis %{reset_date} nicht mehr verfügbar."
           next_reset: "Guthaben wird am %{time} Uhr zurückgesetzt"
         usage:
           ai_bot: "KI-Bot"
-          ai_helper: "Helfer (%{persona})"
+          ai_helper: "Helfer (%{agent})"
           ai_helper_image_caption: "Bildbeschriftungen"
-          ai_persona: "Persona (%{persona})"
           ai_summarization: "Zusammenfassen"
           ai_embeddings_semantic_search: "KI-Suche"
           ai_spam: "Spam"
-          automation: "Automatisierung (%{persona})"
+          automation: "Automatisierung (%{agent})"
         in_use_warning:
           one: "Dieses Modell wird derzeit von %{settings} verwendet. Wenn es falsch konfiguriert ist, wird die Funktion nicht wie erwartet funktionieren."
           other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
         model_description:
           none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
-          anthropic-claude-opus-4-5: "Das intelligenteste Modell von Anthropic"
-          anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
+          anthropic-claude-opus-4-6: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-sonnet-4-6: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-3-pro: "Googles intelligentestes Modell"
           google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
@@ -732,8 +720,8 @@ de:
           open_router-deepseek-deepseek-v3-2: "DeepSeeks neuestes Hochleistungsmodell"
           open_router-moonshotai-kimi-k2-5: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
           open_router-x-ai-grok-4-fast: "Das Vorzeigemodell von xAI mit Bildverarbeitung"
-          open_router-minimax-minimax-m2-1: "Das multimodale Modell von MiniMax mit großem Kontext"
-          open_router-z-ai-glm-4-7: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
+          open_router-minimax-minimax-m2-5: "Das multimodale Modell von MiniMax mit großem Kontext"
+          open_router-z-ai-glm-5: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
           open_router-arcee-ai-trinity-large-preview-free: "Kostenloses Open-Source-Modell von Arcee AI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
@@ -789,21 +777,24 @@ de:
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
           enable_native_tool: "Aktiviere native Tool-Unterstützung"
           disable_native_tools: "Native Tool-Unterstützung deaktivieren (XML-basierte Tools verwenden)"
+          disable_native_structured_output: "Deaktiviere die native strukturierte Ausgabe (verwende stattdessen das Vorausfüllen von Assistenznachrichten, erforderlich für Claude 3.x und älter)"
           provider_order: "Anbieterreihenfolge (kommagetrennte Liste)"
           provider_quantizations: "Reihenfolge der Provider-Quantisierungen (kommagetrennte Liste, z. B.: fp16,fp8)"
           disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
           reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
           enable_reasoning: "Argumentation aktivieren (nur für Argumentationsmodelle anwendbar)"
-          enable_thinking: "Denken aktivieren (nur bei entsprechenden Modellen, z.B.: Flash 2.5)"
+          adaptive_thinking: "Aktiviere adaptives Denken (empfohlen für Claude-4.6-Modelle)"
+          enable_thinking: "Aktiviere das Denken (Gemini-2.5-Modelle – verwendet Token-Budget)"
+          thinking_level: "Denkgrad (Gemini-3-Modelle – regelt die Argumentationstiefe)"
           thinking_tokens: "Anzahl der zum Denken verwendeten Token"
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
           prompt_caching: "Aufforderung-Zwischenspeichern-Modus"
-          prompt_caching_never: "Niemals - Verwende keine zwischengespeicherten Aufforderungen"
+          prompt_caching_never: "Niemals - Keine zwischengespeicherten Aufforderungen verwenden"
           prompt_caching_tool_results: "Tool-Ergebnisse - Zwischenspeichern, wenn Tool-Ergebnisse vorhanden sind (empfohlen)"
           prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
-          effort: "Anstrengungsgrad (nur Claude Opus 4.5)"
+          effort: "Anstrengungsgrad"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -865,11 +856,14 @@ de:
       reviewables:
         model_used: "Verwendetes Modell:"
         accuracy: "Genauigkeit:"
+        ai_tool_action:
+          agent: "Agent"
+          tool: "Tool"
+          parameters: "Parameter"
       embeddings:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
         new: "Neue Einbettung"
-        back: "Zurück"
         save: "Speichern"
         saved: "Einbettungskonfiguration gespeichert"
         delete: "Löschen"
@@ -915,17 +909,15 @@ de:
         provider_fields:
           model_name: "Modellname"
         semantic_search: "Themen (semantisch)"
-        semantic_search_loading: "Suche mehr Ergebnisse mithilfe der KI"
         semantic_search_results:
-          toggle: "%{count} Ergebnisse, die mit KI gefunden wurden, werden angezeigt"
-          toggle_hidden: "%{count} mit KI gefundene Ergebnisse werden ausgeblendet"
-          none: "Entschuldigung, unsere KI-Suche hat keine passenden Themen gefunden"
-          new: "Drücke auf „Suchen“, um mit der KI nach neuen Ergebnissen zu suchen"
+          toggle: "KI-Ergebnisse"
           unavailable: "KI-Ergebnisse nicht verfügbar"
           zero_results_expanded: "Keine Ergebnisse gefunden, es werden %{count} KI-Ergebnisse angezeigt"
         semantic_search_tooltips:
           results_explanation: "Wenn diese Funktion aktiviert ist, werden zusätzliche KI-Suchergebnisse unten hinzugefügt."
           invalid_sort: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
+          not_submitted: "Führe eine Suche aus, um KI-Ergebnisse zu sehen."
+          no_results: "Für diese Suche wurden keine KI-Ergebnisse gefunden."
         semantic_search_unavailable_tooltip: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
         ai_generated_result: "Suchergebnis mit KI gefunden"
         quick_search:
@@ -935,7 +927,8 @@ de:
         collapse_view_label: "Vollbild verlassen (ESC- oder Zurück-Taste)"
         click_to_run_label: "Artefakt ausführen"
       ai_bot:
-        persona: "Persona"
+        title: "KI-Bot"
+        agent: "Agent"
         llm: "Modell"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
@@ -1085,3 +1078,5 @@ de:
           title: "KI-gemeldeter Beitrag"
         reviewable_ai_chat_message:
           title: "KI-gemeldete Chat-Nachricht"
+        reviewable_ai_tool_action:
+          title: "KI-Tool Aktion"

@@ -9,12 +9,18 @@
     width: 100%;
   }
 
-  &-textarea,
   &-composer,
   &-code,
   &-image {
     .form-kit__container-content {
       width: var(--form-kit-large-input) !important;
+    }
+  }
+
+  &-textarea {
+    .form-kit__container-content {
+      min-width: var(--form-kit-large-input);
+      width: fit-content !important;
     }
   }
 
@@ -35,17 +41,18 @@
 
   .form-kit__container-description {
     margin: 0;
-    font-size: var(--font-down-1-rem);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
 
     pre,
     code {
-      font-size: var(--font-down-2-rem);
+      font-size: var(--font-down-2);
     }
   }
 
   .form-kit__container-help-text {
     margin: 0;
-    font-size: var(--font-down-1-rem);
+    font-size: var(--font-down-1);
     color: var(--primary-high-or-secondary-low);
   }
 
@@ -62,6 +69,11 @@
 
     &.--large {
       width: var(--form-kit-large-input);
+    }
+
+    &.--max {
+      max-width: var(--form-kit-max-input);
+      width: 100%;
     }
 
     &.--full {

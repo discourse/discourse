@@ -1,7 +1,7 @@
+import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -111,7 +111,7 @@ function registerTopicFooterButtons(api) {
       const label = i18n("discourse_assign.assigned_to");
 
       if (user) {
-        return htmlSafe(
+        return trustHTML(
           `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${
             user.username
           }</span></span>&nbsp;${renderAvatar(user, {
@@ -120,7 +120,7 @@ function registerTopicFooterButtons(api) {
           })}`
         );
       } else if (group) {
-        return htmlSafe(
+        return trustHTML(
           `<span class="unassign-label">${label}</span> @${group.name}`
         );
       }
@@ -150,7 +150,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.unassign.title");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -194,7 +194,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.reassign.to_self");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -240,7 +240,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const label = i18n("discourse_assign.reassign.title_w_ellipsis");
 
-      return htmlSafe(
+      return trustHTML(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
@@ -322,14 +322,14 @@ function initialize(api) {
     "model:bookmark",
     (Superclass) =>
       class extends Superclass {
-        @discourseComputed("assigned_to_user")
-        assignedToUserPath(assignedToUser) {
-          return assignedToUserPath(assignedToUser);
+        @computed("assigned_to_user")
+        get assignedToUserPath() {
+          return assignedToUserPath(this.assigned_to_user);
         }
 
-        @discourseComputed("assigned_to_group")
-        assignedToGroupPath(assignedToGroup) {
-          return assignedToGroupPath(assignedToGroup);
+        @computed("assigned_to_group")
+        get assignedToGroupPath() {
+          return assignedToGroupPath(this.assigned_to_group);
         }
       }
   );
@@ -704,6 +704,8 @@ export default {
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
+        description: "topics.bulk.assign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
         action({ setComponent }) {
           setComponent(BulkActionsAssignUser);
         },
@@ -715,6 +717,8 @@ export default {
         label: "topics.bulk.unassign",
         icon: "user-xmark",
         class: "btn-default unassign-topics",
+        description: "topics.bulk.unassign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },

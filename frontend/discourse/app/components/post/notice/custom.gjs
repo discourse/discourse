@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import UserLink from "discourse/components/user-link";
@@ -28,9 +28,9 @@ export default class PostNoticeCustom extends Component {
   <template>
     {{icon "user-shield"}}
     <div class="post-notice-message" {{this.registerCreatedByLink}}>
-      {{htmlSafe @notice.cooked}}
+      {{trustHTML @notice.cooked}}
       {{#if this.createdByName}}
-        {{htmlSafe
+        {{trustHTML
           (i18n
             "post.notice.custom_created_by"
             userLinkHTML="<span class='custom_created_by'></span>"

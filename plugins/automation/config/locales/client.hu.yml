@@ -10,6 +10,7 @@ hu:
       logs:
         staff_actions:
           actions:
+            create_automation: automatizálás létrehozása
             update_automation: automatizálás frissítése
             delete_automation: automatizálás törlése
     discourse_automation:
@@ -68,8 +69,10 @@ hu:
           fields:
             categories:
               label: Kategóriák
+              description: Csak akkor aktiválódik, ha a megjelölt téma ezekben a kategóriákban van
             tags:
               label: Címkék
+              description: Csak akkor aktiválódik, ha a megjelölt téma a következő címkék bármelyikével rendelkezik
         not_found: Nem találta a(z) `%{trigger}` kiváltóját a(z) `%{automation}` automatizáláshoz, győződjön meg róla, hogy a kapcsolódó bővítmény telepítve van-e.
         user_badge_granted:
           fields:
@@ -280,6 +283,14 @@ hu:
               label: Címkék
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: E-mail sablon
+              description: Támogatja az automatizálási helyőrzőket
+            recipients:
+              label: Címzettek
+              description: Értesítendő felhasználók vagy e-mail címek
         not_found: Nem található a `%{script}` szkript az automatizáláshoz `%{automation}`, ellenőrizze, hogy a kapcsolódó bővítmény telepítve van
         zapier_webhook:
           fields:
@@ -429,6 +440,11 @@ hu:
               label: "Felhasználó egyéni mezőneve"
         set_topic_timer:
           title: Téma időzítőjének beállítása
+          fields:
+            type:
+              label: Időzítő típusa
+            duration:
+              label: Időzítő időtartama
       unnamed_automation: "Névtelen automatizálás"
       models:
         script:
@@ -441,6 +457,9 @@ hu:
           runs_today: "%{count} ma"
           runs_this_week: "%{count} ezen a héten"
           runs_this_month: "%{count} ebben a hónapban"
+          recent_errors:
+            one: "%{count} hiba a közelmúltban"
+            other: "%{count} hiba a közelmúltban"
           runs:
             label: Futások
           name:
@@ -453,6 +472,8 @@ hu:
             label: Verzió
           status:
             label: Állapot
+          enabled:
+            label: "Automatizálás engedélyezése"
           disabled:
             label: Letiltva
           placeholders:
@@ -463,3 +484,4 @@ hu:
             label: Utolsó futás
           last_updated_by:
             label: 'Frissítette:'
+          enable_toggle_disabled: "Ezt az automatizálást akkor engedélyezheti, ha minden kötelező mezőt kitöltött."

@@ -1,7 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { bbcodeAttributeDecode } from "discourse/lib/bbcode-attributes";
 import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -108,7 +108,7 @@ function buildOptionsFromMarkdownTag(element) {
   const opts = {};
 
   // siteSettings defaults as used by buildOptionsFromElement are purposefully
-  // ommitted to reproduce exactly what was on the original element
+  // omitted to reproduce exactly what was on the original element
   opts.time = element.attributes["data-time"];
   opts.date = element.attributes["data-date"];
   opts.recurring = element.attributes["data-recurring"];
@@ -409,7 +409,7 @@ class LocalDatesInit {
 
     return this.tooltip.show(event.target, {
       identifier: "local-date",
-      content: htmlSafe(buildHtmlPreview(event.target, this.siteSettings)),
+      content: trustHTML(buildHtmlPreview(event.target, this.siteSettings)),
     });
   }
 

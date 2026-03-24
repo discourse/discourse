@@ -29,9 +29,6 @@ ro:
               label: "Etichete"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Personaj"
-              description: "Personajul este folosit pentru triaj, asigură-te că răspunde cu un singur cuvânt pe care îl poți folosi pentru a declanșa acțiunea."
             category:
               label: "Categorie"
             tags:
@@ -56,11 +53,9 @@ ro:
     discourse_ai:
       default_llm:
         title: "Model LLM implicit"
-        description: "Modelul LLM implicit de utilizat pentru toate funcțiile IA. Acesta va fi utilizat dacă nu este specificat niciun LLM în configurația funcționalității sau în personaj. Dacă nu este specificat niciun LLM implicit, se va utiliza ultimul LLM creat."
       llm_selector:
         none: "Nimic"
       features:
-        back: "Înapoi"
         disabled: "(dezactivat)"
         groups: "Grupuri:"
         no_groups: "Nimic"
@@ -97,8 +92,6 @@ ro:
           enable_translations: "Activează traducerile automate"
         stats:
           title: "Statistici traducere"
-          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
-          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
           backfill_disabled: "Completarea este dezactivată, doar postările noi vor fi traduse."
           eta_minutes:
             one: "un minut"
@@ -135,8 +128,7 @@ ro:
         periods:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
-      ai_persona:
-        back: "Înapoi"
+      ai_agent:
         name: "Nume"
         edit: "Editează"
         export: "Exportă"
@@ -155,7 +147,6 @@ ro:
           title: "Încărcări"
           uploading: "Se încarcă..."
       tools:
-        back: "Înapoi"
         export: "Exportă"
         import: "Importă"
         name: "Nume"
@@ -165,7 +156,7 @@ ro:
         remove_parameter: "Elimină"
         parameter_required: "Necesare"
         edit: "Editează"
-        test: "Rulează test"
+        test: "Test"
         delete: "Șterge"
         test_modal:
           run: "Rulează test"
@@ -173,7 +164,6 @@ ro:
         short_title: "Date de conectare"
         name: "Nume"
         secret: "Valoare"
-        back: "Înapoi"
         save: "Salvează"
         edit: "Editează"
         delete: "Șterge"
@@ -183,7 +173,6 @@ ro:
         provider: "Furnizor"
         save: "Salvează"
         edit: "Editează"
-        back: "Înapoi"
         delete: Șterge
         quotas:
           group: "Grup"
@@ -198,11 +187,11 @@ ro:
         credit_allocation:
           soft_limit_warning: "Acest model are %{percentage}% din creditele IA rămase astăzi"
         usage:
-          ai_helper: "Ajutor (%{persona})"
+          ai_helper: "Ajutor (%{agent})"
           ai_summarization: "Rezumat"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-5: "Cel mai inteligent model de la Anthropic"
+          anthropic-claude-opus-4-6: "Cel mai inteligent model de la Anthropic"
           open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5"
         next:
           title: "Următorul"
@@ -215,7 +204,6 @@ ro:
           fake: "Personalizat"
         provider_fields:
           role_arn: "Rol ARN AWS Bedrock"
-          effort: "Nivel de efort (doar Claude Opus 4.5)"
       ai_helper:
         context_menu:
           cancel: "Anulează"
@@ -231,7 +219,6 @@ ro:
         image_caption:
           save_caption: "Salvează"
       embeddings:
-        back: "Înapoi"
         save: "Salvează"
         delete: "Șterge"
         edit: "Editează"

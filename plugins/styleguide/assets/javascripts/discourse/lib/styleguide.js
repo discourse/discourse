@@ -19,6 +19,7 @@ import multiselect from "../components/sections/molecules/multi-select";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
 import postMenu from "../components/sections/molecules/post-menu";
+import segmentedControl from "../components/sections/molecules/segmented-control";
 import signupCta from "../components/sections/molecules/signup-cta";
 import toasts from "../components/sections/molecules/toasts";
 import tooltips from "../components/sections/molecules/tooltips";
@@ -62,6 +63,11 @@ const SECTIONS = [
   { component: dateTimeInputs, category: "atoms", id: "date-time-inputs" },
   { component: dropdowns, category: "atoms", id: "dropdowns" },
   { component: topicLink, category: "atoms", id: "topic-link" },
+  {
+    component: segmentedControl,
+    category: "atoms",
+    id: "segmented-control",
+  },
   { component: breadCrumbs, category: "molecules", id: "bread-crumbs" },
   { component: categories, category: "molecules", id: "categories" },
   { component: charCounter, category: "molecules", id: "char-counter" },

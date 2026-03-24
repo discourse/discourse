@@ -494,5 +494,121 @@ RSpec.describe DiscoursePoll::PollsController do
 
       expect(json["voters"][first].size).to eq(1)
     end
+
+    context "with private category polls" do
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:poll_creator) { Fabricate(:admin).tap { |u| group.add(u) } }
+      fab!(:private_poll) do
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: poll_creator,
+          raw: "[poll public=true]\n- A\n- B\n[/poll]",
+        )
+      end
+      fab!(:user_in_group) { Fabricate(:user).tap { |u| group.add(u) } }
+      fab!(:user_outside_group, :user)
+
+      before { DiscoursePoll::Poll.vote(user_in_group, private_poll.id, "poll", [first]) }
+
+      it "prevents users without permission from seeing voters" do
+        log_in_user(user_outside_group)
+
+        get :voters, params: { post_id: private_poll.id, poll_name: "poll" }, format: :json
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows users with permission to see voters" do
+        log_in_user(user_in_group)
+
+        get :voters, params: { post_id: private_poll.id, poll_name: "poll" }, format: :json
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["voters"][first].size).to eq(1)
+        expect(json["voters"][first][0]["id"]).to eq(user_in_group.id)
+      end
+    end
+  end
+
+  context "when post_id does not match the poll's post" do
+    it "does not allow voting on another post's poll" do
+      accessible_post = Fabricate(:post, topic: topic, user: user)
+
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_poll_post =
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: Fabricate(:admin).tap { |u| group.add(u) },
+          raw: "[poll]\n- A\n- B\n[/poll]",
+        )
+
+      expect(accessible_post.id).to be < private_poll_post.id
+
+      put :vote,
+          params: {
+            post_id: [accessible_post.id, private_poll_post.id],
+            poll_name: "poll",
+            options: ["5c24fc1df56d764b550ceae1b9319125"],
+          },
+          format: :json
+
+      expect(response.status).not_to eq(200)
+      expect(PollVote.where(user_id: user.id).count).to eq(0)
+    end
+
+    it "does not allow removing a vote from another post's poll" do
+      accessible_post = Fabricate(:post, topic: topic, user: user)
+
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_poll_post =
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: Fabricate(:admin).tap { |u| group.add(u) },
+          raw: "[poll]\n- A\n- B\n[/poll]",
+        )
+
+      expect(accessible_post.id).to be < private_poll_post.id
+
+      delete :remove_vote,
+             params: {
+               post_id: [accessible_post.id, private_poll_post.id],
+               poll_name: "poll",
+             },
+             format: :json
+
+      expect(response.status).not_to eq(200)
+    end
+
+    it "does not allow toggling status of another post's poll" do
+      own_post = Fabricate(:post, topic: topic, user: user)
+
+      other_topic = Fabricate(:topic)
+      other_user = Fabricate(:user, trust_level: TrustLevel[1])
+      victim_poll_post =
+        Fabricate(:post, topic: other_topic, user: other_user, raw: "[poll]\n- A\n- B\n[/poll]")
+
+      expect(own_post.id).to be < victim_poll_post.id
+
+      put :toggle_status,
+          params: {
+            post_id: [own_post.id, victim_poll_post.id],
+            poll_name: "poll",
+            status: "closed",
+          },
+          format: :json
+
+      expect(response.status).not_to eq(200)
+      expect(victim_poll_post.polls.first.reload.status).to eq("open")
+    end
   end
 end

@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -15,7 +15,6 @@ import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import formatCurrency from "../helpers/format-currency";
 
@@ -126,9 +125,9 @@ export default class CampaignBanner extends Component {
     document.body.classList.remove(SIDEBAR_BODY_CLASS);
   }
 
-  @discourseComputed("backgroundImageUrl")
-  bannerInfoStyle(backgroundImageUrl) {
-    if (!backgroundImageUrl) {
+  @computed("backgroundImageUrl")
+  get bannerInfoStyle() {
+    if (!this.backgroundImageUrl) {
       return "";
     }
 
@@ -141,22 +140,22 @@ export default class CampaignBanner extends Component {
       background-repeat: no-repeat;`;
   }
 
-  @discourseComputed(
+  @computed(
     "router.currentRouteName",
     "currentUser",
     "siteSettings.discourse_subscriptions_campaign_enabled",
     "visible"
   )
-  shouldShow(currentRoute, currentUser, enabled, visible) {
-    if (!currentRoute) {
+  get shouldShow() {
+    if (!this.router?.currentRouteName) {
       return false;
     }
     // do not show on admin or subscriptions pages
     const showOnRoute =
-      currentRoute !== "discovery.s" &&
-      !currentRoute.split(".")[0].includes("admin") &&
-      currentRoute.split(".")[0] !== "subscribe" &&
-      currentRoute.split(".")[0] !== "subscriptions";
+      this.router?.currentRouteName !== "discovery.s" &&
+      !this.router?.currentRouteName?.split(".")[0].includes("admin") &&
+      this.router?.currentRouteName?.split(".")[0] !== "subscribe" &&
+      this.router?.currentRouteName?.split(".")[0] !== "subscriptions";
 
     if (!this.site.show_campaign_banner) {
       return false;
@@ -165,12 +164,17 @@ export default class CampaignBanner extends Component {
     // make sure not to render above main container when inside a topic
     if (
       this.connectorName === "above-main-container" &&
-      currentRoute.includes("topic")
+      this.router?.currentRouteName?.includes("topic")
     ) {
       return false;
     }
 
-    return showOnRoute && currentUser && enabled && visible;
+    return (
+      showOnRoute &&
+      this.currentUser &&
+      this.siteSettings?.discourse_subscriptions_campaign_enabled &&
+      this.visible
+    );
   }
 
   @observes("dismissed")
@@ -180,8 +184,8 @@ export default class CampaignBanner extends Component {
     }
   }
 
-  @discourseComputed("dismissed")
-  visible(dismissed) {
+  @computed("dismissed")
+  get visible() {
     const dismissedBannerKey = this.keyValueStore.get(
       "dismissed_campaign_banner"
     );
@@ -192,20 +196,20 @@ export default class CampaignBanner extends Component {
 
     return (
       (!dismissedBannerKey || now - bannerDismissedTime > threeMonths) &&
-      !dismissed
+      !this.dismissed
     );
   }
 
-  @discourseComputed
-  subscribeRoute() {
+  @computed
+  get subscribeRoute() {
     if (this.pricingTableEnabled) {
       return "subscriptions";
     }
     return "subscribe";
   }
 
-  @discourseComputed
-  isGoalMet() {
+  @computed
+  get isGoalMet() {
     const currentVolume = this.subscriberGoal
       ? this.subscribers
       : this.amountRaised;
@@ -226,7 +230,7 @@ export default class CampaignBanner extends Component {
       {{#if this.shouldShow}}
         <div
           class="campaign-banner"
-          style={{htmlSafe
+          style={{trustHTML
             (concat "box-shadow: 5px 5px #" this.dropShadowColor)
           }}
         >
@@ -234,7 +238,7 @@ export default class CampaignBanner extends Component {
 
           <div
             class="campaign-banner-info"
-            style={{htmlSafe this.bannerInfoStyle}}
+            style={{trustHTML this.bannerInfoStyle}}
           >
             {{#if this.isGoalMet}}
               <h2 class="campaign-banner-info-header">
@@ -288,7 +292,7 @@ export default class CampaignBanner extends Component {
 
               {{#if this.subscriberGoal}}
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=this.subscribers
@@ -299,7 +303,7 @@ export default class CampaignBanner extends Component {
                 </p>
               {{else}}
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=(formatCurrency this.currency this.amountRaised)
@@ -347,7 +351,7 @@ export default class CampaignBanner extends Component {
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=this.subscribers
@@ -364,7 +368,7 @@ export default class CampaignBanner extends Component {
                 ></progress>
 
                 <p class="campaign-banner-progress-description">
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "discourse_subscriptions.campaign.goal_comparison"
                       current=(formatCurrency this.currency this.amountRaised)

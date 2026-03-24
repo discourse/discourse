@@ -6,6 +6,11 @@
 
 sl:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        hidden: "skrito"
+        failed: "spodletelo"
     number:
       format:
         separator: ","
@@ -300,6 +305,8 @@ sl:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
     admin_onboarding_banner:
+      start_posting:
+        back: "Nazaj"
       spread_the_word:
         copied_to_clipboard: "Povezava je bila kopirana v odložišče!"
     about:
@@ -1247,6 +1254,8 @@ sl:
         tags: "Oznake"
         interface: "Uporabniški vmesnik"
         apps: "Aplikacije"
+      calendar_subscriptions:
+        copied: "Kopirano!"
       change_password:
         success: "(e-sporočilo poslano)"
         in_progress: "(pošiljanje e-sporočila)"
@@ -1706,6 +1715,7 @@ sl:
     form_kit:
       reset: Ponastavi
       optional: neobvezno
+      required: zahtevano
       errors:
         required: "Zahtevano"
     close: "Zapri"
@@ -2306,9 +2316,6 @@ sl:
         confirm: "Potrdi"
         select_all: "Izberi vse"
         clear_all: "Počisti vse"
-        unlist_topics: "Izloči temo iz seznamov"
-        relist_topics: "Postavi temo nazaj na seznam"
-        delete: "Izbriši teme"
         delete_topics_count:
           one: "Izbriši temo"
           two: "Izbriši teme"
@@ -2322,20 +2329,10 @@ sl:
         dismiss_new: "Opusti nove"
         toggle: "preklopi množično izbiro tem"
         actions: "Množična dejanja"
-        close_topics: "Zapri teme"
-        archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Prestavi v Prejeto"
         change_notification_level: "Spremeni raven obveščanja"
         choose_new_category: "Izberi novo kategorijo za temo:"
-        selected:
-          one: "Izbrali ste <b>%{count}</b> temo."
-          two: "Izbrali ste <b>%{count}</b> temi."
-          few: "Izbrali ste <b>%{count}</b> teme."
-          other: "Izbrali ste <b>%{count}</b> tem."
-        change_tags: "Zamenjaj oznake"
-        append_tags: "Dodaj oznake"
         choose_new_tags: "Izberite nove oznake za te teme:"
-        choose_append_tags: "Izberite nove oznake da se dodajo na te teme:"
         changed_tags: "Oznake na teh temah so bile spremenjene."
         progress:
           one: "Napredek: <strong>%{count}</strong> tema"
@@ -2368,8 +2365,6 @@ sl:
         name: "Prestavi v Prejeto"
       remove_tags:
         name: "Odstrani oznake"
-      append_tags:
-        name: "Dodaj oznake"
       replace_tags:
         name: "Zamenjaj oznake"
       delete_topics:
@@ -3006,6 +3001,8 @@ sl:
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       no_description: "Dodajte opis kategorije."
+      description_expand: "Več"
+      description_collapse: "Manj"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
       security: "Varnost"
       security_add_group: "Dodaj skupino"
@@ -3470,7 +3467,16 @@ sl:
         two: "Izbrisani bosta tudi njeni %{count} sopomenki."
         few: "Izbrisane bodo tudi njene %{count} sopomenke."
         other: "Izbrisanih bo tudi njenih %{count} sopomenk."
-      description: "Opis (največ 1000 znakov)"
+      description: "Opis"
+      settings:
+        title: "Nastavitve"
+        general: "Splošno"
+        back: "Nazaj"
+        name: "Ime"
+        synonyms_subtitle: "Ko bodo uporabljene naslednje oznake, bodo nadomeščene z %{name}"
+      localization:
+        name: "Ime"
+        description: "Opis"
       sort_by: "Uredi po:"
       sort_by_count: "številu"
       sort_by_name: "imenu"
@@ -3706,7 +3712,6 @@ sl:
         categories: "Vse kategorije"
   admin_js:
     settings: "Nastavitve"
-    reset_filter: "Ponastavi"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3719,6 +3724,9 @@ sl:
       reports:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
+        group_traffic: "Promet"
+        group_members: "Člani"
+        group_other: "Drugo"
       config_sections:
         account:
           title: "Račun"
@@ -3741,7 +3749,6 @@ sl:
         preview: "Predogled"
         enabled_for_options:
           everyone: "Vsi"
-          staff: "Samo osebje"
         impact_roles:
           admins: "Administratorji"
           moderators: "Moderatorji"
@@ -3813,6 +3820,9 @@ sl:
               title: "Dnevniki"
         reports:
           title: "Poročila"
+          sub_pages:
+            settings:
+              title: "Nastavitve"
         badges:
           title: "Značke"
         permalinks:
@@ -3850,12 +3860,6 @@ sl:
         default_value: "Privzeto"
       search:
         title: "Išči"
-        result_types:
-          theme:
-            one: "Videz"
-            two: "Videzi"
-            few: "Videzi"
-            other: "Videzi"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3924,7 +3928,7 @@ sl:
           all: "Vsi"
           view_table: "tabela"
           view_graph: "graf"
-          refresh_report: "Osveži poročilo"
+          refresh_report: "Osveži"
           daily: Dnevno
           monthly: Mesečno
           weekly: Tedensko
@@ -4708,6 +4712,7 @@ sl:
           title: "Prikaži na uporabnikovi izkaznici"
         field_types:
           text: "Besedilo"
+          date: "Datum"
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:

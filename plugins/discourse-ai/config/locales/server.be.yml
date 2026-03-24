@@ -12,6 +12,42 @@ be:
     ai_bot:
       tool_summary:
         search: "Пошук"
+      tool_help:
+        delete_topic: "Выдаліць тэму"
+      close_topic:
+        errors:
+          not_found: "Тэма не знойдзена."
+      unlist_topic:
+        errors:
+          not_found: "Тэма не знойдзена."
+      delete_topic:
+        errors:
+          not_found: "Тэма не знойдзена."
+      edit_tags:
+        errors:
+          not_found: "Тэма не знойдзена."
+      edit_category:
+        errors:
+          not_found: "Тэма не знойдзена."
+          category_not_found: "Катэгорыя не знойдзена."
+      set_topic_timer:
+        errors:
+          not_found: "Тэма не знойдзена."
+      set_slow_mode:
+        errors:
+          not_found: "Тэма не знойдзена."
+      move_posts:
+        errors:
+          not_found: "Тэма не знойдзена."
+      assign:
+        errors:
+          not_found: "Тэма не знойдзена."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Ухваліць"
+        reject:
+          title: "адхіляць"
     sentiment:
       reports:
         post_emotion:

@@ -1,0 +1,153 @@
+// @ts-check
+import Component from "@glimmer/component";
+import { array, hash } from "@ember/helper";
+/** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
+import DTooltip from "discourse/float-kit/components/d-tooltip";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+/** @type {import("../shared/args-table.gjs").default} */
+import ArgsTable from "../shared/args-table";
+
+/**
+ * Component signature for OutletInfo.
+ *
+ * @typedef {Object} OutletInfoSignature
+ * @property {Object} Args
+ * @property {string} Args.outletName - The name of the block outlet.
+ * @property {number} Args.blockCount - Number of blocks registered.
+ * @property {Object} [Args.outletArgs] - Arguments passed to the outlet.
+ * @property {Error} [Args.error] - Validation error if config failed.
+ * @property {Object} Blocks
+ * @property {[]} Blocks.default - Default block for rendering children.
+ */
+
+/**
+ * Debug overlay for BlockOutlet components.
+ * Shows outlet name badge with a tooltip containing outlet info and GitHub search link.
+ *
+ * @extends {Component<OutletInfoSignature>}
+ */
+export default class OutletInfo extends Component {
+  /**
+   * Returns a human-readable label for the block count.
+   *
+   * @returns {string} "1 block" for singular, "{n} blocks" for plural.
+   */
+  get blockLabel() {
+    const count = this.args.blockCount;
+    return count === 1 ? "1 block" : `${count} blocks`;
+  }
+
+  /**
+   * Cleans up the error message for display in the popup.
+   * Removes the "[Blocks]" prefix while preserving formatted structure.
+   *
+   * @returns {string} The cleaned error message.
+   */
+  get errorMessage() {
+    let message = this.args.error?.message ?? "Unknown validation error";
+
+    // Remove "[Blocks]" prefix that's added for console logging
+    message = message.replace(/^\[Blocks\]\s*/i, "");
+
+    return message.trim();
+  }
+
+  /**
+   * Checks whether this outlet has any args passed to it.
+   *
+   * @returns {boolean} True if outlet has at least one arg.
+   */
+  get hasOutletArgs() {
+    const outletArgs = this.args.outletArgs;
+    const deprecatedArgs = outletArgs?.[DEPRECATED_ARGS_KEY];
+
+    return (
+      (outletArgs != null && Object.keys(outletArgs).length > 0) ||
+      (deprecatedArgs != null && Object.keys(deprecatedArgs).length > 0)
+    );
+  }
+
+  <template>
+    <div
+      class={{concatClass
+        "block-outlet-debug"
+        (if @error "--validation-failed")
+      }}
+      data-outlet-name={{@outletName}}
+    >
+      <DTooltip
+        @identifier="block-outlet-info"
+        @interactive={{true}}
+        @placement="bottom-start"
+        @maxWidth={{400}}
+        @triggers={{hash
+          mobile=(array "click")
+          desktop=(array "click" "hover")
+        }}
+        @untriggers={{hash mobile=(array "click") desktop=(array "click")}}
+      >
+        <:trigger>
+          <span class="block-outlet-debug__badge {{if @error '--error'}}">
+            {{icon "cubes"}}
+            {{@outletName}}
+          </span>
+        </:trigger>
+        <:content>
+          <div class="outlet-info__wrapper">
+            <div
+              class="outlet-info__heading
+                {{if @error '--error' '--block-outlet'}}"
+            >
+              <span class="title">
+                {{icon "cubes"}}
+                {{@outletName}}
+              </span>
+              {{#if @error}}
+                <span class="outlet-info__status">ERROR</span>
+              {{/if}}
+              <a
+                class="github-link"
+                href="https://github.com/search?q=repo%3Adiscourse%2Fdiscourse%20BlockOutlet%20@name=%22{{@outletName}}%22&type=code"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Find on GitHub"
+              >{{icon "fab-github"}}</a>
+            </div>
+            <div class="outlet-info__content">
+              {{#if @error}}
+                <div class="outlet-info__error">
+                  <div class="outlet-info__section-title">Validation failed</div>
+                  <pre
+                    class="outlet-info__error-message"
+                  >{{this.errorMessage}}</pre>
+                </div>
+              {{else if @blockCount}}
+                <div class="outlet-info__section">
+                  <div class="outlet-info__section-title">Blocks Registered</div>
+                  <div class="outlet-info__stat">
+                    {{icon "cube"}}
+                    <span>{{this.blockLabel}}</span>
+                  </div>
+                </div>
+              {{else}}
+                <div class="outlet-info__empty">
+                  No blocks registered for this outlet
+                </div>
+              {{/if}}
+
+              {{#if this.hasOutletArgs}}
+                <div class="outlet-info__section">
+                  <div class="outlet-info__section-title">Outlet Args</div>
+                  <ArgsTable @args={{@outletArgs}} @prefix="block outlet" />
+                </div>
+              {{/if}}
+            </div>
+          </div>
+        </:content>
+      </DTooltip>
+      {{yield}}
+    </div>
+  </template>
+}

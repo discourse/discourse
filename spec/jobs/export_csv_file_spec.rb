@@ -269,6 +269,20 @@ RSpec.describe Jobs::ExportCsvFile do
       expect(report[3]).to contain_exactly("2010-01-03", "3", "6", "9")
     end
 
+    it "works with stacked_chart reports and hidden_labels" do
+      ApplicationRequest.create!(date: "2010-01-01", req_type: "page_view_logged_in", count: 1)
+      ApplicationRequest.create!(date: "2010-01-01", req_type: "page_view_anon", count: 4)
+      ApplicationRequest.create!(date: "2010-01-01", req_type: "page_view_crawler", count: 7)
+
+      exporter.extra["name"] = "consolidated_page_views"
+      exporter.extra["hidden_labels"] = "page_view_crawler"
+
+      report = export_report
+
+      expect(report[0]).to contain_exactly("Day", "Logged in users", "Anonymous users")
+      expect(report[1]).to contain_exactly("2010-01-01", "1", "4")
+    end
+
     it "works with posts reports and filters" do
       category = Fabricate(:category)
       subcategory = Fabricate(:category, parent_category: category)

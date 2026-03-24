@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import HighlightedCode from "discourse/admin/components/highlighted-code";
 import DButton from "discourse/components/d-button";
+import HighlightedCode from "discourse/components/highlighted-code";
 import { not } from "discourse/truth-helpers";
 
 export default class StyleguideExample extends Component {

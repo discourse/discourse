@@ -42,6 +42,9 @@ loaderShim("@ember/object/observers", () =>
   importSync("@ember/object/observers")
 );
 loaderShim("@ember/owner", () => importSync("@ember/owner"));
+loaderShim("@ember/reactive/collections", () =>
+  importSync("@ember/reactive/collections")
+);
 loaderShim("@ember/render-modifiers/modifiers/did-insert", () =>
   importSync("@ember/render-modifiers/modifiers/did-insert")
 );
@@ -136,4 +139,7 @@ loaderShim("@ember-decorators/component", () =>
 );
 loaderShim("@ember-decorators/object", () =>
   importSync("@ember-decorators/object")
+);
+loaderShim("discourse/lib/transformer/registry", () =>
+  importSync("discourse/lib/registry/transformers")
 );

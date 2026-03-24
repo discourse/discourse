@@ -7,8 +7,13 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 export default class CreateTopicButton extends Component {
   @service router;
 
-  label = this.args.label ?? "topic.create";
-  btnId = this.args.btnId ?? "create-topic";
+  get label() {
+    return this.args.label ?? "topic.create";
+  }
+
+  get btnId() {
+    return this.args.btnId ?? "create-topic";
+  }
 
   get btnTypeClass() {
     return this.args.btnTypeClass || "btn-default";

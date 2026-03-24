@@ -1,13 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
+import { computed } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
-import discourseComputed from "discourse/lib/decorators";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { and } from "discourse/truth-helpers";
@@ -37,19 +37,19 @@ export default class ChatToTopicSelector extends Component {
   chatMessageIds = null;
   chatChannelId = null;
 
-  @discourseComputed()
-  newTopicInstruction() {
-    return htmlSafe(this.instructionLabels[NEW_TOPIC_SELECTION]);
+  @computed()
+  get newTopicInstruction() {
+    return trustHTML(this.instructionLabels[NEW_TOPIC_SELECTION]);
   }
 
-  @discourseComputed()
-  existingTopicInstruction() {
-    return htmlSafe(this.instructionLabels[EXISTING_TOPIC_SELECTION]);
+  @computed()
+  get existingTopicInstruction() {
+    return trustHTML(this.instructionLabels[EXISTING_TOPIC_SELECTION]);
   }
 
-  @discourseComputed()
-  newMessageInstruction() {
-    return htmlSafe(this.instructionLabels[NEW_MESSAGE_SELECTION]);
+  @computed()
+  get newMessageInstruction() {
+    return trustHTML(this.instructionLabels[NEW_MESSAGE_SELECTION]);
   }
 
   <template>

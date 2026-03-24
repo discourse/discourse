@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -12,7 +11,7 @@ import TopicAssignments from "../topic-assignments";
 export default class EditTopicAssignments extends Component {
   @service taskActions;
 
-  @tracked assignments = this.topic.assignments();
+  assignments = this.topic.assignments();
 
   get title() {
     if (this.topic.isAssigned() || this.topic.hasAssignedPosts()) {

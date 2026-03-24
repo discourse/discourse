@@ -23,6 +23,9 @@ Rails.application.config.to_prepare do
                SiteSetting.push_api_secret_key.length == 32
         SiteSetting.push_api_secret_key = SecureRandom.hex
       end
+
+      # Check for circular dependencies in site settings.
+      SiteSetting.type_supervisor.dependencies.order
     rescue ActiveRecord::StatementInvalid
       # This will happen when migrating a new database
     end

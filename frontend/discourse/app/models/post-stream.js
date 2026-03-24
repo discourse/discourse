@@ -1,10 +1,10 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { trackedObject } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -13,7 +13,7 @@ import {
 } from "discourse/lib/array-tools";
 import deprecated from "discourse/lib/deprecated";
 import { deepMerge } from "discourse/lib/object";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
@@ -68,9 +68,9 @@ export default class PostStream extends RestModel {
   @tracked stagingPost = false;
   @tracked timelineLookup = [];
 
-  @trackedArray posts = [];
-  @trackedArray stream = [];
-  @trackedArray userFilters = [];
+  @autoTrackedArray posts = [];
+  @autoTrackedArray stream = [];
+  @autoTrackedArray userFilters = [];
 
   _identityMap = {};
 
@@ -179,7 +179,7 @@ export default class PostStream extends RestModel {
   **/
   @dependentKeyCompat
   get streamFilters() {
-    const result = new TrackedObject();
+    const result = trackedObject();
 
     if (this.filter) {
       result.filter = this.filter;
@@ -1060,23 +1060,29 @@ export default class PostStream extends RestModel {
   }
 
   updateFromJson(postStreamData) {
-    this.posts.length = 0;
-    this.gaps = null;
+    applyBehaviorTransformer(
+      "post-stream-update-from-json",
+      () => {
+        this.posts.length = 0;
+        this.gaps = null;
 
-    if (postStreamData) {
-      // Load posts if present
-      postStreamData.posts.forEach((p) =>
-        this.appendPost(this.store.createRecord("post", p))
-      );
-      delete postStreamData.posts;
+        if (postStreamData) {
+          // Load posts if present
+          postStreamData.posts.forEach((p) =>
+            this.appendPost(this.store.createRecord("post", p))
+          );
+          delete postStreamData.posts;
 
-      // Update our attributes
-      postStreamData.gaps = {
-        before: new TrackedObject(postStreamData.gaps?.before || {}),
-        after: new TrackedObject(postStreamData.gaps?.after || {}),
-      };
-      this.setProperties(postStreamData);
-    }
+          // Update our attributes
+          postStreamData.gaps = {
+            before: trackedObject(postStreamData.gaps?.before || {}),
+            after: trackedObject(postStreamData.gaps?.after || {}),
+          };
+          this.setProperties(postStreamData);
+        }
+      },
+      { postStream: this }
+    );
   }
 
   /**
@@ -1344,9 +1350,5 @@ export default class PostStream extends RestModel {
       suggested_topics: result.suggested_topics,
       suggested_group_name: result.suggested_group_name,
     });
-
-    if (this.topic.isPrivateMessage) {
-      this.pmTopicTrackingState.startTracking();
-    }
   }
 }

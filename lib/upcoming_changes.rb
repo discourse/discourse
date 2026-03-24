@@ -91,6 +91,12 @@ module UpcomingChanges
     ).order(created_at: :desc)
   end
 
+  # We dynamically determine if an upcoming change is enabled
+  # or disabled based on the current status of the change as well
+  # as whether the admin has manually toggled the change.
+  #
+  # @param change_setting_name [Symbol] The name of the upcoming change
+  # @return [Boolean]
   def self.resolved_value(change_setting_name)
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
@@ -125,6 +131,15 @@ module UpcomingChanges
     SiteSetting.site_setting_group_ids[change_setting_name].presence || []
   end
 
+  # Checks if a given upcoming change is enabled for a user,
+  # which can be either enabled for everyone, enabled for certain groups,
+  # or disabled for everyone. The user's group membership is used to determine
+  # if the upcoming change is enabled for them if the upcoming change is
+  # enabled for certain groups.
+  #
+  # @param change_setting_name [Symbol] The name of the upcoming change
+  # @param user [User] The user to check if the upcoming change is enabled for
+  # @return [Boolean]
   def self.enabled_for_user?(change_setting_name, user)
     change_setting_name = change_setting_name.to_sym
     setting_enabled = SiteSetting.public_send(change_setting_name)
@@ -143,6 +158,38 @@ module UpcomingChanges
     setting_enabled
   end
 
+  # Calculates the current state of all upcoming changes for a given user,
+  # including the reason why a change is or isn't enabled for them, and
+  # if it's due to group membership, which groups are relevant.
+  #
+  # The acting_guardian is used to determine group visibility. This is
+  # mostly used to show a list of upcoming changes for a user in the admin
+  # interface.
+  #
+  # @param user [User] The user to get the upcoming changes for
+  # @param acting_guardian [Guardian] The current user's guardian
+  # @return [Array<Hash>]
+  #
+  # @example
+  #   stats_for_user(user: user, acting_guardian: admin)
+  #   # => [
+  #   #   {
+  #   #     name: "new_feature",
+  #   #     humanized_name: "New Feature",
+  #   #     description: "This is a new feature",
+  #   #     enabled: true,
+  #   #     specific_groups: ["Group 1", "Group 2"],
+  #   #     reason: :in_specific_groups
+  #   #   },
+  #   #   {
+  #   #     name: "another_feature",
+  #   #     humanized_name: "Another Feature",
+  #   #     description: "This is another feature",
+  #   #     enabled: false,
+  #   #     specific_groups: [],
+  #   #     reason: :enabled_for_no_one
+  #   #   },
+  #   # ]
   def self.stats_for_user(user:, acting_guardian:)
     guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
     user_belonging_to_group_ids = user.belonging_to_group_ids
@@ -180,5 +227,42 @@ module UpcomingChanges
         reason:,
       }
     end
+  end
+
+  # For a given setting, we need to determine the enabled for value
+  # for the UI based on the setting value, and if the setting is enabled
+  # for certain groups, we need the actual group records to display in the UI.
+  # Mostly a utility method.
+  #
+  # @param setting_name [Symbol] The name of the setting
+  # @param setting_value [Boolean] The value of the setting
+  # @param upcoming_change_selected_groups [Hash] A hash of group ids to group names
+  #   across all upcoming changes.
+  # @return [Hash] The enabled for value and the setting groups
+  #
+  # @example
+  #   enabled_for_with_groups(:new_feature, true, { 1 => "Group 1", 2 => "Group 2" })
+  def self.enabled_for_with_groups(setting_name, setting_value, upcoming_change_selected_groups)
+    group_ids_for_setting = SiteSetting.site_setting_group_ids[setting_name]
+    setting_groups =
+      upcoming_change_selected_groups.values_at(*group_ids_for_setting).join(
+        ",",
+      ) if group_ids_for_setting.present?
+
+    enabled_for =
+      if !setting_value
+        "no_one"
+      elsif setting_groups.blank?
+        "everyone"
+      else
+        if group_ids_for_setting == [Group::AUTO_GROUPS[:staff]]
+          # Have to do this because the staff auto group name is localized
+          upcoming_change_selected_groups[Group::AUTO_GROUPS[:staff]]
+        else
+          "groups"
+        end
+      end
+
+    { enabled_for:, setting_groups: }
   end
 end

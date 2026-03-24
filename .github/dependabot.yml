@@ -16,7 +16,7 @@ updates:
       prefix: "DEPS"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 40
     versioning-strategy: lockfile-only
     allow:
       - dependency-type: direct
@@ -74,10 +74,9 @@ updates:
       prefix: "DEPS"
     cooldown:
       default-days: 7
-      exclude: [
-        "@discourse/*"
-      ]
-    open-pull-requests-limit: 20
+      exclude:
+        - "@discourse/*"
+    open-pull-requests-limit: 40
     versioning-strategy: increase
     ignore:
       - dependency-name: "webpack" # Recent versions have bugs with `/static` loading. We're working to move away from webpack anyway.

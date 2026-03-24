@@ -209,7 +209,6 @@ id:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari pengguna sah yang secara tidak sengaja dibatasi lajunya."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Anda tidak dapat menambahkan salah satu nilai berikut ke setelan: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Anda tidak dapat menonaktifkan metadata gambar strip jika 'composer media optimization image enabled' diaktifkan. Nonaktifkan 'composer media optimization image enabled' sebelum menonaktifkan metadata gambar strip."
-      x_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
     conflicting_google_user_id: 'ID Akun Google untuk akun ini telah berubah; intervensi staf diperlukan untuk alasan keamanan. Silakan hubungi staf dan arahkan mereka ke <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Maaf, kami tidak dapat membuat pratinjau untuk halaman web ini karena server '%{hostname}' tidak dapat ditemukan. Alih-alih pratinjau, hanya tautan yang akan muncul di post Anda. :cry:"
@@ -925,7 +924,6 @@ id:
         time_to_resolution: Waktu resolusi
     visits:
       title: "Kunjungan Pengguna"
-      xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
       xaxis: "Hari"
@@ -966,10 +964,8 @@ id:
       yaxis: "Hari"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Hari"
       yaxis: "DAU/MAU"
-      description: "Jumlah anggota yang masuk pada hari terakhir dibagi dengan jumlah anggota yang masuk pada bulan lalu – menghasilkan % yang menunjukkan 'stickiness' komunitas. Bertujuan untuk >20%."
     daily_engaged_users:
       title: "Pengguna yang Terlibat Harian"
       xaxis: "Hari"
@@ -1232,6 +1228,7 @@ id:
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Kunci autentikasi Mandrill digunakan untuk memverifikasi pesan webhook."
     postmark_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/sparkpost?t=supersecret"
@@ -1261,8 +1258,6 @@ id:
       invalid_email: "Alamat email tidak valid."
       invalid_csp_script_src: "Nilai harus berupa 'unsafe-eval' atau 'wasm-unsafe-eval', atau dalam bentuk '<hash algorithm>-<base64 value>' dengan algoritma hash yang didukung adalah sha256, sha384, atau sha512. Pastikan masukan Anda diapit tanda kutip tunggal."
       email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."
-      min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
-      max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
       invalid_search_ranking_weights: "Nilai tidak valid untuk setelan situs search_ranking_weights. Contoh: '{0.1,0.2,0.3,1.0}'. Perhatikan bahwa nilai maksimum untuk setiap bobot adalah 1,0."
   search:
@@ -1293,34 +1288,6 @@ id:
       blank: "tidak boleh kosong."
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
-  new_version_mailer:
-    text_body_template: |
-      Hore, versi baru dari [Discourse] (https://www.discourse.org) telah tersedia!
-
-      Versi Anda: %{installed_version}
-      Versi baru: **%{new_version}**
-
-      - Perbarui menggunakan **[pembaruan browser sekali klik] kami yang mudah (%{base_url}/admin/update) **
-
-      - Lihat apa yang baru di [catatan rilis](https://meta.discourse.org/tag/release-notes) atau lihat [catatan perubahan GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
-  new_version_mailer_with_notes:
-    text_body_template: |
-      Hore, versi baru [Discourse] (https://www.discourse.org) tersedia!
-
-      Versi Anda: %{installed_version}
-      Versi baru: **%{new_version}**
-
-      - Perbarui menggunakan ** [pembaruan browser satu-klik] kami yang mudah (%{base_url}/admin/update) **
-
-      - Lihat apa yang baru di [catatan rilis] (https://meta.discourse.org/tag/release-notes) atau lihat [perubahan GitHub mentah](https://github.com/discourse/discourse/commits/main)
-
-      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
-
-      ### Catatan rilis
-
-      %{notes}
   system_messages:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"
@@ -1758,8 +1725,6 @@ id:
     description: "Mode aman memungkinkan Anda menguji situs Anda tanpa memuat tema atau penyesuaian plugin client-side. Penyesuaian plugin server-side tetap diaktifkan."
     no_unofficial_plugins: "Nonaktifkan penyesuaian plugin client-side tidak resmi"
     no_plugins: "Nonaktifkan semua penyesuaian plugin client-side"
-  dev_mode:
-    enter: "Enter"
   wizard:
     step:
       setup:
@@ -1874,8 +1839,6 @@ id:
         title: "Ya"
       approve_and_unhide:
         title: "Ya"
-      no_action_post:
-        title: "Tidak ada tindakan"
       delete_post:
         title: "Hapus postingan"
         complete: "Pos dihapus"
@@ -1883,8 +1846,6 @@ id:
         title: "Sembunyikan pos"
       restore_post:
         title: "Pulihkan post"
-      no_action_user:
-        title: "Tidak ada tindakan"
       silence_user:
         title: "Senyapkan pengguna"
       suspend_user:

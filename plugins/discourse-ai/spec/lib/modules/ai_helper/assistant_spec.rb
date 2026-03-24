@@ -89,7 +89,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
       expect { assistant.available_prompts(user) }.not_to raise_error
     end
 
-    context "when PostIllustrator persona has an image generation tool" do
+    context "when PostIllustrator agent has an image generation tool" do
       let(:image_tool) do
         AiTool.create!(
           name: "Test Image Generator",
@@ -108,9 +108,9 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
         )
       end
 
-      context "with system PostIllustrator persona (dynamic tool discovery)" do
+      context "with system PostIllustrator agent (dynamic tool discovery)" do
         before do
-          # Use the default system PostIllustrator persona
+          # Use the default system PostIllustrator agent
           image_tool # Create the tool
           DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
         end
@@ -129,23 +129,23 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
           )
         end
 
-        it "PostIllustrator persona has tools and forces their use" do
-          persona = AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
-          persona_instance = persona.class_instance.new
+        it "PostIllustrator agent has tools and forces their use" do
+          agent = AiAgent.find_by(id: SiteSetting.ai_helper_post_illustrator_agent)
+          agent_instance = agent.class_instance.new
 
-          expect(persona_instance.tools).not_to be_empty
-          expect(persona_instance.tools.first).to be_a(Class)
-          expect(persona_instance.tools.first.tool_id).to eq(image_tool.id)
-          expect(persona_instance.force_tool_use).to eq(persona_instance.tools)
-          expect(persona_instance.forced_tool_count).to eq(1)
+          expect(agent_instance.tools).not_to be_empty
+          expect(agent_instance.tools.first).to be_a(Class)
+          expect(agent_instance.tools.first.tool_id).to eq(image_tool.id)
+          expect(agent_instance.force_tool_use).to eq(agent_instance.tools)
+          expect(agent_instance.forced_tool_count).to eq(1)
         end
       end
 
-      context "with custom persona" do
-        let(:custom_persona) do
-          AiPersona.create!(
+      context "with custom agent" do
+        let(:custom_agent) do
+          AiAgent.create!(
             name: "Custom Post Illustrator",
-            description: "Test persona with image tool",
+            description: "Test agent with image tool",
             system_prompt: "You are an AI that generates images from text prompts.",
             enabled: true,
             system: false,
@@ -155,8 +155,8 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
         end
 
         before do
-          # Set the custom persona as the illustrator persona
-          SiteSetting.ai_helper_post_illustrator_persona = custom_persona.id
+          # Set the custom agent as the illustrator agent
+          SiteSetting.ai_helper_post_illustrator_agent = custom_agent.id
           DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
         end
 
@@ -210,9 +210,9 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
         it "gracefully handles PostIllustrator.tools raising exception" do
           # Stub the PostIllustrator class to raise an error
-          allow_any_instance_of(DiscourseAi::Personas::PostIllustrator).to receive(
-            :tools,
-          ).and_raise(StandardError.new("Tool discovery failed"))
+          allow_any_instance_of(DiscourseAi::Agents::PostIllustrator).to receive(:tools).and_raise(
+            StandardError.new("Tool discovery failed"),
+          )
 
           DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
 
@@ -228,7 +228,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
   describe("#attach_user_context") do
     before { SiteSetting.allow_user_locale = true }
 
-    let(:context) { DiscourseAi::Personas::BotContext.new(user: user) }
+    let(:context) { DiscourseAi::Agents::BotContext.new(user: user) }
 
     it "is able to perform %LANGUAGE% replacements" do
       assistant.attach_user_context(context, user)
@@ -291,10 +291,10 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
         expect(response[:suggestions]).to contain_exactly(english_text)
       end
 
-      context "when the persona is not using structured outputs" do
+      context "when the agent is not using structured outputs" do
         it "still works" do
-          regular_persona = Fabricate(:ai_persona, response_format: nil)
-          SiteSetting.ai_helper_translator_persona = regular_persona.id
+          regular_agent = Fabricate(:ai_agent, response_format: nil)
+          SiteSetting.ai_helper_translator_agent = regular_agent.id
 
           response =
             DiscourseAi::Completions::Llm.with_prepared_responses([english_text]) do

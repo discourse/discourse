@@ -35,6 +35,7 @@ module DiscourseSolved
       return false if !authenticated?
       return false if !topic || !post || post.post_number <= 1 || post.whisper?
       return false if !allow_accepted_answers?(topic)
+      return false if !can_see_post?(post)
 
       return true if is_staff?
 
@@ -45,6 +46,10 @@ module DiscourseSolved
       return true if !topic.private_message? && is_category_group_moderator?(topic.category)
 
       topic.user_id == current_user.id && !topic.closed && SiteSetting.accept_solutions_topic_author
+    end
+
+    def can_unaccept_answer?(topic, post)
+      can_accept_answer?(topic, post) || (is_staff? && topic&.solved.present?)
     end
   end
 end

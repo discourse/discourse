@@ -10,10 +10,8 @@ nl:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Staat AI zoeken toe"
-              stream_completion: "Maakt streamen van voltooiingen van AI-persona's mogelijk"
-              update_personas: "Staat bijwerken van AI-persona's toe"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -35,9 +33,6 @@ nl:
             create_ai_llm_model: "LLM-model maken"
             update_ai_llm_model: "LLM-model bijwerken"
             delete_ai_llm_model: "LLM-model verwijderen"
-            create_ai_persona: "AI-persona maken"
-            update_ai_persona: "AI-persona bijwerken"
-            delete_ai_persona: "AI-persona verwijderen"
             create_ai_tool: "AI-tool maken"
             update_ai_tool: "AI-tool bijwerken"
             delete_ai_tool: "AI-tool verwijderen"
@@ -110,25 +105,14 @@ nl:
             top_p:
               label: "Top P"
               description: "Te gebruiken top P voor de LLM. Verhoog deze om de willekeur te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken)"
-            persona_id:
-              label: "Persona"
-              description: "Te gebruiken AI-persona voor rapportgeneratie"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Persona"
-              description: "AI-persona om te gebruiken voor triage (moet standaard-LLM en gebruiker hebben ingesteld)"
             whisper:
               label: "Antwoorden als fluisterbericht"
-              description: "Of de respons van de persona een fluisterbericht moet zijn"
             silent_mode:
               label: "Stille modus"
-              description: "In de stille modus ontvangt de persona de content, maar plaatst niets op het forum. Dit is handig bij triage met behulp van tools."
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
-              description: "De prompt om te gebruiken voor triage. Zorg dat deze antwoordt met een enkel woord dat kan worden gebruikt om de actie te activeren"
             max_post_tokens:
               label: "Maximaal aantal plaatsingstokens"
               description: "Het maximale aantal tokens om te scannen met LLM-triage"
@@ -165,9 +149,6 @@ nl:
             whisper:
               label: "Antwoorden als fluisterbericht"
               description: "Of de respons van de AI een fluisterbericht moet zijn"
-            reply_persona:
-              label: "Antwoordpersona"
-              description: "AI-persona om te gebruiken voor antwoorden (moet standaard-LLM hebben), krijgt voorrang boven standaardantwoorden"
             max_output_tokens:
               label: "Maximaal aantal uitvoertokens"
               description: "Door dit op te geven wordt een bovenlimiet ingesteld voor het maximale aantal tokens dat het model kan genereren. Respecteert de maximumlimiet voor uitvoertokens van de LLM."
@@ -175,23 +156,17 @@ nl:
       title: "AI"
       default_llm:
         title: "Standaard LLM-model"
-        description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of persona. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
       llm_selector:
         none: "Geen"
       features:
         short_title: "Functies"
-        description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke persona's en LLM's en de toegang kan per groep worden beheerd."
-        back: "Terug"
         disabled: "(uitgeschakeld)"
-        persona:
-          one: "Persona:"
-          other: "Persona's:"
         groups: "Groepen:"
         llm:
           one: "LLM:"
           other: "LLM's:"
         no_llm: "Geen LLM geselecteerd"
-        no_persona: "Niet ingesteld"
+        no_agent: "Niet ingesteld"
         no_groups: "Geen"
         edit: "Instellingen"
         expand_list:
@@ -207,7 +182,6 @@ nl:
           unconfigured: "Niet geconfigureerd"
         filters:
           all: "Alles"
-          text: "Zoek naar functies, persona's, LLM's of groepen..."
           no_results: "Geen functies gevonden die aan je filters voldoen."
           reset: "Resetten"
         no_automations: "Er zijn nog geen automatiseringen"
@@ -236,10 +210,7 @@ nl:
           generate_concepts: "Conceptenafleiding"
           match_concepts: "Conceptenmatching"
           deduplicate_concepts: "Conceptendeduplicatie"
-          setting_groups:
-            personas: "Persona's"
         ai_helper:
-          name: "Helper"
           description: "Helpt gebruikers bij de interactie met de community, zoals het maken van topics, het schrijven van berichten en het lezen van content"
           proofread: Tekst proeflezen
           title_suggestions: "Titels voorstellen"
@@ -254,7 +225,6 @@ nl:
           post_illustrator: "Berichtillustrator"
           setting_groups:
             automation: "Automatisering"
-            personas: "Persona's"
         translation:
           name: "Vertaling"
           description: "Vertaalt content in ondersteunde talen"
@@ -262,8 +232,6 @@ nl:
           post_raw_translator: "Ruwe berichtvertaler"
           topic_title_translator: "Topictitelvertaler"
           short_text_translator: "Kortetekstvertaler"
-          setting_groups:
-            personas: "Persona's"
         spam:
           name: "Spam"
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
@@ -299,7 +267,6 @@ nl:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
         select_llm: "Selecteer LLM"
-        select_persona: "Selecteer persona"
         custom_instructions: "Aangepaste instructies"
         custom_instructions_help: "Aangepaste instructies specifiek voor jouw site om de AI te helpen bij het identificeren van spam, bijvoorbeeld 'Wees agressiever bij het scannen van berichten die niet in het Engels zijn'."
         last_seven_days: "Afgelopen 7 dagen"
@@ -372,23 +339,20 @@ nl:
           last_week: "Vorige week"
           last_month: "Vorige maand"
           custom: "Aangepast..."
-      ai_persona:
+      ai_agent:
         ai_tools: "Tools"
         tool_strategies:
           all: "Toepassen op alle antwoorden"
           replies:
             one: "Alleen toepassen op eerste antwoord"
             other: "Alleen toepassen op eerste %{count} antwoorden"
-        back: "Terug"
         name: "Naam"
         edit: "Bewerken"
         export: "Exporteren"
         import: "Importeren"
-        import_error_conflict: "Conflict gedetecteerd bij het importeren van %{name}. Wil je de bestaande persona bijwerken?"
         overwrite: "Overschrijven"
         description: "Beschrijving"
         no_llm_selected: "Geen taalmodel geselecteerd"
-        use_parent_llm: "Taalmodel van persona gebruiken"
         max_context_posts: "Maximaal aantal contextberichten"
         max_context_posts_help: "Het maximale aantal berichten dat als context voor de AI kan worden gebruikt bij het reageren op een gebruiker. (Leeg voor standaardinstelling)"
         vision_enabled: Zicht ingeschakeld
@@ -399,47 +363,32 @@ nl:
           medium: Middelmatige kwaliteit (512x512)
           high: Hoge kwaliteit - langzaamst (1024x1024)
         mentionable: Vermeldingen toestaan
-        mentionable_help: Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze gebruiker vermelden in berichten. De AI reageert als deze persona.
         user: Gebruiker
         create_user: Gebruiker maken
-        create_user_help: Je kunt optioneel een gebruiker aan deze persona koppelen. Als je dat doet, gebruikt de AI deze gebruiker om op verzoeken te antwoorden.
         default_llm: Standaard taalmodel
-        default_llm_help: Het standaard taalmodel dat voor deze persona moet worden gebruikt. Vereist als je de persona wilt vermelden in openbare berichten.
         question_consolidator_llm: Taalmodel voor Vragenconsolidator
         question_consolidator_llm_help: Het te gebruiken taalmodel voor de vragenconsolidator. Je kunt een minder krachtig model kiezen om kosten te besparen.
         system_prompt: Systeemprompt
         forced_tool_strategy: Gedwongen toolstrategie
         allow_chat_direct_messages: "Directe chatberichten toestaan"
-        allow_chat_direct_messages_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen directe berichten naar deze persona sturen."
         allow_chat_channel_mentions: "Vermelding in chatkanalen toestaan"
-        allow_chat_channel_mentions_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze persona vermelden in chatkanalen."
         allow_personal_messages: "Persoonlijke berichten toestaan"
-        allow_personal_messages_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen persoonlijke berichten naar deze persona sturen."
         allow_topic_mentions: "Vermelding in topics toestaan"
-        allow_topic_mentions_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze persona vermelden in topics."
         force_default_llm: "Altijd standaard taalmodel gebruiken"
         save: "Opslaan"
-        saved: "Persona opgeslagen"
         enabled: "Ingeschakeld?"
         tools: "Ingeschakelde tools"
         forced_tools: "Geforceerde tools"
         allowed_groups: "Toegestane groepen"
-        confirm_delete: "Weet je zeker dat je deze persona wilt verwijderen?"
-        new: "Nieuwe persona"
-        no_personas: "Je hebt nog geen persona's gemaakt"
-        title: "Persona's"
-        short_title: "Persona's"
         delete: "Verwijderen"
         temperature: "Temperatuur"
         temperature_help: "Te gebruiken temperatuur voor de LLM. Verhoog deze om de creativiteit te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken, doorgaans een waarde van 0,0 tot 2,0)"
         top_p: "Top P"
         top_p_help: "Te gebruiken Top P voor de LLM. Verhoog deze om de willekeurigheid te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken, doorgaans een waarde van 0,0 tot 1,0)"
         priority: "Prioriteit"
-        priority_help: "Prioritaire persona's worden bovenaan de personalijst weergegeven voor gebruikers. Als meerdere persona's prioriteit hebben, worden deze alfabetisch gesorteerd."
         tool_options: "Toolopties"
         rag_conversation_chunks: "Conversatiechunks zoeken"
         rag_conversation_chunks_help: "Het te gebruiken aantal chunks voor zoeken door het RAG-model. Verhoog dit om de hoeveelheid context te vergroten die de AI kan gebruiken."
-        persona_description: "Persona's zijn een krachtige functie waarmee je het gedrag van de AI-engine kunt aanpassen in je Discourse-forum. Ze fungeren als een 'systeembericht' dat de reacties en interacties van de AI stuurt, waardoor je een persoonlijkere en boeiendere gebruikerservaring creëert."
         response_format:
           title: "JSON-responsindeling"
           no_format: "Geen JSON-indeling opgegeven"
@@ -459,11 +408,8 @@ nl:
           enabled: "AI-bot?"
         ai_bot:
           title: "AI-botopties"
-          save_first: "Nadat je de persona hebt opgeslagen, zijn er meer AI-botopties beschikbaar."
         filters:
-          text: "Zoek een persona"
           reset: "Resetten"
-          no_results: "Geen persona's gevonden die aan je filters voldoen."
           all_features: "Elke functie"
         features_list:
           one: "Functie:"
@@ -492,7 +438,6 @@ nl:
           uploading: "Uploaden..."
           remove: "Upload verwijderen"
       tools:
-        back: "Terug"
         short_title: "Tools"
         export: "Exporteren"
         import: "Importeren"
@@ -503,7 +448,6 @@ nl:
         name_help: "De naam wordt weergegeven in de Discourse-gebruikersinterface en is de korte identificatie die je gebruikt om de tool te vinden in verschillende instellingen. Deze moet uniek zijn."
         new: "Nieuwe tool"
         tool_name: "Toolnaam"
-        tool_name_help: "De toolnaam wordt gepresenteerd aan het grote taalmodel. Deze is niet uniek, maar wel uniek per persona. (Persona valideert bij opslaan)"
         description: "Beschrijving"
         description_help: "Een duidelijke beschrijving van het doel van de tool voor het taalmodel"
         subheader_description: "Tools breiden de mogelijkheden van AI-bots uit met door de gebruiker gedefinieerde JavaScript-functies."
@@ -521,8 +465,9 @@ nl:
         parameter_description: "Parameterbeschrijving"
         enum_value: "Enumwaarde"
         add_enum_value: "Enumwaarde toevoegen"
+        credential_not_set: "(niet ingesteld)"
         edit: "Bewerken"
-        test: "Test uitvoeren"
+        test: "Testen"
         delete: "Verwijderen"
         saved: "Tool opgeslagen"
         confirm_delete: "Weet je zeker dat je deze tool wilt verwijderen?"
@@ -534,11 +479,11 @@ nl:
         short_title: "Aanmeldgegevens"
         name: "Naam"
         secret: "Waarde"
-        back: "Terug"
         save: "Opslaan"
         edit: "Bewerken"
         delete: "Verwijderen"
         embedding: "Insluiting"
+        tool: "Tool"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -559,7 +504,6 @@ nl:
         save: "Opslaan"
         edit: "Bewerken"
         saved: "LLM-model opgeslagen"
-        back: "Terug"
         confirm_delete: Weet je zeker dat je dit model wilt verwijderen?
         delete: Verwijderen
         quotas:
@@ -584,20 +528,19 @@ nl:
           max_usages_required: "Moet worden ingesteld als het maximale aantal tokens niet is ingesteld"
         usage:
           ai_bot: "AI-bot"
-          ai_helper: "Helper (%{persona})"
+          ai_helper: "Helper (%{agent})"
           ai_helper_image_caption: "Afbeeldingsbijschrift"
-          ai_persona: "Persona (%{persona})"
           ai_summarization: "Samenvatten"
           ai_embeddings_semantic_search: "AI zoeken"
           ai_spam: "Spam"
-          automation: "Automatisering (%{persona})"
+          automation: "Automatisering (%{agent})"
         in_use_warning:
           one: "Dit model wordt momenteel gebruikt door %{settings}. Als het onjuist is geconfigureerd, werkt de functie niet zoals verwacht."
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-5: "Het intelligentste model van Antropic"
-          anthropic-claude-sonnet-4-5: "Optimale balans tussen snelheid en kosten"
+          anthropic-claude-opus-4-6: "Het intelligentste model van Antropic"
+          anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
           open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
@@ -653,7 +596,6 @@ nl:
           disable_streaming: "Streamingvoltooiingen uitschakelen (streaming- naar niet-streaming-verzoeken converteren)"
           reasoning_effort: "Redeneringsinspanning (alleen van toepassing op redeneringsmodellen)"
           enable_reasoning: "Redeneren inschakelen (alleen van toepassing op redeneringsmodellen)"
-          enable_thinking: "Denken inschakelen (alleen op toepasselijke modellen, bijvoorbeeld: flash 2.5)"
           thinking_tokens: "Aantal tokens dat wordt gebruikt voor denken"
           reasoning_tokens: "Aantal tokens dat wordt gebruikt voor redeneren"
           disable_temperature: "Temperatuur uitschakelen (sommige denkmodellen ondersteunen geen temperatuur)"
@@ -712,11 +654,13 @@ nl:
       reviewables:
         model_used: "Gebruikt model:"
         accuracy: "Nauwkeurigheid:"
+        ai_tool_action:
+          tool: "Tool"
+          parameters: "Parameters"
       embeddings:
         short_title: "Insluitingen"
         description: "Insluitingen zijn numerieke representaties van gegevens die betekenis en relaties vastleggen, waardoor AI-functies van Discourse zoals Gerelateerde onderwerpen en AI-zoeken content kunnen begrijpen en verbinden."
         new: "Nieuwe insluiting"
-        back: "Terug"
         save: "Opslaan"
         saved: "Insluitingsconfiguratie opgeslagen"
         delete: "Verwijderen"
@@ -762,12 +706,7 @@ nl:
         provider_fields:
           model_name: "Modelnaam"
         semantic_search: "Topics (semantisch)"
-        semantic_search_loading: "Zoeken naar meer resultaten met behulp van AI"
         semantic_search_results:
-          toggle: "%{count} resultaten gevonden met AI worden weergegeven"
-          toggle_hidden: "%{count} resultaten gevonden met AI zijn verborgen"
-          none: "Sorry, AI zoeken heeft geen overeenkomende topics gevonden"
-          new: "Druk op 'Zoeken' om nieuwe resultaten te zoeken met AI"
           unavailable: "AI-resultaten niet beschikbaar"
         semantic_search_tooltips:
           results_explanation: "Als dit is ingeschakeld, worden hieronder extra AI-zoekresultaten toegevoegd."
@@ -781,7 +720,7 @@ nl:
         collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
         click_to_run_label: "Artefact uitvoeren"
       ai_bot:
-        persona: "Persona"
+        title: "AI-bot"
         llm: "Model"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"

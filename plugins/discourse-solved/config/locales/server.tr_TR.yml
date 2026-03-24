@@ -6,9 +6,29 @@
 
 tr_TR:
   accepted_answer: "Kabul Edilen Yanıt"
+  category_types:
+    support:
+      name: "Destek"
+      title: "destek"
+      description: "Üyelerin soru sorabildiği ve yanıtları çözüm olarak işaretleyebildiği yer."
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
+      solved_topics_auto_close_hours:
+        label: "Çözülmüş konuları otomatik olarak kapat (saat)"
+        description: "Çözüldü olarak işaretlendikten sonra bu kadar saat geçtikten sonra konuyu otomatik olarak kapat. Devre dışı bırakmak için 0 olarak ayarla."
+      notify_on_staff_accept_solved:
+        label: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
+      empty_box_on_unsolved:
+        label: "Konu listesinde çözülmemiş konuların yanında boş bir onay kutusu göster"
+      solved_topics_auto_close_duration:
+        label: "Çözülmüş konuları otomatik olarak kapat"
+        description: "Konu \"çözüldü\" olarak işaretlendikten sonra bu süre geçtikten sonra otomatik olarak kapatılır. Devre dışı bırakmak için 0 olarak ayarlayın."
   site_settings:
     solved_enabled: "Çözüldü eklentisini etkinleştirin, kullanıcıların konularda yanıtları çözüldü olarak seçmesine izin verin"
     allow_solved_on_all_topics: "Kullanıcıların tüm konularda çözüm seçmesine izin verin (işaretli olmadığında, çözümler kategori veya etiket başına etkinleştirilebilir)"
+    allow_solved_in_groups: "Bu gruplar için grup mesajlarında çözümlerin işaretlenmesine izin ver."
     accept_all_solutions_trust_level: "Herhangi bir konudaki çözümleri kabul etmek için gereken asgari güven seviyesi (OP olmasa bile)"
     accept_all_solutions_allowed_groups: "Herhangi bir konudaki çözümleri kabul etmesine izin verilen gruplar (OP olmasa bile). Yöneticilere ve moderatörlere her zaman izin verilir."
     empty_box_on_unsolved: "Çözülmemiş konuların yanında boş bir kutu görüntüle"
@@ -16,20 +36,19 @@ tr_TR:
     solved_topics_auto_close_hours: "Konu, çözüldü olarak işaretlendiğinde son yanıttan (n) saat sonra konuyu otomatik kapat. Otomatik kapatmayı devre dışı bırakmak için 0 olarak ayarlayın."
     show_filter_by_solved_status: "Bir konu listesini çözülmüş duruma göre filtrelemek için bir açılır menü gösterin."
     notify_on_staff_accept_solved: "Bir gönderi bir personel tarafından çözüm olarak işaretlendiğinde konuyu oluşturana bildirim gönderin."
-    ignore_solved_topics_in_assigned_reminder: "Ödevlere ilişkin anımsatıcıların çözülmüş konuları içermesini önleyin. Yalnızca discourse-assign eklentisi kullanıldığında geçerlidir."
-    assignment_status_on_solve: "Bir konu çözüldüğünde tüm atamaları bu duruma güncelleyin"
-    assignment_status_on_unsolve: "Bir konu çözülmediğinde tüm atamaları bu duruma güncelleyin"
     disable_solved_education_message: "Çözülen konular için eğitim mesajını devre dışı bırakın."
     accept_solutions_topic_author: "Konu yazarının bir çözümü kabul etmesine izin verin."
     solved_add_schema_markup: "HTML'ye QAPage şema işaretlemesi ekleyin."
     enable_solved_tags: "Kullanıcıların çözüm seçmesine olanak tanıyacak etiketler."
     prioritize_solved_topics_in_search: "Arama sonuçlarında çözülmüş konulara öncelik verin."
+    enable_support_category_type_setup: "Kategori oluşturma ayarları sırasında \"Destek\" kategori türü seçeneğini etkinleştirir. Bunun geçerli olabilmesi için \"basitleştirilmiş kategori oluşturma\" seçeneğinin etkinleştirilmiş olması gerektiğini unutmayın."
     show_who_marked_solved: "Konuyu kimin çözülmüş olarak işaretlediğini gösterin. Bu, konunun ilk gönderisinde ve cevap gönderisinde bir ipucu olarak belirtilir."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
     accepted_solutions:
       title: "Kabul edilen çözümler"
+      description: "Belirli bir tarih aralığında, isteğe bağlı kategori filtresi ve 30 günlük karşılaştırma toplamı ile günde kaç konu için çözüm kabul edildi."
       xaxis: "Gün"
       yaxis: "Toplam"
   solved:

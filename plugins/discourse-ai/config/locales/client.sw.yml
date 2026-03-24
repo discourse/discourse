@@ -37,7 +37,6 @@ sw:
       llm_selector:
         none: "Hakuna"
       features:
-        back: "Iliyopita"
         disabled: "(imezuiwa)"
         groups: "Makundi:"
         no_groups: "Hakuna"
@@ -73,8 +72,7 @@ sw:
         username: "Jina la mtumiaji"
         total_requests: "Jumla ya Maombi"
         total: "Jumla"
-      ai_persona:
-        back: "Iliyopita"
+      ai_agent:
         name: "Jina"
         edit: "Hariri"
         export: "Hamisha"
@@ -93,7 +91,6 @@ sw:
           title: "Upakiaji"
           uploading: "Inaongezwa"
       tools:
-        back: "Iliyopita"
         export: "Hamisha"
         import: "Imeingizwa kutoka sehemu nyingine"
         name: "Jina"
@@ -103,11 +100,11 @@ sw:
         remove_parameter: "Ondoa"
         parameter_required: "Muhimu na Inahitajika"
         edit: "Hariri"
+        test: "Majaribio"
         delete: "Futa"
       secrets:
         name: "Jina"
         secret: "Thamani"
-        back: "Iliyopita"
         save: "Hifadhi"
         edit: "Hariri"
         delete: "Futa"
@@ -117,7 +114,6 @@ sw:
         provider: "Mkimu"
         save: "Hifadhi"
         edit: "Hariri"
-        back: "Iliyopita"
         delete: Futa
         quotas:
           group: "Kikundi"
@@ -142,7 +138,6 @@ sw:
         image_caption:
           save_caption: "Hifadhi"
       embeddings:
-        back: "Iliyopita"
         save: "Hifadhi"
         delete: "Futa"
         edit: "Hariri"

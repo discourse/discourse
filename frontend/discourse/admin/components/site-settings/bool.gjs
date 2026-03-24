@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 
 export default class Bool extends Component {
@@ -28,7 +28,7 @@ export default class Bool extends Component {
         checked={{this.enabled}}
         disabled={{@disabled}}
       />
-      <span>{{htmlSafe @setting.description}}</span>
+      <span>{{trustHTML @setting.description}}</span>
     </label>
   </template>
 }

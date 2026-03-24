@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import PostVotingAnswerButton from "../components/post-voting-answer-button";
 import PostVotingAnswerHeader, {
   ORDER_BY_ACTIVITY_FILTER,
@@ -40,7 +40,7 @@ function customizePost(api) {
     "model:post",
     (Superclass) =>
       class extends Superclass {
-        @trackedArray comments;
+        @autoTrackedArray comments;
       }
   );
 

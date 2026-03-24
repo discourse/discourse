@@ -214,4 +214,30 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       end
     end
   end
+
+  describe "plugin javascript assets" do
+    it "has expected javascript asset" do
+      enabled_plugins = Discourse.plugins.filter(&:enabled?)
+
+      visit "/"
+      expect(page).to have_css("div.discourse-root", visible: :all) # Themes might hide it
+
+      plugin_script_tags =
+        page
+          .all(
+            "script[data-plugin-name], link[rel=modulepreload][data-plugin-name]",
+            visible: :all,
+            minimum: 0,
+          )
+          .map { |tag| tag["data-plugin-name"] }
+
+      enabled_plugins.each do |plugin|
+        if plugin.js_asset_exists?
+          expect(plugin_script_tags).to include(plugin.name)
+        else
+          expect(plugin_script_tags).not_to include(plugin.name)
+        end
+      end
+    end
+  end
 end

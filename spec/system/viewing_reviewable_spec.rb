@@ -2,7 +2,7 @@
 
 require "discourse_ip_info"
 
-describe "Viewing reviewable item", type: :system do
+describe "Viewing reviewable item" do
   fab!(:admin)
   fab!(:moderator)
   fab!(:group)
@@ -270,11 +270,10 @@ describe "Viewing reviewable item", type: :system do
         end
 
         it "does not show IP information" do
-          visit "/"
           review_page.visit_reviewable(reviewable_flagged_post)
           review_page.click_insights_tab
 
-          expect(page).not_to have_text("The requested URL or resource could not be found.")
+          expect(review_page).to have_no_ip_lookup_info
         end
       end
     end

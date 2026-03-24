@@ -5,13 +5,20 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Löse eine Automatisierung über die API aus"
   js:
     admin:
       logs:
         staff_actions:
           actions:
             create_automation: Automatisierung erstellen
-            update_automation: automatisierung aktualisieren
+            update_automation: Automatisierung aktualisieren
             delete_automation: Automatisierung löschen
     discourse_automation:
       title: Automatisierung
@@ -457,6 +464,9 @@ de:
           runs_today: "%{count} heute"
           runs_this_week: "%{count} diese Woche"
           runs_this_month: "%{count} diesen Monat"
+          recent_errors:
+            one: "%{count} Fehler in letzter Zeit"
+            other: "%{count} Fehler in letzter Zeit"
           runs:
             label: Ausführungen
           name:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Editing sidebar tags navigation", type: :system do
+RSpec.describe "Editing sidebar tags navigation" do
   fab!(:user)
   fab!(:tag1) { Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) } }
 

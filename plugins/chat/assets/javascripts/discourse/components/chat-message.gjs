@@ -186,6 +186,7 @@ export default class ChatMessage extends Component {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
     cancel(this._makeMessageActiveHandler);
+    cancel(this._onMouseEnterMessageDebouncedHandler);
     this.#teardownMentionedUsers();
     this.chat.activeMessage = null;
   }
@@ -272,7 +273,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+    if (
+      this.chat.activeMessage?.model?.id === this.args.message.id &&
+      this.chat.activeMessage?.context === this.args.context
+    ) {
       return;
     }
 
@@ -295,7 +299,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+    if (
+      this.chat.activeMessage?.model?.id === this.args.message.id &&
+      this.chat.activeMessage?.context === this.args.context
+    ) {
       return;
     }
 
@@ -359,6 +366,7 @@ export default class ChatMessage extends Component {
 
     this.chat.activeMessage = {
       model: this.args.message,
+      hideUserInfo: this.hideUserInfo,
       context: this.args.context,
     };
   }

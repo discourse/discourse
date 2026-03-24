@@ -42,6 +42,11 @@ $padding-pills-small: var(--space-half) var(--space-2);
     border-bottom: 1px solid var(--primary-low);
   }
 
+  &.selected {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 12px 1px var(--topic-card-shadow);
+  }
+
   .bulk-select-enabled & {
     > .bulk-select {
       display: none;
@@ -186,6 +191,10 @@ $padding-pills-small: var(--space-half) var(--space-2);
     a {
       color: var(--primary);
       word-break: break-word;
+
+      > * {
+        pointer-events: none;
+      }
     }
 
     .topic-status.--pinned,
@@ -197,9 +206,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   .topic-excerpt {
-    span {
-      word-break: break-word;
-    }
+    overflow-wrap: anywhere;
 
     .--high-context & {
       color: var(--primary-high);

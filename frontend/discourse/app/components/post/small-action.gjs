@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
+import { trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserAvatar from "discourse/components/user-avatar";
@@ -58,7 +58,7 @@ export function resetGroupPostSmallActionCodes() {
 export default class PostSmallAction extends Component {
   @service a11y;
 
-  decoratorState = new TrackedMap();
+  decoratorState = trackedMap();
 
   @cached
   get CustomComponent() {
@@ -118,7 +118,7 @@ export default class PostSmallAction extends Component {
       }
     }
 
-    return htmlSafe(
+    return trustHTML(
       i18n(`action_codes.${this.code}`, { who, when, path: this.path })
     );
   }
@@ -198,7 +198,7 @@ export default class PostSmallAction extends Component {
               {{else}}
                 {{! aria-hidden is set to true because the a11y heading text is
                   almost the same as the description}}
-                <p aria-hidden="true">{{htmlSafe this.description}}</p>
+                <p aria-hidden="true">{{trustHTML this.description}}</p>
               {{/if}}
             </div>
             <div class="small-action-buttons">

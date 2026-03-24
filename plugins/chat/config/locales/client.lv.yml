@@ -21,6 +21,7 @@ lv:
         yesterday: "Vakar"
       create: "Izveidot"
       cancel: "Atcelt"
+      pinned: "Piesprausts"
       channel_settings:
         edit: "Rediģēt"
         add: "Pievienot"

@@ -2,7 +2,8 @@ import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -13,8 +14,39 @@ import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
-export default class ToolbarPopupmenuOptions extends Component {
+export default class ToolbarPopupMenuOptions extends Component {
   @service capabilities;
+
+  trackScrollability = modifier((element) => {
+    const innerContent = element.closest(".fk-d-menu__inner-content");
+    const menuElement = innerContent?.parentElement;
+    if (!innerContent || !menuElement) {
+      return;
+    }
+
+    const checkScroll = () => {
+      const { scrollHeight, scrollTop, clientHeight } = innerContent;
+      const hasOverflow = scrollHeight > clientHeight;
+      menuElement.classList.toggle(
+        "--scroll-top",
+        hasOverflow && scrollTop > 2
+      );
+      menuElement.classList.toggle(
+        "--scroll-bottom",
+        hasOverflow && scrollHeight - scrollTop - clientHeight > 2
+      );
+    };
+
+    const observer = new ResizeObserver(checkScroll);
+    observer.observe(innerContent);
+    innerContent.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
+
+    return () => {
+      observer.disconnect();
+      innerContent.removeEventListener("scroll", checkScroll);
+    };
+  });
 
   willDestroy() {
     super.willDestroy();
@@ -103,7 +135,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       });
     }
 
-    return htmlSafe(htmlLabel);
+    return trustHTML(htmlLabel);
   }
 
   get convertedContent() {
@@ -150,7 +182,7 @@ export default class ToolbarPopupmenuOptions extends Component {
         {{icon (this.getIcon this.args)}}
       </:trigger>
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DropdownMenu {{this.trackScrollability}} as |dropdown|>
           {{#each this.convertedContent as |option|}}
             <dropdown.item>
               <DButton

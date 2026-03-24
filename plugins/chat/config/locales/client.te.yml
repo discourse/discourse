@@ -22,6 +22,7 @@ te:
         yesterday: "నిన్న"
       create: "సృష్టించండి"
       cancel: "రద్దుచేయి"
+      pinned: "పిన్ చేయబడింది"
       channel_settings:
         edit: "సవరణ"
         add: "కలుపు"

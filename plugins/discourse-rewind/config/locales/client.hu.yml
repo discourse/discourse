@@ -5,27 +5,237 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Visszatekintés"
   js:
     discourse_rewind:
+      placeholder: Discourse Visszatekintés
+      title: Visszatekintés
+      viewing_other_user: "Jelenleg <strong>%{username}</strong> Discourse Visszatekintését nézed."
+      cannot_view_rewind: >
+        Nem tekintheted meg ezt a Discourse Visszatekintést. Lehet, hogy a tulajdonos nem osztotta meg nyilvánosan?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Discourse Visszatekintés engedélyezése. Ez az év végi tevékenységek összefoglalóját jeleníti meg a profilodban és az avatárodon."
+        share_publicly: "Oszd meg a Discourse Visszatekintésed más fórumtagokkal. Bármelyik fórumtag megtekintheti a Discourse Visszatekintés összefoglalódat."
+        cannot_share_when_profile_hidden: "A Visszatekintés megosztásához engedélyezned kell másoknak a nyilvános profilod megtekintését."
+      profile_link: "%{rewindYear} évi Discourse Visszatekintésed"
       share:
         toggle_label:
           private: "Privát"
           public: "Nyilvános"
+        confirm: "Megosztás előtt mindenképpen nézd át a Visszatekintést, mivel tartalmazhat személyes üzenetekből származó adatokat. Bármikor visszaállíthatod privátra."
+        confirm_button:
+          enable: "Legyen nyilvános"
+          disable: "Maradjon titokban"
+        enabled_success: "A Visszatekintésed mostantól megosztható a többi fórumtaggal."
+        disabled_success: "A Visszatekintésed mostantól titkos."
       reports:
+        activity_calendar:
+          title: Tevékenységi naptár
+          cell_title:
+            visited_no_posts: "Megátogattad és böngészted a(z) %{date} oldalt, de nem írtál bejegyzéseket."
+            visited_no_posts_others: "%{username} meglátogatta és nézelődött ekkor: %{date}, de nem tett közzé bejegyzéseket."
+            visited_with_posts:
+              one: "%{count} bejegyzést tettél közzé ekkor: %{date}"
+              other: "%{count} bejegyzést tettél közzé ekkor: %{date}"
+            visited_with_posts_others:
+              one: "%{count} bejegyzést tett közzé %{username}, ekkor: %{date}"
+              other: "%{count} bejegyzést tett közzé %{username}, ekkor: %{date}"
+            no_activity: "Nem voltál ekkor az oldalon %{date}."
+            no_activity_others: "%{username} nem volt jelen %{date} napon."
+        top_words:
+          title: Szóhasználat
         reading_time:
           title: Olvasási Idő
+          book_comparison: "<code>%{readingTime}</code> időt töltöttél az oldalunkon olvasással! Ennyi időbe telne, ha végigolvasnál egy <i>%{bookTitle}</i> könyvet"
+          book_comparison_others: "%{username} ennyi időt töltött <code>%{readingTime}</code> az oldalunkon olvasással! Ennyi időbe telne elolvasni <i>%{bookTitle}</i>"
+        post_used_reactions:
+          title: Leggyakrabban használt reakciók a témákban
+          total_number: "Reakciók száma összesen: %{count}"
+        post_received_reactions:
+          title: A legtöbb reakciót kapott témák
+        fbff:
+          title: Az FBFF-ed (Fórum Legjobb Barátod Örökre)
+          title_others: "%{username}FBFF-je (Fórum Legjobb Barát Örökre)"
+        most_viewed_categories:
+          title:
+            one: A legnézettebb kategóriád
+            other: A %{count} legnézettebb kategóriád
+          title_others:
+            one: "%{username} legnézettebb kategóriája"
+            other: "%{username} %{count} legnézettebb kategóriái"
+        most_viewed_tags:
+          title:
+            one: A legtöbbet megtekintett címkéd
+            other: A %{count} legtöbbet megtekintett címkéd
+          title_others:
+            one: "%{username} legtöbbet megtekintett címkéje"
+            other: "%{username} %{count} legnézettebb címkéi"
+        best_topics:
+          view_topic: Téma megtekintése
+          title:
+            one: A legjobb témád
+            other: A %{count} legjobb témáid
+          title_others:
+            one: "%{username} legjobb témája"
+            other: "%{username} %{count} legjobb témái"
+        best_posts:
+          view_post: Bejegyzés megtekintése
+          title:
+            one: A legjobb bejegyzésed
+            other: A legjobb %{count} bejegyzéseid
+          title_others:
+            one: "%{username} legjobb bejegyzése"
+            other: "%{username} %{count} legjobb bejegyzései"
+        ai_usage:
+          title: AI használat
+          total_requests: Összes kérés
+          total_tokens: Összes token
+          success_rate: Sikerességi arány
+          favorite_features: Leggyakrabban használt funkciók
+          favorite_models: Leggyakrabban használt AI modellek
+          wake_up: "Ébresztő, %{username}..."
+          system_title: "AI HASZNÁLAT ÉSZLELVE"
+          section_features: "FŐBB JELLEMZŐK"
+          section_models: "TOP MODELLEK"
+        assignments:
+          title: Feladatok
+          total_assigned: Hozzám rendelve
+          total_assigned_others: "%{username} felhasználóhoz rendelve"
+          completed: Elvégzett feladatok
+          pending: Függőben lévő feladatok
+          assigned_by_user: Kiadott feladatok
+          completion_rate: Befejezési arány
         chat_usage:
+          title: Csevegési tevékenység
+          total_messages: Összes üzenet
+          dm_messages: Közvetlen üzenetek
+          unique_dm_channels: Közvetlen üzenetküldő beszélgetések
+          reactions_received: Beérkezett reakciók
+          avg_message_length: Átlagos üzenethossz
+          favorite_channels: Kedvenc csatornák
           messages: üzenetek
+          bot_name: XxRewindBotxX
           author: Ön
           author_others: "%{username}"
+          channel_title: "#csevegési-tevékenység"
           status_online: "● online"
+          message_1:
+            one: "<strong>%{count}</strong> üzenetet küldtél idén!"
+            other: "<strong>%{count}</strong> üzenetet küldtél idén!"
+          reply_1: "lol lenyűgöző B-)"
+          message_2_MF: |
+            { dm_count, plural,
+                one {<strong>#</strong> PÜ beszélgetésed volt}
+              other {<strong>#</strong> PÜ beszélgetéseid}
+            } valakivel { channel_count, plural,
+                one {<strong>#</strong> személlyel vagy csoporttal}
+              other {<strong>#</strong> különböző emberekkel vagy csoportokkal}
+            }.
+          reply_2: "cOo0oL :D"
+          message_3:
+            one: "Imádták az üzeneteidet! <strong>%{count}</strong> reakciót váltottál ki ❤️"
+            other: "Imádták az üzeneteidet! <strong>%{count}</strong> reakciót kaptál ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Az átlagos üzenethossz <strong>%{length}</strong> karakter volt"
+          message_5: "Kedvenc csatornáid:"
+          dancing_baby_alt: "Táncoló baba"
+        favorite_gifs:
+          title:
+            one: Kedvenc GIF-ed
+            other: A %{count} kedvenc GIF-eid
+          title_others:
+            one: "%{username} kedvenc GIF-je"
+            other: "%{username} %{count} kedvenc GIF-jei"
+          total_usage:
+            one: '%{count} felhasznált idő'
+            other: '%{count} felhasznált idő összesen'
         invites:
           title: Meghívók
+          total_invites: Összes elküldött meghívó
+          redeemed: Felhasznált meghívók
+          redemption_rate: Elfogadási arány
+          avg_trust_level: Átlagos bizalmi szint
+          invitee_impact: A meghívottaid hatása
+          invitee_impact_others: "%{username} meghívottjainak hatása"
           invitee_posts: Létrehozott bejegyzések
+          invitee_topics: Elindított témák
           invitee_likes: Adott tetszésnyilvánítások
+          most_active_invitee: Legaktívabb meghívott
+          guest_book_title: Vendégkönyv
+          guest_book_subtitle: Közösségi meghívóid
+          guest_book_subtitle_others: "%{username} közösségi meghívói"
           label_invitations_sent: "Meghívók elküldve:"
+          label_guests_joined: "Elfogadott meghívók:"
+          label_acceptance_rate: "Elfogadási arány:"
+          section_contributions: Meghívottak hozzájárulása
+          label_posts_written: "Írt bejegyzések:"
+          label_topics_started: "Elindított témák:"
+          label_likes_given: "Adott lájkok:"
+          section_most_active: Legaktívabb vendég
         new_user_interactions:
+          title: Új felhasználók mentorálása
+          subtitle:
+            one: '%{count} új felhasználónak segítettél idén'
+            other: '%{count} új felhasználónak segítettél idén'
+          subtitle_others:
+            one: "%{username}, %{count} új felhasználónak segített idén"
+            other: "%{username}, %{count} új felhasználónak segített idén"
+          new_member:
+            one: "%{count} új tag"
+            other: "%{count} új tag"
+          total_interactions: Összes interakció
+          unique_new_users: Egyedi új felhasználók
           likes_given: Adott tetszésnyilvánítások
+          replies: Hozzászólás bejegyzésekhez
           mentions: Említések
+          topics_with_new_users: Új felhasználók témái
+          contributions_helped: a hozzájárulásaid segítettek
+          contributions_helped_others: "%{username} hozzájárulásai segítettek"
+        time_of_day_activity:
+          title: Napi tevékenység ritmusa
+          play_button: Játssza le tevékenységét hangként
+          play_button_others: "%{username} tevékenységének lejátszása hangként"
+          stop_button: Hanglejátszás leállítása
         writing_analysis:
+          title: Íráselemzés
+          menu_file: Fájl
           menu_other: Egyéb
+          menu_additional: További
+          menu_opening: MEGNYITÁS
+          help_text: Nyomja meg az F1 gombot a segítségért
+          app_name: DiscoStar Professional
+          total_words: Összes szó
+          total_posts: Összes bejegyzés
+          avg_post_length: Átlagos bejegyzéshossz
+          readability_score_label: Olvashatósági pontszám
+          readability_level: Olvashatósági szint
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "CS Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R. R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virginia Woolf"
+              4: "Gabriel García Márquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fjodor Dosztojevszkij"

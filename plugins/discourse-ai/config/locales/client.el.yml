@@ -10,7 +10,7 @@ el:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Επιτρέπει την αναζήτηση AI"
       site_settings:
         categories:
@@ -60,6 +60,13 @@ el:
               label: "Κατηγορίες"
             tags:
               label: "Ετικέτες"
+            debug_mode:
+              label: "Λειτουργία Αποσφαλμάτωσης"
+              description: "Ενεργοποιήστε τη λειτουργία αποσφαλμάτωσης για να δείτε την ακατέργαστη είσοδο και έξοδο του LLM"
+        ai_tool_action:
+          fields:
+            tool:
+              description: "Το εργαλείο AI που θα εκτελείται όταν πυροδοτείται ο αυτοματισμός"
         llm_triage:
           fields:
             category:
@@ -68,6 +75,7 @@ el:
               label: "Ετικέτες"
             canned_reply:
               label: "Απάντηση"
+              description: "Ακατέργαστο κείμενο της έτοιμης απάντησης που θα δημοσιευτεί στο θέμα"
             flag_type:
               label: "Τύπος αναφοράς"
               description: "Τύπος σημαίας που θα εφαρμοστεί στην ανάρτηση (ανεπιθύμητο ή απλώς αναγγελία για έλεγχο)"
@@ -87,11 +95,10 @@ el:
       llm_selector:
         none: "Κανένα"
       features:
-        back: "Πίσω"
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
         disabled: "(απενεργοποιημένο)"
         groups: "Ομάδες:"
-        no_persona: "Δεν έχει οριστεί"
+        no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
         edit: "Ρυθμίσεις"
         expand_list:
@@ -107,7 +114,10 @@ el:
           name: "Αναζήτηση"
         ai_helper:
           setting_groups:
+            access_permissions: "Πρόσβαση & Δικαιώματα"
             automation: "Αυτοματισμός"
+        translation:
+          post_raw_translator: "Μεταφραστής ακατέργαστης ανάρτησης"
         spam:
           name: "Ανεπιθύμητα"
       modals:
@@ -146,8 +156,7 @@ el:
         periods:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
-      ai_persona:
-        back: "Πίσω"
+      ai_agent:
         name: "Όνομα"
         edit: "Επεξεργασία"
         export: "Εξαγωγή"
@@ -155,6 +164,7 @@ el:
         description: "Περιγραφή"
         mentionable: Να επιτρέπονται επισημάνσεις
         user: Χρήστης
+        allow_chat_direct_messages: "Να επιτρέπονται τα άμεσα μηνύματα συνομιλίας"
         allow_chat_channel_mentions: "Να επιτρέπονται επισημάνσεις καναλιών συνομιλίας"
         allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
@@ -167,13 +177,11 @@ el:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
-          no_results: "Καμία περσόνα δεν αντιστοιχεί με τα φίλτρα σας."
       rag:
         uploads:
           title: "Μεταφορτώσεις"
           uploading: "Επιφόρτωση..."
       tools:
-        back: "Πίσω"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
@@ -183,13 +191,14 @@ el:
         save: "Αποθήκευση"
         remove_parameter: "Αφαίρεση"
         parameter_required: "Απαιτείται"
+        credential_not_set: "(δεν έχει οριστεί)"
         edit: "Επεξεργασία"
+        test: "Δοκιμή"
         delete: "Σβήσιμο"
       secrets:
         short_title: "Διαπιστευτήρια"
         name: "Όνομα"
         secret: "Τιμή"
-        back: "Πίσω"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: "Σβήσιμο"
@@ -197,9 +206,9 @@ el:
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
+        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        back: "Πίσω"
         delete: Σβήσιμο
         quotas:
           group: "Ομάδα"
@@ -240,7 +249,6 @@ el:
         image_caption:
           save_caption: "Αποθήκευση"
       embeddings:
-        back: "Πίσω"
         save: "Αποθήκευση"
         delete: "Σβήσιμο"
         edit: "Επεξεργασία"
@@ -250,13 +258,21 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
-        semantic_search_loading: "Γίνεται αναζήτηση περισσότερων αποτελεσμάτων χρησιμοποιώντας AI"
       ai_bot:
+        title: "AI bot"
         llm: "Μοντέλο"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
         shortcut_link: "AI bot"
+        debug_ai: "Προβολή ακατέργαστου AI αιτήματος και απάντησης"
         debug_ai_modal:
+          title: "Προβολή αλληλεπίδρασης AI"
+          copy_request: "Αντιγραφή αιτήματος"
+          copy_response: "Αντιγραφή απάντησης"
+          request_tokens: "Διακριτικά αιτήματος:"
+          response_tokens: "Διακριτικά απάντησης:"
+          cache_read_tokens: "Διακριτικά ανάγνωσης προσωρινής μνήμης:"
+          cache_write_tokens: "Διακριτικά εγγραφής προσωρινής μνήμης:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"
@@ -266,6 +282,7 @@ el:
         share_modal:
           copy: "Αντιγραφή"
         conversations:
+          placeholder: "Κάντε μια ερώτηση..."
           messages_sidebar_title: "Συζητήσεις"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"

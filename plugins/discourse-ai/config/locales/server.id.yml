@@ -52,7 +52,7 @@ id:
         attribution: "Keterangan oleh AI"
     ai_bot:
       default_pm_prefix: "[PM bot AI tanpa judul]"
-      personas:
+      agents:
         default_llm_required: "Model LLM default diperlukan sebelum mengaktifkan Obrolan"
       tool_options:
         search:
@@ -70,6 +70,40 @@ id:
       tool_description:
         github_search_files: "Mencari '%{keywords}' di %{repo}/%{branch}"
         github_search_code: "Mencari '%{query}' di %{repo}"
+      close_topic:
+        errors:
+          not_found: "Tidak ada topik."
+      unlist_topic:
+        errors:
+          not_found: "Tidak ada topik."
+      delete_topic:
+        errors:
+          not_found: "Tidak ada topik."
+      edit_tags:
+        errors:
+          not_found: "Tidak ada topik."
+      edit_category:
+        errors:
+          not_found: "Tidak ada topik."
+          category_not_found: "Kategori tidak ditemukan."
+      set_topic_timer:
+        errors:
+          not_found: "Tidak ada topik."
+      set_slow_mode:
+        errors:
+          not_found: "Tidak ada topik."
+      move_posts:
+        errors:
+          not_found: "Tidak ada topik."
+      assign:
+        errors:
+          not_found: "Tidak ada topik."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Terima"
+        reject:
+          title: "Tolak"
     summarization:
       chat:
         no_targets: "Tidak ada pesan selama periode yang dipilih."

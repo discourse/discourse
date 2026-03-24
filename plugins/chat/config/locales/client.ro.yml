@@ -27,6 +27,7 @@ ro:
         yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulează"
+      pinned: "Fixat"
       move_to_channel:
         instructions:
           one: "Mutați <strong>%{count}</strong> mesaj. Selectați un canal de destinație. Un mesaj placeholder va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că acest mesaj a fost mutat. Retineți că lanțurile de răspuns nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca raspunsuri la mesajele mutate."

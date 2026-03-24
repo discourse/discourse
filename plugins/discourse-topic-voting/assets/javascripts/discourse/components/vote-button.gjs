@@ -15,9 +15,10 @@ export default class VoteBox extends Component {
 
   @tracked hasVoted = false;
   @tracked hasSeenSuccessMenu = false;
-  topic = this.args.topic;
 
-  alreadyVoted = this.topic.user_voted;
+  get topic() {
+    return this.args.topic;
+  }
 
   get buttonContent() {
     const content = {};
@@ -58,6 +59,11 @@ export default class VoteBox extends Component {
 
   @action
   onShowMenu() {
+    if (!this.topic.user_voted) {
+      this.hasVoted = false;
+      this.hasSeenSuccessMenu = false;
+    }
+
     applyBehaviorTransformer("topic-vote-button-click", () => {
       if (!this.currentUser) {
         return this.args.showLogin();
@@ -174,14 +180,16 @@ export default class VoteBox extends Component {
                 class="btn-transparent see-votes topic-voting-menu__row-btn"
               />
             </dropdown.item>
-            <dropdown.item class="topic-voting-menu__row">
-              <DButton
-                @translatedLabel={{i18n "topic_voting.remove_vote"}}
-                @action={{this.removeVote}}
-                @icon="arrow-rotate-left"
-                class="btn-transparent remove-vote topic-voting-menu__row-btn --danger"
-              />
-            </dropdown.item>
+            {{#if this.topic.user_voted}}
+              <dropdown.item class="topic-voting-menu__row">
+                <DButton
+                  @translatedLabel={{i18n "topic_voting.remove_vote"}}
+                  @action={{this.removeVote}}
+                  @icon="arrow-rotate-left"
+                  class="btn-transparent remove-vote topic-voting-menu__row-btn --danger"
+                />
+              </dropdown.item>
+            {{/if}}
           {{/if}}
         </DropdownMenu>
       </:content>

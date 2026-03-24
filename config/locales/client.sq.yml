@@ -6,6 +6,12 @@
 
 sq:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "në"
+        hidden: "fshehur"
+        failed: "dështoi"
     number:
       format:
         separator: "."
@@ -296,6 +302,8 @@ sq:
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
     admin_onboarding_banner:
+      start_posting:
+        back: "Kthehu mbrapa"
       spread_the_word:
         action: "Kopjoni lidhjen"
         copied_to_clipboard: "Linku u kopjua në memo!"
@@ -524,7 +532,6 @@ sq:
       filtered_flagged_by: "Shënuar nga"
       explain:
         why: "shpjegoni pse ky artikull përfundoi në radhë"
-        title: "Vlerësimi i rishikueshëm"
         formula: "Formula"
         subtotal: "Nëntotali"
         total: "Total"
@@ -538,17 +545,14 @@ sq:
           title: "Përdoruesve me shënimet e të cilëve janë rënë dakord historikisht u jepet një bonus."
         trust_level_bonus:
           name: "niveli i besimit"
-          title: "Artikujt e rishikueshëm të krijuar nga përdoruesit e nivelit më të lartë të besimit kanë një rezultat më të lartë."
         type_bonus:
           name: "lloji i bonusit"
-          title: "Disa lloje të rishikueshme mund t'u caktohen një bonus nga stafi për t'i bërë ato një prioritet më të lartë."
       revise_and_reject_post:
         title: "Rishikoni"
         reason: "Arsye"
         send_pm: "Dërgo PM"
         feedback: "Reagime"
         optional: "opsionale"
-      stale_help: "Ky artikull i rishikueshëm është zgjidhur nga <b>%{username}</b>."
       claim_help:
         optional: "Ju mund ta përvetësoni këtë artikull për të parandaluar të tjerët ta shqyrtojnë atë."
         required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
@@ -1464,6 +1468,8 @@ sq:
         tags: "Etiketat"
         interface: "Ndërfaqja"
         apps: "Aplikimet"
+      calendar_subscriptions:
+        copied: "Kopjuar!"
       change_password:
         success: "(emaili u dërgua)"
         in_progress: "(duke dërguar emailin)"
@@ -2052,6 +2058,7 @@ sq:
     form_kit:
       reset: Rivendosni
       optional: opsionale
+      required: i nevojshëm
       dirty_form: "Nuk i keni dorëzuar ndryshimet tuaja! Jeni të sigurt që dëshironi të largoheni?"
       errors:
         required: "E nevojshme"
@@ -2829,8 +2836,6 @@ sq:
         max_views:
           placeholder: maksimale
           aria_label: Filtro sipas shikimeve maksimale
-        additional_options:
-          label: "Filtro sipas numrit të postimeve dhe shikimeve të temës"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
@@ -2892,11 +2897,8 @@ sq:
         confirm: "Konfirmo"
         select_all: "Zgjidh të gjitha"
         clear_all: "Pastro kriteret"
-        unlist_topics: "Hiq temat nga lista"
-        relist_topics: "Relistoni temat"
         reset_bump_dates: "Rivendos datat e përplasjes"
         defer: "Shëno si të palexuar"
-        delete: "Fshi temat"
         delete_topics_count:
           one: "Fshi temën"
           other: "Fshi temat"
@@ -2929,29 +2931,18 @@ sq:
           other: "Hiq të Ri (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Veprime në masë"
-        change_category: "Cakto kategorinë…"
-        close_topics: "Mbyll temat"
-        archive_topics: "Arkivo temat"
         move_messages_to_inbox: "Transfero në inbox"
         archive_messages: "Kaloni te Arkivi"
-        notification_level: "Njoftimet…"
         change_notification_level: "Ndrysho nivelin e njoftimit"
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
-        selected:
-          one: "Keni zgjedhur <b>%{count}</b> temë."
-          other: "Keni zgjedhur <b>%{count}</b> tema."
         selected_sole_category:
           one: "Keni zgjedhur <b>%{count}</b> temë:"
           other: "Keni zgjedhur <b>%{count}</b> tema:"
         selected_count:
           one: "%{count} zgjedhur"
           other: "%{count} zgjedhur"
-        change_tags: "Zëvendësoni etiketat"
-        append_tags: "Shtoj Etiketa"
         choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
-        choose_append_tags: "Zgjidhni etiketat e reja për të shtuar për këto tema:"
         changed_tags: "Etiketat e temave u ndryshuan. "
-        remove_tags: "Hiqni të gjitha etiketat"
         confirm_remove_tags:
           one: "Të gjitha etiketat do të hiqen nga kjo temë. A jeni të sigurt?"
           other: "Të gjitha etiketat do të hiqen nga temat %{count} . A jeni të sigurt?"
@@ -2980,7 +2971,6 @@ sq:
         name: "Hiqe"
       close_topics:
         name: "Mbyll"
-        note: "Shënim"
         optional: (opsionale)
       archive_topics:
         name: "Arkivoni"
@@ -2994,24 +2984,18 @@ sq:
         name: "Relistoni"
       remove_tags:
         name: "Hiqni etiketat"
-      append_tags:
-        name: "Shtoni etiketat"
       replace_tags:
         name: "Zëvendësoni etiketat"
       delete_topics:
         name: "Fshij"
       update_category:
         name: "Përditëso kategorinë"
-        description: "Zgjidhni kategorinë e re për temat e zgjedhura"
       reset_bump_dates:
         name: "Rivendos datat e përplasjes"
-        description: "Rivendosni datën e ngritjes së temës në datën e fundit të postimit të krijuar, gjë që ndikon në renditjen në listën e temave"
       defer:
         name: "Shënoni të palexuar"
-        description: "Shënoni temat si të palexuara"
       update_notifications:
         name: "Përditëso Njoftimet"
-        description: "Ndrysho nivelin e njoftimit në Në Shikim, Në Ndjekje, Normal ose Në Heshtje"
     topic:
       filter_to:
         one: "%{count} postim në temë"
@@ -3504,6 +3488,8 @@ sq:
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
+      description_expand: "Shfaq më shumë"
+      description_collapse: "Shfaq më pak"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"
       security: "Siguria"
       permissions:
@@ -3799,6 +3785,15 @@ sq:
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
+      description: "Përshkrimi"
+      settings:
+        title: "Rregullimet"
+        general: "Karakteristika të përgjithshme"
+        back: "Kthehu mbrapa"
+        name: "Emri"
+      localization:
+        name: "Emri"
+        description: "Përshkrimi"
       sort_by: "Rendit sipas:"
       sort_by_count: "numri"
       sort_by_name: "emër"
@@ -3942,7 +3937,6 @@ sq:
         categories: "Të gjitha kategoritë"
   admin_js:
     settings: "Rregullimet"
-    reset_filter: "Rivendosni"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -3950,6 +3944,10 @@ sq:
         remove_muted_tags_from_latest:
           always: "gjithmonë"
           never: "asnjëherë"
+      reports:
+        group_traffic: "Trafik"
+        group_members: "Anëtarë"
+        group_other: "Të tjerë"
       config_sections:
         account:
           title: "Llogaria"
@@ -4034,6 +4032,10 @@ sq:
           sub_pages:
             logs:
               title: "Ditari"
+        reports:
+          sub_pages:
+            settings:
+              title: "Rregullimet"
         badges:
           title: "Stemat"
         permalinks:
@@ -4111,7 +4113,7 @@ sq:
           all: "Të Gjithë"
           view_table: "tabelë"
           view_graph: "grafik"
-          refresh_report: "Rifresko raportin"
+          refresh_report: "Rifresko"
           daily: Ditore
           monthly: Mujore
           weekly: Javore

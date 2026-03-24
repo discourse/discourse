@@ -52,7 +52,7 @@ module DiscourseSubscriptions
       def destroy
         params.require(:id)
         begin
-          refund_subscription(params[:id]) if params[:refund]
+          refund_subscription(params[:id]) if ActiveModel::Type::Boolean.new.cast(params[:refund])
           subscription = ::Stripe::Subscription.cancel(params[:id])
 
           customer =

@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
 import Actions from "./actions";
+import Informative from "./informative";
 
 export default class Block extends Component {
   get blockForType() {
     switch (this.args.definition.type) {
       case "actions":
         return Actions;
+      case "informative":
+        return Informative;
       default:
         throw new Error(`Unknown block type: ${this.args.definition.type}`);
     }

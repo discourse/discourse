@@ -104,6 +104,16 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
 
         expect(created_def).to be_nil
       end
+
+      it "rejects a SQL injection payload in pg_function" do
+        post "/admin/plugins/discourse-ai/ai-embeddings.json",
+             params: {
+               ai_embedding: valid_attrs.merge(pg_function: "'; DROP TABLE users; --"),
+             }
+
+        expect(response.status).to eq(422)
+        expect(EmbeddingDefinition.last).to be_nil
+      end
     end
   end
 
@@ -224,15 +234,26 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
     end
   end
 
-  describe "GET #test" do
+  describe "POST #test" do
+    it "is not accessible via GET" do
+      WebMock.stub_request(:post, valid_attrs[:url]).to_return(status: 200, body: [[1]].to_json)
+
+      get "/admin/plugins/discourse-ai/ai-embeddings/test.json",
+          params: {
+            ai_embedding: valid_attrs,
+          }
+
+      expect(response.status).to eq(404)
+    end
+
     context "when we can generate an embedding" do
       it "returns a success true flag" do
         WebMock.stub_request(:post, valid_attrs[:url]).to_return(status: 200, body: [[1]].to_json)
 
-        get "/admin/plugins/discourse-ai/ai-embeddings/test.json",
-            params: {
-              ai_embedding: valid_attrs,
-            }
+        post "/admin/plugins/discourse-ai/ai-embeddings/test.json",
+             params: {
+               ai_embedding: valid_attrs,
+             }
 
         expect(response).to be_successful
         expect(response.parsed_body["success"]).to eq(true)
@@ -248,10 +269,10 @@ RSpec.describe DiscourseAi::Admin::AiEmbeddingsController do
           body: error_message.to_json,
         )
 
-        get "/admin/plugins/discourse-ai/ai-embeddings/test.json",
-            params: {
-              ai_embedding: valid_attrs,
-            }
+        post "/admin/plugins/discourse-ai/ai-embeddings/test.json",
+             params: {
+               ai_embedding: valid_attrs,
+             }
 
         expect(response).to be_successful
         expect(response.parsed_body["success"]).to eq(false)

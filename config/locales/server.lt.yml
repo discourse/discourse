@@ -878,7 +878,9 @@ lt:
         flagger: Pranešėjas
     visits:
       title: "Nario aplankymai"
-      xaxis: "Diena"
+      xaxis:
+        desktop: "Darbalaukis"
+        mobile: "Mobilus"
       yaxis: "Apsilankymai"
     signups:
       title: "Registracijos"
@@ -922,10 +924,8 @@ lt:
       yaxis: "Diena"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Diena"
       yaxis: "DAU/MAU"
-      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >20 proc."
     daily_engaged_users:
       title: "Kasdien dalyvaujantys vartotojai"
       xaxis: "Diena"
@@ -1391,8 +1391,6 @@ lt:
       invalid_string_min_max: "Turi būti tarp %{min} ir %{max} simbolių."
       invalid_json: "Netinkamas JSON."
       invalid_reply_by_email_address: "Reikšmę turi sudaryti „%{reply_key}“ ir ji turi skirtis nuo pranešimo el. pašto."
-      max_username_length_exists: "Negalite nustatyti maksimalaus vartotojo vardo ilgio žemiau ilgiausio vartotojo vardo (%{username})."
-      max_username_length_range: "Negalite nustatyti didžiausios vertės žemiau minimumo."
       invalid_hex_value: "Spalvų reikšmės turi būti 6 skaitmenų šešioliktainiai kodai."
       empty_selectable_avatars: "Prieš įgalindami šį nustatymą, pirmiausia turite įkelti bent du pasirinktus avatarus."
       allowed_unicode_usernames:
@@ -2510,8 +2508,6 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
-  dev_mode:
-    enter: "Įeiti"
   wizard:
     title: "Discourse sąranka"
     step:
@@ -2641,12 +2637,8 @@ lt:
         title: "Taip"
       approve_and_unhide:
         title: "Taip"
-      no_action_post:
-        title: "Jokių veiksmų"
       delete_post:
         complete: "Įrašas ištrintas"
-      no_action_user:
-        title: "Jokių veiksmų"
       delete_user:
         complete: "Naudotojas ištrintas"
   create_linked_topic:

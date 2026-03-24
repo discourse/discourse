@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Admin::RagDocumentFragmentsController do
   fab!(:admin)
-  fab!(:ai_persona)
+  fab!(:ai_agent)
 
   fab!(:vector_def, :embedding_definition)
 
@@ -16,8 +16,8 @@ RSpec.describe DiscourseAi::Admin::RagDocumentFragmentsController do
   after { @cleanup_files&.each(&:unlink) }
 
   describe "GET #indexing_status_check" do
-    it "works for AiPersona" do
-      get "/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=AiPersona&target_id=#{ai_persona.id}"
+    it "works for AiAgent" do
+      get "/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=AiAgent&target_id=#{ai_agent.id}"
 
       expect(response.parsed_body).to eq({})
       expect(response.status).to eq(200)

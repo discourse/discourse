@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  solved: "حل شده"
+  posted: "ارسال شده"
+  vote_count:
+    one: "%{count} رای"
+    other: "%{count} رای"
+  like_count:
+    one: "%{count} پسندیده"
+    other: "%{count} پسندیده"
+  reply_count:
+    one: "%{count} پاسخ"
+    other: "%{count} پاسخ"

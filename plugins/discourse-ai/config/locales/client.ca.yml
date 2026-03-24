@@ -37,7 +37,6 @@ ca:
       llm_selector:
         none: "Cap"
       features:
-        back: "Enrere"
         disabled: "(desactivat)"
         groups: "Grups:"
         no_groups: "Cap"
@@ -83,8 +82,7 @@ ca:
         total: "Total"
         periods:
           last_day: "Últimes 24 hores"
-      ai_persona:
-        back: "Enrere"
+      ai_agent:
         name: "Nom"
         edit: "Edita"
         export: "Exporta"
@@ -105,7 +103,6 @@ ca:
           title: "Càrregues"
           uploading: "Carregant..."
       tools:
-        back: "Enrere"
         export: "Exporta"
         import: "Importa"
         name: "Nom"
@@ -115,12 +112,12 @@ ca:
         remove_parameter: "Elimina"
         parameter_required: "Necessari"
         edit: "Edita"
+        test: "Test"
         delete: "Suprimeix"
       secrets:
         short_title: "Credencials"
         name: "Nom"
         secret: "Valor"
-        back: "Enrere"
         save: "Desa"
         edit: "Edita"
         delete: "Suprimeix"
@@ -130,7 +127,6 @@ ca:
         provider: "Proveïdor"
         save: "Desa"
         edit: "Edita"
-        back: "Enrere"
         delete: Suprimeix
         quotas:
           group: "Grup"
@@ -160,7 +156,6 @@ ca:
         image_caption:
           save_caption: "Desa"
       embeddings:
-        back: "Enrere"
         save: "Desa"
         delete: "Suprimeix"
         edit: "Edita"

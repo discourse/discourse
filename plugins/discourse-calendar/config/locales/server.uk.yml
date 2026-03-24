@@ -5,9 +5,13 @@
 # https://translate.discourse.org/
 
 uk:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Читати стрічку подій календаря"
   reports:
     currently_away:
       title: Користувачі зараз відсутні
+      description: "Користувачі, які зараз у відпустці або у відпустці, яких можна фільтрувати за групами."
       labels:
         username: Імʼя користувача
   discourse_automation:

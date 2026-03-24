@@ -19,10 +19,52 @@ pt:
         image_generation_custom:
           name: "Personalizar"
     ai_bot:
+      agents:
+        custom_prompt:
+          name: "Janela personalizada"
+        smart_dates:
+          name: "Datas inteligentes"
+        translator:
+          name: "Tradutor"
+        locale_detector:
+          name: "Detetor de idioma"
       tool_summary:
         search: "Pesquisar"
         time: "Hora"
         summarize: "Resumir"
+      close_topic:
+        errors:
+          not_found: "Tópico não encontrado."
+      unlist_topic:
+        errors:
+          not_found: "Tópico não encontrado."
+      delete_topic:
+        errors:
+          not_found: "Tópico não encontrado."
+      edit_tags:
+        errors:
+          not_found: "Tópico não encontrado."
+      edit_category:
+        errors:
+          not_found: "Tópico não encontrado."
+      set_topic_timer:
+        errors:
+          not_found: "Tópico não encontrado."
+      set_slow_mode:
+        errors:
+          not_found: "Tópico não encontrado."
+      move_posts:
+        errors:
+          not_found: "Tópico não encontrado."
+      assign:
+        errors:
+          not_found: "Tópico não encontrado."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprovar"
+        reject:
+          title: "Rejeitar"
     ai_staff_action_logger:
       updated: "atualizado"
       removed: "removido"

@@ -7,6 +7,7 @@
 ar:
   discourse_subscriptions:
     customer_not_found: لم يتم العثور على العميل
+    subscription_not_found: لم يتم العثور على الاشتراك
     card:
       declined: تم رفض البطاقة
       invalid: البطاقة غير صالحة

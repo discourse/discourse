@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Themes", type: :system do
+describe "Admin Customize Themes" do
   fab!(:color_scheme) do
     Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
   end

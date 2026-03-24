@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
@@ -192,7 +192,7 @@ export default class UserPasskeys extends Component {
             <div class="passkey-left">
               <div class="row-passkey__name">{{passkey.name}}</div>
               <div class="row-passkey__created-date">
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "user.passkeys.added_date"
                     date=(formatDate
@@ -203,7 +203,7 @@ export default class UserPasskeys extends Component {
               </div>
               <div class="row-passkey__used-date">
                 {{#if passkey.last_used}}
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "user.passkeys.last_used_date"
                       date=(formatDate

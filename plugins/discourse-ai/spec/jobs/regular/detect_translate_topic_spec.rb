@@ -55,9 +55,24 @@ describe Jobs::DetectTranslateTopic do
     job.execute({ topic_id: topic.id })
   end
 
-  it "skips bot topics" do
+  it "skips bot topics by default" do
     topic.update!(user: Discourse.system_user)
     DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    job.execute({ topic_id: topic.id })
+  end
+
+  it "translates bot topics when force is true" do
+    topic.update!(user: Discourse.system_user)
+    DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).once
+
+    job.execute({ topic_id: topic.id, force: true })
+  end
+
+  it "translates bot topics when ai_translation_include_bot_content is true" do
+    SiteSetting.ai_translation_include_bot_content = true
+    topic.update!(user: Discourse.system_user)
+    DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).once
 
     job.execute({ topic_id: topic.id })
   end

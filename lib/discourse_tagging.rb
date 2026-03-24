@@ -635,7 +635,12 @@ module DiscourseTagging
       query_params = [builder_params[:selected_tag_ids]]
 
       if category_has_tag_groups
-        one_tag_per_group_sql << "AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?)"
+        one_tag_per_group_sql << if category.allow_global_tags
+          # Include both category tag groups AND global tag groups (not restricted to any category)
+          "AND (tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?) OR tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups))"
+        else
+          "AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = ?)"
+        end
         query_params << category.id
       end
 
@@ -804,7 +809,7 @@ module DiscourseTagging
     Discourse.cache.delete(TAGS_STAFF_CACHE_KEY)
   end
 
-  def self.clean_tag(tag)
+  def self.clean_tag(tag, truncate: true)
     tag = tag.dup
     tag.downcase! if SiteSetting.force_lowercase_tags
     tag.strip!
@@ -812,7 +817,7 @@ module DiscourseTagging
     tag.gsub!(/[^[:word:][:punct:]]+/, "")
     tag.gsub!(TAGS_FILTER_REGEXP, "")
     tag.squeeze!("-")
-    tag[0...SiteSetting.max_tag_length]
+    truncate ? tag[0...SiteSetting.max_tag_length] : tag
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})

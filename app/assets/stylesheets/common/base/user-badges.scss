@@ -165,6 +165,8 @@
     right: 0;
     bottom: 0;
     z-index: 1;
+    border-radius: var(--d-button-border-radius) 0 var(--d-button-border-radius)
+      0;
   }
 
   .badge-contents {
@@ -188,11 +190,15 @@
       }
     }
 
-    .badge-summary:has(a) {
-      // for summary links to be reachable
-      // they must be positioned above .badge-link:after
-      position: relative;
-      z-index: 1;
+    .badge-summary {
+      overflow-wrap: break-word;
+
+      &:has(a) {
+        // for summary links to be reachable
+        // they must be positioned above .badge-link:after
+        position: relative;
+        z-index: 1;
+      }
     }
 
     .badge-icon {
@@ -226,6 +232,7 @@
     }
 
     .badge-info {
+      min-width: 0;
       color: var(--primary);
 
       h3 {
@@ -251,6 +258,15 @@
       h3 {
         font-size: var(--font-up-3);
       }
+    }
+  }
+
+  &.--can-favorite {
+    // helps description text avoid favorite button overlap
+    .badge-summary {
+      width: 100%;
+      padding-right: var(--space-6);
+      box-sizing: border-box;
     }
   }
 }

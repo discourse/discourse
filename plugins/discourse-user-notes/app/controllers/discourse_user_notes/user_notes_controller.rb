@@ -19,7 +19,8 @@ module DiscourseUserNotes
       raise Discourse::NotFound if user.blank?
       extras = {}
       if post_id = params[:user_note][:post_id]
-        extras[:post_id] = post_id
+        post = Post.with_deleted.find_by(id: post_id)
+        extras[:post_id] = post_id if post && guardian.can_see_post?(post)
       end
       if reviewable_id = params[:user_note][:reviewable_id]
         extras[:reviewable_id] = reviewable_id
@@ -52,11 +53,13 @@ module DiscourseUserNotes
         Post.with_deleted.where(id: obj.map { |o| o[:post_id] }).each { |p| posts_by_id[p.id] = p }
         obj.each do |o|
           o[:created_by] = users_by_id[o[:created_by].to_i]
-          o[:post] = posts_by_id[o[:post_id].to_i]
+          post = posts_by_id[o[:post_id].to_i]
+          o[:post] = post if post && guardian.can_see_post?(post)
         end
       else
         obj[:created_by] = User.where(id: obj[:created_by]).first
-        obj[:post] = Post.with_deleted.where(id: obj[:post_id]).first
+        post = Post.with_deleted.where(id: obj[:post_id]).first
+        obj[:post] = post if post && guardian.can_see_post?(post)
       end
 
       serialize_data(obj, ::UserNoteSerializer)

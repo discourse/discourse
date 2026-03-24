@@ -6,6 +6,11 @@
 
 hy:
   js:
+    blocks:
+      ghost:
+        status: "Ստատուս"
+        hidden: "թաքցված"
+        failed: "ձախողված"
     number:
       format:
         separator: "."
@@ -292,6 +297,8 @@ hy:
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
     admin_onboarding_banner:
+      start_posting:
+        back: "Ետ"
       spread_the_word:
         action: "Պատճենել հղումը"
     about:
@@ -516,7 +523,6 @@ hy:
       in_reply_to: "ի պատասխան"
       explain:
         why: "Բացատրել, թե ինչու՞ է այդ էլեմենտը հայտնվել հերթի մեջ: "
-        title: "Ամփոփիչ Գնահատական"
         formula: "Բանաձև"
         subtotal: "Միջանկյալ հանրագումար "
         total: "Ամբողջը"
@@ -530,10 +536,8 @@ hy:
           title: "Օգտատերերը, ում գրավոր բողոքները համաձայնեցված են՝ կստանան բոնուս: "
         trust_level_bonus:
           name: "վստահության մակարդակ"
-          title: "Օգտատրիրոջ վստահության առավել մեծ մակարդակ ունենալու դեպքում, ստուգվող էլեմենտները ստանում են ավելի բարձր բալ: "
         type_bonus:
           name: "բոնուսի տեսակը"
-          title: "Որոշ ստուգվող տեսակների դեպքում, աշխատակիցներին կարող են բոնուս նշանակվել, որպեսզի նրանք գերակայության հասնեն: "
       revise_and_reject_post:
         title: "Վերանայել"
         reason: "Պատճառ"
@@ -542,7 +546,6 @@ hy:
         custom_reason: "Տվեք պատճառի հստակ նկարագրությունը"
         other_reason: "Այլ..."
         optional: "ընտրովի"
-      stale_help: "Այս վերանայումը լուծվել է <b>%{username}</b>- ի կողմից:"
       claim_help:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
         required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
@@ -1439,6 +1442,8 @@ hy:
         tags: "Պիտակներ"
         interface: "Ինտերֆեյս"
         apps: "Հավելվածներ"
+      calendar_subscriptions:
+        copied: "Պատճենված է!"
       change_password:
         success: "(էլ. նամակն ուղարկված է)"
         in_progress: "(էլ. նամակն ուղարկվում է)"
@@ -1968,6 +1973,7 @@ hy:
     form_kit:
       reset: Զրոյացնել
       optional: ընտրովի
+      required: պարտադիր է
       errors:
         required: "Պարտադիր"
         too_short:
@@ -2519,8 +2525,6 @@ hy:
         max_views:
           placeholder: առավելագույնը
           aria_label: զտել ըստ առավելագույն դիտումների
-        additional_options:
-          label: "Զտել ըստ գրառումների քանակի և թեմայի դիտումների"
     new_item: "նոր"
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
@@ -2538,9 +2542,6 @@ hy:
         confirm: "Հաստատել"
         select_all: "Ընտրել Բոլորը"
         clear_all: "Ջնջել Բոլորը"
-        unlist_topics: "Թեմաները Ցուցակից Հանել"
-        relist_topics: "Վերացանկավորել Թեմաները"
-        delete: "Ջնջել Թեմաները"
         delete_topics_count:
           one: "Ջնջել Թեման"
           other: "Ջնջել Թեմաները"
@@ -2552,20 +2553,12 @@ hy:
         dismiss_new: "Չեղարկել Նորերը"
         toggle: "փոխանջատել թեմաների զանգվածային ընտրությունը"
         actions: "Զանգվածային Գործողությունները"
-        close_topics: "Փակել Թեմաները"
-        archive_topics: "Արխիվացնել Թեմաները"
         move_messages_to_inbox: "Տեղափոխել Մուտքային"
         choose_new_category: "Ընտրել նոր կատեգորիա թեմաների համար՝"
-        selected:
-          one: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
-          other: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
         selected_count:
           one: "%{count} ընտրված"
           other: "%{count} ընտրված"
-        change_tags: "Փոխարինել Պիտակները"
-        append_tags: "Ավելացնել Պիտակներ"
         choose_new_tags: "Ընտրել նոր պիտակներ այս թեմաների համար՝"
-        choose_append_tags: "Ընտրել նոր պիտակներ այս թեմաներին ավելացնելու համար՝"
         changed_tags: "Այդ թեմաների պիտակները փոփոխվել են:"
         error_topic_count:
           one: "%{count} թեմա"
@@ -2592,8 +2585,6 @@ hy:
         name: "Տեղափոխել Մուտքային"
       unlist_topics:
         name: "Ցուցակից հանել"
-      append_tags:
-        name: "Ավելացնել Պիտակներ"
       replace_tags:
         name: "Փոխարինել Պիտակները"
       delete_topics:
@@ -3164,6 +3155,8 @@ hy:
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
       no_description: "Խնդրում ենք այս կատեգորիայի համար ավելացնել նկարագրություն:"
+      description_expand: "Ցույց տալ ավելին"
+      description_collapse: "Ցույց տալ ավելի քիչ"
       already_used: "Այս գույնը օգտագործվել է մեկ այլ կատեգորիայի կողմից"
       security: "Անվտանգություն"
       permissions:
@@ -3579,6 +3572,15 @@ hy:
         one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որին այն վերագրված է:"
         other: "Իսկապե՞ս ուզում եք ջնջել այս պիտակը և հեռացնել այն %{count} թեմայից, որոնց այն վերագրված է:"
       delete_confirm_no_topics: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս պիտակը:"
+      description: "Նկարագրություն"
+      settings:
+        title: "Կարգավորումներ"
+        general: "Ընդհանուր"
+        back: "Ետ"
+        name: "Անուն"
+      localization:
+        name: "Անուն"
+        description: "Նկարագրություն"
       sort_by: "Դասավորել ըստ՝ "
       sort_by_count: "քանակի"
       sort_by_name: "անվան"
@@ -3787,7 +3789,6 @@ hy:
         categories: "Բոլոր կատեգորիաները"
   admin_js:
     settings: "Կարգավորումներ"
-    reset_filter: "Վերահաստատե;"
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
@@ -3800,6 +3801,9 @@ hy:
       reports:
         title: "Հասանելի հաշվետվությունների ցանկը"
         sidebar_title: "Հաշվետվություններ"
+        group_traffic: "Այցելությունները"
+        group_members: "Անդամներ"
+        group_other: "Այլ"
       config_sections:
         account:
           title: "Հաշիվ"
@@ -3886,6 +3890,9 @@ hy:
               title: "Գրառումներ"
         reports:
           title: "Հաշվետվություններ"
+          sub_pages:
+            settings:
+              title: "Կարգավորումներ"
         badges:
           title: "Կրծքանշաններ"
         permalinks:
@@ -3928,13 +3935,6 @@ hy:
         default_value: "Լռելյայն"
       search:
         title: "Որոնում"
-        result_types:
-          theme:
-            one: "Թեմա"
-            other: "Թեմաներ"
-          component:
-            one: "Բաղադրիչ"
-            other: "Բաղադրիչներ"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
@@ -4001,7 +4001,7 @@ hy:
           all: "Ամբողջը"
           view_table: "աղյուսակ"
           view_graph: "գրաֆիկ"
-          refresh_report: "Թարմացնել Հաշվետվությունը"
+          refresh_report: "Թարմացնել"
           daily: Օրվա Ընթացքում
           monthly: Ամսվա Ընթացքում
           weekly: Շաբաթվա Ընթացքում
@@ -5086,6 +5086,7 @@ hy:
             title: "Ընտրովի"
         field_types:
           text: "Տեքստ"
+          date: "Ամսաթիվ"
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:

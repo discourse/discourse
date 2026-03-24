@@ -1,16 +1,89 @@
 @use "lib/viewport";
 
 .uc-enable-simplified-category-creation {
-  .select-kit.multi-select.group-chooser {
-    width: var(--form-kit-large-input);
+  .d-page-header__title-row {
+    line-height: var(--line-height-medium);
+    gap: var(--space-4);
+  }
 
-    @include viewport.until(sm) {
-      width: 100%;
+  .edit-category-tab-security {
+    .alert {
+      --permission-table-max-width: var(--form-kit-max-input);
     }
+  }
+
+  .form-kit__container-content {
+    width: 100%;
+  }
+
+  .edit-category-tab:not(.edit-category-tab-general) {
+    .form-kit__container-optional {
+      display: none;
+    }
+  }
+
+  .category-permissions-table {
+    --permission-table-max-width: var(--form-kit-max-input);
+    width: 100%;
   }
 
   div.edit-category {
     display: block;
+    max-width: 75ch;
+    width: 100%;
+    margin: 0 auto;
+
+    h1 {
+      font-size: var(--font-up-3);
+    }
+
+    .form-kit__field-toggle {
+      flex-direction: column;
+      width: 100%;
+      gap: 0.5em;
+      align-items: start;
+
+      .form-kit__container-content {
+        align-items: flex-start;
+      }
+    }
+
+    .form-kit__conditional-display-content {
+      // prevent content shift when changing style options
+      min-height: 2.6em;
+
+      &:has(.badge-category__wrapper) {
+        justify-content: center;
+      }
+    }
+
+    .--radio-cards {
+      .form-kit__container-title {
+        max-width: var(--form-kit-max-input);
+        width: 100%;
+      }
+
+      .form-kit__conditional-display-content {
+        .form-kit__container {
+          flex-direction: column;
+        }
+      }
+    }
+
+    .select-kit.multi-select.group-chooser {
+      max-width: var(--form-kit-max-input);
+      width: 100%;
+    }
+
+    .edit-category-tab-settings label,
+    .edit-category-tab-tags label,
+    .edit-category-tab-settings input[type="text"],
+    .edit-category-tab-settings .select-kit,
+    .edit-category-tab-tags input[type="text"],
+    .edit-category-tab-tags .select-kit {
+      width: 100%;
+      max-width: var(--form-kit-max-input);
+    }
 
     .add-required-tag-group {
       align-self: start;
@@ -63,15 +136,16 @@
       border-bottom: 1px solid var(--content-border-color);
     }
 
+    .edit-category-page-header {
+      margin-bottom: 1.5em;
+    }
+
     .edit-category-content {
-      margin-top: 2em;
       grid-area: unset;
     }
-  }
 
-  .edit-category-tab-security {
-    .form-kit__container-content {
-      width: 100%;
+    .edit-category-type-schema-fields {
+      display: contents;
     }
   }
 
@@ -98,11 +172,9 @@
     }
   }
 
-  .category-permissions-table {
-    width: 100%;
-  }
-
   .form-kit__errors-summary {
+    width: 100%;
+    max-width: var(--form-kit-max-input);
     margin-top: var(--space-4);
 
     + .form-kit__section.edit-category-content {
@@ -111,11 +183,6 @@
   }
 
   .form-kit__conditional-display {
-    .badge-category__wrapper {
-      min-height: 2.6em;
-      top: var(--space-1);
-    }
-
     .form-kit__container-content:has(.is-disabled) {
       // select-kit has pointer-events disabled, so we need to style the parent
       cursor: not-allowed;
@@ -125,5 +192,77 @@
   .edit-category .edit-category-footer {
     padding: 0;
     margin-bottom: var(--space-4);
+  }
+
+  .edit-category-tab-localizations {
+    .btn-default {
+      align-self: start;
+    }
+  }
+
+  #main-outlet:has(.edit-category) + .powered-by-discourse {
+    display: none; // hide for now due to alignment
+  }
+
+  .admin-changes-banner {
+    max-width: var(--form-kit-max-input);
+    flex-direction: row-reverse;
+    align-items: center;
+
+    .controls {
+      flex-direction: row-reverse;
+      margin-right: auto;
+    }
+  }
+}
+
+.edit-category-description-container {
+  .readonly-field {
+    width: 100%;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .description-content {
+    &.--collapsed {
+      max-height: calc(4 * 1.5em);
+      overflow: hidden;
+      position: relative;
+
+      &.--overflowing::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1.5em;
+        background: linear-gradient(transparent, var(--secondary, white));
+        pointer-events: none;
+      }
+    }
+  }
+
+  .description-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+
+    .toggle-description {
+      color: var(--primary-medium);
+
+      &:hover {
+        color: var(--primary-high);
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import FullnameInput from "discourse/components/fullname-input";
 import InputTip from "discourse/components/input-tip";
@@ -43,7 +43,7 @@ export default <template>
         <div class="col-form">
           {{#if @controller.successMessage}}
             <div class="success-info">
-              <p>{{htmlSafe @controller.successMessage}}</p>
+              <p>{{trustHTML @controller.successMessage}}</p>
             </div>
           {{else}}
             <div class="invited-by">
@@ -55,13 +55,13 @@ export default <template>
 
             {{#if @controller.associateHtml}}
               <p class="create-account-associate-link">
-                {{htmlSafe @controller.associateHtml}}
+                {{trustHTML @controller.associateHtml}}
               </p>
             {{/if}}
 
             {{#unless @controller.isInviteLink}}
               <p class="email-message">
-                {{htmlSafe @controller.yourEmailMessage}}
+                {{trustHTML @controller.yourEmailMessage}}
                 {{#if @controller.showSocialLoginAvailable}}
                   {{i18n "invites.social_login_available"}}
                 {{/if}}
@@ -257,7 +257,7 @@ export default <template>
                 </div>
 
                 <div class="disclaimer">
-                  {{htmlSafe @controller.disclaimerHtml}}
+                  {{trustHTML @controller.disclaimerHtml}}
                 </div>
 
                 {{#if @controller.errorMessage}}

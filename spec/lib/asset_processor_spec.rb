@@ -223,7 +223,10 @@ RSpec.describe AssetProcessor do
           },
         },
       )
-    expect(result["main.js"]["code"]).to include("createTemplateFactory")
+    code = result["main.js"]["code"]
+    expect(code).to include("createTemplateFactory")
+    expect(code).to include("deprecated(")
+    expect(code).to include('id: "discourse.hbs-extension"')
   end
 
   it "handles colocation" do
@@ -261,6 +264,44 @@ RSpec.describe AssetProcessor do
     expect(result["main.js"]["code"]).to include(
       "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
+  end
+
+  it "handles colocation of connectors" do
+    js = <<~JS.chomp
+      export default {
+        setupComponent(args, component) {
+          console.log("hello world");
+        }
+      }
+    JS
+
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    result =
+      AssetProcessor.new.rollup(
+        {
+          "discourse/templates/connectors/foo.js" => js,
+          "discourse/templates/connectors/foo.hbs" => template,
+        },
+        {
+          themeId: 22,
+          entrypoints: {
+            main: {
+              modules: %w[
+                discourse/templates/connectors/foo.js
+                discourse/templates/connectors/foo.hbs
+              ],
+            },
+          },
+        },
+      )
+
+    expect(result["main.js"]["code"]).to include(
+      'compatModules["discourse/templates/connectors/foo"]',
+    ).once
+    expect(result["main.js"]["code"]).to include('compatModules["discourse/connectors/foo"]').once
   end
 
   it "handles relative imports from one module to another" do
@@ -389,7 +430,62 @@ RSpec.describe AssetProcessor do
   end
 
   it "returns the ember version" do
-    expect(AssetProcessor.new.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
+    expect(AssetProcessor.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
+  end
+
+  it "errors on missing relative imports" do
+    mod_1 = <<~JS.chomp
+      import SomeModule from "../some-module";
+      console.log(SomeModule);
+    JS
+
+    expect do
+      AssetProcessor.new.rollup(
+        { "discourse/components/my-component.gjs" => mod_1 },
+        { pluginName: "myplugin" },
+      )
+    end.to raise_error(AssetProcessor::TranspileError)
+  end
+
+  it "outputs entrypoint manifest data" do
+    mod = <<~JS.chomp
+      export default "module 1";
+    JS
+
+    admin_mod = <<~JS.chomp
+      import comp from "./my-component";
+      console.log(comp);
+      export default "module 2";
+    JS
+
+    result =
+      AssetProcessor.new.rollup(
+        {
+          "discourse/components/my-component.gjs" => mod,
+          "discourse/components/my-admin-component.gjs" => admin_mod,
+        },
+        {
+          themeId: 22,
+          entrypoints: {
+            main: {
+              modules: %w[discourse/components/my-component.gjs],
+            },
+            admin: {
+              modules: %w[discourse/components/my-admin-component.gjs],
+            },
+          },
+        },
+      )
+
+    expect(result["main.js"]["imports"].length).to eq(1)
+    expect(result["main.js"]["imports"].first).to include("chunk")
+    expect(result["main.js"]["name"]).to eq("main")
+    expect(result["main.js"]["isEntry"]).to eq(true)
+
+    expect(result["admin.js"]["imports"].length).to eq(1)
+    expect(result["admin.js"]["imports"].first).to include("chunk")
+    expect(result["admin.js"]["name"]).to eq("admin")
+    expect(result["admin.js"]["isEntry"]).to eq(true)
   end
 
   it "errors on missing relative imports" do

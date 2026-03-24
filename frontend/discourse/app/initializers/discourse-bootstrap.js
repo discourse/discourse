@@ -13,13 +13,8 @@ import I18n from "discourse-i18n";
 export default {
   // The very first initializer to run
   initialize(app) {
-    const {
-      isDevelopment,
-      isProduction,
-      isTesting,
-      isRailsTesting,
-      setEnvironment,
-    } = environment;
+    const { isDevelopment, isProduction, isTesting, isRailsTesting } =
+      environment;
 
     setURLContainer(app.__container__);
     setDefaultOwner(app.__container__);
@@ -37,7 +32,6 @@ export default {
     }
 
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
-    setEnvironment(setupData.environment);
 
     // the `if DEBUG` forces the code inside the conditional block to be tree-shaken in
     // production builds

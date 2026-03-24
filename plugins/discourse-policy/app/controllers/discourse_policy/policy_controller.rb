@@ -5,14 +5,12 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
 
   before_action :ensure_logged_in, :set_post
   before_action :ensure_can_accept, only: %i[accept unaccept]
+  before_action :ensure_can_see_policy_users, only: %i[accepted not_accepted]
 
   def accept
     PolicyUser.add!(current_user, @post.post_policy)
     @post.publish_change_to_clients!(:policy_change)
-
-    if @post.post_policy.add_users_to_group.present?
-      @post.post_policy.add_users_group.add(current_user)
-    end
+    @add_users_group&.add(current_user)
 
     render json: success_json
   end
@@ -20,24 +18,12 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
   def unaccept
     PolicyUser.remove!(current_user, @post.post_policy)
     @post.publish_change_to_clients!(:policy_change)
-
-    if @post.post_policy.add_users_to_group.present?
-      @post.post_policy.add_users_group.remove(current_user)
-    end
+    @add_users_group&.remove(current_user)
 
     render json: success_json
   end
 
   def accepted
-    # Check if user has permission to see group members
-    groups = @post.post_policy.groups
-    return render_json_error(I18n.t("discourse_policy.errors.group_not_found")) if groups.blank?
-
-    guardian = Guardian.new(current_user)
-    unless guardian.can_see_groups_members?(groups)
-      return render_json_error(I18n.t("discourse_policy.error.no_permission"))
-    end
-
     users =
       @post
         .post_policy
@@ -49,15 +35,6 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
   end
 
   def not_accepted
-    # Check if user has permission to see group members
-    groups = @post.post_policy.groups
-    return render_json_error(I18n.t("discourse_policy.errors.group_not_found")) if groups.blank?
-
-    guardian = Guardian.new(current_user)
-    unless guardian.can_see_groups_members?(groups)
-      return render_json_error(I18n.t("discourse_policy.error.no_permission"))
-    end
-
     users =
       @post
         .post_policy
@@ -70,6 +47,15 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
 
   private
 
+  def ensure_can_see_policy_users
+    post_policy = @post.post_policy
+    raise Discourse::InvalidAccess if post_policy.private? && !guardian.is_admin?
+
+    unless guardian.can_see_groups_members?(post_policy.groups)
+      render_json_error(I18n.t("discourse_policy.error.no_permission"))
+    end
+  end
+
   def ensure_can_accept
     if !GroupUser.where(
          "group_id in (:group_ids) and user_id = :user_id",
@@ -77,6 +63,11 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
          user_id: current_user.id,
        ).exists?
       return render_json_error(I18n.t("discourse_policy.errors.user_missing"))
+    end
+
+    @add_users_group = @post.post_policy.add_users_group
+    if @add_users_group && !Guardian.new(@post.user).can_edit_group?(@add_users_group)
+      return render_json_error(I18n.t("discourse_policy.errors.policy_group_inaccessible"))
     end
 
     true
@@ -89,6 +80,8 @@ class DiscoursePolicy::PolicyController < ::ApplicationController
     @post = Post.find_by(id: params[:post_id])
 
     raise Discourse::NotFound if !@post
+
+    raise Discourse::NotFound if !guardian.can_see?(@post)
 
     return render_json_error(I18n.t("discourse_policy.errors.no_policy")) if !@post.post_policy
 

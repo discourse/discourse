@@ -15,12 +15,25 @@ pl_PL:
       reactions_title: "Reakcje"
       state_panel:
         more_users: "i %{count} więcej..."
+        show_users: "Pokaż więcej użytkowników"
+        hide_users: "Pokaż mniej użytkowników"
+        reaction_group:
+          one: "%{reaction}: %{count} użytkownik"
+          few: "%{reaction}: %{count} użytkowników"
+          many: "%{reaction}: %{count} użytkowników"
+          other: "%{reaction}: %{count} użytkowników"
       reaction:
         forbidden: "Ta reakcja została utworzona zbyt dawno temu. Nie można jej już zmodyfikować ani usunąć."
       picker:
         react_with: "Zareaguj na ten post: %{reaction}"
         cant_remove_reaction: "Nie możesz już usunąć swojej reakcji"
         remove_reaction: "Usuń tę reakcję %{reaction}"
+      counter:
+        aria_label:
+          one: "%{count} reakcja"
+          few: "%{count} reakcje"
+          many: "%{count} reakcji"
+          other: "%{count} reakcji"
       main_reaction:
         add: "Polub ten wpis"
         remove: "Usuń to polubienie"

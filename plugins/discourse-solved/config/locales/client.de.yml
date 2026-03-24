@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_solved: "Discourse – Gelöst"
+          discourse_solved: "Discourse Gelöst"
   js:
     notifications:
       alt:
@@ -20,6 +20,8 @@ de:
       title: "Gelöst"
       allow_accepted_answers: "Erlaube dem Ersteller des Themas und Team-Mitgliedern, eine Antwort als Lösung zu markieren"
       solved_topics_auto_close_hours: "Thema automatisch (n) Stunden nach der letzten Antwort schließen, sobald das Thema als gelöst markiert wurde."
+      notify_on_staff_accept_solved: "Benachrichtige den Themenersteller, wenn ein Team-Mitglied eine Lösung auswählt"
+      empty_box_on_unsolved: "Zeige eine leere Box neben ungelösten Themen in der Themenliste"
       accept_answer: "Auswählen, wenn diese Antwort das Problem löst"
       accepted_description: "Dies ist die für dieses Thema akzeptierte Lösung"
       has_no_accepted_answer: "Dieses Thema hat keine Lösung"
@@ -58,6 +60,10 @@ de:
         description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."
       notification:
         title: "dein Beitrag wurde als Lösung markiert"
+      category_type_support:
+        title: "Support"
+        not_support_type: "Achtung! Du hast die Möglichkeit deaktiviert, Beiträge in dieser Kategorie als Lösungen auszuwählen. Du findest die entsprechenden Einstellungen, um diese Funktion wieder zu aktivieren, im Tab „Einstellungen“."
+        confirm_remove_support_type: "Bist du sicher, dass du die Möglichkeit, Beiträge in dieser Kategorie als Lösungen auszuwählen, entfernen möchtest? Du kannst sie später auf der Registerkarte Einstellungen wieder aktivieren."
     topic_statuses:
       solved:
         help: "Dieses Thema hat eine Lösung"

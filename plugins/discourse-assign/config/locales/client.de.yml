@@ -9,7 +9,7 @@ de:
     admin:
       site_settings:
         categories:
-          discourse_assign: "Discourse – Zuordnen"
+          discourse_assign: "Discourse Zuordnen"
   js:
     filters:
       unassigned:
@@ -142,6 +142,14 @@ de:
       bulk:
         unassign: "Zuordnung von Themen aufheben"
         assign: "Themen zuordnen"
+        assign_description: "Die ausgewählten Themen dem folgenden Benutzer zuweisen:"
+        unassign_description: "Möchtest du die Zuordnung der ausgewählten Themen aufheben?"
+        confirm_assign_topics:
+          one: "%{count} Thema zuordnen"
+          other: "%{count} Themen zuordnen"
+        confirm_unassign_topics:
+          one: "Zuordnung von %{count} Thema aufheben"
+          other: "Zuordnung von %{count} Themen aufheben"
     discourse_automation:
       scriptables:
         random_assign:

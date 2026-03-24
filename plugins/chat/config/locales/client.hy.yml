@@ -22,6 +22,7 @@ hy:
         yesterday: "Երեկվա"
       create: "Ստեղծել"
       cancel: "Չեղարկել"
+      pinned: "Ամրակցված"
       channel_settings:
         edit: "Խմբագրել"
         add: "Ավելացնել"

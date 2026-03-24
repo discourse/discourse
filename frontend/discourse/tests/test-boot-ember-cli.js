@@ -2,13 +2,13 @@ import { start as startEmberExam } from "ember-exam/addon-test-support";
 import { setupEmberOnerrorValidation } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
-import { loadAdmin, loadThemes } from "discourse/app";
+import { loadAdmin, loadThemesAndPlugins } from "discourse/app";
 import config from "discourse/config/environment";
 import setupTests from "discourse/tests/setup-tests";
 
 export async function startTests() {
   await loadAdmin();
-  await loadThemes();
+  await loadThemesAndPlugins();
 
   // if (!window.EmberENV.TESTS_FILE_LOADED) {
   //   throw new Error(

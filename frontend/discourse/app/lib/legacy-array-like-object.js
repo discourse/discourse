@@ -5,23 +5,24 @@
  * already existing classes that previously used the ArrayProxy mixin. It should not
  * be used in new development.
  *
- * For new code, use a standard class with tracked properties and @trackedArray for the content property.
+ * For new code, use a standard class with tracked properties and @autoTrackedArray for the content property.
  * Example:
  *
  *   import { tracked } from '@glimmer/tracking';
- *   import { trackedArray } from "discourse/lib/tracked-tools";
+ *   import { autoTrackedArray } from "discourse/lib/tracked-tools";
  *
  *   class MyArrayWrapper {
  *     @tracked someProp;
- *     @trackedArray content = [];
+ *     @autoTrackedArray content = [];
  *   }
  *
  * This approach provides reactivity and array capabilities without legacy proxy patterns.
  */
 
 import EmberObject from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import deprecated from "discourse/lib/deprecated";
+import { isTrackedArray } from "discourse/lib/tracked-tools";
 
 const EMBER_OBJECT_PROPERTIES = new Set([
   "constructor",
@@ -152,8 +153,7 @@ export default class LegacyArrayLikeObject extends EmberObject {
       );
     }
 
-    this.#content =
-      content instanceof TrackedArray ? content : new TrackedArray(content);
+    this.#content = isTrackedArray(content) ? content : trackedArray(content);
 
     return createProxy(this, this.#content);
   }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag Groups", type: :system do
+describe "Tag Groups" do
   fab!(:admin)
   fab!(:tag1) { Fabricate(:tag, name: "cats") }
   fab!(:tag2) { Fabricate(:tag, name: "bats") }
@@ -31,6 +31,28 @@ describe "Tag Groups", type: :system do
       expect(tag_groups_page).to have_tag_group_in_sidebar("Ats")
       expect(tag_groups_page).to have_tag_in_group("cats")
       expect(tag_groups_page).to have_tag_in_group("bats")
+    end
+  end
+
+  describe "navigating between tag groups" do
+    fab!(:tag3) { Fabricate(:tag, name: "rats") }
+    fab!(:group_one) { Fabricate(:tag_group, name: "Group One", tags: [tag1]) }
+    fab!(:group_two) { Fabricate(:tag_group, name: "Group Two", tags: [tag2, tag3]) }
+
+    it "updates the form when clicking a different tag group in the sidebar" do
+      tag_groups_page.visit
+      tag_groups_page.click_tag_group("Group One")
+
+      expect(tag_groups_page).to have_name("Group One")
+      expect(tag_groups_page).to have_tag_in_group("cats")
+      expect(tag_groups_page).to have_no_tag_in_group("bats")
+
+      tag_groups_page.click_tag_group("Group Two")
+
+      expect(tag_groups_page).to have_name("Group Two")
+      expect(tag_groups_page).to have_tag_in_group("bats")
+      expect(tag_groups_page).to have_tag_in_group("rats")
+      expect(tag_groups_page).to have_no_tag_in_group("cats")
     end
   end
 

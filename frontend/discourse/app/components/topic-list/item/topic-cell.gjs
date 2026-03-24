@@ -93,19 +93,19 @@ export default class TopicCell extends Component {
           @name="topic-list-topic-cell-link-bottom-line"
           @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
         >
+          <PluginOutlet
+            @name="topic-list-before-category"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
           {{#unless @hideCategory}}
             {{#unless @topic.isPinnedUncategorized}}
-              <PluginOutlet
-                @name="topic-list-before-category"
-                @outletArgs={{lazyHash topic=@topic}}
-              />
               {{categoryLink @topic.category}}
-              <PluginOutlet
-                @name="topic-list-after-category"
-                @outletArgs={{lazyHash topic=@topic}}
-              />
             {{/unless}}
           {{/unless}}
+          <PluginOutlet
+            @name="topic-list-after-category"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
 
           {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 

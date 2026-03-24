@@ -62,7 +62,7 @@ class DiscourseSolved::SolvedPostSerializer < ApplicationSerializer
   end
 
   def topic_title
-    object.topic.title
+    object.topic.fancy_title
   end
 
   def truncated

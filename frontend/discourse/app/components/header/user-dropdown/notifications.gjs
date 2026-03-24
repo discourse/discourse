@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import {
@@ -21,7 +21,7 @@ export default class Notifications extends Component {
 
   get avatar() {
     const avatarAttrs = addExtraUserClasses(this.currentUser, {});
-    return htmlSafe(
+    return trustHTML(
       renderAvatar(this.currentUser, {
         imageSize: this.avatarSize,
         hideTitle: true,

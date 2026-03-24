@@ -51,7 +51,6 @@ export default class ChatThread extends Component {
   @service chatThreadPane;
   @service dialog;
   @service currentUser;
-  @service router;
   @service siteSettings;
 
   @tracked atBottom = true;
@@ -86,16 +85,6 @@ export default class ChatThread extends Component {
 
   get pendingContextKey() {
     return this.args.thread?.id ? `thread:${this.args.thread.id}` : null;
-  }
-
-  @action
-  handleKeydown(event) {
-    if (event.key === "Escape") {
-      return this.router.transitionTo(
-        "chat.channel",
-        ...this.args.thread.channel.routeModels
-      );
-    }
   }
 
   @action

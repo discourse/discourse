@@ -24,7 +24,7 @@ fa_IR:
       formatted_excerpt: "گفتگوی هوش‌مصنوعی با %{llm_name}:\n %{excerpt}"
       title: "%{title} - گفتگوی هوش‌مصنوعی - %{site_name}"
     ai_bot:
-      personas:
+      agents:
         dall_e3:
           name: "DALL-E 3"
       tool_summary:
@@ -36,12 +36,48 @@ fa_IR:
         image: "تولید تصویر"
         google: "جستجو در گوگل"
         dall_e: "تولید تصویر"
+      tool_help:
+        delete_topic: "حذف موضوع"
       tool_description:
         summarize: "خلاصه شده <a href='%{url}'>%{title}</a>"
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
         image: "%{prompt}"
+      close_topic:
+        errors:
+          not_found: "موضوع پیدا نشد."
+      unlist_topic:
+        errors:
+          not_found: "موضوع پیدا نشد."
+      delete_topic:
+        errors:
+          not_found: "موضوع پیدا نشد."
+      edit_tags:
+        errors:
+          not_found: "موضوع پیدا نشد."
+      edit_category:
+        errors:
+          not_found: "موضوع پیدا نشد."
+          category_not_found: "دسته یافت نشد."
+      set_topic_timer:
+        errors:
+          not_found: "موضوع پیدا نشد."
+      set_slow_mode:
+        errors:
+          not_found: "موضوع پیدا نشد."
+      move_posts:
+        errors:
+          not_found: "موضوع پیدا نشد."
+      assign:
+        errors:
+          not_found: "موضوع پیدا نشد."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "تایید"
+        reject:
+          title: "رد کردن"
     ai_staff_action_logger:
       updated: "به روز شده"
       removed: "پاک شد"

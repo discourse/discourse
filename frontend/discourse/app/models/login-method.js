@@ -1,8 +1,7 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { Promise } from "rsvp";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -36,26 +35,26 @@ export default class LoginMethod extends EmberObject {
     });
   }
 
-  @discourseComputed
-  title() {
+  @computed
+  get title() {
     return this.title_override || i18n(`login.${this.name}.title`);
   }
 
-  @discourseComputed
-  icon() {
+  @computed
+  get icon() {
     return this.icon_override || "user";
   }
 
-  @discourseComputed
-  screenReaderTitle() {
+  @computed
+  get screenReaderTitle() {
     return (
       this.title_override ||
       i18n(`login.${this.name}.sr_title`, { defaultValue: this.title })
     );
   }
 
-  @discourseComputed
-  prettyName() {
+  @computed
+  get prettyName() {
     return this.pretty_name_override || i18n(`login.${this.name}.name`);
   }
 

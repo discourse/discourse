@@ -76,6 +76,7 @@ module SvgSprite
         copy
         crosshairs
         cube
+        cubes
         desktop
         diagram-project
         discourse-amazon
@@ -89,6 +90,7 @@ module SvgSprite
         discourse-dnd
         discourse-emojis
         discourse-expand
+        discourse-flask-check
         discourse-other-tab
         discourse-sidebar
         discourse-sparkles
@@ -109,6 +111,7 @@ module SvgSprite
         envelope
         eye
         eye-dropper
+        eye-slash
         fab-android
         fab-apple
         fab-chrome
@@ -121,6 +124,7 @@ module SvgSprite
         fab-instagram
         fab-linkedin-in
         fab-linux
+        fab-microsoft
         fab-markdown
         fab-threads
         fab-threads-square

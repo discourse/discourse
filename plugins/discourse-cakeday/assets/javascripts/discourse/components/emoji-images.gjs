@@ -1,24 +1,24 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { computed } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import computed from "discourse/lib/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class EmojiImages extends Component {
   @computed("list")
-  emojiHTML(list) {
-    return list
+  get emojiHTML() {
+    return this.list
       .split("|")
       .map((et) => emojiUnescape(`:${et}:`, { skipTitle: true }));
   }
 
   @computed("title")
-  titleText(title) {
-    return i18n(title);
+  get titleText() {
+    return i18n(this.title);
   }
 
   <template>
@@ -26,7 +26,7 @@ export default class EmojiImages extends Component {
       {{#if this.siteSettings.enable_emoji}}
         <div title={{this.titleText}}>
           {{#each this.emojiHTML as |html|}}
-            {{htmlSafe html}}
+            {{trustHTML html}}
           {{/each}}
         </div>
       {{else}}

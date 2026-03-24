@@ -6,6 +6,11 @@
 
 et:
   js:
+    blocks:
+      ghost:
+        status: "Staatus"
+        hidden: "peidetud"
+        failed: "ebaõnnestunud"
     number:
       format:
         separator: "."
@@ -245,6 +250,9 @@ et:
       title: "Uued ja lugemata teemad"
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Tagasi"
     about:
       edit: "Muuda seda lehekülge"
       simple_title: "Teave"
@@ -965,6 +973,8 @@ et:
         tags: "Sildid"
         interface: "Kasutajaliides"
         apps: "Äpid"
+      calendar_subscriptions:
+        copied: "Kopeeritud!"
       change_password:
         success: "(meil saadetud)"
         in_progress: "(saadan meili)"
@@ -1288,6 +1298,7 @@ et:
     form_kit:
       reset: Lähtesta
       optional: valikuline
+      required: nõutud
       errors:
         required: "Nõutud"
     close: "Sulge"
@@ -1661,8 +1672,6 @@ et:
       bulk:
         select_all: "Vali kõik"
         clear_all: "Puhasta kõik"
-        unlist_topics: "Eemalda teemad loetelust"
-        delete: "Kustuta teemad"
         delete_topics_count:
           one: "Kustuta teema"
           other: "Kustuta teemad"
@@ -1674,20 +1683,11 @@ et:
         dismiss_new: "Ignoreeri uusi"
         toggle: "lülita teemade massiline äramärkimine ümber"
         actions: "Masstoimingud"
-        close_topics: "Sulge teemad"
-        archive_topics: "Arhiveeri teemad"
         move_messages_to_inbox: "Liiguta sisendkausta"
         change_notification_level: "Muuda teavituste taset"
         choose_new_category: "Vali teemadele uus kategooria:"
-        selected:
-          one: "Märkisid ära <b>%{count}</b> teema."
-          other: "Märkisid ära <b>%{count}</b> teemat."
-        change_tags: "Asenda sildid"
-        append_tags: "Lisa sildid"
         choose_new_tags: "Vali teemadele uued sildid:"
-        choose_append_tags: "Vali uued sildid, mida nendele teemadele lisada:"
         changed_tags: "Nende teemade silte on muudetud."
-        remove_tags: "Eemalda kõik sildid"
         confirm_remove_tags:
           one: "Sellelt teemalt eemaldatakse kõik sildid. Kas oled kindel?"
           other: "<b>%{count}</b> teemalt eemaldatakse kõik sildid. Kas oled kindel?"
@@ -1716,8 +1716,6 @@ et:
         name: "Arhiiv"
       move_messages_to_inbox:
         name: "Liiguta postkasti"
-      append_tags:
-        name: "Lisa sildid"
       replace_tags:
         name: "Asenda sildid"
       delete_topics:
@@ -2548,6 +2546,15 @@ et:
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
+      description: "Kirjeldus"
+      settings:
+        title: "Seaded"
+        general: "Üldine"
+        back: "Tagasi"
+        name: "Nimi"
+      localization:
+        name: "Nimi"
+        description: "Kirjeldus"
       sort_by: "Järjesta:"
       sort_by_count: "üldarv"
       sort_by_name: "nimi"
@@ -2709,7 +2716,6 @@ et:
         categories: "Kõik kategooriad"
   admin_js:
     settings: "Sätted"
-    reset_filter: "Nulli"
     admin:
       title: "Discourse'i adminn"
       moderator: "Moderaator"
@@ -2717,6 +2723,10 @@ et:
         remove_muted_tags_from_latest:
           always: "alati"
           never: "mitte kunagi"
+      reports:
+        group_traffic: "Liiklus"
+        group_members: "Liikmed"
+        group_other: "Muu"
       config_sections:
         account:
           title: "Konto"
@@ -2801,6 +2811,10 @@ et:
           sub_pages:
             logs:
               title: "Logid"
+        reports:
+          sub_pages:
+            settings:
+              title: "Seaded"
         badges:
           title: "Märgised"
         permalinks:
@@ -2846,13 +2860,6 @@ et:
         default_value: "Vaikimisi"
       search:
         title: "Otsi"
-        result_types:
-          theme:
-            one: "Kujundusteema"
-            other: "Kujundused"
-          component:
-            one: "Komponent"
-            other: "Komponendid"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -2902,7 +2909,7 @@ et:
           all: "Kõik"
           view_table: "tabel"
           view_graph: "diagramm"
-          refresh_report: "Värskenda raportit"
+          refresh_report: "Värskenda"
           daily: Igapäevaselt
           monthly: Igakuiselt
           weekly: Iganädalaselt
@@ -3722,6 +3729,7 @@ et:
           title: "Kuva kasutaja profiilil"
         field_types:
           text: "Tekst"
+          date: "Kuupäev"
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:

@@ -8,8 +8,12 @@
   "keywords": [
     "ember-addon"
   ],
+  "types": "src/index.d.ts",
   "exports": {
-    ".": "./src/index.js",
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
     "./addon-main.js": "./addon-main.cjs"
   },
   "files": [
@@ -22,7 +26,7 @@
     "make-plural": "^8.1.0"
   },
   "engines": {
-    "node": ">= 18",
+    "node": ">= 20",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^10"

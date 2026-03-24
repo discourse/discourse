@@ -129,6 +129,29 @@ RSpec.describe UpcomingChanges::List do
 
           expect(mock_setting[:upcoming_change][:enabled_for]).to eq("groups")
         end
+
+        context "when the staff group has been localized" do
+          before do
+            SiteSetting.default_locale = "de"
+            Group.refresh_automatic_group!(:staff)
+          end
+
+          it "sets enabled_for to the localized staff group name when setting value is true and group is staff" do
+            SiteSetting.enable_upload_debug_mode = true
+            SiteSettingGroup.create!(
+              name: "enable_upload_debug_mode",
+              group_ids: Group::AUTO_GROUPS[:staff].to_s,
+            )
+            SiteSetting.refresh_site_setting_group_ids!
+            SiteSetting.notify_changed!
+
+            results = result.upcoming_changes
+            setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(setting[:upcoming_change][:enabled_for]).to eq(
+              Group.find(Group::AUTO_GROUPS[:staff]).name,
+            )
+          end
+        end
       end
 
       it "updates the user's last_visited_upcoming_changes_at custom field" do

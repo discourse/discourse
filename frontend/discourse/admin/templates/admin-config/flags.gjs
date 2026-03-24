@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -11,11 +10,9 @@ class FlagsTemplate extends Component {
   @service site;
   @service siteSettings;
 
-  @tracked flags = this.site.flagTypes;
-
   get addFlagButtonDisabled() {
     return (
-      this.flags.filter(
+      this.site.flagTypes.filter(
         (flag) => !Object.values(SYSTEM_FLAG_IDS).includes(flag.id)
       ).length >= this.siteSettings.custom_flags_limit
     );

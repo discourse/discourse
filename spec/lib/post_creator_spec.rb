@@ -1236,6 +1236,28 @@ RSpec.describe PostCreator do
       expect(topic.posts_count).to eq(3)
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
+
+    it "does not bump highest_post_number for small_action posts in PMs" do
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
+      Fabricate(:post, topic: topic)
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(1)
+
+      PostCreator.create!(
+        Discourse.system_user,
+        raw: "topic unlisted",
+        topic_id: topic.id,
+        post_type: Post.types[:small_action],
+        action_code: "visible.disabled",
+        skip_validations: true,
+      )
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(2)
+    end
   end
 
   describe "warnings" do
@@ -1652,6 +1674,21 @@ RSpec.describe PostCreator do
       _post = pc.create
       expect(@posts_created).to eq(1)
       expect(@topics_created).to eq(0)
+    end
+
+    it "fires post_created even when topic_created handler raises" do
+      bad_handler = proc { raise "topic_created boom" }
+      DiscourseEvent.on(:topic_created, &bad_handler)
+
+      PostCreator.new(
+        user,
+        raw: "this is the new content for my topic",
+        title: "this is my new topic title",
+      ).create
+
+      expect(@posts_created).to eq(1)
+    ensure
+      DiscourseEvent.off(:topic_created, &bad_handler)
     end
   end
 

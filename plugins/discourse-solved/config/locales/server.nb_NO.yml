@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Tillat enmeeier og personale å markere et svar som løsning"
   site_settings:
     solved_enabled: "Skru på løsnings-programtillegget, tillat brukere å velge løsninger på emner"
     accept_all_solutions_trust_level: "Laveste tilltisnivå som kreves for å godta løsninger for ethvert emne (selv når du ikke er OP)"

@@ -30,7 +30,6 @@ export default class AiSearchDiscoveries extends Component {
 
   @tracked loadingConversationTopic = false;
   @tracked fullDiscoveryToggled = false;
-  @tracked discoveryPreviewLength = this.args.discoveryPreviewLength || 150;
 
   constructor() {
     super(...arguments);
@@ -73,6 +72,10 @@ export default class AiSearchDiscoveries extends Component {
     );
   }
 
+  get discoveryPreviewLength() {
+    return this.args.discoveryPreviewLength || 150;
+  }
+
   get query() {
     return this.args?.searchTerm || this.search.activeGlobalSearchTerm;
   }
@@ -105,8 +108,8 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   get canContinueConversation() {
-    const personas = this.currentUser?.ai_enabled_personas;
-    if (!personas) {
+    const agents = this.currentUser?.ai_enabled_agents;
+    if (!agents) {
       return false;
     }
 
@@ -114,16 +117,15 @@ export default class AiSearchDiscoveries extends Component {
       return false;
     }
 
-    const discoverPersona = personas.find(
-      (persona) =>
-        persona.id === parseInt(this.siteSettings?.ai_discover_persona, 10)
+    const discoverAgent = agents.find(
+      (agent) => agent.id === parseInt(this.siteSettings?.ai_discover_agent, 10)
     );
-    const discoverPersonaHasBot = discoverPersona?.username;
+    const discoverAgentHasBot = discoverAgent?.username;
 
     return (
       this.discobotDiscoveries.discovery?.length > 0 &&
       !this.discobotDiscoveries.isStreaming &&
-      discoverPersonaHasBot
+      discoverAgentHasBot
     );
   }
 

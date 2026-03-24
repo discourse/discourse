@@ -71,6 +71,15 @@ class Plugin::Instance
     File.dirname(path)
   end
 
+  def resolved_dir
+    @resolved_dir ||=
+      if File.symlink?(root_dir)
+        File.expand_path(File.readlink(root_dir), "#{Rails.root}/plugins")
+      else
+        root_dir
+      end
+  end
+
   def seed_data
     @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
@@ -400,6 +409,10 @@ class Plugin::Instance
     reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
+  def register_category_type(klass)
+    Categories::TypeRegistry.register(klass, plugin_identifier: self.metadata.name)
+  end
+
   def register_problem_check(klass)
     DiscoursePluginRegistry.register_problem_check(klass, self)
   end
@@ -617,6 +630,11 @@ class Plugin::Instance
   def commit_url
     return if commit_hash.blank?
     "#{git_repo.url}/commit/#{commit_hash}"
+  end
+
+  def preinstalled?
+    return @preinstalled if defined?(@preinstalled)
+    @preinstalled = !File.exist?(File.join(directory, ".git"))
   end
 
   def git_repo
@@ -954,8 +972,7 @@ class Plugin::Instance
   end
 
   def js_asset_exists?
-    # If assets/javascripts exists, ember-cli will output a .js file
-    File.exist?("#{File.dirname(@path)}/assets/javascripts")
+    Plugin::JsManager.js_asset_exists?(directory_name)
   end
 
   def extra_js_asset_exists?
@@ -963,11 +980,11 @@ class Plugin::Instance
   end
 
   def admin_js_asset_exists?
-    File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
+    Plugin::JsManager.admin_js_asset_exists?(directory_name)
   end
 
   def test_js_asset_exists?
-    File.exist?("#{File.dirname(@path)}/test/javascripts")
+    Plugin::JsManager.test_js_asset_exists?(directory_name)
   end
 
   # Receives an array with two elements:
@@ -1031,6 +1048,24 @@ class Plugin::Instance
   def add_api_parameter_route(methods: nil, actions: nil, formats: nil)
     DiscoursePluginRegistry.register_api_parameter_route(
       RouteMatcher.new(methods: methods, actions: actions, formats: formats),
+      self,
+    )
+  end
+
+  # Register an additional calendar subscription feed that appears in the user's
+  # calendar subscription preferences. Each feed needs a name (unique key),
+  # user API key scope name, and a lambda that builds the URL given (base_url, user, key).
+  #
+  # Example:
+  #   register_calendar_subscription_feed(
+  #     name: "all_events",
+  #     scope: "discourse-calendar:events_calendar",
+  #     description_key: "discourse_calendar.preferences.all_events_description",
+  #     url: ->(base_url, user, key) { "#{base_url}/events.ics?user_api_key=#{key}" }
+  #   )
+  def register_calendar_subscription_feed(name:, scope:, description_key:, url:)
+    DiscoursePluginRegistry.register_calendar_subscription_feed(
+      { name: name, scope: scope, description_key: description_key, url: url },
       self,
     )
   end

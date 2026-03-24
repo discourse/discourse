@@ -6,6 +6,25 @@
 
 de:
   accepted_answer: "Akzeptierte Antwort"
+  category_types:
+    support:
+      name: "Support"
+      title: "Support"
+      description: "Hier können Mitglieder Fragen stellen und Antworten als Lösungen markieren"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Erlaube dem Ersteller des Themas und Team-Mitgliedern, eine Antwort als Lösung zu markieren"
+      solved_topics_auto_close_hours:
+        label: "Gelöste Themen automatisch schließen nach (Stunden)"
+        description: "Thema nach so vielen Stunden automatisch schließen, wenn es als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."
+      notify_on_staff_accept_solved:
+        label: "Benachrichtige den Themenersteller, wenn ein Team-Mitglied eine Lösung auswählt"
+      empty_box_on_unsolved:
+        label: "Zeige eine leere Box neben ungelösten Themen in der Themenliste"
+      solved_topics_auto_close_duration:
+        label: "Gelöste Themen automatisch schließen"
+        description: "Thema nach dieser Zeit automatisch schließen, wenn es als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."
   site_settings:
     solved_enabled: "Aktiviere das solved-Plug-in; erlaubt Benutzern, Lösungen für Themen auszuwählen"
     allow_solved_on_all_topics: "Benutzern erlauben, Lösungen für alle Themen auszuwählen (wenn diese Option nicht aktiviert ist, können Lösungen nach Kategorie oder Schlagwort aktiviert werden)"
@@ -17,9 +36,6 @@ de:
     solved_topics_auto_close_hours: "Thema automatisch (n) Stunden nach der letzten Antwort schließen, sobald das Thema als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."
     show_filter_by_solved_status: "Zeige eine Drop-down-Liste, um eine Themenliste nach „Gelöst“-Status zu filtern."
     notify_on_staff_accept_solved: "Benachrichtigung an den Themenersteller senden, wenn ein Beitrag von einem Team-Mitglied als Lösung markiert wird."
-    ignore_solved_topics_in_assigned_reminder: "Verhindere, dass Erinnerungen für Zuordnungen gelöste Themen betreffen. Nur relevant, wenn das Plugin discourse-assign verwendet wird."
-    assignment_status_on_solve: "Wenn ein Thema als gelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
-    assignment_status_on_unsolve: "Wenn ein Thema als ungelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
     disable_solved_education_message: "Deaktiviert den Hinweis für gelöste Themen."
     accept_solutions_topic_author: "Erlaube dem Themenverfasser, eine Lösung zu akzeptieren."
     solved_add_schema_markup: "Füge QAPage-Schema-Mark-up zu HTML hinzu."
@@ -31,6 +47,7 @@ de:
   reports:
     accepted_solutions:
       title: "Akzeptierte Lösungen"
+      description: "Anzahl der pro Tag als gelöst markierten Themen innerhalb eines ausgewählten Datumsbereichs, optional nach Kategorie gefiltert, einschließlich eines 30-Tage-Vergleichswerts."
       xaxis: "Tag"
       yaxis: "Gesamt"
   solved:

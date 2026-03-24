@@ -108,7 +108,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   def update
     params_to_edit = editable_params(params, channel_from_params)
-    params_to_edit.each { |k, v| params_to_edit[k] = nil if params_to_edit[k].blank? }
+    params_to_edit.each { |k, v| params_to_edit[k] = nil if v.is_a?(String) && v.blank? }
     if ActiveRecord::Type::Boolean.new.deserialize(params_to_edit[:auto_join_users])
       auto_join_limiter(channel_from_params).performed!
     end

@@ -1,11 +1,12 @@
 .form-kit__control-textarea {
   // prevents firefox/chrome to add spacing under textarea
   display: block;
+  min-height: 150px;
+  min-width: var(--form-kit-large-input);
 
   @include default-input {
     // reset textarea styles
     height: 150px;
-    min-width: auto !important;
     padding: 0.5em !important;
   }
 }

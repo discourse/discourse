@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import CategoryLogo from "discourse/components/category-logo";
 import DNavigation from "discourse/components/d-navigation";
@@ -19,9 +19,10 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 
 export default class DiscoveryNavigation extends Component {
-  @service router;
+  @service categoryTypeChooser;
   @service currentUser;
   @service modal;
+  @service router;
 
   get filterMode() {
     return calculateFilterMode({
@@ -63,7 +64,7 @@ export default class DiscoveryNavigation extends Component {
 
   @action
   createCategory() {
-    this.router.transitionTo("newCategory");
+    this.categoryTypeChooser.createCategory();
   }
 
   @action
@@ -107,7 +108,7 @@ export default class DiscoveryNavigation extends Component {
             <div class="category-heading__content">
               {{categoryBadge @category class="category-heading__badge"}}
               <p class="category-heading__description">
-                {{htmlSafe @category.description}}
+                {{trustHTML @category.description}}
               </p>
             </div>
           {{/if}}

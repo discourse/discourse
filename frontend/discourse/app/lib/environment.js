@@ -3,7 +3,9 @@ import deprecated from "discourse/lib/deprecated";
 
 export const INPUT_DELAY = 250;
 
-let environment = "unknown";
+let environment =
+  document.getElementById("data-discourse-setup")?.dataset.environment ||
+  "unknown";
 
 export function setEnvironment(e) {
   environment = e;
@@ -27,7 +29,6 @@ export function isRailsTesting() {
 export function isLegacyEmber() {
   deprecated("`isLegacyEmber()` is now deprecated and always returns false", {
     id: "discourse.is-legacy-ember",
-    dropFrom: "3.0.0.beta1",
   });
   return false;
 }

@@ -135,6 +135,7 @@ module DiscourseAi
       # @param output_thinking { Boolean - Optional } - If true, the completion will return the thinking output for thinking models.
       # @param response_format { Hash - Optional } - JSON schema passed to the API as the desired structured output.
       # @param [Experimental] extra_model_params { Hash - Optional } - Other params that are not available accross models. e.g. response_format JSON schema.
+      # @param execution_context { DiscourseAi::Completions::ExecutionContext - Optional } - Explicit per-call context for token tracking and audit logging.
       #
       # @param &on_partial_blk { Block - Optional } - The passed block will get called with the LLM partial response.
       #
@@ -155,6 +156,7 @@ module DiscourseAi
         response_format: nil,
         extra_model_params: nil,
         cancel_manager: nil,
+        execution_context: nil,
         &partial_read_blk
       )
         self.class.record_prompt(
@@ -176,8 +178,10 @@ module DiscourseAi
 
         model_params = { max_tokens: max_tokens, stop_sequences: stop_sequences }
 
-        model_params[:temperature] = temperature if temperature
-        model_params[:top_p] = top_p if top_p
+        if SiteSetting.ai_llm_temperature_top_p_enabled
+          model_params[:temperature] = temperature if temperature
+          model_params[:top_p] = top_p if top_p
+        end
 
         # internals expect symbolized keys, so we normalize here
         response_format =
@@ -215,6 +219,7 @@ module DiscourseAi
           partial_tool_calls: partial_tool_calls,
           output_thinking: output_thinking,
           cancel_manager: cancel_manager,
+          execution_context:,
           &partial_read_blk
         )
       end

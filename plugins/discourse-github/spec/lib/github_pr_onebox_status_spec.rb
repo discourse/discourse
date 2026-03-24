@@ -218,4 +218,25 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
       end
     end
   end
+
+  describe "#status_date_label" do
+    let(:onebox) { Onebox::Engine::GithubPullRequestOnebox.new(gh_link) }
+
+    it "returns the 'open' translation for nil status" do
+      result = onebox.send(:status_date_label, nil)
+      expect(result).to eq(I18n.t("onebox.github.status_date.open"))
+    end
+
+    it "returns the 'open' translation for empty status" do
+      result = onebox.send(:status_date_label, "")
+      expect(result).to eq(I18n.t("onebox.github.status_date.open"))
+    end
+
+    it "returns the correct translation for each status" do
+      %w[open draft approved changes_requested merged closed].each do |status|
+        result = onebox.send(:status_date_label, status)
+        expect(result).to eq(I18n.t("onebox.github.status_date.#{status}"))
+      end
+    end
+  end
 end

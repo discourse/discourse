@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
 import DiscourseReactionsStatePanel from "./discourse-reactions-state-panel";
@@ -17,7 +18,7 @@ export default class DiscourseReactionsCounter extends Component {
   @service site;
   @service siteSettings;
 
-  reactionsUsers = new TrackedObject();
+  reactionsUsers = trackedObject();
 
   get elementId() {
     return `discourse-reactions-counter-${this.args.post.id}-${
@@ -52,6 +53,18 @@ export default class DiscourseReactionsCounter extends Component {
   @action
   mouseUp(event) {
     event.stopImmediatePropagation();
+  }
+
+  @action
+  keyDown(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      this.click(event);
+    } else if (event.key === "Escape" && this.args.statePanelExpanded) {
+      event.stopPropagation();
+      this.args.collapseStatePanel();
+      document.getElementById(this.elementId)?.focus();
+    }
   }
 
   @action
@@ -156,6 +169,12 @@ export default class DiscourseReactionsCounter extends Component {
     }
   }
 
+  get counterAriaLabel() {
+    return i18n("discourse_reactions.counter.aria_label", {
+      count: this.args.post.reaction_users_count,
+    });
+  }
+
   get onlyOneMainReaction() {
     return (
       this.args.post.reactions?.length === 1 &&
@@ -169,6 +188,9 @@ export default class DiscourseReactionsCounter extends Component {
     <div
       id={{this.elementId}}
       class={{this.classes}}
+      role="button"
+      tabindex="0"
+      aria-label={{this.counterAriaLabel}}
       {{on "mousedown" this.mouseDown}}
       {{on "mouseup" this.mouseUp}}
       {{closeOnClickOutside this.clickOutside}}
@@ -176,6 +198,7 @@ export default class DiscourseReactionsCounter extends Component {
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}
       {{on "click" this.click}}
+      {{on "keydown" this.keyDown}}
     >
       {{#if @post.reaction_users_count}}
         <DiscourseReactionsStatePanel
@@ -195,7 +218,7 @@ export default class DiscourseReactionsCounter extends Component {
           />
         {{/unless}}
 
-        <span class="reactions-counter">
+        <span class="reactions-counter" aria-hidden="true">
           {{@post.reaction_users_count}}
         </span>
 
@@ -203,6 +226,7 @@ export default class DiscourseReactionsCounter extends Component {
           <div class="discourse-reactions-reaction-button my-likes">
             <DButton
               class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
+              @translatedTitle={{this.counterAriaLabel}}
               @icon={{this.siteSettings.discourse_reactions_like_icon}}
             />
           </div>

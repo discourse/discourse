@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import FlashMessage from "discourse/components/flash-message";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
@@ -41,7 +41,7 @@ export default <template>
             <h1 class="login-title">{{i18n "login.no_login_methods.title"}}</h1>
             <img />
             <p class="login-subheader">
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "login.no_login_methods.description"
                   (hash adminLoginPath=@controller.adminLoginPath)

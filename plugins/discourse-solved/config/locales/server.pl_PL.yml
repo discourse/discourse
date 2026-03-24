@@ -6,6 +6,25 @@
 
 pl_PL:
   accepted_answer: "Zaakceptowana odpowiedź"
+  category_types:
+    support:
+      name: "Wsparcie"
+      title: "wsparcie"
+      description: "Miejsce, w którym członkowie mogą zadawać pytania i oznaczać odpowiedzi jako rozwiązania."
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Pozwól użytkownikom na akceptowanie rozwiązań"
+      solved_topics_auto_close_hours:
+        label: "Automatycznie zamknij rozwiązane tematy (godziny)"
+        description: "Automatycznie zamykaj temat po tylu godzinach od oznaczenia go jako rozwiązany. Ustaw 0, aby wyłączyć."
+      notify_on_staff_accept_solved:
+        label: "Powiadom twórcę tematu, gdy personel oznaczy rozwiązanie"
+      empty_box_on_unsolved:
+        label: "Wyświetl puste pole wyboru obok nierozwiązanych tematów na liście tematów"
+      solved_topics_auto_close_duration:
+        label: "Automatycznie zamknij rozwiązane tematy"
+        description: "Automatycznie zamknij temat po upływie tego czasu, gdy zostanie oznaczony jako rozwiązany. Ustaw na 0, aby wyłączyć."
   site_settings:
     solved_enabled: "Aktywuj wtyczkę solved, zezwól użytkownikom wybierać rozwiązania w tematach"
     allow_solved_on_all_topics: "Zezwalaj użytkownikom na wybieranie rozwiązań dotyczących wszystkich tematów (jeśli to pole nie jest zaznaczone, rozwiązania można włączać dla poszczególnych kategorii lub tagów)"
@@ -17,20 +36,19 @@ pl_PL:
     solved_topics_auto_close_hours: "Zamknij temat automatycznie po (n) godzinach od ostatniej odpowiedzi, gdy temat został oznaczony jako rozwiązany. Ustaw na 0, aby wyłączyć automatyczne zamykanie."
     show_filter_by_solved_status: "Pokaż rozwinięcie, aby filtrować listę tematów po statusie rozwiązania"
     notify_on_staff_accept_solved: "Wyślij powiadomienie do twórcy tematu, gdy post zostanie oznaczony przez personel jako rozwiązanie."
-    ignore_solved_topics_in_assigned_reminder: "Zapobiegaj wyświetlaniu przypomnień o zadaniach, które nie obejmują rozwiązanych tematów. Dotyczy tylko korzystania z wtyczki discourse-assign."
-    assignment_status_on_solve: "Gdy temat zostanie rozwiązany, zaktualizuj wszystkie zadania do tego statusu"
-    assignment_status_on_unsolve: "Jeśli temat jest nierozwiązany, zaktualizuj wszystkie zadania do tego statusu"
     disable_solved_education_message: "Wyłącz wiadomość edukacyjną dla rozwiązanych tematów."
     accept_solutions_topic_author: "Pozwól autorowi tematu zaakceptować rozwiązanie."
     solved_add_schema_markup: "Dodaj znaczniki schema QAPage do kodu HTML."
     enable_solved_tags: "Tagi, które pozwolą użytkownikom wybrać rozwiązania."
     prioritize_solved_topics_in_search: "Priorytetyzuj rozwiązane tematy w wynikach wyszukiwania."
+    enable_support_category_type_setup: "Włącza opcję „Wsparcie” podczas konfiguracji tworzenia kategorii. Uwaga: aby ta opcja zadziałała, opcja „Włącz uproszczone tworzenie kategorii” musi być włączona."
     show_who_marked_solved: "Pokaż, kto oznaczył temat jako rozwiązany. Informacja o tym znajduje się w pierwszym poście tematu, a w dymku z odpowiedzią."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
     accepted_solutions:
       title: "Zaakceptowane rozwiązania"
+      description: "Ile tematów miało zaakceptowane rozwiązanie dziennie w określonym przedziale dat, z opcjonalnym filtrem kategorii i 30-dniowym porównaniem całkowitych wyników."
       xaxis: "Dzień"
       yaxis: "Wszystkie"
   solved:

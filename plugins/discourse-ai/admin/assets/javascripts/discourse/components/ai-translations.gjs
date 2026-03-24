@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Chart from "discourse/admin/components/chart";
 import DButton from "discourse/components/d-button";
@@ -72,13 +72,13 @@ export default class AiTranslations extends Component {
       this.creditStatus?.reset_time_formatted ||
       this.creditStatus?.reset_time_absolute;
     if (resetTime) {
-      return htmlSafe(
+      return trustHTML(
         i18n("discourse_ai.translations.credit_limit_warning", {
           reset_time: resetTime,
         })
       );
     }
-    return htmlSafe(
+    return trustHTML(
       i18n("discourse_ai.translations.credit_limit_warning_no_time")
     );
   }
@@ -122,12 +122,6 @@ export default class AiTranslations extends Component {
       "adminPlugins.show.discourse-ai-features.edit",
       this.args.model.translation_id
     );
-  }
-
-  get descriptionTooltip() {
-    return i18n("discourse_ai.translations.stats.description_tooltip", {
-      count: this.total,
-    });
   }
 
   @action
@@ -250,12 +244,6 @@ export default class AiTranslations extends Component {
     }
   }
 
-  get descriptionKey() {
-    return this.done === this.total
-      ? "discourse_ai.translations.stats.complete_language_detection_description"
-      : "discourse_ai.translations.stats.incomplete_language_detection_description";
-  }
-
   get backfillStatusMessage() {
     if (
       this.args.model?.backfill_enabled &&
@@ -299,7 +287,7 @@ export default class AiTranslations extends Component {
           });
         }
 
-        return htmlSafe(
+        return trustHTML(
           i18n("discourse_ai.translations.stats.backfill_message", {
             date: formattedDate,
             eta: timeKey,

@@ -70,6 +70,7 @@
 # type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
 # type: tag_group_list        - A list of tag group names.
 # type: file_size_restriction - A file size restriction in bytes.
+# type: icon                  - A single fontawesome icon name from the Discourse icon set (e.g. heart, star)
 #
 required:
   title:
@@ -2010,6 +2011,9 @@ email:
   mailjet_webhook_token:
     default: ""
     secret: true
+  mailpace_webhook_token:
+    default: ""
+    secret: true
   mandrill_authentication_key:
     default: ""
     secret: true
@@ -2677,6 +2681,10 @@ security:
   moderators_change_post_ownership:
     client: true
     default: false
+  change_post_ownership_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
   moderators_view_emails:
     client: true
     default: false
@@ -2801,6 +2809,9 @@ security:
     refresh: true
     hidden: true
     area: "group_permissions"
+  cache_control_bfcache_compatibility:
+    default: false
+    hidden: true
 
 onebox:
   post_onebox_maxlength:
@@ -2850,6 +2861,12 @@ onebox:
     type: list
     secret: true
     list_type: secret
+  reddit_onebox_client_id:
+    default: ""
+    secret: true
+  reddit_onebox_client_secret:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -4214,12 +4231,14 @@ experimental:
       status: "experimental"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
+      disallow_enabled_for_groups: true
   enable_auto_grid_images:
     default: false
     client: true
+    hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
   rename_faq_to_guidelines:
@@ -4229,7 +4248,7 @@ experimental:
     area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "experimental"
+      status: "beta"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   experimental_tag_settings_page:
     default: false
@@ -4241,7 +4260,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
   impersonate_without_logout:
@@ -4249,7 +4268,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
@@ -4278,10 +4297,6 @@ experimental:
     default: true
     hidden: true
     client: true
-  enable_upcoming_changes:
-    default: false
-    hidden: true
-    client: true
   floating_dismiss_topics_on_mobile:
     default: false
     hidden: true
@@ -4295,6 +4310,13 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
+  experimental_topic_category_change_notification:
+    default: false
+    hidden: true
+  enable_upcoming_changes:
+    default: true
+    hidden: true
+    client: true

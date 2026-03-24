@@ -8,6 +8,7 @@ pt_BR:
   reports:
     currently_away:
       title: Usuários ausentes no momento
+      description: "Usuários que estão atualmente de férias ou afastados, os quais podem ser filtrados por grupo."
       labels:
         username: Nome de usuário(a)
   discourse_automation:
@@ -49,6 +50,7 @@ pt_BR:
     all_day_event_start_time: "Os eventos que não têm uma hora de início especificada começarão neste momento. O formato é HH:mm. Para 6:00 da manhã, digite 06:00"
     all_day_event_end_time: "Os eventos que não têm uma hora de início especificada começarão neste momento. O formato é HH:mm. Para 6:00 da manhã, digite 18:00"
     all_day_event_time_error: "Hora inválida. O formato precisa ser HH:mm (ex: 08:00)."
+    calendar_categories: "Exibir um calendário no topo de uma categoria. O categoryId é obrigatório. Exemplo: categoryId=6;weekends=false;defaultView=year;\n Outras configurações válidas: weekends(true/false) e defaultView(day,week,month,year)."
     calendar_categories_outlet: "Permite mudar qual saída deve mostrar o calendário da categoria."
     working_days: "Dias úteis definidos. Você pode exibir a disponibilidade de um grupo utilizando a etiqueta \"timezones\" em uma postagem, por exemplo: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Hora de início das horas do dia útil."
@@ -60,6 +62,7 @@ pt_BR:
     calendar_automatic_holidays_enabled: "Definir automaticamente o status do feriado conforme a região do(a) usuário(a) (observação: você pode desativar feriados automáticos específicos nas configurações do plugin)"
     event_participation_buttons: "Lista botões de participação no evento que os(as) usuários(as) podem usar."
     sidebar_show_upcoming_events: "Mostre o link dos próximos eventos na barra lateral, em \"Mais\"."
+    calendar_first_day_of_week: "Escolher o primeiro dia da semana do calendário. As opções são sábado, domingo ou segunda-feira."
   discourse_calendar:
     invite_user_notification: "%{username} convidou para participar de %{description}"
     calendar_must_be_in_first_post: "A etiqueta do calendário só pode ser usada no primeiro post de um tópico."

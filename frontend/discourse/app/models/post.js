@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import EmberObject, { get } from "@ember/object";
+import EmberObject, { computed, get } from "@ember/object";
 import { alias, and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -8,13 +8,13 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import {
   defineTrackedProperty,
   enumerateTrackedKeys,
 } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -220,12 +220,17 @@ export default class Post extends RestModel {
   }
 
   get shareUrl() {
-    return this.customShare || resolveShareUrl(this.url, this.currentUser);
+    const url = this.customShare || resolveShareUrl(this.url, this.currentUser);
+    return applyValueTransformer("post-share-url", url, { post: this });
   }
 
-  @discourseComputed("name", "username")
-  showName(name, username) {
-    return name && name !== username && this.siteSettings.display_name_on_posts;
+  @computed("name", "username")
+  get showName() {
+    return (
+      this.name &&
+      this.name !== this.username &&
+      this.siteSettings.display_name_on_posts
+    );
   }
 
   get deletedBy() {
@@ -236,24 +241,24 @@ export default class Post extends RestModel {
     return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
-  @discourseComputed("post_number", "topic_id", "topic.slug")
-  url(post_number, topic_id, topicSlug) {
+  @computed("post_number", "topic_id", "topic.slug")
+  get url() {
     return postUrl(
-      topicSlug || this.topic_slug,
-      topic_id || this.get("topic.id"),
-      post_number
+      this.topic?.slug || this.topic_slug,
+      this.topic_id || this.get("topic.id"),
+      this.post_number
     );
   }
 
   // Don't drop the /1
-  @discourseComputed("post_number", "url")
-  urlWithNumber(postNumber, baseUrl) {
-    return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
+  @computed("post_number", "url")
+  get urlWithNumber() {
+    return this.post_number === 1 ? `${this.url}/1` : this.url;
   }
 
-  @discourseComputed("username")
-  usernameUrl(username) {
-    return userPath(username);
+  @computed("username")
+  get usernameUrl() {
+    return userPath(this.username);
   }
 
   updatePostField(field, value) {
@@ -276,8 +281,8 @@ export default class Post extends RestModel {
     return this.link_counts.filter((link) => link.internal && link.title);
   }
 
-  @discourseComputed("actions_summary.@each.can_act")
-  flagsAvailable() {
+  @computed("actions_summary.@each.can_act")
+  get flagsAvailable() {
     // TODO: Investigate why `this.site` is sometimes null when running
     // Search - Search with context
     if (!this.site) {
@@ -289,17 +294,20 @@ export default class Post extends RestModel {
     );
   }
 
-  @discourseComputed(
-    "siteSettings.use_pg_headlines_for_excerpt",
-    "topic_title_headline"
-  )
-  useTopicTitleHeadline(enabled, title) {
-    return enabled && title;
+  @computed("siteSettings.use_pg_headlines_for_excerpt", "topic_title_headline")
+  get useTopicTitleHeadline() {
+    return (
+      this.siteSettings?.use_pg_headlines_for_excerpt &&
+      this.topic_title_headline
+    );
   }
 
-  @discourseComputed("topic_title_headline")
-  topicTitleHeadline(title) {
-    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
+  @computed("topic_title_headline")
+  get topicTitleHeadline() {
+    return fancyTitle(
+      this.topic_title_headline,
+      this.siteSettings.support_mixed_text_direction
+    );
   }
 
   get canBookmark() {
@@ -580,24 +588,30 @@ export default class Post extends RestModel {
    This can only be called after setDeletedState was called, but the delete
    failed on the server.
    **/
-  undoDeleteState() {
-    if (this.oldCooked) {
-      this.setProperties({
-        deleted_at: null,
-        deleted_by: null,
-        cooked: this.oldCooked,
-        version: this.version - 1,
-        can_recover: false,
-        can_delete: true,
-        user_deleted: false,
-        can_edit: this.oldCanEdit ?? false,
-      });
+  undoDeleteState({ force_destroy = false } = {}) {
+    if (force_destroy || !this.oldCooked) {
+      return;
     }
+
+    this.setProperties({
+      deleted_at: null,
+      deleted_by: null,
+      cooked: this.oldCooked,
+      version: this.version - 1,
+      can_recover: false,
+      can_delete: true,
+      user_deleted: false,
+      can_edit: this.oldCanEdit ?? false,
+    });
   }
 
   destroy(deletedBy, opts) {
-    return this.setDeletedState(deletedBy).then(() => {
-      return ajax("/posts/" + this.id, {
+    const maybeSetDeletedState = opts?.force_destroy
+      ? Promise.resolve()
+      : this.setDeletedState(deletedBy);
+
+    return maybeSetDeletedState.then(() => {
+      return ajax(`/posts/${this.id}`, {
         data: { context: window.location.pathname, ...opts },
         type: "DELETE",
       });

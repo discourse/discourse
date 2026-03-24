@@ -102,18 +102,11 @@ before_fork do |server, worker|
             # The cause is currently unknown but we suspect that it is related to the Unicorn master process and
             # Sidekiq demon processes reopening logs at the same time as we noticed that Unicorn worker processes only
             # reopen logs after the Unicorn master process is done. To workaround the problem, we are adding an arbitrary
-            # delay of 1 second to Sidekiq's log reopeing procedure. The 1 second delay should be
+            # delay of 1 second to Sidekiq's log reopening procedure. The 1 second delay should be
             # more than enough for the Unicorn master process to finish reopening logs.
             Demon::Sidekiq.kill("USR2")
           end
       end
-    end
-
-    enable_email_sync_demon = ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
-
-    if enable_email_sync_demon
-      server.logger.info "starting up EmailSync demon"
-      Demon::EmailSync.start(1, logger: server.logger)
     end
 
     DiscoursePluginRegistry.demon_processes.each do |demon_class|
@@ -130,11 +123,6 @@ before_fork do |server, worker|
             Demon::Sidekiq.ensure_running
             Demon::Sidekiq.heartbeat_check
             Demon::Sidekiq.rss_memory_check
-          end
-
-          if enable_email_sync_demon
-            Demon::EmailSync.ensure_running
-            Demon::EmailSync.check_email_sync_heartbeat
           end
 
           DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }

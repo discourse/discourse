@@ -10,8 +10,8 @@ module DiscourseAi
       before_action :check_permissions
 
       def reply
-        if ai_discover_persona.default_llm_id.blank? && SiteSetting.ai_default_llm_model.blank?
-          render_json_error "Discover persona is missing a default LLM model.", status: 503
+        if ai_discover_agent.default_llm_id.blank? && SiteSetting.ai_default_llm_model.blank?
+          render_json_error "Discover agent is missing a default LLM model.", status: 503
           return
         end
 
@@ -29,7 +29,7 @@ module DiscourseAi
         raise Discourse::InvalidParameters.new("query") if !params[:query]
         raise Discourse::InvalidParameters.new("context") if !params[:context]
 
-        bot_user_id = ai_discover_persona.user_id
+        bot_user_id = ai_discover_agent.user_id
         bot_username = User.find_by(id: bot_user_id).username
 
         RateLimiter.new(
@@ -65,15 +65,17 @@ module DiscourseAi
 
       private
 
-      def ai_discover_persona
-        @discover_persona ||= AiPersona.find_by_id_from_cache(SiteSetting.ai_discover_persona)
+      def ai_discover_agent
+        @discover_agent ||= AiAgent.find_by_id_from_cache(SiteSetting.ai_discover_agent)
       end
 
       def check_permissions
-        if ai_discover_persona.nil? || current_user.nil? ||
-             !current_user.in_any_groups?(ai_discover_persona.allowed_group_ids.to_a)
+        if ai_discover_agent.nil? || current_user.nil? ||
+             !current_user.in_any_groups?(ai_discover_agent.allowed_group_ids.to_a)
           raise Discourse::InvalidAccess.new
         end
+
+        raise Discourse::InvalidAccess if guardian.is_silenced?
       end
     end
   end

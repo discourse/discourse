@@ -89,6 +89,12 @@
             "null"
           ]
         },
+        "topic_title_placeholder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "form_template_ids": {
           "type": "array",
           "items": {}
@@ -316,6 +322,9 @@
             "string",
             "null"
           ]
+        },
+        "category_types": {
+          "type": "object"
         }
       },
       "required": [
@@ -339,6 +348,7 @@
         "notification_level",
         "can_edit",
         "topic_template",
+        "topic_title_placeholder",
         "has_children",
         "subcategory_count",
         "sort_order",

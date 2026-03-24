@@ -31,7 +31,7 @@ For example, to modify the link URL of the logo on mobile devices:
 
 ```js
 api.registerValueTransformer("home-logo-href", ({ value, context }) => {
-  const site = api.lookup("service:site");
+  const site = api.container.lookup("service:site");
   if (site.mobileView) {
     return "/latest";
   } else {

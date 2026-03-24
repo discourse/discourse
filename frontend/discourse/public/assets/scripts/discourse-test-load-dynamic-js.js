@@ -4,6 +4,10 @@ const outputNode = document.querySelector("discourse-dynamic-test-js");
 const params = new URLSearchParams(document.location.search);
 const target = params.get("target") || "core";
 
+if (target === "theme-qunit") {
+  window.location.href = window.location.origin + "/theme-qunit";
+}
+
 (async function setup() {
   const rootUrl = document.querySelector("link[rel='canonical']").href;
   const response = await fetch(
@@ -38,7 +42,9 @@ const target = params.get("target") || "core";
     } else if (element.tagName === "SCRIPT") {
       const script = document.createElement("script");
       script.src = element.src;
-      script.dataset = element.dataset;
+      for (const [key, value] of Object.entries(element.dataset)) {
+        script.dataset[key] = value;
+      }
       script.defer = element.defer;
       script.async = false; // Weirdly, this is true by default when programmatically creating script tags
       outputNode.append(script);

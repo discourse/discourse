@@ -6,6 +6,12 @@
 
 fa_IR:
   js:
+    blocks:
+      ghost:
+        status: "وضعیت"
+        in_location: "در"
+        hidden: "مخفی"
+        failed: "ناموفق"
     number:
       format:
         separator: "."
@@ -340,6 +346,8 @@ fa_IR:
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     admin_onboarding_banner:
+      start_posting:
+        back: "بازگشت"
       spread_the_word:
         action: "رونوشت پیوند"
         copied_to_clipboard: "پیوند در کلیپ بورد کپی شد!"
@@ -567,19 +575,13 @@ fa_IR:
       in_reply_to: "در پاسخ به"
       filtered_flagged_by: "پرچم گذاری شده توسط"
       unknown:
-        title:
-          one: "از طرف افزونه غیرفعال شده، موارد قابل بازبینی معلق دارید:"
-          other: "از طرف افزونه‌های غیرفعال، موارد قابل بازبینی معلق دارید:"
         instruction: "تا زمانی که پلاگین مربوط را فعال نکنید، نمی توانند به درستی نمایش داده شوند. لطفا افزونه را فعال کنید و صفحه را تازه کنید. البته می توانید آنها را نادیده نیز بگیرید. <a href='%{url}' target='_blank'>بیشتر بدانید...</a>"
         reviewable_unknown_source: "%{reviewableType} (افزونه ناشناخته)"
         reviewable_known_source: "%{reviewableType} (از افزونه '%{pluginName}')"
         ignore_all: "چشم‌پوشی از همه"
         enable_plugins: "فعال‌سازی افزونه"
-        delete_confirm: "آیا مطمئن هستید که می‌خواهید تمام بررسی‌های ایجاد شده توسط پلاگین‌های غیرفعال را حذف کنید؟"
-        ignore_success: "تمام بررسی‌های ایجاد شده توسط پلاگین‌های غیرفعال حذف شده‌اند."
       explain:
         why: "توضیح دهید که چرا این مورد در صف پایان یافت"
-        title: "امتیازدهی قابل تجدید نظر"
         formula: "فرمول"
         subtotal: "جمع جزء"
         total: "مجموع"
@@ -593,10 +595,8 @@ fa_IR:
           title: "کاربرانی که پرچم آن ها به طور گروهی پذیرفته شده است، یک امتیاز دریافت می کنند."
         trust_level_bonus:
           name: "سطح اعتماد"
-          title: "موارد قابل بررسی که توسط کاربرانی با میزان اعتماد بیشتر ایجاد شده اند، اولویت بالاتری دارند."
         type_bonus:
           name: "امتیاز را وارد کنید"
-          title: "موارد قابل بررسی خاص می توانند کارمندان دارای امتیاز شوند تا اولویت آن ها را بیشتر کند."
       revise_and_reject_post:
         title: "تجدید نظر کردن"
         reason: "دلیل"
@@ -605,7 +605,6 @@ fa_IR:
         custom_reason: "شرح واضحی از دلیل ارائه دهید"
         other_reason: "غیره…"
         optional: "اختیاری"
-      stale_help: "این موردِ قابل بررسی توسط <b>%{username}</b> حل شده است."
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
         required: "قبل از بازنگری موارد باید آن‌ها را درخواست دهید."
@@ -1529,6 +1528,10 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
+        calendar_subscriptions: "تقویم"
+      calendar_subscriptions:
+        copied: "کپی شد!"
+        add_to_google: "تقویم گوگل"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -2122,6 +2125,7 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
+      required: مورد نیاز
       dirty_form: "شما تغییرات خود را ارسال نکرده‌اید! آیا مطمئنید می‌خواهید بروید؟"
       errors:
         required: "مورد نیاز"
@@ -2914,8 +2918,6 @@ fa_IR:
         max_views:
           placeholder: حداکثر
           aria_label: فیلتر بر اساس حداکثر بازدید
-        additional_options:
-          label: "بر اساس تعداد پست‌ها و بازدیدهای موضوع فیلتر کنید"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -2977,11 +2979,8 @@ fa_IR:
         confirm: "تایید"
         select_all: "انتخاب همه"
         clear_all: "پاکسازی همه"
-        unlist_topics: "از فهرست خارج کردن مباحث"
-        relist_topics: "ایجاد فهرست مجدد از موضوعات"
         reset_bump_dates: "بازنشانی تاریخ بالا آوردن"
         defer: "علامت گذاری به عنوان خوانده نشده"
-        delete: "حذف موضوعات"
         delete_topics_count:
           one: "پاک کردن موضوع"
           other: "حذف موضوعات"
@@ -3014,29 +3013,18 @@ fa_IR:
           other: "رد کردن (%{count}) موضوع جدید"
         toggle: "تغییر وضعیت انتخاب گروهی موضوعات"
         actions: "عملیات گروهی"
-        change_category: "تنظیم دسته‌بندی…"
-        close_topics: "بستن موضوعات"
-        archive_topics: "بایگانی موضوعات"
         move_messages_to_inbox: "انتقال به صندوق دریافت"
         archive_messages: "انتقال به بایگانی"
-        notification_level: "اعلان‌ها…"
         change_notification_level: "تغییر سطح آگاه‌سازی"
         choose_new_category: "یک دسته‌بندی جدید برای موضوع انتخاب نمایید"
-        selected:
-          one: "شما <b>%{count}</b> موضوع را انتخاب کرده اید."
-          other: "شما <b>%{count}</b> موضوع را انتخاب کرده اید."
         selected_sole_category:
           one: "شما <b>%{count}</b> موضوع را از دسته انتخاب کرده اید:"
           other: "شما <b>%{count}</b> موضوع را از دسته انتخاب کرده اید:"
         selected_count:
           one: "%{count} تا انتخاب شده است"
           other: "%{count} تا انتخاب شده است"
-        change_tags: "جایگزینی برچسب‌ها"
-        append_tags: "افزودن برچسب‌ها"
         choose_new_tags: "انتخاب برچسب‌های جدید برای این موضوعات:"
-        choose_append_tags: "انتخاب برچسب‌های جدید برای افزودن به این موضوعات:"
         changed_tags: "انتخاب برچسب برای موضوعاتی که عوض شدند"
-        remove_tags: "حذف همه‌ی برچسب‌ها"
         confirm_remove_tags:
           one: "همه برچسب ها از این موضوع حذف خواهند شد. آیا مطمئن هستید؟"
           other: "همه برچسب ها از <b>%{count}</b> موضوع حذف خواهند شد. آیا مطمئن هستید؟"
@@ -3065,7 +3053,6 @@ fa_IR:
         name: "رد کردن"
       close_topics:
         name: "بستن"
-        note: "یادداشت"
         optional: (اختیاری)
       archive_topics:
         name: "بایگانی"
@@ -3079,24 +3066,18 @@ fa_IR:
         name: "فهرست مجدد"
       remove_tags:
         name: "حذف برچسب‌ها"
-      append_tags:
-        name: "افزودن برچسب‌ها"
       replace_tags:
         name: "جایگزینی برچسب‌ها"
       delete_topics:
         name: "حذف"
       update_category:
         name: "به روز رسانی دسته"
-        description: "دسته بندی جدید را برای موضوعات انتخاب شده انتخاب کنید"
       reset_bump_dates:
         name: "بازنشانی تاریخ‌های بالا آوردن"
-        description: "تاریخ بالا آوردن موضوع را به تاریخ آخرین پست ایجاد شده در آن موضوع بازنشانی کنید، که روی ترتیب در لیست موضوع تأثیر می‌گذارد"
       defer:
         name: "علامت گذاری به عنوان خوانده نشده"
-        description: "علامت گذاری موضوعات به عنوان خوانده نشده"
       update_notifications:
         name: "به روز رسانی اعلان‌ها"
-        description: "سطح اعلان را به دنبال کردن، پیگیری کردن، عادی یا بی‌صدا تغییر دهید"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -3841,6 +3822,8 @@ fa_IR:
       delete: "حذف دسته‌بندی"
       create: "دسته‌بندی جدید"
       create_long: "ایجاد یک دسته‌بندی جدید"
+      type_settings_schema:
+        site_settings: "تنظیمات سایت"
       save: "ذخیره دسته‌بندی"
       slug_placeholder: "(اختیاری) کلمه با - جدا شده برای پیوند"
       creation_error: خطایی در ساخت این دسته بروز کرد.
@@ -3869,6 +3852,8 @@ fa_IR:
       list: "فهرست دسته‌بندی‌ها"
       no_description: "لطفا برای این دسته بندی توضیحاتی اضافه نمایید."
       change_in_category_topic: "ویرایش توضیحات"
+      description_expand: "نمایش بیشتر"
+      description_collapse: "نمایش کمتر"
       already_used: "این رنگ توسط یک دسته بندی دیگر گزیده شده است"
       security: "امنیت"
       security_add_group: "افزودن گروه"
@@ -4410,7 +4395,20 @@ fa_IR:
         one: "مترادف آن نیز حذف خواهد شد."
         other: "%{count} مترادف آن نیز حذف خواهند شد."
       edit_tag: "ویرایش نام و توضیحات برچسب"
-      description: "توضیحات (حداکثر ۱۰۰۰ نویسه)"
+      description: "توضیح"
+      settings:
+        title: "تنظیم"
+        general: "عمومی"
+        localizations: "محلی‌سازی‌ها"
+        back: "بازگشت"
+        name: "نام"
+        slug: "نشانک (slug)"
+        name_placeholder: "نام برچسب"
+        synonyms_subtitle: "هنگامی که از برچسب‌های زیر استفاده می‌شود، آنها با %{name}جایگزین می‌شوند"
+      localization:
+        locale: "زبان"
+        name: "نام"
+        description: "توضیح"
       sort_by: "مرتب سازی بر اساس:"
       sort_by_count: "تعداد"
       sort_by_name: "نام"
@@ -4830,7 +4828,6 @@ fa_IR:
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"
-    reset_filter: "بازنشانی"
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "ناظر"
@@ -4842,9 +4839,11 @@ fa_IR:
           never: "هیچوقت"
       reports:
         title: "لیستی از گزارشات موجود"
-        meta_doc: "گزارش‌ها ابزار قدرتمندی هستند که به شما کمک می‌کنند بفهمید چه اتفاقی در سایت شما می‌افتد. آنها می توانند به شما در شناسایی روندها، شناسایی مشکلات و تصمیم گیری بر اساس داده ها کمک کنند."
         sidebar_title: "گزارشات"
         back: "بازگشت به همه گزارش‌ها"
+        group_traffic: "ترافیک"
+        group_members: "اعضاء"
+        group_other: "دیگر"
       config_sections:
         account:
           title: "حساب کاربری"
@@ -4869,7 +4868,6 @@ fa_IR:
         preview: "پیش‌نمایش"
         enabled_for_options:
           everyone: "همه"
-          staff: "فقط به تیم مدیریت"
         statuses:
           experimental: "آزمایشی"
         impact_roles:
@@ -4987,6 +4985,9 @@ fa_IR:
         reports:
           title: "گزارشات"
           header_description: "گزارش‌ها ابزار قدرتمندی هستند که به شما کمک می‌کنند بفهمید چه اتفاقی در سایت شما می‌افتد. آنها می توانند به شما در شناسایی روندها، شناسایی مشکلات و تصمیم گیری بر اساس داده ها کمک کنند."
+          sub_pages:
+            settings:
+              title: "تنظیم"
         badges:
           title: "نشان‌ها"
         content:
@@ -5071,22 +5072,6 @@ fa_IR:
         default_value: "پیش‌فرض"
       search:
         title: "جستجو"
-        result_types:
-          page:
-            one: "صفحه"
-            other: "صفحه"
-          report:
-            one: "گزارش"
-            other: "گزارش"
-          setting:
-            one: "تنظیم"
-            other: "تنظیم"
-          theme:
-            one: "قالب"
-            other: "قالب‌ها"
-          component:
-            one: "کامپوننت "
-            other: "کامپوننت‌ها"
       new_features:
         title: "چه چیزی جدید شده؟"
         check_for_updates: "برررسی به‌روز‌رسانی‌ها"
@@ -5110,14 +5095,6 @@ fa_IR:
           title: "چه چیزی جدید شده؟"
           subtitle: "ما همیشه در حال انتشار ویژگی ها و بهبودهای جدید هستیم. این صفحه نکات برجسته را پوشش می‌دهد، اما می‌توانید روی «بیشتر بدانید» کلیک کنید تا یادداشت‌های انتشار گسترده را ببینید."
           learn_more: "بیشتر بدانید..."
-          experimental: "آزمایشی"
-          experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."
-          experiment_disabled: "شما ویژگی آزمایشی را غیرفعال کرده‌اید."
-          experiment_tooltip:
-            title_enabled: "ویژگی آزمایشی را خاموش کنید"
-            content_enabled: "با تغییر این تنظیم، این ویژگی برای همه کاربران غیرفعال می‌شود."
-          feature_tooltip:
-            content_enabled: "با تغییر این تنظیم، این ویژگی برای همه کاربران غیرفعال می‌شود."
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."
@@ -5179,7 +5156,7 @@ fa_IR:
           all: "همه"
           view_table: "جدول"
           view_graph: "نمودار"
-          refresh_report: "تازه کردن گزارش"
+          refresh_report: "تازه‌سازی"
           daily: روزانه
           monthly: ماهیانه
           weekly: هفتگی
@@ -6887,6 +6864,7 @@ fa_IR:
           disabled: "قابل جستجو نیست"
         field_types:
           text: "متن"
+          date: "تاریخ"
           confirm: "تاییدیه"
           dropdown: "کرکره‌ای"
           multiselect: "انتخاب چندگانه"
@@ -7003,7 +6981,7 @@ fa_IR:
             confirm: "بله، سیاست رمز عبور را به روز کنید"
           min_admin_password_length:
             confirm: "بله، سیاست رمز عبور را به روز کنید"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "بله، سیاست رمز عبور را به روز کنید"
           block_common_passwords:
             confirm: "بله، سیاست رمز عبور را به روز کنید"

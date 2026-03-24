@@ -5,13 +5,19 @@ require_relative "../support/runner_helper"
 
 RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
   fab!(:llm, :fake_model)
+  let(:execution_context) { DiscourseAi::Completions::ExecutionContext.new }
 
   before { stub_runner_bot(response: "Search overview") }
 
   describe "#run" do
     it "returns a discovery payload with the model output" do
       runner = described_class.new("discoveries")
-      result = runner.run(OpenStruct.new(args: { query: "chat integrations" }), llm)
+      result =
+        runner.run(
+          OpenStruct.new(args: { query: "chat integrations" }),
+          llm,
+          execution_context: execution_context,
+        )
 
       expect(result[:raw]).to eq("Search overview")
       expect(result[:metadata]).to include(query: "chat integrations")
@@ -23,6 +29,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
         runner.run(
           OpenStruct.new(args: { cases: [{ query: "best themes" }, { query: "login security" }] }),
           llm,
+          execution_context: execution_context,
         )
 
       expect(results.length).to eq(2)
@@ -32,10 +39,9 @@ RSpec.describe DiscourseAi::Evals::Runners::Discoveries do
     it "raises when the query is missing" do
       runner = described_class.new("discoveries")
 
-      expect { runner.run(OpenStruct.new(args: {}), llm) }.to raise_error(
-        ArgumentError,
-        /require :query/,
-      )
+      expect {
+        runner.run(OpenStruct.new(args: {}), llm, execution_context: execution_context)
+      }.to raise_error(ArgumentError, /require :query/)
     end
   end
 end

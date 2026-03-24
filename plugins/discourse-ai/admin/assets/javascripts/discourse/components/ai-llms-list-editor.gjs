@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -128,7 +128,7 @@ export default class AiLlmsListEditor extends Component {
 
   localizeUsage(usage) {
     return i18n(`discourse_ai.llms.usage.${usage.type}`, {
-      persona: usage.name,
+      agent: usage.name,
     });
   }
 
@@ -160,8 +160,8 @@ export default class AiLlmsListEditor extends Component {
             <DPageSubheader
               @titleLabel={{i18n "discourse_ai.llms.configured.title"}}
             />
-            <table class="d-admin-table">
-              <thead>
+            <table class="d-table">
+              <thead class="d-table__header">
                 <tr>
                   <th>{{i18n "discourse_ai.llms.display_name"}}</th>
                   <th>{{i18n "discourse_ai.llms.provider"}}</th>
@@ -172,9 +172,9 @@ export default class AiLlmsListEditor extends Component {
                 {{#each @llms.content as |llm|}}
                   <tr
                     data-llm-id={{llm.name}}
-                    class="ai-llm-list__row d-admin-row__content"
+                    class="ai-llm-list__row d-table__row"
                   >
-                    <td class="d-admin-row__overview">
+                    <td class="d-table__cell --overview">
 
                       <div class="ai-llm-list__name">
                         <strong>
@@ -200,7 +200,7 @@ export default class AiLlmsListEditor extends Component {
                           {{#if llm.llm_credit_allocation.hard_limit_reached}}
                             <div class="alert alert-danger ai-credit-warning">
                               {{icon "circle-info"}}
-                              {{htmlSafe
+                              {{trustHTML
                                 (i18n
                                   "discourse_ai.llms.credit_allocation.hard_limit_warning"
                                   reset_date=(this.formatResetDate
@@ -214,7 +214,7 @@ export default class AiLlmsListEditor extends Component {
                           }}
                             <div class="alert alert-warning ai-credit-warning">
                               {{icon "circle-info"}}
-                              {{htmlSafe
+                              {{trustHTML
                                 (i18n
                                   "discourse_ai.llms.credit_allocation.soft_limit_warning"
                                   percentage=llm.llm_credit_allocation.percentage_remaining
@@ -225,15 +225,15 @@ export default class AiLlmsListEditor extends Component {
                         </div>
                       {{/if}}
                     </td>
-                    <td class="d-admin-row__detail">
-                      <div class="d-admin-row__mobile-label">
+                    <td class="d-table__cell --detail">
+                      <div class="d-table__mobile-label">
                         {{i18n "discourse_ai.llms.provider"}}
                       </div>
                       {{i18n
                         (concat "discourse_ai.llms.providers." llm.provider)
                       }}
                     </td>
-                    <td class="d-admin-row__controls">
+                    <td class="d-table__cell --controls">
                       <DButton
                         class="btn btn-default btn-small ai-llm-list__edit-button"
                         @label="discourse_ai.llms.edit"

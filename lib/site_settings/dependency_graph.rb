@@ -6,6 +6,8 @@ end
 class SiteSettings::DependencyGraph
   include TSort
 
+  CircularDependency = Class.new(StandardError)
+
   attr_reader :dependencies, :behaviors
 
   def initialize(dependencies = {})
@@ -44,6 +46,15 @@ class SiteSettings::DependencyGraph
 
   def order
     @order ||= tsort
+  rescue TSort::Cyclic
+    cycles =
+      strongly_connected_components.reject(&:one?).map { |cycle| cycle.join(" <-> ") }.join("\n")
+
+    raise CircularDependency.new(<<~MESSAGE)
+      Circular dependencies in site settings:
+
+        #{cycles}
+    MESSAGE
   end
 
   private

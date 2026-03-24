@@ -9,6 +9,7 @@ import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -117,9 +118,19 @@ class DiscourseURL extends EmberObject {
       if (opts.anchor) {
         selector = `#main #${opts.anchor}, a[name=${opts.anchor}]`;
         holder = document.querySelector(selector);
+
+        if (!holder) {
+          // Anchor not found — post may be cloaked. Scroll to the post
+          // placeholder to trigger uncloaking, then let LockOn retry
+          // until the anchor element appears in the rendered content.
+          const postHolder = document.querySelector(holderId);
+          if (postHolder) {
+            postHolder.scrollIntoView(true);
+          }
+        }
       }
 
-      if (!holder) {
+      if (!holder && !opts.anchor) {
         selector = holderId;
         holder = document.querySelector(selector);
       }
@@ -207,6 +218,11 @@ class DiscourseURL extends EmberObject {
   routeTo(path, opts) {
     opts = opts || {};
 
+    if (isEmpty(path)) {
+      return;
+    }
+
+    path = applyValueTransformer("route-to-url", path, { opts });
     if (isEmpty(path)) {
       return;
     }

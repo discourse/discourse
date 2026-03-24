@@ -9,7 +9,7 @@ module DiscourseAi
             raise NotImplemented
           end
 
-          def find_runner(feature, persona_prompt)
+          def find_runner(feature, agent_prompt)
             registry = [
               DiscourseAi::Evals::Runners::AiHelper,
               DiscourseAi::Evals::Runners::Translation,
@@ -20,47 +20,55 @@ module DiscourseAi
               DiscourseAi::Evals::Runners::Inference,
             ]
             klass = registry.find { |runner| runner.can_handle?(feature) }
-            klass&.new(feature.split(":").last, persona_prompt) if klass
+            klass&.new(feature.split(":").last, agent_prompt) if klass
           end
         end
 
-        attr_reader :feature_name, :persona_prompt_override
+        attr_reader :feature_name, :agent_prompt_override
 
-        def initialize(feature, persona_prompt_override = nil)
+        def initialize(feature, agent_prompt_override = nil)
           @feature_name = feature
-          @persona_prompt_override = persona_prompt_override
+          @agent_prompt_override = agent_prompt_override
         end
 
         private
 
-        def resolve_persona(persona_class: nil)
-          if persona_class.nil?
-            raise ArgumentError, "Unable to resolve persona for runner (#{self.class.name})"
+        def resolve_agent(agent_class: nil)
+          if agent_class.nil?
+            raise ArgumentError, "Unable to resolve agent for runner (#{self.class.name})"
           end
 
-          persona = persona_class.new
+          agent = agent_class.new
 
-          if persona_prompt_override.present?
-            override = persona_prompt_override
-            persona.define_singleton_method(:system_prompt) { override }
+          if agent_prompt_override.present?
+            override = agent_prompt_override
+            agent.define_singleton_method(:system_prompt) { override }
           end
 
-          persona
+          agent
         end
 
-        def capture_plain_response(bot, context)
+        def capture_plain_response(bot, context, execution_context:)
           buffer = +""
-          bot.reply(context) { |partial, _, type| buffer << partial if type.blank? }
+          bot.reply(context, execution_context:) do |partial, _, type|
+            buffer << partial if type.blank?
+          end
           buffer
         end
 
-        def capture_structured_response(bot, context, schema_key:, schema_type: "string")
+        def capture_structured_response(
+          bot,
+          context,
+          schema_key:,
+          schema_type: "string",
+          execution_context:
+        )
           key = schema_key&.to_sym
           raise ArgumentError, "schema_key is required for structured capture" if key.nil?
 
           accumulator = schema_type == "array" ? [] : +""
 
-          bot.reply(context) do |partial, _, type|
+          bot.reply(context, execution_context:) do |partial, _, type|
             if type == :structured_output
               chunk = partial.read_buffered_property(key)
               accumulator = append_structured_chunk(accumulator, schema_type, chunk)

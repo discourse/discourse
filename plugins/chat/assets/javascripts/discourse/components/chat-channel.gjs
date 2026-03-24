@@ -59,9 +59,6 @@ export default class ChatChannel extends Component {
   @service dialog;
   @service siteSettings;
 
-  @tracked sending = false;
-  @tracked showChatQuoteSuccess = false;
-  @tracked includeHeader = true;
   @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;

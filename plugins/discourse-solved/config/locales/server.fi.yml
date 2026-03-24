@@ -6,6 +6,14 @@
 
 fi:
   accepted_answer: "Hyväksytty vastaus"
+  category_types:
+    support:
+      name: "Tuki"
+      title: "tuki"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Salli ketjun omistajan ja henkilökunnan merkitä viesti ratkaisuksi"
   site_settings:
     solved_enabled: "Ota käyttöön Solved-lisäosa, salii käyttäjän merkitä ratkaisuja ketjuille"
     allow_solved_on_all_topics: "Salli käyttäjien valita ratkaisuja kaikissa ketjuissa (jos tätä ei ole valittu, ratkaisut voidaan ottaa käyttöön alue- tai tunnistekohtaisesti)"
@@ -16,9 +24,6 @@ fi:
     solved_topics_auto_close_hours: "Sulje ketju automaattisesti (n) tunnin kuluttua viimeisestä vastauksesta, kun aihe on merkitty ratkaistuksi. Poista automaattinen sulkeminen käytöstä asettamalla arvoksi 0."
     show_filter_by_solved_status: "Näytä pudotusvalikko, jolla voi suodattaa ketjuluetteloa ratkaisun tilan mukaan."
     notify_on_staff_accept_solved: "Lähetä ilmoitus ketjun luojalle, kun henkilökunta merkitsee viestin ratkaisuksi."
-    ignore_solved_topics_in_assigned_reminder: "Estä osoitusten muistutuksia sisällyttämästä ratkaistuja ketjuja. Olennainen vain käytettäessä discourse-assign-lisäosaa."
-    assignment_status_on_solve: "Kun ketju on ratkaistu, päivitä kaikki osoitukset tähän tilaan"
-    assignment_status_on_unsolve: "Kun ketju on ratkaisematon, päivitä kaikki osoitukset tähän tilaan"
     disable_solved_education_message: "Poista koulutusviesti käytöstä ratkaistuissa ketjuissa."
     accept_solutions_topic_author: "Salli ketjun luojan hyväksyä ratkaisu."
     solved_add_schema_markup: "Lisää QAPage-skeemamerkintä HTML:ään."

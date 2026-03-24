@@ -164,7 +164,7 @@
     font-size: var(--font-down-1);
   }
 
-  div.discourse-tags {
+  .discourse-tags {
     font-size: var(--font-down-1);
   }
 
@@ -661,7 +661,7 @@
         overflow: hidden; // clears the text from wrapping below icons
         overflow-wrap: break-word;
 
-        @include line-clamp(2);
+        @include line-clamp(3);
       }
     }
 

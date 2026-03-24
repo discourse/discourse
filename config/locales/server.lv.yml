@@ -256,7 +256,9 @@ lv:
       labels:
         flag: Tips
     visits:
-      xaxis: "Diena"
+      xaxis:
+        desktop: "Personālais dators"
+        mobile: "Mobilais"
     signups:
       xaxis: "Diena"
     new_contributors:
@@ -492,8 +494,6 @@ lv:
       button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
-  dev_mode:
-    enter: "Ievadīt"
   wizard:
     step:
       setup:

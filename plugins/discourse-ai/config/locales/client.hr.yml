@@ -39,10 +39,9 @@ hr:
       llm_selector:
         none: "Ništa"
       features:
-        back: "Natrag"
         disabled: "(onemogućeno)"
         groups: "Grupe:"
-        no_persona: "Nije postavljeno"
+        no_agent: "Nije postavljeno"
         no_groups: "Ništa"
         edit: "Postavke"
         expand_list:
@@ -93,8 +92,7 @@ hr:
         periods:
           last_day: "Posljednja 24 sata"
           custom: "Prilagođeno..."
-      ai_persona:
-        back: "Natrag"
+      ai_agent:
         name: "Ime"
         edit: "Uredi"
         export: "Izvoz"
@@ -115,7 +113,6 @@ hr:
           title: "Prijenosi"
           uploading: "Učitavanje..."
       tools:
-        back: "Natrag"
         export: "Izvoz"
         name: "Ime"
         description: "Opis"
@@ -123,13 +120,14 @@ hr:
         save: "Spremi"
         remove_parameter: "Ukloni"
         parameter_required: "Potrebno"
+        credential_not_set: "(nije postavljeno)"
         edit: "Uredi"
+        test: "Test"
         delete: "Izbriši"
       secrets:
         short_title: "Vjerodajnice"
         name: "Ime"
         secret: "Vrijednost"
-        back: "Natrag"
         save: "Spremi"
         edit: "Uredi"
         delete: "Izbriši"
@@ -139,7 +137,6 @@ hr:
         provider: "Pružatelj usluga"
         save: "Spremi"
         edit: "Uredi"
-        back: "Natrag"
         delete: Izbriši
         quotas:
           group: "Grupa"
@@ -179,7 +176,6 @@ hr:
         image_caption:
           save_caption: "Spremi"
       embeddings:
-        back: "Natrag"
         save: "Spremi"
         delete: "Izbriši"
         edit: "Uredi"

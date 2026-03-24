@@ -31,13 +31,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
         with:
-          cache: "pnpm"
-          cache-dependency-path: docs/developer-guides/pnpm-lock.yaml
+          fetch-depth: 1
+
+      - uses: pnpm/action-setup@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

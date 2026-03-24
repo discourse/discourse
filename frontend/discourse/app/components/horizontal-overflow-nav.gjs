@@ -1,21 +1,28 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import onResize from "discourse/modifiers/on-resize";
 
 export default class HorizontalOverflowNav extends Component {
-  @service site;
-
   @tracked hasScroll;
   @tracked hideRightScroll = false;
   @tracked hideLeftScroll = true;
   scrollInterval;
+
+  @bind
+  setup(element) {
+    this.scrollToActive(element);
+
+    const observer = new MutationObserver(() => this.watchScroll(element));
+    observer.observe(element, { childList: true });
+    registerDestructor(this, () => observer.disconnect());
+  }
 
   @bind
   scrollToActive(element) {
@@ -30,10 +37,6 @@ export default class HorizontalOverflowNav extends Component {
 
   @bind
   onResize(entries) {
-    if (this.site.mobileView) {
-      return;
-    }
-
     const element = entries[0].target;
     this.watchScroll(element);
     this.hasScroll = element.scrollWidth > element.offsetWidth;
@@ -46,10 +49,6 @@ export default class HorizontalOverflowNav extends Component {
 
   @bind
   onScroll(event) {
-    if (this.site.mobileView) {
-      return;
-    }
-
     this.watchScroll(event.target);
   }
 
@@ -78,7 +77,7 @@ export default class HorizontalOverflowNav extends Component {
 
   @bind
   scrollDrag(event) {
-    if (this.site.mobileView || !this.hasScroll) {
+    if (!this.hasScroll) {
       return;
     }
 
@@ -160,7 +159,7 @@ export default class HorizontalOverflowNav extends Component {
       <ul
         {{onResize this.onResize}}
         {{on "scroll" this.onScroll}}
-        {{didInsert this.scrollToActive}}
+        {{didInsert this.setup}}
         {{on "mousedown" this.scrollDrag}}
         class="nav-pills action-list {{@className}}"
         ...attributes

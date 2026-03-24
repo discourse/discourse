@@ -602,6 +602,23 @@ RSpec.describe Admin::UsersController do
 
       include_examples "suspension of active user possible"
       include_examples "suspension of staff users"
+
+      it "cannot edit an arbitrary static doc post unrelated to the suspended user" do
+        static_doc_post = Fabricate(:post)
+        SiteSetting.tos_topic_id = static_doc_post.topic_id
+
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "reason",
+              post_id: static_doc_post.id,
+              post_action: "edit",
+              post_edit: "edited content",
+            }
+
+        expect(response.status).to eq(200)
+        expect(static_doc_post.reload.raw).not_to eq("edited content")
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -666,6 +683,32 @@ RSpec.describe Admin::UsersController do
         expect(user).to be_moderator
       end
     end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "prevents unsuspending a staff user" do
+        another_admin.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+        other_moderator =
+          Fabricate(:moderator, suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+
+        put "/admin/users/#{another_admin.id}/unsuspend.json"
+        expect(response.status).to eq(403)
+        expect(another_admin.reload).to be_suspended
+
+        put "/admin/users/#{other_moderator.id}/unsuspend.json"
+        expect(response.status).to eq(403)
+        expect(other_moderator.reload).to be_suspended
+      end
+
+      it "can unsuspend a regular user" do
+        user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+
+        put "/admin/users/#{user.id}/unsuspend.json"
+        expect(response.status).to eq(200)
+        expect(user.reload).not_to be_suspended
+      end
+    end
   end
 
   describe "#revoke_admin" do
@@ -683,7 +726,7 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["can_be_merged"]).to eq(true)
         expect(response.parsed_body["can_be_deleted"]).to eq(true)
         expect(response.parsed_body["can_be_anonymized"]).to eq(true)
-        expect(response.parsed_body["can_delete_all_posts"]).to eq(false)
+        expect(response.parsed_body["can_delete_all_posts"]).to eq(true)
       end
     end
 
@@ -2046,6 +2089,19 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "unsilencing user possible"
+
+      it "prevents unsilencing a staff user" do
+        silenced_admin = Fabricate(:admin, silenced_till: 10.years.from_now)
+        silenced_mod = Fabricate(:moderator, silenced_till: 10.years.from_now)
+
+        put "/admin/users/#{silenced_admin.id}/unsilence.json"
+        expect(response.status).to eq(403)
+        expect(silenced_admin.reload).to be_silenced
+
+        put "/admin/users/#{silenced_mod.id}/unsilence.json"
+        expect(response.status).to eq(403)
+        expect(silenced_mod.reload).to be_silenced
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -2522,6 +2578,15 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "post batch deletion possible"
+
+      context "when target user is another moderator" do
+        fab!(:target_moderator, :moderator)
+
+        it "denies access with a 403 response" do
+          put "/admin/users/#{target_moderator.id}/delete_posts_batch.json"
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -2605,6 +2670,15 @@ RSpec.describe Admin::UsersController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
       include_examples "delete_posts_decider accessible", :moderator
+
+      context "when target user is another moderator" do
+        fab!(:target_moderator, :moderator)
+
+        it "denies access with a 403 response" do
+          post "/admin/users/#{target_moderator.id}/delete_posts_decider.json"
+          expect(response.status).to eq(403)
+        end
+      end
 
       context "when user has too many posts to delete" do
         fab!(:target_user) do

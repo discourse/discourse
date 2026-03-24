@@ -1,6 +1,6 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 
 const FormTemplateFieldInput = <template>
@@ -16,7 +16,7 @@ const FormTemplateFieldInput = <template>
 
     {{#if @attributes.description}}
       <span class="form-template-field__description">
-        {{htmlSafe @attributes.description}}
+        {{trustHTML @attributes.description}}
       </span>
     {{/if}}
 

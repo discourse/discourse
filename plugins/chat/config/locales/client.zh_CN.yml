@@ -49,6 +49,9 @@ zh_CN:
         description: "描述"
         actions: "操作"
         settings: "设置"
+        no_channels: "没有与此类别关联的聊天频道"
+        no_channels_body: "每个类别可以创建多个频道，这些频道对相同成员开放，具体取决于类别的安全设置。 <a href='%{chatBrowseUrl}'>创建聊天频道</a>。"
+        include_subcategories: "包含子类别频道"
       text_copied: 文本已复制到剪贴板
       link_copied: 链接已复制到剪贴板
       back_to_forum: "论坛"
@@ -65,7 +68,16 @@ zh_CN:
       chat_channels: "频道"
       starred: "收藏"
       starred_channels: "收藏的频道"
-      starred_channels_empty: "您未收藏任何频道，收藏一些频道，以便在此快速访问它们。"
+      starred_channels_empty: "您未收藏任何频道。收藏一些频道，以便在此处快速访问它们。"
+      pinned_messages:
+        title: "置顶消息"
+        close: "关闭置顶消息"
+        pinned_by_you: "由您置顶"
+        pinned_by_user: "由 %{username} 置顶"
+      no_pinned_messages: "此频道中没有置顶消息。"
+      pin_message: "置顶消息"
+      unpin_message: "取消置顶消息"
+      pinned: "已置顶"
       browse_all_channels: "浏览所有频道"
       see_in: "参见"
       open_channel_menu: "打开频道菜单"
@@ -82,9 +94,11 @@ zh_CN:
         edit: "编辑"
         add: "添加"
         star_channel: "收藏频道"
-        unstar_channel: "取消收藏"
+        unstar_channel: "取消收藏频道"
         close_channel: "关闭频道"
         open_channel: "打开频道"
+        open_channel_disabled_archived: "无法重新打开已归档的频道。"
+        open_channel_disabled_read_only: "无法重新打开只读频道。"
         archive_channel: "归档频道"
         delete_channel: "删除频道"
         join_channel: "加入频道"
@@ -138,12 +152,12 @@ zh_CN:
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
-        title: "向我发送聊天直通消息或群聊时向我发送电子邮件"
+        title: "当我收到聊天私信或群聊时向我发送电子邮件"
         when_away: "仅在离开时"
       header_indicator_preference:
         title: "在标题中显示活动指示器"
         all_new: "所有新消息"
-        dm_and_mentions: "直接消息、提及和关注的对话"
+        dm_and_mentions: "直接消息、提及和关注的消息串"
         only_mentions: "仅限提及"
         never: "永不"
       separate_sidebar_mode:
@@ -325,8 +339,8 @@ zh_CN:
         yesterday: 昨天
       search_view:
         filter_placeholder: 搜索消息
-        message_result_label: "来自 %{username}的聊天消息： %{preview} %{threadInfo}"
-        in_thread: "在线程 %{title}"
+        message_result_label: "来自 %{username} 的聊天消息：%{preview} %{threadInfo}"
+        in_thread: "位于消息串 %{title} 中"
         sr_instructions: "按 Enter 或空格键打开消息。使用 Tab 在结果之间导航。"
         results_list_label: "聊天消息搜索结果"
       members_view:
@@ -468,7 +482,7 @@ zh_CN:
         follow: "加入"
         followed: "已加入"
         mute: "将频道设为免打扰"
-        unmute: "取消频道静音"
+        unmute: "取消将频道设为免打扰"
         threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"
@@ -496,7 +510,7 @@ zh_CN:
         short_title: 搜索
         title: 搜索聊天
         aria_label: "切换到聊天搜索"
-        no_results: "无搜索结果"
+        no_results: "找不到结果"
         sort:
           relevance: "相关性"
           latest: "最新"
@@ -574,11 +588,11 @@ zh_CN:
       retention_reminders:
         chat_settings: "聊天设置"
         indefinitely_short: "无限期"
-        indefinitely_long: "%{chatSettingsLink} 已设置为无限期保留频道消息。"
+        indefinitely_long: "%{chatSettingsLink}已设置为无限期保留频道消息。"
         short:
           other: "%{count} 天"
         long:
-          other: "%{chatSettingsLink} 已设置为保留频道消息 %{count} 天。"
+          other: "%{chatSettingsLink}已设置为将频道消息保留 %{count} 天。"
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"
@@ -615,13 +629,13 @@ zh_CN:
         notifications:
           regular:
             title: "正常"
-            description: "当有人在此对话中提及您时获得通知。"
+            description: "当有人在此消息串中提及您时获得通知。"
           tracking:
             title: "跟踪"
-            description: "当有人在此对话中提及您时获得通知，并在对话列表中看到新回复的数量。"
+            description: "当有人在此消息串中提及您时获得通知，并在消息串列表中查看新回复的数量。"
           watching:
             title: "正在关注"
-            description: "获得关于此对话中的所有回复的通知，并在对话列表中看到新回复的数量。"
+            description: "获得关于此消息串中的所有回复的通知，并在消息串列表中查看新回复的数量。"
         participants_other_count:
           other: "+%{count}"
       thread_title_toast:

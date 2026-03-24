@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 sq:
+  posted: "postuar"
+  reply_count:
+    one: "%{count} përgjigje"
+    other: "%{count} përgjigje"

@@ -150,6 +150,13 @@ export default class BaseCustomSidebarSectionLink {
    */
   get hoverTitle() {}
 
+  /**
+   * @returns {{ navigation: string[] }} Keywords for the sidebar section link used for filtering
+   */
+  get keywords() {
+    return { navigation: [] };
+  }
+
   _notImplemented() {
     throw "not implemented";
   }

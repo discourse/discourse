@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    discourse_math:
+      edit_modal:
+        apply: "قوللان"
+      insert_modal:
+        insert: "قىستۇر"

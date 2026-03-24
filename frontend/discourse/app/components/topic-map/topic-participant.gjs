@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserLink from "discourse/components/user-link";
@@ -16,7 +16,7 @@ export function addTopicParticipantClassesCallback(callback) {
 
 export default class TopicParticipant extends Component {
   get avatarImage() {
-    return htmlSafe(
+    return trustHTML(
       avatarImg({
         avatarTemplate: this.args.participant.avatar_template,
         size: "medium",

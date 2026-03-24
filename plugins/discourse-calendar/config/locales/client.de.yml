@@ -10,8 +10,14 @@ de:
       calendar: "Kalender & Ereignisse"
       site_settings:
         categories:
-          discourse_post_event: "Discourse – Ereignis"
+          discourse_post_event: "Discourse Ereignis"
           discourse_calendar: "Kalender und Ereignisse"
+      web_hooks:
+        calendar_event:
+          group_name: "Kalenderereignis"
+          calendar_event_created: "Kalenderereignis wurde erstellt"
+          calendar_event_updated: "Kalenderereignis wurde aktualisiert"
+          calendar_event_destroyed: "Kalenderereignis wurde zerstört"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ de:
               label: Themen-ID
     discourse_calendar:
       invite_user_notification: "%{username} lädt dich ein zu: %{description}"
+      preferences:
+        all_events: "Discourse Kalender – Alle Ereignisse"
+        all_events_description: "Alle Forum-Ereignisse"
+        my_events: "Discourse Kalender – Meine Ereignisse"
+        my_events_description: "Ereignisse, die du besuchst oder an denen du interessiert bist"
       on_holiday: "Im Urlaub"
       disable_holiday: "Deaktivieren"
       enable_holiday: "Aktivieren"
@@ -45,7 +56,7 @@ de:
         title: "Region"
         none: "Keine"
         use_current_region: "Aktuelle Region verwenden"
-        select_region: "Region auswählen ..."
+        select_region: "Region auswählen …"
         names:
           ae: "Vereinigte Arabische Emirate"
           ar: "Argentinien"
@@ -351,6 +362,7 @@ de:
       bulk_invite: "Masseneinladung"
       close_event: "Ereignis beenden"
       open_event: "Ereignis öffnen"
+      destroy_event: "Ereignis zerstören"
       invitees_modal:
         title_invited: "Teilnahme am Ereignis"
         title_participated: "Liste von Benutzern, die teilgenommen haben"
@@ -427,6 +439,12 @@ de:
             private:
               title: "Privat"
               description: "An einem privaten Ereignis können nur eingeladene Benutzer teilnehmen."
+      composer:
+        name_placeholder: "Ereignis"
+        end_date_placeholder: "Enddatum festlegen"
+        location_placeholder: "Ort oder URL hinzufügen"
+        max_attendees_placeholder: "Maximale Teilnehmerzahl festlegen"
+        description_placeholder: "Beschreibung hinzufügen"
       builder_modal:
         custom_fields:
           label: "Benutzerdefinierte Felder"
@@ -447,6 +465,8 @@ de:
         timezone:
           label: Zeitzone
           remove_timezone: Keine Zeitzone (UTC)
+        all_day:
+          label: "Ganztägiges Ereignis"
         reminders:
           label: "Erinnerungen"
           types:
@@ -496,6 +516,7 @@ de:
           label: "Eingeladene Gruppen"
         status:
           label: "Status"
+        delete_confirmation_message: "Dieses Ereignis löschen?"
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"

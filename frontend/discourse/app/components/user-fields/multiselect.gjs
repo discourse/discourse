@@ -1,5 +1,5 @@
 import { concat, fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import InputTip from "discourse/components/input-tip";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
@@ -29,7 +29,7 @@ export default class UserFieldMultiselect extends UserFieldBase {
       {{#if this.validation.failed}}
         <InputTip @validation={{this.validation}} />
       {{else}}
-        <div class="instructions">{{htmlSafe this.field.description}}</div>
+        <div class="instructions">{{trustHTML this.field.description}}</div>
       {{/if}}
     </div>
   </template>

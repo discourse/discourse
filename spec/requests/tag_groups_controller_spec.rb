@@ -299,7 +299,7 @@ RSpec.describe TagGroupsController do
           }
 
       expect(response.status).to eq(200)
-      expect(tag_group.tags.map(&:id)).to contain_exactly(tag2.id, tag3.id)
+      expect(tag_group.reload.tags.map(&:id)).to contain_exactly(tag2.id, tag3.id)
 
       expect(UserHistory.last).to have_attributes(
         acting_user_id: admin.id,
@@ -355,6 +355,24 @@ RSpec.describe TagGroupsController do
 
       expect(new_parent).to be_present
       expect(tag_group.reload.parent_tag).to eq(new_parent)
+    end
+
+    it "returns an error when updating with a duplicate name" do
+      Fabricate(:tag_group, name: "existing_name")
+      original_name = tag_group.name
+
+      put "/tag_groups/#{tag_group.id}.json", params: { tag_group: { name: "existing_name" } }
+
+      expect(response.status).to eq(422)
+      expect(tag_group.reload.name).to eq(original_name)
+    end
+
+    it "does not create a staff action log entry when update fails" do
+      Fabricate(:tag_group, name: "existing_name")
+
+      expect {
+        put "/tag_groups/#{tag_group.id}.json", params: { tag_group: { name: "existing_name" } }
+      }.not_to change { UserHistory.where(action: UserHistory.actions[:tag_group_change]).count }
     end
   end
 end

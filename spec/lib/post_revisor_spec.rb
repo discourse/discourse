@@ -533,6 +533,32 @@ describe PostRevisor do
         expect(post.revisions.count).to eq(1)
       end
 
+      it "creates a new version when diff computation exceeds the comparison budget" do
+        SiteSetting.editing_grace_period = 1.minute
+        SiteSetting.editing_grace_period_max_diff = 1_000
+
+        post = Fabricate(:post, raw: "hello world")
+        revisor = PostRevisor.new(post)
+
+        ONPDiff
+          .any_instance
+          .stubs(:short_diff)
+          .raises(
+            ONPDiff::DiffLimitExceeded.new(
+              comparisons_used: 2_000_001,
+              comparison_budget: 2_000_000,
+              left_size: 11,
+              right_size: 12,
+            ),
+          )
+
+        revisor.revise!(post.user, { raw: "hello world!" }, revised_at: post.updated_at + 1.second)
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+      end
+
       it "creates a new version when the post is flagged" do
         SiteSetting.editing_grace_period = 1.minute
 
@@ -974,6 +1000,19 @@ describe PostRevisor do
           expect(events).to include(event_name: :before_edit_post, params: [post, params])
         end
       end
+
+      context "when editing the post_edited event signature for extensibility" do
+        it "exposes revise opts via the PostRevisor payload" do
+          params = { raw: "body (edited)" }
+          opts = { suggested_edit: true }
+
+          events = DiscourseEvent.track_events { post_revisor.revise!(user, params, opts) }
+          event = events.find { |e| e[:event_name] == :post_edited }
+
+          expect(event[:params].third).to be_kind_of(PostRevisor)
+          expect(event[:params].third.opts).to include(suggested_edit: true)
+        end
+      end
     end
 
     describe "topic excerpt" do
@@ -1044,11 +1083,11 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
     end
 
-    it "revises and tracks changes of topic archetypes" do
+    it "revises and tracks changes of topic archetypes for staff" do
       new_archetype = Archetype.banner
       result =
         post_revisor.revise!(
-          post.user,
+          admin,
           { archetype: new_archetype },
           revised_at: post.updated_at + 10.minutes,
         )
@@ -1060,21 +1099,34 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
     end
 
+    it "does not allow regular users to change topic archetype to banner" do
+      result =
+        post_revisor.revise!(
+          post.user,
+          { archetype: Archetype.banner },
+          revised_at: post.updated_at + 10.minutes,
+        )
+
+      expect(result).to eq(false)
+      post.reload
+      expect(post.topic.archetype).to eq(Archetype.default)
+    end
+
     it "revises and tracks changes of topic tags" do
       post_revisor.revise!(admin, tags: ["new-tag"])
       expect(post.post_revisions.last.modifications).to eq("tags" => [[], ["new-tag"]])
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: %w[new-tag new-tag-2])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [["new-tag"], %w[new-tag new-tag-2]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag")
+      expect(after).to contain_exactly("new-tag", "new-tag-2")
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: ["new-tag-3"])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [%w[new-tag new-tag-2], ["new-tag-3"]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag", "new-tag-2")
+      expect(after).to contain_exactly("new-tag-3")
       expect(post_revisor.raw_changed?).to eq(false)
     end
 

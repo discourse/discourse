@@ -78,10 +78,6 @@ da:
           unassigned: "er ikke tildelt"
         assigned:
           label: "Tildelt til"
-    topics:
-      bulk:
-        unassign: "Fjern tildeling af emner"
-        assign: "Tildel emner"
     discourse_automation:
       scriptables:
         random_assign:

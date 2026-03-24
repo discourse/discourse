@@ -7,6 +7,12 @@ RSpec.describe User do
 
   it_behaves_like "it has custom fields"
 
+  describe "#reload" do
+    it "accepts options like ActiveRecord's reload" do
+      expect { user.reload(lock: true) }.not_to raise_error
+    end
+  end
+
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
   end
@@ -627,6 +633,18 @@ RSpec.describe User do
       expect(Reviewable.where(created_by: user).count).to eq(0)
 
       posts.each { |p| expect(Topic.find_by(id: p.topic_id)).to be_nil if p.is_first_post? }
+    end
+
+    it "deletes reviewables that have notes" do
+      reviewable = Fabricate(:reviewable_queued_post, created_by: user)
+      Fabricate(:reviewable_note, reviewable: reviewable)
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(Post.where(id: post_ids)).to be_empty
+      expect(Reviewable.where(created_by: user).count).to eq(0)
+      expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
     end
 
     it "does not allow non moderators to delete all posts" do
@@ -2134,7 +2152,11 @@ RSpec.describe User do
           status: Reviewable.statuses[:approved],
         )
 
-        expect(user.number_of_rejected_posts.to_i).to eq(0)
+        expect(user.number_of_rejected_posts).to eq(0)
+      end
+
+      it "returns 0 when user has no rejected posts" do
+        expect(user.number_of_rejected_posts).to eq(0)
       end
     end
 
@@ -2163,6 +2185,16 @@ RSpec.describe User do
         # ignores other users' history
         Fabricate(:user_history, action: UserHistory.actions[:silence_user])
         expect(user.reload.number_of_silencings).to eq(3)
+      end
+
+      it "returns 0 when user has no silencings" do
+        expect(user.number_of_silencings).to eq(0)
+      end
+    end
+
+    describe "#number_of_suspensions" do
+      it "returns 0 when user has no suspensions" do
+        expect(user.number_of_suspensions).to eq(0)
       end
     end
   end
@@ -3814,8 +3846,6 @@ RSpec.describe User do
     let(:admin_guardian) { Guardian.new(admin_user) }
 
     before do
-      SiteSetting.enable_upcoming_changes = true
-
       mock_upcoming_change_metadata(
         {
           enable_upload_debug_mode: {

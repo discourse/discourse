@@ -3,6 +3,9 @@
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const { compatBuild } = require("@embroider/compat");
 
+// TODO
+throw new Error("not used");
+
 module.exports = async function (defaults) {
   let app = new EmberApp(defaults, {});
   const { buildOnce } = await import("@embroider/vite");

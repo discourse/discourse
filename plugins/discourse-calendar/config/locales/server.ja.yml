@@ -49,6 +49,7 @@ ja:
     all_day_event_start_time: "開始時刻が指定されていないイベントはこの時刻に開始します。フォーマットは HH:mm です。午前 6 時の場合は、06:00 と入力します"
     all_day_event_end_time: "終了時刻が指定されていないイベントはこの時刻に終了します。フォーマットは HH:mm です。午後 6 時の場合は、18:00 と入力します"
     all_day_event_time_error: "無効な時刻です。フォーマットは HH:mm である必要があります（例: 08:00）。"
+    calendar_categories: "カテゴリの上部にカレンダーを表示する。categoryId は必須です。例: categoryId=6;weekends=false;defaultView=year;\n その他の有効な設定: weekends(true/false)、defaultView(day,week,month,year)"
     calendar_categories_outlet: "カテゴリカレンダーを表示する場所を変更できるようにします。"
     working_days: "稼働日を設定します。投稿に `timezones` タグを使用して、グループの空き状況を表示できます。例: `[timezones group=admins][timezones]`"
     working_day_start_hour: "稼働時間の開始時刻。"
@@ -60,6 +61,7 @@ ja:
     calendar_automatic_holidays_enabled: "ユーザーの地域に基づいて休暇ステータスを自動的に設定します (注意: 特定の自動休暇はプラグインの設定で無効にできます)"
     event_participation_buttons: "ユーザーが使用できるイベント参加ボタンのリスト。"
     sidebar_show_upcoming_events: "サイドバーの「もっと」の下に今後のイベントのリンクを表示する。"
+    calendar_first_day_of_week: "カレンダーに表示する週の最初の曜日を設定します。オプションは、土曜日、日曜日、または月曜日です。"
   discourse_calendar:
     invite_user_notification: "%{username} があなたを招待しました: %{description}"
     calendar_must_be_in_first_post: "Calendar タグは、トピックの最初の投稿でのみ使用できます。"
@@ -85,6 +87,7 @@ ja:
           raw_invitees:
             only_group: "イベントにはグループ名のみを使用できます。"
           ends_at_before_starts_at: "イベントを開始時刻より前に終了されることはできません。"
+          max_attendees_reached: "このイベントは満席です。"
           start_must_be_present_and_a_valid_date: "イベントには有効な開始日が必要です。"
           end_must_be_a_valid_date: "終了日は有効な日付である必要があります。"
           invalid_recurrence: "繰り返しは、every_month、every_week、every_two_weeks、every_four_weeks、every_day、every_weekday のいずれかである必要があります。"

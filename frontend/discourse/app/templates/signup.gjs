@@ -1,6 +1,6 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import FlashMessage from "discourse/components/flash-message";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
@@ -65,7 +65,7 @@ export default <template>
           <form id="login-form">
             {{#if @controller.associateHtml}}
               <div class="input-group create-account-associate-link">
-                <span>{{htmlSafe @controller.associateHtml}}</span>
+                <span>{{trustHTML @controller.associateHtml}}</span>
               </div>
             {{/if}}
             <div class="input-group create-account-email">

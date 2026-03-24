@@ -5,9 +5,13 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Takvim etkinlikleri akışını oku"
   reports:
     currently_away:
       title: Şu anda uzaktaki kullanıcılar
+      description: "Şu anda tatilde veya izinli olan kullanıcılar, grup bazında filtrelenebilir."
       labels:
         username: Kullanıcı Adı
   discourse_automation:
@@ -49,6 +53,7 @@ tr_TR:
     all_day_event_start_time: "Başlangıç zamanı belirtilmeyen etkinlikler bu saatte başlayacaktır. Biçim SS:dd'dir. Sabah 6 için 06.00 yazın"
     all_day_event_end_time: "Bitiş saati belirtilmeyen etkinlikler bu saatte sona erecektir. Biçim SS:dd'dir. Öğleden sonra 6 için 18.00 girin"
     all_day_event_time_error: "Geçersiz saat. Biçim SS:dd (ör: 08.00) olmalıdır."
+    calendar_categories: "Kategorinin üst kısmında bir takvim görüntüleyin. categoryId zorunludur. Örnek: categoryId=6;weekends=false;defaultView=year;\n Diğer geçerli ayarlar: weekends(true/false) ve defaultView(day,week,month,year)."
     calendar_categories_outlet: "Kategori takvimini hangi çıkışın göstereceğini değiştirmeye izin verir."
     working_days: "Çalışma günlerini ayarlayın. Bir gönderide \"saat dilimleri\" etiketini kullanarak bir grubun uygunluğunu görüntüleyebilirsiniz, ör.: \"[timezones group=admins][timezones]\""
     working_day_start_hour: "Çalışma günü saatlerinin başlama saati."
@@ -60,6 +65,7 @@ tr_TR:
     calendar_automatic_holidays_enabled: "Kullanıcı bölgesine göre tatil durumunu otomatik olarak ayarla (not: belirli otomatik tatilleri eklenti ayarlarından devre dışı bırakabilirsiniz)"
     event_participation_buttons: "Kullanıcıların kullanabileceği etkinlik katılım düğmelerinin listesi."
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
+    calendar_first_day_of_week: "Takvim görüntüsü için haftanın ilk gününü ayarlayın. Seçenekler Cumartesi, Pazar veya Pazartesi'dir."
   discourse_calendar:
     invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
     calendar_must_be_in_first_post: "Takvim etiketi, bir konunun yalnızca ilk gönderisinde kullanılabilir."
@@ -85,6 +91,7 @@ tr_TR:
           raw_invitees:
             only_group: "Bir etkinlik yalnızca grup adlarını kabul eder."
           ends_at_before_starts_at: "Bir etkinlik başlamadan bitemez."
+          max_attendees_reached: "Bu etkinlik dolmuştur."
           start_must_be_present_and_a_valid_date: "Bir etkinlik için geçerli bir başlangıç tarihi gerekir."
           end_must_be_a_valid_date: "Bitiş tarihi geçerli bir tarih olmalıdır."
           invalid_recurrence: "Yineleme şunlardan biri olmalıdır: her_ay, her_hafta, her_iki_hafta, her_dört_hafta, her_gün, her_hafta içi."

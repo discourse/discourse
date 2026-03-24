@@ -104,12 +104,10 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
         }.by(2)
 
         notification = Notification.where("data::text LIKE ?", "%enable_upload_debug_mode%").last
-        expect(notification.data).to eq(
-          {
-            upcoming_change_name: :enable_upload_debug_mode,
-            upcoming_change_humanized_name: "Enable upload debug mode",
-          }.to_json,
-        )
+        data = JSON.parse(notification.data)
+        expect(data["upcoming_change_names"]).to eq(["enable_upload_debug_mode"])
+        expect(data["upcoming_change_humanized_names"]).to eq(["Enable upload debug mode"])
+        expect(data["count"]).to eq(1)
       end
 
       it "creates an admins_notified_automatic_promotion event" do
@@ -136,13 +134,22 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
       context "when multiple settings meet promotion criteria" do
         let(:show_user_menu_avatars_status) { :stable }
 
-        it "processes all eligible settings" do
-          expect { result }.to change {
+        it "processes all eligible settings into consolidated notifications" do
+          result
+
+          notifications =
             Notification.where(
               notification_type: Notification.types[:upcoming_change_automatically_promoted],
               user_id: [admin.id, admin_2.id],
-            ).count
-          }.by(4)
+            )
+          expect(notifications.count).to eq(2)
+
+          data = JSON.parse(notifications.first.data)
+          expect(data["upcoming_change_names"]).to contain_exactly(
+            "enable_upload_debug_mode",
+            "show_user_menu_avatars",
+          )
+          expect(data["count"]).to eq(2)
         end
 
         it "creates events for all promoted settings" do

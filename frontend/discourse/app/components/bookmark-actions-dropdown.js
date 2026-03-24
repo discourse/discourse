@@ -1,6 +1,5 @@
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
@@ -21,8 +20,8 @@ const ACTION_PIN = "pin";
 })
 @pluginApiIdentifiers("bookmark-actions-dropdown")
 export default class BookmarkActionsDropdown extends DropdownSelectBoxComponent {
-  @discourseComputed("bookmark")
-  content(bookmark) {
+  @computed("bookmark")
+  get content() {
     const actions = [];
 
     actions.push({
@@ -39,7 +38,7 @@ export default class BookmarkActionsDropdown extends DropdownSelectBoxComponent 
       description: i18n("post.bookmarks.actions.edit_bookmark.description"),
     });
 
-    if (bookmark.reminder_at) {
+    if (this.bookmark.reminder_at) {
       actions.push({
         id: ACTION_CLEAR_REMINDER,
         icon: "clock-rotate-left",
@@ -54,10 +53,10 @@ export default class BookmarkActionsDropdown extends DropdownSelectBoxComponent 
       id: ACTION_PIN,
       icon: "thumbtack",
       name: i18n(
-        `post.bookmarks.actions.${bookmark.pinAction()}_bookmark.name`
+        `post.bookmarks.actions.${this.bookmark.pinAction()}_bookmark.name`
       ),
       description: i18n(
-        `post.bookmarks.actions.${bookmark.pinAction()}_bookmark.description`
+        `post.bookmarks.actions.${this.bookmark.pinAction()}_bookmark.description`
       ),
     });
 

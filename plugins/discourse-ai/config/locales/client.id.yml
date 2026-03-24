@@ -87,7 +87,6 @@ id:
       llm_selector:
         none: "Tidak ada"
       features:
-        back: "Kembali"
         disabled: "(dinonaktifkan)"
         groups: "Grup:"
         no_groups: "Tidak ada"
@@ -129,13 +128,11 @@ id:
         total: "Jumlah"
         periods:
           last_day: "24 jam terakhir"
-      ai_persona:
-        back: "Kembali"
+      ai_agent:
         name: "Nama"
         edit: "Ubah"
         export: "Ekspor"
         description: "Deskripsi"
-        mentionable_help: Jika diaktifkan, pengguna di grup yang diizinkan dapat menyebut pengguna ini di posting, AI akan merespons sebagai persona ini.
         user: Pengguna
         question_consolidator_llm: Model Bahasa untuk Konsolidator Pertanyaan
         question_consolidator_llm_help: Model bahasa yang digunakan untuk konsolidator pertanyaan, Anda dapat memilih model yang kurang kuat untuk menghemat biaya.
@@ -153,7 +150,6 @@ id:
         uploads:
           uploading: "Mengunggah..."
       tools:
-        back: "Kembali"
         export: "Ekspor"
         name: "Nama"
         description: "Deskripsi"
@@ -165,7 +161,6 @@ id:
       secrets:
         short_title: "Kredensial"
         name: "Nama"
-        back: "Kembali"
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
@@ -173,7 +168,6 @@ id:
         display_name: "Nama"
         save: "Simpan"
         edit: "Ubah"
-        back: "Kembali"
         delete: Hapus
         quotas:
           duration: "Durasi"
@@ -224,7 +218,6 @@ id:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"
       embeddings:
-        back: "Kembali"
         save: "Simpan"
         delete: "Hapus"
         edit: "Ubah"
@@ -235,11 +228,6 @@ id:
         providers:
           google: "Google"
         semantic_search: "Topik (Semantik)"
-        semantic_search_loading: "Mencari hasil lebih banyak menggunakan AI"
-        semantic_search_results:
-          toggle: "Menampilkan %{count} hasil yang ditemukan menggunakan AI"
-          toggle_hidden: "Menyembunyikan %{count} hasil yang ditemukan menggunakan AI"
-          none: "Maaf, pencarian AI kami tidak menemukan topik yang cocok"
         ai_generated_result: "Hasil pencarian ditemukan menggunakan AI"
         quick_search:
           suffix: "di semua topik dan posting dengan AI"

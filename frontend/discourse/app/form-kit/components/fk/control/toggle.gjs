@@ -1,9 +1,9 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 
-export default class FKControlToggle extends Component {
+export default class FKControlToggle extends FKBaseControl {
   static controlType = "toggle";
 
   @action

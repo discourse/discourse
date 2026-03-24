@@ -17,11 +17,10 @@ module Jobs
       end
 
       topic = Topic.find_by(id: args[:topic_id])
-      if topic.blank? || topic.title.blank? || topic.deleted_at.present? || topic.user_id <= 0
-        return
-      end
+      return if topic.blank? || topic.title.blank? || topic.deleted_at.present?
 
       force = args[:force] || false
+      return if topic.user_id <= 0 && !force && !SiteSetting.ai_translation_include_bot_content
 
       if force
         # no restrictions

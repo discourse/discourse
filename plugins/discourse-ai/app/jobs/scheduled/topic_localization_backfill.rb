@@ -9,9 +9,8 @@ module Jobs
       return if !DiscourseAi::Translation.backfill_enabled?
 
       topic_title_llm =
-        find_llm_model_for_persona(SiteSetting.ai_translation_topic_title_translator_persona)
-      post_raw_llm =
-        find_llm_model_for_persona(SiteSetting.ai_translation_post_raw_translator_persona)
+        find_llm_model_for_agent(SiteSetting.ai_translation_topic_title_translator_agent)
+      post_raw_llm = find_llm_model_for_agent(SiteSetting.ai_translation_post_raw_translator_agent)
 
       if (topic_title_llm && !LlmCreditAllocation.credits_available?(topic_title_llm)) ||
            (post_raw_llm && !LlmCreditAllocation.credits_available?(post_raw_llm))
@@ -22,18 +21,20 @@ module Jobs
       end
 
       limit = SiteSetting.ai_translation_backfill_hourly_rate / (60 / 5) # this job runs in 5-minute intervals
+      return if limit == 0
+
       Jobs.enqueue(:localize_topics, limit:)
     end
 
     private
 
-    def find_llm_model_for_persona(persona_id)
-      return nil if persona_id.blank?
+    def find_llm_model_for_agent(agent_id)
+      return nil if agent_id.blank?
 
-      persona_klass = AiPersona.find_by_id_from_cache(persona_id)
-      return nil if persona_klass.blank?
+      agent_klass = AiAgent.find_by_id_from_cache(agent_id)
+      return nil if agent_klass.blank?
 
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
+      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
     end
   end
 end

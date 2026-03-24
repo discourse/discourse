@@ -101,6 +101,53 @@ RSpec.describe StaticController do
         FileUtils.rm_rf(secret_dir) if secret_dir && Dir.exist?(secret_dir)
       end
     end
+
+    context "with fallback_assets_path" do
+      it "serves files from the fallback assets directory" do
+        Dir.mktmpdir do |tmpdir|
+          fallback_dir = File.join(tmpdir, "fallback_assets")
+          FileUtils.mkdir_p(fallback_dir)
+
+          File.write(File.join(fallback_dir, "test-asset.js"), "fallback js content")
+
+          GlobalSetting.stubs(:fallback_assets_path).returns(fallback_dir)
+
+          get "/cdn_asset/#{site}/test-asset.js"
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to match(/public/)
+          expect(response.body).to eq("fallback js content")
+        end
+      end
+
+      it "returns 404 for files not in primary or fallback" do
+        Dir.mktmpdir do |tmpdir|
+          fallback_dir = File.join(tmpdir, "fallback_assets")
+          FileUtils.mkdir_p(fallback_dir)
+
+          GlobalSetting.stubs(:fallback_assets_path).returns(fallback_dir)
+
+          get "/cdn_asset/#{site}/nonexistent.js"
+
+          expect(response.status).to eq(404)
+        end
+      end
+      it "rejects fallback paths that traverse outside the fallback directory" do
+        Dir.mktmpdir do |tmpdir|
+          fallback_dir = File.join(tmpdir, "fallback_assets")
+          FileUtils.mkdir_p(fallback_dir)
+
+          File.write(File.join(fallback_dir, "test-asset.js"), "fallback js content")
+
+          GlobalSetting.stubs(:fallback_assets_path).returns(fallback_dir)
+
+          get "/cdn_asset/#{site}/../test-asset.js"
+
+          expect(response.status).to eq(404)
+          expect(response.body).not_to eq("fallback js content")
+        end
+      end
+    end
   end
 
   describe "#show" do

@@ -5,9 +5,13 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Przeczytaj wydarzenia w kalendarzu"
   reports:
     currently_away:
       title: Użytkownicy aktualnie nieobecni
+      description: "Użytkownicy, którzy aktualnie są na urlopie lub nie mają urlopu, można ich filtrować według grup."
       labels:
         username: Nazwa użytkownika
   discourse_automation:

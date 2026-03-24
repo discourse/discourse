@@ -342,6 +342,17 @@ RSpec.describe Topic do
     end
   end
 
+  describe "url" do
+    fab!(:topic)
+
+    it "omits blank slugs" do
+      topic.update_columns(title: "", slug: nil)
+      topic.reload
+
+      expect(topic.url).to eq("#{Discourse.base_url}/t/#{topic.id}")
+    end
+  end
+
   describe "updating a title to be shorter" do
     let!(:topic) { Fabricate(:topic) }
 
@@ -2121,6 +2132,40 @@ RSpec.describe Topic do
             }
           end
         end
+
+        describe "tracking state notifications" do
+          before { SiteSetting.experimental_topic_category_change_notification = true }
+          it "publishes category change when moving to a restricted category" do
+            restricted_category =
+              Fabricate(:category_with_definition, read_restricted: true, user: user)
+
+            messages =
+              MessageBus.track_publish { topic.change_category_to_id(restricted_category.id) }
+
+            delete_message = messages.find { |m| m.channel == "/delete" }
+            latest_message = messages.find { |m| m.channel == "/latest" }
+
+            expect(delete_message).to be_present
+            expect(delete_message.data["topic_id"]).to eq(topic.id)
+
+            expect(latest_message).to be_present
+            expect(latest_message.data["topic_id"]).to eq(topic.id)
+          end
+
+          it "publishes latest when moving between public categories" do
+            another_category =
+              Fabricate(:category_with_definition, read_restricted: false, user: user)
+
+            messages =
+              MessageBus.track_publish("/latest") do
+                topic.change_category_to_id(another_category.id)
+              end
+
+            expect(messages.length).to eq(1)
+            expect(messages.first.data["topic_id"]).to eq(topic.id)
+            expect(messages.first.data["payload"]["category_id"]).to eq(another_category.id)
+          end
+        end
       end
 
       context "when allow_uncategorized_topics is false" do
@@ -3316,6 +3361,38 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#remove_allowed_group" do
+    fab!(:pm_group, :group)
+
+    it "creates a small action post even when remover loses access via that group" do
+      pm_group.add(moderator)
+
+      private_topic =
+        Fabricate(
+          :private_message_topic,
+          title: "Private message with group",
+          user: admin,
+          topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: admin)],
+          topic_allowed_groups: [Fabricate.build(:topic_allowed_group, group: pm_group)],
+        )
+      Fabricate(:post, topic: private_topic, user: admin)
+
+      # Verify moderator only has access via the group
+      expect(private_topic.allowed_users).not_to include(moderator)
+      expect(private_topic.allowed_group_users).to include(moderator)
+
+      expect(private_topic.remove_allowed_group(moderator, pm_group.name)).to eq(true)
+      expect(private_topic.allowed_groups).not_to include(pm_group)
+
+      # Moderator no longer has access
+      expect(private_topic.reload.all_allowed_users.where(id: moderator.id).exists?).to eq(false)
+
+      small_action = private_topic.posts.where(action_code: "removed_group").last
+      expect(small_action).to be_present
+      expect(small_action.user).to eq(moderator)
+    end
+  end
+
   describe "#featured_link_root_domain" do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -3749,6 +3826,20 @@ RSpec.describe Topic do
       expect(topic.has_localization?("zh-CN")).to eq(true)
 
       expect(topic.has_localization?("z")).to eq(false)
+    end
+
+    it "returns true for a regional match (ja matches ja_JP)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "ja_JP")
+
+      expect(topic.has_localization?("ja")).to eq(true)
+    end
+
+    it "returns true for a base locale match (pt_BR matches pt)" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "pt")
+
+      expect(topic.has_localization?("pt_BR")).to eq(true)
     end
   end
 

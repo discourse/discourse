@@ -5,6 +5,7 @@ import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { getOwner } from "@ember/owner";
+import { run } from "@ember/runloop";
 import {
   getSettledState,
   isSettled,
@@ -267,7 +268,7 @@ export default function setupTests(config) {
       setupS3CDN(null, null, { snapshot: true });
     }
 
-    applyDefaultHandlers(pretender);
+    applyDefaultHandlers();
 
     pretender.prepareBody = function (body) {
       if (typeof body === "object") {
@@ -322,6 +323,14 @@ export default function setupTests(config) {
     testCleanup(getOwner(app), app);
 
     sinon.restore();
+
+    // Destroy the previous Application so its entire dependency graph
+    // (ApplicationInstance, container, registry, services, etc.) can be GC'd.
+    // Without this, every test leaks an Application which is never torn down.
+    run(() => {
+      app.destroy();
+    });
+
     resetPretender();
     clearPresenceState();
 
@@ -342,6 +351,10 @@ export default function setupTests(config) {
     MessageBus.unsubscribe("*");
     localStorage.clear();
     enableLoadMoreObserver();
+
+    // Release the app reference so the destroyed app isn't retained
+    // by this closure until the next test creates a new one.
+    app = null;
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
@@ -358,12 +371,12 @@ export default function setupTests(config) {
 
   handleLegacyParameters();
 
-  if (target === "theme-qunit") {
-    window.location.href = window.location.origin + "/theme-qunit";
-  }
-
-  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
-  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
+  const hasPluginJs = !!document.querySelector(
+    "link[rel=modulepreload][data-plugin-name], script[data-plugin-name]"
+  );
+  const hasThemeJs = !!document.querySelector(
+    "link[rel=modulepreload][data-theme-id], script[data-theme-id]"
+  );
 
   // forces 0 as duration for all jquery animations
   $.fx.off = true;
@@ -384,8 +397,14 @@ export default function setupTests(config) {
 
   // core tests run without loading plugins or themes
   const isCoreTest = !hasPluginJs && !hasThemeJs;
-  const isPreinstalledPluginTest = !!document.querySelector(
-    `script[data-discourse-plugin="${CSS.escape(target)}"][data-preinstalled="true"]`
+  const isPreinstalledPluginTest = !!(
+    document.querySelector(
+      // TODO (ROLLUP_PLUGIN_COMPILER): drop this legacy script tag check
+      `script[data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
+    ) ||
+    document.querySelector(
+      `link[rel=modulepreload][data-plugin-name="${CSS.escape(target)}"][data-preinstalled="true"]`
+    )
   );
 
   if (config.RAISE_ON_DEPRECATION ?? (isCoreTest || isPreinstalledPluginTest)) {

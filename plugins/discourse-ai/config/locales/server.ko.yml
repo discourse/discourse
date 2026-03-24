@@ -20,6 +20,40 @@ ko:
         search: "검색"
         time: "시간"
         summarize: "요약하기"
+      close_topic:
+        errors:
+          not_found: "글을 찾을 수 없음."
+      unlist_topic:
+        errors:
+          not_found: "글을 찾을 수 없음."
+      delete_topic:
+        errors:
+          not_found: "글을 찾을 수 없음."
+      edit_tags:
+        errors:
+          not_found: "글을 찾을 수 없음."
+      edit_category:
+        errors:
+          not_found: "글을 찾을 수 없음."
+          category_not_found: "카테고리를 찾을수 없습니다."
+      set_topic_timer:
+        errors:
+          not_found: "글을 찾을 수 없음."
+      set_slow_mode:
+        errors:
+          not_found: "글을 찾을 수 없음."
+      move_posts:
+        errors:
+          not_found: "글을 찾을 수 없음."
+      assign:
+        errors:
+          not_found: "글을 찾을 수 없음."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "승인"
+        reject:
+          title: "거부"
     sentiment:
       reports:
         post_emotion:

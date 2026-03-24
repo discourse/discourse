@@ -194,6 +194,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def include_upcoming_changes_stats?
-    SiteSetting.enable_upcoming_changes && scope.is_staff?
+    scope.is_staff?
   end
 end

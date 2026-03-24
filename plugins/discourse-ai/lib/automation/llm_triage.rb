@@ -38,7 +38,7 @@ module DiscourseAi
 
       def self.handle(
         post:,
-        triage_persona_id:,
+        triage_agent_id:,
         search_for_text:,
         category_id: nil,
         tags: nil,
@@ -51,7 +51,7 @@ module DiscourseAi
         max_post_tokens: nil,
         stop_sequences: nil,
         whisper: nil,
-        reply_persona_id: nil,
+        reply_agent_id: nil,
         max_output_tokens: nil,
         action: nil,
         notify_author_pm: nil,
@@ -59,7 +59,7 @@ module DiscourseAi
         notify_author_pm_message: nil
       )
         if category_id.blank? && tags.blank? && canned_reply.blank? && hide_topic.blank? &&
-             flag_post.blank? && reply_persona_id.blank?
+             flag_post.blank? && reply_agent_id.blank?
           raise ArgumentError, "llm_triage: no action specified!"
         end
 
@@ -68,15 +68,15 @@ module DiscourseAi
           return
         end
 
-        triage_persona = AiPersona.find(triage_persona_id)
-        model_id = triage_persona.default_llm_id || SiteSetting.ai_default_llm_model
+        triage_agent = AiAgent.find(triage_agent_id)
+        model_id = triage_agent.default_llm_id || SiteSetting.ai_default_llm_model
         return if model_id.blank?
         model = LlmModel.find(model_id)
 
         bot =
-          DiscourseAi::Personas::Bot.as(
+          DiscourseAi::Agents::Bot.as(
             Discourse.system_user,
-            persona: triage_persona.class_instance.new,
+            agent: triage_agent.class_instance.new,
             model: model,
           )
 
@@ -89,13 +89,13 @@ module DiscourseAi
             strict: SiteSetting.ai_strict_token_counting,
           ) if max_post_tokens.present?
 
-        if post.upload_ids.present? && triage_persona.vision_enabled
+        if post.upload_ids.present? && triage_agent.vision_enabled
           input = [input]
           input.concat(post.upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
 
         bot_ctx =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             user: Discourse.system_user,
             post: post,
             skip_show_thinking: true,
@@ -138,11 +138,11 @@ module DiscourseAi
           user = User.find_by_username(canned_reply_user) if canned_reply_user.present?
           original_user = user
           user = user || Discourse.system_user
-          if reply_persona_id.present? && action != :edit
+          if reply_agent_id.present? && action != :edit
             begin
               DiscourseAi::AiBot::Playground.reply_to_post(
                 post: post,
-                persona_id: reply_persona_id,
+                agent_id: reply_agent_id,
                 whisper: whisper,
                 user: original_user,
                 attributed_user: Discourse.system_user,
@@ -191,9 +191,9 @@ module DiscourseAi
               I18n.t(
                 "discourse_automation.scriptables.llm_triage.flagged_post",
                 base_path: Discourse.base_path,
-                llm_response: result,
+                llm_response: ERB::Util.html_escape(result),
                 automation_id: automation&.id.to_s,
-                automation_name: automation&.name.to_s,
+                automation_name: ERB::Util.html_escape(automation&.name.to_s),
               )
 
             if !flagged_by_tool

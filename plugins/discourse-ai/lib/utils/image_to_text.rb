@@ -5,10 +5,11 @@ class DiscourseAi::Utils::ImageToText
   MAX_IMAGE_SIZE = 10.megabytes
 
   class Reader
-    def initialize(uploads:, llm_model:, user:)
+    def initialize(uploads:, llm_model:, user:, execution_context: nil)
       @uploads = uploads
       @llm_model = llm_model
       @user = user
+      @execution_context = execution_context
       @buffer = +""
 
       @to_process = uploads.dup
@@ -26,7 +27,12 @@ class DiscourseAi::Utils::ImageToText
 
       upload = @to_process.shift
       extractor =
-        DiscourseAi::Utils::ImageToText.new(upload: upload, llm_model: @llm_model, user: @user)
+        DiscourseAi::Utils::ImageToText.new(
+          upload: upload,
+          llm_model: @llm_model,
+          user: @user,
+          execution_context: @execution_context,
+        )
       extractor.extract_text do |chunk, error|
         if error
           Discourse.warn_exception(
@@ -44,10 +50,10 @@ class DiscourseAi::Utils::ImageToText
     end
   end
 
-  def self.as_fake_file(uploads:, llm_model:, user:)
+  def self.as_fake_file(uploads:, llm_model:, user:, execution_context: nil)
     # given our implementation for extracting text expect a file, return a simple object that can simulate read(size)
     # and stream content
-    Reader.new(uploads: uploads, llm_model: llm_model, user: user)
+    Reader.new(uploads: uploads, llm_model: llm_model, user: user, execution_context:)
   end
 
   def self.tesseract_installed?
@@ -64,13 +70,14 @@ class DiscourseAi::Utils::ImageToText
     end
   end
 
-  attr_reader :upload, :llm_model, :user
+  attr_reader :upload, :llm_model, :user, :execution_context
 
-  def initialize(upload:, llm_model:, user:, guidance_text: nil)
+  def initialize(upload:, llm_model:, user:, guidance_text: nil, execution_context: nil)
     @upload = upload
     @llm_model = llm_model
     @user = user
     @guidance_text = guidance_text
+    @execution_context = execution_context
   end
 
   def extract_text(retries: 3)
@@ -139,7 +146,7 @@ class DiscourseAi::Utils::ImageToText
       ]
     end
     prompt = DiscourseAi::Completions::Prompt.new(system_message, messages: messages)
-    result = llm.generate(prompt, user: Discourse.system_user)
+    result = llm.generate(prompt, user: Discourse.system_user, execution_context:)
     extract_chunks(result)
   end
 

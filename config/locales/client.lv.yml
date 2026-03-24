@@ -6,6 +6,11 @@
 
 lv:
   js:
+    blocks:
+      ghost:
+        status: "Statuss"
+        hidden: "paslēpts"
+        failed: "neizdevies"
     number:
       format:
         separator: ","
@@ -254,6 +259,9 @@ lv:
       pill: "Saistītās ziņas"
     suggested_topics:
       pm_title: "Ieteiktās ziņas"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Atpakaļ"
     about:
       simple_title: "Par"
       title: "Par %{title}"
@@ -353,7 +361,6 @@ lv:
       in_reply_to: "atbildot uz"
       explain:
         why: "paskaidrojiet, kāpēc šis vienums netika apstrādāts"
-        title: "Pārskatāms vērtējums"
         formula: "Formula"
         subtotal: "Starpsumma"
         total: "Kopā"
@@ -367,14 +374,11 @@ lv:
           title: "Lietotājiem, kuru karogi vēsturiski ir saskaņoti, tiek piešķirti bonusi."
         trust_level_bonus:
           name: "uzticības līmenis"
-          title: "Pārskatāmiem vienumiem, ko izveidojuši augstāka uzticamības līmeņa lietotāji, ir augstāks rādītājs."
         type_bonus:
           name: "tipa bonuss"
-          title: "Atsevišķiem pārskatāmiem veidiem darbinieki var piešķirt prēmiju, lai tie būtu augstāka prioritāte."
       revise_and_reject_post:
         reason: "Iemesls"
         optional: "pēc izvēles"
-      stale_help: "Šo pārskatāmo jautājumu ir atrisinājis <b>%{username}</b>."
       claim_help:
         optional: "Jūs varat pieprasīt šo vienumu, lai citi to nevarētu pārskatīt."
         required: "Jums ir jāpieprasa vienumi, pirms jūs varat tos pārskatīt."
@@ -1072,6 +1076,8 @@ lv:
         tags: "Tagi"
         interface: "Saskarne"
         apps: "Lietotnes"
+      calendar_subscriptions:
+        copied: "Nokopēts!"
       change_password:
         success: "(e-pasts nosūtīts)"
         in_progress: "(sūta e-pastu)"
@@ -1462,6 +1468,7 @@ lv:
     form_kit:
       reset: Atlikt
       optional: pēc izvēles
+      required: obligāts
       errors:
         required: "Nepieciešams"
     close: "Aizvērt"
@@ -1865,9 +1872,6 @@ lv:
       bulk:
         select_all: "Izvēlēties visu"
         clear_all: "Noņemt visu"
-        unlist_topics: "Izņemt no sarakstiem tēmas"
-        relist_topics: "Atkal padarīt tēmas redzamas sarakstiem"
-        delete: "Dzēst tēmas"
         delete_topics_count:
           zero: "Dzēst tēmas"
           one: "Dzēst tēmu"
@@ -1880,18 +1884,9 @@ lv:
         dismiss_new: "Nerādīt jaunus"
         toggle: "darbības ar vairākām tēmām"
         actions: "Darbības ar vairumu"
-        close_topics: "Slēgt tēmas"
-        archive_topics: "Arhivēt tēmas"
         move_messages_to_inbox: "Pārvietot uz iesūtni"
         choose_new_category: "Izvēlēties jaunu sadaļu šīm tēmām:"
-        selected:
-          zero: "Jūs izvēlējāties <b>0.</b> tēmas."
-          one: "Jūs izvēlējāties <b>%{count}.</b> tēmu."
-          other: "Jūs izvēlējāties <b>%{count}</b> tēmas."
-        change_tags: "Aizvietot tagus"
-        append_tags: "Pievienot tagus"
         choose_new_tags: "Izvēlēties jaunus tagus šīm tēmām:"
-        choose_append_tags: "Izvēlēties jaunas birkas, ko pievienot šīm tēmām:"
         changed_tags: "Šo tēmu tagi tika mainīti."
         error_topic_count:
           zero: "%{count} tēmas"
@@ -1915,8 +1910,6 @@ lv:
         name: "Arhīvs"
       move_messages_to_inbox:
         name: "Pārvietot uz iesūtni"
-      append_tags:
-        name: "Pievienot tagus"
       replace_tags:
         name: "Aizvietot tagus"
       delete_topics:
@@ -2681,6 +2674,15 @@ lv:
       tags: "Tagi"
       add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
+      description: "Apraksts"
+      settings:
+        title: "Iestatījumi"
+        general: "Vispārīgi"
+        back: "Atpakaļ"
+        name: "Vārds"
+      localization:
+        name: "Vārds"
+        description: "Apraksts"
       sort_by: "Kārtot pēc:"
       sort_by_count: "skaita"
       sort_by_name: "vārda"
@@ -2832,7 +2834,6 @@ lv:
         categories: "Visas sadaļas"
   admin_js:
     settings: "Iestatījumi"
-    reset_filter: "Atlikt"
     admin:
       title: "Discourse administrators"
       moderator: "Moderators"
@@ -2840,6 +2841,10 @@ lv:
         remove_muted_tags_from_latest:
           always: "vienmēr"
           never: "nekad"
+      reports:
+        group_traffic: "Datu plūsma"
+        group_members: "Dalībnieki"
+        group_other: "Citi"
       config_sections:
         account:
           title: "Konts"
@@ -2857,7 +2862,6 @@ lv:
         preview: "Priekšskatījums"
         enabled_for_options:
           everyone: "Ikviens"
-          staff: "Tikai darbiniekiem"
         impact_roles:
           admins: "Administratori"
           moderators: "Moderātori"
@@ -2923,6 +2927,10 @@ lv:
           sub_pages:
             logs:
               title: "Žurnāls"
+        reports:
+          sub_pages:
+            settings:
+              title: "Iestatījumi"
         badges:
           title: "Žetoni"
         permalinks:
@@ -2964,11 +2972,6 @@ lv:
         default_value: "Noklusējums"
       search:
         title: "Meklēt"
-        result_types:
-          theme:
-            zero: "Dizaini"
-            one: "Tēma"
-            other: "Dizaini"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"
@@ -3010,7 +3013,7 @@ lv:
           all: "Visi"
           view_table: "tabula"
           view_graph: "grafiks"
-          refresh_report: "Pārlādēt ziņojumu"
+          refresh_report: "Pārlādēt"
           daily: Dienas
           monthly: Mēneša
           weekly: Nedēļas
@@ -3741,6 +3744,7 @@ lv:
           title: "Parādīt leitotāja kartē"
         field_types:
           text: "Teksts"
+          date: "Datums"
           confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:

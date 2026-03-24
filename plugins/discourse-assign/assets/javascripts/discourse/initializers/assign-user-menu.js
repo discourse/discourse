@@ -1,4 +1,4 @@
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
@@ -45,7 +45,7 @@ export default {
               }
 
               get description() {
-                return htmlSafe(
+                return trustHTML(
                   emojiUnescape(
                     i18n(`user.assignment_description.${this.postOrTopic()}`, {
                       topic_title: this.notification.fancy_title,

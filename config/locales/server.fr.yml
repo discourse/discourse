@@ -60,8 +60,6 @@ fr:
   inline_oneboxer:
     topic_page_title_post_number: "numéro %{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} par %{username}"
-    too_many_urls: "Impossible d'intégrer plus de 10 URL dans une seule requête."
-    concurrency_not_allowed: "Les demandes simultanées de « inline-oneboxing » ne sont pas autorisées. Veuillez envoyer une demande à la fois."
   components:
     enabled_filter: "Activé"
     disabled_filter: "Désactivé"
@@ -344,7 +342,6 @@ fr:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Les agents utilisateurs doivent comporter au moins 3 caractères pour éviter de limiter accidentellement le débit des utilisateurs légitimes."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Vous ne pouvez ajouter aucune des valeurs suivantes au paramètre : %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver la suppression des métadonnées d'image si l'option « Optimisation des images dans l'éditeur » est activée. Désactivez « Optimisation des images dans l'éditeur » avant de désactiver la suppression des métadonnées d'image."
-      x_summary_large_image_no_svg: "Les images de résumé X utilisées pour les métadonnées twitter:image ne peuvent pas être des images .svg."
       tl0_and_anonymous_flag: "Pour les utilisateurs anonymes, une « site contact email » ou une « email address to report illegal content » doit être fournie."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Ce paramètre nécessite que le paramètre « Autoriser le mode anonyme » soit activé au préalable."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1214,9 +1211,10 @@ fr:
       description: "Liste des statuts de signalement : type de signalement, auteur, signaleur et temps de résolution."
     visits:
       title: "Visites d'utilisateurs"
-      xaxis: "Jour"
+      xaxis:
+        desktop: "Bureau"
+        mobile: "Mobile"
       yaxis: "Nombre de visites"
-      description: "Nombre de visites d'utilisateurs connectés."
     signups:
       title: "Inscriptions"
       xaxis: "Jour"
@@ -1278,10 +1276,8 @@ fr:
       description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et les autres trafics."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "Jour"
       yaxis: "DAU/MAU"
-      description: "Nombre d'utilisateurs qui se sont connectés au cours de la dernière journée, divisé par le nombre d'utilisateurs qui se sont connectés au cours du dernier mois. Valeur exprimée en % qui représente le taux d'adhésion de la communauté. Viser > 20 %."
     daily_engaged_users:
       title: "Utilisateurs impliqués au quotidien"
       xaxis: "Jour"
@@ -1774,7 +1770,6 @@ fr:
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents est défini, ce taux s'appliquera à tous les robots d'indexation (nombre de secondes d'attente entre requêtes)"
     content_security_policy: "Activez la politique de sécurité du contenu (CSP). La CSP est une couche de sécurité supplémentaire qui permet de prévenir certains types d'attaques, notamment le Cross Site Scripting (XSS) et l'injection de données."
     content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only (CSP)"
-    content_security_policy_collect_reports: "Activer la collecte des rapports de violation CSP sur la page /csp_reports"
     content_security_policy_frame_ancestors: "Limiter les parties autorisées à intégrer ce site dans une iframe par le biais de l'attribut « csp ». Appliquer les restrictions d'hôtes définies dans la page <a href='%{base_path}/admin/customize/embedding'>Intégration externe</a>."
     content_security_policy_script_src: "Sources de script supplémentaires autorisées. L'hôte actuel et le CDN sont inclus par défaut. Voir <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Empêcher les attaques XSS grâce à la politique de sécurité du contenu (CSP).</a> Les autres sources hôtes sont ignorées car la dynamique stricte est activée."
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
@@ -2091,7 +2086,6 @@ fr:
     alternative_reply_by_email_addresses: "Liste des modèles alternatifs pour les adresses des e-mails entrants de la réponse par e-mail. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Utilisez du HTML plutôt que du texte pour les e-mails entrants."
     strip_incoming_email_lines: "Supprimer les espaces en début et fin de chaque ligne d'e-mail entrants."
-    disable_emails: "Empêcher Discourse d'envoyer tout type d'e-mails. Sélectionnez « oui » pour désactiver les e-mails pour tous les utilisateurs. Sélectionnez « non responsables » pour désactiver les e-mails uniquement pour les utilisateurs qui ne sont pas des responsables."
     strip_images_from_short_emails: "Retirer les images des e-mails dont la taille est inférieure à 2 800 octets"
     short_email_length: "Définissez la longueur maximale, en octets, pour qu'un e-mail soit classé comme « court » pour la suppression de l'image. Si la taille d'un e-mail ne dépasse pas ce paramètre, toutes les images (telles que les avatars et les émojis) contenues dans l'e-mail seront supprimées."
     display_name_on_email_from: "Afficher les noms complets dans le champ « De » des e-mails"
@@ -2109,6 +2103,7 @@ fr:
     mailgun_api_key: "Clé d'API secrète de Mailgun utilisée pour vérifier les messages du webhook."
     sendgrid_verification_key: "Clé de vérification Sendgrid utilisée pour vérifier les messages du webhook."
     mailjet_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Clé d'authentification Mandrill utilisée pour vérifier les messages du webhook."
     postmark_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/sparkpost?t=supersecret"
@@ -2180,7 +2175,6 @@ fr:
     group_in_subject: "Mettre %%{optional_pm} dans le sujet de l'e-mail au nom du premier groupe du message direct. Voir : <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>personnaliser le format du sujet des e-mails ordinaires</a>"
     allow_anonymous_mode: "Activez l'option permettant aux utilisateurs de passer en mode anonyme pour publier. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lors de la création de publications ou de sujets sur le site. Voir aussi « allow_anonymous_likes »."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme toutes les N minutes pour chaque utilisateur. Exemple : si la valeur 600 est choisie, lorsque 600 minutes seront passées après le dernier message ET que l'utilisateur passera en mode anonyme, un nouveau compte anonyme lui sera créé."
-    hide_user_profiles_from_public: "Désactiver les cartes, les profils et le répertoire d'utilisateurs pour les visiteurs."
     hide_new_user_profiles: "Masquez les profils d'utilisateurs de niveau de confiance 1 ou inférieur au public et les utilisateurs de niveau de confiance 1 jusqu'à ce qu'ils envoient une publication pour la première fois. Cette fonctionnalité est désactivée sans condition sur les sites must_approve_users et invite_only."
     allow_users_to_hide_profile: "Autoriser les utilisateurs à masquer leur profil et leur présence"
     hide_user_activity_tab: "Masquez l'onglet d'activité sur les profils d'utilisateur, à l'exception d'Admin et de Self."
@@ -2371,7 +2365,6 @@ fr:
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
     dashboard_general_tab_activity_metrics: "Sélectionnez les rapports à afficher comme indicateurs d'activité dans l'onglet général."
-    gravatar_enabled: "Utilisez le service <a href='https://gravatar.com/'>Gravatar</a> pour les avatars des utilisateurs. Cela empêchera les utilisateurs de passer à Gravatar pour leurs avatars, mais cela n'affectera pas les utilisateurs qui l'utilisent déjà."
     gravatar_name: "Spécifiez le nom du fournisseur de services Gravatar. Ce nom est généralement utilisé pour identifier la source fournissant des avatars Gravatar au site."
     gravatar_base_url: "Spécifiez l'URL d'accès à l'API du fournisseur Gravatar. Ce paramètre est essentiel pour convertir les adresses e-mail en URL Gravatar dans lesquelles les images d'avatar sont stockées."
     gravatar_login_url: "URL relative à gravatar_base_url, qui fournit à l'utilisateur la connexion au service Gravatar."
@@ -2452,12 +2445,6 @@ fr:
       reply_by_email_disabled: "Vous devez d'abord activer « reply by email » avant d'activer ce paramètre."
       discourse_connect_url_is_empty: "Avant d'activer ce paramètre, vous devez d'abord définir le paramètre « discourse connect url »."
       enable_local_logins_disabled: "Vous devez d'abord activer « enable local logins » avant d'activer ce paramètre."
-      min_username_length_exists: "Il n'est pas possible de définir une longueur minimale de nom d'utilisateur qui soit plus longue qu'un nom d'utilisateur qui existe déjà (%{username})."
-      min_group_name_length_exists: "Vous ne pouvez pas définir une longueur minimale de nom d'utilisateur supérieure au nom de groupe le plus court (%{group_name})."
-      min_username_length_range: "Il n'est pas possible de définir un minimum plus grand qu'un maximum."
-      max_username_length_exists: "Il n'est pas possible de définir une longueur maximale de nom d'utilisateur qui soit plus courte qu'un nom d'utilisateur qui existe déjà (%{username})."
-      max_group_name_length_exists: "Vous ne pouvez pas définir une longueur maximale de nom d'utilisateur inférieure au nom de groupe le plus long (%{group_name})."
-      max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       invalid_hex_value: "Les valeurs de couleurs doivent être au format hexadécimal à 6 chiffres."
       empty_selectable_avatars: "Vous devez d'abord envoyer au moins deux avatars sélectionnables avant d'activer ce paramètre."
       category_search_priority:
@@ -2516,7 +2503,6 @@ fr:
       exclude_tag: "Exclure les sujets avec une étiquette spécifique"
       exclude_tags_any: "Exclure les sujets avec l'une des étiquettes spécifiées (séparés par des virgules)"
       exclude_tags_all: "Exclure les sujets comportant toutes les étiquettes spécifiées (séparées par des plus)"
-      tags_alias: "Alias pour le filtre « tag : »"
       tag_group: "Afficher les sujets dont les étiquettes appartiennent à un groupe de balises spécifique"
       exclude_tag_group: "Exclure les sujets comportant des balises d'un groupe de balises spécifique"
       activity_before: "Afficher les sujets dont la dernière activité est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
@@ -2940,35 +2926,9 @@ fr:
   new_version_mailer:
     title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Hourra ! Une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/update)**
-
-      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes de modifications"
     subject_template: "[%{email_prefix}] Mise à jour disponible"
-    text_body_template: |
-      Hourra ! Une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/update)**
-
-      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
-
-      ### Notes de version
-
-      %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
@@ -4912,8 +4872,6 @@ fr:
     deprecation_error_label: Faire en sorte que les dépréciations de Javascript génèrent une erreur
     enter: "Activer le mode sans échec"
     must_select: "Vous devez sélectionner au moins une option pour activer le mode sans échec."
-  dev_mode:
-    enter: "Entrée"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5171,8 +5129,6 @@ fr:
       approve_and_unhide:
         title: "Oui"
         complete: "Publication approuvée et visible"
-      no_action_post:
-        title: "Aucune action"
       delete_post:
         title: "Supprimer la publication"
         complete: "Publication supprimée"
@@ -5181,8 +5137,6 @@ fr:
       restore_post:
         title: "Rétablir le message"
         complete: "Publication restaurée"
-      no_action_user:
-        title: "Aucune action"
       silence_user:
         title: "Désactiver l'utilisateur"
         complete: "Utilisateur mis en sourdine"

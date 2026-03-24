@@ -35,28 +35,9 @@ class PostsController < ApplicationController
   end
 
   def markdown_num
-    if params[:revision].present?
-      post_revision = find_post_revision_from_topic_id
-      render plain: post_revision.modifications[:raw].last
-    elsif params[:post_number].present?
-      markdown Post.find_by(
-                 topic_id: params[:topic_id].to_i,
-                 post_number: params[:post_number].to_i,
-               )
-    else
-      opts = params.slice(:page)
-      opts[:limit] = MARKDOWN_TOPIC_PAGE_SIZE
-      topic_view = TopicView.new(params[:topic_id], current_user, opts)
-      content = topic_view.posts.map { |p| <<~MD }
-          #{p.user.username} | #{p.updated_at} | ##{p.post_number}
-
-          #{p.raw}
-
-          -------------------------
-
-        MD
-      render plain: content.join
-    end
+    return render plain: markdown_for_revision if params[:revision].present?
+    return markdown_for_post if params[:post_number].present?
+    render plain: markdown_for_topic
   end
 
   def latest
@@ -82,6 +63,7 @@ class PostsController < ApplicationController
       posts =
         Post
           .private_posts
+          .where(post_type: Topic.visible_post_types(current_user))
           .order(id: :desc)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
@@ -281,9 +263,13 @@ class PostsController < ApplicationController
 
     if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
       if guardian.can_update_bumped_at?
-        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
-          params[:bypass_bump].presence || params.dig(:post, :bypass_bump),
-        )
+        bypass_bump_value =
+          if params.key?(:bypass_bump)
+            params[:bypass_bump]
+          else
+            params.dig(:post, :bypass_bump)
+          end
+        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(bypass_bump_value)
       end
     end
 
@@ -489,20 +475,24 @@ class PostsController < ApplicationController
     post = find_post_from_params
     raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
 
-    post_revision = find_post_revision_from_params
-    post_revision_serializer =
-      PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
-    render_json_dump(post_revision_serializer)
+    render_json_dump(
+      PostRevisionSerializer.new(find_post_revision_from_params, scope: guardian, root: false),
+    )
   end
 
   def latest_revision
     post = find_post_from_params
     raise Discourse::NotFound if post.hidden && !guardian.can_view_hidden_post_revisions?
 
-    post_revision = find_latest_post_revision_from_params
-    post_revision_serializer =
-      PostRevisionSerializer.new(post_revision, scope: guardian, root: false)
-    render_json_dump(post_revision_serializer)
+    render_json_dump(
+      PostRevisionSerializer.new(
+        find_latest_post_revision_from_params,
+        scope: guardian,
+        root: false,
+      ),
+    )
+  rescue ONPDiff::DiffLimitExceeded
+    render_json_error(I18n.t("errors.diff_too_complex"), status: 422)
   end
 
   def hide_revision
@@ -734,7 +724,7 @@ class PostsController < ApplicationController
 
   def deleted_posts
     params.permit(:offset, :limit)
-    guardian.ensure_can_see_deleted_posts!
+    guardian.ensure_can_see_deleted_posts_for_user!
 
     user = fetch_user_from_params
     offset = [params[:offset].to_i, 0].max
@@ -834,6 +824,33 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def markdown_for_revision
+    find_post_revision_from_topic_id.modifications[:raw].last
+  end
+
+  def markdown_for_post
+    post = Post.find_by(topic_id: params[:topic_id].to_i, post_number: params[:post_number].to_i)
+    markdown(post)
+  end
+
+  def markdown_for_topic
+    topic_view =
+      TopicView.new(
+        params[:topic_id],
+        current_user,
+        page: params[:page],
+        limit: MARKDOWN_TOPIC_PAGE_SIZE,
+      )
+    topic_view.posts.select { |post| guardian.can_see?(post) }.map { |post| <<~MD }.join
+        #{post.user.username} | #{post.updated_at} | ##{post.post_number}
+
+        #{post.raw}
+
+        -------------------------
+
+      MD
+  end
 
   def user_posts(guardian, user_id, opts)
     # Topic.unscoped is necessary to remove the default deleted_at: nil scope
@@ -1033,7 +1050,14 @@ class PostsController < ApplicationController
   end
 
   def display_post(post)
-    post.revert_to(params[:version].to_i) if params[:version].present?
+    if params[:version].present?
+      version = params[:version].to_i
+      post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
+      if post_revision
+        guardian.ensure_can_see!(post_revision)
+        post.revert_to(version)
+      end
+    end
     render_post_json(post)
   end
 

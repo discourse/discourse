@@ -65,3 +65,6 @@ vi:
     review:
       transcript:
         view: "Xem bản ghi các tin nhắn trước đó"
+      types:
+        reviewable_post_voting_comment:
+          title: "Bình luận về tút bị báo cáo"

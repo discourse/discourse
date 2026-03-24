@@ -14,6 +14,7 @@ const extension = {
       defining: true,
       attrs: {
         username: { default: null },
+        displayName: { default: null },
         postNumber: { default: null },
         topicId: { default: null },
         full: { default: null },
@@ -25,6 +26,7 @@ const extension = {
           getAttrs(dom) {
             return {
               username: dom.getAttribute("data-username"),
+              displayName: dom.getAttribute("data-display-name"),
               postNumber: dom.getAttribute("data-post"),
               topicId: dom.getAttribute("data-topic"),
               full: dom.getAttribute("data-full"),
@@ -33,17 +35,24 @@ const extension = {
         },
       ],
       toDOM(node) {
-        const { username, postNumber, topicId, full } = node.attrs;
+        const { username, displayName, postNumber, topicId, full } = node.attrs;
         const attrs = { class: "quote" };
         attrs["data-username"] = username;
         attrs["data-post"] = postNumber;
         attrs["data-topic"] = topicId;
         attrs["data-full"] = full ? "true" : "false";
+        if (displayName) {
+          attrs["data-display-name"] = displayName;
+        }
 
         const domSpec = ["aside", attrs];
 
         if (username) {
-          domSpec.push(["div", { class: "title" }, `${username}:`]);
+          domSpec.push([
+            "div",
+            { class: "title" },
+            `${displayName || username}:`,
+          ]);
         }
 
         domSpec.push(["blockquote", 0]);
@@ -67,6 +76,7 @@ const extension = {
       if (token.tag === "aside") {
         state.openNode(state.schema.nodes.quote, {
           username: token.attrGet("data-username"),
+          displayName: token.attrGet("data-display-name"),
           postNumber: token.attrGet("data-post"),
           topicId: token.attrGet("data-topic"),
           full: token.attrGet("data-full"),
@@ -94,12 +104,14 @@ const extension = {
 
   serializeNode: {
     quote(state, node) {
-      const postNumber = node.attrs.postNumber
-        ? `, post:${node.attrs.postNumber}`
-        : "";
-      const topicId = node.attrs.topicId ? `, topic:${node.attrs.topicId}` : "";
-      const quoteValue = node.attrs.username
-        ? `="${node.attrs.username}${postNumber}${topicId}"`
+      const { username, displayName, postNumber, topicId } = node.attrs;
+      const postNumberParam = postNumber ? `, post:${postNumber}` : "";
+      const topicIdParam = topicId ? `, topic:${topicId}` : "";
+      const usernameParam =
+        displayName && username ? `, username:${username}` : "";
+      const name = displayName || username;
+      const quoteValue = name
+        ? `="${name}${postNumberParam}${topicIdParam}${usernameParam}"`
         : "";
 
       state.write(`[quote${quoteValue}]\n`);

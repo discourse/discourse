@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'rollup' && ' (rollup)' || '' }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'legacy' && ' (legacy)' || '' }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -62,7 +62,7 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
-      ROLLUP_PLUGIN_COMPILER: 1
+      ROLLUP_PLUGIN_COMPILER: ${{ matrix.plugin_compiler == 'rollup' && '1' || '0' }}
 
     strategy:
       fail-fast: false
@@ -71,6 +71,7 @@ jobs:
         build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
+        plugin_compiler: ["rollup"]
         exclude:
           - build_type: backend
             target: themes
@@ -88,6 +89,9 @@ jobs:
           - build_type: system
             target: chat
             browser: Chrome
+          - build_type: frontend
+            target: plugins
+            plugin_compiler: "legacy"
           # - build_type: frontend
           #   target: core
           #   browser: Firefox Evergreen
@@ -318,7 +322,7 @@ jobs:
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend'
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
@@ -371,7 +375,7 @@ jobs:
           fi
 
       - name: Upload failed system test artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
         with:
           name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
@@ -395,7 +399,7 @@ jobs:
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
       - name: Upload flaky tests report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
@@ -407,7 +411,7 @@ jobs:
     needs: build
     steps:
       - name: Merge Artifacts
-        uses: actions/upload-artifact/merge@v6
+        uses: actions/upload-artifact/merge@v7
         with:
           name: failed-system-test-artifacts
           pattern: failed-system-test-artifacts-*
@@ -417,7 +421,7 @@ jobs:
         continue-on-error: true
 
       - name: Merge Artifacts
-        uses: actions/upload-artifact/merge@v6
+        uses: actions/upload-artifact/merge@v7
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*

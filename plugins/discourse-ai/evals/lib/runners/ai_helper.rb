@@ -6,14 +6,14 @@ module DiscourseAi
   module Evals
     module Runners
       class AiHelper < Base
-        PERSONA_MAP = {
-          "proofread" => DiscourseAi::Personas::Proofreader,
-          "explain" => DiscourseAi::Personas::Tutor,
-          "smart_dates" => DiscourseAi::Personas::SmartDates,
-          "title_suggestions" => DiscourseAi::Personas::TitlesGenerator,
-          "markdown_tables" => DiscourseAi::Personas::MarkdownTableGenerator,
-          "custom_prompt" => DiscourseAi::Personas::CustomPrompt,
-          "translator" => DiscourseAi::Personas::Translator,
+        AGENT_MAP = {
+          "proofread" => DiscourseAi::Agents::Proofreader,
+          "explain" => DiscourseAi::Agents::Tutor,
+          "smart_dates" => DiscourseAi::Agents::SmartDates,
+          "title_suggestions" => DiscourseAi::Agents::TitlesGenerator,
+          "markdown_tables" => DiscourseAi::Agents::MarkdownTableGenerator,
+          "custom_prompt" => DiscourseAi::Agents::CustomPrompt,
+          "translator" => DiscourseAi::Agents::Translator,
         }.freeze
 
         SANITIZE_REGEX_STR =
@@ -27,15 +27,15 @@ module DiscourseAi
           feature_name&.start_with?("ai_helper:")
         end
 
-        def initialize(feature_name, persona_prompt_override = nil)
-          @persona_class =
-            PERSONA_MAP.fetch(feature_name) do
+        def initialize(feature_name, agent_prompt_override = nil)
+          @agent_class =
+            AGENT_MAP.fetch(feature_name) do
               raise ArgumentError, "Unsupported AI Helper mode '#{feature_name}'"
             end
-          super(feature_name, persona_prompt_override)
+          super(feature_name, agent_prompt_override)
         end
 
-        def run(eval_case, llm)
+        def run(eval_case, llm, execution_context:)
           args = eval_case.args || {}
           input = args[:input].presence || raise(ArgumentError, "ai_helper evals require :input")
           user = build_user(args[:locale])
@@ -46,6 +46,7 @@ module DiscourseAi
               user: user,
               force_default_locale: args.fetch(:force_default_locale, false),
               custom_prompt: args[:custom_prompt],
+              execution_context:,
             )
 
           formatted = format_response(response)
@@ -54,7 +55,7 @@ module DiscourseAi
 
         private
 
-        attr_reader :feature_name, :persona_class
+        attr_reader :feature_name, :agent_class
 
         def build_user(locale)
           return Discourse.system_user if locale.blank?
@@ -65,11 +66,18 @@ module DiscourseAi
           end
         end
 
-        def generate_prompt(llm:, input:, user:, force_default_locale:, custom_prompt:)
+        def generate_prompt(
+          llm:,
+          input:,
+          user:,
+          force_default_locale:,
+          custom_prompt:,
+          execution_context:
+        )
           bot = build_bot(llm, user)
           user_input = build_user_input(input, custom_prompt)
           context =
-            DiscourseAi::Personas::BotContext.new(
+            DiscourseAi::Agents::BotContext.new(
               user: user,
               skip_show_thinking: true,
               feature_name: "ai_helper:#{feature_name}",
@@ -79,7 +87,7 @@ module DiscourseAi
             )
           context = attach_user_context(context, user, force_default_locale: force_default_locale)
 
-          capture_response(bot, context)
+          capture_response(bot, context, execution_context:)
         end
 
         def build_user_input(input, custom_prompt)
@@ -91,13 +99,13 @@ module DiscourseAi
         end
 
         def build_bot(llm, user)
-          persona = resolve_persona(persona_class: persona_class)
+          agent = resolve_agent(agent_class: agent_class)
 
-          DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm)
+          DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
         end
 
-        def capture_response(bot, context)
-          schema_info = bot.persona.response_format&.first
+        def capture_response(bot, context, execution_context:)
+          schema_info = bot.agent.response_format&.first
 
           if schema_info.present?
             capture_structured_response(
@@ -105,9 +113,10 @@ module DiscourseAi
               context,
               schema_key: schema_info["key"],
               schema_type: schema_info["type"],
+              execution_context:,
             )
           else
-            capture_plain_response(bot, context)
+            capture_plain_response(bot, context, execution_context:)
           end
         end
 

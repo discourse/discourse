@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Create channel", type: :system do
+RSpec.describe "Create channel" do
   fab!(:category_1, :category)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }

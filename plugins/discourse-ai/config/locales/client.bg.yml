@@ -37,10 +37,9 @@ bg:
       llm_selector:
         none: "Без"
       features:
-        back: "Назад"
         disabled: "(деактивирани)"
         groups: "Групи:"
-        no_persona: "Не е зададено"
+        no_agent: "Не е зададено"
         no_groups: "Без"
         edit: "Настройки"
         expand_list:
@@ -85,15 +84,14 @@ bg:
         periods:
           last_day: "Последните 24 часа"
           custom: "Ръчно задаване..."
-      ai_persona:
-        back: "Назад"
-        name: "Име "
+      ai_agent:
+        name: "Име"
         edit: "Редактирай"
         export: "Експорт "
         import: "Импорт"
         description: "Описание"
         user: Потребител
-        save: "Запази "
+        save: "Запази"
         enabled: "Да е включен?"
         delete: "Изтрий"
         response_format:
@@ -106,7 +104,6 @@ bg:
         uploads:
           uploading: "Качва се..."
       tools:
-        back: "Назад"
         export: "Експорт "
         import: "Импорт"
         name: "Име"
@@ -115,13 +112,13 @@ bg:
         save: "Запази"
         remove_parameter: "Премахване"
         parameter_required: "Задъжителни"
+        credential_not_set: "(не е зададено)"
         edit: "Редактирай"
         delete: "Изтрий"
       secrets:
         short_title: "Данни за удостоверяване"
         name: "Име"
         secret: "Стойност"
-        back: "Назад"
         save: "Запази"
         edit: "Редактирай"
         delete: "Изтрий"
@@ -130,7 +127,6 @@ bg:
         display_name: "Име"
         save: "Запази"
         edit: "Редактирай"
-        back: "Назад"
         delete: Изтрий
         quotas:
           group: "Група"
@@ -164,7 +160,6 @@ bg:
         image_caption:
           save_caption: "Запази"
       embeddings:
-        back: "Назад"
         save: "Запази"
         delete: "Изтрий"
         edit: "Редактирай"

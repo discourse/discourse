@@ -37,9 +37,9 @@ vi:
       llm_selector:
         none: "Không"
       features:
-        back: "Quay lại"
         disabled: "(vô hiệu hóa)"
         groups: "Nhóm:"
+        no_agent: "Chưa đặt"
         no_groups: "Không có gì"
         edit: "Cài đặt"
         expand_list:
@@ -88,8 +88,7 @@ vi:
         periods:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
-      ai_persona:
-        back: "Quay lại"
+      ai_agent:
         name: "Tên"
         edit: "Sửa"
         export: "Xuất"
@@ -112,7 +111,6 @@ vi:
           title: "Tải lên"
           uploading: "Đang tải lên..."
       tools:
-        back: "Quay lại"
         export: "Xuất"
         import: "Nhập"
         name: "Tên"
@@ -121,13 +119,14 @@ vi:
         save: "Lưu lại"
         remove_parameter: "Xóa"
         parameter_required: "Bắt buộc"
+        credential_not_set: "(chưa đặt)"
         edit: "Sửa"
+        test: "Kiểm tra"
         delete: "Xóa"
       secrets:
         short_title: "Thông tin đăng nhập"
         name: "Tên"
         secret: "Giá trị"
-        back: "Quay lại"
         save: "Lưu lại"
         edit: "Sửa"
         delete: "Xóa"
@@ -136,7 +135,6 @@ vi:
         display_name: "Tên"
         save: "Lưu lại"
         edit: "Sửa"
-        back: "Quay lại"
         delete: Xóa
         quotas:
           group: "Nhóm"
@@ -192,7 +190,6 @@ vi:
           save_caption: "Lưu lại"
         no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
       embeddings:
-        back: "Quay lại"
         save: "Lưu lại"
         delete: "Xóa"
         edit: "Sửa"
@@ -202,12 +199,7 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
-        semantic_search_loading: "Tìm kiếm thêm kết quả bằng AI"
         semantic_search_results:
-          toggle: "Xem %{count} kết quả tìm thấy bằng AI"
-          toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
-          none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
-          new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
           unavailable: "Kết quả AI không khả dụng"
           zero_results_expanded: "Không tìm thấy kết quả, hiển thị %{count} kết quả AI"
         semantic_search_tooltips:

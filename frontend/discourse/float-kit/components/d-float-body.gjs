@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { concat, fn, hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { fn, hash } from "@ember/helper";
+import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
@@ -62,6 +62,15 @@ export default class DFloatBody extends Component {
     return this.args.instance.options;
   }
 
+  get style() {
+    const maxWidth =
+      typeof this.options.maxWidth === "number"
+        ? `${this.options.maxWidth}px`
+        : this.options.maxWidth;
+
+    return trustHTML(`max-width: ${maxWidth}`);
+  }
+
   <template>
     {{~! strip whitespace ~}}<DFloatPortal
       @inline={{@inline}}
@@ -94,7 +103,7 @@ export default class DFloatBody extends Component {
           (modifier FloatKitCloseOnEscape @instance.close)
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
-        style={{htmlSafe (concat "max-width: " this.options.maxWidth "px")}}
+        style={{this.style}}
         ...attributes
       >
         <div class={{@innerClass}}>

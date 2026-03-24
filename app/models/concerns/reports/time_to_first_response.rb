@@ -10,6 +10,7 @@ module Reports::TimeToFirstResponse
 
       report.icon = "reply"
       report.higher_is_better = false
+      report.y_axis_title = I18n.t("reports.time_to_first_response.yaxis")
       report.data = []
       report.average = true
 

@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { LinkTo } from "@ember/routing";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 
@@ -12,7 +12,7 @@ export default class ProductItem extends Component {
       <h2>{{this.product.name}}</h2>
 
       <p class="product-description">
-        {{htmlSafe this.product.description}}
+        {{trustHTML this.product.description}}
       </p>
 
       {{#if this.isLoggedIn}}

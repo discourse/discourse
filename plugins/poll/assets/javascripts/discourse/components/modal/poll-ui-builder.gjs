@@ -4,8 +4,8 @@ import { Textarea } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -18,7 +18,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { optionalRequire } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -57,7 +57,7 @@ export default class PollUiBuilderModal extends Component {
   @tracked pollType = REGULAR_POLL_TYPE;
   @tracked publicPoll = this.siteSettings.poll_default_public;
   @tracked showAdvanced = false;
-  @trackedArray pollOptions = [new TrackedObject({ value: "" })];
+  @autoTrackedArray pollOptions = [trackedObject({ value: "" })];
 
   get showNumber() {
     return this.showAdvanced || this.isNumber;
@@ -334,7 +334,7 @@ export default class PollUiBuilderModal extends Component {
   onOptionsTextChange(e) {
     this.pollOptions = e.target.value
       .split("\n")
-      .map((value) => new TrackedObject({ value }));
+      .map((value) => trackedObject({ value }));
     this.enforceMinMaxValues();
   }
 
@@ -408,7 +408,7 @@ export default class PollUiBuilderModal extends Component {
       atIndex = this.pollOptions.length;
     }
 
-    const option = new TrackedObject({ value: "" });
+    const option = trackedObject({ value: "" });
     this.pollOptions.splice(atIndex, 0, option);
     this.enforceMinMaxValues();
   }

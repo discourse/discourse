@@ -227,7 +227,11 @@ class Reviewable < ActiveRecord::Base
     rs.reason = reason.to_s if reason
     rs.save!
 
-    update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
+    update(
+      score: self.score + rs.score,
+      latest_score: rs.created_at,
+      force_review: self.force_review || force_review,
+    )
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
 
     # Flags are cached for performance reasons.

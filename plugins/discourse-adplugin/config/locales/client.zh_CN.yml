@@ -24,9 +24,9 @@ zh_CN:
             ad_type:
               label: "广告类型"
             house_ad_name:
-              label: "房屋广告名称"
+              label: "自家广告名称"
             ad_placement:
-              label: "广告位投放"
+              label: "广告展示位置"
             user_type:
               label: "用户类型"
       adplugin:
@@ -37,22 +37,27 @@ zh_CN:
           new_name: "新建自家广告"
           save: "保存"
           delete: "删除"
+          confirm_delete: "确定要删除此广告吗？"
           html: "HTML"
           categories: "类别"
+          routes: "路由"
           groups: "群组"
+          description: "创建并管理您自己的广告，使其在您站点的各个位置展示。"
+          get_started: "尚未创建自家广告。"
           filter_placeholder: "选择广告…"
           more_settings: "更多设置"
           show_to_anons: "向匿名用户显示"
           show_to_logged_in_users: "向登录用户显示"
           category_chooser_description: "选择应显示此广告的类别，或留空以在任何地方显示广告。`no_ads_for_categories` 网站设置优先于此设置。"
-          category_chooser_description_with_routes: "选择要显示此广告的类别。留空，路由选择将在任何地方显示广告。 `no_ads_for_categories` 网站设置优先于此设置。"
-          route_chooser_description: "选择要显示此广告的页面/路由。留空此项和类别选择以便在任何地方显示广告。"
+          category_chooser_description_with_routes: "选择应显示此广告的类别。将此设置和路由选择留空会在任何地方显示广告。`no_ads_for_categories` 站点设置优先于此设置。"
+          route_chooser_description: "选择应显示此广告的页面/路由。将此设置和类别选择留空会在任何地方显示广告。"
           group_chooser_description: "选择可以查看此广告的群组或留空以向所有登录用户显示广告。"
           preview: "预览"
           back: "自家广告"
           name: "名称"
           edit: "编辑"
           tabs:
+            ads: "广告"
             settings: "设置"
           topic_list_top:
             title: "话题列表顶部广告"

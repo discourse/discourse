@@ -5,7 +5,7 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { throttle } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -17,7 +17,7 @@ const plusOne = helper(([val]) => val + 1);
 const getAspectRatio = helper(([width, height]) => {
   const w = parseInt(width, 10) || 1;
   const h = parseInt(height, 10) || 1;
-  return htmlSafe(`aspect-ratio: ${w} / ${h}`);
+  return trustHTML(`aspect-ratio: ${w} / ${h}`);
 });
 
 const KEYBOARD_THROTTLE_MS = isTesting() ? 0 : 150;

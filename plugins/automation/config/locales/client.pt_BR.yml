@@ -69,8 +69,10 @@ pt_BR:
           fields:
             categories:
               label: Categorias
+              description: Acionar somente quando o tópico denunciado estiver nessas categorias.
             tags:
-              label: Etiquetas
+              label: Tags
+              description: Acionar apenas quando o tópico denunciado tiver essas tags.
         not_found: Não foi possível encontrar o acionador `%{trigger}` para automação `%{automation}`. Verifique se o plugin associado está instalado
         user_badge_granted:
           fields:
@@ -281,6 +283,14 @@ pt_BR:
               label: Etiquetas
               description: Opcional, ativação apenas se a postagem tiver alguma destas etiquetas
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Modelo de e-mail
+              description: Suporta espaços reservados para automação.
+            recipients:
+              label: Destinatários
+              description: Usuários ou endereços de e-mail a notificar
         not_found: Não foi possível encontrar o script `%{script}` para automação `%{automation}`, verifique se o plugin associado está instalado
         zapier_webhook:
           fields:
@@ -430,6 +440,11 @@ pt_BR:
               label: "Nome do campo personalizado do(a) usuário(a)"
         set_topic_timer:
           title: Definir timer do tópico
+          fields:
+            type:
+              label: Tipo de temporizador
+            duration:
+              label: Duração do temporizador
       unnamed_automation: "Automação sem nome"
       models:
         script:
@@ -442,6 +457,9 @@ pt_BR:
           runs_today: "%{count} hoje"
           runs_this_week: "%{count} esta semana"
           runs_this_month: "%{count} este mês"
+          recent_errors:
+            one: "%{count} erro recente"
+            other: "%{count} erros recentes"
           runs:
             label: Execuções
           name:

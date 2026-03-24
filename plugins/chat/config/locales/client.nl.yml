@@ -64,6 +64,7 @@ nl:
       cancel: "Annuleren"
       cancel_reply: "Antwoord annuleren"
       chat_channels: "Kanalen"
+      pinned: "Vastgemaakt"
       browse_all_channels: "Alle kanalen bekijken"
       see_in: "Bekijken in"
       move_to_channel:

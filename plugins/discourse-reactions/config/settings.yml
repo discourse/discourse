@@ -4,6 +4,7 @@ discourse_reactions:
     client: true
   discourse_reactions_like_icon:
     client: true
+    type: icon
     default: "heart"
   discourse_reactions_reaction_for_like:
     client: true
@@ -20,11 +21,12 @@ discourse_reactions:
     client: true
   discourse_reactions_excluded_from_like:
     type: emoji_list
-    default: "-1"
+    default: "-1|poop|face_with_symbols_on_mouth|enraged_face|face_vomiting|nauseated_face|angry|kitchen_knife|water_pistol|bomb|clown_face|unamused_face|roll_eyes|confused|smirking_face|disappointed_face|pensive_face|lying_face|weary_face|tired_face|confounded_face|persevering_face|smiling_face_with_horns|angry_face_with_horns|cigarette|person_gesturing_no|prohibited|no_entry|dagger|cross_mark"
     validator: "ReactionsExcludedFromLikeSiteSettingValidator"
     area: "emojis"
   discourse_reactions_like_sync_enabled:
     default: true
+    hidden: true
   discourse_reactions_allow_any_emoji:
     default: false
     client: true

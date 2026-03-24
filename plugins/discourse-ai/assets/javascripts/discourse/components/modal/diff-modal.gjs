@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -28,10 +28,9 @@ export default class ModalDiffModal extends Component {
 
   @tracked loading = false;
   @tracked finalResult = "";
-  @tracked escapedSelectedText = escapeExpression(this.args.model.selectedText);
-  @tracked diffStreamer = new DiffStreamer(this.args.model.selectedText);
   @tracked suggestion = "";
-  @tracked
+  escapedSelectedText = escapeExpression(this.args.model.selectedText);
+  diffStreamer = new DiffStreamer(this.args.model.selectedText);
   smoothStreamer = new SmoothStreamer(
     () => this.suggestion,
     (newValue) => (this.suggestion = newValue)
@@ -223,7 +222,7 @@ export default class ModalDiffModal extends Component {
             }}
           >
             {{~#if @model.showResultAsDiff~}}
-              <span class="diff-inner">{{htmlSafe this.diffResult}}</span>
+              <span class="diff-inner">{{trustHTML this.diffResult}}</span>
             {{else}}
               {{#if (or this.loading this.smoothStreamer.isStreaming)}}
                 <CookText

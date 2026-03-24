@@ -99,7 +99,8 @@ class DiscourseLogstashLogger < Logger
 
       if progname == "sidekiq-exception"
         event["job.class"] = opts.dig(:context, :job)
-        event["job.opts"] = opts.dig(:context, :opts)&.stringify_keys&.to_s
+        job_opts = opts.dig(:context, :opts)
+        event["job.opts"] = job_opts.transform_keys(&:to_s).to_s if job_opts
         event["job.problem_db"] = opts.dig(:context, :problem_db)
         event["exception.class"] = opts[:exception_class]
         event["exception.message"] = opts[:exception_message]

@@ -6,6 +6,10 @@
 
 sw:
   js:
+    blocks:
+      ghost:
+        hidden: "imefichwa"
+        failed: "kushindwa"
     number:
       format:
         separator: "."
@@ -206,6 +210,9 @@ sw:
       other: "Herufi %{count}"
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Iliyopita"
     about:
       edit: "Hariri ukurasa huu"
       simple_title: "Kuhusu "
@@ -1069,6 +1076,7 @@ sw:
     form_kit:
       reset: Anza Upya
       optional: sio muhimu
+      required: muhimu
       errors:
         required: "Muhimu na Inahitajika"
     close: "Funga"
@@ -1474,9 +1482,6 @@ sw:
       bulk:
         select_all: "Chagua Zote"
         clear_all: "Ondoa Zote"
-        unlist_topics: "Ondoa Mada kwenye listi"
-        relist_topics: "Orodhesha Upya Mada"
-        delete: "Futa Mada"
         delete_topics_count:
           one: "Futa Mada"
           other: "Futa Mada"
@@ -1488,17 +1493,9 @@ sw:
         dismiss_new: "Ondosha Mpya"
         toggle: "Badili kwa wingi chaguo la topiki"
         actions: "Vitendo za Jumla"
-        close_topics: "Funga Mada"
-        archive_topics: "Hifadhi Mada kwenye nyaraka"
         move_messages_to_inbox: "Hamishia kwenye kisanduku-pokezi"
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
-        selected:
-          one: "Umechagua mada <b>%{count}</b>."
-          other: "Umechagua mada <b>%{count}</b>."
-        change_tags: "Badilisha Lebo"
-        append_tags: "Jumlisha Lebo"
         choose_new_tags: "Chagua lebo mpya kwa ajili ya hizi mada:"
-        choose_append_tags: "Chagua lebo mpya kuweka kwenye mada hizi:"
         changed_tags: "lebo za hizo mada zilibadilishwa."
         error_topic_count:
           one: "%{count} topiki"
@@ -1521,8 +1518,6 @@ sw:
         name: "Nyaraka"
       move_messages_to_inbox:
         name: "Hamisha kwenda Kisanduku pokezi"
-      append_tags:
-        name: "Jumlisha Lebo"
       replace_tags:
         name: "Badilisha Lebo"
       delete_topics:
@@ -2235,6 +2230,15 @@ sw:
       add_synonyms: "Ongeza"
       delete_tag: "futa lebo"
       delete_confirm_no_topics: "Una uhakika unataka kufuta lebo hii?"
+      description: "Maelezo"
+      settings:
+        title: "Mipangilio"
+        general: "Jumla"
+        back: "Iliyopita"
+        name: "Jina"
+      localization:
+        name: "Jina"
+        description: "Maelezo"
       sort_by: "Pangilia kwa:"
       sort_by_count: "hesabu"
       sort_by_name: "jina"
@@ -2385,7 +2389,6 @@ sw:
         categories: "Kategoria Zote"
   admin_js:
     settings: "Mipangilio"
-    reset_filter: "Weka/Anzisha Upya"
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"
@@ -2395,6 +2398,9 @@ sw:
           never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
+        group_traffic: "Utembeleaji"
+        group_members: "Wanachama"
+        group_other: "Nyingine"
       config_sections:
         account:
           title: "Akaunti"
@@ -2477,6 +2483,10 @@ sw:
           sub_pages:
             logs:
               title: "Batli"
+        reports:
+          sub_pages:
+            settings:
+              title: "Mipangilio"
         badges:
           title: "Beji"
         permalinks:
@@ -2516,10 +2526,6 @@ sw:
         default_value: "Halisi"
       search:
         title: "Tafuta"
-        result_types:
-          theme:
-            one: "Mandhari"
-            other: "Mandhari"
       dashboard:
         title: "Ubao"
         version: "Toleo"
@@ -2568,7 +2574,7 @@ sw:
           all: "Zote"
           view_table: "jedwali"
           view_graph: "grafu"
-          refresh_report: "Rudisha tena Ripoti"
+          refresh_report: "Rudisha Tena"
           daily: Kila siku
           monthly: Klla mwezi
           weekly: Kila wiki
@@ -3389,6 +3395,7 @@ sw:
           title: "Onyesha kwenye kadi ya mtumiaji"
         field_types:
           text: "Neno"
+          date: "Tarehe"
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:

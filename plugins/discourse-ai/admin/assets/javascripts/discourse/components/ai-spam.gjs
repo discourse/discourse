@@ -16,6 +16,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 import SpamTestModal from "./modal/spam-test-modal";
@@ -34,9 +35,9 @@ export default class AiSpam extends Component {
   };
   @tracked isEnabled = false;
   @tracked selectedLLM = null;
-  @tracked selectedPersonaId = null;
+  @tracked selectedAgentId = null;
   @tracked customInstructions = "";
-  @tracked errors = [];
+  @autoTrackedArray errors;
 
   constructor() {
     super(...arguments);
@@ -98,11 +99,15 @@ export default class AiSpam extends Component {
     }
     this.customInstructions = model.custom_instructions;
     this.stats = model.stats;
-    this.selectedPersonaId = model.ai_persona_id;
+    this.selectedAgentId = model.ai_agent_id;
   }
 
   get availableLLMs() {
     return this.args.model?.available_llms || [];
+  }
+
+  get availableAgents() {
+    return this.args.model?.available_agents || [];
   }
 
   @action
@@ -135,8 +140,8 @@ export default class AiSpam extends Component {
   }
 
   @action
-  async updatePersona(value) {
-    this.selectedPersonaId = value;
+  async updateAgent(value) {
+    this.selectedAgentId = value;
   }
 
   @action
@@ -147,7 +152,7 @@ export default class AiSpam extends Component {
         data: {
           llm_model_id: this.llmId,
           custom_instructions: this.customInstructions,
-          ai_persona_id: this.selectedPersonaId,
+          ai_agent_id: this.selectedAgentId,
         },
       });
       this.toasts.success({
@@ -263,15 +268,15 @@ export default class AiSpam extends Component {
           {{/if}}
         </div>
 
-        <div class="ai-spam__persona">
-          <label class="ai-spam__persona-label">{{i18n
-              "discourse_ai.spam.select_persona"
+        <div class="ai-spam__agent">
+          <label class="ai-spam__agent-label">{{i18n
+              "discourse_ai.spam.select_agent"
             }}</label>
           <ComboBox
-            @value={{this.selectedPersonaId}}
-            @content={{@model.available_personas}}
-            @onChange={{this.updatePersona}}
-            class="ai-spam__persona-selector"
+            @value={{this.selectedAgentId}}
+            @content={{this.availableAgents}}
+            @onChange={{this.updateAgent}}
+            class="ai-spam__agent-selector"
           />
         </div>
 

@@ -120,11 +120,9 @@ export function registerIconRenderer(renderer) {
 }
 
 function iconClasses(icon, params) {
-  // "notification." is invalid syntax for classes, use replacement instead
+  // dots are invalid syntax for classes, use replacement instead
   const dClass =
-    icon.replacementId && icon.id.includes("notification.")
-      ? icon.replacementId
-      : icon.id;
+    icon.replacementId && icon.id.includes(".") ? icon.replacementId : icon.id;
 
   let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 
@@ -185,7 +183,6 @@ registerIconRenderer({
     if (params.translatedtitle) {
       deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
         since: "2.9.0.beta6",
-        dropFrom: "2.10.0.beta1",
         id: "discourse.icon-renderer-translatedtitle",
       });
       params.translatedTitle = params.translatedtitle;

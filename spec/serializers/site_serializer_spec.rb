@@ -515,6 +515,22 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#email_configured" do
+    it "returns true when smtp_address is set" do
+      global_setting :smtp_address, "smtp.example.com"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:email_configured]).to eq(true)
+    end
+
+    it "returns false when smtp_address is blank" do
+      global_setting :smtp_address, ""
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:email_configured]).to eq(false)
+    end
+  end
+
   describe "#groups" do
     fab!(:group)
     fab!(:admin)

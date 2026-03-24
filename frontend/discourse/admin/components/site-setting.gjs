@@ -8,7 +8,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
@@ -16,8 +16,10 @@ import JobStatus from "discourse/admin/components/site-settings/job-status";
 import SiteSetting from "discourse/admin/models/site-setting";
 import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
@@ -54,6 +56,7 @@ const CUSTOM_TYPES = [
   "locale_list",
   "locale_enum",
   "topic",
+  "icon",
 ];
 
 export default class SiteSettingComponent extends Component {
@@ -147,7 +150,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get themeSiteSettingWarningText() {
-    return htmlSafe(
+    return trustHTML(
       i18n("admin.theme_site_settings.site_setting_warning", {
         basePath,
         defaultThemeName: sanitize(this.defaultTheme.name),
@@ -185,7 +188,7 @@ export default class SiteSettingComponent extends Component {
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
-      return htmlSafe(`<div class="preview">${escapedValue}</div>`);
+      return trustHTML(`<div class="preview">${escapedValue}</div>`);
     }
     return null;
   }
@@ -290,8 +293,12 @@ export default class SiteSettingComponent extends Component {
     return this.setting.staffLogFilter;
   }
 
+  get isDisabled() {
+    return this.setting.themeable || this.setting.disabled;
+  }
+
   get canUpdate() {
-    if (this.setting.themeable) {
+    if (this.isDisabled) {
       return false;
     }
 
@@ -342,7 +349,7 @@ export default class SiteSettingComponent extends Component {
         let errorString = json.errors[0];
 
         if (json.html_message) {
-          errorString = htmlSafe(errorString);
+          errorString = trustHTML(errorString);
         }
 
         this.setting.validationMessage = errorString;
@@ -416,7 +423,10 @@ export default class SiteSettingComponent extends Component {
   <template>
     <div
       data-setting={{this.setting.setting}}
-      class="row setting {{this.typeClass}} {{if this.overridden 'overridden'}}"
+      class="row setting
+        {{this.typeClass}}
+        {{if this.overridden 'overridden'}}
+        {{if this.isDisabled 'disabled'}}"
       ...attributes
     >
       <div class="setting-label">
@@ -436,6 +446,11 @@ export default class SiteSettingComponent extends Component {
             </LinkTo>
           {{/if}}
         </h3>
+
+        <PluginOutlet
+          @name="site-setting-after-label"
+          @outletArgs={{lazyHash setting=this.setting}}
+        />
 
         {{#if this.defaultIsAvailable}}
           <DButton
@@ -460,7 +475,7 @@ export default class SiteSettingComponent extends Component {
         {{else}}
           <this.resolvedComponent
             {{on "keydown" this._handleKeydown}}
-            @disabled={{this.setting.themeable}}
+            @disabled={{this.isDisabled}}
             @setting={{this.setting}}
             @value={{this.buffered.value}}
             @preview={{this.preview}}
@@ -476,6 +491,10 @@ export default class SiteSettingComponent extends Component {
             <Description @description={{this.setting.description}} />
             <JobStatus @status={{this.status}} @progress={{this.progress}} />
           {{/if}}
+          <PluginOutlet
+            @name="site-setting-after-description"
+            @outletArgs={{lazyHash setting=this.setting}}
+          />
           {{#if this.showThemeSiteSettingWarning}}
             <div class="setting-theme-warning">
               <p class="setting-theme-warning__text">

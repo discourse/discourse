@@ -13,6 +13,9 @@ tr_TR:
       editing:
         one: "düzenliyor"
         other: "düzenliyor"
+      translating:
+        one: "çeviri"
+        other: "çeviri"
       replying_to_topic:
         one: "yanıtlıyor"
         other: "yanıtlıyor"

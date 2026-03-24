@@ -389,6 +389,44 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       expect(log.response_tokens).to eq(20)
     end
 
+    it "strips temperature and top_p when reasoning is enabled" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          enable_reasoning: true,
+          reasoning_tokens: 2048,
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user, temperature: 0.7, top_p: 0.9)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body).not_to have_key("temperature")
+      expect(request_body).not_to have_key("top_p")
+    end
+
     it "supports claude 3 streaming" do
       proxy = DiscourseAi::Completions::Llm.proxy(model)
 
@@ -489,7 +527,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   end
 
   describe "disabled tool use" do
-    it "handles tool_choice: :none by adding a user message instead of using tool_choice param" do
+    it "sets tool_choice to none natively" do
       proxy = DiscourseAi::Completions::Llm.proxy(model)
       request = nil
 
@@ -527,26 +565,21 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         end
         .to_return(status: 200, body: content)
 
-      proxy.generate(prompt, user: user)
+      result = proxy.generate(prompt, user: user)
 
       request_body = JSON.parse(request.body)
 
-      expect(request_body).not_to have_key("tool_choice")
+      expect(request_body.dig("tool_choice", "type")).to eq("none")
 
       messages = request_body["messages"]
-      expect(messages.length).to eq(2)
+      expect(messages.length).to eq(1)
 
-      last_message = messages.last
-      expect(last_message["role"]).to eq("user")
-
-      expect(last_message["content"]).to eq(
-        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text_user,
-      )
+      expect(result).to eq("I won't use any tools. Here's a direct response instead.")
     end
   end
 
   describe "tool_choice :none with response_format" do
-    it "injects user message workaround and assistant prefill when structured output is disabled" do
+    it "sets tool_choice none and appends assistant prefill when structured output is disabled" do
       model.update!(
         provider_params: model.provider_params.merge("disable_native_structured_output" => true),
       )
@@ -610,26 +643,19 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
       request_body = JSON.parse(request.body)
 
-      expect(request_body).not_to have_key("tool_choice")
+      expect(request_body.dig("tool_choice", "type")).to eq("none")
       expect(request_body).not_to have_key("output_config")
 
       messages = request_body["messages"]
-      expect(messages.length).to eq(3)
+      expect(messages.length).to eq(2)
       expect(messages[0]["role"]).to eq("user")
-      expect(messages[1]["role"]).to eq("user")
-      expect(messages[1]["content"]).to eq(
-        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text_user,
-      )
-      expect(messages[2]).to eq({ "role" => "assistant", "content" => "{" })
+      expect(messages[1]).to eq({ "role" => "assistant", "content" => "{" })
     end
   end
 
   describe "forced tool use" do
-    it "can properly force tool use" do
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
-      request = nil
-
-      tools = [
+    let(:tools) do
+      [
         {
           name: "echo",
           description: "echo something",
@@ -638,17 +664,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           ],
         },
       ]
+    end
 
-      prompt =
-        DiscourseAi::Completions::Prompt.new(
-          "You are a bot",
-          messages: [type: :user, id: "user1", content: "echo hello"],
-          tools: tools,
-          tool_choice: "echo",
-        )
-
-      # Mock response from Bedrock
-      content = {
+    let(:tool_response_body) do
+      {
         content: [
           {
             type: "tool_use",
@@ -664,6 +683,19 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           output_tokens: 15,
         },
       }.to_json
+    end
+
+    it "can properly force tool use" do
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [type: :user, id: "user1", content: "echo hello"],
+          tools: tools,
+          tool_choice: "echo",
+        )
 
       stub_request(
         :post,
@@ -673,15 +705,50 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           request = inner_request
           true
         end
-        .to_return(status: 200, body: content)
+        .to_return(status: 200, body: tool_response_body)
 
       proxy.generate(prompt, user: user)
 
-      # Parse the request body
       request_body = JSON.parse(request.body)
 
-      # Verify that tool_choice: "echo" is present
       expect(request_body.dig("tool_choice", "name")).to eq("echo")
+    end
+
+    it "skips tool_choice and injects guidance when thinking is enabled" do
+      model.update!(
+        provider_params:
+          model.provider_params.merge("enable_reasoning" => true, "adaptive_thinking" => true),
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      prompt =
+        DiscourseAi::Completions::Prompt.new(
+          "You are a bot",
+          messages: [type: :user, id: "user1", content: "echo hello"],
+          tools: tools,
+          tool_choice: "echo",
+        )
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: tool_response_body)
+
+      proxy.generate(prompt, user: user)
+
+      request_body = JSON.parse(request.body)
+
+      expect(request_body).not_to have_key("tool_choice")
+      last_message = request_body["messages"].last
+      expect(last_message["role"]).to eq("user")
+      expect(last_message["content"]).to include("'echo' tool")
     end
   end
 
@@ -1265,7 +1332,116 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     end
   end
 
+  describe "adaptive thinking" do
+    it "sends adaptive thinking config when enabled" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          enable_reasoning: true,
+          adaptive_thinking: true,
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body["thinking"]).to eq({ "type" => "adaptive" })
+      expect(request_body["max_tokens"]).to eq(32_000)
+    end
+
+    it "adaptive_thinking takes priority over enable_reasoning" do
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          enable_reasoning: true,
+          adaptive_thinking: true,
+          reasoning_tokens: 10_000,
+        },
+      )
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body["thinking"]).to eq({ "type" => "adaptive" })
+      expect(request_body["max_tokens"]).to eq(32_000)
+    end
+  end
+
   describe "effort parameter" do
+    it "includes effort in output_config when set to max" do
+      model.update!(provider_params: { access_key_id: "123", region: "us-east-1", effort: "max" })
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body.dig("output_config", "effort")).to eq("max")
+    end
+
     it "includes effort in output_config when set to low, medium, or high" do
       model.update!(
         provider_params: {

@@ -30,8 +30,10 @@ tr_TR:
         label: "Gönderi oylaması konusu oluşturun"
       composer_actions:
         create_as_post_voting:
+          label: "Gönderi oylamasını aç/kapat"
           desc: "Konu oylanabilir gönderilerle oluşturulacak"
         remove_as_post_voting:
+          label: "Gönderi oylamasını kaldır"
           desc: "Konu normal formatta oluşturulacak"
     vote:
       already_voted: "Her soru için yalnızca bir kez oy kullanabilirsiniz."
@@ -117,3 +119,6 @@ tr_TR:
     review:
       transcript:
         view: "Önceki mesajların dökümünü görüntüle"
+      types:
+        reviewable_post_voting_comment:
+          title: "Bayraklı Gönderi Oylama Yorumu"

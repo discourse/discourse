@@ -1,5 +1,24 @@
 en:
   js:
+    blocks:
+      ghost:
+        # Section titles
+        status: "Status"
+        conditions: "Conditions"
+        arguments: "Arguments"
+        container_args: "Container Args"
+        in_location: "in"
+        # Status text (used in badge, header, and status section)
+        hidden: "hidden"
+        not_registered: "not registered"
+        no_visible_children: "no visible children"
+        failed: "failed"
+      ghost_reasons:
+        # Longer hint messages shown at bottom of ghost tooltip
+        optional_missing_hint: "This optional block is not rendered because it's not registered."
+        no_visible_children_hint: "This container block is not rendered because none of its children are visible."
+        condition_failed_hint: "This block is not rendered because its conditions failed."
+        head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -318,6 +337,7 @@ en:
     skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+    emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
@@ -354,6 +374,8 @@ en:
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
     broken_transformer_alert: "There was an error. Your site may not work properly."
+    broken_block_alert: "A block configuration error was detected. Check browser console for details."
+    broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
@@ -361,6 +383,20 @@ en:
       theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plugin '%{name}'"
       unknown_source: "One of your themes or plugins"
+
+    dev_tools:
+      drag_to_move: "Drag to move"
+      toggle_plugin_outlet_debug: "Toggle plugin outlet debug"
+      toggle_block_debug: "Toggle block debug"
+      block_debug:
+        outlet_boundaries: "Outlet boundaries"
+        visual_overlay: "Visual overlay"
+        ghost_blocks: "Ghost blocks"
+        condition_debugging: "Condition debugging"
+      toggle_safe_mode: "Toggle safe mode"
+      toggle_verbose_localization: "Toggle verbose localization"
+      toggle_mobile_view: "Toggle mobile view"
+      disable_dev_tools: "Disable dev tools"
 
     s3:
       regions:
@@ -466,6 +502,12 @@ en:
         title: "Start Posting"
         description: "Give people something to talk about together"
         action: "Icebreaker ideas"
+        choose_option: "How would you like to start?"
+        predefined_topics: "Icebreaker templates"
+        predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
+        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
+        use_predefined: "Browse templates"
+        back: "Back"
         icebreakers:
           fun_facts:
             title: "What are some fun facts about you?"
@@ -479,7 +521,6 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
-
 
       spread_the_word:
         title: "Spread the Word!"
@@ -1883,6 +1924,24 @@ en:
         apps: "Apps"
         navigation_menu: "Navigation menu"
         upcoming_changes: "Upcoming changes"
+        calendar_subscriptions: "Calendar"
+
+      calendar_subscriptions:
+        description: "Generate subscription URLs to sync with your favourite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs. "
+        generate: "Generate Subscription URLs"
+        regenerate: "Regenerate URLs"
+        regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"
+        revoke: "Revoke Subscription"
+        revoke_confirm: "This will revoke your calendar subscription URLs. Any calendar apps using them will stop receiving updates. Continue?"
+        urls_warning: "The subscription URLs are ready! Click the buttons below to link them to your calendar app. Note: these URLs are shown only once."
+        bookmarks: "Bookmark Reminders"
+        bookmarks_description: "Your bookmarks with reminder dates"
+        copy: "Copy URL"
+        copied: "Copied!"
+        add_to_google: "Google Calendar"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple Calendar"
+        active_subscription: "You have an active calendar subscription."
 
       change_password:
         success: "(email sent)"
@@ -2550,6 +2609,7 @@ en:
     form_kit:
       reset: Reset
       optional: optional
+      required: required
       errors_summary_title:
         one: "Fix this error to continue"
         other: "Fix these errors to continue"
@@ -3171,6 +3231,7 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
+      edit_reason: "Add your reason for editing"
       enter_fullscreen: "Enter fullscreen composer"
       exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
@@ -3336,9 +3397,13 @@ en:
         available:
           title: "Upcoming changes"
           description: "'%{changeName}' is available for preview"
+          description_two: "'%{changeName1}' and '%{changeName2}' are available for preview"
+          description_many: "'%{changeName}' and %{otherChangeCount} more changes are available for preview"
         automatically_promoted:
           title: "Upcoming changes"
           description: "'%{changeName}' has been automatically enabled"
+          description_two: "'%{changeName1}' and '%{changeName2}' were automatically enabled"
+          description_many: "'%{changeName}' and %{otherChangeCount} more changes were automatically enabled"
       dismiss_confirmation:
         body:
           default:
@@ -3400,8 +3465,8 @@ en:
         votes_released: "vote was released"
         new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
-        upcoming_change_available: "new upcoming change '%{changeName}' is available"
-        upcoming_change_automatically_promoted: "upcoming change '%{changeName}' has been automatically enabled"
+        upcoming_change_available: "new upcoming changes are available"
+        upcoming_change_automatically_promoted: "upcoming changes have been automatically enabled"
 
     upload_selector:
       change: "Change"
@@ -3611,11 +3676,11 @@ en:
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
-        unlist_topics: "Unlist Topics"
-        relist_topics: "Relist Topics"
+        unlist_topics: "Unlist topics"
+        relist_topics: "Relist topics"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
-        delete: "Delete Topics"
+        delete: "Delete topics"
         delete_topics_count:
           one: "Delete Topic"
           other: "Delete Topics"
@@ -3654,36 +3719,57 @@ en:
           other: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Set Category…"
-        close_topics: "Close Topics"
-        archive_topics: "Archive Topics"
+        change_category: "Update category"
+        close_topics: "Close topics"
+        archive_topics: "Archive topics"
         move_messages_to_inbox: "Move to Inbox"
         archive_messages: "Move to Archive"
-        notification_level: "Notifications…"
+        notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected:
-          one: "You have selected <b>%{count}</b> topic."
-          other: "You have selected <b>%{count}</b> topics."
         selected_sole_category:
           one: "You have selected <b>%{count}</b> topic from category:"
           other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
-        change_tags: "Replace Tags"
-        append_tags: "Append Tags"
+        change_tags: "Replace tags"
+        append_tags: "Add tags"
         choose_new_tags: "Choose new tags for these topics:"
-        choose_append_tags: "Choose new tags to append for these topics:"
+        choose_append_tags: "Add tags"
         changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove All Tags"
+        remove_tags: "Remove tags"
         confirm_remove_tags:
           one: "All tags will be removed from this topic. Are you sure?"
           other: "All tags will be removed from %{count} topics. Are you sure?"
+        confirm_update_topics:
+          one: "Update %{count} topic"
+          other: "Update %{count} topics"
+        confirm_close_topics:
+          one: "Close %{count} topic"
+          other: "Close %{count} topics"
+        confirm_archive_topics:
+          one: "Archive %{count} topic"
+          other: "Archive %{count} topics"
+        confirm_unlist_topics:
+          one: "Unlist %{count} topic"
+          other: "Unlist %{count} topics"
+        confirm_relist_topics:
+          one: "Relist %{count} topic"
+          other: "Relist %{count} topics"
+        confirm_archive_messages:
+          one: "Archive %{count} message"
+          other: "Archive %{count} messages"
+        confirm_move_to_inbox:
+          one: "Move %{count} message to inbox"
+          other: "Move %{count} messages to inbox"
+        confirm_delete_topics:
+          one: "Delete %{count} topic"
+          other: "Delete %{count} topics"
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
-        notify: "Notify users of this change."
+        notify: "Notify users of this change"
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
         completed_count:
@@ -3723,38 +3809,44 @@ en:
         name: "Dismiss"
       close_topics:
         name: "Close"
-        note: "Note"
+        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Learn more</a>"
+        note: "Add a note to these topics"
         optional: (optional)
       archive_topics:
         name: "Archive"
+        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Learn more</a>"
       archive_messages:
         name: "Move to Archive"
       move_messages_to_inbox:
         name: "Move to Inbox"
       unlist_topics:
         name: "Unlist"
+        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
       remove_tags:
         name: "Remove Tags"
+        description: "Remove all tags from the selected topics."
       append_tags:
-        name: "Append Tags"
+        name: "Add Tags"
+        description: "Add the following tags to the selected topics:"
       replace_tags:
         name: "Replace Tags"
+        description: "Replace all existing tags on the selected topics with the following:"
       delete_topics:
         name: "Delete"
+        description: "Permanently delete the selected topics. This action cannot be undone."
       update_category:
         name: "Update Category"
-        description: "Choose the new category for the selected topics"
+        description: "Move all selected topics to the following category:"
       reset_bump_dates:
         name: "Reset Bump Dates"
-        description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
+        description: "Do you want to update the bump dates to the last created post date? This may impact their ordering in the topic list."
       defer:
         name: "Mark Unread"
-        description: "Mark topics as unread"
       update_notifications:
         name: "Update Notifications"
-        description: "Change notification level to Watching, Tracking, Normal, or Muted"
+        description: "Update your personal notification level for the selected topics to:"
 
     topic:
       filter_to:
@@ -3942,6 +4034,9 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
+      auto_delete_immediate:
+        one: "The last post in the topic is already %{count} hour old, so the topic will be deleted immediately."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be deleted immediately."
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
@@ -4502,6 +4597,7 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        diff_too_complex: "The diff is too complex to display. Please try viewing individual smaller edits."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -4582,6 +4678,7 @@ en:
 
       original_language: "This post was originally written in %{language}"
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
+      ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
       none: "(no category)"
@@ -4597,6 +4694,8 @@ en:
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
+      topic_title_placeholder: "Category topic title placeholder"
+      topic_title_placeholder_placeholder: "[optional] custom topic title placeholder for this category"
       tags: "Tags"
       localizations: "Localizations"
       localization:
@@ -4620,11 +4719,24 @@ en:
         delete: "Delete"
         add: "Add required tag group"
         placeholder: "Select tag group…"
+        min_count: "Tag count"
+        tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
       create: "New category"
+      create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
+      settings_apply_to_all_of_type_warning: "Changes below will apply to all categories of this type"
+      type_settings_schema:
+        category_settings: "Category settings"
+        category_custom_fields: "Category settings"
+        site_settings: "Site settings"
+      choose_type:
+        title: "Choose category type"
+        requires_plugin: "Requires plugin"
+      create_category: "Create category"
       save: "Save category"
+      unsaved_changes: "You have unsaved changes"
       slug: "Category slug"
       parent: "Parent category"
       slug_placeholder: "(Optional) dashed-words for url"
@@ -4671,6 +4783,9 @@ en:
       list: "List categories"
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
+      description_updated: "Description updated"
+      description_expand: "Show more"
+      description_collapse: "Show less"
       already_used: "This color has been used by another category"
       color_palette: "Color palette"
       security: "Security"
@@ -5887,7 +6002,7 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset"
+    reset_filter: "Reset filter"
     toggle_filters: "Toggle dropdown filters"
 
     admin:
@@ -5910,8 +6025,7 @@ en:
         group_traffic: "Traffic"
         group_members: "Members"
         group_content: "Content & Health"
-        group_moderation: "Moderation"
-        group_security: "Security"
+        group_moderation_and_security: "Moderation & Security"
         group_other: "Other"
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
@@ -5960,7 +6074,7 @@ en:
         enabled_for_options:
           no_one: "No one"
           everyone: "Everyone"
-          staff: "Staff only"
+          staff: "%{staffGroupName} only"
           specific_groups: "Specific group(s)"
           specific_groups_with_group_names:
             one: "the group %{groupNames}"
@@ -5983,7 +6097,7 @@ en:
           all: "All"
           enabled_all: "All enabled states"
           enabled: "Enabled"
-          enabled_for_staff: "Enabled for staff"
+          enabled_for_staff: "Enabled for %{staffGroupName}"
           enabled_for_specific_groups: "Enabled for specific groups"
           disabled: "Disabled"
           impact_type_all: "All impact types"
@@ -6448,23 +6562,6 @@ en:
           no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           learn_more: "Learn more..."
-          experimental: "Experimental"
-          only_experiments: "Only show experimental features"
-          experiment_enabled: "You have enabled the experimental feature."
-          experiment_disabled: "You have disabled the experimental feature."
-          feature_enabled: "You have enabled the feature."
-          feature_disabled: "You have disabled the feature."
-          toggled_too_fast: "You have switched the toggle too fast. Please wait a few seconds before trying again."
-          experiment_tooltip:
-            title_disabled: "Try this experimental feature"
-            title_enabled: "Turn off experimental feature"
-            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
-            content_enabled: "Changing this will disable the feature for all users."
-          feature_tooltip:
-            title_disabled: "Try this feature"
-            title_enabled: "Turn off feature"
-            content_disabled: "Give this new feature a spin! You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
-            content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
         refresh_problems: "Refresh"
@@ -6529,10 +6626,11 @@ en:
           all: "All"
           view_table: "table"
           view_graph: "graph"
-          refresh_report: "Refresh Report"
+          refresh_report: "Refresh"
           daily: Daily
           monthly: Monthly
           weekly: Weekly
+          chart_group_period: "Select a period"
           value_so_far: "%{value} (so far)"
           dates: "Dates (UTC)"
           groups: "All groups"
@@ -7937,6 +8035,7 @@ en:
             upcoming_change_available: "upcoming change available"
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
+            configure_category_type: "configure category type"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -8589,6 +8688,9 @@ en:
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"
         interpolation_keys: "Available interpolation keys:"
+        interpolation_key_insert: "Click to insert"
+        interpolation_key_used: "Already used"
+        interpolation_key_invalid: "Unknown key — will not be interpolated"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
@@ -8708,7 +8810,7 @@ en:
           min_admin_password_length:
             prompt: "You're about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           block_common_passwords:

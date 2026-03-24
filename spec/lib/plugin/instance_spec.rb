@@ -162,6 +162,22 @@ TEXT
         expect(plugin.discourse_owned?).to eq(false)
       end
     end
+
+    describe ".preinstalled?" do
+      it "returns true when the plugin directory has no .git directory" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        expect(plugin.preinstalled?).to eq(true)
+      end
+
+      it "returns false when the plugin directory has a .git directory" do
+        Dir.mktmpdir do |tmpdir|
+          FileUtils.mkdir_p(File.join(tmpdir, ".git"))
+          File.write(File.join(tmpdir, "plugin.rb"), "# name: test-plugin\n# about: test")
+          plugin = Plugin::Instance.new(nil, File.join(tmpdir, "plugin.rb"))
+          expect(plugin.preinstalled?).to eq(false)
+        end
+      end
+    end
   end
 
   describe "enabling/disabling" do

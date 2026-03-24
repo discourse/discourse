@@ -84,7 +84,8 @@ module PageObjects
       end
 
       def has_tag_chooser_tag?(tag)
-        find("option[value='#{tag.id}']", visible: :all).present?
+        display_value = tag.name.tr("-", " ").upcase
+        find("option[value='#{display_value}']", visible: :all).present?
       end
 
       def has_preview_modal?

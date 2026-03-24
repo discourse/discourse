@@ -123,6 +123,7 @@ div.edit-category {
 
     .category-permission-hint {
       font-size: var(--font-down-1);
+      color: var(--primary-high-or-secondary-low);
     }
   }
 
@@ -228,7 +229,8 @@ div.edit-category {
   }
 
   .edit-category-tab-settings,
-  .edit-category-tab-tags {
+  .edit-category-tab-tags,
+  .edit-category-tab-topic-template {
     > section {
       margin-bottom: 1.5em;
     }
@@ -384,8 +386,4 @@ div.edit-category {
   .group-name {
     width: 100%;
   }
-}
-
-.edit-category .everyone-has-access-warning {
-  margin-top: 2em;
 }

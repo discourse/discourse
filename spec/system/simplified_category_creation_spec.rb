@@ -7,11 +7,51 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.enable_simplified_category_creation = true
     sign_in(admin)
+  end
+
+  describe "Selecting category type when setting up a new category" do
+    it "automatically skips category type selection when only one type (discussion) is available" do
+      visit("/new-category/setup")
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_current_path("/new-category/general")
+    end
+
+    context "when multiple types are available" do
+      class MockCategoryType < ::Categories::Types::Base
+        type_id :mock_type
+
+        class << self
+          def category_matches?(category)
+            true
+          end
+
+          def find_matches
+            Category.none
+          end
+        end
+      end
+
+      before { Categories::TypeRegistry.register(MockCategoryType) }
+      after { Categories::TypeRegistry.reset! }
+
+      it "shows the category type selection cards" do
+        visit("/new-category/setup")
+
+        expect(category_type_card).to have_type_card("mock_type")
+        expect(category_type_card).to have_type_card("discussion")
+
+        category_type_card.find_type_card("discussion").click
+        expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+        expect(page).to have_current_path("/new-category/general")
+      end
+    end
   end
 
   describe "General Tab" do
@@ -104,6 +144,35 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".edit-category-settings")
     end
 
+    it "preserves permission types when adding a new access group on general tab" do
+      group2 = Fabricate(:group)
+
+      category_page.visit_new_category
+
+      form.field("name").fill_in("Permission Test")
+      form.choose_conditional("group_restricted")
+
+      group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
+      group_chooser.expand
+      group_chooser.select_row_by_value(group.id)
+      group_chooser.collapse
+
+      category_page.toggle_advanced_settings
+      find(".edit-category-security a").click
+      category_permission_row.toggle_group_permission(group.name, "reply")
+
+      find(".edit-category-general a").click
+      group_chooser.expand
+      group_chooser.select_row_by_value(group2.id)
+      group_chooser.collapse
+
+      find(".edit-category-security a").click
+
+      expect(page).to have_no_css(
+        "#{category_permission_row.group_permission_row_selector(group.name)} .reply-granted",
+      )
+    end
+
     it "automatically switches to private when selecting a restricted parent" do
       restricted_parent =
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
@@ -115,6 +184,69 @@ describe "Simplified Category Creation" do
       parent_chooser.select_row_by_value(restricted_parent.id)
 
       expect(page).to have_css(".group-chooser")
+    end
+
+    it "shows inherited groups when selecting a restricted parent" do
+      restricted_parent =
+        Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
+
+      category_page.visit_new_category
+
+      parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
+      parent_chooser.expand
+      parent_chooser.select_row_by_value(restricted_parent.id)
+
+      group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
+      expect(group_chooser).to have_selected_name(group.name)
+    end
+
+    it "collapses long descriptions with a show more toggle" do
+      category_with_definition = Fabricate(:category_with_definition)
+      long_description = (["This is a long paragraph of text."] * 20).join(" ")
+      post = category_with_definition.topic.first_post
+      post.update!(cooked: "<p>#{long_description}</p>")
+      category_with_definition.update!(description: "<p>#{long_description}</p>")
+
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+      expect(page).to have_css(".toggle-description")
+
+      find(".toggle-description").click
+
+      expect(page).to have_no_css(".description-content.--collapsed")
+      expect(page).to have_css(".description-content.--overflowing")
+
+      find(".toggle-description").click
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+    end
+
+    it "does not show expand toggle for short descriptions" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content")
+      expect(page).to have_no_css(".toggle-description")
+      expect(page).to have_no_css(".description-content.--overflowing")
+    end
+
+    it "opens the composer to edit the category description and updates it after save" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      composer = PageObjects::Components::Composer.new
+
+      find(".edit-category-description").click
+      expect(composer).to be_opened
+
+      composer.fill_content("Updated category description")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(page).to have_css(".edit-category-description-container .readonly-field")
+      expect(page).to have_content("Updated category description")
+      expect(toasts).to have_success(I18n.t("js.category.description_updated"))
     end
   end
 
@@ -167,7 +299,7 @@ describe "Simplified Category Creation" do
     it "enables topic approval requirement" do
       category_page.visit_settings(category)
 
-      category_page.toggle_checkbox(I18n.t("js.category.require_topic_approval"))
+      form.field("category_setting.require_topic_approval").toggle
       category_page.save_settings
 
       expect(category.reload.require_topic_approval?).to eq(true)

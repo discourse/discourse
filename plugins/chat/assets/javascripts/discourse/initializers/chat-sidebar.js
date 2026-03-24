@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import noop from "discourse/helpers/noop";
 import { avatarUrl } from "discourse/lib/avatar-utils";
@@ -102,14 +102,14 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
           return this.channel.displayTitle;
         } else {
           const username = this.channel.escapedTitle.replaceAll("@", "");
-          return htmlSafe(
+          return trustHTML(
             `${escapeExpression(username)}${decorateUsername(
               escapeExpression(username)
             )}`
           );
         }
       } else {
-        return htmlSafe(emojiUnescape(this.channel.escapedTitle));
+        return trustHTML(emojiUnescape(this.channel.escapedTitle));
       }
     }
 
@@ -126,7 +126,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
         }
       } else {
         return this.channel.escapedDescription
-          ? htmlSafe(this.channel.escapedDescription)
+          ? trustHTML(this.channel.escapedDescription)
           : `${this.channel.escapedTitle} ${i18n("chat.title")}`;
       }
     }
@@ -538,7 +538,7 @@ export default {
               }
 
               get text() {
-                return htmlSafe(emojiUnescape(this.channel.escapedTitle));
+                return trustHTML(emojiUnescape(this.channel.escapedTitle));
               }
 
               get prefixType() {
@@ -555,7 +555,7 @@ export default {
 
               get title() {
                 return this.channel.escapedDescription
-                  ? htmlSafe(this.channel.escapedDescription)
+                  ? trustHTML(this.channel.escapedDescription)
                   : `${this.channel.escapedTitle} ${i18n("chat.title")}`;
               }
 
@@ -812,7 +812,7 @@ export default {
                     "@",
                     ""
                   );
-                  return htmlSafe(
+                  return trustHTML(
                     `${escapeExpression(username)}${decorateUsername(
                       escapeExpression(username)
                     )}`

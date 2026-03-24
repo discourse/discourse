@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
@@ -50,7 +50,7 @@ export default class DebugAiModal extends Component {
     const split = response.split("\n");
     const safe = split.map((line) => escapeExpression(line)).join("<br>");
 
-    return htmlSafe(safe);
+    return trustHTML(safe);
   }
 
   @action

@@ -19,6 +19,40 @@ gl:
       tool_summary:
         search: "Buscar"
         time: "Hora"
+      close_topic:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+      unlist_topic:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+      delete_topic:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+      edit_tags:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+      edit_category:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+          category_not_found: "Non foi posíbel atopar a categoría."
+      set_topic_timer:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+      set_slow_mode:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+      move_posts:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+      assign:
+        errors:
+          not_found: "Non foi posíbel atopar o tema."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprobar"
+        reject:
+          title: "Rexeitar"
     sentiment:
       reports:
         post_emotion:

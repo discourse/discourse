@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -48,7 +48,6 @@ export default class BookmarkModal extends Component {
   @tracked postDetectedLocalTimezone = null;
   @tracked prefilledDatetime = null;
   @tracked flash = null;
-  @tracked userTimezone = this.currentUser.user_option.timezone;
   @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
   @notEmpty("userTimezone") userHasTimezoneSet;
@@ -71,6 +70,10 @@ export default class BookmarkModal extends Component {
     this._itsatrap?.destroy();
     this._itsatrap = null;
     this.keyboardShortcuts.unpause();
+  }
+
+  get userTimezone() {
+    return this.currentUser.user_option.timezone;
   }
 
   get bookmark() {
@@ -428,7 +431,7 @@ export default class BookmarkModal extends Component {
               @_itsatrap={{this._itsatrap}}
             />
           {{else}}
-            <div class="alert alert-info">{{htmlSafe
+            <div class="alert alert-info">{{trustHTML
                 (i18n "bookmarks.no_timezone" basePath=(basePath))
               }}</div>
           {{/if}}

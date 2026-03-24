@@ -6,6 +6,10 @@
 
 cs:
   accepted_answer: "Přijatá odpověď"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Povolit vlastníkovi tématu a správcům označit odpověď jako řešení"
   site_settings:
     solved_enabled: "Zapnout plugin \"vyřešeno\", povolit uživatelům zvolit řešení témat"
     allow_solved_on_all_topics: "Povolit uživatelům výběr řešení pro všechna témata (pokud není zaškrtnuto, lze povolit řešení pro jednotlivé kategorie nebo štítky)."
@@ -17,9 +21,6 @@ cs:
     solved_topics_auto_close_hours: "Automaticky zavřít téma (n) hodin po poslední odpovědi, jakmile bylo téma označeno jako vyřešené. Nastavením na 0 deaktivujete automatické zavírání."
     show_filter_by_solved_status: "Zobrazit rozevírací seznam pro filtrování seznamu témat podle statusu vyřešení."
     notify_on_staff_accept_solved: "Odeslání oznámení tvůrci tématu, když je příspěvek označen jako řešení zaměstnancem."
-    ignore_solved_topics_in_assigned_reminder: "Zabránit tomu, aby připomenutí úkolů zahrnovala vyřešená témata. Relevantní pouze při použití pluginu discourse-assign."
-    assignment_status_on_solve: "Když je téma vyřešeno, aktualizujte všechny úkoly na tento stav."
-    assignment_status_on_unsolve: "Když je téma nevyřešené, aktualizujte všechna přiřazení na tento stav"
     disable_solved_education_message: "Zakázat vzdělávací zprávu pro řešení témat."
     accept_solutions_topic_author: "Povolit autorovi tématu přijmout řešení."
     solved_add_schema_markup: "Přidání do HTML značky schématu QAPage."

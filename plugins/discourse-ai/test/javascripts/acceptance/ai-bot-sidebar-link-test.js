@@ -8,7 +8,7 @@ acceptance("AI Bot - Sidebar community link", function (needs) {
       {
         id: 1,
         model_name: "gpt-4",
-        is_persona: false,
+        is_agent: false,
       },
     ],
   });
@@ -42,7 +42,7 @@ acceptance("AI Bot - Sidebar community link - disabled", function (needs) {
       {
         id: 1,
         model_name: "gpt-4",
-        is_persona: false,
+        is_agent: false,
       },
     ],
   });
@@ -83,14 +83,14 @@ acceptance("AI Bot - Sidebar community link - no bots", function (needs) {
 });
 
 acceptance(
-  "AI Bot - Sidebar community link - persona without default LLM",
+  "AI Bot - Sidebar community link - agent without default LLM",
   function (needs) {
     needs.user({
       ai_enabled_chat_bots: [
         {
           id: 1,
-          model_name: "custom-persona",
-          is_persona: true,
+          model_name: "custom-agent",
+          is_agent: true,
           has_default_llm: false,
         },
       ],
@@ -102,27 +102,27 @@ acceptance(
       ai_bot_add_to_community_section: true,
     });
 
-    test("does not display AI bot link when persona has no default LLM", async function (assert) {
+    test("does not display AI bot link when agent has no default LLM", async function (assert) {
       await visit("/");
 
       assert
         .dom(".sidebar-section-link[data-link-name='ai-bot']")
         .doesNotExist(
-          "AI bot link is not displayed when persona lacks default LLM"
+          "AI bot link is not displayed when agent lacks default LLM"
         );
     });
   }
 );
 
 acceptance(
-  "AI Bot - Sidebar community link - persona with default LLM",
+  "AI Bot - Sidebar community link - agent with default LLM",
   function (needs) {
     needs.user({
       ai_enabled_chat_bots: [
         {
           id: 1,
-          model_name: "custom-persona",
-          is_persona: true,
+          model_name: "custom-agent",
+          is_agent: true,
           has_default_llm: true,
         },
       ],
@@ -134,12 +134,12 @@ acceptance(
       ai_bot_add_to_community_section: true,
     });
 
-    test("displays AI bot link when persona has default LLM", async function (assert) {
+    test("displays AI bot link when agent has default LLM", async function (assert) {
       await visit("/");
 
       assert
         .dom(".sidebar-section-link[data-link-name='ai-bot']")
-        .exists("AI bot link is displayed when persona has default LLM");
+        .exists("AI bot link is displayed when agent has default LLM");
     });
   }
 );

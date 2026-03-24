@@ -17,9 +17,6 @@ nl:
         spam: "Als spam markeren en bericht verbergen"
         spam_silence: "Als spam markeren, bericht verbergen en gebruiker dempen"
     scriptables:
-      llm_persona_triage:
-        title: Berichten triageren met AI-persona
-        description: "Reageer op berichten met een specifieke AI-persona"
       llm_triage:
         title: Berichten triageren met AI
         description: "Triageer berichten met behulp van een groot taalmodel"
@@ -77,7 +74,6 @@ nl:
     ai_embeddings_semantic_related_include_closed_topics: "Neem gesloten topics op in semantische zoekresultaten"
     ai_embeddings_per_post_enabled: Insluitingen genereren voor elk bericht
     ai_summarization_enabled: "Schakel de samenvattingsfunctie in"
-    ai_summarization_persona: "Persona om te gebruiken voor de samenvattingsfunctie"
     ai_pm_summarization_allowed_groups: "Groepen mogen samenvattingen maken en bekijken in PB's."
     ai_summary_gists_enabled: "Genereer automatisch korte samenvattingen van de nieuwste reacties in topics"
     ai_summary_backfill_maximum_topics_per_hour: "Aantal topicsamenvattingen om aan te vullen per uur."
@@ -92,7 +88,6 @@ nl:
     ai_discord_app_id: "De ID van de Discord-toepassing waarmee je de Discord-zoekfunctie wilt koppelen"
     ai_discord_app_public_key: "De openbare sleutel van de Discord-toepassing waarmee je de Discord-zoekfunctie wilt koppelen"
     ai_discord_search_mode: "Selecteer de zoekmodus die je wilt gebruiken voor de Discord-zoekfunctie"
-    ai_discord_search_persona: "De persona om te gebruiken voor de Discord-zoekfunctie"
     ai_discord_allowed_guilds: "Discord-gilden (servers) waar de bot mag zoeken"
     ai_translation_backfill_limit_to_public_content: "Als dit is ingeschakeld, wordt alleen content in openbare categorieën vertaald. Als dit is uitgeschakeld, wordt ook content in groeps-PB's en privécategorieën vertaald."
     ai_translation_backfill_max_age_days: "De maximale leeftijd van een bericht en topic dat vertaald moet worden. Berichten en topics die ouder zijn dan dit worden niet vertaald. 0 schakelt het vertalen van eerdere berichten uit, maar niet van nieuwe berichten."
@@ -258,10 +253,8 @@ nl:
     ai_bot:
       reply_error: "Het lijkt erop dat ons systeem een onverwacht probleem heeft ondervonden terwijl het probeerde te antwoorden.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
-      personas:
+      agents:
         default_llm_required: "Standaard LLM-model is vereist voordat Chat wordt ingeschakeld"
-        cannot_delete_system_persona: "Systeempersona's kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit"
-        cannot_edit_system_persona: "Systeempersona's kunnen alleen worden hernoemd. Je kunt tools of systeemprompts niet bewerken. Je kunt ze wel uitschakelen en een kopie maken"
         cannot_have_duplicate_tools: "Mag geen dubbele tools hebben"
         github_helper:
           name: "GitHub Helper"
@@ -301,10 +294,8 @@ nl:
           description: "AI-bot gespecialiseerd in het maken van interactieve webartefacten"
         summarizer:
           name: "Samenvatter"
-          description: "Standaardpersona die AI-samenvattingen te ondersteunen"
         short_summarizer:
           name: "Samenvatter (korte vorm)"
-          description: "Standaardpersona die korte AI-samenvattingen voor items in topiclijsten ondersteunt"
         concept_finder:
           name: "Conceptzoeker"
           description: "AI-bot gespecialiseerd in het identificeren van concepten en thema's in content"
@@ -316,30 +307,22 @@ nl:
           description: "AI-bot gespecialiseerd in het dedupliceren van concepten"
         custom_prompt:
           name: "Aangepaste prompt"
-          description: "Standaardpersona die de aangepaste promptfunctie van de Helper ondersteunt"
         smart_dates:
           name: "Slimme datums"
-          description: "Standaardpersona die de slimme datumfunctie van de Helper ondersteunt"
         markdown_table_generator:
           name: "Markdown-tabelgenerator"
-          description: "Standaardpersona die de Markdown-tabelfunctie van de Helper ondersteunt"
         post_illustrator:
           name: "Berichtillustrator"
         proofreader:
           name: "Proeflezer"
-          description: "Standaardpersona die de proefleesfunctie van de Helper ondersteunt"
         titles_generator:
           name: "Titelgenerator"
-          description: "Standaardpersona die de Helper-functie voor het voorstellen van topictitels ondersteunt"
         tutor:
           name: "Mentor"
-          description: "Standaardpersona die de uitlegfunctie van de Helper ondersteunt"
         translator:
           name: "Vertaler"
-          description: "Standaardpersona die de vertaalfunctie van de Helper ondersteunt"
         image_captioner:
           name: "Afbeeldingsbijschriften"
-          description: "Standaardpersona die de Helper-functie voor afbeeldingsbijschriften ondersteunt"
         locale_detector:
           name: "Taaldetector"
           description: "Ondersteunt de vertaalfunctie door de taal van een bepaalde tekst (berichten, titels enz.) te detecteren."
@@ -354,13 +337,10 @@ nl:
           description: "Ondersteunt de vertaalfunctie als een generieke tekstvertaler, gebruikt voor korte teksten zoals categorienamen of tags"
         spam_detector:
           name: "Spamdetector"
-          description: "Standaardpersona die onze spamdetectiefunctie ondersteunt"
         content_creator:
           name: "Contentmaker"
-          description: "Standaardpersona die de HyDE-zoekfunctie ondersteunt"
         report_runner:
           name: "Rapportenuitvoerder"
-          description: "Standaardpersona gebruikt in het rapportautomatiseringsscript"
       topic_not_found: "Samenvatting niet beschikbaar, topic niet gevonden!"
       summarizing: "Topic samenvatten"
       searching: "Zoeken naar: '%{query}'"
@@ -368,7 +348,6 @@ nl:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "Taalmodel voor gebruik in onderzoek (standaard de LLM van de huidige persona)"
           max_tokens_per_batch:
             name: "Maximaal aantal tokens per batch"
             description: "Maximaal aantal tokens dat voor elke batch in het onderzoek mag worden gebruikt"
@@ -451,6 +430,7 @@ nl:
         github_file_content: "Haal de inhoud van bestanden op uit een GitHub-repository"
         random_picker: "Kies een willekeurig getal of een willekeurig element uit een lijst"
         categories: "Geef een lijst weer van alle openbaar zichtbare categorieën op het forum"
+        delete_topic: "Verwijder een topic"
         search: "Doorzoek alle openbare topics op het forum"
         tags: "Geef een lijst weer van alle tags op het forum"
         time: "Zoek de tijd in verschillende tijdzones"
@@ -514,6 +494,40 @@ nl:
         continue_conversation:
           title: "Ontdekkingsgesprek: zoek naar %{query}"
           raw: "Tijdens het zoeken naar %{query} heb je me de volgende informatie laten zien:\n\n%{context}\n\nLaten we het gesprek voortzetten."
+      close_topic:
+        errors:
+          not_found: "Topic niet gevonden."
+      unlist_topic:
+        errors:
+          not_found: "Topic niet gevonden."
+      delete_topic:
+        errors:
+          not_found: "Topic niet gevonden."
+      edit_tags:
+        errors:
+          not_found: "Topic niet gevonden."
+      edit_category:
+        errors:
+          not_found: "Topic niet gevonden."
+          category_not_found: "Categorie niet gevonden."
+      set_topic_timer:
+        errors:
+          not_found: "Topic niet gevonden."
+      set_slow_mode:
+        errors:
+          not_found: "Topic niet gevonden."
+      move_posts:
+        errors:
+          not_found: "Topic niet gevonden."
+      assign:
+        errors:
+          not_found: "Topic niet gevonden."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Goedkeuren"
+        reject:
+          title: "Weigeren"
     summarization:
       configuration_hint:
         one: "Configureer eerst de instelling '%{setting}'."
@@ -542,7 +556,6 @@ nl:
         set_llm_first: "Stel eerst %{setting} in"
         model_unreachable: "We konden geen antwoord krijgen van dit model. Controleer eerst je instellingen."
         invalid_seeded_model: "Je kunt dit model niet gebruiken met deze functie"
-        invalid_persona_response_format: "De geselecteerde persona moet een responsindeling hebben met een booleaans veld genaamd \"spam\""
         must_select_model: "Je moet eerst een LLM selecteren"
       endpoints:
         not_configured: "%{display_name} (niet geconfigureerd)"
@@ -553,7 +566,7 @@ nl:
         one: "We kunnen dit model niet verwijderen omdat %{settings} het gebruikt. Werk de instelling bij en probeer het opnieuw."
         other: "We kunnen dit model niet verwijderen omdat %{settings} het gebruiken. Werk de instellingen bij en probeer het opnieuw."
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
-    personas:
+    agents:
       malformed_examples: "De gegeven voorbeelden hebben een onjuiste indeling."
     embeddings:
       delete_failed: "Dit model is momenteel in gebruik. Werk eerst 'ai embeddings selected model' bij."
@@ -572,15 +585,10 @@ nl:
       quota_exceeded: "Je hebt het quotum voor dit model overschreden. Probeer het opnieuw over %{relative_time}."
       quota_required: "Je moet het maximale aantal tokens of gebruiken opgeven voor dit model"
       no_query_specified: De queryparameter is verplicht. Geef deze op.
-      no_user_for_persona: Er is geen gebruiker gekoppeld aan de opgegeven persona.
-      persona_not_found: De opgegeven persona bestaat niet. Controleer de parameters persona_name en persona_id.
       no_user_specified: De gebruikersnaam of de parameter user_unique_id is vereist. Geef deze op.
       user_not_found: De opgegeven gebruiker bestaat niet. Controleer de gebruikersnaamparameter.
-      persona_disabled: De opgegeven persona is uitgeschakeld. Controleer de parameters persona_name en persona_id.
-      no_default_llm: Er moet een default_llm zijn gedefinieerd voor de persona.
       user_not_allowed: De gebruiker mag niet deelnemen aan het topic.
       prompt_message_length: Het bericht %{idx} is langer dan de limiet van 1000 tekens.
-      persona_already_exists: Persona met de naam %{name} bestaat al.
       custom_tool_exists:
         one: "Aangepaste tool met de naam %{names} bestaat al."
         other: "Aangepaste tools met de namen %{names} bestaan al."

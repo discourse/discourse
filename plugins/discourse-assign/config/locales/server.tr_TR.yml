@@ -14,6 +14,7 @@ tr_TR:
     assign_self_regex: "Kendi kendine atama için geçmesi gereken regex. Örnek \"listem\""
     assign_other_regex: "Konuları bahsetme yoluyla başkalarına atamak için geçmesi gereken regex. Örnek \"listeniz\"."
     unassign_on_group_archive: "Bir mesaj bir grup tarafından arşivlendiğinde, mesajın atamasını kaldırın (gelen kutusuna geri taşınırsa yeniden atayın)"
+    unassign_on_close: "Konu kapatıldığında otomatik olarak atamayı kaldırın. NOT: Takip mesajı oluşturulmayacaktır."
     reassign_on_open: "Bir konu açıldığında önceden atanmış kullanıcıları/grupları yeniden atayın"
     invite_on_assign: "Bir kullanıcıya veya gruba kişisel bir mesaj atandığında, zaten katılımcı değillerse onları Kişisel Mesaja davet edin."
     assign_mailer: "Atamalar için bildirim e-postasının ne zaman gönderileceği"
@@ -24,6 +25,9 @@ tr_TR:
     assign_allowed_on_groups: "Bu gruplardaki kullanıcılar konu atayabilir ve kendilerine konu atanabilir."
     enable_assign_status: "Her atamaya özelleştirilebilir bir durum alanı ekleyin."
     assign_statuses: "Her atama için kullanılabilir durumların listesi. İlk durum, her yeni atamaya uygulanan varsayılan durumdur."
+    ignore_solved_topics_in_assigned_reminder: "Görev hatırlatmalarının çözülmüş konuları içermesini önleyin. Yalnızca discourse-solved eklentisi kullanıldığında geçerlidir."
+    assignment_status_on_solve: "Bir konu çözüldüğünde tüm atamaları bu duruma güncelleyin"
+    assignment_status_on_unsolve: "Bir konu çözülmediğinde tüm atamaları bu duruma güncelleyin"
     errors:
       assign_statuses:
         too_few: "En az iki farklı durum mevcut olmalı."

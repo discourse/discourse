@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Composer helper", type: :system do
+RSpec.describe "AI Composer helper" do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:non_member_group, :group)
   fab!(:embedding_definition)
 
-  fab!(:custom_prompts_persona) do
-    Fabricate(:ai_persona, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+  fab!(:custom_prompts_agent) do
+    Fabricate(:ai_agent, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
   end
 
   before do
     enable_current_plugin
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
     assign_fake_provider_to(:ai_default_llm_model)
-    SiteSetting.ai_helper_custom_prompt_persona = custom_prompts_persona.id
+    SiteSetting.ai_helper_custom_prompt_agent = custom_prompts_agent.id
     SiteSetting.ai_helper_enabled = true
     Jobs.run_immediately!
     sign_in(user)
@@ -121,7 +121,7 @@ RSpec.describe "AI Composer helper", type: :system do
 
     context "when not a member of custom prompt group" do
       let(:mode) { DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT }
-      before { custom_prompts_persona.update!(allowed_group_ids: [non_member_group.id]) }
+      before { custom_prompts_agent.update!(allowed_group_ids: [non_member_group.id]) }
 
       it "does not show custom prompt option" do
         trigger_composer_helper(input)
@@ -409,11 +409,26 @@ RSpec.describe "AI Composer helper", type: :system do
       topic_page.visit_topic(topic)
       page.find(".edit-topic", visible: false).click
       page.find(".ai-tag-suggester-trigger").click
-      tag1_css = ".ai-tag-suggester-content btn[data-name='#{video.name}']"
-      tag2_css = ".ai-tag-suggester-content btn[data-name='#{music.name}']"
+      tag1_css = ".ai-suggestions-menu button[data-name='#{video.name}']"
+      tag2_css = ".ai-suggestions-menu button[data-name='#{music.name}']"
 
       expect(page).to have_no_css(tag1_css)
       expect(page).to have_no_css(tag2_css)
+    end
+
+    it "shows filtered suggestions when topic already has tags" do
+      response =
+        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      page.find(".ai-tag-suggester-trigger").click
+
+      wait_for { ai_suggestion_dropdown.has_dropdown? }
+
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{video.name}']")
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{music.name}']")
     end
 
     it "removes applied tag suggestions from the dropdown" do

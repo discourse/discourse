@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
@@ -13,7 +12,9 @@ import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 
 export default class BadgeCard extends Component {
-  @tracked size = this.args.size || "medium";
+  get size() {
+    return this.args.size || "medium";
+  }
 
   get url() {
     const { badge, filterUser, username } = this.args;
@@ -31,9 +32,9 @@ export default class BadgeCard extends Component {
   }
 
   get summary() {
-    const { size, badge } = this.args;
+    const { badge } = this.args;
 
-    if (size === "large" && !isEmpty(badge.long_description)) {
+    if (this.size === "large" && !isEmpty(badge.long_description)) {
       return emojiUnescape(sanitize(badge.long_description));
     }
     return sanitize(badge.description);
@@ -61,7 +62,10 @@ export default class BadgeCard extends Component {
 
   <template>
     <div
-      class="badge-card --badge-{{this.size}}"
+      class="badge-card --badge-{{this.size}}{{if
+          @canFavorite
+          ' --can-favorite'
+        }}"
       data-badge-slug={{@badge.slug}}
     >
       <div class="badge-contents">
@@ -91,11 +95,11 @@ export default class BadgeCard extends Component {
               {{/if}}
             </h3>
             <div id="badge-summary-{{@badge.slug}}" class="badge-summary">
-              {{htmlSafe this.summary}}
+              {{trustHTML this.summary}}
             </div>
             {{#if this.displayCount}}
               <div id="badge-granted-{{@badge.slug}}" class="badge-granted">
-                {{htmlSafe
+                {{trustHTML
                   (i18n
                     "badges.awarded"
                     count=this.displayCount
@@ -123,7 +127,7 @@ export default class BadgeCard extends Component {
           <DButton
             @icon="star"
             @action={{@onFavoriteClick}}
-            class="btn-default favorite-btn"
+            class="btn-default favorite-btn btn-small"
           />
         {{else}}
           <DButton
@@ -135,7 +139,7 @@ export default class BadgeCard extends Component {
               "badges.favorite_max_reached"
             }}
             @disabled={{not @canFavoriteMoreBadges}}
-            class="btn-default favorite-btn"
+            class="btn-default favorite-btn btn-small"
           />
         {{/if}}
       {{/if}}

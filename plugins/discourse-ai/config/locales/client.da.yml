@@ -45,9 +45,9 @@ da:
       llm_selector:
         none: "Ingen"
       features:
-        back: "Tilbage"
         disabled: "(deaktiveret)"
         groups: "Grupper:"
+        no_agent: "Ikke indstillet"
         no_groups: "Ingen"
         edit: "Indstillinger"
         expand_list:
@@ -98,8 +98,7 @@ da:
         periods:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."
-      ai_persona:
-        back: "Tilbage"
+      ai_agent:
         name: "Navn"
         edit: "Rediger"
         export: "Eksporter"
@@ -121,7 +120,6 @@ da:
           title: "Overførsler"
           uploading: "Overfører…"
       tools:
-        back: "Tilbage"
         export: "Eksporter"
         import: "Importer"
         name: "Navn"
@@ -130,8 +128,9 @@ da:
         save: "Gem"
         remove_parameter: "Fjern"
         parameter_required: "Obligatoriske"
+        credential_not_set: "(ikke indstillet)"
         edit: "Rediger"
-        test: "Kør test"
+        test: "Test"
         delete: "Slet"
         test_modal:
           run: "Kør test"
@@ -139,7 +138,6 @@ da:
         short_title: "Legitimationsoplysninger"
         name: "Navn"
         secret: "værdi"
-        back: "Tilbage"
         save: "Gem"
         edit: "Rediger"
         delete: "Slet"
@@ -148,7 +146,6 @@ da:
         display_name: "Navn"
         save: "Gem"
         edit: "Rediger"
-        back: "Tilbage"
         delete: Slet
         quotas:
           group: "Gruppe"
@@ -188,7 +185,6 @@ da:
         image_caption:
           save_caption: "Gem"
       embeddings:
-        back: "Tilbage"
         save: "Gem"
         delete: "Slet"
         edit: "Rediger"

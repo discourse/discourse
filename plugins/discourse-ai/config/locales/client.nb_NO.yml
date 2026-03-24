@@ -37,10 +37,9 @@ nb_NO:
       llm_selector:
         none: "Ingen"
       features:
-        back: "Forrige"
         disabled: "(deaktivert)"
         groups: "Grupper:"
-        no_persona: "Ikke angitt"
+        no_agent: "Ikke angitt"
         no_groups: "Ingen"
         edit: "Innstillinger"
         expand_list:
@@ -85,8 +84,7 @@ nb_NO:
         total: "Totalt"
         periods:
           last_day: "Siste 24 timer"
-      ai_persona:
-        back: "Forrige"
+      ai_agent:
         name: "Navn"
         edit: "Rediger"
         export: "Eksporter"
@@ -105,7 +103,6 @@ nb_NO:
           title: "Opplastinger"
           uploading: "Laster opp…"
       tools:
-        back: "Forrige"
         export: "Eksporter"
         import: "Importer"
         name: "Navn"
@@ -114,13 +111,14 @@ nb_NO:
         save: "Lagre"
         remove_parameter: "Fjern"
         parameter_required: "Påkrevd"
+        credential_not_set: "(ikke angitt)"
         edit: "Rediger"
+        test: "Test"
         delete: "Slett"
       secrets:
         short_title: "Legitimasjon"
         name: "Navn"
         secret: "Verdi"
-        back: "Forrige"
         save: "Lagre"
         edit: "Rediger"
         delete: "Slett"
@@ -130,7 +128,6 @@ nb_NO:
         provider: "Tilbyder"
         save: "Lagre"
         edit: "Rediger"
-        back: "Forrige"
         delete: Slett
         quotas:
           group: "Gruppe"
@@ -168,7 +165,6 @@ nb_NO:
         image_caption:
           save_caption: "Lagre"
       embeddings:
-        back: "Forrige"
         save: "Lagre"
         delete: "Slett"
         edit: "Rediger"

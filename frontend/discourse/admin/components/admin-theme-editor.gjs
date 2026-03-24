@@ -7,12 +7,11 @@ import { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
 import { fmt } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { gt, lte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -38,8 +37,7 @@ export default class AdminThemeEditor extends Component {
   @service router;
 
   @tracked showAdvanced;
-  @tracked onlyOverridden;
-  @tracked currentTargetName;
+  currentTargetName;
 
   warning = null;
 
@@ -53,17 +51,12 @@ export default class AdminThemeEditor extends Component {
       if (!this.showAdvanced && ADVANCED_TARGETS.includes(target.name)) {
         return false;
       }
-      if (!this.onlyOverridden) {
-        return true;
-      }
+      return true;
     });
   }
 
   get visibleFields() {
     let fields = this.theme.fields[this.currentTargetName];
-    if (this.onlyOverridden) {
-      fields = fields.filter((field) => field.edited);
-    }
     if (!this.showAdvanced) {
       fields = fields.filter(
         (field) => field.edited || !ADVANCED_FIELDS.includes(field.name)
@@ -78,20 +71,20 @@ export default class AdminThemeEditor extends Component {
     );
   }
 
-  @discourseComputed("currentTargetName", "fieldName")
-  activeSectionMode(targetName, fieldName) {
-    if (fieldName === "color_definitions") {
+  @computed("currentTargetName", "fieldName")
+  get activeSectionMode() {
+    if (this.fieldName === "color_definitions") {
       return "scss";
     }
-    if (fieldName === "js") {
+    if (this.fieldName === "js") {
       return "javascript";
     }
-    return fieldName && fieldName.includes("scss") ? "scss" : "html";
+    return this.fieldName && this.fieldName.includes("scss") ? "scss" : "html";
   }
 
-  @discourseComputed("currentTargetName", "fieldName")
-  placeholder(targetName, fieldName) {
-    if (fieldName && fieldName === "color_definitions") {
+  @computed("currentTargetName", "fieldName")
+  get placeholder() {
+    if (this.fieldName && this.fieldName === "color_definitions") {
       const example =
         ":root {\n" +
         "  --mytheme-tertiary-or-highlight: #{dark-light-choose($tertiary, $highlight)};\n" +
@@ -123,18 +116,14 @@ export default class AdminThemeEditor extends Component {
     this.theme.setField(this.currentTargetName, this.fieldName, value);
   }
 
-  @discourseComputed("maximized")
-  maximizeIcon(maximized) {
-    return maximized ? "discourse-compress" : "discourse-expand";
+  @computed("maximized")
+  get maximizeIcon() {
+    return this.maximized ? "discourse-compress" : "discourse-expand";
   }
 
-  @discourseComputed(
-    "currentTargetName",
-    "fieldName",
-    "theme.theme_fields.@each.error"
-  )
-  error(target, fieldName) {
-    return this.theme.getError(target, fieldName);
+  @computed("currentTargetName", "fieldName", "theme.theme_fields.@each.error")
+  get error() {
+    return this.theme.getError(this.currentTargetName, this.fieldName);
   }
 
   @action
@@ -250,7 +239,7 @@ export default class AdminThemeEditor extends Component {
       {{/if}}
 
       {{#if this.warning}}
-        <pre class="field-warning">{{htmlSafe this.warning}}</pre>
+        <pre class="field-warning">{{trustHTML this.warning}}</pre>
       {{/if}}
 
       <div class="field-info">

@@ -18,6 +18,40 @@ nb_NO:
         search: "Søk"
         time: "Tid"
         summarize: "Oppsummer"
+      close_topic:
+        errors:
+          not_found: "Fant ikke emnet."
+      unlist_topic:
+        errors:
+          not_found: "Fant ikke emnet."
+      delete_topic:
+        errors:
+          not_found: "Fant ikke emnet."
+      edit_tags:
+        errors:
+          not_found: "Fant ikke emnet."
+      edit_category:
+        errors:
+          not_found: "Fant ikke emnet."
+          category_not_found: "Kategorien finnes ikke."
+      set_topic_timer:
+        errors:
+          not_found: "Fant ikke emnet."
+      set_slow_mode:
+        errors:
+          not_found: "Fant ikke emnet."
+      move_posts:
+        errors:
+          not_found: "Fant ikke emnet."
+      assign:
+        errors:
+          not_found: "Fant ikke emnet."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Godkjenn"
+        reject:
+          title: "Avvis"
     ai_staff_action_logger:
       updated: "oppdatert"
       removed: "fjernet"

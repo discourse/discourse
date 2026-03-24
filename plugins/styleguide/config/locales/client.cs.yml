@@ -85,6 +85,8 @@ cs:
           title: "Seznam příspěvků"
           empty_example: "<PostList /> prázdný stav"
           populated_example: "<PostList /> zaplněný stav"
+        post_oneboxes:
+          title: "Oneboxy příspěvků"
         topic_map:
           title: "Mapa tématu"
         site_header:

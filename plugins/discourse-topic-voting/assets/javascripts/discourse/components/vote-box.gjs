@@ -15,7 +15,6 @@ export default class VoteBox extends Component {
 
   @tracked votesAlert;
   @tracked allowClick = true;
-  @tracked initialVote = false;
 
   @action
   addVote() {

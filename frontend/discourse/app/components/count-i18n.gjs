@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
 export default class CountI18n extends Component {
@@ -21,6 +21,6 @@ export default class CountI18n extends Component {
   }
 
   <template>
-    <span>{{htmlSafe (i18n this.fullKey count=@count)}}</span>
+    <span>{{trustHTML (i18n this.fullKey count=@count)}}</span>
   </template>
 }

@@ -136,10 +136,6 @@ it:
           unassigned: "non sono assegnati"
         assigned:
           label: "Assegnato a"
-    topics:
-      bulk:
-        unassign: "Annulla assegnazione argomenti"
-        assign: "Assegna argomenti"
     discourse_automation:
       scriptables:
         random_assign:

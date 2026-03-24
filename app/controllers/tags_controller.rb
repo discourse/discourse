@@ -288,7 +288,7 @@ class TagsController < ::ApplicationController
 
     previous_tag_name = @tag.name
     @tag.name = DiscourseTagging.clean_tag(new_tag_name) if new_tag_name.present?
-    @tag.description = new_tag_description if new_tag_description.present?
+    @tag.description = new_tag_description if new_tag.has_key?(:description)
 
     if @tag.save
       if @tag.name != previous_tag_name
@@ -518,7 +518,7 @@ class TagsController < ::ApplicationController
   end
 
   def create_synonyms
-    guardian.ensure_can_edit_tag!
+    guardian.ensure_can_edit_tag!(@tag)
 
     # frontend uses form data
     tags_param = params[:tags].try(:values) || params[:tags]

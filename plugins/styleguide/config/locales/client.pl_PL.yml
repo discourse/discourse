@@ -85,6 +85,8 @@ pl_PL:
           title: "Lista postów"
           empty_example: "<PostList /> pusty stan"
           populated_example: "<PostList /> stan wypełniony"
+        post_oneboxes:
+          title: "Opublikuj Oneboxy"
         topic_map:
           title: "Mapa tematu"
         site_header:
@@ -115,3 +117,5 @@ pl_PL:
         char_counter:
           title: "Licznik znaków"
           placeholder: "Tutaj wpisz swój tekst..."
+        segmented_control:
+          title: "Sterowanie segmentowe (grupa przełączników przycisków)"

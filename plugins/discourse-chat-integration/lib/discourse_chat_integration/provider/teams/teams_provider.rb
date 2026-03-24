@@ -5,7 +5,7 @@ module DiscourseChatIntegration::Provider::TeamsProvider
   PROVIDER_ENABLED_SETTING = :chat_integration_teams_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [
-    { key: "name", regex: '^\S+$', unique: true },
+    { key: "name", unique: true },
     { key: "webhook_url", regex: '^https:\/\/\S+$', unique: true, hidden: true },
   ]
 
@@ -101,7 +101,7 @@ module DiscourseChatIntegration::Provider::TeamsProvider
               {
                 type: "Image",
                 style: "Person",
-                url: "http:#{post.user.small_avatar_url}",
+                url: post.user.small_avatar_url,
                 altText: display_name,
                 size: "Small",
               },

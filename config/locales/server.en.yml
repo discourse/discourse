@@ -286,6 +286,7 @@ en:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    diff_too_complex: "The diff is too complex to compute safely. Please try smaller edits."
     messages:
       invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
@@ -892,6 +893,14 @@ en:
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
+
+  category_types:
+    not_available: "Category type '%{type_name}' is not available"
+    discussion:
+      name: "Discussion"
+      title: "discussion"
+      description: "A standard category with all the essentials for conversation."
+
   trust_levels:
     admin: "Admin"
     staff: "Staff"
@@ -1238,6 +1247,9 @@ en:
       every_month: "every month"
       every_six_months: "every six months"
 
+  calendar_subscriptions:
+    application_name: "Calendar Subscriptions"
+
   user_api_key:
     title: 'Authorize "%{application_name}"'
     authorize: "Authorize"
@@ -1326,9 +1338,11 @@ en:
       description: "List of flags' statuses including type of flag, poster, flagger, and time to resolution."
     visits:
       title: "User Visits"
-      xaxis: "Day"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobile"
       yaxis: "Number of visits"
-      description: "Number of signed-in user visits."
+      description: "Number of signed-in user visits by device type."
     signups:
       title: "Signups"
       xaxis: "Day"
@@ -1392,10 +1406,10 @@ en:
       description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
+      title: "DAU / MAU"
       xaxis: "Day"
       yaxis: "DAU/MAU"
-      description: "Number of members that logged in in the last day divided by number of members that logged in in the last month – returns a % which indicates community 'stickiness'. Aim for >20%."
+      description: "The share of monthly active members who returned in the last day. This percentage shows how regularly people come back; also called the community 'stickiness'. Aim for > 20%."
     daily_engaged_users:
       title: "Daily Engaged Users"
       xaxis: "Day"
@@ -1814,6 +1828,8 @@ en:
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
     github_onebox_access_tokens: "A mapping of a GitHub organisation or user to a GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
+    reddit_onebox_client_id: "Reddit API OAuth client ID used for authenticated Reddit oneboxes. Create a 'script' type app at reddit.com/prefs/apps to obtain credentials."
+    reddit_onebox_client_secret: "Reddit API OAuth client secret used for authenticated Reddit oneboxes. Found under the 'script' type app created at reddit.com/prefs/apps."
 
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
@@ -1906,6 +1922,7 @@ en:
     moderators_manage_categories: "Allow moderators to create and manage categories"
     moderators_manage_groups: "Allow moderators to create and manage groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
+    change_post_ownership_allowed_groups: "Allow users in these groups to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -2340,6 +2357,7 @@ en:
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     sendgrid_verification_key: "Sendgrid verification key used to verify webhook messages."
     mailjet_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailjet?t=supersecret"
+    mailpace_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/mailpace?t=supersecret"
     mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
     postmark_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/sparkpost?t=supersecret"
@@ -2427,7 +2445,7 @@ en:
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
-    hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
+    hide_user_profiles_from_public: "Disable user cards and user profiles for anonymous users. Aggregated stats will still be available in the user directory."
     hide_new_user_profiles: "Hide trust level 1 or lower user profiles from the public and trust level 1 users until they post for the first time. This feature is disabled unconditionally on must_approve_users and invite_only sites."
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
     hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
@@ -2749,7 +2767,6 @@ en:
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
     content_localization_use_default_locale_when_unsupported: "Serve localized content in the site's default locale to users whose preferred language is not listed in 'content localization supported locales'."
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
-    enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
@@ -2881,6 +2898,8 @@ en:
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
       activity_after: "Show topics with last activity after a date (YYYY-MM-DD or days ago)"
+      bookmarked_before: "Show topics bookmarked before a date (YYYY-MM-DD or days ago)"
+      bookmarked_after: "Show topics bookmarked after a date (YYYY-MM-DD or days ago)"
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
@@ -3341,7 +3360,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
@@ -3356,7 +3375,7 @@ en:
 
       - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
-      - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
+      - See what's new in the [release notes](https://releases.discourse.org/changelog/%{new_version})
 
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 

@@ -6,11 +6,11 @@
 
 zh_CN:
   site_settings:
-    discourse_rewind_enabled: "启用 Discourse Rewind，回顾成员们在社区的活动，提供有趣的年终总结。"
+    discourse_rewind_enabled: "启用 Discourse 回顾，回顾成员在社区的活动，提供有趣的年终总结。"
   discourse_rewind:
-    report_failed: "未能生成 Discourse Rewind 报告。"
-    invalid_year: "回顾功能只能在1月或12月生成。"
-    user_not_found: "未找到用户或无法查看该用户。"
-    reports_not_cached: "报告尚未生成，请刷新页面。"
-    report_not_found: "未找到报告。"
-    cannot_share_when_profile_hidden: "要分享 Rewind，您必须允许其他人查看您的公开个人资料。"
+    report_failed: "无法生成 Discourse 回顾报告。"
+    invalid_year: "回顾只能在 1 月或 12 月生成。"
+    user_not_found: "找不到用户或无法查看该用户。"
+    reports_not_cached: "报告尚未生成。请刷新页面。"
+    report_not_found: "找不到报告。"
+    cannot_share_when_profile_hidden: "要分享回顾，您必须允许其他人查看您的公开个人资料。"

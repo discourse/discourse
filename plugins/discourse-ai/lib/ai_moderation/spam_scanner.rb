@@ -185,8 +185,8 @@ module DiscourseAi
           end
 
         used_llm = bot.model
-        spam_persona = bot.persona
-        used_prompt = spam_persona.craft_prompt(ctx, llm: used_llm).system_message_text
+        spam_agent = bot.agent
+        used_prompt = spam_agent.craft_prompt(ctx, llm: used_llm).system_message_text
 
         text_content =
           if target_msg[:content].is_a?(Array)
@@ -218,7 +218,10 @@ module DiscourseAi
       def self.perform_scan!(post)
         return if !enabled?
         settings = AiModerationSetting.spam
-        return if !settings || !settings.llm_model || !settings.ai_persona
+        return if !settings || !settings.llm_model
+
+        agent = settings.ai_agent
+        return if !agent
 
         target_msg = build_target_content_msg(post)
         custom_instructions = settings.custom_instructions.presence
@@ -293,7 +296,7 @@ module DiscourseAi
         bypass_response_format: false,
         user: Discourse.system_user
       )
-        DiscourseAi::Personas::BotContext
+        DiscourseAi::Agents::BotContext
           .new(
             user: user,
             skip_show_thinking: true,
@@ -310,11 +313,11 @@ module DiscourseAi
         llm_id: nil,
         user: Discourse.system_user
       )
-        persona = settings.ai_persona.class_instance&.new
+        agent = settings.ai_agent.class_instance&.new
 
         llm_model = llm_id ? LlmModel.find(llm_id) : settings.llm_model
 
-        DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm_model)
+        DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm_model)
       end
 
       def self.is_spam?(structured_output)

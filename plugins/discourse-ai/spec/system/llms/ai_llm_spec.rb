@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Managing LLM configurations", type: :system do
+RSpec.describe "Managing LLM configurations" do
   fab!(:admin)
   fab!(:ai_secret) { Fabricate(:ai_secret, name: "Test API Key", secret: "abcd") }
 
@@ -40,6 +40,7 @@ RSpec.describe "Managing LLM configurations", type: :system do
     expect(llm.max_prompt_tokens.to_i).to eq(model_preset[:tokens])
     expect(llm.provider).to eq("anthropic")
     expect(llm.display_name).to eq(model_preset[:display_name])
+    expect(llm.provider_params["prompt_caching"]).to eq("tool_results")
   end
 
   it "manually configures an LLM" do

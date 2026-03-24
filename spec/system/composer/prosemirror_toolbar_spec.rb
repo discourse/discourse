@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Toolbar", type: :system do
+describe "Composer - ProseMirror - Toolbar" do
   include_context "with prosemirror editor"
 
   describe "toolbar state updates" do
@@ -166,6 +166,42 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
 
       composer.toggle_rich_editor
       expect(composer).to have_value("[link text :heart:](https://example.com)")
+    end
+  end
+
+  describe "list toolbar" do
+    it "shows the list dropdown on mobile", mobile: true do
+      open_composer
+
+      list_menu = composer.list_menu
+      list_menu.expand
+
+      expect(page).to have_css("[data-name='list-bullet']")
+      expect(page).to have_css("[data-name='list-ordered']")
+    end
+
+    it "can apply a bullet list from the dropdown" do
+      open_composer
+
+      composer.type_content("A list item")
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-bullet']").click
+
+      expect(rich).to have_css("ul li", text: "A list item")
+    end
+
+    it "can apply an ordered list from the dropdown" do
+      open_composer
+
+      composer.type_content("A list item")
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-ordered']").click
+
+      expect(rich).to have_css("ol li", text: "A list item")
     end
   end
 

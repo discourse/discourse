@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -203,14 +203,14 @@ export default class FeatureTopic extends Component {
                     @condition={{this.loading}}
                   >
                     {{#if this.pinnedGloballyCount}}
-                      {{htmlSafe
+                      {{trustHTML
                         (i18n
                           "topic.feature_topic.already_pinned_globally"
                           count=this.pinnedGloballyCount
                         )
                       }}
                     {{else}}
-                      {{htmlSafe
+                      {{trustHTML
                         (i18n "topic.feature_topic.not_pinned_globally")
                       }}
                     {{/if}}
@@ -223,12 +223,12 @@ export default class FeatureTopic extends Component {
                     @size="small"
                     @condition={{this.loading}}
                   >
-                    {{htmlSafe this.alreadyPinnedMessage}}
+                    {{trustHTML this.alreadyPinnedMessage}}
                   </ConditionalLoadingSpinner>
                 </p>
                 <p>{{i18n "topic.feature_topic.pin_note"}}</p>
               {{/if}}
-              <p>{{htmlSafe this.unPinMessage}}</p>
+              <p>{{trustHTML this.unPinMessage}}</p>
               <p><DButton
                   @action={{this.unpin}}
                   @icon="thumbtack"
@@ -245,7 +245,7 @@ export default class FeatureTopic extends Component {
                   @size="small"
                   @condition={{this.loading}}
                 >
-                  {{htmlSafe this.alreadyPinnedMessage}}
+                  {{trustHTML this.alreadyPinnedMessage}}
                 </ConditionalLoadingSpinner>
               </p>
               <p>
@@ -253,7 +253,7 @@ export default class FeatureTopic extends Component {
               </p>
               {{#if this.site.mobileView}}
                 <p>
-                  {{htmlSafe this.pinMessage}}
+                  {{trustHTML this.pinMessage}}
                 </p>
                 <p class="with-validation">
                   <FutureDateInput
@@ -271,7 +271,7 @@ export default class FeatureTopic extends Component {
                 </p>
               {{else}}
                 <p class="with-validation">
-                  {{htmlSafe this.pinMessage}}
+                  {{trustHTML this.pinMessage}}
                   <span>
                     {{icon "far-clock"}}
                     <FutureDateInput
@@ -309,14 +309,14 @@ export default class FeatureTopic extends Component {
                     @condition={{this.loading}}
                   >
                     {{#if this.pinnedGloballyCount}}
-                      {{htmlSafe
+                      {{trustHTML
                         (i18n
                           "topic.feature_topic.already_pinned_globally"
                           count=this.pinnedGloballyCount
                         )
                       }}
                     {{else}}
-                      {{htmlSafe
+                      {{trustHTML
                         (i18n "topic.feature_topic.not_pinned_globally")
                       }}
                     {{/if}}
@@ -376,7 +376,7 @@ export default class FeatureTopic extends Component {
           {{/if}}
         {{/if}}
         <hr />
-        {{#if this.currentUser.staff}}
+        {{#if @model.topic.details.can_banner_topic}}
           <div class="feature-section">
             <div class="desc">
               <p>
@@ -385,9 +385,9 @@ export default class FeatureTopic extends Component {
                   @condition={{this.loading}}
                 >
                   {{#if this.bannerCount}}
-                    {{htmlSafe (i18n "topic.feature_topic.banner_exists")}}
+                    {{trustHTML (i18n "topic.feature_topic.banner_exists")}}
                   {{else}}
-                    {{htmlSafe (i18n "topic.feature_topic.no_banner_exists")}}
+                    {{trustHTML (i18n "topic.feature_topic.no_banner_exists")}}
                   {{/if}}
                 </ConditionalLoadingSpinner>
               </p>

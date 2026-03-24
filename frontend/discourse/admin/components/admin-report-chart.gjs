@@ -14,8 +14,9 @@ function getCSSColor(varName) {
 }
 
 export function isInCurrentPeriod(timestamp, grouping) {
-  const date = moment(timestamp);
-  const now = moment();
+  // Report data uses UTC dates, so compare in UTC
+  const date = moment.utc(timestamp);
+  const now = moment.utc();
 
   switch (grouping) {
     case "weekly":
@@ -112,6 +113,9 @@ export default class AdminReportChart extends Component {
         plugins: {
           tooltip: {
             backgroundColor: getCSSColor("--primary"),
+            titleColor: getCSSColor("--secondary"),
+            bodyColor: getCSSColor("--secondary"),
+            footerColor: getCSSColor("--secondary"),
             titleMarginBottom: 16,
             footerMarginTop: 16,
             padding: {
@@ -161,11 +165,18 @@ export default class AdminReportChart extends Component {
         scales: {
           y: {
             display: true,
+            title: {
+              display: true,
+              text: model.y_axis_title,
+            },
+
             grid: { color: getCSSColor("--primary-low") },
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
+              maxRotation: 25,
               minRotation: 0,
+              stepSize: 1,
               precision: 0,
             },
           },

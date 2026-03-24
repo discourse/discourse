@@ -95,6 +95,8 @@ en:
         unstar_channel: "Unstar channel"
         close_channel: "Close channel"
         open_channel: "Open channel"
+        open_channel_disabled_archived: "Archived channels cannot be reopened."
+        open_channel_disabled_read_only: "Read-only channels cannot be reopened."
         archive_channel: "Archive channel"
         delete_channel: "Delete channel"
         join_channel: "Join channel"

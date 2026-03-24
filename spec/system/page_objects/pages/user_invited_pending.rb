@@ -66,6 +66,10 @@ module PageObjects
         find(".user-content .invite-button")
       end
 
+      def has_invite_count?(count)
+        has_css?(".user-content .user-invite-list tbody tr", count: count)
+      end
+
       def invites_list
         all(".user-content .user-invite-list tbody tr").map { |row| Invite.new(row) }
       end

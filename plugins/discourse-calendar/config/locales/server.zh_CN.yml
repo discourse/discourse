@@ -5,9 +5,13 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "阅读日历事件 feed"
   reports:
     currently_away:
       title: 用户目前离开
+      description: "目前正在休假或离职的用户，可以按群组进行筛选。"
       labels:
         username: 用户名
   discourse_automation:
@@ -49,7 +53,7 @@ zh_CN:
     all_day_event_start_time: "未指定开始时间的活动将在此时间开始。格式为 HH:mm。如为上午 6:00，输入 06:00"
     all_day_event_end_time: "未指定结束时间的活动将在此时间结束。格式为 HH:mm。如为下午 6:00，输入 18:00"
     all_day_event_time_error: "时间无效。格式必须为 HH:mm（例如：08:00）。"
-    calendar_categories: "在类别顶部显示一个日历。categoryId 为必填参数。\n例如：categoryId=6;weekends=false;defaultView=year；\n 其他有效设置：weekends(true/false) 和 defaultView(day,week,month,year)。"
+    calendar_categories: "在类别顶部显示一个日历。categoryId 为必选参数。\n示例：categoryId=6;weekends=false;defaultView=year;\n其他有效设置：weekends(true/false) 和 defaultView(day,week,month,year)。"
     calendar_categories_outlet: "允许更改应显示类别日历的位置。"
     working_days: "设置工作日。您可以在帖子中使用 `timezones` 标签显示群组可用性，例如：`[timezones group=admins][timezones]`"
     working_day_start_hour: "工作日的开始时间。"
@@ -77,7 +81,7 @@ zh_CN:
       ongoing_event_reminder: "%{title} 正在进行。"
     errors:
       bulk_invite:
-        max_invitees: "前 %{max_invitees} 位受邀者已创建。尝试将文件拆分成更小的部分。"
+        max_invitees: "已创建前 %{max_invitees} 位受邀者。尝试将文件拆分成更小的部分。"
         error: "上传文件时出错。请稍后再试。"
       models:
         event:

@@ -1,26 +1,26 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import { resettableTracked, trackedArray } from "discourse/lib/tracked-tools";
+import {
+  autoTrackedArray,
+  resettableTracked,
+} from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
 export default class FormTemplateFieldUpload extends Component {
   @service appEvents;
 
-  @tracked fileInputSelector = `#${this.fileUploadElementId}`;
-  @tracked
-  fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
   @resettableTracked uploadValue = this.args.value || "";
-  @trackedArray uploadedFiles = [];
+  @autoTrackedArray uploadedFiles = [];
+  fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: this.args.id,
@@ -142,7 +142,7 @@ export default class FormTemplateFieldUpload extends Component {
 
       {{#if @attributes.description}}
         <span class="form-template-field__description">
-          {{htmlSafe @attributes.description}}
+          {{trustHTML @attributes.description}}
         </span>
       {{/if}}
 

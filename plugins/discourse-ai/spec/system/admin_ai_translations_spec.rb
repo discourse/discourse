@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin AI translations", type: :system do
+RSpec.describe "Admin AI translations" do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
 

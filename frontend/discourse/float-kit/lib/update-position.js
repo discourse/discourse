@@ -65,15 +65,22 @@ function buildMiddleware(options, content, detectOverflowOptions) {
       middleware.push(inline());
     }
 
+    const shiftMiddleware = buildShiftMiddleware(
+      options,
+      detectOverflowOptions
+    );
     const visibilityOptimizer = buildVisibilityOptimizerMiddleware(
       options,
       detectOverflowOptions
     );
-    if (visibilityOptimizer) {
-      middleware.push(visibilityOptimizer);
-    }
 
-    middleware.push(buildShiftMiddleware(options, detectOverflowOptions));
+    if (!visibilityOptimizer) {
+      middleware.push(shiftMiddleware);
+    } else if (options.shiftBeforeVisibilityOptimizer) {
+      middleware.push(shiftMiddleware, visibilityOptimizer);
+    } else {
+      middleware.push(visibilityOptimizer, shiftMiddleware);
+    }
   }
 
   let arrowElement;

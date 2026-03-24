@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { bbcodeAttributeEncode } from "discourse/lib/bbcode-attributes";
 import { generateIcsData } from "discourse/lib/download-calendar";
@@ -167,10 +167,30 @@ export default class DiscoursePostEventDates extends Component {
       return;
     }
 
+    if (this.args.event.allDay) {
+      const start = moment(this.args.event.startsAt, "YYYY-MM-DD");
+      const includeStartYear = !start.isSame(moment(), "year");
+      const startFormat = includeStartYear ? "ddd, MMM D, YYYY" : "ddd, MMM D";
+      let dates = start.format(startFormat);
+
+      if (this.args.event.endsAt) {
+        const end = moment(this.args.event.endsAt, "YYYY-MM-DD");
+        if (!end.isSame(start, "day")) {
+          const includeEndYear =
+            !end.isSame(moment(), "year") || !end.isSame(start, "year");
+          const endFormat = includeEndYear ? "ddd, MMM D, YYYY" : "ddd, MMM D";
+          dates += ` → ${end.format(endFormat)}`;
+        }
+      }
+
+      this.htmlDates = trustHTML(dates);
+      return;
+    }
+
     if (this.siteSettings.discourse_local_dates_enabled) {
       const bbcode = this.datesBBCode.join("<span> → </span>");
       const result = await cook(bbcode);
-      this.htmlDates = htmlSafe(result.toString());
+      this.htmlDates = trustHTML(result.toString());
 
       // doesn’t work reliably without discourseLater
       discourseLater(() => {
@@ -195,7 +215,7 @@ export default class DiscoursePostEventDates extends Component {
         const endFormatted = moment(this.endsAt).format(this.endsAtFormat);
         dates += ` → ${endFormatted}`;
       }
-      this.htmlDates = htmlSafe(dates);
+      this.htmlDates = trustHTML(dates);
     }
   }
 

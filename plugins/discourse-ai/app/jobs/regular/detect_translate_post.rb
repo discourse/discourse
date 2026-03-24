@@ -17,12 +17,13 @@ module Jobs
       end
 
       post = Post.find_by(id: args[:post_id])
-      return if post.blank? || post.raw.blank? || post.deleted_at.present? || post.user_id <= 0
+      return if post.blank? || post.raw.blank? || post.deleted_at.present?
+
+      force = args[:force] || false
+      return if post.user_id <= 0 && !force && !SiteSetting.ai_translation_include_bot_content
 
       topic = post.topic
       return if topic.blank?
-
-      force = args[:force] || false
 
       if force
         # no restrictions

@@ -7,8 +7,8 @@ module("Integration | Component | admin-report-chart", function (hooks) {
 
   module("hasIncompleteData", function () {
     module("daily grouping", function () {
-      test("returns true when last data point is today", function (assert) {
-        const today = moment().format("YYYY-MM-DD");
+      test("returns true when last data point is today in UTC", function (assert) {
+        const today = moment.utc().format("YYYY-MM-DD");
 
         assert.true(
           hasIncompleteData({ x: today, y: 5 }, "daily"),
@@ -16,8 +16,8 @@ module("Integration | Component | admin-report-chart", function (hooks) {
         );
       });
 
-      test("returns false when last data point is yesterday", function (assert) {
-        const yesterday = moment().subtract(1, "day").format("YYYY-MM-DD");
+      test("returns false when last data point is yesterday in UTC", function (assert) {
+        const yesterday = moment.utc().subtract(1, "day").format("YYYY-MM-DD");
 
         assert.false(
           hasIncompleteData({ x: yesterday, y: 5 }, "daily"),
@@ -27,8 +27,8 @@ module("Integration | Component | admin-report-chart", function (hooks) {
     });
 
     module("weekly grouping", function () {
-      test("returns true when last data point is this week", function (assert) {
-        const today = moment().format("YYYY-MM-DD");
+      test("returns true when last data point is this week in UTC", function (assert) {
+        const today = moment.utc().format("YYYY-MM-DD");
 
         assert.true(
           hasIncompleteData({ x: today, y: 5 }, "weekly"),
@@ -36,8 +36,8 @@ module("Integration | Component | admin-report-chart", function (hooks) {
         );
       });
 
-      test("returns false when last data point is last week", function (assert) {
-        const lastWeek = moment().subtract(1, "week").format("YYYY-MM-DD");
+      test("returns false when last data point is last week in UTC", function (assert) {
+        const lastWeek = moment.utc().subtract(1, "week").format("YYYY-MM-DD");
 
         assert.false(
           hasIncompleteData({ x: lastWeek, y: 5 }, "weekly"),
@@ -47,8 +47,8 @@ module("Integration | Component | admin-report-chart", function (hooks) {
     });
 
     module("monthly grouping", function () {
-      test("returns true when last data point is this month", function (assert) {
-        const today = moment().format("YYYY-MM-DD");
+      test("returns true when last data point is this month in UTC", function (assert) {
+        const today = moment.utc().format("YYYY-MM-DD");
 
         assert.true(
           hasIncompleteData({ x: today, y: 5 }, "monthly"),
@@ -56,8 +56,11 @@ module("Integration | Component | admin-report-chart", function (hooks) {
         );
       });
 
-      test("returns false when last data point is last month", function (assert) {
-        const lastMonth = moment().subtract(1, "month").format("YYYY-MM-DD");
+      test("returns false when last data point is last month in UTC", function (assert) {
+        const lastMonth = moment
+          .utc()
+          .subtract(1, "month")
+          .format("YYYY-MM-DD");
 
         assert.false(
           hasIncompleteData({ x: lastMonth, y: 5 }, "monthly"),

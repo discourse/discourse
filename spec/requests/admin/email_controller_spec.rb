@@ -238,9 +238,33 @@ RSpec.describe Admin::EmailController do
              params: {
                last_seen_at: 1.week.ago,
                username: admin.username,
-               email: email("previous_replies"),
+               email: admin.email,
              }
         expect(response.status).to eq(200)
+      end
+
+      it "sends the digest to the requested email without unsubscribe links" do
+        Fabricate(:topic, created_at: 1.day.ago)
+        ActionMailer::Base.deliveries.clear
+
+        expect {
+          post "/admin/email/send-digest.json",
+               params: {
+                 last_seen_at: 1.month.ago,
+                 username: user.username,
+                 email: "attacker@evil.com",
+               }
+        }.not_to change { UnsubscribeKey.count }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+
+        message = ActionMailer::Base.deliveries.last
+        expect(message.to).to eq(["attacker@evil.com"])
+        expect(message.html_part.body.to_s).not_to include("/email/unsubscribe/")
+        expect(message.text_part.body.to_s).not_to include("/email/unsubscribe/")
+        expect(message.header["List-Unsubscribe"].to_s).to be_blank
+        expect(message.header["List-Unsubscribe-Post"].to_s).to be_blank
       end
     end
   end

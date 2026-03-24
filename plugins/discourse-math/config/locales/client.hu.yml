@@ -5,3 +5,19 @@
 # https://translate.discourse.org/
 
 hu:
+  js:
+    discourse_math:
+      edit_math: "Matematika szerkesztése"
+      edit_modal:
+        title: "Matematika szerkesztése"
+        label: "Matematika"
+        apply: "Alkalmaz"
+      composer:
+        insert_math: "Matematikai kód beszúrása"
+      insert_modal:
+        title_inline: "Beágyazott matematikai képlet beszúrása"
+        title_block: "Blokk matematikai elem beszúrása"
+        label: "Latex"
+        placeholder: "E=mc^2"
+        insert: "Beszúrás"
+        block_mode: "Blokk mód (megjelenített egyenlet)"

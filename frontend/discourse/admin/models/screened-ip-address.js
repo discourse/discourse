@@ -1,7 +1,6 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ScreenedIpAddress extends EmberObject {
@@ -15,14 +14,14 @@ export default class ScreenedIpAddress extends EmberObject {
 
   @equal("action_name", "block") isBlocked;
 
-  @discourseComputed("action_name")
-  actionName(actionName) {
-    return i18n(`admin.logs.screened_ips.actions.${actionName}`);
+  @computed("action_name")
+  get actionName() {
+    return i18n(`admin.logs.screened_ips.actions.${this.action_name}`);
   }
 
-  @discourseComputed("ip_address")
-  isRange(ipAddress) {
-    return ipAddress.indexOf("/") > 0;
+  @computed("ip_address")
+  get isRange() {
+    return this.ip_address.indexOf("/") > 0;
   }
 
   save() {

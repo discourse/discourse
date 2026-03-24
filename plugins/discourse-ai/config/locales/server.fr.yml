@@ -17,9 +17,6 @@ fr:
         spam: "Signaler comme contenu indésirable et masquer la publication"
         spam_silence: "Signaler comme contenu indésirable, masquer la publication et désactiver l'utilisateur"
     scriptables:
-      llm_persona_triage:
-        title: Triez les publications à l'aide d'un personnage IA
-        description: "Répondez aux publications à l'aide d'un personnage IA spécifique"
       llm_triage:
         title: Trier les publications à l'aide de l'IA
         description: "Triez les publications à l'aide d'un grand modèle linguistique"
@@ -77,7 +74,6 @@ fr:
     ai_embeddings_semantic_related_include_closed_topics: "Inclure des sujets fermés dans les résultats de recherche sémantique"
     ai_embeddings_per_post_enabled: Générer des intégrations pour chaque publication
     ai_summarization_enabled: "Activer la fonction de synthèse"
-    ai_summarization_persona: "Personnage à utiliser pour la fonction de synthèse"
     ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
     ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à compléter par heure."
@@ -92,7 +88,6 @@ fr:
     ai_discord_app_id: "L'identifiant de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
     ai_discord_app_public_key: "La clé publique de l'application Discord à laquelle vous souhaitez connecter la recherche Discord"
     ai_discord_search_mode: "Sélectionnez le mode de recherche à utiliser pour la recherche Discord"
-    ai_discord_search_persona: "Le personnage à utiliser pour la recherche sur Discord."
     ai_discord_allowed_guilds: "Guildes Discord (serveurs) dans lesquelles le robot est autorisé à effectuer des recherches"
     ai_translation_backfill_limit_to_public_content: "Lorsque cette option est activée, seul le contenu des catégories publiques sera traduit. Lorsque cette option est désactivée, le contenu des MP de groupe et des catégories privées sera également envoyé pour traduction."
     ai_translation_backfill_max_age_days: "L'âge maximal des publications et sujets à traduire. Les publications et sujets antérieurs à cette date ne seront pas traduits. 0 désactive le remplissage, mais ne désactive pas la traduction des nouvelles publications."
@@ -258,10 +253,8 @@ fr:
     ai_bot:
       reply_error: "Il semble que notre système ait rencontré un problème inattendu en essayant de répondre.\n\n[details='Détails de l'erreur']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de robot IA sans titre]"
-      personas:
+      agents:
         default_llm_required: "Le modèle LLM par défaut est requis avant d'activer la messagerie instantanée"
-        cannot_delete_system_persona: "Les personnages du système ne peuvent pas être supprimés. Veuillez plutôt les désactiver"
-        cannot_edit_system_persona: "Les personnages du système peuvent uniquement être renommés, vous ne pouvez pas modifier les outils ou l'invite du système, mais seulement les désactiver et en faire une copie"
         cannot_have_duplicate_tools: "Impossible d'avoir des outils en double"
         github_helper:
           name: "Assistant GitHub"
@@ -301,10 +294,8 @@ fr:
           description: "Robot IA spécialisé dans la création d'artefacts Web interactifs"
         summarizer:
           name: "Agent de synthèse"
-          description: "Personnage par défaut utilisé pour alimenter les résumés par l'IA"
         short_summarizer:
           name: "Agent de synthèse (forme courte)"
-          description: "Personnage par défaut utilisé pour générer des résumés courts basés sur l'IA pour les éléments des listes de sujets"
         concept_finder:
           name: "Chercheur de concepts"
           description: "Robot IA spécialisé dans l'identification de concepts et de thèmes dans le contenu"
@@ -316,30 +307,22 @@ fr:
           description: "Robot IA spécialisé dans la déduplication de concepts"
         custom_prompt:
           name: "Invite personnalisée"
-          description: "Personnage par défaut qui alimente la fonction d'invite personnalisée de l'assistant"
         smart_dates:
           name: "Dates intelligentes"
-          description: "Personnage par défaut qui alimente la fonction de dates intelligentes de l'assistant"
         markdown_table_generator:
           name: "Générateur de tableaux Markdown"
-          description: "Personnage par défaut qui alimente la fonction de génération de tableau Markdown de l'assistant"
         post_illustrator:
           name: "Illustrateur de publications"
         proofreader:
           name: "Relecteur"
-          description: "Personnage par défaut qui alimente la fonction de relecture de texte de l'assistant"
         titles_generator:
           name: "Générateur de titres"
-          description: "Personnage par défaut qui alimente la fonctionnalité de suggestion de titres de sujets par l'assistant"
         tutor:
           name: "Tuteur"
-          description: "Personnage par défaut qui alimente la fonction d'explication de l'assistant"
         translator:
           name: "Traducteur"
-          description: "Personnage par défaut qui alimente la fonction de traduction de l'assistant"
         image_captioner:
           name: "Légendes des images"
-          description: "Personnage par défaut qui alimente la fonction de légende d'image de l'assistant"
         locale_detector:
           name: "Détecteur de paramètre régional"
           description: "Active la fonction de traduction en détectant les paramètres régionaux d'un texte donné (publications, titres, etc.)"
@@ -354,13 +337,10 @@ fr:
           description: "Alimente la fonction de traduction en tant que traducteur de texte générique, utilisé pour les textes courts tels que les noms de catégories ou les étiquettes"
         spam_detector:
           name: "Détecteur de contenus indésirables"
-          description: "Personnage par défaut qui alimente notre fonction de détection des contenus indésirables"
         content_creator:
           name: "Créateur de contenu"
-          description: "Personnage par défaut à l'origine de la recherche HyDE"
         report_runner:
           name: "Exécuteur de rapports"
-          description: "Personnage par défaut utilisé dans le script d'automatisation des rapports"
       topic_not_found: "Résumé indisponible, sujet introuvable !"
       summarizing: "Synthèse du sujet"
       searching: "Recherche de : '%{query}'"
@@ -368,7 +348,6 @@ fr:
         researcher:
           researcher_llm:
             name: "LLM "
-            description: "Modèle linguistique à utiliser pour la recherche (par défaut, LLM du personnage actuel)"
           max_tokens_per_batch:
             name: "Nombre maximal de jetons par lot"
             description: "Nombre maximal de jetons à utiliser pour chaque lot dans la recherche"
@@ -451,6 +430,7 @@ fr:
         github_file_content: "Récupérer le contenu des fichiers depuis un dépôt GitHub"
         random_picker: "Choisissez un nombre aléatoire ou un élément aléatoire d'une liste"
         categories: "Répertorier toutes les catégories visibles publiquement sur le forum"
+        delete_topic: "Supprimez un sujet"
         search: "Rechercher dans tous les sujets publics sur le forum"
         tags: "Répertorier toutes les étiquettes du forum"
         time: "Trouver l'heure dans différents fuseaux horaires"
@@ -514,6 +494,40 @@ fr:
         continue_conversation:
           title: "Conversation de découverte : recherchez %{query}"
           raw: "Lors de ma recherche pour %{query}, vous m'avez montré les informations suivantes :\n\n%{context}\n\nPoursuivons la conversation."
+      close_topic:
+        errors:
+          not_found: "Sujet non trouvé."
+      unlist_topic:
+        errors:
+          not_found: "Sujet non trouvé."
+      delete_topic:
+        errors:
+          not_found: "Sujet non trouvé."
+      edit_tags:
+        errors:
+          not_found: "Sujet non trouvé."
+      edit_category:
+        errors:
+          not_found: "Sujet non trouvé."
+          category_not_found: "Catégorie non trouvée ."
+      set_topic_timer:
+        errors:
+          not_found: "Sujet non trouvé."
+      set_slow_mode:
+        errors:
+          not_found: "Sujet non trouvé."
+      move_posts:
+        errors:
+          not_found: "Sujet non trouvé."
+      assign:
+        errors:
+          not_found: "Sujet non trouvé."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Approuver"
+        reject:
+          title: "Rejeter"
     summarization:
       configuration_hint:
         one: "Configurez d'abord le paramètre « %{setting} »."
@@ -542,7 +556,6 @@ fr:
         set_llm_first: "Réglez %{setting} en premier"
         model_unreachable: "Nous n'avons pas pu obtenir de réponse de ce modèle. Vérifiez d'abord vos paramètres."
         invalid_seeded_model: "Vous ne pouvez pas utiliser ce modèle avec cette fonctionnalité"
-        invalid_persona_response_format: "Le personnage sélectionné doit avoir un format de réponse avec un champ booléen intitulé « spam »"
         must_select_model: "Vous devez d'abord sélectionner un LLM"
       endpoints:
         not_configured: "%{display_name} (non configuré)"
@@ -553,7 +566,7 @@ fr:
         one: "Nous n'avons pas pu supprimer ce modèle, car %{settings} l'utilise. Mettez à jour le paramètre et réessayez."
         other: "Nous n'avons pas pu supprimer ce modèle, car %{settings} l'utilisent. Mettez à jour les paramètres et réessayez."
       cannot_edit_builtin: "Vous ne pouvez pas modifier un modèle intégré."
-    personas:
+    agents:
       malformed_examples: "Les exemples donnés ont un format incorrect."
     embeddings:
       delete_failed: "Ce modèle est actuellement utilisé. Mettez d'abord à jour `ai embeddings selected model`."
@@ -572,15 +585,10 @@ fr:
       quota_exceeded: "Vous avez dépassé le quota pour ce modèle. Veuillez réessayer dans %{relative_time}."
       quota_required: "Vous devez spécifier un nombre maximal de jetons ou d'utilisations pour ce modèle"
       no_query_specified: Le paramètre de requête est obligatoire, veuillez le spécifier.
-      no_user_for_persona: Le personnage spécifié n'a pas d'utilisateur associé.
-      persona_not_found: Le personnage spécifié n'existe pas. Vérifiez les paramètres persona_name ou persona_id.
       no_user_specified: Le nom d'utilisateur ou le paramètre user_unique_id est obligatoire. Veuillez le préciser.
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.
-      persona_disabled: Le personnage spécifié est désactivé. Vérifiez les paramètres persona_name ou persona_id.
-      no_default_llm: Le personnage doit avoir un default_llm défini.
       user_not_allowed: L'utilisateur n'est pas autorisé à participer au sujet.
       prompt_message_length: Le message %{idx} dépasse la limite de 1 000 caractères.
-      persona_already_exists: Le personnage portant le nom %{name} existe déjà.
       custom_tool_exists:
         one: "L'outil personnalisé portant le nom %{names} existe déjà."
         other: "Des outils personnalisés portant le nom %{names} existent déjà."

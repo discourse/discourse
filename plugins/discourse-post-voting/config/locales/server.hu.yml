@@ -35,8 +35,11 @@ hu:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "Mit akarsz csinálni a hozzászólással?"
         no_action_comment:
           title: "Nincs művelet"
+          description: "Hagyd a hozzászólást úgy, ahogy van."
         agree_and_keep_comment:
           title: "Hozzászólás megtartása"
           description: "Egyetértek a megjelöléssel, de a hozzászólást változatlanul hagyom."
@@ -49,9 +52,24 @@ hu:
         agree_and_delete:
           title: "Hozzászólás törlése"
           description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
+        agree_and_suspend:
+          title: "Felhasználó felfüggesztése"
+          description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
+        agree_and_silence:
+          title: "Felhasználó némítása"
+          description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
         disagree_and_restore:
           title: "Nem értek egyet, és visszaállítom a hozzászólást"
           description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
+        disagree:
+          title: "Hozzászólás megtartása"
+          description: "Nem értek egyet a megjelöléssel, és a hozzászólást változatlanul hagyom."
+        ignore:
+          title: "Megjelölés figyelmen kívül hagyása"
+          description: "Töröld a sorból művelet nélkül."
+        delete_and_agree:
+          title: "Megjelölés figyelmen kívül hagyása és megjegyzés törlése"
+          description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
   post_action_types:
     vote:
       title: "Szavazás"
@@ -99,16 +117,25 @@ hu:
             title: "Hozzászólás törlése"
             description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
           delete_and_agree:
+            title: "Megjelölés figyelmen kívül hagyása és megjegyzés törlése"
             description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
           disagree_and_restore:
             title: "Nem értek egyet, és visszaállítom a hozzászólást"
             description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
+          disagree:
+            title: "Hozzászólás megtartása"
+            description: "Nem értek egyet a megjelöléssel, és a hozzászólást változatlanul hagyom."
+          ignore:
+            title: "Megjelölés figyelmen kívül hagyása"
+            description: "Töröld a sorból művelet nélkül."
         transcript:
           view: "Korábbi hozzászólások átiratának megtekintése"
       reviewable_score_types:
         needs_review:
           title: "Felülvizsgálatra van szükség"
         notify_user:
+          comment_pm_title: "Szavazás utáni hozzászólásod"
           comment_pm_body: "%{link}\n\n%{comment}"
         notify_moderators:
+          comment_pm_title: "A szavazás utáni hozzászóláshoz a személyzet figyelmére van szükség"
           comment_pm_body: "%{link}\n\n%{comment}"

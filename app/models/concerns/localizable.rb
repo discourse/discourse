@@ -31,6 +31,10 @@ module Localizable
     end
   end
 
+  def has_localization?(locale = I18n.locale)
+    get_localization(locale).present?
+  end
+
   def in_user_locale?
     LocaleNormalizer.is_same?(locale, I18n.locale)
   end

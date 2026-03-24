@@ -1,7 +1,6 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class TagsController extends Controller {
@@ -18,14 +17,21 @@ export default class TagsController extends Controller {
     );
   }
 
-  @discourseComputed(
+  @computed(
     "model.watched_tags.[]",
     "model.watching_first_post_tags.[]",
     "model.tracked_tags.[]",
     "model.muted_tags.[]"
   )
-  selectedTags(watched, watchedFirst, tracked, muted) {
-    return [].concat(watched, watchedFirst, tracked, muted).filter((t) => t);
+  get selectedTags() {
+    return []
+      .concat(
+        this.model?.watched_tags,
+        this.model?.watching_first_post_tags,
+        this.model?.tracked_tags,
+        this.model?.muted_tags
+      )
+      .filter((t) => t);
   }
 
   @action

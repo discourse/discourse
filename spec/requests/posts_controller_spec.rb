@@ -112,6 +112,66 @@ RSpec.describe PostsController do
       expect(parsed["username"]).to eq(new_post.user.username)
       expect(parsed["cooked"]).to eq(new_post.cooked)
     end
+
+    context "with version parameter" do
+      let(:post_with_revisions) { Fabricate(:post, user: user, version: 2) }
+      let(:post_revision) { Fabricate(:post_revision, post: post_with_revisions) }
+
+      it "returns the reverted content for a visible revision" do
+        post_revision
+        sign_in(user)
+        get "/posts/#{post_with_revisions.id}.json?version=1"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
+      end
+
+      context "when the revision is hidden" do
+        before { post_revision.update!(hidden: true) }
+
+        it "rejects access for a regular user" do
+          sign_in(user)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "rejects access for an anonymous user" do
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "allows access for staff" do
+          sign_in(admin)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["cooked"]).to eq("<p>BEFORE</p>")
+        end
+      end
+
+      context "when edit history is not visible to the public" do
+        before { SiteSetting.edit_history_visible_to_public = false }
+
+        it "rejects access for an anonymous user" do
+          post_revision
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "rejects access for a regular user who is not the poster" do
+          other_user = Fabricate(:user)
+          sign_in(other_user)
+          post_revision
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
+        it "allows access for staff" do
+          post_revision
+          sign_in(admin)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe "#by_number" do
@@ -675,6 +735,21 @@ RSpec.describe PostsController do
                   },
                 }
           }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "respects top-level bypass_bump=false over nested bypass_bump=true" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: false,
+                  post: {
+                    raw: "updated content",
+                    bypass_bump: true,
+                  },
+                },
+                as: :json
+          }.to change { wiki_post.topic.reload.bumped_at }
           expect(response.status).to eq(200)
         end
 
@@ -2385,6 +2460,36 @@ RSpec.describe PostsController do
       expect(response.status).to eq(400)
     end
 
+    context "when diff generation exceeds the comparison budget" do
+      let(:diff_error) do
+        ONPDiff::DiffLimitExceeded.new(
+          comparisons_used: 1,
+          comparison_budget: 0,
+          left_size: 1,
+          right_size: 1,
+        )
+      end
+
+      before { ONPDiff.any_instance.stubs(:compose).raises(diff_error) }
+
+      it "returns an empty diff and an error flag for a specific revision endpoint" do
+        sign_in(admin)
+        get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body["diff_error"]).to eq(true)
+      end
+
+      it "returns an empty diff and an error flag for the latest revision endpoint" do
+        sign_in(admin)
+        post_revision
+        get "/posts/#{post.id}/revisions/latest.json"
+
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body["diff_error"]).to eq(true)
+      end
+    end
+
     context "when edit history is not visible to the public" do
       before { SiteSetting.edit_history_visible_to_public = false }
 
@@ -2873,6 +2978,17 @@ RSpec.describe PostsController do
         expect(data[0]["id"]).to eq(post_deleted_by_admin.id)
         expect(data[0]["deleted_by"]["id"]).to eq(admin.id)
       end
+
+      it "denies access to non-staff users in delete_all_posts_and_topics_allowed_groups" do
+        group = Fabricate(:group)
+        non_staff_user = Fabricate(:user, refresh_auto_groups: true)
+        group.add(non_staff_user)
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|#{group.id}"
+
+        sign_in(non_staff_user)
+        get "/posts/#{user.username}/deleted.json"
+        expect(response).to be_forbidden
+      end
     end
   end
 
@@ -2909,6 +3025,95 @@ RSpec.describe PostsController do
       get "/raw/#{topic.id}"
       expect(response.status).to eq(200)
       expect(response.body).to include("123456789", "abcdefghij")
+    end
+
+    context "with a hidden post" do
+      fab!(:topic)
+      fab!(:visible_post) do
+        Fabricate(:post, topic: topic, post_number: 1, raw: "visible post content")
+      end
+      fab!(:hidden_post) do
+        Fabricate(:post, topic: topic, post_number: 2, raw: "hidden post content", hidden: true)
+      end
+      fab!(:post_author) { hidden_post.user }
+
+      before { SiteSetting.hidden_post_visible_groups = Group::AUTO_GROUPS[:trust_level_4] }
+
+      context "when fetching a single hidden post" do
+        context "when logged out" do
+          it "returns not found" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response).to have_http_status(:not_found)
+          end
+        end
+
+        context "when logged in as a regular user" do
+          before { sign_in(user) }
+
+          it "returns not found" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response).to have_http_status(:not_found)
+          end
+        end
+
+        context "when logged in as the post author" do
+          before { sign_in(post_author) }
+
+          it "returns the hidden post content" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response.body).to eq("hidden post content")
+          end
+        end
+
+        context "when logged in as a moderator" do
+          before { sign_in(moderator) }
+
+          it "returns the hidden post content" do
+            get "/raw/#{topic.id}/#{hidden_post.post_number}"
+            expect(response.body).to eq("hidden post content")
+          end
+        end
+      end
+
+      context "when fetching the whole topic" do
+        context "when logged out" do
+          it "excludes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content").and exclude(
+                    "hidden post content",
+                  )
+          end
+        end
+
+        context "when logged in as a regular user" do
+          before { sign_in(user) }
+
+          it "excludes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content").and exclude(
+                    "hidden post content",
+                  )
+          end
+        end
+
+        context "when logged in as the post author" do
+          before { sign_in(post_author) }
+
+          it "includes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content", "hidden post content")
+          end
+        end
+
+        context "when logged in as a moderator" do
+          before { sign_in(moderator) }
+
+          it "includes hidden post content" do
+            get "/raw/#{topic.id}"
+            expect(response.body).to include("visible post content", "hidden post content")
+          end
+        end
+      end
     end
   end
 
@@ -3061,6 +3266,23 @@ RSpec.describe PostsController do
         post_ids = json["private_posts"].map { |p| p["id"] }
 
         expect(post_ids).to eq([post_id])
+      end
+
+      it "does not include whisper posts for non-whisperer users" do
+        sign_in(user)
+
+        pm = Fabricate(:private_message_topic, recipient: user)
+        regular_post = Fabricate(:post, topic: pm)
+        whisper_post = Fabricate(:post, topic: pm, post_type: Post.types[:whisper])
+
+        get "/private-posts.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        post_ids = json["private_posts"].map { |p| p["id"] }
+
+        expect(post_ids).to include(regular_post.id)
+        expect(post_ids).to_not include(whisper_post.id)
       end
 
       it "returns private posts for json" do

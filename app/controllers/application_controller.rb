@@ -101,8 +101,12 @@ class ApplicationController < ActionController::Base
 
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
-      response.cache_control[:no_cache] = true
-      response.cache_control[:extras] = ["no-store"]
+      if SiteSetting.cache_control_bfcache_compatibility
+        response.cache_control[:no_cache] = true
+      else
+        response.cache_control[:no_cache] = true
+        response.cache_control[:extras] = ["no-store"]
+      end
     end
     response.headers["Discourse-No-Onebox"] = "1" if SiteSetting.login_required
   end
@@ -800,6 +804,11 @@ class ApplicationController < ActionController::Base
         OpenSSL::PKey::RSA.new(params[:user_api_public_key])
       rescue OpenSSL::PKey::RSAError
         return render plain: I18n.t("user_api_key.invalid_public_key")
+      end
+
+      client = UserApiKeyClient.find_by(public_key: params[:user_api_public_key])
+      if client&.auth_redirect.present? && params[:auth_redirect] != client.auth_redirect
+        return render plain: I18n.t("user_api_key.invalid_auth_redirect")
       end
 
       if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect])

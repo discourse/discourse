@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Wyzwalanie automatyzacji za pomocą API"
   js:
     admin:
       logs:
@@ -459,6 +466,11 @@ pl_PL:
           runs_today: "%{count} dzisiaj"
           runs_this_week: "%{count} w tym tygodniu"
           runs_this_month: "%{count} w tym miesiącu"
+          recent_errors:
+            one: "%{count} błąd ostatnio"
+            few: "%{count} błędy ostatnio"
+            many: "%{count} błędów ostatnio"
+            other: "%{count} błędów ostatnio"
           runs:
             label: Uruchomiona
           name:

@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
@@ -120,8 +120,8 @@ function editAssignmentsButton() {
   const label = i18n("discourse_assign.topic_level_menu.edit_assignments");
   return {
     id: "reassign",
-    name: htmlSafe(label),
-    label: htmlSafe(`${icon} ${label}`),
+    name: trustHTML(label),
+    label: trustHTML(`${icon} ${label}`),
   };
 }
 
@@ -130,8 +130,8 @@ function reassignToSelfButton() {
   const label = i18n("discourse_assign.topic_level_menu.reassign_topic_to_me");
   return {
     id: "reassign-self",
-    name: htmlSafe(label),
-    label: htmlSafe(`${icon} ${label}`),
+    name: trustHTML(label),
+    label: trustHTML(`${icon} ${label}`),
   };
 }
 
@@ -152,8 +152,8 @@ function unassignFromTopicButton(topic, prioritize_full_name_in_ux) {
 
   return {
     id: "unassign",
-    name: htmlSafe(label),
-    label: htmlSafe(`${icon} ${label}`),
+    name: trustHTML(label),
+    label: trustHTML(`${icon} ${label}`),
   };
 }
 
@@ -192,8 +192,8 @@ function unassignFromPostButton(postId, assignment) {
   );
   return {
     id: `unassign-from-post-${postId}`,
-    name: htmlSafe(dataName),
-    label: htmlSafe(`${icon} ${label}`),
+    name: trustHTML(dataName),
+    label: trustHTML(`${icon} ${label}`),
   };
 }
 
@@ -205,10 +205,10 @@ function topicLevelUnassignButton(assignees) {
 
   return {
     id: null,
-    name: htmlSafe(
+    name: trustHTML(
       i18n("discourse_assign.topic_level_menu.unassign_with_ellipsis")
     ),
-    label: htmlSafe(`${avatars}${label}`),
+    label: trustHTML(`${avatars}${label}`),
   };
 }
 

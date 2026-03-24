@@ -10,10 +10,8 @@ fr:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permet la recherche alimentée par l'IA"
-              stream_completion: "Permet de diffuser en continu les complétions de personnages IA"
-              update_personas: "Permet de mettre à jour les personnages IA"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -35,9 +33,6 @@ fr:
             create_ai_llm_model: "Créer un modèle LLM"
             update_ai_llm_model: "Mettre à jour le modèle LLM"
             delete_ai_llm_model: "Supprimer le modèle LLM"
-            create_ai_persona: "Créer un personnage IA"
-            update_ai_persona: "Mettre à jour le personnage IA"
-            delete_ai_persona: "Supprimer le personnage IA"
             create_ai_tool: "Créer un outil d'IA"
             update_ai_tool: "Mettre à jour l'outil d'IA"
             delete_ai_tool: "Supprimer l'outil d'IA"
@@ -110,25 +105,14 @@ fr:
             top_p:
               label: "Top P"
               description: "Top P à utiliser pour le LLM, augmentez pour augmenter le caractère aléatoire (laissez vide pour utiliser la valeur par défaut du modèle)"
-            persona_id:
-              label: "Personnage"
-              description: "Personnage IA à utiliser pour la génération de rapports"
-        llm_persona_triage:
+        llm_agent_triage:
           fields:
-            persona:
-              label: "Personnage"
-              description: "Personnage IA à utiliser pour le triage (doit avoir un LLM et un utilisateur par défaut définis)"
             whisper:
               label: "Répondre avec un murmure"
-              description: "Si la réponse du personnage doit être un murmure"
             silent_mode:
               label: "Mode silencieux"
-              description: "En mode silencieux, le personnage recevra le contenu, mais ne publiera rien sur le forum. Cela est utile lors du triage à l'aide d'outils"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Personnage"
-              description: "Le personnage qui sera utilisé pour le tri, assurez-vous qu'il répond avec un seul mot que vous pouvez utiliser pour déclencher l'action"
             max_post_tokens:
               label: "Nombre maximum de jetons de publication"
               description: "Le nombre maximal de jetons à analyser à l'aide du triage LLM"
@@ -165,9 +149,6 @@ fr:
             whisper:
               label: "Répondre avec un murmure"
               description: "Si la réponse de l'IA doit être un murmure"
-            reply_persona:
-              label: "Personnage de réponse"
-              description: "Personnage IA à utiliser pour les réponses (doit avoir un LLM par défaut). Il sera prioritaire sur la réponse normalisée"
             max_output_tokens:
               label: "Nombre maximum de jetons de sortie"
               description: "Lorsqu'il est spécifié, il fixe une limite supérieure au nombre maximum de jetons que le modèle peut générer. Cette valeur respecte la limite maximale de jetons de sortie du LLM"
@@ -175,23 +156,17 @@ fr:
       title: "IA"
       default_llm:
         title: "Modèle LLM par défaut"
-        description: "Le modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA. Cela sera utilisé si aucun LLM n'est spécifié dans la configuration des fonctionnalités ou dans le personnage. Si aucun LLM par défaut n'est spécifié, le dernier LLM créé sera utilisé."
       llm_selector:
         none: "Jamais"
       features:
         short_title: "Fonctionnalités"
-        description: "Il s'agit des fonctionnalités d'IA disponibles pour les visiteurs de votre site. Elles peuvent être configurées pour utiliser des personnages IA et des LLM spécifiques, et leur accès peut être contrôlé par des groupes."
-        back: "Retour"
         disabled: "(désactivée)"
-        persona:
-          one: "Personnage :"
-          other: "Personnages :"
         groups: "Groupes :"
         llm:
           one: "LLM :"
           other: "LLM :"
         no_llm: "Aucun LLM sélectionné"
-        no_persona: "Non défini"
+        no_agent: "Non défini"
         no_groups: "Aucun"
         edit: "Paramètres"
         expand_list:
@@ -207,7 +182,6 @@ fr:
           unconfigured: "Non configuré"
         filters:
           all: "Tout"
-          text: "Rechercher des fonctionnalités, des personnages, des LLM ou des groupes..."
           no_results: "Aucune fonctionnalité correspondant à vos filtres n'a été trouvée."
           reset: "Réinitialiser"
         no_automations: "Il n'y a pas encore d'automatisations"
@@ -236,10 +210,7 @@ fr:
           generate_concepts: "Inférence de concepts"
           match_concepts: "Correspondance de concepts"
           deduplicate_concepts: "Déduplication des concepts"
-          setting_groups:
-            personas: "Personnages"
         ai_helper:
-          name: "Assistant"
           description: "Permet aux utilisateurs d'interagir avec la communauté, par exemple en créant des sujets, en rédigeant des articles et en lisant du contenu"
           proofread: Relire le texte
           title_suggestions: "Suggérer des titres"
@@ -254,7 +225,6 @@ fr:
           post_illustrator: "Illustrateur de publications"
           setting_groups:
             automation: "Automatisation"
-            personas: "Personnages"
         translation:
           name: "Traduction"
           description: "Traduit le contenu dans les langues prises en charge"
@@ -262,8 +232,6 @@ fr:
           post_raw_translator: "Traducteur du contenu brut de la publication"
           topic_title_translator: "Traducteur de titre de sujet"
           short_text_translator: "Traducteur de textes courts"
-          setting_groups:
-            personas: "Personnages"
         spam:
           name: "Contenu indésirable"
           description: "Identifie les contenus indésirables potentiels à l'aide du LLM sélectionné et les signale aux modérateurs du site afin qu'ils les inspectent dans la file d'attente de révision"
@@ -299,7 +267,6 @@ fr:
         short_title: "Contenu indésirable"
         title: "Configuration de la gestion du contenu indésirable"
         select_llm: "Sélectionner le LLM"
-        select_persona: "Sélectionnez un personnage"
         custom_instructions: "Instructions personnalisées"
         custom_instructions_help: "Des instructions personnalisées spécifiques à votre site pour aider l'IA à identifier le contenu indésirable, par exemple « Faites preuve d'agressivité dans l'analyse des publications qui ne sont pas en anglais »."
         last_seven_days: "Ces 7 derniers jours"
@@ -372,23 +339,20 @@ fr:
           last_week: "La semaine dernière"
           last_month: "Le mois dernier"
           custom: "Personnalisé…"
-      ai_persona:
+      ai_agent:
         ai_tools: "Outils"
         tool_strategies:
           all: "Appliquer à toutes les réponses"
           replies:
             one: "Appliquer à la première réponse uniquement"
             other: "Appliquer aux %{count} premières réponses"
-        back: "Retour"
         name: "Nom"
         edit: "Modifier"
         export: "Exporter"
         import: "Importer"
-        import_error_conflict: "Un conflit a été détecté lors de l'importation de %{name}, souhaitez-vous mettre à jour le personnage existant ?"
         overwrite: "Remplacer"
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
-        use_parent_llm: "Utiliser le modèle linguistique du personnage"
         max_context_posts: "Nombre maximal de publications contextuelles"
         max_context_posts_help: "Le nombre maximal de publications à utiliser comme contexte pour l'IA lorsqu'elle répond à un utilisateur. (vide par défaut)"
         vision_enabled: Vision activée
@@ -399,47 +363,32 @@ fr:
           medium: Qualité moyenne (512x512)
           high: Qualité élevée - plus lent (1024x1024)
         mentionable: Autoriser les mentions
-        mentionable_help: Si cette option est activée, les utilisateurs des groupes autorisés peuvent mentionner cet utilisateur dans les publications, l'IA répondra en tant que personnage.
         user: Utilisateur
         create_user: Créer un utilisateur
-        create_user_help: Vous pouvez éventuellement associer un utilisateur à ce personnage. Si vous le faites, l'IA utilisera cet utilisateur pour répondre aux demandes.
         default_llm: Modèle linguistique par défaut
-        default_llm_help: Le modèle linguistique par défaut à utiliser pour ce personnage. Obligatoire si vous souhaitez mentionner un personnage sur des publications publiques.
         question_consolidator_llm: Modèle linguistique pour l'outil de consolidation des questions
         question_consolidator_llm_help: Le modèle linguistique à utiliser pour l'outil de consolidation des questions, vous pouvez choisir un modèle moins puissant pour réduire les coûts.
         system_prompt: Invite du système
         forced_tool_strategy: Stratégie d'outil forcé
         allow_chat_direct_messages: "Autoriser les messages directs de discussion"
-        allow_chat_direct_messages_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent envoyer des messages directs à ce personnage."
         allow_chat_channel_mentions: "Autoriser les mentions du canal de discussion"
-        allow_chat_channel_mentions_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent mentionner ce personnage dans les canaux de discussion."
         allow_personal_messages: "Autoriser les messages privés"
-        allow_personal_messages_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent envoyer des messages privés à ce personnage."
         allow_topic_mentions: "Autoriser les mentions de sujets"
-        allow_topic_mentions_help: "Si cette option est activée, les utilisateurs des groupes autorisés peuvent mentionner ce personnage dans les sujets."
         force_default_llm: "Toujours utiliser le modèle linguistique par défaut"
         save: "Enregistrer"
-        saved: "Personnage enregistré"
         enabled: "Activé ?"
         tools: "Outils activés"
         forced_tools: "Outils forcés"
         allowed_groups: "Groupes autorisés"
-        confirm_delete: "Voulez-vous vraiment supprimer ce personnage ?"
-        new: "Nouveau personnage"
-        no_personas: "Vous n'avez pas encore créé de personnage"
-        title: "Personnages"
-        short_title: "Personnages"
         delete: "Supprimer"
         temperature: "Température"
         temperature_help: "Température à utiliser pour le LLM. Augmentez la valeur pour augmenter la créativité (laissez le champ vide pour utiliser la valeur par défaut du modèle, généralement une valeur comprise entre 0,0 et 2,0)"
         top_p: "Top P"
         top_p_help: "Top P à utiliser pour le LLM, augmentez pour augmenter le caractère aléatoire (laissez vide pour utiliser la valeur par défaut du modèle, généralement une valeur comprise entre 0,0 et 1,0)"
         priority: "Priorité"
-        priority_help: "Les personnages prioritaires sont affichés aux utilisateurs en haut de la liste des personnages. Si plusieurs personnages sont prioritaires, ils seront triés par ordre alphabétique."
         tool_options: "Options de l'outil"
         rag_conversation_chunks: "Rechercher des morceaux de conversation"
         rag_conversation_chunks_help: "Le nombre de segments à utiliser pour les recherches de modèles RAG. Augmentez pour augmenter la quantité de contexte que l'IA peut utiliser."
-        persona_description: "Les personnages sont une fonctionnalité puissante qui vous permet de personnaliser le comportement du moteur d'IA dans votre forum Discourse. Ils agissent comme un « message système » qui guide les réponses et les interactions de l'IA, en contribuant ainsi à créer une expérience utilisateur plus personnalisée et plus interactive."
         response_format:
           title: "Format de réponse JSON"
           no_format: "Aucun format JSON spécifié"
@@ -459,11 +408,8 @@ fr:
           enabled: "Un robot IA ?"
         ai_bot:
           title: "Options de robots IA"
-          save_first: "D'autres options de robots IA seront disponibles une fois que vous aurez enregistré le personnage."
         filters:
-          text: "Chercher un personnage"
           reset: "Réinitialiser"
-          no_results: "Aucun personnage correspondant à vos filtres n'a été trouvé."
           all_features: "N'importe quelle caractéristique"
         features_list:
           one: "Caractéristique :"
@@ -492,7 +438,6 @@ fr:
           uploading: "Envoi en cours…"
           remove: "Supprimer le téléversement"
       tools:
-        back: "Retour"
         short_title: "Outils"
         export: "Exporter"
         import: "Importer"
@@ -503,7 +448,6 @@ fr:
         name_help: "Le nom apparaîtra dans l'interface utilisateur de Discourse. Il s'agit de l'identifiant abrégé que vous utiliserez pour trouver l'outil dans différents paramètres. Il doit être distinct (obligatoire)"
         new: "Nouvel outil"
         tool_name: "Nom de l'outil"
-        tool_name_help: "Le nom de l'outil est présenté au grand modèle de langage. Il n'est pas unique, mais il l'est par personnage. (Le personnage est validé lors de l'enregistrement)"
         description: "Description"
         description_help: "Une description claire de l'objectif de l'outil pour le modèle linguistique"
         subheader_description: "Les outils étendent les capacités des robots IA avec des fonctions JavaScript définies par l'utilisateur."
@@ -521,8 +465,9 @@ fr:
         parameter_description: "Description du paramètre"
         enum_value: "Valeur d'énumération"
         add_enum_value: "Ajouter une valeur d'énumération"
+        credential_not_set: "(non défini)"
         edit: "Modifier"
-        test: "Lancer le test"
+        test: "Test"
         delete: "Supprimer"
         saved: "Outil enregistré"
         confirm_delete: "Voulez-vous vraiment supprimer cet outil ?"
@@ -534,11 +479,11 @@ fr:
         short_title: "Identifiants"
         name: "Nom"
         secret: "Valeur"
-        back: "Retour"
         save: "Enregistrer"
         edit: "Modifier"
         delete: "Supprimer"
         embedding: "Intégration"
+        tool: "Outil"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"
@@ -559,7 +504,6 @@ fr:
         save: "Enregistrer"
         edit: "Modifier"
         saved: "Modèle LLM enregistré"
-        back: "Retour"
         confirm_delete: Voulez-vous vraiment supprimer ce modèle ?
         delete: Supprimer
         quotas:
@@ -584,20 +528,19 @@ fr:
           max_usages_required: "Doit être défini si le nombre maximum de jetons n'est pas défini"
         usage:
           ai_bot: "Robot IA"
-          ai_helper: "Assistant (%{persona})"
+          ai_helper: "Assistant (%{agent})"
           ai_helper_image_caption: "Légende de l'image"
-          ai_persona: "Personnage (%{persona})"
           ai_summarization: "Résumer"
           ai_embeddings_semantic_search: "Recherche IA"
           ai_spam: "Contenu indésirable"
-          automation: "Automatisation (%{persona})"
+          automation: "Automatisation (%{agent})"
         in_use_warning:
           one: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, la fonctionnalité ne fonctionnera pas comme prévu."
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-5: "Le modèle le plus intelligent d'Anthropic"
-          anthropic-claude-sonnet-4-5: "Équilibre optimal entre vitesse et coût"
+          anthropic-claude-opus-4-6: "Le modèle le plus intelligent d'Anthropic"
+          anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
           open_ai-gpt-5-nano: "Le modèle GPT-5 le plus rapide et le plus économique"
         preseeded_model_description: "Modèle open source préconfiguré utilisant %{model}"
@@ -653,7 +596,6 @@ fr:
           disable_streaming: "Désactiver les complétions de streaming (convertir les requêtes de streaming en requêtes non-streaming)"
           reasoning_effort: "Effort de raisonnement (applicable uniquement aux modèles de raisonnement)"
           enable_reasoning: "Activer le raisonnement (applicable uniquement aux modèles de raisonnement)"
-          enable_thinking: "Activer la réflexion (uniquement sur les modèles applicables, p. ex., flash 2.5)"
           thinking_tokens: "Nombre de jetons utilisés pour réfléchir"
           reasoning_tokens: "Nombre de jetons utilisés pour le raisonnement"
           disable_temperature: "Désactiver la température (certains modèles ne prennent pas en charge la température)"
@@ -712,11 +654,13 @@ fr:
       reviewables:
         model_used: "Modèle utilisé :"
         accuracy: "Précision :"
+        ai_tool_action:
+          tool: "Outil"
+          parameters: "Paramètres"
       embeddings:
         short_title: "Intégrations"
         description: "Les intégrations sont des représentations numériques de données qui capturent le sens et les relations, et permettent aux fonctionnalités de Discourse AI telles que les sujets connexes et la recherche IA de comprendre et de connecter le contenu."
         new: "Nouvelle intégration"
-        back: "Retour"
         save: "Enregistrer"
         saved: "Configuration d'intégration enregistrée"
         delete: "Supprimer"
@@ -762,12 +706,7 @@ fr:
         provider_fields:
           model_name: "Nom du modèle"
         semantic_search: "Sujets (sémantiques)"
-        semantic_search_loading: "Rechercher plus de résultats à l'aide de l'IA"
         semantic_search_results:
-          toggle: "Affichage de %{count} résultats trouvés en utilisant l'IA"
-          toggle_hidden: "Masquer %{count} résultats trouvés à l’aide de l'IA"
-          none: "Nous sommes désolés, notre recherche par IA n'a trouvé aucun sujet correspondant"
-          new: "Appuyez sur « Rechercher » pour commencer à rechercher de nouveaux résultats avec l'IA"
           unavailable: "Résultats de l'IA indisponibles"
         semantic_search_tooltips:
           results_explanation: "Lorsque cette option est activée, des résultats de recherche IA supplémentaires seront ajoutés ci-dessous."
@@ -781,7 +720,7 @@ fr:
         collapse_view_label: "Quitter le mode plein écran (bouton Échap ou Retour)"
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
-        persona: "Personnage"
+        title: "Robot IA"
         llm: "Modèle"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"

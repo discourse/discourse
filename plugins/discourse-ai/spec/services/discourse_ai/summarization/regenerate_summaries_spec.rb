@@ -61,7 +61,7 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
 
       before do
         SiteSetting.ai_summary_gists_enabled = true
-        assign_persona_to(:ai_summary_gists_persona, [group.id])
+        assign_agent_to(:ai_summary_gists_agent, [group.id])
       end
 
       include_examples "common validation"
@@ -102,7 +102,7 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
     context "when type is summary" do
       let(:type) { "summary" }
 
-      before { assign_persona_to(:ai_summarization_persona, [group.id]) }
+      before { assign_agent_to(:ai_summarization_agent, [group.id]) }
 
       include_examples "common validation"
 

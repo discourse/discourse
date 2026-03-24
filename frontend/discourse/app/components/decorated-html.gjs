@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { untrack } from "@glimmer/validator";
-import { htmlSafe, isHTMLSafe } from "@ember/template";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
+import { isHTMLSafe, trustHTML } from "@ember/template";
 import helperFn from "discourse/helpers/helper-fn";
 import deprecated from "discourse/lib/deprecated";
 import {
@@ -111,7 +111,7 @@ export function resetHtmlDecorators() {
  * @param {string} [id] - ID attribute for the wrapper div
  */
 export default class DecoratedHtml extends Component {
-  renderGlimmerInfos = new TrackedArray();
+  renderGlimmerInfos = trackedArray();
 
   decoratedContent = helperFn(({ decorateArgs }, on) => {
     const cookedDiv = this.elementToDecorate;
@@ -157,7 +157,7 @@ export default class DecoratedHtml extends Component {
   });
 
   get elementToDecorate() {
-    const cooked = this.args.html || htmlSafe("");
+    const cooked = this.args.html || trustHTML("");
     if (!isHTMLSafe(cooked)) {
       throw "@html must be an htmlSafe string";
     }

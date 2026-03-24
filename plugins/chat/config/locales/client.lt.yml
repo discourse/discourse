@@ -65,6 +65,7 @@ lt:
       cancel: "Atšaukti"
       cancel_reply: "Atšaukti atsakymą"
       chat_channels: "Kanalai"
+      pinned: "Prisegta"
       browse_all_channels: "Naršyti visus kanalus"
       see_in: "Žiūrėti"
       open_channel_menu: "Atidaryti kanalo meniu"

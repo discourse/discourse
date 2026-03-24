@@ -1,8 +1,8 @@
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import AvatarFlair from "discourse/components/avatar-flair";
@@ -12,7 +12,6 @@ import GroupMembershipButton from "discourse/components/group-membership-button"
 import boundAvatar from "discourse/helpers/bound-avatar";
 import routeAction from "discourse/helpers/route-action";
 import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -41,24 +40,24 @@ export default class GroupCardContents extends CardContentsBase {
 
   group = null;
 
-  @discourseComputed("group.members.[]")
-  highlightedMembers(members) {
-    return members.slice(0, maxMembersToDisplay);
+  @computed("group.members.[]")
+  get highlightedMembers() {
+    return this.group?.members.slice(0, maxMembersToDisplay);
   }
 
-  @discourseComputed("group.user_count", "group.members.[]")
-  moreMembersCount(memberCount) {
-    return Math.max(memberCount - maxMembersToDisplay, 0);
+  @computed("group.user_count", "group.members.[]")
+  get moreMembersCount() {
+    return Math.max(this.group?.user_count - maxMembersToDisplay, 0);
   }
 
-  @discourseComputed("group.name")
-  groupClass(name) {
-    return name ? `group-card-${name}` : "";
+  @computed("group.name")
+  get groupClass() {
+    return this.group?.name ? `group-card-${this.group?.name}` : "";
   }
 
-  @discourseComputed("group")
-  groupPath(group) {
-    return groupPath(group.name);
+  @computed("group")
+  get groupPath() {
+    return groupPath(this.group.name);
   }
 
   @onEvent("didInsertElement")
@@ -206,7 +205,7 @@ export default class GroupCardContents extends CardContentsBase {
           {{#if this.group.bio_excerpt}}
             <div class="card-row second-row">
               <div class="bio">
-                {{htmlSafe this.group.bio_excerpt}}
+                {{trustHTML this.group.bio_excerpt}}
               </div>
             </div>
           {{/if}}

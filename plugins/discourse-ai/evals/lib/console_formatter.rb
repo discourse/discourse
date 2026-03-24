@@ -3,7 +3,7 @@
 module DiscourseAi
   module Evals
     # Renders richer CLI output for eval runs: a compact progress bar followed by
-    # a table summarizing each case across models/personas.
+    # a table summarizing each case across models/agents.
     class ConsoleFormatter
       PROGRESS_BAR_WIDTH = 28
       SAMPLE_WIDTH = 46
@@ -11,11 +11,11 @@ module DiscourseAi
       DEFAULT_MAX_WIDTH = 120
       JUDGE_COLUMN_LABEL = "judge"
 
-      def initialize(label:, output:, total_targets:, persona_key: nil)
+      def initialize(label:, output:, total_targets:, agent_key: nil)
         @run_label = label
         @output = output
         @total_targets = total_targets
-        @persona_key = persona_key
+        @agent_key = agent_key
         @rows = []
         @columns = []
         @completed_units = 0
@@ -27,7 +27,7 @@ module DiscourseAi
 
       def announce_start
         header = "Starting evaluation #{run_label}"
-        header << " (persona: #{persona_key})" if persona_key && persona_key != "default"
+        header << " (agent: #{agent_key})" if agent_key && agent_key != "default"
         output.puts(header)
       end
 
@@ -137,7 +137,7 @@ module DiscourseAi
 
       private
 
-      attr_reader :run_label, :output, :rows, :columns, :persona_key, :row_offsets
+      attr_reader :run_label, :output, :rows, :columns, :agent_key, :row_offsets
 
       def register_column(label)
         label = label.to_s

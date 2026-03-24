@@ -47,31 +47,21 @@ export default class SoftwareUpdatePrompt extends Component {
 
     if (!this.timeoutHandler && this.session.requiresRefresh) {
       if (isTesting()) {
-        this.updatePromptState(true);
+        this.addMessage();
       } else {
         // Since we can do this transparently for people browsing the forum
         // hold back the message 24 hours.
         this.timeoutHandler = discourseLater(
-          () => this.updatePromptState(true),
+          () => this.addMessage(),
           1000 * 60 * 24 * 60
         );
       }
     }
   }
 
-  updatePromptState(value) {
-    // when adding the message, we inject the HTML then add the animation
-    // when dismissing, things need to happen in the opposite order
-    const firstProp = value ? "showPrompt" : "animatePrompt";
-    const secondProp = value ? "animatePrompt" : "showPrompt";
-
-    this[firstProp] = value;
-
-    if (isTesting()) {
-      this[secondProp] = value;
-    } else {
-      discourseLater(() => (this[secondProp] = value), 500);
-    }
+  addMessage() {
+    this.showPrompt = true;
+    discourseLater(() => (this.animatePrompt = true), 500);
   }
 
   @action
@@ -81,7 +71,8 @@ export default class SoftwareUpdatePrompt extends Component {
 
   @action
   dismiss() {
-    this.updatePromptState(false);
+    this.animatePrompt = false;
+    discourseLater(() => (this.showPrompt = false), 500);
   }
 
   <template>

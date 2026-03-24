@@ -12,6 +12,8 @@ el:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> χρειάζεται έλεγχο. Εντός των τελευταίων %{count} ωρών, απέτυχε να ανταποκριθεί %{failed_calls} από τις %{total_calls} φορές."
   discourse_automation:
     scriptables:
+      ai_tool_action:
+        description: Εκτέλεση ενός εργαλείου AI όταν πυροδοτείται ο αυτοματισμός
       llm_triage:
         notify_author_pm:
           subject: "Η ανάρτησή σας αφαιρέθηκε προσωρινά για έλεγχο."
@@ -22,6 +24,8 @@ el:
 
             Παραπομπή: %{post_url}
   site_settings:
+    ai_nsfw_flag_threshold_drawings: "Όριο για να θεωρηθεί ένα σχέδιο NSFW."
+    ai_bot_debugging_allowed_groups: "Να επιτρέπεται σε αυτές τις ομάδες να βλέπουν ένα κουμπί αποσφαλμάτωσης σε αναρτήσεις που εμφανίζει το ακατέργαστο AI αίτημα και απάντηση"
     ai_translation_max_post_length: "Ο μέγιστος αριθμός χαρακτήρων για τη μετάφραση μιας ανάρτησης. Οι αναρτήσεις που είναι μεγαλύτερες από αυτόν τον αριθμό δεν θα μεταφράζονται."
     ai_translation_backfill_max_age_days: "Η μέγιστη ηλικία μιας ανάρτησης και ενός θέματος που θα μεταφραστεί. Οι αναρτήσεις και τα θέματα που είναι παλαιότερα από αυτό δεν θα μεταφράζονται. Το 0 απενεργοποιεί την συμπλήρωση, αλλά δεν θα απενεργοποιήσει τη μετάφραση νέων αναρτήσεων."
   reports:
@@ -35,13 +39,57 @@ el:
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
+      agents:
+        post_raw_translator:
+          name: "Μεταφραστής ανάρτησης"
+          description: "Ενισχύει τη λειτουργία μετάφρασης μεταφράζοντας αναρτήσεις που περιέχουν Discourse Markdown"
       tool_summary:
         flag_post: "Αναφορά ανάρτησης"
+        edit_post: "Επεξεργασία ανάρτησης"
         search: "Αναζήτηση"
         time: "Ώρα"
         summarize: "Συνοψίστε"
+      tool_help:
+        delete_topic: "Διαγραφή θέματος"
       tool_description:
         web_browser: "Γίνεται ανάγνωση <a href='%{url}'>%{url}</a>"
+      discoveries:
+        continue_conversation:
+          raw: "Στην αναζήτησή μου για %{query}, μου δείξατε τις ακόλουθες πληροφορίες:\n\n%{context}\n\nΑς συνεχίσουμε τη συζήτηση."
+      close_topic:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      unlist_topic:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      delete_topic:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      edit_tags:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      edit_category:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+          category_not_found: "Η κατηγορία δεν βρέθηκε."
+      set_topic_timer:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      set_slow_mode:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      move_posts:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+      assign:
+        errors:
+          not_found: "Το θέμα δε βρέθηκε."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Έγκριση"
+        reject:
+          title: "Απόρριψη"
     ai_staff_action_logger:
       updated: "ενημερώθηκε"
       removed: "αφαιρέθηκε"

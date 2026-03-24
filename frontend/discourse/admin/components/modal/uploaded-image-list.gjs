@@ -11,11 +11,11 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 export default class UploadedImageList extends Component {
-  @trackedArray
+  @autoTrackedArray
   images = this.args.model.value?.length
     ? this.args.model.value.split("|")
     : [];

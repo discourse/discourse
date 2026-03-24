@@ -431,23 +431,21 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       ]);
     }
 
-    if (siteSettings.enable_upcoming_changes) {
-      const rootSection = this.adminNavManager.findSection("root");
-      const linkExists = rootSection?.links.some(
-        (link) => link.name === "admin_upcoming_changes"
-      );
-      if (!linkExists) {
-        this.adminNavManager.amendLinksToSection("root", [
-          {
-            name: "admin_upcoming_changes",
-            route: "adminConfig.upcomingChanges",
-            label: "admin.config.upcoming_changes.title",
-            description: "admin.config.upcoming_changes.header_description",
-            icon: "flask",
-            keywords: "admin.config.upcoming_changes.keywords",
-          },
-        ]);
-      }
+    const rootSection = this.adminNavManager.findSection("root");
+    const linkExists = rootSection?.links.some(
+      (link) => link.name === "admin_upcoming_changes"
+    );
+    if (!linkExists) {
+      this.adminNavManager.amendLinksToSection("root", [
+        {
+          name: "admin_upcoming_changes",
+          route: "adminConfig.upcomingChanges",
+          label: "admin.config.upcoming_changes.title",
+          description: "admin.config.upcoming_changes.header_description",
+          icon: "flask",
+          keywords: "admin.config.upcoming_changes.keywords",
+        },
+      ]);
     }
 
     for (const [sectionName, additionalLinks] of Object.entries(

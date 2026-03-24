@@ -127,6 +127,22 @@ class CategoriesController < ApplicationController
     render json: success_json
   end
 
+  def types
+    guardian.ensure_can_create_category!
+
+    counts_by_type =
+      Discourse
+        .cache
+        .fetch(Categories::TypeRegistry::COUNTS_CACHE_KEY, expires_in: 1.hour) do
+          Categories::TypeRegistry.counts
+        end
+
+    render json: {
+             types: Categories::TypeRegistry.list(only_visible: true),
+             counts: counts_by_type,
+           }
+  end
+
   def show
     guardian.ensure_can_see!(@category)
 
@@ -141,6 +157,7 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
+    category_type = params[:category_type]
 
     if category_params[:description].present? &&
          category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
@@ -166,6 +183,33 @@ class CategoriesController < ApplicationController
     if @category.save
       @category.move_to(position.to_i) if position
 
+      if category_type.present? &&
+           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+        Categories::Configure.call(
+          guardian:,
+          params: {
+            category_id: @category.id,
+            category_type:,
+            site_setting_configuration_values: params[:category_type_site_settings],
+            category_configuration_values: category_params[:custom_fields],
+          },
+        ) do |result|
+          on_failed_policy(:type_is_available) do
+            return(
+              render json: {
+                       errors: [
+                         I18n.t(
+                           "category_types.not_available",
+                           type_name: category_type.capitalize,
+                         ),
+                       ],
+                     },
+                     status: :unprocessable_entity
+            )
+          end
+        end
+      end
+
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
       end
@@ -186,16 +230,48 @@ class CategoriesController < ApplicationController
       category_params.delete(:position)
 
       old_custom_fields = cat.custom_fields.dup
-      if category_params[:custom_fields]
-        category_params[:custom_fields].each do |key, value|
-          if value.present?
-            cat.custom_fields[key] = value
+      category_params[:custom_fields]&.each do |key, value|
+        if value.nil? || value == ""
+          cat.custom_fields.delete(key)
+        else
+          cat.custom_fields[key] = if value.is_a?(TrueClass) || value.is_a?(FalseClass)
+            value.to_s
           else
-            cat.custom_fields.delete(key)
+            value
           end
         end
       end
       category_params.delete(:custom_fields)
+
+      if UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user) &&
+           params[:category_type_site_settings].present?
+        # NOTE: The code in this block is pretty similar to what we are doing in
+        # configure_site_settings in Categories::Types::Base, however here we
+        # need to be able to update site settings across all category types for
+        # the category and it's best to do this in one query rather than
+        # multiple.
+        #
+        # Maybe in future we do something different, but this is a good starting point.
+        category_type_settings =
+          params[:category_type_site_settings].permit!.to_h.map do |name, value|
+            { setting_name: name, value: }
+          end
+
+        # We do this because we want to allow updating hidden settings for the
+        # category type, but not other settings. The configuration schema for a
+        # category type defines which settings it wants to change, so that's a
+        # good source to use as an allowlist here.
+        allowed_setting_names = cat.category_type_site_setting_names
+        SiteSetting::Update.call(
+          guardian:,
+          options: {
+            allow_changing_hidden: allowed_setting_names,
+          },
+          params: {
+            settings: category_type_settings,
+          },
+        )
+      end
 
       # properly null the value so the database constraint doesn't catch us
       category_params[:email_in] = nil if category_params[:email_in]&.blank?
@@ -256,6 +332,7 @@ class CategoriesController < ApplicationController
   def destroy
     guardian.ensure_can_delete!(@category)
     @category.destroy
+    Discourse.cache.delete(Categories::TypeRegistry::COUNTS_CACHE_KEY)
 
     Scheduler::Defer.later "Log staff action delete category" do
       @staff_action_logger.log_category_deletion(@category)
@@ -548,6 +625,7 @@ class CategoriesController < ApplicationController
           :slug,
           :allow_badges,
           :topic_template,
+          :topic_title_placeholder,
           :description,
           :sort_order,
           :sort_ascending,

@@ -4,84 +4,38 @@ module DiscourseAi
   module Completions
     module Endpoints
       class OpenAi < Base
+        include OpenAiShared
+
         def self.can_contact?(llm_model)
           %w[open_ai azure groq].include?(llm_model.provider) &&
             !llm_model.url.to_s.include?("/v1/responses")
         end
 
         def normalize_model_params(model_params)
-          model_params = model_params.dup
+          normalized = super
 
           # max_tokens is deprecated however we still need to support it
           # on older OpenAI models and older Azure models, so we will only normalize
           # if our model name starts with o (to denote all the reasoning models)
           if llm_model.name.starts_with?(/o|gpt-5/)
-            max_tokens = model_params.delete(:max_tokens)
-            model_params[:max_completion_tokens] = max_tokens if max_tokens
+            max_tokens = normalized.delete(:max_tokens)
+            normalized[:max_completion_tokens] = max_tokens if max_tokens
           end
 
-          # temperature is already supported
-          if model_params[:stop_sequences]
-            model_params[:stop] = model_params.delete(:stop_sequences)
-          end
-
-          model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
-
-          model_params
-        end
-
-        def default_options
-          { model: llm_model.name }
-        end
-
-        def provider_id
-          AiApiAuditLog::Provider::OpenAI
-        end
-
-        def perform_completion!(
-          dialect,
-          user,
-          model_params = {},
-          feature_name: nil,
-          feature_context: nil,
-          partial_tool_calls: false,
-          output_thinking: false,
-          cancel_manager: nil,
-          &blk
-        )
-          @native_tool_support = dialect.native_tool_support?
-          super
+          normalized
         end
 
         private
 
-        def disable_streaming?
-          @disable_streaming ||= llm_model.lookup_custom_param("disable_streaming")
-        end
-
-        def reasoning_effort
-          return @reasoning_effort if defined?(@reasoning_effort)
-          @reasoning_effort = llm_model.lookup_custom_param("reasoning_effort")
-          @reasoning_effort = nil if !%w[minimal low medium high].include?(@reasoning_effort)
-          @reasoning_effort
-        end
-
-        def model_uri
-          if llm_model.url.to_s.starts_with?("srv://")
-            service = DiscourseAi::Utils::DnsSrv.lookup(llm_model.url.sub("srv://", ""))
-            api_endpoint = "https://#{service.target}:#{service.port}/v1/chat/completions"
-          else
-            api_endpoint = llm_model.url
-          end
-
-          @uri ||= URI(api_endpoint)
+        def srv_fallback_path
+          "/v1/chat/completions"
         end
 
         def prepare_payload(prompt, model_params, dialect)
           payload = default_options.merge(model_params).merge(messages: prompt)
 
           payload.merge!({ reasoning_effort: reasoning_effort }) if reasoning_effort
+          payload[:service_tier] = service_tier if service_tier
 
           if @streaming_mode
             payload[:stream] = true
@@ -111,55 +65,6 @@ module DiscourseAi
 
           payload
         end
-
-        def prepare_request(payload)
-          headers = { "Content-Type" => "application/json" }
-          api_key = llm_model.api_key
-
-          if llm_model.provider == "azure"
-            headers["api-key"] = api_key
-          else
-            headers["Authorization"] = "Bearer #{api_key}"
-            org_id = llm_model.lookup_custom_param("organization")
-            headers["OpenAI-Organization"] = org_id if org_id.present?
-          end
-
-          Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
-        end
-
-        def final_log_update(log)
-          log.request_tokens = processor.prompt_tokens if processor.prompt_tokens
-          log.response_tokens = processor.completion_tokens if processor.completion_tokens
-          log.cache_read_tokens = processor.cache_read_tokens if processor.cache_read_tokens
-        end
-
-        def decode(response_raw)
-          processor.process_message(JSON.parse(response_raw, symbolize_names: true))
-        end
-
-        def decode_chunk(chunk)
-          @decoder ||= JsonStreamDecoder.new
-          elements =
-            (@decoder << chunk)
-              .map { |parsed_json| processor.process_streamed_message(parsed_json) }
-              .flatten
-              .compact
-
-          # Remove duplicate partial tool calls
-          # sometimes we stream weird chunks
-          seen_tools = Set.new
-          elements.select { |item| !item.is_a?(ToolCall) || seen_tools.add?(item) }
-        end
-
-        def decode_chunk_finish
-          processor.finish
-        end
-
-        def xml_tools_enabled?
-          !@native_tool_support
-        end
-
-        private
 
         def processor
           @processor ||= OpenAiMessageProcessor.new(partial_tool_calls: partial_tool_calls)

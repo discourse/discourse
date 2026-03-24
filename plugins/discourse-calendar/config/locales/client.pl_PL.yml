@@ -12,6 +12,12 @@ pl_PL:
         categories:
           discourse_post_event: "Wydarzenie Discourse"
           discourse_calendar: "Kalendarz i wydarzenia"
+      web_hooks:
+        calendar_event:
+          group_name: "Wydarzenie w kalendarzu"
+          calendar_event_created: "Utworzono wydarzenie w kalendarzu"
+          calendar_event_updated: "Wydarzenie w kalendarzu zostało zaktualizowane"
+          calendar_event_destroyed: "Wydarzenie w kalendarzu zostało zniszczone"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ pl_PL:
               label: ID tematu
     discourse_calendar:
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
+      preferences:
+        all_events: "Kalendarz Discourse – wszystkie wydarzenia"
+        all_events_description: "Wszystkie wydarzenia na forum"
+        my_events: "Kalendarz Discourse – moje wydarzenia"
+        my_events_description: "Wydarzenia, na które się wybierasz lub które Cię interesują"
       on_holiday: "Na świętach"
       disable_holiday: "Wyłącz"
       enable_holiday: "Włącz"
@@ -353,6 +364,7 @@ pl_PL:
       bulk_invite: "Zaproszenie zbiorcze"
       close_event: "Zamknij wydarzenie"
       open_event: "Wydarzenie otwarte"
+      destroy_event: "Zniszcz wydarzenie"
       invitees_modal:
         title_invited: "Udział w wydarzeniu"
         title_participated: "Lista użytkowników, którzy wzięli udział"
@@ -437,6 +449,12 @@ pl_PL:
             private:
               title: "Prywatne"
               description: "Do wydarzenia prywatnego mogą dołączyć wyłącznie zaproszeni użytkownicy."
+      composer:
+        name_placeholder: "Wydarzenie"
+        end_date_placeholder: "Ustaw datę zakończenia"
+        location_placeholder: "Dodaj lokalizację lub adres URL"
+        max_attendees_placeholder: "Ustaw maksymalną liczbę uczestników"
+        description_placeholder: "Dodaj opis wydarzenia"
       builder_modal:
         custom_fields:
           label: "Pola niestandardowe"
@@ -457,6 +475,9 @@ pl_PL:
         timezone:
           label: Strefa czasowa
           remove_timezone: Brak strefy czasowej (UTC)
+        all_day:
+          label: "Wydarzenie całodniowe"
+          description: "Wydarzenie całodniowe nie będzie miało konkretnych godzin, tylko datę. Wydarzenie będzie trwało od początku do końca dnia."
         reminders:
           label: "Przypomnienia"
           types:
@@ -506,6 +527,7 @@ pl_PL:
           label: "Zaproszone grupy"
         status:
           label: "Status"
+        delete_confirmation_message: "Usunąć to wydarzenie?"
       invite_user_or_group:
         title: "Powiadom użytkowników lub grupy"
         invite: "Wyślij"

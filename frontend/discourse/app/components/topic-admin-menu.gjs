@@ -161,7 +161,7 @@ export default class TopicAdminMenu extends Component {
               (and
                 this.details.can_pin_unpin_topic
                 (not this.isPrivateMessage)
-                (or this.visible this.featured)
+                (or this.visible this.featured this.details.can_banner_topic)
               )
             }}
               <dropdown.item class="topic-admin-pin">

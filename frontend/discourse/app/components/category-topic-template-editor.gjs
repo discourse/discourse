@@ -6,6 +6,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DEditor from "discourse/components/d-editor";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import TextField from "discourse/components/text-field";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import { i18n } from "discourse-i18n";
 
@@ -14,6 +15,27 @@ export default class CategoryTopicTemplateEditor extends Component {
   @service siteSettings;
 
   @tracked _showFormTemplateOverride;
+  @tracked _localTopicTemplate;
+  @tracked _localTopicTitlePlaceholder;
+
+  get topicTemplate() {
+    return this._localTopicTemplate ?? this.args.category?.topic_template;
+  }
+
+  set topicTemplate(value) {
+    this._localTopicTemplate = value;
+  }
+
+  get topicTitlePlaceholder() {
+    return (
+      this._localTopicTitlePlaceholder ??
+      this.args.category?.topic_title_placeholder
+    );
+  }
+
+  set topicTitlePlaceholder(value) {
+    this._localTopicTitlePlaceholder = value;
+  }
 
   get showInsertLinkButton() {
     if (this.args.showInsertLinkButton === undefined) {
@@ -26,9 +48,9 @@ export default class CategoryTopicTemplateEditor extends Component {
     if (this._showFormTemplateOverride !== undefined) {
       return this._showFormTemplateOverride;
     }
-    return Boolean(
-      this.args.category && this.args.category.get("form_template_ids.length")
-    );
+
+    const formTemplateIds = this.args.category?.form_template_ids;
+    return Boolean(formTemplateIds && formTemplateIds.length > 0);
   }
 
   set showFormTemplate(value) {
@@ -49,23 +71,56 @@ export default class CategoryTopicTemplateEditor extends Component {
 
     if (!this.showFormTemplate) {
       // Clear associated form templates if switching to freeform
-      this.args.category.set("form_template_ids", []);
-    }
-
-    if (this.args.onChange) {
-      this.args.onChange();
+      if (this.args.onChange) {
+        this.args.onChange("form_template_ids", []);
+      } else {
+        this.args.category.set("form_template_ids", []);
+      }
     }
   }
 
   @action
   handleFormTemplateChange(value) {
-    this.args.category.set("form_template_ids", value);
     if (this.args.onChange) {
-      this.args.onChange();
+      this.args.onChange("form_template_ids", value);
+    } else {
+      this.args.category.set("form_template_ids", value);
+    }
+  }
+
+  @action
+  handleTopicTitlePlaceholderChange(value) {
+    this.topicTitlePlaceholder = value;
+    if (this.args.onChange) {
+      this.args.onChange("topic_title_placeholder", value);
+    } else {
+      this.args.category.set("topic_title_placeholder", value);
+    }
+  }
+
+  @action
+  handleTopicTemplateChange(event) {
+    const value = event.target.value;
+    this.topicTemplate = value;
+    if (this.args.onChange) {
+      this.args.onChange("topic_template", value);
+    } else {
+      this.args.category.set("topic_template", value);
     }
   }
 
   <template>
+    <div class="control-group">
+      <label for="category-topic-title-placeholder">
+        {{i18n "category.topic_title_placeholder"}}
+      </label>
+      <TextField
+        @value={{this.topicTitlePlaceholder}}
+        @id="category-topic-title-placeholder"
+        @placeholderKey="category.topic_title_placeholder_placeholder"
+        @onChange={{this.handleTopicTitlePlaceholderChange}}
+      />
+    </div>
     {{#if this.siteSettings.enable_form_templates}}
       <div class="control-group">
         <DToggleSwitch
@@ -96,14 +151,16 @@ export default class CategoryTopicTemplateEditor extends Component {
         </div>
       {{else}}
         <DEditor
-          @value={{@category.topic_template}}
+          @value={{this.topicTemplate}}
           @showLink={{this.showInsertLinkButton}}
+          @change={{this.handleTopicTemplateChange}}
         />
       {{/if}}
     {{else}}
       <DEditor
-        @value={{@category.topic_template}}
+        @value={{this.topicTemplate}}
         @showLink={{this.showInsertLinkButton}}
+        @change={{this.handleTopicTemplateChange}}
       />
     {{/if}}
   </template>

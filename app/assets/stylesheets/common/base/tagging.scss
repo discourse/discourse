@@ -2,6 +2,7 @@
 
 :root {
   --tag-text-color: var(--primary-high);
+  --tag-max-width: 14em;
 }
 
 .container.tags-index {
@@ -21,6 +22,10 @@
 
 #list-area .tags-list h3 {
   margin-bottom: 20px;
+}
+
+.tags-index .tags-list h3 {
+  @extend %heading-anchor;
 }
 
 .tags-list .tag-box {
@@ -63,7 +68,7 @@
 }
 
 .discourse-tag {
-  max-width: 14em;
+  max-width: var(--tag-max-width);
   display: inline-block;
   vertical-align: middle;
   margin: 0;
@@ -117,6 +122,11 @@
   }
 }
 
+.link-bottom-line,
+.topic-header-extra {
+  --tag-max-width: 18em;
+}
+
 .d-header .topic-header-extra {
   .discourse-tags {
     font-size: var(--font-down-1);
@@ -126,6 +136,14 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
   &:has(.box) {
     gap: var(--space-1);

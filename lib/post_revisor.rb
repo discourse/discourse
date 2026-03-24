@@ -68,7 +68,7 @@ class PostRevisor
         removed_tags = prev_tags - persisted_tag_names
         diff_tags = added_tags | removed_tags
 
-        if diff_tags.present?
+        if diff_tags.present? && !self.silent
           Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
 
           PostRevisor.create_small_action_for_tag_changes(
@@ -84,7 +84,8 @@ class PostRevisor
 
   POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type locale]
 
-  attr_reader :category_changed, :post_revision
+  # Extensions can inspect revision options via the `:post_edited` event payload.
+  attr_reader :category_changed, :post_revision, :opts
 
   def initialize(post, topic = post.topic)
     @post = post
@@ -118,7 +119,11 @@ class PostRevisor
   end
 
   track_topic_field(:archetype) do |topic_changes, attribute|
-    track_and_revise topic_changes, :archetype, attribute
+    if topic_changes.guardian.can_change_archetype?(topic_changes.topic, attribute)
+      track_and_revise topic_changes, :archetype, attribute
+    else
+      topic_changes.check_result(false)
+    end
   end
 
   track_topic_field(:category_id) do |tc, new_category_id, fields|
@@ -444,6 +449,8 @@ class PostRevisor
     @diff_size ||=
       begin
         ONPDiff.new(before, after).short_diff.sum { |str, type| type == :common ? 0 : str.size }
+      rescue ONPDiff::DiffLimitExceeded
+        Float::INFINITY
       end
   end
 

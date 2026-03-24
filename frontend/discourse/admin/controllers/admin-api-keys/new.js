@@ -1,11 +1,10 @@
 import Controller from "@ember/controller";
-import { action, get } from "@ember/object";
+import { action, computed, get } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "../../components/modal/api-key-urls";
 
@@ -32,12 +31,12 @@ export default class AdminApiKeysNewController extends Controller {
     this._loadScopes();
   }
 
-  @discourseComputed("model.{description,username}", "showUserSelector")
-  saveDisabled(model, showUserSelector) {
-    if (isBlank(model.description)) {
+  @computed("model.{description,username}", "showUserSelector")
+  get saveDisabled() {
+    if (isBlank(this.model?.description)) {
       return true;
     }
-    if (showUserSelector && isBlank(model.username)) {
+    if (this.showUserSelector && isBlank(this.model?.username)) {
       return true;
     }
     return false;

@@ -129,6 +129,8 @@ ar:
       web_hooks:
         assign_event:
           group_name: "أحداث التعيين"
+          assigned: "عندما يقوم المستخدم بتعيين موضوع"
+          unassigned: "عندما يلغي المستخدم تعيين موضوع"
     search:
       advanced:
         in:
@@ -136,10 +138,6 @@ ar:
           unassigned: "غير معيَّنة"
         assigned:
           label: "معيَّنة إلى"
-    topics:
-      bulk:
-        unassign: "إلغاء تعيين الموضوعات"
-        assign: "تعيين الموضوعات"
     discourse_automation:
       scriptables:
         random_assign:

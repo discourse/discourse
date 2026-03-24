@@ -10,6 +10,9 @@ tr_TR:
       sort_options:
         votes: "Oylar"
     topic_voting:
+      notification_label:
+        vote_released: "Oy iade edildi"
+      title: "Konu oylaması"
       reached_limit: "Oy hakkınız kalmadı, mevcut bir oyunuzu kaldırın!"
       list_votes: "Oylarınızı listeleyin"
       votes_nav_help: "en çok oy alan konular"
@@ -20,6 +23,9 @@ tr_TR:
       voted_title: "Oylandı"
       voting_closed_title: "Kapalı"
       voting_limit: "Sınır"
+      see_votes: "%{count}/%{max} oy hakkınız kaldı"
+      locked: "Kilitli"
+      locked_description: "Oy vermek için güven düzeyinizi artırın"
       votes:
         one: "%{count} oy"
         other: "%{count} oy"

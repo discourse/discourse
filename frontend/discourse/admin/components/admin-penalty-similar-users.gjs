@@ -4,7 +4,7 @@ import { Input } from "@ember/component";
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import avatar from "discourse/helpers/avatar";
 import formatDuration from "discourse/helpers/format-duration";
@@ -59,7 +59,7 @@ export default class AdminPenaltySimilarUsers extends Component {
   <template>
     <div class="penalty-similar-users">
       <p class="alert alert-warning">
-        {{htmlSafe
+        {{trustHTML
           (i18n
             "admin.user.other_matches"
             (hash count=@user.similar_users_count username=@user.username)

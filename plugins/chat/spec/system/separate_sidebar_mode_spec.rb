@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Separate sidebar mode", type: :system do
+RSpec.describe "Separate sidebar mode" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }

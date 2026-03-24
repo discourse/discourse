@@ -16,45 +16,45 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
             params: {
               is_enabled: true,
               llm_model_id: llm_model.id,
-              ai_persona_id:
-                DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::SpamDetector],
+              ai_agent_id:
+                DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::SpamDetector],
               custom_instructions: "custom instructions",
             }
 
         expect(response.status).to eq(200)
         expect(SiteSetting.ai_spam_detection_enabled).to eq(true)
         expect(AiModerationSetting.spam.llm_model_id).to eq(llm_model.id)
-        expect(AiModerationSetting.spam.ai_persona_id).to eq(
-          DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::SpamDetector],
+        expect(AiModerationSetting.spam.ai_agent_id).to eq(
+          DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::SpamDetector],
         )
         expect(AiModerationSetting.spam.data["custom_instructions"]).to eq("custom instructions")
       end
 
-      it "validates the selected persona has a valid response format" do
-        ai_persona = Fabricate(:ai_persona, response_format: nil)
+      it "validates the selected agent has a valid response format" do
+        ai_agent = Fabricate(:ai_agent, response_format: nil)
 
         put "/admin/plugins/discourse-ai/ai-spam.json",
             params: {
               is_enabled: true,
               llm_model_id: llm_model.id,
-              ai_persona_id: ai_persona.id,
+              ai_agent_id: ai_agent.id,
               custom_instructions: "custom instructions",
             }
 
         expect(response.status).to eq(422)
 
-        ai_persona.update!(response_format: [{ "key" => "spam", "type" => "boolean" }])
+        ai_agent.update!(response_format: [{ "key" => "spam", "type" => "boolean" }])
 
         put "/admin/plugins/discourse-ai/ai-spam.json",
             params: {
               is_enabled: true,
               llm_model_id: llm_model.id,
-              ai_persona_id: ai_persona.id,
+              ai_agent_id: ai_agent.id,
               custom_instructions: "custom instructions",
             }
 
         expect(response.status).to eq(200)
-        expect(AiModerationSetting.spam.ai_persona_id).to eq(ai_persona.id)
+        expect(AiModerationSetting.spam.ai_agent_id).to eq(ai_agent.id)
       end
 
       it "can not enable spam detection without a model selected" do
@@ -146,15 +146,15 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
           expect(history.details).to include("llm_model_id")
         end
 
-        it "logs staff actio when ai_persona_id changes" do
-          new_persona =
+        it "logs staff actio when ai_agent_id changes" do
+          new_agent =
             Fabricate(
-              :ai_persona,
-              name: "Updated Persona",
+              :ai_agent,
+              name: "Updated Agent",
               response_format: [{ "key" => "spam", "type" => "boolean" }],
             )
 
-          put "/admin/plugins/discourse-ai/ai-spam.json", params: { ai_persona_id: new_persona.id }
+          put "/admin/plugins/discourse-ai/ai-spam.json", params: { ai_agent_id: new_agent.id }
 
           expect(response.status).to eq(200)
 
@@ -165,8 +165,8 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
               custom_type: "update_ai_spam_settings",
             ).last
           expect(history).to be_present
-          expect(history.details).to include("ai_persona_id")
-          expect(history.details).to include(new_persona.name)
+          expect(history.details).to include("ai_agent_id")
+          expect(history.details).to include(new_agent.name)
         end
 
         it "does not log staff action when only is_enabled changes" do

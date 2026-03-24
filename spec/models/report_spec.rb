@@ -158,6 +158,47 @@ RSpec.describe Report do
         expect(report.prev30Days).to eq(2)
       end
     end
+
+    context "when reporting_improvements is enabled" do
+      before { SiteSetting.reporting_improvements = true }
+
+      fab!(:user)
+      fab!(:user_2, :user)
+
+      it "returns a stacked chart with desktop and mobile series" do
+        freeze_time_safe
+        user.user_visits.create!(visited_at: 1.day.ago, mobile: false)
+        user_2.user_visits.create!(visited_at: 1.day.ago, mobile: true)
+        user.user_visits.create!(visited_at: 2.days.ago, mobile: false)
+
+        expect(report.modes).to eq([Report::MODES[:stacked_chart]])
+        expect(report.default_group_by).to eq("weekly")
+        expect(report.data.length).to eq(2)
+        expect(report.data[0][:req]).to eq("desktop")
+        expect(report.data[1][:req]).to eq("mobile")
+        expect(report.data[0][:data].length).to eq(2)
+        expect(report.data[1][:data].length).to eq(1)
+        expect(report.total).to eq(3)
+        expect(report.prev30Days).to eq(0)
+      end
+
+      it "filters by group" do
+        freeze_time_safe
+        group = Fabricate(:group)
+        group.add(user)
+
+        user.user_visits.create!(visited_at: 1.day.ago, mobile: false)
+        user_2.user_visits.create!(visited_at: 1.day.ago, mobile: true)
+
+        filtered_report = Report.find("visits", filters: { group: group.id })
+
+        desktop_data = filtered_report.data[0][:data]
+        mobile_data = filtered_report.data[1][:data]
+
+        expect(desktop_data.length).to eq(1)
+        expect(mobile_data.length).to eq(0)
+      end
+    end
   end
 
   describe "mobile visits report" do
@@ -808,6 +849,63 @@ RSpec.describe Report do
       it "returns a report for a given editor" do
         expect(report_with_one_edit.data.count).to be(1)
         expect(report_with_two_edits.data.count).to be(2)
+      end
+    end
+
+    context "with private message edits" do
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:editor, :user)
+      fab!(:pm_post, :private_message_post)
+
+      before { pm_post.revise(editor, { raw: "updated private message body" }) }
+
+      it "excludes PM edits for moderators" do
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data).to be_empty
+      end
+
+      it "excludes PM edits when current_user is nil" do
+        report = Report.find("post_edits")
+        expect(report.data).to be_empty
+      end
+
+      it "includes PM edits for admins" do
+        report = Report.find("post_edits", current_user: admin)
+        expect(report.data.count).to eq(1)
+      end
+    end
+
+    context "with secure category edits" do
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:editor, :user)
+      fab!(:group)
+      fab!(:secure_category) do
+        category = Fabricate(:category)
+        category.set_permissions(group => :full)
+        category.save!
+        category
+      end
+      fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
+      fab!(:secure_post) { Fabricate(:post, topic: secure_topic) }
+
+      before { secure_post.revise(editor, { raw: "updated secure post body" }) }
+
+      it "excludes secure category edits for moderators without access" do
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data).to be_empty
+      end
+
+      it "includes secure category edits for admins" do
+        report = Report.find("post_edits", current_user: admin)
+        expect(report.data.count).to eq(1)
+      end
+
+      it "includes secure category edits for moderators with group access" do
+        group.add(moderator)
+        report = Report.find("post_edits", current_user: moderator)
+        expect(report.data.count).to eq(1)
       end
     end
   end

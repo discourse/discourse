@@ -103,6 +103,6 @@ For more information on Transformers, check out the [dedicated guide](https://me
 
 ## Finding more JS API methods
 
-All the available APIs are listed in the [`plugin-api.gjs` source code](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/plugin-api.gjs) in Discourse core, along with a short description and examples.
+All the available APIs are listed in the [`plugin-api.gjs` source code](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/plugin-api.gjs) in Discourse core, along with a short description and examples.
 
 That's it for this chapter, and almost the end of the tutorial. Let's wrap things up [in the conclusion](https://meta.discourse.org/t/357802).

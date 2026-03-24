@@ -6,6 +6,11 @@
 
 ca:
   js:
+    blocks:
+      ghost:
+        status: "Estat"
+        hidden: "amagat"
+        failed: "fallits"
     number:
       format:
         separator: "."
@@ -292,6 +297,9 @@ ca:
       pill: "Missatges relacionats"
     suggested_topics:
       pm_title: "Missatges recomanats"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Enrere"
     about:
       edit: "Edita aquesta pàgina"
       simple_title: "Quant a"
@@ -440,7 +448,6 @@ ca:
       in_reply_to: "en resposta a"
       explain:
         why: "expliqueu per què aquest element ha acabat a la cua"
-        title: "Puntuació revisable"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -454,10 +461,8 @@ ca:
           title: "Es dóna una bonificació als usuaris que hagin creat banderes amb les quals històricament s'hagi estat d'acord. "
         trust_level_bonus:
           name: "nivell de confiança"
-          title: "Els elements revisables creats per usuaris de nivell superior de confiança tenen una puntuació més alta."
         type_bonus:
           name: "bonificació tipus"
-          title: "El personal pot assignar una bonificació a certs tipus revisables perquè tinguin una prioritat més alta."
       revise_and_reject_post:
         reason: "Motiu"
         optional: "opcional"
@@ -1097,6 +1102,8 @@ ca:
         tags: "Etiquetes"
         interface: "Interfície"
         apps: "Aplicacions"
+      calendar_subscriptions:
+        copied: "Copiat!"
       change_password:
         success: "(correu electrònic enviat)"
         in_progress: "(enviant correu electrònic)"
@@ -1463,6 +1470,7 @@ ca:
     form_kit:
       reset: Restableix
       optional: opcional
+      required: necessari
       errors:
         required: "Necessari"
     close: "Tanca"
@@ -1942,9 +1950,6 @@ ca:
         confirm: "Confirma"
         select_all: "Selecciona-ho tot"
         clear_all: "Neteja-ho tot"
-        unlist_topics: "Fes temes invisibles"
-        relist_topics: "Torna a llistar els temes"
-        delete: "Suprimeix temes"
         delete_topics_count:
           one: "Suprimeix tema"
           other: "Suprimeix temes"
@@ -1956,17 +1961,9 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "commuta la selecció massiva de temes"
         actions: "Accions massives"
-        close_topics: "Tanca temes"
-        archive_topics: "Arxiva temes"
         move_messages_to_inbox: "Mou a la safata d'entrada"
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
-        selected:
-          one: "He seleccionat <b>%{count}</b> tema."
-          other: "Heu seleccionat <b>%{count}</b> temes."
-        change_tags: "Reemplaça etiquetes"
-        append_tags: "Annexa etiquetes"
         choose_new_tags: "Trieu noves etiquetes per a aquests temes:"
-        choose_append_tags: "Trieu noves etiquetes a afegir per a aquests temes:"
         changed_tags: "Les etiquetes d'aquests temes han estat canviades."
         error_topic_count:
           one: "%{count} tema"
@@ -1989,8 +1986,6 @@ ca:
         name: "Arxiva"
       move_messages_to_inbox:
         name: "Mou a la safata d'entrada"
-      append_tags:
-        name: "Annexa etiquetes"
       replace_tags:
         name: "Reemplaça etiquetes"
       delete_topics:
@@ -2484,6 +2479,7 @@ ca:
       allow_global_tags_label: "Permet també altres etiquetes"
       required_tag_group:
         delete: "Suprimeix"
+        tag_group: "Grup d'etiquetes"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
       create_long: "Crea una categoria nova"
       slug_placeholder: "(opcional) paraules amb guionets per a url"
@@ -2865,6 +2861,15 @@ ca:
         one: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la del tema %{count} al qual és assignada?"
         other: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la dels %{count} temes als quals és assignada?"
       delete_confirm_no_topics: "Esteu segur que voleu suprimir aquesta etiqueta?"
+      description: "Descripció"
+      settings:
+        title: "Configuració"
+        general: "General"
+        back: "Enrere"
+        name: "Nom"
+      localization:
+        name: "Nom"
+        description: "Descripció"
       sort_by: "Ordena per:"
       sort_by_count: "comptabilitza"
       sort_by_name: "nom"
@@ -3042,7 +3047,6 @@ ca:
         categories: "Totes les categories"
   admin_js:
     settings: "Configuració"
-    reset_filter: "Restableix"
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"
@@ -3055,6 +3059,9 @@ ca:
       reports:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
+        group_traffic: "Tràfic"
+        group_members: "Membres"
+        group_other: "Altres"
       config_sections:
         account:
           title: "Compte"
@@ -3076,7 +3083,6 @@ ca:
         preview: "Previsualitza"
         enabled_for_options:
           everyone: "Tothom"
-          staff: "Només l'equip responsable"
         impact_roles:
           admins: "Administradors"
           moderators: "Moderadors"
@@ -3148,6 +3154,9 @@ ca:
               title: "Registres"
         reports:
           title: "Reports"
+          sub_pages:
+            settings:
+              title: "Configuració"
         badges:
           title: "Insígnies"
         permalinks:
@@ -3196,13 +3205,6 @@ ca:
         default_value: "Per defecte"
       search:
         title: "Cerca"
-        result_types:
-          theme:
-            one: "Aparença"
-            other: "Aparences"
-          component:
-            one: "Component"
-            other: "Components"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3269,7 +3271,7 @@ ca:
           all: "Tot"
           view_table: "taula"
           view_graph: "gràfica"
-          refresh_report: "Actualitza el report"
+          refresh_report: "Actualitza"
           daily: Diàriament
           monthly: Mensualment
           weekly: Setmanalment
@@ -4284,6 +4286,7 @@ ca:
           title: "Mostra en la targeta d'usuari"
         field_types:
           text: "Text"
+          date: "Data"
           confirm: "Confirmació"
           dropdown: "Desplega"
       site_text:

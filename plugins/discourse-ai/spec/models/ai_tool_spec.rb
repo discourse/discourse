@@ -213,7 +213,7 @@ RSpec.describe AiTool do
       },
     )
 
-    expect { runner.invoke }.to raise_error(DiscourseAi::Personas::ToolRunner::TooManyRequestsError)
+    expect { runner.invoke }.to raise_error(DiscourseAi::Agents::ToolRunner::TooManyRequestsError)
   end
 
   it "can perform GET HTTP requests" do
@@ -658,15 +658,13 @@ RSpec.describe AiTool do
     end
   end
 
-  context "when updating personas" do
-    fab!(:ai_persona) do
-      Fabricate(:ai_persona, name: "TestPersona", system_prompt: "Original prompt")
-    end
+  context "when updating agents" do
+    fab!(:ai_agent) { Fabricate(:ai_agent, name: "TestAgent", system_prompt: "Original prompt") }
 
-    it "can update a persona with proper permissions" do
+    it "can update a agent with proper permissions" do
       script = <<~JS
         function invoke(params) {
-          return discourse.updatePersona(params.persona_name, {
+          return discourse.updateAgent(params.agent_name, {
             system_prompt: params.new_prompt,
             temperature: 0.7,
             top_p: 0.9
@@ -677,28 +675,28 @@ RSpec.describe AiTool do
       tool = create_tool(script: script)
       runner =
         tool.runner(
-          { persona_name: "TestPersona", new_prompt: "Updated system prompt" },
+          { agent_name: "TestAgent", new_prompt: "Updated system prompt" },
           llm: nil,
           bot_user: bot_user,
         )
 
       result = runner.invoke
       expect(result["success"]).to eq(true)
-      expect(result["persona"]["system_prompt"]).to eq("Updated system prompt")
-      expect(result["persona"]["temperature"]).to eq(0.7)
+      expect(result["agent"]["system_prompt"]).to eq("Updated system prompt")
+      expect(result["agent"]["temperature"]).to eq(0.7)
 
-      ai_persona.reload
-      expect(ai_persona.system_prompt).to eq("Updated system prompt")
-      expect(ai_persona.temperature).to eq(0.7)
-      expect(ai_persona.top_p).to eq(0.9)
+      ai_agent.reload
+      expect(ai_agent.system_prompt).to eq("Updated system prompt")
+      expect(ai_agent.temperature).to eq(0.7)
+      expect(ai_agent.top_p).to eq(0.9)
     end
   end
 
-  context "when fetching persona information" do
-    fab!(:ai_persona) do
+  context "when fetching agent information" do
+    fab!(:ai_agent) do
       Fabricate(
-        :ai_persona,
-        name: "TestPersona",
+        :ai_agent,
+        name: "TestAgent",
         description: "Test description",
         system_prompt: "Test system prompt",
         temperature: 0.8,
@@ -708,21 +706,21 @@ RSpec.describe AiTool do
       )
     end
 
-    it "can fetch a persona by name" do
+    it "can fetch a agent by name" do
       script = <<~JS
         function invoke(params) {
-          const persona = discourse.getPersona(params.persona_name);
-          return persona;
+          const agent = discourse.getAgent(params.agent_name);
+          return agent;
         }
       JS
 
       tool = create_tool(script: script)
-      runner = tool.runner({ persona_name: "TestPersona" }, llm: nil, bot_user: bot_user)
+      runner = tool.runner({ agent_name: "TestAgent" }, llm: nil, bot_user: bot_user)
 
       result = runner.invoke
 
-      expect(result["id"]).to eq(ai_persona.id)
-      expect(result["name"]).to eq("TestPersona")
+      expect(result["id"]).to eq(ai_agent.id)
+      expect(result["name"]).to eq("TestAgent")
       expect(result["description"]).to eq("Test description")
       expect(result["system_prompt"]).to eq("Test system prompt")
       expect(result["temperature"]).to eq(0.8)
@@ -732,25 +730,25 @@ RSpec.describe AiTool do
       expect(result["tools"][1]).to be_a(Array)
     end
 
-    it "raises an error when the persona doesn't exist" do
+    it "raises an error when the agent doesn't exist" do
       script = <<~JS
         function invoke(params) {
-          return discourse.getPersona("NonExistentPersona");
+          return discourse.getAgent("NonExistentAgent");
         }
       JS
 
       tool = create_tool(script: script)
       runner = tool.runner({}, llm: nil, bot_user: bot_user)
 
-      expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Persona not found/)
+      expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Agent not found/)
     end
 
-    it "can update a persona after fetching it" do
+    it "can update a agent after fetching it" do
       script = <<~JS
         function invoke(params) {
-          const persona = discourse.getPersona("TestPersona");
-          return persona.update({
-            system_prompt: "Updated through getPersona().update()",
+          const agent = discourse.getAgent("TestAgent");
+          return agent.update({
+            system_prompt: "Updated through getAgent().update()",
             temperature: 0.5
           });
         }
@@ -762,9 +760,9 @@ RSpec.describe AiTool do
       result = runner.invoke
       expect(result["success"]).to eq(true)
 
-      ai_persona.reload
-      expect(ai_persona.system_prompt).to eq("Updated through getPersona().update()")
-      expect(ai_persona.temperature).to eq(0.5)
+      ai_agent.reload
+      expect(ai_agent.system_prompt).to eq("Updated through getAgent().update()")
+      expect(ai_agent.temperature).to eq(0.5)
     end
   end
 

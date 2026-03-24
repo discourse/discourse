@@ -84,11 +84,16 @@ class RemoteTheme < ActiveRecord::Base
     )
   end
 
-  def self.import_theme_from_directory(directory, theme_id: nil)
+  def self.import_theme_from_directory(
+    directory,
+    theme_id: nil,
+    allow_out_of_sequence_migration: false
+  )
     update_theme(
       ThemeStore::DirectoryImporter.new(directory),
       update_components: "none",
       theme_id: theme_id,
+      allow_out_of_sequence_migration: allow_out_of_sequence_migration,
     )
   end
 
@@ -97,7 +102,8 @@ class RemoteTheme < ActiveRecord::Base
     user: Discourse.system_user,
     theme_id: nil,
     update_components: nil,
-    run_migrations: true
+    run_migrations: true,
+    allow_out_of_sequence_migration: false
   )
     importer.import!
 
@@ -132,6 +138,7 @@ class RemoteTheme < ActiveRecord::Base
         skip_update: true,
         already_in_transaction: true,
         run_migrations:,
+        allow_out_of_sequence_migration:,
       )
 
       if existing && update_components.present? && update_components != "none"
@@ -236,7 +243,8 @@ class RemoteTheme < ActiveRecord::Base
     skip_update: false,
     raise_if_theme_save_fails: true,
     already_in_transaction: false,
-    run_migrations: true
+    run_migrations: true,
+    allow_out_of_sequence_migration: false
   )
     cleanup = false
 
@@ -390,7 +398,12 @@ class RemoteTheme < ActiveRecord::Base
 
       create_theme_site_settings(theme, theme_info["theme_site_settings"])
 
-      theme.migrate_settings(start_transaction: false) if run_migrations
+      if run_migrations
+        theme.migrate_settings(
+          start_transaction: false,
+          allow_out_of_sequence_migration: allow_out_of_sequence_migration,
+        )
+      end
     end
 
     if already_in_transaction

@@ -131,16 +131,17 @@ module ApplicationHelper
         path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
-      # assets needed for theme testing are not compressed because they take a fair
-      # amount of time to compress (+30 seconds) during rebuilds/deploys when the
-      # vast majority of sites will never need them, so it makes more sense to serve
-      # them uncompressed instead of making everyone's rebuild/deploy take +30 more
-      # seconds.
-      if !script.start_with?("discourse/tests/")
-        if is_brotli_req?
-          path = path.gsub(/\.([^.]+)\z/, '.br.\1')
-        elsif is_gzip_req?
-          path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
+      if is_brotli_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/br/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.br.\1')
+        end
+      elsif is_gzip_req?
+        if path.include?("/assets/js/")
+          path = path.sub("/assets/js/", "/assets/gz/")
+        else
+          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
     end
@@ -148,7 +149,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script, type_module: false, from_vite: false)
+  def preload_script(script, type_module: false, from_vite: false, attrs: {})
     scripts = []
 
     if from_vite && ENV["USE_VITE_ASSETS"]
@@ -170,20 +171,24 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script, type_module:)
+        preload_script_url(path, entrypoint: script, type_module:, attrs:)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, type_module: false)
+  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
+
+    extra_attrs =
+      attrs&.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }&.join(" ")
+    extra_attrs = " #{extra_attrs}" if extra_attrs.present?
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute}#{extra_attrs} #{nonce_attribute}></script>
     HTML
   end
 

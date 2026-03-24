@@ -8,6 +8,7 @@ ja:
   site_settings:
     policy_enabled: "ポリシーを許可？"
     policy_restrict_to_staff_posts: "ポリシーはスタッフの投稿のみに表示される場合があります"
+    create_policy_allowed_groups: "投稿にポリシーを追加するにはグループメンバーシップを必要とする"
     policy_easy_revoke: "同意ボタンと同意の取り消しボタンを同時に表示する"
   discourse_policy:
     errors:

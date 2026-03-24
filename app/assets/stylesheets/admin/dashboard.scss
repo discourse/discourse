@@ -210,6 +210,10 @@
       margin-left: -5px;
     }
 
+    .site-traffic .chart-canvas-container {
+      height: 250px;
+    }
+
     .chart-canvas {
       width: 100%;
       height: 100%;
@@ -352,11 +356,20 @@
     padding: 0.65em 0.25em;
   }
 
-  .admin-report .main {
+  .admin-report .main,
+  //temp fix for reporting upcoming changes
+  .admin-report .chart__body {
     border: 1px solid var(--content-border-color);
 
     &:hover {
       background-color: var(--primary-very-low);
+    }
+  }
+
+  // temp fix for reporting upcoming changes
+  .alert {
+    .uc-reporting-improvements & {
+      margin-bottom: 0;
     }
   }
 
@@ -741,17 +754,6 @@
   }
 }
 
-.admin-new-feature-item__header-experimental {
-  color: var(--tertiary);
-  background-color: var(--tertiary-very-low);
-  padding: 0.5em;
-  font-size: var(--font-down-3);
-  margin-left: 0.5rem;
-  font-weight: 400;
-  border-radius: var(--d-border-radius);
-  display: inline-block;
-}
-
 .admin-new-feature-item__body {
   display: flex;
   justify-content: space-between;
@@ -823,15 +825,5 @@
     h3 {
       margin-right: 0.5em;
     }
-  }
-}
-
-.admin-new-features__experiments-filter {
-  display: flex;
-  margin-bottom: 1em;
-  align-items: center;
-
-  .d-toggle-switch {
-    margin-right: 0.5em;
   }
 }

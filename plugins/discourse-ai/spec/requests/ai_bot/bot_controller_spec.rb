@@ -140,16 +140,16 @@ RSpec.describe DiscourseAi::AiBot::BotController do
   describe "#retry_response" do
     fab!(:bot_user, :user)
     let!(:llm_model) { Fabricate(:llm_model, user: bot_user) }
-    let!(:ai_persona) do
+    let!(:ai_agent) do
       Fabricate(
-        :ai_persona,
+        :ai_agent,
         user: bot_user,
         default_llm_id: llm_model.id,
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
       )
     end
-    let(:persona) { ai_persona.class_instance.new }
-    let(:bot) { DiscourseAi::Personas::Bot.as(bot_user, persona: persona) }
+    let(:agent) { ai_agent.class_instance.new }
+    let(:bot) { DiscourseAi::Agents::Bot.as(bot_user, agent: agent) }
 
     let!(:prompt_post) do
       Fabricate(:post, topic: pm_topic, user: user, raw: "Hello @#{bot_user.username}")
@@ -167,7 +167,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       Group.refresh_automatic_groups!
       SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
-      AiPersona.persona_cache.flush!
+      AiAgent.agent_cache.flush!
 
       tl0_group =
         Group.find_by(name: "trust_level_0") || Group.find(Group::AUTO_GROUPS[:trust_level_0])
@@ -206,15 +206,15 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         Jobs::CreateAiReply.new.execute(
           post_id: prompt_post.id,
           bot_user_id: bot_user.id,
-          persona_id: reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD].to_i,
+          agent_id: reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i,
           reply_post_id: reply_post.id,
         )
       end
 
       expect(response.status).to eq(200)
       expect(reply_post.reload.raw).to eq(retry_text)
-      expect(reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD].to_i).to eq(
-        persona.id,
+      expect(reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i).to eq(
+        agent.id,
       )
     end
 
@@ -232,7 +232,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     it "allows retrying if LLM model has a negative id (seeded)" do
       seeded_llm_model = Fabricate(:llm_model, id: -9999, user: bot_user, name: "second-model")
 
-      bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona, model: seeded_llm_model)
+      bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent, model: seeded_llm_model)
       DiscourseAi::Completions::Llm.with_prepared_responses(["first try"], llm: seeded_llm_model) do
         DiscourseAi::AiBot::Playground.new(bot).reply_to(prompt_post)
       end
@@ -257,7 +257,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(reply.reload.raw).to eq(retry_text)
     end
 
-    it "uses the original LLM model when retrying even if persona default changed" do
+    it "uses the original LLM model when retrying even if agent default changed" do
       second_bot_user = Fabricate(:user)
       second_llm_model = Fabricate(:llm_model, user: second_bot_user, name: "second-model")
 
@@ -269,8 +269,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(original_llm_name).to be_present
       expect(original_llm_id.to_i).to eq(llm_model.id)
 
-      ai_persona.update!(default_llm_id: second_llm_model.id)
-      AiPersona.persona_cache.flush!
+      ai_agent.update!(default_llm_id: second_llm_model.id)
+      AiAgent.agent_cache.flush!
 
       retry_text = "retry with original model"
 

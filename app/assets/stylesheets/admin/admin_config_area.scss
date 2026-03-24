@@ -103,13 +103,7 @@
 }
 
 .admin-site-settings-filter-controls {
-  background: var(--primary-very-low);
-  margin-bottom: 1em;
-
-  .controls,
-  .search.controls {
-    background: var(--primary-very-low);
-  }
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 .admin-config-area-empty-list,
@@ -131,7 +125,8 @@
   flex-direction: column;
   width: calc(100% - 1em);
   border: 1px solid var(--content-border-color);
-  padding: 0.5em;
+  padding: var(--space-4);
+  border-radius: var(--d-border-radius);
 
   @media (max-width: $mobile-breakpoint) {
     flex-direction: column;

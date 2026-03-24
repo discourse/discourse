@@ -8,3 +8,9 @@ cs:
   site_settings:
     discourse_math_enabled: "Povolit Discourse matematický plugin (přidá speciální zpracování pro $ a $$ bloky)"
     discourse_math_provider: "Výchozí zprostředkovatel vykreslování matematiky"
+    discourse_math_enable_latex_delimiters: "Povolit oddělovače ve stylu LaTeXu: \\(...\\) pro matematické výrazy na řádku a \\[...\\] pro matematické výrazy v bloku"
+    discourse_math_mathjax_output: "Výstupní formát MathJax (pouze MathJax)"
+    discourse_math_enable_menu: "Povolit kontextové menu (pouze MathJax)"
+    discourse_math_enable_accessibility: "Povolit funkce přístupnosti (MathJax pouze s menu)"
+    discourse_math_zoom_on_click: "Zvětšení 175 % při kliknutí s klávesou Alt (MathJax pouze s menu)"
+    discourse_math_enable_asciimath: "Povolit asciimath (přidá speciální zpracování pro vstup oddělený %; podporováno pouze s MathJax)"

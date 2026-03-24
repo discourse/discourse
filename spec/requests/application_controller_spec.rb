@@ -24,6 +24,31 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(403)
       expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
     end
+
+    context "when cache_control_bfcache_compatibility is enabled" do
+      before { SiteSetting.cache_control_bfcache_compatibility = true }
+
+      it "sets bfcache-compatible cache control headers" do
+        get "/latest"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cache-Control"]).to eq("no-cache")
+      end
+
+      it "sets bfcache-compatible cache control headers on 404" do
+        get "/invalid-urlllllllllll"
+
+        expect(response.status).to eq(404)
+        expect(response.headers["Cache-Control"]).to eq("no-cache")
+      end
+
+      it "sets bfcache-compatible cache control headers on 403" do
+        get "/latest.json", headers: { HTTP_API_KEY: "invalid-api-key" }
+
+        expect(response.status).to eq(403)
+        expect(response.headers["Cache-Control"]).to eq("no-cache")
+      end
+    end
   end
 
   context "when visiting an invalid URL" do
@@ -904,6 +929,55 @@ RSpec.describe ApplicationController do
       args[:auth_redirect] = "discourse://auth_redirect"
 
       get "/categories", params: args
+
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to("#{args[:auth_redirect]}?otp=true")
+    end
+
+    it "does not allow auth_redirect that differs from a registered client's redirect" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://*.example.com/callback"
+
+      Fabricate(
+        :user_api_key_client,
+        public_key: public_key,
+        auth_redirect: "https://legitimate.example.com/callback",
+      )
+
+      args[:user_api_public_key] = public_key
+      args[:auth_redirect] = "https://evil.example.com/callback"
+
+      get "/latest", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_auth_redirect"))
+    end
+
+    it "redirects when auth_redirect matches a registered client's redirect and global allowlist" do
+      SiteSetting.allowed_user_api_auth_redirects = "https://legitimate.example.com/callback"
+
+      Fabricate(
+        :user_api_key_client,
+        public_key: public_key,
+        auth_redirect: "https://legitimate.example.com/callback",
+      )
+
+      args[:user_api_public_key] = public_key
+      args[:auth_redirect] = "https://legitimate.example.com/callback"
+
+      get "/latest", params: args
+
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to("#{args[:auth_redirect]}?otp=true")
+    end
+
+    it "falls back to global wildcards when client has no registered auth_redirect" do
+      SiteSetting.allowed_user_api_auth_redirects = "discourse://auth_redirect"
+
+      Fabricate(:user_api_key_client, public_key: public_key, auth_redirect: nil)
+
+      args[:user_api_public_key] = public_key
+      args[:auth_redirect] = "discourse://auth_redirect"
+
+      get "/latest", params: args
 
       expect(response.status).to eq(302)
       expect(response).to redirect_to("#{args[:auth_redirect]}?otp=true")

@@ -6,6 +6,12 @@
 
 sv:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "i"
+        hidden: "dold"
+        failed: "misslyckad"
     number:
       format:
         separator: "."
@@ -295,6 +301,8 @@ sv:
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
     admin_onboarding_banner:
+      start_posting:
+        back: "Tillbaka"
       spread_the_word:
         copied_to_clipboard: "Länken har kopierats till urklipp!"
     about:
@@ -462,7 +470,6 @@ sv:
       in_reply_to: "som svar till"
       explain:
         why: "förklara varför detta föremål hamnade i kön"
-        title: "Granskningsvärdering"
         formula: "Formel"
         subtotal: "Delsumma"
         total: "Totalt"
@@ -476,10 +483,8 @@ sv:
           title: "Användare vars flaggor historiskt har fått medhåll ges en bonus."
         trust_level_bonus:
           name: "förtroendenivå"
-          title: "Granskade objekt skapade av användare med högre förtroendenivå har en högre poäng."
         type_bonus:
           name: "typ bonus"
-          title: "Vissa granskningsärenden kan tilldelas en bonus av personal för att ge dem en högre prioritet."
       revise_and_reject_post:
         title: "Revidera"
         reason: "Anledning"
@@ -488,7 +493,6 @@ sv:
         custom_reason: "Ge en tydlig beskrivning av orsaken"
         other_reason: "Annan..."
         optional: "valfritt"
-      stale_help: "Detta granskningsbara objekt har lösts av <b>%{username}</b>."
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
         required: "Du måste göra anspråk innan du kan granska dem."
@@ -1325,6 +1329,10 @@ sv:
         tags: "Taggar"
         interface: "Gränssnitt"
         apps: "Appar"
+        calendar_subscriptions: "Kalender"
+      calendar_subscriptions:
+        copied: "Kopierad!"
+        add_to_google: "Google -kalender"
       change_password:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
@@ -1869,6 +1877,7 @@ sv:
     form_kit:
       reset: Återställ
       optional: valfritt
+      required: krävs
       errors:
         required: "Krävs"
         invalid_url: "Måste vara en giltig URL"
@@ -2578,8 +2587,6 @@ sv:
         max_views:
           placeholder: maximalt
           aria_label: filtrera efter största antal visningar
-        additional_options:
-          label: "Filtrera efter inläggsantal och ämnesvisningar"
     new_item: "ny"
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
@@ -2641,10 +2648,7 @@ sv:
         confirm: "Bekräfta"
         select_all: "Välj alla"
         clear_all: "Rensa alla"
-        unlist_topics: "Avlista ämnen"
-        relist_topics: "Lista om ämnen"
         reset_bump_dates: "Återställ knuffdatum"
-        delete: "Ta bort ämnen"
         delete_topics_count:
           one: "Radera ämne"
           other: "Ta bort ämnen"
@@ -2677,25 +2681,16 @@ sv:
           other: "Avfärda nya (%{count})"
         toggle: "växla val av flertalet ämnen"
         actions: "Massändringar"
-        change_category: "Ange kategori…"
-        close_topics: "Stäng ämnen"
-        archive_topics: "Arkivera ämnen"
         move_messages_to_inbox: "Flytta till inkorgen"
-        notification_level: "Aviseringar…"
         change_notification_level: "Ändra aviseringsnivå"
         choose_new_category: "Välj den nya kategorin för ämnena:"
-        selected:
-          one: "Du har markerat <b>%{count}</b> ämne."
-          other: "Du har markerat <b>%{count}</b> ämnen."
         selected_count:
           one: "%{count} har valts"
           other: "%{count} har valts"
-        change_tags: "Ersätt taggar"
         append_tags: "Lägg till taggar"
         choose_new_tags: "Välj nya taggar för de här ämnena:"
-        choose_append_tags: "Välj nya taggar att lägga till för dessa ämnen:"
+        choose_append_tags: "Lägg till taggar"
         changed_tags: "Taggarna för de här ämnena ändrades."
-        remove_tags: "Ta bort alla taggar"
         confirm_remove_tags:
           one: "Alla taggar tas bort från det här ämnet. Är du säker?"
           other: "Alla taggar tas bort från <b>%{count}</b> ämnen. Är du säker?"
@@ -2729,15 +2724,12 @@ sv:
         name: "Flytta till inkorgen"
       remove_tags:
         name: "Ta bort taggar"
-      append_tags:
-        name: "Lägg till taggar"
       replace_tags:
         name: "Ersätt taggar"
       delete_topics:
         name: "Radera"
       update_category:
         name: "Uppdatera kategori"
-        description: "Välj den nya kategorin för de valda ämnena"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -3447,6 +3439,7 @@ sv:
         delete: "Radera"
         add: "Lägg till obligatorisk tagg-grupp"
         placeholder: "Välj tagg-grupp…"
+        tag_group: "Tagg-grupp"
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
       create_long: "Skapa en ny kategori"
       slug_placeholder: "(Valfritt) streckade ord för url"
@@ -3470,6 +3463,8 @@ sv:
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
       no_description: "Lägg till en beskrivning för den här kategorin."
+      description_expand: "Visa mer"
+      description_collapse: "Visa mindre"
       already_used: "Den här färgen används redan av en annan kategori"
       security: "Säkerhet"
       security_add_group: "Lägg till en grupp"
@@ -3960,7 +3955,18 @@ sv:
         one: "Dess synonym kommer också att raderas."
         other: "Dess %{count} synonymer kommer också att raderas."
       edit_tag: "Redigera taggnamn och beskrivning"
-      description: "Beskrivning (max. 1000 tecken)"
+      description: "Beskrivning"
+      settings:
+        title: "Inställningar"
+        general: "Allmänt"
+        back: "Tillbaka"
+        name: "Namn"
+        slug: "Slug"
+        name_placeholder: "Namn på tagg"
+        synonyms_subtitle: "När följande taggar används, kommer de att ersättas med %{name}"
+      localization:
+        name: "Namn"
+        description: "Beskrivning"
       sort_by: "Sortera efter:"
       sort_by_count: "summa"
       sort_by_name: "namn"
@@ -4347,7 +4353,6 @@ sv:
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
-    reset_filter: "Återställ"
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
@@ -4360,6 +4365,9 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         sidebar_title: "Rapporter"
+        group_traffic: "Trafik"
+        group_members: "Medlemmar"
+        group_other: "Övrigt"
       config_sections:
         account:
           title: "Konto"
@@ -4384,7 +4392,6 @@ sv:
         preview: "Förhandsgranska"
         enabled_for_options:
           everyone: "Alla"
-          staff: "Endast personal"
         impact_roles:
           admins: "Administratörer"
           moderators: "Moderatorer"
@@ -4466,6 +4473,9 @@ sv:
               title: "Loggar"
         reports:
           title: "Rapporter"
+          sub_pages:
+            settings:
+              title: "Inställningar"
         badges:
           title: "Utmärkelser"
         permalinks:
@@ -4515,13 +4525,6 @@ sv:
         default_value: "Standard"
       search:
         title: "Sök"
-        result_types:
-          theme:
-            one: "Tema"
-            other: "Teman"
-          component:
-            one: "Komponent"
-            other: "Komponenter"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4589,7 +4592,7 @@ sv:
           all: "Alla"
           view_table: "tabell"
           view_graph: "graf"
-          refresh_report: "Uppdatera rapport"
+          refresh_report: "Uppdatera"
           daily: Dagligen
           monthly: Månadsvis
           weekly: Veckovis
@@ -6060,6 +6063,7 @@ sv:
           enabled: "Sökbart"
         field_types:
           text: "Text"
+          date: "Datum"
           confirm: "Bekräftelse"
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"

@@ -140,6 +140,8 @@ module PrettyText
 
     DiscoursePluginRegistry.vendored_pretty_text.each { |vpt| ctx.eval(File.read(vpt)) }
 
+    ctx.low_memory_notification # GC to free up memory used during init
+
     ctx
   end
 
@@ -156,7 +158,10 @@ module PrettyText
   end
 
   def self.reset_translations
-    v8.eval("__resetTranslationTree()")
+    @mutex.synchronize do
+      v8.eval("__resetTranslationTree()")
+      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    end
   end
 
   def self.reset_context
@@ -697,7 +702,10 @@ module PrettyText
 
   def self.protect
     rval = nil
-    @mutex.synchronize { rval = yield }
+    @mutex.synchronize do
+      rval = yield
+      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+    end
     rval
   end
 

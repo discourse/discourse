@@ -33,16 +33,6 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
     {{/if}}
 
     <@form.Collection @name="localizations" as |collection index|>
-      <collection.Field
-        @name="category_id"
-        @title="category_id"
-        @showTitle={{false}}
-        @disabled={{true}}
-        as |field|
-      >
-        <field.Input @value={{this.category.id}} @type="hidden" />
-      </collection.Field>
-
       <@form.Row as |row|>
         <row.Col @size={{2}}>
           <collection.Field
@@ -50,15 +40,16 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             @title={{i18n "category.localization.locale"}}
             @format="full"
             @validation="required"
+            @type="select"
             as |field|
           >
-            <field.Select as |select|>
+            <field.Control as |select|>
               {{#each this.selectableLocales as |locale|}}
                 <select.Option
                   @value={{locale.value}}
                 >{{locale.name}}</select.Option>
               {{/each}}
-            </field.Select>
+            </field.Control>
           </collection.Field>
         </row.Col>
 
@@ -67,9 +58,10 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             @name="name"
             @title={{i18n "category.localization.name"}}
             @validation="required|length:1,50"
+            @type="input"
             as |field|
           >
-            <field.Input
+            <field.Control
               placeholder={{i18n "category.name_placeholder"}}
               @maxlength="50"
               class="category-name"
@@ -81,9 +73,10 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
           <collection.Field
             @name="description"
             @title={{i18n "category.localization.description"}}
+            @type="textarea"
             as |field|
           >
-            <field.Textarea @height={{60}} />
+            <field.Control @height={{60}} />
           </collection.Field>
         </row.Col>
 
@@ -99,7 +92,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
     </@form.Collection>
 
     <@form.Button
-      class="add-localization"
+      class="btn-default add-localization"
       @icon="plus"
       @label="category.localization.add"
       @action={{fn

@@ -1,6 +1,5 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ScreenedEmail extends EmberObject {
@@ -14,9 +13,9 @@ export default class ScreenedEmail extends EmberObject {
     );
   }
 
-  @discourseComputed("action")
-  actionName(action) {
-    return i18n("admin.logs.screened_actions." + action);
+  @computed("action")
+  get actionName() {
+    return i18n("admin.logs.screened_actions." + this.action);
   }
 
   clearBlock() {

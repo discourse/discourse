@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Form Templates", type: :system do
+describe "Edit Category Form Templates" do
   fab!(:color_scheme)
   fab!(:theme)
   fab!(:admin)

@@ -15,9 +15,13 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { eq, gt } from "discourse/truth-helpers";
+import { eq, gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
+import {
+  isProviderParamHidden,
+  normalizeProviderParams,
+} from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 import DurationSelector from "./ai-quota-duration-selector";
 import AiSecretSelector from "./ai-secret-selector";
 import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
@@ -115,6 +119,19 @@ export default class AiLlmEditorForm extends Component {
     );
   }
 
+  fieldTypeForProviderParam(type) {
+    switch (type) {
+      case "enum":
+        return "select";
+      case "checkbox":
+        return "checkbox";
+      case "secret":
+        return "custom";
+      default:
+        return `input-${type}`;
+    }
+  }
+
   get adminUser() {
     return AdminUser.create(this.args.model?.user);
   }
@@ -140,7 +157,7 @@ export default class AiLlmEditorForm extends Component {
 
     const localized = usedBy.map((m) => {
       return i18n(`discourse_ai.llms.usage.${m.type}`, {
-        persona: m.name,
+        agent: m.name,
       });
     });
 
@@ -184,26 +201,7 @@ export default class AiLlmEditorForm extends Component {
   @action
   metaProviderParams(provider) {
     const params = this.args.llms.resultSetMeta.provider_params[provider] || {};
-
-    return Object.entries(params).reduce((acc, [field, value]) => {
-      if (typeof value === "string") {
-        acc[field] = { type: value };
-      } else if (typeof value === "object") {
-        if (value.values) {
-          value = { ...value };
-          value.values = value.values.map((v) => ({ id: v, name: v }));
-        }
-
-        acc[field] = {
-          type: value.type || "text",
-          values: value.values || [],
-          default: value.default ?? undefined,
-        };
-      } else {
-        acc[field] = { type: "text" }; // fallback
-      }
-      return acc;
-    }, {});
+    return normalizeProviderParams(params);
   }
 
   @action
@@ -297,6 +295,11 @@ export default class AiLlmEditorForm extends Component {
   }
 
   @action
+  isProviderParamHidden(params, providerParamsData) {
+    return isProviderParamHidden(params, providerParamsData);
+  }
+
+  @action
   providerParamsKeys(providerParams) {
     return providerParams ? Object.keys(providerParams) : [];
   }
@@ -321,9 +324,10 @@ export default class AiLlmEditorForm extends Component {
         @format="large"
         @tooltip={{i18n "discourse_ai.llms.hints.display_name"}}
         @disabled={{@model.seeded}}
+        @type="input"
         as |field|
       >
-        <field.Input />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -333,9 +337,10 @@ export default class AiLlmEditorForm extends Component {
         @validation="required"
         @format="large"
         @disabled={{@model.seeded}}
+        @type="input"
         as |field|
       >
-        <field.Input />
+        <field.Control />
       </form.Field>
 
       {{#unless @model.seeded}}
@@ -345,15 +350,16 @@ export default class AiLlmEditorForm extends Component {
           @format="large"
           @validation="required"
           @onSet={{this.setProvider}}
+          @type="select"
           as |field|
         >
-          <field.Select as |select|>
+          <field.Control as |select|>
             {{#each this.selectedProviders as |provider|}}
               <select.Option
                 @value={{provider.id}}
               >{{provider.name}}</select.Option>
             {{/each}}
-          </field.Select>
+          </field.Control>
         </form.Field>
 
         {{#if (this.canEditURL data.provider)}}
@@ -362,9 +368,10 @@ export default class AiLlmEditorForm extends Component {
             @title={{i18n "discourse_ai.llms.url"}}
             @validation="required"
             @format="large"
+            @type="input"
             as |field|
           >
-            <field.Input />
+            <field.Control />
           </form.Field>
         {{/if}}
 
@@ -372,15 +379,16 @@ export default class AiLlmEditorForm extends Component {
           @name="ai_secret_id"
           @title={{i18n "discourse_ai.llms.api_key"}}
           @format="large"
+          @type="custom"
           as |field|
         >
-          <field.Custom>
+          <field.Control>
             <AiSecretSelector
               @value={{data.ai_secret_id}}
               @secrets={{this.availableSecrets}}
               @onChange={{field.set}}
             />
-          </field.Custom>
+          </field.Control>
         </form.Field>
 
         <form.Object @name="provider_params" as |object providerParamsData|>
@@ -389,36 +397,42 @@ export default class AiLlmEditorForm extends Component {
               (get (this.metaProviderParams data.provider) name)
               as |params|
             }}
-              <object.Field
-                @name={{name}}
-                @title={{i18n
-                  (concat "discourse_ai.llms.provider_fields." name)
-                }}
-                @format="large"
-                as |field|
-              >
-                {{#if (eq params.type "enum")}}
-                  <field.Select @includeNone={{false}} as |select|>
-                    {{#each params.values as |option|}}
-                      <select.Option
-                        @value={{option.id}}
-                      >{{option.name}}</select.Option>
-                    {{/each}}
-                  </field.Select>
-                {{else if (eq params.type "checkbox")}}
-                  <field.Checkbox />
-                {{else if (eq params.type "secret")}}
-                  <field.Custom>
-                    <AiSecretSelector
-                      @value={{field.value}}
-                      @secrets={{this.availableSecrets}}
-                      @onChange={{field.set}}
-                    />
-                  </field.Custom>
-                {{else}}
-                  <field.Input @type={{params.type}} />
-                {{/if}}
-              </object.Field>
+              {{#if
+                (not (this.isProviderParamHidden params providerParamsData))
+              }}
+                <object.Field
+                  @name={{name}}
+                  @title={{i18n
+                    (concat "discourse_ai.llms.provider_fields." name)
+                  }}
+                  @showTitle={{not (eq params.type "checkbox")}}
+                  @format="large"
+                  @type={{this.fieldTypeForProviderParam params.type}}
+                  as |field|
+                >
+                  {{#if (eq params.type "enum")}}
+                    <field.Control @includeNone={{false}} as |select|>
+                      {{#each params.values as |option|}}
+                        <select.Option
+                          @value={{option.id}}
+                        >{{option.name}}</select.Option>
+                      {{/each}}
+                    </field.Control>
+                  {{else if (eq params.type "checkbox")}}
+                    <field.Control />
+                  {{else if (eq params.type "secret")}}
+                    <field.Control>
+                      <AiSecretSelector
+                        @value={{field.value}}
+                        @secrets={{this.availableSecrets}}
+                        @onChange={{field.set}}
+                      />
+                    </field.Control>
+                  {{else}}
+                    <field.Control />
+                  {{/if}}
+                </object.Field>
+              {{/if}}
             {{/let}}
           {{/each}}
         </form.Object>
@@ -428,15 +442,16 @@ export default class AiLlmEditorForm extends Component {
           @title={{i18n "discourse_ai.llms.tokenizer"}}
           @format="large"
           @validation="required"
+          @type="select"
           as |field|
         >
-          <field.Select as |select|>
+          <field.Control as |select|>
             {{#each this.tokenizers as |tokenizer|}}
               <select.Option
                 @value={{tokenizer.id}}
               >{{tokenizer.name}}</select.Option>
             {{/each}}
-          </field.Select>
+          </field.Control>
         </form.Field>
 
         <form.Field
@@ -445,9 +460,10 @@ export default class AiLlmEditorForm extends Component {
           @tooltip={{i18n "discourse_ai.llms.hints.max_prompt_tokens"}}
           @validation="required"
           @format="large"
+          @type="input-number"
           as |field|
         >
-          <field.Input @type="number" step="any" min="0" lang="en" />
+          <field.Control step="any" min="0" lang="en" />
         </form.Field>
 
         <form.InputGroup as |inputGroup|>
@@ -456,29 +472,10 @@ export default class AiLlmEditorForm extends Component {
             @title={{i18n "discourse_ai.llms.cost_input"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_input"}}
             @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            @type="input-number"
             as |field|
           >
-            <field.Input @type="number" step="any" min="0" lang="en" />
-          </inputGroup.Field>
-
-          <inputGroup.Field
-            @name="cached_input_cost"
-            @title={{i18n "discourse_ai.llms.cost_cached_input"}}
-            @tooltip={{i18n "discourse_ai.llms.hints.cost_cached_input"}}
-            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
-            as |field|
-          >
-            <field.Input @type="number" step="any" min="0" lang="en" />
-          </inputGroup.Field>
-
-          <inputGroup.Field
-            @name="cache_write_cost"
-            @title={{i18n "discourse_ai.llms.cost_cache_write"}}
-            @tooltip={{i18n "discourse_ai.llms.hints.cost_cache_write"}}
-            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
-            as |field|
-          >
-            <field.Input @type="number" step="any" min="0" lang="en" />
+            <field.Control step="any" min="0" lang="en" />
           </inputGroup.Field>
 
           <inputGroup.Field
@@ -486,9 +483,34 @@ export default class AiLlmEditorForm extends Component {
             @title={{i18n "discourse_ai.llms.cost_output"}}
             @tooltip={{i18n "discourse_ai.llms.hints.cost_output"}}
             @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            @type="input-number"
             as |field|
           >
-            <field.Input @type="number" step="any" min="0" lang="en" />
+            <field.Control step="any" min="0" lang="en" />
+          </inputGroup.Field>
+        </form.InputGroup>
+
+        <form.InputGroup as |inputGroup|>
+          <inputGroup.Field
+            @name="cached_input_cost"
+            @title={{i18n "discourse_ai.llms.cost_cached_input"}}
+            @tooltip={{i18n "discourse_ai.llms.hints.cost_cached_input"}}
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            @type="input-number"
+            as |field|
+          >
+            <field.Control step="any" min="0" lang="en" />
+          </inputGroup.Field>
+
+          <inputGroup.Field
+            @name="cache_write_cost"
+            @title={{i18n "discourse_ai.llms.cost_cache_write"}}
+            @tooltip={{i18n "discourse_ai.llms.hints.cost_cache_write"}}
+            @helpText={{i18n "discourse_ai.llms.hints.cost_measure"}}
+            @type="input-number"
+            as |field|
+          >
+            <field.Control step="any" min="0" lang="en" />
           </inputGroup.Field>
         </form.InputGroup>
 
@@ -497,19 +519,22 @@ export default class AiLlmEditorForm extends Component {
           @title={{i18n "discourse_ai.llms.max_output_tokens"}}
           @tooltip={{i18n "discourse_ai.llms.hints.max_output_tokens"}}
           @format="large"
+          @type="input-number"
           as |field|
         >
-          <field.Input @type="number" step="any" min="0" lang="en" />
+          <field.Control step="any" min="0" lang="en" />
         </form.Field>
 
         <form.Field
           @name="vision_enabled"
           @title={{i18n "discourse_ai.llms.vision_enabled"}}
           @tooltip={{i18n "discourse_ai.llms.hints.vision_enabled"}}
+          @showTitle={{false}}
           @format="large"
+          @type="checkbox"
           as |field|
         >
-          <field.Checkbox />
+          <field.Control />
         </form.Field>
 
         <form.Field
@@ -517,16 +542,15 @@ export default class AiLlmEditorForm extends Component {
           @title={{i18n "discourse_ai.llms.allowed_attachment_types"}}
           @tooltip={{i18n "discourse_ai.llms.hints.allowed_attachment_types"}}
           @format="large"
+          @type="custom"
           as |field|
         >
-          <field.Label />
-          <field.Custom>
+          <field.Control>
             <AiLlmAttachmentTypes
               @value={{field.value}}
               @onChange={{field.set}}
             />
-          </field.Custom>
-          <field.Hint />
+          </field.Control>
         </form.Field>
 
         {{#if @model.user}}
@@ -583,13 +607,10 @@ export default class AiLlmEditorForm extends Component {
                     @name="max_tokens"
                     @title="max_tokens"
                     @showTitle={{false}}
+                    @type="input-number"
                     as |field|
                   >
-                    <field.Input
-                      @type="number"
-                      class="ai-llm-quotas__input"
-                      min="1"
-                    />
+                    <field.Control class="ai-llm-quotas__input" min="1" />
                   </collection.Field>
                 </td>
                 <td class="ai-llm-quotas__cell">
@@ -597,13 +618,10 @@ export default class AiLlmEditorForm extends Component {
                     @name="max_usages"
                     @title="max_usages"
                     @showTitle={{false}}
+                    @type="input-number"
                     as |field|
                   >
-                    <field.Input
-                      @type="number"
-                      class="ai-llm-quotas__input"
-                      min="1"
-                    />
+                    <field.Control class="ai-llm-quotas__input" min="1" />
                   </collection.Field>
                 </td>
                 <td class="ai-llm-quotas__cell">
@@ -611,14 +629,15 @@ export default class AiLlmEditorForm extends Component {
                     @name="duration_seconds"
                     @title="duration_seconds"
                     @showTitle={{false}}
+                    @type="custom"
                     as |field|
                   >
-                    <field.Custom>
+                    <field.Control>
                       <DurationSelector
                         @value={{collectionData.duration_seconds}}
                         @onChange={{field.set}}
                       />
-                    </field.Custom>
+                    </field.Control>
                   </collection.Field>
                 </td>
                 <td>

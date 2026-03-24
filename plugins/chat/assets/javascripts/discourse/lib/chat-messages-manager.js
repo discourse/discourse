@@ -4,10 +4,10 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 
 export default class ChatMessagesManager {
-  @trackedArray messages = [];
+  @autoTrackedArray messages = [];
 
   constructor(owner) {
     setOwner(this, owner);

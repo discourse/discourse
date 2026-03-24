@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User invites", type: :system do
+describe "User invites" do
   fab!(:admin)
   fab!(:user)
   fab!(:invites_pending) { [1, 2, 3, 4].map { Fabricate(:invite, invited_by: user) } }
@@ -11,6 +11,18 @@ describe "User invites", type: :system do
   before do
     SiteSetting.invite_expiry_days = 1
     sign_in(admin)
+  end
+
+  describe "pending invites" do
+    let(:user_invite_pending_page) { PageObjects::Pages::UserInvitedPending.new }
+
+    it "can load more invites" do
+      SiteSetting.invites_per_page = 3
+
+      user_invite_pending_page.visit(user)
+
+      expect(user_invite_pending_page).to have_invite_count(invites_pending.size)
+    end
   end
 
   describe "expired invites" do

@@ -13,17 +13,13 @@ RSpec.describe DiscourseAi::Evals::Features do
         1,
         "module-1",
         enabled_by_setting: "setting-1",
-        features: [
-          DiscourseAi::Configuration::Feature.new("feature-1", "persona-1", 1, "module-1"),
-        ],
+        features: [DiscourseAi::Configuration::Feature.new("feature-1", "agent-1", 1, "module-1")],
       ),
       DiscourseAi::Configuration::Module.new(
         2,
         "module-2",
         enabled_by_setting: "setting-2",
-        features: [
-          DiscourseAi::Configuration::Feature.new("feature-2", "persona-2", 2, "module-2"),
-        ],
+        features: [DiscourseAi::Configuration::Feature.new("feature-2", "agent-2", 2, "module-2")],
       ),
     ]
   end

@@ -1129,6 +1129,59 @@ TEXT
       expect(parsed_body).not_to have_key(:reasoning)
     end
 
+    it "accepts none as reasoning_effort" do
+      model.update!(provider_params: { reasoning_effort: "none" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("none")
+    end
+
+    it "accepts xhigh as reasoning_effort" do
+      model.update!(provider_params: { reasoning_effort: "xhigh" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:reasoning_effort]).to eq("xhigh")
+    end
+
+    it "strips temperature and top_p when reasoning_effort is set" do
+      model.update!(provider_params: { reasoning_effort: "low" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { temperature: 0.7, top_p: 0.9 })
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+      expect(parsed_body).not_to have_key(:temperature)
+      expect(parsed_body).not_to have_key(:top_p)
+    end
+
     it "omits reasoning parameters when not configured" do
       parsed_body = nil
       stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
@@ -1143,6 +1196,121 @@ TEXT
 
       expect(parsed_body).not_to have_key(:reasoning)
       expect(parsed_body).not_to have_key(:reasoning_effort)
+    end
+  end
+
+  describe "service_tier payload" do
+    let(:prompt) { compliance.generic_prompt }
+    let(:dialect) { compliance.dialect(prompt: prompt) }
+
+    it "includes service_tier when set to auto" do
+      model.update!(provider_params: { service_tier: "auto" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("auto")
+    end
+
+    it "includes service_tier when set to flex" do
+      model.update!(provider_params: { service_tier: "flex" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("flex")
+    end
+
+    it "includes service_tier when set to priority" do
+      model.update!(provider_params: { service_tier: "priority" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("priority")
+    end
+
+    it "omits service_tier when set to default" do
+      model.update!(provider_params: { service_tier: "default" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body).not_to have_key(:service_tier)
+    end
+
+    it "omits service_tier when not configured" do
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body).not_to have_key(:service_tier)
+    end
+
+    it "includes service_tier for azure provider" do
+      model.update!(
+        provider: "azure",
+        url:
+          "https://test.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview",
+        provider_params: {
+          service_tier: "priority",
+        },
+      )
+
+      parsed_body = nil
+      stub_request(
+        :post,
+        "https://test.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-15-preview",
+      ).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user)
+
+      expect(parsed_body[:service_tier]).to eq("priority")
     end
   end
 end

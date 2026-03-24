@@ -15,14 +15,14 @@ export default class AiCredits extends Service {
   #pendingRequests = new Map();
 
   /**
-   * Check credit status for specific persona IDs.
+   * Check credit status for specific agent IDs.
    *
-   * @param {number[]} personaIds - Array of persona IDs to check
-   * @returns {Promise<Object>} - Credit status keyed by persona_id
+   * @param {number[]} agentIds - Array of agent IDs to check
+   * @returns {Promise<Object>} - Credit status keyed by agent_id
    */
-  async checkPersonaCredits(personaIds) {
-    const result = await this.#fetchStatus({ persona_ids: personaIds });
-    return result.personas || {};
+  async checkAgentCredits(agentIds) {
+    const result = await this.#fetchStatus({ agent_ids: agentIds });
+    return result.agents || {};
   }
 
   /**
@@ -37,14 +37,14 @@ export default class AiCredits extends Service {
   }
 
   /**
-   * Check if a specific persona has credits available.
+   * Check if a specific agent has credits available.
    *
-   * @param {number} personaId - The persona ID to check
+   * @param {number} agentId - The agent ID to check
    * @returns {Promise<boolean>} - True if credits are available
    */
-  async isPersonaCreditAvailable(personaId) {
-    const result = await this.checkPersonaCredits([personaId]);
-    const status = result[personaId];
+  async isAgentCreditAvailable(agentId) {
+    const result = await this.checkAgentCredits([agentId]);
+    const status = result[agentId];
     return status?.credit_status?.available ?? true;
   }
 
@@ -61,14 +61,14 @@ export default class AiCredits extends Service {
   }
 
   /**
-   * Get detailed credit status for a persona.
+   * Get detailed credit status for a agent.
    *
-   * @param {number} personaId - The persona ID
+   * @param {number} agentId - The agent ID
    * @returns {Promise<Object|null>} - Full credit status object or null
    */
-  async getPersonaCreditStatus(personaId) {
-    const result = await this.checkPersonaCredits([personaId]);
-    return result[personaId]?.credit_status || null;
+  async getAgentCreditStatus(agentId) {
+    const result = await this.checkAgentCredits([agentId]);
+    return result[agentId]?.credit_status || null;
   }
 
   /**
@@ -128,7 +128,7 @@ export default class AiCredits extends Service {
    *
    * @private
    * @param {Object} params - Request parameters
-   * @param {number[]} [params.persona_ids] - Array of persona IDs to check
+   * @param {number[]} [params.agent_ids] - Array of agent IDs to check
    * @param {string[]} [params.features] - Array of feature names to check
    * @param {number[]} [params.llm_model_ids] - Array of LLM model IDs to check
    * @returns {Promise<Object>} Promise resolving to credit status object

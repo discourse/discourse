@@ -1,10 +1,10 @@
 /* eslint-disable ember/no-jquery */
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -73,7 +73,7 @@ export default class TextareaTextManipulation {
   placeholder;
 
   /** @type {import("discourse/lib/composer/text-manipulation").ToolbarState} */
-  state = new TrackedObject();
+  state = trackedObject();
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
@@ -845,7 +845,7 @@ export default class TextareaTextManipulation {
         excludeHeadInSelection: true,
       });
     } else {
-      // Remove heading when the Paragrah level (0) is selected.
+      // Remove heading when the Paragraph level (0) is selected.
       const currentHeadingLevel = sel.lineVal.search(/[^#]/);
       if (currentHeadingLevel >= 0) {
         // When you apply the list with the same head chars, then they
@@ -899,7 +899,7 @@ export default class TextareaTextManipulation {
       putCursorAtEnd(this.textarea);
     } else {
       // in some browsers, the focus() called by putCursorAtEnd doesn't bubble the event to set
-      // isEditorFoused=true and bring the focus indicator to the wrapper, unless we do it on next tick
+      // isEditorFocused=true and bring the focus indicator to the wrapper, unless we do it on next tick
       next(() => putCursorAtEnd(this.textarea));
     }
   }

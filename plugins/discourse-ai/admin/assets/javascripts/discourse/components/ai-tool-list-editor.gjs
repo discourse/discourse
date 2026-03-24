@@ -26,6 +26,12 @@ export default class AiToolListEditor extends Component {
 
   @tracked expandedCategory = null;
 
+  get sortedTools() {
+    return [...(this.args.tools.content || [])].sort((a, b) =>
+      (a.name || "").localeCompare(b.name || "")
+    );
+  }
+
   get dropdownPresets() {
     return this.args.tools.resultSetMeta.presets.filter((preset) => {
       // Filter out individual image generation presets, keep only the category
@@ -270,18 +276,18 @@ export default class AiToolListEditor extends Component {
       </DPageSubheader>
 
       {{#if @tools.content}}
-        <table class="d-admin-table ai-tool-list-editor">
-          <thead>
+        <table class="d-table ai-tool-list-editor">
+          <thead class="d-table__header">
             <th>{{i18n "discourse_ai.tools.name"}}</th>
             <th></th>
           </thead>
           <tbody>
-            {{#each @tools.content as |tool|}}
+            {{#each this.sortedTools as |tool|}}
               <tr
                 data-tool-id={{tool.id}}
-                class="ai-tool-list__row d-admin-row__content"
+                class="ai-tool-list__row d-table__row"
               >
-                <td class="d-admin-row__overview">
+                <td class="d-table__cell --overview">
                   <div class="ai-tool-list__name-with-description">
                     <div class="ai-tool-list__name">
                       <strong>
@@ -319,7 +325,7 @@ export default class AiToolListEditor extends Component {
                     {{/if}}
                   </div>
                 </td>
-                <td class="d-admin-row__controls">
+                <td class="d-table__cell --controls">
                   <LinkTo
                     @route="adminPlugins.show.discourse-ai-tools.edit"
                     @model={{tool}}
@@ -331,12 +337,83 @@ export default class AiToolListEditor extends Component {
           </tbody>
         </table>
       {{else}}
-        <AdminConfigAreaEmptyList
-          @ctaLabel="discourse_ai.tools.new"
-          @ctaRoute="adminPlugins.show.discourse-ai-tools.new"
-          @ctaClass="ai-tool-list-editor__empty-new-button"
-          @emptyLabel="discourse_ai.tools.no_tools"
-        />
+        <AdminConfigAreaEmptyList @emptyLabel="discourse_ai.tools.no_tools">
+          <DMenu
+            @triggerClass="btn-default btn-small admin-config-area-empty-list__cta-button ai-tool-list-editor__empty-new-button"
+            @label={{i18n "discourse_ai.tools.new"}}
+            @icon="plus"
+            @placement="bottom-end"
+            @onClose={{this.resetMenuState}}
+          >
+            <:content>
+              <DropdownMenu as |dropdown|>
+                {{#if this.expandedCategory}}
+                  <dropdown.item>
+                    <DButton
+                      @label="back_button"
+                      @icon="chevron-left"
+                      @action={{this.collapseCategory}}
+                      class="btn-transparent"
+                    />
+                  </dropdown.item>
+                  <dropdown.divider />
+                  {{#each this.categoryPresets.otherPresets as |preset|}}
+                    <dropdown.item>
+                      <div
+                        role="button"
+                        class="ai-tool-preset-item"
+                        data-option={{preset.preset_id}}
+                        {{on "click" (fn this.routeToNewTool preset)}}
+                      >
+                        <span
+                          class="ai-tool-preset-provider"
+                        >{{preset.provider}}</span>
+                        <span
+                          class="ai-tool-preset-model"
+                        >{{preset.model_name}}</span>
+                      </div>
+                    </dropdown.item>
+                  {{/each}}
+
+                  {{#if this.categoryPresets.customPreset}}
+                    <dropdown.divider />
+                    <dropdown.item>
+                      <DButton
+                        @translatedLabel={{this.categoryPresets.customPreset.preset_name}}
+                        @action={{fn
+                          this.routeToNewTool
+                          this.categoryPresets.customPreset
+                        }}
+                        class="btn-transparent"
+                        data-option={{this.categoryPresets.customPreset.preset_id}}
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                {{else}}
+                  {{#each this.dropdownPresets as |preset index|}}
+                    {{#if (eq index this.lastIndexOfPresets)}}
+                      <dropdown.divider />
+                    {{/if}}
+
+                    <dropdown.item>
+                      <DButton
+                        @translatedLabel={{preset.preset_name}}
+                        @action={{if
+                          preset.is_category
+                          (fn this.expandCategory preset)
+                          (fn this.routeToNewTool preset)
+                        }}
+                        class="btn-transparent"
+                        data-option={{preset.preset_id}}
+                      />
+                    </dropdown.item>
+                  {{/each}}
+                {{/if}}
+              </DropdownMenu>
+
+            </:content>
+          </DMenu>
+        </AdminConfigAreaEmptyList>
       {{/if}}
     </section>
   </template>

@@ -37,4 +37,18 @@ describe "BannerTopic" do
       expect(topic.archetype).to eq(Archetype.banner)
     end
   end
+
+  context "when topic is in a read-restricted category" do
+    fab!(:group)
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+    before { topic.update!(category: private_category) }
+
+    it "does not banner the topic" do
+      automation.trigger!
+      topic.reload
+
+      expect(topic.archetype).to eq(Archetype.default)
+    end
+  end
 end

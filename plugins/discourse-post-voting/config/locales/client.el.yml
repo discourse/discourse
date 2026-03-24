@@ -112,3 +112,9 @@ el:
         voters_count_diff:
           one: "και %{count} ακόμα χρήστης..."
           other: "και %{count} ακόμα χρήστες..."
+    review:
+      transcript:
+        view: "Προβολή μεταγραφής προηγούμενων μηνυμάτων"
+      types:
+        reviewable_post_voting_comment:
+          title: "Σχόλιο σε ψήφιση αναρτήσεων με αναφορά"

@@ -48,7 +48,10 @@ import { addUniqueValuesToArray } from "../../lib/array-tools";
 export default class PostList extends Component {
   @tracked loading = false;
   @tracked canLoadMore = true;
-  @tracked emptyText = this.args.emptyText || i18n("post_list.empty");
+
+  get emptyText() {
+    return this.args.emptyText || i18n("post_list.empty");
+  }
 
   get isLoadingContent() {
     return this.loading || this.args.isLoading;

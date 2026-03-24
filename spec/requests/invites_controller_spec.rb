@@ -916,6 +916,20 @@ RSpec.describe InvitesController do
           end
         end
       end
+
+      context "when invite is linked to a PM topic the user no longer has access to" do
+        it "returns an error when updating the email without providing topic_id" do
+          sign_in(user)
+          pm_topic = Fabricate(:private_message_topic, user: user)
+          invite = Fabricate(:invite, invited_by: user, email: "original@example.com")
+          TopicInvite.create!(invite: invite, topic: pm_topic)
+
+          pm_topic.topic_allowed_users.where(user_id: user.id).destroy_all
+
+          put "/invites/#{invite.id}.json", params: { email: "new-target@example.com" }
+          expect(response.status).to eq(403)
+        end
+      end
     end
   end
 
@@ -1690,6 +1704,25 @@ RSpec.describe InvitesController do
       expect(response.status).to eq(403)
       expect(expired_invite.reload.deleted_at).to eq(nil)
     end
+
+    it "does not allow a moderator to delete another user's expired invites" do
+      moderator = Fabricate(:moderator)
+      sign_in(moderator)
+      post "/invites/destroy-all-expired", params: { username: user.username }
+
+      expect(response.status).to eq(403)
+      expect(expired_invite.reload.deleted_at).to eq(nil)
+    end
+
+    it "allows a moderator to delete their own expired invites" do
+      moderator = Fabricate(:moderator)
+      mod_expired_invite = Fabricate(:invite, invited_by: moderator, expires_at: 2.days.ago)
+      sign_in(moderator)
+      post "/invites/destroy-all-expired", params: { username: moderator.username }
+
+      expect(response.status).to eq(200)
+      expect(mod_expired_invite.reload.deleted_at).to be_present
+    end
   end
 
   describe "#resend_invite" do
@@ -1800,6 +1833,18 @@ RSpec.describe InvitesController do
         File.new("#{Rails.root}/spec/fixtures/csv/invites_with_locales.csv")
       end
       let(:file_with_locales) { Rack::Test::UploadedFile.new(File.open(csv_file_with_locales)) }
+      let(:csv_file_with_malicious_headers) do
+        File.new("#{Rails.root}/spec/fixtures/csv/invite_malicious_headers.csv")
+      end
+      let(:file_with_malicious_headers) do
+        Rack::Test::UploadedFile.new(File.open(csv_file_with_malicious_headers))
+      end
+      let(:csv_file_with_valid_and_invalid_headers) do
+        File.new("#{Rails.root}/spec/fixtures/csv/invite_valid_and_invalid_headers.csv")
+      end
+      let(:file_with_valid_and_invalid_headers) do
+        Rack::Test::UploadedFile.new(File.open(csv_file_with_valid_and_invalid_headers))
+      end
 
       it "fails if you cannot bulk invite to the forum" do
         sign_in(Fabricate(:user))
@@ -1874,6 +1919,47 @@ RSpec.describe InvitesController do
 
         user2 = User.where(staged: true).find_by_email("test2@example.com")
         expect(user2.locale).to eq("pl")
+      end
+
+      it "strips arbitrary CSV header columns that are not allowed" do
+        sign_in(admin)
+
+        post "/invites/upload_csv.json",
+             params: {
+               file: file_with_malicious_headers,
+               name: "malicious.csv",
+             }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::BulkInvite.jobs.size).to eq(1)
+
+        job_args = Jobs::BulkInvite.jobs.first["args"].first
+        invites = job_args["invites"]
+
+        invites.each do |invite|
+          expect(invite.keys).not_to include("admin", "moderator", "trust_level")
+        end
+
+        expect(invites.first).to eq({ "email" => "test@example.com", "groups" => "discourse" })
+        expect(invites.second).to eq({ "email" => "test2@example.com" })
+      end
+
+      it "allows valid user field names in CSV headers while stripping others" do
+        Fabricate(:user_field, name: "location")
+        sign_in(admin)
+
+        post "/invites/upload_csv.json",
+             params: {
+               file: file_with_valid_and_invalid_headers,
+               name: "test.csv",
+             }
+
+        expect(response.status).to eq(200)
+
+        job_args = Jobs::BulkInvite.jobs.first["args"].first
+        invites = job_args["invites"]
+
+        expect(invites.first).to eq({ "email" => "test@example.com", "location" => "usa" })
       end
 
       describe "invite_bulk_csv_custom_error modifier" do

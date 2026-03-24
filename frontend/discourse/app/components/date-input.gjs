@@ -7,7 +7,6 @@ import { waitForPromise } from "@ember/test-waiters";
 import { classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import { Promise } from "rsvp";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 function isInputDateSupported() {
@@ -24,8 +23,8 @@ export default class DateInput extends Component {
   useNativePicker = isInputDateSupported();
   _picker = null;
 
-  @discourseComputed("site.mobileView")
-  inputType() {
+  @computed("site.mobileView")
+  get inputType() {
     return this.useNativePicker ? "date" : "text";
   }
 

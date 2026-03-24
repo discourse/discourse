@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Assign | Assigning topics", type: :system do
+describe "Assign | Assigning topics" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
   fab!(:admin1, :admin)

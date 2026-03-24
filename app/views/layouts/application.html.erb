@@ -21,6 +21,14 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
+    <%= render("layouts/plugin_js", opts: {
+        include_official: allow_plugins?,
+        include_unofficial: allow_third_party_plugins?,
+        request: request,
+        include_admin_asset: staff?
+      }) if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
+     %>
+
     <%= build_plugin_html 'server:before-script-load' %>
 
     <script nonce="<%= csp_nonce_placeholder %>">
@@ -47,12 +55,12 @@
     <%= preload_script "vendor", type_module: true, from_vite: true %>
     <%= preload_script "discourse", type_module: true, from_vite: true %>
 
-    <%= render "layouts/plugin_js", opts: {
+    <%= render("layouts/plugin_js", opts: {
         include_official: allow_plugins?,
         include_unofficial: allow_third_party_plugins?,
         request: request,
         include_admin_asset: staff?
-      }
+      }) if ENV["ROLLUP_PLUGIN_COMPILER"] == "0"
      %>
 
     <%- if staff? %>

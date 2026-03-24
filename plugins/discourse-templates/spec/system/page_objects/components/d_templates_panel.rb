@@ -16,12 +16,8 @@ module PageObjects
       end
 
       def has_templates?(*templates)
-        templates.all? { |template| has_css?("#template-item-#{template.id}") } &&
-          template_count == templates.size
-      end
-
-      def template_count
-        all("#{PANEL_SELECTOR} .template-item").count
+        has_css?("#{PANEL_SELECTOR} .template-item", count: templates.size) &&
+          templates.all? { |template| has_css?("#template-item-#{template.id}") }
       end
     end
   end

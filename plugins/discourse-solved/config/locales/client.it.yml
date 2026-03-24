@@ -46,6 +46,8 @@ it:
         description: "Evidenzia la risposta e aiuta gli altri utilizzando il pulsante della soluzione sotto la risposta corretta."
       notification:
         title: "il tuo messaggio è stato contrassegnato come soluzione"
+      category_type_support:
+        title: "Sostienici"
     topic_statuses:
       solved:
         help: "Questo argomento ha una soluzione"

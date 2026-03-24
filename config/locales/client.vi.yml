@@ -6,6 +6,12 @@
 
 vi:
   js:
+    blocks:
+      ghost:
+        status: "Trạng thái"
+        in_location: "trong"
+        hidden: "ẩn"
+        failed: "thất bại"
     carousel:
       go_to_slide: "Đến slide %{index}"
       previous: "Slide trước"
@@ -383,6 +389,8 @@ vi:
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
+      start_posting:
+        back: "Quay lại"
       spread_the_word:
         action: "Sao chép link"
     about:
@@ -599,18 +607,13 @@ vi:
       in_reply_to: "trong trả lời tới"
       filtered_flagged_by: "Gắn cờ bởi"
       unknown:
-        title:
-          other: "Bạn có các yêu cầu cần xem xét từ các plugin đã bị vô hiệu hóa:"
         instruction: "Chúng sẽ không hiển thị đúng cách cho đến khi bạn kích hoạt plugin liên quan. Vui lòng kích hoạt plugin và làm mới trang. Hoặc bạn có thể bỏ qua chúng. <a href='%{url}' target='_blank'>Tìm hiểu thêm...</a>"
         reviewable_unknown_source: "%{reviewableType} (plugin không xác định)"
         reviewable_known_source: "%{reviewableType} (từ plugin '%{pluginName}')"
         ignore_all: "Bỏ qua tất cả"
         enable_plugins: "Kích hoạt các plugin"
-        delete_confirm: "Bạn có chắc muốn xóa tất cả đánh giá được tạo bởi các plugin đã bị vô hiệu hóa?"
-        ignore_success: "Tất cả đánh giá được tạo bởi các plugin đã bị vô hiệu hóa đều đã bị xóa."
       explain:
         why: "giải thích lý do tại sao mặt hàng này kết thúc trong hàng đợi"
-        title: "Chấm điểm"
         formula: "Công thức"
         subtotal: "Tổng phụ"
         total: "Tổng số"
@@ -624,10 +627,8 @@ vi:
           title: "Người dùng có cờ đã được đồng ý trong lịch sử được tặng tiền thưởng."
         trust_level_bonus:
           name: "độ tin cậy"
-          title: "Các mục có thể xem lại được tạo bởi người dùng có độ tin cậy cao hơn có điểm cao hơn."
         type_bonus:
           name: "loại tiền thưởng"
-          title: "Một số loại có thể xem lại có thể được nhân viên chỉ định một phần thưởng để làm cho chúng có mức độ ưu tiên cao hơn."
       revise_and_reject_post:
         title: "Xem lại"
         reason: "Lý do"
@@ -636,7 +637,6 @@ vi:
         custom_reason: "Hãy giải thích rõ lý do"
         other_reason: "Khác…"
         optional: "tùy chọn"
-      stale_help: "Có thể bản xem lại này đã được giải quyết bởi <b>%{username}</b>."
       claim_help:
         optional: "Bạn có thể phàn nàn mục này để tránh những người khác đánh giá nó."
         required: "Bạn phải yêu cầu các mục trước khi bạn có thể xem xét chúng."
@@ -1632,6 +1632,10 @@ vi:
         apps: "Ứng dụng"
         navigation_menu: "Menu điều hướng"
         upcoming_changes: "Các thay đổi sắp tới"
+        calendar_subscriptions: "Lịch"
+      calendar_subscriptions:
+        copied: "Đã sao chép!"
+        add_to_google: "Google Lịch"
       change_password:
         success: "(email đã gửi)"
         in_progress: "(đang gửi email)"
@@ -2225,6 +2229,7 @@ vi:
     form_kit:
       reset: Cài lại
       optional: tùy chọn
+      required: bắt buộc
       dirty_form: "Bạn chưa gửi các thay đổi của mình! Bạn có chắc muốn thoát?"
       errors:
         starts_with: "Phải bắt đầu bằng %{prefix}"
@@ -2962,8 +2967,6 @@ vi:
         votes_released: "đã trả lượt bình chọn"
         new_features: "tính năng mới của Discourse đã ra mắt"
         admin_problems: "Lời khuyên mới trên bảng điều khiển"
-        upcoming_change_available: "thay đổi mới sắp tới '%{changeName}' hiện đã có sẵn"
-        upcoming_change_automatically_promoted: "thay đổi sắp tới '%{changeName}' đã được kích hoạt tự động"
     upload_selector:
       change: "Thay đổi"
       delete: "Xóa"
@@ -3099,8 +3102,6 @@ vi:
         max_views:
           placeholder: Tối đa
           aria_label: lọc theo lượt xem tối đa
-        additional_options:
-          label: "Lọc số lượng tút và lượt xem chủ đề"
     hamburger_menu: "Menu điều hướng"
     new_item: "mới"
     go_back: "quay trở lại"
@@ -3156,11 +3157,8 @@ vi:
         confirm: "Xác nhận"
         select_all: "Chọn hết"
         clear_all: "Xóa hết"
-        unlist_topics: "Không công khai chủ đề"
-        relist_topics: "Mở lại công khai chủ đề"
         reset_bump_dates: "Đặt lại ngày đẩy"
         defer: "Đánh dấu là chưa đọc"
-        delete: "Xóa chủ đề"
         delete_topics_count:
           other: "Xóa chủ đề"
         delete_posts_count:
@@ -3191,31 +3189,21 @@ vi:
           other: "Loại bỏ Mới (%{count})"
         toggle: "Bật/tắt chọn nhiều chủ đề cùng lúc"
         actions: "Thao tác hàng loạt"
-        change_category: "Chọn chuyên mục…"
-        close_topics: "Đóng các chủ đề"
-        archive_topics: "Chủ đề Lưu trữ"
         move_messages_to_inbox: "Chuyển sang hộp thư"
         archive_messages: "Di chuyển đến Lưu trữ"
-        notification_level: "Thông báo…"
         change_notification_level: "Thay đổi mức thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
-        selected:
-          other: "Bạn đã chọn <b>%{count}</b> chủ đề"
         selected_sole_category:
           other: "Bạn đã chọn <b>%{count}</b> chủ đề từ chuyên mục:"
         selected_count:
           other: "%{count} được chọn"
-        change_tags: "Thay thế thẻ"
-        append_tags: "Thêm thẻ"
         choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
-        choose_append_tags: "Chọn các thẻ mới để thêm vào cho các chủ đề này:"
         changed_tags: "Các thẻ của các chủ đề đó đã được thay đổi."
-        remove_tags: "Xóa tất cả các thẻ"
         confirm_remove_tags:
           other: "Tất cả các thẻ sẽ bị xóa khỏi <b>%{count}</b> chủ đề. Bạn có chắc không?"
         progress:
           other: "Tiến độ: <strong>%{count}</strong> chủ đề"
-        notify: "Thông báo cho người dùng về thay đổi này."
+        notify: "Thông báo cho người dùng về thay đổi này"
         performing: "Đang thực hiện các thao tác hàng loạt, vui lòng chờ…"
         completed: "Các thao tác xử lý hàng loạt đã hoàn tất!"
         error_topic_count:
@@ -3243,7 +3231,6 @@ vi:
         name: "Bỏ qua"
       close_topics:
         name: "Đóng"
-        note: "Ghi chú"
         optional: (tùy chọn)
       archive_topics:
         name: "Lưu Trữ"
@@ -3257,24 +3244,18 @@ vi:
         name: "Công khai lại"
       remove_tags:
         name: "Xóa thẻ"
-      append_tags:
-        name: "Thêm thẻ"
       replace_tags:
         name: "Thay thế thẻ"
       delete_topics:
         name: "Xóa"
       update_category:
         name: "Cập nhật chuyên mục"
-        description: "Chọn chuyên mục mới cho các chủ đề đã chọn này"
       reset_bump_dates:
         name: "Đặt lại ngày đẩy"
-        description: "Đặt lại ngày đẩy chủ đề thành ngày tạo tút cuối cùng, điều này ảnh hưởng đến thứ tự hiển thị trong danh sách chủ đề"
       defer:
         name: "Đánh dấu là Chưa đọc"
-        description: "Đánh dấu chủ đề là chưa đọc"
       update_notifications:
         name: "Cập nhật thông báo"
-        description: "Thay đổi mức độ thông báo thành Giám sát, Theo dõi, Bình thường hoặc Phớt lờ."
     topic:
       filter_to:
         other: "%{count} tút trong chủ đề"
@@ -3786,7 +3767,8 @@ vi:
           edit: "Sửa"
           delete: "Xóa"
         add: "Thêm bản dịch mới"
-        manage: "Quản lý bản dịch (hiện có %{count})"
+        manage:
+          other: "Quản lý bản dịch (hiện có %{count})"
         view:
           other: "Xem %{count} ngôn ngữ đã dịch"
         modal:
@@ -4025,11 +4007,15 @@ vi:
         delete: "Xóa"
         add: "Thêm nhóm thẻ bắt buộc"
         placeholder: "Chọn nhóm thẻ…"
+        tag_group: "Nhóm thẻ"
       topic_featured_link_allowed: "Cho phép các liên kết nổi bật trong chuyên mục này"
       delete: "Xóa chuyên mục"
       create: "Chuyên mục mới"
       create_long: "Tạo Chủ đề mới"
+      type_settings_schema:
+        site_settings: "Cài đặt trang web"
       save: "Lưu chuyên mục"
+      unsaved_changes: "Bạn có những thay đổi chưa được lưu"
       slug: "Đường dẫn chuyên mục"
       parent: "Chuyên mục chính"
       slug_placeholder: "(Tùy chọn) các từ sử dụng trong url"
@@ -4075,6 +4061,8 @@ vi:
       list: "Danh sách chuyên mục"
       no_description: "Hãy thêm mô tả cho chuyên mục này"
       change_in_category_topic: "Sửa mô tả"
+      description_expand: "Hiện thêm"
+      description_collapse: "Thu gọn"
       already_used: "Màu này đã được dùng bởi chuyên mục khác"
       color_palette: "Bảng màu"
       security: "Bảo mật"
@@ -4643,7 +4631,20 @@ vi:
         other: "%{count} từ đồng nghĩa của nó cũng sẽ bị xóa."
       edit_tag: "Chỉnh sửa tên thẻ và mô tả"
       edit: "Sửa thẻ này"
-      description: "Mô tả (tối đa 1000 ký tự)"
+      description: "Mô tả"
+      settings:
+        title: "Cài đặt"
+        general: "Chung"
+        localizations: "Bản địa hóa"
+        back: "Quay lại"
+        name: "Tên"
+        slug: "tên đường dẫn"
+        name_placeholder: "Tên thẻ"
+        synonyms_subtitle: "Khi các thẻ sau được sử dụng, chúng sẽ được thay thế bằng %{name}"
+      localization:
+        locale: "Ngôn ngữ"
+        name: "Tên"
+        description: "Mô tả"
       sort_by: "Xếp theo:"
       sort_by_count: "Số lượng"
       sort_by_name: "Tên"
@@ -5143,7 +5144,6 @@ vi:
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
-    reset_filter: "Cài lại"
     toggle_filters: "Bật/tắt bộ lọc thả xuống"
     admin:
       title: "Quản trị Diễn đàn"
@@ -5157,9 +5157,11 @@ vi:
           never: "không bao giờ"
       reports:
         title: "Danh sách các báo cáo có sẵn"
-        meta_doc: "Báo cáo là công cụ mạnh mẽ giúp bạn hiểu rõ những gì đang diễn ra trên trang web của mình. Chúng có thể giúp bạn nhận diện xu hướng, phát hiện vấn đề và đưa ra quyết định dựa trên dữ liệu."
         sidebar_title: "Báo cáo"
         back: "Quay lại tất cả báo cáo"
+        group_traffic: "Băng thông"
+        group_members: "Thành viên kênh"
+        group_other: "Khác"
       config_sections:
         account:
           title: "Tài khoản"
@@ -5203,7 +5205,6 @@ vi:
         enabled_for_options:
           no_one: "Không ai"
           everyone: "Mọi người"
-          staff: "Chỉ nhân viên"
           specific_groups: "Các nhóm cụ thể"
           specific_groups_with_group_names:
             other: "Các nhóm %{groupNames}"
@@ -5225,7 +5226,6 @@ vi:
           all: "Tất cả"
           enabled_all: "Tất cả trạng thái được kích hoạt"
           enabled: "Đã bật"
-          enabled_for_staff: "Đã kích hoạt cho nhân viên"
           enabled_for_specific_groups: "Đã kích hoạt cho các nhóm cụ thể"
           disabled: "Vô hiệu hóa"
           impact_type_all: "Tất cả loại tác động"
@@ -5314,7 +5314,6 @@ vi:
               help_text: "Kích thước đề xuất là 600x80 pixel."
             large_icon:
               title: "Biểu tượng hình vuông"
-              description: "Phiên bản hình vuông của logo xuất hiện ở đầu trang quản trị và cũng là logo ứng dụng trên màn hình chính của thiết bị di động."
               help_text: "Kích thước đề xuất là 512x512 pixel."
             square_icon_dark:
               required: "Sử dụng logo vuông khác cho chế độ tối?"
@@ -5501,7 +5500,7 @@ vi:
           header_description: "Báo cáo là công cụ mạnh mẽ giúp bạn hiểu rõ những gì đang diễn ra trên trang web của mình. Chúng có thể giúp bạn nhận diện xu hướng, phát hiện vấn đề và đưa ra quyết định dựa trên dữ liệu."
           sub_pages:
             settings:
-              title: "Cài đặt bảng điều khiển"
+              title: "Cài đặt"
         badges:
           title: "Huy hiệu"
           header_description: "Huy hiệu là phần thưởng dành cho thành viên vì các hoạt động, đóng góp và thành tích của họ, nhằm ghi nhận, xác thực và khuyến khích hành vi tích cực và sự tham gia trong cộng đồng"
@@ -5653,17 +5652,6 @@ vi:
         no_results: 'Chúng tôi không tìm thấy bất kỳ kết quả nào khớp với "%{filter}".'
         result_count:
           other: '%{count} kết quả cho "%{filter}"'
-        result_types:
-          page:
-            other: "Trang"
-          report:
-            other: "Báo cáo"
-          setting:
-            other: "Cài đặt"
-          theme:
-            other: "Themes"
-          component:
-            other: "Các thành phần"
       new_features:
         title: "Có gì mới?"
         check_for_updates: "Kiểm tra cập nhật"
@@ -5688,23 +5676,6 @@ vi:
           subtitle: "Chúng tôi liên tục phát hành các tính năng và cải tiến mới. Trang này nêu bật những điểm chính, nhưng bạn có thể nhấn vào 'Tìm hiểu thêm' để xem ghi chú phát hành chi tiết."
           no_new_features_error: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
           learn_more: "Tìm hiểu thêm..."
-          experimental: "Thí nghiệm"
-          only_experiments: "Chỉ hiển thị các tính năng thử nghiệm"
-          experiment_enabled: "Bạn đã kích hoạt tính năng thử nghiệm."
-          experiment_disabled: "Bạn đã tắt tính năng thử nghiệm."
-          feature_enabled: "Bạn đã kích hoạt tính năng."
-          feature_disabled: "Bạn đã tắt tính năng."
-          toggled_too_fast: "Bạn đã chuyển đổi quá nhanh. Vui lòng đợi vài giây trước khi thử lại."
-          experiment_tooltip:
-            title_disabled: "Thử tính năng thử nghiệm này"
-            title_enabled: "Tắt tính năng thử nghiệm"
-            content_disabled: "Hãy dùng thử tính năng mới nhất mà chúng tôi đang phát triển! Tính năng này vẫn đang trong giai đoạn thử nghiệm, vì vậy chúng tôi có thể loại bỏ nó bất cứ lúc nào. Bạn có thể hủy kích hoạt bất cứ khi nào bạn muốn.<br/><br/>Thay đổi tùy chọn này sẽ kích hoạt tính năng cho tất cả thành viên."
-            content_enabled: "Việc thay đổi này sẽ vô hiệu hóa tính năng đối với tất cả thành viên."
-          feature_tooltip:
-            title_disabled: "Thử tính năng này"
-            title_enabled: "Tắt tính năng"
-            content_disabled: "Hãy thử tính năng mới này! Bạn có thể tắt bất cứ lúc nào bạn muốn.<br/><br/>Thay đổi tùy chọn này sẽ kích hoạt tính năng cho tất cả thành viên."
-            content_enabled: "Việc thay đổi này sẽ vô hiệu hóa tính năng đối với tất cả thành viên."
         last_checked: "Kiểm tra lần cuối"
         refresh_problems: "Làm mới"
         no_problems: "Không phát hiện vấn đề"
@@ -5763,7 +5734,7 @@ vi:
           all: "Tất cả"
           view_table: "bảng"
           view_graph: "đồ thị"
-          refresh_report: "Làm mới báo cáo"
+          refresh_report: "Làm mới"
           daily: hằng ngày
           monthly: Hàng tháng
           weekly: Hàng tuần
@@ -7721,6 +7692,7 @@ vi:
         field_types:
           text: "Văn bản"
           textarea: "Vùng nhập văn bản"
+          date: "Ngày"
           confirm: "Xác nhận"
           dropdown: "Xổ xuống"
           multiselect: "Chọn nhiều"
@@ -7854,7 +7826,7 @@ vi:
           min_admin_password_length:
             prompt: "Bạn sắp thay đổi chính sách mật khẩu. Điều này sẽ ảnh hưởng đến tất cả quản trị viên khi họ thay đổi mật khẩu kể từ bây giờ. Bạn có chắc muốn tiếp tục?"
             confirm: "Có, cập nhật chính sách mật khẩu"
-          password_unique_charactes:
+          password_unique_characters:
             prompt: "Bạn sắp thay đổi chính sách mật khẩu của mình. Điều này sẽ ảnh hưởng đến tất cả thành viên khi thay đổi mật khẩu kể từ bây giờ. Bạn có chắc muốn tiếp tục?"
             confirm: "Có, cập nhật chính sách mật khẩu"
           block_common_passwords:

@@ -13,9 +13,39 @@
 
 .form-kit__section-title {
   margin: 0;
-  font-size: var(--font-up-1-rem);
+  font-size: var(--font-up-1);
+}
+
+.form-kit__section-header {
+  border-bottom: 1px solid var(--content-border-color);
+  padding-bottom: 0.5em;
 }
 
 .form-kit__section-subtitle {
   margin-top: calc(var(--space-4) * -1); // Offset the gap of the section
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.form-kit__section.emphasis {
+  border: 2px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+  padding: 1em;
+  box-sizing: border-box;
+
+  &.emphasis-success {
+    border-color: var(--success-medium);
+  }
+
+  &.emphasis-error {
+    border-color: var(--danger-medium);
+  }
+
+  &.emphasis-warning {
+    border-color: var(--highlight);
+  }
+
+  &.emphasis-info {
+    border-color: var(--tertiary-medium);
+  }
 }

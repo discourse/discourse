@@ -37,7 +37,6 @@ et:
       llm_selector:
         none: "Pole"
       features:
-        back: "Tagasi"
         disabled: "(välja lülitatud)"
         groups: "Rühmad:"
         no_groups: "Pole"
@@ -79,8 +78,7 @@ et:
         username: "Kasutajanimi"
         total_requests: "Kokku päringuid"
         total: "Kokku"
-      ai_persona:
-        back: "Tagasi"
+      ai_agent:
         name: "Nimi"
         edit: "Muuda"
         export: "Ekspordi"
@@ -99,7 +97,6 @@ et:
           title: "Üleslaadimised"
           uploading: "Laen üles..."
       tools:
-        back: "Tagasi"
         export: "Ekspordi"
         import: "Impordi"
         name: "Nimi"
@@ -109,11 +106,11 @@ et:
         remove_parameter: "Eemalda"
         parameter_required: "Nõutud"
         edit: "Muuda"
+        test: "Proovi"
         delete: "Kustuta"
       secrets:
         name: "Nimi"
         secret: "Väärtus"
-        back: "Tagasi"
         save: "Salvesta"
         edit: "Muuda"
         delete: "Kustuta"
@@ -123,7 +120,6 @@ et:
         provider: "Teenusepakkuja"
         save: "Salvesta"
         edit: "Muuda"
-        back: "Tagasi"
         delete: Kustuta
         quotas:
           group: "Rühm"
@@ -155,7 +151,6 @@ et:
         image_caption:
           save_caption: "Salvesta"
       embeddings:
-        back: "Tagasi"
         save: "Salvesta"
         delete: "Kustuta"
         edit: "Muuda"

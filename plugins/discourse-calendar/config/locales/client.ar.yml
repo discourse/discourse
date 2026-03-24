@@ -7,9 +7,11 @@
 ar:
   admin_js:
     admin:
+      calendar: "التقويم والأحداث"
       site_settings:
         categories:
           discourse_post_event: "حدث Discourse"
+          discourse_calendar: "التقويم والأحداث"
   js:
     notifications:
       titles:
@@ -34,6 +36,7 @@ ar:
         header_title: "العطلات"
         pick_region_description: "اختر منطقة لعرض العطلات لتلك المنطقة."
         disabled_holidays_description: "سيتم استبعاد العطلات المتوقفة من تقويم عطلات فريق العمل."
+        header_description: "اختر منطقة لعرض العطلات الخاصة بها. سيتم استبعاد العطلات المتوقفة من تقويم عطلات فريق العمل."
       date: "التاريخ"
       add_to_calendar: "الإضافة إلى تقويم Google"
       toggle_timezone_offset_title: "تبديل إزاحة المنطقة الزمنية"
@@ -42,6 +45,7 @@ ar:
         title: "المنطقة"
         none: "لا يوجد"
         use_current_region: "استخدام المنطقة الحالية"
+        select_region: "اختر منطقة..."
         names:
           ae: "الإمارات العربية المتحدة"
           ar: "الأرجنتين"
@@ -351,6 +355,7 @@ ar:
       bulk_invite: "دعوة جماعية"
       close_event: "إغلاق الحدث"
       open_event: "فتح الحدث"
+      destroy_event: "إلغاء الحدث"
       invitees_modal:
         title_invited: "المشاركة في الحدث"
         title_participated: "قائمة المستخدمين الذين شاركوا"
@@ -432,6 +437,7 @@ ar:
         event:
           expired: "انتهى"
           closed: "مغلق"
+          full: "كامل"
           status:
             standalone:
               title: "مستقل"
@@ -442,6 +448,12 @@ ar:
             private:
               title: "خاص"
               description: "لا يمكن إلا للمستخدمين المدعوين الانضمام إلى حدثٍ خاص."
+      composer:
+        name_placeholder: "حدث"
+        end_date_placeholder: "تعيين تاريخ الانتهاء"
+        location_placeholder: "أضف الموقع أو عنوان URL"
+        max_attendees_placeholder: "حدد الحد الأقصى للحضور"
+        description_placeholder: "أضف وصفًا للحدث"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -489,6 +501,9 @@ ar:
         minimal:
           label: "حدث صغير"
           checkbox_label: "إخفاء زرَّي ذاهب/غير ذاهب وحالة المدعوين"
+        max_attendees:
+          label: "الحد الأقصى للحضور"
+          placeholder: "لا يوجد حد"
         allow_chat:
           label: "تكامل الدردشة"
           checkbox_label: "إنشاء قناة دردشة خاصة بحدث معين وإدارتها"
@@ -508,6 +523,7 @@ ar:
           label: "المجموعات المدعوة"
         status:
           label: "الحالة"
+        delete_confirmation_message: "هل تريد حذف هذا الحدث؟"
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"

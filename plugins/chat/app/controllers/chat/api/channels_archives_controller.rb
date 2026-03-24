@@ -15,6 +15,14 @@ class Chat::Api::ChannelsArchivesController < Chat::Api::ChannelsController
     raise Discourse::InvalidParameters if new_topic && archive_params[:title].blank?
     raise Discourse::InvalidParameters if !new_topic && archive_params[:topic_id].blank?
 
+    if !new_topic
+      destination_topic = Topic.find_by(id: archive_params[:topic_id])
+      if destination_topic.blank? || !guardian.can_see_topic?(destination_topic) ||
+           !guardian.can_create_post_on_topic?(destination_topic)
+        raise Discourse::InvalidAccess
+      end
+    end
+
     if !guardian.can_change_channel_status?(channel_from_params, :read_only)
       raise Discourse::InvalidAccess.new(I18n.t("chat.errors.channel_cannot_be_archived"))
     end

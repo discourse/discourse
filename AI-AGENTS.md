@@ -11,16 +11,18 @@ Discourse is large with long history. Understand context before changes.
 
 ### All Files
 - Always lint changed files
-- Make display strings translatable (use placeholders, not split strings)
 - Create subagent to review changes against this file after completing tasks
 
 ### Toolset
 - Use `pnpm` for JavaScript, `bundle` for Ruby
-- Use helpers in bin over bundle exec (bin/rspec, bin/rake)
+- Use helpers in bin over bundle exec (bin/rspec, bin/rake, bin/lint)
 
-### JavaScript
+### JavaScript and UI
 - No empty backing classes for template-only components unless requested
-- Use FormKit for forms: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 (`app/assets/javascripts/discourse/app/form-kit`)
+- Use FormKit for forms, see ./docs/developer-guides/docs/03-code-internals/21-form-kit.md (`frontend/discourse/app/form-kit`)
+- Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md
+- Make display strings translatable (use placeholders, not split strings)
+- Use "Sentence case" for strings, not "Proper Case" or "lower case"
 
 ### JSDoc
 - Do not add JSDoc to any new code you write.
@@ -87,12 +89,14 @@ ALWAYS lint any changes you make
 
 ## Services
 - Extract business logic (validation, models, permissions) from controllers
-- https://meta.discourse.org/t/using-service-objects-in-discourse/333641
+- docs/developer-guides/docs/03-code-internals/19-service-objects.md
+- Use the skill at .skills/discourse-service-authoring
 - Examples: `app/services` (only classes with `Service::Base`)
 
 ## Database & Performance
 - ActiveRecord: use `includes()`/`preload()` (N+1), `find_each()`/`in_batches()` (large sets), `update_all`/`delete_all` (bulk), `exists?` over `present?`
-- Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns, use `bin/rails generate migration` for new migrations
+- Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns
+- Use `bin/rails generate migration` for new migrations
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
 
 ## HTTP Response Codes

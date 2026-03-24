@@ -34,5 +34,12 @@ RSpec.describe Chat::ChatController do
       post "/chat/admin/export/messages"
       expect(response.status).to eq(403)
     end
+
+    it "moderators can't export chat messages via the general csv export endpoint" do
+      sign_in(moderator)
+      post "/export_csv/export_entity.json", params: { entity: "chat_message" }
+      expect(response).not_to be_successful
+      expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+    end
   end
 end

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ActivationControls from "discourse/components/activation-controls";
 import DModal from "discourse/components/d-modal";
 import { resendActivationEmail } from "discourse/lib/user-activation";
@@ -38,7 +38,7 @@ export default class NotActivated extends Component {
       class="not-activated-modal"
     >
       <:body>
-        {{htmlSafe (i18n "login.not_activated" sentTo=@model.sentTo)}}
+        {{trustHTML (i18n "login.not_activated" sentTo=@model.sentTo)}}
       </:body>
       <:footer>
         <ActivationControls

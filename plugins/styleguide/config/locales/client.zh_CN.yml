@@ -62,7 +62,7 @@ zh_CN:
         categories_list:
           title: "类别列表"
         topic_link:
-          title: "主题链接和状态"
+          title: "话题链接和状态"
         topic_list_item:
           title: "话题列表项"
         topic_statuses:
@@ -85,6 +85,8 @@ zh_CN:
           title: "帖子列表"
           empty_example: "<PostList /> 空状态"
           populated_example: "<PostList /> 已填写状态"
+        post_oneboxes:
+          title: "帖子 Onebox"
         topic_map:
           title: "话题图"
         site_header:
@@ -115,3 +117,5 @@ zh_CN:
         char_counter:
           title: "字符计数器"
           placeholder: "在此处输入您的文本…"
+        segmented_control:
+          title: "分段控制（按钮切换组）"

@@ -11,6 +11,7 @@ ru:
         draft: "Черновик"
         open: "Открытые"
         approved: "Одобренные"
+        merged: "Объединено"
         closed: "Закрытое"
   admin_js:
     admin:

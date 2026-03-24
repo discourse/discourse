@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | no sidebar", type: :system do
+RSpec.describe "List channels | no sidebar" do
   fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }

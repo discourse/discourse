@@ -6,6 +6,12 @@
 
 pt:
   js:
+    blocks:
+      ghost:
+        status: "Estado"
+        in_location: "em"
+        hidden: "escondido"
+        failed: "falhado"
     number:
       format:
         separator: "."
@@ -409,6 +415,8 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     admin_onboarding_banner:
+      start_posting:
+        back: "Anterior"
       spread_the_word:
         action: "Copiar hiperligação"
     about:
@@ -649,19 +657,13 @@ pt:
       in_reply_to: "Em resposta a"
       filtered_flagged_by: "Sinalizado por"
       unknown:
-        title:
-          one: "Tem revisões pendentes de um plugin desativado:"
-          other: "Tem revisões pendentes de plugins desativados:"
         instruction: "Não podem ser exibidos corretamente até que ative o plugin relevante. Por favor, ative o plugin e atualize a página. Alternativamente, pode ignorá-los. <a href='%{url}' target='_blank'>Saiba mais...</a>"
         reviewable_unknown_source: "%{reviewableType} (plugin desconhecido)"
         reviewable_known_source: "%{reviewableType} (do plugin '%{pluginName}')"
         ignore_all: "Ignora tudo"
         enable_plugins: "Ativar os plugins"
-        delete_confirm: "Tem a certeza de que pretende eliminar todas as avaliações criadas por plugins desativados?"
-        ignore_success: "Todas as avaliações criadas por plugins desativados foram eliminadas."
       explain:
         why: "explique por que este item acabou na fila"
-        title: "Pontuação passível de revisão"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -675,10 +677,8 @@ pt:
           title: "Os utilizadores com um histórico de sinalizações concordantes obtêm um bónus."
         trust_level_bonus:
           name: "nível de confiança"
-          title: "Os itens para revisão criados por utilizadores de nível de confiança superior têm uma pontuação mais elevada."
         type_bonus:
           name: "tipo de bónus"
-          title: "Determinado tipo de revisões podem receber um bónus por parte da equipa para terem uma prioridade mais elevada."
       revise_and_reject_post:
         title: "Rever"
         reason: "Motivo"
@@ -687,7 +687,6 @@ pt:
         custom_reason: "Dê uma descrição clara do motivo"
         other_reason: "Outro..."
         optional: "opcional"
-      stale_help: "Esta revisão foi resolvida por <b>%{username}</b>."
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
         required: "Deve reivindicar items antes de as poder rever."
@@ -1668,6 +1667,9 @@ pt:
         interface: "Interface"
         apps: "Aplicações"
         navigation_menu: "Menu de Navegação"
+      calendar_subscriptions:
+        copied: "Copiado!"
+        add_to_google: "Calendário Google"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -2274,6 +2276,7 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
+      required: obrigatório
       dirty_form: "Não submeteste as tuas alterações! Tens a certeza de que queres sair?"
       errors:
         starts_with: "Deve começar com %{prefix}"
@@ -3128,9 +3131,6 @@ pt:
       bulk:
         select_all: "Selecionar Tudo"
         clear_all: "Remover Tudo"
-        unlist_topics: "Remover Tópicos da Lista"
-        relist_topics: "Voltar a Listar Tópicos"
-        delete: "Eliminar Tópicos"
         delete_topics_count:
           one: "Eliminar Tópico"
           other: "Eliminar Tópicos"
@@ -3154,22 +3154,11 @@ pt:
           other: "Descartar Novos (%{count})"
         toggle: "ativar seleção em massa de tópicos"
         actions: "Ações em Massa"
-        change_category: "Definir Categoria..."
-        close_topics: "Fechar Tópicos"
-        archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para a Caixa de Entrada"
-        notification_level: "Notificações…"
         change_notification_level: "Alterar Nível de Notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
-        selected:
-          one: "Selecionou <b>%{count}</b> tópico."
-          other: "Selecionou <b>%{count}</b> tópicos."
-        change_tags: "Substituir Etiquetas"
-        append_tags: "Anexar Etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
-        choose_append_tags: "Escolha novas etiquetas para acrescentar a estes tópicos:"
         changed_tags: "As etiquetas para esses tópicos foram mudadas."
-        remove_tags: "Remover Todas as Etiquetas"
         confirm_remove_tags:
           one: "Todas as etiquetas serão removidas deste tópico. Tem a certeza?"
           other: "Todas as etiquetas serão removidas de <b>%{count}</b> tópicos. Tem a certeza?"
@@ -3199,15 +3188,12 @@ pt:
         name: "Arquivo"
       move_messages_to_inbox:
         name: "Mover para a Caixa de Entrada"
-      append_tags:
-        name: "Anexar Etiquetas"
       replace_tags:
         name: "Substituir Etiquetas"
       delete_topics:
         name: "Eliminar"
       defer:
         name: "Marcar como Não Lido"
-        description: "Marcar tópicos como não lido"
       update_notifications:
         name: "Notificações de Atualização"
     topic:
@@ -3665,7 +3651,9 @@ pt:
           edit: "Editar"
           delete: "Eliminar"
         add: "Adicionar nova tradução"
-        manage: "Gerir traduções (existentes: %{count})"
+        manage:
+          one: "Gerir traduções (existentes: %{count})"
+          other: "Gerir traduções (existentes: %{count})"
         view:
           one: "Ver %{count} idioma traduzido"
           other: "Ver %{count} idiomas traduzidos"
@@ -3867,6 +3855,7 @@ pt:
       allow_global_tags_label: "Permita também outras tags"
       required_tag_group:
         delete: "Eliminar"
+        tag_group: "Grupo de tags"
       topic_featured_link_allowed: "Permitir hiperligações em destaque nesta categoria"
       create_long: "Criar uma nova categoria"
       slug_placeholder: "(Opcional) palavras com travessão no URL"
@@ -3896,6 +3885,8 @@ pt:
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
       no_description: "Por favor adicione uma descrição para esta categoria."
+      description_expand: "Mostrar mais"
+      description_collapse: "Mostrar menos"
       already_used: "Esta cor já foi usada para outra categoria"
       security: "Segurança"
       security_add_group: "Adicionar um grupo"
@@ -4306,6 +4297,19 @@ pt:
       delete_confirm_synonyms:
         one: "Seu sinônimo também será excluído."
         other: "Seus %{count} sinônimos também serão excluídos."
+      description: "Descrição"
+      settings:
+        title: "Configurações"
+        general: "Geral"
+        localizations: "Localizações"
+        back: "Anterior"
+        name: "Nome"
+        slug: "Slug"
+        synonyms_subtitle: "Quando as tags seguintes forem usadas, elas serão substituídas por %{name}"
+      localization:
+        locale: "Idioma"
+        name: "Nome"
+        description: "Descrição"
       sort_by: "Ordenar por:"
       sort_by_count: "contagem"
       sort_by_name: "nome"
@@ -4507,7 +4511,6 @@ pt:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
-    reset_filter: "Repor"
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"
@@ -4521,6 +4524,9 @@ pt:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         back: "Voltar para todos os relatórios"
+        group_traffic: "Tráfego"
+        group_members: "Membros"
+        group_other: "Outro"
       config_sections:
         account:
           title: "Conta"
@@ -4544,7 +4550,6 @@ pt:
         preview: "Pré-visualização"
         enabled_for_options:
           everyone: "Todos"
-          staff: "Apenas Pessoal"
         statuses:
           experimental: "Experimental"
         impact_roles:
@@ -4664,6 +4669,9 @@ pt:
               title: "Logs"
         reports:
           title: "Relatórios"
+          sub_pages:
+            settings:
+              title: "Configurações"
         badges:
           title: "Crachás"
         permalinks:
@@ -4712,13 +4720,6 @@ pt:
         site_setting_warning: 'Esta definição é gerida pelo tema predefinido para o seu site (%{defaultThemeName}). Pode modificá-la na <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">página de edição do tema</a>.'
       search:
         title: "Pesquisar"
-        result_types:
-          theme:
-            one: "Tema"
-            other: "Temas"
-          component:
-            one: "Componente"
-            other: "Componentes"
       new_features:
         title: "O que é novo?"
         check_for_updates: "Procurar por atualizações"
@@ -4739,18 +4740,6 @@ pt:
         new_features:
           title: "O que é novo?"
           learn_more: "Saiba mais..."
-          experimental: "Experimental"
-          only_experiments: "Mostrar apenas as funcionalidades experimentais"
-          experiment_enabled: "Ativou a funcionalidade experimental."
-          experiment_disabled: "Desativou a funcionalidade experimental."
-          feature_enabled: "Ativou a funcionalidade."
-          feature_disabled: "Desativou a funcionalidade."
-          experiment_tooltip:
-            title_disabled: "Teste esta funcionalidade experimental"
-            title_enabled: "Desativar a funcionalidade experimental"
-          feature_tooltip:
-            title_disabled: "Teste esta funcionalidade"
-            title_enabled: "Desativar funcionalidade"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
@@ -4801,7 +4790,7 @@ pt:
           all: "Tudo"
           view_table: "tabela"
           view_graph: "grafo"
-          refresh_report: "Atualizar relatório"
+          refresh_report: "Atualizar"
           daily: Diário
           monthly: Mensal
           weekly: Semanal
@@ -5797,6 +5786,7 @@ pt:
           disabled: "Não apresentado no formulário de registo"
         field_types:
           text: "Texto"
+          date: "Data"
           confirm: "Confirmação"
           dropdown: "Lista pendente"
       site_text:

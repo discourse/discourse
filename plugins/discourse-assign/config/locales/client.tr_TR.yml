@@ -129,6 +129,8 @@ tr_TR:
       web_hooks:
         assign_event:
           group_name: "Etkinlik Ata"
+          assigned: "Bir kullanıcı bir konu atadığında"
+          unassigned: "Bir kullanıcı bir konuyu atamayı kaldırdığında"
     search:
       advanced:
         in:
@@ -138,8 +140,16 @@ tr_TR:
           label: "Şuraya atandı:"
     topics:
       bulk:
-        unassign: "Konuların atamalarını kaldır"
-        assign: "Konuları ata"
+        unassign: "Konuların atamasını kaldır"
+        assign: "Konuları atayın"
+        assign_description: "Seçilen konuları aşağıdaki kullanıcıya atayın:"
+        unassign_description: "Seçili konuların atamasını kaldırmak istiyor musunuz?"
+        confirm_assign_topics:
+          one: "%{count} konuyu atayın"
+          other: "%{count} konuyu atayın"
+        confirm_unassign_topics:
+          one: "%{count} konunun atamasını kaldır"
+          other: "%{count} konunun atamasını kaldır"
     discourse_automation:
       scriptables:
         random_assign:

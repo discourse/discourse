@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Filtering templates by tags", type: :system do
+RSpec.describe "Filtering templates by tags" do
   fab!(:current_user, :user)
   fab!(:templates_category, :category)
   fab!(:tag_1, :tag)

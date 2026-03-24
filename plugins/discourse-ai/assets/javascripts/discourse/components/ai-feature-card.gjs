@@ -75,10 +75,10 @@ export default class AiFeatureCard extends Component {
   groupList(feature) {
     const groups = [];
     const groupIds = new Set();
-    if (feature.personas) {
-      feature.personas.forEach((persona) => {
-        if (persona.allowed_groups) {
-          persona.allowed_groups.forEach((group) => {
+    if (feature.agents) {
+      feature.agents.forEach((agent) => {
+        if (agent.allowed_groups) {
+          agent.allowed_groups.forEach((group) => {
             if (!groupIds.has(group.id)) {
               groupIds.add(group.id);
               groups.push(group);
@@ -102,30 +102,27 @@ export default class AiFeatureCard extends Component {
             <span>{{i18n "discourse_ai.features.disabled"}}</span>
           {{/unless}}
         </div>
-        <div class="ai-feature-card__persona">
+        <div class="ai-feature-card__agent">
           <span class="ai-feature-card__label">
-            {{i18n
-              "discourse_ai.features.persona"
-              count=@feature.personas.length
-            }}
+            {{i18n "discourse_ai.features.agent" count=@feature.agents.length}}
           </span>
-          {{#if @feature.personas}}
+          {{#if @feature.agents}}
             <ExpandableList
-              @items={{@feature.personas}}
+              @items={{@feature.agents}}
               @maxItemsToShow={{5}}
-              as |persona index isLastItem|
+              as |agent index isLastItem|
             >
               <LinkTo
-                @route="adminPlugins.show.discourse-ai-personas.edit"
-                @model={{persona.id}}
-                class="ai-feature-card__persona-link"
+                @route="adminPlugins.show.discourse-ai-agents.edit"
+                @model={{agent.id}}
+                class="ai-feature-card__agent-link"
               >
-                {{concat persona.name (unless (isLastItem index) ", ")}}
+                {{concat agent.name (unless (isLastItem index) ", ")}}
               </LinkTo>
             </ExpandableList>
           {{else}}
             <span class="ai-feature-card__label">
-              {{i18n "discourse_ai.features.no_persona"}}
+              {{i18n "discourse_ai.features.no_agent"}}
             </span>
           {{/if}}
         </div>
@@ -157,7 +154,7 @@ export default class AiFeatureCard extends Component {
           {{/if}}
         </div>
         {{#if @showGroups}}
-          {{#if @feature.personas}}
+          {{#if @feature.agents}}
             <div class="ai-feature-card__groups">
               <span class="ai-feature-card__label">
                 {{i18n "discourse_ai.features.groups"}}

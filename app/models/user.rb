@@ -636,7 +636,7 @@ class User < ActiveRecord::Base
     User.email_hash(email)
   end
 
-  def reload
+  def reload(options = nil)
     @unread_notifications = nil
     @all_unread_notifications_count = nil
     @unread_total_notifications = nil
@@ -1315,6 +1315,8 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
+    reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
+    ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
     Reviewable.where(created_by_id: id).delete_all
 
     posts
@@ -1650,7 +1652,7 @@ class User < ActiveRecord::Base
         .where(status: "rejected", target_created_by_id: ids)
         .group(:target_created_by_id)
         .count
-    end
+    end || 0
   end
 
   def number_of_flags_given
@@ -1667,7 +1669,7 @@ class User < ActiveRecord::Base
         .where(target_user_id: ids, action: UserHistory.actions[:silence_user])
         .group(:target_user_id)
         .count
-    end
+    end || 0
   end
 
   def number_of_suspensions
@@ -1676,7 +1678,7 @@ class User < ActiveRecord::Base
         .where(target_user_id: ids, action: UserHistory.actions[:suspend_user])
         .group(:target_user_id)
         .count
-    end
+    end || 0
   end
 
   def create_user_profile

@@ -15,9 +15,8 @@
     gap: 0.25em;
     margin: 0;
     font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
-    font-weight: bold;
-    padding-bottom: 0.25em;
+    color: var(--primary);
+    font-weight: 600 !important;
   }
 
   &-subtitle {
@@ -26,8 +25,7 @@
     gap: 0.25em;
     margin: 0;
     font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
-    padding-bottom: 0.25em;
+    color: var(--primary-medium);
 
     > * {
       margin: 0;
@@ -57,6 +55,11 @@
 
     &.--large {
       width: var(--form-kit-large-input);
+    }
+
+    &.--max {
+      max-width: var(--form-kit-max-input);
+      width: 100%;
     }
 
     &.--full {

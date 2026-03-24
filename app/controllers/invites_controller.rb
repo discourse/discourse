@@ -3,6 +3,8 @@
 require "csv"
 
 class InvitesController < ApplicationController
+  ALLOWED_BULK_INVITE_COLUMNS = %w[email groups topic_id locale]
+
   requires_login only: %i[
                    create
                    create_multiple
@@ -207,6 +209,8 @@ class InvitesController < ApplicationController
       raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
       guardian.ensure_can_invite_to!(topic)
     end
+
+    invite.topics.each { |t| guardian.ensure_can_invite_to!(t) } if !params.has_key?(:topic_id)
 
     if params[:group_ids].present? || params[:group_names].present?
       groups = Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names])
@@ -430,8 +434,8 @@ class InvitesController < ApplicationController
   end
 
   def destroy_all_expired
-    guardian.ensure_can_destroy_all_invites!
     user = fetch_user_from_params
+    guardian.ensure_can_destroy_all_invites!(user)
 
     Invite
       .where(invited_by: user)
@@ -490,19 +494,29 @@ class InvitesController < ApplicationController
 
         csv_header = nil
         invites = []
+        valid_columns = nil
 
         CSV.foreach(file.tempfile, encoding: "bom|utf-8") do |row|
           # Try to extract a CSV header, if it exists
           if csv_header.nil?
             if row[0] == "email"
               csv_header = row
+              valid_columns = Set.new(ALLOWED_BULK_INVITE_COLUMNS + UserField.pluck(:name))
               next
             else
               csv_header = %w[email groups topic_id]
             end
           end
 
-          invites.push(csv_header.zip(row).map.to_h.filter { |k, v| v.present? }) if row[0].present?
+          if row[0].present?
+            invite =
+              csv_header
+                .zip(row)
+                .map
+                .to_h
+                .filter { |k, v| v.present? && (!valid_columns || valid_columns.include?(k)) }
+            invites.push(invite)
+          end
 
           break if invites.count >= SiteSetting.max_bulk_invites
         end

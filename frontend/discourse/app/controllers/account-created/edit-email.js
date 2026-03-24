@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { changeEmail } from "discourse/lib/user-activation";
 
 export default class AccountCreatedEditEmailController extends Controller {
@@ -11,9 +10,9 @@ export default class AccountCreatedEditEmailController extends Controller {
   accountCreated;
   newEmail;
 
-  @discourseComputed("newEmail", "accountCreated.email")
-  submitDisabled(newEmail, currentEmail) {
-    return newEmail === currentEmail;
+  @computed("newEmail", "accountCreated.email")
+  get submitDisabled() {
+    return this.newEmail === this.accountCreated?.email;
   }
 
   @action

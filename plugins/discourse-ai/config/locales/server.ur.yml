@@ -18,7 +18,7 @@ ur:
     spam_detection:
       bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
     ai_bot:
-      personas:
+      agents:
         default_llm_required: "چیٹ کو فعال کرنے سے پہلے ڈیفالٹ LLM ماڈل درکار ہے۔"
       tool_options:
         update_artifact:
@@ -34,6 +34,40 @@ ur:
         read: "موضوع پڑھیں"
       tool_description:
         time: "%{timezone} میں وقت %{time} ہے"
+      close_topic:
+        errors:
+          not_found: "موضوع نہیں ملا."
+      unlist_topic:
+        errors:
+          not_found: "موضوع نہیں ملا."
+      delete_topic:
+        errors:
+          not_found: "موضوع نہیں ملا."
+      edit_tags:
+        errors:
+          not_found: "موضوع نہیں ملا."
+      edit_category:
+        errors:
+          not_found: "موضوع نہیں ملا."
+          category_not_found: "زُمرہ نہیں ملا."
+      set_topic_timer:
+        errors:
+          not_found: "موضوع نہیں ملا."
+      set_slow_mode:
+        errors:
+          not_found: "موضوع نہیں ملا."
+      move_posts:
+        errors:
+          not_found: "موضوع نہیں ملا."
+      assign:
+        errors:
+          not_found: "موضوع نہیں ملا."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "منظور"
+        reject:
+          title: "مسترد کریں"
     sentiment:
       reports:
         post_emotion:

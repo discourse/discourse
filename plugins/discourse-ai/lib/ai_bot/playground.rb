@@ -15,9 +15,9 @@ module DiscourseAi
       # The bot will take care of completions while this class updates the topic title
       # and stream replies.
 
-      def self.find_chat_persona(message, channel, user)
+      def self.find_chat_agent(message, channel, user)
         if channel.direct_message_channel?
-          AiPersona
+          AiAgent
             .allowed_modalities(allow_chat_direct_messages: true)
             .find do |p|
               p[:user_id].in?(channel.allowed_user_ids) && (user.group_ids & p[:allowed_group_ids])
@@ -27,7 +27,7 @@ module DiscourseAi
           if message.message.include?("@")
             mentions = message.parsed_mentions.parsed_direct_mentions
             if mentions.present?
-              AiPersona
+              AiAgent
                 .allowed_modalities(allow_chat_channel_mentions: true)
                 .find { |p| p[:username].in?(mentions) && (user.group_ids & p[:allowed_group_ids]) }
             end
@@ -39,15 +39,15 @@ module DiscourseAi
         return if !SiteSetting.ai_bot_enabled
 
         all_chat =
-          AiPersona.allowed_modalities(
+          AiAgent.allowed_modalities(
             allow_chat_channel_mentions: true,
             allow_chat_direct_messages: true,
           )
         return if all_chat.blank?
         return if all_chat.any? { |m| m[:user_id] == user.id }
 
-        persona = find_chat_persona(message, channel, user)
-        return if !persona
+        agent = find_chat_agent(message, channel, user)
+        return if !agent
 
         post_ids = nil
         post_ids = context.dig(:context, :post_ids) if context.is_a?(Hash)
@@ -56,7 +56,7 @@ module DiscourseAi
           :create_ai_chat_reply,
           channel_id: channel.id,
           message_id: message.id,
-          persona_id: persona[:id],
+          agent_id: agent[:id],
           context_post_ids: post_ids,
         )
       end
@@ -100,10 +100,9 @@ module DiscourseAi
         mentionables = nil
 
         if post.topic.private_message?
-          mentionables =
-            AiPersona.allowed_modalities(user: post.user, allow_personal_messages: true)
+          mentionables = AiAgent.allowed_modalities(user: post.user, allow_personal_messages: true)
         else
-          mentionables = AiPersona.allowed_modalities(user: post.user, allow_topic_mentions: true)
+          mentionables = AiAgent.allowed_modalities(user: post.user, allow_topic_mentions: true)
         end
 
         mentioned = nil
@@ -135,7 +134,7 @@ module DiscourseAi
             mentioned = mentionables.find { |mentionable| bot_user.id == mentionable[:user_id] }
           end
 
-          # public topic so we need to use the persona user
+          # public topic so we need to use the agent user
           bot_user ||= User.find_by(id: mentioned[:user_id]) if mentioned
         end
 
@@ -145,25 +144,23 @@ module DiscourseAi
         end
 
         if bot_user
-          topic_persona_id = post.topic.custom_fields["ai_persona_id"]
-          topic_persona_id = topic_persona_id.to_i if topic_persona_id.present?
+          topic_agent_id = post.topic.custom_fields["ai_agent_id"]
+          topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
 
-          persona_id = mentioned&.dig(:id) || topic_persona_id
+          agent_id = mentioned&.dig(:id) || topic_agent_id
 
-          persona = nil
+          agent = nil
 
-          if persona_id
-            persona = DiscourseAi::Personas::Persona.find_by(user: post.user, id: persona_id.to_i)
+          agent = DiscourseAi::Agents::Agent.find_by(user: post.user, id: agent_id.to_i) if agent_id
+
+          if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
+            agent = DiscourseAi::Agents::Agent.find_by(user: post.user, name: agent_name)
           end
 
-          if !persona && persona_name = post.topic.custom_fields["ai_persona"]
-            persona = DiscourseAi::Personas::Persona.find_by(user: post.user, name: persona_name)
-          end
-
-          # edge case, llm was mentioned in an ai persona conversation
-          if persona_id == topic_persona_id && post.topic.private_message? && persona &&
+          # edge case, llm was mentioned in an ai agent conversation
+          if agent_id == topic_agent_id && post.topic.private_message? && agent &&
                all_llm_users.present?
-            if !persona.force_default_llm && mentions.present?
+            if !agent.force_default_llm && mentions.present?
               mentioned_llm_user_id, _ =
                 all_llm_users.find { |id, username| mentions.include?(username) }
 
@@ -173,11 +170,11 @@ module DiscourseAi
             end
           end
 
-          persona ||= DiscourseAi::Personas::General
+          agent ||= DiscourseAi::Agents::General
 
-          bot_user = User.find(persona.user_id) if persona && persona.force_default_llm
+          bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
 
-          bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona.new)
+          bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
           new(bot).update_playground_with(post)
         end
       end
@@ -185,7 +182,7 @@ module DiscourseAi
       def self.reply_to_post(
         post:,
         user: nil,
-        persona_id: nil,
+        agent_id: nil,
         whisper: nil,
         add_user_to_pm: false,
         stream_reply: false,
@@ -195,14 +192,14 @@ module DiscourseAi
         attributed_user: nil,
         feature_context: nil
       )
-        ai_persona = AiPersona.find_by(id: persona_id)
-        raise Discourse::InvalidParameters.new(:persona_id) if !ai_persona
-        persona_class = ai_persona.class_instance
-        persona = persona_class.new
+        ai_agent = AiAgent.find_by(id: agent_id)
+        raise Discourse::InvalidParameters.new(:agent_id) if !ai_agent
+        agent_class = ai_agent.class_instance
+        agent = agent_class.new
 
-        bot_user = user || ai_persona.user
+        bot_user = user || ai_agent.user
         raise Discourse::InvalidParameters.new(:user) if bot_user.nil?
-        bot = DiscourseAi::Personas::Bot.as(bot_user, persona: persona)
+        bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
         playground = new(bot)
 
         playground.reply_to(
@@ -240,7 +237,7 @@ module DiscourseAi
             post,
             max_posts: 5,
             bot_usernames: available_bot_usernames,
-            include_uploads: bot.persona.class.vision_enabled,
+            include_uploads: bot.agent.class.vision_enabled,
           )
 
         # conversation context may contain tool calls, and confusing user names
@@ -306,15 +303,15 @@ module DiscourseAi
       end
 
       def reply_to_chat_message(message, channel, context_post_ids)
-        persona_user = User.find(bot.persona.class.user_id)
+        agent_user = User.find(bot.agent.class.user_id)
 
         participants = channel.user_chat_channel_memberships.map { |m| m.user.username }
 
         context_post_ids = nil if !channel.direct_message_channel?
 
         max_chat_messages = 40
-        if bot.persona.class.respond_to?(:max_context_posts)
-          max_chat_messages = bot.persona.class.max_context_posts || 40
+        if bot.agent.class.respond_to?(:max_context_posts)
+          max_chat_messages = bot.agent.class.max_context_posts || 40
         end
 
         if !channel.direct_message_channel?
@@ -323,7 +320,7 @@ module DiscourseAi
         end
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             participants: participants,
             message_id: message.id,
             channel_id: channel.id,
@@ -333,7 +330,7 @@ module DiscourseAi
                 message,
                 channel: channel,
                 context_post_ids: context_post_ids,
-                include_uploads: bot.persona.class.vision_enabled,
+                include_uploads: bot.agent.class.vision_enabled,
                 max_messages: max_chat_messages,
                 bot_user_ids: available_bot_user_ids,
                 instruction_message: instruction_message,
@@ -344,7 +341,7 @@ module DiscourseAi
           )
 
         reply = nil
-        guardian = Guardian.new(persona_user)
+        guardian = Guardian.new(agent_user)
 
         force_thread = message.thread_id.nil? && channel.direct_message_channel?
         in_reply_to_id = channel.direct_message_channel? ? message.id : nil
@@ -452,12 +449,12 @@ module DiscourseAi
 
         # safeguard
         max_context_posts = 40
-        if bot.persona.class.respond_to?(:max_context_posts)
-          max_context_posts = bot.persona.class.max_context_posts || 40
+        if bot.agent.class.respond_to?(:max_context_posts)
+          max_context_posts = bot.agent.class.max_context_posts || 40
         end
 
         context =
-          DiscourseAi::Personas::BotContext.new(
+          DiscourseAi::Agents::BotContext.new(
             post: post,
             user: attributed_user,
             custom_instructions: custom_instructions,
@@ -468,19 +465,19 @@ module DiscourseAi
                 post,
                 style: context_style,
                 max_posts: max_context_posts,
-                include_uploads: bot.persona.class.vision_enabled,
+                include_uploads: bot.agent.class.vision_enabled,
                 bot_usernames: available_bot_usernames,
               ),
           )
 
         reply_user = bot.bot_user
-        if bot.persona.class.respond_to?(:user_id)
-          reply_user = User.find_by(id: bot.persona.class.user_id) || reply_user
+        if bot.agent.class.respond_to?(:user_id)
+          reply_user = User.find_by(id: bot.agent.class.user_id) || reply_user
         end
 
         stream_reply = post.topic.private_message? if stream_reply.nil?
 
-        # we need to ensure persona user is allowed to reply to the pm
+        # we need to ensure agent user is allowed to reply to the pm
         if post.topic.private_message? && add_user_to_pm
           if !post.topic.topic_allowed_users.exists?(user_id: reply_user.id)
             post.topic.topic_allowed_users.create!(user_id: reply_user.id)
@@ -524,7 +521,7 @@ module DiscourseAi
                 custom_fields: {
                   DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
                   DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                  DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
+                  DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
                 },
               )
           end
@@ -537,7 +534,7 @@ module DiscourseAi
             .llm
             .llm_model
             .id
-          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD] = bot.persona.id
+          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = bot.agent.id
           reply_post.save_custom_fields
 
           publish_update(reply_post, { raw: "" })
@@ -558,7 +555,7 @@ module DiscourseAi
           )
         end
 
-        context.skip_show_thinking ||= !bot.persona.class.show_thinking
+        context.skip_show_thinking ||= !bot.agent.class.show_thinking
         post_streamer = PostStreamer.new(delay: Rails.env.test? ? 0 : 0.5) if stream_reply
         started_thinking = false
 
@@ -621,7 +618,7 @@ module DiscourseAi
               custom_fields: {
                 DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD => bot.llm.llm_model.display_name,
                 DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD => bot.llm.llm_model.id,
-                DiscourseAi::AiBot::POST_AI_PERSONA_ID_FIELD => bot.persona.id,
+                DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => bot.agent.id,
               },
             )
         end
@@ -638,6 +635,8 @@ module DiscourseAi
 
         reply_post
       rescue LlmCreditAllocation::CreditLimitExceeded => e
+        return if silent_mode
+
         reset_time = e.allocation&.formatted_reset_time || ""
         locale_key = post.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
         error_message =
@@ -693,11 +692,11 @@ module DiscourseAi
 
       def available_bot_usernames
         @bot_usernames ||=
-          AiPersona.joins(:user).pluck(:username).concat(available_bot_users.map(&:username))
+          AiAgent.joins(:user).pluck(:username).concat(available_bot_users.map(&:username))
       end
 
       def available_bot_user_ids
-        @bot_ids ||= AiPersona.joins(:user).pluck("users.id").concat(available_bot_users.map(&:id))
+        @bot_ids ||= AiAgent.joins(:user).pluck("users.id").concat(available_bot_users.map(&:id))
       end
 
       private
@@ -748,13 +747,12 @@ module DiscourseAi
       end
 
       def schedule_bot_reply(post)
-        persona_id =
-          DiscourseAi::Personas::Persona.system_personas[bot.persona.class] || bot.persona.class.id
+        agent_id = DiscourseAi::Agents::Agent.system_agents[bot.agent.class] || bot.agent.class.id
         ::Jobs.enqueue(
           :create_ai_reply,
           post_id: post.id,
           bot_user_id: bot.bot_user.id,
-          persona_id: persona_id,
+          agent_id: agent_id,
         )
       end
 

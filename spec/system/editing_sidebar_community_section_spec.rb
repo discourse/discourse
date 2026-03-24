@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Editing Sidebar Community Section", type: :system do
+RSpec.describe "Editing Sidebar Community Section" do
   fab!(:admin)
   fab!(:user)
 

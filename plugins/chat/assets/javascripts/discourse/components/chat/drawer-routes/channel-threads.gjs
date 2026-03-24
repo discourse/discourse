@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -13,7 +13,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
   backLinkTitle = i18n("chat.return_to_list");
 
   get title() {
-    return htmlSafe(
+    return trustHTML(
       i18n("chat.threads.list") +
         " - " +
         replaceEmoji(this.args.model.channel.escapedTitle)
@@ -39,10 +39,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
 
         {{#if this.chatStateManager.isDrawerExpanded}}
           <div class="chat-drawer-content">
-            <ChatThreadList
-              @channel={{@model.channel}}
-              @includeHeader={{false}}
-            />
+            <ChatThreadList @channel={{@model.channel}} />
           </div>
         {{/if}}
       {{/if}}

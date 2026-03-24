@@ -1,6 +1,7 @@
 {
   "references": [
     { "path": "frontend/discourse" },
+    { "path": "frontend/discourse-i18n" },
     { "path": "plugins/automation" },
     { "path": "plugins/chat" },
     { "path": "plugins/checklist" },
@@ -43,6 +44,7 @@
     { "path": "plugins/poll" },
     { "path": "plugins/spoiler-alert" },
     { "path": "plugins/styleguide" },
+    { "path": "themes/horizon" }
   ],
-  "include": [],
+  "include": []
 }

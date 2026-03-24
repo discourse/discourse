@@ -36,6 +36,13 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
       : this.firstLineUsers.length;
   }
 
+  get groupAriaLabel() {
+    return i18n("discourse_reactions.state_panel.reaction_group", {
+      reaction: this.args.reaction.id,
+      count: this.args.reaction.count,
+    });
+  }
+
   get moreLabel() {
     if (this.args.isDisplayed && this.args.reaction.count > MAX_USERS_COUNT) {
       return i18n("discourse_reactions.state_panel.more_users", {
@@ -51,10 +58,12 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
         "discourse-reactions-state-panel-reaction"
         (if @isDisplayed "is-displayed")
       }}
+      role="listitem"
+      aria-label={{this.groupAriaLabel}}
       {{on "click" this.click}}
     >
       {{#if @users}}
-        <div class="reaction-wrapper">
+        <div class="reaction-wrapper" aria-hidden="true">
           <div class="emoji-wrapper">
             {{emoji @reaction.id}}
           </div>
@@ -76,7 +85,15 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
             {{/each}}
 
             {{#if (gt @users.length MIN_USERS_COUNT)}}
-              <button type="button" class="show-users">
+              <button
+                type="button"
+                class="show-users"
+                aria-label={{if
+                  @isDisplayed
+                  (i18n "discourse_reactions.state_panel.hide_users")
+                  (i18n "discourse_reactions.state_panel.show_users")
+                }}
+              >
                 {{icon (if @isDisplayed "chevron-up" "chevron-down")}}
               </button>
             {{/if}}

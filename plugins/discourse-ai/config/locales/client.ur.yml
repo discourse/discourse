@@ -10,7 +10,7 @@ ur:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "اے آئی تلاش کی اجازت دیتا ہے"
       site_settings:
         categories:
@@ -32,9 +32,6 @@ ur:
             create_ai_llm_model: "ایل ایل ایم ماڈل بنائیں"
             update_ai_llm_model: "ایل ایل ایم ماڈل کو اپ ڈیٹ کریں"
             delete_ai_llm_model: "ایل ایل ایم ماڈل حذف کریں"
-            create_ai_persona: "اے آئی پرسونا تخلیق کریں"
-            update_ai_persona: "اے آئی پرسونا اپڈیٹ کریں"
-            delete_ai_persona: "اے آئی پرسونا حذف کریں"
             create_ai_tool: "اے آئی ٹول بنائیں"
             update_ai_tool: "اے آئی ٹول اپ ڈیٹ کریں"
             delete_ai_tool: "اے آئی ٹول حذف کریں"
@@ -65,9 +62,9 @@ ur:
       llm_selector:
         none: "کوئی نہیں"
       features:
-        back: "واپس"
         disabled: "(غیر فعال)"
         groups: "گروپس:"
+        no_agent: "سیٹ نہیں"
         no_groups: "کوئی نہیں"
         edit: "سیٹِنگ"
         expand_list:
@@ -125,29 +122,28 @@ ur:
           last_week: "گزشتہ ہفتے"
           last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
-      ai_persona:
-        back: "واپس"
+      ai_agent:
         name: "نام"
         edit: "ترمیم کریں"
         export: "برآمد"
         import: "درآمد"
         description: "تفصیل"
-        user: صارف
+        user: رکن
         save: "محفوظ کریں"
         enabled: "فعال؟"
-        delete: "مٹائیں"
+        delete: "حذف کریں"
         response_format:
           open_modal: "ترمیم کریں"
           modal:
             key_title: "کی"
         filters:
           reset: "رِی سَیٹ"
+        llms_list: "ایل ایل ایم:"
       rag:
         uploads:
           title: "اَپ لوڈز"
           uploading: "اَپ لوڈ کیا جا رہا ہے..."
       tools:
-        back: "واپس"
         export: "برآمد"
         import: "درآمد"
         import_error_conflict: "ٹول پہلے سے موجود ہے، کیا آپ اسے اپ ڈیٹ کرنا چاہیں گے؟"
@@ -157,13 +153,14 @@ ur:
         save: "محفوظ کریں"
         remove_parameter: "خارج کریں"
         parameter_required: "درکار"
+        credential_not_set: "(سیٹ نہیں)"
         edit: "ترمیم کریں"
+        test: "ٹیسٹ"
         delete: "مٹائیں"
       secrets:
         short_title: "شہادت"
         name: "نام"
         secret: "وَیلِیو"
-        back: "واپس"
         save: "محفوظ"
         edit: "ترمیم کریں"
         delete: "مٹائیں"
@@ -173,7 +170,6 @@ ur:
         provider: "پرووَائیڈر"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
-        back: "واپس"
         delete: مٹائیں
         quotas:
           group: "گروپ"
@@ -214,7 +210,6 @@ ur:
         image_caption:
           save_caption: "محفوظ کریں"
       embeddings:
-        back: "واپس"
         save: "محفوظ کریں"
         delete: "مٹائیں"
         edit: "ترمیم کریں"

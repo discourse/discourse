@@ -113,7 +113,14 @@ class DirectoryItemsController < ApplicationController
     if params[:user_field_ids]
       serializer_opts[:user_custom_field_map] = {}
 
-      user_field_ids = params[:user_field_ids]&.split("|")&.map(&:to_i)
+      allowed_field_ids =
+        if guardian.is_staff?
+          UserField.pluck(:id)
+        else
+          UserField.public_fields.pluck(:id)
+        end
+
+      user_field_ids = params[:user_field_ids].split("|").map(&:to_i) & allowed_field_ids
       user_field_ids.each do |user_field_id|
         serializer_opts[:user_custom_field_map][
           "#{User::USER_FIELD_PREFIX}#{user_field_id}"
@@ -145,7 +152,9 @@ class DirectoryItemsController < ApplicationController
 
   def set_groups_exclusion
     @exclude_group_names = params[:exclude_groups].split("|")
-    @exclude_group_ids = Group.where(name: @exclude_group_names).pluck(:id)
+    groups = Group.where(name: @exclude_group_names)
+    groups = groups.select { |g| guardian.can_see?(g) && guardian.can_see_group_members?(g) }
+    @exclude_group_ids = groups.map(&:id)
     @users_in_exclude_groups = GroupUser.where(group_id: @exclude_group_ids).pluck(:user_id)
   end
 

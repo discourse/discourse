@@ -73,6 +73,7 @@ module ::DiscoursePostEvent
   # Topic where op has a post event custom field
   TOPIC_POST_EVENT_STARTS_AT = "TopicEventStartsAt"
   TOPIC_POST_EVENT_ENDS_AT = "TopicEventEndsAt"
+  TOPIC_POST_EVENT_ALL_DAY = "TopicEventAllDay"
 end
 
 require_relative "lib/discourse_calendar/engine"
@@ -139,13 +140,44 @@ after_initialize do
   require_relative "lib/discourse_post_event/post_extension"
   require_relative "lib/discourse_post_event/rrule_generator"
   require_relative "lib/discourse_post_event/rrule_configurator"
+  require_relative "lib/discourse_post_event/web_hook_extension"
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
+
+  add_api_parameter_route(
+    methods: :get,
+    actions: "discourse_post_event/events#index",
+    formats: :ics,
+  )
+
+  add_user_api_key_scope :events_calendar,
+                         methods: :get,
+                         actions: "discourse_post_event/events#index",
+                         formats: :ics
+
+  register_calendar_subscription_feed(
+    name: "all_events",
+    scope: "discourse-calendar:events_calendar",
+    description_key: "discourse_calendar.preferences.all_events_description",
+    url: ->(base_url, _user, key) do
+      "#{base_url}/discourse-post-event/events.ics?user_api_key=#{key}"
+    end,
+  )
+
+  register_calendar_subscription_feed(
+    name: "my_events",
+    scope: "discourse-calendar:events_calendar",
+    description_key: "discourse_calendar.preferences.my_events_description",
+    url: ->(base_url, user, key) do
+      "#{base_url}/discourse-post-event/events.ics?attending_user=#{user.username_lower}&include_interested=true&user_api_key=#{key}"
+    end,
+  )
 
   reloadable_patch do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
+    ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
   end
 
   add_to_class(:user, :can_create_discourse_post_event?) do
@@ -209,18 +241,45 @@ after_initialize do
     end,
   ) { DiscoursePostEvent::EventSerializer.new(object.event, scope: scope, root: false) }
 
-  on(:post_created) { |post| DiscoursePostEvent::Event.update_from_raw(post) }
+  on(:post_created) do |post|
+    DiscoursePostEvent::Event.update_from_raw(post)
+    post.reload
+    if SiteSetting.discourse_post_event_enabled && post.event
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+    end
+  end
 
-  on(:post_edited) { |post| DiscoursePostEvent::Event.update_from_raw(post) }
+  on(:post_edited) do |post|
+    event_before = post.event
+    had_event_before = event_before.present?
+    DiscoursePostEvent::Event.update_from_raw(post)
+    post.reload
+
+    if SiteSetting.discourse_post_event_enabled
+      if post.event && had_event_before
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
+      elsif post.event && !had_event_before
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+      elsif !post.event && had_event_before
+        payload = WebHook.build_calendar_event_payload(event_before)
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
+      end
+    end
+  end
 
   on(:post_destroyed) do |post|
     if SiteSetting.discourse_post_event_enabled && post.event
+      payload = WebHook.build_calendar_event_payload(post.event)
       post.event.update!(deleted_at: Time.now)
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, post.event, payload)
     end
   end
 
   on(:post_recovered) do |post|
-    post.event.update!(deleted_at: nil) if SiteSetting.discourse_post_event_enabled && post.event
+    if SiteSetting.discourse_post_event_enabled && post.event
+      post.event.update!(deleted_at: nil)
+      WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+    end
   end
 
   add_preloaded_topic_list_custom_field DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT
@@ -280,6 +339,35 @@ after_initialize do
         SiteSetting.display_post_event_date_on_topic_title && object.event_ends_at
     end,
   ) { object.event_ends_at }
+
+  add_preloaded_topic_list_custom_field DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY
+
+  add_to_serializer(
+    :topic_view,
+    :event_all_day,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title && object.topic.event_all_day
+    end,
+  ) { object.topic.event_all_day }
+
+  add_to_class(:topic, :event_all_day) do
+    return @event_all_day if defined?(@event_all_day)
+    @event_all_day =
+      begin
+        value = custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY].to_s
+        ActiveModel::Type::Boolean.new.cast(value)
+      end
+  end
+
+  add_to_serializer(
+    :topic_list_item,
+    :event_all_day,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title && object.event_all_day
+    end,
+  ) { object.event_all_day }
 
   add_to_serializer(
     :topic_view,
@@ -509,18 +597,61 @@ after_initialize do
       fragment
         .css(".discourse-post-event")
         .each do |event_node|
+          tz = event_node["data-timezone"] || "UTC"
           starts_at = event_node["data-start"]
           ends_at = event_node["data-end"]
-          dates = "#{starts_at} (#{event_node["data-timezone"] || "UTC"})"
-          dates = "#{dates} → #{ends_at} (#{event_node["data-timezone"] || "UTC"})" if ends_at
+
+          formatted_start =
+            begin
+              DateTime.parse(starts_at).strftime("%B %-d, %Y %-I:%M %p")
+            rescue StandardError
+              starts_at
+            end
+          dates = "#{formatted_start} (#{tz})"
+
+          if ends_at
+            formatted_end =
+              begin
+                DateTime.parse(ends_at).strftime("%B %-d, %Y %-I:%M %p")
+              rescue StandardError
+                ends_at
+              end
+            dates = "#{dates} → #{formatted_end} (#{tz})"
+          end
 
           event_name = event_node["data-name"] || post.topic.title
-          event_node.replace <<~TXT
-          <div style='border:1px solid #dedede'>
-            <p><a href="#{Discourse.base_url}#{post.url}">#{CGI.escape_html(event_name)}</a></p>
-            <p>#{CGI.escape_html(dates)}</p>
-          </div>
-        TXT
+          location = event_node["data-location"]
+          url = event_node["data-url"]
+
+          rows = +""
+          rows << <<~HTML
+            <tr>
+              <td style="padding: 12px;">
+                <a href="#{Discourse.base_url}#{post.url}" style="font-weight: bold; font-size: 1.1em;">#{CGI.escape_html(event_name)}</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(dates)}</td>
+            </tr>
+          HTML
+
+          rows << <<~HTML if location.present?
+              <tr>
+                <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(location)}</td>
+              </tr>
+            HTML
+
+          rows << <<~HTML if url.present?
+              <tr>
+                <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(url)}">#{CGI.escape_html(url)}</a></td>
+              </tr>
+            HTML
+
+          event_node.replace <<~HTML
+            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px; width: 100%;">
+              #{rows}
+            </table>
+          HTML
         end
     end
   end

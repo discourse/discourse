@@ -6,7 +6,7 @@
 
 uk:
   site_settings:
-    data_explorer_enabled: "Увімкніть Провідник даних у /admin/plugins/discourse-data-explorer"
+    data_explorer_enabled: "Увімкнути оглядач даних"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

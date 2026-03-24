@@ -2,7 +2,7 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -16,6 +16,7 @@ import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
+import ToolbarScrollContainer from "discourse/components/composer/toolbar-scroll-container";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
@@ -29,7 +30,6 @@ import concatClass from "discourse/helpers/concat-class";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
@@ -154,8 +154,8 @@ export default class DEditor extends Component {
     });
   }
 
-  @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
-  showEditorModeToggle() {
+  @computed("siteSettings.rich_editor", "forceEditorMode")
+  get showEditorModeToggle() {
     return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
   }
 
@@ -784,7 +784,7 @@ export default class DEditor extends Component {
         >
 
           {{#if this.replacedToolbarInstance}}
-            <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
+            <ToolbarScrollContainer @class="--replaced-toolbar">
               <DButton
                 @action={{this.resetToolbar}}
                 @icon="angle-left"
@@ -797,9 +797,9 @@ export default class DEditor extends Component {
                 @rovingButtonBar={{this.rovingButtonBar}}
                 @isFirst={{false}}
               />
-            </div>
+            </ToolbarScrollContainer>
           {{else}}
-            <div class="d-editor-button-bar" role="toolbar">
+            <ToolbarScrollContainer>
               {{#if this.showEditorModeToggle}}
                 <ToggleSwitch
                   @preventFocus={{true}}
@@ -815,7 +815,7 @@ export default class DEditor extends Component {
                 @rovingButtonBar={{this.rovingButtonBar}}
                 @isFirst={{not this.siteSettings.rich_editor}}
               />
-            </div>
+            </ToolbarScrollContainer>
           {{/if}}
 
           <ConditionalLoadingSpinner @condition={{this.loading}} />

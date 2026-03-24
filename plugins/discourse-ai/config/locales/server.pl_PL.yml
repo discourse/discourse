@@ -32,9 +32,9 @@ pl_PL:
       ai_tool_action:
         title: Działanie narzędzia AI
         description: Uruchom narzędzie AI, gdy zostanie wyzwolona automatyzacja
-      llm_persona_triage:
-        title: Sortuj posty za pomocą AI Persona
-        description: "Odpowiadaj na posty, używając konkretnej osobowości AI"
+      llm_agent_triage:
+        title: Sortuj wpisy przy użyciu agenta AI
+        description: "Odpowiadaj na posty, używając konkretnego agenta AI"
       llm_triage:
         title: Oceniaj posty za pomocą sztucznej inteligencji
         description: "Oceniaj posty przy użyciu dużego modelu językowego"
@@ -98,8 +98,8 @@ pl_PL:
     ai_helper_automatic_chat_thread_title: "Automatycznie ustawiaj tytuły wątków czatu na podstawie zawartości wątku."
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
-    ai_helper_post_illustrator_persona: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
-    ai_helper_chat_thread_title_persona: "Persona używana do generowania tytułów wątków czatu."
+    ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
+    ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
     ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
@@ -113,7 +113,7 @@ pl_PL:
     ai_embeddings_semantic_related_age_time_scale: "Skala czasowa w dniach obliczania kary wiekowej. Tematy nieaktywne przez wiele dni otrzymują ~ 50% kary z karą = 1,0. Użyj 365 dla skali rocznej, 90 dla skali kwartalnej."
     ai_embeddings_per_post_enabled: Generuj osadzenia dla każdego wpisu
     ai_summarization_enabled: "Włącz funkcję podsumowania"
-    ai_summarization_persona: "Osobowość do wykorzystania w funkcji podsumowania"
+    ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
     ai_summary_gists_enabled: "Automatycznie generuj krótkie podsumowania najnowszych odpowiedzi w tematach"
     ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
@@ -127,14 +127,14 @@ pl_PL:
     ai_bot_add_to_community_section: "Wyświetl link w sekcji społeczności na pasku bocznym, aby rozpocząć prywatną wiadomość z botem AI"
     ai_bot_github_access_token: "Token dostępu GitHub do użytku z narzędziami GitHub AI (wymagany do obsługi wyszukiwania)"
     ai_discover_enabled: "Włącz funkcję wyszukiwania odkrywczego"
-    ai_discover_persona: "Osobowość do wykorzystania w funkcji wyszukiwania odkrywczego"
+    ai_discover_agent: "Agent do wykorzystania w funkcji wyszukiwania odkrywczego"
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX dla Google Custom Search API"
     ai_discord_search_enabled: "Włącza funkcję wyszukiwania w serwisie Discord"
     ai_discord_app_id: "Identyfikator aplikacji Discord, z którą chcesz połączyć wyszukiwanie Discord"
     ai_discord_app_public_key: "Klucz publiczny aplikacji Discord, z którą chcesz połączyć wyszukiwarkę Discord"
     ai_discord_search_mode: "Wybierz tryb wyszukiwania, którego chcesz użyć do wyszukiwania w serwisie Discord"
-    ai_discord_search_persona: "Osobowość, której należy używać do wyszukiwania w serwisie Discord."
+    ai_discord_search_agent: "Agent używany do wyszukiwania Discord."
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
     ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
     ai_translation_backfill_limit_to_public_content: "Po włączeniu tej opcji tłumaczone będą tylko treści z kategorii publicznych. Po wyłączeniu tej opcji do tłumaczenia będą wysyłane również treści z prywatnych wiadomości grupowych i kategorii."
@@ -282,11 +282,28 @@ pl_PL:
           name: "Zacznij od zera..."
       name:
         characters: "może zawierać tylko cyfry, litery i podkreślenia"
+      secret_contracts:
+        invalid_payload: "Sekretne kontrakty muszą być tablicą."
+        invalid_contract: "Sekretny kontrakt o indeksie %{index} jest nieprawidłowy."
+        alias_required: "Sekretny kontrakt o indeksie %{index} musi zawierać alias."
+        alias_too_long: "Sekretny alias `%{alias}` jest za długi."
+        alias_invalid: "Sekretny alias `%{alias}` może zawierać tylko cyfry, litery i podkreślenia."
+        alias_not_unique: "Sekretny alias `%{alias}` jest zduplikowany."
+      secret_bindings:
+        invalid_payload: "Sekretne powiązania muszą być tablicą."
+        secret_not_found: "Wybrane poświadczenie nie istnieje."
+        alias_not_declared: "Alias `%{alias}` nie jest zadeklarowany w tym narzędziu."
+      secret_runtime:
+        alias_not_declared: "Alias poświadczeń `%{alias}` nie jest zadeklarowany dla tego narzędzia."
+        missing_binding: "Alias poświadczeń `%{alias}` jest wymagany, ale nie jest powiązany."
+        missing_required_aliases: "Brak wymaganych powiązań poświadczeń dla aliasów: %{aliases}."
+        secret_not_found: "Alias poświadczeń `%{alias}` jest powiązany z brakującymi poświadczeniami."
+        unknown_error: "Nie można rozwiązać żądanego poświadczenia."
     ai_helper:
       errors:
         completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."
-        no_illustrator_persona: "Osobowość ilustratora wpisów nie jest skonfigurowany. Sprawdź ustawienia witryny."
-        no_image_generation_tool: "Osobowość ilustratora wpisów musi mieć dołączone narzędzie do generowania obrazów. Skonfiguruj narzędzie do generowania obrazów dla tej postaci w panelu administracyjnym."
+        no_illustrator_agent: "Agent ilustratora wpisów nie jest skonfigurowany. Sprawdź ustawienia witryny."
+        no_image_generation_tool: "Agent ilustratora wpisów musi mieć dołączone narzędzie do generowania obrazów. Skonfiguruj narzędzie do generowania obrazów dla tego agenta w panelu administracyjnym."
         no_image_generated: "Nie udało się wygenerować obrazu. Spróbuj ponownie lub sprawdź konfigurację narzędzia."
         llm_model_not_configured: "Do generowania obrazów nie skonfigurowano żadnego modelu językowego. Skonfiguruj domyślny model językowy w ustawieniach witryny."
         unknown_error: "Wystąpił nieoczekiwany błąd podczas generowania miniatur. Spróbuj ponownie."
@@ -324,10 +341,11 @@ pl_PL:
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
-      personas:
+      tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
+      agents:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
-        cannot_delete_system_persona: "Person systemowych nie można usunąć, zamiast tego wyłącz je."
-        cannot_edit_system_persona: "Można zmienić tylko nazwy osobowości systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
+        cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
+        cannot_edit_system_agent: "Można zmienić tylko nazwy agentów systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
         cannot_have_duplicate_tools: "Nie można mieć duplikatów narzędzi"
         github_helper:
           name: "Pomocnik GitHub"
@@ -367,10 +385,10 @@ pl_PL:
           description: "Bot AI specjalizuje się w tworzeniu interaktywnych artefaktów internetowych"
         summarizer:
           name: "Podsumowanie"
-          description: "Domyślna persona używana do zasilania podsumowań AI"
+          description: "Domyślny agent używany do zasilania podsumowań AI"
         short_summarizer:
           name: "Podsumowanie (forma krótka)"
-          description: "Domyślna persona używana do zasilania krótkich podsumowań elementów list tematycznych przez AI"
+          description: "Domyślny agent używana do zasilania krótkich podsumowań elementów list tematycznych przez AI"
         concept_finder:
           name: "Wyszukiwarka koncepcji"
           description: "Bot AI specjalizujący się w identyfikowaniu koncepcji i tematów w treściach"
@@ -382,31 +400,31 @@ pl_PL:
           description: "Bot AI specjalizujący się w deduplikacji koncepcji"
         custom_prompt:
           name: "Niestandardowy monit"
-          description: "Domyślna osobowość obsługująca funkcję niestandardowego monitu pomocnika"
+          description: "Domyślny agent obsługujący funkcję niestandardowego monitu pomocnika"
         smart_dates:
           name: "Inteligentne daty"
-          description: "Domyślna osobowość obsługująca funkcję inteligentnych dat pomocnika"
+          description: "Domyślny agent obsługujący funkcję inteligentnych dat pomocnika"
         markdown_table_generator:
           name: "Generator tabel Markdown"
-          description: "Domyślna persona obsługująca funkcję generowania tabeli Markdown pomocnika"
+          description: "Domyślny agent obsługujący funkcję generowania tabeli Markdown pomocnika"
         post_illustrator:
           name: "Ilustrator postów"
           description: "Generuje obrazy do ilustrowania wpisów, korzystając z dostępnych narzędzi do generowania obrazów"
         proofreader:
           name: "Korektor"
-          description: "Domyślna osobowość obsługująca funkcję korekty tekstu pomocnika"
+          description: "Domyślny agent obsługujący funkcję korekty tekstu pomocnika"
         titles_generator:
           name: "Generator tytułów"
-          description: "Domyślna osobowość obsługująca funkcję sugerowania tytułów tematów pomocnika"
+          description: "Domyślny agent obsługujący funkcję sugerowania tytułów tematów pomocnika"
         tutor:
           name: "Korepetytor"
-          description: "Domyślna persona obsługująca funkcję wyjaśniania pomocnika"
+          description: "Domyślny agent obsługujący funkcję wyjaśniania pomocnika"
         translator:
           name: "Tłumacz"
-          description: "Domyślna osobowość obsługująca funkcję tłumacza pomocnika"
+          description: "Domyślny agent obsługujący funkcję tłumacza pomocnika"
         image_captioner:
           name: "Podpisy pod obrazkami"
-          description: "Domyślna osobowość obsługująca funkcję podpisu obrazu pomocnika"
+          description: "Domyślny agent obsługujący funkcję podpisu obrazu pomocnika"
         locale_detector:
           name: "Detektor ustawień regionalnych"
           description: "Umożliwia działanie funkcji tłumaczenia poprzez wykrywanie ustawień regionalnych danego tekstu (postów, tytułów itp.)"
@@ -421,19 +439,19 @@ pl_PL:
           description: "Umożliwia korzystanie z funkcji tłumaczenia jako ogólnego tłumacza tekstu, używanego w przypadku krótkich tekstów, takich jak nazwy kategorii lub tagi"
         spam_detector:
           name: "Detektor spamu"
-          description: "Domyślna persona napędzająca naszą funkcję wykrywania spamu"
+          description: "Domyślny agent obsługujący naszą funkcję wykrywania spamu"
         content_creator:
           name: "Twórca treści"
-          description: "Domyślna osobowość obsługująca wyszukiwanie HyDE"
+          description: "Domyślny agent obsługujący wyszukiwanie HyDE"
         report_runner:
           name: "Runner raportów"
-          description: "Domyślna osobowość używana w skrypcie automatyzacji raportów"
+          description: "Domyślny agent używany w skrypcie automatyzacji raportów"
         discover:
           name: "Odkrywaj"
-          description: "Domyślna osobowość używana w funkcji odkrywania (bezpłatne wyszukiwanie)"
+          description: "Domyślny agent używany w funkcji odkrywania (bezpłatne wyszukiwanie)"
         chat_thread_titler:
           name: "Tytułowanie wątku czatu"
-          description: "Domyślna persona umożliwiająca automatyczne generowanie tytułów wątków czatu"
+          description: "Domyślny agent obsługujący automatyczne generowanie tytułów wątków czatu"
       topic_not_found: "Podsumowanie niedostępne, nie znaleziono tematu!"
       summarizing: "Podsumowanie tematu"
       searching: "Wyszukiwanie: '%{query}'"
@@ -441,7 +459,7 @@ pl_PL:
         researcher:
           researcher_llm:
             name: "LLM"
-            description: "Model języka do wykorzystania w badaniach (domyślnie LLM obecnej osobowości)"
+            description: "Model języka do wykorzystania w badaniach (domyślnie LLM obecnego agenta)"
           max_tokens_per_batch:
             name: "Maksymalna liczba tokenów na partię"
             description: "Maksymalna liczba tokenów do wykorzystania w każdej partii badań"
@@ -502,6 +520,19 @@ pl_PL:
         random_picker: "Losowy selektor"
         categories: "Wymień kategorie"
         flag_post: "Oflaguj post"
+        close_topic: "Zamknij temat"
+        unlist_topic: "Usuń temat z listy"
+        lock_post: "Zablokuj wpis"
+        delete_topic: "Usuń temat"
+        edit_post: "Edytuj wpis"
+        edit_tags: "Edytuj tagi"
+        edit_category: "Edytuj kategorię"
+        set_topic_timer: "Ustaw minutnik tematu"
+        set_slow_mode: "Ustaw tryb powolny"
+        move_posts: "Przenieś wpisy"
+        grant_badge: "Przyznaj odznakę"
+        assign: "Przypisz temat"
+        mark_as_solved: "Oznacz jako rozwiązany"
         search: "Szukaj"
         tags: "Wymień tagi"
         time: "Czas"
@@ -531,6 +562,19 @@ pl_PL:
         random_picker: "Wybierz losową liczbę lub losowy element listy"
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
         flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
+        close_topic: "Zamknij lub otwórz temat"
+        unlist_topic: "Wyświetlanie lub usuwanie tematu z listy"
+        lock_post: "Zablokuj lub odblokuj wpis"
+        delete_topic: "Usuń temat"
+        edit_post: "Edytuj zawartość wpisu"
+        edit_tags: "Edytuj tagi w temacie"
+        edit_category: "Przenieś temat do innej kategorii"
+        set_topic_timer: "Ustaw minutnik dla tematu, aby go zamknąć, otworzyć, usunąć lub przesunąć"
+        set_slow_mode: "Włączanie lub wyłączanie trybu powolnego w temacie"
+        move_posts: "Przenieś wpisy do nowego lub istniejącego tematu"
+        grant_badge: "Przyznaj użytkownikowi odznakę"
+        assign: "Przypisz lub usuń przypisanie tematu użytkownikowi lub grupie"
+        mark_as_solved: "Oznacz lub odznacz wpis jako zaakceptowane rozwiązanie"
         search: "Przeszukaj wszystkie publiczne tematy na forum"
         tags: "Wymień wszystkie tagi na forum"
         time: "Znajdź czas w różnych strefach czasowych"
@@ -558,6 +602,19 @@ pl_PL:
         github_file_content: "Pobrano zawartość %{file_paths} z %{repo_name}@%{branch}"
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
         flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
+        close_topic: "Zamykanie tematu %{topic_id} (zamknięto: %{closed})"
+        unlist_topic: "Usuwanie tematu z listy %{topic_id} (usunięto z listy: %{unlisted})"
+        lock_post: "Blokowanie wpisu %{post_id} (zablokowano: %{locked})"
+        delete_topic: "Usuwanie tematu %{topic_id} (usunięto: %{deleted})"
+        edit_post: "Edycja wpisu %{post_id}"
+        edit_tags: "Edycja tagów w temacie %{topic_id}: %{tags}"
+        edit_category: "Przeniesienie tematu %{topic_id} do kategorii %{category_id}"
+        set_topic_timer: "Ustawienie minutnika %{timer_type} w temacie %{topic_id} (%{duration_hours}h)"
+        set_slow_mode: "Ustawianie trybu powolnego w temacie %{topic_id} (%{slow_mode_seconds}s)"
+        move_posts: "Przenoszenie wpisów %{post_ids} z tematu %{topic_id}"
+        grant_badge: "Przyznanie odznaki „%{badge_name}” użytkownikowi %{username}"
+        assign: "Przypisanie tematu %{topic_id} (przypisano: %{assigned})"
+        mark_as_solved: "Oznaczanie wpisu %{post_id} jako rozwiązany (rozwiązany: %{solved})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
         time: "Czas w %{timezone} wynosi %{time}"
         summarize: "Podsumowano <a href='%{url}'>%{title}</a>"
@@ -620,6 +677,110 @@ pl_PL:
         already_flagged: "Wpis został już oflagowany do sprawdzenia."
         flagged: "Wpis oflagowany do sprawdzenia."
         reason: "Bot AI oflagował ten wpis.\n\nPowód: %{reason}"
+      close_topic:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do zamykania ani otwierania tego tematu."
+          no_reason: "Aby zamknąć lub otworzyć temat, trzeba podać powód."
+        success: "Temat zaktualizowano pomyślnie."
+      unlist_topic:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do dodania lub usunięcia tego tematu z listy."
+          no_reason: "Aby dodać temat do listy lub usunąć go z listy, należy podać powód."
+        success: "Temat zaktualizowano pomyślnie."
+      lock_post:
+        errors:
+          not_found: "Nie znaleziono wpisu."
+          not_allowed: "Nie masz uprawnień do blokowania ani odblokowywania tego wpisu."
+          no_reason: "Aby zablokować lub odblokować wpis, trzeba podać powód."
+        success: "Wpis został pomyślnie zaktualizowany."
+      delete_topic:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do usunięcia lub przywrócenia tego tematu."
+          no_reason: "Aby usunąć lub przywrócić temat, trzeba podać powód."
+        success: "Temat zaktualizowano pomyślnie."
+      edit_post:
+        errors:
+          not_found: "Nie znaleziono wpisu."
+          not_allowed: "Nie masz uprawnień do edycji tego wpisu."
+          nothing_to_edit: "Należy podać tekst surowy lub tytuł."
+          no_reason: "Wymagane jest podanie powodu edycji."
+          revision_failed: "Nie udało się poprawić wpisu."
+        success: "Wpis edytowany pomyślnie."
+      edit_tags:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do edytowania tagów w tym temacie."
+          no_reason: "Aby edytować tagi, trzeba podać powód."
+          tagging_disabled: "Tagowanie nie jest włączone na tej stronie."
+        success: "Tagi zaktualizowano pomyślnie."
+      edit_category:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do przeniesienia tego tematu."
+          category_not_found: "Nie odnaleziono kategorii."
+          no_reason: "Aby przenieść temat, konieczne jest podanie przyczyny."
+          revision_failed: "Nie udało się przenieść tematu."
+        success: "Temat został pomyślnie przeniesiony."
+      set_topic_timer:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do ustawienia minutnika dla tego tematu."
+          no_reason: "Aby ustawić minutnik tematu, trzeba podać powód."
+          invalid_timer_type: "Nieprawidłowy typ minutnika. Musi to być jeden z: close, open, delete, silent_close, bump."
+        success: "Minutnik tematu został pomyślnie zaktualizowany."
+      set_slow_mode:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do ustawienia trybu powolnego w tym temacie."
+          no_reason: "Aby ustawić tryb powolny, trzeba podać powód."
+        success: "Tryb powolny zaktualizowano pomyślnie."
+      move_posts:
+        errors:
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do przenoszenia wpisów w tym temacie."
+          no_reason: "Aby przenieść wpis, trzeba podać powód."
+          no_posts: "Nie podano identyfikatorów wpisów."
+          no_destination: "Należy podać parametr destination_topic_id lub new_title."
+          move_failed: "Nie udało się przenieść wpisów."
+        success: "Wpisy przeniesiono pomyślnie."
+      grant_badge:
+        errors:
+          user_not_found: "Użytkownik nie został znaleziony."
+          badge_not_found: "Odznaka nie została znaleziona."
+          not_allowed: "Nie masz uprawnień do przyznawania odznak."
+          no_reason: "Aby przyznać odznakę, konieczne jest podanie powodu."
+          badge_disabled: "Odznaka nie jest włączona."
+          grant_failed: "Nie udało się przyznać odznaki."
+        success: "Odznaka przyznana pomyślnie."
+      assign:
+        errors:
+          plugin_not_installed: "Wtyczka discourse-assign nie jest zainstalowana."
+          not_found: "Temat nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do przypisywania tego tematu."
+          no_reason: "Aby przypisać lub anulować przypisanie tematu, konieczne jest podanie przyczyny."
+          assignee_not_found: "Nie znaleziono użytkownika lub grupy."
+          assign_failed: "Nie udało się przypisać tematu."
+        success: "Przypisanie tematu zostało pomyślnie zaktualizowane."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "Wtyczka discourse-solved nie jest zainstalowana."
+          no_reason: "Aby oznaczyć lub odznaczyć wpis jako rozwiązany, należy podać powód."
+          action_failed: "Nie udało się zaktualizować statusu rozwiązania."
+        success: "Status rozwiązany zaktualizowano pomyślnie."
+    reviewables:
+      ai_tool_action:
+        title: "Działanie narzędzia AI"
+        approve:
+          title: "Zatwierdź"
+        reject:
+          title: "Odrzuć"
+        target_missing: "Cel działania narzędzia już nie istnieje."
+        tool_not_found: "Narzędzie „%{tool_name}” nie jest już dostępne."
+        bot_user_missing: "Użytkownik bota już nie istnieje."
+        execution_error: "Nie udało się wykonać narzędzia: %{error}"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."
@@ -650,7 +811,7 @@ pl_PL:
         set_llm_first: "Najpierw ustaw %{setting}"
         model_unreachable: "Nie mogliśmy uzyskać odpowiedzi od tego modelu. Sprawdź najpierw swoje ustawienia."
         invalid_seeded_model: "Nie można używać tego modelu z tą funkcją"
-        invalid_persona_response_format: "Wybrana osoba musi mieć format odpowiedzi z polem logicznym o nazwie „spam”"
+        invalid_agent_response_format: "Wybrany agent musi mieć format odpowiedzi z polem logicznym o nazwie „spam”"
         must_select_model: "Najpierw musisz wybrać LLM"
         invalid_llm_id: "Wybrany model LLM jest nieprawidłowy"
       endpoints:
@@ -666,7 +827,7 @@ pl_PL:
         many: "Nie mogliśmy usunąć tego modelu, ponieważ używa go %{settings} . Zaktualizuj ustawienia i spróbuj ponownie."
         other: "Nie mogliśmy usunąć tego modelu, ponieważ używa go %{settings} . Zaktualizuj ustawienia i spróbuj ponownie."
       cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
-    personas:
+    agents:
       malformed_examples: "Podane przykłady mają błędny format."
     embeddings:
       delete_failed: "Ten model jest obecnie używany. Najpierw zaktualizuj „wybrany model osadzania sztucznej inteligencji”."
@@ -678,7 +839,7 @@ pl_PL:
         choose_model: "Najpierw ustaw „osadzenia sztucznej inteligencji wybrane modele”."
         model_test_failed: "Nie udało nam się wygenerować testowego osadzenia z tym modelem. Sprawdź, czy jest poprawnie skonfigurowany."
     secrets:
-      delete_failed_in_use: "To poświadczenie jest obecnie używane przez co najmniej jeden program LLM lub osadzenia i nie można go usunąć."
+      delete_failed_in_use: "To poświadczenie jest obecnie używane przez jedno lub więcej LLM, osadzeń lub narzędzi i nie może zostać usunięte."
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
       secret_required: "Należy wybrać poświadczenie"
@@ -700,15 +861,35 @@ pl_PL:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
       no_query_specified: Parametr zapytania jest wymagany, podaj go.
-      no_user_for_persona: Określona persona nie ma powiązanego użytkownika.
-      persona_not_found: Określona persona nie istnieje. Sprawdź parametry persona_name lub persona_id.
+      no_user_for_agent: Określony agent nie ma powiązanego użytkownika.
+      agent_not_found: "Określony agent nie istnieje. Sprawdź parametry agent_name lub agent_id (starsze: agent_name lub agent_id)."
       no_user_specified: Wymagana jest nazwa użytkownika lub parametr user_unique_id, proszę go podać.
       user_not_found: Podany użytkownik nie istnieje. Sprawdź parametr nazwy użytkownika.
-      persona_disabled: Podana osobowość jest wyłączona. Sprawdź parametry persona_name lub persona_id.
-      no_default_llm: Osobowość musi mieć zdefiniowany parametr default_llm.
+      agent_disabled: "Określony agent jest wyłączony. Sprawdź parametry agent_name lub agent_id (starsze: agent_name lub agent_id)."
+      no_default_llm: Agent musi mieć zdefiniowany parametr default_llm.
       user_not_allowed: Użytkownik nie ma prawa brać udziału w dyskusji na ten temat.
+      invalid_stream_resume_token: Token resume_token jest nieprawidłowy lub wygasł.
+      no_tool_results_specified: Parametr tool_results jest wymagany przy wznawianiu strumienia.
+      invalid_custom_tools: "Parametr custom_tools jest nieprawidłowy: %{details}"
+      duplicate_custom_tools: "Parametr custom_tools zawiera zduplikowane nazwy narzędzi: %{names}"
+      too_many_custom_tools: "Parametr custom_tools może zawierać maksymalnie %{max} narzędzi."
+      custom_tool_definition_too_large: "Każda definicja narzędzia niestandardowego może mieć maksymalnie %{max} bajtów."
+      invalid_stream_param: "Parametr %{key} jest nieprawidłowy: %{details}"
+      expected_array: "oczekiwano tablicy"
+      expected_object: "oczekiwano obiektu"
+      ambiguous_tool_results: "Podaj albo tool_results albo tool_result, nie obydwa."
+      invalid_tool_results: "Parametr tool_results jest nieprawidłowy: %{details}"
+      too_many_tool_results: "Parametr tool_results może zawierać maksymalnie %{max} elementów."
+      no_pending_tool_calls: Nie ma żadnych oczekujących wywołań narzędzi dla tego tokena CV.
+      missing_tool_results: "Brak wyników wyszukiwania dla identyfikatorów wywołań narzędzi: %{ids}"
+      unexpected_tool_results: "Nieoczekiwane wyniki narzędzia dla identyfikatorów wywołań narzędzia: %{ids}"
+      invalid_tool_result_content: "Wynik narzędzia dla %{id} musi zawierać treść"
+      tool_result_content_too_large: "Każdy ładunek zawartości wyniku narzędzia musi mieć maksymalnie %{max} bajtów."
+      stream_reply_max_resume_rounds_reached: Osiągnięto maksymalną liczbę rund wznawiania używania niestandardowych narzędzi (%{max}).
+      stream_reply_state_too_large: "Stan strumienia jest zbyt duży, aby go zachować (maks. %{max} bajtów)."
+      stream_reply_unexpected_error: Podczas przesyłania odpowiedzi wystąpił nieoczekiwany błąd.
       prompt_message_length: Wiadomość %{idx} przekracza limit 1000 znaków.
-      persona_already_exists: Osobowość o nazwie %{name} już istnieje.
+      agent_already_exists: Agent o nazwie %{name} już istnieje.
       custom_tool_exists:
         one: "Niestandardowe narzędzie o nazwie %{names} już istnieje."
         few: "Niestandardowe narzędzia o nazwach %{names} już istnieją."

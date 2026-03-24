@@ -11,6 +11,7 @@ ja:
         draft: "下書き"
         open: "オープン"
         approved: "承認済み"
+        merged: "マージ済み"
         closed: "終了"
   admin_js:
     admin:

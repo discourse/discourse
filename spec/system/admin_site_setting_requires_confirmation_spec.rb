@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Site Setting Requires Confirmation", type: :system do
+describe "Admin Site Setting Requires Confirmation" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   fab!(:admin)

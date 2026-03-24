@@ -25,6 +25,14 @@ Propshaft::Helper.prepend(
 
 Propshaft::Compiler::SourceMappingUrls.prepend(
   Module.new do
+    def compile(asset, input)
+      if asset.logical_path.to_s.include?(".digested.")
+        input
+      else
+        super
+      end
+    end
+
     def source_mapping_url(*args)
       # Propshaft insists on converting sourcemap URLs to absolute paths. We want to keep
       # relative paths so that we can serve assets from different subdirectories without needing

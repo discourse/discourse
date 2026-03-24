@@ -67,9 +67,15 @@ class TagGroupsController < ApplicationController
     guardian.ensure_can_admin_tag_groups!
     old_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
     json_result(@tag_group, serializer: TagGroupSerializer) do |tag_group|
-      @tag_group.update(tag_groups_params)
-      new_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
-      StaffActionLogger.new(current_user).log_tag_group_change(@tag_group.name, old_data, new_data)
+      if @tag_group.update(tag_groups_params)
+        new_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
+        StaffActionLogger.new(current_user).log_tag_group_change(
+          @tag_group.name,
+          old_data,
+          new_data,
+        )
+        true
+      end
     end
   end
 

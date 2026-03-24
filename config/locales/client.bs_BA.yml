@@ -6,6 +6,11 @@
 
 bs_BA:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        hidden: "hidden"
+        failed: "neuspješno"
     number:
       format:
         separator: "."
@@ -264,6 +269,9 @@ bs_BA:
       pill: "Povezane Poruke"
     suggested_topics:
       pm_title: "Preporučene Poruke"
+    admin_onboarding_banner:
+      start_posting:
+        back: "Prethodno"
     about:
       edit: "Edit this page"
       simple_title: "O nama"
@@ -385,7 +393,6 @@ bs_BA:
       in_reply_to: "odgovori na"
       explain:
         why: "objasnite zašto je ovaj objekat završio na listi za čekanje"
-        title: "Ocjenjiv Skor"
         formula: "Formula"
         subtotal: "Podsuma"
         total: "Suma"
@@ -399,10 +406,8 @@ bs_BA:
           title: "Korisnicima čije su zastave prethodno bivale usaglašene dobivaju bonus."
         trust_level_bonus:
           name: "nivo povjerenja"
-          title: "Ocjenjivi objekti kreirani od strane korisnika sa višim nivoom povjerenja imaju viši skor."
         type_bonus:
           name: "bonus tip"
-          title: "Neki ocjenjivi tipovi mogu zaprimiti bonus od strane osoblja foruma kako bi tim tipovima podigli prioritet"
       revise_and_reject_post:
         reason: "Reason"
         optional: "opciono"
@@ -1073,6 +1078,8 @@ bs_BA:
         tags: "Oznake"
         interface: "Sučelje"
         apps: "Aplikacije"
+      calendar_subscriptions:
+        copied: "Kopirano!"
       change_password:
         success: "(email poslat)"
         in_progress: "(šaljem email)"
@@ -1461,6 +1468,7 @@ bs_BA:
     form_kit:
       reset: Resetovati
       optional: opciono
+      required: required
       errors:
         required: "Required"
     close: "Zatvori"
@@ -1945,9 +1953,6 @@ bs_BA:
       bulk:
         select_all: "Označi sve"
         clear_all: "Očisti sve"
-        unlist_topics: "Skini teme sa liste"
-        relist_topics: "Listaj teme"
-        delete: "Obriši teme"
         delete_topics_count:
           one: "Obriši temu"
           few: "Obriši teme"
@@ -1960,18 +1965,9 @@ bs_BA:
         dismiss_new: "Odpusti Nove"
         toggle: "preklopi masovno označavanje tema"
         actions: "Masovno odrađene akcije"
-        close_topics: "Zatvori teme"
-        archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Idi u inbox"
         choose_new_category: "Izaberi novu kategoriju za temu:"
-        selected:
-          one: "Označili ste <b>%{count}</b> temu."
-          few: "Označili ste <b>%{count}</b> teme."
-          other: "Označili ste <b>%{count}</b> teme."
-        change_tags: "Zamijeni oznake"
-        append_tags: "Pripoji oznake"
         choose_new_tags: "Odaberi nove tagove za ove teme:"
-        choose_append_tags: "Odaberi nove oznake kako bi pripojili ovim temama:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
         error_topic_count:
           one: "%{count} tema"
@@ -1995,8 +1991,6 @@ bs_BA:
         name: "Arhiva"
       move_messages_to_inbox:
         name: "Premjesti u Sanduče"
-      append_tags:
-        name: "Pripoji oznake"
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:
@@ -2954,6 +2948,16 @@ bs_BA:
         one: "Pripadajući sinonim će također biti obrisan."
         few: "Pripadajućih %{count} sinonima će također biti obrisano."
         other: "Pripadajućih %{count} sinonima će također biti obrisano."
+      description: "Opis"
+      settings:
+        title: "Postavke"
+        general: "General"
+        back: "Prethodno"
+        name: "Ime"
+        synonyms_subtitle: "U slučaju da se sljedeće oznake koriste, iste će biti zamijenjene sa %{name}"
+      localization:
+        name: "Ime"
+        description: "Opis"
       sort_by: "Sortiraj po:"
       sort_by_count: "brojenje"
       sort_by_name: "ime"
@@ -3132,7 +3136,6 @@ bs_BA:
         categories: "Sve kategorije"
   admin_js:
     settings: "Postavke"
-    reset_filter: "Resetovati"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3145,6 +3148,9 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
+        group_traffic: "Promet"
+        group_members: "Članovi"
+        group_other: "Other"
       config_sections:
         account:
           title: "Račun"
@@ -3166,7 +3172,6 @@ bs_BA:
         preview: "Pregled"
         enabled_for_options:
           everyone: "Svatko"
-          staff: "Samo za urednike i admine"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -3236,6 +3241,9 @@ bs_BA:
               title: "Logs"
         reports:
           title: "Izvještaji"
+          sub_pages:
+            settings:
+              title: "Postavke"
         badges:
           title: "Bedž"
         permalinks:
@@ -3283,15 +3291,6 @@ bs_BA:
         default_value: "Uobičajen"
       search:
         title: "Pretraži"
-        result_types:
-          theme:
-            one: "Izgled"
-            few: "Teme"
-            other: "Teme"
-          component:
-            one: "Komponenta"
-            few: "Komponenti"
-            other: "Komponenti"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3359,7 +3358,7 @@ bs_BA:
           all: "All"
           view_table: "View as Table"
           view_graph: "graph"
-          refresh_report: "Refresh Report"
+          refresh_report: "Refresh"
           daily: Dnevno
           monthly: Mesečno
           weekly: Sedmično
@@ -4360,6 +4359,7 @@ bs_BA:
           title: "Prikaži na korisničkoj kartici"
         field_types:
           text: "Poruka"
+          date: "Datum"
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:

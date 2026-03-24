@@ -36,7 +36,8 @@ class CategorySerializer < SiteCategorySerializer
              :default_slow_mode_seconds,
              :style_type,
              :emoji,
-             :icon
+             :icon,
+             :category_types
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
   has_many :category_localizations, serializer: CategoryLocalizationSerializer, embed: :objects
@@ -147,5 +148,10 @@ class CategorySerializer < SiteCategorySerializer
 
   def description
     category_description
+  end
+
+  def category_types
+    return {} if !SiteSetting.enable_simplified_category_creation
+    object.category_types
   end
 end

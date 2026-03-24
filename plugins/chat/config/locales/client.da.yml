@@ -46,6 +46,7 @@ da:
       cancel: "Annuller"
       cancel_reply: "Annuller svar"
       chat_channels: "Kanaler"
+      pinned: "Fastgjort"
       browse_all_channels: "Gennemse alle kanaler"
       move_to_channel:
         title: "Flyt beskeder til kanal"

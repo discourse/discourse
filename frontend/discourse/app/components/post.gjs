@@ -4,8 +4,8 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -52,15 +52,11 @@ export default class Post extends Component {
 
   @tracked expandedFirstPost;
   @tracked repliesAbove;
-  @tracked repliesBelow = new TrackedArray();
-
-  /**
-   * @type {boolean}
-   */
   @tracked isTogglingReplies = false;
   @tracked isLoadingMoreReplies = false;
 
-  decoratorState = new TrackedMap();
+  repliesBelow = trackedArray();
+  decoratorState = trackedMap();
 
   addEventListeners = modifier((element, [listeners]) => {
     for (const { event, callback } of listeners) {
@@ -500,7 +496,7 @@ export default class Post extends Component {
                       class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
                     >
                       <DButton
-                        class="post__collapse-button post__collapse-button-down collapse-down"
+                        class="btn-default btn-small post__collapse-button post__collapse-button-down collapse-down"
                         @action={{this.toggleReplyAbove}}
                         @icon="chevron-down"
                         @title="post.collapse"
@@ -597,7 +593,7 @@ export default class Post extends Component {
                         )
                       }}
                         <DButton
-                          class="post__expand-button expand-post"
+                          class="btn-default post__expand-button expand-post"
                           @action={{this.expandFirstPost}}
                           @translatedLabel={{if
                             this.expandedFirstPost.isPending
@@ -664,7 +660,7 @@ export default class Post extends Component {
                           {{/each}}
 
                           <DButton
-                            class="post__collapse-button post__collapse-button-up collapse-up"
+                            class="btn-default btn-small post__collapse-button post__collapse-button-up collapse-up"
                             @action={{this.toggleRepliesBelow}}
                             @ariaLabel="post.sr_collapse_replies"
                             @icon="chevron-up"

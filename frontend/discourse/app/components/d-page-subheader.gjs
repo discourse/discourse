@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import {
   DangerActionListItem,
   DangerButton,
@@ -39,7 +39,7 @@ export default class DPageSubheader extends Component {
                 @identifier="d-page-subheader-mobile-actions"
                 @title={{i18n "more_options"}}
                 @icon="ellipsis-vertical"
-                class="btn-small"
+                class="btn-small btn-default"
               >
                 <:content>
                   <DropdownMenu class="d-page-subheader__mobile-actions">
@@ -72,10 +72,10 @@ export default class DPageSubheader extends Component {
 
       {{#if @descriptionLabel}}
         <p class="d-page-subheader__description">
-          {{htmlSafe @descriptionLabel}}
+          {{trustHTML @descriptionLabel}}
           {{#if @learnMoreUrl}}
             <span class="d-page-subheader__learn-more">
-              {{htmlSafe
+              {{trustHTML
                 (i18n "learn_more_with_link" url=@learnMoreUrl)
               }}</span>
           {{/if}}

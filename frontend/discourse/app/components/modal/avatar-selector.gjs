@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AvatarUploader from "discourse/components/avatar-uploader";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -23,7 +23,6 @@ export default class AvatarSelectorModal extends Component {
 
   @tracked gravatarRefreshDisabled = false;
   @tracked gravatarFailed = false;
-  @tracked uploading = false;
   @tracked _selected = null;
 
   get user() {
@@ -39,7 +38,7 @@ export default class AvatarSelectorModal extends Component {
   }
 
   get submitDisabled() {
-    return this.selected === "logo" || this.uploading;
+    return this.selected === "logo";
   }
 
   get selectableAvatars() {
@@ -242,7 +241,7 @@ export default class AvatarSelectorModal extends Component {
                   "large"
                 }}
                 <span>
-                  {{htmlSafe
+                  {{trustHTML
                     (i18n
                       "user.change_avatar.gravatar"
                       gravatarName=this.siteSettings.gravatar_name
@@ -299,7 +298,6 @@ export default class AvatarSelectorModal extends Component {
                 @user_id={{this.user.id}}
                 @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
                 @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
-                @uploading={{this.uploading}}
                 @id="avatar-uploader"
                 @done={{this.uploadComplete}}
                 class="avatar-uploader"

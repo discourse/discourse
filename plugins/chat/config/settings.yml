@@ -9,6 +9,7 @@ chat:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/397571"
   enable_public_channels:
     default: true
     client: true
@@ -97,6 +98,10 @@ chat:
     default: true
     client: true
     validator: "Chat::AllowUploadsValidator"
+  chat_show_copy_button_on_codeblocks:
+    client: true
+    default: true
+    hidden: true
   max_chat_auto_joined_users:
     min: 0
     default: 10000

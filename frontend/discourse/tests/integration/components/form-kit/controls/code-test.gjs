@@ -14,8 +14,8 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     await render(
       <template>
         <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @name="foo" @title="Foo" as |field|>
-            <field.Code @height={{100}} style="width: 200px" />
+          <form.Field @type="code" @name="foo" @title="Foo" as |field|>
+            <field.Control @height={{100}} style="width: 200px" />
           </form.Field>
         </Form>
       </template>
@@ -31,12 +31,55 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     assert.form().field("foo").hasValue("bar");
   });
 
+  test("@height", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @type="code" @name="foo" @title="Foo" as |field|>
+            <field.Control @height={{100}} />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.strictEqual(
+      document.querySelector(".form-kit__control-code").style.height,
+      "100px"
+    );
+  });
+
+  test("@lang", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @type="code" @name="foo" @title="Foo" as |field|>
+            <field.Control @lang="sql" />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert.strictEqual(
+      document
+        .querySelector(".form-kit__control-code")
+        .aceEditor.getSession()
+        .getMode().$id,
+      "ace/mode/sql"
+    );
+  });
+
   test("when disabled", async function (assert) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
-            <field.Code />
+          <form.Field
+            @type="code"
+            @name="foo"
+            @title="Foo"
+            @disabled={{true}}
+            as |field|
+          >
+            <field.Control />
           </form.Field>
         </Form>
       </template>

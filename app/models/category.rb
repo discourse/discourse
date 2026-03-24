@@ -37,6 +37,7 @@ class Category < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
+  has_many :category_posting_review_groups, dependent: :destroy
   has_many :groups, through: :category_groups
   has_many :moderating_groups, through: :category_moderation_groups, source: :group
   has_many :topic_timers, dependent: :destroy
@@ -312,6 +313,25 @@ class Category < ActiveRecord::Base
     Category.reset_topic_ids_cache
   end
 
+  def category_types
+    return {} if !SiteSetting.enable_simplified_category_creation
+    Categories::TypeRegistry
+      .all
+      .values
+      .each_with_object({}) do |type_klass, result|
+        result[type_klass.type_id] = type_klass.metadata if type_klass.category_matches?(self)
+      end
+  end
+
+  def category_type_site_setting_names
+    category_types
+      .values
+      .filter_map { |type_metadata| type_metadata.dig(:configuration_schema, :site_settings) }
+      .flatten(1)
+      .map { |setting| setting[:key].to_sym }
+      .uniq
+  end
+
   # Accepts an array of slugs with each item in the array
   # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
   # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
@@ -444,29 +464,49 @@ class Category < ActiveRecord::Base
          AND (c.topic_count <> COALESCE(x.topic_count, 0) OR c.post_count <> COALESCE(x.post_count, 0))
     SQL
 
-    # Yes, there are a lot of queries happening below.
-    # Performing a lot of queries is actually faster than using one big update
-    # statement with sub-selects on large databases with many categories,
-    # topics, and posts.
-    #
-    # The old method with the one query is here:
-    # https://github.com/discourse/discourse/blob/5f34a621b5416a53a2e79a145e927fca7d5471e8/app/models/category.rb
-    #
-    # If you refactor this, test performance on a large database.
-
-    Category.all.each do |c|
+    Category.find_each do |c|
       topics = c.topics.visible
       topics = topics.where.not(id: c.topic_id) if c.topic_id
-      c.topics_year = topics.created_since(1.year.ago).count
-      c.topics_month = topics.created_since(1.month.ago).count
-      c.topics_week = topics.created_since(1.week.ago).count
-      c.topics_day = topics.created_since(1.day.ago).count
 
-      posts = c.visible_posts
-      c.posts_year = posts.created_since(1.year.ago).count
-      c.posts_month = posts.created_since(1.month.ago).count
-      c.posts_week = posts.created_since(1.week.ago).count
-      c.posts_day = posts.created_since(1.day.ago).count
+      # Combine time-based topic counts into a single query
+      topic_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM topics
+        WHERE category_id = :category_id
+          AND visible = true
+          AND deleted_at IS NULL
+          #{c.topic_id ? "AND id != :topic_id" : ""}
+      SQL
+
+      c.topics_year = topic_counts[0]
+      c.topics_month = topic_counts[1]
+      c.topics_week = topic_counts[2]
+      c.topics_day = topic_counts[3]
+
+      # Combine time-based post counts into a single query
+      post_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM posts
+        INNER JOIN topics ON topics.id = posts.topic_id
+        WHERE topics.category_id = :category_id
+          AND topics.visible = true
+          AND posts.deleted_at IS NULL
+          AND posts.user_deleted = false
+          #{c.topic_id ? "AND topics.id != :topic_id" : ""}
+      SQL
+
+      c.posts_year = post_counts[0]
+      c.posts_month = post_counts[1]
+      c.posts_week = post_counts[2]
+      c.posts_day = post_counts[3]
 
       c.save if c.changed?
     end
@@ -1252,64 +1292,65 @@ end
 # Table name: categories
 #
 #  id                                        :integer          not null, primary key
-#  name                                      :string(50)       not null
-#  color                                     :string(6)        default("0088CC"), not null
-#  topic_id                                  :integer
-#  topic_count                               :integer          default(0), not null
-#  created_at                                :datetime         not null
-#  updated_at                                :datetime         not null
-#  user_id                                   :integer          not null
-#  topics_year                               :integer          default(0)
-#  topics_month                              :integer          default(0)
-#  topics_week                               :integer          default(0)
-#  slug                                      :string           not null
-#  description                               :text
-#  text_color                                :string(6)        default("FFFFFF"), not null
-#  read_restricted                           :boolean          default(FALSE), not null
+#  all_topics_wiki                           :boolean          default(FALSE), not null
+#  allow_badges                              :boolean          default(TRUE), not null
+#  allow_global_tags                         :boolean          default(FALSE), not null
+#  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
+#  auto_close_based_on_last_post             :boolean          default(FALSE)
 #  auto_close_hours                          :float
-#  post_count                                :integer          default(0), not null
-#  latest_post_id                            :integer
-#  latest_topic_id                           :integer
-#  position                                  :integer
-#  parent_category_id                        :integer
-#  posts_year                                :integer          default(0)
-#  posts_month                               :integer          default(0)
-#  posts_week                                :integer          default(0)
+#  color                                     :string(6)        default("0088CC"), not null
+#  contains_messages                         :boolean
+#  default_list_filter                       :string(20)       default("all")
+#  default_slow_mode_seconds                 :integer
+#  default_top_period                        :string(20)       default("all")
+#  default_view                              :string(50)
+#  description                               :text
 #  email_in                                  :string
 #  email_in_allow_strangers                  :boolean          default(FALSE)
-#  topics_day                                :integer          default(0)
-#  posts_day                                 :integer          default(0)
-#  allow_badges                              :boolean          default(TRUE), not null
-#  name_lower                                :string(50)       not null
-#  auto_close_based_on_last_post             :boolean          default(FALSE)
-#  topic_template                            :text
-#  contains_messages                         :boolean
-#  sort_order                                :string
-#  sort_ascending                            :boolean
-#  uploaded_logo_id                          :integer
-#  uploaded_background_id                    :integer
-#  topic_featured_link_allowed               :boolean          default(TRUE)
-#  all_topics_wiki                           :boolean          default(FALSE), not null
-#  show_subcategory_list                     :boolean          default(FALSE)
-#  num_featured_topics                       :integer          default(3)
-#  default_view                              :string(50)
-#  subcategory_list_style                    :string(50)       default("rows_with_featured_topics")
-#  default_top_period                        :string(20)       default("all")
-#  mailinglist_mirror                        :boolean          default(FALSE), not null
-#  minimum_required_tags                     :integer          default(0), not null
-#  navigate_to_first_post_after_read         :boolean          default(FALSE), not null
-#  search_priority                           :integer          default(0)
-#  allow_global_tags                         :boolean          default(FALSE), not null
-#  read_only_banner                          :string
-#  default_list_filter                       :string(20)       default("all")
-#  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
-#  default_slow_mode_seconds                 :integer
-#  uploaded_logo_dark_id                     :integer
-#  uploaded_background_dark_id               :integer
-#  style_type                                :integer          default("square"), not null
 #  emoji                                     :string
 #  icon                                      :string
 #  locale                                    :string(20)
+#  mailinglist_mirror                        :boolean          default(FALSE), not null
+#  minimum_required_tags                     :integer          default(0), not null
+#  name                                      :string(50)       not null
+#  name_lower                                :string(50)       not null
+#  navigate_to_first_post_after_read         :boolean          default(FALSE), not null
+#  num_featured_topics                       :integer          default(3)
+#  position                                  :integer
+#  post_count                                :integer          default(0), not null
+#  posts_day                                 :integer          default(0)
+#  posts_month                               :integer          default(0)
+#  posts_week                                :integer          default(0)
+#  posts_year                                :integer          default(0)
+#  read_only_banner                          :string
+#  read_restricted                           :boolean          default(FALSE), not null
+#  search_priority                           :integer          default(0)
+#  show_subcategory_list                     :boolean          default(FALSE)
+#  slug                                      :string           not null
+#  sort_ascending                            :boolean
+#  sort_order                                :string
+#  style_type                                :integer          default("square"), not null
+#  subcategory_list_style                    :string(50)       default("rows_with_featured_topics")
+#  text_color                                :string(6)        default("FFFFFF"), not null
+#  topic_count                               :integer          default(0), not null
+#  topic_featured_link_allowed               :boolean          default(TRUE)
+#  topic_template                            :text
+#  topic_title_placeholder                   :string
+#  topics_day                                :integer          default(0)
+#  topics_month                              :integer          default(0)
+#  topics_week                               :integer          default(0)
+#  topics_year                               :integer          default(0)
+#  created_at                                :datetime         not null
+#  updated_at                                :datetime         not null
+#  latest_post_id                            :integer
+#  latest_topic_id                           :integer
+#  parent_category_id                        :integer
+#  topic_id                                  :integer
+#  uploaded_background_dark_id               :integer
+#  uploaded_background_id                    :integer
+#  uploaded_logo_dark_id                     :integer
+#  uploaded_logo_id                          :integer
+#  user_id                                   :integer          not null
 #
 # Indexes
 #

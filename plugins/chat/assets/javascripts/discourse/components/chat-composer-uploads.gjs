@@ -9,7 +9,7 @@ import PickFilesButton from "discourse/components/pick-files-button";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { cloneJSON } from "discourse/lib/object";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
@@ -20,7 +20,7 @@ export default class ChatComposerUploads extends Component {
   @service capabilities;
   @service mediaOptimizationWorker;
 
-  @trackedArray uploads = null;
+  @autoTrackedArray uploads = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "chat-composer-uploader",

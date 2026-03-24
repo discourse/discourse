@@ -31,7 +31,7 @@ module DiscourseAi
         # this allows us to release memory earlier
         def queue_streamed_reply(
           io:,
-          persona:,
+          agent:,
           user:,
           topic:,
           query:,
@@ -46,7 +46,7 @@ module DiscourseAi
               if custom_tools.present? || resume_token.present?
                 stream_custom_tool_reply(
                   io: io,
-                  persona: persona,
+                  agent: agent,
                   user: user,
                   topic: topic,
                   query: query,
@@ -59,7 +59,7 @@ module DiscourseAi
               else
                 stream_standard_reply(
                   io: io,
-                  persona: persona,
+                  agent: agent,
                   user: user,
                   topic: topic,
                   query: query,
@@ -80,7 +80,7 @@ module DiscourseAi
 
         def stream_standard_reply(
           io:,
-          persona:,
+          agent:,
           user:,
           topic:,
           query:,
@@ -100,7 +100,7 @@ module DiscourseAi
           else
             post_params[:title] = I18n.t("discourse_ai.ai_bot.default_pm_prefix")
             post_params[:archetype] = Archetype.private_message
-            post_params[:target_usernames] = "#{user.username},#{persona.user.username}"
+            post_params[:target_usernames] = "#{user.username},#{agent.user.username}"
           end
 
           post = PostCreator.create!(user, post_params)
@@ -108,13 +108,10 @@ module DiscourseAi
 
           write_headers(io)
 
-          persona_class = DiscourseAi::Personas::Persona.find_by(id: persona.id, user: current_user)
-          bot = DiscourseAi::Personas::Bot.as(persona.user, persona: persona_class.new)
+          agent_class = DiscourseAi::Agents::Agent.find_by(id: agent.id, user: current_user)
+          bot = DiscourseAi::Agents::Bot.as(agent.user, agent: agent_class.new)
 
-          write_chunk(
-            io,
-            { topic_id: topic.id, bot_user_id: persona.user.id, persona_id: persona.id },
-          )
+          write_chunk(io, { topic_id: topic.id, bot_user_id: agent.user.id, agent_id: agent.id })
 
           DiscourseAi::AiBot::Playground
             .new(bot)
@@ -129,7 +126,7 @@ module DiscourseAi
 
         def stream_custom_tool_reply(
           io:,
-          persona:,
+          agent:,
           user:,
           topic:,
           query:,
@@ -145,7 +142,7 @@ module DiscourseAi
 
           session =
             DiscourseAi::AiBot::StreamReplyCustomToolsSession.new(
-              persona: persona,
+              agent: agent,
               user: user,
               topic: topic,
               query: query,

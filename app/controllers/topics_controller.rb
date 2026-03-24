@@ -167,7 +167,8 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+    if slugs_do_not_match ||
+         (!request.format.json? && params[:slug].nil? && @topic_view.topic.slug.present?)
       redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
       return
     end
@@ -303,6 +304,7 @@ class TopicsController < ApplicationController
 
     @posts =
       Post
+        .secured(guardian)
         .where(hidden: false, deleted_at: nil, topic_id: @topic.id)
         .where("posts.id in (?)", post_ids)
         .joins("LEFT JOIN users u on u.id = posts.user_id")
@@ -494,7 +496,12 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
 
-    tags = params[:tags] || []
+    tags =
+      if params[:tags].is_a?(ActionController::Parameters)
+        params[:tags].values
+      else
+        params[:tags] || []
+      end
 
     if tags.present? && tags.first.is_a?(String)
       Discourse.deprecate(
@@ -504,14 +511,14 @@ class TopicsController < ApplicationController
       )
     end
 
-    success =
-      PostRevisor.new(topic.first_post, topic).revise!(
-        current_user,
-        { tags: },
-        validate_post: false,
-      )
+    revisor = PostRevisor.new(topic.first_post, topic)
+    revised = revisor.revise!(current_user, { tags: }, validate_post: false)
 
-    success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
+    if revised || topic.errors.blank?
+      render_serialized(topic, BasicTopicSerializer)
+    else
+      render_json_error(topic)
+    end
   end
 
   def feature_stats
@@ -610,6 +617,12 @@ class TopicsController < ApplicationController
     guardian.ensure_can_moderate!(topic)
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
+
+    if status_type == TopicTimer.types[:publish_to_category] && params[:category_id].present?
+      category = Category.find_by(id: params[:category_id])
+      raise Discourse::NotFound if !category
+      raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
+    end
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }
 
@@ -958,6 +971,11 @@ class TopicsController < ApplicationController
       end
     end
 
+    if params[:destination_topic_id].present?
+      destination_topic = Topic.find_by(id: params[:destination_topic_id])
+      guardian.ensure_can_create_post_on_topic!(destination_topic)
+    end
+
     hijack do
       destination_topic = move_posts_to_destination(topic)
       render_topic_changes(destination_topic)
@@ -1112,6 +1130,8 @@ class TopicsController < ApplicationController
       result = { topic_ids: changed_topic_ids }
       result[:errors] = operator.errors if operator.errors.present?
       render_json_dump result
+    rescue Discourse::InvalidParameters => ex
+      render_json_error(ex, status: 400)
     end
   end
 

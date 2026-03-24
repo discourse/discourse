@@ -58,8 +58,6 @@ fa_IR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} توسط %{username}"
-    too_many_urls: "نمی توان بیش از ۱۰ نشانی وب را در یک درخواست به صورت inline در یک جعبه قرار داد."
-    concurrency_not_allowed: "درخواست‌های inline-oneboxing همزمان مجاز نیستند. لطفاً هر بار یک درخواست ارسال کنید."
   components:
     enabled_filter: "فعال شده"
     disabled_filter: "غیرفعال"
@@ -335,7 +333,6 @@ fa_IR:
       cors_origins_should_not_have_trailing_slash: "شما نباید اسلش انتهایی (/) را به مبدا CORS اضافه کنید."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "یوزر ایجینت باید حداقل 3 کاراکتر داشته باشند تا از محدود شدن نرخ درخواست کاربران قانونی به صورت تصادفی جلوگیری شود."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "شما نمی توانید هیچ یک از مقادیر زیر را به تنظیمات اضافه کنید: %{values}."
-      x_summary_large_image_no_svg: "تصاویر خلاصه توییتر مورد استفاده برای ابرداده twitter:image نمی توانند یک تصویر .svg باشند."
       tl0_and_anonymous_flag: "برای کاربران ناشناس باید «ایمیل تماس با سایت» یا «آدرس ایمیل برای گزارش محتوای غیرقانونی» ارائه شود."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "این تنظیم نیاز دارد که ابتدا تنظیمات «فعال‌سازی حالت ناشناس» فعال باشد."
     conflicting_google_user_id: 'شناسه حساب Google برای این حساب تغییر کرده است. مداخله کارکنان به دلایل امنیتی لازم است. لطفاً با کارکنان تماس بگیرید و به آنها نشان دهید <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1108,9 +1105,10 @@ fa_IR:
         flagger: گزارش‌دهنده
     visits:
       title: "بازدید کاربران"
-      xaxis: "روز"
+      xaxis:
+        desktop: "کامپیوتر"
+        mobile: "موبایل"
       yaxis: "تعداد بازدید ها"
-      description: "تعداد بازدیدهای کاربران وارد شده"
     signups:
       title: "ثبت‌نام‌ها"
       xaxis: "روز"
@@ -1167,10 +1165,8 @@ fa_IR:
       description: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس، خزنده های شناخته شده و سایر ترافیک‌ها."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
-      title: "DAU/MAU"
       xaxis: "روز"
       yaxis: "DAU/MAU"
-      description: "تعداد اعضایی که در روز گذشته وارد سیستم شده‌اند تقسیم بر تعداد اعضایی که در ماه گذشته وارد شده‌اند - درصدی را نشان می‌دهد که نشان‌دهنده «چسبندگی» انجمن است. بیش از ۲۰٪ را هدف بگیرید."
     daily_engaged_users:
       title: "کاربران فعال روزانه"
       xaxis: "روز"
@@ -1712,7 +1708,6 @@ fa_IR:
     enable_group_directory: "یک فهرست راهنما برای گروه‌ها فراهم کنید"
     allow_anonymous_mode: "گزینه‌ای را فعال کنید که به کاربران اجازه دهد برای ارسال نوشته‌ها به حالت ناشناس تغییر کنند. با فعال‌سازی، کاربران می‌توانند هویت خود را هنگام ایجاد نوشته‌ها یا موضوعات در وبگاه پنهان کنند. همچنین به اجازه پسندیده ناشناس مراجعه کنید."
     anonymous_account_duration_minutes: "برای محافظت از ناشناس ماندن، هر N دقیقه برای هر کاربر یک حساب‌کاربری ناشناس بساز. برای مثال: اگر به ۶۰۰ تنظیم شود، به محض اینکه ۶۰۰ دقیقه از آخرین فرسته گذشت و کاربر به حالت ناشناس تغییر کرد، حساب کاربری جدید ناشناس ساخته می شود."
-    hide_user_profiles_from_public: "غیر‌فعال‌سازی کارت کاربری، پروفایل کاربر و فهرست راهنمای کاربر برای کاربران ناشناس."
     allow_profile_backgrounds: "به کاربر اجازه بده تا پس‌زمینه نمایه خود را بارگذاری کند."
     get_a_room_threshold: "تعداد نوشته‌هایی که کاربر باید در یک موضوع ایجاد کند تا به او اخطار داده شود."
     enable_mobile_theme: "دستگاه های موبایلی که از قالب مناسب موبایل استفاده می کنند٬‌ با قابلیت جابجایی به حالت نمایش کامل. اگر از استایلی استفاده می‌کنید که کاملا واکنشگرا است این قسمت را غیر‌فعال کنید."
@@ -1782,8 +1777,6 @@ fa_IR:
       reply_by_email_address_is_empty: "باید یک 'آدرس پاسخ با ایمیل' قبل از فعالسازی پاسخ با ایمیل تنظیم کنید."
       user_locale_not_enabled: "قبل از فعالسازی این قسمت، ابتدا باید 'اجازه انتخاب زبان' را به کاربر بدهید."
       invalid_regex: "الگوی regex نامعتبر یا غیر‌مجاز است."
-      min_username_length_range: "شما نمیتوانید مقدار حداقل را بیشتر از حداکثر قرار دهید."
-      max_username_length_range: "شما نمی‌توانید حداکثر را کمتر از حداقل قرار دهید."
       markdown_linkify_tlds: "شما مقدار «*» را نمی‌توانید وارد کنید."
       content_localization_locale_limit: "تعداد زبان‌های پشتیبانی‌شده نمی‌تواند بیش از %{max} باشد."
     placeholder:
@@ -2759,8 +2752,6 @@ fa_IR:
     title: "ورود به حالت امن"
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
     enter: "فعال‌سازی حالت امن"
-  dev_mode:
-    enter: "وارد شدن "
   wizard:
     title: "راه اندازی Discourse"
     step:
@@ -2869,15 +2860,11 @@ fa_IR:
         title: "بله"
       approve_and_unhide:
         title: "بله"
-      no_action_post:
-        title: "هیچ اقدامی"
       delete_post:
         title: "حذف نوشته"
         complete: "نوشته حذف شده"
       restore_post:
         title: "بازیابی نوشته"
-      no_action_user:
-        title: "هیچ اقدامی"
       suspend_user:
         title: "کاربر تعلیق شده"
       delete_user:

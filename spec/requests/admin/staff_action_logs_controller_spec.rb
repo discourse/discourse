@@ -327,7 +327,7 @@ RSpec.describe Admin::StaffActionLogsController do
         parsed = response.parsed_body
 
         name_diff = <<-HTML
-          <h3>name</h3><p></p><table class="markdown"><tr><td class="diff-del"><del>#{tag_group1.name}</del></td><td class="diff-ins"><ins>#{tag_group2.name}</ins></td></tr></table>
+          <h3>name</h3><p></p><table class="markdown"><tr><td class="--previous diff-del"><del>#{tag_group1.name}</del></td><td class="--current diff-ins"><ins>#{tag_group2.name}</ins></td></tr></table>
         HTML
         expect(parsed["side_by_side"]).to include(name_diff.strip)
         expect(parsed["side_by_side"]).to include("<del>#{tag1.name}</del>")
@@ -387,6 +387,31 @@ RSpec.describe Admin::StaffActionLogsController do
         StaffActionLogger.new(admin).log_theme_destroy(theme)
         get "/admin/logs/staff_action_logs/#{UserHistory.last.id}/diff.json"
         expect(response.status).to eq(200)
+      end
+
+      it "falls back when diff generation exceeds the comparison budget" do
+        theme = Fabricate(:theme)
+        theme.set_field(target: :mobile, name: :scss, value: "body {.up}")
+        original_json =
+          ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
+        theme.set_field(target: :mobile, name: :scss, value: "body {.down}")
+        record = StaffActionLogger.new(Discourse.system_user).log_theme_change(original_json, theme)
+
+        ONPDiff
+          .any_instance
+          .stubs(:compose)
+          .raises(
+            ONPDiff::DiffLimitExceeded.new(
+              comparisons_used: 1,
+              comparison_budget: 0,
+              left_size: 1,
+              right_size: 1,
+            ),
+          )
+
+        get "/admin/logs/staff_action_logs/#{record.id}/diff.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["side_by_side"]).to include(I18n.t("errors.diff_too_complex"))
       end
     end
 

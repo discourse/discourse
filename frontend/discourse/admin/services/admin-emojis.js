@@ -7,7 +7,7 @@ import {
   removeValueFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
-import { trackedArray } from "discourse/lib/tracked-tools";
+import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 const ALL_FILTER = "all";
@@ -18,7 +18,7 @@ export default class AdminEmojis extends Service {
 
   @tracked filter = ALL_FILTER;
   @tracked sorting = ["group", "name"];
-  @trackedArray emojis = [];
+  @autoTrackedArray emojis = [];
 
   constructor() {
     super(...arguments);

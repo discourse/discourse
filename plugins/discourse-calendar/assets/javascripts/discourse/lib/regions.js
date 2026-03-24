@@ -227,6 +227,7 @@ export const HOLIDAY_REGIONS = [
   "us_ut",
   "us_ri",
   "us_nv",
+  "us_ny",
   "us_nm",
   "us_md",
   "us_fl",

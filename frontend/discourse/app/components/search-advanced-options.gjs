@@ -70,8 +70,6 @@ function inOptionsForUsers() {
       // Messages
       "all",
       "private",
-      // Search scope
-      "title",
     ],
     "inOptionsForUsers"
   );
@@ -85,6 +83,8 @@ function inOptionsForAll() {
       "pinned",
       "wiki",
       "images",
+      // Search scope
+      "title",
     ],
     "inOptionsForAll"
   );
@@ -246,7 +246,7 @@ export default class SearchAdvancedOptions extends Component {
       if (value === "personal") {
         value = "messages";
       }
-      if (validValues.includes(value)) {
+      if (validValues.includes(value) && !selectedFilters.includes(value)) {
         selectedFilters.push(value);
       }
     }

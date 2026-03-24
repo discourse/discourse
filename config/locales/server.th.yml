@@ -215,6 +215,9 @@ th:
     flags_status:
       labels:
         flag: ชนิด
+    visits:
+      xaxis:
+        mobile: "โทรศัพท์"
     consolidated_page_views:
       labels:
         post: โพส
@@ -491,8 +494,6 @@ th:
       button: "ลงทะเบียน"
     resend_email:
       title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
-  dev_mode:
-    enter: "เอ็นเทอร์"
   wizard:
     step:
       setup:

@@ -8,3 +8,9 @@ pt_BR:
   site_settings:
     discourse_math_enabled: "Ativar o plugin Discourse Math (adicionará processamento especial a blocos $ e $$)"
     discourse_math_provider: "Provedor padrão de renderização matemática"
+    discourse_math_enable_latex_delimiters: "Ativar delimitadores no estilo LaTeX: \\(...\\) para fórmulas matemáticas inline e \\[...\\] para fórmulas matemáticas em blocos."
+    discourse_math_mathjax_output: "Formato de saída do MathJax (somente MathJax)"
+    discourse_math_enable_menu: "Ativar menu contextual (somente MathJax)"
+    discourse_math_enable_accessibility: "Ativar recursos de acessibilidade (somente MathJax com menu)"
+    discourse_math_zoom_on_click: "Zoom de 175% com Alt+clique (somente MathJax com menu)"
+    discourse_math_enable_asciimath: "Ativar o asciimath (entradas delimitadas entre % são processadas de forma especial – requer o MathJax)"

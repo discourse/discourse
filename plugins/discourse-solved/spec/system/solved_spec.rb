@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Solved", type: :system do
+describe "Solved" do
   fab!(:admin)
   fab!(:solver, :user)
   fab!(:accepter) { Fabricate(:user, name: "<b>DERP<b>") }

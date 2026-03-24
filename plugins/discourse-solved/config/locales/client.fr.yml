@@ -46,6 +46,8 @@ fr:
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."
       notification:
         title: "votre message a été marqué comme solution"
+      category_type_support:
+        title: "Soutenir"
     topic_statuses:
       solved:
         help: "Ce sujet a une solution"

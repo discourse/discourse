@@ -6,6 +6,12 @@
 
 da:
   js:
+    blocks:
+      ghost:
+        status: "Status"
+        in_location: "i"
+        hidden: "skjult"
+        failed: "fejlet"
     number:
       format:
         separator: "."
@@ -397,6 +403,8 @@ da:
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
     admin_onboarding_banner:
+      start_posting:
+        back: "Tilbage"
       spread_the_word:
         action: "Kopiér link"
     about:
@@ -589,19 +597,13 @@ da:
       in_reply_to: "som svar til"
       filtered_flagged_by: "Anmeldt af"
       unknown:
-        title:
-          one: "Du har afventende gennemgange fra deaktiveret plugin:"
-          other: "Du har afventende gennemgange fra deaktiveret plugins:"
         instruction: "De kan ikke vises korrekt, før du aktiverer det relevante plugin. Aktivér venligst plugin'et, og opdater siden. Alternativt kan du ignorere dem. <a href='%{url}' target='_blank'>Få mere at vide...</a>"
         reviewable_unknown_source: "%{reviewableType} (ukendt plugin)"
         reviewable_known_source: "%{reviewableType} (fra '%{pluginName}' plugin)"
         ignore_all: "Ignorer alle"
         enable_plugins: "Aktivér plugins"
-        delete_confirm: "Er du sikker på, at du vil slette alle anmeldelser oprettet af deaktiverede plugins?"
-        ignore_success: "Alle anmeldelser oprettet af deaktiverede plugins er blevet slettet."
       explain:
         why: "forklar hvorfor dette punkt endte i køen"
-        title: "Scoring, der kan gennemgås"
         formula: "Formular"
         subtotal: "Mellemtotal"
         total: "Total"
@@ -615,10 +617,8 @@ da:
           title: "Brugere, hvis markeringer historisk er blevet bekræftet/godkendt, får en bonus."
         trust_level_bonus:
           name: "tillidsniveau"
-          title: "Punkter til gennemgang, som er oprettet af brugere med højere tillidsniveau, har en højere score."
         type_bonus:
           name: "skriv bonus"
-          title: "Visse gennemgåelige typer kan tildeles en bonus af medarbejdere, for at give dem til en højere prioritet."
       revise_and_reject_post:
         title: "Revidere"
         reason: "Begrundelse"
@@ -627,7 +627,6 @@ da:
         custom_reason: "Giv en klar beskrivelse af årsagen"
         other_reason: "Andet..."
         optional: "valgfri"
-      stale_help: "Denne gennemgang er blevet løst af <b>%{username}</b>."
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -1489,6 +1488,9 @@ da:
         tags: "Tags"
         interface: "Grænseflade"
         apps: "Apps"
+      calendar_subscriptions:
+        copied: "Kopieret!"
+        add_to_google: "Google Kalender"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -2015,6 +2017,7 @@ da:
     form_kit:
       reset: Nulstil
       optional: valgfri
+      required: krævet
       errors:
         required: "Obligatoriske"
         invalid_url: "Skal være en gyldig URL"
@@ -2743,11 +2746,8 @@ da:
         confirm: "Bekræft"
         select_all: "Vælg alle"
         clear_all: "Ryd alle"
-        unlist_topics: "Fjern emner fra liste"
-        relist_topics: "Genindlæs emner"
         reset_bump_dates: "Nulstil bump datoer"
         defer: "Markér som ulæst"
-        delete: "Slet emner"
         delete_topics_count:
           one: "Slet emne"
           other: "Slet emner"
@@ -2759,29 +2759,20 @@ da:
         dismiss_new: "Afvis nye"
         toggle: "vælg flere emner af gangen"
         actions: "Handlinger på flere indlæg"
-        change_category: "Indstil kategori…"
-        close_topics: "Luk indlæg"
-        archive_topics: "Arkiver Emner"
         move_messages_to_inbox: "Flyt til indbakke"
         archive_messages: "Flyt til arkiv"
-        notification_level: "Notifikationer…"
         change_notification_level: "Skift Notifikationsniveau"
         choose_new_category: "Vælg den nye kategori for emnerne:"
-        selected:
-          one: "Du har valgt <b>%{count}</b> indlæg."
-          other: "Du har valgt <b>%{count}</b> indlæg."
         selected_sole_category:
           one: "Du har valgt <b>%{count}</b> emne fra kategorien:"
           other: "Du har valgt <b>%{count}</b> emner fra kategorien:"
         selected_count:
           one: "%{count} valgt"
           other: "%{count} valgt"
-        change_tags: "Erstat tags"
-        append_tags: "Tilføj tags"
+        append_tags: "Tilføj mærker"
         choose_new_tags: "Vælg nye tags for dette emne"
-        choose_append_tags: "Vælg nye tags til at tilføje emnet:"
+        choose_append_tags: "Tilføj mærker"
         changed_tags: "Tags for dette emne blev ændret"
-        remove_tags: "Fjern alle tags"
         confirm_remove_tags:
           one: "Alle mærker fjernes fra dette emne. Er du sikker?"
           other: "Alle tags fjernes fra %{count} emner. Er du sikker?"
@@ -2807,7 +2798,6 @@ da:
         name: "Ignorer Alle"
       close_topics:
         name: "Luk"
-        note: "Note"
         optional: (valgfri)
       archive_topics:
         name: "Arkiv"
@@ -2817,8 +2807,6 @@ da:
         name: "Flyt til indbakke"
       remove_tags:
         name: "Fjern tags"
-      append_tags:
-        name: "Tilføj tags"
       replace_tags:
         name: "Erstat tags"
       delete_topics:
@@ -3477,6 +3465,7 @@ da:
         delete: "Slet"
         add: "Tilføj obligatorisk mærkegruppe"
         placeholder: "Vælg mærkegruppe…"
+        tag_group: "Mærkegruppe"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       create_long: "Opret en ny kategori"
       slug_placeholder: "(Valgfri) gennemstregede-ord for URL"
@@ -3505,6 +3494,8 @@ da:
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "Rediger beskrivelse"
+      description_expand: "Vis mere"
+      description_collapse: "Vis mindre"
       already_used: "Denne farve er blevet brugt af en anden kategori"
       security: "Sikkerhed"
       security_add_group: "Tilføj en gruppe"
@@ -3981,7 +3972,18 @@ da:
         one: "Dets synonym slettes også."
         other: "Dets %{count} synonymer slettes også."
       edit_tag: "Rediger mærke navn og beskrivelse"
-      description: "Beskrivelse (maks. 1000 tegn)"
+      description: "Beskrivelse"
+      settings:
+        title: "Indstillinger"
+        general: "Overordnet"
+        back: "Tilbage"
+        name: "Navn"
+        slug: "Alias (Slug)"
+        name_placeholder: "Mærke navn"
+        synonyms_subtitle: "Når følgende tags bruges, vil de blive erstattet med %{name}"
+      localization:
+        name: "Navn"
+        description: "Beskrivelse"
       sort_by: "Sortér efter:"
       sort_by_count: "antal"
       sort_by_name: "navn"
@@ -4318,7 +4320,6 @@ da:
   admin_js:
     type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
-    reset_filter: "Nulstil"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -4332,6 +4333,9 @@ da:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
         back: "Tilbage til alle rapporter"
+        group_traffic: "Trafik"
+        group_members: "Brugere"
+        group_other: "Andre"
       config_sections:
         account:
           title: "Konto"
@@ -4356,7 +4360,6 @@ da:
         preview: "Forhåndsvisning"
         enabled_for_options:
           everyone: "Alle"
-          staff: "Kun personale"
         statuses:
           experimental: "Eksperimentel"
         impact_roles:
@@ -4481,6 +4484,9 @@ da:
               title: "Logs"
         reports:
           title: "Rapporter"
+          sub_pages:
+            settings:
+              title: "Indstillinger"
         badges:
           title: "Emblemer"
         content:
@@ -4545,22 +4551,6 @@ da:
         result_count:
           one: '%{count} resultat for "%{filter}"'
           other: '%{count} resultater for "%{filter}"'
-        result_types:
-          page:
-            one: "Side"
-            other: "Sider"
-          report:
-            one: "Rapport"
-            other: "Rapporter"
-          setting:
-            one: "Indstilling"
-            other: "Indstillinger"
-          theme:
-            one: "Tema"
-            other: "Temaer"
-          component:
-            one: "Komponent"
-            other: "komponenter"
       new_features:
         title: "Hvad er nyt?"
         check_for_updates: "Se efter opdateringer"
@@ -4583,7 +4573,6 @@ da:
         new_features:
           title: "Hvad er nyt?"
           learn_more: "Lær mere..."
-          experimental: "Eksperimentel"
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
         no_problems: "Ingen problemer fundet."
@@ -4635,7 +4624,7 @@ da:
           all: "Alle"
           view_table: "tabel"
           view_graph: "graf"
-          refresh_report: "Genopfrisk rapporten"
+          refresh_report: "Genindlæs"
           daily: Dagligt
           monthly: Månedligt
           weekly: Ugentligt
@@ -6073,6 +6062,7 @@ da:
         field_types:
           text: "Tekst"
           textarea: "Tekstområde"
+          date: "Dato"
           confirm: "Bekræft"
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
@@ -6180,7 +6170,7 @@ da:
             confirm: "Ja, opdater adgangskodepolitik"
           min_admin_password_length:
             confirm: "Ja, opdater adgangskodepolitik"
-          password_unique_charactes:
+          password_unique_characters:
             confirm: "Ja, opdater adgangskodepolitik"
         job_status:
           completed: "Opdatering fuldført"

@@ -24,9 +24,9 @@ module PageObjects
         page.has_css?("#{FEATURES_PAGE} .ai-module", count: count)
       end
 
-      def has_feature_persona?(feature_name, name)
+      def has_feature_agent?(feature_name, name)
         page.has_css?(
-          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__persona-link",
+          "#{FEATURES_PAGE} .ai-feature-card[data-feature-name='#{feature_name}'] .ai-feature-card__agent-link",
           text: name,
         )
       end

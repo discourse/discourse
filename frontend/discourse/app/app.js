@@ -21,9 +21,10 @@ import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import "discourse/lib/theme-settings-store";
 import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
-// import require from "require";
+import { importSync } from "@embroider/macros";
+import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
@@ -94,11 +95,14 @@ async function loadThemeFromModulePreload(link) {
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
       String(error)
     );
+
+    if (DEBUG && (isRailsTesting() || isTesting())) {
+      throw new Error(error);
+    }
+
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
 }
-
-let dialogContent;
 
 async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
@@ -115,20 +119,27 @@ async function loadPluginFromModulePreload(link) {
     );
 
     if (DEBUG) {
-      if (!dialogContent) {
-        const dialog = document.createElement("dialog");
-        dialog.style = "background: black; color: red; border-radius: 30px;";
-
-        dialogContent = document.createElement("div");
-        dialog.append(dialogContent);
-
-        document.body.append(dialog);
-        dialog.showModal();
+      if (isRailsTesting() || isTesting()) {
+        throw new Error(error);
       }
 
-      dialogContent.innerText += `Failed to load plugin ${link.dataset.pluginName} from ${link.href}\n${error.message}\n\n`;
+      let { addError } = importSync("discourse/static/development-error");
+      addError(error, link.dataset.pluginName, link.href);
     }
   }
+}
+
+export async function loadThemesAndPlugins() {
+  const promises = [
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+    ].map(loadThemeFromModulePreload),
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
+    ].map(loadPluginFromModulePreload),
+  ];
+
+  await Promise.all(promises);
 }
 
 export async function loadThemes() {

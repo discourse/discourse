@@ -266,8 +266,10 @@ class PostCreator
   end
 
   def trigger_after_events
-    DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user) unless @opts[:topic_id]
-    DiscourseEvent.trigger(:post_created, @post, @opts, @user)
+    unless @opts[:topic_id]
+      DiscourseEvent.trigger(:topic_created, @post.topic, @opts, @user, continue_on_error: true)
+    end
+    DiscourseEvent.trigger(:post_created, @post, @opts, @user, continue_on_error: true)
   end
 
   def self.track_post_stats
@@ -291,14 +293,13 @@ class PostCreator
 
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
-    whisper = post.post_type == Post.types[:whisper]
     increase_posts_count =
       !post.topic&.private_message? || post.post_type != Post.types[:small_action]
     post.post_number ||=
       Topic.next_post_number(
         post.topic_id,
         reply: post.reply_to_post_number.present?,
-        whisper: whisper,
+        post_type: post.post_type,
         post: increase_posts_count,
       )
 

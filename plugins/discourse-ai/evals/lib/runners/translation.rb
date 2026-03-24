@@ -7,10 +7,10 @@ module DiscourseAi
     module Runners
       class Translation < Base
         OPERATIONS = {
-          "locale_detector" => DiscourseAi::Personas::LocaleDetector,
-          "post_raw_translator" => DiscourseAi::Personas::PostRawTranslator,
-          "topic_title_translator" => DiscourseAi::Personas::TopicTitleTranslator,
-          "short_text_translator" => DiscourseAi::Personas::ShortTextTranslator,
+          "locale_detector" => DiscourseAi::Agents::LocaleDetector,
+          "post_raw_translator" => DiscourseAi::Agents::PostRawTranslator,
+          "topic_title_translator" => DiscourseAi::Agents::TopicTitleTranslator,
+          "short_text_translator" => DiscourseAi::Agents::ShortTextTranslator,
         }.freeze
 
         def self.can_handle?(feature_name)
@@ -24,7 +24,7 @@ module DiscourseAi
           end
         end
 
-        def run(eval_case, llm)
+        def run(eval_case, llm, execution_context:)
           raw_args = eval_case.args
           if raw_args.present? && !raw_args.is_a?(Hash)
             raise ArgumentError, "Translation evals expect args defined as a Hash"
@@ -36,10 +36,10 @@ module DiscourseAi
           if case_defs.present?
             case_defs.map do |case_args|
               normalized_args = args.merge(case_args.symbolize_keys)
-              run_case(normalized_args, llm)
+              run_case(normalized_args, llm, execution_context:)
             end
           else
-            run_case(args, llm)
+            run_case(args, llm, execution_context:)
           end
         end
 
@@ -47,50 +47,50 @@ module DiscourseAi
 
         attr_reader :operation
 
-        def run_case(case_args, llm)
+        def run_case(case_args, llm, execution_context:)
           content = extract_content(case_args)
           raise ArgumentError, "Translation evals require :input or :conversation" if content.blank?
 
           output =
             if operation == "locale_detector"
-              detect_locale(content, llm)
+              detect_locale(content, llm, execution_context:)
             else
               target_locale =
                 case_args[:target_locale].presence ||
                   raise(ArgumentError, "Translation evals require :target_locale")
-              translate_content(content, target_locale, llm)
+              translate_content(content, target_locale, llm, execution_context:)
             end
 
           build_payload(case_args, content, output)
         end
 
-        def detect_locale(content, llm)
-          persona = persona_for_operation
+        def detect_locale(content, llm, execution_context:)
+          agent = agent_for_operation
           context =
-            DiscourseAi::Personas::BotContext.new(
+            DiscourseAi::Agents::BotContext.new(
               user: system_user,
               skip_show_thinking: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: content }],
             )
 
-          bot = DiscourseAi::Personas::Bot.as(system_user, persona: persona, model: llm)
-          capture_plain_response(bot, context).strip
+          bot = DiscourseAi::Agents::Bot.as(system_user, agent: agent, model: llm)
+          capture_plain_response(bot, context, execution_context:).strip
         end
 
-        def translate_content(content, target_locale, llm)
-          persona = persona_for_operation
+        def translate_content(content, target_locale, llm, execution_context:)
+          agent = agent_for_operation
           payload = { content:, target_locale: }.to_json
           context =
-            DiscourseAi::Personas::BotContext.new(
+            DiscourseAi::Agents::BotContext.new(
               user: system_user,
               skip_show_thinking: true,
               feature_name: "translation/#{operation}",
               messages: [{ type: :user, content: payload }],
             )
 
-          bot = DiscourseAi::Personas::Bot.as(system_user, persona: persona, model: llm)
-          capture_plain_response(bot, context).strip
+          bot = DiscourseAi::Agents::Bot.as(system_user, agent: agent, model: llm)
+          capture_plain_response(bot, context, execution_context:).strip
         end
 
         def build_payload(case_args, content, output)
@@ -115,9 +115,9 @@ module DiscourseAi
           @user ||= Discourse.system_user
         end
 
-        def persona_for_operation
-          persona_class = OPERATIONS.fetch(operation)
-          resolve_persona(persona_class: persona_class)
+        def agent_for_operation
+          agent_class = OPERATIONS.fetch(operation)
+          resolve_agent(agent_class: agent_class)
         end
       end
     end

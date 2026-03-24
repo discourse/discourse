@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { Promise } from "rsvp";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
@@ -221,9 +221,6 @@ export default class BulkTopicActions extends Component {
       case "reset-bump-dates":
         this.performAndRefresh({ type: "reset_bump_dates" });
         break;
-      case "defer":
-        this.performAndRefresh({ type: "destroy_post_timing" });
-        break;
       case "update-notifications":
         this.performAndRefresh({
           type: "change_notification_level",
@@ -391,6 +388,15 @@ export default class BulkTopicActions extends Component {
     return this.soleCategory && this.isTagAction;
   }
 
+  get confirmButtonLabel() {
+    if (this.model.confirmButtonTranslationKey) {
+      return i18n(this.model.confirmButtonTranslationKey, {
+        count: this.model.bulkSelectHelper.selected.length,
+      });
+    }
+    return i18n("topics.bulk.confirm");
+  }
+
   get disabledSubmit() {
     if (this.isNotificationAction) {
       return !this.notificationLevelId || this.loading;
@@ -407,7 +413,6 @@ export default class BulkTopicActions extends Component {
   <template>
     <DModal
       @title={{@model.title}}
-      @subtitle={{@model.description}}
       @closeModal={{@closeModal}}
       class="topic-bulk-actions-modal -large"
     >
@@ -419,20 +424,20 @@ export default class BulkTopicActions extends Component {
           {{#if this.failureMessages}}
             <div class="topic-bulk-actions-modal__errors">
               {{#if this.successTopicCount}}
-                <p>{{htmlSafe
+                <p>{{trustHTML
                     (i18n
                       "topics.bulk.completed_count" count=this.successTopicCount
                     )
                   }}</p>
               {{/if}}
               {{#if this.skippedTopicCount}}
-                <p>{{htmlSafe
+                <p>{{trustHTML
                     (i18n
                       "topics.bulk.skipped_count" count=this.skippedTopicCount
                     )
                   }}</p>
               {{/if}}
-              <p>{{htmlSafe
+              <p>{{trustHTML
                   (i18n "topics.bulk.not_completed" count=this.failedTopicCount)
                 }}</p>
               <ul>
@@ -446,26 +451,23 @@ export default class BulkTopicActions extends Component {
               </ul>
             </div>
           {{else}}
-            <div class="topic-bulk-actions-modal__selection-info">
+            {{#if @model.description}}
+              <p class="topic-bulk-actions-modal__description">{{trustHTML
+                  @model.description
+                }}</p>
+            {{/if}}
 
-              {{#if this.showSoleCategoryTip}}
-                {{htmlSafe
+            {{#if this.showSoleCategoryTip}}
+              <div class="topic-bulk-actions-modal__selection-info">
+                {{trustHTML
                   (i18n
                     "topics.bulk.selected_sole_category"
                     count=@model.bulkSelectHelper.selected.length
                   )
                 }}
-                {{htmlSafe this.soleCategoryBadgeHTML}}
-              {{else}}
-                {{htmlSafe
-                  (i18n
-                    "topics.bulk.selected"
-                    count=@model.bulkSelectHelper.selected.length
-                  )
-                }}
-
-              {{/if}}
-            </div>
+                {{trustHTML this.soleCategoryBadgeHTML}}
+              </div>
+            {{/if}}
 
             {{#if this.isCategoryAction}}
               <p>
@@ -489,7 +491,7 @@ export default class BulkTopicActions extends Component {
                         @selection={{this.notificationLevelId}}
                       />
                       <strong>{{level.name}}</strong>
-                      <div class="description">{{htmlSafe
+                      <div class="description">{{trustHTML
                           level.description
                         }}</div>
                     </label>
@@ -565,8 +567,7 @@ export default class BulkTopicActions extends Component {
           <DButton
             @action={{this.performAction}}
             @disabled={{this.disabledSubmit}}
-            @icon="check"
-            @label="topics.bulk.confirm"
+            @translatedLabel={{this.confirmButtonLabel}}
             id="bulk-topics-confirm"
             class="btn-primary"
           />

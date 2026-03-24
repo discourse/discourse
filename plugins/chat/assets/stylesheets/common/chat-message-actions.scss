@@ -14,6 +14,14 @@
   // dynamically overridden by the component
   visibility: hidden;
   pointer-events: none;
+
+  &.is-size-full {
+    padding-left: 60px !important; /* for easier mouse movement to the element */
+  }
+
+  &.is-size-reduced {
+    padding-left: 20px !important; /* for easier mouse movement to the element */
+  }
 }
 
 .chat-message-actions {

@@ -183,6 +183,7 @@ class TopicLink < ActiveRecord::Base
         .joins(:post, :user)
         .where("posts.id IS NOT NULL AND users.id IS NOT NULL")
         .where(topic_id: topic.id, reflection: false)
+        .where(posts: { hidden: false })
         .last(200)
 
     lookup = {}
@@ -199,8 +200,6 @@ class TopicLink < ActiveRecord::Base
     lookup
   end
 
-  private
-
   def self.apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
     builder.where(<<~SQL)
       #{target_topic}.deleted_at IS NULL
@@ -208,6 +207,9 @@ class TopicLink < ActiveRecord::Base
       AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
     SQL
   end
+  private_class_method :apply_link_visibility_filters
+
+  private
 
   # This pattern is used to create topic links very efficiently with minimal
   # errors under heavy concurrent use

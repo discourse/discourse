@@ -37,10 +37,9 @@ sl:
       llm_selector:
         none: "Brez"
       features:
-        back: "Nazaj"
         disabled: "(onemogočeno)"
         groups: "Skupine:"
-        no_persona: "Ni nastavljeno"
+        no_agent: "Ni nastavljeno"
         no_groups: "Brez"
         edit: "Nastavitve"
         expand_list:
@@ -96,8 +95,7 @@ sl:
         periods:
           last_day: "Zadnjih 24 ur"
           custom: "Po meri..."
-      ai_persona:
-        back: "Nazaj"
+      ai_agent:
         name: "Ime"
         edit: "Uredi"
         export: "Izvozi"
@@ -117,7 +115,6 @@ sl:
           title: "Prenosi"
           uploading: "Nalagam..."
       tools:
-        back: "Nazaj"
         export: "Izvozi"
         import: "Uvozi"
         name: "Ime"
@@ -126,13 +123,13 @@ sl:
         save: "Shrani"
         remove_parameter: "Odstrani"
         parameter_required: "Zahtevano"
+        credential_not_set: "(ni nastavljeno)"
         edit: "Uredi"
         delete: "Izbriši"
       secrets:
         short_title: "Poverilnice"
         name: "Ime"
         secret: "Stanje"
-        back: "Nazaj"
         save: "Shrani"
         edit: "Uredi"
         delete: "Izbriši"
@@ -141,7 +138,6 @@ sl:
         display_name: "Ime"
         save: "Shrani"
         edit: "Uredi"
-        back: "Nazaj"
         delete: Izbriši
         quotas:
           group: "Skupina"
@@ -177,7 +173,6 @@ sl:
         image_caption:
           save_caption: "Shrani"
       embeddings:
-        back: "Nazaj"
         save: "Shrani"
         delete: "Izbriši"
         edit: "Uredi"

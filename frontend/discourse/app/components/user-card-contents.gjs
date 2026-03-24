@@ -5,7 +5,7 @@ import EmberObject, { action, computed, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { compare, isEmpty } from "@ember/utils";
 import {
   attributeBindings,
@@ -29,7 +29,6 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
 import { durationTiny } from "discourse/lib/formatter";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -114,61 +113,61 @@ export default class UserCardContents extends CardContentsBase {
     ).canCheckEmails;
   }
 
-  @discourseComputed("user")
-  hasLocaleOrWebsite(user) {
-    return user.location || user.website_name || this.userTimezone;
+  @computed("user")
+  get hasLocaleOrWebsite() {
+    return this.user.location || this.user.website_name || this.userTimezone;
   }
 
-  @discourseComputed("user.status")
-  hasStatus() {
+  @computed("user.status")
+  get hasStatus() {
     return this.siteSettings.enable_user_status && this.user.status;
   }
 
-  @discourseComputed("user.status.emoji")
-  userStatusEmoji(emoji) {
-    return emojiUnescape(escapeExpression(`:${emoji}:`));
+  @computed("user.status.emoji")
+  get userStatusEmoji() {
+    return emojiUnescape(escapeExpression(`:${this.user?.status?.emoji}:`));
   }
 
-  @discourseComputed("user.staff")
-  staff(isStaff) {
-    return isStaff ? "staff" : "";
+  @computed("user.staff")
+  get staff() {
+    return this.user?.staff ? "staff" : "";
   }
 
-  @discourseComputed("user.trust_level")
-  newUser(trustLevel) {
-    return trustLevel === 0 ? "new-user" : "";
+  @computed("user.trust_level")
+  get newUser() {
+    return this.user?.trust_level === 0 ? "new-user" : "";
   }
 
-  @discourseComputed("user.name")
-  nameFirst(name) {
-    return prioritizeNameInUx(name);
+  @computed("user.name")
+  get nameFirst() {
+    return prioritizeNameInUx(this.user?.name);
   }
 
-  @discourseComputed("user")
-  userTimezone(user) {
+  @computed("user")
+  get userTimezone() {
     if (!this.showUserLocalTime) {
       return;
     }
-    return user.get("user_option.timezone");
+    return this.user.get("user_option.timezone");
   }
 
-  @discourseComputed("userTimezone")
-  formattedUserLocalTime(timezone) {
-    return moment.tz(timezone).format(i18n("dates.time"));
+  @computed("userTimezone")
+  get formattedUserLocalTime() {
+    return moment.tz(this.userTimezone).format(i18n("dates.time"));
   }
 
-  @discourseComputed("username")
-  usernameClass(username) {
-    return username ? `user-card-${username}` : "";
+  @computed("username")
+  get usernameClass() {
+    return this.username ? `user-card-${this.username}` : "";
   }
 
-  @discourseComputed("topicPostCount")
-  filterPostsLabel(count) {
-    return i18n("topic.filter_to", { count });
+  @computed("topicPostCount")
+  get filterPostsLabel() {
+    return i18n("topic.filter_to", { count: this.topicPostCount });
   }
 
-  @discourseComputed("user.user_fields.@each.value")
-  publicUserFields() {
+  @computed("user.user_fields.@each.value")
+  get publicUserFields() {
     const siteUserFields = this.site.get("user_fields");
     if (!isEmpty(siteUserFields)) {
       const userFields = this.get("user.user_fields");
@@ -184,36 +183,39 @@ export default class UserCardContents extends CardContentsBase {
     }
   }
 
-  @discourseComputed("user.trust_level")
-  removeNoFollow(trustLevel) {
-    return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
+  @computed("user.trust_level")
+  get removeNoFollow() {
+    return this.user?.trust_level > 2 && !this.siteSettings.tl3_links_no_follow;
   }
 
-  @discourseComputed("user.badge_count", "user.featured_user_badges.length")
-  moreBadgesCount(badgeCount, badgeLength) {
-    return badgeCount - badgeLength;
+  @computed("user.badge_count", "user.featured_user_badges.length")
+  get moreBadgesCount() {
+    return this.user?.badge_count - this.user?.featured_user_badges?.length;
   }
 
-  @discourseComputed("user.time_read", "user.recent_time_read")
-  showRecentTimeRead(timeRead, recentTimeRead) {
-    return timeRead !== recentTimeRead && recentTimeRead !== 0;
+  @computed("user.time_read", "user.recent_time_read")
+  get showRecentTimeRead() {
+    return (
+      this.user?.time_read !== this.user?.recent_time_read &&
+      this.user?.recent_time_read !== 0
+    );
   }
 
-  @discourseComputed("user.recent_time_read")
-  recentTimeRead(recentTimeReadSeconds) {
-    return durationTiny(recentTimeReadSeconds);
+  @computed("user.recent_time_read")
+  get recentTimeRead() {
+    return durationTiny(this.user?.recent_time_read);
   }
 
-  @discourseComputed("showRecentTimeRead", "user.time_read", "recentTimeRead")
-  timeReadTooltip(showRecent, timeRead, recentTimeRead) {
-    if (showRecent) {
+  @computed("showRecentTimeRead", "user.time_read", "recentTimeRead")
+  get timeReadTooltip() {
+    if (this.showRecentTimeRead) {
       return i18n("time_read_recently_tooltip", {
-        time_read: durationTiny(timeRead),
-        recent_time_read: recentTimeRead,
+        time_read: durationTiny(this.user?.time_read),
+        recent_time_read: this.recentTimeRead,
       });
     } else {
       return i18n("time_read_tooltip", {
-        time_read: durationTiny(timeRead),
+        time_read: durationTiny(this.user?.time_read),
       });
     }
   }
@@ -233,14 +235,14 @@ export default class UserCardContents extends CardContentsBase {
     this.element.style.backgroundImage = bg;
   }
 
-  @discourseComputed("user.primary_group_name")
-  primaryGroup(primaryGroup) {
-    return `group-${primaryGroup}`;
+  @computed("user.primary_group_name")
+  get primaryGroup() {
+    return `group-${this.user?.primary_group_name}`;
   }
 
-  @discourseComputed("user.profile_hidden", "user.inactive")
-  contentHidden(profileHidden, inactive) {
-    return profileHidden || inactive;
+  @computed("user.profile_hidden", "user.inactive")
+  get contentHidden() {
+    return this.user?.profile_hidden || this.user?.inactive;
   }
 
   @onEvent("didInsertElement")
@@ -486,7 +488,7 @@ export default class UserCardContents extends CardContentsBase {
                 {{/if}}
                 {{#if this.hasStatus}}
                   <div class="user-status">
-                    {{htmlSafe this.userStatusEmoji}}
+                    {{trustHTML this.userStatusEmoji}}
                     <span class="user-status__description">
                       {{this.user.status.description}}
                     </span>
@@ -597,7 +599,7 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="suspension-reason-title">{{i18n
                         "user.suspended_reason"
                       }}</span>
-                    <span class="suspension-reason-description">{{htmlSafe
+                    <span class="suspension-reason-description">{{trustHTML
                         this.user.suspend_reason
                       }}</span>
                   </div>
@@ -620,7 +622,7 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="silence-reason-title">{{i18n
                         "user.silenced_reason"
                       }}</span>
-                    <span class="silence-reason-description">{{htmlSafe
+                    <span class="silence-reason-description">{{trustHTML
                         this.user.silence_reason
                       }}</span>
                   </div>
@@ -629,7 +631,7 @@ export default class UserCardContents extends CardContentsBase {
               {{#unless this.isRestricted}}
                 <div class="bio">
                   <HtmlWithLinks>
-                    {{htmlSafe this.user.bio_excerpt}}
+                    {{trustHTML this.user.bio_excerpt}}
                   </HtmlWithLinks>
                 </div>
               {{/unless}}
@@ -647,7 +649,7 @@ export default class UserCardContents extends CardContentsBase {
                     this.user.featured_topic.id
                   }}
                 >{{replaceEmoji
-                    (htmlSafe this.user.featured_topic.fancy_title)
+                    (trustHTML this.user.featured_topic.fancy_title)
                   }}</LinkTo>
               </div>
             </div>

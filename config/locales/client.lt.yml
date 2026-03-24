@@ -6,6 +6,12 @@
 
 lt:
   js:
+    blocks:
+      ghost:
+        status: "Statusas"
+        in_location: "į"
+        hidden: "paslėptas"
+        failed: "nepavyko"
     carousel:
       go_to_slide: "Eiti į skaidrę %{index}"
       previous: "Ankstesnė skaidrė"
@@ -343,6 +349,8 @@ lt:
       pill: "Siūloma"
       pm_title: "Rekomenduojamos žinutės"
     admin_onboarding_banner:
+      start_posting:
+        back: "Atgal"
       spread_the_word:
         action: "Nukopijuoti nuorodą"
         copied_to_clipboard: "Nuoroda nukopijuota į iškarpinę!"
@@ -607,21 +615,13 @@ lt:
       in_reply_to: "atsakant į"
       filtered_flagged_by: "Pažymėjo"
       unknown:
-        title:
-          one: "Yra laukiančių peržiūrų dėl išjungto papildinio:"
-          few: "Yra laukiančių peržiūrų dėl išjungto papildinio:"
-          many: "Yra laukiančių peržiūrų dėl išjungto papildinio:"
-          other: "Yra laukiančių peržiūrų dėl išjungtų papildinių:"
         instruction: "Jie negalės būti tinkamai rodomi, kol neįgalinsite atitinkamo papildinio. Įjunkite papildinį ir atnaujinkite puslapį. Arba galite jų ignoruoti. <a href='%{url}' target='_blank'>Sužinokite daugiau...</a>"
         reviewable_unknown_source: "%{reviewableType} (nežinomas įskiepis)"
         reviewable_known_source: "%{reviewableType} (iš „%{pluginName}“ įskiepio)"
         ignore_all: "Ignoruoti viską"
         enable_plugins: "Įjungti papildinius"
-        delete_confirm: "Ar tikrai norite ištrinti visas išjungtų papildinių sukurtas apžvalgas?"
-        ignore_success: "Visos išjungtų papildinių sukurtos apžvalgos buvo ištrintos."
       explain:
         why: "paaiškinkite, kodėl šis elementas atsidūrė eilėje"
-        title: "Peržiūrimas balas"
         formula: "Formulė"
         subtotal: "Tarpinė suma"
         total: "Viso"
@@ -635,10 +635,8 @@ lt:
           title: "Naudotojams, kurių vėliavoms istoriškai pritarta, suteikiama premija."
         trust_level_bonus:
           name: "patikimumo lygis"
-          title: "Peržiūrimi elementai, sukurti aukštesnio pasitikėjimo lygio naudotojų, turi didesnį balą."
         type_bonus:
           name: "tipo premija"
-          title: "Tam tikriems peržiūrėtiems tipams darbuotojai gali priskirti premiją, kad jie taptų aukštesniu prioritetu."
       revise_and_reject_post:
         title: "Pataisyti"
         reason: "Priežastis"
@@ -647,7 +645,6 @@ lt:
         custom_reason: "Pateikite aiškų priežasties aprašymą"
         other_reason: "Kiti..."
         optional: "pasirinktinai"
-      stale_help: "Ši peržiūra buvo išspręsta <b>%{username}</b>."
       claim_help:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
         required: "Turite pareikšti teises į elementus, kad galėtumėte juos peržiūrėti."
@@ -1522,6 +1519,9 @@ lt:
         interface: "Sąsaja"
         apps: "Programėlės"
         upcoming_changes: "Būsimi pakeitimai"
+      calendar_subscriptions:
+        copied: "Nukopijuota!"
+        add_to_google: "„Google“ kalendorius"
       change_password:
         success: "(el. laiškas išsiųstas)"
         in_progress: "(siunčiamas el. laiškas)"
@@ -2028,6 +2028,7 @@ lt:
     form_kit:
       reset: Atstatyti
       optional: pasirinktinai
+      required: privalomi
       errors:
         required: "Privalomi"
         date_before_or_equal: "Turi būti prieš arba lygu %{date}"
@@ -2726,8 +2727,6 @@ lt:
         max_views:
           placeholder: maksimalus
           aria_label: filtruoti pagal daugiausia peržiūrų
-        additional_options:
-          label: "Filtruoti pagal įrašų skaičių ir temos peržiūras"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
@@ -2746,8 +2745,6 @@ lt:
         confirm: "Patvirtinti"
         select_all: "Pasirinkti viską"
         clear_all: "Išvalyti viską"
-        unlist_topics: "Atžymėti temas"
-        delete: "Ištrinti temas"
         delete_topics_count:
           one: "Ištrinti temą"
           few: "Ištrinti temas"
@@ -2761,22 +2758,11 @@ lt:
         dismiss_new: "Praleisti Naujas"
         toggle: "perjungti temų pasirinkimus"
         actions: "Veiksmai"
-        close_topics: "Uždaryti temas"
-        archive_topics: "Archyvuoti temas"
         move_messages_to_inbox: "Perkelti į Pranešimų dėžutę"
         change_notification_level: "Keisti pranešimo lygį"
         choose_new_category: "Pasirinkti naują kategoriją temoms:"
-        selected:
-          one: "Jūs pasirinkote <b>%{count}</b> temą."
-          few: "Jūs pasirinkote <b>%{count}</b> temas."
-          many: "Jūs pasirinkote <b>%{count}</b> temų."
-          other: "Jūs pasirinkote <b>%{count}</b> temų."
-        change_tags: "Pakeisti žymas"
-        append_tags: "Pridėti žymas"
         choose_new_tags: "Pasirinkite naujas žymas šioms temoms:"
-        choose_append_tags: "Pasirinkite naujas žymas, kurias norite pridėti šioms temoms:"
         changed_tags: "Šių temų žymos buvo pakeistos."
-        remove_tags: "Pašalinti visas žymes"
         confirm_remove_tags:
           one: "Visos žymos bus pašalintos iš šios temos. Ar esate tikras?"
           few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
@@ -2806,8 +2792,6 @@ lt:
         name: "Archyvuoti"
       move_messages_to_inbox:
         name: "Perkelti į Pranešimų dėžutę"
-      append_tags:
-        name: "Pridėti žymas"
       replace_tags:
         name: "Pakeisti žymas"
       delete_topics:
@@ -3411,6 +3395,7 @@ lt:
       allow_global_tags_label: "Taip pat leiskite kitas žymas"
       required_tag_group:
         delete: "Pašalinti"
+        tag_group: "Žymų grupė"
       topic_featured_link_allowed: "Leisti svarbiausias šios kategorijos nuorodas"
       create_long: "Sukurti naują kategoriją"
       slug_placeholder: "(Pasirinktinai) brūkšniniai žodžiai skirti URL"
@@ -3434,6 +3419,8 @@ lt:
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"
       delete_error: "Įvyko klaida ištrinant kategoriją."
       no_description: "Prašome pridėti aprašymą šiai kategorijai."
+      description_expand: "Rodyti daugiau"
+      description_collapse: "Rodyti mažiau"
       already_used: "Ši spalva jau priskirta prie kitos kategorijos"
       security: "Saugumo"
       security_add_group: "Pridėti grupę"
@@ -3884,6 +3871,16 @@ lt:
       delete_tag: "Ištrinti žymą"
       delete_confirm_no_topics: "Ar tikrai norite ištrinti šią žymą?"
       edit_tag: "Redaguoti žymos pavadinimą ir aprašymą"
+      description: "Aprašymas"
+      settings:
+        title: "Nustatymai"
+        general: "Bendrieji"
+        back: "Atgal"
+        name: "Vardas"
+        name_placeholder: "Žymos pavadinimas"
+      localization:
+        name: "Vardas"
+        description: "Aprašymas"
       sort_by: "Rūšiuoti pagal:"
       sort_by_count: "skaičių"
       sort_by_name: "vardą"
@@ -4120,7 +4117,6 @@ lt:
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
-    reset_filter: "Atstatyti"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
@@ -4133,6 +4129,9 @@ lt:
       reports:
         title: "Galimų ataskaitų sąrašas"
         sidebar_title: "Pranešimai"
+        group_traffic: "Srautas"
+        group_members: "Nariai"
+        group_other: "Kiti"
       config_sections:
         account:
           title: "Paskyra"
@@ -4154,7 +4153,6 @@ lt:
         preview: "Peržiūrėti"
         enabled_for_options:
           everyone: "Visi"
-          staff: "Tik personalui"
         impact_roles:
           admins: "Administratoriai"
           moderators: "Moderatoriai"
@@ -4233,6 +4231,9 @@ lt:
               title: "Įrašai"
         reports:
           title: "Pranešimai"
+          sub_pages:
+            settings:
+              title: "Nustatymai"
         badges:
           title: "Trofėjai"
         permalinks:
@@ -4275,17 +4276,6 @@ lt:
         default_value: "Numatytasis"
       search:
         title: "Paieška"
-        result_types:
-          theme:
-            one: "Tema"
-            few: "Temos"
-            many: "Temos"
-            other: "Temos"
-          component:
-            one: "Komponentas"
-            few: "Komponentai"
-            many: "Komponentai"
-            other: "Komponentai"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
@@ -4349,7 +4339,7 @@ lt:
           all: "Visi"
           view_table: "table"
           view_graph: "grafikas"
-          refresh_report: "Refresh Report"
+          refresh_report: "Atnaujinti"
           daily: Kasdien
           monthly: Kas mėnesį
           weekly: Kas savaitę
@@ -5454,6 +5444,7 @@ lt:
           enabled: "Ieškoma"
         field_types:
           text: "Tekstas"
+          date: "Data"
           confirm: "Patvirtinimas"
           dropdown: "Išskleidimas"
           multiselect: "Daugialypis pasirinkimas"

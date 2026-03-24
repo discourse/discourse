@@ -2,37 +2,68 @@
 
 module Plugin
   class JsManager
-    def self.digested_logical_path_for(script)
-      return if !script.start_with?("plugins/")
-      _, plugin_name, filename = script.split("/")
+    @cache = {}
 
-      # Todo: optimize this lookup
-      Rails
-        .application
-        .assets
-        .load_path
-        .assets
-        .find do |a|
-          a.logical_path.to_s.match?(/^plugins\/#{plugin_name}-\w{8}\.digested\//) &&
-            a.logical_path.basename.to_s == "#{filename}.js"
-        end
-        &.logical_path
+    def self.js_asset_exists?(plugin_directory_name)
+      maybe_cache("js_asset_exists_#{plugin_directory_name}") do
+        has_source_files_in_dir(plugin_directory_name, "assets/javascripts")
+      end
+    end
+
+    def self.admin_js_asset_exists?(plugin_directory_name)
+      maybe_cache("admin_js_asset_exists_#{plugin_directory_name}") do
+        has_source_files_in_dir(plugin_directory_name, "admin/assets/javascripts")
+      end
+    end
+
+    def self.test_js_asset_exists?(plugin_directory_name)
+      maybe_cache("test_js_asset_exists_#{plugin_directory_name}") do
+        has_source_files_in_dir(plugin_directory_name, "test/javascripts")
+      end
+    end
+
+    def self.read_manifest(plugin_directory_name)
+      maybe_cache("manifest_#{plugin_directory_name}") do
+        manifest_path = "#{Rails.root}/app/assets/generated/#{plugin_directory_name}/manifest.json"
+        JSON.parse(File.read(manifest_path))
+      rescue Errno::ENOENT
+        {}
+      end
+    end
+
+    def self.digested_logical_path_for(plugin_directory_name, entrypoint_name)
+      manifest_entry = read_manifest(plugin_directory_name)[entrypoint_name]
+      "js/plugins/#{manifest_entry["fileName"].delete_suffix(".js")}" if manifest_entry
+    end
+
+    def self.import_paths_for(plugin_directory_name, entrypoint_name)
+      read_manifest(plugin_directory_name)[entrypoint_name]["imports"].map do
+        "js/plugins/#{it.delete_suffix(".js")}"
+      end
     end
 
     def compile!
-      puts "[Plugin::JSManager] Compiling plugins..."
+      log "Compiling #{Discourse.plugins.count} plugins..."
       start = Time.now
 
-      Parallel.each(Discourse.plugins, in_threads: 1) { |plugin| compile_js_bundle(plugin) }
+      if !GlobalSetting.mini_racer_single_threaded && AssetProcessor.booted?
+        raise "[Plugin::JSManager] Cannot fork for parallel compilation because AssetProcessor is already booted."
+      end
 
-      puts "[Plugin::JSManager] Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
+      parallel_count = [Etc.nprocessors, 4].min
+      AssetProcessor.timeout = 60_000
+
+      Parallel.each(Discourse.plugins, in_processes: parallel_count) do |plugin|
+        compile_js_bundle(plugin)
+      end
+
+      log "Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
     end
 
     def compile_js_bundle(plugin)
-      print "Building #{plugin.directory_name}... "
-      start = Time.now
-
-      output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/plugins"
+      base_output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}"
+      js_dir = "#{base_output_dir}/js/plugins"
+      map_dir = "#{base_output_dir}/map/plugins"
 
       entrypoints = { "main" => "assets/javascripts", "admin" => "admin/assets/javascripts" }
       entrypoints["test"] = "test/javascripts" if Rails.env.local?
@@ -53,7 +84,11 @@ module Plugin
           full_path = File.join(js_base, file)
           if File.file?(full_path)
             normalized_file_path = file.sub(/\.js\.es6$/, ".js")
-            tree[normalized_file_path] = File.read(full_path)
+            content = File.read(full_path)
+            content = AssetProcessor.append_es6_deprecation(content, file) if file.end_with?(
+              ".js.es6",
+            )
+            tree[normalized_file_path] = content
             if name == "test" && file.match(%r{/(acceptance|integration|unit)/})
               if file.match?(/-test\.g?js$/)
                 entrypoints_config[name][:modules] << normalized_file_path
@@ -70,42 +105,60 @@ module Plugin
           [
             *tree.keys,
             *tree.values,
-            Theme::BASE_COMPILER_VERSION,
-            AssetProcessor.new.ember_version,
+            AssetProcessor::BASE_COMPILER_VERSION,
+            AssetProcessor.ember_version,
             minify?.to_s,
+            plugin.name,
           ].join,
         )
       base36_digest = hex_digest.to_i(16).to_s(36).first(8)
 
-      output_path = "#{output_dir}/#{plugin.directory_name}-#{base36_digest}.digested"
+      filename_prefix = "#{plugin.directory_name}_"
+      filename_suffix = "-#{base36_digest}.digested"
 
-      if !(cache? && Dir.exist?(output_path))
+      expected_entrypoints =
+        entrypoints_config.keys.map do |name|
+          "#{js_dir}/#{filename_prefix}#{name}#{filename_suffix}.js"
+        end
+
+      files_exist = expected_entrypoints.all? { |path| File.exist?(path) }
+
+      if !cache? || !files_exist
         compiler =
           Plugin::JsCompiler.new(
-            plugin.directory_name,
+            plugin.name,
             minify: minify?,
             tree: tree,
             entrypoints: entrypoints_config,
+            filename_prefix:,
+            filename_suffix:,
           )
         result = compiler.compile!
 
-        FileUtils.mkdir_p(output_path)
-        result.each do |file, info|
-          code = info["code"]
-          code += "\n//# sourceMappingURL=#{file}.map\n" if info["map"]
-          File.write("#{output_path}/#{file}", code)
+        FileUtils.mkdir_p(js_dir)
+        FileUtils.mkdir_p(map_dir)
 
-          File.write("#{output_path}/#{file}.map", info["map"]) if info["map"]
+        manifest = {}
+        result.each do |file_name, info|
+          code = info["code"]
+          code += "\n//# sourceMappingURL=../../map/plugins/#{file_name}.map\n" if info["map"]
+          File.write("#{js_dir}/#{file_name}", code)
+
+          File.write("#{map_dir}/#{file_name}.map", info["map"]) if info["map"]
+
+          if info["isEntry"]
+            manifest[info["name"]] = { fileName: file_name, imports: info["imports"] }
+          end
         end
+
+        File.write("#{base_output_dir}/manifest.json", JSON.pretty_generate(manifest))
       end
 
       # Delete any old versions
       Dir
-        .glob("#{output_dir}/#{plugin.directory_name}*")
-        .reject { |path| path == output_path || File.file?(path) }
+        .glob("#{base_output_dir}/*/*/*")
+        .reject { |path| path.include?(filename_suffix) || path.include?("_extra") }
         .each { |path| FileUtils.rm_rf(path) }
-
-      puts "done (#{(Time.now - start).round(2)}s)"
     end
 
     def watch
@@ -117,17 +170,23 @@ module Plugin
           changed_files = modified + added + removed
           changed_plugins = Set.new
 
+          log "Changed files:"
           changed_files.each do |file|
-            puts file
-            plugin = Discourse.plugins.find { |p| file.start_with?(p.directory) }
+            relative_path = Pathname.new(file).relative_path_from(Rails.root)
+            log "- #{relative_path}"
+
+            plugin = Discourse.plugins.find { |p| file.start_with?(p.resolved_dir) }
             changed_plugins << plugin if plugin
           end
 
-          puts "Changed plugins #{changed_plugins.map(&:directory_name).join(", ")}"
+          log "Recompiling..."
+          start = Time.now
           changed_plugins.each { |plugin| compile_js_bundle(plugin) }
+          log "Finished recompilation in #{(Time.now - start).round(2)}s"
+
           MessageBus.publish("/file-change", ["refresh"])
         rescue => e
-          STDERR.puts "Plugin JS watcher crashed \n#{e}"
+          log "Plugin JS watcher crashed \n#{e}"
         end
 
       begin
@@ -139,12 +198,31 @@ module Plugin
       end
     end
 
+    private
+
     def minify?
       Rails.env.production?
     end
 
     def cache?
       true
+    end
+
+    def log(message)
+      STDERR.puts "[Plugin::JsManager] #{message}"
+    end
+
+    private_class_method def self.maybe_cache(key, &blk)
+      if Rails.env.production?
+        @cache.fetch(key, &blk)
+      else
+        blk.call
+      end
+    end
+
+    private_class_method def self.has_source_files_in_dir(plugin_directory_name, dir)
+      Dir.glob("plugins/#{plugin_directory_name}/#{dir}/**/*.{js,hbs,gjs,es6}") { break true } ||
+        false
     end
   end
 end

@@ -46,6 +46,8 @@ nl:
         description: "Markeer het antwoord en help anderen door de oplossingsknop onder het juiste antwoord te gebruiken."
       notification:
         title: "Je bericht is gemarkeerd als oplossing"
+      category_type_support:
+        title: "Steunen"
     topic_statuses:
       solved:
         help: "Dit topic heeft een oplossing"

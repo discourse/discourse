@@ -12,11 +12,10 @@ html.discourse-reactions-no-select {
   .reactions {
     display: flex;
     align-items: center;
+    gap: 0.15em;
 
     .discourse-reactions-list-emoji {
       border-radius: 100px;
-      width: 20px;
-      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -26,8 +25,8 @@ html.discourse-reactions-no-select {
       }
 
       .emoji {
-        width: 1.1em;
-        height: 1.1em;
+        width: 1em;
+        height: 1em;
 
         &.desaturated {
           filter: grayscale(100%);
@@ -471,6 +470,12 @@ html.discourse-reactions-no-select {
   align-items: center;
   text-align: center;
   cursor: pointer;
+  border-radius: var(--d-button-border-radius);
+
+  &:focus-visible {
+    outline: none;
+    background: var(--d-post-control-background--hover);
+  }
 
   .reactions-counter {
     font-size: $font-up-1;

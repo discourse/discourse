@@ -1,6 +1,6 @@
 -- This file is auto-generated from the IntermediateDB schema. To make changes,
--- update the "config/intermediate_db.yml" configuration file and then run
--- `bin/cli schema generate` to regenerate this file.
+-- update the configuration files in "migrations/config/schema/" and then run
+-- `migrations/bin/cli schema generate` to regenerate this file.
 
 CREATE TABLE badge_groupings
 (
@@ -10,6 +10,7 @@ CREATE TABLE badge_groupings
     name        TEXT     NOT NULL,
     position    INTEGER  NOT NULL
 );
+
 
 CREATE TABLE badges
 (
@@ -34,6 +35,7 @@ CREATE TABLE badges
     target_posts        BOOLEAN,
     "trigger"           INTEGER
 );
+
 
 CREATE TABLE categories
 (
@@ -78,12 +80,14 @@ CREATE TABLE categories
     topic_featured_link_allowed               BOOLEAN,
     topic_id                                  NUMERIC,
     topic_template                            TEXT,
+    topic_title_placeholder                   TEXT,
     uploaded_background_dark_id               TEXT,
     uploaded_background_id                    TEXT,
     uploaded_logo_dark_id                     TEXT,
     uploaded_logo_id                          TEXT,
     user_id                                   NUMERIC  NOT NULL
 );
+
 
 CREATE TABLE category_custom_fields
 (
@@ -93,12 +97,14 @@ CREATE TABLE category_custom_fields
     PRIMARY KEY (category_id, name)
 );
 
+
 CREATE TABLE category_moderation_groups
 (
-    category_id NUMERIC,
-    group_id    NUMERIC,
+    category_id NUMERIC NOT NULL,
+    group_id    NUMERIC NOT NULL,
     PRIMARY KEY (category_id, group_id)
 );
+
 
 CREATE TABLE category_users
 (
@@ -109,6 +115,7 @@ CREATE TABLE category_users
     PRIMARY KEY (category_id, user_id)
 );
 
+
 CREATE TABLE group_users
 (
     group_id           NUMERIC  NOT NULL,
@@ -118,6 +125,7 @@ CREATE TABLE group_users
     owner              BOOLEAN,
     PRIMARY KEY (group_id, user_id)
 );
+
 
 CREATE TABLE "groups"
 (
@@ -148,12 +156,31 @@ CREATE TABLE "groups"
     visibility_level                   INTEGER
 );
 
+
+CREATE TABLE log_entries
+(
+    created_at DATETIME  NOT NULL,
+    details    JSON_TEXT,
+    exception  TEXT,
+    message    TEXT      NOT NULL,
+    type       ENUM_TEXT NOT NULL
+);
+
+
 CREATE TABLE muted_users
 (
-    created_at    DATETIME,
+    user_id       NUMERIC  NOT NULL,
     muted_user_id NUMERIC  NOT NULL,
-    user_id       NUMERIC  NOT NULL
+    created_at    DATETIME,
+    PRIMARY KEY (user_id, muted_user_id)
 );
+
+
+CREATE TABLE permalink_normalizations
+(
+    normalization TEXT NOT NULL PRIMARY KEY
+);
+
 
 CREATE TABLE site_settings
 (
@@ -163,6 +190,7 @@ CREATE TABLE site_settings
     value           TEXT
 );
 
+
 CREATE TABLE tag_group_memberships
 (
     tag_group_id NUMERIC  NOT NULL,
@@ -171,14 +199,16 @@ CREATE TABLE tag_group_memberships
     PRIMARY KEY (tag_group_id, tag_id)
 );
 
+
 CREATE TABLE tag_group_permissions
 (
-    group_id        NUMERIC  NOT NULL,
-    permission_type INTEGER,
     tag_group_id    NUMERIC  NOT NULL,
+    group_id        NUMERIC  NOT NULL,
+    permission_type INTEGER  NOT NULL,
     created_at      DATETIME,
     PRIMARY KEY (tag_group_id, group_id, permission_type)
 );
+
 
 CREATE TABLE tag_groups
 (
@@ -189,6 +219,14 @@ CREATE TABLE tag_groups
     parent_tag_id NUMERIC
 );
 
+
+CREATE TABLE tag_synonyms
+(
+    synonym_tag_id NUMERIC NOT NULL PRIMARY KEY,
+    target_tag_id  NUMERIC NOT NULL
+);
+
+
 CREATE TABLE tag_users
 (
     tag_id             NUMERIC  NOT NULL,
@@ -197,6 +235,7 @@ CREATE TABLE tag_users
     notification_level INTEGER  NOT NULL,
     PRIMARY KEY (tag_id, user_id)
 );
+
 
 CREATE TABLE tags
 (
@@ -208,12 +247,14 @@ CREATE TABLE tags
     slug        TEXT     NOT NULL
 );
 
+
 CREATE TABLE topic_allowed_groups
 (
-    group_id NUMERIC NOT NULL,
     topic_id NUMERIC NOT NULL,
+    group_id NUMERIC NOT NULL,
     PRIMARY KEY (topic_id, group_id)
 );
+
 
 CREATE TABLE topic_allowed_users
 (
@@ -223,13 +264,15 @@ CREATE TABLE topic_allowed_users
     PRIMARY KEY (topic_id, user_id)
 );
 
+
 CREATE TABLE topic_tags
 (
-    tag_id     NUMERIC  NOT NULL,
     topic_id   NUMERIC  NOT NULL,
+    tag_id     NUMERIC  NOT NULL,
     created_at DATETIME,
     PRIMARY KEY (topic_id, tag_id)
 );
+
 
 CREATE TABLE topic_users
 (
@@ -247,6 +290,7 @@ CREATE TABLE topic_users
     total_msecs_viewed       INTEGER,
     PRIMARY KEY (topic_id, user_id)
 );
+
 
 CREATE TABLE topics
 (
@@ -272,12 +316,26 @@ CREATE TABLE topics
     visible              BOOLEAN
 );
 
-CREATE INDEX index_topics_on_archetype ON topics (archetype);
+CREATE INDEX idx_topics_archetype ON topics (archetype);
+
+CREATE TABLE uploads
+(
+    id          TEXT         NOT NULL PRIMARY KEY,
+    data        BLOB,
+    description TEXT,
+    filename    TEXT         NOT NULL,
+    origin      TEXT,
+    path        TEXT,
+    type        ENUM_INTEGER,
+    url         TEXT,
+    user_id     NUMERIC
+);
+
 
 CREATE TABLE user_associated_accounts
 (
+    user_id       NUMERIC   NOT NULL,
     provider_name TEXT      NOT NULL,
-    user_id       NUMERIC,
     created_at    DATETIME,
     info          JSON_TEXT,
     last_used     DATETIME,
@@ -285,23 +343,26 @@ CREATE TABLE user_associated_accounts
     PRIMARY KEY (user_id, provider_name)
 );
 
+
 CREATE TABLE user_custom_fields
 (
-    name       TEXT     NOT NULL,
     user_id    NUMERIC  NOT NULL,
-    value      TEXT,
+    name       TEXT     NOT NULL,
+    value      TEXT     NOT NULL,
     created_at DATETIME,
     PRIMARY KEY (user_id, name, value)
 );
 
+
 CREATE TABLE user_emails
 (
-    email      TEXT     NOT NULL,
     user_id    NUMERIC  NOT NULL,
+    email      TEXT     NOT NULL,
     created_at DATETIME,
     "primary"  BOOLEAN,
     PRIMARY KEY (user_id, email)
 );
+
 
 CREATE TABLE user_field_options
 (
@@ -311,17 +372,19 @@ CREATE TABLE user_field_options
     PRIMARY KEY (user_field_id, value)
 );
 
+
 CREATE TABLE user_field_values
 (
-    created_at           DATETIME,
-    field_id             NUMERIC  NOT NULL,
-    is_multiselect_field BOOLEAN,
     user_id              NUMERIC  NOT NULL,
-    value                TEXT
+    field_id             NUMERIC  NOT NULL,
+    value                TEXT     NOT NULL,
+    created_at           DATETIME,
+    is_multiselect_field BOOLEAN,
+    PRIMARY KEY (user_id, field_id, value)
 );
 
-CREATE UNIQUE INDEX user_field_values_multiselect_index ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
-CREATE UNIQUE INDEX user_field_values_not_multiselect_index ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
+CREATE UNIQUE INDEX idx_unique_user_field_values_multiselect ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
+CREATE UNIQUE INDEX idx_unique_user_field_values_not_multiselect ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
 
 CREATE TABLE user_fields
 (
@@ -341,77 +404,70 @@ CREATE TABLE user_fields
     show_on_user_card BOOLEAN
 );
 
+
 CREATE TABLE user_options
 (
-    user_id                              NUMERIC  NOT NULL PRIMARY KEY,
-    ai_search_discoveries                BOOLEAN,
-    allow_private_messages               BOOLEAN,
-    auto_image_caption                   BOOLEAN,
-    auto_track_topics_after_msecs        INTEGER,
-    automatically_unpin_topics           BOOLEAN,
-    bookmark_auto_delete_preference      INTEGER,
-    chat_email_frequency                 INTEGER,
-    chat_enabled                         BOOLEAN,
-    chat_header_indicator_preference     INTEGER,
-    chat_quick_reaction_type             INTEGER,
-    chat_quick_reactions_custom          TEXT,
-    chat_send_shortcut                   INTEGER,
-    chat_separate_sidebar_mode           INTEGER,
-    chat_sound                           TEXT,
-    color_scheme_id                      NUMERIC,
-    composition_mode                     INTEGER,
-    dark_scheme_id                       NUMERIC,
-    default_calendar                     INTEGER,
-    digest_after_minutes                 INTEGER,
-    discourse_rewind_dismissed_at        DATETIME,
-    discourse_rewind_enabled             BOOLEAN,
-    discourse_rewind_share_publicly      BOOLEAN,
-    dismissed_channel_retention_reminder BOOLEAN,
-    dismissed_dm_retention_reminder      BOOLEAN,
-    dynamic_favicon                      BOOLEAN,
-    email_digests                        BOOLEAN,
-    email_in_reply_to                    BOOLEAN,
-    email_level                          INTEGER,
-    email_messages_level                 INTEGER,
-    email_previous_replies               INTEGER,
-    enable_allowed_pm_users              BOOLEAN,
-    enable_defer                         BOOLEAN,
-    enable_markdown_monospace_font       BOOLEAN,
-    enable_quoting                       BOOLEAN,
-    enable_smart_lists                   BOOLEAN,
-    external_links_in_new_tab            BOOLEAN,
-    hide_presence                        BOOLEAN,
-    hide_profile                         BOOLEAN,
-    hide_profile_and_presence            BOOLEAN,
-    homepage_id                          NUMERIC,
-    ignore_channel_wide_mention          BOOLEAN,
-    include_tl0_in_digests               BOOLEAN,
-    interface_color_mode                 INTEGER,
-    last_redirected_to_top_at            DATETIME,
-    like_notification_frequency          INTEGER,
-    mailing_list_mode                    BOOLEAN,
-    mailing_list_mode_frequency          INTEGER,
-    new_topic_duration_minutes           INTEGER,
-    notification_level_when_assigned     INTEGER,
-    notification_level_when_replying     INTEGER,
-    notify_on_linked_posts               BOOLEAN,
-    oldest_search_log_date               DATETIME,
-    only_chat_push_notifications         BOOLEAN,
-    policy_email_frequency               INTEGER,
-    seen_popups                          INTEGER,
-    show_thread_title_prompts            BOOLEAN,
-    sidebar_link_to_filtered_list        BOOLEAN,
-    sidebar_show_count_of_new_items      BOOLEAN,
-    skip_new_user_tips                   BOOLEAN,
-    text_size_key                        INTEGER,
-    text_size_seq                        INTEGER,
-    theme_ids                            INTEGER,
-    theme_key_seq                        INTEGER,
-    timezone                             TEXT,
-    title_count_mode_key                 INTEGER,
-    topics_unread_when_closed            BOOLEAN,
-    watched_precedence_over_muted        BOOLEAN
+    user_id                          NUMERIC  NOT NULL PRIMARY KEY,
+    allow_private_messages           BOOLEAN,
+    auto_track_topics_after_msecs    INTEGER,
+    automatically_unpin_topics       BOOLEAN,
+    bookmark_auto_delete_preference  INTEGER,
+    color_scheme_id                  NUMERIC,
+    composition_mode                 INTEGER,
+    dark_scheme_id                   NUMERIC,
+    default_calendar                 INTEGER,
+    digest_after_minutes             INTEGER,
+    dynamic_favicon                  BOOLEAN,
+    email_digests                    BOOLEAN,
+    email_in_reply_to                BOOLEAN,
+    email_level                      INTEGER,
+    email_messages_level             INTEGER,
+    email_previous_replies           INTEGER,
+    enable_allowed_pm_users          BOOLEAN,
+    enable_defer                     BOOLEAN,
+    enable_markdown_monospace_font   BOOLEAN,
+    enable_quoting                   BOOLEAN,
+    enable_smart_lists               BOOLEAN,
+    external_links_in_new_tab        BOOLEAN,
+    hide_presence                    BOOLEAN,
+    hide_profile                     BOOLEAN,
+    hide_profile_and_presence        BOOLEAN,
+    homepage_id                      NUMERIC,
+    include_tl0_in_digests           BOOLEAN,
+    interface_color_mode             INTEGER,
+    last_redirected_to_top_at        DATETIME,
+    like_notification_frequency      INTEGER,
+    mailing_list_mode                BOOLEAN,
+    mailing_list_mode_frequency      INTEGER,
+    new_topic_duration_minutes       INTEGER,
+    notification_level_when_replying INTEGER,
+    notify_on_linked_posts           BOOLEAN,
+    oldest_search_log_date           DATETIME,
+    seen_popups                      INTEGER,
+    sidebar_link_to_filtered_list    BOOLEAN,
+    sidebar_show_count_of_new_items  BOOLEAN,
+    skip_new_user_tips               BOOLEAN,
+    text_size_key                    INTEGER,
+    text_size_seq                    INTEGER,
+    theme_ids                        INTEGER,
+    theme_key_seq                    INTEGER,
+    timezone                         TEXT,
+    title_count_mode_key             INTEGER,
+    topics_unread_when_closed        BOOLEAN,
+    watched_precedence_over_muted    BOOLEAN
 );
+
+
+CREATE TABLE user_suspensions
+(
+    user_id         NUMERIC  NOT NULL,
+    suspended_at    DATETIME NOT NULL,
+    reason          TEXT,
+    suspended_by_id NUMERIC,
+    suspended_till  DATETIME,
+    PRIMARY KEY (user_id, suspended_at)
+);
+
 
 CREATE TABLE users
 (
@@ -444,4 +500,5 @@ CREATE TABLE users
     username                  TEXT      NOT NULL,
     views                     INTEGER
 );
+
 

@@ -40,7 +40,17 @@ hu:
       no_solved_topics_title_others: "%{username} még nem oldott meg témát"
       no_solved_topics_body: "Ha hasznos választ ad egy témára, előfordulhat, hogy a téma tulajdonosa vagy a stáb az Ön válaszát választják megoldásként."
       marked_solved_by: "%{user} felhasználó megoldottnak jelölte"
+      confirm_move_solution_title: "Megoldott bejegyzés áthelyezése"
+      confirm_move_solution:
+        one: "A kiválasztott bejegyzés jelenleg a téma megoldásaként van megjelölve. Ha áthelyezed, a téma állapota „megoldatlanra” változik."
+        other: "Az egyik kiválasztott bejegyzés a téma megoldásaként van megjelölve. Ha áthelyezed őket, a téma állapota „megoldatlanra” változik."
+      move_post_confirm:
+        one: "Bejegyzés áthelyezése"
+        other: "Bejegyzések áthelyezése"
       move_post_cancel: "Mégse"
+      dont_show_again: "Értem, ne mutasd meg még egyszer"
+      confirm_solved_removal_title: "A megoldás eltávolításra kerül"
+      confirm_solved_removal: "Ez a módosítás letiltja a témakör megoldásait, és eltávolítja az elfogadott megoldást."
       confirm_solved_removal_confirm: "Megerősítés"
       confirm_solved_removal_cancel: "Mégse"
       no_answer:
@@ -48,6 +58,8 @@ hu:
         description: "Emelje ki a választ, és segítsen másoknak is a helyes válasz alatti megoldás gomb segítségével."
       notification:
         title: "hozzászólásod megoldásként lett megjelölve"
+      category_type_support:
+        title: "Támogatás"
     topic_statuses:
       solved:
         help: "Ez a téma tartalmaz egy megoldást"

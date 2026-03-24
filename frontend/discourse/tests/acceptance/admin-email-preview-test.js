@@ -1,4 +1,4 @@
-import { click, visit, waitUntil } from "@ember/test-helpers";
+import { click, fillIn, visit, waitUntil } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -35,5 +35,30 @@ acceptance("Admin - email-preview", function (needs) {
         "<span>Not actually html</span>",
         "text content is escaped correctly"
       );
+  });
+
+  test("send digest form requires a destination email", async function (assert) {
+    await visit("/admin/email/preview-digest");
+
+    assert
+      .dom(".email-preview-digest .controls")
+      .exists("send email form is shown");
+
+    assert
+      .dom(".email-preview-digest .controls input[type='text']")
+      .exists("an email text field is shown for sending this digest preview");
+
+    assert
+      .dom(".email-preview-digest .controls .btn-default")
+      .isDisabled("send button is disabled until an email address is entered");
+
+    await fillIn(
+      ".email-preview-digest .controls input[type='text']",
+      "preview@example.com"
+    );
+
+    assert
+      .dom(".email-preview-digest .controls .btn-default")
+      .isNotDisabled("send button is enabled once an email address is entered");
   });
 });

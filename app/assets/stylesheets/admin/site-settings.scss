@@ -10,16 +10,13 @@
   margin-left: 0.5em;
 }
 
-.admin-plugin-config-area {
-  &__settings {
-    .admin-filtered-site-settings {
-      padding: 0.5em 1em;
-    }
+.admin-filtered-site-settings {
+  padding: 1em;
+}
 
-    .setting-label {
-      margin-left: 18px;
-    }
-  }
+body.has-admin-changes-banner #main-outlet {
+  // makes space so banner doesn't overlap content
+  padding-bottom: 6em;
 }
 
 .admin-changes-banner {
@@ -35,6 +32,12 @@
   border-radius: var(--d-border-radius);
   box-shadow: var(--shadow-card);
   z-index: 1;
+
+  .footer-nav-visible & {
+    bottom: calc(
+      var(--footer-nav-height) + env(safe-area-inset-bottom) + var(--space-4)
+    );
+  }
 
   @include viewport.until(sm) {
     flex-direction: column;

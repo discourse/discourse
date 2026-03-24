@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -72,7 +72,7 @@ export default class AssignedToFirstPost extends Component {
         {{#if this.assignedToUser}}
           <span class="assignee">
             <span class="assigned-to--user">
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "discourse_assign.assigned_topic_to"
                   username=(this.prioritizedAssigneeName this.assignedToUser)
@@ -86,7 +86,7 @@ export default class AssignedToFirstPost extends Component {
         {{#if this.assignedToGroup}}
           <span class="assignee">
             <span class="assigned-to--group">
-              {{htmlSafe
+              {{trustHTML
                 (i18n
                   "discourse_assign.assigned_topic_to"
                   username=this.assignedToGroup.name

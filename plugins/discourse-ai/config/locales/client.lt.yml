@@ -10,10 +10,8 @@ lt:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Leidžia dirbtinio intelekto paiešką"
-              stream_completion: "Leidžia transliuoti dirbtinio intelekto personažų užbaigimus"
-              update_personas: "Leidžia atnaujinti dirbtinio intelekto personas"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -35,9 +33,6 @@ lt:
             create_ai_llm_model: "Sukurkite LLM modelį"
             update_ai_llm_model: "Atnaujinti LLM modelį"
             delete_ai_llm_model: "Ištrinti LLM modelį"
-            create_ai_persona: "Sukurkite AI personažą"
-            update_ai_persona: "Atnaujinti dirbtinio intelekto personažą"
-            delete_ai_persona: "Ištrinti dirbtinio intelekto personažą"
             create_ai_tool: "Sukurkite dirbtinio intelekto įrankį"
             update_ai_tool: "Atnaujinti dirbtinio intelekto įrankį"
             delete_ai_tool: "Ištrinti dirbtinio intelekto įrankį"
@@ -110,8 +105,6 @@ lt:
             top_p:
               label: "Viršutinė P"
               description: "Viršutinė P, naudojama LLM, padidinkite, kad padidėtų atsitiktinumas (palikite tuščią, jei norite naudoti numatytuosius modelio parametrus)"
-            persona_id:
-              label: "Persona"
         ai_tool_action:
           fields:
             tool:
@@ -120,14 +113,8 @@ lt:
             llm_model:
               label: "LLM modelis"
               description: "Kalbos modelis įrankiams, kurie naudoja llm.generate() (neprivaloma)"
-        llm_persona_triage:
-          fields:
-            persona:
-              label: "Persona"
         llm_triage:
           fields:
-            triage_persona:
-              label: "Persona"
             search_for_text:
               label: "Ieškokite teksto"
             category:
@@ -148,7 +135,6 @@ lt:
       llm_selector:
         none: "Nieko"
       features:
-        back: "Atgal"
         settings_save_error: "Kai kurių nustatymų išsaugoti nepavyko."
         disabled: "(uždrausta)"
         groups: "Grupės:"
@@ -194,9 +180,7 @@ lt:
             settings: "Pagrindiniai nustatymai"
             topic_criteria: "Temos kriterijai"
             post_criteria: "Įrašo kriterijai"
-            personas: "Personos"
         ai_helper:
-          name: "Padėjėjas"
           description: "Padeda vartotojams bendrauti bendruomenėje, pavyzdžiui, kurti temas, rašyti įrašus ir skaityti turinį"
           proofread: Korektūruotas tekstas
           title_suggestions: "Siūlyti pavadinimus"
@@ -211,7 +195,6 @@ lt:
             access_permissions: "Prieiga ir leidimai"
             enabled_features: "Įjungtos funkcijos"
             automation: "Automatizavimas"
-            personas: "Personos"
         translation:
           name: "Vertimai"
           description: "Verčia turinį į palaikomas kalbas"
@@ -221,7 +204,6 @@ lt:
           short_text_translator: "Trumpų tekstų vertėjas"
           setting_groups:
             settings: "Pagrindiniai nustatymai"
-            personas: "Personos"
             backfill_and_limits: "Užpildymas ir apribojimai"
         spam:
           name: "Šlamštas"
@@ -260,7 +242,6 @@ lt:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"
         select_llm: "Pasirinkite teisės magistro laipsnį (LLM)"
-        select_persona: "Pasirinkite asmenį"
         custom_instructions: "Individualūs nurodymai"
         custom_instructions_help: "Jūsų svetainei pritaikytos instrukcijos, padedančios dirbtiniam intelektui atpažinti šlamštą, pvz., „Aktyviau nuskaitykite įrašus ne anglų kalba“."
         last_seven_days: "Paskutinės 7 dienos"
@@ -293,8 +274,7 @@ lt:
         periods:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."
-      ai_persona:
-        back: "Atgal"
+      ai_agent:
         name: "Vardas"
         edit: "Redaguoti"
         export: "Eksportuoti"
@@ -317,7 +297,6 @@ lt:
           title: "Įkėlimai"
           uploading: "Įkeliama"
       tools:
-        back: "Atgal"
         export: "Eksportuoti"
         import: "Importuoti"
         name: "Vardas"
@@ -327,21 +306,21 @@ lt:
         remove_parameter: "Pašalinti"
         parameter_required: "Privalomi"
         edit: "Redaguoti"
+        test: "Bandymas"
         delete: "Pašalinti"
       secrets:
         short_title: "Įgaliojimai"
         name: "Vardas"
         secret: "Reikšmė"
-        back: "Atgal"
         save: "Saugoti"
         edit: "Redaguoti"
         delete: "Pašalinti"
         embedding: "Įterpimai"
+        tool: "Įrankis"
       llms:
         display_name: "Vardas"
         save: "Saugoti"
         edit: "Redaguoti"
-        back: "Atgal"
         delete: Pašalinti
         quotas:
           group: "Grupė"
@@ -387,8 +366,10 @@ lt:
           generating: "Generuojama antraštė..."
           credits: "Antraštė teikiama AI"
           save_caption: "Saugoti"
+      reviewables:
+        ai_tool_action:
+          tool: "Įrankis"
       embeddings:
-        back: "Atgal"
         save: "Saugoti"
         delete: "Pašalinti"
         edit: "Redaguoti"
@@ -399,7 +380,6 @@ lt:
           google: "Google"
           fake: "Išskirtinės"
       ai_bot:
-        persona: "Persona"
         llm: "Modelis"
         debug_ai_modal:
           request: "Užklausa"
@@ -436,3 +416,7 @@ lt:
         tooltip:
           actions:
             disable: "Išjungti"
+    review:
+      types:
+        reviewable_ai_tool_action:
+          title: "DI įrankio veiksmas"

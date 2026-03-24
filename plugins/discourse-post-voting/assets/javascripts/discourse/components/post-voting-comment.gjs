@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
 import routeAction from "discourse/helpers/route-action";
@@ -23,7 +23,6 @@ export default class PostVotingComment extends Component {
 
   @tracked isEditing = false;
   @tracked isVoting = false;
-  @tracked hidden = false;
 
   get anchorId() {
     return buildAnchorId(this.args.comment.id);
@@ -124,7 +123,7 @@ export default class PostVotingComment extends Component {
         </div>
 
         <div class="post-voting-comment-post">
-          <span class="post-voting-comment-cooked">{{htmlSafe
+          <span class="post-voting-comment-cooked">{{trustHTML
               @comment.cooked
             }}</span>
 

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
@@ -15,7 +15,7 @@ const BotMessage = <template>
     </div>
     {{#if @message}}
       <div class="chat-message__text">
-        {{htmlSafe @message}}
+        {{trustHTML @message}}
       </div>
     {{/if}}
     {{yield}}
@@ -111,7 +111,7 @@ export default class ChatUsage extends Component {
 
           <div class="chat-window__messages">
             <div class="chat-message --left">
-              <BotMessage @message={{htmlSafe this.message1Text}} />
+              <BotMessage @message={{trustHTML this.message1Text}} />
             </div>
 
             <div class="chat-message --right">
@@ -123,7 +123,7 @@ export default class ChatUsage extends Component {
             </div>
 
             <div class="chat-message --left">
-              <BotMessage @message={{htmlSafe this.message2Text}} />
+              <BotMessage @message={{trustHTML this.message2Text}} />
             </div>
 
             <div class="chat-message --right">
@@ -135,7 +135,7 @@ export default class ChatUsage extends Component {
             </div>
 
             <div class="chat-message --left">
-              <BotMessage @message={{htmlSafe this.message3Text}} />
+              <BotMessage @message={{trustHTML this.message3Text}} />
             </div>
 
             <div class="chat-message --right">
@@ -147,7 +147,7 @@ export default class ChatUsage extends Component {
             </div>
 
             <div class="chat-message --left">
-              <BotMessage @message={{htmlSafe this.message4Text}} />
+              <BotMessage @message={{trustHTML this.message4Text}} />
             </div>
 
             {{#if this.favoriteChannels.length}}

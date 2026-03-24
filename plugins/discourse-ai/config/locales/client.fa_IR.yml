@@ -63,10 +63,9 @@ fa_IR:
       llm_selector:
         none: "هیچ‌کدام"
       features:
-        back: "بازگشت"
         disabled: "(غیرفعال)"
         groups: "گروه‌ها:"
-        no_persona: "تنظیم نشده"
+        no_agent: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
         edit: "تنظیم"
         expand_list:
@@ -119,8 +118,7 @@ fa_IR:
         periods:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."
-      ai_persona:
-        back: "بازگشت"
+      ai_agent:
         name: "نام"
         edit: "ویرایش"
         export: "خروجی گرفتن"
@@ -141,7 +139,6 @@ fa_IR:
           title: "بارگذاری‌ها"
           uploading: "در حال بار گذاری..."
       tools:
-        back: "بازگشت"
         export: "خروجی گرفتن"
         import: "ورود داده‌ها"
         name: "نام"
@@ -150,8 +147,9 @@ fa_IR:
         save: "ذخیره"
         remove_parameter: "پاک کردن"
         parameter_required: "مورد نیاز"
+        credential_not_set: "(تنظیم نشده)"
         edit: "ویرایش"
-        test: "اجرا کردن تست"
+        test: "آزمایش کردن"
         delete: "حذف"
         test_modal:
           run: "اجرا کردن تست"
@@ -159,17 +157,16 @@ fa_IR:
         short_title: "اطلاعات ورود"
         name: "نام"
         secret: "مقدار"
-        back: "بازگشت"
         save: "ذخیره"
         edit: "ویرایش"
         delete: "حذف"
         embedding: "جاسازی"
+        tool: "ابزار"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
         save: "ذخیره"
         edit: "ویرایش"
-        back: "بازگشت"
         delete: حذف
         quotas:
           group: "گروه"
@@ -219,8 +216,9 @@ fa_IR:
       reviewables:
         model_used: "مدل مورد استفاده:"
         accuracy: "دقت:"
+        ai_tool_action:
+          tool: "ابزار"
       embeddings:
-        back: "بازگشت"
         save: "ذخیره"
         delete: "حذف"
         edit: "ویرایش"

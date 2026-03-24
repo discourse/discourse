@@ -48,7 +48,7 @@ export function OK(resp = {}, headers = {}) {
 const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 
-const fixturesByUrl = {};
+export const fixturesByUrl = {};
 const fixturesByUrlForHandlers = {};
 
 for (const module of Object.values(
@@ -67,23 +67,21 @@ for (const module of Object.values(
   }
 }
 
-export { fixturesByUrl };
+const pretender = new Pretender();
 
-const instance = new Pretender();
-
-const oldRegister = instance.register;
-instance.register = (...args) => {
+const oldRegister = pretender.register;
+pretender.register = (...args) => {
   args[1] = getURL(args[1]);
-  return oldRegister.call(instance, ...args);
+  return oldRegister.call(pretender, ...args);
 };
 
-export default instance;
+export default pretender;
 
 export function pretenderHelpers() {
   return { parsePostData, response, success };
 }
 
-export function applyDefaultHandlers(pretender) {
+export function applyDefaultHandlers() {
   const pretenderModules = import.meta.glob("./**/*-pretender.{js,gjs}", {
     eager: true,
   });
@@ -597,7 +595,7 @@ export function applyDefaultHandlers(pretender) {
 
     // The request sends `permissions` as an object (e.g. {everyone: 1})
     // but the real server never echoes it back. Remove it because the
-    // Category model expects `permissions` to be an array (@trackedArray).
+    // Category model expects `permissions` to be an array (@autoTrackedArray).
     delete category.permissions;
 
     return response({ category });
@@ -1065,6 +1063,10 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
+  pretender.post("/admin/dashboard/problems.json", () => {
+    return response(200, fixturesByUrl["/admin/dashboard/problems.json"]);
+  });
+
   pretender.get("/admin/customize/watched_words", () => {
     return response(200, fixturesByUrl["/admin/customize/watched_words.json"]);
   });
@@ -1423,9 +1425,9 @@ export function applyDefaultHandlers(pretender) {
 }
 
 export function resetPretender() {
-  instance.handlers = [];
-  instance.handledRequests = [];
-  instance.unhandledRequests = [];
-  instance.passthroughRequests = [];
-  instance.hosts.registries = {};
+  pretender.handlers = [];
+  pretender.handledRequests = [];
+  pretender.unhandledRequests = [];
+  pretender.passthroughRequests = [];
+  pretender.hosts.registries = {};
 }

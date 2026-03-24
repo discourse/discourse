@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 el:
+  discourse_policy:
+    error:
+      no_permission: "Μη εξουσιοδοτημένο"
   reports:
     unaccepted-policies:
       labels:

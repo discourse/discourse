@@ -195,15 +195,6 @@ en:
               help: "The URL provided when you create a new integration in a Gitter room."
 
         #######################################
-        ########## FLOWDOCK STRINGS ###########
-        #######################################
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flow Token"
-              help: "The flow token provided after creating a source for a flow into which you want to send messages."
-        #######################################
         ########## GROUPME STRINGS ###########
         #######################################
         groupme:

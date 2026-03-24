@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
-import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -27,8 +27,8 @@ class PrivateMessageTopicTrackingState extends Service {
   @tracked inbox = null;
   @tracked filter = null;
   @tracked activeGroup = null;
-  @tracked newIncoming = new TrackedArray();
-  states = new TrackedMap();
+  @tracked newIncoming = trackedArray();
+  states = trackedMap();
   stateChangeCallbacks = new Map();
 
   willDestroy() {
@@ -98,18 +98,18 @@ class PrivateMessageTopicTrackingState extends Service {
 
     if (topicIds) {
       const topicIdSet = new Set(topicIds);
-      this.newIncoming = new TrackedArray(
+      this.newIncoming = trackedArray(
         this.newIncoming.filter((id) => !topicIdSet.has(id))
       );
     } else {
-      this.newIncoming = new TrackedArray();
+      this.newIncoming = trackedArray();
     }
   }
 
   stopIncomingTracking() {
     if (this.isTrackingIncoming) {
       this.isTrackingIncoming = false;
-      this.newIncoming = new TrackedArray();
+      this.newIncoming = trackedArray();
     }
   }
 
@@ -266,7 +266,7 @@ class PrivateMessageTopicTrackingState extends Service {
     let newState = data;
 
     if (oldState && !deepEqual(oldState, newState)) {
-      newState = deepMerge(oldState, newState);
+      newState = deepMerge({ ...oldState }, newState);
     }
 
     this.states.set(topicId, newState);

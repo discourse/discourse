@@ -7,6 +7,7 @@
 tr_TR:
   site_settings:
     sign_in_with_apple_enabled: 'Apple ile oturum açma etkinleştirilsin mi?'
+    apple_client_id: "(Apple ile giriş yap) Geliştirici konsolundaki Apple ‘Hizmet Tanımlayıcı’. Normalde ters alan adı tarzı bir dize (ör. com.example.auth)"
     apple_team_id: '(Apple ile oturum açın) Apple Takım Kimliği (10 karakter)'
     apple_key_id: '(Apple ile oturum açın) Apple Anahtarı Kimliği (10 karakter)'
     apple_pem: '(Apple ile oturum açın) Apple Pem Dosyası İçeriği. BEGIN ve END satırlarını ekleyin'

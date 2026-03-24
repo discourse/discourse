@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror editor - Checklist extension", type: :system do
+describe "Composer - ProseMirror editor - Checklist extension" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
@@ -126,16 +126,11 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       rich.click
 
       click_checklist_toolbar_option
-      rich.send_keys("Only item")
-
       expect(checklist).to have_checkboxes(count: 1)
-      expect(checklist).to have_items(count: 1)
 
-      rich.send_keys(:home)
       rich.send_keys(:backspace)
 
       expect(checklist).to have_no_checkboxes
-      expect(rich).to have_text("Only item")
     end
   end
 end

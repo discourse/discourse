@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic bulk select", type: :system do
+describe "Topic bulk select" do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:admin)
   fab!(:user)
@@ -46,6 +46,26 @@ describe "Topic bulk select", type: :system do
 
       expect(page).to have_text(I18n.t("js.topics.none.education.unread"))
     end
+
+    it "turns off bulk select after dismissing" do
+      other_topic = Fabricate(:topic, user: admin)
+      create_post(user: admin, topic: other_topic)
+      create_post(topic: other_topic)
+
+      sign_in(admin)
+      visit("/unread")
+
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_checkbox(topic)
+
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("dismiss-unread")
+
+      topic_bulk_actions_modal.click_dismiss_confirm
+
+      expect(topic_list).to have_topic(other_topic)
+      expect(topic_list).to have_no_topic_checkbox(other_topic)
+    end
   end
 
   context "when dismissing new topics" do
@@ -67,6 +87,25 @@ describe "Topic bulk select", type: :system do
       topic_bulk_actions_modal.click_dismiss_confirm
 
       expect(page).to have_text(I18n.t("js.topics.none.education.new"))
+    end
+
+    it "turns off bulk select after dismissing" do
+      other_topic = Fabricate(:topic, user: user)
+      create_post(user: user, topic: other_topic)
+
+      sign_in(admin)
+      visit("/new")
+
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_checkbox(topic)
+
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("dismiss-new")
+
+      topic_bulk_actions_modal.click_dismiss_confirm
+
+      expect(topic_list).to have_topic(other_topic)
+      expect(topic_list).to have_no_topic_checkbox(other_topic)
     end
   end
 

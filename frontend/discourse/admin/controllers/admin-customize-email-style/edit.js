@@ -1,20 +1,19 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminCustomizeEmailStyleEditController extends Controller {
   @service dialog;
 
-  @discourseComputed("model.isSaving")
-  saveButtonText(isSaving) {
-    return isSaving ? i18n("saving") : i18n("admin.customize.save");
+  @computed("model.isSaving")
+  get saveButtonText() {
+    return this.model?.isSaving ? i18n("saving") : i18n("admin.customize.save");
   }
 
-  @discourseComputed("model.changed", "model.isSaving")
-  saveDisabled(changed, isSaving) {
-    return !changed || isSaving;
+  @computed("model.changed", "model.isSaving")
+  get saveDisabled() {
+    return !this.model?.changed || this.model?.isSaving;
   }
 
   @action

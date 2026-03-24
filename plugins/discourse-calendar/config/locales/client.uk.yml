@@ -12,6 +12,12 @@ uk:
         categories:
           discourse_post_event: "Подія Discourse"
           discourse_calendar: "Календар та події"
+      web_hooks:
+        calendar_event:
+          group_name: "Календар подій"
+          calendar_event_created: "Створено подію календаря"
+          calendar_event_updated: "Подію календаря оновлено"
+          calendar_event_destroyed: "Подію календаря знищено"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ uk:
               label: ID теми
     discourse_calendar:
       invite_user_notification: "%{username} запросили Вас на: %{description}"
+      preferences:
+        all_events: "Discourse Календар - Усі події"
+        all_events_description: "Усі події форуму"
+        my_events: "Discourse Календар - Мої події"
+        my_events_description: "Події, на які ви збираєтеся або які вас цікавлять"
       on_holiday: "У відпустці"
       disable_holiday: "Вимкнути"
       enable_holiday: "Увімкнути"
@@ -353,6 +364,7 @@ uk:
       bulk_invite: "Масове запрошення"
       close_event: "Закрити подію"
       open_event: "Відкрити подію"
+      destroy_event: "Знищити подію"
       invitees_modal:
         title_invited: "Участь у Події"
         title_participated: "Список користувачів, які брали участь"
@@ -437,6 +449,12 @@ uk:
             private:
               title: "Приватні"
               description: "До закритої події можуть приєднатися лише запрошені користувачі."
+      composer:
+        name_placeholder: "Подія"
+        end_date_placeholder: "Встановіть дату закінчення"
+        location_placeholder: "Додати місцезнаходження або URL-адресу"
+        max_attendees_placeholder: "Встановити максимальну кількість відвідувачів"
+        description_placeholder: "Додати опис події"
       builder_modal:
         custom_fields:
           label: "Користувацькі поля"
@@ -457,6 +475,9 @@ uk:
         timezone:
           label: Часовий пояс
           remove_timezone: Без часового поясу (UTC)
+        all_day:
+          label: "Подія на цілий день"
+          description: "Подія на цілий день не матиме конкретного часу, лише дату. Подія триватиме від початку до кінця дня."
         reminders:
           label: "Нагадування"
           types:
@@ -506,6 +527,7 @@ uk:
           label: "Запрошені групи"
         status:
           label: "Статус"
+        delete_confirmation_message: "Видалити цю подію?"
       invite_user_or_group:
         title: "Сповістити користувача(ів) або групу(и)"
         invite: "Надіслати"

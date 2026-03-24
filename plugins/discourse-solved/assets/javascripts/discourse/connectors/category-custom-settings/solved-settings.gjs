@@ -7,12 +7,26 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default class SolvedSettings extends Component {
+  static shouldRender(args, context) {
+    return !context.siteSettings.enable_simplified_category_creation;
+  }
+
   @service siteSettings;
 
   @tracked
   enableAcceptedAnswers =
     this.args.outletArgs.category.custom_fields.enable_accepted_answers ===
     "true";
+
+  @tracked
+  notifyOnStaffAcceptSolved =
+    this.args.outletArgs.category.custom_fields
+      ?.notify_on_staff_accept_solved !== "false";
+
+  @tracked
+  emptyBoxOnUnsolved =
+    this.args.outletArgs.category.custom_fields?.empty_box_on_unsolved !==
+    "false";
 
   get customFields() {
     return this.args.outletArgs.category.custom_fields;
@@ -22,6 +36,18 @@ export default class SolvedSettings extends Component {
   onChangeSetting(value) {
     this.enableAcceptedAnswers = value;
     this.customFields.enable_accepted_answers = value ? "true" : "false";
+  }
+
+  @action
+  onChangeNotifyOnStaffAcceptSolved(value) {
+    this.notifyOnStaffAcceptSolved = value;
+    this.customFields.notify_on_staff_accept_solved = value ? "true" : "false";
+  }
+
+  @action
+  onChangeEmptyBoxOnUnsolved(value) {
+    this.emptyBoxOnUnsolved = value;
+    this.customFields.empty_box_on_unsolved = value ? "true" : "false";
   }
 
   @action
@@ -62,6 +88,42 @@ export default class SolvedSettings extends Component {
           min="0"
           id="auto-close-solved-topics"
         />
+      </section>
+
+      <section class="field">
+        <div class="notify-on-staff-accept-solved">
+          <label class="checkbox-label">
+            <input
+              {{on
+                "change"
+                (withEventValue
+                  this.onChangeNotifyOnStaffAcceptSolved "target.checked"
+                )
+              }}
+              checked={{this.notifyOnStaffAcceptSolved}}
+              type="checkbox"
+            />
+            {{i18n "solved.notify_on_staff_accept_solved"}}
+          </label>
+        </div>
+      </section>
+
+      <section class="field">
+        <div class="empty-box-on-unsolved">
+          <label class="checkbox-label">
+            <input
+              {{on
+                "change"
+                (withEventValue
+                  this.onChangeEmptyBoxOnUnsolved "target.checked"
+                )
+              }}
+              checked={{this.emptyBoxOnUnsolved}}
+              type="checkbox"
+            />
+            {{i18n "solved.empty_box_on_unsolved"}}
+          </label>
+        </div>
       </section>
     </div>
   </template>

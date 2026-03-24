@@ -5,29 +5,239 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: Rewind
+      loading: "Ağ oluşturma eğrileri..."
+      viewing_other_user: "<strong>%{username}'nin</strong> Discourse Rewind raporunu görüntülüyorsunuz."
+      cannot_view_rewind: >
+        Bu Discourse Rewind raporunu görüntüleyemezsiniz. Belki de sahibi bunu herkese açık olarak paylaşmamıştır?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Discourse Rewind'ı etkinleştirin. Bu, profilinizde ve avatarınızda yıl sonu etkinlik özetini gösterir."
+        share_publicly: "Discourse Rewind özetini diğer forum üyeleriyle paylaşın. Herhangi bir forum üyesi Discourse Rewind özetinizi görüntüleyebilir."
+        cannot_share_when_profile_hidden: "Rewind'ı paylaşmak için başkalarının genel profilinizi görüntülemesine izin vermelisiniz."
+      profile_link: "%{rewindYear} Discourse Rewind'ınızı görüntüleyin"
       share:
         toggle_label:
           private: "Özel"
           public: "Genel"
+        confirm: "Paylaşmadan önce Rewind'ınızı mutlaka gözden geçirin, çünkü kişisel mesajlardan alınan veriler içerebilir. İstediğiniz zaman tekrar özel hale getirebilirsiniz."
+        confirm_button:
+          enable: "Herkese açık hale getir"
+          disable: "Gizli tut"
+        enabled_success: "Rewind'ınız artık diğer forum üyeleriyle paylaşılabilir."
+        disabled_success: "Rewind'ınız artık gizlidir."
       reports:
+        activity_calendar:
+          title: Etkinlik Takvimi
+          cell_title:
+            visited_no_posts: "%{date} tarihinde ziyaret ettiniz ve gizlice izlediniz, ancak hiçbir gönderi yapmadınız."
+            visited_no_posts_others: "%{username} %{date} tarihinde siteyi ziyaret etti ve gözlemledi, ancak herhangi bir gönderi yapmadı."
+            visited_with_posts:
+              one: "%{date} tarihinde %{count} adet gönderi yaptınız."
+              other: "%{date} tarihinde %{count} adet gönderi yaptınız."
+            visited_with_posts_others:
+              one: "%{username} %{date} tarihinde %{count} adet gönderi yaptı."
+              other: "%{username} %{date} tarihinde %{count} adet gönderi yaptı."
+            no_activity: "%{date} tarihinde ortalarda yoktun."
+            no_activity_others: "%{username} %{date} tarihinde ortalıkta değildi."
+        top_words:
+          title: Kelime Kullanımı
         reading_time:
           title: Okuma süresi
+          book_comparison: "Sitemizde <code>%{readingTime}</code> okuma yaptınız! Bu, <i>%{bookTitle}</i> kitabını okumak için gereken süreye eşittir."
+          book_comparison_others: "%{username} sitemizde <code>%{readingTime}</code> okuma yaptı! Bu, <i>%{bookTitle}</i> kitabını okumak için gereken süreye eşittir."
+        post_used_reactions:
+          title: Konularda en çok kullanılan tepkiler
+          total_number: "Toplam reaksiyon sayısı: %{count}"
+        post_received_reactions:
+          title: Konularda en çok alınan tepkiler
+        fbff:
+          title: FBFF'niz (Forumdaki Sonsuza Kadar En İyi Arkadaşınız)
+          title_others: "%{username}'nın FBFF'si (Forumdaki Sonsuza Kadar En İyi Arkadaşı)"
+        most_viewed_categories:
+          title:
+            one: En çok görüntülenen kategoriniz
+            other: En çok görüntülenen %{count} kategoriniz
+          title_others:
+            one: "%{username}'nın en çok görüntülenen kategorisi"
+            other: "%{username}'nin en çok görüntülenen %{count} kategorisi"
+        most_viewed_tags:
+          title:
+            one: En çok görüntülenen etiketiniz
+            other: En çok görüntülenen %{count} etiketiniz
+          title_others:
+            one: "%{username}'nin en çok görüntülenen etiketi"
+            other: "%{username}'nin en çok görüntülenen %{count} etiketi"
+        best_topics:
+          view_topic: Konuyu görüntüle
+          title:
+            one: En iyi konunuz
+            other: En iyi %{count} konunuz
+          title_others:
+            one: "%{username}'in en iyi konusu"
+            other: "%{username}'in en iyi %{count} konusu"
+        best_posts:
+          view_post: Gönderiyi görüntüle
+          title:
+            one: En iyi gönderin
+            other: En iyi %{count} gönderin
+          title_others:
+            one: "%{username}'nin en iyi gönderisi"
+            other: "%{username}'ın %{count} en iyi gönderisi"
+        ai_usage:
+          title: Yapay Zeka Kullanımı
+          total_requests: Toplam istek sayısı
+          total_tokens: Toplam token sayısı
+          success_rate: Başarı Oranı
+          favorite_features: En Çok Kullanılan Özellikler
+          favorite_models: En Çok Kullanılan AI Modelleri
+          wake_up: "Uyan, %{username}..."
+          system_title: "YAPAY ZEKA KULLANIMI ALGILANDI"
+          section_features: "EN ÖNEMLİ ÖZELLİKLER"
+          section_models: "EN İYİ MODELLER"
         assignments:
+          title: Görevler
+          total_assigned: Bana atanan
           total_assigned_others: "%{username} Adlı gruba atandı"
+          completed: Tamamlanan görevler
+          pending: Bekleyen görevler
+          assigned_by_user: Verilen görevler
+          completion_rate: Tamamlanma oranı
         chat_usage:
+          title: Sohbet Etkinliği
+          total_messages: Toplam Mesajlar
+          dm_messages: Doğrudan Mesajlar
+          unique_dm_channels: Doğrudan Mesaj Sohbetleri
+          reactions_received: Alınan Tepkiler
+          avg_message_length: Ortalama Mesaj Uzunluğu
+          favorite_channels: Favori Kanallar
           messages: i̇letiler
+          bot_name: XxRewindBotxX
           author: Siz
           author_others: "%{username}"
+          channel_title: "#sohbet-etkinliği"
           status_online: "● çevrimiçi"
+          message_1:
+            one: "Bu yıl <strong>%{count}</strong> mesaj gönderdin!"
+            other: "Bu yıl <strong>%{count}</strong> mesaj gönderdin!"
+          reply_1: "lol harika B-)"
+          message_2_MF: |
+            { dm_count, plural,
+                one {<strong>#</strong> DM sohbeti}
+              other {<strong>#</strong> DM sohbetleri}
+            } ile { channel_count, plural,
+                one {<strong>#</strong> kişi veya grupla}
+              other {<strong>#</strong> farklı kişi veya gruplarla}
+            } sohbet ettiniz.
+          reply_2: "cOo0oL :D"
+          message_3:
+            one: "İnsanlar mesajlarınızı çok sevdi! <strong>%{count}</strong> tepki aldınız ❤️"
+            other: "İnsanlar mesajlarınızı çok sevdi! <strong>%{count}</strong> tepki aldınız ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Ortalama mesaj uzunluğunuz <strong>%{length}</strong> karakterdi."
+          message_5: "En sevdiğiniz kanallar:"
+          dancing_baby_alt: "Dans eden bebek"
+        favorite_gifs:
+          title:
+            one: En sevdiğiniz GIF
+            other: En sevdiğiniz %{count} GIF
+          title_others:
+            one: "%{username}'in favori GIF'i"
+            other: "%{username}'in favorisi %{count} GIF"
+          total_usage:
+            one: '%{count} kez kullanıldı'
+            other: '%{count} kez kullanıldı'
         invites:
           title: Davetler
+          total_invites: Gönderilen Toplam Davet Sayısı
+          redeemed: Kabul Edilen Davetler
+          redemption_rate: Kabul Oranı
+          avg_trust_level: Ortalama Güven Seviyesi
+          invitee_impact: Davetlilerinizin Etkisi
+          invitee_impact_others: "%{username}'nin davetlerinin etkisi"
           invitee_posts: Oluşturulan Gönderiler
+          invitee_topics: Başlatılan Konular
           invitee_likes: Yapılan Beğenilenler
+          most_active_invitee: En Aktif Davetli
+          guest_book_title: Ziyaretçi Defteri
+          guest_book_subtitle: Topluluğunuzun Davetiyeleri
+          guest_book_subtitle_others: "%{username}'nin Topluluk Davetleri"
           label_invitations_sent: "Davet gönderildi:"
+          label_guests_joined: "Kabul edilen davetler:"
+          label_acceptance_rate: "Kabul oranı:"
+          section_contributions: Katılımcıların katkıları
+          label_posts_written: "Yazılan gönderiler:"
+          label_topics_started: "Başlatılan konular:"
+          label_likes_given: "Verilen beğeniler:"
+          section_most_active: En Aktif Misafir
         new_user_interactions:
+          title: Yeni Kullanıcılara Mentorluk Yapmak
+          subtitle:
+            one: Bu yıl %{count} yeni kullanıcıya yardım ettiniz.
+            other: Bu yıl %{count} yeni kullanıcıya yardım ettiniz.
+          subtitle_others:
+            one: "%{username} bu yıl %{count} yeni kullanıcıya yardım etti"
+            other: "%{username} bu yıl %{count} yeni kullanıcıya yardım etti"
+          new_member:
+            one: "%{count} yeni üye"
+            other: "%{count} yeni üye"
+          total_interactions: Toplam Etkileşimler
+          unique_new_users: Benzersiz Yeni Kullanıcı
           likes_given: Yapılan Beğenilenler
+          replies: Gönderilere Yanıtlar
           mentions: Bahsetmeler
+          topics_with_new_users: Yeni Kullanıcılarla İlgili Konular
+          contributions_helped: katkılarınız yardımcı oldu
+          contributions_helped_others: "%{username}'nin katkıları yardımcı oldu"
+        time_of_day_activity:
+          title: Günlük Aktivite Ritmi
+          play_button: Etkinliğinizi ses olarak çalın
+          play_button_others: "%{username}'nin etkinliğini ses olarak çal"
+          stop_button: Ses çalmayı durdur
         writing_analysis:
+          title: Yazma Analizi
+          menu_file: Dosya
           menu_other: Diğer
+          menu_additional: Ek olarak
+          menu_opening: AÇILIŞ
+          help_text: Yardım için F1 tuşuna basın
+          app_name: DiscoStar Profesyonel
+          release_info: CDCK'dan %{rewindYear} sürümü
+          total_words: Toplam Kelime Sayısı
+          total_posts: Toplam Gönderiler
+          avg_post_length: Ortalama Gönderi Uzunluğu
+          readability_score_label: Okunabilirlik Puanı
+          readability_level: Okunabilirlik Seviyesi
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C.S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R.R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virgina Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fyodor Dostoyevski"

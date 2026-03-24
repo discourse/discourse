@@ -9,7 +9,7 @@ fr:
     admin:
       site_settings:
         categories:
-          discourse_assign: "Affectation de Discourse"
+          discourse_assign: "Attribution Discourse"
   js:
     filters:
       unassigned:
@@ -129,6 +129,8 @@ fr:
       web_hooks:
         assign_event:
           group_name: "Événements d'attribution"
+          assigned: "Quand un utilisateur attribue un sujet"
+          unassigned: "Quand un utilisateur désattribue un sujet"
     search:
       advanced:
         in:
@@ -136,10 +138,6 @@ fr:
           unassigned: "ne sont pas attribués"
         assigned:
           label: "Attribué à"
-    topics:
-      bulk:
-        unassign: "Annuler l'attribution des sujets"
-        assign: "Attribuer les sujets"
     discourse_automation:
       scriptables:
         random_assign:

@@ -742,7 +742,9 @@ pt:
         flag: Tipo
     visits:
       title: "Visitas do Utilizador"
-      xaxis: "Dia"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Móvel"
       yaxis: "Número de visitas"
     signups:
       xaxis: "Dia"
@@ -1196,7 +1198,6 @@ pt:
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá verificar o Gravatar para avatars personalizados, por dia"
     enable_user_directory: "Forneça uma diretoria de utilizadores para navegação"
     anonymous_account_duration_minutes: "Para proteger o anonimato crie uma nova conta anónima a cada N minutos para cada utilizador. Exemplo: se configurado para 600, assim que passarem 600 minutos desde a última mensagem E o utilizador altere para anónimo, uma nova conta anónima é criada."
-    hide_user_profiles_from_public: "Desativar cartões de utilizador, perfis de utilizador e diretoria de utilizadores para utilizadores anónimos."
     max_notifications_per_user: "O número máximo de notificações por utilizador, se este número for excedido as notificações antigas serão eliminadas. Reforçado semanalmente. Defina como 0 para desativar"
     allowed_user_website_domains: "O ''site'' da Web do utilizador será verificado em relação a estes domínios."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
@@ -1270,8 +1271,6 @@ pt:
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
-      min_username_length_range: "Não pode definir o mínimo acima do máximo."
-      max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -2036,8 +2035,6 @@ pt:
   safe_mode:
     title: "Entrar em modo de segurança"
     enter: "Entrar em Modo de Segurança"
-  dev_mode:
-    enter: "Entrar"
   wizard:
     title: "Configuração do Discourse"
     step:

@@ -20,10 +20,12 @@ export default function lightbox(elem, additionalData = {}) {
     return INIT_PROMISES.get(elem);
   }
 
-  const promise = initLightbox(elem, additionalData).catch((error) => {
-    INIT_PROMISES.delete(elem);
-    throw error;
-  });
+  const promise = waitForPromise(initLightbox(elem, additionalData)).catch(
+    (error) => {
+      INIT_PROMISES.delete(elem);
+      throw error;
+    }
+  );
 
   INIT_PROMISES.set(elem, promise);
   return promise;

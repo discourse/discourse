@@ -5,3 +5,19 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  js:
+    discourse_math:
+      edit_math: "Matematiği düzenle"
+      edit_modal:
+        title: "Matematiği düzenle"
+        label: "Matematik"
+        apply: "Uygula"
+      composer:
+        insert_math: "Matematik Ekle"
+      insert_modal:
+        title_inline: "Satır İçi Matematik Ekle"
+        title_block: "Blok Matematik Ekle"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "Ekle"
+        block_mode: "Blok modu (görüntülenen denklem)"

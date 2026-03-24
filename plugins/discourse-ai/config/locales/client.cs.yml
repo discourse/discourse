@@ -41,10 +41,9 @@ cs:
       llm_selector:
         none: "Žádný"
       features:
-        back: "Zpět"
         disabled: "(vypnuto)"
         groups: "Skupiny:"
-        no_persona: "Nenastaveno"
+        no_agent: "Nenastaveno"
         no_groups: "Žádná"
         edit: "Nastavení"
         expand_list:
@@ -112,9 +111,8 @@ cs:
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
-      ai_persona:
-        back: "Zpět"
-        name: "Název"
+      ai_agent:
+        name: "Jméno"
         edit: "Upravit"
         export: "Export"
         import: "Import"
@@ -135,7 +133,6 @@ cs:
           button: "Přidat soubory"
           uploading: "Nahrává se..."
       tools:
-        back: "Zpět"
         export: "Export"
         import: "Import"
         name: "Název"
@@ -144,8 +141,9 @@ cs:
         save: "Uložit"
         remove_parameter: "Smazat"
         parameter_required: "Povinné"
+        credential_not_set: "(nenastaveno)"
         edit: "Upravit"
-        test: "Spustit test"
+        test: "Test"
         delete: "Smazat"
         test_modal:
           run: "Spustit test"
@@ -153,16 +151,15 @@ cs:
         short_title: "Pověření"
         name: "Název"
         secret: "Hodnota"
-        back: "Zpět"
         save: "Uložit"
         edit: "Upravit"
         delete: "Smazat"
         embedding: "Zabudování"
+        tool: "Nástroj"
       llms:
         display_name: "Název"
         save: "Uložit"
         edit: "Upravit"
-        back: "Zpět"
         delete: Smazat
         quotas:
           group: "Skupina"
@@ -178,6 +175,9 @@ cs:
         usage:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
+        model_description:
+          anthropic-claude-opus-4-6: "Nejinteligentnější model společnosti Anthropic"
+          anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"
         tests:
@@ -251,8 +251,10 @@ cs:
           credits: "Popisek od AI"
           save_caption: "Uložit"
         no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
+      reviewables:
+        ai_tool_action:
+          tool: "Nástroj"
       embeddings:
-        back: "Zpět"
         save: "Uložit"
         delete: "Smazat"
         edit: "Upravit"
@@ -267,10 +269,6 @@ cs:
           CDCK: "CDCK"
           fake: "Přizpůsobené"
         semantic_search_results:
-          toggle: "Zobrazeno %{count} výsledků nalezených pomocí AI"
-          toggle_hidden: "Skryto %{count} výsledků nalezených pomocí AI"
-          none: "Je nám líto, naše vyhledávání AI nenalezlo žádná odpovídající témata"
-          new: "Stisknutím tlačítka „hledat“ začněte hledat nové výsledky pomocí AI"
           unavailable: "Výsledky AI nejsou k dispozici"
         semantic_search_tooltips:
           results_explanation: "Pokud je tato funkce povolena, budou níže přidány další výsledky vyhledávání pomocí umělé inteligence."

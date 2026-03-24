@@ -39,17 +39,6 @@ if Sidekiq.server?
     # defer queue should simply run in sidekiq
     Scheduler::Defer.async = false
 
-    # warm up AR
-    RailsMultisite::ConnectionManagement.safe_each_connection do
-      (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-        begin
-          table.classify.constantize.first
-        rescue StandardError
-          nil
-        end
-      end
-    end
-
     scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
 
     if !scheduler_hostname || scheduler_hostname.split(",").include?(Discourse.os_hostname)

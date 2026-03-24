@@ -37,12 +37,14 @@ module DiscourseAi
             "How much is 1 + 1?",
             user: @opts[:user] || Discourse.system_user,
             feature_name: "llm_validator",
+            temperature: 0.7,
+            top_p: 0.9,
           )
           .present?
       end
 
       def is_using(llm_model)
-        in_use_by = AiPersona.where(default_llm_id: llm_model.id).pluck(:name)
+        in_use_by = AiAgent.where(default_llm_id: llm_model.id).pluck(:name)
 
         in_use_by << "ai_default_llm_model" if SiteSetting.ai_default_llm_model.to_i == llm_model.id
 

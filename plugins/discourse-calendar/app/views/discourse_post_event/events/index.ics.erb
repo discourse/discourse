@@ -1,15 +1,20 @@
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Discourse//<%= Discourse.current_hostname %>//<%= Discourse.full_version %>//EN
-<%- @events.each do |event| -%>
+<%- @ics_events.each do |entry| -%>
+<%- event = entry[:event] -%>
+<%- starts_at = entry[:starts_at] -%>
+<%- ends_at = entry[:ends_at] -%>
+<%- next if starts_at.nil? -%>
 BEGIN:VEVENT
-UID:calendar_event_#<%= event.id %>@<%= Discourse.current_hostname %>
+UID:calendar_event_#<%= event.id %>_<%= starts_at.to_i %>@<%= Discourse.current_hostname %>
 DTSTAMP:<%= Time.now.utc.strftime("%Y%m%dT%H%M%SZ") %>
-DTSTART:<%= event.starts_at.strftime("%Y%m%dT%H%M%SZ") %>
-DTEND:<%= event.ends_at.presence ? event.ends_at.strftime("%Y%m%dT%H%M%SZ") : (event.starts_at + 1.hour).strftime("%Y%m%dT%H%M%SZ") %>
-SUMMARY:<%= event.name.presence || event.post.topic.title %>
-<%- if event.location.present? -%>  LOCATION:<%= event.location %><%- end -%>
-DESCRIPTION:<%= event.description.presence || PrettyText.format_for_email(event.post.excerpt, event.post).html_safe.gsub(/\r?\n/, '\n') %>
+DTSTART:<%= starts_at.utc.strftime("%Y%m%dT%H%M%SZ") %>
+DTEND:<%= ends_at.presence ? ends_at.utc.strftime("%Y%m%dT%H%M%SZ") : (starts_at + 1.hour).utc.strftime("%Y%m%dT%H%M%SZ") %>
+SUMMARY:<%= IcalEncoder.encode(event.name.presence || event.post.topic.title) %>
+<%- if event.location.present? -%>LOCATION:<%= IcalEncoder.encode(event.location) %>
+<%- end -%>
+DESCRIPTION:<%= IcalEncoder.encode([(event.description.presence || event.post.excerpt), event.post.full_url].compact.join("\n")) %>
 URL:<%= event.url.presence || event.post.topic.url(event.post.post_number) %>
 END:VEVENT
 <%- end -%>

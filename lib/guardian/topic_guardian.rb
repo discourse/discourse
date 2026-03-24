@@ -286,10 +286,6 @@ module TopicGuardian
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
-  def can_get_access_to_topic?(topic)
-    topic&.access_topic_via_group.present? && authenticated?
-  end
-
   def filter_allowed_categories(records, category_id_column: "topics.category_id")
     return records if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
 
@@ -320,7 +316,16 @@ module TopicGuardian
   end
 
   def can_banner_topic?(topic)
-    topic && authenticated? && !topic.private_message? && is_staff?
+    topic && authenticated? && !topic.private_message? && !topic.category&.read_restricted? &&
+      is_staff?
+  end
+
+  def can_change_archetype?(topic, new_archetype)
+    return true if new_archetype == topic.archetype
+    if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
+      return can_banner_topic?(topic)
+    end
+    true
   end
 
   def can_edit_tags?(topic)
@@ -339,6 +344,7 @@ module TopicGuardian
   def can_perform_action_available_to_group_moderators?(topic)
     return false if anonymous? || topic.nil?
     return true if is_staff?
+    return false if !can_see_topic?(topic)
     return true if @user.has_trust_level?(TrustLevel[4])
 
     is_category_group_moderator?(topic.category)

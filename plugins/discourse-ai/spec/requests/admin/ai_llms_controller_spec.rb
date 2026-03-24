@@ -12,10 +12,10 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
   describe "GET #index" do
     fab!(:llm_model)
     fab!(:llm_model2, :llm_model)
-    fab!(:ai_persona) do
+    fab!(:ai_agent) do
       Fabricate(
-        :ai_persona,
-        name: "Cool persona",
+        :ai_agent,
+        name: "Cool agent",
         force_default_llm: true,
         default_llm_id: llm_model2.id,
       )
@@ -55,7 +55,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
       # setting the setting calls the model
       DiscourseAi::Completions::Llm.with_prepared_responses(["OK"]) do
-        SiteSetting.ai_helper_proofreader_persona = ai_persona.id
+        SiteSetting.ai_helper_proofreader_agent = ai_agent.id
         SiteSetting.ai_helper_enabled = true
       end
 
@@ -77,7 +77,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       model2_json = llms.find { |m| m["id"] == llm_model2.id }
 
       expect(model2_json["used_by"]).to contain_exactly(
-        { "type" => "ai_persona", "name" => "Cool persona", "id" => ai_persona.id },
+        { "type" => "ai_agent", "name" => "Cool agent", "id" => ai_agent.id },
         { "type" => "ai_helper", "name" => "Proofread text" },
       )
 
@@ -141,6 +141,16 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(model.display_name).to eq(valid_attrs[:display_name])
       end
 
+      it "stores cache_write_cost" do
+        attrs = valid_attrs.merge(cache_write_cost: 0.25)
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(201)
+        expect(LlmModel.last.cache_write_cost).to eq(0.25)
+        expect(response.parsed_body["ai_llm"]["cache_write_cost"]).to eq(0.25)
+      end
+
       it "stores allowed_attachment_types" do
         attrs = valid_attrs.merge(allowed_attachment_types: %w[pdf docx])
 
@@ -194,6 +204,19 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(created_model.lookup_custom_param("organization")).to eq(
           provider_params[:organization],
         )
+      end
+
+      it "does not store nested hash values in provider_params" do
+        provider_params = { organization: { nested: "injected_value" } }
+
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm: valid_attrs.merge(provider_params: provider_params),
+             }
+
+        expect(response.status).to eq(201)
+        created_model = LlmModel.last
+        expect(created_model.lookup_custom_param("organization")).not_to be_a(Hash)
       end
 
       it "ignores parameters not associated with that provider" do
@@ -278,6 +301,45 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
         expect(response.status).to eq(201)
         expect(created_model.lookup_custom_param("disable_system_prompt")).to eq(true)
+      end
+
+      it "casts hash-form checkbox fields to booleans" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "anthropic",
+                   provider_params: {
+                     enable_reasoning: "true",
+                     adaptive_thinking: "false",
+                   },
+                 ),
+             }
+
+        expect(response.status).to eq(201)
+        created_model = LlmModel.last
+        expect(created_model.provider_params["enable_reasoning"]).to eq(true)
+        expect(created_model.provider_params["adaptive_thinking"]).to eq(false)
+      end
+
+      it "sanitizes dependent params when parent is inactive" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "anthropic",
+                   provider_params: {
+                     enable_reasoning: false,
+                     adaptive_thinking: true,
+                     reasoning_tokens: 10_000,
+                   },
+                 ),
+             }
+
+        expect(response.status).to eq(201)
+        created_model = LlmModel.last
+        expect(created_model.provider_params["adaptive_thinking"]).to be_nil
+        expect(created_model.provider_params["reasoning_tokens"]).to be_nil
       end
     end
   end
@@ -551,7 +613,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
   describe "DELETE #destroy" do
     fab!(:llm_model)
 
-    it "destroys the requested ai_persona" do
+    it "destroys the requested ai_agent" do
       expect {
         delete "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json"
 
@@ -578,7 +640,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     end
 
     context "with llms configured" do
-      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+      fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
 
       it "validates the model is not in use" do
         delete "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json"

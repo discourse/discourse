@@ -1,5 +1,5 @@
 import { fn } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import UppyBackupUploader from "discourse/admin/components/uppy-backup-uploader";
 import humanSize from "discourse/admin/helpers/human-size";
 import DButton from "discourse/components/d-button";
@@ -35,7 +35,7 @@ export default <template>
   {{#if @controller.status.restoreDisabled}}
     <div class="backup-message alert alert-info">
       {{icon "circle-info"}}
-      {{htmlSafe
+      {{trustHTML
         (i18n
           "admin.backups.operations.restore.is_disabled"
           url=@controller.restoreSettingsUrl

@@ -22,9 +22,7 @@ class WebhooksController < ActionController::Base
     if SiteSetting.sendgrid_verification_key.present?
       return signature_failure if !valid_sendgrid_signature?
     else
-      Rails.logger.warn(
-        "Received a Sendgrid webhook, but no verification key has been configured. This is unsafe behaviour and will be disallowed in the future.",
-      )
+      return signature_failure
     end
 
     events = params["_json"] || [params]
@@ -55,9 +53,7 @@ class WebhooksController < ActionController::Base
     if SiteSetting.mailjet_webhook_token.present?
       return signature_failure if !valid_mailjet_token?
     else
-      Rails.logger.warn(
-        "Received a Mailjet webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
-      )
+      return signature_failure
     end
 
     events = params["_json"] || [params]
@@ -79,6 +75,12 @@ class WebhooksController < ActionController::Base
   def mailpace
     # see https://docs.mailpace.com/guide/webhooks#email-events
 
+    if SiteSetting.mailpace_webhook_token.present?
+      return signature_failure if !valid_mailpace_token?
+    else
+      return signature_failure
+    end
+
     message_id = Email::MessageIdService.message_id_clean(params["payload"]["message_id"])
     to_address = params["payload"]["to"]
     status = params["payload"]["status"]
@@ -97,9 +99,7 @@ class WebhooksController < ActionController::Base
     if SiteSetting.mandrill_authentication_key.present?
       return signature_failure if !valid_mandrill_signature?
     else
-      Rails.logger.warn(
-        "Received a Mandrill webhook, but no authentication key has been configured. This is unsafe behaviour and will be disallowed in the future.",
-      )
+      return signature_failure
     end
 
     JSON
@@ -130,9 +130,7 @@ class WebhooksController < ActionController::Base
     if SiteSetting.postmark_webhook_token.present?
       return signature_failure if !valid_postmark_token?
     else
-      Rails.logger.warn(
-        "Received a Postmark webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
-      )
+      return signature_failure
     end
 
     # see https://postmarkapp.com/developer/webhooks/bounce-webhook#bounce-webhook-data
@@ -155,9 +153,7 @@ class WebhooksController < ActionController::Base
     if SiteSetting.sparkpost_webhook_token.present?
       return signature_failure if !valid_sparkpost_token?
     else
-      Rails.logger.warn(
-        "Received a Sparkpost webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
-      )
+      return signature_failure
     end
 
     events = params["_json"] || [params]
@@ -323,6 +319,10 @@ class WebhooksController < ActionController::Base
       signature,
       Base64.strict_encode64(payload_signature),
     )
+  end
+
+  def valid_mailpace_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.mailpace_webhook_token)
   end
 
   def valid_postmark_token?

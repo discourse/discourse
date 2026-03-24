@@ -4,47 +4,55 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
   # Contract validations are tested through the service call tests below
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, guardian:) }
 
+    fab!(:user)
+    let(:guardian) { Guardian.new(user) }
     let(:params) { {} }
 
     context "when no parameters provided" do
       it { is_expected.to run_successfully }
 
       it "returns empty result" do
-        expect(result[:personas]).to eq({})
+        expect(result[:agents]).to eq({})
         expect(result[:features]).to eq({})
         expect(result[:llm_models]).to eq({})
       end
     end
 
     context "when parameters exceed limits" do
-      let(:params) { { persona_ids: (1..101).to_a } }
+      let(:params) { { agent_ids: (1..101).to_a } }
 
       it { is_expected.to fail_a_contract }
     end
 
-    context "with persona_ids param" do
+    context "with agent_ids param" do
       fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
-      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+        )
+      end
 
-      let(:params) { { persona_ids: [ai_persona.id] } }
+      let(:params) { { agent_ids: [ai_agent.id] } }
 
       context "without credit allocation" do
         it { is_expected.to run_successfully }
 
-        it "returns empty personas hash" do
-          expect(result[:personas]).to eq({})
+        it "returns empty agents hash" do
+          expect(result[:agents]).to eq({})
         end
       end
 
-      context "with non-existent persona IDs" do
-        let(:params) { { persona_ids: [99_999] } }
+      context "with non-existent agent IDs" do
+        let(:params) { { agent_ids: [99_999] } }
 
         it { is_expected.to run_successfully }
 
-        it "returns empty personas hash" do
-          expect(result[:personas]).to eq({})
+        it "returns empty agents hash" do
+          expect(result[:agents]).to eq({})
         end
       end
 
@@ -55,27 +63,44 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
 
         it { is_expected.to run_successfully }
 
-        it "returns credit status for persona" do
-          persona_data = result[:personas][ai_persona.id]
+        it "returns credit status for agent" do
+          agent_data = result[:agents][ai_agent.id]
 
-          expect(persona_data).to be_present
-          expect(persona_data[:llm_model_id]).to eq(llm_model.id)
-          expect(persona_data[:credit_status][:available]).to eq(true)
-          expect(persona_data[:credit_status][:daily_credits]).to eq(1000)
+          expect(agent_data).to be_present
+          expect(agent_data[:llm_model_id]).to eq(llm_model.id)
+          expect(agent_data[:credit_status][:available]).to eq(true)
+          expect(agent_data[:credit_status][:daily_credits]).to eq(1000)
         end
 
         it "returns hard_limit_reached when credits exhausted" do
           llm_credit_allocation.deduct_credits!(1000)
 
-          persona_data = result[:personas][ai_persona.id]
+          agent_data = result[:agents][ai_agent.id]
 
-          expect(persona_data[:credit_status][:available]).to eq(false)
-          expect(persona_data[:credit_status][:hard_limit_reached]).to eq(true)
+          expect(agent_data[:credit_status][:available]).to eq(false)
+          expect(agent_data[:credit_status][:hard_limit_reached]).to eq(true)
         end
 
-        it "batch loads multiple personas efficiently" do
-          persona2 = Fabricate(:ai_persona, default_llm_id: llm_model.id)
-          params[:persona_ids] = [ai_persona.id, persona2.id]
+        it "excludes disabled agents" do
+          ai_agent.update!(enabled: false)
+
+          expect(result[:agents]).to eq({})
+        end
+
+        it "excludes agents the user does not have group access to" do
+          ai_agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:staff]])
+
+          expect(result[:agents]).to eq({})
+        end
+
+        it "batch loads multiple agents efficiently" do
+          agent2 =
+            Fabricate(
+              :ai_agent,
+              default_llm_id: llm_model.id,
+              allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+            )
+          params[:agent_ids] = [ai_agent.id, agent2.id]
 
           queries = track_sql_queries { result }
 
@@ -85,22 +110,28 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
         end
 
         it "handles mixed valid and invalid IDs" do
-          params[:persona_ids] = [ai_persona.id, 99_999]
+          params[:agent_ids] = [ai_agent.id, 99_999]
 
-          expect(result[:personas].keys).to contain_exactly(ai_persona.id)
+          expect(result[:agents].keys).to contain_exactly(ai_agent.id)
         end
       end
     end
 
     context "with features param" do
       fab!(:llm_model) { Fabricate(:llm_model, id: -2) }
-      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+        )
+      end
 
       let(:params) { { features: ["discoveries"] } }
 
       before do
         SiteSetting.ai_discover_enabled = true
-        SiteSetting.ai_discover_persona = ai_persona.id
+        SiteSetting.ai_discover_agent = ai_agent.id
       end
 
       context "without credit allocation" do
@@ -148,9 +179,17 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
     end
 
     context "with llm_model_ids param" do
+      fab!(:admin)
       fab!(:llm_model) { Fabricate(:llm_model, id: -3) }
 
+      let(:guardian) { Guardian.new(admin) }
       let(:params) { { llm_model_ids: [llm_model.id] } }
+
+      it "returns empty for non-staff users" do
+        non_staff_result = described_class.call(params:, guardian: Guardian.new(user))
+
+        expect(non_staff_result[:llm_models]).to eq({})
+      end
 
       context "without credit allocation" do
         it { is_expected.to run_successfully }
@@ -217,35 +256,43 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
     end
 
     context "with combined parameters" do
+      fab!(:admin)
       fab!(:llm_model) { Fabricate(:llm_model, id: -6) }
-      fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
+      fab!(:ai_agent) do
+        Fabricate(
+          :ai_agent,
+          default_llm_id: llm_model.id,
+          allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+        )
+      end
       fab!(:llm_credit_allocation) do
         Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
       end
 
+      let(:guardian) { Guardian.new(admin) }
       let(:params) do
-        { persona_ids: [ai_persona.id], features: ["discoveries"], llm_model_ids: [llm_model.id] }
+        { agent_ids: [ai_agent.id], features: ["discoveries"], llm_model_ids: [llm_model.id] }
       end
 
       before do
         SiteSetting.ai_discover_enabled = true
-        SiteSetting.ai_discover_persona = ai_persona.id
+        SiteSetting.ai_discover_agent = ai_agent.id
       end
 
       it { is_expected.to run_successfully }
 
       it "handles multiple parameter types simultaneously" do
-        expect(result[:personas]).to be_present
+        expect(result[:agents]).to be_present
         expect(result[:features]).to be_present
         expect(result[:llm_models]).to be_present
       end
     end
 
     context "with input sanitization" do
-      it "sanitizes persona IDs to integers" do
-        params[:persona_ids] = ["1", "2", nil, ""]
+      it "sanitizes agent IDs to integers" do
+        params[:agent_ids] = ["1", "2", nil, ""]
 
-        expect(result[:personas]).to eq({})
+        expect(result[:agents]).to eq({})
       end
 
       it "sanitizes feature names to strings" do
@@ -256,11 +303,14 @@ RSpec.describe DiscourseAi::CreditStatusChecker do
       end
 
       it "removes duplicates from input" do
+        admin = Fabricate(:admin)
         llm_model = Fabricate(:llm_model, id: -7)
         Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 1000)
         params[:llm_model_ids] = [llm_model.id, llm_model.id, llm_model.id]
 
-        expect(result[:llm_models].keys.length).to eq(1)
+        staff_result = described_class.call(params:, guardian: Guardian.new(admin))
+
+        expect(staff_result[:llm_models].keys.length).to eq(1)
       end
     end
   end

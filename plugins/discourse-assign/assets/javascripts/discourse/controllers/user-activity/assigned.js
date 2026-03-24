@@ -1,9 +1,8 @@
 import { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { action, computed } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import discourseDebounce from "discourse/lib/debounce";
-import discourseComputed from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -17,14 +16,14 @@ export default class UserActivityAssigned extends UserTopicsList {
   ascending = false;
   search = "";
 
-  @discourseComputed("model.topics.length", "search")
-  doesntHaveAssignments(topicsLength, search) {
-    return !search && !topicsLength;
+  @computed("model.topics.length", "search")
+  get doesntHaveAssignments() {
+    return !this.search && !this.model?.topics?.length;
   }
 
-  @discourseComputed
-  emptyStateBody() {
-    return htmlSafe(
+  @computed
+  get emptyStateBody() {
+    return trustHTML(
       i18n("user.no_assignments_body", {
         preferencesUrl: getURL("/my/preferences/notifications"),
         icon: iconHTML("user-plus"),

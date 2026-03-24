@@ -6,6 +6,11 @@
 
 th:
   js:
+    blocks:
+      ghost:
+        status: "สถานะ"
+        hidden: "ถูกซ่อน"
+        failed: "ล้มเหลว"
     number:
       format:
         separator: "."
@@ -233,6 +238,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
+    admin_onboarding_banner:
+      start_posting:
+        back: "กลับ"
     about:
       simple_title: "เกี่ยวกับ"
       title: "เกี่ยวกับ %{title}"
@@ -871,6 +879,8 @@ th:
         users: "ผู้ใช้"
         tags: "แท็ก"
         apps: "แอป"
+      calendar_subscriptions:
+        copied: "คัดลอกแล้ว!"
       change_password:
         success: "(อีเมลถูกส่งแล้ว)"
         in_progress: "(กำลังส่งอีเมล)"
@@ -1191,6 +1201,7 @@ th:
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     form_kit:
       optional: ทางเลือก
+      required: ต้องการ
       errors:
         required: "ต้องการ"
     close: "ปิด"
@@ -1613,8 +1624,6 @@ th:
       bulk:
         select_all: "เลือกทั้งหมด"
         clear_all: "ล้างทั้งหมด"
-        unlist_topics: "กระทู้ที่ไม่ได้แสดง"
-        delete: "ลบกระทู้"
         delete_topics_count:
           other: "ลบกระทู้"
         dismiss: "ซ่อน"
@@ -1625,13 +1634,8 @@ th:
         dismiss_new: "ซ่อนใหม่"
         toggle: "สลับการเลือกกระทู้จำนวนมาก"
         actions: "การดำเนินการจำนวนมาก"
-        close_topics: "ปิดกระทู้"
-        archive_topics: "คลังกระทู้"
         move_messages_to_inbox: "ย้ายไปกล่องขาเข้า"
         choose_new_category: "เลือกหมวดหมู่ใหม่ให้กระทู้"
-        selected:
-          other: "คุณได้เลือก <b>%{count}</b> กระทู้"
-        change_tags: "แทนที่แท็ก"
         choose_new_tags: "เลือกแท็กใหม่เพื่อกระทู้เหล่านี้:"
         changed_tags: "แท็กของกระทู้เหล่านี้ถูกเปลี่ยนแปลง"
         error_topic_count:
@@ -2388,6 +2392,16 @@ th:
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
+      description: "รายละเอียด"
+      settings:
+        title: "การตั้งค่า"
+        general: "ทั่วไป"
+        back: "กลับ"
+        name: "ชื่อ"
+        name_placeholder: "ชื่อแท็ก"
+      localization:
+        name: "ชื่อ"
+        description: "รายละเอียด"
       sort_by: "เรียงโดย:"
       sort_by_count: "นับ"
       sort_by_name: "ชื่อ"
@@ -2542,6 +2556,10 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
+      reports:
+        group_traffic: "การจราจร"
+        group_members: "สมาชิก"
+        group_other: "อื่นๆ"
       config_sections:
         account:
           title: "บัญชี"
@@ -2615,6 +2633,10 @@ th:
           title: "กลุ่ม"
         backups:
           title: "สำรอง"
+        reports:
+          sub_pages:
+            settings:
+              title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
         permalinks:
@@ -2643,11 +2665,6 @@ th:
         default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
-        result_types:
-          setting:
-            other: "การตั้งค่า"
-          theme:
-            other: "ธีม"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2689,7 +2706,7 @@ th:
           all: "ทั้งหมด"
           view_table: "ตาราง"
           view_graph: "กราฟ"
-          refresh_report: "โหลดรายงานใหม่"
+          refresh_report: "รีเฟรช"
           daily: รายวัน
           monthly: รายเดือน
           weekly: รายสัปดาห์
@@ -3300,6 +3317,7 @@ th:
           title: "แสดงในข้อมูลสาธารณะ"
         field_types:
           text: "ข้อความ"
+          date: "วันที่"
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:

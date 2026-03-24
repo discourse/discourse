@@ -123,14 +123,6 @@ module.exports = {
           fs.existsSync(path.resolve(root, dirent.name, "plugin.rb"))
       );
 
-    // Load official plugins list
-    const officialPluginsPath = path.resolve(
-      "../../config/official_plugins.json"
-    );
-    const officialPlugins = JSON.parse(
-      fs.readFileSync(officialPluginsPath, "utf8")
-    );
-
     return pluginDirectories.map((directory) => {
       const directoryName = directory.name;
       const pluginName = parsePluginName(
@@ -157,14 +149,6 @@ module.exports = {
       const hasTests = fs.existsSync(testDirectory);
       const hasConfig = fs.existsSync(configDirectory);
 
-      // Check if plugin is official
-      const isOfficial = officialPlugins.includes(pluginName);
-
-      // Check if plugin is preinstalled (bundled in discourse git repo)
-      const isPreinstalled = !fs.existsSync(
-        path.resolve(root, directoryName, ".git")
-      );
-
       return {
         pluginName,
         directoryName,
@@ -176,8 +160,6 @@ module.exports = {
         hasAdminJs,
         hasTests,
         hasConfig,
-        isOfficial,
-        isPreinstalled,
       };
     });
   },
@@ -277,7 +259,7 @@ module.exports = {
 
   // Matches logic from GlobalSetting.load_plugins? in the ruby app
   shouldLoadPlugins() {
-    if (process.env.ROLLUP_PLUGIN_COMPILER === "1") {
+    if (process.env.ROLLUP_PLUGIN_COMPILER !== "0") {
       return false;
     }
 

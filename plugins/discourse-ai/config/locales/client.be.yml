@@ -37,7 +37,6 @@ be:
       llm_selector:
         none: "Няма"
       features:
-        back: "Назад"
         disabled: "(адключана)"
         groups: "групы:"
         edit: "Налады"
@@ -81,11 +80,10 @@ be:
         username: "Імя карыстальніка"
         total_requests: "Усяго запытаў"
         total: "Усяго"
-      ai_persona:
-        back: "Назад"
-        name: "Імя"
+      ai_agent:
+        name: "Назва"
         edit: "Рэдагаваць"
-        export: "экспарт"
+        export: "Экспарт"
         description: "Апісанне"
         user: Карыстальнік
         save: "Захаваць"
@@ -93,13 +91,12 @@ be:
         response_format:
           open_modal: "Рэдагаваць"
         filters:
-          reset: "скінуць"
+          reset: "Скінуць"
       rag:
         uploads:
           title: "Загрузкі"
           uploading: "Запампоўванне ..."
       tools:
-        back: "Назад"
         export: "экспарт"
         name: "Імя"
         description: "Апісанне"
@@ -112,7 +109,6 @@ be:
       secrets:
         name: "Імя"
         secret: "значэнне"
-        back: "Назад"
         save: "Захаваць"
         edit: "Рэдагаваць"
         delete: "Выдаліць"
@@ -121,7 +117,6 @@ be:
         display_name: "Імя"
         save: "Захаваць"
         edit: "Рэдагаваць"
-        back: "Назад"
         delete: Выдаліць
         quotas:
           group: "Група"
@@ -145,7 +140,6 @@ be:
         image_caption:
           save_caption: "Захаваць"
       embeddings:
-        back: "Назад"
         save: "Захаваць"
         delete: "Выдаліць"
         edit: "Рэдагаваць"

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DModal from "discourse/components/d-modal";
 import FilterInput from "discourse/components/filter-input";
 import { translateModKey } from "discourse/lib/utilities";
@@ -481,7 +481,7 @@ export default class KeyboardShortcutsHelp extends Component {
                   }}</h2>
                 <ul>
                   {{#each-in shortcutCategory.shortcuts as |name shortcut|}}
-                    <li>{{htmlSafe shortcut}}</li>
+                    <li>{{trustHTML shortcut}}</li>
                   {{/each-in}}
                 </ul>
               </section>

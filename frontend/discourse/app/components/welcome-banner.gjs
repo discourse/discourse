@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -178,7 +178,7 @@ export default class WelcomeBanner extends Component {
 
   get bgImgStyle() {
     if (this.siteSettings.welcome_banner_image) {
-      return htmlSafe(
+      return trustHTML(
         `background-image:url(${escapeExpression(
           this.siteSettings.welcome_banner_image
         )});`
@@ -191,7 +191,7 @@ export default class WelcomeBanner extends Component {
       this.siteSettings.welcome_banner_image &&
       this.siteSettings.welcome_banner_text_color
     ) {
-      return htmlSafe(
+      return trustHTML(
         `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
       );
     }
@@ -217,10 +217,10 @@ export default class WelcomeBanner extends Component {
             class="welcome-banner__title"
             style={{if this.textColorStyle this.textColorStyle}}
           >
-            {{htmlSafe this.headerText}}
+            {{trustHTML this.headerText}}
             {{#if this.subheaderText}}
               <p class="welcome-banner__subheader">
-                {{htmlSafe this.subheaderText}}
+                {{trustHTML this.subheaderText}}
               </p>
             {{/if}}
           </div>

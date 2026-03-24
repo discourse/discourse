@@ -46,31 +46,21 @@ RSpec.describe TopicStatusUpdater do
     TopicUser.update_last_read(user_wants_unread, post.topic.id, 1, 1, 0)
     TopicUser.update_last_read(user_wants_read, post.topic.id, 1, 1, 0)
 
-    PostTiming.create!(
-      topic_id: post.topic.id,
-      post_number: 1,
-      user_id: user_wants_unread.id,
-      msecs: 1000,
-    )
-    PostTiming.create!(
-      topic_id: post.topic.id,
-      post_number: 1,
-      user_id: user_wants_read.id,
-      msecs: 1000,
-    )
+    PostTiming.create!(topic: post.topic, post_number: 1, user: user_wants_unread, msecs: 1000)
+    PostTiming.create!(topic: post.topic, post_number: 1, user: user_wants_read, msecs: 1000)
 
     TopicStatusUpdater.new(post.topic, admin).update!("closed", true)
 
     # Should have 2 posts (original + close action)
     expect(post.topic.posts.count).to eq(2)
 
-    # User with topics_unread_when_closed enabled should NOT have read the close action
-    tu_wants_unread = TopicUser.find_by(user_id: user_wants_unread.id, topic_id: post.topic.id)
+    # In PMs, close small_action posts only bump highest_staff_post_number,
+    # so neither user's last_read_post_number advances past the original post.
+    tu_wants_unread = TopicUser.find_by(user: user_wants_unread, topic: post.topic)
     expect(tu_wants_unread.last_read_post_number).to eq(1)
 
-    # User with topics_unread_when_closed disabled SHOULD have read the close action
-    tu_wants_read = TopicUser.find_by(user_id: user_wants_read.id, topic_id: post.topic.id)
-    expect(tu_wants_read.last_read_post_number).to eq(2)
+    tu_wants_read = TopicUser.find_by(user: user_wants_read, topic: post.topic)
+    expect(tu_wants_read.last_read_post_number).to eq(1)
   end
 
   it "adds an autoclosed message" do
@@ -277,6 +267,47 @@ RSpec.describe TopicStatusUpdater do
       TopicStatusUpdater.new(topic, admin).update!("visible", false)
 
       expect(TopicHotScore.find_by(topic_id: topic.id)).to be_nil
+    end
+  end
+
+  describe "tracking state notifications on visibility change" do
+    before { SiteSetting.experimental_topic_category_change_notification = true }
+
+    it "publishes delete when topic becomes invisible" do
+      topic = Fabricate(:topic)
+
+      messages =
+        MessageBus.track_publish("/delete") do
+          TopicStatusUpdater.new(topic, admin).update!("visible", false)
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.data["topic_id"]).to eq(topic.id)
+      expect(messages.first.data["message_type"]).to eq(TopicTrackingState::DELETE_MESSAGE_TYPE)
+    end
+
+    it "publishes recover when topic becomes visible again" do
+      topic = Fabricate(:topic, visible: false)
+
+      messages =
+        MessageBus.track_publish("/recover") do
+          TopicStatusUpdater.new(topic, admin).update!("visible", true)
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.data["topic_id"]).to eq(topic.id)
+      expect(messages.first.data["message_type"]).to eq(TopicTrackingState::RECOVER_MESSAGE_TYPE)
+    end
+
+    it "does not publish for non-regular topics" do
+      topic = Fabricate(:private_message_topic)
+
+      messages =
+        MessageBus.track_publish("/delete") do
+          TopicStatusUpdater.new(topic, admin).update!("visible", false)
+        end
+
+      expect(messages.length).to eq(0)
     end
   end
 end

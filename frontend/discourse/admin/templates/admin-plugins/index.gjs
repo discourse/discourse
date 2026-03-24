@@ -1,5 +1,5 @@
 import { concat } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AdminPluginsList from "discourse/admin/components/admin-plugins-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -14,7 +14,7 @@ export default <template>
 
     <DPageHeader
       @titleLabel={{i18n "admin.config.plugins.title"}}
-      @descriptionLabel={{htmlSafe
+      @descriptionLabel={{trustHTML
         (concat
           (i18n "admin.config.plugins.header_description")
           '<a class="admin-plugins-howto" href="https://meta.discourse.org/t/install-a-plugin/19157">'

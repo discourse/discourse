@@ -27,7 +27,7 @@ acceptance("New category access for moderators", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/new-category",
+      "/new-category/general",
       "it allows access to new category"
     );
   });
@@ -118,6 +118,62 @@ acceptance("Category New", function (needs) {
       .dom("input.category-name")
       .hasValue("testing", "it doesn't clear out the rest of the form fields");
     assert.strictEqual(categorySelector.header().value(), "6");
+  });
+});
+
+acceptance("Category type setup page", function (needs) {
+  needs.user({ admin: true, can_create_category: true });
+  needs.settings({
+    enable_simplified_category_creation: true,
+  });
+  needs.pretender((server, helper) => {
+    server.get("/categories/types", () => {
+      return helper.response(200, {
+        types: [
+          {
+            id: "discussion",
+            name: "Discussion",
+            title: "discussion",
+            icon: "comments",
+            description: "General discussion",
+            configuration_schema: {},
+            available: true,
+          },
+          {
+            id: "support",
+            name: "Support",
+            title: "support",
+            icon: "circle-question",
+            description: "Q&A support",
+            configuration_schema: {},
+            available: true,
+          },
+        ],
+        counts: {
+          discussion: 1,
+          support: 0,
+        },
+      });
+    });
+  });
+
+  test("Visiting /new-category redirects to setup page", async function (assert) {
+    await visit("/new-category");
+    assert.strictEqual(currentURL(), "/new-category/setup");
+  });
+
+  test("Setup page shows type cards", async function (assert) {
+    await visit("/new-category/setup");
+    assert.dom(".category-type-cards__card").exists({ count: 2 });
+    assert.dom(".category-type-cards__card-name").exists();
+  });
+
+  test("Clicking a type card transitions to new category form", async function (assert) {
+    await visit("/new-category/setup");
+    await click(
+      ".category-type-cards__card:first-child .category-type-cards__card-select"
+    );
+    assert.strictEqual(currentURL(), "/new-category/general");
   });
 });
 

@@ -14,6 +14,7 @@ class Report
     trust_level
     file_extension
     include_subcategories
+    hidden_labels
   ]
 
   MODES = {
@@ -54,17 +55,29 @@ class Report
   }
 
   LEGACY_REPORTS = %w[
+    associated_accounts_by_provider
     bookmarks
+    consolidated_api_requests
+    flags
+    flags_status
     likes
     moderator_warning_private_messages
+    mobile_visits
     notify_moderators_private_messages
     notify_user_private_messages
     post_edits
     profile_views
+    reactions
+    suspicious_logins
     system_private_messages
+    top_referrers
     top_users_by_likes_received_from_inferior_trust_level
     top_users_by_likes_received_from_a_variety_of_people
+    trust_level_growth
+    user_flagging_ratio
     user_to_user_private_messages
+    web_crawlers
+    web_hook_events_daily_aggregate
   ]
 
   include Reports::AssociatedAccountsByProvider
@@ -138,7 +151,10 @@ class Report
                 :secondary_color,
                 :filters,
                 :available_filters,
-                :legacy
+                :legacy,
+                :default_group_by,
+                :y_axis_title,
+                :current_user
 
   def self.default_days
     30
@@ -180,6 +196,7 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
+      report.current_user&.id,
     ].compact.map(&:to_s).join(":")
   end
 
@@ -266,6 +283,8 @@ class Report
       json[:prev_period] = self.prev_period if self.prev_period
       json[:prev30Days] = self.prev30Days if self.prev30Days
       json[:limit] = self.limit if self.limit
+      json[:default_group_by] = self.default_group_by if self.default_group_by
+      json[:y_axis_title] = self.y_axis_title if self.y_axis_title
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
@@ -298,6 +317,7 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.current_user = opts[:current_user] if opts[:current_user]
     report.labels = Report.default_labels
 
     report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements

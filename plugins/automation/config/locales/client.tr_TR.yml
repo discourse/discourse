@@ -5,11 +5,19 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "API aracılığıyla bir otomasyonu tetikle"
   js:
     admin:
       logs:
         staff_actions:
           actions:
+            create_automation: otomasyon oluştur
             update_automation: otomasyonu güncelle
             delete_automation: otomasyonu sil
     discourse_automation:
@@ -68,8 +76,10 @@ tr_TR:
           fields:
             categories:
               label: Kategoriler
+              description: Sadece işaretli konu bu kategorilerde olduğunda tetikleyin
             tags:
               label: Etiketler
+              description: Sadece işaretli konu bu etiketlerden herhangi birine sahip olduğunda tetikle
         not_found: Otomasyon `%{automation}` için `%{trigger}` tetikleyicisi bulunamadı, ilgili eklentinin kurulu olduğundan emin olun
         user_badge_granted:
           fields:
@@ -280,6 +290,14 @@ tr_TR:
               label: Etiketler
               description: 'İsteğe bağlı, yalnızca gönderide şu etiketlerden herhangi biri varsa tetiklenir:'
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: E-posta şablonu
+              description: Otomasyon yer tutucularını destekler
+            recipients:
+              label: Alıcılar
+              description: Bildirilecek kullanıcılar veya e-posta adresleri
         not_found: Otomasyon `%{automation}` için `%{script}` komut dosyası bulunamadı, ilgili eklentinin kurulu olduğundan emin olun
         zapier_webhook:
           fields:
@@ -429,6 +447,11 @@ tr_TR:
               label: "Kullanıcı Özel Alan adı"
         set_topic_timer:
           title: Konu Zamanlayıcısını ayarla
+          fields:
+            type:
+              label: Zamanlayıcı Türü
+            duration:
+              label: Zamanlayıcı Süresi
       unnamed_automation: "Adsız otomasyon"
       models:
         script:
@@ -441,6 +464,9 @@ tr_TR:
           runs_today: "Bugün %{count}"
           runs_this_week: "Bu hafta %{count}"
           runs_this_month: "Bu ay %{count}"
+          recent_errors:
+            one: "Son zamanlarda %{count} hata"
+            other: "Son zamanlarda %{count} hata"
           runs:
             label: Çalıştırma sayısı
           name:

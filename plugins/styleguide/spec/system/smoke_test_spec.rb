@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Styleguide Smoke Test", type: :system do
+RSpec.describe "Styleguide Smoke Test" do
   fab!(:admin)
 
   # keep this hash updated when adding, removing or renaming components
@@ -18,6 +18,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/atoms/date-time-inputs", title: "Date/Time inputs" },
       { href: "/atoms/dropdowns", title: "Dropdowns" },
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
+      { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
     ],
     "MOLECULES" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
@@ -121,6 +122,19 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
           expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
         end
       end
+    end
+  end
+
+  context "when the styleguide is enabled for everyone" do
+    before do
+      Capybara.reset_sessions!
+      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    end
+
+    it "renders a page using HighlightedCode for anonymous users" do
+      visit "/styleguide/atoms/font-scale"
+      expect(page).to have_css(".styleguide-contents h1.section-title", text: "Font System")
+      expect(page).to have_css("code.hljs")
     end
   end
 

@@ -19,6 +19,9 @@ en:
     assign_allowed_on_groups: "Users in these groups are allowed to assign topics and can be assigned topics."
     enable_assign_status: "Add a customizable status field to every assignment."
     assign_statuses: "List of statuses available to each assignment. The first status is the default status applied to every new assignment."
+    ignore_solved_topics_in_assigned_reminder: "Prevent reminders for assignments from including solved topics. Only relevant when using the discourse-solved plugin."
+    assignment_status_on_solve: "When a topic is solved update all assignments to this status"
+    assignment_status_on_unsolve: "When a topic is unsolved update all assignments to this status"
     errors:
       assign_statuses:
         too_few: "There must be at least two different statuses available."

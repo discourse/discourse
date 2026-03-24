@@ -41,7 +41,7 @@ $breakpoints: (
   @if $sidebar {
     // when the sidebar is shown, we want to increase the breakpoints by the width of the sidebar
     /* stylelint-disable-next-line scss/no-global-function-names */
-    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$sidebar-width})) {
+    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$d-sidebar-width})) {
       .has-sidebar-page {
         @content;
       }
@@ -137,11 +137,6 @@ $hpad: 0.65em;
 }
 
 // Stuff we repeat
-@mixin post-aside {
-  border-left: 5px solid var(--primary-300);
-  background-color: var(--blend-primary-secondary-5);
-}
-
 @mixin d-animation($name, $duration, $easing: ease) {
   animation: $name $duration $easing forwards;
 

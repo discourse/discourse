@@ -41,10 +41,9 @@ hu:
       llm_selector:
         none: "Egyik sem"
       features:
-        back: "Vissza"
         disabled: "(kikapcsolva)"
         groups: "Csoportok:"
-        no_persona: "Nincs beállítva"
+        no_agent: "Nincs beállítva"
         no_groups: "Egyik sem"
         edit: "Beállítások"
         expand_list:
@@ -99,8 +98,7 @@ hu:
         periods:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"
-      ai_persona:
-        back: "Vissza"
+      ai_agent:
         name: "Név"
         edit: "Szerkesztés"
         export: "Exportálás"
@@ -121,7 +119,6 @@ hu:
           title: "Feltöltések"
           uploading: "Feltöltés…"
       tools:
-        back: "Vissza"
         export: "Exportálás"
         import: "Importálás"
         name: "Név"
@@ -131,8 +128,9 @@ hu:
         save: "Mentés"
         remove_parameter: "Eltávolítás"
         parameter_required: "Kötelező"
+        credential_not_set: "(nincs beállítva)"
         edit: "Szerkesztés"
-        test: "Teszt futtatása"
+        test: "Teszt"
         delete: "Törlés"
         test_modal:
           run: "Teszt futtatása"
@@ -140,7 +138,6 @@ hu:
         short_title: "Hitelesítő adatok"
         name: "Név"
         secret: "Érték"
-        back: "Vissza"
         save: "Mentés"
         edit: "Szerkesztés"
         delete: "Törlés"
@@ -150,7 +147,6 @@ hu:
         provider: "Szolgáltató"
         save: "Mentés"
         edit: "Szerkesztés"
-        back: "Vissza"
         delete: Törlés
         quotas:
           group: "Csoport"
@@ -174,6 +170,10 @@ hu:
         providers:
           google: "Google"
           fake: "Egyéni"
+        provider_fields:
+          adaptive_thinking: "Adaptív gondolkodás engedélyezése (Claude 4.6 modellekhez javasolt)"
+          enable_thinking: "Gondolkodás engedélyezése (Gemini 2.5 modellek – token-keretet használ)"
+          thinking_level: "Gondolkodási szint (Gemini 3 modellek – a következtetési mélységet szabályozza)"
       related_topics:
         pill: "Kapcsolódó"
       ai_helper:
@@ -193,7 +193,6 @@ hu:
         image_caption:
           save_caption: "Mentés"
       embeddings:
-        back: "Vissza"
         save: "Mentés"
         delete: "Törlés"
         edit: "Szerkesztés"

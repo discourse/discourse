@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Data explorer query runner", type: :system do
+RSpec.describe "Data explorer query runner" do
   fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "group") }
   fab!(:group_user) { Fabricate(:group_user, user: admin, group: group) }
@@ -26,7 +26,7 @@ RSpec.describe "Data explorer query runner", type: :system do
       expect(page).to have_css(".query-results .result-header")
 
       find(".query-edit .previous").click
-      find("a[href='/admin/plugins/discourse-data-explorer/queries/#{query_b.id}']").click
+      first("a[href='/admin/plugins/discourse-data-explorer/queries/#{query_b.id}']").click
       expect(page).to have_no_css(".query-results .result-header")
     end
   end

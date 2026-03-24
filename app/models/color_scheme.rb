@@ -406,16 +406,17 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.base
-    return @base_color_scheme if @base_color_scheme
-    @base_color_scheme =
-      new(
-        id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME],
-        name: I18n.t("admin_js.admin.customize.theme.default_light_scheme"),
-      )
-    @base_color_scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
-    @base_color_scheme.is_base = true
-    @base_color_scheme.is_builtin_default = true
-    @base_color_scheme
+    @base_color_scheme ||=
+      begin
+        scheme = new(id: NAMES_TO_ID_MAP[LIGHT_PALETTE_NAME], name: LIGHT_PALETTE_NAME)
+        scheme.colors = base_colors.map { |name, hex| { name: name, hex: hex } }
+        scheme.is_base = true
+        scheme.is_builtin_default = true
+        scheme.define_singleton_method(:name) do
+          I18n.t("admin_js.admin.customize.theme.default_light_scheme")
+        end
+        scheme
+      end
   end
 
   def self.is_base?(scheme_name)

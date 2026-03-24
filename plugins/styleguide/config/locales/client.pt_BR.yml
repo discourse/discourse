@@ -38,6 +38,8 @@ pt_BR:
           title: "Sistema da fonte"
         colors:
           title: "Cores"
+        dialog:
+          title: "Diálogo"
         icons:
           title: "Ícones"
           full_list: "Exibir a lista completa de ícones incríveis de fonte"
@@ -59,6 +61,8 @@ pt_BR:
           title: "Navegação empilhada"
         categories_list:
           title: "Lista de categorias"
+        topic_link:
+          title: "Link e status do tópico"
         topic_list_item:
           title: "Item de lista de tópicos"
         topic_statuses:
@@ -81,6 +85,8 @@ pt_BR:
           title: "Lista de postagens"
           empty_example: "<PostList /> estado vazio"
           populated_example: "<PostList /> estado preenchido"
+        post_oneboxes:
+          title: "Publicar Oneboxes"
         topic_map:
           title: "Mapa do tópico"
         site_header:
@@ -99,6 +105,8 @@ pt_BR:
           title: "Ícones no cabeçalho"
         spinners:
           title: "Controle giratório"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Estado vazio"
         tooltips:

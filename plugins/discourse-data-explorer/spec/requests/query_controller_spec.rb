@@ -59,11 +59,15 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
 
-      it "shows all available queries in alphabetical order" do
+      it "shows all available queries sorted by name when requested" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "B")
         make_query("SELECT 1 as value", name: "A")
-        get "/admin/plugins/discourse-data-explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json",
+            params: {
+              order: "name",
+              ascending: "true",
+            }
         expect(response.status).to eq(200)
         expect(response_json["queries"].length).to eq(
           DiscourseDataExplorer::Queries.default.count + 2,
@@ -499,21 +503,17 @@ describe DiscourseDataExplorer::QueryController do
 
           post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
                params: {
-                 limit: "ALL",
+                 limit: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT + 1,
                }
-          expect(response_json["rows"].count).to eq(3)
+          expect(response.status).to eq(400)
         end
 
         it "should limit the results in CSV download" do
-          begin
-            original_const = DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT
-            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", 2)
-
-            query = make_query <<~SQL
+          query = make_query <<~SQL
             SELECT id FROM posts
-            SQL
+          SQL
 
+          stub_const(DiscourseDataExplorer, "QUERY_RESULT_MAX_LIMIT", 2) do
             post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
@@ -527,16 +527,12 @@ describe DiscourseDataExplorer::QueryController do
                  }
             expect(response.body.split("\n").count).to eq(2)
 
-            # The value `ALL` is not supported in csv exports.
             post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.csv",
                  params: {
                    download: 1,
-                   limit: "ALL",
+                   limit: DiscourseDataExplorer::QUERY_RESULT_MAX_LIMIT + 1,
                  }
-            expect(response.body.split("\n").count).to eq(1)
-          ensure
-            DiscourseDataExplorer.send(:remove_const, "QUERY_RESULT_MAX_LIMIT")
-            DiscourseDataExplorer.const_set("QUERY_RESULT_MAX_LIMIT", original_const)
+            expect(response.body.split("\n").count).to eq(3)
           end
         end
       end
@@ -710,6 +706,99 @@ describe DiscourseDataExplorer::QueryController do
         get "/data-explorer/queries/#{query.id}/run.json"
         expect(response.status).to eq(404)
       end
+
+      it "returns 404 when the query has no group assignments" do
+        query = make_query("SELECT 1 as value", {}, [])
+
+        get "/data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "legacy /admin/plugins/explorer/ routes" do
+    fab!(:admin)
+
+    before { sign_in(admin) }
+
+    it "redirects GET /admin/plugins/explorer/queries to /admin/plugins/discourse-data-explorer/queries" do
+      get "/admin/plugins/explorer/queries"
+      expect(response).to redirect_to("/admin/plugins/discourse-data-explorer/queries")
+    end
+
+    it "redirects GET /admin/plugins/explorer/queries/:id to /admin/plugins/discourse-data-explorer/queries/:id" do
+      query = make_query("SELECT 1 as value")
+      get "/admin/plugins/explorer/queries/#{query.id}"
+      expect(response).to redirect_to("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+    end
+
+    it "serves GET /admin/plugins/explorer/schema.json" do
+      get "/admin/plugins/explorer/schema.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to be_a(Hash)
+      expect(response.parsed_body.keys).to include("posts")
+    end
+
+    it "serves GET /admin/plugins/explorer/groups.json" do
+      get "/admin/plugins/explorer/groups.json"
+      expect(response.status).to eq(200)
+    end
+
+    it "serves POST /admin/plugins/explorer/queries.json" do
+      post "/admin/plugins/explorer/queries.json",
+           params: {
+             query: {
+               name: "Legacy route test",
+               description: "Testing legacy route",
+               sql: "SELECT 1",
+             },
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["query"]["name"]).to eq("Legacy route test")
+    end
+
+    it "serves PUT /admin/plugins/explorer/queries/:id.json" do
+      query = make_query("SELECT 1 as value")
+      put "/admin/plugins/explorer/queries/#{query.id}.json",
+          params: {
+            query: {
+              name: "Updated via legacy route",
+              sql: query.sql,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(query.reload.name).to eq("Updated via legacy route")
+    end
+
+    it "serves DELETE /admin/plugins/explorer/queries/:id.json" do
+      query = make_query("SELECT 1 as value")
+      delete "/admin/plugins/explorer/queries/#{query.id}.json"
+      expect(response.status).to eq(200)
+      expect(query.reload.hidden).to eq(true)
+    end
+
+    it "serves POST /admin/plugins/explorer/queries/:id/run.json" do
+      query = make_query("SELECT 42 as legacy_value")
+      post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { params: {}.to_json }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(response.parsed_body["columns"]).to eq(["legacy_value"])
+      expect(response.parsed_body["rows"]).to eq([[42]])
+    end
+
+    it "serves POST /admin/plugins/explorer/queries/:id/run without .json suffix or Accept header" do
+      query = make_query("SELECT 42 as legacy_value")
+      post "/admin/plugins/explorer/queries/#{query.id}/run",
+           params: {
+             params: {}.to_json,
+           },
+           headers: {
+             "Accept" => "",
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq(true)
+      expect(response.parsed_body["columns"]).to eq(["legacy_value"])
+      expect(response.parsed_body["rows"]).to eq([[42]])
     end
   end
 end

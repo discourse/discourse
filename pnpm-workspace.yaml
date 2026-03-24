@@ -2,6 +2,7 @@ strictPeerDependencies: true
 onlyBuiltDependencies:
   - "@ember/render-modifiers"
 packages:
+- "docs/developer-guides"
 - "frontend/custom-proxy"
 - "frontend/deprecation-silencer"
 - "frontend/discourse"
@@ -54,6 +55,7 @@ packages:
 - "plugins/poll"
 - "plugins/spoiler-alert"
 - "plugins/styleguide"
+- "themes/horizon"
 allowedDeprecatedVersions:
   "@babel/plugin-proposal-class-properties": "*"
   "@babel/plugin-proposal-private-methods": "*"

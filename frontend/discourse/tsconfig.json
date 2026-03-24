@@ -24,7 +24,7 @@
       "discourse/truth-helpers/*": ["./truth-helpers/*"],
       "discourse/truth-helpers": ["./truth-helpers/index.js"],
       "discourse/dialog-holder/*": ["./dialog-holder/*"],
-      "discourse/*": ["./app/*"],
+      "discourse/*": ["./app/*"]
     }
   }
 }

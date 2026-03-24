@@ -31,7 +31,7 @@ RSpec.describe PrettyText do
       it "correctly extracts usernames from the new quote format" do
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
-          <aside class="quote no-group" data-username="codinghorror" data-post="2" data-topic="#{topic.id}">
+          <aside class="quote no-group" data-username="codinghorror" data-display-name="Jeff" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
           <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a></div>
@@ -1692,8 +1692,41 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("❤️💣")).to match(/<img src[^>]+bomb[^>]+>/)
     end
 
-    it "replaces Emoji from Unicode 14.0" do
-      expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
+    it "correctly cooks skin tone and gendered ZWJ sequences" do
+      # 1. Standard RGI Input (Man Bouncing Ball: Light Skin Tone)
+      # Structure: ⛹ (26f9) + 🏻 (1f3fb) + ZWJ (200d) + ♂ (2642) + VS16 (fe0f)
+      standard_input = [0x26f9, 0x1f3fb, 0x200d, 0x2642, 0xfe0f].pack("U*")
+      expect(PrettyText.cook(standard_input)).to eq(
+        "<p><img src=\"/images/emoji/twitter/man_bouncing_ball/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":man_bouncing_ball:t2:\" class=\"emoji only-emoji\" alt=\":man_bouncing_ball:t2:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+
+      # 2. Regression: Ordinary Skin Tone (Thumbs Up: Light Skin Tone)
+      # Structure: 👍 (1f44d) + 🏻 (1f3fb)
+      thumbs_up = [0x1f44d, 0x1f3fb].pack("U*")
+      expect(PrettyText.cook(thumbs_up)).to eq(
+        "<p><img src=\"/images/emoji/twitter/+1/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":+1:t2:\" class=\"emoji only-emoji\" alt=\":+1:t2:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+
+      # 3. Regression: Ordinary ZWJ Sequence (Family: Man, Woman, Girl)
+      # Structure: 👨 (1f468) + ZWJ (200d) + 👩 (1f469) + ZWJ (200d) + 👧 (1f467)
+      family = [0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467].pack("U*")
+      expect(PrettyText.cook(family)).to eq(
+        "<p><img src=\"/images/emoji/twitter/family_man_woman_girl.png?v=#{Emoji::EMOJI_VERSION}\" title=\":family_man_woman_girl:\" class=\"emoji only-emoji\" alt=\":family_man_woman_girl:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+    end
+
+    it "replaces Unicode emoji from all supported Emoji versions" do
+      expect(PrettyText.cook("😀")).to match(/\:grinning_face\:/) # Emoji 1.0
+      expect(PrettyText.cook("🤳")).to match(/\:selfie\:/) # Emoji 3.0
+      expect(PrettyText.cook("🦷")).to match(/\:tooth\:/) # Emoji 11.0
+      expect(PrettyText.cook("🧅")).to match(/\:onion\:/) # Emoji 12.0
+      expect(PrettyText.cook("🥷")).to match(/\:ninja\:/) # Emoji 13.0
+      expect(PrettyText.cook("❤️‍🔥")).to match(/\:heart_on_fire\:/) # Emoji 13.1
+      expect(PrettyText.cook("🫠")).to match(/\:melting_face\:/) # Emoji 14.0
+      expect(PrettyText.cook("🫨")).to match(/\:shaking_face\:/) # Emoji 15.0
+      expect(PrettyText.cook("🐦‍🔥")).to match(/\:phoenix\:/) # Emoji 15.1
+      expect(PrettyText.cook("🫩")).to match(/\:face_with_bags_under_eyes\:/) # Emoji 16.0
+      expect(PrettyText.cook("🫪")).to match(/\:distorted_face\:/) # Emoji 17.0
     end
 
     context "with subfolder" do
@@ -2601,6 +2634,21 @@ HTML
       <iframe src='https://bob.com/abc/def'></iframe>
       <iframe src='https://bob.com/abc/def/../ghi'></iframe>
       <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
+  it "can skip URL-encoded relative paths in allowlist iframes" do
+    SiteSetting.allowed_iframes = "https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def'></iframe>
+      <iframe src='https://bob.com/abc/def/%2e%2e/ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/%2E%2E/ghi'></iframe>
     HTML
 
     html = <<~HTML

@@ -565,8 +565,14 @@ RSpec.describe Chat::GuardianExtensions do
 
       context "when user is owner of the message" do
         context "when chatable is a category" do
-          it "allows to restore if owner can see category" do
+          it "allows owner to restore when deleted by owner" do
+            message.trash!(guardian.user)
             expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+          end
+
+          it "disallows owner to restore when deleted by staff" do
+            message.trash!(staff_guardian.user)
+            expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
           end
 
           context "when category is restricted" do
@@ -1001,6 +1007,16 @@ RSpec.describe Chat::GuardianExtensions do
           expect(other_guardian.can_manage_chat_message_pin?(dm_message)).to eq(false)
         end
       end
+    end
+  end
+
+  describe "#can_export_entity?" do
+    fab!(:moderator)
+
+    it "only allows admins to export chat_message" do
+      expect(Guardian.new(user).can_export_entity?("chat_message")).to eq(false)
+      expect(Guardian.new(moderator).can_export_entity?("chat_message")).to eq(false)
+      expect(staff_guardian.can_export_entity?("chat_message")).to eq(true)
     end
   end
 end

@@ -39,10 +39,9 @@ sv:
       llm_selector:
         none: "Ingen"
       features:
-        back: "Tillbaka"
         disabled: "(inaktiverad)"
         groups: "Grupper:"
-        no_persona: "Inte inställd"
+        no_agent: "Inte inställd"
         no_groups: "Ingen"
         edit: "Inställningar"
         expand_list:
@@ -91,8 +90,7 @@ sv:
         periods:
           last_day: "Senaste 24 timmarna"
           custom: "Anpassad..."
-      ai_persona:
-        back: "Tillbaka"
+      ai_agent:
         name: "Namn"
         edit: "Redigera"
         export: "Exportera"
@@ -114,7 +112,6 @@ sv:
           title: "Uppladdningar"
           uploading: "Laddar upp..."
       tools:
-        back: "Tillbaka"
         export: "Exportera"
         import: "Importera"
         name: "Namn"
@@ -123,13 +120,14 @@ sv:
         save: "Spara"
         remove_parameter: "Ta bort"
         parameter_required: "Krävs"
+        credential_not_set: "(inte inställd)"
         edit: "Redigera"
+        test: "Testa"
         delete: "Ta bort"
       secrets:
         short_title: "Kontouppgifter"
         name: "Namn"
         secret: "Värde"
-        back: "Tillbaka"
         save: "Spara"
         edit: "Redigera"
         delete: "Radera"
@@ -139,7 +137,6 @@ sv:
         provider: "Leverantör"
         save: "Spara"
         edit: "Redigera"
-        back: "Tillbaka"
         delete: Ta bort
         quotas:
           group: "Grupp"
@@ -179,7 +176,6 @@ sv:
         image_caption:
           save_caption: "Spara"
       embeddings:
-        back: "Tillbaka"
         save: "Spara"
         delete: "Ta bort"
         edit: "Redigera"
