@@ -9,8 +9,12 @@ module DiscourseBoosts
                :name,
                :avatar_template,
                :user_id,
+               :user_title,
+               :primary_group_name,
                :topic_id,
-               :topic_title
+               :topic_title,
+               :category_id,
+               :post_type
 
     def url
       object.url
@@ -34,6 +38,18 @@ module DiscourseBoosts
 
     def topic_title
       object.topic.title
+    end
+
+    def user_title
+      object&.user&.title
+    end
+
+    def primary_group_name
+      object&.user&.primary_group&.name
+    end
+
+    def category_id
+      object.topic.category_id
     end
   end
 end
