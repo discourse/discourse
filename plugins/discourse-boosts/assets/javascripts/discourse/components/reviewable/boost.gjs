@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import { i18n } from "discourse-i18n";
@@ -29,7 +29,7 @@ export default class ReviewableBoost extends Component {
     <div class="review-item__post">
       <div class="review-item__post-content-wrapper">
         <div class="review-item__post-content">
-          {{htmlSafe this.boostCooked}}
+          {{trustHTML this.boostCooked}}
           {{yield}}
         </div>
       </div>
