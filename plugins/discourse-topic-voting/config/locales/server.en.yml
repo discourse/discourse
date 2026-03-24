@@ -22,3 +22,5 @@ en:
         topic_votes_max: "Maximum number of topic votes"
         order_topic_votes: "Order topics by most votes"
         order_topic_votes_asc: "Order topics by fewest votes"
+        order_topic_votes_trending: "Order topics by trending votes"
+        order_topic_votes_trending_asc: "Order topics by least trending votes"
