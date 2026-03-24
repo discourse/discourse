@@ -94,10 +94,7 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get enabledForDisabled() {
-    return (
-      this.args.change.upcoming_change.status === "permanent" ||
-      this.savingEnabledFor
-    );
+    return this.savingEnabledFor;
   }
 
   get showDependentSettingsLink() {
@@ -326,13 +323,6 @@ export default class UpcomingChangeItem extends Component {
           </div>
         {{/if}}
 
-        {{#if (eq @change.upcoming_change.status "permanent")}}
-          <div class="upcoming-change__status-notice">
-            {{icon "triangle-exclamation"}}
-            {{i18n "admin.upcoming_changes.permanent_notice"}}
-          </div>
-        {{/if}}
-
         {{#if (eq @change.upcoming_change.status "stable")}}
           <div class="upcoming-change__status-notice">
             {{icon "triangle-exclamation"}}
@@ -353,13 +343,7 @@ export default class UpcomingChangeItem extends Component {
               (concat "--status-" @change.upcoming_change.status)
             }}
           >
-            {{icon
-              (if
-                (eq @change.upcoming_change.status "permanent")
-                "lock"
-                "far-circle-dot"
-              )
-            }}
+            {{icon "far-circle-dot"}}
             {{i18n
               (concat
                 "admin.upcoming_changes.statuses."
@@ -423,16 +407,12 @@ export default class UpcomingChangeItem extends Component {
 
         {{#if (eq this.bufferedEnabledFor "groups")}}
           <div class="upcoming-change__group-selection-wrapper">
-            {{#if (eq @change.upcoming_change.status "permanent")}}
-              {{i18n "admin.upcoming_changes.permanent_no_group_selection"}}
-            {{else}}
-              <GroupSelector
-                @groupFinder={{this.groupFinder}}
-                @groupNames={{this.bufferedGroups}}
-                @onChange={{this.groupsChanged}}
-                @placeholderKey="admin.upcoming_changes.select_groups"
-              />
-            {{/if}}
+            <GroupSelector
+              @groupFinder={{this.groupFinder}}
+              @groupNames={{this.bufferedGroups}}
+              @onChange={{this.groupsChanged}}
+              @placeholderKey="admin.upcoming_changes.select_groups"
+            />
 
             {{#if this.bufferedGroupsDirty}}
               <DButton

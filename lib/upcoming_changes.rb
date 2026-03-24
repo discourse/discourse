@@ -47,15 +47,21 @@ module UpcomingChanges
     end
   end
 
-  def self.image_data(change_setting_name)
+  def self.image_data(change_setting_name, include_file_path: false)
     width, height = nil, nil
 
-    File.open(File.join(Rails.public_path, image_path(change_setting_name)), "rb") do |file|
+    full_file_path = File.join(Rails.public_path, image_path(change_setting_name))
+
+    File.open(full_file_path, "rb") do |file|
       image_info = FastImage.new(file)
       width, height = image_info.size
     end
 
-    { url: "#{Discourse.base_url}/#{image_path(change_setting_name)}", width:, height: }
+    data = { url: "#{Discourse.base_url}/#{image_path(change_setting_name)}", width:, height: }
+
+    data[:file_path] = full_file_path if include_file_path
+
+    data
   end
 
   def self.change_metadata(change_setting_name)
@@ -264,5 +270,67 @@ module UpcomingChanges
       end
 
     { enabled_for:, setting_groups: }
+  end
+
+  def self.clear_caches!
+    Discourse.cache.delete(current_statuses_cache_key)
+    Discourse.cache.delete(permanent_upcoming_changes_cache_key)
+  end
+
+  def self.current_statuses_cache_key
+    "upcoming_changes_current_statuses::#{Discourse.git_version}"
+  end
+
+  # This also only changes once per deploy, so we can cache to the git version
+  # to save time in other places in the codebase when we have to figure out
+  # when an upcoming change moved to its current status.
+  #
+  # This cache is automatically cleared when UpcomingChanges::Action::TrackStatusChanges
+  # is called, since that adds new UpcomingChangeEvent records.
+  def self.current_statuses
+    Discourse
+      .cache
+      .fetch(current_statuses_cache_key) do
+        results = DB.query(<<-SQL, status_changed: UpcomingChangeEvent.event_types[:status_changed])
+          WITH latest_status_changes AS (
+            SELECT upcoming_change_name, MAX(created_at) as created_at
+            FROM upcoming_change_events
+            WHERE event_type = :status_changed
+            GROUP BY upcoming_change_name
+            ORDER BY MAX(created_at) DESC
+          )
+          SELECT latest_status_changes.upcoming_change_name, latest_status_changes.created_at, upcoming_change_events.event_data->>'new_value' as new_value
+          FROM latest_status_changes
+          INNER JOIN upcoming_change_events ON upcoming_change_events.upcoming_change_name = latest_status_changes.upcoming_change_name AND upcoming_change_events.created_at = latest_status_changes.created_at
+          ORDER BY latest_status_changes.created_at DESC
+        SQL
+
+        results.each_with_object({}) do |result, statuses|
+          statuses[result.upcoming_change_name] = {
+            status: result.new_value,
+            changed_at: result.created_at,
+          }
+        end
+      end
+  end
+
+  def self.permanent_upcoming_changes_cache_key
+    "upcoming_changes_permanent::#{Discourse.git_version}"
+  end
+
+  # These don't change except on deploy, so we can cache to the git version
+  # to save time in other places in the codebase when we have to figure out
+  # whether a change is permanent or not.
+  def self.permanent_upcoming_changes
+    Discourse
+      .cache
+      .fetch(permanent_upcoming_changes_cache_key) do
+        UpcomingChanges::List.call(
+          guardian: Discourse.system_user.guardian,
+          options: {
+            filter_statuses: [:permanent],
+          },
+        )&.upcoming_changes
+      end
   end
 end
