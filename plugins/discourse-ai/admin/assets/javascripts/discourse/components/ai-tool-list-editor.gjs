@@ -329,7 +329,7 @@ export default class AiToolListEditor extends Component {
                   <LinkTo
                     @route="adminPlugins.show.discourse-ai-tools.edit"
                     @model={{tool}}
-                    class="btn btn-text btn-small"
+                    class="btn btn-default btn-text btn-small"
                   >{{i18n "discourse_ai.tools.edit"}}</LinkTo>
                 </td>
               </tr>

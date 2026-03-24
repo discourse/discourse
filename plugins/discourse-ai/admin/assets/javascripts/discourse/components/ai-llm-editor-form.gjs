@@ -664,13 +664,13 @@ export default class AiLlmEditorForm extends Component {
       {{/if}}
 
       <form.Actions>
+        <form.Submit />
         <form.Button
           @action={{fn this.test data}}
           @disabled={{this.testRunning}}
           @label="discourse_ai.llms.tests.title"
+          class="btn-default"
         />
-
-        <form.Submit />
 
         {{#if (eq data.llm_quotas.length 0)}}
           <form.Button
@@ -679,7 +679,7 @@ export default class AiLlmEditorForm extends Component {
               (fn form.addItemToCollection "llm_quotas")
             }}
             @label="discourse_ai.llms.quotas.add"
-            class="ai-llm-editor__add-quota-btn"
+            class="btn-default ai-llm-editor__add-quota-btn"
           />
         {{/if}}
 
@@ -688,6 +688,7 @@ export default class AiLlmEditorForm extends Component {
             <form.Button
               @action={{this.delete}}
               @label="discourse_ai.llms.delete"
+              @icon="trash-can"
               class="btn-danger"
             />
           {{/unless}}
