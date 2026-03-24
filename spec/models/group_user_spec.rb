@@ -384,6 +384,9 @@ RSpec.describe GroupUser do
       expect(
         CategoryUser.where(user_id: user2.id, category_id: category1.id).first.notification_level,
       ).to eq(CategoryUser.notification_levels[:watching])
+      expect(
+        CategoryUser.where(user_id: user2.id, category_id: category2.id).first.notification_level,
+      ).to eq(CategoryUser.notification_levels[:tracking])
     end
 
     it "keeps the semantically higher notification level on conflict" do
