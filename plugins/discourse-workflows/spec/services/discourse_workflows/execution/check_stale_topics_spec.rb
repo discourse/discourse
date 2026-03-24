@@ -41,7 +41,7 @@ RSpec.describe DiscourseWorkflows::Execution::CheckStaleTopics do
         result
 
         trigger_node.reload
-        expect(trigger_node.static_data["triggered_topic_ids"]).to include(topic.id)
+        expect(trigger_node.triggered_topic_ids).to include(topic.id)
       end
     end
 

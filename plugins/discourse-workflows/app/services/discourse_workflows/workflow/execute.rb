@@ -11,7 +11,7 @@ module DiscourseWorkflows
 
     model :trigger_node
     model :workflow
-    step :execute_workflow
+    model :execution, :run_workflow
 
     private
 
@@ -23,11 +23,11 @@ module DiscourseWorkflows
       trigger_node.workflow
     end
 
-    def execute_workflow(trigger_node:, params:)
+    def run_workflow(trigger_node:, params:)
       trigger_output = params.trigger_data || {}
       executor = DiscourseWorkflows::Executor.new(trigger_node, trigger_output)
       executor.run
-      context[:execution] = executor.execution
+      executor.execution
     end
   end
 end

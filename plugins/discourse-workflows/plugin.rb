@@ -11,6 +11,7 @@ enabled_site_setting :discourse_workflows_enabled
 
 module ::DiscourseWorkflows
   PLUGIN_NAME = "discourse-workflows"
+  TEMPLATES_PATH = File.expand_path("config/templates", __dir__)
 end
 
 require_relative "lib/discourse_workflows/engine"

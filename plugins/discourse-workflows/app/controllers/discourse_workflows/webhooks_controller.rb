@@ -9,7 +9,9 @@ module DiscourseWorkflows
     skip_before_action :check_xhr
 
     def receive
-      DiscourseWorkflows::Webhook::Receive.call(params: webhook_params) do |result|
+      DiscourseWorkflows::Webhook::Receive.call(
+        service_params.deep_merge(params: webhook_params),
+      ) do |result|
         on_success { render json: { success: true } }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:webhook_nodes) do

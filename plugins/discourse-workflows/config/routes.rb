@@ -68,7 +68,8 @@ DiscourseWorkflows::Engine.routes.draw do
         :defaults => {
           format: :html,
         }
-    post "/:uuid" => "forms#submit", :constraints => { uuid: /[0-9a-f-]{36}/ }
+    post "/:uuid" => "forms#create", :constraints => { uuid: /[0-9a-f-]{36}/ }
+    put "/:uuid" => "forms#update", :constraints => { uuid: /[0-9a-f-]{36}/ }
   end
 end
 

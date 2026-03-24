@@ -76,14 +76,16 @@ export default class WorkflowsForm extends Component {
 
     try {
       const payload = { form_data: formData };
-      if (this.executionId) {
+      const isResume = !!this.executionId;
+
+      if (isResume) {
         payload.execution_id = this.executionId;
       }
 
       const result = await ajax(
         `/workflows/form/${this.args.model.uuid}.json`,
         {
-          type: "POST",
+          type: isResume ? "PUT" : "POST",
           data: payload,
         }
       );

@@ -6,6 +6,7 @@ module DiscourseWorkflows
     self.inheritance_column = nil
 
     include NodeTypeChecks
+    include TriggerTracking
 
     belongs_to :workflow, class_name: "DiscourseWorkflows::Workflow", foreign_key: "workflow_id"
 
@@ -34,7 +35,34 @@ module DiscourseWorkflows
     validate :validate_configuration
     validate :validate_type_version
 
+    def downstream_form?
+      outgoing_connections
+        .joins(:target_node)
+        .where(discourse_workflows_nodes: { type: "action:form" })
+        .exists?
+    end
+
+    def form_data_from(submitted_params)
+      Array(configuration["form_fields"]).each_with_object({}) do |field, data|
+        key = field["field_label"].to_s.parameterize(separator: "_")
+        data[key] = coerce_field_value(submitted_params[key], field["field_type"])
+      end
+    end
+
     private
+
+    def coerce_field_value(value, field_type)
+      case field_type
+      when "number"
+        if value.present?
+          value.to_s.include?(".") ? value.to_f : value.to_i
+        end
+      when "checkbox"
+        ActiveModel::Type::Boolean.new.cast(value)
+      else
+        value
+      end
+    end
 
     def validate_configuration
       return if type.blank?

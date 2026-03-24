@@ -20,7 +20,7 @@ module DiscourseWorkflows
       schedule_triggers.find_each do |node|
         cron = node.configuration&.dig("cron")
         next unless DiscourseWorkflows::CronParser.matches?(cron, now)
-        next if already_triggered_this_minute?(node, now)
+        next if node.triggered_this_minute?(now)
 
         Jobs.enqueue(
           Jobs::DiscourseWorkflows::ExecuteWorkflow,
@@ -28,15 +28,8 @@ module DiscourseWorkflows
           trigger_data: DiscourseWorkflows::Triggers::Schedule::V1.new.output,
         )
 
-        node.update!(static_data: node.static_data.merge("last_triggered_at" => now.iso8601))
+        node.mark_triggered!(now)
       end
-    end
-
-    def already_triggered_this_minute?(node, now)
-      last_triggered = node.static_data&.dig("last_triggered_at")
-      return false if last_triggered.blank?
-
-      Time.parse(last_triggered).beginning_of_minute == now.beginning_of_minute
     end
   end
 end

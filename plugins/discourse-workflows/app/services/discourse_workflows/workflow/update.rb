@@ -30,13 +30,17 @@ module DiscourseWorkflows
 
     transaction do
       step :update_workflow
-      step :populate_graph
+      only_if(:graph_data_provided) { step :populate_graph }
     end
 
     private
 
     def fetch_workflow(params:)
       DiscourseWorkflows::Workflow.find_by(id: params.workflow_id)
+    end
+
+    def graph_data_provided(params:)
+      !params.nodes.nil? || !params.connections.nil?
     end
 
     def update_workflow(workflow:, params:, guardian:)
@@ -46,8 +50,6 @@ module DiscourseWorkflows
     end
 
     def populate_graph(workflow:, params:)
-      return if params.nodes.nil? && params.connections.nil?
-
       Workflow::Action::PopulateGraph.call(
         workflow:,
         nodes_data: params.nodes || [],

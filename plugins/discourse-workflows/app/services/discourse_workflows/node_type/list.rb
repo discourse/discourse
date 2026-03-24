@@ -30,10 +30,9 @@ module DiscourseWorkflows
         }
 
         if available_versions.size > 1
-          schema[:configuration_schema_versions] = build_version_schemas(
-            identifier,
-            available_versions,
-          )
+          schema[:configuration_schema_versions] = available_versions.to_h do |version|
+            [version, Registry.find_node_type(identifier, version: version).configuration_schema]
+          end
         end
 
         schema[:output_schema] = latest_class.output_schema if latest_class.respond_to?(
@@ -43,13 +42,6 @@ module DiscourseWorkflows
         schema[:branching] = latest_class.branching? if latest_class.respond_to?(:branching?)
 
         schema
-      end
-    end
-
-    def build_version_schemas(identifier, versions)
-      versions.to_h do |version|
-        klass = Registry.find_node_type(identifier, version: version)
-        [version, klass.configuration_schema]
       end
     end
   end

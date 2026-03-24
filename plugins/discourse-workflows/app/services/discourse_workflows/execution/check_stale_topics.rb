@@ -18,7 +18,7 @@ module DiscourseWorkflows
       stale_trigger_nodes.find_each do |node|
         hours = (node.configuration&.dig("hours") || 24).to_i.clamp(1..)
         threshold = hours.hours.ago
-        triggered_ids = Set.new(node.static_data["triggered_topic_ids"] || [])
+        triggered_ids = Set.new(node.triggered_topic_ids)
 
         new_topic_ids = []
 
@@ -36,12 +36,7 @@ module DiscourseWorkflows
           new_topic_ids << topic.id
         end
 
-        next if new_topic_ids.blank?
-
-        node.reload
-        merged_ids =
-          Set.new(node.static_data["triggered_topic_ids"] || []).merge(new_topic_ids).to_a
-        node.update!(static_data: node.static_data.merge("triggered_topic_ids" => merged_ids))
+        node.track_triggered_topics!(new_topic_ids)
       end
     end
 
