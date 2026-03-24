@@ -444,6 +444,9 @@ RSpec.describe GroupUser do
       expect(TagUser.where(user_id: user2.id, tag_id: tag1.id).first.notification_level).to eq(
         TagUser.notification_levels[:watching],
       )
+      expect(TagUser.where(user_id: user2.id, tag_id: tag2.id).first.notification_level).to eq(
+        TagUser.notification_levels[:tracking],
+      )
     end
 
     it "keeps the semantically higher notification level on conflict" do
@@ -452,13 +455,21 @@ RSpec.describe GroupUser do
         tag_id: tag1.id,
         notification_level: TagUser.notification_levels[:watching],
       )
+      TagUser.create!(
+        user_id: user2.id,
+        tag_id: tag1.id,
+        notification_level: TagUser.notification_levels[:watching],
+      )
 
       group.tracking_tags = [tag1.name]
       group.save!
 
-      GroupUser.bulk_set_tag_notifications(group, [user1.id])
+      GroupUser.bulk_set_tag_notifications(group, [user1.id, user2.id])
 
       expect(TagUser.where(user_id: user1.id, tag_id: tag1.id).first.notification_level).to eq(
+        TagUser.notification_levels[:watching],
+      )
+      expect(TagUser.where(user_id: user2.id, tag_id: tag1.id).first.notification_level).to eq(
         TagUser.notification_levels[:watching],
       )
     end
