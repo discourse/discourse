@@ -66,11 +66,6 @@ module ::DiscourseAi
 end
 
 Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: DiscourseAi)
-Rails.autoloaders.main.inflector.inflect(
-  "oauth_discovery" => "OAuthDiscovery",
-  "oauth_flow" => "OAuthFlow",
-  "oauth_token_store" => "OAuthTokenStore",
-)
 
 require_relative "lib/engine"
 require_relative "lib/configuration/module"
