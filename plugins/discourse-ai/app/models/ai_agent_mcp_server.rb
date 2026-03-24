@@ -48,3 +48,20 @@ class AiAgentMcpServer < ActiveRecord::Base
     self[:selected_tool_names] = selected_tool_names.presence
   end
 end
+
+# == Schema Information
+#
+# Table name: ai_agent_mcp_servers
+#
+#  id                  :bigint           not null, primary key
+#  selected_tool_names :jsonb
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  ai_agent_id         :bigint           not null
+#  ai_mcp_server_id    :bigint           not null
+#
+# Indexes
+#
+#  index_ai_agent_mcp_servers_on_ai_agent_id_and_ai_mcp_server_id  (ai_agent_id,ai_mcp_server_id) UNIQUE
+#  index_ai_agent_mcp_servers_on_ai_mcp_server_id                  (ai_mcp_server_id)
+#
