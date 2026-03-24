@@ -158,6 +158,7 @@
     "pretender": "^3.4.7",
     "qunit": "^2.25.0",
     "qunit-dom": "^3.5.0",
+    "rolldown": "1.0.0-rc.11",
     "rollup-plugin-visualizer": "^5.12.0",
     "sinon": "^21.0.3",
     "source-map": "^0.7.6",

@@ -648,9 +648,12 @@ importers:
       qunit-dom:
         specifier: ^3.5.0
         version: 3.5.0
+      rolldown:
+        specifier: 1.0.0-rc.11
+        version: 1.0.0-rc.11
       rollup-plugin-visualizer:
         specifier: ^5.12.0
-        version: 5.14.0(rollup@4.59.0)
+        version: 5.14.0(rolldown@1.0.0-rc.11)(rollup@4.59.0)
       sinon:
         specifier: ^21.0.3
         version: 21.0.3
@@ -19102,13 +19105,14 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.0.0-rc.11
       '@rolldown/binding-win32-x64-msvc': 1.0.0-rc.11
 
-  rollup-plugin-visualizer@5.14.0(rollup@4.59.0):
+  rollup-plugin-visualizer@5.14.0(rolldown@1.0.0-rc.11)(rollup@4.59.0):
     dependencies:
       open: 8.4.2
       picomatch: 4.0.3
       source-map: 0.7.6
       yargs: 17.7.2
     optionalDependencies:
+      rolldown: 1.0.0-rc.11
       rollup: 4.59.0
 
   rollup@4.59.0:

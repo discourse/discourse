@@ -1,8 +1,8 @@
 import { ember } from "@embroider/vite";
 import { defineConfig } from "vite";
 import customProxy from "../custom-proxy";
-import writeResolverConfig from "./lib/embroider-vite-resolver-options";
-import maybeBabel from "./lib/vite-maybe-babel";
+import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
+import maybeBabel from "./lib/vite-maybe-babel.mjs";
 
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 

@@ -17,7 +17,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
 
     entrypoints = {}
 
-    vite_manifest = JSON.parse(File.read("#{dist_dir}/.vite/manifest.json"))
+    vite_manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
 
     vite_manifest.each do |key, value|
       next unless value["isEntry"]
@@ -34,7 +34,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.route_bundles
-    vite_manifest = JSON.parse(File.read("#{dist_dir}/.vite/manifest.json"))
+    vite_manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
 
     route_bundles = {}
 
@@ -49,7 +49,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.deep_preloads_for(asset)
-    vite_manifest = JSON.parse(File.read("#{dist_dir}/.vite/manifest.json"))
+    vite_manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
 
     preloads = []
     seen = Set.new
