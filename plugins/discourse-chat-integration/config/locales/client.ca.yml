@@ -155,12 +155,6 @@ ca:
             webhook_url:
               title: "URL del webhook"
               help: "L'URL proporcionat quan creeu una nova integració en la sala Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Testimoni de flux"
-              help: "El testimoni de flux proporcionat després de crear una font per a un flux al qual voleu enviar missatges."
         teams:
           param:
             name:

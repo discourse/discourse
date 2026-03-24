@@ -163,12 +163,6 @@ pl_PL:
             webhook_url:
               title: "URL webhooka"
               help: "Adres URL podany podczas tworzenia nowej integracji w pokoju Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Token Flow"
-              help: "Token Flow nadany w trakcie tworzenia źródła flowu, w którym zamierzasz wysyłać wiadomości."
         groupme:
           title: "GroupMe"
           param:

@@ -523,7 +523,6 @@ pl_PL:
       start_posting:
         title: "Rozpocznij publikowanie"
         description: "Daj ludziom temat do wspólnej rozmowy"
-        action: "Pomysły na przełamanie lodów"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
@@ -2016,7 +2015,7 @@ pl_PL:
         upcoming_changes: "Nadchodzące zmiany"
         calendar_subscriptions: "Kalendarz"
       calendar_subscriptions:
-        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić. "
+        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić."
         generate: "Generuj adresy URL subskrypcji"
         regenerate: "Wygeneruj ponownie adresy URL"
         regenerate_confirm: "Spowoduje to unieważnienie istniejących adresów URL subskrypcji kalendarza. Wszystkie aplikacje kalendarza korzystające ze starych adresów URL przestaną otrzymywać aktualizacje. Kontynuować?"

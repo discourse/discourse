@@ -108,8 +108,6 @@ et:
           param:
             name:
               title: "Nimi"
-        flowdock:
-          title: "Flowdock"
         teams:
           param:
             name:

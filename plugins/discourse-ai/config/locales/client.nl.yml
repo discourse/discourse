@@ -366,8 +366,6 @@ nl:
         user: Gebruiker
         create_user: Gebruiker maken
         default_llm: Standaard taalmodel
-        question_consolidator_llm: Taalmodel voor Vragenconsolidator
-        question_consolidator_llm_help: Het te gebruiken taalmodel voor de vragenconsolidator. Je kunt een minder krachtig model kiezen om kosten te besparen.
         system_prompt: Systeemprompt
         forced_tool_strategy: Gedwongen toolstrategie
         allow_chat_direct_messages: "Directe chatberichten toestaan"

@@ -503,8 +503,6 @@ de:
         user: Benutzer
         create_user: Benutzer erstellen
         default_llm: Standard-Sprachmodell
-        question_consolidator_llm: Sprachmodell für Fragenkonsolidierer
-        question_consolidator_llm_help: Das Sprachmodell, das für den Fragenkonsolidierer verwendet werden soll. Du kannst ein weniger leistungsfähiges Modell wählen, um Kosten zu sparen.
         system_prompt: System-Eingabeaufforderung
         forced_tool_strategy: Erzwungene Tool-Strategie
         allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"

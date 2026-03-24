@@ -47,8 +47,6 @@ pl_PL:
     chat_integration_rocketchat_webhook_url: "URL webhooka integracyjnego Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Długość skrótu wpisu na Rocket Chat"
     chat_integration_gitter_enabled: "Włącz integrację z Glitter"
-    chat_integration_flowdock_enabled: "Włącz integrację z Flowdock"
-    chat_integration_flowdock_excerpt_length: "Długość skrótu wpisu na Flowdock"
     chat_integration_groupme_enabled: "Włącz integrację z GroupMe"
     chat_integration_groupme_excerpt_length: "Długość fragmentu postu GroupMe"
     chat_integration_groupme_bot_ids: "*wymagane* Identyfikatory bota, rozdzielone przecinkiem, jeśli jest ich wiele"
@@ -225,8 +223,6 @@ pl_PL:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "wysłano"
       google:
         new_post: "Nowy post na %{site_title}"
         new_topic: "Nowy temat na %{site_title}"

@@ -163,12 +163,6 @@ uk:
             webhook_url:
               title: "URL-адреса веб-хука"
               help: "URL-адреса, яка створюється під час створення нової інтеграції з Gitter кімнатою."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flow Token"
-              help: "Token потоку надається після створення джерела для потоку, в який потрібно відправляти повідомлення."
         groupme:
           title: "GroupMe"
           param:

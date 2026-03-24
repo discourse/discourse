@@ -2777,6 +2777,8 @@ uk:
       exclude_tag_group: "Виключити теми з тегами зі певної групи тегів"
       activity_before: "Показати теми з останньою активністю до дати (YYYY-MM-DD або днів тому)"
       activity_after: "Показати теми з останньою активністю після дати (YYYY-MM-DD або днів тому)"
+      bookmarked_before: "Показувати теми, додані в закладки до дати (YYYY-MM-DD або днів тому)"
+      bookmarked_after: "Показати теми, додані в закладки після дати (YYYY-MM-DD або днів тому)"
       created_before: "Показати теми, створені до певної дати (YYYY-MM-DD або днів тому)"
       created_after: "Показати теми, створені після дати (YYYY-MM-DD або днів тому)"
       created_by: "Показати теми, створені певним користувачем або групою"
@@ -3236,9 +3238,35 @@ uk:
   new_version_mailer:
     title: "Нова версія Mailer"
     subject_template: "[%{email_prefix}] Нова версія Discourse, доступно оновлення"
+    text_body_template: |
+      Ура, нова версія [Discourse](https://www.discourse.org) доступна!
+
+      Ваша версія: %{installed_version}
+      Нова версія: **%{new_version}**
+
+      - Оновіть за допомогою нашого простого **[оновлення браузера одним кліком](%{base_url}/admin/update)**
+
+      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/%{new_version})
+
+      - Відвідайте [meta.discourse.org](https://meta.discourse.org) для новин, обговорень та підтримки Discourse
   new_version_mailer_with_notes:
     title: "Нова версія Mailer з примітками"
     subject_template: "[%{email_prefix}] доступне оновлення"
+    text_body_template: |
+      Ура, нова версія [Discourse](https://www.discourse.org) доступна!
+
+      Ваша версія: %{installed_version}
+      Нова версія: **%{new_version}**
+
+      - Оновіть систему за допомогою нашого простого **[оновлення браузера одним кліком](%{base_url}/admin/update)**
+
+      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/%{new_version})
+
+      - Відвідайте [meta.discourse.org](https://meta.discourse.org) для новин, обговорення та підтримки Discourse
+
+      ### Нотатки до випуску
+
+      %{notes}
   flag_reasons:
     off_topic: "Ваш допис було відмічено спам-прапорцем **Цей допис не по темі**: учасники спільноти вважають, що допис не дуже добре підходить до цієї дискусії (відповідно до її назви та першого повідомлення)."
     inappropriate: "Ваш допис було позначено як **невідповідний**: спільнота вважає його образливим, таким, що розпалює ненависть, або таким, що порушує [наші правила спільноти] (%{base_path}/guidelines)."

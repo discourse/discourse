@@ -163,12 +163,6 @@ zh_CN:
             webhook_url:
               title: "网络钩子 URL"
               help: "在 Gitter 房间中创建新集成时提供的 URL。"
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "流令牌"
-              help: "在为要向其发送消息的流创建源后提供的流令牌。"
         groupme:
           title: "GroupMe"
           param:

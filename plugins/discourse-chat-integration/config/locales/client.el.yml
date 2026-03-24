@@ -148,8 +148,6 @@ el:
               help: "Το όνομα ενός δωματίου Gitter π.χ. gitterHQ/services."
             webhook_url:
               title: "Webhook URL"
-        flowdock:
-          title: "Flowdock"
         groupme:
           title: "GroupMe"
         teams:

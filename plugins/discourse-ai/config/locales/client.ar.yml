@@ -517,8 +517,6 @@ ar:
         user: المستخدم
         create_user: إنشاء مستخدم
         default_llm: نموذج اللغة الافتراضي
-        question_consolidator_llm: نموذج اللغة لخاصية موحِّد الأسئلة
-        question_consolidator_llm_help: نموذج اللغة الذي سيُستخدم لتوحيد الأسئلة، يمكنك اختيار نموذج أقل قوة للتوفير في التكاليف.
         system_prompt: رسالة مطالبة النظام
         forced_tool_strategy: استراتيجية الأداة الإجبارية
         allow_chat_direct_messages: "السماح بالرسائل المباشرة في الدردشة"

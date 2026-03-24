@@ -148,8 +148,6 @@ sw:
               help: "Jina la chumba cha Gitter e.g. gitterHQ/huduma."
             webhook_url:
               title: "Anwani ya Webhook"
-        flowdock:
-          title: "Flowdock"
         teams:
           param:
             name:

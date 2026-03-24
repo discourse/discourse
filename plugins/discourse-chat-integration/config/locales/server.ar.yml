@@ -47,8 +47,6 @@ ar:
     chat_integration_rocketchat_webhook_url: "عنوان URL لخطاف الويب لتكامل الدردشة Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "طول المقتطف من منشور Rocket Chat"
     chat_integration_gitter_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Gitter"
-    chat_integration_flowdock_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Flowdock"
-    chat_integration_flowdock_excerpt_length: "طول المقتطف من منشور Flowdock"
     chat_integration_groupme_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Groupme"
     chat_integration_groupme_excerpt_length: "طول المقتطف من منشور Groupme"
     chat_integration_groupme_bot_ids: "*مطلوب* مُعرِّفات برامج الروبوت، مفصولة بالرمز \",\" إذا كانت عديدة"
@@ -225,8 +223,6 @@ ar:
           ~~~الاقتباس
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "تم النشر"
       google:
         new_post: "منشور جديد على %{site_title}"
         new_topic: "منشور جديد على %{site_title}"

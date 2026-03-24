@@ -439,8 +439,6 @@ he:
         user: משתמש
         create_user: יצירת משתמש
         default_llm: מודל שפה כברירת מחדל
-        question_consolidator_llm: מודל שפה למגבש השאלות
-        question_consolidator_llm_help: מודל השפה לשימוש עבור מגבש השאלות, אפשר לבחור במודל פחות חזק כדי לחסוך בעלויות.
         system_prompt: בקשת מערכת
         forced_tool_strategy: אסטרטגיית כלי כפוי
         allow_chat_direct_messages: "לאפשר הודעות ישירות בצ׳אט"

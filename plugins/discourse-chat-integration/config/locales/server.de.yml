@@ -47,8 +47,6 @@ de:
     chat_integration_rocketchat_webhook_url: "Die URL für den Webhook der „Rocket Chat“-Integration"
     chat_integration_rocketchat_excerpt_length: "Auszugslänge für „Rocket Chat“-Beiträge"
     chat_integration_gitter_enabled: "Aktiviere den Chat-Integration-Provider für Gitter"
-    chat_integration_flowdock_enabled: "Aktiviere den Chat-Integration-Provider für Flowdock"
-    chat_integration_flowdock_excerpt_length: "Auszugslänge für Flowdock-Beiträge"
     chat_integration_groupme_enabled: "Aktiviere den Chat-Integration-Provider für Groupme"
     chat_integration_groupme_excerpt_length: "Auszugslänge für Groupme-Beiträge"
     chat_integration_groupme_bot_ids: "*erforderlich* Bot-IDs getrennt durch „,“ (Komma), falls mehrere vorhanden sind"
@@ -225,8 +223,6 @@ de:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "hat geschrieben"
       google:
         new_post: "Neuer Beitrag auf %{site_title}"
         new_topic: "Neues Thema auf %{site_title}"

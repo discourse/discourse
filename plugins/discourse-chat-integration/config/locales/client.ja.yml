@@ -161,12 +161,6 @@ ja:
             webhook_url:
               title: "Webhook URL"
               help: "Gitter ルームで新しい統合を作成するときに提供される URL。"
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flow トークン"
-              help: "メッセージの送信先となる Flow のソースを作成した後に提供される Flow トークン。"
         groupme:
           title: "GroupMe"
           param:

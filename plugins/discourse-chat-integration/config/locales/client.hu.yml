@@ -163,12 +163,6 @@ hu:
             webhook_url:
               title: "Webhook webcíme"
               help: "Az URL, amelyet egy új integráció létrehozásakor kap egy Gitter szobában."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flow Token"
-              help: "A forrás létrehozása után megadott flow-token ahhoz az adatfolyamhoz, amelybe üzeneteket szeretne küldeni."
         groupme:
           title: "GroupMe"
           param:

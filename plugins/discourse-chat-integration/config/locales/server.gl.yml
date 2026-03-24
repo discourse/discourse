@@ -44,8 +44,6 @@ gl:
     chat_integration_rocketchat_webhook_url: "O URL do enganche (webhook) para integración de Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Lonxitude do resumo da publicación en Rocket Chat"
     chat_integration_gitter_enabled: "Activar o fornecedor de chat-integration para Gitter"
-    chat_integration_flowdock_enabled: "Activar o fornecedor de chat-integration para Flowdock"
-    chat_integration_flowdock_excerpt_length: "Lonxitude do resumo da publicación en Flowdock"
     chat_integration_groupme_enabled: "Activar o fornecedor de chat-integration para Groupme"
     chat_integration_groupme_excerpt_length: "Lonxitude do resumo da publicación en Groupme"
     chat_integration_teams_enabled: "Activar o fornecedor de chat-integration para Microsft Teams"
@@ -187,8 +185,6 @@ gl:
           ~~~ cita
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "publicado"
       google:
         new_post: "Nova publicación en %{site_title}"
         new_topic: "Novo tema en %{site_title}"

@@ -47,8 +47,6 @@ he:
     chat_integration_rocketchat_webhook_url: "כתובת התליית השילוב עם Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Rocket Chat"
     chat_integration_gitter_enabled: "הפעלת ספק שילוב הצ׳אט עם Gitter"
-    chat_integration_flowdock_enabled: "הפעלת ספק שילוב הצ׳אט עם Flowdock"
-    chat_integration_flowdock_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Flowdock"
     chat_integration_groupme_enabled: "הפעלת ספק שילוב הצ׳אט עם Groupme"
     chat_integration_groupme_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Groupme"
     chat_integration_teams_enabled: "הפעלת ספק שילוב הצ׳אט עם Microsoft Teams"
@@ -217,8 +215,6 @@ he:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "פורסם"
       google:
         new_post: "פוסט חדש באתר %{site_title}"
         new_topic: "נושא חדש באתר %{site_title}"

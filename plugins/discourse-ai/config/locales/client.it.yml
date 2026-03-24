@@ -366,8 +366,6 @@ it:
         user: Utente
         create_user: Crea utente
         default_llm: Modello linguistico predefinito
-        question_consolidator_llm: Modello linguistico per il consolidatore di domande
-        question_consolidator_llm_help: Il modello linguistico da utilizzare per il consolidatore di domande. È possibile scegliere un modello meno potente per risparmiare sui costi.
         system_prompt: Comando di sistema
         forced_tool_strategy: Strategia degli strumenti forzati
         allow_chat_direct_messages: "Consenti messaggi diretti in chat"

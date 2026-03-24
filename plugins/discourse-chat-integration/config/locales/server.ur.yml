@@ -44,8 +44,6 @@ ur:
     chat_integration_rocketchat_webhook_url: "راکٹ چیٹ انٹیگریشن ویب ھُوک کیلئے یو آر ایل"
     chat_integration_rocketchat_excerpt_length: "راکٹ چَیٹ پوسٹ کے اقتباس کا سائز"
     chat_integration_gitter_enabled: "گِیٹر کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
-    chat_integration_flowdock_enabled: "فلَوڈَوک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
-    chat_integration_flowdock_excerpt_length: "فلَوڈَوک پوسٹ کے اقتباس کا سائز"
     chat_integration_google_enabled: "'گوگل چیٹ' چیٹ انٹیگریشن فراہم کنندہ کو فعال کریں"
   chat_integration:
     all_categories: "(تمام زمرہ جات)"
@@ -163,5 +161,3 @@ ur:
           ~~~اقتباس
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "پوسٹ کیا"

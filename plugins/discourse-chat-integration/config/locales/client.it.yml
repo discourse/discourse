@@ -159,12 +159,6 @@ it:
             webhook_url:
               title: "URL webhook"
               help: "L'URL fornito quando si crea una nuova integrazione in una stanza Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Token di flusso"
-              help: "Il token di flusso fornito dopo aver creato un'origine per un flusso in cui inviare messaggi."
         groupme:
           title: "GroupMe"
           param:

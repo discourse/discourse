@@ -459,7 +459,6 @@ pt_BR:
       start_posting:
         title: "Comece a postar"
         description: "Dê às pessoas algo sobre o que conversar."
-        action: "Ideias para quebrar o gelo"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
         predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."

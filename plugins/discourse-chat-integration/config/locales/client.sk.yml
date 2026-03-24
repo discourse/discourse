@@ -159,12 +159,6 @@ sk:
             webhook_url:
               title: "Webová adresa URL"
               help: "Adresa URL poskytnutá pri vytváraní novej integrácie v miestnosti Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Token toku"
-              help: "Token toku poskytnutý po vytvorení zdroja toku, do ktorého chcete posielať správy."
         groupme:
           title: "GroupMe"
           param:

@@ -159,12 +159,6 @@ fi:
             webhook_url:
               title: "Webhookin URL-osoite"
               help: "URL-osoite, joka annetaan, kun luot uuden integraation Gitter-huoneessa."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Kulun tunnus"
-              help: "Kulun tunnus, joka annetaan sen jälkeen, kun olet luonut lähteen kululle, johon haluat lähettää viestejä."
         groupme:
           title: "GroupMe"
           param:

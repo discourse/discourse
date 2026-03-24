@@ -159,12 +159,6 @@ fr:
             webhook_url:
               title: "URL du webhook"
               help: "L'adresse URL fournie lorsque vous créez une nouvelle intégration dans un espace de discussion Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Jeton de flux"
-              help: "Le jeton de flux fourni après avoir créé une source pour un flux dans lequel vous souhaitez envoyer des messages."
         groupme:
           title: "GroupMe"
           param:

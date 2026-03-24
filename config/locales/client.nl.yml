@@ -423,7 +423,6 @@ nl:
       start_posting:
         title: "Begin met posten"
         description: "Geef mensen iets om samen over te praten"
-        action: "Ideeën voor ijsbrekers"
         back: "Terug"
         icebreakers:
           fun_facts:
