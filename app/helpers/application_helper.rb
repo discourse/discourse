@@ -708,27 +708,35 @@ module ApplicationHelper
   end
 
   def crawler_topic_container_schema(topic)
-    default = { itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting" }
-    attrs = DiscoursePluginRegistry.apply_modifier(:topic_crawler_container_schema, default, topic)
-    tag.attributes(**attrs)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_container_schema,
+        { itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting" },
+        topic,
+      ),
+    )
   end
 
   def crawler_topic_main_entity_schema(topic)
-    attrs = DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, {}, topic)
-    attrs.present? ? tag.attributes(**attrs) : nil
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, {}, topic),
+    ).presence
   end
 
   def crawler_post_schema(post, topic)
-    default =
-      (
-        if post.is_first_post?
-          {}
-        else
-          { itemprop: "comment", itemscope: true, itemtype: "http://schema.org/Comment" }
-        end
-      )
-    attrs = DiscoursePluginRegistry.apply_modifier(:topic_crawler_post_schema, default, post, topic)
-    attrs.present? ? tag.attributes(**attrs) : ""
+    default = {
+      itemprop: "comment",
+      itemscope: true,
+      itemtype: "http://schema.org/Comment",
+    } unless post.is_first_post?
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_post_schema,
+        default || {},
+        post,
+        topic,
+      ),
+    )
   end
 
   # If there is plugin HTML return that, otherwise yield to the template
