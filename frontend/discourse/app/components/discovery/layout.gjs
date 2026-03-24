@@ -1,3 +1,4 @@
+import BlockOutlet from "discourse/blocks/block-outlet";
 import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -34,59 +35,72 @@ const Layout = <template>
     </div>
   </div>
 
-  <PluginOutlet
-    @name="discovery-above"
-    @connectorTagName="div"
-    @outletArgs={{lazyHash
-      category=@model.category
-      tag=@model.tag
-      model=@model
-    }}
-  />
-
-  <div class={{concatClass "container list-container" @listClass}}>
-    <div class="row full-width">
-      <div id="header-list-area">
-        {{yield to="header"}}
-        <PluginOutlet
-          @name="header-list-container-bottom"
-          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-        />
-      </div>
-    </div>
-    <div class="row full-width">
+  <div class="discovery-layout">
+    <div class="discovery-layout__main">
 
       <PluginOutlet
-        @name="before-list-area"
-        @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+        @name="discovery-above"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash
+          category=@model.category
+          tag=@model.tag
+          model=@model
+        }}
       />
 
-      <div id="list-area">
-        <PluginOutlet
-          @name="discovery-list-area"
-          @outletArgs={{lazyHash
-            category=@model.category
-            tag=@model.tag
-            model=@model
-          }}
-          @defaultGlimmer={{true}}
-        >
+      <div class={{concatClass "container list-container" @listClass}}>
+        <div class="row full-width">
+          <div id="header-list-area">
+            {{yield to="header"}}
+            <PluginOutlet
+              @name="header-list-container-bottom"
+              @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+            />
+          </div>
+        </div>
+        <div class="row full-width">
+
           <PluginOutlet
-            @name="discovery-list-container-top"
-            @connectorTagName="span"
+            @name="before-list-area"
             @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
           />
-          {{yield to="list"}}
-        </PluginOutlet>
+
+          <div id="list-area">
+            <PluginOutlet
+              @name="discovery-list-area"
+              @outletArgs={{lazyHash
+                category=@model.category
+                tag=@model.tag
+                model=@model
+              }}
+              @defaultGlimmer={{true}}
+            >
+              <PluginOutlet
+                @name="discovery-list-container-top"
+                @connectorTagName="span"
+                @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+              />
+              {{yield to="list"}}
+            </PluginOutlet>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <PluginOutlet
-    @name="discovery-below"
-    @connectorTagName="div"
-    @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-  />
+    <div class="discovery-layout__sidebar">
+      <BlockOutlet
+        @name="sidebar-discovery"
+        @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+      />
+    </div>
+
+    <PluginOutlet
+      @name="discovery-below"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+    />
+
+  </div>
 </template>;
 
 export default Layout;
