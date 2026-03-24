@@ -929,20 +929,20 @@ class Group < ActiveRecord::Base
         if self.title.present?
           User.where(id: added_user_ids).where(title: [nil, ""]).update_all(title: self.title)
         end
+
+        recalculate_user_count
       end
-
-      recalculate_user_count
-    end
-
-    if added_user_ids.present? && self.grant_trust_level.present? && !self.grant_trust_level.zero?
-      Jobs.enqueue(
-        :bulk_grant_trust_level,
-        user_ids: added_user_ids,
-        trust_level: self.grant_trust_level,
-      )
     end
 
     if added_user_ids.present?
+      if self.grant_trust_level.present? && !self.grant_trust_level.zero?
+        Jobs.enqueue(
+          :bulk_grant_trust_level,
+          user_ids: added_user_ids,
+          trust_level: self.grant_trust_level,
+        )
+      end
+
       GroupUser.bulk_set_category_notifications(self, added_user_ids)
       GroupUser.bulk_set_tag_notifications(self, added_user_ids)
 
