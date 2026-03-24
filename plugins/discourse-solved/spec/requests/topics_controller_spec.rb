@@ -134,6 +134,38 @@ RSpec.describe TopicsController do
       expect(doc.css('[itemtype*="DiscussionForumPosting"]').size).to eq(1)
       expect(doc.css('[itemtype*="Question"]').size).to eq(0)
     end
+
+    it "does not emit QAPage schema when schema markup is set to never" do
+      SiteSetting.solved_add_schema_markup = "never"
+
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      expect(doc.css('[itemtype*="DiscussionForumPosting"]').size).to eq(1)
+      expect(doc.css('[itemtype*="QAPage"]').size).to eq(0)
+      expect(doc.css('[itemtype*="Question"]').size).to eq(0)
+    end
+
+    it "does not emit QAPage schema when set to 'answered only' without an accepted answer" do
+      SiteSetting.solved_add_schema_markup = "answered only"
+
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      expect(doc.css('[itemtype*="DiscussionForumPosting"]').size).to eq(1)
+      expect(doc.css('[itemtype*="QAPage"]').size).to eq(0)
+    end
+
+    it "emits QAPage schema when set to 'answered only' with an accepted answer" do
+      SiteSetting.solved_add_schema_markup = "answered only"
+      Fabricate(:solved_topic, topic: topic, answer_post: p2)
+
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      expect(doc.css('[itemtype*="QAPage"]').size).to eq(1)
+      expect(doc.css('[itemtype*="Question"]').size).to eq(1)
+    end
   end
 
   context "with solved enabled for topics with specific tags" do

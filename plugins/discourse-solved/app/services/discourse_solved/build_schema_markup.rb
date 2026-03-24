@@ -46,7 +46,7 @@ class DiscourseSolved::BuildSchemaMarkup
     topic
       .posts
       .where.not(id: excluded_ids)
-      .where(post_type: Post.types[:regular])
+      .where(post_type: Post.types[:regular], hidden: false)
       .order(:post_number)
       .to_a
   end

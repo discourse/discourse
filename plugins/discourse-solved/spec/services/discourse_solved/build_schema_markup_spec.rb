@@ -65,6 +65,18 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
           expect(html).not_to include('"acceptedAnswer"')
         end
       end
+
+      context "when the topic has hidden replies" do
+        fab!(:hidden_reply) { Fabricate(:post, topic: topic, hidden: true) }
+        fab!(:visible_reply) { Fabricate(:post, topic: topic) }
+
+        it "excludes hidden posts from suggested answers" do
+          html = result[:html]
+          expect(html).to include('"answerCount":1')
+          expect(html).to include(visible_reply.user.username)
+          expect(html).not_to include(hidden_reply.user.username)
+        end
+      end
     end
 
     context "when there is an accepted answer but no other answers" do
