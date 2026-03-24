@@ -15,6 +15,7 @@ module DiscourseTools
     options do
       attribute :tags, :array, default: []
       attribute :skip_validations, :boolean, default: false
+      attribute :skip_workflows, :boolean, default: false
     end
 
     policy :can_create
@@ -36,6 +37,7 @@ module DiscourseTools
       }
       args[:category] = params.category_id if params.category_id.present?
       args[:tags] = options.tags if options.tags.present?
+      args[:skip_workflows] = true if options.skip_workflows
 
       post_creator = PostCreator.new(guardian.user, **args)
       context[:post] = post_creator.create

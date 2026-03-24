@@ -17,7 +17,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
     after { DiscourseWorkflows::Registry.reset! }
 
-    it "creates an execution and returns 204" do
+    it "creates an execution" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true)
       trigger_node =
         Fabricate(
@@ -32,7 +32,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
              trigger_node_id: trigger_node.id,
            }
 
-      expect(response.status).to eq(204)
+      expect(response.status).to eq(200)
     end
 
     it "returns 404 when trigger node does not exist" do

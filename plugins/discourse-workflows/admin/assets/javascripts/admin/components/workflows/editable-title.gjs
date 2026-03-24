@@ -13,7 +13,7 @@ function syncInputWidth(input) {
 
 const autosize = modifier((element) => {
   syncInputWidth(element);
-  element.focus();
+  Promise.resolve().then(() => element.focus());
   const handler = () => syncInputWidth(element);
   element.addEventListener("input", handler);
   return () => element.removeEventListener("input", handler);

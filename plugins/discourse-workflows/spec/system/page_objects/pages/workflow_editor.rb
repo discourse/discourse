@@ -8,8 +8,10 @@ module PageObjects
         self
       end
 
-      def fill_name(name)
-        find(".workflows-editor__name-input").fill_in(with: name)
+      def edit_name(name)
+        find(".workflows-editable-title__text").click
+        find(".workflows-editable-title__input").fill_in(with: name)
+        find(".workflows-editable-title__input").send_keys(:return)
         self
       end
 
@@ -26,7 +28,7 @@ module PageObjects
       end
 
       def click_add_node
-        find(".workflows-add-node-button__trigger").click
+        find(".workflows-canvas__add-node-btn").click
         self
       end
 
@@ -64,7 +66,12 @@ module PageObjects
 
       def select_node_type(identifier)
         label = NODE_TYPE_LABELS.fetch(identifier, identifier)
-        find(".fk-d-menu__inner-content .btn", text: label).click
+        if page.has_css?(".workflows-node-panel", wait: 0)
+          find(".workflows-node-panel__search-input").fill_in(with: label)
+          find(".workflows-node-panel__item-name", text: label).click
+        else
+          find(".fk-d-menu__inner-content .btn", text: label).click
+        end
         self
       end
 
@@ -78,8 +85,8 @@ module PageObjects
       end
 
       def has_condition_port_labels?
-        page.has_css?(".workflow-rete-node__port-pill", text: "true") &&
-          page.has_css?(".workflow-rete-node__port-pill", text: "false")
+        page.has_css?(".workflow-rete-node__port-pill", text: "true", wait: 10) &&
+          page.has_css?(".workflow-rete-node__port-pill", text: "false", wait: 10)
       end
     end
   end

@@ -1123,6 +1123,8 @@ class Topic < ActiveRecord::Base
         if SiteSetting.experimental_topic_category_change_notification
           DB.after_commit { TopicTrackingState.publish_category_change(self, old_category) }
         end
+
+        DiscourseEvent.trigger(:topic_category_changed, self, old_category)
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")

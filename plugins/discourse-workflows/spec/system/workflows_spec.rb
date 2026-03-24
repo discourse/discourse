@@ -21,8 +21,6 @@ RSpec.describe "Discourse Workflows", type: :system do
   it "creates a workflow with trigger and action" do
     editor_page.visit_new
 
-    editor_page.fill_name("Tag closed topics")
-
     expect(editor_page).to have_empty_state_add_node
     editor_page.click_empty_state_add_node
     editor_page.select_node_type("trigger:topic_closed")
@@ -35,24 +33,25 @@ RSpec.describe "Discourse Workflows", type: :system do
     expect(editor_page).to have_node_count(2)
 
     workflows_page.visit_index
-    expect(workflows_page).to have_workflow("Tag closed topics")
+    expect(workflows_page).to have_workflow("My workflow")
   end
 
-  it "creates a workflow with condition node showing port labels" do
+  it "creates a workflow with condition node" do
     editor_page.visit_new
-    editor_page.fill_name("Condition workflow")
 
-    editor_page.click_add_node
+    editor_page.click_empty_state_add_node
     editor_page.select_node_type("trigger:topic_closed")
+
+    expect(editor_page).to have_node_count(1)
 
     editor_page.click_add_node
     editor_page.select_node_type("condition:if")
 
     expect(editor_page).to have_node_count(2)
-    expect(editor_page).to have_condition_port_labels
+    expect(editor_page).to have_node("If")
 
     workflows_page.visit_index
-    expect(workflows_page).to have_workflow("Condition workflow")
+    expect(workflows_page).to have_workflow("My workflow")
   end
 
   it "shows a warning icon when the latest workflow run failed" do

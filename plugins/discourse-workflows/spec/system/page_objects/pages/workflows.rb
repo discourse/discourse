@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def has_no_workflows?
-        page.has_css?(".workflows-index__empty")
+        page.has_css?(".workflows-empty-state")
       end
 
       def click_new_workflow
