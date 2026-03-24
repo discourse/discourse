@@ -10,8 +10,8 @@ class DiscourseSolved::BuildSchemaMarkup
 
   model :topic
   policy :accepted_answers_allowed
-  model :accepted_answer, optional: true
   policy :schema_markup_enabled
+  model :accepted_answer, optional: true
   model :suggested_answers, optional: true
   model :html
 
@@ -25,19 +25,12 @@ class DiscourseSolved::BuildSchemaMarkup
     guardian.allow_accepted_answers?(topic)
   end
 
-  def fetch_accepted_answer(topic:)
-    topic.solved&.answer_post
+  def schema_markup_enabled(topic:)
+    DiscourseSolved::SchemaUtils.schema_markup_enabled?(topic)
   end
 
-  def schema_markup_enabled(accepted_answer:)
-    case SiteSetting.solved_add_schema_markup
-    when "never"
-      false
-    when "answered only"
-      accepted_answer.present?
-    else
-      true
-    end
+  def fetch_accepted_answer(topic:)
+    topic.solved&.answer_post
   end
 
   def fetch_suggested_answers(topic:, accepted_answer:)

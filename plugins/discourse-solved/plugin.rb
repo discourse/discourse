@@ -77,33 +77,21 @@ after_initialize do
     { answer: { actions: %w[discourse_solved/answer#accept discourse_solved/answer#unaccept] } },
   )
 
-  schema_markup_enabled =
-    lambda do |topic|
-      return false unless Guardian.new.allow_accepted_answers?(topic)
-      case SiteSetting.solved_add_schema_markup
-      when "never"
-        false
-      when "answered only"
-        topic.solved&.answer_post_id.present?
-      else
-        true
-      end
-    end
-
   register_modifier(:topic_crawler_container_schema) do |schema, topic|
-    next schema unless schema_markup_enabled.call(topic)
+    next schema if !DiscourseSolved::SchemaUtils.schema_markup_enabled?(topic)
     { itemscope: true, itemtype: "https://schema.org/QAPage" }
   end
 
   register_modifier(:topic_crawler_main_entity_schema) do |schema, topic|
-    next schema unless schema_markup_enabled.call(topic)
+    next schema if !DiscourseSolved::SchemaUtils.schema_markup_enabled?(topic)
     { itemprop: "mainEntity", itemscope: true, itemtype: "https://schema.org/Question" }
   end
 
   register_modifier(:topic_crawler_post_schema) do |schema, post, topic|
-    next schema unless schema_markup_enabled.call(topic)
+    next schema if !DiscourseSolved::SchemaUtils.schema_markup_enabled?(topic)
     next {} if post.is_first_post?
     next { itemscope: true } if post.post_type == Post.types[:small_action]
+
     if topic.solved&.answer_post_id == post.id
       { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
     else
