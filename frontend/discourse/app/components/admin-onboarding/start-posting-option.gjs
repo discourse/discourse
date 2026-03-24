@@ -32,11 +32,13 @@ export default class StartPostingOption extends Component {
       <p>
         {{i18n this.body}}
       </p>
-      <DButton
-        @label={{this.actionLabel}}
-        @action={{this.onSelect}}
-        class="btn-default"
-      />
+      {{#unless this.hideAction}}
+        <DButton
+          @label={{this.actionLabel}}
+          @action={{this.onSelect}}
+          class="btn-default"
+        />
+      {{/unless}}
     </div>
   </template>
 }

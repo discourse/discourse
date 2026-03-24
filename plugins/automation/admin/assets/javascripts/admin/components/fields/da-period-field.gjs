@@ -3,8 +3,8 @@ import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 import BaseField from "./da-base-field";
@@ -20,7 +20,7 @@ export default class PeriodField extends BaseField {
 
     next(() => {
       if (!this.args.field.metadata.value) {
-        this.args.field.metadata.value = new TrackedObject({
+        this.args.field.metadata.value = trackedObject({
           interval: 1,
           frequency: null,
         });

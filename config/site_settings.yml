@@ -70,6 +70,7 @@
 # type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
 # type: tag_group_list        - A list of tag group names.
 # type: file_size_restriction - A file size restriction in bytes.
+# type: icon                  - A single fontawesome icon name from the Discourse icon set (e.g. heart, star)
 #
 required:
   title:
@@ -2808,6 +2809,9 @@ security:
     refresh: true
     hidden: true
     area: "group_permissions"
+  cache_control_bfcache_compatibility:
+    default: false
+    hidden: true
 
 onebox:
   post_onebox_maxlength:

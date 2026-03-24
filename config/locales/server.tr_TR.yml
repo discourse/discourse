@@ -3032,30 +3032,30 @@ tr_TR:
     title: "Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] Yeni Discourse sürümü, güncelleme mevcut"
     text_body_template: |
-      Yaşasın, [Discourse]'un (https://www.discourse.org) yeni bir sürümü çıktı!
+      Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
-      Sizin sürümünüz: %{installed_version}
+      Mevcut sürümünüz: %{installed_version}
       Yeni sürüm: **%{new_version}**
 
-      - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** kullanarak güncelleyin
+      - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarından] (https://meta.discourse.org/tag/release-notes) yeniliklere bakın veya [ham GitHub değişiklik günlüğünü](https://github.com/discourse/discourse/commits/main) görüntüleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
 
-      - Discourse ile ilgili haberler, tartışmalar ve Discourse'a destek için [meta.discourse.org] (https://meta.discourse.org) adresini ziyaret edin
+      - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
   new_version_mailer_with_notes:
     title: "Notlarla Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] güncelleme mevcut"
     text_body_template: |
-      Yaşasın, [Discourse]'un (https://www.discourse.org) yeni sürümü çıktı!
+      Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
-      Sizin sürümünüz: %{installed_version}
+      Mevcut sürümünüz: %{installed_version}
       Yeni sürüm: **%{new_version}**
 
-      - Kolay **[tek tıklamayla tarayıcı güncellemesini](%{base_url}/admin/update)** kullanarak güncelleyin
+      - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarından] (https://meta.discourse.org/tag/release-notes) yenilikleri görün veya [ham GitHub değişiklik günlüğünü](https://github.com/discourse/discourse/commits/main) görüntüleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
 
-      - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org] (https://meta.discourse.org) adresini ziyaret edin
+      - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
 
       ### Sürüm notları
 

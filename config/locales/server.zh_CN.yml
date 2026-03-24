@@ -1070,6 +1070,8 @@ zh_CN:
       weekly: "每周"
       every_month: "每月"
       every_six_months: "每六个月"
+  calendar_subscriptions:
+    application_name: "日历订阅"
   user_api_key:
     title: '授权“%{application_name}”'
     authorize: "授权"
@@ -2938,32 +2940,32 @@ zh_CN:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
     text_body_template: |
-      太好了，新版本的 [Discourse](https://www.discourse.org) 现已发布！
+      太好了！[Discourse](https://www.discourse.org) 新版本已发布！
 
-      您的版本：%{installed_version}
+      您的版本： %{installed_version}
       新版本：**%{new_version}**
 
-      - 使用我们的**[一键式浏览器更新](%{base_url}/admin/update)**进行更新
+      - 使用我们便捷的 **一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化，或查看[原始 GitHub 更改日志](https://github.com/discourse/discourse/commits/main)
+      - 查看[发行说明](https://releases.discourse.org/changelog/%{new_version})了解新增功能
 
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 了解 Discourse 的新闻、讨论和支持。
+      - 访问[meta.discourse.org](https://meta.discourse.org)获取Discourse的新闻、讨论和支持
   new_version_mailer_with_notes:
     title: "带版本说明的新版本邮件"
     subject_template: "[%{email_prefix}] 有可用更新"
     text_body_template: |
-      太好了，新版本的 [Discourse](https://www.discourse.org) 现已发布！
+      太好了！[Discourse](https://www.discourse.org) 新版本上线啦！
 
-      您的版本：%{installed_version}
+      您的版本： %{installed_version}
       新版本：**%{new_version}**
 
-      - 使用我们简单的**[一键式浏览器更新](%{base_url}/admin/update)**进行更新
+      - 使用我们便捷的 **[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化，或查看[原始 GitHub 更改日志](https://github.com/discourse/discourse/commits/main)
+      - 查看[发行说明](https://releases.discourse.org/changelog/%{new_version})中的新增功能
 
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 了解 Discourse 的新闻、讨论和支持
+      - 访问[meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
 
-      ### 版本说明
+      ### 发行说明
 
       %{notes}
   flag_reasons:

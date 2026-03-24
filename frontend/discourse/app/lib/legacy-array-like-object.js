@@ -20,8 +20,9 @@
  */
 
 import EmberObject from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import deprecated from "discourse/lib/deprecated";
+import { isTrackedArray } from "discourse/lib/tracked-tools";
 
 const EMBER_OBJECT_PROPERTIES = new Set([
   "constructor",
@@ -152,8 +153,7 @@ export default class LegacyArrayLikeObject extends EmberObject {
       );
     }
 
-    this.#content =
-      content instanceof TrackedArray ? content : new TrackedArray(content);
+    this.#content = isTrackedArray(content) ? content : trackedArray(content);
 
     return createProxy(this, this.#content);
   }

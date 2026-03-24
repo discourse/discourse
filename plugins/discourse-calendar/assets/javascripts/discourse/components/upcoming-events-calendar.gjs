@@ -54,6 +54,7 @@ export default class UpcomingEventsCalendar extends Component {
     const events = await this.discoursePostEventService.fetchEvents({
       after: info.startStr,
       before: info.endStr,
+      include_ongoing: true,
       attending_user: this.args.mine ? this.currentUser?.username : null,
     });
 

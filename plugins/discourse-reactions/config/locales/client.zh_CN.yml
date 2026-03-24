@@ -15,12 +15,19 @@ zh_CN:
       reactions_title: "回应"
       state_panel:
         more_users: "还有 %{count} 个…"
+        show_users: "显示更多用户"
+        hide_users: "显示较少用户"
+        reaction_group:
+          other: "%{reaction}: %{count} 名用户"
       reaction:
         forbidden: "该回应是很久以前创建的。它不能再被修改或移除。"
       picker:
         react_with: "使用以下方式回应此帖子：%{reaction}"
         cant_remove_reaction: "您无法再移除您自己的回应了"
         remove_reaction: "删除此 %{reaction} 回应"
+      counter:
+        aria_label:
+          other: "%{count} 个反应"
       main_reaction:
         add: "点赞此帖子"
         remove: "移除此赞"

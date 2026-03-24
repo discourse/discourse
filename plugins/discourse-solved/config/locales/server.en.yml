@@ -20,7 +20,7 @@ en:
         label: "Display an empty checkbox next to unsolved topics in the topic list"
       solved_topics_auto_close_duration:
         label: "Auto close solved topics"
-        description: "Automatically close topic after this duration once marked as solved. Set to 0 to disable."
+        description: "Automatically close solved topics after this duration from the last reply. Set to 0 to disable."
 
   site_settings:
     solved_enabled: "Enable solved plugin, allow users to select solutions for topics"

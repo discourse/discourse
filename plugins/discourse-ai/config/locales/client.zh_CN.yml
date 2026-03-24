@@ -235,6 +235,7 @@ zh_CN:
       features:
         short_title: "功能"
         description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的 agent 和 LLM，并按群组控制访问权限。"
+        back: "返回 AI 功能"
         settings_save_error: "某些设置无法保存。"
         disabled: "（已禁用）"
         agent:
@@ -309,6 +310,8 @@ zh_CN:
             post_criteria: "帖子条件"
             agents: "Agents"
         ai_helper:
+          edit: "编辑 AI 助手设置"
+          name: "AI 助手"
           description: "协助用户进行社区互动，例如创建话题、撰写帖子和阅读内容"
           proofread: 审校文本
           title_suggestions: "建议标题"
@@ -486,6 +489,7 @@ zh_CN:
           all: "应用于所有回复"
           replies:
             other: "应用于前 %{count} 条回复"
+        back: "返回 agent"
         name: "名称"
         edit: "编辑"
         export: "导出"
@@ -622,6 +626,7 @@ zh_CN:
           uploading: "正在上传…"
           remove: "移除上传"
       tools:
+        back: "返回工具"
         short_title: "工具"
         export: "导出"
         import: "导入"
@@ -680,6 +685,7 @@ zh_CN:
         no_secrets: "暂无凭据"
         new_title: "新建凭据"
         edit_title: "编辑凭据"
+        back: "返回凭据"
         save: "保存"
         edit: "编辑"
         delete: "删除"
@@ -713,6 +719,7 @@ zh_CN:
         save: "保存"
         edit: "编辑"
         saved: "LLM 模型已保存"
+        back: "返回 LLM"
         confirm_delete: 确定要删除此模型吗？
         delete: 删除
         quotas:
@@ -909,6 +916,7 @@ zh_CN:
         short_title: "嵌入向量"
         description: "嵌入向量是捕捉意义和关系的数据的数值表示，使 Discourse AI 功能（如相关主题和 AI 搜索）能够理解和连接内容。"
         new: "新建嵌入向量"
+        back: "返回嵌入"
         save: "保存"
         saved: "嵌入向量配置已保存"
         delete: "删除"
