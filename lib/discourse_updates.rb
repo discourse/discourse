@@ -266,7 +266,11 @@ module DiscourseUpdates
         )
       return nil if entries.blank?
 
-      last_seen = entries.max_by { |item| item.with_indifferent_access[:created_at] }
+      last_seen =
+        entries.max_by do |item|
+          val = item.with_indifferent_access[:created_at]
+          val.is_a?(String) ? Time.zone.parse(val).to_i : val.to_i
+        end
       Discourse.redis.set(
         new_features_last_seen_key(user_id),
         last_seen.with_indifferent_access[:created_at],
