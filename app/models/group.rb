@@ -820,8 +820,7 @@ class Group < ActiveRecord::Base
   def add(user, notify: false, automatic: false)
     return false if user.nil?
     added_ids = GroupManager.new(self).add([user.id], automatic:)
-    return self if added_ids.empty?
-    send_membership_notification(user) if notify
+    send_membership_notification(user) if notify && !added_ids.empty?
 
     self
   end
