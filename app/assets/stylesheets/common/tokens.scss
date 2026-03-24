@@ -1,23 +1,29 @@
 :root {
-  --dt-text-default: light-dark(var(--neutral-1100), var(--dark-neutral-1000));
-  --dt-text-subtle: light-dark(var(--neutral-800), var(--dark-neutral-800));
-  --dt-text-subtlest: light-dark(var(--neutral-700), var(--dark-neutral-700));
-  --dt-text-accent: var(--lime-800);
-  --dt-text-accent-bolder: var(--lime-900);
-  --dt-text-inverse: var(--neutral-100);
-  --dt-border-input: var(--primary-300);
-  --dt-border-default: var(--primary-200);
-  --dt-border-accent: var(--lime-600);
-  --dt-background-accent-subtlest: var(--lime-100);
-  --dt-background-accent-subtler: var(--lime-200);
-  --dt-background-accent-subtle: var(--lime-400);
-  --dt-background-accent-bolder: var(--lime-700);
-  --dt-border-width: 1px;
-  --dt-radius-xsmall: 2px;
-  --dt-radius-small: 4px;
-  --dt-radius-medium: 6px;
-  --dt-radius-large: 8px;
-  --dt-radius-xlarge: 12px;
-  --dt-radius-xxlarge: 16px;
-  --dt-radius-full: 9999px;
+  --token-text-default: light-dark(
+    var(--neutral-1100),
+    var(--dark-neutral-1000)
+  );
+  --token-text-subtle: light-dark(var(--neutral-800), var(--dark-neutral-800));
+  --token-text-subtlest: light-dark(
+    var(--neutral-700),
+    var(--dark-neutral-700)
+  );
+  --token-text-accent: var(--lime-800);
+  --token-text-accent-bolder: var(--lime-900);
+  --token-text-inverse: var(--neutral-100);
+  --token-border-input: var(--primary-300);
+  --token-border-default: var(--primary-200);
+  --token-border-accent: var(--lime-600);
+  --token-background-accent-subtlest: var(--lime-100);
+  --token-background-accent-subtler: var(--lime-200);
+  --token-background-accent-subtle: var(--lime-400);
+  --token-background-accent-bolder: var(--lime-700);
+  --token-border-width: 1px;
+  --token-radius-xsmall: 2px;
+  --token-radius-small: 4px;
+  --token-radius-medium: 6px;
+  --token-radius-large: 8px;
+  --token-radius-xlarge: 12px;
+  --token-radius-xxlarge: 16px;
+  --token-radius-full: 9999px;
 }
