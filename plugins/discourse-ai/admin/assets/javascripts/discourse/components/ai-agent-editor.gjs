@@ -1025,11 +1025,12 @@ export default class AgentEditor extends Component {
             <form.Button
               @label="discourse_ai.ai_agent.export"
               @action={{this.exportAgent}}
-              class="ai-agent-editor__export"
+              class="btn-default ai-agent-editor__export"
             />
             <form.Button
               @action={{this.delete}}
               @label="discourse_ai.ai_agent.delete"
+              @icon="trash-can"
               class="btn-danger"
             />
           {{/unless}}
