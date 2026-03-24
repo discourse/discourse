@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { array, concat, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
@@ -87,27 +87,33 @@ export default class LatestTopicListItem extends Component {
         <div class="bottom-row">
           <PluginOutlet
             @name="latest-topic-list-item-main-link-bottom-row"
+            @aliases={{array
+              (hash
+                name="below-latest-topic-list-item-bottom-row"
+                position="after"
+                deprecated=true
+                since="2026.3.0"
+              )
+            }}
             @outletArgs={{lazyHash topic=@topic}}
           >
             {{categoryLink @topic.category~}}
             {{~discourseTags @topic mode="list"}}
           </PluginOutlet>
-          <PluginOutlet
-            @name="below-latest-topic-list-item-bottom-row"
-            @connectorTagName="span"
-            @outletArgs={{lazyHash topic=@topic}}
-          />
         </div>
       </div>
 
       <div class="topic-stats">
         <PluginOutlet
-          @name="above-latest-topic-list-item-post-count"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash topic=@topic}}
-        />
-        <PluginOutlet
           @name="latest-topic-list-item-topic-stats"
+          @aliases={{array
+            (hash
+              name="above-latest-topic-list-item-post-count"
+              position="before"
+              deprecated=true
+              since="2026.3.0"
+            )
+          }}
           @outletArgs={{lazyHash topic=@topic}}
         >
           <ItemRepliesCell @topic={{@topic}} @tagName="div" />

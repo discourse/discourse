@@ -367,7 +367,9 @@ export default class PluginOutlet extends Component {
       if (alias.position) {
         continue;
       }
-      const aliasConnectors = this.#renderedConnectorsFor(alias.name);
+      const aliasConnectors = this.#renderedConnectorsFor(alias.name, {
+        skipDebug: true,
+      });
       if (aliasConnectors.length > 0) {
         if (alias.deprecated) {
           this.#emitAliasDeprecation(alias);

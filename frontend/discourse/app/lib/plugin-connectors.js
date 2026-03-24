@@ -216,7 +216,7 @@ export function connectorsFor(outletName, outletArgs, options) {
   if (!_connectorCache) {
     buildConnectorCache();
   }
-  if (debugOutletCallback) {
+  if (debugOutletCallback && !options?.skipDebug) {
     return debugOutletCallback(outletName, _connectorCache[outletName], {
       outletArgs,
       ...options,
