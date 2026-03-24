@@ -789,7 +789,7 @@ de:
       view_all: "Alle anzeigen"
       grouped_by_topic: "Gruppiert nach Thema"
       none: "Es sind keine Elemente zur Überprüfung vorhanden."
-      view_pending: "zeige verbleibende"
+      view_pending: "zeige Ausstehende"
       topic_has_pending:
         one: "Dieses Thema hat <b>%{count}</b> Beitrag, der auf Genehmigung wartet."
         other: "Dieses Thema hat <b>%{count}</b> Beiträge, die auf Genehmigung warten."
@@ -1028,8 +1028,8 @@ de:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
         pending_posts:
-          one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
-          other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
+          one: "Du hast <strong>%{count}</strong> ausstehenden Beitrag."
+          other: "Du hast <strong>%{count}</strong> ausstehende Beiträge."
         ok: "OK"
       example_username: "Benutzername"
       reject_reason:
