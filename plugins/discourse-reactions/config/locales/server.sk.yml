@@ -13,8 +13,6 @@ sk:
     discourse_reactions_desaturated_reaction_panel: "Znižuje vizuálny šum reakcií tým, že ich zobrazuje desaturované až do nabehnutia."
     discourse_reactions_excluded_from_like: "Reakcie, ktoré sa nepočítajú ako lajk. Všetky reakcie, ktoré nie sú uvedené v tomto zozname, sa budú počítať ako \"páči sa mi to\" na účely odznakov, hlásení a iné účely."
     discourse_reactions_like_sync_enabled: "Ak je táto možnosť zapnutá, budú vytvorené zodpovedajúce záznamy o historických reakciách, okrem reakcií definovaných v poli `discourse_reactions_excluded_from_like`. Táto synchronizácia bude prebiehať pravidelne na pozadí a tiež pri zmene `discourse_reactions_excluded_from_like`."
-    errors:
-      invalid_excluded_emoji: "Nemôžete vylúčiť emotikony, ktoré nie sú v \"Discourse reakciách povolených reakcií\", a nemôžete vylúčiť emotikony používané pre \" reakcie Discourse pre podobné\"."
   badges:
     first_reaction:
       name: Prvá reakcia

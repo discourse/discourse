@@ -553,8 +553,6 @@ pl_PL:
         create_user_help: Opcjonalnie możesz przypisać użytkownika do tego agenta. Jeśli to zrobisz, sztuczna inteligencja użyje tego użytkownika do odpowiedzi na żądania.
         default_llm: Domyślny model językowy
         default_llm_help: Domyślny model językowy używany dla tego agenta. Wymagane, jeśli chcesz wspomnieć o agencie w postach publicznych.
-        question_consolidator_llm: Model językowy dla konsolidatora pytań
-        question_consolidator_llm_help: Model językowy, który należy zastosować w konsolidatorze pytań. Aby obniżyć koszty, można wybrać mniej wydajny model.
         system_prompt: Prompt systemowy
         forced_tool_strategy: Strategia wymuszonego narzędzia
         allow_chat_direct_messages: "Zezwalaj na bezpośrednie wiadomości czatu"

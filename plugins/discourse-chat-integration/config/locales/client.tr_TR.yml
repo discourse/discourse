@@ -163,12 +163,6 @@ tr_TR:
             webhook_url:
               title: "Web kancası URL'si"
               help: "Bir Gitter odasında yeni bir entegrasyon oluşturduğunuzda sağlanan URL."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Akış Token'ı"
-              help: "Mesaj göndermek istediğiniz bir akış için bir kaynak oluşturduktan sonra sağlanan akış token'ı."
         groupme:
           title: "GroupMe"
           param:

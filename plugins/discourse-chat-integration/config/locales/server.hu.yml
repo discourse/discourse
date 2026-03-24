@@ -47,8 +47,6 @@ hu:
     chat_integration_rocketchat_webhook_url: "A Rocket Chat integrációs webhook URL címe"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat bejegyzésrészlet hossza"
     chat_integration_gitter_enabled: "Gitter chatintegrációs szolgáltató engedélyezése"
-    chat_integration_flowdock_enabled: "Flowdock chatintegrációs szolgáltató engedélyezése"
-    chat_integration_flowdock_excerpt_length: "Flowdock bejegyzésrészlet hossza"
     chat_integration_groupme_enabled: "Groupme chatintegrációs szolgáltató engedélyezése"
     chat_integration_groupme_excerpt_length: "Groupme bejegyzésrészlet hossza"
     chat_integration_groupme_bot_ids: "*kötelező* Botazonosítók, ',' karakterrel elválasztva, ha több van"
@@ -225,8 +223,6 @@ hu:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "közzétéve"
       google:
         new_post: "Új bejegyzés a(z) %{site_title} oldalon"
         new_topic: "Új téma a(z) %{site_title} oldalon"

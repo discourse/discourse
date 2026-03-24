@@ -459,7 +459,6 @@ hu:
       start_posting:
         title: "Kezdj el posztolni!"
         description: "Adj témát a közös beszélgetéshez!"
-        action: "Jégtörő témaötlet"
         choose_option: "Hogyan szeretnél kezdeni?"
         predefined_topics: "Jégtörő sablonok"
         predefined_topics_subtitle: "Adj témát az új tagoknak a beszélgetéshez: válassz egy sablont, szerkeszd meg, és alakítsd a sajátodra!"

@@ -510,6 +510,7 @@ uk:
             description: "Контролює, чи буде повідомлення переглянуто, приховано, видалено або віднесено до спаму."
       tool_summary:
         read_artifact: "Читати артефакти"
+        search_uploaded_documents: "Пошук завантажених документів"
         update_artifact: "Оновлення веб-артефакту"
         create_artifact: "Створити веб-артефакт"
         web_browser: "Перегляд веб-сторінок"
@@ -552,6 +553,7 @@ uk:
         researcher_dry_run: "Підготовка дослідження"
       tool_help:
         read_artifact: "Читати веб-артефакти за допомогою ШІ Бота"
+        search_uploaded_documents: "Пошук документів, завантажених до цього агента"
         update_artifact: "Оновити вебартефакт за допомогою ШІ Бота"
         create_artifact: "Створіть артефакт за допомогою ШІ Бота"
         web_browser: "Переглядайте веб-сторінки за допомогою AI Bot"
@@ -593,6 +595,11 @@ uk:
         researcher: "Дослідження інформації форуму за допомогою AI Bot"
       tool_description:
         read_artifact: "Зчитайте веб-артефакт за допомогою AI Bot"
+        search_uploaded_documents:
+          one: "Знайдено %{count} завантаженого уривку документа для '%{query}'"
+          few: "Знайдено %{count} завантажені уривки документів для '%{query}'"
+          many: "Знайдено %{count} завантажених уривків документів для '%{query}'"
+          other: "Знайдено %{count} завантажених уривків документів для '%{query}'"
         update_artifact: "Оновлено артефакт за допомогою ШІ Бота"
         create_artifact: "Створено веб-сайт: %{name} - %{specification}"
         web_browser: "Читання <a href='%{url}'>%{url}</a>"

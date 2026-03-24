@@ -45,8 +45,6 @@ sv:
     chat_integration_rocketchat_webhook_url: "URL för Rocket Chats integrerings-webhook"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat-inläggsutdragets längd"
     chat_integration_gitter_enabled: "Aktivera chattintegreringsleverantör för Gitter"
-    chat_integration_flowdock_enabled: "Aktivera chattintegreringsleverantör för Flowdock"
-    chat_integration_flowdock_excerpt_length: "Flowdock-inläggsutdragets längd"
     chat_integration_groupme_enabled: "Aktivera chattintegreringsleverantör för Groupme"
     chat_integration_groupme_excerpt_length: "Groupme-inläggsutdragets längd"
     chat_integration_teams_enabled: "Aktivera chattintegreringsleverantören för Microsoft Teams"
@@ -207,8 +205,6 @@ sv:
           ~~~citat
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "publicerade"
       google:
         new_post: "Nytt inlägg på %{site_title}"
         new_topic: "Nytt ämne på %{site_title}"

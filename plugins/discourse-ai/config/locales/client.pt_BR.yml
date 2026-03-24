@@ -485,8 +485,6 @@ pt_BR:
         user: Usuário(a)
         create_user: Criar usuário(a)
         default_llm: Modelo de linguagem padrão
-        question_consolidator_llm: Modelo de linguagem para consolidador de pergunta
-        question_consolidator_llm_help: O modelo de linguagem a ser usado para o consolidador de pergunta. Para economizar, você pode escolher um modelo menos robusto.
         system_prompt: Prompt do sistema
         forced_tool_strategy: Estratégia de ferramenta forçada
         allow_chat_direct_messages: "Permitir mensagens diretas do chat"

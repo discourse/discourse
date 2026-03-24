@@ -7,6 +7,3 @@
 sr:
   chat_integration:
     all_categories: "(sve kategorije)"
-    provider:
-      flowdock:
-        message_title: "pisao"

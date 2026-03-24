@@ -155,12 +155,6 @@ hy:
             webhook_url:
               title: "Webhook -ի URL"
               help: "URL -ը, որը տրվում է Gitter սենյակում նոր ինտեգրում ստեղծելիս:"
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Հոսքի Տոկեն"
-              help: "Հոսքի տոկեն, որը տրամադրվում է հոսքի համար սկզբնաղյուր ստեղծելուց հետո, որի մեջ Դուք ցանկանում եք ուղարկել հաղորդագրություններ:"
         teams:
           param:
             name:

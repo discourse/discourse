@@ -366,8 +366,6 @@ fi:
         user: Käyttäjä
         create_user: Luo käyttäjä
         default_llm: Oletuskielimalli
-        question_consolidator_llm: Kielimalli kysymysten yhdistäjälle
-        question_consolidator_llm_help: Kysymysten yhdistäjälle käytettävä kielimalli, voit valita vähemmän tehokkaan mallin kustannusten säästämiseksi.
         system_prompt: Järjestelmäkehote
         forced_tool_strategy: Pakotetun työkalun strategia
         allow_chat_direct_messages: "Salli chat-yksityisviestit"

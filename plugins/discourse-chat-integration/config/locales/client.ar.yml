@@ -163,12 +163,6 @@ ar:
             webhook_url:
               title: "عنوان URL لخطاف الويب"
               help: "عنوان URL الذي يتم إدخاله عند إنشاء تكامل جديد في غرفة Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "رمز القسم"
-              help: "رمز القسم الذي تم إدخاله بعد إنشاء مصدر لقسم تريد إرسال الرسائل فيه."
         groupme:
           title: "GroupMe"
           param:

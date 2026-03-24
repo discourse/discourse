@@ -2777,6 +2777,8 @@ pl_PL:
       exclude_tag_group: "Wyklucz tematy z tagami z określonej grupy tagów"
       activity_before: "Pokaż tematy z ostatnią aktywnością przed datą (RRRR-MM-DD lub dni temu)"
       activity_after: "Pokaż tematy z ostatnią aktywnością po dacie (RRRR-MM-DD lub dni temu)"
+      bookmarked_before: "Pokaż tematy dodane do zakładek przed datą (RRRR-MM-DD lub dni temu)"
+      bookmarked_after: "Pokaż tematy dodane do zakładek po dacie (RRRR-MM-DD lub dni temu)"
       created_before: "Pokaż tematy utworzone przed datą (RRRR-MM-DD lub dni temu)"
       created_after: "Pokaż tematy utworzone po określonej dacie (RRRR-MM-DD lub dni temu)"
       created_by: "Pokaż tematy utworzone przez określonego użytkownika lub grupę"
