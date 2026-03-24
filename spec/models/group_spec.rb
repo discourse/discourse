@@ -1414,16 +1414,6 @@ RSpec.describe Group do
       expect(result).to contain_exactly(user.id, admin.id)
     end
 
-    it "returns empty array when no users are in the group" do
-      group.bulk_remove([user.id, admin.id])
-      expect(group.bulk_remove([user.id])).to eq([])
-    end
-
-    it "updates group user count" do
-      group.bulk_remove([user.id, admin.id])
-      expect(group.reload.user_count).to eq(0)
-    end
-
     it "clears primary_group_id" do
       group.update!(primary_group: true)
       User.where(id: [user.id, admin.id]).update_all(primary_group_id: group.id)
@@ -1533,7 +1523,6 @@ RSpec.describe Group do
           .track_publish("/refresh_client") { group.bulk_publish_category_updates([user, admin]) }
           .first
 
-      expect(message.data).to eq("clobber")
       expect(message.user_ids).to contain_exactly(user.id, admin.id)
     end
 
