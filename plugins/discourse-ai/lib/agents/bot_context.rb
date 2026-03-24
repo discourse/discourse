@@ -23,7 +23,8 @@ module DiscourseAi
                     :format_dates,
                     :temporal_context,
                     :user_language,
-                    :bypass_response_format
+                    :bypass_response_format,
+                    :guardian
 
       def initialize(
         post: nil,
@@ -46,7 +47,8 @@ module DiscourseAi
         cancel_manager: nil,
         inferred_concepts: [],
         format_dates: false,
-        bypass_response_format: false
+        bypass_response_format: false,
+        guardian: nil
       )
         @participants = participants
         @user = user
@@ -72,6 +74,8 @@ module DiscourseAi
         @cancel_manager = cancel_manager
 
         @bypass_response_format = bypass_response_format
+
+        @guardian = guardian
 
         if post
           @post_id = post.id
