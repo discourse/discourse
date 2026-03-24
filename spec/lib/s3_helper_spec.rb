@@ -247,6 +247,54 @@ RSpec.describe "S3Helper" do
       # If the request were invalid, this spec would raise an error
       s3_helper.delete_objects(%w[object/one.txt object/two.txt])
     end
+
+    it "does nothing when given empty array" do
+      expect { s3_helper.delete_objects([]) }.not_to raise_error
+    end
+
+    it "raises error with summary and sample when deletions fail" do
+      client.stub_responses(
+        :delete_objects,
+        {
+          deleted: [{ key: "object/one.txt" }],
+          errors: [{ key: "object/two.txt", code: "AccessDenied", message: "Access Denied" }],
+        },
+      )
+
+      expect { s3_helper.delete_objects(%w[object/one.txt object/two.txt]) }.to raise_error(
+        RuntimeError,
+      ) do |error|
+        expect(error.message).to include("Failed to delete 1 S3 objects: AccessDenied (1)")
+        expect(error.message).to include("object/two.txt: AccessDenied - Access Denied")
+      end
+    end
+
+    it "tallies error codes and caps sample at 5" do
+      client.stub_responses(
+        :delete_objects,
+        {
+          deleted: [],
+          errors: [
+            { key: "object/one.txt", code: "AccessDenied", message: "Access Denied" },
+            {
+              key: "object/two.txt",
+              code: "NoSuchKey",
+              message: "The specified key does not exist",
+            },
+          ],
+        },
+      )
+
+      expect { s3_helper.delete_objects(%w[object/one.txt object/two.txt]) }.to raise_error(
+        RuntimeError,
+      ) do |error|
+        expect(error.message).to include("Failed to delete 2 S3 objects")
+        expect(error.message).to include("AccessDenied (1)")
+        expect(error.message).to include("NoSuchKey (1)")
+        expect(error.message).to include("object/one.txt: AccessDenied")
+        expect(error.message).to include("object/two.txt: NoSuchKey")
+      end
+    end
   end
 
   describe "#presigned_url" do
