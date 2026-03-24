@@ -129,6 +129,39 @@ describe "Composer Form Template Validations" do
     )
   end
 
+  it "shows an error when a required upload field has no file" do
+    form_template_with_upload =
+      Fabricate(
+        :form_template,
+        name: "Upload Required",
+        template:
+          %Q(
+        - type: upload
+          id: my-upload
+          attributes:
+            file_types: ".jpg, .png"
+            label: "Upload a file"
+          validations:
+            required: true),
+      )
+    category =
+      Fabricate(
+        :category,
+        name: "Uploads",
+        slug: "uploads",
+        form_template_ids: [form_template_with_upload.id],
+      )
+
+    category_page.visit(category)
+    category_page.new_topic_button.click
+    composer.fill_title(topic_title)
+    composer.create
+
+    expect(composer).to have_form_template_field_error(
+      I18n.t("js.form_templates.errors.value_missing.default"),
+    )
+  end
+
   it "shows an error when an input doesn't satisfy the requested pattern" do
     category_page.visit(category_with_template_2)
     category_page.new_topic_button.click
