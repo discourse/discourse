@@ -240,7 +240,13 @@ module DiscourseUpdates
 
       if last_seen.present?
         entries.select! do |item|
-          Time.zone.parse(item[:created_at] || item["created_at"]) > last_seen
+          created_at =
+            if item[:created_at].is_a?(String)
+              Time.zone.parse(item[:created_at])
+            else
+              item[:created_at]
+            end
+          created_at.to_i > last_seen.to_i
         end
       end
 
@@ -260,10 +266,10 @@ module DiscourseUpdates
         )
       return nil if entries.blank?
 
-      last_seen = entries.max_by { |item| item[:created_at] || item["created_at"] }
+      last_seen = entries.max_by { |item| item.with_indifferent_access[:created_at] }
       Discourse.redis.set(
         new_features_last_seen_key(user_id),
-        last_seen[:created_at] || last_seen["created_at"],
+        last_seen.with_indifferent_access[:created_at],
       )
     end
 

@@ -517,9 +517,9 @@ RSpec.describe DiscourseUpdates do
         result = described_class.merge_new_features_with_upcoming_changes([])
         feature = feature_for_uc_setting(result)
 
-        expect(feature[:created_at]).to eq(event_time.to_s)
-        expect(feature[:updated_at]).to eq(event_time.to_s)
-        expect(feature[:released_at]).to eq(event_time.to_s)
+        expect(feature[:created_at]).to eq_time(event_time)
+        expect(feature[:updated_at]).to eq_time(event_time)
+        expect(feature[:released_at]).to eq_time(event_time)
       end
 
       it "uses the latest status_changed-to-permanent event when several exist" do
@@ -547,14 +547,14 @@ RSpec.describe DiscourseUpdates do
 
         result = described_class.merge_new_features_with_upcoming_changes([])
 
-        expect(feature_for_uc_setting(result)[:created_at]).to eq(newer.to_s)
+        expect(feature_for_uc_setting(result)[:created_at]).to eq_time(newer)
       end
 
       it "falls back to the current time when no matching event exists" do
         freeze_time do
           result = described_class.merge_new_features_with_upcoming_changes([])
 
-          expect(feature_for_uc_setting(result)[:created_at]).to eq(Time.zone.now.to_s)
+          expect(feature_for_uc_setting(result)[:created_at]).to eq_time(Time.zone.now)
         end
       end
 
@@ -571,7 +571,7 @@ RSpec.describe DiscourseUpdates do
 
           result = described_class.merge_new_features_with_upcoming_changes([])
 
-          expect(feature_for_uc_setting(result)[:created_at]).to eq(Time.zone.now.to_s)
+          expect(feature_for_uc_setting(result)[:created_at]).to eq_time(Time.zone.now)
         end
       end
     end

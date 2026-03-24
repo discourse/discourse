@@ -321,7 +321,7 @@ RSpec.describe Admin::DashboardController do
             expect(feature["screenshot_url"]).to eq(
               "#{Discourse.base_url}/images/upcoming_changes/enable_upload_debug_mode.png",
             )
-            expect(feature["created_at"]).to eq(Time.zone.now.to_s)
+            expect(Time.parse(feature["created_at"])).to eq_time(Time.zone.now)
           end
         end
       end

@@ -48,17 +48,25 @@ module Jobs
       # - If an admin has no stored "last looked" time, or it is older than the
       #   newest item (Meta list plus permanent upcoming changes), send the
       #   new-features notification and update their stored time to that newest
-      #   item.
+      #   item. Compare using whole seconds so Redis round-trip (.to_s then parse)
+      #   does not look older than in-memory DB timestamps within the same second.
       new_features_with_permanent_uc = find_new_features
       new_most_recent = new_features_with_permanent_uc&.first&.symbolize_keys
       if new_most_recent
         most_recent_created_at = new_most_recent[:created_at]
-        most_recent_feature_date = Time.zone.parse(most_recent_created_at)
+        most_recent_feature_date =
+          (
+            if most_recent_created_at.is_a?(String)
+              Time.zone.parse(most_recent_created_at)
+            else
+              most_recent_created_at
+            end
+          )
 
         admin_ids.each do |admin_id|
           admin_last_viewed_feature_date = DiscourseUpdates.get_last_viewed_feature_date(admin_id)
           if admin_last_viewed_feature_date.blank? ||
-               admin_last_viewed_feature_date < most_recent_feature_date
+               admin_last_viewed_feature_date.to_i < most_recent_feature_date.to_i
             Notification.consolidate_or_create!(
               user_id: admin_id,
               notification_type: Notification.types[:new_features],
