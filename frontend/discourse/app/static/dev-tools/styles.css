@@ -531,6 +531,62 @@ pre.outlet-info__error-message {
   overflow-y: auto;
 }
 
+.outlet-info__deprecation-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--danger-low);
+  border: 1px solid var(--danger-medium);
+  border-radius: 4px;
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 1.4;
+
+  .d-icon {
+    flex-shrink: 0;
+  }
+}
+
+.outlet-info__since {
+  color: var(--primary-medium);
+  font-size: 11px;
+}
+
+.outlet-info__aliases {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  code {
+    font-size: 12px;
+    padding: 1px 4px;
+    background: var(--primary-very-low);
+    border-radius: 3px;
+  }
+}
+
+.outlet-info__alias {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.outlet-info__alias-deprecated {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--danger);
+  font-size: 11px;
+
+  .d-icon {
+    font-size: 10px;
+  }
+}
+
 /* Shared Outlet Args Table */
 .outlet-args-table {
   display: flex;

@@ -212,20 +212,27 @@ export function connectorsExist(outletName) {
   return Boolean(_connectorCache[outletName] || debugOutletCallback);
 }
 
-export function connectorsFor(outletName, outletArgs) {
+export function connectorsFor(outletName, outletArgs, options) {
   if (!_connectorCache) {
     buildConnectorCache();
   }
   if (debugOutletCallback) {
     return debugOutletCallback(outletName, _connectorCache[outletName], {
       outletArgs,
+      ...options,
     });
   }
   return _connectorCache[outletName] || [];
 }
 
-export function renderedConnectorsFor(outletName, args, context, owner) {
-  return connectorsFor(outletName, args).filter((con) => {
+export function renderedConnectorsFor(
+  outletName,
+  args,
+  context,
+  owner,
+  options
+) {
+  return connectorsFor(outletName, args, options).filter((con) => {
     return (
       !con.connectorClass?.shouldRender ||
       con.connectorClass?.shouldRender(args, context, owner)

@@ -3,12 +3,15 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import templateOnly from "@ember/component/template-only";
+import { array, hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { click, find, render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import PluginOutlet from "discourse/components/plugin-outlet";
+import PluginOutlet, {
+  normalizeAlias,
+} from "discourse/components/plugin-outlet";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import deprecated, {
@@ -1289,6 +1292,500 @@ module(
         </template>
       );
       assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | aliases and deprecations",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.consoleWarnStub = sinon.stub(console, "warn");
+      disableRaiseOnDeprecation();
+    });
+
+    hooks.afterEach(function () {
+      this.consoleWarnStub.restore();
+      enableRaiseOnDeprecation();
+    });
+
+    test("renders connectors registered under an alias name", async function (assert) {
+      extraConnectorComponent(
+        "old-outlet-name",
+        <template>
+          <span class="alias-content">From alias</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-outlet-name"
+            @aliases={{array "old-outlet-name"}}
+          />
+        </template>
+      );
+
+      assert.dom(".alias-content").hasText("From alias");
+    });
+
+    test("renders connectors from both canonical name and alias", async function (assert) {
+      extraConnectorComponent(
+        "canonical-outlet",
+        <template>
+          <span class="canonical">Canonical</span>
+        </template>
+      );
+      extraConnectorComponent(
+        "alias-outlet",
+        <template>
+          <span class="alias">Alias</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="canonical-outlet"
+            @aliases={{array "alias-outlet"}}
+          />
+        </template>
+      );
+
+      assert.dom(".canonical").hasText("Canonical");
+      assert.dom(".alias").hasText("Alias");
+    });
+
+    test("deprecated alias emits warning when connectors exist", async function (assert) {
+      extraConnectorComponent(
+        "old-name",
+        <template>
+          <span class="old">Old</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-name"
+            @aliases={{array
+              (hash name="old-name" deprecated=true since="4.0")
+            }}
+          />
+        </template>
+      );
+
+      assert.dom(".old").hasText("Old");
+      assert.true(
+        this.consoleWarnStub.calledWithMatch(
+          /Plugin outlet "old-name" has been renamed to "new-name"/
+        )
+      );
+    });
+
+    test("deprecated alias does not emit warning when no connectors exist", async function (assert) {
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-name"
+            @aliases={{array
+              (hash name="old-name" deprecated=true since="4.0")
+            }}
+          />
+        </template>
+      );
+
+      assert.false(
+        this.consoleWarnStub.calledWithMatch(/old-name/),
+        "no deprecation warning emitted"
+      );
+    });
+
+    test("deprecated alias uses custom message when provided", async function (assert) {
+      extraConnectorComponent(
+        "legacy-name",
+        <template>
+          <span class="legacy">Legacy</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="modern-name"
+            @aliases={{array
+              (hash
+                name="legacy-name"
+                deprecated=true
+                since="4.0"
+                message="Use modern-name instead of legacy-name"
+              )
+            }}
+          />
+        </template>
+      );
+
+      assert.dom(".legacy").hasText("Legacy");
+      assert.true(
+        this.consoleWarnStub.calledWithMatch(
+          /Use modern-name instead of legacy-name/
+        )
+      );
+    });
+
+    test("non-deprecated alias does not emit warnings", async function (assert) {
+      extraConnectorComponent(
+        "alternate-name",
+        <template>
+          <span class="alt">Alt</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="primary-name"
+            @aliases={{array "alternate-name"}}
+          />
+        </template>
+      );
+
+      assert.dom(".alt").hasText("Alt");
+      assert.strictEqual(
+        this.consoleWarnStub.callCount,
+        0,
+        "no warnings emitted"
+      );
+    });
+
+    test("wrapper outlet aliases resolve __before and __after connectors", async function (assert) {
+      extraConnectorComponent(
+        "old-wrapper__before",
+        <template>
+          <span class="alias-before">Before from alias</span>
+        </template>
+      );
+      extraConnectorComponent(
+        "old-wrapper__after",
+        <template>
+          <span class="alias-after">After from alias</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet @name="new-wrapper" @aliases={{array "old-wrapper"}}>
+            <span class="wrapped">Wrapped content</span>
+          </PluginOutlet>
+        </template>
+      );
+
+      assert.dom(".alias-before").hasText("Before from alias");
+      assert.dom(".wrapped").hasText("Wrapped content");
+      assert.dom(".alias-after").hasText("After from alias");
+    });
+
+    test("@deprecated emits warning when connectors exist", async function (assert) {
+      extraConnectorComponent(
+        "doomed-outlet",
+        <template>
+          <span class="doomed">Doomed</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="doomed-outlet"
+            @deprecated={{hash since="4.0"}}
+          />
+        </template>
+      );
+
+      assert.dom(".doomed").hasText("Doomed");
+      assert.true(
+        this.consoleWarnStub.calledWithMatch(
+          /Plugin outlet "doomed-outlet" is deprecated/
+        )
+      );
+    });
+
+    test("@deprecated does not emit warning when no connectors exist", async function (assert) {
+      await render(
+        <template>
+          <PluginOutlet
+            @name="doomed-outlet"
+            @deprecated={{hash since="4.0"}}
+          />
+        </template>
+      );
+
+      assert.false(
+        this.consoleWarnStub.calledWithMatch(/doomed-outlet/),
+        "no deprecation warning emitted"
+      );
+    });
+
+    test("@deprecated uses custom message", async function (assert) {
+      extraConnectorComponent(
+        "old-outlet",
+        <template>
+          <span class="old-outlet">Old</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="old-outlet"
+            @deprecated={{hash
+              since="4.0"
+              message="This outlet will be removed. Use the Block API."
+            }}
+          />
+        </template>
+      );
+
+      assert.dom(".old-outlet").hasText("Old");
+      assert.true(
+        this.consoleWarnStub.calledWithMatch(
+          /This outlet will be removed\. Use the Block API\./
+        )
+      );
+    });
+
+    test("multiple aliases on same outlet", async function (assert) {
+      extraConnectorComponent(
+        "alias-one",
+        <template>
+          <span class="one">One</span>
+        </template>
+      );
+      extraConnectorComponent(
+        "alias-two",
+        <template>
+          <span class="two">Two</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="target-outlet"
+            @aliases={{array "alias-one" "alias-two"}}
+          />
+        </template>
+      );
+
+      assert.dom(".one").hasText("One");
+      assert.dom(".two").hasText("Two");
+    });
+
+    test("file-based connectors under alias name render in canonical outlet", async function (assert) {
+      registerTemporaryModule(
+        `${TEMPLATE_PREFIX}/old-file-outlet/my-connector`,
+        hbs`<span class="file-alias">File-based alias connector</span>`
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-file-outlet"
+            @aliases={{array "old-file-outlet"}}
+          />
+        </template>
+      );
+
+      assert.dom(".file-alias").hasText("File-based alias connector");
+    });
+
+    test("connectorsExist returns true when connectors exist only under alias", async function (assert) {
+      extraConnectorComponent(
+        "only-alias-outlet",
+        <template>
+          <span class="only-alias">Only alias</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="empty-canonical"
+            @aliases={{array "only-alias-outlet"}}
+          >
+            <span class="default">Default content</span>
+          </PluginOutlet>
+        </template>
+      );
+
+      assert.dom(".only-alias").hasText("Only alias");
+      assert.dom(".default").doesNotExist();
+    });
+
+    test("mixed deprecated and non-deprecated aliases", async function (assert) {
+      extraConnectorComponent(
+        "deprecated-alias",
+        <template>
+          <span class="dep">Deprecated</span>
+        </template>
+      );
+      extraConnectorComponent(
+        "active-alias",
+        <template>
+          <span class="active">Active</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="main-outlet"
+            @aliases={{array
+              (hash name="deprecated-alias" deprecated=true since="4.0")
+              "active-alias"
+            }}
+          />
+        </template>
+      );
+
+      assert.dom(".dep").hasText("Deprecated");
+      assert.dom(".active").hasText("Active");
+      assert.true(
+        this.consoleWarnStub.calledWithMatch(/deprecated-alias/),
+        "deprecated alias emits warning"
+      );
+      assert.false(
+        this.consoleWarnStub.calledWithMatch(/active-alias/),
+        "non-deprecated alias does not emit warning"
+      );
+    });
+
+    test("DEBUG assertion: alias with deprecation properties but no deprecated flag", function (assert) {
+      assert.throws(
+        () => {
+          const aliases = [{ name: "bad-alias", since: "4.0" }];
+          // Trigger normalization
+          aliases.map(normalizeAlias);
+        },
+        /has deprecation properties.*but `deprecated` is not true/,
+        "throws when alias has since without deprecated=true"
+      );
+    });
+
+    test("DEBUG assertion: alias with invalid position value", function (assert) {
+      assert.throws(
+        () => normalizeAlias({ name: "bad-pos", position: "middle" }),
+        /invalid position "middle"/,
+        "throws for invalid position value"
+      );
+    });
+
+    test("position='after' routes alias connectors to wrapper __after outlet", async function (assert) {
+      extraConnectorComponent(
+        "old-standalone-outlet",
+        <template>
+          <span class="from-old-standalone">Old standalone</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-wrapper-outlet"
+            @aliases={{array
+              (hash
+                name="old-standalone-outlet"
+                position="after"
+                deprecated=true
+                since="4.0"
+              )
+            }}
+          >
+            <span class="wrapped">Wrapped content</span>
+          </PluginOutlet>
+        </template>
+      );
+
+      assert.dom(".wrapped").hasText("Wrapped content");
+      assert.dom(".from-old-standalone").hasText("Old standalone");
+    });
+
+    test("position='before' routes alias connectors to wrapper __before outlet", async function (assert) {
+      extraConnectorComponent(
+        "old-above-outlet",
+        <template>
+          <span class="from-old-above">Old above</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-wrapper-outlet"
+            @aliases={{array (hash name="old-above-outlet" position="before")}}
+          >
+            <span class="wrapped">Wrapped content</span>
+          </PluginOutlet>
+        </template>
+      );
+
+      assert.dom(".wrapped").hasText("Wrapped content");
+      assert.dom(".from-old-above").hasText("Old above");
+    });
+
+    test("position-targeted alias does not render in main outlet", async function (assert) {
+      extraConnectorComponent(
+        "targeted-alias",
+        <template>
+          <span class="targeted">Targeted</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="standalone-outlet"
+            @aliases={{array (hash name="targeted-alias" position="after")}}
+          />
+        </template>
+      );
+
+      assert.dom(".targeted").doesNotExist();
+    });
+
+    test("position-targeted alias with deprecation emits warning", async function (assert) {
+      extraConnectorComponent(
+        "old-below-outlet",
+        <template>
+          <span class="old-below">Old below</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="wrapper-outlet"
+            @aliases={{array
+              (hash
+                name="old-below-outlet"
+                position="after"
+                deprecated=true
+                since="4.0"
+              )
+            }}
+          >
+            <span class="wrapped">Content</span>
+          </PluginOutlet>
+        </template>
+      );
+
+      assert.dom(".old-below").hasText("Old below");
+      assert.true(
+        this.consoleWarnStub.calledWithMatch(/old-below-outlet/),
+        "deprecated position alias emits warning"
+      );
     });
   }
 );
