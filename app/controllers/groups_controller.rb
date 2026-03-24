@@ -387,7 +387,9 @@ class GroupsController < ApplicationController
         end
     end
 
-    guardian.ensure_can_invite_to_forum!([group]) if emails.present?
+    if emails.present? && !guardian.can_invite_to_forum?([group])
+      return render_json_error(I18n.t("groups.errors.cannot_add_emails"))
+    end
 
     if users.empty? && emails.empty?
       raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))

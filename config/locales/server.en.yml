@@ -651,6 +651,7 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
+      cannot_add_emails: "Only usernames can be used to add members to this group. To invite by email, use the Invite button."
       counting_too_many_email_domains:
         one: "Maximum %{count} email domain can be counted at once"
         other: "Maximum %{count} email domains can be counted at once"
