@@ -43,7 +43,10 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
 
     params = DiscourseChatIntegration::Provider.get_by_name(provider)::CHANNEL_PARAMETERS
 
-    unless params.map { |p| p[:key] }.sort == data.keys.sort
+    required_params = params.reject { |p| p[:required] == false }
+    optional_params = params.select { |p| p[:required] == false }
+    unless required_params.map { |p| p[:key] }.sort ==
+             (data.keys - optional_params.map { |p| p[:key] }).sort
       errors.add(:data, "data does not match the required structure for provider #{provider}")
       return
     end
@@ -52,7 +55,10 @@ class DiscourseChatIntegration::Channel < DiscourseChatIntegration::PluginModel
     matching_channels = DiscourseChatIntegration::Channel.with_provider(provider).where.not(id: id)
 
     data.each do |key, value|
-      regex_string = params.find { |p| p[:key] == key }[:regex]
+      param = params.find { |p| p[:key] == key }
+      next if param.nil?
+      next if param[:required] == false && value.blank?
+      regex_string = param[:regex]
       if regex_string.present? && !Regexp.new(regex_string).match?(value)
         errors.add(:data, "data.#{key} is invalid")
       end

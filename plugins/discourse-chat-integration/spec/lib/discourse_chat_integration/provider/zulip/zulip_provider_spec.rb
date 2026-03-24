@@ -15,15 +15,37 @@ RSpec.describe DiscourseChatIntegration::Provider::ZulipProvider do
       DiscourseChatIntegration::Channel.create!(
         provider: "zulip",
         data: {
-          stream: "general",
-          subject: "Discourse Notifications",
+          channel: "general",
+          topic: "Discourse Notifications",
         },
       )
+    end
+
+    let(:chan_no_topic) do
+      DiscourseChatIntegration::Channel.create!(provider: "zulip", data: { channel: "general" })
     end
 
     it "sends a webhook request" do
       stub1 = stub_request(:post, "https://hello.world/api/v1/messages").to_return(status: 200)
       described_class.trigger_notification(post, chan1, nil)
+      expect(stub1).to have_been_requested.once
+    end
+
+    it "uses the fixed topic when configured" do
+      stub1 =
+        stub_request(:post, "https://hello.world/api/v1/messages").with(
+          body: hash_including("topic" => "Discourse Notifications"),
+        ).to_return(status: 200)
+      described_class.trigger_notification(post, chan1, nil)
+      expect(stub1).to have_been_requested.once
+    end
+
+    it "uses the Discourse thread title as topic when no topic is configured" do
+      stub1 =
+        stub_request(:post, "https://hello.world/api/v1/messages").with(
+          body: hash_including("topic" => post.topic.title),
+        ).to_return(status: 200)
+      described_class.trigger_notification(post, chan_no_topic, nil)
       expect(stub1).to have_been_requested.once
     end
 
@@ -47,8 +69,8 @@ RSpec.describe DiscourseChatIntegration::Provider::ZulipProvider do
         DiscourseChatIntegration::Channel.create!(
           provider: "zulip",
           data: {
-            stream: "foo",
-            subject: "Discourse Notifications",
+            channel: "foo",
+            topic: "Discourse Notifications",
           },
         )
       channel = described_class.get_channel_by_name("foo")

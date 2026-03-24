@@ -160,14 +160,14 @@ en:
         zulip:
           title: "Zulip"
           param:
-            stream:
-              title: "Stream"
-              help: "The name of the Zulip stream the message should be sent to. e.g. 'general'"
-            subject:
-              title: "Subject"
-              help: "The subject that these messages sent by the bot should be given"
+            channel:
+              title: "Channel"
+              help: "The name of the Zulip channel the message should be sent to. e.g. 'general'"
+            topic:
+              title: "Topic"
+              help: "The topic that these messages sent by the bot should be given. If left blank, the Discourse thread title will be used."
           errors:
-            does_not_exist: "That stream does not exist on Zulip"
+            does_not_exist: "That channel does not exist on Zulip"
 
         #######################################
         ######## ROCKET CHAT STRINGS ##########
