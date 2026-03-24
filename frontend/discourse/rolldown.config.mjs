@@ -57,7 +57,7 @@ export default {
     extensions,
   },
   experimental: {
-    incrementalBuild: false,
+    incrementalBuild: true,
   },
   input: {
     discourse: "discourse.js",
