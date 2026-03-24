@@ -754,6 +754,10 @@ Discourse::Application.routes.draw do
           :defaults => {
             format: :json,
           }
+      get "#{root_path}/:username/data-export" => "user_data_exports#show",
+          :constraints => {
+            username: RouteFormat.username,
+          }
       get "#{root_path}/:username/emails" => "users#check_emails",
           :constraints => {
             username: RouteFormat.username,
