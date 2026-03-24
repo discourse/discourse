@@ -595,58 +595,64 @@ export default class AiLlmEditorForm extends Component {
             <tbody class="ai-llm-quotas__table-body">
               <form.Collection
                 @name="llm_quotas"
-                @tagName="tr"
-                class="ai-llm-quotas__row"
                 as |collection index collectionData|
               >
-                <td
-                  class="ai-llm-quotas__cell"
-                >{{collectionData.group_name}}</td>
-                <td class="ai-llm-quotas__cell">
-                  <collection.Field
-                    @name="max_tokens"
-                    @title="max_tokens"
-                    @showTitle={{false}}
-                    @type="input-number"
-                    as |field|
-                  >
-                    <field.Control class="ai-llm-quotas__input" min="1" />
-                  </collection.Field>
-                </td>
-                <td class="ai-llm-quotas__cell">
-                  <collection.Field
-                    @name="max_usages"
-                    @title="max_usages"
-                    @showTitle={{false}}
-                    @type="input-number"
-                    as |field|
-                  >
-                    <field.Control class="ai-llm-quotas__input" min="1" />
-                  </collection.Field>
-                </td>
-                <td class="ai-llm-quotas__cell">
-                  <collection.Field
-                    @name="duration_seconds"
-                    @title="duration_seconds"
-                    @showTitle={{false}}
-                    @type="custom"
-                    as |field|
-                  >
-                    <field.Control>
-                      <DurationSelector
-                        @value={{collectionData.duration_seconds}}
-                        @onChange={{field.set}}
+                <tr class="ai-llm-quotas__row">
+                  <td
+                    class="ai-llm-quotas__cell"
+                  >{{collectionData.group_name}}</td>
+                  <td class="ai-llm-quotas__cell">
+                    <collection.Field
+                      @name="max_tokens"
+                      @title="max_tokens"
+                      @showTitle={{false}}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control
+                        class="ai-llm-quotas__input ai-llm-quotas__input--tokens"
+                        min="1"
                       />
-                    </field.Control>
-                  </collection.Field>
-                </td>
-                <td>
-                  <form.Button
-                    @icon="trash-can"
-                    @action={{fn collection.remove index}}
-                    class="btn-danger ai-llm-quotas__delete-btn"
-                  />
-                </td>
+                    </collection.Field>
+                  </td>
+                  <td class="ai-llm-quotas__cell">
+                    <collection.Field
+                      @name="max_usages"
+                      @title="max_usages"
+                      @showTitle={{false}}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control
+                        class="ai-llm-quotas__input ai-llm-quotas__input--usages"
+                        min="1"
+                      />
+                    </collection.Field>
+                  </td>
+                  <td class="ai-llm-quotas__cell">
+                    <collection.Field
+                      @name="duration_seconds"
+                      @title="duration_seconds"
+                      @showTitle={{false}}
+                      @type="custom"
+                      as |field|
+                    >
+                      <field.Control>
+                        <DurationSelector
+                          @value={{collectionData.duration_seconds}}
+                          @onChange={{field.set}}
+                        />
+                      </field.Control>
+                    </collection.Field>
+                  </td>
+                  <td>
+                    <form.Button
+                      @icon="trash-can"
+                      @action={{fn collection.remove index}}
+                      class="btn-danger ai-llm-quotas__delete-btn"
+                    />
+                  </td>
+                </tr>
               </form.Collection>
             </tbody>
           </table>
