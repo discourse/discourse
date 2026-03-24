@@ -1000,7 +1000,7 @@ class Group < ActiveRecord::Base
 
     bulk_publish_category_updates(group_users_to_remove.map(&:user))
 
-    group_users_to_remove.each do |group_user|
+    group_users_to_remove.find_each do |group_user|
       trigger_user_removed_event(group_user.user)
       enqueue_user_removed_from_group_webhook_events(group_user)
     end
