@@ -1,4 +1,6 @@
 :root {
+  // Text
+  //
   --token-text-default: light-dark(
     var(--neutral-1100),
     var(--dark-neutral-1000)
@@ -14,6 +16,8 @@
     var(--blue-oklch-200)
   );
   --token-text-inverse: light-dark(var(--neutral-0), var(--dark-neutral-100));
+
+  // Border
   --token-border-input: light-dark(var(--neutral-500), var(--dark-neutral-600));
   --token-border-default: light-dark(
     var(--neutral-300A),
@@ -40,7 +44,7 @@
     var(--blue-oklch-400)
   );
 
-  // Surface
+  // Backgrounds
   // Use as the primary background for the UI.
   // ---
   --token-surface: light-dark(var(--neutral-0), var(--dark-neutral-100));
@@ -52,10 +56,16 @@
     var(--neutral-300),
     var(--dark-neutral-250)
   );
+  --token-background-input: light-dark(
+    var(--neutral-0),
+    var(--dark-neutral-200)
+  );
+
+  // Sizing
   --token-border-width: 1px;
   --token-radius-xsmall: 2px;
   --token-radius-small: 4px;
-  --token-radius-medium: 6px;
+  --token-radius-medium: 6px; // interactive elements (buttons, inputs, nav items, etc)
   --token-radius-large: 8px;
   --token-radius-xlarge: 12px;
   --token-radius-xxlarge: 16px;

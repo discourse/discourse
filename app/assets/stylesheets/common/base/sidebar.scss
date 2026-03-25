@@ -21,14 +21,14 @@
 
   // must be rgba for gradient
   --d-sidebar-footer-fade: rgb(from var(--token-surface) r g b / 1);
-  --d-sidebar-header-color: var(--token-text-default);
-  --d-sidebar-header-icon-color: var(--token-text-default);
+  --d-sidebar-header-color: var(--token-text-subtle);
+  --d-sidebar-header-icon-color: var(--token-text-subtle);
   --d-sidebar-header-font-weight: bold;
   --d-sidebar-section-border-color: var(--token-border-default);
   --d-sidebar-border-color: var(--token-border-default);
-  --d-sidebar-link-color: var(--token-text-default);
-  --d-sidebar-link-icon-color: var(--token-text-default);
-  --d-sidebar-link-badge-color: var(--token-text-default);
+  --d-sidebar-link-color: var(--token-text-subtle);
+  --d-sidebar-link-icon-color: var(--token-text-subtle);
+  --d-sidebar-link-badge-color: var(--token-text-subtle);
 
   // example: new count
   // example: chat participant count
@@ -40,7 +40,7 @@
 
   // highlight applies to both hover and focus states
   --d-sidebar-highlight-background: var(--token-surface-hovered);
-  --d-sidebar-highlight-color: var(--token-text-default-bolder);
+  --d-sidebar-highlight-color: var(--token-text-default);
   --d-sidebar-highlight-prefix-background: var(--token-surface-pressed);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-link-color);
   --d-sidebar-highlight-suffix-color: var(--d-sidebar-link-color);
@@ -51,10 +51,10 @@
 
   // example: hovering a button within a highlighted section
   --d-sidebar-active-background: var(--token-surface-pressed);
-  --d-sidebar-active-color: var(--token-text-default-bolder);
+  --d-sidebar-active-color: var(----token-text-default);
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--token-surface-pressed);
-  --d-sidebar-active-suffix-color: var(--token-text-default-bolder);
+  --d-sidebar-active-suffix-color: var(----token-text-default);
   --d-sidebar-active-font-weight: bold; // example: active section link
 
   @include viewport.until(sm) {
@@ -117,7 +117,7 @@
 
     // custom scrollbar styling
     --scrollbarBg: transparent;
-    --scrollbarThumbBg: var(--token-background-accent-subtler);
+    --scrollbarThumbBg: var(--token-surface-hovered);
     --scrollbarWidth: var(--space-2);
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
@@ -441,12 +441,12 @@
   &__input-container {
     display: flex;
     align-items: center;
-    border: var(---d-border-width) solid var(--d-border-input);
-    background: var(--d-input-bg-color);
+    border: var(--token-border-width) solid var(--token-border-input);
+    background: var(--token-background-input);
     box-sizing: border-box;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--token-radius-medium);
     overflow: hidden;
     padding-inline: var(--d-sidebar-row-horizontal-padding);
     gap: var(--d-sidebar-section-link-prefix-margin-right);
@@ -456,12 +456,12 @@
     flex-shrink: 0;
     font-size: var(--d-sidebar-section-link-icon-size);
     border: 0;
-    background: var(--d-input-bg-color);
+    background: var(--token-background-input);
     width: var(--d-sidebar-section-link-prefix-width);
     padding: 0;
 
     &:hover {
-      background: var(--d-input-bg-color) !important;
+      background: transparent !important;
     }
   }
 
