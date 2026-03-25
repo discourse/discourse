@@ -332,8 +332,6 @@ const workflows = [
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
   { handler: "notify-admin", matchId: "discourse.add-flag-property" },
-  { handler: "notify-admin", matchId: "discourse.bootbox" },
-  { handler: "notify-admin", matchId: "discourse.add-header-panel" },
   { handler: "notify-admin", matchId: "discourse.breadcrumbs.childCategories" },
   { handler: "notify-admin", matchId: "discourse.breadcrumbs.firstCategory" },
   {
