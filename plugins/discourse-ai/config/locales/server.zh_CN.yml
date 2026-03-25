@@ -293,6 +293,8 @@ zh_CN:
         missing_required_aliases: "缺少别名所需的凭据绑定：%{aliases}。"
         secret_not_found: "凭据别名 `%{alias}` 与丢失的凭据绑定。"
         unknown_error: "无法解析请求的凭据。"
+    mcp_servers:
+      secret_not_found: "所选凭据不存在。"
     ai_helper:
       errors:
         completion_request_failed: "尝试提供建议时出错。请重试。"

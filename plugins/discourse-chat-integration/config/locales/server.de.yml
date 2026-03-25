@@ -59,9 +59,6 @@ de:
     chat_integration_webex_excerpt_length: "Auszugslänge für „Webex Teams“-Beiträge"
     chat_integration_google_enabled: "Aktiviere den Chat-Integration-Provider für Google Chat"
     chat_integration_google_excerpt_length: "Auszugslänge für „Google Chat“-Beiträge"
-  dashboard:
-    problem:
-      channel_errors: "Einige Chat-Integration-Kanäle weisen Fehler auf. Besuche <a href='%{base_path}/admin/plugins/chat-integration'>den Bereich zur Chat-Integration</a>, um mehr darüber herauszufinden."
   discourse_automation:
     scriptables:
       send_slack_message:

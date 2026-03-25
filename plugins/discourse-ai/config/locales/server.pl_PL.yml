@@ -299,6 +299,8 @@ pl_PL:
         missing_required_aliases: "Brak wymaganych powiązań poświadczeń dla aliasów: %{aliases}."
         secret_not_found: "Alias poświadczeń `%{alias}` jest powiązany z brakującymi poświadczeniami."
         unknown_error: "Nie można rozwiązać żądanego poświadczenia."
+    mcp_servers:
+      secret_not_found: "Wybrane poświadczenie nie istnieje."
     ai_helper:
       errors:
         completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."

@@ -111,6 +111,9 @@ ug:
         user: ئىشلەتكۈچى
         save: "ساقلا"
         enabled: "قوزغىتىلدى؟"
+        mcp_tools_modal:
+          select_all: "ھەممىنى تاللا"
+          clear_all: "ھەممىنى تازىلا"
         delete: "ئۆچۈر"
         response_format:
           open_modal: "تەھرىر"
@@ -146,6 +149,21 @@ ug:
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
+      mcp_servers:
+        name: "ئىسمى"
+        description: "چۈشەندۈرۈش"
+        url: "تور ئادرېسى"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "باغلاندى"
+        oauth_connect: "ئۇلا"
+        enabled: "قوزغىتىلدى"
+        save: "ساقلا"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        tools_modal:
+          required: "زۆرۈر"
       llms:
         display_name: "ئىسمى"
         save: "ساقلا"

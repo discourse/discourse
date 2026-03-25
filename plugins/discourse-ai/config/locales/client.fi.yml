@@ -376,6 +376,8 @@ fi:
         save: "Tallenna"
         enabled: "Otettu käyttöön?"
         tools: "Käytössä olevat työkalut"
+        mcp_tools_modal:
+          clear_all: "Tyhjennä kaikki"
         forced_tools: "Pakotetut työkalut"
         allowed_groups: "Sallitut ryhmät"
         delete: "Poista"
@@ -448,7 +450,6 @@ fi:
         tool_name: "Työkalun nimi"
         description: "Kuvaus"
         description_help: "Selkeä kuvaus työkalun tarkoituksesta kielimallissa"
-        subheader_description: "Työkalut laajentavat tekoälybottien ominaisuuksia käyttäjän määrittämillä JavaScript-toiminnoilla."
         summary: "Yhteenveto"
         summary_help: "Loppukäyttäjille näytettävä yhteenveto työkalujen tarkoituksesta"
         script: "Skripti"
@@ -482,6 +483,22 @@ fi:
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      mcp_servers:
+        name: "Nimi"
+        description: "Kuvaus"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Yhdistetty"
+        oauth_connect: "Yhdistä"
+        enabled: "Käytössä"
+        save: "Tallenna"
+        edit: "Muokkaa"
+        delete: "Poista"
+        tools_modal:
+          parameters: "Parametrit"
+          required: "Pakollinen"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"

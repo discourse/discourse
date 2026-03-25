@@ -116,6 +116,17 @@ te:
         edit: "సవరించండి"
         delete: "తొలగించు"
         embedding: "పొందుపరచడం"
+      mcp_servers:
+        name: "పేరు"
+        description: "వివరణ"
+        url: "URL"
+        oauth_connect: "కనెక్ట్ చేయండి"
+        enabled: "ప్రారంభించబడింది"
+        save: "సేవ్ చేయండి"
+        edit: "సవరించండి"
+        delete: "తొలగించండి"
+        tools_modal:
+          required: "అవసరం"
       llms:
         display_name: "పేరు"
         save: "సేవ్ చేయండి"

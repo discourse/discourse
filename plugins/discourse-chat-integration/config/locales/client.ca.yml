@@ -14,15 +14,13 @@ ca:
     chat_integration:
       menu_title: "Integracions de xat"
       settings: "Configuració"
-      no_providers: "Heu d'habilitar alguns proveïdors en la configuració del connector"
+      more_providers: "Més"
       channels_with_errors: "Alguns canals d'aquest proveïdor van fallar l'última vegada que es van enviar missatges. Feu clic en la icona o icones d'error per a obtenir més informació."
       group_mention_template: "Mencions de: @ %{name}"
       group_message_template: "Missatges a: @ %{name}"
-      choose_group: "(trieu un grup)"
-      all_categories: "(totes les categories)"
-      all_tags: "(totes les etiquetes)"
-      create_rule: "Crea una regla"
-      create_channel: "Crea un canal"
+      choose_group: "(Trieu un grup)"
+      all_categories: "(Totes les categories)"
+      all_tags: "(Totes les etiquetes)"
       delete_channel: "Suprimeix"
       test_channel: "Test"
       edit_channel: "Edita"
@@ -30,13 +28,10 @@ ca:
       test_modal:
         title: "Envia un missatge de prova"
         topic: "Tema"
-        send: "Envia un missatge de prova"
         close: "Tanca"
         success: "Missatge enviat correctament"
       type:
         normal: Normal
-        group_message: Missatge de grup
-        group_mention: Menció de grup
       filter:
         mute: 'Silenci'
         follow: 'Sols la primera publicació'
@@ -56,8 +51,6 @@ ca:
           ok: "Vàlid"
           fail: "Format no vàlid"
       edit_rule_modal:
-        title: Edita la regla
-        save: Desa la regla
         cancel: Cancel·la
         provider: Proveïdor
         type: Tipus
@@ -78,7 +71,6 @@ ca:
           param:
             identifier:
               title: Canal
-              help: "per exemple #canal, @nomdusuari."
           errors:
             action_prohibited: "El bot no té permís per a publicar en aquest canal"
         telegram:
@@ -101,7 +93,6 @@ ca:
               help: "Un nom per a descriure el canal. No s'utilitza per a la connexió amb Discord."
             webhook_url:
               title: URL del webhook
-              help: L'URL del webhook creat en la configuració del servidor Discord
         guilded:
           param:
             name:
@@ -113,7 +104,6 @@ ca:
           param:
             identifier:
               title: Canal
-              help: "per exemple #canal, @nomdusuari."
           errors:
             channel_not_found: "El canal especificat no existeix en Mattermost"
         matrix:
@@ -143,7 +133,6 @@ ca:
           param:
             identifier:
               title: Canal
-              help: "per exemple #canal, @nomdusuari."
           errors:
             invalid_channel: "Aquest canal no existeix en Rocket Chat"
         gitter:
@@ -151,7 +140,6 @@ ca:
           param:
             name:
               title: "Nom"
-              help: "El nom de la sala Gitter, p. ex. gitterHQ/services."
             webhook_url:
               title: "URL del webhook"
               help: "L'URL proporcionat quan creeu una nova integració en la sala Gitter."

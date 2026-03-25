@@ -123,6 +123,17 @@ bg:
         edit: "Редактирай"
         delete: "Изтрий"
         embedding: "Ембедване"
+      mcp_servers:
+        name: "Име "
+        description: "Описание"
+        url: "URL"
+        oauth_connect: "Свържете се"
+        enabled: "Да е включен"
+        save: "Запази "
+        edit: "Редактирай"
+        delete: "Изтрий"
+        tools_modal:
+          required: "Задъжителни"
       llms:
         display_name: "Име"
         save: "Запази"

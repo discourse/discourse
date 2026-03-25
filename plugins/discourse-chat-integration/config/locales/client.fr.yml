@@ -14,15 +14,14 @@ fr:
     chat_integration:
       menu_title: "Intégrations du chat"
       settings: "Paramètres"
-      no_providers: "Vous devez activer certains fournisseurs dans les paramètres de l'extension"
+      more_providers: "Plus"
+      channels_title: "Canaux"
       channels_with_errors: "Certains canaux de ce fournisseur ont échoué la dernière fois que des messages ont été envoyés. Cliquez sur les icônes d'erreur pour en savoir plus."
       group_mention_template: "Mentions de : @%{name}"
       group_message_template: "Messages à : @%{name}"
-      choose_group: "(choisir un groupe)"
-      all_categories: "(toutes les catégories)"
-      all_tags: "(toutes les étiquettes)"
-      create_rule: "Créer une règle"
-      create_channel: "Créer un canal"
+      choose_group: "(Choisir un groupe)"
+      all_categories: "(Toutes les catégories)"
+      all_tags: "(Toutes les étiquettes)"
       delete_channel: "Supprimer"
       test_channel: "Test"
       edit_channel: "Modifier"
@@ -30,13 +29,10 @@ fr:
       test_modal:
         title: "Envoyer un message de test"
         topic: "Sujet"
-        send: "Envoyer message de test"
         close: "Fermer"
         success: "Message envoyé avec succès"
       type:
         normal: Normal
-        group_message: Message de groupe
-        group_mention: Mention de groupe
       filter:
         mute: 'Mettre en sourdine'
         follow: 'Première publication uniquement'
@@ -57,8 +53,6 @@ fr:
           ok: "Valide"
           fail: "Format invalide"
       edit_rule_modal:
-        title: Modifier la règle
-        save: Enregistrer la règle
         cancel: Annuler
         provider: Fournisseur
         type: Type
@@ -79,7 +73,6 @@ fr:
           param:
             identifier:
               title: Canal
-              help: "p. ex., #canal, @utilisateur."
           errors:
             action_prohibited: "Ce bot n'a pas l'autorisation de publier dans ce canal"
         telegram:
@@ -102,7 +95,6 @@ fr:
               help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Discord."
             webhook_url:
               title: URL du webhook
-              help: L'URL du Webhook créée dans les paramètres de votre serveur Discord
         guilded:
           title: "Guilded"
           param:
@@ -117,7 +109,6 @@ fr:
           param:
             identifier:
               title: Canal
-              help: "p. ex., #canal, @utilisateur."
           errors:
             channel_not_found: "Le canal spécifié n'existe pas sur Mattermost"
         matrix:
@@ -147,7 +138,6 @@ fr:
           param:
             identifier:
               title: Canal
-              help: "p. ex., #canal, @utilisateur."
           errors:
             invalid_channel: "Le canal spécifié n'existe pas sur Rocket.Chat"
         gitter:
@@ -155,7 +145,6 @@ fr:
           param:
             name:
               title: "Nom"
-              help: "Un nom d'espace de discussion Gitter. P. ex., gitterHQ/services."
             webhook_url:
               title: "URL du webhook"
               help: "L'adresse URL fournie lorsque vous créez une nouvelle intégration dans un espace de discussion Gitter."

@@ -531,6 +531,8 @@ ru:
         save: "Сохранить"
         enabled: "Включено?"
         tools: "Включенные инструменты"
+        mcp_tools_modal:
+          clear_all: "Сбросить все"
         forced_tools: "Обязательные инструменты"
         allowed_groups: "Разрешенные группы"
         delete: "Удалить"
@@ -605,7 +607,6 @@ ru:
         tool_name: "Название инструмента"
         description: "Описание"
         description_help: "Четкое описание назначения инструмента для языковой модели"
-        subheader_description: "Инструменты расширяют возможности AI-ботов с помощью пользовательских функций JavaScript."
         summary: "Сводка"
         summary_help: "Краткое описание назначения инструментов для отображения конечным пользователям"
         script: "Скрипт"
@@ -639,6 +640,22 @@ ru:
         delete: "Удалить"
         embedding: "Встраивание"
         tool: "Инструмент"
+      mcp_servers:
+        name: "Название"
+        description: "Описание"
+        url: "URL-адрес"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Связанный"
+        oauth_connect: "Подключить"
+        enabled: "Включено"
+        save: "Сохранить"
+        edit: "Изменить"
+        delete: "Удалить"
+        tools_modal:
+          parameters: "Параметры"
+          required: "Обязательный"
       llms:
         short_title: "Большие языковые модели"
         no_llms: "Еще нет LLM"

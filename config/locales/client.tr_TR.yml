@@ -459,6 +459,7 @@ tr_TR:
       start_posting:
         title: "Paylaşmaya Başla"
         description: "İnsanlara birlikte konuşacakları bir konu verin"
+        action: "Fikirleri gör"
         choose_option: "Nasıl başlamak istersiniz?"
         predefined_topics: "Buz kırıcı şablonlar"
         predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."

@@ -132,6 +132,21 @@ sv:
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      mcp_servers:
+        name: "Namn"
+        description: "Beskrivning"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Kopplad"
+        oauth_connect: "Koppla"
+        enabled: "Aktiverad"
+        save: "Spara"
+        edit: "Redigera"
+        delete: "Ta bort"
+        tools_modal:
+          required: "Krävs"
       llms:
         display_name: "Namn"
         provider: "Leverantör"

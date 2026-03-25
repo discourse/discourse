@@ -8,10 +8,12 @@ cs:
   js:
     chat_integration:
       settings: "Nastavení"
+      more_providers: "Více"
+      channels_title: "Kanály"
       channel_exception: "Při posledním odeslání zprávy do tohoto kanálu došlo k neznámé chybě."
-      choose_group: "(vyberte skupinu)"
-      all_categories: "(všechny kategorie)"
-      all_tags: "(všechny štítky)"
+      choose_group: "(Vyberte skupinu)"
+      all_categories: "(Všechny kategorie)"
+      all_tags: "(Všechny štítky)"
       delete_channel: "Smazat"
       test_channel: "Test"
       edit_channel: "Upravit"

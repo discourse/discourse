@@ -113,6 +113,15 @@ be:
         edit: "Рэдагаваць"
         delete: "Выдаліць"
         embedding: "узаемадзеянне"
+      mcp_servers:
+        name: "Назва"
+        description: "Апісанне"
+        url: "URL спасылка"
+        save: "Захаваць"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
+        tools_modal:
+          required: "Абавязкова"
       llms:
         display_name: "Імя"
         save: "Захаваць"

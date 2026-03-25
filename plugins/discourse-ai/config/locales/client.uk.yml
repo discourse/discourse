@@ -509,6 +509,11 @@ uk:
         credit_allocations: "Кредитні асигнування"
       ai_agent:
         ai_tools: "Інструменти"
+        mcp_server_tool_count:
+          one: "%{count} інструмент"
+          few: "%{count} інструменти"
+          many: "%{count} інструментів"
+          other: "%{count} інструментів"
         tool_strategies:
           all: "Застосувати до всіх відповідей"
           replies:
@@ -580,6 +585,11 @@ uk:
           many: "%{count} інструментів"
           other: "%{count} інструментів"
         tool_tokens_total: "~%{tokens} Маркери"
+        mcp_server_tokens_only: "~%{tokens} маркери"
+        mcp_tools_modal:
+          title: "%{name} інструментів"
+          select_all: "Вибрати все"
+          clear_all: "Очистити все"
         tool_severity_medium: "Помірна місткість"
         tool_severity_high: "Висока ємність"
         tool_severity_too_many: "Занадто багато інструментів"
@@ -671,7 +681,6 @@ uk:
         tool_name_help: "Назва інструменту представлена у великій мовній моделі. Вона не є окремою, але є окремою для кожного агента. (агент перевіряє під час збереження)"
         description: "Опис"
         description_help: "Чіткий опис призначення інструменту для мовної моделі"
-        subheader_description: "Інструменти розширюють можливості ботів на базі штучного інтелекту за допомогою визначених користувачем функцій JavaScript."
         summary: "Підсумок"
         summary_help: "Короткий опис призначення інструментів для відображення кінцевим користувачам"
         script: "Скрипт"
@@ -727,6 +736,30 @@ uk:
         tool: "Інструмент"
         modal:
           title: "Створити нові облікові дані"
+      mcp_servers:
+        name: "Імʼя"
+        description: "Опис"
+        url: "Посилання"
+        auth_types:
+          oauth: "OAuth"
+        secret: "Облікові дані"
+        oauth_statuses:
+          connected: "Пов’язаний"
+        oauth_connect: "Підключити"
+        enabled: "Включено"
+        save: "Зберегти"
+        edit: "Редагувати"
+        delete: "Видалити"
+        back: "Назад до інструментів"
+        tool_count:
+          one: "%{count} інструмент"
+          few: "%{count} інструменти"
+          many: "%{count} інструментів"
+          other: "%{count} інструментів"
+        tools_modal:
+          title: "%{name} інструментів"
+          parameters: "Параметри"
+          required: "Обов'язкові"
       llms:
         short_title: "LLMs"
         no_llms: "Ще немає LLM"

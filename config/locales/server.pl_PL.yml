@@ -686,6 +686,7 @@ pl_PL:
         many: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
         other: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
       usernames_or_emails_required: "Nazwy użytkowników lub adresy e-mail muszą być obecne"
+      cannot_add_emails: "Do dodawania członków do tej grupy można używać wyłącznie nazw użytkowników. Aby zaprosić e-mailem, użyj przycisku „Zaproś”."
       counting_too_many_email_domains:
         one: "Maksymalnie %{count} domena e-mail może być liczona jednocześnie"
         few: "Maksymalnie %{count} domeny e-mail mogą być liczone jednocześnie"

@@ -14,16 +14,15 @@ pt_BR:
     chat_integration:
       menu_title: "Integrações de chat"
       settings: "Configurações"
-      no_providers: "Você precisa habilitar alguns provedores nas configurações do plugin"
+      more_providers: "Mais"
+      channels_title: "Canais"
       channels_with_errors: "Alguns canais deste provedor falharam na última vez em que as mensagens foram enviadas. Clique no(s) ícone(s) de erro para saber mais."
       channel_exception: "Ocorreu um erro desconhecido última vez que uma mensagem foi enviada para este canal."
       group_mention_template: "Menções de: @%{name}"
       group_message_template: "Mensagens para: @%{name}"
-      choose_group: "(escolha um grupo)"
-      all_categories: "(todas as categorias)"
-      all_tags: "(todas as etiquetas)"
-      create_rule: "Criar Regra"
-      create_channel: "Criar Canal"
+      choose_group: "(Fechar grupo)"
+      all_categories: "(Todas as categorias)"
+      all_tags: "(Todas as etiquetas)"
       delete_channel: "Excluir"
       test_channel: "Testar"
       edit_channel: "Editar"
@@ -31,14 +30,11 @@ pt_BR:
       test_modal:
         title: "Enviar uma mensagem de teste"
         topic: "Tópico"
-        send: "Enviar Mensagem de Teste"
         close: "Fechar"
         error: "Ocorreu um erro desconhecido durante o envio da mensagem. Verifique os logs do site para mais informações."
         success: "Mensagem enviada com sucesso"
       type:
         normal: Normal
-        group_message: Mensagem de Grupo
-        group_mention: Menção de Grupo
       filter:
         mute: 'Silenciar'
         follow: 'Apenas primeira postagem'
@@ -59,8 +55,6 @@ pt_BR:
           ok: "Válido"
           fail: "Formato inválido"
       edit_rule_modal:
-        title: Editar Regra
-        save: Salvar Regra
         cancel: Cancelar
         provider: Provedor
         type: Tipo
@@ -81,7 +75,6 @@ pt_BR:
           param:
             identifier:
               title: Canal
-              help: "ex.: #canal, @username."
           errors:
             action_prohibited: "Este robô não tem permissão para postar naquele canal"
             channel_not_found: "O canal especificado não existe no Slack"
@@ -105,7 +98,6 @@ pt_BR:
               help: "Um nome para descrever o canal. Não é usado para a conexão ao Discord."
             webhook_url:
               title: URL do webhook
-              help: A URL do webhook criada nas configurações do seu servidor Discord
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +112,6 @@ pt_BR:
           param:
             identifier:
               title: Canal
-              help: "ex.: #canal, @username."
           errors:
             channel_not_found: "O canal especificado não existe no Mattermost"
         matrix:
@@ -151,7 +142,6 @@ pt_BR:
           param:
             identifier:
               title: Canal
-              help: "ex.: #canal, @username."
           errors:
             invalid_channel: "Este canal não existe no Rocket Chat"
         gitter:
@@ -159,7 +149,6 @@ pt_BR:
           param:
             name:
               title: "Nome"
-              help: "O nome de uma sala Gitter, ex.: gitterHQ/services."
             webhook_url:
               title: "URL do webhook"
               help: "A URL fornecida quando você cria uma nova integração em uma sala Gitter."

@@ -59,9 +59,6 @@ hu:
     chat_integration_webex_excerpt_length: "Webex Team bejegyzésrészlet hossza"
     chat_integration_google_enabled: "Engedélyezze a „Google Chat” chatintegrációs szolgáltatót"
     chat_integration_google_excerpt_length: "Google Chat bejegyzésrészlet hossza"
-  dashboard:
-    problem:
-      channel_errors: "Néhány chatintegrációs csatorna hibás lehet. További információkért látogassa meg a <a href='%{base_path}/admin/plugins/chat-integration'>chatintegrációs részt</a>."
   discourse_automation:
     scriptables:
       send_slack_message:
