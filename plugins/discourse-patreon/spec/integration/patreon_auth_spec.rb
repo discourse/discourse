@@ -10,11 +10,10 @@ describe "Patreon Oauth2" do
   fab!(:user2, :user)
 
   def setup_patreon_emails_stub(email:, verified:)
-    stub_request(:get, "https://api.patreon.com/oauth2/api/current_user").with(
-      headers: {
-        "Authorization" => "Bearer #{access_token}",
-      },
-    ).to_return(
+    stub_request(
+      :get,
+      "https://www.patreon.com/api/oauth2/v2/identity?fields%5Buser%5D=email,full_name,is_email_verified",
+    ).with(headers: { "Authorization" => "Bearer #{access_token}" }).to_return(
       status: 200,
       body:
         JSON.dump(
@@ -39,7 +38,7 @@ describe "Patreon Oauth2" do
     SiteSetting.patreon_client_id = client_id
     SiteSetting.patreon_client_secret = client_secret
 
-    stub_request(:post, "https://api.patreon.com/oauth2/token").with(
+    stub_request(:post, "https://www.patreon.com/api/oauth2/token").with(
       body:
         hash_including(
           "client_id" => client_id,

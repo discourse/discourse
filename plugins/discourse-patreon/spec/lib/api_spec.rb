@@ -2,7 +2,7 @@
 
 RSpec.describe Patreon::Api do
   let(:url) do
-    "https://api.patreon.com/oauth2/api/current_user/campaigns?include=rewards,creator,goals,pledges&page%5Bcount%5D=100"
+    "https://www.patreon.com/api/oauth2/v2/campaigns?include=tiers,creator&fields%5Bcampaign%5D=created_at,name,patron_count&fields%5Btier%5D=title,amount_cents,created_at"
   end
 
   def stub(status)

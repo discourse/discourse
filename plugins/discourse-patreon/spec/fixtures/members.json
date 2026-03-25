@@ -1,0 +1,92 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "currently_entitled_amount_cents": 0,
+        "last_charge_date": null,
+        "last_charge_status": "Paid",
+        "patron_status": "active_patron",
+        "email": "foo@bar.com"
+      },
+      "id": "member-1",
+      "relationships": {
+        "currently_entitled_tiers": {
+          "data": [{ "id": "999999", "type": "tier" }]
+        },
+        "user": {
+          "data": { "id": "111111", "type": "user" }
+        }
+      },
+      "type": "member"
+    },
+    {
+      "attributes": {
+        "currently_entitled_amount_cents": 100,
+        "last_charge_date": "2017-11-07T20:59:52+00:00",
+        "last_charge_status": "Declined",
+        "patron_status": "declined_patron",
+        "email": "boo@far.com"
+      },
+      "id": "member-2",
+      "relationships": {
+        "currently_entitled_tiers": {
+          "data": [{ "id": "999998", "type": "tier" }]
+        },
+        "user": {
+          "data": { "id": "111112", "type": "user" }
+        }
+      },
+      "type": "member"
+    },
+    {
+      "attributes": {
+        "currently_entitled_amount_cents": 200,
+        "last_charge_date": "2017-11-10T20:59:52+00:00",
+        "last_charge_status": "Declined",
+        "patron_status": "declined_patron",
+        "email": "roo@aar.com"
+      },
+      "id": "member-3",
+      "relationships": {
+        "currently_entitled_tiers": {
+          "data": [{ "id": "999997", "type": "tier" }]
+        },
+        "user": {
+          "data": { "id": "111113", "type": "user" }
+        }
+      },
+      "type": "member"
+    }
+  ],
+  "included": [
+    {
+      "attributes": {
+        "email": "foo@bar.com",
+        "full_name": "Foo Bar"
+      },
+      "id": "111111",
+      "type": "user"
+    },
+    {
+      "attributes": {
+        "email": "boo@far.com",
+        "full_name": "Boo Far"
+      },
+      "id": "111112",
+      "type": "user"
+    },
+    {
+      "attributes": {
+        "email": "roo@aar.com",
+        "full_name": "Roo Aar"
+      },
+      "id": "111113",
+      "type": "user"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 3
+    }
+  }
+}

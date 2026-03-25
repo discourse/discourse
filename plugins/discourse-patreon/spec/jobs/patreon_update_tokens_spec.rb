@@ -6,7 +6,7 @@ RSpec.describe Jobs::PatreonUpdateTokens do
   before do
     SiteSetting.patreon_enabled = true
 
-    stub_request(:post, "https://api.patreon.com/oauth2/token").with(
+    stub_request(:post, "https://www.patreon.com/api/oauth2/token").with(
       body: {
         "client_id" => SiteSetting.patreon_client_id,
         "client_secret" => SiteSetting.patreon_client_secret,

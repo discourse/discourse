@@ -108,9 +108,11 @@ class ::OmniAuth::Strategies::Patreon < ::OmniAuth::Strategies::OAuth2
   option :client_options,
          site: "https://www.patreon.com",
          authorize_url: "https://www.patreon.com/oauth2/authorize",
-         token_url: "https://api.patreon.com/oauth2/token"
+         token_url: "https://www.patreon.com/api/oauth2/token"
 
-  option :authorize_params, response_type: "code"
+  option :authorize_params,
+         response_type: "code",
+         scope: "identity identity[email] campaigns campaigns.members campaigns.members[email]"
 
   def custom_build_access_token
     verifier = request.params["code"]
@@ -137,7 +139,7 @@ class ::OmniAuth::Strategies::Patreon < ::OmniAuth::Strategies::OAuth2
         response =
           client.request(
             :get,
-            "https://api.patreon.com/oauth2/api/current_user",
+            "https://www.patreon.com/api/oauth2/v2/identity?fields%5Buser%5D=email,full_name,is_email_verified",
             headers: {
               "Authorization" => "Bearer #{access_token.token}",
             },

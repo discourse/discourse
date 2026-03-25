@@ -12,9 +12,9 @@ class Patreon::PatreonWebhookController < ApplicationController
                      :verify_authenticity_token
 
   TRIGGERS = %w[
-    pledges:create
-    pledges:update
-    pledges:delete
+    members:create
+    members:update
+    members:delete
     members:pledge:create
     members:pledge:update
     members:pledge:delete
@@ -46,11 +46,11 @@ class Patreon::PatreonWebhookController < ApplicationController
     end
 
     case event
-    when "pledges:create", "members:pledge:create"
+    when "members:create", "members:pledge:create"
       Patreon::Pledge.create!(pledge_data)
-    when "pledges:update", "members:pledge:update"
+    when "members:update", "members:pledge:update"
       Patreon::Pledge.update!(pledge_data)
-    when "pledges:delete", "members:pledge:delete"
+    when "members:delete", "members:pledge:delete"
       Patreon::Pledge.delete!(pledge_data)
     end
 
