@@ -862,22 +862,22 @@ class Group < ActiveRecord::Base
 
     Group.transaction do
       sql = <<~SQL
-        INSERT INTO group_users
-          (group_id, user_id, notification_level, created_at, updated_at)
-        SELECT
-          :group_id,
-          u.id,
-          :notification_level,
-          CURRENT_TIMESTAMP,
-          CURRENT_TIMESTAMP
-        FROM users AS u
-        WHERE u.id IN (:user_ids)
-        AND NOT EXISTS (
-          SELECT 1 FROM group_users AS gu
-          WHERE gu.user_id = u.id AND
-          gu.group_id = :group_id
-        )
-        RETURNING user_id
+      INSERT INTO group_users
+        (group_id, user_id, notification_level, created_at, updated_at)
+      SELECT
+        :group_id,
+        u.id,
+        :notification_level,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+      FROM users AS u
+      WHERE u.id IN (:user_ids)
+      AND NOT EXISTS (
+        SELECT 1 FROM group_users AS gu
+        WHERE gu.user_id = u.id AND
+        gu.group_id = :group_id
+      )
+      RETURNING user_id
       SQL
 
       added_user_ids =
