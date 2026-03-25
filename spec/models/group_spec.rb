@@ -1296,6 +1296,7 @@ RSpec.describe Group do
       )
     end
 
+
     it "updates group user count" do
       expect {
         group.bulk_add([user.id, admin.id])

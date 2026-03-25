@@ -885,8 +885,7 @@ class Group < ActiveRecord::Base
           sql,
           group_id: self.id,
           user_ids: user_ids,
-          notification_level:
-            self.default_notification_level || NotificationLevels.types[:watching],
+          notification_level: self.default_notification_level,
         )
 
       return [] if added_user_ids.blank?
