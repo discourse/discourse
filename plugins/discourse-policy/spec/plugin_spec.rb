@@ -117,8 +117,7 @@ describe DiscoursePolicy do
         expect(post_policy.add_users_to_group).to be_nil
       end
 
-      # TODO: plugin passes an AR relation to group.remove instead of a single user — fix callsite to use GroupManager
-      xit "removes all users from the group upon version change" do
+      it "removes all users from the group upon version change" do
         updated_policy = <<~MD
           [policy group=#{group.name} version=2 add-users-to-group=#{group2.name}]
             Here's the new policy
