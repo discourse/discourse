@@ -930,8 +930,7 @@ class Group < ActiveRecord::Base
     GroupUser.bulk_set_category_notifications(self, added_user_ids)
     GroupUser.bulk_set_tag_notifications(self, added_user_ids)
 
-    added_users = User.where(id: added_user_ids)
-    added_users.find_each { |user| trigger_user_added_event(user, automatic) }
+    User.where(id: added_user_ids).find_each { |user| trigger_user_added_event(user, automatic) }
 
     bulk_publish_category_updates(added_user_ids)
 
