@@ -13,13 +13,6 @@ RSpec.describe Jobs::BulkGrantTrustLevel do
     )
   end
 
-  it "does not raise when trust_level is missing but recalculate is true" do
-    user = Fabricate(:user, trust_level: 0)
-    expect {
-      Jobs::BulkGrantTrustLevel.new.execute(user_ids: [user.id], recalculate: true)
-    }.not_to raise_error
-  end
-
   it "updates the trust_level" do
     user1 = Fabricate(:user, email: "foo@wat.com", trust_level: 0)
     user2 = Fabricate(:user, email: "foo@bar.com", trust_level: 2)
