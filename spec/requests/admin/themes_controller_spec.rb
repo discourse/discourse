@@ -166,13 +166,6 @@ RSpec.describe Admin::ThemesController do
   end
 
   describe "#import" do
-    let(:theme_json_file) do
-      Rack::Test::UploadedFile.new(
-        file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"),
-        "application/json",
-      )
-    end
-
     let(:theme_archive) do
       Rack::Test::UploadedFile.new(
         file_from_fixtures("discourse-test-theme.zip", "themes"),
@@ -213,11 +206,6 @@ RSpec.describe Admin::ThemesController do
           expect(response.parsed_body["errors"]).to include(
             I18n.t("themes.import_error.not_allowed_theme", { repo: remote.strip }),
           )
-        end
-
-        it "bans json file import" do
-          post "/admin/themes/import.json", params: { theme: theme_json_file }
-          expect(response.status).to eq(403)
         end
       end
 
@@ -282,18 +270,6 @@ RSpec.describe Admin::ThemesController do
         expect(RemoteTheme.last.private_key).to eq("rsa private key")
 
         expect(response.status).to eq(201)
-      end
-
-      it "imports a theme" do
-        post "/admin/themes/import.json", params: { theme: theme_json_file }
-        expect(response.status).to eq(201)
-
-        json = response.parsed_body
-
-        expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
-        expect(json["theme"]["theme_fields"].length).to eq(2)
-        expect(json["theme"]["auto_update"]).to eq(false)
-        expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
 
       it "can fail if theme is not accessible" do
@@ -440,7 +416,7 @@ RSpec.describe Admin::ThemesController do
 
     shared_examples "theme import not allowed" do
       it "prevents theme import with a 404 response" do
-        post "/admin/themes/import.json", params: { theme: theme_json_file }
+        post "/admin/themes/import.json", params: { theme: theme_archive }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))

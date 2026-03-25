@@ -376,7 +376,7 @@ export default class InstallThemeModal extends Component {
                   {{on "change" this.uploadLocaleFile}}
                   type="file"
                   id="file-input"
-                  accept=".dcstyle.json,application/json,.tar.gz,application/x-gzip,.zip,application/zip"
+                  accept=".tar.gz,application/x-gzip,.zip,application/zip"
                 />
                 <br />
                 <span class="description">

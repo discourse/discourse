@@ -7552,7 +7552,7 @@ en:
           import_web_tip: "Repository containing theme"
           direct_install_tip: "Are you sure you want to install <strong>%{name}</strong> from the repository listed below?"
           import_web_advanced: "Advanced…"
-          import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
+          import_file_tip: ".tar.gz or .zip file containing theme"
           is_private: "Theme is in a private git repository"
           finish_install: "Finish Theme Installation"
           last_attempt: "Installation process did not finish, last attempted:"
