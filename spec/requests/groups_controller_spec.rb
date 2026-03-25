@@ -1645,12 +1645,29 @@ RSpec.describe GroupsController do
         expect(response.status).to eq(200)
       end
 
-      it "does not send invites if user cannot invite" do
+      it "returns a clear error when group owner without invite permission submits emails" do
         group.add_owner(user)
         sign_in(user)
 
         put "/groups/#{group.id}/members.json", params: { emails: "test@example.com" }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to include("Only usernames")
+      end
+
+      it "rejects emails even when valid usernames are also submitted by owner without invite permission" do
+        group.add_owner(user)
+        sign_in(user)
+
+        expect {
+          put "/groups/#{group.id}/members.json",
+              params: {
+                usernames: other_user.username,
+                emails: "nonexistent@example.com",
+              }
+        }.not_to change { group.users.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to include("Only usernames")
       end
 
       context "when is able to add several members to a group" do
