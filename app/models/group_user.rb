@@ -202,8 +202,6 @@ class GroupUser < ActiveRecord::Base
     Group.decrement_counter(:user_count, self.group_id)
   end
 
-  private
-
   def self.semantically_higher_notification_level_sql(new_col, existing_col)
     <<~SQL.squish
       CASE
@@ -214,6 +212,7 @@ class GroupUser < ActiveRecord::Base
       END
     SQL
   end
+  private_class_method :semantically_higher_notification_level_sql
 end
 
 # == Schema Information
