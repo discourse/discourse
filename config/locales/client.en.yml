@@ -3992,6 +3992,7 @@ en:
         publish_to: "Publish To:"
         when: "When:"
         time_frame_required: "Please select a time frame"
+        category_required: "Please select a category"
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
         duration: "Duration"
