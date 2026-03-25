@@ -4,6 +4,7 @@ class DiscourseSolved::BuildSchemaMarkup
   include Service::Base
 
   params do
+    attribute :post_ids, :array
     attribute :topic_id, :integer
     validates :topic_id, presence: true
   end
@@ -33,15 +34,12 @@ class DiscourseSolved::BuildSchemaMarkup
     topic.solved&.answer_post
   end
 
-  def fetch_suggested_answers(topic:, accepted_answer:)
+  def fetch_suggested_answers(params:, topic:, accepted_answer:)
     excluded_ids = [topic.first_post.id]
     excluded_ids << accepted_answer.id if accepted_answer.present?
-    topic
-      .posts
-      .where.not(id: excluded_ids)
-      .where(post_type: Post.types[:regular], hidden: false)
-      .order(:post_number)
-      .to_a
+    scope = topic.posts.where.not(id: excluded_ids)
+    scope = scope.where(id: params.post_ids) if params.post_ids.present?
+    scope.where(post_type: Post.types[:regular], hidden: false).order(:post_number).to_a
   end
 
   def fetch_html(topic:, accepted_answer:, suggested_answers:)

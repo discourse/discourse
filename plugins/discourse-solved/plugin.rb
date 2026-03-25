@@ -90,11 +90,12 @@ after_initialize do
   end
 
   register_html_builder("server:before-head-close-crawler") do |controller|
-    topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
+    topic_view = controller.instance_variable_get(:@topic_view)
     result =
       DiscourseSolved::BuildSchemaMarkup.call(
         params: {
-          topic_id: topic_id,
+          topic_id: topic_view&.topic&.id,
+          post_ids: topic_view&.posts&.ids,
         },
         guardian: controller.guardian,
       )
@@ -102,11 +103,12 @@ after_initialize do
   end
 
   register_html_builder("server:before-head-close") do |controller|
-    topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
+    topic_view = controller.instance_variable_get(:@topic_view)
     result =
       DiscourseSolved::BuildSchemaMarkup.call(
         params: {
-          topic_id: topic_id,
+          topic_id: topic_view&.topic&.id,
+          post_ids: topic_view&.posts&.ids,
         },
         guardian: controller.guardian,
       )
