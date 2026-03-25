@@ -1130,18 +1130,6 @@ class Group < ActiveRecord::Base
     "#{Discourse.base_url}/g/#{UrlHelper.encode_component(self.name)}"
   end
 
-  def bulk_publish_category_updates(user_ids)
-    return if user_ids.blank?
-    return unless categories.exists?
-
-    if user_ids.size == 1
-      user = User.find(user_ids.first)
-      publish_category_updates(user)
-    else
-      Discourse.request_refresh!(user_ids:)
-    end
-  end
-
   protected
 
   def name_format_validator
@@ -1303,6 +1291,18 @@ class Group < ActiveRecord::Base
   end
 
   private
+
+  def bulk_publish_category_updates(user_ids)
+    return if user_ids.blank?
+    return unless categories.exists?
+
+    if user_ids.size == 1
+      user = User.find(user_ids.first)
+      publish_category_updates(user)
+    else
+      Discourse.request_refresh!(user_ids:)
+    end
+  end
 
   def build_user_removed_webhook_payloads(group_users_relation)
     return unless WebHook.active_web_hooks(:group_user)

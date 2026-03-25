@@ -1393,6 +1393,26 @@ RSpec.describe Group do
         TagUser.notification_levels[:watching],
       )
     end
+
+    it "publishes category updates for a single added user" do
+      category = Fabricate(:category)
+      group.update!(categories: [category])
+
+      message = MessageBus.track_publish("/categories") { group.bulk_add([user.id]) }.first
+
+      expect(message).to be_present
+      expect(message.user_ids).to eq([user.id])
+    end
+
+    it "publishes a refresh when adding multiple users" do
+      category = Fabricate(:category)
+      group.update!(categories: [category])
+
+      message =
+        MessageBus.track_publish("/refresh_client") { group.bulk_add([user.id, admin.id]) }.first
+
+      expect(message.user_ids).to contain_exactly(user.id, admin.id)
+    end
   end
 
   describe "#bulk_remove" do
@@ -1486,6 +1506,16 @@ RSpec.describe Group do
       expect(events.map { |e| e[:params][0] }).to contain_exactly(user, admin)
     end
 
+    it "publishes category updates for removed users" do
+      category = Fabricate(:category)
+      group.update!(categories: [category])
+
+      message =
+        MessageBus.track_publish("/refresh_client") { group.bulk_remove([user.id, admin.id]) }.first
+
+      expect(message.user_ids).to contain_exactly(user.id, admin.id)
+    end
+
     describe "with webhook" do
       fab!(:group_user_web_hook)
 
@@ -1501,50 +1531,6 @@ RSpec.describe Group do
           expect([user.id, admin.id]).to include(payload["user_id"])
         end
       end
-    end
-  end
-
-  describe "#bulk_publish_category_updates" do
-    fab!(:category)
-
-    it "publishes to /categories for a single user" do
-      group.update!(categories: [category])
-
-      message =
-        MessageBus
-          .track_publish("/categories") { group.bulk_publish_category_updates([user.id]) }
-          .first
-
-      expect(message).to be_present
-      expect(message.user_ids).to eq([user.id])
-    end
-
-    it "publishes a refresh for multiple users" do
-      group.update!(categories: [category])
-
-      message =
-        MessageBus
-          .track_publish("/refresh_client") do
-            group.bulk_publish_category_updates([user.id, admin.id])
-          end
-          .first
-
-      expect(message.user_ids).to contain_exactly(user.id, admin.id)
-    end
-
-    it "does nothing when users are blank" do
-      group.update!(categories: [category])
-
-      messages = MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([]) }
-
-      expect(messages).to be_empty
-    end
-
-    it "does nothing when group has no categories" do
-      messages =
-        MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([user.id]) }
-
-      expect(messages).to be_empty
     end
   end
 
