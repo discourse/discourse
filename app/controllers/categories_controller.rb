@@ -597,6 +597,7 @@ class CategoriesController < ApplicationController
         end
 
         if SiteSetting.content_localization_enabled?
+          conditional_param_keys << :locale
           conditional_param_keys << { category_localizations: %i[id locale name description] }
         end
 

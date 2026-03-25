@@ -4699,6 +4699,8 @@ en:
       tags: "Tags"
       localizations: "Localizations"
       localization:
+        language: "Category language"
+        language_description: "The primary language of this category's name and description."
         locale: "Locale"
         name: "Name"
         description: "Description"
