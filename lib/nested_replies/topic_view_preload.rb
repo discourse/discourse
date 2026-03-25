@@ -24,15 +24,3 @@ TopicView.on_preload do |topic_view|
 
   topic_view.nested_replies_direct_reply_counts = counts
 end
-
-TopicView.on_preload do |topic_view|
-  next unless SiteSetting.nested_replies_enabled
-  next if topic_view.nested_replies_skip_preload
-  next unless defined?(DiscourseReactions)
-
-  posts = topic_view.posts
-  post_ids = posts.map(&:id)
-  next if post_ids.empty?
-
-  NestedReplies.batch_precompute_reactions(posts, post_ids)
-end

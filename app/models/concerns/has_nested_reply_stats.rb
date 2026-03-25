@@ -4,8 +4,6 @@ module HasNestedReplyStats
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :precomputed_reactions
-
     after_create :nested_replies_increment_stats
     after_destroy :nested_replies_decrement_stats
   end

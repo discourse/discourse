@@ -31,8 +31,6 @@ module NestedReplies
         end
 
       TopicView.preload(@topic_view)
-
-      preload_plugin_associations(posts)
     end
 
     private
@@ -80,33 +78,6 @@ module NestedReplies
 
       def reorder(*_args)
         self
-      end
-    end
-
-    def preload_plugin_associations(posts)
-      ActiveRecord::Associations::Preloader.new(records: posts, associations: [:post_actions]).call
-
-      if defined?(DiscourseReactions) && SiteSetting.respond_to?(:discourse_reactions_enabled) &&
-           SiteSetting.discourse_reactions_enabled
-        ActiveRecord::Associations::Preloader.new(
-          records: posts,
-          associations: [{ reactions: { reaction_users: :user } }],
-        ).call
-
-        post_ids = posts.map(&:id).uniq
-        if TopicViewSerializer.respond_to?(:posts_reaction_users_count)
-          counts = TopicViewSerializer.posts_reaction_users_count(post_ids)
-          action_users =
-            DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-              post_ids,
-            )
-          posts.each do |post|
-            post.reaction_users_count = counts[post.id].to_i
-            post.post_actions_with_reaction_users = action_users[post.id] || {}
-          end
-        end
-
-        NestedReplies.batch_precompute_reactions(posts, post_ids)
       end
     end
   end

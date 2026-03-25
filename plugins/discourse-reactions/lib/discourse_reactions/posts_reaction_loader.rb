@@ -3,6 +3,8 @@
 module DiscourseReactions::PostsReactionLoader
   def posts_with_reactions
     if SiteSetting.discourse_reactions_enabled
+      return if object.instance_variable_get(:@reactions_preloaded)
+
       posts = object.posts
 
       ActiveRecord::Associations::Preloader.new(
