@@ -1296,7 +1296,6 @@ RSpec.describe Group do
       )
     end
 
-
     it "updates group user count" do
       expect {
         group.bulk_add([user.id, admin.id])
@@ -1429,6 +1428,14 @@ RSpec.describe Group do
     it "returns empty array for blank input" do
       expect(group.bulk_remove([])).to eq([])
       expect(group.bulk_remove(nil)).to eq([])
+    end
+
+    it "updates group user count" do
+      group.reload
+      expect {
+        group.bulk_remove([user.id])
+        group.reload
+      }.to change { group.user_count }.from(2).to(1)
     end
 
     it "ignores user_ids not in the group" do

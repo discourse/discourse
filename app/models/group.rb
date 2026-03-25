@@ -915,7 +915,7 @@ class Group < ActiveRecord::Base
         User.where(id: added_user_ids, title: [nil, ""]).update_all(title: self.title)
       end
 
-      recalculate_user_count
+      Group.update_counters(self.id, user_count: added_user_ids.size)
     end
 
     if self.grant_trust_level.present? && !self.grant_trust_level.zero?
@@ -977,7 +977,7 @@ class Group < ActiveRecord::Base
           .find_each { |user| user.update_column(:title, user.next_best_title) }
       end
 
-      recalculate_user_count
+      Group.update_counters(self.id, user_count: -removed_user_ids.size)
     end
 
     if self.grant_trust_level.present? && !self.grant_trust_level.zero?
