@@ -441,6 +441,14 @@ RSpec.describe Oneboxer do
         expect(result[:preview]).to be_empty
       end
 
+      it "does not return onebox for domains in ignore_redirects when blocked" do
+        SiteSetting.blocked_onebox_domains = "x.com"
+
+        result = Oneboxer.external_onebox("https://x.com/someone/status/123")
+        expect(result[:onebox]).to be_empty
+        expect(result[:preview]).to be_empty
+      end
+
       it "does not return onebox if the Discourse-No-Onebox header == 1" do
         stub_request(:get, "https://website.com/discourse-no-onebox").to_return(
           status: 200,
