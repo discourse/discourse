@@ -140,9 +140,9 @@ after_initialize do
             if post_policy.add_users_to_group.present?
               previously_accepted_users = post_policy.accepted_policy_users
 
-              Group
-                .find_by(id: post_policy.add_users_to_group)
-                &.bulk_remove(previously_accepted_users.pluck(:user_id))
+              Group.find_by(id: post_policy.add_users_to_group)&.bulk_remove(
+                previously_accepted_users.pluck(:user_id),
+              )
             end
           end
         end

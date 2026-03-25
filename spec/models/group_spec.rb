@@ -1520,7 +1520,9 @@ RSpec.describe Group do
 
       message =
         MessageBus
-          .track_publish("/refresh_client") { group.bulk_publish_category_updates([user.id, admin.id]) }
+          .track_publish("/refresh_client") do
+            group.bulk_publish_category_updates([user.id, admin.id])
+          end
           .first
 
       expect(message.user_ids).to contain_exactly(user.id, admin.id)
@@ -1529,8 +1531,7 @@ RSpec.describe Group do
     it "does nothing when users are blank" do
       group.update!(categories: [category])
 
-      messages =
-        MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([]) }
+      messages = MessageBus.track_publish("/categories") { group.bulk_publish_category_updates([]) }
 
       expect(messages).to be_empty
     end
