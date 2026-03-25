@@ -613,10 +613,9 @@ class Topic < ActiveRecord::Base
 
     # Remove muted and shared draft categories
     remove_category_ids =
-      CategoryUser.where(
-        user_id: user.id,
-        notification_level: CategoryUser.notification_levels[:muted],
-      ).pluck(:category_id)
+      CategoryUser.where(user:, notification_level: CategoryUser.notification_levels[:muted]).pluck(
+        :category_id,
+      )
 
     remove_category_ids << SiteSetting.shared_drafts_category if SiteSetting.shared_drafts_enabled?
 
@@ -630,6 +629,11 @@ class Topic < ActiveRecord::Base
         )
     end
 
+    # Remove topics from ignored users
+    ignored_user_ids =
+      IgnoredUser.where(user:).where(expiring_at: Time.zone.now..).pluck(:ignored_user_id)
+    topics = topics.where.not(user_id: ignored_user_ids) if ignored_user_ids.present?
+
     # Remove muted tags
     muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
     unless muted_tag_ids.empty?
@@ -637,8 +641,7 @@ class Topic < ActiveRecord::Base
       # and don't forget untagged topics.
       topics =
         topics.where(
-          "EXISTS ( SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id AND tag_id NOT IN (?) )
-        OR NOT EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id)",
+          "EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id AND tag_id NOT IN (?)) OR NOT EXISTS (SELECT 1 FROM topic_tags WHERE topic_tags.topic_id = topics.id)",
           muted_tag_ids,
         )
     end
