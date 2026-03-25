@@ -113,10 +113,6 @@ RSpec.describe "Styleguide Smoke Test" do
     sections.each do |section, items|
       items.each do |item|
         it "renders the #{section}: #{item[:title]} page correctly" do
-          # TODO: fix chat and more-topics pages
-          skip_pages = %w[/organisms/chat /organisms/more-topics]
-          skip "Skipping smoke test for #{item[:href]} page" if skip_pages.include?(item[:href])
-
           visit "/styleguide/#{item[:href]}"
 
           expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
