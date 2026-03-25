@@ -679,7 +679,7 @@ GEM
     stripe (11.1.0)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
-    test-prof (1.5.2)
+    test-prof (1.6.0)
     thor (1.5.0)
     tiktoken_ruby (0.0.15.1-aarch64-linux)
     tiktoken_ruby (0.0.15.1-aarch64-linux-musl)
@@ -1239,7 +1239,7 @@ CHECKSUMS
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   stripe (11.1.0) sha256=a76e82cc7e4d2433803ca5fbe9453d019df376236f0b9fbcb7f36e6dd327f98d
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
-  test-prof (1.5.2) sha256=185839fb7d3745b3770ec48e3e5718eff9e28c327a50a1e18a3a9ef1060f8576
+  test-prof (1.6.0) sha256=b04cee7b9684b9b31e23e258f835ba67ee5b4fd5f6cc7204d076ef695805c335
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   tiktoken_ruby (0.0.15.1-aarch64-linux) sha256=e2c5d00b20c10bd220a103a271011bfa828e159cfba3b99d2c4029069bbb9198
   tiktoken_ruby (0.0.15.1-aarch64-linux-musl) sha256=2b58d9f2b0615d876a767b756c117b1438e68354513aff3d540b665b8eb6559c
