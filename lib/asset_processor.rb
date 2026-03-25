@@ -20,6 +20,9 @@ class AssetProcessor
   class TranspileError < StandardError
   end
 
+  class TimeoutError < StandardError
+  end
+
   def self.booted?
     !!@ctx
   end
@@ -186,6 +189,10 @@ class AssetProcessor
       v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
       result
     end
+  rescue MiniRacer::ScriptTerminatedError => e
+    timeout_error = TimeoutError.new("Script terminated: timeout after #{timeout / 1000}s")
+    timeout_error.set_backtrace(e.backtrace)
+    raise timeout_error
   rescue MiniRacer::RuntimeError => e
     message = e.message
     begin
