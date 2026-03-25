@@ -1008,12 +1008,12 @@ class Group < ActiveRecord::Base
   end
 
   def enqueue_user_removed_webhook_events(webhook_payloads)
-    webhook_payloads&.each do |wp|
+    webhook_payloads&.each do |webhook_payload|
       WebHook.enqueue_hooks(
         :group_user,
         :user_removed_from_group,
-        id: wp[:id],
-        payload: wp[:payload],
+        id: webhook_payload[:id],
+        payload: webhook_payload[:payload],
         group_ids: [self.id],
       )
     end
