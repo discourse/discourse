@@ -13,6 +13,8 @@ import ReactionsActionSummary from "../components/discourse-reactions-actions-su
 replaceIcon("notification.reaction", "bell");
 
 function initializeDiscourseReactions(api) {
+  api.registerAppreciationNotificationType("reaction");
+
   customizePostMenu(api);
 
   api.addKeyboardShortcut("l", null, {

@@ -25,6 +25,7 @@ module SvgSprite
         arrows-rotate
         asterisk
         at
+        award
         backward
         backward-fast
         backward-step

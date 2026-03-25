@@ -1,11 +1,12 @@
-import UserAction from "discourse/models/user-action";
-import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
-import { i18n } from "discourse-i18n";
+import { service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
-export default class UserNotificationsLikesReceived extends UserActivityStreamRoute {
-  userActionType = UserAction.TYPES["likes_received"];
+export default class UserNotificationsLikesReceived extends DiscourseRoute {
+  @service router;
 
-  titleToken() {
-    return i18n("user_action_groups.1");
+  redirect() {
+    this.router.replaceWith("userNotifications.appreciationsReceived", {
+      queryParams: { types: "like" },
+    });
   }
 }

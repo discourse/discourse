@@ -88,6 +88,19 @@ export function registerUserMenuTab(func) {
   CUSTOM_TABS_CLASSES.push(func(UserMenuTab));
 }
 
+const APPRECIATION_NOTIFICATION_TYPES = [];
+
+export function registerAppreciationNotificationType(type) {
+  if (!APPRECIATION_NOTIFICATION_TYPES.includes(type)) {
+    APPRECIATION_NOTIFICATION_TYPES.push(type);
+  }
+}
+
+export function getAppreciationNotificationTypes() {
+  return APPRECIATION_NOTIFICATION_TYPES;
+}
+
 export function resetUserMenuTabs() {
   CUSTOM_TABS_CLASSES.length = 0;
+  APPRECIATION_NOTIFICATION_TYPES.length = 0;
 }

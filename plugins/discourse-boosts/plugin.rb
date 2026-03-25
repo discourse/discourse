@@ -19,8 +19,12 @@ module ::DiscourseBoosts
 end
 
 require_relative "lib/discourse_boosts/engine"
+require_relative "lib/appreciation_providers/boosts"
 
 after_initialize do
+  DiscoursePluginRegistry.register_appreciation_provider(AppreciationProviders::Boosts.new, self)
+  DiscoursePluginRegistry.register_appreciation_notification_type("boost", self)
+
   reloadable_patch do |plugin|
     Post.prepend DiscourseBoosts::PostExtension
     UserOption.prepend DiscourseBoosts::UserOptionExtension

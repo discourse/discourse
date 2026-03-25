@@ -24,8 +24,12 @@ module ::DiscourseReactions
 end
 
 require_relative "lib/discourse_reactions/engine"
+require_relative "lib/appreciation_providers/reactions"
 
 after_initialize do
+  DiscoursePluginRegistry.register_appreciation_provider(AppreciationProviders::Reactions.new, self)
+  DiscoursePluginRegistry.register_appreciation_notification_type("reaction", self)
+
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-reactions", "db", "fixtures").to_s
 
   %w[

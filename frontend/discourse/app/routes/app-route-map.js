@@ -113,6 +113,7 @@ export default function () {
         this.route("topics");
         this.route("replies");
         this.route("likesGiven", { path: "likes-given" });
+        this.route("appreciations", { path: "appreciations-given" });
         this.route("bookmarks");
         this.route("bookmarksWithReminders", {
           path: "bookmarks-with-reminders",
@@ -129,6 +130,9 @@ export default function () {
       function () {
         this.route("responses");
         this.route("likesReceived", { path: "likes-received" });
+        this.route("appreciationsReceived", {
+          path: "appreciations-received",
+        });
         this.route("mentions");
         this.route("edits");
         this.route("links");

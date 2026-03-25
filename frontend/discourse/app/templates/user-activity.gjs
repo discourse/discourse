@@ -73,12 +73,12 @@ export default <template>
         {{/if}}
 
         <DNavigationItem
-          @route="userActivity.likesGiven"
+          @route="userActivity.appreciations"
           @ariaCurrentContext="subNav"
-          class="user-nav__activity-likes"
+          class="user-nav__activity-appreciations"
         >
-          {{icon "heart"}}
-          <span>{{i18n "user_action_groups.1"}}</span>
+          {{icon "award"}}
+          <span>{{i18n "user.appreciations"}}</span>
         </DNavigationItem>
 
         {{#if @controller.user.showBookmarks}}
