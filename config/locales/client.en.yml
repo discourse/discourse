@@ -492,7 +492,6 @@ en:
 
     admin_onboarding_banner:
       launch_in_easy_steps: "Launch in %{step_count} easy steps"
-      skipped: "The admin onboarding checklist has now been skipped. If you would like to re-enable it, look for `enable site owner onboarding` in the site settings."
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       invite_collaborators:
         title: "Invite Collaborators"
