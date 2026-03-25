@@ -703,7 +703,7 @@ export async function createReteEditor(container, { iconHTML, callbacks }) {
   AreaExtensions.simpleNodesOrder(area);
 
   const selector = AreaExtensions.selector();
-  const accumulating = AreaExtensions.accumulateOnCtrl();
+  const accumulating = { active: () => false };
   AreaExtensions.selectableNodes(area, selector, { accumulating });
 
   // Track syncing to avoid feedback loops
@@ -809,14 +809,6 @@ export async function createReteEditor(container, { iconHTML, callbacks }) {
       case "nodepicked": {
         const pickedId = context.data.id;
         const clientId = reteToClient.get(pickedId);
-
-        // Deselect previously selected nodes
-        for (const node of editor.getNodes()) {
-          if (node.id !== pickedId && node.selected) {
-            node.selected = false;
-            area.update("node", node.id);
-          }
-        }
 
         if (clientId) {
           const now = Date.now();
