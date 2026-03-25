@@ -122,7 +122,7 @@ export default class TopicFromParams extends DiscourseRoute {
     } else if (
       EmbedMode.enabled &&
       this.currentUser &&
-      topic.posts_count === 1 &&
+      topic.replyCount === 0 &&
       topic.get("details.can_create_post")
     ) {
       schedule("afterRender", () => {

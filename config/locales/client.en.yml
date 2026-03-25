@@ -711,6 +711,7 @@ en:
       storage_access_prompt: "Already have a %{site_name} account? Allow access to your session to comment as yourself."
       allow_access: "Allow Access"
       continue_as_guest: "Continue as Guest"
+      be_first_to_reply: "Be the first to reply!"
 
     topic_count_all:
       one: "See %{count} new topic"
