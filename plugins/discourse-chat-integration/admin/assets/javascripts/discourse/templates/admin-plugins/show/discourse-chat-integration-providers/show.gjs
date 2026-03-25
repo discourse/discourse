@@ -1,3 +1,4 @@
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import icon from "discourse/helpers/d-icon";
@@ -63,9 +64,7 @@ const providerTitle = (provider) =>
       </div>
     {{else}}
       {{#unless @controller.showNewChannelForm}}
-        <div class="admin-plugin-config-area__empty-list">
-          {{i18n "chat_integration.no_channels"}}
-        </div>
+        <AdminConfigAreaEmptyList @emptyLabel="chat_integration.no_channels" />
       {{/unless}}
     {{/if}}
   </div>

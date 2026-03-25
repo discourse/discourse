@@ -74,7 +74,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
       @label={{i18n "chat_integration.nav.providers"}}
     />
 
-    <div id="admin-plugin-chat" class="admin-detail">
+    <div id="admin-plugin-chat-integration" class="admin-detail">
       {{#if this.enabledProviders.length}}
         <div class="admin-nav-submenu">
           <ul class="nav nav-pills">

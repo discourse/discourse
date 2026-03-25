@@ -26,6 +26,12 @@ export default class EditRule extends Component {
     return this.type === "normal";
   }
 
+  get title() {
+    return this.args.model.rule.id
+      ? i18n("chat_integration.edit_rule_modal.edit_title")
+      : i18n("chat_integration.edit_rule_modal.create_title");
+  }
+
   @action
   onTypeChange(type) {
     this.type = type;
@@ -72,7 +78,7 @@ export default class EditRule extends Component {
 
   <template>
     <DModal
-      @title={{i18n "chat_integration.edit_rule_modal.title"}}
+      @title={{this.title}}
       @closeModal={{@closeModal}}
       id="chat-integration-edit-rule-modal"
       class="chat-integration-modal"
