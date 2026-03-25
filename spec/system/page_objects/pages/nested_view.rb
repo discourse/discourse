@@ -346,6 +346,53 @@ module PageObjects
         self
       end
 
+      # ── Deletion/recovery assertions ─────────────────────────────
+
+      def has_deleted_placeholder_for?(post)
+        has_css?("[data-post-number='#{post.post_number}'].nested-post__deleted-placeholder")
+      end
+
+      def has_no_deleted_placeholder_for?(post)
+        has_no_css?("[data-post-number='#{post.post_number}'].nested-post__deleted-placeholder")
+      end
+
+      def has_deleted_post_class_for?(post)
+        has_css?(".nested-post--deleted [data-post-number='#{post.post_number}']")
+      end
+
+      # ── Post actions ────────────────────────────────────────────
+
+      def click_post_delete_button(post)
+        within("[data-post-number='#{post.post_number}']") do
+          find(".show-more-actions").click if has_css?(".show-more-actions", wait: 2)
+          find("button.delete").click
+        end
+        self
+      end
+
+      def click_post_recover_button(post)
+        within("[data-post-number='#{post.post_number}']") do
+          find(".show-more-actions").click if has_css?(".show-more-actions", wait: 2)
+          find("button.recover").click
+        end
+        self
+      end
+
+      # ── Load more ───────────────────────────────────────────────
+
+      def has_load_more_roots_button?
+        has_css?(".nested-view__load-more")
+      end
+
+      def click_load_more_roots
+        find(".nested-view__load-more").click
+        self
+      end
+
+      def root_post_count
+        all(".nested-view__roots > .nested-post").count
+      end
+
       # ── Post counting ─────────────────────────────────────────────
 
       def posts_at_depth(depth)

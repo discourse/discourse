@@ -37,7 +37,6 @@ export default class NestedController extends Controller {
   @tracked ancestorsTruncated = false;
   @tracked topAncestorPostNumber = null;
   @tracked newRootPostIds = [];
-  @tracked postScreenTracker = null;
   @tracked editingTopic = false;
   @tracked pinnedPostNumber = null;
   queryParams = ["sort", "context"];

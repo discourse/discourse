@@ -69,7 +69,6 @@ export default class NestedView extends Component {
         @editPost={{@editPost}}
         @showHistory={{@showHistory}}
         @replyToPost={{@replyToPost}}
-        @postScreenTracker={{@postScreenTracker}}
         @showPostMenu={{true}}
       />
 
@@ -118,7 +117,6 @@ export default class NestedView extends Component {
             @recoverPost={{@recoverPost}}
             @showFlags={{@showFlags}}
             @showHistory={{@showHistory}}
-            @postScreenTracker={{@postScreenTracker}}
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}

@@ -90,7 +90,6 @@ export default class NestedContextView extends Component {
         @topic={{@topic}}
         @editPost={{@editPost}}
         @showHistory={{@showHistory}}
-        @postScreenTracker={{@postScreenTracker}}
       />
 
       <div class="nested-view__controls">
@@ -144,7 +143,6 @@ export default class NestedContextView extends Component {
               @recoverPost={{@recoverPost}}
               @showFlags={{@showFlags}}
               @showHistory={{@showHistory}}
-              @postScreenTracker={{@postScreenTracker}}
               @expansionState={{@expansionState}}
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}

@@ -31,7 +31,7 @@ All plugin files have been moved to core locations with the namespace changed fr
 | SCSS | `app/assets/stylesheets/common/nested-view.scss` (imported in `common.scss`) |
 | 9 components | `frontend/discourse/app/components/nested-*.gjs` |
 | Route + controller + template | `frontend/discourse/app/{routes,controllers,templates}/nested.*` |
-| 3 libs | `frontend/discourse/app/lib/{nested-post-url,post-screen-tracker,process-node}.js` |
+| 2 libs | `frontend/discourse/app/lib/{nested-post-url,process-node}.js` |
 | Service | `frontend/discourse/app/services/nested-view-cache.js` |
 | 3 instance-initializers | `frontend/discourse/app/instance-initializers/nested-*.js` |
 | 3 connectors | `frontend/discourse/app/connectors/{topic-navigation,category-custom-settings}/` |
@@ -183,15 +183,25 @@ Items roughly ordered by priority/risk. Check off as completed.
   `Post.where(id: ...)` relation instead of crashing. Common methods (`includes`, `pluck`,
   `where`) still use efficient in-memory implementations to avoid re-querying.
 
-- [ ] **`nested_post` parameter in post adapter**: `frontend/discourse/app/adapters/post.js`
-  unconditionally sets `args.nested_post = true` on every post creation. This predates the
-  plugin — audit whether it's still needed or can be cleaned up.
+- [x] **`nested_post` parameter in post adapter**: Unrelated to nested replies — it's a
+  2015-era backwards-compatibility flag that opts the Ember client into the full JSON
+  envelope (`{post, action, success}`) vs the bare post object. The composer service
+  depends on `responseJson.action`, `.post`, `.route_to`, etc. Added a clarifying comment.
 
-- [ ] **Test coverage gaps** (from MAINTENANCE_PROPOSALS.md):
-  - Message bus real-time updates (created/revised/deleted posts)
-  - Pagination (load more roots, load more children)
-  - Post deletion/editing within nested view
-  - Mobile/responsive behavior
+- [x] **Test coverage gaps**: Added QUnit tests for nested-view-cache service,
+  process-node lib, nested controller state/message-bus logic, and
+  process-node lib. Added system specs for post editing/saving,
+  deletion (user + admin, preserving children), pagination (roots + children),
+  and real-time MessageBus updates (`nested_post_lifecycle_spec.rb`,
+  `nested_pagination_spec.rb`, `nested_realtime_spec.rb`).
+  Mobile/responsive — not yet covered (CSS-only, low priority).
+
+- [x] **Remove `PostScreenTracker` — use core's `ScreenTrack` service**: Added
+  `observePost(element, post)` and `unobservePost(element)` to the core
+  `ScreenTrack` service with a lazily-created `IntersectionObserver`. Deleted the
+  standalone `PostScreenTracker` class and removed the `@postScreenTracker` prop
+  threading from 8 component/template files. `NestedPost` and `NestedOp` now
+  inject `@service screenTrack` directly.
 
 ---
 
@@ -205,5 +215,5 @@ All currently passing:
 | `spec/requests/nested_topics_controller_spec.rb` | 61 | passing |
 | `spec/serializers/nested_replies_basic_category_serializer_spec.rb` | 2 | passing |
 | `plugins/discourse-reactions/spec/` (non-system) | 160 | passing |
-| JS unit tests (3 files) | 20 | passing |
-| System specs (11 files) | not yet run (need server) | — |
+| JS unit tests (6 files) | 67 | passing |
+| System specs (14 files) | not yet run (need server) | — |

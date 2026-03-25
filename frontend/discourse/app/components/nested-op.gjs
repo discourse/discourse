@@ -19,11 +19,12 @@ export default class NestedOp extends Component {
   @service capabilities;
   @service currentUser;
   @service modal;
+  @service screenTrack;
   @service site;
 
   trackPost = modifier((element) => {
-    this.args.postScreenTracker?.observe(element, this.args.post);
-    return () => this.args.postScreenTracker?.unobserve(element);
+    this.screenTrack.observePost(element, this.args.post);
+    return () => this.screenTrack.unobservePost(element);
   });
 
   <template>

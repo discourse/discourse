@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SmallUserList, {
   smallUserAttrs,
@@ -38,7 +39,6 @@ import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
-import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;

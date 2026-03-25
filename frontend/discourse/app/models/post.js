@@ -8,13 +8,13 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
+import getURL from "discourse/lib/get-url";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import {
   defineTrackedProperty,
   enumerateTrackedKeys,
 } from "discourse/lib/tracked-tools";
-import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";

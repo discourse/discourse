@@ -1,6 +1,7 @@
-import { run } from "@ember/runloop";
+import { cancel, run } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -22,6 +23,7 @@ const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 export default class ScreenTrack extends Service {
   @service appEvents;
   @service currentUser;
+  @service header;
   @service keyValueStore;
   @service session;
   @service topicTrackingState;
@@ -38,6 +40,12 @@ export default class ScreenTrack extends Service {
   _readOnscreen = null;
   _readPosts = new Set();
   _inProgress = false;
+
+  // Element-level post observation (used by nested view)
+  _observer = null;
+  _elementToPost = new WeakMap();
+  _observedPosts = {};
+  _syncDebounceTimer = null;
 
   constructor() {
     super(...arguments);
@@ -83,11 +91,73 @@ export default class ScreenTrack extends Service {
       clearInterval(this._interval);
       this._interval = null;
     }
+
+    this._destroyObserver();
   }
 
   setOnscreen(onscreen, readOnscreen) {
     this._onscreen = onscreen;
     this._readOnscreen = readOnscreen;
+  }
+
+  observePost(element, post) {
+    if (!this._observer) {
+      this._createObserver();
+    }
+    this._elementToPost.set(element, post);
+    this._observer.observe(element);
+  }
+
+  unobservePost(element) {
+    const post = this._elementToPost.get(element);
+    if (post) {
+      delete this._observedPosts[post.post_number];
+    }
+    this._elementToPost.delete(element);
+    this._observer?.unobserve(element);
+    this._syncOnscreen();
+  }
+
+  _createObserver() {
+    const margin = (this.header?.headerOffset || 0) * -1;
+    this._observer = new IntersectionObserver(
+      (entries) => entries.forEach(this._handleIntersection),
+      { rootMargin: `${margin}px 0px 0px 0px`, threshold: [0, 1] }
+    );
+  }
+
+  @bind
+  _handleIntersection(entry) {
+    const post = this._elementToPost.get(entry.target);
+    if (!post) {
+      return;
+    }
+    if (entry.isIntersecting) {
+      this._observedPosts[post.post_number] = post;
+    } else {
+      delete this._observedPosts[post.post_number];
+    }
+    this._syncDebounceTimer = discourseDebounce(this, this._syncOnscreen, 10);
+  }
+
+  _syncOnscreen() {
+    const onScreen = [];
+    const readOnScreen = [];
+    for (const post of Object.values(this._observedPosts)) {
+      onScreen.push(post.post_number);
+      if (post.read) {
+        readOnScreen.push(post.post_number);
+      }
+    }
+    this.setOnscreen(onScreen, readOnScreen);
+  }
+
+  _destroyObserver() {
+    cancel(this._syncDebounceTimer);
+    this._observer?.disconnect();
+    this._observer = null;
+    this._elementToPost = new WeakMap();
+    this._observedPosts = {};
   }
 
   // Reset our timers

@@ -28,6 +28,7 @@ export default class NestedPost extends Component {
   @service capabilities;
   @service currentUser;
   @service modal;
+  @service screenTrack;
   @service site;
   @service siteSettings;
 
@@ -36,8 +37,8 @@ export default class NestedPost extends Component {
   @tracked collapsed;
 
   trackPost = modifier((element) => {
-    this.args.postScreenTracker?.observe(element, this.args.post);
-    return () => this.args.postScreenTracker?.unobserve(element);
+    this.screenTrack.observePost(element, this.args.post);
+    return () => this.screenTrack.unobservePost(element);
   });
 
   restoreScroll = modifier((element) => {
@@ -430,7 +431,6 @@ export default class NestedPost extends Component {
             @highlightParentLine={{this.highlightLine}}
             @unhighlightParentLine={{this.unhighlightLine}}
             @parentLineHighlighted={{this.lineHighlighted}}
-            @postScreenTracker={{@postScreenTracker}}
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}

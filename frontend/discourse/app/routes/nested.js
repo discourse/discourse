@@ -2,11 +2,9 @@ import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import PostScreenTracker from "../lib/post-screen-tracker";
 import processNode from "../lib/process-node";
 
 export default class NestedRoute extends Route {
-  @service header;
   @service nestedViewCache;
   @service screenTrack;
   @service siteSettings;
@@ -92,9 +90,6 @@ export default class NestedRoute extends Route {
       model.topic.postStream.storePost(model.opPost);
     }
 
-    controller.postScreenTracker = new PostScreenTracker(this.screenTrack, {
-      headerOffset: this.header.headerOffset,
-    });
     this.screenTrack.start(model.topic.id, controller);
   }
 
@@ -106,8 +101,6 @@ export default class NestedRoute extends Route {
 
     controller.unsubscribe();
     this.screenTrack.stop();
-    controller.postScreenTracker?.destroy();
-    controller.postScreenTracker = null;
   }
 
   _saveToCache(controller) {

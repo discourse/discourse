@@ -5,10 +5,10 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { and, not, or } from "discourse/truth-helpers";
@@ -87,9 +87,7 @@ export default class TopicAdminMenu extends Component {
   }
 
   get showNestedRepliesToggle() {
-    return (
-      this.siteSettings.nested_replies_enabled && this.currentUser?.staff
-    );
+    return this.siteSettings.nested_replies_enabled && this.currentUser?.staff;
   }
 
   get nestedRepliesToggleLabel() {

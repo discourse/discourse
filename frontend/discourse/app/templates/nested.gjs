@@ -39,7 +39,6 @@ export default <template>
       @topicCategoryChanged={{@controller.topicCategoryChanged}}
       @topicTagsChanged={{@controller.topicTagsChanged}}
       @minimumRequiredTags={{@controller.minimumRequiredTags}}
-      @postScreenTracker={{@controller.postScreenTracker}}
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
@@ -74,7 +73,6 @@ export default <template>
       @topicCategoryChanged={{@controller.topicCategoryChanged}}
       @topicTagsChanged={{@controller.topicTagsChanged}}
       @minimumRequiredTags={{@controller.minimumRequiredTags}}
-      @postScreenTracker={{@controller.postScreenTracker}}
       @expansionState={{@controller.expansionState}}
       @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
       @scrollAnchor={{@controller.scrollAnchor}}
