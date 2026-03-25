@@ -6,6 +6,7 @@ class CreateWorkflowTables < ActiveRecord::Migration[7.2]
       t.string :name, null: false
       t.boolean :enabled, default: false, null: false
       t.integer :allowed_group_ids, array: true, default: []
+      t.jsonb :sticky_notes, default: []
       t.integer :created_by_id, null: false
       t.integer :updated_by_id
       t.timestamps null: false
