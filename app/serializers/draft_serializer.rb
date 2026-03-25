@@ -23,6 +23,29 @@ class DraftSerializer < ApplicationSerializer
              :archetype,
              :archived
 
+  def data
+    tag_map = options[:tag_map]
+    return object.data if tag_map.blank?
+
+    parsed = object.parsed_data
+    %w[tags original_tags].each do |field|
+      next if parsed[field].blank?
+
+      parsed[field] = parsed[field].filter_map do |t|
+        if t.is_a?(String)
+          tag = tag_map[t]
+          tag ? { id: tag.id, name: tag.name, slug: tag.slug_for_url } : nil
+        else
+          t
+        end
+      end
+    end
+
+    parsed.to_json
+  rescue JSON::ParserError
+    object.data
+  end
+
   def cooked
     object.parsed_data["reply"] || ""
   end

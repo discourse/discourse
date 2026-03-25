@@ -18,7 +18,8 @@ class DraftsController < ApplicationController
         limit: fetch_limit_from_params(default: nil, max: INDEX_LIMIT),
       )
 
-    response = { drafts: serialize_data(stream, DraftSerializer) }
+    tag_map = build_tag_map_for_drafts(stream)
+    response = { drafts: serialize_data(stream, DraftSerializer, tag_map: tag_map) }
 
     if guardian.can_lazy_load_categories?
       category_ids = stream.map { |draft| draft.topic&.category_id }.compact.uniq
@@ -33,7 +34,9 @@ class DraftsController < ApplicationController
     raise Discourse::NotFound.new if params[:id].blank?
 
     seq = params[:sequence] || DraftSequence.current(current_user, params[:id])
-    render json: { draft: Draft.get(current_user, params[:id], seq), draft_sequence: seq }
+    draft_data = Draft.get(current_user, params[:id], seq)
+    draft_data = enrich_draft_tags(draft_data) if draft_data.present?
+    render json: { draft: draft_data, draft_sequence: seq }
   end
 
   def create
@@ -226,6 +229,49 @@ class DraftsController < ApplicationController
   end
 
   private
+
+  def build_tag_map_for_drafts(drafts)
+    tag_names =
+      drafts.flat_map do |draft|
+        data = draft.parsed_data
+        (Array(data["tags"]) + Array(data["original_tags"])).select { |t| t.is_a?(String) }
+      end.uniq
+
+    return {} if tag_names.blank?
+    Tag.where(name: tag_names).select(:id, :name, :slug).index_by(&:name)
+  end
+
+  def enrich_draft_tags(draft_json)
+    data = JSON.parse(draft_json)
+
+    all_string_names =
+      %w[tags original_tags].flat_map do |field|
+        next [] if data[field].blank?
+        data[field].select { |t| t.is_a?(String) }
+      end.uniq
+
+    return data.to_json if all_string_names.blank?
+
+    tags_by_name =
+      Tag.where(name: all_string_names).select(:id, :name, :slug).index_by(&:name)
+
+    %w[tags original_tags].each do |field|
+      next if data[field].blank?
+
+      data[field] = data[field].filter_map do |t|
+        if t.is_a?(String)
+          tag = tags_by_name[t]
+          tag ? { id: tag.id, name: tag.name, slug: tag.slug_for_url } : nil
+        else
+          t
+        end
+      end
+    end
+
+    data.to_json
+  rescue JSON::ParserError
+    draft_json
+  end
 
   def reached_max_drafts_per_user?(params)
     user_id = current_user.id
