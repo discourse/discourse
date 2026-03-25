@@ -19,6 +19,10 @@ module DiscourseWorkflows
         {}
       end
 
+      def self.manually_triggerable?
+        false
+      end
+
       def initialize(*event_args)
         @event_args = event_args
       end

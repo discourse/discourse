@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -12,6 +13,7 @@ import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea
 import icon from "discourse/helpers/d-icon";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import {
   fieldControl,
   fieldInputType,
@@ -42,6 +44,28 @@ const BUILT_IN_FIELD_CONTROLS = {
 function isExpression(value) {
   return typeof value === "string" && value.startsWith("=");
 }
+
+const CRON_FIELD_PATTERN =
+  /^(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+)(,(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+))*$/;
+
+function isValidCron(value) {
+  if (!value || typeof value !== "string") {
+    return false;
+  }
+  const fields = value.trim().split(/\s+/);
+  return fields.length === 5 && fields.every((f) => CRON_FIELD_PATTERN.test(f));
+}
+
+const FIELD_VALIDATORS = {
+  cron: (name, value, { addError }) => {
+    if (value && !isValidCron(value)) {
+      addError(name, {
+        title: i18n("discourse_workflows.schedule.cron"),
+        message: i18n("discourse_workflows.schedule.cron_invalid"),
+      });
+    }
+  },
+};
 
 export default class PropertyEngineField extends Component {
   @tracked _expressionMode = null;
@@ -133,6 +157,11 @@ export default class PropertyEngineField extends Component {
     return this.args.schema?.required ? "required" : undefined;
   }
 
+  get customValidation() {
+    const key = this.args.schema?.validate;
+    return key ? FIELD_VALIDATORS[key] : undefined;
+  }
+
   get codeHeight() {
     return this.args.schema?.ui?.height;
   }
@@ -143,7 +172,7 @@ export default class PropertyEngineField extends Component {
 
   get fieldDescription() {
     if (this.showDescription && this.description) {
-      return this.description;
+      return htmlSafe(this.description);
     }
     return undefined;
   }
@@ -260,6 +289,7 @@ export default class PropertyEngineField extends Component {
         @type="custom"
         @format="full"
         @validation={{this.validation}}
+        @validate={{this.customValidation}}
         @onSet={{this.handleSet}}
         as |field|
       >
@@ -289,6 +319,7 @@ export default class PropertyEngineField extends Component {
         @type="custom"
         @format="full"
         @validation={{this.validation}}
+        @validate={{this.customValidation}}
         @onSet={{this.handleSet}}
         as |field|
       >

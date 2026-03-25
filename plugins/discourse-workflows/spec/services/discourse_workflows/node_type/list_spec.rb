@@ -18,6 +18,8 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         DiscourseWorkflows::Conditions::IfCondition::V1,
       )
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Webhook::V1)
+      DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Manual::V1)
+      DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Schedule::V1)
     end
 
     after { DiscourseWorkflows::Registry.reset! }
@@ -73,6 +75,16 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       it "includes branching for condition nodes" do
         condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
         expect(condition[:branching]).to eq(true)
+      end
+
+      it "includes manually_triggerable for triggers that support it" do
+        manual = result[:node_types].find { |nt| nt[:identifier] == "trigger:manual" }
+        schedule = result[:node_types].find { |nt| nt[:identifier] == "trigger:schedule" }
+        topic_closed = result[:node_types].find { |nt| nt[:identifier] == "trigger:topic_closed" }
+
+        expect(manual[:manually_triggerable]).to eq(true)
+        expect(schedule[:manually_triggerable]).to eq(true)
+        expect(topic_closed[:manually_triggerable]).to eq(false)
       end
     end
   end

@@ -36,11 +36,13 @@ module DiscourseWorkflows
     end
 
     def populate_graph(workflow:, params:)
-      Workflow::Action::PopulateGraph.call(
-        workflow:,
-        nodes_data: params.nodes,
-        connections_data: params.connections,
-      )
+      result =
+        Workflow::Action::PopulateGraph.call(
+          workflow:,
+          nodes_data: params.nodes,
+          connections_data: params.connections,
+        )
+      fail!(workflow.errors.full_messages) if result == false
     end
 
     def log(workflow:, guardian:)

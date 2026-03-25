@@ -49,6 +49,12 @@ module DiscourseWorkflows
             status: :bad_request,
           )
         end
+        on_failed_step(:populate_graph) do |step_result|
+          render(
+            json: failed_json.merge(errors: Array(step_result.error)),
+            status: :unprocessable_entity,
+          )
+        end
         on_model_errors(:workflow) do |model|
           render(
             json: failed_json.merge(errors: model.errors.full_messages),
@@ -74,6 +80,12 @@ module DiscourseWorkflows
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
             status: :bad_request,
+          )
+        end
+        on_failed_step(:populate_graph) do |step_result|
+          render(
+            json: failed_json.merge(errors: Array(step_result.error)),
+            status: :unprocessable_entity,
           )
         end
         on_model_not_found(:workflow) { raise Discourse::NotFound }

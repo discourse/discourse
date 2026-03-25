@@ -68,8 +68,8 @@ export default class WorkflowNode extends Component {
     return Object.keys(this.args.node.outputs);
   }
 
-  get isManualTrigger() {
-    return this.data.type === "trigger:manual";
+  get isManuallyTriggerable() {
+    return this.args.manuallyTriggerableTypes?.has(this.data.type) ?? false;
   }
 
   get nodeStyle() {
@@ -109,7 +109,7 @@ export default class WorkflowNode extends Component {
 
       <div class="workflow-rete-node__body">
         <CanvasHoverToolbar @hoverSelector=".workflow-rete-node">
-          {{#if this.isManualTrigger}}
+          {{#if this.isManuallyTriggerable}}
             <button
               type="button"
               class="workflow-canvas-toolbar__btn --success"

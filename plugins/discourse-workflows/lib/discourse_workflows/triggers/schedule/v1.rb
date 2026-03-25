@@ -8,12 +8,16 @@ module DiscourseWorkflows
           "trigger:schedule"
         end
 
+        def self.manually_triggerable?
+          true
+        end
+
         def self.output_schema
           { timestamp: :string }
         end
 
         def self.configuration_schema
-          { cron: { type: :string, required: true } }
+          { cron: { type: :string, required: true, validate: :cron } }
         end
 
         def self.validate_configuration(configuration, errors)

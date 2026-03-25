@@ -204,7 +204,8 @@ en:
         description: "Fires when a topic has had no replies for the specified number of hours."
       schedule:
         cron: "Cron expression"
-        cron_description: "Standard 5-field cron (minute hour day-of-month month day-of-week). Example: 0 9 * * 1-5 for weekdays at 9am UTC."
+        cron_description: "Standard 5-field cron (minute hour day-of-month month day-of-week). Example: 0 9 * * 1-5 for weekdays at 9am UTC. <a href='https://crontab.guru/examples.html' target='_blank'>Help on cron</a>."
+        cron_invalid: "Must be a valid 5-field cron expression."
       loop_over_items:
         batch_size: "Batch Size"
         batch_size_description: "Number of items to process per iteration."

@@ -70,7 +70,9 @@ module DiscourseWorkflows
       node_type = DiscourseWorkflows::Registry.find_node_type(type, version: type_version)
       return unless node_type.respond_to?(:validate_configuration)
 
-      node_type.validate_configuration(configuration, errors)
+      node_errors = ActiveModel::Errors.new(self)
+      node_type.validate_configuration(configuration, node_errors)
+      node_errors.each { |error| errors.add(error.attribute, "#{name}: #{error.message}") }
     end
 
     def validate_type_version

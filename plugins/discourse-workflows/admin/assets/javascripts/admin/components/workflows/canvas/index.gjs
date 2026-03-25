@@ -14,6 +14,7 @@ import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
+import { loadNodeTypes } from "../../../lib/workflows/node-types";
 import Controls from "./controls";
 import { createReteEditor } from "./rete-editor";
 import StickyNotesLayer from "./sticky-notes-layer";
@@ -32,6 +33,7 @@ export default class WorkflowCanvas extends Component {
   @tracked zoom = 1;
   @tracked reteApi = null;
   @tracked areaTransform = { x: 0, y: 0, k: 1 };
+  @tracked manuallyTriggerableTypes = new Set();
 
   #ZOOM_STEP = 0.05;
   #ZOOM_MIN = 0.25;
@@ -190,6 +192,14 @@ export default class WorkflowCanvas extends Component {
     await this.syncToRete();
     this.#syncAreaTransform();
     element.focus();
+
+    loadNodeTypes().then((types) => {
+      this.manuallyTriggerableTypes = new Set(
+        (types || [])
+          .filter((t) => t.manually_triggerable)
+          .map((t) => t.identifier)
+      );
+    });
   }
 
   #syncAreaTransform() {
@@ -661,6 +671,7 @@ export default class WorkflowCanvas extends Component {
             @onDelete={{this.reteApi.renderer.onNodeDelete}}
             @onManualTrigger={{this.reteApi.renderer.onManualTrigger}}
             @onSocketRendered={{this.reteApi.renderer.onSocketRendered}}
+            @manuallyTriggerableTypes={{this.manuallyTriggerableTypes}}
           />
         {{/in-element}}
       {{/each}}

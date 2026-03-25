@@ -118,7 +118,7 @@ RSpec.describe DiscourseWorkflows::Node do
 
       expect(node).not_to be_valid
       expect(node.errors.full_messages).to include(
-        I18n.t("discourse_workflows.errors.invalid_cron_expression"),
+        "Schedule: #{I18n.t("discourse_workflows.errors.invalid_cron_expression")}",
       )
     end
   end

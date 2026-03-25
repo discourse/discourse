@@ -6,6 +6,9 @@ const NODE_DEFAULTS = {
     path: crypto.randomUUID(),
     http_method: "GET",
   }),
+  "trigger:schedule": () => ({
+    cron: "0 * * * *",
+  }),
 };
 
 function generateNodeName(identifier, existingNodes) {

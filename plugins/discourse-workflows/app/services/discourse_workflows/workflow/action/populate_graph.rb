@@ -7,6 +7,7 @@ module DiscourseWorkflows
     option :connections_data
 
     def call
+      return false unless validate_nodes
       node_map = upsert_nodes
       sync_connections(node_map)
     end
@@ -76,6 +77,35 @@ module DiscourseWorkflows
       end
 
       node_map
+    end
+
+    def validate_nodes
+      existing_nodes = workflow.nodes.index_by { |n| n.id.to_s }
+
+      nodes_data.each do |node_data|
+        node_data = node_data.symbolize_keys
+        client_id = node_data[:client_id].to_s
+        existing = existing_nodes[client_id]
+
+        type_version =
+          existing&.type_version || node_data[:type_version] ||
+            DiscourseWorkflows::Registry.latest_version(node_data[:type]) ||
+            DiscourseWorkflows::Registry::DEFAULT_VERSION
+
+        node =
+          DiscourseWorkflows::Node.new(
+            type: node_data[:type],
+            type_version: type_version,
+            name: node_data[:name],
+            configuration: node_data[:configuration] || {},
+            workflow: workflow,
+          )
+
+        next if node.valid?
+        node.errors.full_messages.each { |msg| workflow.errors.add(:base, msg) }
+      end
+
+      workflow.errors.empty?
     end
 
     def sync_connections(node_map)

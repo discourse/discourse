@@ -40,6 +40,9 @@ module DiscourseWorkflows
         )
         schema[:metadata] = latest_class.metadata if latest_class.respond_to?(:metadata)
         schema[:branching] = latest_class.branching? if latest_class.respond_to?(:branching?)
+        if latest_class.respond_to?(:manually_triggerable?)
+          schema[:manually_triggerable] = latest_class.manually_triggerable?
+        end
 
         schema
       end
