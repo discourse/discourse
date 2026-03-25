@@ -131,6 +131,54 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       )
     end
 
+    it "includes configured mcp servers in meta" do
+      Fabricate(:ai_mcp_server, name: "Jira")
+      DiscourseAi::Mcp::ToolRegistry.stubs(:tool_definitions_for).returns(
+        [{ "name" => "search_issues", "description" => "Search issues", "inputSchema" => {} }],
+      )
+
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+
+      expect(response).to be_successful
+      expect(response.parsed_body["meta"]["mcp_servers"]).to include(
+        a_hash_including(
+          "name" => "Jira",
+          "tool_count" => 1,
+          "token_count" => an_instance_of(Integer),
+          "tools" => [a_hash_including("name" => "search_issues")],
+        ),
+      )
+    end
+
+    it "includes selected MCP tool metadata in the serialized agent" do
+      server = Fabricate(:ai_mcp_server, name: "Jira")
+      ai_agent.ai_mcp_servers << server
+      ai_agent
+        .ai_agent_mcp_servers
+        .find_by!(ai_mcp_server_id: server.id)
+        .update!(selected_tool_names: ["search_issues"])
+      DiscourseAi::Mcp::ToolRegistry.stubs(:tool_definitions_for).returns(
+        [{ "name" => "search_issues", "description" => "Search issues", "inputSchema" => {} }],
+      )
+
+      get "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}/edit.json"
+
+      expect(response).to be_successful
+      expect(response.parsed_body.dig("ai_agent", "mcp_servers")).to include(
+        a_hash_including(
+          "name" => "Jira",
+          "tool_count" => 1,
+          "token_count" => an_instance_of(Integer),
+          "selected_tool_names" => ["search_issues"],
+          "selected_tool_count" => 1,
+          "selected_token_count" => an_instance_of(Integer),
+        ),
+      )
+      expect(response.parsed_body.dig("ai_agent", "mcp_server_tool_names")).to eq(
+        { server.id.to_s => ["search_issues"] },
+      )
+    end
+
     context "with translations" do
       before do
         SiteSetting.default_locale = "fr"
@@ -202,6 +250,11 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   describe "POST #create" do
     context "with valid params" do
       let(:valid_attributes) do
+        ai_mcp_server = Fabricate(:ai_mcp_server, name: "Jira")
+        DiscourseAi::Mcp::ToolRegistry.stubs(:tool_definitions_for).returns(
+          [{ "name" => "search_issues", "description" => "Search issues" }],
+        )
+
         {
           name: "superbot",
           description: "Assists with tasks",
@@ -215,6 +268,10 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           allow_chat_direct_messages: true,
           default_llm_id: llm_model.id,
           forced_tool_count: 2,
+          mcp_server_ids: [ai_mcp_server.id],
+          mcp_server_tool_names: {
+            ai_mcp_server.id.to_s => ["search_issues"],
+          },
           execution_mode: "agentic",
           max_turn_tokens: 5000,
           compression_threshold: 80,
@@ -253,6 +310,8 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           agent = AiAgent.find(agent_json["id"])
 
           expect(agent.tools).to eq([["search", { "base_query" => "test" }, true]])
+          expect(agent.ai_mcp_servers.pluck(:name)).to eq(["Jira"])
+          expect(agent.ai_agent_mcp_servers.first.selected_tool_names).to eq(["search_issues"])
           expect(agent.top_p).to eq(0.1)
           expect(agent.temperature).to eq(0.5)
         }.to change(AiAgent, :count).by(1)
@@ -445,6 +504,74 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.max_turn_tokens).to eq(8000)
 
       expect(agent.compression_threshold).to eq(75)
+    end
+
+    it "supports updating selected MCP tool names" do
+      server = Fabricate(:ai_mcp_server, name: "Jira")
+      agent = Fabricate(:ai_agent, name: "test_bot2")
+      agent.ai_mcp_servers << server
+      DiscourseAi::Mcp::ToolRegistry
+        .stubs(:tool_definitions_for)
+        .with(server)
+        .returns(
+          [{ "name" => "search_issues", "description" => "Search issues", "inputSchema" => {} }],
+        )
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              mcp_server_ids: [server.id],
+              mcp_server_tool_names: {
+                server.id.to_s => ["search_issues"],
+              },
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(agent.reload.ai_agent_mcp_servers.first.selected_tool_names).to eq(["search_issues"])
+    end
+
+    it "preserves hidden disabled MCP assignments when updating visible ones" do
+      enabled_server = Fabricate(:ai_mcp_server, name: "Jira")
+      disabled_server = Fabricate(:ai_mcp_server, name: "Legacy Docs", enabled: false)
+      agent = Fabricate(:ai_agent, name: "test_bot2")
+      agent.ai_mcp_servers << enabled_server
+      agent.ai_mcp_servers << disabled_server
+      DiscourseAi::Mcp::ToolRegistry
+        .stubs(:tool_definitions_for)
+        .with(enabled_server)
+        .returns(
+          [{ "name" => "search_issues", "description" => "Search issues", "inputSchema" => {} }],
+        )
+      agent
+        .ai_agent_mcp_servers
+        .find_by!(ai_mcp_server_id: disabled_server.id)
+        .update!(selected_tool_names: ["search_legacy"])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              name: "updated",
+              mcp_server_ids: [enabled_server.id],
+              mcp_server_tool_names: {
+                enabled_server.id.to_s => ["search_issues"],
+              },
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+
+      agent.reload
+      expect(agent.ai_mcp_servers.pluck(:id)).to contain_exactly(
+        enabled_server.id,
+        disabled_server.id,
+      )
+      expect(
+        agent
+          .ai_agent_mcp_servers
+          .find_by!(ai_mcp_server_id: disabled_server.id)
+          .selected_tool_names,
+      ).to eq(["search_legacy"])
     end
 
     it "supports updating vision params" do

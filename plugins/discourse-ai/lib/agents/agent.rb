@@ -316,31 +316,12 @@ module DiscourseAi
         tool_klass = available_tools.find { |c| c.signature.dig(:name) == function_name }
         return nil if tool_klass.nil?
 
-        arguments = {}
-        tool_klass.signature[:parameters].to_a.each do |param|
-          name = param[:name]
-          value = tool_call.parameters[name.to_sym]
-
-          if param[:type] == "array" && value
-            value =
-              begin
-                JSON.parse(value)
-              rescue JSON::ParserError
-                [value.to_s]
-              end
-          elsif param[:type] == "string" && value
-            value = strip_quotes(value).to_s
-          elsif param[:type] == "integer" && value
-            value = strip_quotes(value).to_i
+        arguments =
+          if tool_klass.signature[:json_schema]
+            tool_call.parameters
+          else
+            coerce_tool_arguments(tool_klass.signature[:parameters].to_a, tool_call)
           end
-
-          if param[:enum] && value && !param[:enum].include?(value)
-            # invalid enum value
-            value = nil
-          end
-
-          arguments[name.to_sym] = value if value
-        end
 
         tool_instance =
           existing_tools.find { |t| t.name == function_name && t.tool_call_id == function_id }
@@ -370,6 +351,32 @@ module DiscourseAi
         return false if id.blank?
 
         UploadReference.where(target_id: id, target_type: "AiAgent").exists?
+      end
+
+      def coerce_tool_arguments(param_defs, tool_call)
+        arguments = {}
+        param_defs.each do |param|
+          name = param[:name]
+          value = tool_call.parameters[name.to_sym]
+
+          if param[:type] == "array" && value
+            value =
+              begin
+                JSON.parse(value)
+              rescue JSON::ParserError
+                [value.to_s]
+              end
+          elsif param[:type] == "string" && value
+            value = strip_quotes(value).to_s
+          elsif param[:type] == "integer" && value
+            value = strip_quotes(value).to_i
+          end
+
+          value = nil if param[:enum] && value && !param[:enum].include?(value)
+
+          arguments[name.to_sym] = value if value
+        end
+        arguments
       end
 
       def strip_quotes(value)

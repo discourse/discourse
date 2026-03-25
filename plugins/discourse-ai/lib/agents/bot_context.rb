@@ -23,7 +23,8 @@ module DiscourseAi
                     :format_dates,
                     :temporal_context,
                     :user_language,
-                    :bypass_response_format
+                    :bypass_response_format,
+                    :mcp_state
 
       def initialize(
         post: nil,
@@ -72,6 +73,7 @@ module DiscourseAi
         @cancel_manager = cancel_manager
 
         @bypass_response_format = bypass_response_format
+        @mcp_state = {}
 
         if post
           @post_id = post.id
@@ -169,6 +171,16 @@ module DiscourseAi
           top_categories: @top_categories,
           bypass_response_format: @bypass_response_format,
         }
+      end
+
+      def mcp_session_for(server_id)
+        @mcp_state&.dig(server_id.to_i, :session_id)
+      end
+
+      def store_mcp_session(server_id, session_id)
+        @mcp_state ||= {}
+        state = (@mcp_state[server_id.to_i] ||= { session_id: nil })
+        state[:session_id] = session_id
       end
     end
   end
