@@ -51,10 +51,10 @@
 
   // example: hovering a button within a highlighted section
   --d-sidebar-active-background: var(--token-surface-pressed);
-  --d-sidebar-active-color: var(----token-text-default);
+  --d-sidebar-active-color: var(--token-text-default);
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--token-surface-pressed);
-  --d-sidebar-active-suffix-color: var(----token-text-default);
+  --d-sidebar-active-suffix-color: var(--token-text-default);
   --d-sidebar-active-font-weight: bold; // example: active section link
 
   @include viewport.until(sm) {
