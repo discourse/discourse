@@ -1341,16 +1341,18 @@ RSpec.describe Group do
 
     it "enqueues bulk_grant_trust_level job when group grants trust level" do
       group.update!(grant_trust_level: 2)
-      group.bulk_add([user.id, admin.id])
 
-      job = Jobs::BulkGrantTrustLevel.jobs.last
-      expect(job["args"].first["trust_level"]).to eq(2)
-      expect(job["args"].first["user_ids"]).to contain_exactly(user.id, admin.id)
+      expect_enqueued_with(
+        job: :bulk_grant_trust_level,
+        args: {
+          trust_level: 2,
+          user_ids: [user.id, admin.id],
+        },
+      ) { group.bulk_add([user.id, admin.id]) }
     end
 
     it "does not enqueue trust level job when grant_trust_level is nil" do
-      group.bulk_add([user.id])
-      expect(Jobs::BulkGrantTrustLevel.jobs).to be_empty
+      expect_not_enqueued_with(job: :bulk_grant_trust_level) { group.bulk_add([user.id]) }
     end
 
     it "triggers user_added_to_group event for each user" do
@@ -1465,11 +1467,13 @@ RSpec.describe Group do
     it "enqueues bulk_grant_trust_level job with recalculate flag" do
       group.update!(grant_trust_level: 2)
 
-      group.bulk_remove([user.id])
-
-      job = Jobs::BulkGrantTrustLevel.jobs.last
-      expect(job["args"].first["recalculate"]).to eq(true)
-      expect(job["args"].first["user_ids"]).to eq([user.id])
+      expect_enqueued_with(
+        job: :bulk_grant_trust_level,
+        args: {
+          recalculate: true,
+          user_ids: [user.id],
+        },
+      ) { group.bulk_remove([user.id]) }
     end
 
     it "triggers user_removed_from_group event for each user" do
