@@ -7,28 +7,15 @@ module Patreon
   end
 
   class Api
-    PATREON_URL = "https://www.patreon.com"
     ACCESS_TOKEN_INVALID = "dashboard.patreon.access_token_invalid"
     INVALID_RESPONSE = "patreon.error.invalid_response"
 
-    CAMPAIGN_FIELDS = "fields%5Bcampaign%5D=created_at,name,patron_count"
-    TIER_FIELDS = "fields%5Btier%5D=title,amount_cents,created_at"
-    MEMBER_FIELDS =
-      "fields%5Bmember%5D=full_name,last_charge_date,last_charge_status,currently_entitled_amount_cents,patron_status,email"
-    USER_FIELDS = "fields%5Buser%5D=email,full_name"
-
     def self.campaign_data
-      get("/api/oauth2/v2/campaigns?include=tiers,creator&#{CAMPAIGN_FIELDS}&#{TIER_FIELDS}")
+      adapter = ApiVersion.current
+      get(adapter.campaign_data_url, base_url: adapter.api_base_url)
     end
 
-    def self.members_data(campaign_id, cursor = nil)
-      url =
-        "/api/oauth2/v2/campaigns/#{campaign_id}/members?include=currently_entitled_tiers,user&#{MEMBER_FIELDS}&#{USER_FIELDS}&#{TIER_FIELDS}&page%5Bcount%5D=1000"
-      url += "&page%5Bcursor%5D=#{CGI.escape(cursor)}" if cursor.present?
-      get(url)
-    end
-
-    def self.get(uri)
+    def self.get(uri, base_url: ApiVersion.current.api_base_url)
       limiter_hr =
         RateLimiter.new(nil, "patreon_api_hr", SiteSetting.max_patreon_api_reqs_per_hr, 1.hour)
       limiter_day =
@@ -40,7 +27,7 @@ module Patreon
 
       response =
         Faraday.new(
-          url: PATREON_URL,
+          url: base_url,
           headers: {
             "Authorization" => "Bearer #{SiteSetting.patreon_creator_access_token}",
           },

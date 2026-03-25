@@ -5,22 +5,13 @@ require "json"
 module Patreon
   class Campaign
     def self.update!
-      rewards = {}
-      campaign_ids = []
-
+      adapter = ApiVersion.current
       response = Patreon::Api.campaign_data
 
       return false if response.blank? || response["data"].blank?
 
-      response["data"].each { |campaign| campaign_ids << campaign["id"] }
-
-      (response["included"] || []).each do |entry|
-        if entry["type"] == "tier"
-          id = entry["id"]
-          rewards[id] = entry["attributes"]
-          rewards[id]["id"] = id
-        end
-      end
+      campaign_data = adapter.parse_campaigns(response)
+      rewards = campaign_data[:rewards]
 
       # Special catch all patrons virtual reward
       rewards["0"] ||= {}
@@ -29,7 +20,7 @@ module Patreon
 
       Patreon.set("rewards", rewards)
 
-      Patreon::Pledge.pull!(campaign_ids)
+      adapter.pull_pledges!(campaign_data)
 
       # Sets all patrons to the seed group by default on first run
       filters = Patreon.get("filters")

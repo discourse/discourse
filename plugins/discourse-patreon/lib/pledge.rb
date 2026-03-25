@@ -2,25 +2,20 @@
 
 module Patreon
   class Pledge
-    def self.create!(member_data)
-      save!([member_data], true)
+    def self.create!(data, adapter: ApiVersion.current)
+      save!([data], true, adapter: adapter)
     end
 
-    def self.update!(member_data)
-      delete!(member_data)
-      create!(member_data)
+    def self.update!(data, adapter: ApiVersion.current)
+      delete!(data, adapter: adapter)
+      create!(data, adapter: adapter)
     end
 
-    def self.delete!(member_data)
-      entry = member_data["data"]
-      rel = entry["relationships"]
+    def self.delete!(data, adapter: ApiVersion.current)
+      entry = data["data"]
       reward_users = Patreon::RewardUser.all
 
-      patron_id = rel["user"]["data"]["id"]
-
-      (rel.dig("currently_entitled_tiers", "data") || []).each do |tier|
-        (reward_users[tier["id"]] || []).reject! { |i| i == patron_id }
-      end
+      patron_id = adapter.delete_pledge_data(entry, reward_users)
 
       Patreon.set("pledges", all.except(patron_id))
       Decline.set(Decline.all.except(patron_id))
@@ -28,33 +23,14 @@ module Patreon
       Patreon.set("reward-users", reward_users)
     end
 
-    def self.pull!(campaign_ids)
-      members_data = []
-
-      campaign_ids.each do |campaign_id|
-        cursor = nil
-        loop do
-          response = Patreon::Api.members_data(campaign_id, cursor)
-          break if response.blank? || response["data"].blank?
-
-          members_data << response
-
-          cursor = response.dig("meta", "pagination", "cursors", "next")
-          break if cursor.blank?
-        end
-      end
-
-      save!(members_data)
-    end
-
-    def self.save!(members_data, is_append = false)
+    def self.save!(pledges_data, is_append = false, adapter: ApiVersion.current)
       pledges = is_append ? all : {}
       reward_users = is_append ? Patreon::RewardUser.all : {}
       users = is_append ? Patreon::Patron.all : {}
       declines = is_append ? Decline.all : {}
 
-      members_data.each do |member_data|
-        new_pledges, new_declines, new_reward_users, new_users = extract(member_data)
+      pledges_data.each do |pledge_data|
+        new_pledges, new_declines, new_reward_users, new_users = adapter.extract(pledge_data)
 
         pledges.merge!(new_pledges)
         declines.merge!(new_declines)
@@ -73,46 +49,12 @@ module Patreon
       Patreon.set("users", users)
     end
 
-    def self.extract(member_data)
-      pledges, declines, reward_users, users = {}, {}, {}, {}
-
-      if member_data && member_data["data"].present?
-        member_data["data"] = [member_data["data"]] unless member_data["data"].kind_of?(Array)
-
-        member_data["data"].each do |entry|
-          next unless entry["type"] == "member"
-
-          patron_id = entry["relationships"]["user"]["data"]["id"]
-          attrs = entry["attributes"]
-
-          (entry.dig("relationships", "currently_entitled_tiers", "data") || []).each do |tier|
-            (reward_users[tier["id"]] ||= []) << patron_id
-          end
-
-          pledges[patron_id] = attrs["currently_entitled_amount_cents"]
-          declines[patron_id] = attrs["last_charge_date"] if attrs["last_charge_status"] ==
-            "Declined"
-        end
-
-        (member_data["included"] || []).each do |entry|
-          case entry["type"]
-          when "user"
-            if entry["attributes"]["email"].present?
-              users[entry["id"]] = entry["attributes"]["email"].downcase
-            end
-          end
-        end
-      end
-
-      [pledges, declines, reward_users, users]
-    end
-
     def self.all
       Patreon.get("pledges") || {}
     end
 
-    def self.get_patreon_id(member_data)
-      member_data["data"]["relationships"]["user"]["data"]["id"]
+    def self.get_patreon_id(data, adapter: ApiVersion.adapter_for_payload(data))
+      adapter.get_patreon_id(data)
     end
 
     class Decline

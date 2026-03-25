@@ -5,11 +5,12 @@ require "json"
 module Patreon
   class Tokens
     def self.update!
-      conn = Faraday.new(url: "https://www.patreon.com")
+      adapter = ApiVersion.current
+      conn = Faraday.new(url: adapter.token_base_url)
 
       response =
         conn.post(
-          "/api/oauth2/token",
+          adapter.token_path,
           grant_type: "refresh_token",
           refresh_token: SiteSetting.patreon_creator_refresh_token,
           client_id: SiteSetting.patreon_client_id,
