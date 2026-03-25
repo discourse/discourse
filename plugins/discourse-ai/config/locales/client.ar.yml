@@ -527,6 +527,9 @@ ar:
         save: "حفظ"
         enabled: "مفعَّلة؟"
         tools: "الأدوات المفعَّلة"
+        mcp_tools_modal:
+          select_all: "تحديد الكل"
+          clear_all: "مسح الكل"
         forced_tools: "الأدوات الإجبارية"
         allowed_groups: "المجموعات المسموح بها"
         delete: "حذف"
@@ -603,7 +606,6 @@ ar:
         tool_name: "اسم الأداة"
         description: "الوصف"
         description_help: "وصف واضح لغرض الأداة بالنسبة إلى نموذج اللغة"
-        subheader_description: "تعمل الأدوات على توسيع قدرات روبوتات الذكاء الاصطناعي باستخدام دوال JavaScript يحدِّدها المستخدم."
         summary: "الملخص"
         summary_help: "ملخص الغرض من الأدوات لعرضه للمستخدمين النهائيين"
         script: "البرنامج النصي"
@@ -657,6 +659,23 @@ ar:
         tool: "أداة"
         modal:
           title: "إنشاء بيانات اعتماد جديدة"
+      mcp_servers:
+        name: "الاسم"
+        description: "الوصف"
+        url: "عنوان URL"
+        auth_types:
+          oauth: "OAuth"
+        secret: "بيانات الاعتماد"
+        oauth_statuses:
+          connected: "متصل"
+        oauth_connect: "ربط"
+        enabled: "مفعَّلة"
+        save: "حفظ"
+        edit: "تعديل"
+        delete: "حذف"
+        tools_modal:
+          parameters: "المعلمات"
+          required: "مطلوب"
       llms:
         short_title: "نماذج اللغة الكبيرة"
         no_llms: "لا توجد نماذج لغة كبيرة بعد"

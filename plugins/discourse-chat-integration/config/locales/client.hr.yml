@@ -14,15 +14,13 @@ hr:
     chat_integration:
       menu_title: "Chat integracije"
       settings: "Postavke"
-      no_providers: "Morate omogućiti neke davatelje usluga u postavkama dodatka"
+      more_providers: "Više"
       channels_with_errors: "Neki kanali za tog davatelja usluga nisu uspjeli zadnji put kada su poruke poslane. Kliknite ikon(u) pogreške da biste saznali više."
       group_mention_template: "Spominjanje: @%{name}"
       group_message_template: "Poruke na: @%{name}"
-      choose_group: "(odaberite grupu)"
-      all_categories: "(sve kategorije)"
-      all_tags: "(sve oznake)"
-      create_rule: "Stvori pravilo"
-      create_channel: "Stvori kanal"
+      choose_group: "(Odaberite grupu)"
+      all_categories: "(Sve kategorije)"
+      all_tags: "(Sve oznake)"
       delete_channel: "Izbriši"
       test_channel: "Test"
       edit_channel: "Uredi"
@@ -30,13 +28,10 @@ hr:
       test_modal:
         title: "Pošaljite probnu poruku"
         topic: "Tema"
-        send: "Pošalji testnu poruku"
         close: "Zatvori"
         success: "Poruka je uspješno poslana"
       type:
         normal: Normalno
-        group_message: Grupna poruka
-        group_mention: Spomena grupe
       filter:
         mute: 'Utišaj'
         follow: 'Samo prva objava'
@@ -57,8 +52,6 @@ hr:
           ok: "Vrijedi"
           fail: "Neispravan format"
       edit_rule_modal:
-        title: Uredi pravilo
-        save: Spremi pravilo
         cancel: Odustani
         provider: Pružatelj usluga
         type: Tip
@@ -79,7 +72,6 @@ hr:
           param:
             identifier:
               title: Kanal
-              help: "npr. #channel, @username."
           errors:
             action_prohibited: "Bot nema dozvolu za objavljivanje na tom kanalu"
         telegram:
@@ -107,7 +99,6 @@ hr:
           param:
             identifier:
               title: Kanal
-              help: "npr. #channel, @username."
         matrix:
           param:
             name:
@@ -120,7 +111,6 @@ hr:
           param:
             identifier:
               title: Kanal
-              help: "npr. #channel, @username."
         gitter:
           param:
             name:

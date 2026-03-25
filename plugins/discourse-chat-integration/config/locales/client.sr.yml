@@ -8,7 +8,9 @@ sr:
   js:
     chat_integration:
       settings: "Podešavanje"
-      all_categories: "(sve kategorije)"
+      more_providers: "Više"
+      channels_title: "Kanali"
+      all_categories: "(Sve kategorije)"
       delete_channel: "Obriši"
       edit_channel: "Izmeni"
       test_modal:

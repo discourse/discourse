@@ -127,6 +127,8 @@ fa_IR:
         user: کاربر
         save: "ذخیره"
         enabled: "فعال شده؟"
+        mcp_tools_modal:
+          clear_all: "پاکسازی همه"
         delete: "حذف"
         response_format:
           open_modal: "ویرایش"
@@ -162,6 +164,19 @@ fa_IR:
         delete: "حذف"
         embedding: "جاسازی"
         tool: "ابزار"
+      mcp_servers:
+        name: "نام"
+        description: "توضیح"
+        url: "نشانی اینترنتی"
+        auth_types:
+          oauth: "OAuth"
+        oauth_connect: "وصل شدن"
+        enabled: "فعال شده"
+        save: "ذخیره"
+        edit: "ویرایش"
+        delete: "حذف"
+        tools_modal:
+          required: "مورد نیاز"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"

@@ -120,6 +120,16 @@ hy:
         edit: "Խմբագրել"
         delete: "Ջնջել"
         embedding: "Զետեղում"
+      mcp_servers:
+        name: "Անուն"
+        description: "Նկարագրություն"
+        url: "URL"
+        oauth_connect: "Կապել"
+        save: "Պահպանել"
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
+        tools_modal:
+          required: "Պարտադիր"
       llms:
         display_name: "Անուն"
         provider: "Մատակարար"

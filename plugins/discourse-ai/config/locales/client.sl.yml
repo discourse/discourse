@@ -134,6 +134,17 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      mcp_servers:
+        name: "Ime"
+        description: "Opis"
+        url: "URL"
+        oauth_connect: "Poveži"
+        enabled: "Vključeno"
+        save: "Shrani"
+        edit: "Uredi"
+        delete: "Izbriši"
+        tools_modal:
+          required: "Zahtevano"
       llms:
         display_name: "Ime"
         save: "Shrani"

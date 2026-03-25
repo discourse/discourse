@@ -14,7 +14,8 @@ ar:
     chat_integration:
       menu_title: "تكاملات الدرشة"
       settings: "الإعدادات"
-      no_providers: "عليك تفعيل بعض مقدِّمي الخدمة في إعدادات المكوِّن الإضافي"
+      more_providers: "المزيد"
+      channels_title: "القنوات"
       channels_with_errors: "فشلت بعض قنوات مقدِّم الخدمة هذا مؤخرًا في آخر مرة تم فيها إرسال الرسائل. انقر على أيقونة/أيقونات الأخطاء لمعرفة المزيد."
       channel_exception: "حدث خطأ غير معروف في آخر مرة تم فيها إرسال رسالة إلى هذه القناة."
       group_mention_template: "الإشارات إلى: @%{name}"
@@ -22,8 +23,6 @@ ar:
       choose_group: "(اختر مجموعة)"
       all_categories: "(جميع الفئات)"
       all_tags: "(جميع الوسوم)"
-      create_rule: "إنشاء قاعدة"
-      create_channel: "إنشاء قناة"
       delete_channel: "حذف"
       test_channel: "اختبار"
       edit_channel: "تعديل"
@@ -31,14 +30,11 @@ ar:
       test_modal:
         title: "إرسال رسالة اختبار"
         topic: "الموضوع"
-        send: "إرسال رسالة اختبار"
         close: "إغلاق"
         error: "حدث خطأ غير معروف في أثناء إرسال الرسالة. تحقَّق من سجلات الموقع لمزيدٍ من المعلومات."
         success: "تم إرسال الرسالة بنجاح"
       type:
         normal: عادي
-        group_message: رسالة مجموعة
-        group_mention: إشارة مجموعة
       filter:
         mute: 'صامت'
         follow: 'المنشور الأول فقط'
@@ -59,8 +55,6 @@ ar:
           ok: "صالح"
           fail: "تنسيق غير صالح"
       edit_rule_modal:
-        title: تعديل القاعدة
-        save: حفظ القاعدة
         cancel: إلغاء
         provider: مقدِّم الخدمة
         type: النوع
@@ -81,7 +75,6 @@ ar:
           param:
             identifier:
               title: القناة
-              help: "على سبيل المثال، #channel، @username."
           errors:
             action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
             channel_not_found: "القناة المحددة غير موجودة على Slack."
@@ -105,7 +98,6 @@ ar:
               help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Discord."
             webhook_url:
               title: عنوان URL لخطاف الويب
-              help: عنوان URL لخطاف الويب، والذي تم إنشاؤه في إعدادات خادم Discord
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +112,6 @@ ar:
           param:
             identifier:
               title: القناة
-              help: "على سبيل المثال، #channel، @username."
           errors:
             channel_not_found: "القناة المحدَّدة غير موجودة على Mattermost"
         matrix:
@@ -151,7 +142,6 @@ ar:
           param:
             identifier:
               title: القناة
-              help: "على سبيل المثال، #channel، @username."
           errors:
             invalid_channel: "هذه القناة غير موجودة على Rocket Chat"
         gitter:
@@ -159,7 +149,6 @@ ar:
           param:
             name:
               title: "الاسم"
-              help: "اسم غرفة Gitter؛ على سبيل المثال، gitterHQ/services."
             webhook_url:
               title: "عنوان URL لخطاف الويب"
               help: "عنوان URL الذي يتم إدخاله عند إنشاء تكامل جديد في غرفة Gitter."

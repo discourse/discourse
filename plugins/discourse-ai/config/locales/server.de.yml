@@ -287,6 +287,8 @@ de:
         missing_required_aliases: "Für folgende Aliase fehlen erforderliche Verknüpfungen zu Anmeldedaten: %{aliases}."
         secret_not_found: "Der Alias „%{alias}“ ist mit nicht vorhandenen Anmeldedaten verknüpft."
         unknown_error: "Die angeforderte Anmeldedaten konnten nicht ermittelt werden."
+    mcp_servers:
+      secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."

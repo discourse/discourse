@@ -104,6 +104,16 @@ th:
         edit: "แก้ไข"
         delete: "ลบ"
         embedding: "ฝั่ง"
+      mcp_servers:
+        name: "ชื่อ"
+        description: "รายละเอียด"
+        url: "URL"
+        oauth_connect: "เชื่อมต่อ"
+        save: "บันทึก"
+        edit: "แก้ไข"
+        delete: "ลบ"
+        tools_modal:
+          required: "ต้องการ"
       llms:
         display_name: "ชื่อ"
         save: "บันทึก"

@@ -14,16 +14,27 @@ pl_PL:
     chat_integration:
       menu_title: "Integracje czatu"
       settings: "Ustawień"
-      no_providers: "Musisz włączyć niektórych dostawców w ustawieniach wtyczki"
+      nav:
+        providers: "Dostawcy"
+        providers_description: "Konfiguruj integracje dostawców czatów"
+      add_provider: "Dodaj dostawcę"
+      more_providers: "Więcej"
+      empty_state:
+        title: "Połącz swoją platformę czatu"
+        body: "Wysyłaj powiadomienia z Discourse na czat swojego zespołu. Wybierz dostawcę, aby rozpocząć."
+      channels_title: "Kanały"
+      no_channels: "Nie skonfigurowano jeszcze żadnych kanałów."
+      channel_actions: "Działania kanału"
+      add_first_channel: "Dodaj swój pierwszy kanał %{provider}"
       channels_with_errors: "Niektóre kanały dla tego dostawcy nie powiodły się, gdy zostały wysłane ostatnie wiadomości. Kliknij ikonę błędu, aby dowiedzieć się więcej."
       channel_exception: "Podczas ostatniego wysyłania wiadomości do tego kanału wystąpił nieznany błąd."
       group_mention_template: "Wzmianki o: @%{name}"
       group_message_template: "Wiadomości do: @%{name}"
-      choose_group: "(wybierz grupę)"
-      all_categories: "(wszystkie kategorie)"
-      all_tags: "(wszystkie tagi)"
+      choose_group: "(Wybierz grupę)"
+      all_categories: "(Wszystkie kategorie)"
+      all_tags: "(Wszystkie tagi)"
       create_rule: "Utwórz regułę"
-      create_channel: "Utwórz kanał"
+      add_channel: "Dodaj kanał"
       delete_channel: "Usuń"
       test_channel: "Sprawdź"
       edit_channel: "Edytuj"
@@ -38,7 +49,7 @@ pl_PL:
       type:
         normal: Normalny
         group_message: Wiadomość grupowa
-        group_mention: Wzmianka grupy
+        group_mention: Wzmianka grupowa
       filter:
         mute: 'Wycisz'
         follow: 'Tylko pierwszy post'
@@ -59,7 +70,8 @@ pl_PL:
           ok: "Poprawny"
           fail: "Niepoprawny format"
       edit_rule_modal:
-        title: Edytuj regułę
+        edit_title: Edytuj regułę
+        create_title: Utwórz regułę
         save: Zapisz regułę
         cancel: Anuluj
         provider: Dostawca
@@ -81,8 +93,9 @@ pl_PL:
           param:
             identifier:
               title: Kanał
-              help: "np. #kanał, @użytkownik."
+              help: "Na przykład #kanał lub @nazwaużytkownika"
           errors:
+            auth_error: "Podany token uwierzytelniania jest nieprawidłowy"
             action_prohibited: "Bot nie ma uprawnień do publikowania na tym kanale"
             channel_not_found: "Podany kanał nie istnieje w Slacku"
         telegram:
@@ -105,7 +118,7 @@ pl_PL:
               help: "Nazwa opisująca kanał. Nie służy do połączenia z Discord."
             webhook_url:
               title: URL webhooka
-              help: URL webhooka stworzony w ustawienia serwera Discorda.
+              help: Adres URL webhooka utworzony w ustawieniach serwera Discord powinien mieć format https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +133,7 @@ pl_PL:
           param:
             identifier:
               title: Kanał
-              help: "np. #kanał, @użytkownik."
+              help: "Na przykład #kanał lub @nazwaużytkownika"
           errors:
             channel_not_found: "Określony kanał nie istnieje w Mattermost"
         matrix:
@@ -151,7 +164,7 @@ pl_PL:
           param:
             identifier:
               title: Kanał
-              help: "np. #kanał, @użytkownik."
+              help: "Na przykład #kanał lub @nazwaużytkownika"
           errors:
             invalid_channel: "Ten kanał nie istnieje na Rocket Chat"
         gitter:
@@ -159,7 +172,7 @@ pl_PL:
           param:
             name:
               title: "Nazwa"
-              help: "Nazwa pokoju Glitter, np. gitterHQ/services."
+              help: "Nazwa pokoju Gitter, na przykład gitterHQ/services"
             webhook_url:
               title: "URL webhooka"
               help: "Adres URL podany podczas tworzenia nowej integracji w pokoju Gitter."

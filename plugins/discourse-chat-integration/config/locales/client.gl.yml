@@ -14,15 +14,13 @@ gl:
     chat_integration:
       menu_title: "Integracións de chat"
       settings: "Configuración"
-      no_providers: "Cómpre activar algúns fornecedores na configuración do complemento"
+      more_providers: "Máis"
       channels_with_errors: "Algunhas das canles deste fornecedor fallaron a última vez que se enviaron mensaxes. Prema na icona(s) de erro para saber máis."
       group_mention_template: "Mencións de: @%{name}"
       group_message_template: "Mensaxes a: @%{name}"
-      choose_group: "(escolla un grupo)"
-      all_categories: "(todas as categorías)"
-      all_tags: "(todas as etiquetas)"
-      create_rule: "Crear regra"
-      create_channel: "Crear canle"
+      choose_group: "(Escolla un grupo)"
+      all_categories: "(Todas as categorías)"
+      all_tags: "(Todas as etiquetas)"
       delete_channel: "Eliminar"
       test_channel: "Proba"
       edit_channel: "Editar"
@@ -30,13 +28,10 @@ gl:
       test_modal:
         title: "Enviar unha mensaxe de proba"
         topic: "Tema"
-        send: "Enviar mensaxe de proba"
         close: "Pechar"
         success: "A mensaxe enviouse correctamente"
       type:
         normal: Normal
-        group_message: Mensaxe de grupo
-        group_mention: Mención de grupo
       filter:
         mute: 'Silenciar'
         follow: 'Só a primeira publicación'
@@ -57,8 +52,6 @@ gl:
           ok: "Correcto"
           fail: "Formato incorrecto"
       edit_rule_modal:
-        title: Editar regra
-        save: Gardar regra
         cancel: Cancelar
         provider: Fornecedor
         type: Tipo
@@ -79,7 +72,6 @@ gl:
           param:
             identifier:
               title: Canle
-              help: "i.e. #canle, @usuario."
           errors:
             action_prohibited: "O bot non ten permisos para publicar nesta canle"
         telegram:
@@ -102,7 +94,6 @@ gl:
               help: "Un nome para describir a canle. Non se utiliza para a conexión co Discord."
             webhook_url:
               title: URL do gancho
-              help: O URL do gancho creado na configuración do seu servidor Discord
         guilded:
           param:
             name:
@@ -114,7 +105,6 @@ gl:
           param:
             identifier:
               title: Canle
-              help: "i.e. #canle, @usuario."
           errors:
             channel_not_found: "A canle especificada non existe no Mattermost"
         matrix:
@@ -144,7 +134,6 @@ gl:
           param:
             identifier:
               title: Canle
-              help: "i.e. #canle, @usuario."
           errors:
             invalid_channel: "Esa canle non existe en Rocket Chat"
         gitter:
@@ -152,7 +141,6 @@ gl:
           param:
             name:
               title: "Nome"
-              help: "O nome dunha sala Gitter, i.e. gitterHQ/servizos."
             webhook_url:
               title: "URL do gancho"
               help: "O URL ofrecido cando vostede crea unha nova integración nunha sala do Gitter."

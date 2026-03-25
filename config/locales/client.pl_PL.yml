@@ -523,6 +523,7 @@ pl_PL:
       start_posting:
         title: "Rozpocznij publikowanie"
         description: "Daj ludziom temat do wspólnej rozmowy"
+        action: "Zobacz pomysły"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
@@ -1286,6 +1287,7 @@ pl_PL:
       add_members:
         title: "Dodaj użytkowników do %{group_name}"
         description: "Wpisz listę użytkowników, których chcesz zaprosić do grupy, lub wklej listę oddzieloną przecinkami:"
+        description_usernames_only: "Wprowadź listę nazw użytkowników, których chcesz dodać do grupy, lub wklej listę rozdzieloną przecinkami:"
         usernames_placeholder: "nazwy użytkowników"
         usernames_or_emails_placeholder: "nazwy użytkowników lub e-maile"
         notify_users: "Powiadom użytkowników"

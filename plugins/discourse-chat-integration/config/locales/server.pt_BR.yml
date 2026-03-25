@@ -59,9 +59,6 @@ pt_BR:
     chat_integration_webex_excerpt_length: "Tamanho do trecho da postagem do Webex Teams"
     chat_integration_google_enabled: "Ative o provedor de integração de chat do \"Google Chat\""
     chat_integration_google_excerpt_length: "Tamanho do trecho da postagem do Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "Alguns canais de integração de bate-papo contêm erros. Acesse a <a href='%{base_path}/admin/plugins/chat-integration'>seção de integração do chat</a> para descobrir mais."
   discourse_automation:
     scriptables:
       send_slack_message:

@@ -495,6 +495,9 @@ pt_BR:
         save: "Salvar"
         enabled: "Ativado(a)?"
         tools: "Ferramentas ativadas"
+        mcp_tools_modal:
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
         forced_tools: "Ferramentas forçadas"
         allowed_groups: "Grupos permitidos"
         delete: "Excluir"
@@ -567,7 +570,6 @@ pt_BR:
         tool_name: "Nome da ferramenta"
         description: "Descrição"
         description_help: "Descrição clara da finalidade da ferramenta para o modelo de linguagem"
-        subheader_description: "As ferramentas estendem as funcionalidades dos bots de IA com funções de JavaScript definidas pelo(a) usuário(a)"
         summary: "Resumo"
         summary_help: "Resumo das finalidades das ferramentas a ser exibido para usuários(as) finais"
         script: "Script"
@@ -621,6 +623,21 @@ pt_BR:
         tool: "Ferramenta"
         modal:
           title: "Criar nova credencial"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrição"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        secret: "Credencial"
+        oauth_connect: "Conectar"
+        enabled: "Ativados"
+        save: "Salvar"
+        edit: "Editar"
+        delete: "Excluir"
+        tools_modal:
+          parameters: "Parâmetros"
+          required: "Necessário(a)"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"

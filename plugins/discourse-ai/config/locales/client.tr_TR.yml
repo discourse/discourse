@@ -493,6 +493,9 @@ tr_TR:
         credit_allocations: "Kredi tahsisleri"
       ai_agent:
         ai_tools: "Araçlar"
+        mcp_server_tool_count:
+          one: "%{count} araç"
+          other: "%{count} araç"
         tool_strategies:
           all: "Tüm yanıtlara uygula"
           replies:
@@ -560,6 +563,11 @@ tr_TR:
           one: "%{count} araç"
           other: "%{count} araç"
         tool_tokens_total: "~%{tokens} Jetonlar"
+        mcp_server_tokens_only: "~%{tokens} jetonlar"
+        mcp_tools_modal:
+          title: "%{name} araç"
+          select_all: "Tümünü seç"
+          clear_all: "Tümünü temizle"
         tool_severity_medium: "Orta kapasite"
         tool_severity_high: "Yüksek kapasite"
         tool_severity_too_many: "Çok fazla araç"
@@ -649,7 +657,6 @@ tr_TR:
         tool_name_help: "\"Araç Adı\" büyük dil modeline sunulur. Bu değer genel olarak tek değildir, ancak her bir ajan için farklıdır. (ajan, kaydetme sırasında doğrulama yapar)"
         description: "Açıklama"
         description_help: "Dil modeli için aracın amacının net bir açıklaması"
-        subheader_description: "Araçlar, kullanıcı tanımlı JavaScript işlevleri ile YZ botlarının yeteneklerini genişletir."
         summary: "Özet"
         summary_help: "Son kullanıcılara gösterilecek araçların amacının özeti"
         script: "Komut Dosyası"
@@ -705,6 +712,28 @@ tr_TR:
         tool: "Araç"
         modal:
           title: "Yeni kimlik bilgisi oluştur"
+      mcp_servers:
+        name: "Ad"
+        description: "Açıklama"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        secret: "Kimlik bilgisi"
+        oauth_statuses:
+          connected: "Bağlı"
+        oauth_connect: "Bağlan"
+        enabled: "Etkin mi"
+        save: "Kaydet"
+        edit: "Düzenle"
+        delete: "Sil"
+        back: "Araçlara geri dön"
+        tool_count:
+          one: "%{count} araç"
+          other: "%{count} araç"
+        tools_modal:
+          title: "%{name} araç"
+          parameters: "Parametreler"
+          required: "Gerekli"
       llms:
         short_title: "LLM'ler"
         no_llms: "Henüz LLM yok"

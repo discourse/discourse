@@ -376,6 +376,8 @@ it:
         save: "Salva"
         enabled: "Abilitato?"
         tools: "Strumenti abilitati"
+        mcp_tools_modal:
+          clear_all: "Deseleziona tutto"
         forced_tools: "Strumenti forzati"
         allowed_groups: "Gruppi ammessi"
         delete: "Elimina"
@@ -448,7 +450,6 @@ it:
         tool_name: "Nome strumento"
         description: "Descrizione"
         description_help: "Una descrizione chiara dello scopo dello strumento per il modello linguistico"
-        subheader_description: "Gli strumenti estendono le capacità dei bot di intelligenza artificiale con funzioni JavaScript definite dall'utente."
         summary: "Riepilogo"
         summary_help: "Il riepilogo degli strumenti ha lo scopo di essere visualizzato agli utenti finali"
         script: "Script"
@@ -482,6 +483,22 @@ it:
         delete: "Elimina"
         embedding: "Integrazione"
         tool: "Strumento"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrizione"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Connesso"
+        oauth_connect: "Connetti"
+        enabled: "Abilitato"
+        save: "Salva"
+        edit: "Modifica"
+        delete: "Elimina"
+        tools_modal:
+          parameters: "Parametri"
+          required: "Obbligatorie"
       llms:
         short_title: "LLM"
         no_llms: "Ancora nessun LLM"

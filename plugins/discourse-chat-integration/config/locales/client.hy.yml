@@ -14,15 +14,13 @@ hy:
     chat_integration:
       menu_title: "Զրույցի ինտեգրումներ"
       settings: "Կարգավորումներ"
-      no_providers: "Դուք պետք է միացնեք որոշ մատակարարների պլագինի կարգավորումներում"
+      more_providers: "Ավելին"
       channels_with_errors: "Այս մատակարարի որոշ ալիքներ ձախողվել են վերջին անգամ հաղորդագրությունները ուղարկելիս: Սեղմեք սխալի պատկերակ(ներ)ին՝ ավելին իմանալու համար:"
       group_mention_template: "Նշումներ՝ @%{name}"
       group_message_template: "Հաղորդագրություն դեպի՝ @%{name}"
-      choose_group: "(ընտրեք խումբ)"
+      choose_group: "(Ընտրեք խումբ)"
       all_categories: "(Բոլոր կատեգորիաները)"
-      all_tags: "(բոլոր թեգերը)"
-      create_rule: "Ստեղծել Կանոն"
-      create_channel: "Ստեղծել Ալիք"
+      all_tags: "(Բոլոր թեգերը)"
       delete_channel: "Ջնջել"
       test_channel: "Փորձարկել"
       edit_channel: "Խմբագրել"
@@ -30,13 +28,10 @@ hy:
       test_modal:
         title: "Ուղարկել փորձնական հաղորդագրություն"
         topic: "Թեմա"
-        send: "Ուղարկել Փորձնական Հաղորդագրություն"
         close: "Փակել"
         success: "Հաղորդագրությունը հաջողությամբ ուղարկված է"
       type:
         normal: Նորմալ
-        group_message: Խմբային Հաղորդագրություն
-        group_mention: Խմբային նշում
       filter:
         mute: 'Խլացնել'
         follow: 'Միայն առաջին գրառումը'
@@ -56,8 +51,6 @@ hy:
           ok: "Վավեր"
           fail: "Անվավեր ֆորմատ"
       edit_rule_modal:
-        title: Խմբագրել Կանոնը
-        save: Պահպանել Կանոնը
         cancel: Չեղարկել
         provider: Մատակարար
         type: Տիպ
@@ -78,7 +71,6 @@ hy:
           param:
             identifier:
               title: Ալիք
-              help: "օրինակ՝ #ալիք, @օգտանուն:"
           errors:
             action_prohibited: "Բոտ այդ ալիքում գրառում կատարելու թույլտվություն չունի"
         telegram:
@@ -101,7 +93,6 @@ hy:
               help: "Անուն ալիքը նկարագրելու համար: Այն չի օգտագործվում Discord-ին միանալու համար: "
             webhook_url:
               title: Webhook -ի URL
-              help: Ձեր Discord սերվերի կարգավորումներում ստեղծված webhook -ի URL -ը
         guilded:
           param:
             name:
@@ -113,7 +104,6 @@ hy:
           param:
             identifier:
               title: Ալիք
-              help: "օրինակ՝ #ալիք, @օգտանուն:"
           errors:
             channel_not_found: "Տվյալ ալիքը գոյություն չունի Mattermost-ում"
         matrix:
@@ -143,7 +133,6 @@ hy:
           param:
             identifier:
               title: Ալիք
-              help: "օրինակ՝ #ալիք, @օգտանուն:"
           errors:
             invalid_channel: "Այդ ալիքը գոյություն չունի Rocket Chat-ում"
         gitter:
@@ -151,7 +140,6 @@ hy:
           param:
             name:
               title: "Անուն"
-              help: "Gitter -ի սենյակի անուն, օրինակ՝ gitterHQ/services."
             webhook_url:
               title: "Webhook -ի URL"
               help: "URL -ը, որը տրվում է Gitter սենյակում նոր ինտեգրում ստեղծելիս:"
