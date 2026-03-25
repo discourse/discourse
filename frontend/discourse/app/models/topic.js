@@ -22,7 +22,6 @@ import {
   autoTrackedArray,
   defineTrackedProperty,
 } from "discourse/lib/tracked-tools";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
@@ -567,25 +566,24 @@ export default class Topic extends RestModel {
     return resolveShareUrl(this.url, this.currentUser);
   }
 
-  @computed("id", "slug")
+  @computed("id", "slug", "is_nested_view")
   get url() {
     let slug = this.slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
     }
+    if (this.is_nested_view) {
+      return `${getURL("/n/")}${slug}/${this.id}`;
+    }
     return `${getURL("/t/")}${slug}/${this.id}`;
   }
 
-  // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
     let url = this.url;
     if (postNumber > 0) {
       url += `/${postNumber}`;
     }
-    return applyValueTransformer("topic-url-for-post-number", url, {
-      topic: this,
-      postNumber,
-    });
+    return url;
   }
 
   @computed("unread_posts", "new_posts")
@@ -605,13 +603,25 @@ export default class Topic extends RestModel {
     return this.unread_posts || this.new_posts;
   }
 
-  @computed("last_read_post_number", "url")
+  @computed("last_read_post_number", "url", "is_nested_view")
   get lastReadUrl() {
+    if (this.is_nested_view) {
+      return this.url;
+    }
     return this.urlForPostNumber(this.last_read_post_number);
   }
 
-  @computed("last_read_post_number", "highest_post_number", "url")
+  @computed(
+    "last_read_post_number",
+    "highest_post_number",
+    "url",
+    "is_nested_view"
+  )
   get lastUnreadUrl() {
+    if (this.is_nested_view) {
+      return this.url;
+    }
+
     let customUrl = null;
     _customLastUnreadUrlCallbacks.some((cb) => {
       const result = cb(this);
@@ -640,8 +650,11 @@ export default class Topic extends RestModel {
     return this.urlForPostNumber(postNumber);
   }
 
-  @computed("highest_post_number", "url")
+  @computed("highest_post_number", "url", "is_nested_view")
   get lastPostUrl() {
+    if (this.is_nested_view) {
+      return this.url;
+    }
     return this.urlForPostNumber(this.highest_post_number);
   }
 

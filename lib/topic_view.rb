@@ -17,6 +17,7 @@ class TopicView
   memoize_for_posts :primary_group_names, :@group_names
   memoize_for_posts :post_user_badges
   memoize_for_posts :last_post
+  memoize_for_posts :nested_replies_direct_reply_counts
 
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
@@ -58,6 +59,8 @@ class TopicView
     :post_number,
     :include_suggested,
     :include_related,
+    :nested_replies_direct_reply_counts,
+    :nested_replies_skip_preload,
   )
 
   delegate :category, to: :topic, allow_nil: true, private: true
@@ -990,7 +993,10 @@ class TopicView
       elsif SiteSetting.tagging_enabled
         :tags
       end
-    Topic.with_deleted.includes(:category, tags_include).find_by(id: topic_or_topic_id)
+    Topic
+      .with_deleted
+      .includes(:category, :nested_topic, tags_include)
+      .find_by(id: topic_or_topic_id)
   end
 
   def find_post_replies_ids(post_id)

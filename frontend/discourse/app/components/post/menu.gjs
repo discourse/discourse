@@ -38,6 +38,7 @@ import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
+import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -55,6 +56,7 @@ const buttonKeys = Object.freeze({
   REPLY: "reply",
   SHARE: "share",
   ADD_TRANSLATION: "addTranslation",
+  NESTED_REPLIES_EXPAND: "nested-replies-expand",
   SHOW_MORE: "showMore",
 });
 
@@ -71,6 +73,7 @@ const coreButtonComponents = new Map([
   [buttonKeys.REPLY, PostMenuReplyButton],
   [buttonKeys.SHARE, PostMenuShareButton],
   [buttonKeys.ADD_TRANSLATION, PostMenuAddTranslationButton],
+  [buttonKeys.NESTED_REPLIES_EXPAND, NestedRepliesExpandButton],
   [buttonKeys.SHOW_MORE, PostMenuShowMoreButton],
 ]);
 

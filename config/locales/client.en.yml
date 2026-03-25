@@ -3848,6 +3848,44 @@ en:
         name: "Update Notifications"
         description: "Update your personal notification level for the selected topics to:"
 
+    nested_replies:
+      nested_view: "Nested View"
+      flat_view: "Flat View"
+      view_as_nested: "View as nested"
+      view_as_flat: "View as flat"
+      sort:
+        label: "Sort by"
+        top: "Top"
+        new: "New"
+        old: "Old"
+      load_more_children:
+        one: "%{count} more reply"
+        other: "%{count} more replies"
+      load_more_children_generic: "More replies"
+      continue_thread: "Continue this thread"
+      new_replies:
+        one: "%{count} new reply"
+        other: "%{count} new replies"
+      collapsed_replies:
+        one: "%{count} reply"
+        other: "%{count} replies"
+      collapse: "Collapse"
+      collapse_parent: "Collapse parent thread"
+      category_settings:
+        default_nested_view: "Use nested view as default for topics in this category"
+      no_replies: "No replies yet."
+      deleted_post_placeholder: "[deleted]"
+      op_badge: "OP"
+      pinned_reply: "Pinned"
+      pin_reply: "Pin to top"
+      unpin_reply: "Unpin"
+      topic_admin_menu:
+        enable_nested_replies: "Enable nested replies"
+        disable_nested_replies: "Disable nested replies"
+      context:
+        banner: "You are viewing a single thread from this topic."
+        view_full_topic: "View full topic"
+        view_parent_context: "View parent context"
     topic:
       filter_to:
         one: "%{count} post in topic"

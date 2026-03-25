@@ -1795,6 +1795,38 @@ content_localization:
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
+  nested_replies_enabled:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  nested_replies_default:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  nested_replies_default_sort:
+    default: "top"
+    client: true
+    type: enum
+    choices:
+      - top
+      - new
+      - old
+    area: "posts_and_topics"
+  nested_replies_max_depth:
+    default: 10
+    client: true
+    type: integer
+    min: 1
+    max: 10
+    area: "posts_and_topics"
+  nested_replies_show_view_as_nested_button:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  nested_replies_cap_nesting_depth:
+    default: false
+    client: true
+    area: "posts_and_topics"
 
 email:
   email_time_window_mins:

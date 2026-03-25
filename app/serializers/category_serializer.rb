@@ -7,7 +7,8 @@ class CategorySerializer < SiteCategorySerializer
     attributes :auto_bump_cooldown_days,
                :num_auto_bump_daily,
                :require_reply_approval,
-               :require_topic_approval
+               :require_topic_approval,
+               :nested_replies_default
   end
 
   class CategoryLocalizationSerializer < ApplicationSerializer

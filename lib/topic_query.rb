@@ -818,7 +818,7 @@ class TopicQuery
     end
 
     # Start with a list of all topics
-    result = Topic.includes(:category)
+    result = Topic.includes(:category, :nested_topic)
 
     if @user
       result =

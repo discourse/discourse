@@ -19,7 +19,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :featured_link_root_domain,
              :allowed_user_count,
              :participant_groups,
-             :is_hot
+             :is_hot,
+             :is_nested_view
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -145,6 +146,14 @@ class TopicListItemSerializer < ListableTopicSerializer
     plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_is_hot, false)
 
     theme_enabled || plugin_enabled
+  end
+
+  def is_nested_view
+    object.nested_topic.present?
+  end
+
+  def include_is_nested_view?
+    SiteSetting.nested_replies_enabled
   end
 
   private

@@ -656,6 +656,7 @@ class CategoriesController < ApplicationController
               num_auto_bump_daily
               require_reply_approval
               require_topic_approval
+              nested_replies_default
             ],
             custom_fields: {
             },

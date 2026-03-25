@@ -1413,6 +1413,17 @@ Discourse::Application.routes.draw do
     get "search" => "search#show"
     post "search/click" => "search#click"
 
+    # Nested replies routes
+    scope "n/:slug/:topic_id", constraints: { topic_id: /\d+/ } do
+      get "/roots" => "nested_topics#roots"
+      get "/children/:post_number" => "nested_topics#children"
+      get "/context/:post_number" => "nested_topics#context"
+      put "/pin" => "nested_topics#pin"
+      put "/toggle" => "nested_topics#toggle"
+      get "/:post_number" => "nested_topics#respond", :constraints => { post_number: /\d+/ }
+      get "/" => "nested_topics#respond"
+    end
+
     # Topics resource
     get "t/:id" => "topics#show"
     put "t/:topic_id" => "topics#update", :constraints => { topic_id: /\d+/ }

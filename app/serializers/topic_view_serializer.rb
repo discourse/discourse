@@ -80,6 +80,7 @@ class TopicViewSerializer < ApplicationSerializer
     :slow_mode_enabled_until,
     :has_localized_content,
     :can_localize_topic,
+    :is_nested_view,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -337,5 +338,13 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_can_localize_topic?
     SiteSetting.content_localization_enabled && scope.can_localize_topic?(object.topic)
+  end
+
+  def is_nested_view
+    object.topic.nested_topic.present?
+  end
+
+  def include_is_nested_view?
+    SiteSetting.nested_replies_enabled
   end
 end

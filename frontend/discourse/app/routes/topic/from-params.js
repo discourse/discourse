@@ -12,6 +12,7 @@ export default class TopicFromParams extends DiscourseRoute {
   @service composer;
   @service header;
   @service router;
+  @service siteSettings;
 
   // Avoid default model hook
   model(params) {
@@ -42,6 +43,16 @@ export default class TopicFromParams extends DiscourseRoute {
 
   afterModel(model) {
     const topic = this.modelFor("topic");
+
+    if (this.siteSettings.nested_replies_enabled && topic.is_nested_view) {
+      const postNumber = model.nearPost;
+      if (postNumber && postNumber > 1) {
+        this.router.replaceWith("nestedPost", topic.slug, topic.id, postNumber);
+      } else {
+        this.router.replaceWith("nested", topic.slug, topic.id);
+      }
+      return;
+    }
 
     const isLoadingFirstPost =
       topic.postStream.firstPostPresent &&

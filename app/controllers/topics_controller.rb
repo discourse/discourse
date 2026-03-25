@@ -173,6 +173,15 @@ class TopicsController < ApplicationController
       return
     end
 
+    if !request.format.json? && SiteSetting.nested_replies_enabled &&
+         @topic_view.topic.nested_topic.present?
+      url = "/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
+      post_number = opts[:post_number].to_i
+      url << "/#{post_number}" if post_number > 0
+      redirect_to url, status: :found
+      return
+    end
+
     track_visit_to_topic
 
     if should_track_visit_to_topic?
@@ -1353,7 +1362,7 @@ class TopicsController < ApplicationController
     additional_allowed_query_parameters =
       DiscoursePluginRegistry.apply_modifier(
         :redirect_to_correct_topic_additional_query_parameters,
-        [],
+        %w[post_number],
       )
 
     opts =
