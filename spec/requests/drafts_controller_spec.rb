@@ -50,6 +50,20 @@ RSpec.describe DraftsController do
       expect(response.parsed_body["drafts"].first["title"]).to eq(nil)
     end
 
+    it "resolves string tags to tag objects in draft data" do
+      sign_in(user)
+      tag = Fabricate(:tag, name: "alpha")
+      Draft.set(user, "new_topic", 0, { reply: "hello", tags: %w[alpha] }.to_json)
+
+      get "/drafts.json"
+      expect(response.status).to eq(200)
+
+      parsed_data = JSON.parse(response.parsed_body["drafts"].first["data"])
+      expect(parsed_data["tags"]).to contain_exactly(
+        { "id" => tag.id, "name" => "alpha", "slug" => tag.slug_for_url },
+      )
+    end
+
     it "returns categories when lazy load categories is enabled" do
       SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
       category = Fabricate(:category)
@@ -74,6 +88,68 @@ RSpec.describe DraftsController do
       get "/drafts/hello.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["draft"]).to eq("test")
+    end
+
+    it "resolves string tags to tag objects in draft data" do
+      sign_in(user)
+      tag1 = Fabricate(:tag, name: "foo")
+      tag2 = Fabricate(:tag, name: "bar")
+      Draft.set(user, "new_topic", 0, { reply: "hello", tags: %w[foo bar] }.to_json)
+
+      get "/drafts/new_topic.json"
+      expect(response.status).to eq(200)
+
+      parsed_draft = JSON.parse(response.parsed_body["draft"])
+      expect(parsed_draft["tags"]).to contain_exactly(
+        { "id" => tag1.id, "name" => "foo", "slug" => tag1.slug_for_url },
+        { "id" => tag2.id, "name" => "bar", "slug" => tag2.slug_for_url },
+      )
+    end
+
+    it "resolves original_tags in draft data" do
+      sign_in(user)
+      tag = Fabricate(:tag, name: "baz")
+      Draft.set(user, "new_topic", 0, { reply: "hello", tags: %w[baz], original_tags: %w[baz] }.to_json)
+
+      get "/drafts/new_topic.json"
+      parsed_draft = JSON.parse(response.parsed_body["draft"])
+      expect(parsed_draft["original_tags"]).to contain_exactly(
+        { "id" => tag.id, "name" => "baz", "slug" => tag.slug_for_url },
+      )
+    end
+
+    it "handles drafts without tags gracefully" do
+      sign_in(user)
+      Draft.set(user, "new_topic", 0, { reply: "no tags here" }.to_json)
+
+      get "/drafts/new_topic.json"
+      expect(response.status).to eq(200)
+      parsed_draft = JSON.parse(response.parsed_body["draft"])
+      expect(parsed_draft["tags"]).to be_nil
+    end
+
+    it "preserves tag objects that are already resolved" do
+      sign_in(user)
+      tag = Fabricate(:tag, name: "existing")
+      Draft.set(user, "new_topic", 0, { reply: "hello", tags: [{ id: tag.id, name: "existing", slug: "existing" }] }.to_json)
+
+      get "/drafts/new_topic.json"
+      parsed_draft = JSON.parse(response.parsed_body["draft"])
+      expect(parsed_draft["tags"]).to contain_exactly(
+        { "id" => tag.id, "name" => "existing", "slug" => "existing" },
+      )
+    end
+
+    it "filters out deleted tags" do
+      sign_in(user)
+      tag = Fabricate(:tag, name: "kept")
+      Draft.set(user, "new_topic", 0, { reply: "hello", tags: %w[kept deleted-tag] }.to_json)
+
+      get "/drafts/new_topic.json"
+      parsed_draft = JSON.parse(response.parsed_body["draft"])
+      expect(parsed_draft["tags"]).to contain_exactly(
+        { "id" => tag.id, "name" => "kept", "slug" => tag.slug_for_url },
+      )
     end
   end
 

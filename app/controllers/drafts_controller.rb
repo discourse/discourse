@@ -18,6 +18,7 @@ class DraftsController < ApplicationController
         limit: fetch_limit_from_params(default: nil, max: INDEX_LIMIT),
       )
 
+    Draft.resolve_tags(stream)
     response = { drafts: serialize_data(stream, DraftSerializer) }
 
     if guardian.can_lazy_load_categories?
@@ -33,7 +34,8 @@ class DraftsController < ApplicationController
     raise Discourse::NotFound.new if params[:id].blank?
 
     seq = params[:sequence] || DraftSequence.current(current_user, params[:id])
-    render json: { draft: Draft.get(current_user, params[:id], seq), draft_sequence: seq }
+    draft_data = Draft.resolve_tags_json(Draft.get(current_user, params[:id], seq))
+    render json: { draft: draft_data, draft_sequence: seq }
   end
 
   def create

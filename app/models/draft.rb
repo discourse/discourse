@@ -215,6 +215,70 @@ class Draft < ActiveRecord::Base
     Post.secured(Guardian.new(user)).joins(:topic).merge(self.allowed_draft_topics_for_user(user))
   end
 
+  def self.resolve_tags(drafts)
+    draft_parsed = {}
+    tag_names = []
+
+    drafts.each do |draft|
+      parsed = draft.parsed_data
+      names =
+        %w[tags original_tags].flat_map do |f|
+          Array(parsed[f]).select { |t| t.is_a?(String) }
+        end
+
+      if names.present?
+        draft_parsed[draft.id] = parsed
+        tag_names.concat(names)
+      end
+    end
+
+    return if tag_names.blank?
+
+    tags_by_name = Tag.where(name: tag_names.uniq).select(:id, :name, :slug).index_by(&:name)
+
+    draft_parsed.each do |draft_id, parsed|
+      draft = drafts.detect { |d| d.id == draft_id }
+
+      %w[tags original_tags].each do |field|
+        next if parsed[field].blank?
+        parsed[field] = parsed[field].filter_map do |t|
+          next t unless t.is_a?(String)
+          tag = tags_by_name[t]
+          tag ? { id: tag.id, name: tag.name, slug: tag.slug_for_url } : nil
+        end
+      end
+
+      draft.data = parsed.to_json
+    end
+  end
+
+  def self.resolve_tags_json(json)
+    return json if json.blank?
+
+    data = JSON.parse(json)
+    string_names =
+      %w[tags original_tags]
+        .flat_map { |f| Array(data[f]).select { |t| t.is_a?(String) } }
+        .uniq
+
+    return json if string_names.blank?
+
+    tags_by_name = Tag.where(name: string_names).select(:id, :name, :slug).index_by(&:name)
+
+    %w[tags original_tags].each do |field|
+      next if data[field].blank?
+      data[field] = data[field].filter_map do |t|
+        next t unless t.is_a?(String)
+        tag = tags_by_name[t]
+        tag ? { id: tag.id, name: tag.name, slug: tag.slug_for_url } : nil
+      end
+    end
+
+    data.to_json
+  rescue JSON::ParserError
+    json
+  end
+
   def self.stream(opts = nil)
     opts ||= {}
 
