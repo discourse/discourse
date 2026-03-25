@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -19,7 +18,6 @@ import Stats from "./stats";
 
 export default class WorkflowsIndex extends Component {
   @service currentUser;
-  @service dialog;
   @service router;
 
   @tracked loading = false;
@@ -61,19 +59,6 @@ export default class WorkflowsIndex extends Component {
     }
   }
 
-  @action
-  async deleteWorkflow(workflow) {
-    await this.dialog.deleteConfirm({
-      message: i18n("discourse_workflows.delete_confirm", {
-        name: workflow.name,
-      }),
-      didConfirm: async () => {
-        await workflow.destroyRecord();
-        this.router.refresh();
-      },
-    });
-  }
-
   <template>
     {{#if @workflows.content.length}}
       <div class="workflows-index__toolbar">
@@ -98,7 +83,6 @@ export default class WorkflowsIndex extends Component {
                 <th>{{i18n "discourse_workflows.last_editor"}}</th>
                 <th>{{i18n "discourse_workflows.last_update"}}</th>
                 <th>{{i18n "discourse_workflows.last_run"}}</th>
-                <th></th>
                 <th></th>
               </tr>
             </thead>
@@ -162,13 +146,6 @@ export default class WorkflowsIndex extends Component {
                         {{i18n "discourse_workflows.disabled"}}
                       </span>
                     {{/if}}
-                  </td>
-                  <td class="workflows-index__actions">
-                    <DButton
-                      @icon="trash-can"
-                      @action={{fn this.deleteWorkflow workflow}}
-                      class="btn-flat"
-                    />
                   </td>
                 </tr>
               {{/each}}
