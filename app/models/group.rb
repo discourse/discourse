@@ -946,17 +946,7 @@ class Group < ActiveRecord::Base
 
     removed_user_ids = group_users_to_remove.pluck(:user_id)
 
-    # Capture webhook payloads before group_user deletion
-    webhook_payloads = nil
-    if WebHook.active_web_hooks(:group_user)
-      webhook_payloads =
-        group_users_to_remove.map do |gu|
-          {
-            id: gu.id,
-            payload: WebHook.generate_payload(:group_user, gu, WebHookGroupUserSerializer),
-          }
-        end
-    end
+    enqueue_user_removed_from_group_webhook_events(group_users_to_remove)
 
     Group.transaction do
       group_users.where(user_id: removed_user_ids).delete_all
@@ -1000,17 +990,23 @@ class Group < ActiveRecord::Base
 
     User.where(id: removed_user_ids).find_each { |user| trigger_user_removed_event(user) }
 
-    webhook_payloads&.each do |wp|
+    removed_user_ids
+  end
+
+  def enqueue_user_removed_from_group_webhook_events(group_users_to_remove)
+    return unless WebHook.active_web_hooks(:group_user)
+
+    group_users_to_remove.find_each do |gu|
+      payload = WebHook.generate_payload(:group_user, gu, WebHookGroupUserSerializer)
+
       WebHook.enqueue_hooks(
         :group_user,
         :user_removed_from_group,
-        id: wp[:id],
-        payload: wp[:payload],
+        id: gu.id,
+        payload: payload,
         group_ids: [self.id],
       )
     end
-
-    removed_user_ids
   end
 
   def recalculate_user_count
