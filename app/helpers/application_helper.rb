@@ -699,10 +699,8 @@ module ApplicationHelper
 
   def dark_scheme_id
     if user_dark_scheme_id
-      if !theme_limits_color_schemes? ||
-           ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
-        return user_dark_scheme_id
-      end
+      return user_scheme_id unless theme_limits_color_schemes?
+      return user_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
     end
 
     theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
