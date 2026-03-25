@@ -10,12 +10,22 @@
     var(--neutral-700),
     var(--dark-neutral-700)
   );
-  --token-text-accent: light-dark(var(--blue-oklch-800), var(--blue-oklch-300));
-  --token-text-accent-bolder: light-dark(
-    var(--blue-oklch-900),
-    var(--blue-oklch-200)
-  );
+  --token-text-accent: light-dark(var(--blue-800), var(--blue-300));
+  --token-text-accent-bolder: light-dark(var(--blue-900), var(--blue-200));
   --token-text-inverse: light-dark(var(--neutral-0), var(--dark-neutral-100));
+
+  // Icon
+  //
+  --token-icon-default: light-dark(
+    var(--neutral-1100),
+    var(--dark-neutral-1000)
+  );
+  --token-icon-subtle: light-dark(var(--neutral-800), var(--dark-neutral-800));
+  --token-icon-subtlest: light-dark(
+    var(--neutral-700),
+    var(--dark-neutral-700)
+  );
+  --token-icon-danger: light-dark(var(--red-700), var(--red-500));
 
   // Border
   --token-border-input: light-dark(var(--neutral-500), var(--dark-neutral-600));
@@ -23,11 +33,8 @@
     var(--neutral-300A),
     var(--dark-neutral-300A)
   );
-  --token-border-focused: light-dark(var(--tertiary))
-    --token-border-accent: light-dark(
-      var(--blue-oklch-200),
-      var(--blue-oklch-900)
-    );
+  --token-border-focused: light-dark(var(--blue-500));
+  --token-border-accent: light-dark(var(--blue-200), var(--blue-900));
 
   // Backgrounds
   // Use as the primary background for the UI.
@@ -45,21 +52,23 @@
     var(--neutral-0),
     var(--dark-neutral-200)
   );
+
+  // Accents
   --token-background-accent-subtlest: light-dark(
-    var(--blue-oklch-100),
-    var(--blue-oklch-1000)
+    var(--blue-100),
+    var(--blue-1000)
   );
   --token-background-accent-subtler: light-dark(
-    var(--blue-oklch-200),
-    var(--blue-oklch-900)
+    var(--blue-200),
+    var(--blue-900)
   );
   --token-background-accent-subtle: light-dark(
-    var(--blue-oklch-400),
-    var(--blue-oklch-700)
+    var(--blue-400),
+    var(--blue-700)
   );
   --token-background-accent-bolder: light-dark(
-    var(--blue-oklch-700),
-    var(--blue-oklch-400)
+    var(--blue-700),
+    var(--blue-400)
   );
 
   // Sizing
