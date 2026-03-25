@@ -402,8 +402,6 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.qunit.global-exists" },
   { handler: "notify-admin", matchId: "discourse.resolver-resolutions" },
   { handler: "notify-admin", matchId: "discourse.safari-hacks-disabled" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-discourse-plugin" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
   { handler: "notify-admin", matchId: "discourse.user.resolved-timezone" },
   { handler: "notify-admin", matchId: "discourse.user.userOptions" },
   { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },
