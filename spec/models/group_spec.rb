@@ -1297,10 +1297,9 @@ RSpec.describe Group do
     end
 
     it "updates group user count" do
-      expect {
-        group.bulk_add([user.id, admin.id])
-        group.reload
-      }.to change { group.user_count }.from(0).to(2)
+      expect { group.bulk_add([user.id, admin.id]) }.to change {
+        group.reload.user_count
+      }.from(0).to(2)
     end
 
     it "grants title to users without one" do
@@ -1432,10 +1431,9 @@ RSpec.describe Group do
 
     it "updates group user count" do
       group.reload
-      expect {
-        group.bulk_remove([user.id])
-        group.reload
-      }.to change { group.user_count }.from(2).to(1)
+      expect { group.bulk_remove([user.id]) }.to change {
+        group.reload.user_count
+      }.from(2).to(1)
     end
 
     it "ignores user_ids not in the group" do
