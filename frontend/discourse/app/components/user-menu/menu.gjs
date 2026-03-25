@@ -12,7 +12,10 @@ import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
+import UserMenuTab, {
+  CUSTOM_TABS_CLASSES,
+  getAppreciationNotificationTypes,
+} from "discourse/lib/user-menu/tab";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
 import UserMenuBookmarksList from "./bookmarks-list";
@@ -69,7 +72,7 @@ const CORE_TOP_TABS = [
 
   class extends UserMenuTab {
     id = "likes";
-    icon = "heart";
+    icon = "award";
     panelComponent = UserMenuLikesNotificationsList;
 
     get shouldDisplay() {
@@ -77,22 +80,22 @@ const CORE_TOP_TABS = [
     }
 
     get count() {
-      return (
-        this.getUnreadCountForType("liked") +
-        this.getUnreadCountForType("liked_consolidated") +
-        this.getUnreadCountForType("reaction")
+      return this.notificationTypes.reduce(
+        (sum, type) => sum + this.getUnreadCountForType(type),
+        0
       );
     }
 
-    // TODO(osama): reaction is a type used by the reactions plugin, but it's
-    // added here temporarily until we add a plugin API for extending
-    // filterByTypes in lists
     get notificationTypes() {
-      return ["liked", "liked_consolidated", "reaction"];
+      return [
+        "liked",
+        "liked_consolidated",
+        ...getAppreciationNotificationTypes(),
+      ];
     }
 
     get linkWhenActive() {
-      return `${this.currentUser.path}/notifications/likes-received`;
+      return `${this.currentUser.path}/notifications/appreciations-received`;
     }
   },
 

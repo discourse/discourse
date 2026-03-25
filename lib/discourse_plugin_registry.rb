@@ -133,6 +133,9 @@ class DiscoursePluginRegistry
 
   define_filtered_register :calendar_subscription_feeds
 
+  define_filtered_register :appreciation_providers
+  define_filtered_register :appreciation_notification_types
+
   define_filtered_register :custom_filter_mappings
 
   define_filtered_register :reviewable_types do |singleton|

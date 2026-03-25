@@ -289,14 +289,21 @@ class Notification < ActiveRecord::Base
   end
 
   # Update `index_notifications_user_menu_ordering_deprioritized_likes` index when updating this as this is used by
-  # `Notification.prioritized_list` to deprioritize like typed notifications. Also See
+  # `Notification.prioritized_list` to deprioritize appreciation typed notifications. Also See
   # `db/migrate/20240306063428_add_indexes_to_notifications.rb`.
+  # Plugins can register additional types via DiscoursePluginRegistry.register_appreciation_notification_type.
+  def self.appreciation_types
+    base = [Notification.types[:liked], Notification.types[:liked_consolidated]]
+    plugin_types =
+      DiscoursePluginRegistry.appreciation_notification_types.filter_map do |type|
+        Notification.types[type.to_sym]
+      end
+    base + plugin_types
+  end
+
+  # @deprecated Use {.appreciation_types} instead.
   def self.like_types
-    [
-      Notification.types[:liked],
-      Notification.types[:liked_consolidated],
-      Notification.types[:reaction],
-    ]
+    appreciation_types
   end
 
   def self.prioritized_list(user, count: 30, types: [])
@@ -307,14 +314,14 @@ class Notification < ActiveRecord::Base
         .notifications
         .includes(:topic)
         .visible
-        .prioritized(types.present? ? [] : like_types)
+        .prioritized(types.present? ? [] : appreciation_types)
         .limit(count)
 
     if types.present?
       notifications = notifications.where(notification_type: types)
     elsif user.user_option.like_notification_frequency ==
           UserOption.like_notification_frequency_type[:never]
-      like_types.each do |notification_type|
+      appreciation_types.each do |notification_type|
         notifications = notifications.where.not(notification_type:)
       end
     end

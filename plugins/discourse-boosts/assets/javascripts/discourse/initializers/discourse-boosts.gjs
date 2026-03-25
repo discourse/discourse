@@ -7,6 +7,8 @@ import BoostActionButton from "../components/boost-action-button";
 import BoostsPostMenu from "../components/boosts-post-menu";
 
 function initializeBoosts(api) {
+  api.registerAppreciationNotificationType("boost");
+
   api.addSaveableUserOption("boost_notifications_level", {
     page: "notifications",
   });

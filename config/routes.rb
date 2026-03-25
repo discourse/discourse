@@ -927,6 +927,14 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
+      get "#{root_path}/:username/appreciations/given" => "appreciations#given",
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      get "#{root_path}/:username/appreciations/received" => "appreciations#received",
+          :constraints => {
+            username: RouteFormat.username,
+          }
       get "#{root_path}/:username/badges" => "users#badges",
           :constraints => {
             username: RouteFormat.username,

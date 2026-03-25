@@ -118,7 +118,10 @@ import {
   transformerTypes,
 } from "discourse/lib/transformer";
 import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
-import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
+import {
+  registerAppreciationNotificationType,
+  registerUserMenuTab,
+} from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { _addCategoryPropertyForSave } from "discourse/models/category";
 import Composer, {
@@ -3034,6 +3037,22 @@ class _PluginApi {
    */
   registerUserMenuTab(func) {
     registerUserMenuTab(func);
+  }
+
+  /**
+   * Register a notification type to be included in the appreciations tab
+   * of the user menu. Core includes "liked" and "liked_consolidated" by
+   * default. Plugins should call this to add their own types.
+   *
+   * ```
+   * api.registerAppreciationNotificationType("reaction");
+   * api.registerAppreciationNotificationType("boost");
+   * ```
+   *
+   * @param {string} type - The notification type name (must match a key in site.notification_types)
+   */
+  registerAppreciationNotificationType(type) {
+    registerAppreciationNotificationType(type);
   }
 
   /**

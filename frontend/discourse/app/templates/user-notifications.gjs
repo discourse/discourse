@@ -38,12 +38,12 @@ export default <template>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userNotifications.likesReceived"
+        @route="userNotifications.appreciationsReceived"
         @ariaCurrentContext="subNav"
-        class="user-nav__notifications-likes"
+        class="user-nav__notifications-appreciations"
       >
-        {{icon "heart"}}
-        <span>{{i18n "user_action_groups.2"}}</span>
+        {{icon "award"}}
+        <span>{{i18n "user.appreciations"}}</span>
       </DNavigationItem>
 
       {{#if @controller.siteSettings.enable_mentions}}
