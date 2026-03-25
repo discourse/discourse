@@ -45,6 +45,7 @@ RSpec.describe DiscourseWorkflows::Triggers::TopicClosed::V1 do
       output = trigger.output
 
       expect(output[:topic_id]).to eq(topic.id)
+      expect(output[:topic_raw]).to eq(topic.first_post&.raw)
       expect(output[:tags]).to eq(["test-tag"])
     end
   end
