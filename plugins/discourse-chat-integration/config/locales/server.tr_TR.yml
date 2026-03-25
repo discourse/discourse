@@ -47,8 +47,6 @@ tr_TR:
     chat_integration_rocketchat_webhook_url: "Rocket Chat entegrasyonu web kancası için URL"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat gönderisi alıntı uzunluğu"
     chat_integration_gitter_enabled: "Gitter sohbet entegrasyon sağlayıcısını etkinleştirin"
-    chat_integration_flowdock_enabled: "Flowdock sohbet entegrasyon sağlayıcısını etkinleştirin"
-    chat_integration_flowdock_excerpt_length: "Flowdock gönderisi alıntı uzunluğu"
     chat_integration_groupme_enabled: "Groupme sohbet entegrasyon sağlayıcısını etkinleştirin"
     chat_integration_groupme_excerpt_length: "Groupme gönderisi alıntı uzunluğu"
     chat_integration_groupme_bot_ids: "*gerekli* Birden fazla varsa ‘,’ ile ayrılmış bot kimlikleri"
@@ -225,8 +223,6 @@ tr_TR:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "gönderildi"
       google:
         new_post: "%{site_title} üzerinde yeni gönderi"
         new_topic: "%{site_title} üzerinde yeni konu"

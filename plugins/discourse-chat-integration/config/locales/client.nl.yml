@@ -159,12 +159,6 @@ nl:
             webhook_url:
               title: "Webhook-URL"
               help: "De opgegeven URL wanneer je een nieuwe integratie maakt in een Gitter-ruimte."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flowtoken"
-              help: "Het opgegeven flowtoken na het maken van een bron voor een flow waarin je berichten wilt sturen."
         groupme:
           title: "GroupMe"
           param:

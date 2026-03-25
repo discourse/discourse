@@ -8,16 +8,27 @@ en:
     chat_integration:
       menu_title: "Chat Integrations"
       settings: "Settings"
-      no_providers: "You need to enable some providers in the plugin settings"
+      nav:
+        providers: "Providers"
+        providers_description: "Configure chat provider integrations"
+      add_provider: "Add provider"
+      more_providers: "More"
+      empty_state:
+        title: "Connect your chat platform"
+        body: "Send notifications from Discourse to your team's chat. Choose a provider to get started."
+      channels_title: "Channels"
+      no_channels: "No channels have been configured yet."
+      channel_actions: "Channel actions"
+      add_first_channel: "Add your first %{provider} channel"
       channels_with_errors: "Some channels for this provider failed last time messages were sent. Click the error icon(s) to learn more."
       channel_exception: "An unknown error occurred when a message was last sent to this channel."
       group_mention_template: "Mentions of: @%{name}"
       group_message_template: "Messages to: @%{name}"
-      choose_group: "(choose a group)"
-      all_categories: "(all categories)"
-      all_tags: "(all tags)"
-      create_rule: "Create Rule"
-      create_channel: "Create Channel"
+      choose_group: "(Choose a group)"
+      all_categories: "(All categories)"
+      all_tags: "(All tags)"
+      create_rule: "Create rule"
+      add_channel: "Add channel"
       delete_channel: "Delete"
       test_channel: "Test"
       edit_channel: "Edit"
@@ -25,14 +36,14 @@ en:
       test_modal:
         title: "Send a test message"
         topic: "Topic"
-        send: "Send Test Message"
+        send: "Send test message"
         close: "Close"
         error: "An unknown error occurred while sending the message. Check the site logs for more information."
         success: "Message sent successfully"
       type:
         normal: Normal
-        group_message: Group Message
-        group_mention: Group Mention
+        group_message: Group message
+        group_mention: Group mention
       filter:
         mute: 'Mute'
         follow: 'First post only'
@@ -53,8 +64,9 @@ en:
           ok: "Valid"
           fail: "Invalid format"
       edit_rule_modal:
-        title: Edit Rule
-        save: Save Rule
+        edit_title: Edit rule
+        create_title: Create rule
+        save: Save rule
         cancel: Cancel
         provider: Provider
         type: Type
@@ -79,8 +91,9 @@ en:
           param:
             identifier:
               title: Channel
-              help: "e.g. #channel, @username."
+              help: "For example #channel or @username"
           errors:
+            auth_error: "The provided authentication token is invalid"
             action_prohibited: "The bot does not have permission to post to that channel"
             channel_not_found: "The specified channel does not exist on Slack"
 
@@ -111,7 +124,7 @@ en:
               help: "A name to describe the channel. It is not used for the connection to Discord."
             webhook_url:
               title: Webhook URL
-              help: The webhook URL created in your Discord server settings
+              help: The webhook URL created in your Discord server settings, should be in the format of https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
 
         #######################################
         ########### GUILDED STRINGS ###########
@@ -134,7 +147,7 @@ en:
           param:
             identifier:
               title: Channel
-              help: "e.g. #channel, @username."
+              help: "For example #channel or @username"
           errors:
             channel_not_found: "The specified channel does not exist on Mattermost"
 
@@ -177,7 +190,7 @@ en:
           param:
             identifier:
               title: Channel
-              help: "e.g. #channel, @username."
+              help: "For example #channel or @username"
           errors:
             invalid_channel: "That channel does not exist on Rocket Chat"
 
@@ -189,20 +202,11 @@ en:
           param:
             name:
               title: "Name"
-              help: "A Gitter room's name e.g. gitterHQ/services."
+              help: "A Gitter room's name for example gitterHQ/services"
             webhook_url:
               title: "Webhook URL"
               help: "The URL provided when you create a new integration in a Gitter room."
 
-        #######################################
-        ########## FLOWDOCK STRINGS ###########
-        #######################################
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flow Token"
-              help: "The flow token provided after creating a source for a flow into which you want to send messages."
         #######################################
         ########## GROUPME STRINGS ###########
         #######################################

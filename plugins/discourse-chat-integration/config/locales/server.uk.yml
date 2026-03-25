@@ -47,8 +47,6 @@ uk:
     chat_integration_rocketchat_webhook_url: "URL-адреса веб-хука для інтеграції з Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Довжина уривку допису Rocket Chat"
     chat_integration_gitter_enabled: "Увімкнути постачальника інтеграції чату Gitter"
-    chat_integration_flowdock_enabled: "Увімкнути постачальника інтеграції чату Flowdock"
-    chat_integration_flowdock_excerpt_length: "Довжина уривку публікації Flowdock"
     chat_integration_groupme_enabled: "Увімкнути постачальника інтеграції чату Groupme"
     chat_integration_groupme_excerpt_length: "Довжина уривку допису в Groupme"
     chat_integration_groupme_bot_ids: "*обов’язково* Ідентифікатори ботів, розділені символом ',' якщо їх декілька"
@@ -225,8 +223,6 @@ uk:
           ~~~цитата
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "розміщено"
       google:
         new_post: "Новий допис на %{site_title}"
         new_topic: "Нова тема на %{site_title}"

@@ -47,8 +47,6 @@ zh_CN:
     chat_integration_rocketchat_webhook_url: "Rocket Chat 集成网络钩子的 URL"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat 帖子摘要长度"
     chat_integration_gitter_enabled: "启用 Gitter 聊天集成提供程序"
-    chat_integration_flowdock_enabled: "启用 Flowdock 聊天集成提供程序"
-    chat_integration_flowdock_excerpt_length: "Flowdock 帖子摘要长度"
     chat_integration_groupme_enabled: "启用 Groupme 聊天集成提供程序"
     chat_integration_groupme_excerpt_length: "GroupMe 帖子摘要长度"
     chat_integration_groupme_bot_ids: "*必填* 机器人 ID，有多个时使用 ',' 分隔"
@@ -225,8 +223,6 @@ zh_CN:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "已发布"
       google:
         new_post: "%{site_title} 上有新帖子"
         new_topic: "%{site_title} 上有新话题"

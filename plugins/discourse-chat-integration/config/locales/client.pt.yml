@@ -149,8 +149,6 @@ pt:
               help: "Um nome da sala do Gitter, exemplo: gitterHQ/services."
             webhook_url:
               title: "URL de Webhook"
-        flowdock:
-          title: "Flowdock"
         teams:
           param:
             name:

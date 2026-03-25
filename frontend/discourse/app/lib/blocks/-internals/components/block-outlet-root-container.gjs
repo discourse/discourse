@@ -263,14 +263,16 @@ export default class BlockOutletRootContainer extends Component {
   }
 
   <template>
-    <div class={{this.safeOutletName}}>
-      <div class={{this.containerClassName}}>
-        <div class={{this.layoutClassName}}>
-          {{#each this.processedChildren key="key" as |child|}}
-            <child.Component />
-          {{/each}}
+    {{#if this.processedChildren.length}}
+      <div class={{this.safeOutletName}}>
+        <div class={{this.containerClassName}}>
+          <div class={{this.layoutClassName}}>
+            {{#each this.processedChildren key="key" as |child|}}
+              <child.Component />
+            {{/each}}
+          </div>
         </div>
       </div>
-    </div>
+    {{/if}}
   </template>
 }

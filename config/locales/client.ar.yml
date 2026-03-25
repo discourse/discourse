@@ -587,7 +587,6 @@ ar:
       start_posting:
         title: "بدء النشر"
         description: "امنح الناس موضوعًا يتحدثون عنه معًا"
-        action: "أفكار لكسر حالة السكوت"
         choose_option: "كيف تود أن تبدأ؟"
         predefined_topics: "قوالب لكسر حالة السكوت"
         predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."

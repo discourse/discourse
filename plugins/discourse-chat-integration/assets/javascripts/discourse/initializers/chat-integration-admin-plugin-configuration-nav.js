@@ -13,6 +13,13 @@ export default {
 
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "plug");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
+        {
+          label: "chat_integration.nav.providers",
+          route: "adminPlugins.show.discourse-chat-integration-providers",
+          description: "chat_integration.nav.providers_description",
+        },
+      ]);
     });
   },
 };

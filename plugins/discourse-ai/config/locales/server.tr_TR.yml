@@ -506,6 +506,7 @@ tr_TR:
             description: "Gönderinin incelenip incelenmeyeceğini, gizlenip gizlenmeyeceğini, silinip silinmeyeceğini veya spam olarak değerlendirilip değerlendirilmeyeceğini kontrol eder."
       tool_summary:
         read_artifact: "Web artifact'i oku"
+        search_uploaded_documents: "Yüklenen belgeleri ara"
         update_artifact: "Web artifact'i güncelle"
         create_artifact: "Web artifact'i oluştur"
         web_browser: "Web'de gezinin"
@@ -548,6 +549,7 @@ tr_TR:
         researcher_dry_run: "Araştırma hazırlama"
       tool_help:
         read_artifact: "YZ Botunu kullanarak bir web artifact'ini okuyun"
+        search_uploaded_documents: "Bu ajana yüklenen belgeleri ara"
         update_artifact: "YZ Botunu kullanarak bir web artifact'i güncelle"
         create_artifact: "YZ Botunu kullanarak bir web artifact'i oluştur"
         web_browser: "YZ Botunu kullanarak web sayfasına göz atın"
@@ -589,6 +591,9 @@ tr_TR:
         researcher: "YZ Botunu kullanarak forum bilgilerini araştırın"
       tool_description:
         read_artifact: "YZ Botunu kullanarak bir web artifact'ini okuyun"
+        search_uploaded_documents:
+          one: "'%{query}' için %{count} adet yüklenmiş belge alıntısı bulundu"
+          other: "'%{query}' için %{count} adet yüklenmiş belge alıntısı bulundu"
         update_artifact: "YZ Botunu kullanarak bir web artifact'i güncellendi"
         create_artifact: "Bir web artifact'i oluşturuldu: %{name} - %{specification}"
         web_browser: "Okunuyor: <a href='%{url}'>%{url}</a>"

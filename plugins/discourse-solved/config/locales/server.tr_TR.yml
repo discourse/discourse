@@ -24,7 +24,7 @@ tr_TR:
         label: "Konu listesinde çözülmemiş konuların yanında boş bir onay kutusu göster"
       solved_topics_auto_close_duration:
         label: "Çözülmüş konuları otomatik olarak kapat"
-        description: "Konu \"çözüldü\" olarak işaretlendikten sonra bu süre geçtikten sonra otomatik olarak kapatılır. Devre dışı bırakmak için 0 olarak ayarlayın."
+        description: "Son yanıtın üzerinden bu süre geçtikten sonra çözülmüş konuları otomatik olarak kapat. Devre dışı bırakmak için 0 olarak ayarla."
   site_settings:
     solved_enabled: "Çözüldü eklentisini etkinleştirin, kullanıcıların konularda yanıtları çözüldü olarak seçmesine izin verin"
     allow_solved_on_all_topics: "Kullanıcıların tüm konularda çözüm seçmesine izin verin (işaretli olmadığında, çözümler kategori veya etiket başına etkinleştirilebilir)"

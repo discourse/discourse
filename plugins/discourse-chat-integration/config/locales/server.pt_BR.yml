@@ -47,8 +47,6 @@ pt_BR:
     chat_integration_rocketchat_webhook_url: "A URL do webhook de integração do Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Tamanho do trecho da postagem do Rocket Chat"
     chat_integration_gitter_enabled: "Ativar o provedor de integração de chat do Gitter"
-    chat_integration_flowdock_enabled: "Ativar o provedor de integração de chat do Flowdock"
-    chat_integration_flowdock_excerpt_length: "Tamanho do trecho da postagem do Flowdock"
     chat_integration_groupme_enabled: "Ative o provedor de integração de chat do GroupMe"
     chat_integration_groupme_excerpt_length: "Tamanho do trecho da postagem do GroupMe"
     chat_integration_groupme_bot_ids: "IDs de Robô *obrigatórias*, separadas por \",\", se houver várias"
@@ -225,8 +223,6 @@ pt_BR:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "postou"
       google:
         new_post: "Nova postagem em %{site_title}"
         new_topic: "Novo tópico em %{site_title}"

@@ -471,8 +471,6 @@ ja:
         user: ユーザー
         create_user: ユーザーを作成
         default_llm: デフォルトの言語モデル
-        question_consolidator_llm: 質問統合用の言語モデル
-        question_consolidator_llm_help: 質問統合に使用する言語モデル。それほど強力でないモデルを選択してコストを節約することも可能です。
         system_prompt: システムプロンプト
         forced_tool_strategy: 強制されるツール戦略
         allow_chat_direct_messages: "チャットダイレクトメッセージを許可"

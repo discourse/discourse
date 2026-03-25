@@ -20,10 +20,6 @@ module DiscourseAi
           1_048_576
         end
 
-        def question_consolidator_llm_id
-          nil
-        end
-
         def execution_mode
           "default"
         end
@@ -229,9 +225,21 @@ module DiscourseAi
           .all_available_tools
           .filter { |tool| tools.include?(tool) }
           .concat(tools.filter(&:custom?))
+          .tap do |available_tools|
+            next if !rag_tool_available?
+            if available_tools.any? { |tool|
+                 tool.signature[:name] == Tools::SearchUploadedDocuments.name
+               }
+              next
+            end
+
+            available_tools << Tools::SearchUploadedDocuments
+          end
+          .uniq
       end
 
       def craft_prompt(context, llm: nil)
+        available_tools = self.available_tools
         system_insts = replace_placeholders(system_prompt, context)
 
         prompt_insts = <<~TEXT.strip
@@ -239,27 +247,10 @@ module DiscourseAi
           #{available_tools.map(&:custom_system_message).compact_blank.join("\n")}
           TEXT
 
-        question_consolidator_llm = llm
-        if self.class.question_consolidator_llm_id.present?
-          question_consolidator_llm ||=
-            DiscourseAi::Completions::Llm.proxy(
-              LlmModel.find_by(id: self.class.question_consolidator_llm_id),
-            )
-        end
-
         if context.custom_instructions.present?
           prompt_insts << "\n"
           prompt_insts << context.custom_instructions
         end
-
-        fragments_guidance =
-          rag_fragments_prompt(
-            context.messages,
-            llm: question_consolidator_llm,
-            user: context.user,
-          )&.strip
-
-        prompt_insts << fragments_guidance if fragments_guidance.present?
 
         post_system_examples = []
 
@@ -369,8 +360,16 @@ module DiscourseAi
             llm: llm,
             context: context,
             provider_data: tool_call.provider_data,
+            agent: self,
           )
         end
+      end
+
+      def rag_tool_available?
+        return false if !DiscourseAi::Embeddings.enabled?
+        return false if id.blank?
+
+        UploadReference.where(target_id: id, target_type: "AiAgent").exists?
       end
 
       def strip_quotes(value)
@@ -385,104 +384,6 @@ module DiscourseAi
         else
           value
         end
-      end
-
-      def rag_fragments_prompt(conversation_context, llm:, user:)
-        upload_refs = UploadReference.where(target_id: id, target_type: "AiAgent").pluck(:upload_id)
-
-        return nil if !DiscourseAi::Embeddings.enabled?
-        return nil if conversation_context.blank? || upload_refs.blank?
-
-        latest_interactions =
-          conversation_context.select { |ctx| %i[model user].include?(ctx[:type]) }.last(10)
-
-        return nil if latest_interactions.empty?
-
-        # first response
-        if latest_interactions.length == 1
-          consolidated_question = DiscourseAi::Completions::Prompt.text_only(latest_interactions[0])
-        else
-          consolidated_question =
-            DiscourseAi::Agents::QuestionConsolidator.consolidate_question(
-              llm,
-              latest_interactions,
-              user,
-            )
-        end
-
-        return nil if !consolidated_question
-
-        vector = DiscourseAi::Embeddings::Vector.instance
-        reranker = DiscourseAi::Inference::HuggingFaceTextEmbeddings
-
-        interactions_vector = vector.vector_from(consolidated_question)
-
-        rag_conversation_chunks = self.class.rag_conversation_chunks
-        search_limit =
-          if reranker.reranker_configured?
-            rag_conversation_chunks * 5
-          else
-            rag_conversation_chunks
-          end
-
-        schema = DiscourseAi::Embeddings::Schema.for(RagDocumentFragment)
-
-        candidate_fragment_ids =
-          schema
-            .asymmetric_similarity_search(
-              interactions_vector,
-              limit: search_limit,
-              offset: 0,
-            ) { |builder| builder.join(<<~SQL, target_id: id, target_type: "AiAgent") }
-                  rag_document_fragments ON
-                  rag_document_fragments.id = rag_document_fragment_id AND
-                  rag_document_fragments.target_id = :target_id AND
-                  rag_document_fragments.target_type = :target_type
-                SQL
-            .map(&:rag_document_fragment_id)
-
-        fragments =
-          RagDocumentFragment.where(upload_id: upload_refs, id: candidate_fragment_ids).pluck(
-            :fragment,
-            :metadata,
-          )
-
-        if reranker.reranker_configured?
-          guidance = fragments.map { |fragment, _metadata| fragment }
-          ranks =
-            DiscourseAi::Inference::HuggingFaceTextEmbeddings
-              .rerank(conversation_context.last[:content], guidance)
-              .to_a
-              .take(rag_conversation_chunks)
-              .map { it[:index] }
-
-          if ranks.empty?
-            fragments = fragments.take(rag_conversation_chunks)
-          else
-            fragments = ranks.map { |idx| fragments[idx] }
-          end
-        end
-
-        <<~TEXT
-          <guidance>
-          The following texts will give you additional guidance for your response.
-          We included them because we believe they are relevant to this conversation topic.
-
-          Texts:
-
-          #{
-          fragments
-            .map do |fragment, metadata|
-              if metadata.present?
-                ["# #{metadata}", fragment].join("\n")
-              else
-                fragment
-              end
-            end
-            .join("\n")
-        }
-          </guidance>
-          TEXT
       end
     end
   end

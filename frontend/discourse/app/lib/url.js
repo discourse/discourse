@@ -308,12 +308,16 @@ class DiscourseURL extends EmberObject {
     rewrites.push({ regexp, replacement, opts: opts || {} });
   }
 
-  redirectAbsolute(url) {
+  redirectAbsolute(url, { replace = false } = {}) {
     // Redirects will kill a test runner
     if (isTesting()) {
       return true;
     }
-    window.location = url;
+    if (replace) {
+      window.location.replace(url);
+    } else {
+      window.location = url;
+    }
     return true;
   }
 

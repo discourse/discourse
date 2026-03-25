@@ -161,12 +161,6 @@ he:
             webhook_url:
               title: "כתובת התלייה"
               help: "הכתובת שסופקה בעת יצירת שילוב בחדר Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "אסימון Flow"
-              help: "אסימון ה־flow לאחר יצירת המשאב ל־flow אליו ברצונך לשלוח הודעות."
         groupme:
           title: "GroupMe"
           param:

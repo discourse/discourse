@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -127,11 +128,13 @@ export default class SpreadsheetEditor extends Component {
   }
 
   async loadJspreadsheet() {
-    const [jspreadsheetModule] = await Promise.all([
-      import("jspreadsheet-ce"),
-      import("jspreadsheet-ce/dist/jspreadsheet.css"),
-      import("jsuites/dist/jsuites.css"),
-    ]);
+    const [jspreadsheetModule] = await waitForPromise(
+      Promise.all([
+        import("jspreadsheet-ce"),
+        import("jspreadsheet-ce/dist/jspreadsheet.css"),
+        import("jsuites/dist/jsuites.css"),
+      ])
+    );
 
     this.jspreadsheet = jspreadsheetModule.default;
     this.jspreadsheet.setDictionary(this.localeMapping());

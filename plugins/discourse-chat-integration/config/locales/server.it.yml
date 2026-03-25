@@ -47,8 +47,6 @@ it:
     chat_integration_rocketchat_webhook_url: "L'URL per il webhook di integrazione di Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Lunghezza dell'estratto del messaggio Rocket Chat"
     chat_integration_gitter_enabled: "Abilita il fornitore per l'integrazione con la chat Gitter"
-    chat_integration_flowdock_enabled: "Abilita il fornitore per l'integrazione con la chat Flowdock"
-    chat_integration_flowdock_excerpt_length: "Lunghezza dell'estratto del messaggio Flowdock"
     chat_integration_groupme_enabled: "Abilita il fornitore per l'integrazione della chat Groupme"
     chat_integration_groupme_excerpt_length: "Lunghezza dell'estratto del messaggio Groupme"
     chat_integration_teams_enabled: "Abilita il fornitore per l'integrazione della chat Microsoft Teams"
@@ -217,8 +215,6 @@ it:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "pubblicato"
       google:
         new_post: "Nuovo messaggio su %{site_title}"
         new_topic: "Nuovo argomento su %{site_title}"

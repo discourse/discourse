@@ -467,7 +467,7 @@ export default class SiteSettingComponent extends Component {
             @action={{this.settingEditButton.action}}
             @icon={{this.settingEditButton.icon}}
             @label={{this.settingEditButton.label}}
-            class="setting-value-edit-button"
+            class="btn-default setting-value-edit-button"
           />
 
           <Description @description={{this.setting.description}} />

@@ -369,8 +369,6 @@ sk:
         user: Používateľ
         create_user: Vytvoriť používateľa
         default_llm: Predvolený jazykový model
-        question_consolidator_llm: Jazykový model pre konsolidátor otázok
-        question_consolidator_llm_help: Jazykový model, ktorý sa má použiť pre konsolidátor otázok, môžete si vybrať menej výkonný model, aby ste ušetrili náklady.
         system_prompt: Systémová výzva
         forced_tool_strategy: Stratégia vynútených nástrojov
         allow_chat_direct_messages: "Povolenie priamych správ v chate"

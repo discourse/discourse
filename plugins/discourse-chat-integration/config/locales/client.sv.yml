@@ -156,12 +156,6 @@ sv:
             webhook_url:
               title: "Webhook-URL"
               help: "URL-adressen som tillhandahålls när du skapar en ny integrering i ett Gitter-rum."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flödesbevis"
-              help: "Flödesbeviset som tillhandahålls efter att du har skapat en källa för ett flöde till vilket du vill skicka meddelanden."
         groupme:
           title: "GroupMe"
           param:

@@ -535,8 +535,6 @@ tr_TR:
         create_user_help: İsterseniz bu ajana bir kullanıcı atayabilirsiniz. Bunu yaparsanız, yapay zeka taleplere yanıt vermek için bu kullanıcıyı kullanacaktır.
         default_llm: Varsayılan dil modeli
         default_llm_help: Bu ajan için kullanılacak varsayılan dil modeli. Ajanı herkese açık paylaşımlarda belirtmek istiyorsanız bu bilgi zorunludur.
-        question_consolidator_llm: Soru Konsolidatörü için Dil Modeli
-        question_consolidator_llm_help: Soru birleştirici için kullanılacak dil modeli, maliyetten tasarruf etmek için daha az güçlü bir model seçebilirsiniz.
         system_prompt: Sistem istemi
         forced_tool_strategy: Zorlanmış araç stratejisi
         allow_chat_direct_messages: "Doğrudan sohbet mesajlarına izin ver"

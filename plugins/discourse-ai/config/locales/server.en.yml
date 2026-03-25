@@ -520,6 +520,7 @@ en:
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
       tool_summary:
         read_artifact: "Read a web artifact"
+        search_uploaded_documents: "Search uploaded documents"
         update_artifact: "Update a web artifact"
         create_artifact: "Create web artifact"
         web_browser: "Browse Web"
@@ -562,6 +563,7 @@ en:
         researcher_dry_run: "Preparing research"
       tool_help:
         read_artifact: "Read a web artifact using the AI Bot"
+        search_uploaded_documents: "Search documents uploaded to this agent"
         update_artifact: "Update a web artifact using the AI Bot"
         create_artifact: "Create a web artifact using the AI Bot"
         web_browser: "Browse web page using the AI Bot"
@@ -603,6 +605,9 @@ en:
         researcher: "Research forum information using the AI Bot"
       tool_description:
         read_artifact: "Read a web artifact using the AI Bot"
+        search_uploaded_documents:
+          one: "Found %{count} uploaded document excerpt for '%{query}'"
+          other: "Found %{count} uploaded document excerpts for '%{query}'"
         update_artifact: "Updated a web artifact using the AI Bot"
         create_artifact: "Created a web artifact: %{name} - %{specification}"
         web_browser: "Reading <a href='%{url}'>%{url}</a>"

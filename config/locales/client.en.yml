@@ -501,7 +501,7 @@ en:
       start_posting:
         title: "Start Posting"
         description: "Give people something to talk about together"
-        action: "Icebreaker ideas"
+        action: "See ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
@@ -1227,6 +1227,7 @@ en:
       add_members:
         title: "Add Users to %{group_name}"
         description: "Enter a list of users you want to invite to the group or paste in a comma separated list:"
+        description_usernames_only: "Enter a list of usernames you want to add to the group or paste in a comma separated list:"
         usernames_placeholder: "usernames"
         usernames_or_emails_placeholder: "usernames or emails"
         notify_users: "Notify users"
@@ -1927,7 +1928,7 @@ en:
         calendar_subscriptions: "Calendar"
 
       calendar_subscriptions:
-        description: "Generate subscription URLs to sync with your favourite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs. "
+        description: "Generate subscription URLs to sync with your favorite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs."
         generate: "Generate Subscription URLs"
         regenerate: "Regenerate URLs"
         regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"

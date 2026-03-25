@@ -36,7 +36,9 @@ async function initLightbox(elem, additionalData = {}) {
   const siteSettings = helperContext().siteSettings;
   const caps = helperContext().capabilities;
 
-  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
+  const { default: PhotoSwipeLightbox } = await waitForPromise(
+    import("photoswipe/lightbox")
+  );
   const isTestEnv = isTesting() || isRailsTesting();
   const canDownload =
     !siteSettings.prevent_anons_from_downloading_files || !!currentUser;
@@ -68,7 +70,7 @@ async function initLightbox(elem, additionalData = {}) {
     escKey: false,
     tapAction,
     paddingFn,
-    pswpModule: async () => await import("photoswipe"),
+    pswpModule: async () => await waitForPromise(import("photoswipe")),
     appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 

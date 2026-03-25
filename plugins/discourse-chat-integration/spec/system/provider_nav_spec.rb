@@ -11,15 +11,15 @@ RSpec.describe "Provider navigation" do
   end
 
   it "only marks the current provider's nav pill as active" do
-    visit("/admin/plugins/chat-integration/telegram")
+    visit("/admin/plugins/discourse-chat-integration/providers/telegram")
 
     expect(page).to have_css(
-      ".admin-controls-chat-providers li.active",
+      ".admin-nav-submenu li.active",
       count: 1,
       text: I18n.t("js.chat_integration.provider.telegram.title"),
     )
     expect(page).to have_css(
-      ".admin-controls-chat-providers li:not(.active)",
+      ".admin-nav-submenu li:not(.active)",
       count: 1,
       text: I18n.t("js.chat_integration.provider.discord.title"),
     )

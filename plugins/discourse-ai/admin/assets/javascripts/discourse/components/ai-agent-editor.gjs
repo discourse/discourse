@@ -882,28 +882,6 @@ export default class AgentEditor extends Component {
               >
                 <field.Control step="any" lang="en" />
               </form.Field>
-
-              <form.Field
-                @name="question_consolidator_llm_id"
-                @title={{i18n
-                  "discourse_ai.ai_agent.question_consolidator_llm"
-                }}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.question_consolidator_llm_help"
-                }}
-                @format="large"
-                @type="custom"
-                as |field|
-              >
-                <field.Control>
-                  <AiLlmSelector
-                    @value={{field.value}}
-                    @llms={{@agents.resultSetMeta.llms}}
-                    @onChange={{field.set}}
-                    class="ai-agent-editor__llms"
-                  />
-                </field.Control>
-              </form.Field>
             </RagOptionsFk>
           </form.Section>
         {{/if}}
@@ -1047,11 +1025,12 @@ export default class AgentEditor extends Component {
             <form.Button
               @label="discourse_ai.ai_agent.export"
               @action={{this.exportAgent}}
-              class="ai-agent-editor__export"
+              class="btn-default ai-agent-editor__export"
             />
             <form.Button
               @action={{this.delete}}
               @label="discourse_ai.ai_agent.delete"
+              @icon="trash-can"
               class="btn-danger"
             />
           {{/unless}}

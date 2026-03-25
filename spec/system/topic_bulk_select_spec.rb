@@ -69,43 +69,75 @@ describe "Topic bulk select" do
   end
 
   context "when dismissing new topics" do
-    fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:post1) { create_post(user: user, topic: topic) }
+    fab!(:topic) { Fabricate(:topic, user:) }
+    fab!(:post1) { create_post(user:, topic:) }
 
-    it "removes the topics from the list" do
-      sign_in(admin)
-      visit("/new")
+    let(:topic_list_controls) { PageObjects::Components::TopicListControls.new }
 
-      topic_list_header.click_bulk_select_button
-      expect(topic_list).to have_topic_checkbox(topic)
+    context "with the bulk actions dropdown" do
+      it "removes the topics from the list" do
+        sign_in(admin)
+        visit("/new")
 
-      topic_list.click_topic_checkbox(topic)
+        topic_list_header.click_bulk_select_button
+        expect(topic_list).to have_topic_checkbox(topic)
 
-      topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-new")
+        topic_list.click_topic_checkbox(topic)
 
-      topic_bulk_actions_modal.click_dismiss_confirm
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("dismiss-new")
 
-      expect(page).to have_text(I18n.t("js.topics.none.education.new"))
+        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
+      end
+
+      it "turns off bulk select after dismissing" do
+        other_topic = Fabricate(:topic, user:)
+        create_post(user:, topic: other_topic)
+
+        sign_in(admin)
+        visit("/new")
+
+        topic_list_header.click_bulk_select_button
+        topic_list.click_topic_checkbox(topic)
+
+        topic_list_header.click_bulk_select_topics_dropdown
+        topic_list_header.click_bulk_button("dismiss-new")
+
+        expect(topic_list).to have_topic(other_topic)
+        expect(topic_list).to have_no_topic_checkbox(other_topic)
+      end
     end
 
-    it "turns off bulk select after dismissing" do
-      other_topic = Fabricate(:topic, user: user)
-      create_post(user: user, topic: other_topic)
+    context "with the dismiss new button" do
+      it "removes the topics from the list" do
+        sign_in(admin)
+        visit("/new")
 
-      sign_in(admin)
-      visit("/new")
+        topic_list_header.click_bulk_select_button
+        expect(topic_list).to have_topic_checkbox(topic)
 
-      topic_list_header.click_bulk_select_button
-      topic_list.click_topic_checkbox(topic)
+        topic_list.click_topic_checkbox(topic)
 
-      topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-new")
+        topic_list_controls.dismiss_new
 
-      topic_bulk_actions_modal.click_dismiss_confirm
+        expect(page).to have_text(I18n.t("js.topics.none.education.new"))
+      end
 
-      expect(topic_list).to have_topic(other_topic)
-      expect(topic_list).to have_no_topic_checkbox(other_topic)
+      it "turns off bulk select after dismissing" do
+        other_topic = Fabricate(:topic, user:)
+        create_post(user:, topic: other_topic)
+
+        sign_in(admin)
+        visit("/new")
+
+        topic_list_header.click_bulk_select_button
+        topic_list.click_topic_checkbox(topic)
+
+        topic_list_controls.dismiss_new
+
+        expect(topic_list).to have_topic(other_topic)
+        expect(topic_list).to have_no_topic_checkbox(other_topic)
+      end
     end
   end
 

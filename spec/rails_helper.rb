@@ -145,6 +145,7 @@ module TestSetup
     NotificationEmailer.disable
     SiteIconManager.disable
     WordWatcher.disable_cache
+    UpcomingChanges.clear_caches!
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
 

@@ -159,12 +159,6 @@ ro:
             webhook_url:
               title: "URL cârlig web"
               help: "Adresa URL furnizată atunci când creezi o nouă integrare într-o cameră Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Jeton Flow"
-              help: "Jetonul Flow furnizat după crearea unei surse pentru un flux în care vrei să trimiți mesaje."
         groupme:
           title: "GroupMe"
           param:
