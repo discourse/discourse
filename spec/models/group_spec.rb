@@ -1453,7 +1453,7 @@ RSpec.describe Group do
         expect(user.reload.title).to eq("Something Else")
       end
 
-      it "falls back to next_best_title when another titled group exists" do
+      it "assigns title from remaining group when removed from current title group" do
         other_group = Fabricate(:group, title: "Other Title")
         other_group.bulk_add([user.id])
         user.update!(title: "Awesome")
