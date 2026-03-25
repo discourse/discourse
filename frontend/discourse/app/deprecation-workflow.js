@@ -331,18 +331,6 @@ const workflows = [
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.childCategories" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.firstCategory" },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategories",
-  },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategoriesSorted",
-  },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.parentCategory" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.secondCategory" },
   {
     handler: "notify-admin",
     matchId: "discourse.category-hashtags.categoryHashtagTriggerRule",
