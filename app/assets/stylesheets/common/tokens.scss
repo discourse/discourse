@@ -23,26 +23,11 @@
     var(--neutral-300A),
     var(--dark-neutral-300A)
   );
-  --token-border-accent: light-dark(
-    var(--blue-oklch-200),
-    var(--blue-oklch-900)
-  );
-  --token-background-accent-subtlest: light-dark(
-    var(--blue-oklch-100),
-    var(--blue-oklch-1000)
-  );
-  --token-background-accent-subtler: light-dark(
-    var(--blue-oklch-200),
-    var(--blue-oklch-900)
-  );
-  --token-background-accent-subtle: light-dark(
-    var(--blue-oklch-400),
-    var(--blue-oklch-700)
-  );
-  --token-background-accent-bolder: light-dark(
-    var(--blue-oklch-700),
-    var(--blue-oklch-400)
-  );
+  --token-border-focused: light-dark(var(--tertiary))
+    --token-border-accent: light-dark(
+      var(--blue-oklch-200),
+      var(--blue-oklch-900)
+    );
 
   // Backgrounds
   // Use as the primary background for the UI.
@@ -59,6 +44,22 @@
   --token-background-input: light-dark(
     var(--neutral-0),
     var(--dark-neutral-200)
+  );
+  --token-background-accent-subtlest: light-dark(
+    var(--blue-oklch-100),
+    var(--blue-oklch-1000)
+  );
+  --token-background-accent-subtler: light-dark(
+    var(--blue-oklch-200),
+    var(--blue-oklch-900)
+  );
+  --token-background-accent-subtle: light-dark(
+    var(--blue-oklch-400),
+    var(--blue-oklch-700)
+  );
+  --token-background-accent-bolder: light-dark(
+    var(--blue-oklch-700),
+    var(--blue-oklch-400)
   );
 
   // Sizing
