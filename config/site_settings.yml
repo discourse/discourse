@@ -3805,7 +3805,9 @@ uncategorized:
     client: true
     default: false
     hidden: true
-    area: "site_admin"
+  site_owner_onboarding_max_days:
+    default: 5
+    hidden: true
 
   enable_welcome_banner:
     client: true

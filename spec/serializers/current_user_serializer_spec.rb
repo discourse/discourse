@@ -421,4 +421,44 @@ RSpec.describe CurrentUserSerializer do
       )
     end
   end
+
+  describe "#show_site_owner_onboarding" do
+    fab!(:admin)
+    fab!(:topic)
+    fab!(:another_admin, :admin)
+
+    let(:admin_serializer) { described_class.new(admin, scope: Guardian.new(admin), root: false) }
+
+    before { SiteSetting.enable_site_owner_onboarding = true }
+
+    it "is not included for non-admin users" do
+      payload = serializer.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+
+    it "is not included when setting is disabled" do
+      SiteSetting.enable_site_owner_onboarding = false
+      payload = admin_serializer.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+
+    it "is true for the first admin on a new site" do
+      payload = admin_serializer.as_json
+      expect(payload[:show_site_owner_onboarding]).to eq(true)
+    end
+
+    it "is not included for a second admin" do
+      serializer2 =
+        described_class.new(another_admin, scope: Guardian.new(another_admin), root: false)
+      payload = serializer2.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+
+    it "is not included when the site is older than the max days setting" do
+      SiteSetting.site_owner_onboarding_max_days = 5
+      Topic.update_all(created_at: 6.days.ago)
+      payload = admin_serializer.as_json
+      expect(payload).not_to have_key(:show_site_owner_onboarding)
+    end
+  end
 end
