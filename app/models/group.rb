@@ -913,7 +913,7 @@ class Group < ActiveRecord::Base
       end
 
       if self.title.present?
-        User.where(id: added_user_ids).where(title: [nil, ""]).update_all(title: self.title)
+        User.where(id: added_user_ids, title: [nil, ""]).update_all(title: self.title)
       end
 
       recalculate_user_count
