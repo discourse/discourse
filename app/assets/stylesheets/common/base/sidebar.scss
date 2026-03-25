@@ -53,9 +53,11 @@
   --d-sidebar-active-background: var(--token-surface-pressed);
   --d-sidebar-active-color: var(--token-text-default);
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
-  --d-sidebar-active-prefix-background: var(--token-surface-pressed);
+  --d-sidebar-active-prefix-background: var(--token-surface-hovered);
   --d-sidebar-active-suffix-color: var(--token-text-default);
-  --d-sidebar-active-font-weight: bold; // example: active section link
+  --d-sidebar-active-font-weight: var(
+    --token-font-weight-medium
+  ); // example: active section link
 
   @include viewport.until(sm) {
     --d-sidebar-row-height: 2.4em;
