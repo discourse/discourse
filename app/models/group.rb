@@ -994,31 +994,6 @@ class Group < ActiveRecord::Base
     removed_user_ids
   end
 
-  def build_user_removed_webhook_payloads(group_users_relation)
-    return unless WebHook.active_web_hooks(:group_user)
-
-    payloads = []
-    group_users_relation.find_each do |gu|
-      payloads << {
-        id: gu.id,
-        payload: WebHook.generate_payload(:group_user, gu, WebHookGroupUserSerializer),
-      }
-    end
-    payloads
-  end
-
-  def enqueue_user_removed_webhook_events(webhook_payloads)
-    webhook_payloads&.each do |webhook_payload|
-      WebHook.enqueue_hooks(
-        :group_user,
-        :user_removed_from_group,
-        id: webhook_payload[:id],
-        payload: webhook_payload[:payload],
-        group_ids: [self.id],
-      )
-    end
-  end
-
   def recalculate_user_count
     DB.exec <<~SQL
       UPDATE groups g
@@ -1329,6 +1304,31 @@ class Group < ActiveRecord::Base
   end
 
   private
+
+  def build_user_removed_webhook_payloads(group_users_relation)
+    return unless WebHook.active_web_hooks(:group_user)
+
+    payloads = []
+    group_users_relation.find_each do |gu|
+      payloads << {
+        id: gu.id,
+        payload: WebHook.generate_payload(:group_user, gu, WebHookGroupUserSerializer),
+      }
+    end
+    payloads
+  end
+
+  def enqueue_user_removed_webhook_events(webhook_payloads)
+    webhook_payloads&.each do |webhook_payload|
+      WebHook.enqueue_hooks(
+        :group_user,
+        :user_removed_from_group,
+        id: webhook_payload[:id],
+        payload: webhook_payload[:payload],
+        group_ids: [self.id],
+      )
+    end
+  end
 
   def send_membership_notification(user)
     Notification.create!(
