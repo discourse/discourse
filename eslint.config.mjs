@@ -28,4 +28,13 @@ export default [
       },
     },
   },
+  {
+    languageOptions: {
+      parserOptions: {
+        babelOptions: {
+          configFile: false,
+        },
+      },
+    },
+  },
 ];

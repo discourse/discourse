@@ -309,7 +309,7 @@ module("Unit | Utility | i18n", function (hooks) {
 
   test("legacy require support", function (assert) {
     withSilencedDeprecations("discourse.i18n-t-import", () => {
-      const myI18n = require("I18n");
+      const myI18n = window.require("I18n");
       assert.strictEqual(myI18n.t("topic.reply.title"), "Répondre");
     });
   });

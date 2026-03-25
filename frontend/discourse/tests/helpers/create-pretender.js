@@ -48,14 +48,23 @@ export function OK(resp = {}, headers = {}) {
 const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 
-export let fixturesByUrl = {};
+export const fixturesByUrl = {};
+const fixturesByUrlForHandlers = {};
 
-function replacesFixturesByUrl(newFixtures) {
-  for (const member of Object.keys(fixturesByUrl)) {
-    delete fixturesByUrl[member];
+for (const module of Object.values(
+  import.meta.glob("../fixtures/**/*", { eager: true })
+)) {
+  if (module.default) {
+    const obj = module.default;
+    Object.keys(obj).forEach((url) => {
+      let fixtureUrl = url;
+      if (fixtureUrl[0] !== "/") {
+        fixtureUrl = "/" + fixtureUrl;
+      }
+      fixturesByUrl[url] = obj[url];
+      fixturesByUrlForHandlers[fixtureUrl] = obj[url];
+    });
   }
-
-  Object.assign(fixturesByUrl, newFixtures);
 }
 
 const pretender = new Pretender();
@@ -73,16 +82,17 @@ export function pretenderHelpers() {
 }
 
 export function applyDefaultHandlers() {
-  // Autoload any `*-pretender` files
-  Object.keys(requirejs.entries).forEach((e) => {
-    let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
-    if (m && m[1] !== "create") {
-      let result = requirejs(e).default.call(pretender, helpers);
-      if (m[1] === "fixture") {
-        replacesFixturesByUrl(result);
-      }
-    }
+  const pretenderModules = import.meta.glob("./**/*-pretender.{js,gjs}", {
+    eager: true,
   });
+
+  for (const module of Object.values(pretenderModules)) {
+    module.default.call(pretender, helpers);
+  }
+
+  for (const [url, data] of Object.entries(fixturesByUrlForHandlers)) {
+    pretender.get(url, () => response(data));
+  }
 
   pretender.get("/admin/plugins", () => response({ plugins: [] }));
 
