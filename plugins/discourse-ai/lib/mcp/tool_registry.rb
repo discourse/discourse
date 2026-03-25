@@ -8,7 +8,8 @@ module DiscourseAi
 
       class << self
         def cache_key(server_id)
-          "discourse-ai:mcp-tools:v#{CACHE_VERSION}:#{server_id}"
+          current_db = RailsMultisite::ConnectionManagement.current_db
+          "discourse-ai:mcp-tools:v#{CACHE_VERSION}:#{current_db}:#{server_id}"
         end
 
         def invalidate!(server_id)

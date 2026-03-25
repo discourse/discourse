@@ -72,8 +72,7 @@ module DiscourseAi
 
         if ai_agent.save
           if mcp_server_ids
-            ai_agent.ai_mcp_server_ids = mcp_server_ids
-            sync_mcp_server_tool_names(ai_agent, mcp_server_tool_names)
+            sync_mcp_server_assignments(ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
           RagDocumentFragment.link_target_and_uploads(ai_agent, attached_upload_ids)
           log_ai_agent_creation(ai_agent)
@@ -97,8 +96,7 @@ module DiscourseAi
 
         if @ai_agent.update(params.except(:rag_uploads))
           if mcp_server_ids
-            @ai_agent.ai_mcp_server_ids = mcp_server_ids
-            sync_mcp_server_tool_names(@ai_agent, mcp_server_tool_names)
+            sync_mcp_server_assignments(@ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
           RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids)
           log_ai_agent_update(@ai_agent, initial_attributes)
@@ -560,12 +558,31 @@ module DiscourseAi
         end
       end
 
-      def sync_mcp_server_tool_names(ai_agent, mcp_server_tool_names)
+      def sync_mcp_server_assignments(ai_agent, submitted_server_ids, mcp_server_tool_names)
+        submitted_server_ids = Array(submitted_server_ids).map(&:to_i)
+        preserved_disabled_server_ids =
+          hidden_disabled_mcp_server_ids(ai_agent, submitted_server_ids)
+        ai_agent.ai_mcp_server_ids = (submitted_server_ids + preserved_disabled_server_ids).uniq
+
         ai_agent.ai_agent_mcp_servers.each do |assignment|
+          next if preserved_disabled_server_ids.include?(assignment.ai_mcp_server_id)
+
           assignment.update!(
             selected_tool_names: mcp_server_tool_names[assignment.ai_mcp_server_id.to_s],
           )
         end
+      end
+
+      def hidden_disabled_mcp_server_ids(ai_agent, submitted_server_ids)
+        ai_agent
+          .ai_agent_mcp_servers
+          .includes(:ai_mcp_server)
+          .filter_map do |assignment|
+            next if submitted_server_ids.include?(assignment.ai_mcp_server_id)
+            next if assignment.ai_mcp_server&.enabled?
+
+            assignment.ai_mcp_server_id
+          end
       end
 
       def serialize_mcp_server(server)

@@ -100,11 +100,16 @@ module DiscourseAi
       end
 
       def test
-        ai_mcp_server = params[:id].present? ? AiMcpServer.find(params[:id]) : AiMcpServer.new
+        persisted_server = params[:id].present? ? AiMcpServer.find(params[:id]) : nil
+        ai_mcp_server = persisted_server || AiMcpServer.new
         ai_mcp_server.assign_attributes(ai_mcp_server_params)
 
         return render_json_error ai_mcp_server if !ai_mcp_server.valid?
-        if ai_mcp_server.oauth? && ai_mcp_server.new_record?
+        if oauth_reauthorization_required_for_test?(ai_mcp_server)
+          ai_mcp_server = sanitized_oauth_test_server(ai_mcp_server)
+        end
+
+        if ai_mcp_server.oauth? && persisted_server.blank?
           return(
             render_json_error(
               I18n.t("discourse_ai.mcp_servers.errors.oauth_save_before_connect"),
@@ -243,6 +248,23 @@ module DiscourseAi
       def log_ai_mcp_server_deletion(details)
         logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
         logger.log_deletion("mcp_server", details)
+      end
+
+      def oauth_reauthorization_required_for_test?(ai_mcp_server)
+        return false if !ai_mcp_server.oauth? || !ai_mcp_server.persisted?
+
+        (ai_mcp_server.changes_to_save.keys & AiMcpServer::OAUTH_REAUTH_TRIGGER_FIELDS).present?
+      end
+
+      def sanitized_oauth_test_server(ai_mcp_server)
+        ai_mcp_server.dup.tap do |server|
+          server.oauth_status = "disconnected"
+          server.oauth_access_token_expires_at = nil
+          server.oauth_token_type = nil
+          server.oauth_last_error = nil
+          server.oauth_last_authorized_at = nil
+          server.oauth_last_refreshed_at = nil
+        end
       end
     end
   end

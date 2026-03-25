@@ -178,6 +178,60 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
         I18n.t("discourse_ai.mcp_servers.errors.oauth_save_before_connect"),
       )
     end
+
+    it "does not reuse stored OAuth tokens when the OAuth configuration changes" do
+      ai_mcp_server =
+        Fabricate(
+          :ai_mcp_server,
+          auth_type: "oauth",
+          oauth_status: "connected",
+          url: "https://docs.example.com/mcp",
+          oauth_access_token_expires_at: 10.minutes.from_now,
+        )
+      ai_mcp_server.oauth_token_store.write!(
+        access_token: "stale-access-token",
+        refresh_token: "refresh-token",
+      )
+
+      client = mock
+      DiscourseAi::Mcp::Client
+        .expects(:new)
+        .with do |test_server|
+          expect(test_server).not_to be_persisted
+          expect(test_server.url).to eq("https://changed.example.com/mcp")
+          expect(test_server.oauth_token_store.access_token).to be_blank
+          expect(test_server.oauth_access_token_expires_at).to be_nil
+          true
+        end
+        .returns(client)
+      client.expects(:initialize_session).returns(
+        {
+          session_id: "session-1",
+          result: {
+            "protocolVersion" => "2025-03-26",
+            "capabilities" => {
+            },
+          },
+        },
+      )
+      client.expects(:list_tools).with(session_id: "session-1").returns([])
+
+      post "/admin/plugins/discourse-ai/ai-mcp-servers/#{ai_mcp_server.id}/test.json",
+           params: {
+             ai_mcp_server: {
+               name: ai_mcp_server.name,
+               description: ai_mcp_server.description,
+               url: "https://changed.example.com/mcp",
+               auth_type: "oauth",
+               oauth_client_registration: ai_mcp_server.oauth_client_registration,
+             },
+           }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response).to be_successful
+    end
   end
 
   describe "GET #oauth_start" do

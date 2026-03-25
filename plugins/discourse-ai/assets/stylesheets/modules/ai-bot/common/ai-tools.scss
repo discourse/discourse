@@ -88,8 +88,11 @@
     margin: 1.25rem 0 0.5rem;
   }
 
-  &__empty-new-mcp-button {
-    margin-left: 0.5em;
+  &__empty-list-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-top: 1em;
   }
 }
 

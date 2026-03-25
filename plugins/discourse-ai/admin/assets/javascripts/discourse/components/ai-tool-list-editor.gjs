@@ -464,88 +464,89 @@ export default class AiToolListEditor extends Component {
         {{/if}}
       {{else}}
         <AdminConfigAreaEmptyList @emptyLabel="discourse_ai.tools.no_tools">
-          <DMenu
-            @triggerClass="btn-default btn-small admin-config-area-empty-list__cta-button ai-tool-list-editor__empty-new-button"
-            @label={{i18n "discourse_ai.tools.new"}}
-            @icon="plus"
-            @placement="bottom-end"
-            @onClose={{this.resetMenuState}}
-          >
-            <:content>
-              <DropdownMenu as |dropdown|>
-                {{#if this.expandedCategory}}
-                  <dropdown.item>
-                    <DButton
-                      @label="back_button"
-                      @icon="chevron-left"
-                      @action={{this.collapseCategory}}
-                      class="btn-transparent"
-                    />
-                  </dropdown.item>
-                  <dropdown.divider />
-                  {{#each this.categoryPresets.otherPresets as |preset|}}
+          <div class="ai-tool-list-editor__empty-list-buttons">
+            <DMenu
+              @triggerClass="btn-default btn-small ai-tool-list-editor__empty-new-button"
+              @label={{i18n "discourse_ai.tools.new"}}
+              @icon="plus"
+              @placement="bottom-end"
+              @onClose={{this.resetMenuState}}
+            >
+              <:content>
+                <DropdownMenu as |dropdown|>
+                  {{#if this.expandedCategory}}
                     <dropdown.item>
-                      <div
-                        role="button"
-                        class="ai-tool-preset-item"
-                        data-option={{preset.preset_id}}
-                        {{on "click" (fn this.routeToNewTool preset)}}
-                      >
-                        <span
-                          class="ai-tool-preset-provider"
-                        >{{preset.provider}}</span>
-                        <span
-                          class="ai-tool-preset-model"
-                        >{{preset.model_name}}</span>
-                      </div>
+                      <DButton
+                        @label="back_button"
+                        @icon="chevron-left"
+                        @action={{this.collapseCategory}}
+                        class="btn-transparent"
+                      />
                     </dropdown.item>
-                  {{/each}}
-
-                  {{#if this.categoryPresets.customPreset}}
                     <dropdown.divider />
-                    <dropdown.item>
-                      <DButton
-                        @translatedLabel={{this.categoryPresets.customPreset.preset_name}}
-                        @action={{fn
-                          this.routeToNewTool
-                          this.categoryPresets.customPreset
-                        }}
-                        class="btn-transparent"
-                        data-option={{this.categoryPresets.customPreset.preset_id}}
-                      />
-                    </dropdown.item>
-                  {{/if}}
-                {{else}}
-                  {{#each this.dropdownPresets as |preset index|}}
-                    {{#if (eq index this.lastIndexOfPresets)}}
+                    {{#each this.categoryPresets.otherPresets as |preset|}}
+                      <dropdown.item>
+                        <div
+                          role="button"
+                          class="ai-tool-preset-item"
+                          data-option={{preset.preset_id}}
+                          {{on "click" (fn this.routeToNewTool preset)}}
+                        >
+                          <span
+                            class="ai-tool-preset-provider"
+                          >{{preset.provider}}</span>
+                          <span
+                            class="ai-tool-preset-model"
+                          >{{preset.model_name}}</span>
+                        </div>
+                      </dropdown.item>
+                    {{/each}}
+
+                    {{#if this.categoryPresets.customPreset}}
                       <dropdown.divider />
+                      <dropdown.item>
+                        <DButton
+                          @translatedLabel={{this.categoryPresets.customPreset.preset_name}}
+                          @action={{fn
+                            this.routeToNewTool
+                            this.categoryPresets.customPreset
+                          }}
+                          class="btn-transparent"
+                          data-option={{this.categoryPresets.customPreset.preset_id}}
+                        />
+                      </dropdown.item>
                     {{/if}}
+                  {{else}}
+                    {{#each this.dropdownPresets as |preset index|}}
+                      {{#if (eq index this.lastIndexOfPresets)}}
+                        <dropdown.divider />
+                      {{/if}}
 
-                    <dropdown.item>
-                      <DButton
-                        @translatedLabel={{preset.preset_name}}
-                        @action={{if
-                          preset.is_category
-                          (fn this.expandCategory preset)
-                          (fn this.routeToNewTool preset)
-                        }}
-                        class="btn-transparent"
-                        data-option={{preset.preset_id}}
-                      />
-                    </dropdown.item>
-                  {{/each}}
-                {{/if}}
-              </DropdownMenu>
+                      <dropdown.item>
+                        <DButton
+                          @translatedLabel={{preset.preset_name}}
+                          @action={{if
+                            preset.is_category
+                            (fn this.expandCategory preset)
+                            (fn this.routeToNewTool preset)
+                          }}
+                          class="btn-transparent"
+                          data-option={{preset.preset_id}}
+                        />
+                      </dropdown.item>
+                    {{/each}}
+                  {{/if}}
+                </DropdownMenu>
 
-            </:content>
-          </DMenu>
-          <DButton
-            @label="discourse_ai.mcp_servers.new"
-            @icon="plus"
-            @action={{this.routeToNewMcpServer}}
-            class="btn-default btn-small ai-tool-list-editor__empty-new-mcp-button"
-          />
-        </AdminConfigAreaEmptyList>
+              </:content>
+            </DMenu>
+            <DButton
+              @label="discourse_ai.mcp_servers.new"
+              @icon="plus"
+              @action={{this.routeToNewMcpServer}}
+              class="btn-default btn-small ai-tool-list-editor__empty-new-mcp-button"
+            />
+          </div></AdminConfigAreaEmptyList>
       {{/if}}
     </section>
   </template>

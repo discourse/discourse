@@ -3,6 +3,14 @@
 RSpec.describe DiscourseAi::Mcp::ToolRegistry do
   before { enable_current_plugin }
 
+  describe ".cache_key" do
+    it "namespaces the cache by current multisite database" do
+      RailsMultisite::ConnectionManagement.stubs(:current_db).returns("second")
+
+      expect(described_class.cache_key(42)).to eq("discourse-ai:mcp-tools:v1:second:42")
+    end
+  end
+
   describe ".tool_classes_for_servers" do
     fab!(:first_server) { Fabricate(:ai_mcp_server, name: "Jira") }
     fab!(:second_server) { Fabricate(:ai_mcp_server, name: "GitHub") }

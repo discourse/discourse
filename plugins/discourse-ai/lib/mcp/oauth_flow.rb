@@ -162,7 +162,6 @@ module DiscourseAi
               server.effective_oauth_client_id,
               server.oauth_client_secret_value,
             )
-            params = params.merge(client_secret: server.oauth_client_secret_value)
           end
 
           response = connection.post(endpoint, params, headers)

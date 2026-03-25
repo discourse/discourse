@@ -531,6 +531,49 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.reload.ai_agent_mcp_servers.first.selected_tool_names).to eq(["search_issues"])
     end
 
+    it "preserves hidden disabled MCP assignments when updating visible ones" do
+      enabled_server = Fabricate(:ai_mcp_server, name: "Jira")
+      disabled_server = Fabricate(:ai_mcp_server, name: "Legacy Docs", enabled: false)
+      agent = Fabricate(:ai_agent, name: "test_bot2")
+      agent.ai_mcp_servers << enabled_server
+      agent.ai_mcp_servers << disabled_server
+      DiscourseAi::Mcp::ToolRegistry
+        .stubs(:tool_definitions_for)
+        .with(enabled_server)
+        .returns(
+          [{ "name" => "search_issues", "description" => "Search issues", "inputSchema" => {} }],
+        )
+      agent
+        .ai_agent_mcp_servers
+        .find_by!(ai_mcp_server_id: disabled_server.id)
+        .update!(selected_tool_names: ["search_legacy"])
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
+          params: {
+            ai_agent: {
+              name: "updated",
+              mcp_server_ids: [enabled_server.id],
+              mcp_server_tool_names: {
+                enabled_server.id.to_s => ["search_issues"],
+              },
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+
+      agent.reload
+      expect(agent.ai_mcp_servers.pluck(:id)).to contain_exactly(
+        enabled_server.id,
+        disabled_server.id,
+      )
+      expect(
+        agent
+          .ai_agent_mcp_servers
+          .find_by!(ai_mcp_server_id: disabled_server.id)
+          .selected_tool_names,
+      ).to eq(["search_legacy"])
+    end
+
     it "supports updating vision params" do
       agent = Fabricate(:ai_agent, name: "test_bot2")
       put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
