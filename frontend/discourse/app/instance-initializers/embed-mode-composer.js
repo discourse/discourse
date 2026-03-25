@@ -1,7 +1,15 @@
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import EmbedMode from "discourse/lib/embed-mode";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import Composer from "discourse/models/composer";
+
+const EMBED_COMPOSER_HEIGHT = "50dvh";
+
+function setEmbedComposerHeight() {
+  document.documentElement.style.setProperty(
+    "--composer-height",
+    EMBED_COMPOSER_HEIGHT
+  );
+}
 
 export default {
   after: "inject-objects",
@@ -11,19 +19,25 @@ export default {
       return;
     }
 
-    const appEvents = owner.lookup("service:app-events");
+    this._owner = owner;
+    this._handler = setEmbedComposerHeight;
 
-    appEvents.on("composer:open", () => {
-      const composerService = owner.lookup("service:composer");
-      if (composerService.model?.composeState !== Composer.FULLSCREEN) {
-        composerService.model.set("composeState", Composer.FULLSCREEN);
-      }
-    });
+    owner.lookup("service:app-events").on("composer:open", this._handler);
 
     withPluginApi((api) => {
       api.registerValueTransformer("composer-force-editor-mode", () => {
         return USER_OPTION_COMPOSITION_MODES.rich;
       });
     });
+  },
+
+  teardown() {
+    if (this._handler) {
+      this._owner
+        .lookup("service:app-events")
+        .off("composer:open", this._handler);
+      this._handler = null;
+      this._owner = null;
+    }
   },
 };

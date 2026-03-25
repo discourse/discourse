@@ -36,6 +36,32 @@ describe "Embed mode" do
     expect(page).to have_css("#post_1")
   end
 
+  it "shows 'be the first to reply' message for topic with no replies" do
+    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+    expect(page).to have_css(".embed-topic-footer__first-reply")
+  end
+
+  it "shows powered by discourse badge" do
+    SiteSetting.enable_powered_by_discourse = true
+    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+    expect(page).to have_css(".embed-topic-footer .powered-by-discourse")
+  end
+
+  it "does not show powered by discourse badge when setting is disabled" do
+    SiteSetting.enable_powered_by_discourse = false
+    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+    expect(page).to have_no_css(".embed-topic-footer .powered-by-discourse")
+  end
+
+  it "does not show embed footer without embed mode" do
+    visit("/t/#{topic.slug}/#{topic.id}")
+
+    expect(page).to have_no_css(".embed-topic-footer")
+  end
+
   context "when logged in" do
     fab!(:user)
     let(:composer) { PageObjects::Components::Composer.new }
@@ -49,16 +75,16 @@ describe "Embed mode" do
       fab!(:no_reply_topic, :topic)
       fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }
 
-      it "auto-opens the composer in fullscreen" do
+      it "auto-opens the composer" do
         visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
 
-        expect(page).to have_css("#reply-control.fullscreen")
+        expect(page).to have_css("#reply-control.open")
       end
 
       it "uses the rich text editor" do
         visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
 
-        expect(page).to have_css("#reply-control.fullscreen")
+        expect(page).to have_css("#reply-control.open")
         expect(composer).to have_rich_editor
       end
 
@@ -80,11 +106,24 @@ describe "Embed mode" do
         expect(page).to have_no_css("#reply-control.fullscreen")
       end
 
-      it "opens the composer in fullscreen when clicking reply" do
+      it "opens the composer when clicking reply" do
         visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-        find("#topic-footer-buttons .btn-primary.create").click
+        topic_page.click_reply_button
 
-        expect(page).to have_css("#reply-control.fullscreen")
+        expect(page).to have_css("#reply-control.open")
+      end
+
+      it "does not show 'be the first to reply' message" do
+        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+        expect(page).to have_no_css(".embed-topic-footer__first-reply")
+      end
+
+      it "still shows powered by discourse badge" do
+        SiteSetting.enable_powered_by_discourse = true
+        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+        expect(page).to have_css(".embed-topic-footer .powered-by-discourse")
       end
     end
   end
