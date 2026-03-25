@@ -1,75 +1,44 @@
 :root {
   // Text
   //
-  --token-text-default: light-dark(
-    var(--neutral-1100),
-    var(--dark-neutral-1000)
+  --token-text-default: var(--primary);
+  --token-text-subtle: var(--primary-700);
+  --token-text-subtlest: var(--primary-500);
+  --token-text-accent: light-dark(var(--tertiary-800), var(--tertiary-300));
+  --token-text-accent-bolder: light-dark(
+    var(--tertiary-900),
+    var(--tertiary-200)
   );
-  --token-text-subtle: light-dark(var(--neutral-800), var(--dark-neutral-800));
-  --token-text-subtlest: light-dark(
-    var(--neutral-700),
-    var(--dark-neutral-700)
-  );
-  --token-text-accent: light-dark(var(--blue-800), var(--blue-300));
-  --token-text-accent-bolder: light-dark(var(--blue-900), var(--blue-200));
-  --token-text-inverse: light-dark(var(--neutral-0), var(--dark-neutral-100));
+
+  // for use on "bold" backgrounds
+  --token-text-inverse: light-dark(var(--secondary), var(--primary));
 
   // Icon
   //
-  --token-icon-default: light-dark(
-    var(--neutral-1100),
-    var(--dark-neutral-1000)
-  );
-  --token-icon-subtle: light-dark(var(--neutral-800), var(--dark-neutral-800));
-  --token-icon-subtlest: light-dark(
-    var(--neutral-700),
-    var(--dark-neutral-700)
-  );
-  --token-icon-danger: light-dark(var(--red-700), var(--red-500));
+  --token-icon-default: var(--primary-900);
+  --token-icon-subtle: var(--primary-700);
+  --token-icon-subtlest: var(--primary-500);
+  --token-icon-danger: var(--danger);
 
   // Border
-  --token-border-input: light-dark(var(--neutral-500), var(--dark-neutral-600));
-  --token-border-default: light-dark(
-    var(--neutral-300A),
-    var(--dark-neutral-300A)
-  );
-  --token-border-focused: light-dark(var(--blue-500));
-  --token-border-accent: light-dark(var(--blue-200), var(--blue-900));
+  --token-border-input: var(--primary-300);
+  --token-border-default: var(--primary-200);
+  --token-border-focused: var(--tertiary);
+  --token-border-accent: var(--tertiary-400);
 
   // Backgrounds
   // Use as the primary background for the UI.
   // ---
-  --token-surface: light-dark(var(--neutral-0), var(--dark-neutral-100));
-  --token-surface-hovered: light-dark(
-    var(--neutral-200),
-    var(--dark-neutral-200)
-  );
-  --token-surface-pressed: light-dark(
-    var(--neutral-300),
-    var(--dark-neutral-250)
-  );
-  --token-background-input: light-dark(
-    var(--neutral-0),
-    var(--dark-neutral-200)
-  );
+  --token-surface: var(--secondary);
+  --token-surface-hovered: var(--primary-100);
+  --token-surface-pressed: var(--primary-200);
+  --token-background-input: var(--secondary);
 
   // Accents
-  --token-background-accent-subtlest: light-dark(
-    var(--blue-100),
-    var(--blue-1000)
-  );
-  --token-background-accent-subtler: light-dark(
-    var(--blue-200),
-    var(--blue-900)
-  );
-  --token-background-accent-subtle: light-dark(
-    var(--blue-400),
-    var(--blue-700)
-  );
-  --token-background-accent-bolder: light-dark(
-    var(--blue-700),
-    var(--blue-400)
-  );
+  --token-background-accent-subtlest: var(--tertiary-500);
+  --token-background-accent-subtler: var(--tertiary-600);
+  --token-background-accent-subtle: var(--tertiary-700);
+  --token-background-accent-bolder: var(--tertiary);
 
   // Sizing
   --token-border-width: 1px;
@@ -80,4 +49,10 @@
   --token-radius-xlarge: 12px;
   --token-radius-xxlarge: 16px;
   --token-radius-full: 9999px;
+
+  // font weight
+  --token-font-weight-bold: 650;
+  --token-font-weight-semibold: 600;
+  --token-font-weight-medium: 500;
+  --token-font-weight-regular: normal;
 }

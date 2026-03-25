@@ -8,7 +8,12 @@ export default {
   },
   overrides: [
     {
-      files: ["**/sidebar.scss", "**/sidebar-*.scss"],
+      files: [
+        "**/sidebar.scss",
+        "**/sidebar-*.scss",
+        "**/*-sidebar.scss",
+        "**/*-sidebar-*.scss",
+      ],
       rules: {
         "discourse/no-core-color-variables": true,
       },
