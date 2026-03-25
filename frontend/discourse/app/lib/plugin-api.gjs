@@ -1076,17 +1076,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated Use `api.headerIcons` instead.
-   */
-  addHeaderPanel() {
-    // eslint-disable-next-line no-console
-    console.error(
-      consolePrefix(),
-      `api.addHeaderPanel: This API was decommissioned. Use api.headerIcons instead.`
-    );
-  }
-
-  /**
    * Adds a pluralization to the store
    *
    * Example:
