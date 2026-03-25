@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin House Ad", type: :system do
+describe "Admin House Ad" do
   fab!(:admin)
 
   let(:house_ads_page) { PageObjects::Pages::AdminHouseAds.new }

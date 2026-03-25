@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Channel notice", type: :system do
+RSpec.describe "Channel notice" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }

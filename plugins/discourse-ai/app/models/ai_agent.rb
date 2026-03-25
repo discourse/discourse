@@ -2,7 +2,9 @@
 
 class AiAgent < ActiveRecord::Base
   # TODO remove tool_details from ignored_columns 01-02-2027
-  self.ignored_columns = %i[tool_details]
+  # question_consolidator_llm_id is intentionally ignored after the RAG tool
+  # migration; the column can be dropped in a later schema cleanup.
+  self.ignored_columns = %i[tool_details question_consolidator_llm_id]
 
   # Between the regular migration (which creates ai_agents as a VIEW over
   # ai_personas) and the post-migration (which does the actual rename_table),
@@ -46,12 +48,13 @@ class AiAgent < ActiveRecord::Base
   validate :tools_can_not_be_duplicated
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
+  has_many :ai_agent_mcp_servers, dependent: :destroy
+  has_many :ai_mcp_servers, through: :ai_agent_mcp_servers
 
   belongs_to :created_by, class_name: "User"
   belongs_to :user
 
   belongs_to :default_llm, class_name: "LlmModel"
-  belongs_to :question_consolidator_llm, class_name: "LlmModel"
   belongs_to :rag_llm_model, class_name: "LlmModel"
 
   has_many :upload_references, as: :target, dependent: :destroy
@@ -77,7 +80,12 @@ class AiAgent < ActiveRecord::Base
   end
 
   def self.all_agent_records(enabled_only: true)
-    agent_cache[:records] ||= AiAgent.ordered.includes(:user).all.limit(MAX_AGENTS_PER_SITE).to_a
+    agent_cache[:records] ||= AiAgent
+      .ordered
+      .includes(:user, ai_agent_mcp_servers: :ai_mcp_server)
+      .all
+      .limit(MAX_AGENTS_PER_SITE)
+      .to_a
 
     if enabled_only
       agent_cache[:records].select(&:enabled)
@@ -208,7 +216,6 @@ class AiAgent < ActiveRecord::Base
       vision_enabled
       vision_max_pixels
       rag_conversation_chunks
-      question_consolidator_llm_id
       allow_chat_channel_mentions
       allow_chat_direct_messages
       allow_topic_mentions
@@ -264,6 +271,28 @@ class AiAgent < ActiveRecord::Base
         force_tool_use << klass if should_force_tool_use
         klass
       end
+
+    reserved_names = tools.filter_map { |tool| tool.signature[:name].to_s.downcase.presence }
+    enabled_mcp_server_assignments =
+      ai_agent_mcp_servers
+        .includes(:ai_mcp_server)
+        .select { |assignment| assignment.ai_mcp_server&.enabled? }
+    enabled_mcp_servers = enabled_mcp_server_assignments.map(&:ai_mcp_server)
+    selected_tool_names_by_server =
+      enabled_mcp_server_assignments.each_with_object({}) do |assignment, hash|
+        next if assignment.all_tools_enabled?
+
+        hash[assignment.ai_mcp_server_id] = assignment.selected_tool_names
+      end
+
+    tools.concat(
+      DiscourseAi::Mcp::ToolRegistry.tool_classes_for_servers(
+        enabled_mcp_servers,
+        reserved_names: reserved_names,
+        selected_tool_names_by_server: selected_tool_names_by_server,
+      ),
+    )
+    instance_attributes[:mcp_server_ids] = enabled_mcp_servers.map(&:id)
 
     agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[self.id]
     if agent_class
@@ -379,7 +408,7 @@ class AiAgent < ActiveRecord::Base
          allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
            force_default_llm
        ) && !default_llm_id
-      errors.add(:default_llm, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
+      errors.add(:base, I18n.t("discourse_ai.ai_bot.agents.default_llm_required"))
     end
   end
 
@@ -433,43 +462,42 @@ end
 #
 # Table name: ai_agents
 #
-#  id                           :bigint           not null, primary key
-#  allow_chat_channel_mentions  :boolean          default(FALSE), not null
-#  allow_chat_direct_messages   :boolean          default(FALSE), not null
-#  allow_personal_messages      :boolean          default(TRUE), not null
-#  allow_topic_mentions         :boolean          default(FALSE), not null
-#  allowed_group_ids            :integer          default([]), not null, is an Array
-#  compression_threshold        :integer
-#  description                  :string(2000)     not null
-#  enabled                      :boolean          default(TRUE), not null
-#  examples                     :jsonb
-#  execution_mode               :string           default("default"), not null
-#  force_default_llm            :boolean          default(FALSE), not null
-#  forced_tool_count            :integer          default(-1), not null
-#  max_context_posts            :integer
-#  max_turn_tokens              :integer
-#  name                         :string(100)      not null
-#  priority                     :boolean          default(FALSE), not null
-#  rag_chunk_overlap_tokens     :integer          default(10), not null
-#  rag_chunk_tokens             :integer          default(374), not null
-#  rag_conversation_chunks      :integer          default(10), not null
-#  require_approval             :boolean          default(FALSE), not null
-#  response_format              :jsonb
-#  show_thinking                :boolean          default(TRUE), not null
-#  system                       :boolean          default(FALSE), not null
-#  system_prompt                :string(10000000) not null
-#  temperature                  :float
-#  tools                        :json             not null
-#  top_p                        :float
-#  vision_enabled               :boolean          default(FALSE), not null
-#  vision_max_pixels            :integer          default(1048576), not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  created_by_id                :integer
-#  default_llm_id               :bigint
-#  question_consolidator_llm_id :bigint
-#  rag_llm_model_id             :bigint
-#  user_id                      :integer
+#  id                          :bigint           not null, primary key
+#  allow_chat_channel_mentions :boolean          default(FALSE), not null
+#  allow_chat_direct_messages  :boolean          default(FALSE), not null
+#  allow_personal_messages     :boolean          default(TRUE), not null
+#  allow_topic_mentions        :boolean          default(FALSE), not null
+#  allowed_group_ids           :integer          default([]), not null, is an Array
+#  compression_threshold       :integer
+#  description                 :string(2000)     not null
+#  enabled                     :boolean          default(TRUE), not null
+#  examples                    :jsonb
+#  execution_mode              :string           default("default"), not null
+#  force_default_llm           :boolean          default(FALSE), not null
+#  forced_tool_count           :integer          default(-1), not null
+#  max_context_posts           :integer
+#  max_turn_tokens             :integer
+#  name                        :string(100)      not null
+#  priority                    :boolean          default(FALSE), not null
+#  rag_chunk_overlap_tokens    :integer          default(10), not null
+#  rag_chunk_tokens            :integer          default(374), not null
+#  rag_conversation_chunks     :integer          default(10), not null
+#  require_approval            :boolean          default(FALSE), not null
+#  response_format             :jsonb
+#  show_thinking               :boolean          default(TRUE), not null
+#  system                      :boolean          default(FALSE), not null
+#  system_prompt               :string(10000000) not null
+#  temperature                 :float
+#  tools                       :json             not null
+#  top_p                       :float
+#  vision_enabled              :boolean          default(FALSE), not null
+#  vision_max_pixels           :integer          default(1048576), not null
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  created_by_id               :integer
+#  default_llm_id              :bigint
+#  rag_llm_model_id            :bigint
+#  user_id                     :integer
 #
 # Indexes
 #

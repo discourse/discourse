@@ -141,7 +141,13 @@ zh_CN:
     topics:
       bulk:
         unassign: "取消指定话题"
-        assign: "指定话题"
+        assign: "分配话题"
+        assign_description: "将所选话题分配给以下用户："
+        unassign_description: "是否取消选中话题的指定？"
+        confirm_assign_topics:
+          other: "指定 %{count} 个话题"
+        confirm_unassign_topics:
+          other: "取消指定 %{count} 个主题"
     discourse_automation:
       scriptables:
         random_assign:

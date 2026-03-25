@@ -36,8 +36,8 @@ a.loading-onebox {
   margin-top: 15px;
   padding: 12px;
   font-size: var(--font-0);
-
-  @include post-aside;
+  background: var(--d-post-aside-background);
+  border-left: var(--d-post-aside-border);
 
   .onebox-result-body {
     padding-top: 5px;
@@ -387,7 +387,8 @@ aside.onebox .onebox-body .onebox-avatar {
 
 blockquote {
   aside.onebox {
-    @include post-aside;
+    background: var(--d-post-aside-background);
+    border-left: var(--d-post-aside-border);
   }
 }
 

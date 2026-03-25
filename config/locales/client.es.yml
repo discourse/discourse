@@ -421,7 +421,6 @@ es:
         action: "Crear invitación"
       start_posting:
         title: "Empezar a publicar"
-        action: "Ideas para romper el hielo"
         back: "Atrás"
         icebreakers:
           introduce_yourself:
@@ -1724,6 +1723,10 @@ es:
         apps: "Aplicaciones"
         navigation_menu: "Menú de navegación"
         upcoming_changes: "Próximos cambios"
+        calendar_subscriptions: "Calendario"
+      calendar_subscriptions:
+        copied: "¡Copiado!"
+        add_to_google: "Calendario de Google"
       change_password:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"
@@ -3295,11 +3298,8 @@ es:
         confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Limpiar todo"
-        unlist_topics: "Hacer invisibles"
-        relist_topics: "Hacer visibles de nuevo"
         reset_bump_dates: "Restablecer fechas de reflote"
         defer: "Marcar como no leído"
-        delete: "Eliminar temas"
         delete_topics_count:
           one: "Eliminar tema"
           other: "Eliminar temas"
@@ -3332,36 +3332,27 @@ es:
           other: "Descartar nuevos (%{count})"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
-        change_category: "Establecer categoría…"
-        close_topics: "Cerrar temas"
-        archive_topics: "Archivar temas"
         move_messages_to_inbox: "Mover a la bandeja de entrada"
         archive_messages: "Mover al archivo"
-        notification_level: "Notificaciones…"
         change_notification_level: "Cambiar nivel de notificación"
         choose_new_category: "Elige la nueva categoría de los temas:"
-        selected:
-          one: "Has seleccionado <b>%{count}</b> tema."
-          other: "Has seleccionado <b>%{count}</b> temas."
         selected_sole_category:
           one: "Has seleccionado <b>%{count}</b> tema de la categoría:"
           other: "Has seleccionado <b>%{count}</b> temas de la categoría:"
         selected_count:
           one: "%{count} seleccionado"
           other: "%{count} seleccionados"
-        change_tags: "Remplazar etiquetas"
         append_tags: "Añadir etiquetas"
         choose_new_tags: "Elige etiquetas nuevas para estos temas:"
-        choose_append_tags: "Elegir etiquetas nuevas para añadir a estos temas:"
+        choose_append_tags: "Añadir etiquetas"
         changed_tags: "Se han cambiado las etiquetas de esos temas."
-        remove_tags: "Eliminar todas las etiquetas"
         confirm_remove_tags:
           one: "Todas las etiquetas se eliminarán de este tema. ¿Estás seguro/a?"
           other: "Todas las etiquetas se eliminarán de <b>%{count}</b> temas. ¿Estás seguro/a?"
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
-        notify: "Notificar a los usuarios afectados por el cambio."
+        notify: "Notificar a los usuarios afectados por el cambio"
         performing: "Realizando operaciones en bloque, espera…"
         completed: "¡Operaciones en bloque completadas con éxito!"
         error_topic_count:
@@ -3390,7 +3381,6 @@ es:
         name: "Descartar"
       close_topics:
         name: "Cerrar"
-        note: "Nota"
         optional: (opcional)
       archive_topics:
         name: "Archivar"
@@ -3404,24 +3394,18 @@ es:
         name: "Volver a publicar"
       remove_tags:
         name: "Eliminar etiquetas"
-      append_tags:
-        name: "Añadir etiquetas"
       replace_tags:
         name: "Remplazar etiquetas"
       delete_topics:
         name: "Eliminar"
       update_category:
         name: "Actualizar Categoría"
-        description: "Elige la nueva categoría para los temas seleccionados"
       reset_bump_dates:
         name: "Restablecer las fechas de reflote"
-        description: "Restablecer la fecha de reflote del tema a la fecha de la última publicación creada, lo que afecta a la ordenación en la lista de temas."
       defer:
         name: "Marcar como no leído"
-        description: "Marcar temas como no leídos"
       update_notifications:
         name: "Actualizar notificaciones"
-        description: "Cambia el nivel de notificación a Viendo, En seguimiento, Normal o Silenciado"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
@@ -4275,6 +4259,8 @@ es:
       list: "Lista de categorías"
       no_description: "Añade una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
+      description_expand: "Mostrar más"
+      description_collapse: "Mostrar menos"
       already_used: "Este color ya ha sido usado para otra categoría"
       color_palette: "Paleta de colores"
       security: "Seguridad"
@@ -5401,8 +5387,6 @@ es:
         group_engagement: "Interacción"
         group_traffic: "Tráfico"
         group_members: "Miembros"
-        group_moderation: "Moderación"
-        group_security: "Seguridad"
         group_other: "Otros"
       config_sections:
         account:

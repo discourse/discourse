@@ -10,7 +10,7 @@ fi:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Sallii tekoälyhaun"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ fi:
         none: "Ei valittu"
       features:
         short_title: "Ominaisuudet"
-        back: "Takaisin"
         disabled: "(pois käytöstä)"
         groups: "Ryhmät:"
         llm:
@@ -212,7 +211,6 @@ fi:
           match_concepts: "Käsitteiden sovittaminen"
           deduplicate_concepts: "Käsitteiden deduplikaatio"
         ai_helper:
-          name: "Apuri"
           description: "Auttaa käyttäjiä vuorovaikutuksessa yhteisön kanssa, kuten ketjujen luomisessa, viestien kirjoittamisessa ja sisällön lukemisessa"
           proofread: Oikolue teksti
           title_suggestions: "Ehdota otsikoita"
@@ -348,7 +346,6 @@ fi:
           replies:
             one: "Käytä vain ensimmäiseen vastaukseen"
             other: "Käytä vain %{count} ensimmäiseen vastaukseen"
-        back: "Takaisin"
         name: "Nimi"
         edit: "Muokkaa"
         export: "Vie"
@@ -369,8 +366,6 @@ fi:
         user: Käyttäjä
         create_user: Luo käyttäjä
         default_llm: Oletuskielimalli
-        question_consolidator_llm: Kielimalli kysymysten yhdistäjälle
-        question_consolidator_llm_help: Kysymysten yhdistäjälle käytettävä kielimalli, voit valita vähemmän tehokkaan mallin kustannusten säästämiseksi.
         system_prompt: Järjestelmäkehote
         forced_tool_strategy: Pakotetun työkalun strategia
         allow_chat_direct_messages: "Salli chat-yksityisviestit"
@@ -381,6 +376,8 @@ fi:
         save: "Tallenna"
         enabled: "Otettu käyttöön?"
         tools: "Käytössä olevat työkalut"
+        mcp_tools_modal:
+          clear_all: "Tyhjennä kaikki"
         forced_tools: "Pakotetut työkalut"
         allowed_groups: "Sallitut ryhmät"
         delete: "Poista"
@@ -441,7 +438,6 @@ fi:
           uploading: "Ladataan..."
           remove: "Poista lataus"
       tools:
-        back: "Takaisin"
         short_title: "Työkalut"
         export: "Vie"
         import: "Tuo"
@@ -454,7 +450,6 @@ fi:
         tool_name: "Työkalun nimi"
         description: "Kuvaus"
         description_help: "Selkeä kuvaus työkalun tarkoituksesta kielimallissa"
-        subheader_description: "Työkalut laajentavat tekoälybottien ominaisuuksia käyttäjän määrittämillä JavaScript-toiminnoilla."
         summary: "Yhteenveto"
         summary_help: "Loppukäyttäjille näytettävä yhteenveto työkalujen tarkoituksesta"
         script: "Skripti"
@@ -483,12 +478,27 @@ fi:
         short_title: "Tunnistetiedot"
         name: "Nimi"
         secret: "Arvo"
-        back: "Takaisin"
         save: "Tallenna"
         edit: "Muokkaa"
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      mcp_servers:
+        name: "Nimi"
+        description: "Kuvaus"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Yhdistetty"
+        oauth_connect: "Yhdistä"
+        enabled: "Käytössä"
+        save: "Tallenna"
+        edit: "Muokkaa"
+        delete: "Poista"
+        tools_modal:
+          parameters: "Parametrit"
+          required: "Pakollinen"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"
@@ -509,7 +519,6 @@ fi:
         save: "Tallenna"
         edit: "Muokkaa"
         saved: "LLM-malli tallennettu"
-        back: "Takaisin"
         confirm_delete: Oletko varma, että haluat poistaa tämän mallin?
         delete: Poista
         quotas:
@@ -667,7 +676,6 @@ fi:
         short_title: "Upotukset"
         description: "Upotukset ovat datan numeerisia esityksiä, jotka tallentavat merkityksen ja suhteet. Niiden avulla Discoursen tekoälyominaisuudet, kuten aiheeseen liittyvät ketjut ja tekoälyhaku, voivat ymmärtää ja yhdistää sisältöä."
         new: "Uusi upotus"
-        back: "Takaisin"
         save: "Tallenna"
         saved: "Upotusmääritykset tallennettu"
         delete: "Poista"
@@ -727,6 +735,7 @@ fi:
         collapse_view_label: "Poistu koko näytön tilasta (Esc- tai Takaisin-painike)"
         click_to_run_label: "Suorita artefakti"
       ai_bot:
+        title: "Tekoälybotti"
         llm: "Malli"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"

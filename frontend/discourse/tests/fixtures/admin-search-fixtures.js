@@ -1,4 +1,4 @@
-export default {
+const adminSearchFixtures = {
   "/admin/search/all.json": {
     settings: [
       {
@@ -66,3 +66,5 @@ export default {
     ],
   },
 };
+
+export default adminSearchFixtures;

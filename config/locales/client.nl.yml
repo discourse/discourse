@@ -423,7 +423,6 @@ nl:
       start_posting:
         title: "Begin met posten"
         description: "Geef mensen iets om samen over te praten"
-        action: "Ideeën voor ijsbrekers"
         back: "Terug"
         icebreakers:
           fun_facts:
@@ -1698,6 +1697,10 @@ nl:
         interface: "Interface"
         apps: "Apps"
         navigation_menu: "Navigatiemenu"
+        calendar_subscriptions: "Kalender"
+      calendar_subscriptions:
+        copied: "Gekopieerd!"
+        add_to_google: "Google-agenda"
       change_password:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail verzenden)"
@@ -3242,11 +3245,8 @@ nl:
         confirm: "Bevestigen"
         select_all: "Alles selecteren"
         clear_all: "Alles wissen"
-        unlist_topics: "Topics onzichtbaar maken"
-        relist_topics: "Topics opnieuw weergeven"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
-        delete: "Topics verwijderen"
         delete_topics_count:
           one: "Topic verwijderen"
           other: "Topics verwijderen"
@@ -3282,29 +3282,20 @@ nl:
           other: "Nieuwe negeren (%{count})"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
-        change_category: "Categorie instellen..."
-        close_topics: "Topics sluiten"
-        archive_topics: "Topics archiveren"
         move_messages_to_inbox: "Verplaatsen naar inbox"
         archive_messages: "Verplaatsen naar archief"
-        notification_level: "Meldingen…"
         change_notification_level: "Meldingsniveau wijzigen"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
-        selected:
-          one: "Je hebt <b>%{count}</b> topic geselecteerd."
-          other: "Je hebt <b>%{count}</b> topics geselecteerd."
         selected_sole_category:
           one: "Je hebt <b>%{count}</b> topic geselecteerd uit de categorie:"
           other: "Je hebt <b>%{count}</b> topics geselecteerd uit de categorie:"
         selected_count:
           one: "%{count} geselecteerd"
           other: "%{count} geselecteerd"
-        change_tags: "Tags vervangen"
         append_tags: "Tags toevoegen"
         choose_new_tags: "Kies nieuwe tags voor deze topics:"
-        choose_append_tags: "Kies nieuwe tags om toe te voegen voor deze topics:"
+        choose_append_tags: "Tags toevoegen"
         changed_tags: "De tags van deze topics zijn gewijzigd."
-        remove_tags: "Alle tags verwijderen"
         confirm_remove_tags:
           one: "Alle tags worden verwijderd van dit topic. Weet je het zeker?"
           other: "Alle tags worden verwijderd van %{count} topics. Weet je het zeker?"
@@ -3339,7 +3330,6 @@ nl:
         name: "Sluiten"
       close_topics:
         name: "Sluiten"
-        note: "Opmerking"
         optional: (optioneel)
       archive_topics:
         name: "Archiveren"
@@ -3353,24 +3343,18 @@ nl:
         name: "Opnieuw zichtbaar maken"
       remove_tags:
         name: "Tags verwijderen"
-      append_tags:
-        name: "Tags toevoegen"
       replace_tags:
         name: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
       update_category:
         name: "Categorie bijwerken"
-        description: "Kies de nieuwe categorie voor de geselecteerde topics"
       reset_bump_dates:
         name: "Omhoogplaatsingsdatums resetten"
-        description: "Reset de omhoogplaatsingsdatum van het topic naar de datum van het laatst gemaakte bericht, wat de volgorde in de topicslijst beïnvloedt"
       defer:
         name: "Markeren als ongelezen"
-        description: "Markeer topics als ongelezen"
       update_notifications:
         name: "Meldingen bijwerken"
-        description: "Wijzig het meldingsniveau naar Kijken, Volgen, Normaal of Gedempt"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -4175,6 +4159,8 @@ nl:
       list: "Categorieën weergeven"
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
+      description_expand: "Meer weergeven"
+      description_collapse: "Minder weergeven"
       already_used: "Deze kleur is al in gebruik door een andere categorie"
       color_palette: "Kleurenpalet"
       security: "Beveiliging"
@@ -5257,8 +5243,6 @@ nl:
         back: "Terug naar alle rapporten"
         group_traffic: "Verkeer"
         group_members: "Leden"
-        group_moderation: "Moderatie"
-        group_security: "Beveiliging"
         group_other: "Overig"
       config_sections:
         account:
@@ -6309,7 +6293,7 @@ nl:
             back: "Terug naar onderdelen"
             install: "Installeren"
             name: "Naam"
-            used_on: "Gebruikt op"
+            used_on: "Gebruikt in"
             enabled: "Ingeschakeld?"
             by_author: "Van %{name}"
             learn_more: "Meer informatie"
@@ -7270,7 +7254,7 @@ nl:
         edit_category:
           select_template: "Selecteer formuliersjablonen"
         errors:
-          multiple_tags_not_allowed: 'Je kunt geen verdere tags selecteren uit de "%{tag_name}". Gebruik een formuliersjabloon om problemen te voorkomen.'
+          multiple_tags_not_allowed: 'Je kunt geen verdere tags selecteren uit de "%{tag_name}". Gebruik het formuliersjabloon om problemen te voorkomen.'
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."

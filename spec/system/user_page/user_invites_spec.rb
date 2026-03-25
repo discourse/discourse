@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User invites", type: :system do
+describe "User invites" do
   fab!(:admin)
   fab!(:user)
   fab!(:invites_pending) { [1, 2, 3, 4].map { Fabricate(:invite, invited_by: user) } }

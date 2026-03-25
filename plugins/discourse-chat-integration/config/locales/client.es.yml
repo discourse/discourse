@@ -14,15 +14,14 @@ es:
     chat_integration:
       menu_title: "Integraciones de chat"
       settings: "Ajustes"
-      no_providers: "Necesitas habilitar algún proveedor en los ajustes del plugin"
+      more_providers: "Más"
+      channels_title: "Canales"
       channels_with_errors: "Algunos canales de este proveedor fallaron la última vez que se enviaron mensajes. Haz clic en los iconos de error para obtener más información."
       group_mention_template: "Menciones de: @%{name}"
       group_message_template: "Mensajes a: @%{name}"
-      choose_group: "(elige un grupo)"
-      all_categories: "(todas las categorías)"
-      all_tags: "(todas las etiquetas)"
-      create_rule: "Crear regla"
-      create_channel: "Crear canal"
+      choose_group: "(Elige un grupo)"
+      all_categories: "(Todas las categorías)"
+      all_tags: "(Todas las etiquetas)"
       delete_channel: "Eliminar"
       test_channel: "Probar"
       edit_channel: "Editar"
@@ -30,13 +29,10 @@ es:
       test_modal:
         title: "Enviar un mensaje de prueba"
         topic: "Tema"
-        send: "Enviar mensaje de prueba"
         close: "Cerrar"
         success: "Mensaje enviado correctamente."
       type:
         normal: Normal
-        group_message: Mensaje grupal
-        group_mention: Mención grupal
       filter:
         mute: 'Silenciar'
         follow: 'Solo la primera publicación'
@@ -57,8 +53,6 @@ es:
           ok: "Válido"
           fail: "Formato no válido"
       edit_rule_modal:
-        title: Editar regla
-        save: Guardar regla
         cancel: Cancelar
         provider: Proveedor
         type: Tipo
@@ -79,7 +73,6 @@ es:
           param:
             identifier:
               title: Canal
-              help: "por ejemplo, #canal, @nombredeusuario."
           errors:
             action_prohibited: "Este bot no tiene permiso para publicar en ese canal."
         telegram:
@@ -102,7 +95,6 @@ es:
               help: "Un nombre para describir el canal. No se usará para la conexión con Discord."
             webhook_url:
               title: URL del webhook
-              help: La URL del webhook creada en los ajustes de tu servidor de Discord
         guilded:
           title: "Guilded"
           param:
@@ -117,7 +109,6 @@ es:
           param:
             identifier:
               title: Canal
-              help: "por ejemplo, #canal, @nombredeusuario."
           errors:
             channel_not_found: "El canal especificado no existe en Mattermost"
         matrix:
@@ -147,7 +138,6 @@ es:
           param:
             identifier:
               title: Canal
-              help: "por ejemplo, #canal, @nombredeusuario."
           errors:
             invalid_channel: "Ese canal no existe en Rocket Chat"
         gitter:
@@ -155,16 +145,9 @@ es:
           param:
             name:
               title: "Nombre"
-              help: "El nombre de la sala de Gitter. Por ejemplo: gitterHQ/services."
             webhook_url:
               title: "URL del webhook"
               help: "La URL que se proporciona al crear una nueva integración en una sala de Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Token del flujo"
-              help: "El token de flujo que se proporciona después de crear un origen para un flujo al que deseas enviar mensajes."
         groupme:
           title: "GroupMe"
           param:

@@ -1,4 +1,4 @@
-export default {
+const pendingPostsFixtures = {
   "/posts/eviltrout/pending.json": {
     pending_posts: [
       {
@@ -30,3 +30,5 @@ export default {
     ],
   },
 };
+
+export default pendingPostsFixtures;

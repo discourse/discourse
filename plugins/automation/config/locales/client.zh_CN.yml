@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "通过 API 触发自动化流程"
   js:
     admin:
       logs:

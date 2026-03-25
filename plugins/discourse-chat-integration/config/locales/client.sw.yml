@@ -14,15 +14,13 @@ sw:
     chat_integration:
       menu_title: "Uwezo wa kuwasiliana"
       settings: "Mipangilio"
-      no_providers: "Unahitaji kuwawezesha baadhi ya watoa huduma kwenye mpangilio wa programu-jalizi"
+      more_providers: "Zaidi"
       channels_with_errors: "Baadha ya chaneli za huyu mtumiaji zilishindwa mara ya mwisho zilipotumiwa ujumbe. Bonyeza ikoni za njano kupata taarifa zaidi za (ma)kosa."
       group_mention_template: "@%{name} Ametajwa:"
       group_message_template: "Ujumbe kwenda kwa: @%{name}"
-      choose_group: "(chagua kikundi)"
+      choose_group: "(Chagua kikundi)"
       all_categories: "(Vikundi Vyote)"
-      all_tags: "(lebo)"
-      create_rule: "Tengeneza Kanuni"
-      create_channel: "Tengeneza Chaneli"
+      all_tags: "(Lebo)"
       delete_channel: "Futa"
       test_channel: "Majaribio"
       edit_channel: "Hariri"
@@ -30,13 +28,10 @@ sw:
       test_modal:
         title: "Jaribu kutuma ujumbe"
         topic: "Mada"
-        send: "Tuma Ujumbe wa Kujaribu"
         close: "Funga"
         success: "Ujumbe umetumwa Vizuri"
       type:
         normal: Kawaida
-        group_message: Ujumbe wa Kikundi
-        group_mention: Kikundi Kimetajwa
       filter:
         mute: 'Nyamazisha'
         follow: 'Taarifa ya kwanza pekee'
@@ -56,8 +51,6 @@ sw:
           ok: "Sahihi"
           fail: "Umbiza Batili"
       edit_rule_modal:
-        title: Hariri Kanuni
-        save: Hifadhi Kanuni
         cancel: Batili
         provider: Mkimu
         type: Aina
@@ -77,7 +70,6 @@ sw:
           param:
             identifier:
               title: Chaneli
-              help: "mfano. #chaneli, @jinalamtumiaji."
           errors:
             action_prohibited: "Roboti hana ruhusa kuchapisha ndani ya hiyo chaneli"
         telegram:
@@ -110,7 +102,6 @@ sw:
           param:
             identifier:
               title: Chaneli
-              help: "mfano. #chaneli, @jinalamtumiaji."
           errors:
             channel_not_found: "Njia hiyo ya mawasiliano haipo kwenye Mattermost"
         matrix:
@@ -137,7 +128,6 @@ sw:
           param:
             identifier:
               title: Chaneli
-              help: "mfano. #chaneli, @jinalamtumiaji."
           errors:
             invalid_channel: "Hii chaneli haipo kwenye Njia ya Mawasiliano ya Rocket Chat"
         gitter:
@@ -145,11 +135,8 @@ sw:
           param:
             name:
               title: "Jina"
-              help: "Jina la chumba cha Gitter e.g. gitterHQ/huduma."
             webhook_url:
               title: "Anwani ya Webhook"
-        flowdock:
-          title: "Flowdock"
         teams:
           param:
             name:

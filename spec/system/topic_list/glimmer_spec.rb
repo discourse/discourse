@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "glimmer topic list", type: :system do
+describe "glimmer topic list" do
   fab!(:user)
 
   let(:topic_list) { PageObjects::Components::TopicList.new }

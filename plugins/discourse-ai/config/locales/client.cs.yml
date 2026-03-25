@@ -41,7 +41,6 @@ cs:
       llm_selector:
         none: "Žádný"
       features:
-        back: "Zpět"
         disabled: "(vypnuto)"
         groups: "Skupiny:"
         no_agent: "Nenastaveno"
@@ -113,7 +112,6 @@ cs:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
       ai_agent:
-        back: "Zpět"
         name: "Jméno"
         edit: "Upravit"
         export: "Export"
@@ -122,6 +120,9 @@ cs:
         user: Uživatel
         save: "Uložit"
         enabled: "Zapnuto?"
+        mcp_tools_modal:
+          select_all: "Vybrat vše"
+          clear_all: "Zrušit vše"
         delete: "Smazat"
         response_format:
           open_modal: "Upravit"
@@ -135,7 +136,6 @@ cs:
           button: "Přidat soubory"
           uploading: "Nahrává se..."
       tools:
-        back: "Zpět"
         export: "Export"
         import: "Import"
         name: "Název"
@@ -154,17 +154,30 @@ cs:
         short_title: "Pověření"
         name: "Název"
         secret: "Hodnota"
-        back: "Zpět"
         save: "Uložit"
         edit: "Upravit"
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
+      mcp_servers:
+        name: "Název"
+        description: "Popis"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Připojeno"
+        oauth_connect: "Připojit"
+        enabled: "Zapnuto"
+        save: "Uložit"
+        edit: "Upravit"
+        delete: "Smazat"
+        tools_modal:
+          required: "Povinné"
       llms:
         display_name: "Název"
         save: "Uložit"
         edit: "Upravit"
-        back: "Zpět"
         delete: Smazat
         quotas:
           group: "Skupina"
@@ -260,7 +273,6 @@ cs:
         ai_tool_action:
           tool: "Nástroj"
       embeddings:
-        back: "Zpět"
         save: "Uložit"
         delete: "Smazat"
         edit: "Upravit"

@@ -387,7 +387,9 @@ class GroupsController < ApplicationController
         end
     end
 
-    guardian.ensure_can_invite_to_forum!([group]) if emails.present?
+    if emails.present? && !guardian.can_invite_to_forum?([group])
+      return render_json_error(I18n.t("groups.errors.cannot_add_emails"))
+    end
 
     if users.empty? && emails.empty?
       raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
@@ -656,10 +658,10 @@ class GroupsController < ApplicationController
     user_id = current_user.id
     user_id = params[:user_id] || user_id if guardian.is_staff?
 
-    GroupUser
-      .where(group_id: group.id)
-      .where(user_id: user_id)
-      .update_all(notification_level: notification_level)
+    group_user = GroupUser.find_by(group_id: group.id, user_id: user_id)
+    raise Discourse::InvalidParameters.new(:user_id) if group_user.blank?
+
+    group_user.update!(notification_level: notification_level)
 
     render json: success_json
   end

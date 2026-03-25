@@ -37,7 +37,6 @@ vi:
       llm_selector:
         none: "Không"
       features:
-        back: "Quay lại"
         disabled: "(vô hiệu hóa)"
         groups: "Nhóm:"
         no_agent: "Chưa đặt"
@@ -90,7 +89,6 @@ vi:
           last_day: "24 giờ qua"
           custom: "Tùy chỉnh..."
       ai_agent:
-        back: "Quay lại"
         name: "Tên"
         edit: "Sửa"
         export: "Xuất"
@@ -99,6 +97,9 @@ vi:
         user: Thành viên
         save: "Lưu lại"
         enabled: "Kích hoạt"
+        mcp_tools_modal:
+          select_all: "Chọn hết"
+          clear_all: "Xóa hết"
         delete: "Xóa"
         response_format:
           open_modal: "Sửa"
@@ -113,7 +114,6 @@ vi:
           title: "Tải lên"
           uploading: "Đang tải lên..."
       tools:
-        back: "Quay lại"
         export: "Xuất"
         import: "Nhập"
         name: "Tên"
@@ -130,16 +130,27 @@ vi:
         short_title: "Thông tin đăng nhập"
         name: "Tên"
         secret: "Giá trị"
-        back: "Quay lại"
         save: "Lưu lại"
         edit: "Sửa"
         delete: "Xóa"
         embedding: "Nhúng"
+      mcp_servers:
+        name: "Tên"
+        description: "Mô tả"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_connect: "Kết nối"
+        enabled: "Đã bật"
+        save: "Lưu lại"
+        edit: "Sửa"
+        delete: "Xóa"
+        tools_modal:
+          required: "Bắt buộc"
       llms:
         display_name: "Tên"
         save: "Lưu lại"
         edit: "Sửa"
-        back: "Quay lại"
         delete: Xóa
         quotas:
           group: "Nhóm"
@@ -195,7 +206,6 @@ vi:
           save_caption: "Lưu lại"
         no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
       embeddings:
-        back: "Quay lại"
         save: "Lưu lại"
         delete: "Xóa"
         edit: "Sửa"

@@ -10,7 +10,7 @@ fr:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permet la recherche alimentée par l'IA"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ fr:
         none: "Jamais"
       features:
         short_title: "Fonctionnalités"
-        back: "Retour"
         disabled: "(désactivée)"
         groups: "Groupes :"
         llm:
@@ -212,7 +211,6 @@ fr:
           match_concepts: "Correspondance de concepts"
           deduplicate_concepts: "Déduplication des concepts"
         ai_helper:
-          name: "Assistant"
           description: "Permet aux utilisateurs d'interagir avec la communauté, par exemple en créant des sujets, en rédigeant des articles et en lisant du contenu"
           proofread: Relire le texte
           title_suggestions: "Suggérer des titres"
@@ -348,7 +346,6 @@ fr:
           replies:
             one: "Appliquer à la première réponse uniquement"
             other: "Appliquer aux %{count} premières réponses"
-        back: "Retour"
         name: "Nom"
         edit: "Modifier"
         export: "Exporter"
@@ -369,8 +366,6 @@ fr:
         user: Utilisateur
         create_user: Créer un utilisateur
         default_llm: Modèle linguistique par défaut
-        question_consolidator_llm: Modèle linguistique pour l'outil de consolidation des questions
-        question_consolidator_llm_help: Le modèle linguistique à utiliser pour l'outil de consolidation des questions, vous pouvez choisir un modèle moins puissant pour réduire les coûts.
         system_prompt: Invite du système
         forced_tool_strategy: Stratégie d'outil forcé
         allow_chat_direct_messages: "Autoriser les messages directs de discussion"
@@ -381,6 +376,9 @@ fr:
         save: "Enregistrer"
         enabled: "Activé ?"
         tools: "Outils activés"
+        mcp_tools_modal:
+          select_all: "Tout sélectionner"
+          clear_all: "Tout effacer"
         forced_tools: "Outils forcés"
         allowed_groups: "Groupes autorisés"
         delete: "Supprimer"
@@ -441,7 +439,6 @@ fr:
           uploading: "Envoi en cours…"
           remove: "Supprimer le téléversement"
       tools:
-        back: "Retour"
         short_title: "Outils"
         export: "Exporter"
         import: "Importer"
@@ -454,7 +451,6 @@ fr:
         tool_name: "Nom de l'outil"
         description: "Description"
         description_help: "Une description claire de l'objectif de l'outil pour le modèle linguistique"
-        subheader_description: "Les outils étendent les capacités des robots IA avec des fonctions JavaScript définies par l'utilisateur."
         summary: "Résumé"
         summary_help: "Résumé des outils destinés à être affichés aux utilisateurs finaux"
         script: "Script"
@@ -483,12 +479,27 @@ fr:
         short_title: "Identifiants"
         name: "Nom"
         secret: "Valeur"
-        back: "Retour"
         save: "Enregistrer"
         edit: "Modifier"
         delete: "Supprimer"
         embedding: "Intégration"
         tool: "Outil"
+      mcp_servers:
+        name: "Nom"
+        description: "Description"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Connecté"
+        oauth_connect: "Connecter"
+        enabled: "Activé"
+        save: "Enregistrer"
+        edit: "Modifier"
+        delete: "Supprimer"
+        tools_modal:
+          parameters: "Paramètres"
+          required: "Requis"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"
@@ -509,7 +520,6 @@ fr:
         save: "Enregistrer"
         edit: "Modifier"
         saved: "Modèle LLM enregistré"
-        back: "Retour"
         confirm_delete: Voulez-vous vraiment supprimer ce modèle ?
         delete: Supprimer
         quotas:
@@ -667,7 +677,6 @@ fr:
         short_title: "Intégrations"
         description: "Les intégrations sont des représentations numériques de données qui capturent le sens et les relations, et permettent aux fonctionnalités de Discourse AI telles que les sujets connexes et la recherche IA de comprendre et de connecter le contenu."
         new: "Nouvelle intégration"
-        back: "Retour"
         save: "Enregistrer"
         saved: "Configuration d'intégration enregistrée"
         delete: "Supprimer"
@@ -727,6 +736,7 @@ fr:
         collapse_view_label: "Quitter le mode plein écran (bouton Échap ou Retour)"
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
+        title: "Robot IA"
         llm: "Modèle"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"

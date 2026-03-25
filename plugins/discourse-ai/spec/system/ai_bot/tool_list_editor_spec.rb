@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AI Tool List Editor Dropdown", type: :system do
+describe "AI Tool List Editor Dropdown" do
   fab!(:admin)
 
   before do
@@ -132,6 +132,38 @@ describe "AI Tool List Editor Dropdown", type: :system do
     expect(tool_menu).to have_css(".btn[data-option='stock_quote']")
     expect(tool_menu).to have_css(".btn[data-option='image_generation_category']")
     expect(tool_menu).to have_css(".btn[data-option='empty_tool']")
+  end
+
+  it "displays credential name after creating a new secret and saving an MCP server" do
+    DiscourseAi::Mcp::ToolRegistry.stubs(:tool_definitions_for).returns([])
+
+    visit "/admin/plugins/discourse-ai/ai-tools/mcp-servers/new"
+
+    form = PageObjects::Components::FormKit.new("form.ai-mcp-server-editor")
+
+    form.field("name").fill_in("Test MCP")
+    form.field("description").fill_in("A test server")
+    form.field("url").fill_in("https://mcp.example.com")
+    form.field("auth_type").select("header_secret")
+
+    find(".ai-secret-selector__add-btn").click
+
+    modal = PageObjects::Components::FormKit.new(".ai-secret-create-modal form")
+    modal.field("name").fill_in("My API Key")
+    modal.field("secret").fill_in("sk-secret-123")
+    modal.submit
+
+    expect(page).to have_no_css(".ai-secret-create-modal")
+
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    expect(secret_selector).to have_selected_name("My API Key")
+
+    form.submit
+
+    expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-tools/mcp-servers/\d+})
+
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    expect(secret_selector).to have_selected_name("My API Key")
   end
 
   it "resets menu state when closing dropdown" do

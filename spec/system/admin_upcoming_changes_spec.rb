@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin upcoming changes", type: :system do
+describe "Admin upcoming changes" do
   fab!(:current_user, :admin)
   let(:upcoming_changes_page) { PageObjects::Pages::AdminUpcomingChanges.new }
 
@@ -60,6 +60,22 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+  end
+
+  it "does not show permanent upcoming changes" do
+    mock_upcoming_change_metadata(
+      {
+        allow_uppercase_posts: {
+          impact: "feature,all_members",
+          status: :permanent,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page).to have_no_change(:allow_uppercase_posts)
   end
 
   # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the

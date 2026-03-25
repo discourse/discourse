@@ -10,7 +10,7 @@ ar:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "يسمح بالبحث باستخدام الذكاء الاصطناعي"
               manage_artifacts: "يسمح بإدارة عناصر الذكاء الاصطناعي (قائمة، عرض، إنشاء، تحديث، حذف)"
       site_settings:
@@ -211,7 +211,6 @@ ar:
         saved: "تم تحديث النموذج اللغوي الكبير الافتراضي بنجاح"
       features:
         short_title: "الميزات"
-        back: "رجوع"
         settings_save_error: "تعذّر حفظ بعض الإعدادات."
         disabled: "(متوقفة)"
         groups: "المجموعات:"
@@ -292,7 +291,6 @@ ar:
             topic_criteria: "معايير الموضوع"
             post_criteria: "معايير المنشور"
         ai_helper:
-          name: "المساعد"
           description: "يُسهم في دعم تفاعل المستخدمين في المجتمع، بما يشمل إنشاء الموضوعات، وكتابة المنشورات، وقراءة المحتوى"
           proofread: تدقيق النص لغويًا
           title_suggestions: "اقتراح عناوين"
@@ -497,7 +495,6 @@ ar:
             few: "التطبيق على أول %{count} ردود فقط"
             many: "التطبيق على أول %{count} ردًا فقط"
             other: "التطبيق على أول %{count} رد فقط"
-        back: "رجوع"
         name: "الاسم"
         edit: "تعديل"
         export: "تصدير"
@@ -520,8 +517,6 @@ ar:
         user: المستخدم
         create_user: إنشاء مستخدم
         default_llm: نموذج اللغة الافتراضي
-        question_consolidator_llm: نموذج اللغة لخاصية موحِّد الأسئلة
-        question_consolidator_llm_help: نموذج اللغة الذي سيُستخدم لتوحيد الأسئلة، يمكنك اختيار نموذج أقل قوة للتوفير في التكاليف.
         system_prompt: رسالة مطالبة النظام
         forced_tool_strategy: استراتيجية الأداة الإجبارية
         allow_chat_direct_messages: "السماح بالرسائل المباشرة في الدردشة"
@@ -532,6 +527,9 @@ ar:
         save: "حفظ"
         enabled: "مفعَّلة؟"
         tools: "الأدوات المفعَّلة"
+        mcp_tools_modal:
+          select_all: "تحديد الكل"
+          clear_all: "مسح الكل"
         forced_tools: "الأدوات الإجبارية"
         allowed_groups: "المجموعات المسموح بها"
         delete: "حذف"
@@ -596,7 +594,6 @@ ar:
           uploading: "جارٍ التحميل..."
           remove: "إزالة التحميل"
       tools:
-        back: "رجوع"
         short_title: "الأدوات"
         export: "تصدير"
         import: "استيراد"
@@ -609,7 +606,6 @@ ar:
         tool_name: "اسم الأداة"
         description: "الوصف"
         description_help: "وصف واضح لغرض الأداة بالنسبة إلى نموذج اللغة"
-        subheader_description: "تعمل الأدوات على توسيع قدرات روبوتات الذكاء الاصطناعي باستخدام دوال JavaScript يحدِّدها المستخدم."
         summary: "الملخص"
         summary_help: "ملخص الغرض من الأدوات لعرضه للمستخدمين النهائيين"
         script: "البرنامج النصي"
@@ -653,7 +649,6 @@ ar:
         no_secrets: "لا توجد بيانات اعتماد حتى الآن"
         new_title: "بيانات اعتماد جديدة"
         edit_title: "تعديل بيانات الاعتماد"
-        back: "رجوع"
         save: "حفظ"
         edit: "تعديل"
         delete: "حذف"
@@ -664,6 +659,23 @@ ar:
         tool: "أداة"
         modal:
           title: "إنشاء بيانات اعتماد جديدة"
+      mcp_servers:
+        name: "الاسم"
+        description: "الوصف"
+        url: "عنوان URL"
+        auth_types:
+          oauth: "OAuth"
+        secret: "بيانات الاعتماد"
+        oauth_statuses:
+          connected: "متصل"
+        oauth_connect: "ربط"
+        enabled: "مفعَّلة"
+        save: "حفظ"
+        edit: "تعديل"
+        delete: "حذف"
+        tools_modal:
+          parameters: "المعلمات"
+          required: "مطلوب"
       llms:
         short_title: "نماذج اللغة الكبيرة"
         no_llms: "لا توجد نماذج لغة كبيرة بعد"
@@ -687,7 +699,6 @@ ar:
         save: "حفظ"
         edit: "تعديل"
         saved: "تم حفظ نموذج اللغة الكبير (LLM)"
-        back: "رجوع"
         confirm_delete: هل تريد بالتأكيد حذف هذا النموذج؟
         delete: حذف
         quotas:
@@ -887,7 +898,6 @@ ar:
         short_title: "التضمينات"
         description: "تمثل التضمينات بيانات بصيغ رقمية تلتقط المعنى والعلاقات، ما يُفعل ميزات الذكاء الاصطناعي في Discourse مثل الموضوعات ذات الصلة والبحث بالذكاء الاصطناعي فهم المحتوى وربطه ببعضه."
         new: "تضمين جديد"
-        back: "رجوع"
         save: "حفظ"
         saved: "تم حفظ تكوين التضمين"
         delete: "حذف"
@@ -951,6 +961,7 @@ ar:
         collapse_view_label: "الخروج من وضع الشاشة الكاملة (ESC أو زر الرجوع)"
         click_to_run_label: "تشغيل أداة الويب"
       ai_bot:
+        title: "روبوت الذكاء الاصطناعي"
         llm: "النموذج"
         pm_warning: "تتم مراقبة رسائل روبوت دردشة الذكاء الاصطناعي بانتظام من قِبل المشرفين."
         cancel_streaming: "إيقاف الرد"

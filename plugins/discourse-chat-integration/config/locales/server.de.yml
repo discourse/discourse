@@ -47,8 +47,6 @@ de:
     chat_integration_rocketchat_webhook_url: "Die URL für den Webhook der „Rocket Chat“-Integration"
     chat_integration_rocketchat_excerpt_length: "Auszugslänge für „Rocket Chat“-Beiträge"
     chat_integration_gitter_enabled: "Aktiviere den Chat-Integration-Provider für Gitter"
-    chat_integration_flowdock_enabled: "Aktiviere den Chat-Integration-Provider für Flowdock"
-    chat_integration_flowdock_excerpt_length: "Auszugslänge für Flowdock-Beiträge"
     chat_integration_groupme_enabled: "Aktiviere den Chat-Integration-Provider für Groupme"
     chat_integration_groupme_excerpt_length: "Auszugslänge für Groupme-Beiträge"
     chat_integration_groupme_bot_ids: "*erforderlich* Bot-IDs getrennt durch „,“ (Komma), falls mehrere vorhanden sind"
@@ -61,9 +59,6 @@ de:
     chat_integration_webex_excerpt_length: "Auszugslänge für „Webex Teams“-Beiträge"
     chat_integration_google_enabled: "Aktiviere den Chat-Integration-Provider für Google Chat"
     chat_integration_google_excerpt_length: "Auszugslänge für „Google Chat“-Beiträge"
-  dashboard:
-    problem:
-      channel_errors: "Einige Chat-Integration-Kanäle weisen Fehler auf. Besuche <a href='%{base_path}/admin/plugins/chat-integration'>den Bereich zur Chat-Integration</a>, um mehr darüber herauszufinden."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -225,8 +220,6 @@ de:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "hat geschrieben"
       google:
         new_post: "Neuer Beitrag auf %{site_title}"
         new_topic: "Neues Thema auf %{site_title}"

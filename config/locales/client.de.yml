@@ -459,13 +459,11 @@ de:
       start_posting:
         title: "Beginne mit dem Erstellen von Beiträgen"
         description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
-        action: "Fragen zum Einstieg"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
         predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
         predefined_topics_description: "Wähle aus einer Sammlung von Gesprächsanregungen, um Diskussionen in Gang zu bringen"
         use_predefined: "Vorlagen ansehen"
-        start_with_this: "Fange hiermit an"
         back: "Zurück"
         icebreakers:
           fun_facts:
@@ -789,7 +787,7 @@ de:
       view_all: "Alle anzeigen"
       grouped_by_topic: "Gruppiert nach Thema"
       none: "Es sind keine Elemente zur Überprüfung vorhanden."
-      view_pending: "zeige verbleibende"
+      view_pending: "zeige Ausstehende"
       topic_has_pending:
         one: "Dieses Thema hat <b>%{count}</b> Beitrag, der auf Genehmigung wartet."
         other: "Dieses Thema hat <b>%{count}</b> Beiträge, die auf Genehmigung warten."
@@ -1028,8 +1026,8 @@ de:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
         pending_posts:
-          one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
-          other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
+          one: "Du hast <strong>%{count}</strong> ausstehenden Beitrag."
+          other: "Du hast <strong>%{count}</strong> ausstehende Beiträge."
         ok: "OK"
       example_username: "Benutzername"
       reject_reason:
@@ -1812,6 +1810,22 @@ de:
         apps: "Apps"
         navigation_menu: "Navigationsmenü"
         upcoming_changes: "Bevorstehende Änderungen"
+        calendar_subscriptions: "Kalender"
+      calendar_subscriptions:
+        generate: "Abonnement-URLs generieren"
+        regenerate: "URLs neu generieren"
+        regenerate_confirm: "Dadurch werden deine bestehenden Kalender-Abonnement-URLs ungültig. Alle Kalender-Apps, die die alten URLs verwenden, werden keine Updates mehr erhalten. Fortfahren?"
+        revoke: "Abonnement widerrufen"
+        revoke_confirm: "Dadurch werden deine Kalender-Abonnement-URLs widerrufen. Alle Kalender-Apps, die diese URLs verwenden, erhalten keine Updates mehr. Fortfahren?"
+        urls_warning: "Die Abonnement-URLs sind fertig! Klicke auf die Schaltflächen unten, um sie mit deiner Kalender-App zu verknüpfen. Hinweis: Diese URLs werden nur einmal angezeigt."
+        bookmarks: "Lesezeichen-Erinnerungen"
+        bookmarks_description: "Deine Lesezeichen mit Erinnerungsterminen"
+        copy: "URL kopieren"
+        copied: "Kopiert!"
+        add_to_google: "Google Kalender"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple-Kalender"
+        active_subscription: "Du hast ein aktives Kalender-Abonnement."
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -2991,6 +3005,7 @@ de:
       collapse: "Editor minimieren"
       open: "Editor öffnen"
       abandon: "Editor schließen und Entwurf verwerfen"
+      edit_reason: "Füge den Bearbeitungsgrund hinzu"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
@@ -3412,8 +3427,8 @@ de:
         confirm: "Bestätigen"
         select_all: "Alle auswählen"
         clear_all: "Auswahl aufheben"
-        unlist_topics: "Themen unsichtbar machen"
-        relist_topics: "Themen neu auflisten"
+        unlist_topics: "Themen aus der Liste entfernen"
+        relist_topics: "Themen wieder auflisten"
         reset_bump_dates: "„Nach oben verschieben“-Zeitangaben zurücksetzen"
         defer: "Als ungelesen markieren"
         delete: "Themen löschen"
@@ -3455,17 +3470,14 @@ de:
           other: "Neue Themen ignorieren (%{count})"
         toggle: "Massenauswahl von Themen umschalten"
         actions: "Massenoperationen"
-        change_category: "Kategorie festlegen …"
+        change_category: "Kategorie aktualisieren"
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
         move_messages_to_inbox: "In Posteingang verschieben"
         archive_messages: "Ins Archiv verschieben"
-        notification_level: "Benachrichtigungen …"
+        notification_level: "Benachrichtigungsstufe aktualisieren"
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
-        selected:
-          one: "Du hast <b>%{count}</b> Thema ausgewählt."
-          other: "Du hast <b>%{count}</b> Themen ausgewählt."
         selected_sole_category:
           one: "Du hast <b>%{count}</b> Thema aus der Kategorie ausgewählt:"
           other: "Du hast <b>%{count}</b> Themen aus der Kategorie ausgewählt:"
@@ -3475,16 +3487,34 @@ de:
         change_tags: "Schlagwörter ersetzen"
         append_tags: "Schlagwörter hinzufügen"
         choose_new_tags: "Neue Schlagwörter für diese Themen wählen:"
-        choose_append_tags: "Wähle neue Schlagwörter, die diesen Themen hinzugefügt werden sollen:"
+        choose_append_tags: "Schlagwörter hinzufügen"
         changed_tags: "Die Schlagwörter dieser Themen wurden geändert."
-        remove_tags: "Alle Schlagwörter entfernen"
+        remove_tags: "Schlagwörter entfernen"
         confirm_remove_tags:
           one: "Alle Schlagwörter werden aus diesem Thema entfernt. Bist du sicher?"
           other: "Alle Schlagwörter werden aus <b>%{count}</b> Themen entfernt. Bist du sicher?"
+        confirm_update_topics:
+          one: "%{count} Thema aktualisieren"
+          other: "%{count} Themen aktualisieren"
+        confirm_close_topics:
+          one: "%{count} Thema schließen"
+          other: "%{count} Themen schließen"
+        confirm_archive_topics:
+          one: "%{count} Thema archivieren"
+          other: "%{count} Themen archivieren"
+        confirm_archive_messages:
+          one: "%{count} Nachricht archivieren"
+          other: "%{count} Nachrichten archivieren"
+        confirm_move_to_inbox:
+          one: "%{count} Nachricht in den Posteingang verschieben"
+          other: "%{count} Nachrichten in den Posteingang verschieben"
+        confirm_delete_topics:
+          one: "%{count} Thema löschen"
+          other: "%{count} Themen löschen"
         progress:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
-        notify: "Informiere die Benutzer über diese Änderung."
+        notify: "Informiere die Benutzer über diese Änderung"
         performing: "Massenoperationen werden durchgeführt, bitte warten …"
         completed: "Massenoperationen erfolgreich abgeschlossen!"
         completed_count:
@@ -3522,7 +3552,6 @@ de:
         name: "Verwerfen"
       close_topics:
         name: "Schließen"
-        note: "Hinweis"
         optional: (optional)
       archive_topics:
         name: "Archivieren"
@@ -3542,18 +3571,16 @@ de:
         name: "Schlagwörter ersetzen"
       delete_topics:
         name: "Löschen"
+        description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
       update_category:
         name: "Kategorie aktualisieren"
-        description: "Wähle die neue Kategorie für die ausgewählten Themen"
+        description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
       reset_bump_dates:
         name: "„Nach oben verschieben“-Daten zurücksetzen"
-        description: "Setzt das „Nach oben verschieben“-Datum auf das vom zuletzt erstellten Beitrag zurück, was die Reihenfolge in der Themenliste beeinflusst"
       defer:
         name: "Als ungelesen markieren"
-        description: "Themen als ungelesen markieren"
       update_notifications:
         name: "Benachrichtigungsstufe aktualisieren"
-        description: "Ändere die Benachrichtigungsstufe auf „Beobachten“, „Verfolgen“, „Normal“ oder „Stumm“"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -4361,7 +4388,10 @@ de:
       create: "Neue Kategorie"
       create_with_type: "Neue Kategorie des Typs „%{typeName}“"
       create_long: "Eine neue Kategorie erstellen"
+      settings_apply_to_all_of_type_warning: "Die nachfolgenden Änderungen gelten für alle Kategorien dieser Art"
       type_settings_schema:
+        category_settings: "Kategorie-Einstellungen"
+        category_custom_fields: "Kategorie-Einstellungen"
         site_settings: "Website-Einstellungen"
       choose_type:
         title: "Kategorietyp wählen"
@@ -4415,6 +4445,9 @@ de:
       list: "Kategorien auflisten"
       no_description: "Bitte füge eine Beschreibung für diese Kategorie hinzu."
       change_in_category_topic: "Beschreibung bearbeiten"
+      description_updated: "Beschreibung aktualisiert"
+      description_expand: "Mehr anzeigen"
+      description_collapse: "Weniger anzeigen"
       already_used: "Diese Farbe wird bereits für eine andere Kategorie verwendet."
       color_palette: "Farbpalette"
       security: "Sicherheit"
@@ -5587,8 +5620,7 @@ de:
         group_traffic: "Traffic"
         group_members: "Mitglieder"
         group_content: "Inhalte & Community-Status"
-        group_moderation: "Moderation"
-        group_security: "Sicherheit"
+        group_moderation_and_security: "Moderation & Sicherheit"
         group_other: "Sonstiges"
         legacy_warning: "Dies ist ein älterer Bericht. Er wird demnächst nicht mehr verfügbar sein. Wenn du Hilfe bei der Suche nach einem Ersatz benötigst, wenden dich bitte an den Support."
       config_sections:
@@ -6183,6 +6215,7 @@ de:
           daily: Täglich
           monthly: Monatlich
           weekly: Wöchentlich
+          chart_group_period: "Wähle einen Zeitraum"
           value_so_far: "%{value} (bis jetzt)"
           dates: "Datumsangaben (UTC)"
           groups: "Alle Gruppen"
@@ -6756,7 +6789,7 @@ de:
             back: "Zurück zu Komponenten"
             install: "Installieren"
             name: "Name"
-            used_on: "Verwendet bei"
+            used_on: "Verwendet von"
             enabled: "Aktiviert?"
             by_author: "Von %{name}"
             learn_more: "Mehr erfahren"

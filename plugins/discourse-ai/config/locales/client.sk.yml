@@ -10,7 +10,7 @@ sk:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Umožňuje vyhľadávanie pomocou AI"
       site_settings:
         categories:
@@ -158,7 +158,6 @@ sk:
         none: "Žiadny"
       features:
         short_title: "Funkcie"
-        back: "Späť"
         disabled: "(vypnuté)"
         groups: "Skupiny:"
         llm:
@@ -211,7 +210,6 @@ sk:
           match_concepts: "Zhoda konceptov"
           deduplicate_concepts: "Deduplikácia konceptov"
         ai_helper:
-          name: "Pomocník"
           description: "Pomáha používateľom pri interakcii s komunitou, ako je vytváranie tém, písanie príspevkov a čítanie obsahu"
           proofread: Korektúra textu
           title_suggestions: "Navrhnúť názvy"
@@ -351,7 +349,6 @@ sk:
             few: "Použiť na prvých %{count} odpovedí"
             many: "Použiť na prvé %{count} odpovede"
             other: "Použiť na prvé %{count} odpovede"
-        back: "Späť"
         name: "Meno"
         edit: "Upraviť"
         export: "Exportovať"
@@ -372,8 +369,6 @@ sk:
         user: Používateľ
         create_user: Vytvoriť používateľa
         default_llm: Predvolený jazykový model
-        question_consolidator_llm: Jazykový model pre konsolidátor otázok
-        question_consolidator_llm_help: Jazykový model, ktorý sa má použiť pre konsolidátor otázok, môžete si vybrať menej výkonný model, aby ste ušetrili náklady.
         system_prompt: Systémová výzva
         forced_tool_strategy: Stratégia vynútených nástrojov
         allow_chat_direct_messages: "Povolenie priamych správ v chate"
@@ -384,6 +379,8 @@ sk:
         save: "Uložiť"
         enabled: "Povolené?"
         tools: "Povolené nástroje"
+        mcp_tools_modal:
+          clear_all: "Vymazať všetko"
         forced_tools: "Vynútené nástroje"
         allowed_groups: "Povolené skupiny"
         delete: "Odstrániť"
@@ -446,7 +443,6 @@ sk:
           uploading: "Načítavam..."
           remove: "Odstránenie nahrávania"
       tools:
-        back: "Späť"
         short_title: "Nástroje"
         export: "Exportovať"
         import: "Import"
@@ -459,7 +455,6 @@ sk:
         tool_name: "Názov nástroja"
         description: "Popis"
         description_help: "Jasný opis účelu nástroja pre jazykový model"
-        subheader_description: "Nástroje rozširujú možnosti AI botov pomocou používateľom definovaných funkcií JavaScriptu."
         summary: "Zhrnutie"
         summary_help: "Zhrnutie účelu nástrojov, ktoré sa zobrazí koncovým používateľom"
         script: "Skript"
@@ -488,12 +483,27 @@ sk:
         short_title: "Poverenia"
         name: "Meno"
         secret: "Hodnota"
-        back: "Späť"
         save: "Uložiť"
         edit: "Upraviť"
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      mcp_servers:
+        name: "Meno"
+        description: "Popis"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Pripojené"
+        oauth_connect: "Pripojiť"
+        enabled: "Povolené"
+        save: "Uložiť"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        tools_modal:
+          parameters: "Parametre"
+          required: "Povinné"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"
@@ -514,7 +524,6 @@ sk:
         save: "Uložiť"
         edit: "Upraviť"
         saved: "Model LLM bol uložený"
-        back: "Späť"
         confirm_delete: Naozaj chcete odstrániť tento model?
         delete: Odstrániť
         quotas:
@@ -675,7 +684,6 @@ sk:
         short_title: "Vkladania"
         description: "Vložené údaje sú číselné reprezentácie údajov, ktoré zachytávajú význam a vzťahy a umožňujú funkciám Discourse AI, ako sú Súvisiace témy a Vyhľadávanie AI, porozumieť obsahu a prepojiť ho."
         new: "Nové vloženie"
-        back: "Späť"
         save: "Uložiť"
         saved: "Uložená konfigurácia vkladania"
         delete: "Odstrániť"
@@ -735,6 +743,7 @@ sk:
         collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
         click_to_run_label: "Spustiť artefakt"
       ai_bot:
+        title: "AI bot"
         llm: "Model"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"

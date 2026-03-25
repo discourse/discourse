@@ -1645,12 +1645,29 @@ RSpec.describe GroupsController do
         expect(response.status).to eq(200)
       end
 
-      it "does not send invites if user cannot invite" do
+      it "returns a clear error when group owner without invite permission submits emails" do
         group.add_owner(user)
         sign_in(user)
 
         put "/groups/#{group.id}/members.json", params: { emails: "test@example.com" }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to include("Only usernames")
+      end
+
+      it "rejects emails even when valid usernames are also submitted by owner without invite permission" do
+        group.add_owner(user)
+        sign_in(user)
+
+        expect {
+          put "/groups/#{group.id}/members.json",
+              params: {
+                usernames: other_user.username,
+                emails: "nonexistent@example.com",
+              }
+        }.not_to change { group.users.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to include("Only usernames")
       end
 
       context "when is able to add several members to a group" do
@@ -2911,6 +2928,78 @@ RSpec.describe GroupsController do
           post "/groups/#{group.id}/test_email_settings.json", params: params
           expect(response.status).to eq(429)
         end
+      end
+    end
+  end
+
+  describe "#set_notifications" do
+    fab!(:target_user, :user)
+    fab!(:non_member_user, :user)
+    fab!(:group)
+
+    context "when target user is in group" do
+      before do
+        group.add(moderator)
+        group.add(target_user)
+      end
+
+      it "allows a staff member to change notification level for a user who is a member of the group" do
+        sign_in(moderator)
+
+        group_user = GroupUser.find_by(group_id: group.id, user_id: target_user.id)
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: target_user.id,
+             }
+
+        expect(response.status).to eq(200)
+        expect(group_user.reload.notification_level).to eq(NotificationLevels.all[:muted])
+      end
+
+      it "does not allow a staff member to change notification level for a user who is not a member of the group" do
+        sign_in(moderator)
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: non_member_user.id,
+             }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "does not allow a regular user to change another user's notification level" do
+        sign_in(target_user)
+
+        mod_group_user = GroupUser.find_by(group_id: group.id, user_id: moderator.id)
+        original_level = mod_group_user.notification_level
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: moderator.id,
+             }
+
+        expect(response.status).to eq(200)
+        expect(mod_group_user.reload.notification_level).to eq(original_level)
+      end
+    end
+
+    context "when target user is not in group" do
+      before { group.add(moderator) }
+
+      it "does not allow a staff member to change notification level for a user who is not a member of the group" do
+        sign_in(moderator)
+
+        post "/groups/#{group.name}/notifications.json",
+             params: {
+               notification_level: NotificationLevels.all[:muted],
+               user_id: target_user.id,
+             }
+
+        expect(response.status).to eq(400)
       end
     end
   end

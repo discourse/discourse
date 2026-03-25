@@ -64,6 +64,8 @@
   --d-header-padding-x: 0.67em;
   --d-table-border-top-height: 3px;
   --d-wrap-padding-x: 0.67em;
+  --d-post-aside-background: var(--blend-primary-secondary-5);
+  --d-post-aside-border-left: 5px solid var(--primary-300);
   --topic-title-font-weight: 400;
   --topic-title-font-weight--visited: 400;
   --topic-list-item-background-color: var(--secondary);
@@ -71,6 +73,7 @@
   --list-container-padding-x: 0em;
   --d-topic-list-header-font-size: initial;
   --skip-links-offset: -75px;
+  --heading-font-weight: bold;
 }
 
 // Animation Keyframes
@@ -251,7 +254,8 @@ small {
 }
 
 blockquote {
-  @include post-aside;
+  background: var(--d-post-aside-background);
+  border-left: var(--d-post-aside-border-left);
 
   @include viewport.until(sm) {
     clear: both;
@@ -275,6 +279,7 @@ h6 {
   font-family: var(--heading-font-family);
   margin-top: 0;
   margin-bottom: 0.5rem;
+  font-weight: var(--heading-font-weight);
 }
 
 a.cancel {
@@ -1169,11 +1174,6 @@ body.has-sidebar-page {
 
     @include viewport.until(lg) {
       --d-main-content-gap: var(--space-4);
-    }
-
-    @media screen and (width < 87rem) {
-      // ideal width just slightly larger than our xl viewport variable
-      padding-inline: 0;
     }
   }
 }

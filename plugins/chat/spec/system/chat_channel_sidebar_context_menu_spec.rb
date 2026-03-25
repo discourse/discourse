@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat channel sidebar context menu", type: :system do
+RSpec.describe "Chat channel sidebar context menu" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
 

@@ -1157,6 +1157,8 @@ id:
         tags: "Label"
         interface: "Antarmuka"
         apps: "Aplikasi"
+      calendar_subscriptions:
+        copied: "Disalin!"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"
@@ -1970,6 +1972,8 @@ id:
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
+      description_expand: "Tampilkan lebih banyak"
+      description_collapse: "Tampilkan lebih sedikit"
       permissions:
         reply: "Balas"
         create: "Buat"

@@ -686,6 +686,7 @@ pl_PL:
         many: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
         other: "Jednocześnie można dodać maksymalnie %{count} użytkowników"
       usernames_or_emails_required: "Nazwy użytkowników lub adresy e-mail muszą być obecne"
+      cannot_add_emails: "Do dodawania członków do tej grupy można używać wyłącznie nazw użytkowników. Aby zaprosić e-mailem, użyj przycisku „Zaproś”."
       counting_too_many_email_domains:
         one: "Maksymalnie %{count} domena e-mail może być liczona jednocześnie"
         few: "Maksymalnie %{count} domeny e-mail mogą być liczone jednocześnie"
@@ -1298,6 +1299,8 @@ pl_PL:
       weekly: "co tydzień"
       every_month: "każdego miesiąca"
       every_six_months: "co 6 miesięcy"
+  calendar_subscriptions:
+    application_name: "Subskrypcje kalendarza"
   user_api_key:
     title: 'Autoryzuj "%{application_name}"'
     authorize: "Autoryzuj"
@@ -2775,6 +2778,8 @@ pl_PL:
       exclude_tag_group: "Wyklucz tematy z tagami z określonej grupy tagów"
       activity_before: "Pokaż tematy z ostatnią aktywnością przed datą (RRRR-MM-DD lub dni temu)"
       activity_after: "Pokaż tematy z ostatnią aktywnością po dacie (RRRR-MM-DD lub dni temu)"
+      bookmarked_before: "Pokaż tematy dodane do zakładek przed datą (RRRR-MM-DD lub dni temu)"
+      bookmarked_after: "Pokaż tematy dodane do zakładek po dacie (RRRR-MM-DD lub dni temu)"
       created_before: "Pokaż tematy utworzone przed datą (RRRR-MM-DD lub dni temu)"
       created_after: "Pokaż tematy utworzone po określonej dacie (RRRR-MM-DD lub dni temu)"
       created_by: "Pokaż tematy utworzone przez określonego użytkownika lub grupę"
@@ -3257,25 +3262,26 @@ pl_PL:
 
       * Aktualizacja za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
 
-      * Dowiedz się, co nowego w [informacjach o wydaniu](https://meta.discourse.org/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://github.com/discourse/discourse/commits/main)
+      * Dowiedz się, co nowego w [informacjach o wydaniu](/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://meta.discourse.org)
 
       * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
   new_version_mailer_with_notes:
     title: "Nowa wersja powiadomień z uwagami"
     subject_template: "[%{email_prefix}] dostępna aktualizacja"
     text_body_template: |
-      Hurra, dostępna jest nowa wersja [Discourse](https://www.discourse.org)!
+      Hurra, nowa wersja [Discourse](https://www.discourse.org) jest dostępna!
 
       Twoja wersja: %{installed_version}
       Nowa wersja: **%{new_version}**
 
-      * Aktualizacja za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
+      - Zaktualizuj, korzystając z naszej łatwej **[aktualizacji przeglądarki jednym kliknięciem](%{base_url}/admin/update)**
 
-      * Dowiedz się, co nowego w [informacjach o wydaniu](https://meta.discourse.org/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://github.com/discourse/discourse/commits/main)
+      - Zobacz, co nowego w [notatkach dotyczących wydania](https://releases.discourse.org/changelog/%{new_version})
 
-      * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
+      - Odwiedź [meta.discourse.org](https://meta.discourse.org) w celu uzyskania wiadomości, dyskusji i wsparcia dla Discourse
 
-      ### Dziennik zmian
+      ### Notatki dotyczące wydania
+
       %{notes}
   flag_reasons:
     off_topic: "Twój wpis został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."

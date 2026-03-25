@@ -56,7 +56,6 @@ ro:
       llm_selector:
         none: "Nimic"
       features:
-        back: "Înapoi"
         disabled: "(dezactivat)"
         groups: "Grupuri:"
         no_groups: "Nimic"
@@ -130,7 +129,6 @@ ro:
           last_day: "Ultimele 24 de ore"
           custom: "Personalizat..."
       ai_agent:
-        back: "Înapoi"
         name: "Nume"
         edit: "Editează"
         export: "Exportă"
@@ -139,6 +137,9 @@ ro:
         user: Utilizator
         save: "Salvează"
         enabled: "Activată?"
+        mcp_tools_modal:
+          select_all: "Selectează tot"
+          clear_all: "Șterge tot"
         delete: "Șterge"
         response_format:
           open_modal: "Editează"
@@ -149,7 +150,6 @@ ro:
           title: "Încărcări"
           uploading: "Se încarcă..."
       tools:
-        back: "Înapoi"
         export: "Exportă"
         import: "Importă"
         name: "Nume"
@@ -167,17 +167,26 @@ ro:
         short_title: "Date de conectare"
         name: "Nume"
         secret: "Valoare"
-        back: "Înapoi"
         save: "Salvează"
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      mcp_servers:
+        name: "Nume"
+        description: "Descriere"
+        url: "URL"
+        oauth_connect: "Conectează-te"
+        enabled: "Activate"
+        save: "Salvează"
+        edit: "Editează"
+        delete: "Șterge"
+        tools_modal:
+          required: "Obligatoriu"
       llms:
         display_name: "Nume"
         provider: "Furnizor"
         save: "Salvează"
         edit: "Editează"
-        back: "Înapoi"
         delete: Șterge
         quotas:
           group: "Grup"
@@ -224,7 +233,6 @@ ro:
         image_caption:
           save_caption: "Salvează"
       embeddings:
-        back: "Înapoi"
         save: "Salvează"
         delete: "Șterge"
         edit: "Editează"

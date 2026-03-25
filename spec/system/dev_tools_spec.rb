@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discourse dev tools", type: :system do
+describe "Discourse dev tools" do
   let(:toolbar) { PageObjects::Components::DevTools::Toolbar.new }
   let(:plugin_outlet_debug) { PageObjects::Components::DevTools::PluginOutletDebug.new }
   let(:block_debug) { PageObjects::Components::DevTools::BlockDebug.new }

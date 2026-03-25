@@ -37,7 +37,6 @@ be:
       llm_selector:
         none: "Няма"
       features:
-        back: "Назад"
         disabled: "(адключана)"
         groups: "групы:"
         edit: "Налады"
@@ -82,7 +81,6 @@ be:
         total_requests: "Усяго запытаў"
         total: "Усяго"
       ai_agent:
-        back: "Назад"
         name: "Назва"
         edit: "Рэдагаваць"
         export: "Экспарт"
@@ -99,7 +97,6 @@ be:
           title: "Загрузкі"
           uploading: "Запампоўванне ..."
       tools:
-        back: "Назад"
         export: "экспарт"
         name: "Імя"
         description: "Апісанне"
@@ -112,16 +109,23 @@ be:
       secrets:
         name: "Імя"
         secret: "значэнне"
-        back: "Назад"
         save: "Захаваць"
         edit: "Рэдагаваць"
         delete: "Выдаліць"
         embedding: "узаемадзеянне"
+      mcp_servers:
+        name: "Назва"
+        description: "Апісанне"
+        url: "URL спасылка"
+        save: "Захаваць"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
+        tools_modal:
+          required: "Абавязкова"
       llms:
         display_name: "Імя"
         save: "Захаваць"
         edit: "Рэдагаваць"
-        back: "Назад"
         delete: Выдаліць
         quotas:
           group: "Група"
@@ -145,7 +149,6 @@ be:
         image_caption:
           save_caption: "Захаваць"
       embeddings:
-        back: "Назад"
         save: "Захаваць"
         delete: "Выдаліць"
         edit: "Рэдагаваць"

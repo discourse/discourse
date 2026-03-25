@@ -1,4 +1,4 @@
-export default {
+const userMenuFixtures = {
   "/u/:username/user-menu-bookmarks": {
       notifications: [
         {
@@ -148,3 +148,5 @@ export default {
     }]
   }
 };
+
+export default userMenuFixtures;

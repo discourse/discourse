@@ -63,7 +63,6 @@ fa_IR:
       llm_selector:
         none: "هیچ‌کدام"
       features:
-        back: "بازگشت"
         disabled: "(غیرفعال)"
         groups: "گروه‌ها:"
         no_agent: "تنظیم نشده"
@@ -120,7 +119,6 @@ fa_IR:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."
       ai_agent:
-        back: "بازگشت"
         name: "نام"
         edit: "ویرایش"
         export: "خروجی گرفتن"
@@ -129,6 +127,8 @@ fa_IR:
         user: کاربر
         save: "ذخیره"
         enabled: "فعال شده؟"
+        mcp_tools_modal:
+          clear_all: "پاکسازی همه"
         delete: "حذف"
         response_format:
           open_modal: "ویرایش"
@@ -141,7 +141,6 @@ fa_IR:
           title: "بارگذاری‌ها"
           uploading: "در حال بار گذاری..."
       tools:
-        back: "بازگشت"
         export: "خروجی گرفتن"
         import: "ورود داده‌ها"
         name: "نام"
@@ -160,18 +159,29 @@ fa_IR:
         short_title: "اطلاعات ورود"
         name: "نام"
         secret: "مقدار"
-        back: "بازگشت"
         save: "ذخیره"
         edit: "ویرایش"
         delete: "حذف"
         embedding: "جاسازی"
         tool: "ابزار"
+      mcp_servers:
+        name: "نام"
+        description: "توضیح"
+        url: "نشانی اینترنتی"
+        auth_types:
+          oauth: "OAuth"
+        oauth_connect: "وصل شدن"
+        enabled: "فعال شده"
+        save: "ذخیره"
+        edit: "ویرایش"
+        delete: "حذف"
+        tools_modal:
+          required: "مورد نیاز"
       llms:
         display_name: "نام"
         provider: "ارائه‌دهنده"
         save: "ذخیره"
         edit: "ویرایش"
-        back: "بازگشت"
         delete: حذف
         quotas:
           group: "گروه"
@@ -224,7 +234,6 @@ fa_IR:
         ai_tool_action:
           tool: "ابزار"
       embeddings:
-        back: "بازگشت"
         save: "ذخیره"
         delete: "حذف"
         edit: "ویرایش"

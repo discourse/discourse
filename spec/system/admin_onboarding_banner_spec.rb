@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-describe "Admin Onboarding Banner", type: :system do
+describe "Admin Onboarding Banner" do
   fab!(:admin)
+  # ensures there is at least one topic, otherwise the topic recent date check doesn't pass
+  fab!(:topic)
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
@@ -33,8 +35,6 @@ describe "Admin Onboarding Banner", type: :system do
       expect(banner).to be_visible
 
       banner.close
-
-      expect(toasts).to have_success(I18n.t("js.admin_onboarding_banner.skipped"))
 
       expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
     end

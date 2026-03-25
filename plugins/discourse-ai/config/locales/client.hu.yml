@@ -41,7 +41,6 @@ hu:
       llm_selector:
         none: "Egyik sem"
       features:
-        back: "Vissza"
         disabled: "(kikapcsolva)"
         groups: "Csoportok:"
         no_agent: "Nincs beállítva"
@@ -100,7 +99,6 @@ hu:
           last_day: "Elmúlt 24 óra"
           custom: "Egyéni…"
       ai_agent:
-        back: "Vissza"
         name: "Név"
         edit: "Szerkesztés"
         export: "Exportálás"
@@ -109,6 +107,9 @@ hu:
         user: Felhasználó
         save: "Mentés"
         enabled: "Engedélyezve?"
+        mcp_tools_modal:
+          select_all: "Összes kiválasztása"
+          clear_all: "Összes törlése"
         delete: "Törlés"
         response_format:
           open_modal: "Szerkesztés"
@@ -121,7 +122,6 @@ hu:
           title: "Feltöltések"
           uploading: "Feltöltés…"
       tools:
-        back: "Vissza"
         export: "Exportálás"
         import: "Importálás"
         name: "Név"
@@ -141,17 +141,30 @@ hu:
         short_title: "Hitelesítő adatok"
         name: "Név"
         secret: "Érték"
-        back: "Vissza"
         save: "Mentés"
         edit: "Szerkesztés"
         delete: "Törlés"
         embedding: "Beágyazás"
+      mcp_servers:
+        name: "Név"
+        description: "Leírás"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Kapcsolódva"
+        oauth_connect: "Kapcsolódás"
+        enabled: "Bekapcsolva"
+        save: "Mentés"
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        tools_modal:
+          required: "Kötelező"
       llms:
         display_name: "Név"
         provider: "Szolgáltató"
         save: "Mentés"
         edit: "Szerkesztés"
-        back: "Vissza"
         delete: Törlés
         quotas:
           group: "Csoport"
@@ -198,7 +211,6 @@ hu:
         image_caption:
           save_caption: "Mentés"
       embeddings:
-        back: "Vissza"
         save: "Mentés"
         delete: "Törlés"
         edit: "Szerkesztés"

@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -332,6 +332,7 @@ export default class Category extends RestModel {
   static _includePermissions(category, store, site) {
     const model = site.updateCategory(category);
     model.setupGroupsAndPermissions();
+    model.setupCategoryTypes();
     return model;
   }
 
@@ -485,6 +486,7 @@ export default class Category extends RestModel {
   @tracked minimum_required_tags;
   @tracked styleType = this.style_type;
   @tracked allowed_tags;
+  @tracked categoryTypes;
   @autoTrackedArray available_groups;
   @autoTrackedArray permissions;
   @autoTrackedArray required_tag_groups;
@@ -492,6 +494,10 @@ export default class Category extends RestModel {
   init() {
     super.init(...arguments);
     this.setupGroupsAndPermissions();
+  }
+
+  setupCategoryTypes() {
+    this.categoryTypes = trackedObject(this.category_types);
   }
 
   setupGroupsAndPermissions() {
@@ -502,7 +508,7 @@ export default class Category extends RestModel {
     if (this.group_permissions) {
       this.permissions = this.group_permissions.map((elem) => {
         removeValueFromArray(this.available_groups, elem.group_name);
-        return new TrackedObject(elem);
+        return trackedObject(elem);
       });
     }
   }
@@ -835,6 +841,7 @@ export default class Category extends RestModel {
         emoji: this.emoji,
         icon: this.icon,
         ...(this.siteSettings.content_localization_enabled && {
+          locale: this.locale,
           category_localizations: this.localizations,
         }),
         ...this._categoryTypeSaveProperties(id),
@@ -849,8 +856,8 @@ export default class Category extends RestModel {
       category_type_site_settings: this.category_type_site_settings,
     };
 
-    if (!id && this.category_types) {
-      props.category_type = Object.keys(this.category_types)[0];
+    if (!id && this.categoryTypes) {
+      props.category_type = Object.keys(this.categoryTypes)[0];
     }
 
     return props;
@@ -883,7 +890,7 @@ export default class Category extends RestModel {
   }
 
   addPermission(permission) {
-    addUniqueValueToArray(this.permissions, new TrackedObject(permission));
+    addUniqueValueToArray(this.permissions, trackedObject(permission));
     removeValueFromArray(this.available_groups, permission.group_name);
   }
 
@@ -907,11 +914,15 @@ export default class Category extends RestModel {
   }
 
   isType(type) {
-    return Object.keys(this.category_types ?? {}).includes(type);
+    return Object.keys(this.categoryTypes ?? {}).includes(type);
   }
 
   getType(type) {
-    return this.category_types?.[type];
+    return this.categoryTypes?.[type];
+  }
+
+  removeType(type) {
+    delete this.categoryTypes[type];
   }
 
   @computed("topics")

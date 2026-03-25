@@ -1,4 +1,4 @@
-export default {
+const groupFixtures = {
   "/groups/moderators.json": {
     group: {
       id: 50,
@@ -1331,3 +1331,5 @@ export default {
     },
   },
 };
+
+export default groupFixtures;

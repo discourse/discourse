@@ -10,7 +10,7 @@ lt:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Leidžia dirbtinio intelekto paiešką"
       site_settings:
         categories:
@@ -135,7 +135,6 @@ lt:
       llm_selector:
         none: "Nieko"
       features:
-        back: "Atgal"
         settings_save_error: "Kai kurių nustatymų išsaugoti nepavyko."
         disabled: "(uždrausta)"
         groups: "Grupės:"
@@ -182,7 +181,6 @@ lt:
             topic_criteria: "Temos kriterijai"
             post_criteria: "Įrašo kriterijai"
         ai_helper:
-          name: "Padėjėjas"
           description: "Padeda vartotojams bendrauti bendruomenėje, pavyzdžiui, kurti temas, rašyti įrašus ir skaityti turinį"
           proofread: Korektūruotas tekstas
           title_suggestions: "Siūlyti pavadinimus"
@@ -277,7 +275,6 @@ lt:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."
       ai_agent:
-        back: "Atgal"
         name: "Vardas"
         edit: "Redaguoti"
         export: "Eksportuoti"
@@ -300,7 +297,6 @@ lt:
           title: "Įkėlimai"
           uploading: "Įkeliama"
       tools:
-        back: "Atgal"
         export: "Eksportuoti"
         import: "Importuoti"
         name: "Vardas"
@@ -316,17 +312,28 @@ lt:
         short_title: "Įgaliojimai"
         name: "Vardas"
         secret: "Reikšmė"
-        back: "Atgal"
         save: "Saugoti"
         edit: "Redaguoti"
         delete: "Pašalinti"
         embedding: "Įterpimai"
         tool: "Įrankis"
+      mcp_servers:
+        name: "Vardas"
+        description: "Aprašymas"
+        url: "Nuoroda"
+        oauth_statuses:
+          connected: "Prijungtas"
+        oauth_connect: "Prisijungti"
+        enabled: "Galimas"
+        save: "Saugoti"
+        edit: "Redaguoti"
+        delete: "Pašalinti"
+        tools_modal:
+          required: "Privalomi"
       llms:
         display_name: "Vardas"
         save: "Saugoti"
         edit: "Redaguoti"
-        back: "Atgal"
         delete: Pašalinti
         quotas:
           group: "Grupė"
@@ -376,7 +383,6 @@ lt:
         ai_tool_action:
           tool: "Įrankis"
       embeddings:
-        back: "Atgal"
         save: "Saugoti"
         delete: "Pašalinti"
         edit: "Redaguoti"

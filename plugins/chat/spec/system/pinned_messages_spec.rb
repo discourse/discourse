@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat pinned messages", type: :system do
+RSpec.describe "Chat pinned messages" do
   fab!(:admin)
   fab!(:channel, :chat_channel)
   fab!(:message) { Fabricate(:chat_message, chat_channel: channel, message: "Important message") }

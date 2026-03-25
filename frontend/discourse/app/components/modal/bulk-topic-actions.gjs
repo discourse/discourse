@@ -221,9 +221,6 @@ export default class BulkTopicActions extends Component {
       case "reset-bump-dates":
         this.performAndRefresh({ type: "reset_bump_dates" });
         break;
-      case "defer":
-        this.performAndRefresh({ type: "destroy_post_timing" });
-        break;
       case "update-notifications":
         this.performAndRefresh({
           type: "change_notification_level",
@@ -391,6 +388,15 @@ export default class BulkTopicActions extends Component {
     return this.soleCategory && this.isTagAction;
   }
 
+  get confirmButtonLabel() {
+    if (this.model.confirmButtonTranslationKey) {
+      return i18n(this.model.confirmButtonTranslationKey, {
+        count: this.model.bulkSelectHelper.selected.length,
+      });
+    }
+    return i18n("topics.bulk.confirm");
+  }
+
   get disabledSubmit() {
     if (this.isNotificationAction) {
       return !this.notificationLevelId || this.loading;
@@ -407,7 +413,6 @@ export default class BulkTopicActions extends Component {
   <template>
     <DModal
       @title={{@model.title}}
-      @subtitle={{@model.description}}
       @closeModal={{@closeModal}}
       class="topic-bulk-actions-modal -large"
     >
@@ -446,9 +451,14 @@ export default class BulkTopicActions extends Component {
               </ul>
             </div>
           {{else}}
-            <div class="topic-bulk-actions-modal__selection-info">
+            {{#if @model.description}}
+              <p class="topic-bulk-actions-modal__description">{{trustHTML
+                  @model.description
+                }}</p>
+            {{/if}}
 
-              {{#if this.showSoleCategoryTip}}
+            {{#if this.showSoleCategoryTip}}
+              <div class="topic-bulk-actions-modal__selection-info">
                 {{trustHTML
                   (i18n
                     "topics.bulk.selected_sole_category"
@@ -456,16 +466,8 @@ export default class BulkTopicActions extends Component {
                   )
                 }}
                 {{trustHTML this.soleCategoryBadgeHTML}}
-              {{else}}
-                {{trustHTML
-                  (i18n
-                    "topics.bulk.selected"
-                    count=@model.bulkSelectHelper.selected.length
-                  )
-                }}
-
-              {{/if}}
-            </div>
+              </div>
+            {{/if}}
 
             {{#if this.isCategoryAction}}
               <p>
@@ -565,8 +567,7 @@ export default class BulkTopicActions extends Component {
           <DButton
             @action={{this.performAction}}
             @disabled={{this.disabledSubmit}}
-            @icon="check"
-            @label="topics.bulk.confirm"
+            @translatedLabel={{this.confirmButtonLabel}}
             id="bulk-topics-confirm"
             class="btn-primary"
           />

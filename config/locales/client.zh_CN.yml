@@ -427,13 +427,11 @@ zh_CN:
       start_posting:
         title: "开始发帖"
         description: "给人们一些共同谈论的话题"
-        action: "破冰创意"
         choose_option: "您想如何开始？"
         predefined_topics: "破冰模板"
         predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自行制作。"
         predefined_topics_description: "从一系列对话开场白中挑选一些，开启讨论"
         use_predefined: "浏览模板"
-        start_with_this: "从这里开始"
         back: "返回"
         icebreakers:
           fun_facts:
@@ -1708,6 +1706,22 @@ zh_CN:
         apps: "应用"
         navigation_menu: "导航菜单"
         upcoming_changes: "即将推出的更改"
+        calendar_subscriptions: "日历"
+      calendar_subscriptions:
+        generate: "生成订阅 URL"
+        regenerate: "重新生成 URL"
+        regenerate_confirm: "这将使您现有的日历订阅 URL 失效。任何使用旧 URL 的日历应用都将无法收到更新。是否继续？"
+        revoke: "撤销订阅"
+        revoke_confirm: "这将撤销您现有的日历订阅 URL。任何使用这些 URL 的日历应用都将停止接收更新。是否继续？"
+        urls_warning: "订阅 URL 已准备就绪！点击下方按钮即可将其 URL 到您的日历应用。注意：这些 URL 仅显示一次。"
+        bookmarks: "书签提醒"
+        bookmarks_description: "您的书签及提醒日期"
+        copy: "复制 URL"
+        copied: "已复制！"
+        add_to_google: "Google 日历"
+        add_to_outlook: "微软 Outlook"
+        add_to_apple: "Apple 日历"
+        active_subscription: "您有一个活跃的日历订阅。"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -3262,31 +3276,45 @@ zh_CN:
           other: "忽略新话题（%{count} 个）…"
         toggle: "切换话题批量选择"
         actions: "批量操作"
-        change_category: "设置类别…"
+        change_category: "更新类别"
         close_topics: "关闭话题"
         archive_topics: "归档话题"
         move_messages_to_inbox: "移至收件箱"
         archive_messages: "移至归档"
-        notification_level: "通知…"
+        notification_level: "更新通知"
         change_notification_level: "更改通知级别"
         choose_new_category: "为话题选择新类别："
-        selected:
-          other: "您已选择 <b>%{count}</b> 个话题。"
         selected_sole_category:
           other: "您已从以下类别中选择 <b>%{count}</b> 个话题。"
         selected_count:
           other: "已选择 %{count} 个"
         change_tags: "替换标签"
-        append_tags: "附加标签"
+        append_tags: "添加标签"
         choose_new_tags: "为这些话题选择新标签："
-        choose_append_tags: "为这些话题选择要附加的新标签："
+        choose_append_tags: "添加标签"
         changed_tags: "这些话题的标签已更改。"
-        remove_tags: "移除所有标签"
+        remove_tags: "移除标签"
         confirm_remove_tags:
           other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
+        confirm_update_topics:
+          other: "更新 %{count} 个话题"
+        confirm_close_topics:
+          other: "关闭 %{count} 个话题"
+        confirm_archive_topics:
+          other: "存档 %{count} 个话题"
+        confirm_unlist_topics:
+          other: "关闭 %{count} 个话题"
+        confirm_relist_topics:
+          other: "重新公开 %{count} 个主题"
+        confirm_archive_messages:
+          other: "存档 %{count} 个消息"
+        confirm_move_to_inbox:
+          other: "将 %{count} 个消息移至收件箱"
+        confirm_delete_topics:
+          other: "删除 %{count} 个话题"
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
-        notify: "将此更改通知用户。"
+        notify: "通知用户此变更"
         performing: "正在执行批量操作，请稍候…"
         completed: "批量操作成功完成！"
         completed_count:
@@ -3320,38 +3348,44 @@ zh_CN:
         name: "忽略"
       close_topics:
         name: "关闭"
-        note: "备注"
+        description: "关闭的话题阻止新的回复。 <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>了解更多</a>"
+        note: "为这些话题添加注释"
         optional: '（可选）'
       archive_topics:
         name: "归档"
+        description: "已存档的话题列表在搜索和最新主题列表中被隐藏。 <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>了解更多的</a>"
       archive_messages:
         name: "移至归档"
       move_messages_to_inbox:
         name: "移至收件箱"
       unlist_topics:
         name: "取消公开"
+        description: "未公开的主题不会显示在话题列表中，但仍可通过直接链接访问。 <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>了解更多</a>"
       relist_topics:
         name: "重新公开"
       remove_tags:
         name: "移除标签"
+        description: "从所选话题中移除所有标签。"
       append_tags:
-        name: "附加标签"
+        name: "添加标签"
+        description: "为选定的话题添加以下标签："
       replace_tags:
         name: "替换标签"
+        description: "将所选话题的所有现有标签替换为以下内容："
       delete_topics:
         name: "删除"
+        description: "永久删除所选话题。此操作无法撤销。"
       update_category:
         name: "更新类别"
-        description: "为所选话题选择新类别"
+        description: "将所有选定的话题移至以下类别："
       reset_bump_dates:
         name: "重置顶帖日期"
-        description: "将话题顶帖日期重置为最后创建的帖子的日期，这会影响话题列表中的排序"
+        description: "您是否想更新顶帖日期为帖子最后创建的日期？这可能会影响它们在话题列表列表中的排序。"
       defer:
         name: "标记为未读"
-        description: "将话题标记为未读"
       update_notifications:
         name: "更新通知"
-        description: "将通知级别更改为“正在关注”、“正在跟踪”、“常规”或“已设为免打扰”"
+        description: "将所选话题的个人通知级别更新为："
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -4085,6 +4119,8 @@ zh_CN:
       advanced: "高级"
       show_advanced: "高级设置"
       topic_template: "模板"
+      topic_title_placeholder: "类别话题标题占位符"
+      topic_title_placeholder_placeholder: "[可选] 此分类的自定义话题标题占位符"
       tags: "标签"
       localizations: "本地化"
       localization:
@@ -4172,6 +4208,9 @@ zh_CN:
       list: "列出类别"
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
+      description_updated: "描述已更新"
+      description_expand: "展开"
+      description_collapse: "收起"
       already_used: "此颜色已被其他类别使用"
       color_palette: "调色板"
       security: "安全性"
@@ -5299,8 +5338,7 @@ zh_CN:
         group_traffic: "流量"
         group_members: "成员"
         group_content: "内容与健康"
-        group_moderation: "审核"
-        group_security: "安全性"
+        group_moderation_and_security: "审核与安全"
         group_other: "其他"
         legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系支持团队。"
       config_sections:

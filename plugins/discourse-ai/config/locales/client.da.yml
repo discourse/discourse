@@ -45,7 +45,6 @@ da:
       llm_selector:
         none: "Ingen"
       features:
-        back: "Tilbage"
         disabled: "(deaktiveret)"
         groups: "Grupper:"
         no_agent: "Ikke indstillet"
@@ -100,7 +99,6 @@ da:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."
       ai_agent:
-        back: "Tilbage"
         name: "Navn"
         edit: "Rediger"
         export: "Eksporter"
@@ -109,6 +107,8 @@ da:
         user: Bruger
         save: "Gem"
         enabled: "Aktiveret?"
+        mcp_tools_modal:
+          clear_all: "Ryd alle"
         allowed_groups: "Tilladte grupper"
         delete: "Slet"
         response_format:
@@ -122,7 +122,6 @@ da:
           title: "Overførsler"
           uploading: "Overfører…"
       tools:
-        back: "Tilbage"
         export: "Eksporter"
         import: "Importer"
         name: "Navn"
@@ -141,16 +140,27 @@ da:
         short_title: "Legitimationsoplysninger"
         name: "Navn"
         secret: "værdi"
-        back: "Tilbage"
         save: "Gem"
         edit: "Rediger"
         delete: "Slet"
         embedding: "Indlejring"
+      mcp_servers:
+        name: "Navn"
+        description: "Beskrivelse"
+        url: "URL"
+        oauth_statuses:
+          connected: "Tilsluttet"
+        oauth_connect: "Forbind"
+        enabled: "Aktiveret"
+        save: "Gem"
+        edit: "Rediger"
+        delete: "Slet"
+        tools_modal:
+          required: "Obligatoriske"
       llms:
         display_name: "Navn"
         save: "Gem"
         edit: "Rediger"
-        back: "Tilbage"
         delete: Slet
         quotas:
           group: "Gruppe"
@@ -190,7 +200,6 @@ da:
         image_caption:
           save_caption: "Gem"
       embeddings:
-        back: "Tilbage"
         save: "Gem"
         delete: "Slet"
         edit: "Rediger"

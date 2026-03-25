@@ -34,6 +34,11 @@ tr_TR:
               label: Konu kimliği
     discourse_calendar:
       invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
+      preferences:
+        all_events: "Etkinlik Takvimi - Tüm Etkinlikler"
+        all_events_description: "Tüm forum etkinlikleri"
+        my_events: "Etkinlik Takvimi - Etkinliklerim"
+        my_events_description: "Katılacağınız veya ilgilendiğiniz etkinlikler"
       on_holiday: "Tatilde"
       disable_holiday: "Devre dışı bırak"
       enable_holiday: "Etkinleştir"
@@ -460,6 +465,9 @@ tr_TR:
         timezone:
           label: Saat dilimi
           remove_timezone: Saat dilimi yok (UTC)
+        all_day:
+          label: "Gün boyu sürecek etkinlik"
+          description: "Tüm gün süren bir etkinlikte belirli saatler belirtilmez, sadece tarih belirtilir. Etkinlik, günün başından sonuna kadar sürecektir."
         reminders:
           label: "Anımsatıcılar"
           types:

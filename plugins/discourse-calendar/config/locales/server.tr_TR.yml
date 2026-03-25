@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Takvim etkinlikleri akışını oku"
   reports:
     currently_away:
       title: Şu anda uzaktaki kullanıcılar

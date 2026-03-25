@@ -10,7 +10,7 @@ ug:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
       site_settings:
         categories:
@@ -49,7 +49,6 @@ ug:
       llm_selector:
         none: "يوق"
       features:
-        back: "كەينى"
         disabled: "(چەكلەندى)"
         groups: "گۇرۇپپا:"
         no_agent: "تەڭشەلمىدى"
@@ -105,7 +104,6 @@ ug:
         periods:
           custom: "ئىختىيارى..."
       ai_agent:
-        back: "كەينى"
         name: "ئىسمى"
         edit: "تەھرىر"
         export: "چىقار"
@@ -113,6 +111,9 @@ ug:
         user: ئىشلەتكۈچى
         save: "ساقلا"
         enabled: "قوزغىتىلدى؟"
+        mcp_tools_modal:
+          select_all: "ھەممىنى تاللا"
+          clear_all: "ھەممىنى تازىلا"
         delete: "ئۆچۈر"
         response_format:
           open_modal: "تەھرىر"
@@ -126,7 +127,6 @@ ug:
           title: "يۈكلەنمە"
           uploading: "يۈكلەۋاتىدۇ..."
       tools:
-        back: "كەينى"
         export: "چىقار"
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
@@ -145,16 +145,29 @@ ug:
         short_title: "ئىسپاتنامە"
         name: "ئىسمى"
         secret: "قىممەت"
-        back: "كەينى"
         save: "ساقلا"
         edit: "تەھرىر"
         delete: "ئۆچۈر"
         embedding: "سىڭدۈرمە"
+      mcp_servers:
+        name: "ئىسمى"
+        description: "چۈشەندۈرۈش"
+        url: "تور ئادرېسى"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "باغلاندى"
+        oauth_connect: "ئۇلا"
+        enabled: "قوزغىتىلدى"
+        save: "ساقلا"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        tools_modal:
+          required: "زۆرۈر"
       llms:
         display_name: "ئىسمى"
         save: "ساقلا"
         edit: "تەھرىر"
-        back: "كەينى"
         delete: ئۆچۈر
         quotas:
           group: "گۇرۇپپا"
@@ -195,7 +208,6 @@ ug:
         image_caption:
           save_caption: "ساقلا"
       embeddings:
-        back: "كەينى"
         save: "ساقلا"
         delete: "ئۆچۈر"
         edit: "تەھرىر"

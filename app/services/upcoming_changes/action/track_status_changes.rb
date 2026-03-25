@@ -82,6 +82,8 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
       end
     end
 
+    Discourse.cache.delete(UpcomingChanges.current_statuses_cache_key)
+
     { status_changes:, notified_changes: }
   end
 

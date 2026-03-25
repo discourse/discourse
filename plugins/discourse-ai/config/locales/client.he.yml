@@ -10,7 +10,7 @@ he:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "מאפשר חיפוש בינה מלאכותית"
       site_settings:
         categories:
@@ -197,7 +197,6 @@ he:
         none: "ללא"
       features:
         short_title: "יכולות"
-        back: "חזרה"
         disabled: "(כבוי)"
         groups: "קבוצות:"
         llm:
@@ -252,7 +251,7 @@ he:
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
         ai_helper:
-          name: "מסייע"
+          name: "מסייע בינה מלאכותית"
           proofread: הגהת הטקסט
           title_suggestions: "הצעת כותרות"
           explain: "הסבר"
@@ -419,7 +418,6 @@ he:
             two: "החלה על שתי התגובות הראשונות בלבד"
             many: "החלה על שתי התגובות הראשונות בלבד"
             other: "החלה על שתי התגובות הראשונות בלבד"
-        back: "חזרה"
         name: "שם"
         edit: "עריכה"
         export: "ייצוא"
@@ -441,8 +439,6 @@ he:
         user: משתמש
         create_user: יצירת משתמש
         default_llm: מודל שפה כברירת מחדל
-        question_consolidator_llm: מודל שפה למגבש השאלות
-        question_consolidator_llm_help: מודל השפה לשימוש עבור מגבש השאלות, אפשר לבחור במודל פחות חזק כדי לחסוך בעלויות.
         system_prompt: בקשת מערכת
         forced_tool_strategy: אסטרטגיית כלי כפוי
         allow_chat_direct_messages: "לאפשר הודעות ישירות בצ׳אט"
@@ -453,6 +449,9 @@ he:
         save: "שמירה"
         enabled: "מאופשר?"
         tools: "כלים פעילים"
+        mcp_tools_modal:
+          select_all: "בחירה בהכול"
+          clear_all: "לפנות הכול"
         forced_tools: "כלים נאכפים"
         allowed_groups: "קבוצות מורשות"
         delete: "מחיקה"
@@ -513,7 +512,6 @@ he:
           uploading: "בהליכי העלאה…"
           remove: "הסרת העלאה"
       tools:
-        back: "חזרה"
         short_title: "כלים"
         export: "ייצוא"
         import: "ייבוא"
@@ -526,7 +524,6 @@ he:
         tool_name: "שם הכלי"
         description: "תיאור"
         description_help: "תיאור ברור של מטרת הכלי למודל השפה"
-        subheader_description: "כלים מרחיבים את היכולות של בוטים של בינה מלאכותית עם פונקציות JavaScript המוגדרות על ידי המשתמשים."
         summary: "תקציר"
         summary_help: "סיכום מטרת הכלים להצגה למשתמשי קצה"
         script: "סקריפט"
@@ -555,12 +552,27 @@ he:
         short_title: "פרטי גישה"
         name: "שם"
         secret: "ערך"
-        back: "חזרה"
         save: "שמירה"
         edit: "עריכה"
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      mcp_servers:
+        name: "שם"
+        description: "תיאור"
+        url: "כתובת"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "מחובר"
+        oauth_connect: "התחברות"
+        enabled: "פעיל"
+        save: "שמירה"
+        edit: "עריכה"
+        delete: "מחיקה"
+        tools_modal:
+          parameters: "משתנים"
+          required: "נדרש"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"
@@ -582,7 +594,6 @@ he:
         save: "שמירה"
         edit: "עריכה"
         saved: "מודל ה־LLM נשמר"
-        back: "חזרה"
         confirm_delete: למחוק את המודל הזה?
         delete: מחיקה
         quotas:
@@ -750,7 +761,6 @@ he:
         short_title: "הטמעות"
         description: "הטמעות הן ייצוגים מספריים של נתונים שלוכדים משמעות וקשר, הפעלת יכולות הבינה המלאכותית של Discourse מאפשרת יכולות כגון נושאים קשורים וחיפוש בינה מלאכותית כדי להבין ולחבר תוכן."
         new: "הטמעה חדשה"
-        back: "חזרה"
         save: "שמירה"
         saved: "הגדרות ההטמעה נשמרו"
         delete: "מחיקה"
@@ -803,6 +813,7 @@ he:
         collapse_view_label: "יציאה ממסך מלא (כפתורי ESC או Back)"
         click_to_run_label: "הרצת תוצר"
       ai_bot:
+        title: "בוט בינה מלאכותית"
         llm: "מודל"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"

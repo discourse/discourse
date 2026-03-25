@@ -26,8 +26,6 @@ pt:
     chat_integration_zulip_excerpt_length: "Comprimento do excerto da publicação de Zulip"
     chat_integration_rocketchat_excerpt_length: "Comprimento do excerto da publicação de Rocket Chat"
     chat_integration_gitter_enabled: "Ativar provedor de integração de conversação Gitter"
-    chat_integration_flowdock_enabled: "Ativar provedor de integração de conversação Flowdock"
-    chat_integration_flowdock_excerpt_length: "Comprimento do excerto da publicação de Flowdock"
   chat_integration:
     all_categories: "(todas as categorias)"
     deleted_category: "(categoria eliminada)"
@@ -106,5 +104,3 @@ pt:
           ~~~citação
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "publicou"

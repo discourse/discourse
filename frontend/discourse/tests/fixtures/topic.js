@@ -1,4 +1,4 @@
-export default {
+const topicFixtures = {
   "/t/130.json": {
     post_stream: {
       posts: [
@@ -7088,3 +7088,5 @@ export default {
     tags: null,
   },
 };
+
+export default topicFixtures;

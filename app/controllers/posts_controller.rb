@@ -63,6 +63,7 @@ class PostsController < ApplicationController
       posts =
         Post
           .private_posts
+          .where(post_type: Topic.visible_post_types(current_user))
           .order(id: :desc)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
@@ -723,7 +724,7 @@ class PostsController < ApplicationController
 
   def deleted_posts
     params.permit(:offset, :limit)
-    guardian.ensure_can_see_deleted_posts!
+    guardian.ensure_can_see_deleted_posts_for_user!
 
     user = fetch_user_from_params
     offset = [params[:offset].to_i, 0].max
@@ -1049,7 +1050,14 @@ class PostsController < ApplicationController
   end
 
   def display_post(post)
-    post.revert_to(params[:version].to_i) if params[:version].present?
+    if params[:version].present?
+      version = params[:version].to_i
+      post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
+      if post_revision
+        guardian.ensure_can_see!(post_revision)
+        post.revert_to(version)
+      end
+    end
     render_post_json(post)
   end
 

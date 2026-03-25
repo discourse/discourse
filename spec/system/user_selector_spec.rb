@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User selector", type: :system do
+describe "User selector" do
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user, :admin)

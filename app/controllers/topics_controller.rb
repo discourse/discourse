@@ -118,7 +118,15 @@ class TopicsController < ApplicationController
         return redirect_to_correct_topic(topic, opts[:post_number]) if topic
       end
 
-      raise ex
+      topic_id = params[:topic_id] || params[:id]
+      original_path =
+        if params[:slug].present? && topic_id.present?
+          "/t/#{params[:slug]}/#{topic_id}"
+        else
+          request.path
+        end
+
+      raise Discourse::NotFound.new(ex.message, check_permalinks: true, original_path:)
     rescue Discourse::NotLoggedIn => ex
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     rescue Discourse::InvalidAccess => ex
@@ -167,7 +175,8 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+    if slugs_do_not_match ||
+         (!request.format.json? && params[:slug].nil? && @topic_view.topic.slug.present?)
       redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
       return
     end

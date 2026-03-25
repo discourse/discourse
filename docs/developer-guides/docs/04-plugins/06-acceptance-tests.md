@@ -94,7 +94,7 @@ To make use of them, add `await pauseTest()` within your test code where you wou
 
 ### Where to go from here
 
-I hate to sound like a broken record but the [Ember documentation](https://guides.emberjs.com/release/testing/testing-application/) on testing is excellent. You might also want to see how Discourse tests various functionality by browsing the tests in our [javascript tests directory](https://github.com/discourse/discourse/tree/main/app/assets/javascripts/discourse/tests). We have quite a few examples in there you can learn from.
+I hate to sound like a broken record but the [Ember documentation](https://guides.emberjs.com/release/testing/testing-application/) on testing is excellent. You might also want to see how Discourse tests various functionality by browsing the tests in our [javascript tests directory](https://github.com/discourse/discourse/tree/main/frontend/discourse/tests). We have quite a few examples in there you can learn from.
 
 Happy testing!
 

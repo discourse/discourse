@@ -1076,6 +1076,8 @@ lv:
         tags: "Tagi"
         interface: "Saskarne"
         apps: "Lietotnes"
+      calendar_subscriptions:
+        copied: "Nokopēts!"
       change_password:
         success: "(e-pasts nosūtīts)"
         in_progress: "(sūta e-pastu)"
@@ -1870,9 +1872,6 @@ lv:
       bulk:
         select_all: "Izvēlēties visu"
         clear_all: "Noņemt visu"
-        unlist_topics: "Izņemt no sarakstiem tēmas"
-        relist_topics: "Atkal padarīt tēmas redzamas sarakstiem"
-        delete: "Dzēst tēmas"
         delete_topics_count:
           zero: "Dzēst tēmas"
           one: "Dzēst tēmu"
@@ -1885,18 +1884,9 @@ lv:
         dismiss_new: "Nerādīt jaunus"
         toggle: "darbības ar vairākām tēmām"
         actions: "Darbības ar vairumu"
-        close_topics: "Slēgt tēmas"
-        archive_topics: "Arhivēt tēmas"
         move_messages_to_inbox: "Pārvietot uz iesūtni"
         choose_new_category: "Izvēlēties jaunu sadaļu šīm tēmām:"
-        selected:
-          zero: "Jūs izvēlējāties <b>0.</b> tēmas."
-          one: "Jūs izvēlējāties <b>%{count}.</b> tēmu."
-          other: "Jūs izvēlējāties <b>%{count}</b> tēmas."
-        change_tags: "Aizvietot tagus"
-        append_tags: "Pievienot tagus"
         choose_new_tags: "Izvēlēties jaunus tagus šīm tēmām:"
-        choose_append_tags: "Izvēlēties jaunas birkas, ko pievienot šīm tēmām:"
         changed_tags: "Šo tēmu tagi tika mainīti."
         error_topic_count:
           zero: "%{count} tēmas"
@@ -1920,8 +1910,6 @@ lv:
         name: "Arhīvs"
       move_messages_to_inbox:
         name: "Pārvietot uz iesūtni"
-      append_tags:
-        name: "Pievienot tagus"
       replace_tags:
         name: "Aizvietot tagus"
       delete_topics:
@@ -2856,7 +2844,6 @@ lv:
       reports:
         group_traffic: "Datu plūsma"
         group_members: "Dalībnieki"
-        group_security: "Drošība"
         group_other: "Citi"
       config_sections:
         account:

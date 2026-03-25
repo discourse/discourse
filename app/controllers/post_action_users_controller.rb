@@ -27,7 +27,9 @@ class PostActionUsersController < ApplicationController
     post_actions =
       DiscoursePluginRegistry.apply_modifier(:post_action_users_list, post_actions, post)
 
-    if !guardian.can_see_post_actors?(post.topic, post_action_type_id)
+    can_see_actors = guardian.can_see_post_actors?(post.topic, post_action_type_id)
+
+    if !can_see_actors
       raise Discourse::InvalidAccess if current_user.blank?
       post_actions = post_actions.where(user_id: current_user.id)
     end
@@ -44,7 +46,7 @@ class PostActionUsersController < ApplicationController
         ),
     }
 
-    data[:total_rows_post_action_users] = total_count if total_count > page_size
+    data[:total_rows_post_action_users] = total_count if can_see_actors && total_count > page_size
 
     render_json_dump(data)
   end

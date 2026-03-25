@@ -90,7 +90,7 @@ hu:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Adatkezelő lekérdezések futtatása. Az API-kulcsot lekérdezések egy halmazára korlátozhatja lekérdezésazonosítók megadásával."
     discourse_automation:
       scriptables:

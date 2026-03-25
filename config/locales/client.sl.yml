@@ -1254,6 +1254,8 @@ sl:
         tags: "Oznake"
         interface: "Uporabniški vmesnik"
         apps: "Aplikacije"
+      calendar_subscriptions:
+        copied: "Kopirano!"
       change_password:
         success: "(e-sporočilo poslano)"
         in_progress: "(pošiljanje e-sporočila)"
@@ -2314,9 +2316,6 @@ sl:
         confirm: "Potrdi"
         select_all: "Izberi vse"
         clear_all: "Počisti vse"
-        unlist_topics: "Izloči temo iz seznamov"
-        relist_topics: "Postavi temo nazaj na seznam"
-        delete: "Izbriši teme"
         delete_topics_count:
           one: "Izbriši temo"
           two: "Izbriši teme"
@@ -2330,20 +2329,10 @@ sl:
         dismiss_new: "Opusti nove"
         toggle: "preklopi množično izbiro tem"
         actions: "Množična dejanja"
-        close_topics: "Zapri teme"
-        archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Prestavi v Prejeto"
         change_notification_level: "Spremeni raven obveščanja"
         choose_new_category: "Izberi novo kategorijo za temo:"
-        selected:
-          one: "Izbrali ste <b>%{count}</b> temo."
-          two: "Izbrali ste <b>%{count}</b> temi."
-          few: "Izbrali ste <b>%{count}</b> teme."
-          other: "Izbrali ste <b>%{count}</b> tem."
-        change_tags: "Zamenjaj oznake"
-        append_tags: "Dodaj oznake"
         choose_new_tags: "Izberite nove oznake za te teme:"
-        choose_append_tags: "Izberite nove oznake da se dodajo na te teme:"
         changed_tags: "Oznake na teh temah so bile spremenjene."
         progress:
           one: "Napredek: <strong>%{count}</strong> tema"
@@ -2376,8 +2365,6 @@ sl:
         name: "Prestavi v Prejeto"
       remove_tags:
         name: "Odstrani oznake"
-      append_tags:
-        name: "Dodaj oznake"
       replace_tags:
         name: "Zamenjaj oznake"
       delete_topics:
@@ -3014,6 +3001,8 @@ sl:
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       no_description: "Dodajte opis kategorije."
+      description_expand: "Več"
+      description_collapse: "Manj"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
       security: "Varnost"
       security_add_group: "Dodaj skupino"
@@ -3737,8 +3726,6 @@ sl:
         sidebar_title: "Poročila"
         group_traffic: "Promet"
         group_members: "Člani"
-        group_moderation: "Moderiranje"
-        group_security: "Varnost"
         group_other: "Drugo"
       config_sections:
         account:

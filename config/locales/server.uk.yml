@@ -1298,6 +1298,8 @@ uk:
       weekly: "щотижня"
       every_month: "щомісяця"
       every_six_months: "кожні півроку"
+  calendar_subscriptions:
+    application_name: "Підписки на календар"
   user_api_key:
     title: 'Авторизувати "%{application_name}"'
     authorize: "Авторизувати"
@@ -2775,6 +2777,8 @@ uk:
       exclude_tag_group: "Виключити теми з тегами зі певної групи тегів"
       activity_before: "Показати теми з останньою активністю до дати (YYYY-MM-DD або днів тому)"
       activity_after: "Показати теми з останньою активністю після дати (YYYY-MM-DD або днів тому)"
+      bookmarked_before: "Показувати теми, додані в закладки до дати (YYYY-MM-DD або днів тому)"
+      bookmarked_after: "Показати теми, додані в закладки після дати (YYYY-MM-DD або днів тому)"
       created_before: "Показати теми, створені до певної дати (YYYY-MM-DD або днів тому)"
       created_after: "Показати теми, створені після дати (YYYY-MM-DD або днів тому)"
       created_by: "Показати теми, створені певним користувачем або групою"
@@ -3235,32 +3239,32 @@ uk:
     title: "Нова версія Mailer"
     subject_template: "[%{email_prefix}] Нова версія Discourse, доступно оновлення"
     text_body_template: |
-      Ура, доступна нова версія [Discourse](https://www.discourse.org)!
+      Ура, нова версія [Discourse](https://www.discourse.org) доступна!
 
       Ваша версія: %{installed_version}
       Нова версія: **%{new_version}**
 
-      - Оновіть за допомогою нашого легкого **[оновлення в оглядачі в один клік](%{base_url}/admin/upgrade)**
+      - Оновіть за допомогою нашого простого **[оновлення браузера одним кліком](%{base_url}/admin/update)**
 
-      - Подивіться, що нового в [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [журнал змін GitHub](https://github.com/discourse/discourse/commits/main)
+      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/%{new_version})
 
-      - Відвідайте [meta.discourse.org](https:// meta.discourse.org) для новин, обговорень і підтримки для Discourse
+      - Відвідайте [meta.discourse.org](https://meta.discourse.org) для новин, обговорень та підтримки Discourse
   new_version_mailer_with_notes:
     title: "Нова версія Mailer з примітками"
     subject_template: "[%{email_prefix}] доступне оновлення"
     text_body_template: |
-      Ура, доступна нова версія [Discourse](https://www.discourse.org)!
+      Ура, нова версія [Discourse](https://www.discourse.org) доступна!
 
       Ваша версія: %{installed_version}
       Нова версія: **%{new_version}**
 
-      - Оновіть за допомогою нашого легкого **[оновлення в оглядачі в один клік](%{base_url}/admin/upgrade)**
+      - Оновіть систему за допомогою нашого простого **[оновлення браузера одним кліком](%{base_url}/admin/update)**
 
-      - Подивіться, що нового в [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [журнал змін GitHub](https://github.com/discourse/discourse/commits/main)
+      - Перегляньте новинки у [нотатках до випуску](https://releases.discourse.org/changelog/%{new_version})
 
-      - Відвідайте [meta.discourse.org](https:// meta.discourse.org) для новин, обговорень і підтримки для Discourse
+      - Відвідайте [meta.discourse.org](https://meta.discourse.org) для новин, обговорення та підтримки Discourse
 
-      ### Примітки до випуску
+      ### Нотатки до випуску
 
       %{notes}
   flag_reasons:

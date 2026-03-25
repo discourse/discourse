@@ -10,7 +10,7 @@ nl:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Staat AI zoeken toe"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ nl:
         none: "Geen"
       features:
         short_title: "Functies"
-        back: "Terug"
         disabled: "(uitgeschakeld)"
         groups: "Groepen:"
         llm:
@@ -212,7 +211,6 @@ nl:
           match_concepts: "Conceptenmatching"
           deduplicate_concepts: "Conceptendeduplicatie"
         ai_helper:
-          name: "Helper"
           description: "Helpt gebruikers bij de interactie met de community, zoals het maken van topics, het schrijven van berichten en het lezen van content"
           proofread: Tekst proeflezen
           title_suggestions: "Titels voorstellen"
@@ -348,7 +346,6 @@ nl:
           replies:
             one: "Alleen toepassen op eerste antwoord"
             other: "Alleen toepassen op eerste %{count} antwoorden"
-        back: "Terug"
         name: "Naam"
         edit: "Bewerken"
         export: "Exporteren"
@@ -369,8 +366,6 @@ nl:
         user: Gebruiker
         create_user: Gebruiker maken
         default_llm: Standaard taalmodel
-        question_consolidator_llm: Taalmodel voor Vragenconsolidator
-        question_consolidator_llm_help: Het te gebruiken taalmodel voor de vragenconsolidator. Je kunt een minder krachtig model kiezen om kosten te besparen.
         system_prompt: Systeemprompt
         forced_tool_strategy: Gedwongen toolstrategie
         allow_chat_direct_messages: "Directe chatberichten toestaan"
@@ -381,6 +376,8 @@ nl:
         save: "Opslaan"
         enabled: "Ingeschakeld?"
         tools: "Ingeschakelde tools"
+        mcp_tools_modal:
+          clear_all: "Alles wissen"
         forced_tools: "Geforceerde tools"
         allowed_groups: "Toegestane groepen"
         delete: "Verwijderen"
@@ -441,7 +438,6 @@ nl:
           uploading: "Uploaden..."
           remove: "Upload verwijderen"
       tools:
-        back: "Terug"
         short_title: "Tools"
         export: "Exporteren"
         import: "Importeren"
@@ -454,7 +450,6 @@ nl:
         tool_name: "Toolnaam"
         description: "Beschrijving"
         description_help: "Een duidelijke beschrijving van het doel van de tool voor het taalmodel"
-        subheader_description: "Tools breiden de mogelijkheden van AI-bots uit met door de gebruiker gedefinieerde JavaScript-functies."
         summary: "Samenvatting"
         summary_help: "Samenvatting van de tools die voor eindgebruikers moeten worden weergegeven"
         script: "Script"
@@ -483,12 +478,27 @@ nl:
         short_title: "Aanmeldgegevens"
         name: "Naam"
         secret: "Waarde"
-        back: "Terug"
         save: "Opslaan"
         edit: "Bewerken"
         delete: "Verwijderen"
         embedding: "Insluiting"
         tool: "Tool"
+      mcp_servers:
+        name: "Naam"
+        description: "Beschrijving"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Verbonden"
+        oauth_connect: "Verbinden"
+        enabled: "Ingeschakeld"
+        save: "Opslaan"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        tools_modal:
+          parameters: "Parameters"
+          required: "Vereist"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -509,7 +519,6 @@ nl:
         save: "Opslaan"
         edit: "Bewerken"
         saved: "LLM-model opgeslagen"
-        back: "Terug"
         confirm_delete: Weet je zeker dat je dit model wilt verwijderen?
         delete: Verwijderen
         quotas:
@@ -667,7 +676,6 @@ nl:
         short_title: "Insluitingen"
         description: "Insluitingen zijn numerieke representaties van gegevens die betekenis en relaties vastleggen, waardoor AI-functies van Discourse zoals Gerelateerde onderwerpen en AI-zoeken content kunnen begrijpen en verbinden."
         new: "Nieuwe insluiting"
-        back: "Terug"
         save: "Opslaan"
         saved: "Insluitingsconfiguratie opgeslagen"
         delete: "Verwijderen"
@@ -727,6 +735,7 @@ nl:
         collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
         click_to_run_label: "Artefact uitvoeren"
       ai_bot:
+        title: "AI-bot"
         llm: "Model"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"

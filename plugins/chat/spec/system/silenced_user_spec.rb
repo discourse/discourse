@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Silenced user", type: :system do
+RSpec.describe "Silenced user" do
   fab!(:channel_1, :category_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }

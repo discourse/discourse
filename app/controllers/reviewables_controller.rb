@@ -241,6 +241,12 @@ class ReviewablesController < ApplicationController
     begin
       if reviewable.update_fields(edit_params, current_user, version: params[:version].to_i)
         result = edit_params.merge(version: reviewable.version)
+        if reviewable.is_a?(ReviewableQueuedPost) && reviewable.payload.present?
+          result[:cooked] = PrettyText.cook(reviewable.payload["raw"]) if reviewable.payload["raw"]
+          if reviewable.payload["title"]
+            result[:fancy_title] = ERB::Util.html_escape(reviewable.payload["title"])
+          end
+        end
         render json: result
       else
         render_json_error(reviewable.errors)

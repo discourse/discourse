@@ -1,4 +1,4 @@
-export default {
+const postFixtures = {
   "/posts/98737532": {
     id: 98737532,
     name: null,
@@ -217,3 +217,5 @@ export default {
     wiki: false,
   },
 };
+
+export default postFixtures;

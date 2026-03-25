@@ -152,7 +152,9 @@ class DirectoryItemsController < ApplicationController
 
   def set_groups_exclusion
     @exclude_group_names = params[:exclude_groups].split("|")
-    @exclude_group_ids = Group.where(name: @exclude_group_names).pluck(:id)
+    groups = Group.where(name: @exclude_group_names)
+    groups = groups.select { |g| guardian.can_see?(g) && guardian.can_see_group_members?(g) }
+    @exclude_group_ids = groups.map(&:id)
     @users_in_exclude_groups = GroupUser.where(group_id: @exclude_group_ids).pluck(:user_id)
   end
 

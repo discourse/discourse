@@ -10,7 +10,7 @@ es:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Permite la búsqueda de IA"
       site_settings:
         categories:
@@ -160,7 +160,6 @@ es:
         none: "Ninguna"
       features:
         short_title: "Características"
-        back: "Atrás"
         disabled: "(desactivado)"
         groups: "Grupos:"
         llm:
@@ -212,7 +211,6 @@ es:
           match_concepts: "Coincidencia de conceptos"
           deduplicate_concepts: "Duplicación de conceptos"
         ai_helper:
-          name: "Ayudante"
           description: "Ayuda a los usuarios a interactuar con la comunidad, como crear temas, escribir publicaciones y leer contenido"
           proofread: Corregir el texto
           title_suggestions: "Sugerir títulos"
@@ -352,7 +350,6 @@ es:
           replies:
             one: "Aplicar solo a la primera respuesta"
             other: "Aplicar a las primeras %{count} respuestas"
-        back: "Atrás"
         name: "Nombre"
         edit: "Editar"
         export: "Exportar"
@@ -373,8 +370,6 @@ es:
         user: Usuario
         create_user: Crear usuario
         default_llm: Modelo lingüístico por defecto
-        question_consolidator_llm: Modelo lingüístico para el consolidador de preguntas
-        question_consolidator_llm_help: El modelo lingüístico a utilizar para el consolidador de preguntas, puedes elegir un modelo menos potente para ahorrar costes.
         system_prompt: Instrucción del sistema
         forced_tool_strategy: Estrategia de herramienta forzada
         allow_chat_direct_messages: "Permitir mensajes directos de chat"
@@ -385,6 +380,9 @@ es:
         save: "Guardar"
         enabled: "¿Activado?"
         tools: "Herramientas habilitadas"
+        mcp_tools_modal:
+          select_all: "Seleccionar todo"
+          clear_all: "Limpiar todo"
         forced_tools: "Herramientas forzadas"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
@@ -445,7 +443,6 @@ es:
           uploading: "Subiendo..."
           remove: "Eliminar subida"
       tools:
-        back: "Atrás"
         short_title: "Herramientas"
         export: "Exportar"
         import: "Importar"
@@ -458,7 +455,6 @@ es:
         tool_name: "Nombre de la herramienta"
         description: "Descripción"
         description_help: "Una descripción clara de la finalidad de la herramienta para el modelo lingüístico"
-        subheader_description: "Las herramientas amplían las capacidades de los robots de IA con funciones JavaScript definidas por el usuario."
         summary: "Resumen"
         summary_help: "Resumen de la finalidad de las herramientas que se mostrará a los usuarios finales"
         script: "Script"
@@ -487,12 +483,27 @@ es:
         short_title: "Credenciales"
         name: "Nombre"
         secret: "Valor"
-        back: "Atrás"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incrustado"
         tool: "Herramienta"
+      mcp_servers:
+        name: "Nombre"
+        description: "Descripción"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Conectados"
+        oauth_connect: "Conectar"
+        enabled: "Activado"
+        save: "Guardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        tools_modal:
+          parameters: "Parámetros"
+          required: "Obligatorio"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -513,7 +524,6 @@ es:
         save: "Guardar"
         edit: "Editar"
         saved: "Modelo LLM guardado"
-        back: "Atrás"
         confirm_delete: '¿Seguro que quieres eliminar este modelo?'
         delete: Eliminar
         quotas:
@@ -671,7 +681,6 @@ es:
         short_title: "Incrustaciones"
         description: "Las incrustaciones son representaciones numéricas de datos que capturan el significado y las relaciones, lo que permite que las características de IA de Discourse, como Temas relacionados y Búsqueda de IA, comprendan y relacionen el contenido."
         new: "Nueva incrustación"
-        back: "Atrás"
         save: "Guardar"
         saved: "Configuración de incrustación guardada"
         delete: "Eliminar"
@@ -731,6 +740,7 @@ es:
         collapse_view_label: "Salir de la pantalla completa (ESC o botón Atrás)"
         click_to_run_label: "Ejecutar Artefacto"
       ai_bot:
+        title: "Bot de IA"
         llm: "Modelo"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"

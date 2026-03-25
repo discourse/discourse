@@ -1,12 +1,12 @@
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 
 export default class Menu extends Service {
-  registeredMenus = new TrackedSet();
+  registeredMenus = trackedSet();
 
   /**
    * Render a menu

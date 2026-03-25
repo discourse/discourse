@@ -98,7 +98,7 @@ pl_PL:
     ai_helper_automatic_chat_thread_title: "Automatycznie ustawiaj tytuły wątków czatu na podstawie zawartości wątku."
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
-    ai_helper_post_illustrator_agent: "Agent do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
+    ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
     ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
@@ -299,6 +299,8 @@ pl_PL:
         missing_required_aliases: "Brak wymaganych powiązań poświadczeń dla aliasów: %{aliases}."
         secret_not_found: "Alias poświadczeń `%{alias}` jest powiązany z brakującymi poświadczeniami."
         unknown_error: "Nie można rozwiązać żądanego poświadczenia."
+    mcp_servers:
+      secret_not_found: "Wybrane poświadczenie nie istnieje."
     ai_helper:
       errors:
         completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."
@@ -510,6 +512,7 @@ pl_PL:
             description: "Kontroluje, czy wpis jest sprawdzany, ukrywany, usuwany lub traktowany jako spam."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
+        search_uploaded_documents: "Wyszukaj przesłane dokumenty"
         update_artifact: "Zaktualizuj artefakt sieciowy"
         create_artifact: "Utwórz artefakt sieciowy"
         web_browser: "Przeglądaj sieć"
@@ -552,6 +555,7 @@ pl_PL:
         researcher_dry_run: "Przygotowywanie badań"
       tool_help:
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
+        search_uploaded_documents: "Wyszukaj dokumenty przesłane do tego agenta"
         update_artifact: "Aktualizuj artefakt sieciowy za pomocą bota AI"
         create_artifact: "Utwórz artefakt sieciowy za pomocą bota AI"
         web_browser: "Przeglądaj stronę internetową za pomocą bota AI"
@@ -593,6 +597,11 @@ pl_PL:
         researcher: "Informacje o forum badawczym z wykorzystaniem bota AI"
       tool_description:
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
+        search_uploaded_documents:
+          one: "Znaleziono %{count} przesłany fragment dokumentu dla „%{query}”"
+          few: "Znaleziono %{count} przesłane fragmenty dokumentu dla „%{query}”"
+          many: "Znaleziono %{count} przesłanych fragmentów dokumentu dla „%{query}”"
+          other: "Znaleziono %{count} przesłanych fragmentów dokumentu dla „%{query}”"
         update_artifact: "Zaktualizowano artefakt sieciowy za pomocą bota AI"
         create_artifact: "Utworzono artefakt sieciowy: %{name} - %{specification}"
         web_browser: "Czytanie <a href='%{url}'>%{url}</a>"

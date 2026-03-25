@@ -21,6 +21,7 @@ export default class CategoryCalendar extends Component {
       const params = {
         after: info.startStr,
         before: info.endStr,
+        include_ongoing: true,
         category_id: this.category.id,
         include_subcategories: true,
       };

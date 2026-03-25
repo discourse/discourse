@@ -163,6 +163,7 @@ class DiscoursePoll::Poll
   def self.toggle_status(user, post_id, poll_name, status, raise_errors = true)
     Poll.transaction do
       post = Post.find_by(id: post_id)
+      post_id = post&.id
       guardian = Guardian.new(user)
 
       # post must not be deleted
@@ -187,7 +188,7 @@ class DiscoursePoll::Poll
         return
       end
 
-      poll = Poll.find_by(post_id: post_id, name: poll_name)
+      poll = Poll.find_by(post_id:, name: poll_name)
 
       if !poll
         if raise_errors
@@ -200,7 +201,7 @@ class DiscoursePoll::Poll
       poll.save!
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-      payload = { post_id: post_id, polls: [serialized_poll] }
+      payload = { post_id:, polls: [serialized_poll] }
 
       post.publish_message!("/polls/#{post.topic_id}", payload)
 
@@ -487,6 +488,7 @@ class DiscoursePoll::Poll
   def self.change_vote(user, post_id, poll_name)
     Poll.transaction do
       post = Post.find_by(id: post_id)
+      post_id = post&.id
 
       # post must not be deleted
       raise DiscoursePoll::Error.new I18n.t("poll.post_is_deleted") if post.nil? || post.trashed?
@@ -502,7 +504,7 @@ class DiscoursePoll::Poll
         raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
       end
 
-      poll = Poll.includes(:poll_options).find_by(post_id: post_id, name: poll_name)
+      poll = Poll.includes(:poll_options).find_by(post_id:, name: poll_name)
 
       unless poll
         raise DiscoursePoll::Error.new I18n.t("poll.no_poll_with_this_name", name: poll_name)
@@ -522,7 +524,7 @@ class DiscoursePoll::Poll
       poll.reload
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-      payload = { post_id: post_id, polls: [serialized_poll] }
+      payload = { post_id:, polls: [serialized_poll] }
 
       post.publish_message!("/polls/#{post.topic_id}", payload)
 

@@ -3166,35 +3166,9 @@ he:
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
-    text_body_template: |
-      הידד, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
-
-      הגרסה שלך: %{installed_version}
-      הגרסה החדשה: **%{new_version}**
-
-      - ניתן לעדכן בעזרת **[עדכון מהיר בלחיצה אחת דרך הדפדפן](%{base_url}/admin/update)**
-
-      - מה שחדש בגרסה מופיע ב[הערות ההפצה](https://meta.discourse.org/tag/release-notes) או שניתן לצפות [ביומן השינויים הגולמי ב־GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - ממליצים לך לבקר ב־[meta.discourse.org](https://meta.discourse.org) לקבלת חדשות, דיונים ותמיכה ב־Discourse
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
-    text_body_template: |
-      היאח, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
-
-      הגרסה שלך: %{installed_version}
-      הגרסה החדשה: **%{new_version}**
-
-      - אפשר לעדכן בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/update)**
-
-      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) תציג בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
-
-      ### הערות מהדורה
-
-      %{notes}
   flag_reasons:
     off_topic: "הפוסט שלך סומן כ**חורג מהנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
     inappropriate: "הפוסט שלך סומן כ**בלתי הולם**: הקהילה מרגישה שהוא מעליב, פוגע, מלבה שנאה או מפר את [הנחיות הקהילה שלנו](%{base_path}/guidelines)"

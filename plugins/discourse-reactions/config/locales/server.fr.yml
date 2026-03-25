@@ -13,8 +13,6 @@ fr:
     discourse_reactions_desaturated_reaction_panel: "Réduit le bruit visuel des réactions en les affichant désaturées lorsqu'elles ne sont pas survolées."
     discourse_reactions_excluded_from_like: "Les réactions qui ne sont pas considérées comme des « J'aime ». Toute réaction ne figurant pas sur cette liste sera considérée comme un J'aime pour les badges, les rapports et à d'autres fins."
     discourse_reactions_like_sync_enabled: "Si cette option est activée, les enregistrements J'aime correspondants seront créés pour les réactions historiques, à l'exception des réactions définies dans discourse_reactions_excluded_from_like. Cette synchronisation se produira régulièrement en arrière-plan, ainsi que lorsque vous modifierez « discourse_reactions_excluded_from_like »."
-    errors:
-      invalid_excluded_emoji: "Vous ne pouvez pas exclure les émojis qui ne figurent pas dans les « réactions discourse, réactions activées » et vous ne pouvez pas exclure les émojis utilisés pour « réactions discourse, réaction J'aime »."
   badges:
     first_reaction:
       name: Première réaction

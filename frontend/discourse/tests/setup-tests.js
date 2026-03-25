@@ -267,7 +267,7 @@ export default function setupTests(config) {
       setupS3CDN(null, null, { snapshot: true });
     }
 
-    applyDefaultHandlers(pretender);
+    applyDefaultHandlers();
 
     pretender.prepareBody = function (body) {
       if (typeof body === "object") {

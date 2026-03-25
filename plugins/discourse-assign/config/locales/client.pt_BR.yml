@@ -138,10 +138,6 @@ pt_BR:
           unassigned: "tiveram atribuição removida"
         assigned:
           label: "Atribuído(a) a"
-    topics:
-      bulk:
-        unassign: "Remover atribuição de tópicos"
-        assign: "Atribuir tópicos"
     discourse_automation:
       scriptables:
         random_assign:

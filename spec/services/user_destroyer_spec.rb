@@ -140,6 +140,13 @@ RSpec.describe UserDestroyer do
         UserDestroyer.new(admin).destroy(user)
         expect(Reviewable.where(created_by_id: user.id).count).to eq(0)
       end
+
+      it "removes the queued post even when it has notes" do
+        Fabricate(:reviewable_note, reviewable: reviewable)
+        UserDestroyer.new(admin).destroy(user)
+        expect(Reviewable.where(created_by_id: user.id).count).to eq(0)
+        expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
+      end
     end
 
     context "with a reviewable user" do

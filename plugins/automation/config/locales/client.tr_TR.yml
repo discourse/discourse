@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "API aracılığıyla bir otomasyonu tetikle"
   js:
     admin:
       logs:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat lazy YouTube videos", type: :system do
+RSpec.describe "Chat lazy YouTube videos" do
   fab!(:current_user, :user)
   fab!(:channel, :category_channel)
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer Form Template Validations", type: :system do
+describe "Composer Form Template Validations" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template) do
     Fabricate(
@@ -126,6 +126,39 @@ describe "Composer Form Template Validations", type: :system do
     composer.fill_form_template_field("input", "b@b.com")
     expect(composer).to have_form_template_field_error(
       I18n.t("js.form_templates.errors.too_short", count: 10),
+    )
+  end
+
+  it "shows an error when a required upload field has no file" do
+    form_template_with_upload =
+      Fabricate(
+        :form_template,
+        name: "Upload Required",
+        template:
+          %Q(
+        - type: upload
+          id: my-upload
+          attributes:
+            file_types: ".jpg, .png"
+            label: "Upload a file"
+          validations:
+            required: true),
+      )
+    category =
+      Fabricate(
+        :category,
+        name: "Uploads",
+        slug: "uploads",
+        form_template_ids: [form_template_with_upload.id],
+      )
+
+    category_page.visit(category)
+    category_page.new_topic_button.click
+    composer.fill_title(topic_title)
+    composer.create
+
+    expect(composer).to have_form_template_field_error(
+      I18n.t("js.form_templates.errors.value_missing.default"),
     )
   end
 

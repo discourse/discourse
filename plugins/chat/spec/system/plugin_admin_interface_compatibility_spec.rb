@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Plugin admin interface compatibility", type: :system do
+RSpec.describe "Plugin admin interface compatibility" do
   fab!(:current_user, :admin)
 
   before do

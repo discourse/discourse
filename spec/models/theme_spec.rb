@@ -126,45 +126,6 @@ RSpec.describe Theme do
     expect(Theme.lookup_field(theme.id, :desktop, "head_tag")).to eq("<b>I am bold</b>")
   end
 
-  it "should precompile fragments in body and head tags" do
-    with_template = <<HTML
-    <script type='text/x-handlebars' name='template'>
-      {{hello}}
-    </script>
-    <script type='text/x-handlebars' data-template-name='raw_template.raw'>
-      {{hello}}
-    </script>
-HTML
-    theme.set_field(target: :common, name: "header", value: with_template)
-    theme.save!
-
-    field = theme.theme_fields.find_by(target_id: Theme.targets[:common], name: "header")
-    baked = Theme.lookup_field(theme.id, :mobile, "header")
-
-    expect(baked).to include(field.javascript_cache.url)
-    expect(field.javascript_cache.content).to include("@ember/template-factory")
-    expect(field.javascript_cache.content).to include("Raw templates are no longer supported")
-  end
-
-  it "can destroy unbaked theme without errors" do
-    with_template = <<HTML
-    <script type='text/x-handlebars' name='template'>
-      {{hello}}
-    </script>
-    <script type='text/x-handlebars' data-template-name='raw_template.raw'>
-      {{hello}}
-    </script>
-HTML
-    theme.set_field(target: :common, name: "header", value: with_template)
-    theme.save!
-
-    field = theme.theme_fields.find_by(target_id: Theme.targets[:common], name: "header")
-    baked = Theme.lookup_field(theme.id, :mobile, "header")
-    ThemeField.where(id: field.id).update_all(compiler_version: 0) # update_all to avoid callbacks
-
-    field.reload.destroy!
-  end
-
   it "should create body_tag_baked on demand if needed" do
     theme.set_field(target: :common, name: :body_tag, value: "<b>test")
     theme.save
@@ -226,43 +187,6 @@ HTML
       sorted = [child.id, child2.id].sort
 
       expect(Theme.transform_ids(theme.id)).to eq([theme.id, *sorted])
-    end
-  end
-
-  describe "plugin api" do
-    def transpile(html)
-      f =
-        ThemeField.create!(
-          target_id: Theme.targets[:mobile],
-          theme_id: -1,
-          name: "after_header",
-          value: html,
-        )
-      f.ensure_baked!
-      [f.value_baked, f.javascript_cache, f]
-    end
-
-    it "transpiles ES6 code" do
-      html = <<HTML
-        <script type='text/discourse-plugin' version='0.1'>
-          const x = 1;
-          console.log(x, settings.foo);
-        </script>
-HTML
-
-      baked, javascript_cache, field = transpile(html)
-      expect(baked).to include(javascript_cache.url)
-
-      expect(javascript_cache.content).to include(
-        "compatModules[\"discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"]",
-      )
-      expect(javascript_cache.content).to include("getObjectForTheme(#{field.theme_id});")
-      expect(javascript_cache.content).to include(
-        "name: \"theme-field-#{field.id}-mobile-html-script-1\",",
-      )
-      expect(javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(javascript_cache.content).to include("withPluginApi(\"0.1\", api =>")
-      expect(javascript_cache.content).to include("const x = 1;")
     end
   end
 
@@ -385,48 +309,31 @@ HTML
     it "allows values to be used in JS" do
       theme.name = 'awesome theme"'
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
-      theme_field =
-        theme.set_field(
-          target: :common,
-          name: :after_header,
-          value:
-            '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{}; console.log(a);</script>',
-        )
+      theme.set_field(
+        target: :extra_js,
+        name: "discourse/initializers/my-init.js",
+        value: "alert(settings.name); let a = ()=>{}; console.log(a);",
+      )
       theme.save!
 
-      theme_field.reload
-      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(
-        theme_field.javascript_cache.url,
-      )
-      expect(theme_field.javascript_cache.content).to include <<~JS
-        registerSettings(#{theme_field.theme.id}, {
+      javascript_cache = theme.reload.javascript_cache
+      expect(javascript_cache.content).to include <<~JS
+        registerSettings(#{theme.id}, {
           "name": "bob"
         });
       JS
-      expect(theme_field.javascript_cache.content).to include(
-        "compatModules[\"discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\"]",
-      )
-      expect(theme_field.javascript_cache.content).to include(
-        "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",
-      )
-      expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(theme_field.javascript_cache.content).to include("withPluginApi(\"1.0\", api =>")
-      expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
-      expect(theme_field.javascript_cache.content).to include("let a = () => {}")
+      expect(javascript_cache.content).to include("alert(settings.name)")
+      expect(javascript_cache.content).to include("let a = () => {}")
 
       setting = theme.settings[:name]
       setting.value = "bill"
       theme.save!
 
-      theme_field.reload
-      expect(theme_field.javascript_cache.content).to include <<~JS
-        registerSettings(#{theme_field.theme.id}, {
+      expect(theme.reload.javascript_cache.content).to include <<~JS
+        registerSettings(#{theme.id}, {
           "name": "bill"
         });
       JS
-      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(
-        theme_field.javascript_cache.url,
-      )
     end
 
     it "is empty when the settings are invalid" do
@@ -839,25 +746,19 @@ HTML
 
     it "recompiles when the hostname changes" do
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
-      theme_field =
-        theme.set_field(
-          target: :common,
-          name: :after_header,
-          value:
-            '<script type="text/discourse-plugin" version="0.1">console.log("hello world");</script>',
-        )
+      theme.set_field(
+        target: :extra_js,
+        name: "discourse/initializers/my-init.js",
+        value: 'console.log("hello world");',
+      )
       theme.save!
 
-      expect(Theme.lookup_field(theme.id, :common, :after_header)).to include(
-        "_ws=#{Discourse.current_hostname}",
-      )
+      expect(theme.reload.javascript_cache.url).to include("_ws=#{Discourse.current_hostname}")
 
       SiteSetting.force_hostname = "someotherhostname.com"
       Theme.clear_cache!
 
-      expect(Theme.lookup_field(theme.id, :common, :after_header)).to include(
-        "_ws=someotherhostname.com",
-      )
+      expect(theme.reload.javascript_cache.url).to include("_ws=someotherhostname.com")
     end
   end
 

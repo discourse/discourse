@@ -14,15 +14,14 @@ fi:
     chat_integration:
       menu_title: "Chat-integraatiot"
       settings: "Asetukset"
-      no_providers: "Sinun täytyy sallia jotkin palveluntarjoajat lisäosien asetuksissa"
+      more_providers: "Lisää"
+      channels_title: "Kanavat"
       channels_with_errors: "Jotkin tämän palveluntuottajan kanavista pettivät viimeksi, kun viestejä lähetettiin. Klikkaa vikaikonia/ikoneita saadaksesi lisää tietoa."
       group_mention_template: "Maininnat: @%{name}"
       group_message_template: "Viestejä käyttäjälle: @%{name}"
-      choose_group: "(valitse ryhmä) "
-      all_categories: "(kaikki alueet)"
-      all_tags: "(kaikki tunnisteet) "
-      create_rule: "Luo sääntö"
-      create_channel: "Luo kanava"
+      choose_group: "(Valitse ryhmä)"
+      all_categories: "(Kaikki luokat)"
+      all_tags: "(Kaikki tunnisteet) "
       delete_channel: "Poista"
       test_channel: "Testi"
       edit_channel: "Muokkaa"
@@ -30,13 +29,10 @@ fi:
       test_modal:
         title: "Lähetä testiviesti"
         topic: "Ketju"
-        send: "Lähetä testiviesti"
         close: "Sulje"
         success: "Viesti lähetetty onnistuneesti"
       type:
         normal: Normaali
-        group_message: Ryhmäviesti
-        group_mention: Ryhmämaininta
       filter:
         mute: 'Vaimenna'
         follow: 'Vain ensimmäinen viesti'
@@ -57,8 +53,6 @@ fi:
           ok: "Voimassa"
           fail: "Formaatti ei kelpaa"
       edit_rule_modal:
-        title: Muokkaa sääntöä
-        save: Tallenna sääntö
         cancel: Peruuta
         provider: Palveluntarjoaja
         type: Tyyppi
@@ -79,7 +73,6 @@ fi:
           param:
             identifier:
               title: Kanava
-              help: "esim. #kanava, @käyttäjänimi."
           errors:
             action_prohibited: "Botilla ei ole oikeuksia lähettää viestejä tälle kanavalle"
         telegram:
@@ -102,7 +95,6 @@ fi:
               help: "Kanavaa kuvaava nimi. Sitä ei käytetä Discordiin yhdistämiseen."
             webhook_url:
               title: Webhookin URL-osoite
-              help: Webhookin URL, joka on luotu Discordin palvelinasetuksissa
         guilded:
           title: "Guilded"
           param:
@@ -117,7 +109,6 @@ fi:
           param:
             identifier:
               title: Kanava
-              help: "esim. #kanava, @käyttäjänimi."
           errors:
             channel_not_found: "Kyseistä kanavaa ei ole olemassa Mattermostissa"
         matrix:
@@ -147,7 +138,6 @@ fi:
           param:
             identifier:
               title: Kanava
-              help: "esim. #kanava, @käyttäjätunnus."
           errors:
             invalid_channel: "Tätä kanavaa ei ole olemassa Rocket Chatissa"
         gitter:
@@ -155,16 +145,9 @@ fi:
           param:
             name:
               title: "Nimi"
-              help: "Gitter-huoneen nimi, esim. gitterHQ/services."
             webhook_url:
               title: "Webhookin URL-osoite"
               help: "URL-osoite, joka annetaan, kun luot uuden integraation Gitter-huoneessa."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Kulun tunnus"
-              help: "Kulun tunnus, joka annetaan sen jälkeen, kun olet luonut lähteen kululle, johon haluat lähettää viestejä."
         groupme:
           title: "GroupMe"
           param:

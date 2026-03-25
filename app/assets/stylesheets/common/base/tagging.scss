@@ -24,6 +24,10 @@
   margin-bottom: 20px;
 }
 
+.tags-index .tags-list h3 {
+  @extend %heading-anchor;
+}
+
 .tags-list .tag-box {
   width: 300px;
   margin-bottom: 1em;
@@ -132,6 +136,14 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
   &:has(.box) {
     gap: var(--space-1);

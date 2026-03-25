@@ -2890,35 +2890,9 @@ ja:
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
-    text_body_template: |
-      [Discourse](https://www.discourse.org) の新しいバージョンを使用できるようになりました！
-
-      現在のバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - *[ワンクリックによるブラウザ更新](%{base_url}/admin/update)**を使って簡単に更新できます
-
-      - [リリースノート](https://meta.discourse.org/tag/release-notes)で新機能を確認するか、[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください
-
-      - Discourse の最新情報、ディスカッション、およびサポートについては、[meta.discourse.org](https://meta.discourse.org) にアクセスしてください
   new_version_mailer_with_notes:
     title: "注意付きの新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 更新が利用可能になりました"
-    text_body_template: |
-      [Discourse](https://www.discourse.org) の新しいバージョンを使用できるようになりました！
-
-      現在のバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - *[ワンクリックによるブラウザ更新](%{base_url}/admin/update)**を使って簡単に更新できます
-
-      - [リリースノート](https://meta.discourse.org/tag/release-notes)で新機能を確認するか、[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください
-
-      - Discourse の最新情報、ディスカッション、およびサポートについては、[meta.discourse.org](https://meta.discourse.org) にアクセスしてください
-
-      ### リリースノート
-
-      %{notes}
   flag_reasons:
     off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティーはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
     inappropriate: "あなたの投稿は**不適切**として通報されました。コミュニティーは投稿が攻撃的、虐待的、ヘイト行為、または[コミュニティーガイドライン](%{base_path}/guidelines)に違反すると感じています。"
@@ -4024,7 +3998,7 @@ ja:
       title: "古いメールを確認してください"
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
       text_body_template: |
-        メールアドレスを変更する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、当たらhしいメールアドレスを確認してください。
+        メールアドレスを変更する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、新しいメールアドレスを確認してください。
 
         次のリンクをクリックして、%{site_name} の現在のメールアドレスを確認してください。
 

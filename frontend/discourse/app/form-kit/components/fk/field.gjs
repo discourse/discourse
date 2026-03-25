@@ -129,6 +129,7 @@ export default class FKField extends Component {
               class={{concatClass
                 "form-kit__container"
                 "form-kit__field"
+                (if field.type (concat "form-kit__field-" field.type))
                 (if field.error "has-error")
                 (if field.disabled "is-disabled")
                 (if (eq field.format "full") "--full")

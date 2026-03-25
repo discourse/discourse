@@ -1736,6 +1736,10 @@ ug:
         apps: "ئەپ"
         navigation_menu: "يولباشچى تىزىملىك"
         upcoming_changes: "كەلگۈسى ئۆزگىرىش"
+        calendar_subscriptions: "يىلنامە"
+      calendar_subscriptions:
+        copied: "كۆچۈرۈلدى!"
+        add_to_google: "Google يىلنامە"
       change_password:
         success: "(ئېلخەت يوللاندى)"
         in_progress: "(ئېلخەت يوللاۋاتىدۇ…)"
@@ -3327,11 +3331,8 @@ ug:
         confirm: "جەزملە"
         select_all: "ھەممىنى تاللا"
         clear_all: "ھەممىنى تازىلا"
-        unlist_topics: "تىزىلمىغان تېما"
-        relist_topics: "قايتا تىزىلغان تېما"
         reset_bump_dates: "چوققىلانغان چېسلانى ئەسلىگە قايتۇر"
         defer: "ئوقۇلمىغان بەلگىسى سال"
-        delete: "تېما ئۆچۈر"
         delete_topics_count:
           one: "تېما ئۆچۈر"
           other: "تېما ئۆچۈر"
@@ -3370,36 +3371,25 @@ ug:
           other: "يېڭىغا پەرۋا قىلما (%{count})"
         toggle: "تېمىنى توپ تاللاشنى ئالماشتۇر"
         actions: "توپ مەشغۇلات"
-        change_category: "سەھىپە تەڭشەك…"
-        close_topics: "تېمىنى تاقا"
-        archive_topics: "تېما ئارخىپلاشتۇر"
         move_messages_to_inbox: "قوبۇللاش ساندۇقىغا يۆتكە"
         archive_messages: "ئارخىپقا يۆتكە"
-        notification_level: "ئۇقتۇرۇش…"
         change_notification_level: "ئۇقتۇرۇش دەرىجىسىنى ئۆزگەرت"
         choose_new_category: "تېمىغا يېڭى سەھىپە تاللىنىدۇ:"
-        selected:
-          one: "سىز <b>%{count}</b> تېما تاللىدىڭىز."
-          other: "سىز <b>%{count}</b> تېما تاللىدىڭىز."
         selected_sole_category:
           one: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
           other: "سەھىپىدىنن <b>%{count}</b> تېما تاللىدىڭىز:"
         selected_count:
           one: "%{count} تاللاندى"
           other: "%{count} تاللاندى"
-        change_tags: "بەلگە ئالماشتۇر"
-        append_tags: "بەلگە قوش"
         choose_new_tags: "بۇ تېمىغا يېڭى بەلگە تاللىنىدۇ:"
-        choose_append_tags: "بۇ تېمىغا قوشىدىغان يېڭى خەتكۈچ تاللىنىدۇ:"
         changed_tags: "بۇ تېمىلارنىڭ بەلگىسى ئۆزگەرتىلگەن."
-        remove_tags: "ھەممە خەتكۈچنى چىقىرىۋەت"
         confirm_remove_tags:
           one: "ھەممە بەلگە بۇ تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
           other: "ھەممە بەلگە %{count} تېمىدىن چىقىرىۋېتىلىدۇ. راستتىنلا شۇنداق قىلامسىز؟"
         progress:
           one: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
           other: "ئىلگىرىلىشى: <strong>%{count}</strong> تېما"
-        notify: "ئىشلەتكۈچىگە بۇ ئۆزگىرىشنى ئۇقتۇرىدۇ."
+        notify: "ئىشلەتكۈچىگە بۇ ئۆزگىرىشنى ئۇقتۇرىدۇ"
         performing: "توپ مەشغۇلات ئىجرا قىلىۋاتىدۇ، سەل كۈتۈڭ…"
         completed: "توپ مەشغۇلات مۇۋەپپەقىيەتلىك تاماملاندى!"
         error_topic_count:
@@ -3427,7 +3417,6 @@ ug:
         name: "پەرۋا قىلما"
       close_topics:
         name: "تاقا"
-        note: "ئەسكەرتىش"
         optional: (تاللاشچان)
       archive_topics:
         name: "ئارخىپ"
@@ -3441,24 +3430,18 @@ ug:
         name: "تىزىمغا قايتا قوش"
       remove_tags:
         name: "بەلگىنى چىقىرىۋەت"
-      append_tags:
-        name: "بەلگە قوش"
       replace_tags:
         name: "بەلگە ئالماشتۇر"
       delete_topics:
         name: "ئۆچۈر"
       update_category:
         name: "سەھىپىنى يېڭىلا"
-        description: "تاللىغان تېمىغا يېڭى سەھىپە تاللايدۇ"
       reset_bump_dates:
         name: "چوققىلىغان چېسلانى ئەسلىگە قايتۇر"
-        description: "چوققىلانغان ۋاقتىنى يازما يوللانغان ئاخىرقى ۋاقىتقا ئەسلىگە قايتۇرىدۇ، بۇ يازما تىزىمىنىڭ تەرتىپىگە تەسىر كۆرسىتىدۇ"
       defer:
         name: "ئوقۇلمىغان بەلگىسى سال"
-        description: "تېمىغا ئوقۇلمىدى بەلگىسى سالىدۇ"
       update_notifications:
         name: "ئوقتۇرۇش يېڭىلا"
-        description: "ئۇقتۇرۇش دەرىجىسىنى كۆزىتىش، ئىزلاش، ئادەتتىكى ياكى ئۈنسىز ھالەتكە ئۆزگەرتىدۇ"
     topic:
       filter_to:
         one: "تېمىدىكى %{count} يازما"
@@ -4296,6 +4279,8 @@ ug:
       list: "سەھىپە تىزىمىنى كۆرسەت"
       no_description: "بۇ سەھىپىنىڭ چۈشەندۈرۈشىنى قوشۇڭ."
       change_in_category_topic: "چۈشەندۈرۈش تەھرىر"
+      description_expand: "تېخىمۇ كۆپ كۆرسەت"
+      description_collapse: "ئازراق كۆرسەت"
       already_used: "بۇ رەڭ باشقا بىر سەھىپىگە ئىشلىتىلگەن"
       color_palette: "رەڭ تاختا"
       security: "بىخەتەرلىك"
@@ -5420,8 +5405,6 @@ ug:
         back: "ھەممە دوكلاتقا قايت"
         group_traffic: "ئېقىم"
         group_members: "ئەزا"
-        group_moderation: "رىياسەتچىلىك"
-        group_security: "بىخەتەرلىك"
         group_other: "باشقا"
       config_sections:
         account:
