@@ -634,7 +634,9 @@ describe Chat::Message do
         user = Fabricate(:unicode_user)
         cooked = described_class.cook("<h1>@#{user.username}</h1>")
 
-        expect(cooked).to eq("<p>&lt;h1&gt;@#{user.username}&lt;/h1&gt;</p>")
+        expect(cooked).to eq(
+          "<p>&lt;h1&gt;<a class=\"mention\" href=\"/u/#{user.encoded_username(lower: true)}\">@#{user.username}</a>&lt;/h1&gt;</p>",
+        )
       end
     end
   end

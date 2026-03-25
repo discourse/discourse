@@ -654,8 +654,8 @@ importers:
         specifier: ^2.12.1
         version: 2.12.1(@glint/template@1.7.7)(webpack@5.99.9(@swc/core@1.15.18)(esbuild@0.25.12))
       markdown-it:
-        specifier: 14.0.0
-        version: 14.0.0
+        specifier: ^14.1.1
+        version: 14.1.1
       pretty-text:
         specifier: workspace:1.0.0
         version: link:../pretty-text
@@ -6911,10 +6911,6 @@ packages:
     resolution: {integrity: sha512-NeXtgpIK6jBciHTm9UhiPnyHDdqyVIdRPJ+KdQtZaf/wR74gvhCNbw5li4TYsxRp5u3ZoHEF4DwpECeZqyCw+w==}
     peerDependencies:
       markdown-it: '>= 13.0.0'
-
-  markdown-it@14.0.0:
-    resolution: {integrity: sha512-seFjF0FIcPt4P9U39Bq1JYblX0KZCjDLFFQPHpL5AzHpqPEKtosxmdq/LTVZnjfH7tjt9BxStm+wXcDBNuYmzw==}
-    hasBin: true
 
   markdown-it@14.1.1:
     resolution: {integrity: sha512-BuU2qnTti9YKgK5N+IeMubp14ZUKUUw7yeJbkjtosvHiP0AZ5c8IAgEMk79D0eC8F23r4Ac/q8cAIFdm2FtyoA==}
@@ -16967,15 +16963,6 @@ snapshots:
       lodash.merge: 4.6.2
       markdown-it: 14.1.1
 
-  markdown-it@14.0.0:
-    dependencies:
-      argparse: 2.0.1
-      entities: 4.5.0
-      linkify-it: 5.0.0
-      mdurl: 2.0.0
-      punycode.js: 2.3.1
-      uc.micro: 2.1.0
-
   markdown-it@14.1.1:
     dependencies:
       argparse: 2.0.1
@@ -17974,7 +17961,7 @@ snapshots:
   prosemirror-markdown@1.13.4:
     dependencies:
       '@types/markdown-it': 14.1.2
-      markdown-it: 14.0.0
+      markdown-it: 14.1.1
       prosemirror-model: 1.25.4
 
   prosemirror-model@1.25.4:
