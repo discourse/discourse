@@ -1235,6 +1235,22 @@ RSpec.describe CategoriesController do
             expect(SiteSetting.max_category_nesting).to eq(3)
           end
         end
+
+        it "updates locale when content_localization_enabled" do
+          SiteSetting.content_localization_enabled = true
+
+          put "/categories/#{category.id}.json", params: { locale: "ja" }
+          expect(response.status).to eq(200)
+          expect(category.reload.locale).to eq("ja")
+        end
+
+        it "does not update locale when content_localization_enabled is false" do
+          SiteSetting.content_localization_enabled = false
+
+          put "/categories/#{category.id}.json", params: { locale: "ja" }
+          expect(response.status).to eq(200)
+          expect(category.reload.locale).to be_nil
+        end
       end
     end
 
