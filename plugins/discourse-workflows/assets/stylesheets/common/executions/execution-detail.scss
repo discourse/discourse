@@ -107,7 +107,7 @@
     }
 
     &.--failed {
-      background: var(--danger-low);
+      background: var(--highlight-low);
     }
 
     code {
@@ -126,14 +126,14 @@
     }
 
     .--failed > & {
-      color: var(--danger);
+      color: var(--highlight);
     }
   }
 
   &__condition-value {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1);
+    gap: var(--space-2);
   }
 
   &__condition-expression {

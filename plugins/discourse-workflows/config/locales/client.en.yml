@@ -326,6 +326,7 @@ en:
         total_time: "Total time:"
         export: "Export"
         error: "Error"
+        with_value: "with value"
         statuses:
           pending: "Pending"
           running: "Running"

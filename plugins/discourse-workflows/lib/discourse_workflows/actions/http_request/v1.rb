@@ -5,6 +5,7 @@ module DiscourseWorkflows
     module HttpRequest
       class V1 < Actions::Base
         TIMEOUT_SECONDS = 30
+        FILTERED_HEADER_PATTERNS = [/key/i, /secret/i, /token/i, /authorization/i, /password/i]
 
         def self.identifier
           "action:http_request"
@@ -69,6 +70,8 @@ module DiscourseWorkflows
           { status: :integer, headers: :object, body: :object }
         end
 
+        attr_reader :logs
+
         def execute_single(context, item:, config:)
           method = (config["method"] || "GET").downcase.to_sym
           url = config["url"]
@@ -77,6 +80,14 @@ module DiscourseWorkflows
           uri = build_uri(url, config["query_params"])
           headers = build_headers(config["headers"])
           body = build_body(method, config["body"], headers)
+
+          @logs ||= []
+          @logs << "#{method.to_s.upcase} #{uri}"
+          if headers.present?
+            filtered = ActiveSupport::ParameterFilter.new(FILTERED_HEADER_PATTERNS).filter(headers)
+            filtered.each { |k, v| @logs << "#{k}: #{v}" }
+          end
+          @logs << body if body.present?
 
           conn =
             Faraday.new(nil, request: { timeout: TIMEOUT_SECONDS }) do |f|

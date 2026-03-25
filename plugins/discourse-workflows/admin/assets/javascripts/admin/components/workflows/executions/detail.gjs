@@ -185,6 +185,11 @@ export default class ExecutionDetail extends Component {
                           <code
                             class="workflows-execution-detail__condition-field"
                           >{{condition.leftExpression}}</code>
+                          <span
+                            class="workflows-execution-detail__condition-operator"
+                          >{{i18n
+                              "discourse_workflows.executions.with_value"
+                            }}</span>
                         {{/if}}
                         <code>{{this.formatValue condition.left}}</code>
                       </span>

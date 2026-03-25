@@ -9,6 +9,7 @@ import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getNodeIcons } from "../../lib/workflows/node-utils";
+import StickyNote from "../../models/sticky-note";
 
 const MAX_VISIBLE_ICONS = 3;
 
@@ -68,18 +69,25 @@ export default class WorkflowsTemplates extends Component {
         })
       );
 
+      const stickyNotes = (fullTemplate.template.sticky_notes || []).map((n) =>
+        StickyNote.serialize(StickyNote.create(n))
+      );
+
+      const workflow = {
+        name: fullTemplate.template.name,
+        nodes,
+        connections,
+      };
+      if (stickyNotes.length > 0) {
+        workflow.sticky_notes = stickyNotes;
+      }
+
       const result = await ajax(
         "/admin/plugins/discourse-workflows/workflows.json",
         {
           type: "POST",
           contentType: "application/json",
-          data: JSON.stringify({
-            workflow: {
-              name: fullTemplate.template.name,
-              nodes,
-              connections,
-            },
-          }),
+          data: JSON.stringify({ workflow }),
         }
       );
 

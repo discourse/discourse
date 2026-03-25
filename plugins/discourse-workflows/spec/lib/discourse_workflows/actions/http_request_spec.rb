@@ -152,6 +152,34 @@ RSpec.describe DiscourseWorkflows::Actions::HttpRequest::V1 do
       expect(result[:body]).to eq("data" => "<html>hello</html>")
     end
 
+    it "records request details in logs" do
+      stub_request(:post, "https://api.example.com/data").to_return(
+        status: 200,
+        body: { ok: true }.to_json,
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = {
+        "method" => "POST",
+        "url" => "https://api.example.com/data",
+        "headers" => [{ "key" => "Authorization", "value" => "Bearer tok" }],
+        "body" => '{"name":"test"}',
+      }
+
+      action.execute_single(context, item: item, config: config)
+
+      expect(action.logs).to eq(
+        [
+          "POST https://api.example.com/data",
+          "Authorization: [FILTERED]",
+          "Content-Type: application/json",
+          '{"name":"test"}',
+        ],
+      )
+    end
+
     it "raises when URL is blank" do
       config = { "method" => "GET", "url" => "" }
 

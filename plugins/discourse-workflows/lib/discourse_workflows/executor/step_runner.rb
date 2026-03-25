@@ -24,7 +24,9 @@ module DiscourseWorkflows
           @state.mark_wait(node: node, step: step)
           raise
         rescue => e
-          step.update!(status: :error, error: e.message, finished_at: Time.current)
+          metadata = step.metadata
+          metadata["logs"] = instance.logs if instance.respond_to?(:logs) && instance.logs.present?
+          step.update!(status: :error, error: e.message, metadata: metadata, finished_at: Time.current)
           raise
         end
       end

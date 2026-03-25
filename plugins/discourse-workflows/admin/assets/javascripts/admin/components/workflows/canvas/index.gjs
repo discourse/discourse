@@ -15,6 +15,7 @@ import { ajax } from "discourse/lib/ajax";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import { loadNodeTypes } from "../../../lib/workflows/node-types";
+import StickyNote from "../../../models/sticky-note";
 import Controls from "./controls";
 import { createReteEditor } from "./rete-editor";
 import StickyNotesLayer from "./sticky-notes-layer";
@@ -520,7 +521,17 @@ export default class WorkflowCanvas extends Component {
         source_output: c.sourceOutput || "main",
       }));
 
-    const data = JSON.stringify({ version: 1, nodes, connections }, null, 2);
+    const stickyNotes = (this.args.stickyNotes || []).map((n) => {
+      const serialized = StickyNote.serialize(n);
+      delete serialized.id;
+      return serialized;
+    });
+
+    const payload = { version: 1, nodes, connections };
+    if (stickyNotes.length > 0) {
+      payload.sticky_notes = stickyNotes;
+    }
+    const data = JSON.stringify(payload, null, 2);
     const date = new Date().toISOString().slice(0, 10);
     const file = new File([data], `workflow-nodes-${date}.json`, {
       type: "application/json",
@@ -606,7 +617,11 @@ export default class WorkflowCanvas extends Component {
           sourceOutput: c.source_output || "main",
         }));
 
-      this.args.onImportNodes?.(newNodes, newConnections);
+      const newStickyNotes = (data.sticky_notes || []).map((n) =>
+        StickyNote.create(n)
+      );
+
+      this.args.onImportNodes?.(newNodes, newConnections, newStickyNotes);
     } catch {
       this.toasts.error({
         data: { message: i18n("discourse_workflows.canvas.import_error") },

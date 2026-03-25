@@ -61,5 +61,43 @@
       "target_index": 2,
       "source_output": "true"
     }
+  ],
+  "sticky_notes": [
+    {
+      "position": {
+        "x": 250.5546875,
+        "y": -37.80078125
+      },
+      "size": {
+        "width": 238.9921875,
+        "height": 148.59375
+      },
+      "color": "yellow",
+      "text": "Double click Check category to set the category id you want to auto tag"
+    },
+    {
+      "position": {
+        "x": 645.84765625,
+        "y": -258.11328125
+      },
+      "size": {
+        "width": 235.84765625,
+        "height": 80
+      },
+      "color": "pink",
+      "text": "Make sure to publish when ready using the draft toggle above"
+    },
+    {
+      "position": {
+        "x": 539.95703125,
+        "y": 16.38671875
+      },
+      "size": {
+        "width": 184.625,
+        "height": 123.7109375
+      },
+      "color": "yellow",
+      "text": "Double click Append tags to define the tags you want to apply"
+    }
   ]
 }

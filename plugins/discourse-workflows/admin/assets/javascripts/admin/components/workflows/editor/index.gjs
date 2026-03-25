@@ -589,7 +589,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  importNodes(newNodes, newConnections) {
+  importNodes(newNodes, newConnections, newStickyNotes) {
     this.#captureUndo();
 
     const existingNodes = this.formApi.get("nodes");
@@ -600,6 +600,14 @@ export default class WorkflowsEditor extends Component {
       ...existingConnections,
       ...newConnections,
     ]);
+
+    if (newStickyNotes?.length) {
+      const existingStickyNotes = this.formApi.get("stickyNotes");
+      this.formApi.set("stickyNotes", [
+        ...existingStickyNotes,
+        ...newStickyNotes,
+      ]);
+    }
 
     this.handleSubmit();
   }
