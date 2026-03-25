@@ -75,7 +75,7 @@ after_initialize do
 
     post_ids = posts.map(&:id).uniq
 
-    posts_reaction_users_count = TopicViewSerializer.posts_reaction_users_count(post_ids)
+    reaction_users_count_map = TopicViewSerializer.posts_reaction_users_count(post_ids)
     post_actions_with_reaction_users =
       DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
         post_ids,
@@ -124,8 +124,10 @@ after_initialize do
 
     likes_map = likes_rows.each_with_object({}) { |row, h| h[row.post_id] = row.likes_count }
 
+    precomputed_reactions_map = {}
+
     posts.each do |post|
-      post.reaction_users_count = posts_reaction_users_count[post.id].to_i
+      post.reaction_users_count = reaction_users_count_map[post.id].to_i
       post.post_actions_with_reaction_users = post_actions_with_reaction_users[post.id] || {}
 
       emoji_reactions = post.emoji_reactions.select { |r| r.reaction_users_count.to_i > 0 }
@@ -150,9 +152,11 @@ after_initialize do
         }
       end
 
-      post.precomputed_reactions = reactions.sort_by { |r| [-r[:count].to_i, r[:id]] }
+      precomputed_reactions_map[post.id] = reactions.sort_by { |r| [-r[:count].to_i, r[:id]] }
     end
 
+    topic_view.instance_variable_set(:@precomputed_reactions, precomputed_reactions_map)
+    topic_view.instance_variable_set(:@reaction_users_count, reaction_users_count_map)
     topic_view.instance_variable_set(:@reactions_preloaded, true)
   end
 
@@ -335,8 +339,9 @@ after_initialize do
   end
 
   add_to_serializer(:post, :reactions) do
-    if object.precomputed_reactions
-      object.precomputed_reactions
+    map = topic_view&.instance_variable_get(:@precomputed_reactions)
+    if map && map.key?(object.id)
+      map[object.id]
     else
       ReactionsSerializerHelpers.reactions_for_post(object)
     end
@@ -347,7 +352,12 @@ after_initialize do
   end
 
   add_to_serializer(:post, :reaction_users_count) do
-    ReactionsSerializerHelpers.reaction_users_count_for_post(object)
+    map = topic_view&.instance_variable_get(:@reaction_users_count)
+    if map && map.key?(object.id)
+      map[object.id].to_i
+    else
+      ReactionsSerializerHelpers.reaction_users_count_for_post(object)
+    end
   end
 
   add_to_serializer(:post, :current_user_used_main_reaction) do
