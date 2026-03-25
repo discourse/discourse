@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import EmptyState from "discourse/components/empty-state";
 import NavItem from "discourse/components/nav-item";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { i18n } from "discourse-i18n";
@@ -121,51 +121,53 @@ export default class DiscourseChatIntegrationProviders extends Component {
 
         {{outlet}}
       {{else}}
-        <EmptyState
-          @title={{i18n "chat_integration.empty_state.title"}}
-          @body={{i18n "chat_integration.empty_state.body"}}
-        />
-        {{#if this.disabledProviders.length}}
-          <div class="chat-integration-providers-list">
-            {{#each this.popularProviders as |provider|}}
-              <DButton
-                @translatedLabel={{i18n
-                  (concat "chat_integration.provider." provider.name ".title")
-                }}
-                @action={{fn this.configureProvider provider}}
-                class="btn-default"
-              />
-            {{/each}}
-            {{#if this.otherProviders.length}}
-              <DMenu
-                @identifier="chat-integration-more-providers"
-                @icon="ellipsis"
-                @label={{i18n "chat_integration.more_providers"}}
-                class="btn-default"
-              >
-                <:content>
-                  <DropdownMenu as |dropdown|>
-                    {{#each this.otherProviders as |provider|}}
-                      <dropdown.item>
-                        <DButton
-                          @translatedLabel={{i18n
-                            (concat
-                              "chat_integration.provider."
-                              provider.name
-                              ".title"
-                            )
-                          }}
-                          @action={{fn this.configureProvider provider}}
-                          class="btn-transparent"
-                        />
-                      </dropdown.item>
-                    {{/each}}
-                  </DropdownMenu>
-                </:content>
-              </DMenu>
-            {{/if}}
-          </div>
-        {{/if}}
+        <AdminConfigAreaEmptyList
+          @emptyLabel="chat_integration.empty_state.title"
+          class="discourse-chat-integration-providers-empty-list"
+        >
+          <p>{{i18n "chat_integration.empty_state.body"}}</p>
+          {{#if this.disabledProviders.length}}
+            <div class="chat-integration-providers-list">
+              {{#each this.popularProviders as |provider|}}
+                <DButton
+                  @translatedLabel={{i18n
+                    (concat "chat_integration.provider." provider.name ".title")
+                  }}
+                  @action={{fn this.configureProvider provider}}
+                  class="btn-default"
+                />
+              {{/each}}
+              {{#if this.otherProviders.length}}
+                <DMenu
+                  @identifier="chat-integration-more-providers"
+                  @icon="ellipsis"
+                  @label={{i18n "chat_integration.more_providers"}}
+                  class="btn-default"
+                >
+                  <:content>
+                    <DropdownMenu as |dropdown|>
+                      {{#each this.otherProviders as |provider|}}
+                        <dropdown.item>
+                          <DButton
+                            @translatedLabel={{i18n
+                              (concat
+                                "chat_integration.provider."
+                                provider.name
+                                ".title"
+                              )
+                            }}
+                            @action={{fn this.configureProvider provider}}
+                            class="btn-transparent"
+                          />
+                        </dropdown.item>
+                      {{/each}}
+                    </DropdownMenu>
+                  </:content>
+                </DMenu>
+              {{/if}}
+            </div>
+          {{/if}}
+        </AdminConfigAreaEmptyList>
       {{/if}}
     </div>
   </template>

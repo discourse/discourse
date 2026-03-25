@@ -135,12 +135,20 @@
   }
 }
 
-.chat-integration-providers-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
+.discourse-chat-integration-providers-empty-list {
+  margin-top: var(--space-6);
+
+  .admin-config-area-empty-list__title {
+    font-size: var(--font-up-1);
+    font-weight: bold;
+  }
+
+  .chat-integration-providers-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
 }
 
 .inline-channel-form {
