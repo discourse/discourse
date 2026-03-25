@@ -946,7 +946,7 @@ class Group < ActiveRecord::Base
 
     removed_user_ids = group_users_to_remove.pluck(:user_id)
 
-    enqueue_user_removed_from_group_webhook_events(group_users_to_remove)
+    webhook_payloads = build_user_removed_webhook_payloads(group_users_to_remove)
 
     Group.transaction do
       group_users.where(user_id: removed_user_ids).delete_all
@@ -989,21 +989,31 @@ class Group < ActiveRecord::Base
     bulk_publish_category_updates(removed_user_ids)
 
     User.where(id: removed_user_ids).find_each { |user| trigger_user_removed_event(user) }
+    enqueue_user_removed_webhook_events(webhook_payloads)
 
     removed_user_ids
   end
 
-  def enqueue_user_removed_from_group_webhook_events(group_users_to_remove)
+  def build_user_removed_webhook_payloads(group_users_relation)
     return unless WebHook.active_web_hooks(:group_user)
 
-    group_users_to_remove.find_each do |gu|
-      payload = WebHook.generate_payload(:group_user, gu, WebHookGroupUserSerializer)
+    payloads = []
+    group_users_relation.find_each do |gu|
+      payloads << {
+        id: gu.id,
+        payload: WebHook.generate_payload(:group_user, gu, WebHookGroupUserSerializer),
+      }
+    end
+    payloads
+  end
 
+  def enqueue_user_removed_webhook_events(webhook_payloads)
+    webhook_payloads&.each do |wp|
       WebHook.enqueue_hooks(
         :group_user,
         :user_removed_from_group,
-        id: gu.id,
-        payload: payload,
+        id: wp[:id],
+        payload: wp[:payload],
         group_ids: [self.id],
       )
     end
