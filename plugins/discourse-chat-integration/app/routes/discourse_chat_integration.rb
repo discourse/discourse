@@ -6,6 +6,7 @@ module DiscourseChatIntegration
   AdminEngine.routes.draw do
     get "" => "chat#respond"
     get "/providers" => "chat#list_providers"
+    get "/providers/:provider" => "chat#respond"
     post "/test" => "chat#test"
 
     get "/channels" => "chat#list_channels"
@@ -16,8 +17,6 @@ module DiscourseChatIntegration
     post "/rules" => "chat#create_rule"
     put "/rules/:id" => "chat#update_rule"
     delete "/rules/:id" => "chat#destroy_rule"
-
-    get "/:provider" => "chat#respond"
   end
 
   PublicEngine.routes.draw { get "/:secret" => "public#post_transcript" }
