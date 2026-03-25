@@ -1068,13 +1068,6 @@ class _PluginApi {
     warnWidgetsDecommissioned();
   }
 
-  addFlagProperty() {
-    deprecated(
-      "addFlagProperty has been removed. Use the reviewable API instead.",
-      { id: "discourse.add-flag-property" }
-    );
-  }
-
   /**
    * Adds a pluralization to the store
    *
