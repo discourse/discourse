@@ -18,6 +18,7 @@ class TopicView
   memoize_for_posts :post_user_badges
   memoize_for_posts :last_post
   memoize_for_posts :nested_replies_direct_reply_counts
+  memoize_for_posts :preloaded_post_data_store
 
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
@@ -62,6 +63,19 @@ class TopicView
     :nested_replies_direct_reply_counts,
     :nested_replies_skip_preload,
   )
+
+  # Generic store for plugins to stash per-post preloaded data (keyed by post_id)
+  # on the TopicView rather than on Post objects. Data stored here survives @posts
+  # replacement by other on_preload hooks. Cleared automatically when the post
+  # collection changes via reset_post_collection.
+  def preloaded_post_data(namespace)
+    @preloaded_post_data_store&.dig(namespace)
+  end
+
+  def set_preloaded_post_data(namespace, data)
+    @preloaded_post_data_store ||= {}
+    @preloaded_post_data_store[namespace] = data
+  end
 
   delegate :category, to: :topic, allow_nil: true, private: true
   delegate :require_reply_approval?, to: :category, prefix: true, allow_nil: true, private: true
@@ -532,11 +546,8 @@ class TopicView
   end
 
   def topic_user
-    @topic_user ||=
-      begin
-        return nil if @user.blank?
-        @topic.topic_users.find_by(user_id: @user.id)
-      end
+    return @topic_user if instance_variable_defined?(:@topic_user)
+    @topic_user = @user.present? ? @topic.topic_users.find_by(user_id: @user.id) : nil
   end
 
   def has_bookmarks?
@@ -894,21 +905,17 @@ class TopicView
   protected
 
   def read_posts_set
-    @read_posts_set ||=
-      begin
-        result = Set.new
-        return result if @user.blank?
-        return result if topic_user.blank?
-
-        post_numbers =
-          PostTiming
-            .where(topic_id: @topic.id, user_id: @user.id)
-            .where(post_number: @posts.pluck(:post_number))
-            .pluck(:post_number)
-
-        post_numbers.each { |pn| result << pn }
-        result
-      end
+    return @read_posts_set if instance_variable_defined?(:@read_posts_set)
+    result = Set.new
+    if @user.present? && topic_user.present?
+      post_numbers =
+        PostTiming
+          .where(topic_id: @topic.id, user_id: @user.id)
+          .where(post_number: @posts.pluck(:post_number))
+          .pluck(:post_number)
+      post_numbers.each { |pn| result << pn }
+    end
+    @read_posts_set = result
   end
 
   private

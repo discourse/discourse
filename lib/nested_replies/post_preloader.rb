@@ -35,8 +35,10 @@ module NestedReplies
 
     private
 
-    # Thin Array subclass that intercepts the ActiveRecord-style methods
-    # other plugins' on_preload hooks call on topic_view.posts.
+    # Array subclass that handles ActiveRecord-style methods called by plugins'
+    # TopicView.on_preload hooks. The posts are already loaded with associations
+    # by TreeLoader, so we avoid re-querying. Explicitly handles the methods
+    # plugins actually use; unknown AR methods fall back to a real relation.
     class PostsArray < Array
       def includes(*associations)
         ActiveRecord::Associations::Preloader.new(records: self, associations: associations).call
@@ -78,6 +80,19 @@ module NestedReplies
 
       def reorder(*_args)
         self
+      end
+
+      def respond_to_missing?(name, include_private = false)
+        Post.none.respond_to?(name, include_private) || super
+      end
+
+      def method_missing(name, *args, **kwargs, &block)
+        relation = Post.none
+        if relation.respond_to?(name)
+          Post.where(id: map(&:id)).public_send(name, *args, **kwargs, &block)
+        else
+          super
+        end
       end
     end
   end

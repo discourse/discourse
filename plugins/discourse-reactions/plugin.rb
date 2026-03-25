@@ -155,9 +155,8 @@ after_initialize do
       precomputed_reactions_map[post.id] = reactions.sort_by { |r| [-r[:count].to_i, r[:id]] }
     end
 
-    topic_view.instance_variable_set(:@precomputed_reactions, precomputed_reactions_map)
-    topic_view.instance_variable_set(:@reaction_users_count, reaction_users_count_map)
-    topic_view.instance_variable_set(:@reactions_preloaded, true)
+    topic_view.set_preloaded_post_data(:reactions, precomputed_reactions_map)
+    topic_view.set_preloaded_post_data(:reaction_users_count, reaction_users_count_map)
   end
 
   # Helper module for shared reactions serialization logic
@@ -339,7 +338,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :reactions) do
-    map = topic_view&.instance_variable_get(:@precomputed_reactions)
+    map = topic_view&.preloaded_post_data(:reactions)
     if map && map.key?(object.id)
       map[object.id]
     else
@@ -352,7 +351,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :reaction_users_count) do
-    map = topic_view&.instance_variable_get(:@reaction_users_count)
+    map = topic_view&.preloaded_post_data(:reaction_users_count)
     if map && map.key?(object.id)
       map[object.id].to_i
     else

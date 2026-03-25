@@ -57,7 +57,7 @@ All plugin files have been moved to core locations with the namespace changed fr
 | `app/serializers/topic_list_item_serializer.rb` | Added `is_nested_view` attribute (via `nested_topic` association) |
 | `app/serializers/topic_view_serializer.rb` | Added `is_nested_view` attribute (via `nested_topic` association) |
 | `app/serializers/category_serializer.rb` | Added `nested_replies_default` to `CategorySettingSerializer` |
-| `lib/topic_view.rb` | Added `nested_replies_direct_reply_counts` accessor + memoization; `:nested_topic` in `find_topic` includes |
+| `lib/topic_view.rb` | Added `nested_replies_direct_reply_counts` accessor + memoization; `:nested_topic` in `find_topic` includes; `preloaded_post_data` / `set_preloaded_post_data` API for plugins to store per-post data that survives `@posts` replacement |
 | `lib/topic_query.rb` | Added `:nested_topic` to default topic includes |
 | `lib/svg_sprite.rb` | Added `nested-circle-minus`, `nested-circle-plus`, `nested-thread` to `SVG_ICONS` |
 | `frontend/.../components/topic-admin-menu.gjs` | Added nested replies toggle button directly |
@@ -117,6 +117,17 @@ Items roughly ordered by priority/risk. Check off as completed.
   hook that batch-preloads associations, counts, and precomputed reactions for all posts.
   The nested view's `PostPreloader#prepare` calls `TopicView.preload(topic_view)` which
   triggers this hook generically — no plugin-specific knowledge needed.
+
+  **New core API — `TopicView#preloaded_post_data`**: Some `on_preload` hooks replace
+  `@posts` entirely (e.g., discourse-global-communities), creating fresh Post objects and
+  losing per-post data set by other hooks. To solve this, added a generic key-value store
+  on TopicView for plugins to stash per-post preloaded data (keyed by post_id):
+  - `topic_view.set_preloaded_post_data(namespace, data)` — store a hash
+  - `topic_view.preloaded_post_data(namespace)` — retrieve it
+  - Auto-clears on `reset_post_collection` via `memoize_for_posts`
+  - discourse-reactions uses `:reactions` and `:reaction_users_count` namespaces
+  - Serializer attributes look up from the map, falling back to per-post queries
+
   Deleted from core:
   - `NestedReplies.batch_precompute_reactions` (~76 lines of SQL)
   - `lib/nested_replies/post_serializer_reactions_patch.rb` (global `PostSerializer` prepend)
@@ -124,6 +135,7 @@ Items roughly ordered by priority/risk. Check off as completed.
   - Second `on_preload` hook in `topic_view_preload.rb`
   - `attr_accessor :precomputed_reactions` from `HasNestedReplyStats` (moved to reactions'
     `PostExtension`)
+
   Also fixed a latent bug in the batch SQL: used `dr.post_id` (reactions table) instead of
   `dru.post_id` (reaction_users table) which wasn't reliably populated.
 
@@ -156,21 +168,24 @@ Items roughly ordered by priority/risk. Check off as completed.
   number) when `is_nested_view` is true. `urlForPostNumber()` is unchanged so intentional
   post linking (search results, share URLs) still works.
 
+- [x] **Fix `TopicView#topic_user` and `#read_posts_set` N+1**: Ruby's `||=` doesn't
+  cache `nil` results, and `return` inside `||= begin...end` bypasses the assignment
+  entirely. This caused 278 repeated `topic_users` queries per request (one per post)
+  when the user had no `TopicUser` record. Fixed by switching to
+  `instance_variable_defined?` for nil-safe caching. This is a core `TopicView` bug
+  that also affects the normal topic view for first-time visitors. Reduced total queries
+  on nested roots endpoint from ~424 to ~96.
+
 ### Low priority
 
-- [ ] **`PostsArray` shim in PostPreloader**: The `PostsArray` class fakes ActiveRecord methods
-  (`.includes()`, `.where()`, `.pluck()`, etc.) so other plugins' `TopicView.on_preload`
-  hooks don't crash when posts is a plain Array. This is fragile. Long-term, make `TopicView`
-  natively handle array post collections, or use a different preloading strategy.
+- [x] **`PostsArray` shim in PostPreloader**: Added `method_missing` + `respond_to_missing?`
+  fallback so that any AR method not explicitly shimmed falls back to a real
+  `Post.where(id: ...)` relation instead of crashing. Common methods (`includes`, `pluck`,
+  `where`) still use efficient in-memory implementations to avoid re-querying.
 
 - [ ] **`nested_post` parameter in post adapter**: `frontend/discourse/app/adapters/post.js`
   unconditionally sets `args.nested_post = true` on every post creation. This predates the
   plugin — audit whether it's still needed or can be cleaned up.
-
-- [ ] **Integrate nested route into topic route**: Currently the nested view is a completely
-  separate `/n/:slug/:topic_id` route with its own data loading, scroll management, and
-  read tracking. Ideally this would be integrated into the topic route as a view mode toggle
-  (no full-page navigation to switch). This is a large follow-up effort.
 
 - [ ] **Test coverage gaps** (from MAINTENANCE_PROPOSALS.md):
   - Message bus real-time updates (created/revised/deleted posts)
