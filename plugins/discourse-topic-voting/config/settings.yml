@@ -12,7 +12,7 @@ plugins:
     default: true
     client: true
   topic_voting_alert_votes_left:
-    default: 10
+    default: 1
     depends_on:
       - "topic_voting_enable_vote_limits"
     depends_behavior: "hidden"

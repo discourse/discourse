@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { get } from "@ember/helper";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
@@ -120,13 +121,26 @@ export default class EditCategoryTypeSchemaFields extends Component {
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >
-        <@form.Object @name="category_type_site_settings" as |siteSettings|>
+        <@form.Object
+          @name="category_type_site_settings"
+          as |siteSettings data|
+        >
           {{#each this.schema.site_settings as |entry|}}
-            <SchemaFormField
-              @category={{@category}}
-              @entry={{entry}}
-              @formObject={{siteSettings}}
-            />
+            {{#if entry.depends_on}}
+              {{#if (get data entry.depends_on)}}
+                <SchemaFormField
+                  @category={{@category}}
+                  @entry={{entry}}
+                  @formObject={{siteSettings}}
+                />
+              {{/if}}
+            {{else}}
+              <SchemaFormField
+                @category={{@category}}
+                @entry={{entry}}
+                @formObject={{siteSettings}}
+              />
+            {{/if}}
           {{/each}}
         </@form.Object>
       </@form.Emphasis>
