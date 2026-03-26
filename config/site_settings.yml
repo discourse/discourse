@@ -4290,7 +4290,10 @@ experimental:
   discovery_layout_with_sidebar_block:
     client: true
     default: false
-    area: "experimental"
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   lazy_load_categories_groups:
     default: ""
     type: group_list
