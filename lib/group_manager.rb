@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class GroupManager
-  def initialize(group)
+  def initialize(acting_user, group)
+    @acting_user = acting_user
     @group = group
   end
 

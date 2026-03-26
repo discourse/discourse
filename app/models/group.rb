@@ -819,7 +819,7 @@ class Group < ActiveRecord::Base
 
   def add(user, notify: false, automatic: false)
     return false if user.nil?
-    added_ids = GroupManager.new(self).add([user.id], automatic:)
+    added_ids = GroupManager.new(Discourse.system_user, self).add([user.id], automatic:)
     send_membership_notification(user) if notify && !added_ids.empty?
 
     self
@@ -827,7 +827,7 @@ class Group < ActiveRecord::Base
 
   def remove(user)
     return false if user.nil?
-    GroupManager.new(self).remove([user.id]).present?
+    GroupManager.new(Discourse.system_user, self).remove([user.id]).present?
   end
 
   def trigger_user_added_event(user, automatic)
