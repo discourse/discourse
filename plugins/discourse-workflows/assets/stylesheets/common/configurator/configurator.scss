@@ -85,26 +85,19 @@
 
   &__mode-trigger {
     position: absolute;
-    top: 4px;
+    top: 50%;
+    transform: translateY(-50%);
     right: 0;
 
     .workflows-property-engine__control-wrapper:has(.d-select) > & {
       right: 30px;
     }
     z-index: 2;
-    opacity: 0;
-    transition: opacity 0.15s;
 
     &.--active {
-      opacity: 1;
-
       .d-icon {
         color: var(--tertiary);
       }
-    }
-
-    .form-kit__container:hover & {
-      opacity: 1;
     }
   }
 
