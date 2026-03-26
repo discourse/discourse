@@ -41,8 +41,8 @@ export default class Layout extends Component {
     </div>
 
     {{#if this.siteSettings.discovery_layout_with_sidebar_block}}
-      <div class="discovery-layout">
-        <div class="discovery-layout__main">
+      <div class="discovery-layout discovery-layout__content">
+        <div class="discovery-layout__list">
 
           <PluginOutlet
             @name="discovery-above"
