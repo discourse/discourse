@@ -56,6 +56,18 @@
       outline: none !important;
       box-shadow: none !important;
     }
+
+    .category-chooser {
+      width: 100% !important;
+
+      .select-kit-header {
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    }
   }
 
   &__fields {

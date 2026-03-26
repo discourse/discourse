@@ -89,7 +89,11 @@
     transform: translateY(-50%);
     right: 0;
 
-    .workflows-property-engine__control-wrapper:has(.d-select) > & {
+    .workflows-property-engine__control-wrapper:has(
+        .d-select,
+        .category-chooser
+      )
+      > & {
       right: 30px;
     }
     z-index: 2;

@@ -8,6 +8,7 @@ import FKControlInput from "discourse/form-kit/components/fk/control/input";
 import FKControlSelect from "discourse/form-kit/components/fk/control/select";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
@@ -341,6 +342,8 @@ export default class PropertyEngineField extends Component {
                 @placeholder={{this.placeholder}}
                 @autofocus={{true}}
               />
+            {{else if (eq this.control "category")}}
+              <CategoryChooser @value={{field.value}} @onChange={{field.set}} />
             {{else if (eq this.control "select")}}
               <FKControlSelect @field={{field}} @includeNone={{false}} as |c|>
                 {{#each this.options as |choice|}}

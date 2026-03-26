@@ -57,10 +57,21 @@ function operationSchema(item) {
   };
 }
 
-const RIGHT_VALUE_SCHEMA = {
-  type: "string",
-  ui: { expression: true, show_label: false },
-};
+const CATEGORY_FIELDS = ["category_id", "category"];
+
+function rightValueSchema(item) {
+  if (CATEGORY_FIELDS.includes(item?.leftValue)) {
+    return {
+      type: "string",
+      ui: { expression: true, show_label: false, control: "category" },
+    };
+  }
+
+  return {
+    type: "string",
+    ui: { expression: true, show_label: false },
+  };
+}
 
 export default class PropertyEngineConditionBuilder extends Component {
   get conditions() {
@@ -181,7 +192,7 @@ export default class PropertyEngineConditionBuilder extends Component {
               @formApi={{@formApi}}
               @fieldName="rightValue"
               @formApiPath={{concat @fieldName "." index ".rightValue"}}
-              @schema={{RIGHT_VALUE_SCHEMA}}
+              @schema={{rightValueSchema item}}
             />
           {{/unless}}
         </collection.Object>
