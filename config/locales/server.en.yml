@@ -1966,6 +1966,7 @@ en:
     moderators_change_trust_levels: "Allow moderators to change user trust levels."
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer."
+    discovery_layout_with_sidebar_block: "Enables a new layout in the topic list that includes an outlet for a sidebar."
     send_old_credential_reminder_days: "Remind about old credentials after days"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."

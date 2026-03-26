@@ -4288,8 +4288,8 @@ experimental:
     default: true
     area: "experimental"
   discovery_layout_with_sidebar_block:
-    default: false
     client: true
+    default: false
     area: "experimental"
   lazy_load_categories_groups:
     default: ""
