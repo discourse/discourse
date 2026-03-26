@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
@@ -27,6 +29,8 @@ function isPositivePort(key) {
 }
 
 export default class WorkflowNode extends Component {
+  @service router;
+
   stopPropagation = (e) => e.stopPropagation();
 
   handleDelete = (e) => {
@@ -70,6 +74,23 @@ export default class WorkflowNode extends Component {
 
   get isManuallyTriggerable() {
     return this.args.manuallyTriggerableTypes?.has(this.data.type) ?? false;
+  }
+
+  get dataTableId() {
+    if (this.data.type !== "action:data_table") {
+      return null;
+    }
+    return this.data.configuration?.data_table_id;
+  }
+
+  @action
+  handleEditDataTable(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-workflows.data-tables.show",
+      this.dataTableId
+    );
   }
 
   get iconBlockStyle() {
@@ -118,6 +139,16 @@ export default class WorkflowNode extends Component {
                 {{on "click" this.handleManualTrigger}}
               >
                 {{icon "play"}}
+              </button>
+            {{/if}}
+            {{#if this.dataTableId}}
+              <button
+                type="button"
+                class="workflow-canvas-toolbar__btn"
+                {{on "pointerdown" this.stopPropagation}}
+                {{on "click" this.handleEditDataTable}}
+              >
+                {{icon "pencil"}}
               </button>
             {{/if}}
             <button

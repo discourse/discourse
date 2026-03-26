@@ -19,27 +19,25 @@ module DiscourseWorkflows
               default: "get",
             },
             data_table_id: {
-              type: :string,
+              type: :integer,
               required: true,
+              ui: {
+                control: :combo_box,
+                options_source: "data_tables",
+                value_property: "id",
+                name_property: "name",
+                filterable: true,
+                none: "discourse_workflows.data_table_node.data_table_id_placeholder",
+              },
             },
-            fields: {
-              type: :collection,
+            columns: {
+              type: :object,
               required: false,
               visible_if: {
                 operation: %w[insert update upsert],
               },
               ui: {
-                control: :data_table_fields,
-              },
-              item_schema: {
-                column: {
-                  type: :string,
-                  required: true,
-                },
-                value: {
-                  type: :string,
-                  required: true,
-                },
+                control: :data_table_columns,
               },
             },
             filter: {
@@ -81,6 +79,16 @@ module DiscourseWorkflows
           }
         end
 
+        def self.metadata
+          {
+            data_tables:
+              DiscourseWorkflows::DataTable
+                .order(:name)
+                .pluck(:id, :name)
+                .map { |id, name| { id:, name: } },
+          }
+        end
+
         def self.output_schema
           {}
         end
@@ -109,7 +117,7 @@ module DiscourseWorkflows
         private
 
         def execute_insert(config)
-          data = build_row_data(config["fields"] || [])
+          data = build_row_data(config["columns"] || {})
           @repository.insert(data)
         end
 
@@ -129,7 +137,7 @@ module DiscourseWorkflows
           rows =
             @repository.update_many(
               filter: parse_filter(config["filter"]),
-              data: build_row_data(config["fields"] || []),
+              data: build_row_data(config["columns"] || {}),
             )
           { "updated_count" => rows.length }
         end
@@ -140,7 +148,7 @@ module DiscourseWorkflows
         end
 
         def execute_upsert(config)
-          data = build_row_data(config["fields"] || [])
+          data = build_row_data(config["columns"] || {})
           filter = parse_filter(config["filter"])
           result = @repository.upsert(filter: filter, data: data)
 
@@ -157,15 +165,26 @@ module DiscourseWorkflows
               DiscourseWorkflows::DataTable.column_name(column)
             end
 
-          fields.each_with_object({}) do |field, result|
-            col_name = field["column"] || field[:column]
+          normalize_fields(fields).each_with_object({}) do |(col_name, value), result|
             col_def = column_map[col_name]
             raise DataTableValidationError, "Unknown column name '#{col_name}'" if col_def.blank?
 
             result[col_name] = DiscourseWorkflows::DataTableRow.normalize_value(
-              field["value"] || field[:value],
+              value,
               DiscourseWorkflows::DataTable.column_type(col_def),
             )
+          end
+        end
+
+        def normalize_fields(fields)
+          if fields.is_a?(Hash)
+            fields
+          elsif fields.is_a?(Array)
+            fields.each_with_object({}) do |field, hash|
+              hash[field["column"] || field[:column]] = field["value"] || field[:value]
+            end
+          else
+            {}
           end
         end
 

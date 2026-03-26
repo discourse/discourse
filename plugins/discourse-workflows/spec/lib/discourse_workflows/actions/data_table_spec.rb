@@ -26,7 +26,9 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
       config = {
         "operation" => "insert",
         "data_table_id" => "-1",
-        "fields" => [{ "column" => "email", "value" => "test@test.com" }],
+        "columns" => {
+          "email" => "test@test.com",
+        },
       }
 
       expect {
@@ -39,7 +41,9 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
       config = {
         "operation" => "insert",
         "data_table_id" => data_table.id.to_s,
-        "fields" => [{ "column" => "nonexistent", "value" => "test" }],
+        "columns" => {
+          "nonexistent" => "test",
+        },
       }
 
       expect {
@@ -63,10 +67,10 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
       config = {
         "operation" => "insert",
         "data_table_id" => data_table.id.to_s,
-        "fields" => [
-          { "column" => "email", "value" => "test@example.com" },
-          { "column" => "score", "value" => "42" },
-        ],
+        "columns" => {
+          "email" => "test@example.com",
+          "score" => "42",
+        },
       }
 
       result = instance.execute_single(context, item: { "json" => {} }, config: config)
@@ -133,7 +137,9 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
           "type" => "and",
           "filters" => [{ "columnName" => "email", "condition" => "eq", "value" => "up@test.com" }],
         },
-        "fields" => [{ "column" => "score", "value" => "99" }],
+        "columns" => {
+          "score" => "99",
+        },
       }
 
       result = instance.execute_single(context, item: { "json" => {} }, config: config)
@@ -176,10 +182,10 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
             { "columnName" => "email", "condition" => "eq", "value" => "new@test.com" },
           ],
         },
-        "fields" => [
-          { "column" => "email", "value" => "new@test.com" },
-          { "column" => "score", "value" => "50" },
-        ],
+        "columns" => {
+          "email" => "new@test.com",
+          "score" => "50",
+        },
       }
 
       result = instance.execute_single(context, item: { "json" => {} }, config: config)
@@ -200,10 +206,10 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
             { "columnName" => "email", "condition" => "eq", "value" => "exists@test.com" },
           ],
         },
-        "fields" => [
-          { "column" => "email", "value" => "exists@test.com" },
-          { "column" => "score", "value" => "99" },
-        ],
+        "columns" => {
+          "email" => "exists@test.com",
+          "score" => "99",
+        },
       }
 
       result = instance.execute_single(context, item: { "json" => {} }, config: config)

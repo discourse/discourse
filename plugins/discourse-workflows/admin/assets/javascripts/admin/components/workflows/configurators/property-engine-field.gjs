@@ -30,13 +30,12 @@ import {
 import ExpressionInput from "./expression-input";
 import PropertyEngineComboBox from "./property-engine-combo-box";
 import PropertyEngineConditionBuilder from "./property-engine-condition-builder";
-import PropertyEngineDataTableFields from "./property-engine-data-table-fields";
+import PropertyEngineDataTableColumns from "./property-engine-data-table-columns";
 import PropertyEngineFilterQuery from "./property-engine-filter-query";
 import PropertyEngineUrlPreview from "./property-engine-url-preview";
 
 const BUILT_IN_FIELD_CONTROLS = {
   combo_box: PropertyEngineComboBox,
-  data_table_fields: PropertyEngineDataTableFields,
   filter_query: PropertyEngineFilterQuery,
   url_preview: PropertyEngineUrlPreview,
 };
@@ -298,6 +297,15 @@ export default class PropertyEngineField extends Component {
           @nodes={{@nodes}}
           @connections={{@connections}}
           @nodeTypes={{@nodeTypes}}
+        />
+      </@form.Section>
+    {{else if (eq this.control "data_table_columns")}}
+      <@form.Section @title={{this.fieldTitle}}>
+        <PropertyEngineDataTableColumns
+          @form={{@form}}
+          @formApi={{@formApi}}
+          @fieldName={{@fieldName}}
+          @configuration={{@configuration}}
         />
       </@form.Section>
     {{else if this.controlComponent}}

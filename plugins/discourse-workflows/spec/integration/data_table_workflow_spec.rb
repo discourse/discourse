@@ -39,11 +39,11 @@ RSpec.describe "Data Table workflow integration" do
       configuration: {
         "operation" => "insert",
         "data_table_id" => data_table.id.to_s,
-        "fields" => [
-          { "column" => "topic_id", "value" => "={{ $json.topic_id }}" },
-          { "column" => "author", "value" => "={{ $json.username }}" },
-          { "column" => "logged", "value" => "true" },
-        ],
+        "columns" => {
+          "topic_id" => "={{ $json.topic_id }}",
+          "author" => "={{ $json.username }}",
+          "logged" => "true",
+        },
       },
     )
   end
