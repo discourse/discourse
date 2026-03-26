@@ -10,6 +10,7 @@ import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
 import { isTesting } from "discourse/lib/environment";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import nestedPostUrl from "discourse/lib/nested-post-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
@@ -61,6 +62,10 @@ export default class NestedOp extends Component {
     {{/if}}
   </template>
 
+  get nestedShareUrl() {
+    return nestedPostUrl(this.args.topic, this.args.post.post_number);
+  }
+
   @action
   copyLink() {
     if (this.site.mobileView) {
@@ -69,7 +74,8 @@ export default class NestedOp extends Component {
 
     const post = this.args.post;
 
-    let actionCallback = () => clipboardCopy(getAbsoluteURL(post.shareUrl));
+    let actionCallback = () =>
+      clipboardCopy(getAbsoluteURL(this.nestedShareUrl));
 
     if (isTesting()) {
       actionCallback = () => {};
@@ -91,7 +97,7 @@ export default class NestedOp extends Component {
 
     try {
       await nativeShare(this.capabilities, {
-        url: getAbsoluteURL(post.shareUrl),
+        url: getAbsoluteURL(this.nestedShareUrl),
       });
     } catch {
       this.modal.show(ShareTopicModal, {

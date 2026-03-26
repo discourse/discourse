@@ -115,7 +115,7 @@ export default class Topic extends RestModel {
     if (opts.fastEdit) {
       data.keep_existing_draft = true;
     }
-    return ajax(topic.get("url"), {
+    return ajax(topic.get("updateUrl") || topic.get("url"), {
       type: "PUT",
       data: JSON.stringify(data),
       contentType: "application/json",
@@ -566,13 +566,22 @@ export default class Topic extends RestModel {
     return resolveShareUrl(this.url, this.currentUser);
   }
 
-  @computed("id", "slug", "is_nested_view")
+  @computed("id", "slug")
+  get updateUrl() {
+    let slug = this.slug || "";
+    if (slug.trim().length === 0) {
+      slug = "topic";
+    }
+    return `${getURL("/t/")}${slug}/${this.id}`;
+  }
+
+  @computed("id", "slug", "is_nested_view", "_forcedFlat")
   get url() {
     let slug = this.slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
     }
-    if (this.is_nested_view) {
+    if (this.is_nested_view && !this._forcedFlat) {
       return `${getURL("/n/")}${slug}/${this.id}`;
     }
     return `${getURL("/t/")}${slug}/${this.id}`;

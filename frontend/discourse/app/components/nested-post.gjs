@@ -18,7 +18,7 @@ import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { and, not } from "discourse/truth-helpers";
+import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import nestedPostUrl from "../lib/nested-post-url";
 import NestedPostChildren from "./nested-post-children";
@@ -79,7 +79,7 @@ export default class NestedPost extends Component {
     this.appEvents.trigger("nested-replies:post-unregistered", this.args.post);
   }
 
-  _onChildCreated({ parentPostNumber, isOwnPost }) {
+  _onChildCreated({ parentPostNumber }) {
     if (parentPostNumber !== this.args.post.post_number) {
       return;
     }
@@ -89,7 +89,7 @@ export default class NestedPost extends Component {
     post.set("total_descendant_count", (post.total_descendant_count || 0) + 1);
     this._childWasCreated = true;
 
-    if (isOwnPost && !this.expanded) {
+    if (!this.expanded) {
       this.expanded = true;
       this.collapsed = false;
       this.args.expansionState?.set(this.args.post.post_number, {
@@ -281,7 +281,7 @@ export default class NestedPost extends Component {
         (if this.collapsed "nested-post--collapsed")
         (if @isPinned "nested-post--pinned")
         (if @post.isWhisper "nested-post--whisper")
-        (if @post.deleted "nested-post--deleted")
+        (if (or @post.deleted @post.user_deleted) "nested-post--deleted")
         (if this.cloakingData.active "nested-post--cloaked")
       }}
       style={{this.cloakingData.style}}

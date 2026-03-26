@@ -177,6 +177,7 @@ export default class NestedController extends Controller {
   @action
   editPost(post) {
     this._topicController.editPost(post);
+    this.composer.set("skipJumpOnSave", true);
   }
 
   @action

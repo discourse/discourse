@@ -161,6 +161,7 @@ export default class NestedRoute extends Route {
 
   _processResponse(data, params) {
     const topic = this.store.createRecord("topic", data.topic);
+    topic.set("is_nested_view", true);
 
     const assignTopic = (postData) => {
       const post = this.store.createRecord("post", postData);
@@ -197,6 +198,7 @@ export default class NestedRoute extends Route {
 
   _processContextResponse(data, params, sort) {
     const topic = this.store.createRecord("topic", data.topic);
+    topic.set("is_nested_view", true);
 
     const assignTopic = (postData) => {
       const post = this.store.createRecord("post", postData);

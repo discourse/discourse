@@ -84,6 +84,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  auto_bump_cooldown_days :integer          default(1)
+#  nested_replies_default  :boolean          default(FALSE), not null
 #  num_auto_bump_daily     :integer          default(0)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null

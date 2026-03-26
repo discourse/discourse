@@ -9,7 +9,7 @@
 #
 # For more details, see https://meta.discourse.org/t/-/361381
 RSpec.describe "Core features" do
-  before { enable_current_plugin }
+  before { SiteSetting.nested_replies_enabled = true }
 
   # Because of how routes are defined it _can_ interfere with how scope mappings work,
   # this test checks if we can create an API key, before rendering, this route checks for all scope mappings
