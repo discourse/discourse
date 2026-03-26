@@ -36,6 +36,9 @@ body.embed-mode {
     border-radius: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
 
     .composer-action-title {
       display: none;
