@@ -12,6 +12,7 @@ en:
         providers: "Providers"
         providers_description: "Configure chat provider integrations"
       add_provider: "Add provider"
+      view_provider_settings: "View provider settings"
       more_providers: "More"
       empty_state:
         title: "Connect your chat platform"
