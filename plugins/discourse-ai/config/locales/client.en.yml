@@ -802,6 +802,8 @@ en:
         oauth_revocation_endpoint: "Revocation endpoint"
         oauth_issuer: "Issuer"
         oauth_last_error: "Last OAuth error"
+        oauth_show_details: "Show details"
+        oauth_hide_details: "Hide details"
         timeout_seconds: "Request timeout (seconds)"
         timeout_seconds_tooltip: "How long Discourse waits for the MCP server before the request fails. Keep 30 unless the server is consistently slow."
         enabled: "Enabled"
