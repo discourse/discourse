@@ -3,9 +3,15 @@ import { i18n } from "discourse-i18n";
 
 const NODE_WIDTH = 130;
 const NODE_HEIGHT_BASE = 90;
+const NODE_HEIGHT_LONG_LABEL = 105;
 const NODE_HEIGHT_WITH_DESC = 110;
 
-export { NODE_HEIGHT_BASE, NODE_HEIGHT_WITH_DESC, NODE_WIDTH };
+export {
+  NODE_HEIGHT_BASE,
+  NODE_HEIGHT_LONG_LABEL,
+  NODE_HEIGHT_WITH_DESC,
+  NODE_WIDTH,
+};
 
 const DEFAULT_NODE_ICONS = {
   "trigger:manual": { icon: "arrow-pointer" },
@@ -35,6 +41,7 @@ const DEFAULT_NODE_ICONS = {
   "action:wait_for_approval": { icon: "user-check", colorKey: "cyan" },
   "action:form": { icon: "rectangle-list", colorKey: "blue" },
   "action:award_badge": { icon: "certificate", colorKey: "yellow" },
+  "action:respond_to_webhook": { icon: "reply", colorKey: "purple" },
   "core:loop_over_items": { icon: "arrow-rotate-right", colorKey: "brown" },
 };
 
@@ -66,8 +73,16 @@ export function nodeDescription(node) {
   return node.configuration?.description || "";
 }
 
+const LABEL_WRAP_THRESHOLD = 15;
+
 export function nodeHeight(node) {
-  return nodeDescription(node) ? NODE_HEIGHT_WITH_DESC : NODE_HEIGHT_BASE;
+  if (nodeDescription(node)) {
+    return NODE_HEIGHT_WITH_DESC;
+  }
+  const label = nodeLabel(node);
+  return label && label.length > LABEL_WRAP_THRESHOLD
+    ? NODE_HEIGHT_LONG_LABEL
+    : NODE_HEIGHT_BASE;
 }
 
 export function nodeWidth() {

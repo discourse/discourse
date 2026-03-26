@@ -32,6 +32,20 @@ module DiscourseWorkflows
               type: :string,
               required: true,
             },
+            response_mode: {
+              type: :options,
+              required: true,
+              default: "immediately",
+              options: %w[immediately when_last_node_finishes respond_to_webhook],
+            },
+            response_code: {
+              type: :string,
+              required: false,
+              default: "200",
+              visible_if: {
+                response_mode: %w[when_last_node_finishes],
+              },
+            },
           }
         end
 

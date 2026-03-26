@@ -92,6 +92,7 @@ en:
         "action:award_badge": "Award Badge"
         "trigger:form": "Form Trigger"
         "action:form": "Form"
+        "action:respond_to_webhook": "Respond to Webhook"
       node_descriptions:
         "trigger:topic_closed": "Fires when a topic is closed by a user or auto-close timer"
         "trigger:post_created": "Fires when a new post or reply is created"
@@ -117,6 +118,7 @@ en:
         "action:award_badge": "Award a badge to a user"
         "trigger:form": "Generates a public web form and fires when it is submitted"
         "action:form": "Adds a page to a multi-step form"
+        "action:respond_to_webhook": "Send a custom HTTP response to the webhook caller"
       if_condition:
         no_conditions_body: "Conditions are used to filter items based on their values."
         add_condition: "Add condition"
@@ -199,6 +201,11 @@ en:
         path_placeholder: "my-webhook"
         url_preview: "Webhook URL"
         click_to_copy: "Click to copy"
+        response_mode: "Respond"
+        response_mode_immediately: "Immediately"
+        response_mode_when_last_node_finishes: "When Last Node Finishes"
+        response_mode_respond_to_webhook: "Using 'Respond to Webhook' Node"
+        response_code: "Response Code"
       stale_topic:
         hours: "Hours with no reply"
         description: "Fires when a topic has had no replies for the specified number of hours."
@@ -278,6 +285,18 @@ en:
         submitting: "Submitting..."
         submit: "Submit"
         save_for_url: "Save the workflow to generate a form URL."
+      respond_to_webhook:
+        response_type: "Respond With"
+        response_type_json: "JSON"
+        response_type_redirect: "Redirect"
+        response_type_text: "Text"
+        response_type_no_data: "No Data"
+        status_code: "Status Code"
+        redirect_url: "Redirect URL"
+        redirect_url_placeholder: "https://example.com/thanks"
+        response_body: "Response Body"
+        response_body_placeholder: '{"success": true}'
+        headers: "Response Headers"
       data_table_node:
         resource: "Resource"
         resources:

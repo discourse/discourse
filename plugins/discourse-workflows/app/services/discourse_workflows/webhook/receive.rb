@@ -13,7 +13,7 @@ module DiscourseWorkflows
     end
 
     model :webhook_nodes
-    step :enqueue_executions
+    step :execute_workflows
 
     private
 
@@ -28,7 +28,7 @@ module DiscourseWorkflows
       candidates.select { |node| resolver.resolve(node.configuration["path"]) == params.path }
     end
 
-    def enqueue_executions(webhook_nodes:, params:)
+    def execute_workflows(webhook_nodes:, params:)
       trigger_data = {
         body: params.body,
         headers: params.headers,
@@ -38,11 +38,22 @@ module DiscourseWorkflows
       }
 
       webhook_nodes.each do |node|
-        Jobs.enqueue(
-          Jobs::DiscourseWorkflows::ExecuteWorkflow,
-          trigger_node_id: node.id,
-          trigger_data: trigger_data,
-        )
+        response_mode = node.configuration["response_mode"] || "immediately"
+
+        if response_mode == "immediately"
+          Jobs.enqueue(
+            Jobs::DiscourseWorkflows::ExecuteWorkflow,
+            trigger_node_id: node.id,
+            trigger_data: trigger_data,
+          )
+        else
+          executor = DiscourseWorkflows::Executor.new(node, trigger_data)
+          execution = executor.run
+
+          context[:sync_execution] ||= execution
+          context[:sync_response_mode] ||= response_mode
+          context[:sync_response_code] ||= node.configuration["response_code"]
+        end
       end
     end
   end

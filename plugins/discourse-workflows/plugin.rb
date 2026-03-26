@@ -37,6 +37,7 @@ register_svg_icon "broom"
 register_svg_icon "arrow-pointer"
 register_svg_icon "note-sticky"
 register_svg_icon "palette"
+register_svg_icon "reply"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -71,6 +72,7 @@ after_initialize do
       WaitForApproval
       AwardBadge
       Form
+      RespondToWebhook
     ].each do |name|
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions.const_get(name)::V1)
     end
