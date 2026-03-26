@@ -1,19 +1,8 @@
 # frozen_string_literal: true
 
 class GroupManager
-  def initialize(acting_user, group)
-    @acting_user = acting_user
+  def initialize(group)
     @group = group
-  end
-
-  def add(user_ids, automatic: false)
-    return [] if user_ids.blank?
-    bulk_add(user_ids, automatic:)
-  end
-
-  def remove(user_ids)
-    return [] if user_ids.blank?
-    bulk_remove(user_ids)
   end
 
   def bulk_add(user_ids, automatic: false)

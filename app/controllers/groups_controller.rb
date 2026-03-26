@@ -571,7 +571,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
-    removed_user_ids = GroupManager.new(current_user, group).bulk_remove(users.map(&:id))
+    removed_user_ids = GroupManager.new(group).bulk_remove(users.map(&:id))
     removed_users = users.where(id: removed_user_ids)
     GroupActionLogger.new(current_user, group).bulk_log_remove_user_from_group(removed_users)
 
@@ -780,7 +780,7 @@ class GroupsController < ApplicationController
   private
 
   def add_users_to_group(group, users, notify = false)
-    GroupManager.new(current_user, group).bulk_add(users)
+    GroupManager.new(group).bulk_add(users)
     GroupActionLogger.new(current_user, group).bulk_log_add_user_to_group(users)
     users.each { |user| group.notify_added_to_group(user) if notify }
   rescue ActiveRecord::RecordNotUnique
