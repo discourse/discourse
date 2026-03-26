@@ -195,4 +195,20 @@ after_initialize do
       end
     end
   end
+
+  if defined?(DiscourseAi)
+    require_relative "lib/discourse_data_explorer/ai_query_generator"
+
+    agent_id =
+      DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_AGENT_IDS[:data_explorer_query_generator]
+
+    register_ai_agent(id: agent_id, klass: DiscourseDataExplorer::AiQueryGenerator)
+
+    register_ai_module(
+      name: "data_explorer",
+      id: 100,
+      enabled_by_setting: "data_explorer_enabled",
+      features: [{ name: "query_generation", agent_id: agent_id }],
+    )
+  end
 end

@@ -1,5 +1,11 @@
 en:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Explorer"
+          description: "AI-powered query generation for Data Explorer"
+          query_generation: "Query Generation"
     errors:
       explorer:
         no_semicolons: "Remove the semicolons from the query."
