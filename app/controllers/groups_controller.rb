@@ -414,7 +414,7 @@ class GroupsController < ApplicationController
     else
       notify = params[:notify_users]&.to_s == "true"
       uniq_users = users.uniq
-      uniq_users.each { |user| add_user_to_group(group, user, notify) }
+      add_users_to_group(group, uniq_users, notify)
 
       emails.each do |email|
         begin
@@ -478,7 +478,7 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidAccess unless group.public_admission
 
     return if group.users.exists?(id: current_user.id)
-    add_user_to_group(group, current_user)
+    add_users_to_group(group, [current_user])
   end
 
   def handle_membership_request
@@ -776,10 +776,12 @@ class GroupsController < ApplicationController
 
   private
 
-  def add_user_to_group(group, user, notify = false)
-    group.add(user)
-    GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-    group.notify_added_to_group(user) if notify
+  def add_users_to_group(group, users, notify = false)
+    GroupManager.new(current_user, group).add(users)
+    users.each do |user|
+      GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+      group.notify_added_to_group(user) if notify
+    end
   rescue ActiveRecord::RecordNotUnique
     # Under concurrency, we might attempt to insert two records quickly and hit a DB
     # constraint. In this case we can safely ignore the error and act as if the user
