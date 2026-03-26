@@ -22,6 +22,22 @@ RSpec.describe NestedTopicsController, type: :request do
     url
   end
 
+  describe "GET respond" do
+    it "redirects crawlers to the flat topic view" do
+      get "/n/#{topic.slug}/#{topic.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}")
+      expect(response.status).to eq(301)
+    end
+
+    it "redirects crawlers to the flat topic view with post number" do
+      get "/n/#{topic.slug}/#{topic.id}/5", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}/5")
+      expect(response.status).to eq(301)
+    end
+  end
+
   describe "GET roots" do
     it "returns 404 when plugin is disabled" do
       SiteSetting.nested_replies_enabled = false

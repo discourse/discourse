@@ -1,10 +1,19 @@
 # frozen_string_literal: true
 
 class NestedTopicsController < ApplicationController
+  skip_before_action :check_xhr, only: %i[respond]
+
   before_action :ensure_nested_replies_enabled
   before_action :find_topic, except: %i[respond]
 
   def respond
+    if use_crawler_layout?
+      url = "/t/#{params[:slug]}/#{params[:topic_id]}"
+      url += "/#{params[:post_number]}" if params[:post_number].present?
+      redirect_to url, status: :moved_permanently
+      return
+    end
+
     render
   end
 

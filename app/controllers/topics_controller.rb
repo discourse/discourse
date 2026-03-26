@@ -181,7 +181,7 @@ class TopicsController < ApplicationController
       return
     end
 
-    if !request.format.json? && SiteSetting.nested_replies_enabled &&
+    if !request.format.json? && !use_crawler_layout? && SiteSetting.nested_replies_enabled &&
          (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
          params[:flat] != "1"
       url = "/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
