@@ -443,6 +443,10 @@
         display: inline; // tags need to stay inline in order for them to truncate
         vertical-align: unset;
       }
+
+      li:has(.assigned-to) {
+        display: inline;
+      }
     }
 
     .topic-featured-link {
