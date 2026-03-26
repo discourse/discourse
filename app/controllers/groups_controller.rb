@@ -571,11 +571,13 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
+    removed_user_ids = GroupManager.new(current_user, group).bulk_remove(users.map(&:id))
+
     removed_users = []
     skipped_users = []
 
     users.each do |user|
-      if group.remove(user)
+      if removed_user_ids.include?(user.id)
         removed_users << user.username
         GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
       else
