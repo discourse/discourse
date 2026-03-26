@@ -118,7 +118,6 @@ en:
         "trigger:form": "Generates a public web form and fires when it is submitted"
         "action:form": "Adds a page to a multi-step form"
       if_condition:
-        no_conditions_title: "Add a condition"
         no_conditions_body: "Conditions are used to filter items based on their values."
         add_condition: "Add condition"
         conditions: "Conditions"

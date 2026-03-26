@@ -218,11 +218,11 @@ export default class PropertyEngineConditionBuilder extends Component {
       />
     {{else}}
       <WorkflowsEmptyState
-        @title={{i18n "discourse_workflows.if_condition.no_conditions_title"}}
         @description={{i18n
           "discourse_workflows.if_condition.no_conditions_body"
         }}
         @onAction={{this.addCondition}}
+        @buttonIcon="plus"
         @buttonLabel="discourse_workflows.if_condition.add_condition"
       />
     {{/if}}

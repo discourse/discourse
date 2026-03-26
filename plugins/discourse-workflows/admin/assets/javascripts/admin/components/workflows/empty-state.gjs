@@ -11,6 +11,7 @@ import DButton from "discourse/components/d-button";
       <DButton
         @action={{@onAction}}
         @label={{@buttonLabel}}
+        @icon={{@buttonIcon}}
         class="btn-primary"
       />
     {{/if}}
