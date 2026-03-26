@@ -386,34 +386,63 @@ end
 
 desc "Validate indexes"
 task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] do |_, args|
-  begin
-    db = TemporaryDb.new
-    db.start
-    db.migrate
+  # Determine if we're in a multisite setup
+  is_multisite = RailsMultisite::ConnectionManagement.has_db?("default")
 
-    ActiveRecord::Base.establish_connection(
-      adapter: "postgresql",
-      database: "discourse",
-      port: db.pg_port,
-      host: "localhost",
-    )
+  if is_multisite
+    # Multisite: use 'default' database as reference
+    puts "Multisite detected, using 'default' database as reference"
+    RailsMultisite::ConnectionManagement.with_connection("default") do
+      expected = DB.query_single <<~SQL
+        SELECT indexdef FROM pg_indexes
+        WHERE schemaname = 'public'
+        ORDER BY indexdef
+      SQL
 
-    expected = DB.query_single <<~SQL
-      SELECT indexdef FROM pg_indexes
-      WHERE schemaname = 'public'
-      ORDER BY indexdef
-    SQL
+      expected_tables = DB.query_single <<~SQL
+        SELECT tablename
+        FROM pg_tables
+        WHERE schemaname = 'public'
+      SQL
 
-    expected_tables = DB.query_single <<~SQL
-      SELECT tablename
-      FROM pg_tables
-      WHERE schemaname = 'public'
-    SQL
+      @expected = expected
+      @expected_tables = expected_tables
+    end
+  else
+    # Single-site: use temporary database as reference
+    puts "Single-site detected, creating temporary database as reference"
+    begin
+      db = TemporaryDb.new
+      db.start
+      db.migrate
 
-    ActiveRecord::Base.establish_connection
-  ensure
-    db&.stop
-    db&.remove
+      ActiveRecord::Base.establish_connection(
+        adapter: "postgresql",
+        database: "discourse",
+        port: db.pg_port,
+        host: "localhost",
+      )
+
+      expected = DB.query_single <<~SQL
+        SELECT indexdef FROM pg_indexes
+        WHERE schemaname = 'public'
+        ORDER BY indexdef
+      SQL
+
+      expected_tables = DB.query_single <<~SQL
+        SELECT tablename
+        FROM pg_tables
+        WHERE schemaname = 'public'
+      SQL
+
+      @expected = expected
+      @expected_tables = expected_tables
+
+      ActiveRecord::Base.establish_connection
+    ensure
+      db&.stop
+      db&.remove
+    end
   end
 
   puts
@@ -422,6 +451,8 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
   inconsistency_found = false
 
   RailsMultisite::ConnectionManagement.each_connection do |db_name|
+    # Skip the reference database in multisite
+    next if is_multisite && db_name == "default"
     puts "Testing indexes on the #{db_name} database", ""
 
     current = DB.query_single <<~SQL
@@ -430,8 +461,8 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
       ORDER BY indexdef
     SQL
 
-    missing = expected - current
-    extra = current - expected
+    missing = @expected - current
+    extra = current - @expected
 
     extra.reject! { |x| x =~ /idx_recent_regular_post_search_data/ }
 
@@ -499,7 +530,7 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
         extra.each do |statement|
           if match = /create .*index (\S+) on public\.(\S+)/i.match(statement)
             index_name, table_name = match[1], match[2]
-            if expected_tables.include?(table_name)
+            if @expected_tables.include?(table_name)
               puts "Dropping #{index_name}"
               begin
                 DB.exec("DROP INDEX #{index_name}")
