@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
+RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
   let(:enable_upload_debug_mode_status) { :experimental }
   let(:show_user_menu_avatars_status) { :beta }
 
   before do
+    # No upcoming change notifications are sent for new sites
+    Migration::Helpers.stubs(:new_site?).returns(false)
     mock_upcoming_change_metadata(
       {
         enable_upload_debug_mode: {
@@ -290,6 +292,19 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
             subject: "show_user_menu_avatars",
           ).count
         }.by(1)
+      end
+
+      context "when the site is new (< 1 hour old)" do
+        before { Migration::Helpers.stubs(:new_site?).returns(true) }
+
+        it "does not notify admins" do
+          expect { result }.not_to change {
+            Notification
+              .where(notification_type: Notification.types[:upcoming_change_available])
+              .where("data::text LIKE ?", "%show_user_menu_avatars%")
+              .count
+          }
+        end
       end
 
       context "when admins were already notified" do

@@ -20,7 +20,7 @@ Key methods to understand:
 - `resolved_value(setting_name)` — Determines the *effective* value of a setting. This is where auto-promotion logic lives: if a setting's status meets/exceeds `promote_upcoming_changes_on_status`, the resolved value is `true` even if the DB default is `false`. Permanent settings always resolve to `true` (admins can't disable them).
 - `enabled_for_user?(setting_name, user)` — The primary access check. Considers: resolved value, group restrictions, anonymous users (only get access if no group restrictions).
 - `stats_for_user(user:, acting_guardian:)` — Returns per-change status for a user including *why* they have/don't have access (the `user_enabled_reasons` enum).
-- `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackStatusChanges` detects changes.
+- `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackNotifyStatusChanges` detects changes.
 
 **`app/models/upcoming_change_event.rb`** — Audit trail. Every lifecycle event (added, removed, status change, manual toggle, admin notification) is recorded here. Has unique indexes to prevent duplicate events of specific types per change.
 
@@ -37,9 +37,9 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 | `List` | Admin-only, fetches all changes with metadata, group data, and images |
 | `Toggle` | Admin enable/disable — updates SiteSetting, clears groups if `disallow_enabled_for_groups`, logs staff action, fires DiscourseEvent |
 | `Track` | Orchestrator called by the scheduled job — delegates to three action sub-services |
-| `TrackAddedChanges` | Compares current settings against event history, creates `added` events |
+| `TrackNotifyAddedChanges` | Compares current settings against event history, creates `added` events |
 | `TrackRemovedChanges` | Creates `removed` events for settings no longer present |
-| `TrackStatusChanges` | Detects status changes in metadata, creates events, clears caches |
+| `TrackNotifyStatusChanges` | Detects status changes in metadata, creates events, clears caches |
 | `NotifyPromotions` | Iterates all changes and calls `NotifyPromotion` for each |
 | `NotifyPromotion` | Handles one promotion — checks policies, merges notifications, fires events |
 | `NotifyAdminsOfAvailableChange` | Notifies admins when a change reaches one status below promotion threshold |
@@ -86,7 +86,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 
 ### Caching Strategy
 
-The `current_statuses` and `permanent_upcoming_changes` caches are keyed by git version (`Discourse.git_version`). This means they're naturally invalidated on every deploy — no TTL needed. Within a deploy, `TrackStatusChanges` calls `clear_caches!` when it detects metadata changes. Always call `clear_caches!` in tests after modifying metadata.
+The `current_statuses` and `permanent_upcoming_changes` caches are keyed by git version (`Discourse.git_version`). This means they're naturally invalidated on every deploy — no TTL needed. Within a deploy, `TrackNotifyStatusChanges` calls `clear_caches!` when it detects metadata changes. Always call `clear_caches!` in tests after modifying metadata.
 
 ### Auto-Promotion
 
@@ -95,6 +95,10 @@ The `resolved_value` method is the single source of truth for whether a setting 
 ### Notification Merging
 
 When multiple changes need notifications, `NotificationDataMerger` consolidates them into a single notification per admin. It finds existing unread notifications and merges the change names array. The frontend notification types handle singular ("Feature X"), dual ("Feature X and Feature Y"), and many ("Feature X and 2 others") display.
+
+### New Site Notification Suppression
+
+Notifications for `added` and `promoted` changes are skipped on new sites (determined by `Migration::Helpers.new_site?` in `lib/migration/helpers.rb` — a site is "new" if its first schema migration was less than 1 hour ago). This prevents freshly provisioned sites from being flooded with notifications for every existing upcoming change on their first run. The tracking/detection steps still execute — only the notification delivery is suppressed.
 
 ### Group-Based Access
 

@@ -27,6 +27,8 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
     let(:setting_status) { :stable }
 
     before do
+      # No upcoming change notifications are sent for new sites
+      Migration::Helpers.stubs(:new_site?).returns(false)
       SiteSetting.promote_upcoming_changes_on_status = :stable
       mock_upcoming_change_metadata(
         enable_upload_debug_mode: {
@@ -72,6 +74,12 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       before { SiteSetting.enable_upload_debug_mode = true }
 
       it { is_expected.to fail_a_policy(:admin_has_not_manually_toggled) }
+    end
+
+    context "when the site is new (< 1 hour old)" do
+      before { Migration::Helpers.stubs(:new_site?).returns(true) }
+
+      it { is_expected.to fail_a_policy(:site_is_not_new) }
     end
 
     context "when everything's ok" do

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe UpcomingChanges::Action::TrackAddedChanges do
+RSpec.describe UpcomingChanges::Action::TrackNotifyAddedChanges do
   let(:enable_upload_debug_mode_status) { :experimental }
   let(:show_user_menu_avatars_status) { :beta }
 
   before do
+    # No upcoming change notifications are sent for new sites
+    Migration::Helpers.stubs(:new_site?).returns(false)
     mock_upcoming_change_metadata(
       {
         enable_upload_debug_mode: {
@@ -103,6 +105,23 @@ RSpec.describe UpcomingChanges::Action::TrackAddedChanges do
           ).count
         }.by(1)
       end
+
+      context "when the site is new (< 1 hour old)" do
+        before { Migration::Helpers.stubs(:new_site?).returns(true) }
+
+        it "does not notify admins that a change is available" do
+          expect { result }.not_to change { Notification.count }
+        end
+
+        it "does still make the upcoming change event" do
+          expect { result }.to change {
+            scoped_events.where(
+              event_type: :added,
+              upcoming_change_name: :show_user_menu_avatars,
+            ).count
+          }.by(1)
+        end
+      end
     end
 
     context "when the change status does not meet promotion_status - 1" do
@@ -112,11 +131,21 @@ RSpec.describe UpcomingChanges::Action::TrackAddedChanges do
       before { SiteSetting.promote_upcoming_changes_on_status = "stable" }
 
       it "does not notify admins for the scoped alpha changes" do
-        expect { result }.not_to change { Notification.count }
+        expect { result }.not_to change {
+          Notification
+            .where(notification_type: Notification.types[:upcoming_change_available])
+            .where(
+              "data::text LIKE '%enable_upload_debug_mode%' OR data::text LIKE '%show_user_menu_avatars%'",
+            )
+            .count
+        }
       end
 
       it "does not include the scoped changes in notified_changes" do
-        expect(result[:notified_changes]).to be_empty
+        expect(result[:notified_changes]).not_to include(
+          :enable_upload_debug_mode,
+          :show_user_menu_avatars,
+        )
       end
     end
 
