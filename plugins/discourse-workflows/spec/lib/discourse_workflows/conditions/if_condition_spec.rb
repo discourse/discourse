@@ -43,13 +43,11 @@ RSpec.describe DiscourseWorkflows::Conditions::IfCondition::V1 do
 
         items = wrap_items({ "status" => "closed" })
         result = condition.evaluate(input_items: items)
-        expect(result["true"]).to eq(items)
-        expect(result["false"]).to eq([])
+        expect(result).to include("true" => items, "false" => [])
 
         items = wrap_items({ "status" => "open" })
         result = condition.evaluate(input_items: items)
-        expect(result["true"]).to eq([])
-        expect(result["false"]).to eq(items)
+        expect(result).to include("true" => [], "false" => items)
       end
 
       it "notEquals" do
@@ -133,11 +131,11 @@ RSpec.describe DiscourseWorkflows::Conditions::IfCondition::V1 do
 
         items = wrap_items({ "status" => "" })
         result = condition.evaluate(input_items: items)
-        expect(result["true"]).to eq(items)
+        expect(result).to include("true" => items)
 
         items = wrap_items({ "status" => "closed" })
         result = condition.evaluate(input_items: items)
-        expect(result["false"]).to eq(items)
+        expect(result).to include("false" => items)
       end
 
       it "notEmpty" do
@@ -226,11 +224,11 @@ RSpec.describe DiscourseWorkflows::Conditions::IfCondition::V1 do
 
         items = wrap_items({ "topic_id" => 42 })
         result = condition.evaluate(input_items: items)
-        expect(result["true"]).to eq(items)
+        expect(result).to include("true" => items)
 
         items = wrap_items({ "topic_id" => 5 })
         result = condition.evaluate(input_items: items)
-        expect(result["false"]).to eq(items)
+        expect(result).to include("false" => items)
       end
 
       it "lt, gte, lte" do
@@ -305,11 +303,11 @@ RSpec.describe DiscourseWorkflows::Conditions::IfCondition::V1 do
 
         items = wrap_items({ "enabled" => true })
         result = condition.evaluate(input_items: items)
-        expect(result["true"]).to eq(items)
+        expect(result).to include("true" => items)
 
         items = wrap_items({ "enabled" => false })
         result = condition.evaluate(input_items: items)
-        expect(result["false"]).to eq(items)
+        expect(result).to include("false" => items)
       end
 
       it "false" do
@@ -384,11 +382,11 @@ RSpec.describe DiscourseWorkflows::Conditions::IfCondition::V1 do
 
         items = wrap_items({ "status" => "closed", "enabled" => true })
         result = condition.evaluate(input_items: items)
-        expect(result["true"]).to eq(items)
+        expect(result).to include("true" => items)
 
         items = wrap_items({ "status" => "closed", "enabled" => false })
         result = condition.evaluate(input_items: items)
-        expect(result["false"]).to eq(items)
+        expect(result).to include("false" => items)
       end
 
       it "or: any condition passing is enough" do
@@ -419,11 +417,11 @@ RSpec.describe DiscourseWorkflows::Conditions::IfCondition::V1 do
 
         items = wrap_items({ "status" => "archived" })
         result = condition.evaluate(input_items: items)
-        expect(result["true"]).to eq(items)
+        expect(result).to include("true" => items)
 
         items = wrap_items({ "status" => "open" })
         result = condition.evaluate(input_items: items)
-        expect(result["false"]).to eq(items)
+        expect(result).to include("false" => items)
       end
     end
 

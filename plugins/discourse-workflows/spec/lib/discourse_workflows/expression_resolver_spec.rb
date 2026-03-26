@@ -124,9 +124,11 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       }
 
       result = resolver.resolve_hash(config)
-      expect(result["topic_id"]).to eq(42)
-      expect(result["tag_name"]).to eq("resolved")
-      expect(result["nested"]["value"]).to eq(42)
+      expect(result).to include(
+        "topic_id" => 42,
+        "tag_name" => "resolved",
+        "nested" => include("value" => 42),
+      )
     end
 
     it "resolves expressions inside arrays of hashes" do

@@ -154,8 +154,10 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
           }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["workflow"]["name"]).to eq("Updated Name")
-      expect(response.parsed_body["workflow"]["enabled"]).to eq(true)
+      expect(response.parsed_body["workflow"]).to include(
+        "name" => "Updated Name",
+        "enabled" => true,
+      )
     end
 
     it "returns 400 when name is missing" do

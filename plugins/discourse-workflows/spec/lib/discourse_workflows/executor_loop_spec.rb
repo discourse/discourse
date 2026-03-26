@@ -130,8 +130,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
     final_output = execution.context["Final Step"]
     expect(final_output).to be_an(Array)
-    expect(final_output.first["json"]["processed"]).to eq("true")
-    expect(final_output.first["json"]["completed"]).to eq("true")
+    expect(final_output.first["json"]).to include("processed" => "true", "completed" => "true")
   end
 
   it "processes multiple items through the loop in batches" do

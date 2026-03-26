@@ -70,8 +70,7 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
       }
 
       result = instance.execute_single(context, item: { "json" => {} }, config: config)
-      expect(result["email"]).to eq("test@example.com")
-      expect(result["score"]).to eq(42)
+      expect(result).to include("email" => "test@example.com", "score" => 42)
       expect(count_data_table_rows(data_table)).to eq(1)
     end
   end

@@ -33,6 +33,8 @@ module DiscourseWorkflows
       only_if(:graph_data_provided) { step :populate_graph }
     end
 
+    step :clear_site_cache
+
     private
 
     def fetch_workflow(params:)
@@ -57,6 +59,10 @@ module DiscourseWorkflows
           connections_data: params.connections || [],
         )
       fail!(workflow.errors.full_messages) if result == false
+    end
+
+    def clear_site_cache
+      Site.clear_cache
     end
   end
 end

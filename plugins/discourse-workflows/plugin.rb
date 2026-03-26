@@ -53,6 +53,7 @@ after_initialize do
       Manual
       Schedule
       Form
+      TopicAdminButton
     ].each do |name|
       DiscourseWorkflows::Registry.register_trigger(
         DiscourseWorkflows::Triggers.const_get(name)::V1,
@@ -92,6 +93,20 @@ after_initialize do
     on(trigger_class.event_name) do |*args|
       DiscourseWorkflows::EventListener.handle(trigger_class, *args)
     end
+  end
+
+  add_to_serializer :site, :topic_admin_button_workflows do
+    DiscourseWorkflows::Node
+      .enabled_of_type("trigger:topic_admin_button")
+      .includes(:workflow)
+      .map do |node|
+        {
+          trigger_node_id: node.id,
+          workflow_id: node.workflow_id,
+          label: node.configuration["label"],
+          icon: node.configuration["icon"] || "gear",
+        }
+      end
   end
 
   on(:chat_message_interaction) do |interaction|

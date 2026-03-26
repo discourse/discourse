@@ -36,9 +36,10 @@ RSpec.describe DiscourseWorkflows::Variable::Create do
 
       it "logs a staff action" do
         result
-        log = UserHistory.last
-        expect(log.custom_type).to eq("discourse_workflows_variable_created")
-        expect(log.subject).to eq("API_BASE_URL")
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "discourse_workflows_variable_created",
+          subject: "API_BASE_URL",
+        )
       end
     end
   end

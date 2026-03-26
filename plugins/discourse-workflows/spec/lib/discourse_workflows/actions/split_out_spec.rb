@@ -13,8 +13,8 @@ RSpec.describe DiscourseWorkflows::Actions::SplitOut::V1 do
       result = execute(input)
 
       expect(result.length).to eq(2)
-      expect(result[0]["json"]["a"]).to eq(1)
-      expect(result[1]["json"]["a"]).to eq(2)
+      expect(result[0]["json"]).to include("a" => 1)
+      expect(result[1]["json"]).to include("a" => 2)
     end
 
     it "wraps non-object array elements in a value key" do
@@ -63,8 +63,7 @@ RSpec.describe DiscourseWorkflows::Actions::SplitOut::V1 do
       result = execute(input, "include" => "all_other_fields")
 
       expect(result.length).to eq(1)
-      expect(result[0]["json"]["company"]).to eq("Acme")
-      expect(result[0]["json"]["n"]).to eq(1)
+      expect(result[0]["json"]).to include("company" => "Acme", "n" => 1)
     end
 
     it "includes selected other fields" do
@@ -92,8 +91,7 @@ RSpec.describe DiscourseWorkflows::Actions::SplitOut::V1 do
       result = execute(input, "field" => "names, ages")
 
       expect(result.length).to eq(2)
-      expect(result[0]["json"]["names"]).to eq("a")
-      expect(result[0]["json"]["ages"]).to eq(1)
+      expect(result[0]["json"]).to include("names" => "a", "ages" => 1)
     end
   end
 

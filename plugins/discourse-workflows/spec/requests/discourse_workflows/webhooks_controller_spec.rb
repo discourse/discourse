@@ -35,9 +35,13 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       expect(job["args"][0]["trigger_node_id"]).to eq(webhook_node.id)
 
       trigger_data = job["args"][0]["trigger_data"]
-      expect(trigger_data["body"]).to eq({ "foo" => "bar" })
-      expect(trigger_data["query"]).to be_a(Hash)
-      expect(trigger_data["headers"]).to be_a(Hash)
+      expect(trigger_data).to include(
+        "body" => {
+          "foo" => "bar",
+        },
+        "query" => be_a(Hash),
+        "headers" => be_a(Hash),
+      )
     end
 
     it "returns 404 when no matching webhook exists" do
@@ -82,8 +86,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       expect(response.status).to eq(200)
 
       trigger_data = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"][0]["trigger_data"]
-      expect(trigger_data["query"]["source"]).to eq("github")
-      expect(trigger_data["query"]["ref"]).to eq("main")
+      expect(trigger_data["query"]).to include("source" => "github", "ref" => "main")
     end
 
     it "handles different HTTP methods" do

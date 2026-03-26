@@ -65,9 +65,11 @@ RSpec.describe "Workflow: topic category changed -> create post" do
     expect(job_data).to be_present
 
     trigger_data = job_data["args"].first["trigger_data"]
-    expect(trigger_data["topic_id"]).to eq(topic.id)
-    expect(trigger_data["old_category_id"]).to eq(category.id)
-    expect(trigger_data["category_id"]).to eq(target_category.id)
+    expect(trigger_data).to include(
+      "topic_id" => topic.id,
+      "old_category_id" => category.id,
+      "category_id" => target_category.id,
+    )
 
     Jobs::DiscourseWorkflows::ExecuteWorkflow.new.execute(job_data["args"].first.symbolize_keys)
 

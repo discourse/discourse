@@ -98,7 +98,9 @@ RSpec.describe "Wait for Approval end-to-end" do
 
     execution.reload
     expect(execution.status).to eq("success")
-    expect(execution.context["Final"].first["json"]["completed"]).to eq("true")
-    expect(execution.context["Final"].first["json"]["approved"]).to eq(true)
+    expect(execution.context["Final"].first["json"]).to include(
+      "completed" => "true",
+      "approved" => true,
+    )
   end
 end

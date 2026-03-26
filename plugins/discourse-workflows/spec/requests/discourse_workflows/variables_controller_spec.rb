@@ -56,8 +56,7 @@ RSpec.describe DiscourseWorkflows::VariablesController do
 
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["variable"]["key"]).to eq("API_URL")
-      expect(json["variable"]["value"]).to eq("https://example.com")
+      expect(json["variable"]).to include("key" => "API_URL", "value" => "https://example.com")
     end
 
     it "returns 400 when key is missing" do

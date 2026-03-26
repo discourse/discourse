@@ -26,6 +26,7 @@ const DEFAULT_NODE_ICONS = {
     colorKey: "deep-orange",
   },
   "trigger:form": { icon: "rectangle-list", colorKey: "teal" },
+  "trigger:topic_admin_button": { icon: "gear", colorKey: "cyan" },
   "condition:if": { icon: "arrows-split-up-and-left", colorKey: "blue" },
   "condition:filter": { icon: "filter", colorKey: "violet" },
   "action:code": { icon: "code", colorKey: "red" },

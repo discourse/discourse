@@ -94,6 +94,7 @@ en:
         "trigger:form": "Form Trigger"
         "action:form": "Form"
         "action:respond_to_webhook": "Respond to Webhook"
+        "trigger:topic_admin_button": "Topic admin button"
       node_descriptions:
         "trigger:topic_closed": "Fires when a topic is closed by a user or auto-close timer"
         "trigger:post_created": "Fires when a new post or reply is created"
@@ -121,6 +122,11 @@ en:
         "trigger:form": "Generates a public web form and fires when it is submitted"
         "action:form": "Adds a page to a multi-step form"
         "action:respond_to_webhook": "Send a custom HTTP response to the webhook caller"
+        "trigger:topic_admin_button": "Adds a button to the topic admin menu that triggers this workflow"
+      topic_admin_button:
+        label: "Button label"
+        label_placeholder: "Run workflow"
+        icon: "Button icon"
       if_condition:
         no_conditions_body: "Conditions are used to filter items based on their values."
         add_condition: "Add condition"

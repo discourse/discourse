@@ -85,8 +85,6 @@ RSpec.describe "Data Table workflow integration" do
     expect(count_data_table_rows(data_table)).to eq(1)
 
     row = list_data_table_rows(data_table)[:rows].first
-    expect(row["topic_id"]).to eq(topic.id)
-    expect(row["author"]).to eq(admin.username)
-    expect(row["logged"]).to eq(true)
+    expect(row).to include("topic_id" => topic.id, "author" => admin.username, "logged" => true)
   end
 end

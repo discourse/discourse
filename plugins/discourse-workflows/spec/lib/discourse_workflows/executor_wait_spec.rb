@@ -71,10 +71,12 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       execution = DiscourseWorkflows::Executor.new(trigger_node, {}).run
 
-      expect(execution.status).to eq("waiting")
-      expect(execution.waiting_node_id).to eq(wait_node.id)
+      expect(execution).to have_attributes(
+        status: "waiting",
+        waiting_node_id: wait_node.id,
+        finished_at: nil,
+      )
       expect(execution.context).to have_key("trigger")
-      expect(execution.finished_at).to be_nil
 
       waiting_step = execution.steps.find_by(node_id: wait_node.id)
       expect(waiting_step.status).to eq("waiting")
@@ -83,8 +85,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       chat_message = Chat::Message.where(chat_channel_id: channel.id).last
       expect(chat_message).to be_present
-      expect(chat_message.message).to eq("Please approve")
-      expect(chat_message.blocks).to be_present
+      expect(chat_message).to have_attributes(message: "Please approve", blocks: be_present)
       expect(chat_message.blocks.first["elements"].size).to eq(2)
 
       approve_action_id = chat_message.blocks.first["elements"].first["action_id"]
@@ -128,9 +129,11 @@ RSpec.describe DiscourseWorkflows::Executor do
       freeze_time do
         execution = DiscourseWorkflows::Executor.new(trigger_node, {}).run
 
-        expect(execution.status).to eq("waiting")
-        expect(execution.waiting_until).to eq_time(60.minutes.from_now)
-        expect(execution.waiting_config["timeout_action"]).to eq("fail")
+        expect(execution).to have_attributes(
+          status: "waiting",
+          waiting_until: eq_time(60.minutes.from_now),
+        )
+        expect(execution.waiting_config).to include("timeout_action" => "fail")
       end
     end
   end
@@ -194,14 +197,15 @@ RSpec.describe DiscourseWorkflows::Executor do
       response_items = [{ "json" => { "approved" => true } }]
       resumed = DiscourseWorkflows::Executor.resume(execution.reload, response_items)
 
-      expect(resumed.status).to eq("success")
-      expect(resumed.finished_at).to be_present
-      expect(resumed.waiting_node_id).to be_nil
+      expect(resumed).to have_attributes(
+        status: "success",
+        finished_at: be_present,
+        waiting_node_id: nil,
+      )
 
       after_output = resumed.context["After"]
       expect(after_output).to be_an(Array)
-      expect(after_output.first["json"]["approved"]).to eq(true)
-      expect(after_output.first["json"]["done"]).to eq("true")
+      expect(after_output.first["json"]).to include("approved" => true, "done" => "true")
     end
 
     it "does not resume a non-waiting execution" do

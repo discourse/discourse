@@ -48,8 +48,7 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       get "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json"
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["data_table"]["id"]).to eq(data_table.id)
-      expect(json["data_table"]["name"]).to eq(data_table.name)
+      expect(json["data_table"]).to include("id" => data_table.id, "name" => data_table.name)
     end
 
     it "returns 404 for non-existent data table" do

@@ -9,6 +9,7 @@ module DiscourseWorkflows
     model :workflow
     step :log
     step :destroy_workflow
+    step :clear_site_cache
 
     private
 
@@ -26,6 +27,10 @@ module DiscourseWorkflows
 
     def destroy_workflow(workflow:)
       workflow.destroy!
+    end
+
+    def clear_site_cache
+      Site.clear_cache
     end
   end
 end

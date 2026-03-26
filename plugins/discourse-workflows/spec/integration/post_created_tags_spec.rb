@@ -71,9 +71,11 @@ RSpec.describe "Workflow: post created -> append tags" do
     expect(job_data).to be_present
 
     trigger_data = job_data["args"].first["trigger_data"]
-    expect(trigger_data["post_id"]).to eq(reply.id)
-    expect(trigger_data["topic_id"]).to eq(topic.id)
-    expect(trigger_data["is_first_post"]).to eq(false)
+    expect(trigger_data).to include(
+      "post_id" => reply.id,
+      "topic_id" => topic.id,
+      "is_first_post" => false,
+    )
 
     Jobs::DiscourseWorkflows::ExecuteWorkflow.new.execute(job_data["args"].first.symbolize_keys)
 

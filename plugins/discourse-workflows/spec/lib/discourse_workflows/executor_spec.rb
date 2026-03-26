@@ -92,8 +92,7 @@ RSpec.describe DiscourseWorkflows::Executor do
       executor = described_class.new(trigger_node, trigger_data)
       execution = executor.run
 
-      expect(execution.status).to eq("error")
-      expect(execution.error).to be_present
+      expect(execution).to have_attributes(status: "error", error: be_present)
     end
 
     it "fails when trigger node is not in the snapshot" do
@@ -112,8 +111,10 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       execution = executor.run
 
-      expect(execution.status).to eq("error")
-      expect(execution.error).to include("not found in workflow snapshot")
+      expect(execution).to have_attributes(
+        status: "error",
+        error: include("not found in workflow snapshot"),
+      )
     end
 
     it "follows the correct branch of a condition node" do
@@ -500,10 +501,12 @@ RSpec.describe DiscourseWorkflows::Executor do
       execution = described_class.new(trigger_node, trigger_data).run
 
       filter_step = execution.steps.find_by(node: filter_node)
-      expect(filter_step.metadata["resolved_configuration"]).to be_present
-      expect(filter_step.metadata["conditions"]).to be_present
+      expect(filter_step).to have_attributes(status: "success")
+      expect(filter_step.metadata).to include(
+        "resolved_configuration" => be_present,
+        "conditions" => be_present,
+      )
       expect(filter_step.metadata["conditions"].first["passed"]).to eq(true)
-      expect(filter_step.status).to eq("success")
     end
 
     it "marks condition step as filtered when all items fail" do

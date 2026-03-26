@@ -27,10 +27,12 @@ RSpec.describe DiscourseWorkflows::DataTableRow do
           fill_missing: true,
         )
 
-      expect(result["email"]).to eq("test@example.com")
-      expect(result["score"]).to eq(42)
-      expect(result["active"]).to eq(true)
-      expect(result["joined_at"]).to be_a(Time)
+      expect(result).to include(
+        "email" => "test@example.com",
+        "score" => 42,
+        "active" => true,
+        "joined_at" => a_kind_of(Time),
+      )
     end
 
     it "fills omitted columns with nil when requested" do

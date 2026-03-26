@@ -58,8 +58,10 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["executions"].length).to eq(1)
-      expect(json["executions"][0]["id"]).to eq(execution.id)
-      expect(json["executions"][0]["workflow_name"]).to eq(workflow.name)
+      expect(json["executions"][0]).to include(
+        "id" => execution.id,
+        "workflow_name" => workflow.name,
+      )
     end
 
     it "returns meta with total rows" do

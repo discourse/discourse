@@ -33,8 +33,10 @@ RSpec.describe DiscourseWorkflows::Execution::CheckStaleTopics do
 
         expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(1)
         job_args = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.first["args"].first
-        expect(job_args["trigger_node_id"]).to eq(trigger_node.id)
-        expect(job_args["trigger_data"]["topic_id"]).to eq(topic.id)
+        expect(job_args).to include(
+          "trigger_node_id" => trigger_node.id,
+          "trigger_data" => include("topic_id" => topic.id),
+        )
       end
 
       it "stores triggered topic IDs in node static_data" do

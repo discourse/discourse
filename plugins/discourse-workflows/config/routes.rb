@@ -56,6 +56,10 @@ DiscourseWorkflows::Engine.routes.draw do
     end
   end
 
+  scope "/discourse-workflows", defaults: { format: :json } do
+    post "/trigger-topic-admin-button" => "topic_admin_button#create"
+  end
+
   scope "/workflows", defaults: { format: :json } do
     match "/webhooks/*path" => "webhooks#receive", :via => :all
   end
