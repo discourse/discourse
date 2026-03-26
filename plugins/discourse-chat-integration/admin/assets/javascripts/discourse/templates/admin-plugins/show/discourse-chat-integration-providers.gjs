@@ -9,9 +9,11 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import NavItem from "discourse/components/nav-item";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { i18n } from "discourse-i18n";
+import SetupProvider from "../../../components/modal/setup-provider";
 
 export default class DiscourseChatIntegrationProviders extends Component {
   @service router;
+  @service modal;
 
   isProviderActive = (providerName) => {
     return this.currentProvider === providerName;
@@ -22,30 +24,17 @@ export default class DiscourseChatIntegrationProviders extends Component {
   }
 
   get enabledProviders() {
-    return this.args.controller.model.content || [];
+    return this.args.controller.model.enabled_providers || [];
   }
 
   // Sorted by popularity (number of customer sites using each provider)
   get allProviders() {
-    return [
-      "slack",
-      "discord",
-      "teams",
-      "telegram",
-      "google",
-      "matrix",
-      "zulip",
-      "mattermost",
-      "powerautomate",
-      "gitter",
-      "rocketchat",
-      "guilded",
-      "groupme",
-      "webex",
-    ].map((name) => ({
-      name,
-      settingsFilter: `chat_integration_${name}`,
-    }));
+    return (this.args.controller.model.available_providers || []).map(
+      (provider) => {
+        provider.settingsFilter = `chat_integration_${provider.name}`;
+        return provider;
+      }
+    );
   }
 
   get disabledProviders() {
@@ -62,10 +51,20 @@ export default class DiscourseChatIntegrationProviders extends Component {
   }
 
   @action
-  configureProvider(provider) {
-    this.router.transitionTo("adminPlugins.show.settings", {
-      queryParams: { filter: provider.settingsFilter },
+  async configureProvider(provider) {
+    const closeData = await this.modal.show(SetupProvider, {
+      model: {
+        provider: this.disabledProviders.find((p) => p.name === provider.name),
+      },
     });
+
+    if (closeData?.setupCompleted) {
+      await this.router.refresh();
+      this.router.transitionTo(
+        "adminPlugins.show.discourse-chat-integration-providers.show",
+        provider.name
+      );
+    }
   }
 
   <template>

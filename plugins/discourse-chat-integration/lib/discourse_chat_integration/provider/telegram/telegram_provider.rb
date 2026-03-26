@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module TelegramProvider
       PROVIDER_NAME = "telegram"
+      POPULARITY_SCORE = 100
       PROVIDER_ENABLED_SETTING = :chat_integration_telegram_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [

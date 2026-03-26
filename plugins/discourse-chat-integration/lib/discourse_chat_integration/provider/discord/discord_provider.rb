@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module DiscordProvider
       PROVIDER_NAME = "discord"
+      POPULARITY_SCORE = 100
       PROVIDER_ENABLED_SETTING = :chat_integration_discord_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [

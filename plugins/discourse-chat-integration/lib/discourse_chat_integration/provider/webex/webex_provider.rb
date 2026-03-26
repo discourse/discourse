@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::WebexProvider
   PROVIDER_NAME = "webex"
+  POPULARITY_SCORE = 50
   PROVIDER_ENABLED_SETTING = :chat_integration_webex_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [

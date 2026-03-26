@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module GuildedProvider
       PROVIDER_NAME = "guilded"
+      POPULARITY_SCORE = 50
       PROVIDER_ENABLED_SETTING = :chat_integration_guilded_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [

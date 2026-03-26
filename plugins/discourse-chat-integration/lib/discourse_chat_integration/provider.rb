@@ -19,16 +19,23 @@ module DiscourseChatIntegration
       self.providers.select { |provider| self.is_enabled(provider) }
     end
 
+    def self.available_providers
+      self
+        .providers
+        .reject { |provider| self.is_enabled(provider) }
+        .sort_by { |provider| [-provider::POPULARITY_SCORE, provider::PROVIDER_NAME] }
+    end
+
     def self.provider_names
-      self.providers.map! { |x| x::PROVIDER_NAME }
+      self.providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
     end
 
     def self.enabled_provider_names
-      self.enabled_providers.map! { |x| x::PROVIDER_NAME }
+      self.enabled_providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
     end
 
     def self.get_by_name(name)
-      self.providers.find { |p| p::PROVIDER_NAME == name }
+      self.providers.find { |provider_klass| provider_klass::PROVIDER_NAME == name }
     end
 
     def self.is_enabled(provider)
@@ -38,6 +45,15 @@ module DiscourseChatIntegration
         SiteSetting.public_send(provider::PROVIDER_ENABLED_SETTING)
       else
         false
+      end
+    end
+
+    def self.setup(provider_klass, current_user)
+      if provider_klass.singleton_class.method_defined?(:setup) ||
+           provider_klass.singleton_class.private_method_defined?(:setup)
+        provider_klass.setup(current_user)
+      else
+        SiteSetting.set_and_log(provider_klass::PROVIDER_ENABLED_SETTING, true, current_user)
       end
     end
 

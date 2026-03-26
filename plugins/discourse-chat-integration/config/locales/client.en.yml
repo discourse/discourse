@@ -14,6 +14,12 @@ en:
       add_provider: "Add provider"
       view_provider_settings: "View provider settings"
       more_providers: "More"
+      setup_provider_modal:
+        title: "Setup %{provider} provider"
+        setup_instructions: "This will enable the %{provider} provider."
+        setup_instructions_additional_details: "Please provide the following details to setup the %{provider} provider."
+        confirm_setup: "Confirm setup"
+        success: "Provider %{provider} setup successfully"
       empty_state:
         title: "Connect your chat platform"
         body: "Send notifications from Discourse to your team's chat. Choose a provider to get started."

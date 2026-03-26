@@ -58,6 +58,43 @@ RSpec.describe "Chat Controller", type: :request do
     end
   end
 
+  describe "setup provider" do
+    include_examples "admin constraints",
+                     "post",
+                     "/admin/plugins/discourse-chat-integration/setup-provider"
+
+    context "when signed in as an admin" do
+      before { sign_in(admin) }
+
+      it "enables the provider site setting" do
+        SiteSetting.chat_integration_enabled = false
+
+        post "/admin/plugins/discourse-chat-integration/setup-provider",
+             params: {
+               provider: {
+                 name: "dummy",
+               },
+             },
+             as: :json
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.chat_integration_enabled).to eq(true)
+      end
+
+      it "returns an error for unknown provider" do
+        post "/admin/plugins/discourse-chat-integration/setup-provider",
+             params: {
+               provider: {
+                 name: "nonexistent_provider",
+               },
+             },
+             as: :json
+
+        expect(response.status).to eq(422)
+      end
+    end
+  end
+
   describe "testing channels" do
     include_examples "admin constraints",
                      "get",
