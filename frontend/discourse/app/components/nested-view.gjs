@@ -7,7 +7,6 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
 import TopicMap from "discourse/components/topic-map";
-import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { eq, gt } from "discourse/truth-helpers";
@@ -44,10 +43,6 @@ export default class NestedView extends Component {
     this.viewportTracker.destroy();
   }
 
-  get isAma() {
-    return this.args.topic?.tags?.some((tag) => tag.name === "ama");
-  }
-
   get flatViewUrl() {
     return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}?flat=1`);
   }
@@ -60,7 +55,7 @@ export default class NestedView extends Component {
 
   <template>
     <div
-      class={{concatClass "nested-view" (if this.isAma "nested-view--ama")}}
+      class="nested-view"
       {{this.viewportTracker.setup
         eyeline=false
         headerOffset=this.header.headerOffset
@@ -131,7 +126,6 @@ export default class NestedView extends Component {
             @depth={{0}}
             @sort={{@sort}}
             @isPinned={{eq node.post.post_number @pinnedPostNumber}}
-            @defaultCollapsed={{this.isAma}}
             @replyToPost={{@replyToPost}}
             @editPost={{@editPost}}
             @deletePost={{@deletePost}}

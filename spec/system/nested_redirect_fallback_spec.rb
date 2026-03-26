@@ -15,22 +15,16 @@ RSpec.describe "Nested redirect fallback for untracked topics" do
     sign_in(user)
   end
 
-  # When the nested replies plugin is enabled and a user navigates to a topic
-  # that is NOT in the client-side tracking state, the routeWillChange handler
-  # in nested-view-redirect.js hits its async fallback path: it aborts the
-  # original Ember transition, performs an ajax lookup to determine the
-  # category, then resumes navigation.
+  # When nested replies is enabled, the afterModel hook in
+  # topic/from-params.js checks topic.is_nested_view and redirects via
+  # router.replaceWith() to the nested route. That check relies on the
+  # topic's category being present in client-side state so is_nested_view
+  # can be resolved. When the topic is NOT in client-side tracking state
+  # the category lookup may be async, exercising a fallback path.
   #
-  # For non-nested topics it must replay the *original* transition via
-  # transition.retry() rather than creating a brand-new
-  # router.transitionTo("topic.fromParams", slug, topicId). A bare
-  # transitionTo always targets topic.fromParams (not topic.fromParamsNear),
-  # which drops the nearPost URL segment — losing the user's intended scroll
-  # position — and may serialise stale controller query params into the URL.
-  #
-  # To verify these tests fail without the fix, change the two
-  # `transition.retry()` calls in nested-view-redirect.js back to
-  # `router.transitionTo("topic.fromParams", slug, topicId)`.
+  # These tests verify the fallback preserves the post number in the URL
+  # (so the user's scroll position isn't lost) and that non-nested topics
+  # still load the flat view correctly.
 
   it "preserves the post number in the URL after the async category check" do
     page.visit("/about")

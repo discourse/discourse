@@ -216,7 +216,6 @@ export default class NestedPostChildren extends Component {
             @topic={{@topic}}
             @depth={{this.childDepth}}
             @sort={{@sort}}
-            @defaultCollapsed={{@defaultCollapsed}}
             @replyToPost={{@replyToPost}}
             @editPost={{@editPost}}
             @deletePost={{@deletePost}}

@@ -56,9 +56,8 @@ export default class NestedPost extends Component {
       this.collapsed = cached.collapsed;
     } else {
       this.expanded =
-        ((this.args.children?.length ?? 0) > 0 ||
-          this.args.post.deleted_post_placeholder === true) &&
-        !this.args.defaultCollapsed;
+        (this.args.children?.length ?? 0) > 0 ||
+        this.args.post.deleted_post_placeholder === true;
       this.collapsed = false;
     }
 
@@ -436,7 +435,6 @@ export default class NestedPost extends Component {
               @totalDescendantCount={{@post.total_descendant_count}}
               @depth={{@depth}}
               @sort={{@sort}}
-              @defaultCollapsed={{@defaultCollapsed}}
               @replyToPost={{@replyToPost}}
               @editPost={{@editPost}}
               @deletePost={{@deletePost}}

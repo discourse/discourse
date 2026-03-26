@@ -206,14 +206,6 @@
     border-radius: 2em;
     padding: 0.65em 1.25em;
   }
-
-  &--ama {
-    .nested-post__op-badge {
-      color: var(--success);
-      background: var(--success-low);
-      border-color: var(--success-medium);
-    }
-  }
 }
 
 // ── Sort selector ──────────────────────────────────────────────────
