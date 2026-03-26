@@ -343,15 +343,11 @@ class PostRevisor
           f != "user_id" && f != "edit_reason" && @post.previous_changes.has_key?(f)
         end
 
-    if only_user_id_changed
-      post_process_post
-    else
-      Topic.reset_highest(@topic.id)
-      post_process_post
-      alert_users
-      publish_changes
-      grant_badge
-    end
+    Topic.reset_highest(@topic.id) unless only_user_id_changed
+    post_process_post
+    alert_users
+    publish_changes
+    grant_badge
 
     ReviewablePost.queue_for_review_if_possible(@post, @editor) if should_create_new_version?
 
