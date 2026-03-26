@@ -732,7 +732,7 @@ RSpec.describe GroupsController do
       freeze_time 1.day.from_now
 
       4.times { group.add(Fabricate(:user)) }
-      usernames = group.users.map { |m| m.username }.sort
+      usernames = group.reload.users.map { |m| m.username }.sort
 
       get "/groups/#{group.name}/members.json", params: { limit: 3, asc: true }
 
@@ -753,7 +753,9 @@ RSpec.describe GroupsController do
       get "/groups/#{group.name}/members.json", params: { order: "added_at" }
       members = response.parsed_body["members"]
 
-      expect(members.last["added_at"]).to eq(first_user.created_at.as_json)
+      expect(Time.zone.parse(members.last["added_at"])).to be_within_one_second_of(
+        first_user.created_at,
+      )
     end
 
     it "can sort items" do

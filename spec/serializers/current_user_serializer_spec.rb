@@ -108,18 +108,16 @@ RSpec.describe CurrentUserSerializer do
 
   describe "#groups" do
     it "should only show visible groups" do
-      Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
-      hidden_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
+      Fabricate(:group, visibility_level: Group.visibility_levels[:public])
+      hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
       public_group =
-        Fabricate.build(
+        Fabricate(
           :group,
           visibility_level: Group.visibility_levels[:public],
           name: "UppercaseGroupName",
         )
       hidden_group.add(user)
-      hidden_group.save!
       public_group.add(user)
-      public_group.save!
       payload = serializer.as_json
 
       expect(payload[:groups]).to contain_exactly(
