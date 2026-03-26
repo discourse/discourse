@@ -71,6 +71,7 @@ require_relative "lib/engine"
 require_relative "lib/configuration/module"
 require_relative "lib/mcp/oauth_token_store"
 require_relative "lib/mcp/oauth_discovery"
+require_relative "lib/mcp/oauth_client_registration"
 require_relative "lib/mcp/oauth_flow"
 
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|

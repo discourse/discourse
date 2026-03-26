@@ -166,7 +166,7 @@ class AiMcpServer < ActiveRecord::Base
     if oauth_client_registration == "manual"
       oauth_client_id.presence
     else
-      oauth_client_metadata_url
+      oauth_client_id.presence || oauth_client_metadata_url
     end
   end
 
@@ -184,6 +184,7 @@ class AiMcpServer < ActiveRecord::Base
       authorization_endpoint: oauth_authorization_endpoint,
       token_endpoint: oauth_token_endpoint,
       revocation_endpoint: oauth_revocation_endpoint,
+      registration_endpoint: oauth_registration_endpoint,
     )
   end
 
@@ -192,6 +193,7 @@ class AiMcpServer < ActiveRecord::Base
       oauth_authorization_endpoint: discovery.authorization_endpoint,
       oauth_token_endpoint: discovery.token_endpoint,
       oauth_revocation_endpoint: discovery.revocation_endpoint,
+      oauth_registration_endpoint: discovery.registration_endpoint,
       oauth_issuer: discovery.issuer,
       oauth_resource_metadata_url: discovery.resource_metadata_url,
       oauth_last_error: nil,
@@ -213,6 +215,21 @@ class AiMcpServer < ActiveRecord::Base
     )
   end
 
+  def store_dynamic_registration!(client_id:, client_secret: nil)
+    columns = { oauth_client_id: client_id }
+    if client_secret.present?
+      secret =
+        AiSecret
+          .find_or_initialize_by(name: "mcp_dynamic_#{id}_client_secret")
+          .tap do |s|
+            s.secret = client_secret
+            s.save!
+          end
+      columns[:oauth_client_secret_ai_secret_id] = secret.id
+    end
+    update_columns(columns)
+  end
+
   def mark_oauth_authorized!
     update_columns(
       oauth_status: "connected",
@@ -232,7 +249,7 @@ class AiMcpServer < ActiveRecord::Base
 
   def clear_oauth_credentials!
     oauth_token_store.clear!
-    update_columns(
+    columns = {
       oauth_status: "disconnected",
       oauth_token_type: nil,
       oauth_access_token_expires_at: nil,
@@ -240,12 +257,15 @@ class AiMcpServer < ActiveRecord::Base
       oauth_authorization_endpoint: nil,
       oauth_token_endpoint: nil,
       oauth_revocation_endpoint: nil,
+      oauth_registration_endpoint: nil,
       oauth_issuer: nil,
       oauth_resource_metadata_url: nil,
       oauth_last_error: nil,
       oauth_last_authorized_at: nil,
       oauth_last_refreshed_at: nil,
-    )
+    }
+    columns[:oauth_client_id] = nil if oauth_client_registration != "manual"
+    update_columns(columns)
   end
 
   def oauth_token_store
@@ -316,9 +336,6 @@ class AiMcpServer < ActiveRecord::Base
     if !oauth?
       self.oauth_client_registration =
         oauth_client_registration.presence || "client_metadata_document"
-    elsif oauth_client_registration != "manual"
-      self.oauth_client_id = nil
-      self.oauth_client_secret_ai_secret_id = nil
     end
 
     self.ai_secret_id = nil if !header_secret?
@@ -412,6 +429,7 @@ end
 #  oauth_last_authorized_at         :datetime
 #  oauth_last_error                 :string(1000)
 #  oauth_last_refreshed_at          :datetime
+#  oauth_registration_endpoint      :string(1000)
 #  oauth_resource_metadata_url      :string(1000)
 #  oauth_revocation_endpoint        :string(1000)
 #  oauth_scopes                     :string(2000)

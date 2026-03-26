@@ -688,6 +688,7 @@ en:
       tools:
         back: "Back to tools"
         short_title: "Tools"
+        keywords: "mcp|mcp server|model context protocol"
         script_tools: "Script tools"
         export: "Export"
         import: "Import"

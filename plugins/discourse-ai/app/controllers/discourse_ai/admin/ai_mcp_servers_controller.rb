@@ -48,8 +48,14 @@ module DiscourseAi
 
       def update
         initial_attributes = @ai_mcp_server.attributes.dup
+        update_params = ai_mcp_server_params
 
-        if @ai_mcp_server.update(ai_mcp_server_params)
+        if @ai_mcp_server.oauth? && update_params[:oauth_client_registration] != "manual" &&
+             @ai_mcp_server.oauth_client_registration != "manual"
+          update_params = update_params.except(:oauth_client_id, :oauth_client_secret_ai_secret_id)
+        end
+
+        if @ai_mcp_server.update(update_params)
           log_ai_mcp_server_update(@ai_mcp_server, initial_attributes)
           render json: AiMcpServerSerializer.new(@ai_mcp_server)
         else
@@ -113,6 +119,7 @@ module DiscourseAi
         persisted_server = params[:id].present? ? AiMcpServer.find(params[:id]) : nil
         ai_mcp_server = persisted_server || AiMcpServer.new
         ai_mcp_server.assign_attributes(ai_mcp_server_params)
+        restore_dynamic_oauth_credentials!(ai_mcp_server, persisted_server)
 
         return render_json_error ai_mcp_server if !ai_mcp_server.valid?
         if oauth_reauthorization_required_for_test?(ai_mcp_server)
@@ -260,10 +267,23 @@ module DiscourseAi
         logger.log_deletion("mcp_server", details)
       end
 
+      def restore_dynamic_oauth_credentials!(ai_mcp_server, persisted_server)
+        return if persisted_server.blank? || !ai_mcp_server.oauth?
+        return if ai_mcp_server.oauth_client_registration == "manual"
+
+        ai_mcp_server.oauth_client_id = persisted_server.oauth_client_id
+        ai_mcp_server.oauth_client_secret_ai_secret_id =
+          persisted_server.oauth_client_secret_ai_secret_id
+      end
+
       def oauth_reauthorization_required_for_test?(ai_mcp_server)
         return false if !ai_mcp_server.oauth? || !ai_mcp_server.persisted?
 
-        (ai_mcp_server.changes_to_save.keys & AiMcpServer::OAUTH_REAUTH_TRIGGER_FIELDS).present?
+        trigger_fields = AiMcpServer::OAUTH_REAUTH_TRIGGER_FIELDS
+        if ai_mcp_server.oauth_client_registration != "manual"
+          trigger_fields -= %w[oauth_client_id oauth_client_secret_ai_secret_id]
+        end
+        (ai_mcp_server.changes_to_save.keys & trigger_fields).present?
       end
 
       def sanitized_oauth_test_server(ai_mcp_server)

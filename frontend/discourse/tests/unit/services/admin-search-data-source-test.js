@@ -194,6 +194,34 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     assert.deepEqual(results[0].label, "About your site > Title");
   });
 
+  test("search - matches 3-character keywords like acronyms", async function (assert) {
+    this.subject.componentDataSourceItems = [];
+    this.subject.reportDataSourceItems = [];
+    this.subject.themeDataSourceItems = [];
+    this.subject.settingDataSourceItems = [];
+    this.subject.pageDataSourceItems = [
+      {
+        description: "Tools and MCP servers",
+        icon: "gear",
+        keywords: "mcp mcp server model context protocol",
+        label: "Plugins > Tools",
+        type: "page",
+        url: "/admin/plugins/discourse-ai/ai-tools",
+      },
+      {
+        description: "Unrelated page",
+        icon: "gear",
+        keywords: "something else entirely",
+        label: "Other Page",
+        type: "page",
+        url: "/admin/other",
+      },
+    ];
+    let results = this.subject.search("mcp");
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].label, "Plugins > Tools");
+  });
+
   test("search - prioritize pages", async function (assert) {
     this.subject.componentDataSourceItems = [];
     this.subject.reportDataSourceItems = [];

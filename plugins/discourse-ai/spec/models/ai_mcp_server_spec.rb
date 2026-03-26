@@ -91,6 +91,33 @@ RSpec.describe AiMcpServer do
     expect(server.effective_oauth_client_id).to eq("manual-client-id")
   end
 
+  it "prefers a dynamically registered client_id over the metadata URL" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    expect(server.reload.effective_oauth_client_id).to eq("dynamic-client-id")
+  end
+
+  it "clears dynamically registered client_id when OAuth credentials are cleared" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    server.clear_oauth_credentials!
+
+    expect(server.reload.oauth_client_id).to be_nil
+    expect(server.effective_oauth_client_id).to eq(server.oauth_client_metadata_url)
+  end
+
+  it "preserves dynamically registered client_id across normal saves" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    server.reload
+    server.update!(description: "Updated description")
+
+    expect(server.reload.oauth_client_id).to eq("dynamic-client-id")
+  end
+
   it "clears stored OAuth credentials when the OAuth configuration changes" do
     server =
       Fabricate(

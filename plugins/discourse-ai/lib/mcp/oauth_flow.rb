@@ -25,6 +25,12 @@ module DiscourseAi
           discovery = OAuthDiscovery.discover!(server)
           server.store_oauth_discovery!(discovery)
 
+          if server.oauth_client_registration != "manual" && server.oauth_client_id.blank? &&
+               discovery.registration_endpoint.present?
+            OAuthClientRegistration.register!(server: server, discovery: discovery)
+            server.reload
+          end
+
           state = SecureRandom.hex(32)
           code_verifier = generate_code_verifier
           Rails.cache.write(
@@ -166,8 +172,7 @@ module DiscourseAi
           validate_endpoint!(endpoint)
 
           headers = { "Accept" => "application/json" }
-          if server.oauth_client_registration == "manual" &&
-               server.oauth_client_secret_value.present?
+          if server.oauth_client_secret_value.present?
             headers["Authorization"] = basic_auth_header(
               server.effective_oauth_client_id,
               server.oauth_client_secret_value,
@@ -226,8 +231,7 @@ module DiscourseAi
             end
 
           headers = { "Accept" => "application/json" }
-          if server.oauth_client_registration == "manual" &&
-               server.oauth_client_secret_value.present?
+          if server.oauth_client_secret_value.present?
             headers["Authorization"] = basic_auth_header(
               server.effective_oauth_client_id,
               server.oauth_client_secret_value,
