@@ -20,7 +20,7 @@ describe "Discovery Layout" do
     it "renders the discovery-layout wrapper with sidebar on /latest" do
       visit("/latest")
       expect(page).to have_css(".discovery-layout")
-      expect(page).to have_css(".discovery-layout__main #list-area")
+      expect(page).to have_css(".discovery-layout__list #list-area")
       expect(page).to have_css(".discovery-layout__sidebar")
     end
   end
