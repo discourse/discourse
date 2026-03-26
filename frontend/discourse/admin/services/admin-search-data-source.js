@@ -283,11 +283,11 @@ export default class AdminSearchDataSource extends Service {
     const labelPartialRegex = new RegExp(`\\b${escapedFilterRegExp}`, "i");
     const exactKeywordRegexes = escapedFilterRegExp
       .split(" ")
-      .filter((keyword) => keyword.length > 3)
+      .filter((keyword) => keyword.length >= 3)
       .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
     const partialKeywordRegexes = escapedFilterRegExp
       .split(" ")
-      .filter((keyword) => keyword.length > 3)
+      .filter((keyword) => keyword.length >= 3)
       .map((keyword) => new RegExp(`\\b${keyword}`, "i"));
     const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
 
@@ -316,7 +316,10 @@ export default class AdminSearchDataSource extends Service {
         ) {
           dataSourceItem.score += SEARCH_SCORES.partialKeyword;
         }
-        if (filter.length > 3 && dataSourceItem.keywords.match(fallbackRegex)) {
+        if (
+          filter.length >= 3 &&
+          dataSourceItem.keywords.match(fallbackRegex)
+        ) {
           dataSourceItem.score += SEARCH_SCORES.fallback;
         }
 

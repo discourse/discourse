@@ -80,6 +80,19 @@ RSpec.describe AiMcpServer do
     expect(server.oauth_token.refresh_token).to eq("refresh")
   end
 
+  it "capitalizes a lowercase OAuth token type in the Authorization header" do
+    server =
+      Fabricate(
+        :ai_mcp_server,
+        auth_type: "oauth",
+        oauth_status: "connected",
+        oauth_token_type: "bearer",
+      )
+    server.oauth_token_store.write!(access_token: "oauth-access-token", refresh_token: "refresh")
+
+    expect(server.auth_header_value).to eq("Bearer oauth-access-token")
+  end
+
   it "uses the client metadata URL unless manual registration is selected" do
     server = Fabricate(:ai_mcp_server, auth_type: "oauth")
 
@@ -89,6 +102,33 @@ RSpec.describe AiMcpServer do
     server.oauth_client_id = "manual-client-id"
 
     expect(server.effective_oauth_client_id).to eq("manual-client-id")
+  end
+
+  it "prefers a dynamically registered client_id over the metadata URL" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    expect(server.reload.effective_oauth_client_id).to eq("dynamic-client-id")
+  end
+
+  it "clears dynamically registered client_id when OAuth credentials are cleared" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    server.clear_oauth_credentials!
+
+    expect(server.reload.oauth_client_id).to be_nil
+    expect(server.effective_oauth_client_id).to eq(server.oauth_client_metadata_url)
+  end
+
+  it "preserves dynamically registered client_id across normal saves" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    server.reload
+    server.update!(description: "Updated description")
+
+    expect(server.reload.oauth_client_id).to eq("dynamic-client-id")
   end
 
   it "clears stored OAuth credentials when the OAuth configuration changes" do

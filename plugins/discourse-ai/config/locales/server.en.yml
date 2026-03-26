@@ -325,7 +325,11 @@ en:
         oauth_state_invalid: "The OAuth authorization state is invalid or has expired. Start the connection again."
         oauth_token_exchange_failed: "The OAuth token exchange failed with status %{status}."
         oauth_https_required: "OAuth requires your site to be served over HTTPS."
+        oauth_callback_failed: "OAuth connection failed: %{message}"
         oauth_client_metadata_public_https_required: "Client metadata document registration requires a public HTTPS site URL. Current client metadata URL: %{url}"
+        oauth_registration_endpoint_missing: "The OAuth authorization server does not advertise a registration endpoint."
+        oauth_client_registration_failed: "Dynamic client registration failed with status %{status}."
+        oauth_client_registration_failed_no_id: "Dynamic client registration succeeded but no client_id was returned."
 
     ai_helper:
       errors:
