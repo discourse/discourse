@@ -7,7 +7,7 @@ module DiscourseWorkflows
     params do
       attribute :workflow_id, :integer
       attribute :name, :string
-      attribute :enabled, :boolean, default: false
+      attribute :enabled, :boolean
       attribute :nodes
       attribute :connections
       attribute :sticky_notes
@@ -46,7 +46,8 @@ module DiscourseWorkflows
     end
 
     def update_workflow(workflow:, params:, guardian:)
-      attrs = { name: params.name, enabled: params.enabled, updated_by: guardian.user }
+      attrs = { name: params.name, updated_by: guardian.user }
+      attrs[:enabled] = params.enabled unless params.enabled.nil?
       attrs[:sticky_notes] = params.sticky_notes if params.sticky_notes
       workflow.update!(**attrs)
     end

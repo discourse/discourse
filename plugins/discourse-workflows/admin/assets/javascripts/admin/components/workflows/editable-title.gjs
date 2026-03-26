@@ -36,6 +36,10 @@ export default class WorkflowEditableTitle extends Component {
 
   @action
   save() {
+    if (!this.isEditing) {
+      return;
+    }
+
     this.isEditing = false;
     if (this.editValue.trim() && this.editValue !== this.args.value) {
       this.args.onSave(this.editValue.trim());
