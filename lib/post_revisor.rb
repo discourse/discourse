@@ -338,10 +338,10 @@ class PostRevisor
 
     # Skip heavy post processing operations if the only change was the post ownership (user merges)
     only_user_id_changed =
-      @fields.has_key?("user_id") &&
-        PostRevisor::POST_TRACKED_FIELDS.none? do |f|
-          f != "user_id" && f != "edit_reason" && @post.previous_changes.has_key?(f)
-        end
+      if @fields.has_key?("user_id")
+        content_tracked_fields = POST_TRACKED_FIELDS - %w[user_id edit_reason]
+        content_tracked_fields.none? { |f| @post.previous_changes.has_key?(f) }
+      end
 
     Topic.reset_highest(@topic.id) unless only_user_id_changed
     post_process_post
