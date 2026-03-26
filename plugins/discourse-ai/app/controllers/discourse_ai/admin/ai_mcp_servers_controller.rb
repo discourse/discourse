@@ -87,9 +87,19 @@ module DiscourseAi
         ai_mcp_server =
           DiscourseAi::Mcp::OAuthFlow.complete!(params: params, current_user: current_user)
         redirect_to ai_mcp_server.admin_edit_url
-      rescue StandardError => e
-        Rails.logger.warn("Discourse AI MCP OAuth callback failed: #{e.message}")
-        redirect_to "/admin/plugins/discourse-ai/ai-tools"
+      rescue DiscourseAi::Mcp::OAuthFlow::OAuthError => e
+        Rails.logger.warn(
+          "Discourse AI MCP OAuth callback failed: #{e.message} (#{e.cause&.class}: #{e.cause&.message})",
+        )
+        if e.server.present?
+          redirect_to e.server.admin_edit_url
+        else
+          flash[:error] = I18n.t(
+            "discourse_ai.mcp_servers.errors.oauth_callback_failed",
+            message: e.message,
+          )
+          redirect_to "/admin/plugins/discourse-ai/ai-tools"
+        end
       end
 
       def oauth_disconnect

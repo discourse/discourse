@@ -21,6 +21,45 @@ RSpec.describe DiscourseAi::Mcp::OAuthFlow do
     end
   end
 
+  describe ".complete!" do
+    it "wraps token exchange errors in OAuthError with the server attached" do
+      ai_mcp_server.update_columns(
+        oauth_authorization_endpoint: "https://auth.example.com/authorize",
+        oauth_token_endpoint: "https://auth.example.com/token",
+        oauth_issuer: "https://auth.example.com",
+      )
+
+      state = SecureRandom.hex(32)
+      Rails.cache.write(
+        "discourse-ai:mcp-oauth-state:#{state}",
+        {
+          "ai_mcp_server_id" => ai_mcp_server.id,
+          "user_id" => user.id,
+          "code_verifier" => "test-verifier",
+        },
+        expires_in: 10.minutes,
+      )
+
+      stub_request(:post, "https://auth.example.com/token").to_return(
+        status: 400,
+        body: { error: "invalid_client", error_description: "Client not found" }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      expect {
+        described_class.complete!(params: { state: state, code: "auth-code" }, current_user: user)
+      }.to raise_error(described_class::OAuthError, "Client not found") { |error|
+        expect(error.server).to eq(ai_mcp_server)
+        expect(error.cause).to be_a(DiscourseAi::Mcp::Client::Error)
+      }
+
+      expect(ai_mcp_server.reload.oauth_status).to eq("error")
+      expect(ai_mcp_server.oauth_last_error).to eq("Client not found")
+    end
+  end
+
   describe ".refresh!" do
     it "uses HTTP basic auth without sending client_secret in the request body" do
       ai_mcp_server.update!(

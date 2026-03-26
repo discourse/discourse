@@ -278,6 +278,29 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
 
       expect(response).to redirect_to(ai_mcp_server.admin_edit_url)
     end
+
+    it "redirects to the server edit page on failure so the admin can see the error" do
+      DiscourseAi::Mcp::OAuthFlow.expects(:complete!).raises(
+        DiscourseAi::Mcp::OAuthFlow::OAuthError.new("Client not found", server: ai_mcp_server),
+      )
+
+      get "/admin/plugins/discourse-ai/ai-mcp-servers/oauth/callback", params: { state: "abc" }
+
+      expect(response).to redirect_to(ai_mcp_server.admin_edit_url)
+    end
+
+    it "falls back to the tools page with a flash error when the server is unknown" do
+      DiscourseAi::Mcp::OAuthFlow.expects(:complete!).raises(
+        DiscourseAi::Mcp::OAuthFlow::OAuthError.new("invalid state"),
+      )
+
+      get "/admin/plugins/discourse-ai/ai-mcp-servers/oauth/callback", params: { state: "bad" }
+
+      expect(response).to redirect_to("/admin/plugins/discourse-ai/ai-tools")
+      expect(flash[:error]).to eq(
+        I18n.t("discourse_ai.mcp_servers.errors.oauth_callback_failed", message: "invalid state"),
+      )
+    end
   end
 
   describe "DELETE #oauth_disconnect" do

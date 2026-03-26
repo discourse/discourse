@@ -8,6 +8,16 @@ module DiscourseAi
     class OAuthFlow
       STATE_TTL = 10.minutes
 
+      OAuthError =
+        Class.new(StandardError) do
+          attr_reader :server
+
+          def initialize(message = nil, server: nil)
+            @server = server
+            super(message)
+          end
+        end
+
       class << self
         def start!(server:, user:)
           validate_local_oauth_urls!(server)
@@ -73,7 +83,7 @@ module DiscourseAi
           server
         rescue StandardError => e
           server&.mark_oauth_error!(e.message)
-          raise
+          raise OAuthError.new(e.message, server: server), cause: e
         end
 
         def refresh!(server)
