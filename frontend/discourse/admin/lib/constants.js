@@ -7,6 +7,7 @@ export const ADMIN_SEARCH_RESULT_TYPES = [
   "theme",
   "component",
   "report",
+  "upcomingChange",
 ];
 
 export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = {
