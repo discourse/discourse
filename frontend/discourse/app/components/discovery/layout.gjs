@@ -42,17 +42,17 @@ export default class Layout extends Component {
 
     {{#if this.siteSettings.discovery_layout_with_sidebar_block}}
       <div class="discovery-layout discovery-layout__content">
-        <div class="discovery-layout__list">
+        <PluginOutlet
+          @name="discovery-above"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash
+            category=@model.category
+            tag=@model.tag
+            model=@model
+          }}
+        />
 
-          <PluginOutlet
-            @name="discovery-above"
-            @connectorTagName="div"
-            @outletArgs={{lazyHash
-              category=@model.category
-              tag=@model.tag
-              model=@model
-            }}
-          />
+        <div class="discovery-layout__list">
 
           <div class={{concatClass "container list-container" @listClass}}>
             <div class="row full-width">
