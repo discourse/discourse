@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class GroupManager
-  include HasErrors
-
   def initialize(group)
     @group = group
   end
