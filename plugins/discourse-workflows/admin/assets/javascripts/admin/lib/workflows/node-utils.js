@@ -1,15 +1,11 @@
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
-const NODE_HEIGHT_BASE = 44;
-const NODE_HEIGHT_WITH_DESC = 62;
-const CHAR_WIDTH = 7.8;
-const PADDING_LEFT_ICON = 36;
-const PADDING_LEFT_TEXT = 14;
-const PADDING_RIGHT = 14;
-const MIN_WIDTH = 80;
+const NODE_WIDTH = 130;
+const NODE_HEIGHT_BASE = 90;
+const NODE_HEIGHT_WITH_DESC = 110;
 
-export { NODE_HEIGHT_BASE, NODE_HEIGHT_WITH_DESC };
+export { NODE_HEIGHT_BASE, NODE_HEIGHT_WITH_DESC, NODE_WIDTH };
 
 const DEFAULT_NODE_ICONS = {
   "trigger:manual": { icon: "arrow-pointer", color: "var(--primary-medium)" },
@@ -70,16 +66,6 @@ export function nodeHeight(node) {
   return nodeDescription(node) ? NODE_HEIGHT_WITH_DESC : NODE_HEIGHT_BASE;
 }
 
-export function nodeWidth(node) {
-  const label = nodeLabel(node);
-  const desc = nodeDescription(node);
-  const hasIcon = !!getNodeIcons()[node.type]?.icon;
-  const textStart = hasIcon ? PADDING_LEFT_ICON : PADDING_LEFT_TEXT;
-  const labelWidth = label.length * CHAR_WIDTH;
-  const descWidth = desc ? desc.length * 6.5 : 0;
-  const contentWidth = Math.max(labelWidth, descWidth);
-  return Math.max(
-    MIN_WIDTH,
-    Math.ceil(textStart + contentWidth + PADDING_RIGHT)
-  );
+export function nodeWidth() {
+  return NODE_WIDTH;
 }

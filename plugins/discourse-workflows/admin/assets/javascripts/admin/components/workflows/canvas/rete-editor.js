@@ -1,5 +1,5 @@
+import { trackedMap } from "@ember/reactive/collections";
 import { cancel, later } from "@ember/runloop";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import loadRete from "discourse/lib/load-rete";
 import { i18n } from "discourse-i18n";
 import {
@@ -54,7 +54,7 @@ function outputKeysForType(type) {
 
 function createCustomRenderer(Scope, iconHTML, callbacks) {
   return class CustomRenderer extends Scope {
-    nodeEntries = new TrackedMap();
+    nodeEntries = trackedMap();
 
     // Socket bridge: called from WorkflowNode's didInsert modifier
     onSocketRendered = (nodeId, side, key, socketOrOutputs, element) => {
@@ -616,7 +616,7 @@ export async function createReteEditor(container, { iconHTML, callbacks }) {
     constructor(data) {
       super(nodeLabel(data) || data.name || "Node");
       this.workflowData = data;
-      this.width = nodeWidth(data);
+      this.width = nodeWidth();
       this.height = nodeHeight(data);
 
       if (!data.type?.startsWith("trigger:")) {

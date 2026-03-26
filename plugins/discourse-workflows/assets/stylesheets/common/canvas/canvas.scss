@@ -193,73 +193,74 @@
 
 .workflow-rete-node {
   display: flex;
+  flex-direction: column;
   align-items: center;
   position: relative;
   cursor: pointer;
   user-select: none;
+  width: 130px;
 
-  &__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--d-border-radius);
-    border: 1px solid var(--primary-low-mid);
-    background: var(--secondary);
-    white-space: nowrap;
-    width: fit-content;
-    transition: border-color 0.15s;
-    min-height: 28px;
-    justify-content: center;
+  &__icon-row {
     position: relative;
   }
 
-  &:hover &__body {
+  &__icon-block {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid var(--primary-low-mid);
+    background: var(--primary-very-low);
+    position: relative;
+    transition: border-color 0.15s;
+  }
+
+  &:hover &__icon-block {
     border-color: var(--primary-medium);
   }
 
-  &.--selected &__body {
+  &.--selected &__icon-block {
     border-color: var(--tertiary);
-  }
-
-  &.--trigger &__body {
-    border-radius: calc(var(--d-border-radius-large) * 2) var(--d-border-radius)
-      var(--d-border-radius) calc(var(--d-border-radius-large) * 2);
-  }
-
-  &.--branching &__body {
-    min-height: 50px;
-  }
-
-  &__title-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    box-shadow: 0 0 0 1px var(--tertiary);
   }
 
   &__icon {
-    flex-shrink: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
+    color: var(--node-icon-color, var(--primary-medium));
 
     .d-icon {
-      width: 14px;
-      height: 14px;
+      width: 24px;
+      height: 24px;
     }
   }
 
   &__label {
+    margin-top: var(--space-2);
     font-size: var(--font-down-1);
-    font-weight: 600;
     color: var(--primary);
     line-height: 1.2;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   &__description {
-    font-size: var(--font-down-2);
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
     line-height: 1.2;
-    white-space: pre;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   // Socket (port) styles
@@ -280,11 +281,12 @@
     }
 
     &.--input {
-      margin-right: -6px;
+      position: absolute;
+      left: -6px;
+      top: calc(50% - 6px);
     }
 
     &.--output {
-      margin-left: -6px;
       display: flex;
       align-items: center;
       gap: var(--space-1);
@@ -297,12 +299,17 @@
   }
 
   &__outputs {
+    position: absolute;
+    right: -6px;
+    top: calc(50% - 6px);
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-self: stretch;
+    justify-content: center;
     gap: var(--space-1);
-    padding: var(--space-1) 0;
+  }
+
+  &.--branching &__outputs {
+    top: calc(50% - 15px);
   }
 
   &__port-pill {
