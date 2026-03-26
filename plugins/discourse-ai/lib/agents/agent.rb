@@ -92,6 +92,14 @@ module DiscourseAi
           @system_agents_by_id = nil
         end
 
+        def registered_tools
+          @registered_tools ||= {}
+        end
+
+        def register_tool(name, klass)
+          registered_tools[name] = klass
+        end
+
         def system_agents_by_id
           @system_agents_by_id ||= system_agents.invert
         end

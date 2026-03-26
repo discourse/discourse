@@ -261,11 +261,10 @@ class AiAgent < ActiveRecord::Base
           inner_name = inner_name.gsub("Tool", "")
           inner_name = "List#{inner_name}" if %w[Categories Tags].include?(inner_name)
 
-          begin
-            klass = "DiscourseAi::Agents::Tools::#{inner_name}".constantize
-            options[klass] = current_options if current_options
-          rescue StandardError
-          end
+          klass =
+            "DiscourseAi::Agents::Tools::#{inner_name}".safe_constantize ||
+              DiscourseAi::Agents::Agent.registered_tools[inner_name]
+          options[klass] = current_options if klass && current_options
         end
 
         force_tool_use << klass if should_force_tool_use

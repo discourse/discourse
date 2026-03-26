@@ -32,6 +32,15 @@ module DiscourseAi
       end
     end
 
+    # registers a tool class so agents can discover it
+    #
+    #   register_ai_tool(DiscourseDataExplorer::Tools::ValidateSql)
+    #
+    def register_ai_tool(klass)
+      tool_name = klass.to_s.split("::").last
+      ::DiscourseAi::Agents::Agent.register_tool(tool_name, klass)
+    end
+
     # registers a module + features for the AI features admin page
     #
     #   register_ai_module(
