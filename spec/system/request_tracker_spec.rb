@@ -270,15 +270,13 @@ describe "Request tracking", type: :system do
         events =
           DiscourseEvent.track_events(:browser_pageview) do
             visit "/"
-            try_until_success do
-              CachedCounting.flush
-              expect(ApplicationRequest.stats).to include(
-                "page_view_anon_total" => 1,
-                "page_view_anon_browser_total" => 1,
-                "page_view_logged_in_total" => 0,
-                "page_view_crawler_total" => 0,
-              )
-            end
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 1,
+              "page_view_anon_browser_total" => 1,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 0,
+            )
           end
 
         event = events[0][:params].last
@@ -293,15 +291,13 @@ describe "Request tracking", type: :system do
           DiscourseEvent.track_events(:browser_pageview) do
             find(".nav-item_categories a").click
 
-            try_until_success do
-              CachedCounting.flush
-              expect(ApplicationRequest.stats).to include(
-                "page_view_anon_total" => 2,
-                "page_view_anon_browser_total" => 2,
-                "page_view_logged_in_total" => 0,
-                "page_view_crawler_total" => 0,
-              )
-            end
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 2,
+              "page_view_anon_browser_total" => 2,
+              "page_view_logged_in_total" => 0,
+              "page_view_crawler_total" => 0,
+            )
           end
 
         event_2 = events[0][:params].last
@@ -321,16 +317,14 @@ describe "Request tracking", type: :system do
           DiscourseEvent.track_events(:browser_pageview) do
             visit "/"
 
-            try_until_success do
-              CachedCounting.flush
-              expect(ApplicationRequest.stats).to include(
-                "page_view_anon_total" => 0,
-                "page_view_anon_browser_total" => 0,
-                "page_view_logged_in_total" => 1,
-                "page_view_crawler_total" => 0,
-                "page_view_logged_in_browser_total" => 1,
-              )
-            end
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 0,
+              "page_view_anon_browser_total" => 0,
+              "page_view_logged_in_total" => 1,
+              "page_view_crawler_total" => 0,
+              "page_view_logged_in_browser_total" => 1,
+            )
           end
 
         event = events[0][:params].last
@@ -345,16 +339,14 @@ describe "Request tracking", type: :system do
         events =
           DiscourseEvent.track_events(:browser_pageview) do
             find(".nav-item_categories a").click
-            try_until_success do
-              CachedCounting.flush
-              expect(ApplicationRequest.stats).to include(
-                "page_view_anon_total" => 0,
-                "page_view_anon_browser_total" => 0,
-                "page_view_logged_in_total" => 2,
-                "page_view_crawler_total" => 0,
-                "page_view_logged_in_browser_total" => 2,
-              )
-            end
+            CachedCounting.flush
+            expect(ApplicationRequest.stats).to include(
+              "page_view_anon_total" => 0,
+              "page_view_anon_browser_total" => 0,
+              "page_view_logged_in_total" => 2,
+              "page_view_crawler_total" => 0,
+              "page_view_logged_in_browser_total" => 2,
+            )
           end
 
         event_2 = events[0][:params].last
@@ -400,7 +392,7 @@ describe "Request tracking", type: :system do
         event = events[0][:params].last
 
         expect(event[:user_id]).to eq(current_user.id)
-        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq(topic.url)
         expect(event[:ip_address]).to eq("::1")
         expect(event[:referrer]).to be_blank
         expect(event[:session_id]).to be_present
@@ -436,7 +428,7 @@ describe "Request tracking", type: :system do
         expect(event).to be_present
 
         expect(event[:user_id]).to eq(current_user.id)
-        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq(topic.url)
         expect(event[:ip_address]).to eq("::1")
         expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
         expect(event[:session_id]).to be_present
@@ -466,7 +458,7 @@ describe "Request tracking", type: :system do
         event = events[0][:params].last
 
         expect(event[:user_id]).to be_blank
-        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq(topic.url)
         expect(event[:ip_address]).to eq("::1")
         expect(event[:referrer]).to be_blank
         expect(event[:session_id]).to be_present
@@ -499,9 +491,9 @@ describe "Request tracking", type: :system do
         expect(event).to be_present
 
         expect(event[:user_id]).to be_blank
-        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
+        expect(event[:url]).to eq(topic.url)
         expect(event[:ip_address]).to eq("::1")
-        expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/")
+        expect(event[:referrer]).to eq("#{Discourse.base_url}/")
         expect(event[:session_id]).to be_present
       end
     end
@@ -519,29 +511,27 @@ describe "Request tracking", type: :system do
             DiscourseEvent.track_events(:browser_pageview) do
               find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
-              try_until_success do
-                CachedCounting.flush
-                expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(
-                  true,
-                )
-                expect(
-                  TopicViewStat.exists?(
-                    topic_id: topic.id,
-                    viewed_at: Time.zone.now.to_date,
-                    anonymous_views: 0,
-                    logged_in_views: 1,
-                  ),
-                ).to eq(true)
-              end
+              CachedCounting.flush
+              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(
+                true,
+              )
+              expect(
+                TopicViewStat.exists?(
+                  topic_id: topic.id,
+                  viewed_at: Time.zone.now.to_date,
+                  anonymous_views: 0,
+                  logged_in_views: 1,
+                ),
+              ).to eq(true)
             end
 
           event = events.find { |e| e[:params].last[:topic_id] == topic.id }&.dig(:params)&.last
           expect(event).to be_present
 
           expect(event[:user_id]).to eq(current_user.id)
-          expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
+          expect(event[:url]).to eq(topic.url)
           expect(event[:ip_address]).to eq("::1")
-          expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/latest")
+          expect(event[:referrer]).to eq("#{Discourse.base_url}/latest")
           expect(event[:session_id]).to be_present
           expect(event[:topic_id]).to eq(topic.id)
         end
@@ -555,27 +545,25 @@ describe "Request tracking", type: :system do
             DiscourseEvent.track_events(:browser_pageview) do
               find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
-              try_until_success do
-                CachedCounting.flush
-                expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
-                expect(
-                  TopicViewStat.exists?(
-                    topic_id: topic.id,
-                    viewed_at: Time.zone.now.to_date,
-                    anonymous_views: 1,
-                    logged_in_views: 0,
-                  ),
-                ).to eq(true)
-              end
+              CachedCounting.flush
+              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
+              expect(
+                TopicViewStat.exists?(
+                  topic_id: topic.id,
+                  viewed_at: Time.zone.now.to_date,
+                  anonymous_views: 1,
+                  logged_in_views: 0,
+                ),
+              ).to eq(true)
             end
 
           event = events.find { |e| e[:params].last[:topic_id] == topic.id }&.dig(:params)&.last
           expect(event).to be_present
 
           expect(event[:user_id]).to be_blank
-          expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/t/#{topic.slug}/#{topic.id}")
+          expect(event[:url]).to eq(topic.url)
           expect(event[:ip_address]).to eq("::1")
-          expect(event[:referrer]).to eq("#{Discourse.base_url_no_prefix}/latest")
+          expect(event[:referrer]).to eq("#{Discourse.base_url}/latest")
           expect(event[:session_id]).to be_present
         end
       end
