@@ -42,6 +42,27 @@ module DiscourseAi
       AUTOMATION_TRIAGE_ID = 11
 
       class << self
+        def registered_modules
+          @registered_modules ||= {}
+        end
+
+        def register(
+          key,
+          module_id:,
+          module_name:,
+          features:,
+          enabled_by_setting: nil,
+          extra_check: nil
+        )
+          registered_modules[key] = {
+            module_id: module_id,
+            module_name: module_name,
+            features: features,
+            enabled_by_setting: enabled_by_setting,
+            extra_check: extra_check,
+          }
+        end
+
         def all
           base_modules = [
             new(
@@ -115,6 +136,18 @@ module DiscourseAi
               enabled_by_setting: "discourse_automation_enabled",
               features: DiscourseAi::Configuration::Feature.ai_automation_triage_scripts,
               extra_check: -> { has_scripts?(%w[llm_triage llm_agent_triage]) },
+            )
+          end
+
+          registered_modules.each_value do |rm|
+            resolved_features =
+              rm[:features].respond_to?(:call) ? rm[:features].call : rm[:features]
+            base_modules << new(
+              rm[:module_id],
+              rm[:module_name],
+              enabled_by_setting: rm[:enabled_by_setting],
+              features: Array(resolved_features),
+              extra_check: rm[:extra_check],
             )
           end
 
