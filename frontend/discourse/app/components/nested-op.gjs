@@ -3,7 +3,6 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -19,13 +18,7 @@ export default class NestedOp extends Component {
   @service capabilities;
   @service currentUser;
   @service modal;
-  @service screenTrack;
   @service site;
-
-  trackPost = modifier((element) => {
-    this.screenTrack.observePost(element, this.args.post);
-    return () => this.screenTrack.unobservePost(element);
-  });
 
   <template>
     {{#if @post}}
@@ -34,7 +27,7 @@ export default class NestedOp extends Component {
           class="nested-view__op-article boxed"
           data-post-id={{@post.id}}
           data-post-number={{@post.post_number}}
-          {{this.trackPost}}
+          {{@registerPost @post}}
         >
           <div class="nested-view__op-row">
             <PostAvatar @post={{@post}} />

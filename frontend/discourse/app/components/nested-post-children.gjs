@@ -216,6 +216,7 @@ export default class NestedPostChildren extends Component {
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}
+            @registerPost={{@registerPost}}
           />
         {{/each}}
 

@@ -28,18 +28,12 @@ export default class NestedPost extends Component {
   @service capabilities;
   @service currentUser;
   @service modal;
-  @service screenTrack;
   @service site;
   @service siteSettings;
 
   @tracked expanded;
   @tracked lineHighlighted = false;
   @tracked collapsed;
-
-  trackPost = modifier((element) => {
-    this.screenTrack.observePost(element, this.args.post);
-    return () => this.screenTrack.unobservePost(element);
-  });
 
   restoreScroll = modifier((element) => {
     const anchor = this.args.scrollAnchor;
@@ -103,6 +97,20 @@ export default class NestedPost extends Component {
         collapsed: false,
       });
     }
+  }
+
+  get isRoot() {
+    return this.args.depth === 0;
+  }
+
+  get cloakingData() {
+    if (!this.isRoot || !this.args.getCloakingData) {
+      return { active: false };
+    }
+    return this.args.getCloakingData(this.args.post, {
+      above: this.args.cloakAbove,
+      below: this.args.cloakBelow,
+    });
   }
 
   get depthClass() {
@@ -274,169 +282,180 @@ export default class NestedPost extends Component {
         (if @isPinned "nested-post--pinned")
         (if @post.isWhisper "nested-post--whisper")
         (if @post.deleted "nested-post--deleted")
+        (if this.cloakingData.active "nested-post--cloaked")
       }}
+      style={{this.cloakingData.style}}
       {{this.restoreScroll}}
+      {{! At depth 0, register wrapper with cloaking observer (captures full subtree height).
+          At deeper depths, register as trackOnly (viewport tracking only, no cloaking). }}
+      {{@registerPost @post trackOnly=(not this.isRoot)}}
     >
-      {{#if @collapseParent}}
-        <button
-          type="button"
-          class="nested-post__parent-line-btn"
-          {{on "click" @collapseParent}}
-          {{on "mouseenter" @highlightParentLine}}
-          {{on "mouseleave" @unhighlightParentLine}}
-          aria-label={{i18n "nested_replies.collapse_parent"}}
-        ></button>
-      {{/if}}
-      <div class="nested-post__gutter">
-        {{#unless this.isMobile}}
-          {{#if this.isDeletedPlaceholder}}
-            <div class="nested-post__deleted-avatar-placeholder">
-              {{icon "trash-can"}}
-            </div>
-          {{else}}
-            <PostAvatar @post={{@post}} @size="small" />
-          {{/if}}
-        {{/unless}}
-        {{#if (and this.showDepthLine (not this.collapsed))}}
+      {{#unless this.cloakingData.active}}
+        {{#if @collapseParent}}
           <button
             type="button"
-            class={{concatClass
-              "nested-post__depth-line"
-              (if this.lineHighlighted "nested-post__depth-line--highlighted")
-              (unless this.expanded "nested-post__depth-line--collapsed")
-            }}
-            {{on "click" this.toggleExpanded}}
-            {{on "mouseenter" this.highlightLine}}
-            {{on "mouseleave" this.unhighlightLine}}
-            aria-label={{if
-              this.expanded
-              (i18n "nested_replies.collapse")
-              this.expandLabel
-            }}
-          >
-            {{#if this.expanded}}
-              <span class="nested-post__depth-line-icon">
-                {{icon "nested-circle-minus"}}
-              </span>
-            {{/if}}
-          </button>
+            class="nested-post__parent-line-btn"
+            {{on "click" @collapseParent}}
+            {{on "mouseenter" @highlightParentLine}}
+            {{on "mouseleave" @unhighlightParentLine}}
+            aria-label={{i18n "nested_replies.collapse_parent"}}
+          ></button>
         {{/if}}
-      </div>
-      <div class="nested-post__main">
-        {{#if this.collapsed}}
-          <button
-            type="button"
-            class="nested-post__collapsed-bar"
-            data-post-number={{@post.post_number}}
-            {{on "click" this.toggleExpanded}}
-          >
-            {{icon "nested-circle-plus"}}
+        <div class="nested-post__gutter">
+          {{#unless this.isMobile}}
             {{#if this.isDeletedPlaceholder}}
-              <span class="nested-post__collapsed-username">{{i18n
+              <div class="nested-post__deleted-avatar-placeholder">
+                {{icon "trash-can"}}
+              </div>
+            {{else}}
+              <PostAvatar @post={{@post}} @size="small" />
+            {{/if}}
+          {{/unless}}
+          {{#if (and this.showDepthLine (not this.collapsed))}}
+            <button
+              type="button"
+              class={{concatClass
+                "nested-post__depth-line"
+                (if this.lineHighlighted "nested-post__depth-line--highlighted")
+                (unless this.expanded "nested-post__depth-line--collapsed")
+              }}
+              {{on "click" this.toggleExpanded}}
+              {{on "mouseenter" this.highlightLine}}
+              {{on "mouseleave" this.unhighlightLine}}
+              aria-label={{if
+                this.expanded
+                (i18n "nested_replies.collapse")
+                this.expandLabel
+              }}
+            >
+              {{#if this.expanded}}
+                <span class="nested-post__depth-line-icon">
+                  {{icon "nested-circle-minus"}}
+                </span>
+              {{/if}}
+            </button>
+          {{/if}}
+        </div>
+        <div class="nested-post__main">
+          {{#if this.collapsed}}
+            <button
+              type="button"
+              class="nested-post__collapsed-bar"
+              data-post-number={{@post.post_number}}
+              {{on "click" this.toggleExpanded}}
+            >
+              {{icon "nested-circle-plus"}}
+              {{#if this.isDeletedPlaceholder}}
+                <span class="nested-post__collapsed-username">{{i18n
+                    "nested_replies.deleted_post_placeholder"
+                  }}</span>
+              {{else}}
+                <span
+                  class="nested-post__collapsed-username"
+                >{{@post.username}}</span>
+              {{/if}}
+              <span class="nested-post__collapsed-separator">&middot;</span>
+              <span
+                class="nested-post__collapsed-reply-count"
+              >{{this.expandLabel}}</span>
+            </button>
+          {{else if this.isDeletedPlaceholder}}
+            <div
+              class="nested-post__deleted-placeholder"
+              data-post-number={{@post.post_number}}
+            >
+              <span class="nested-post__deleted-label">{{i18n
                   "nested_replies.deleted_post_placeholder"
                 }}</span>
-            {{else}}
-              <span
-                class="nested-post__collapsed-username"
-              >{{@post.username}}</span>
-            {{/if}}
-            <span class="nested-post__collapsed-separator">&middot;</span>
-            <span
-              class="nested-post__collapsed-reply-count"
-            >{{this.expandLabel}}</span>
-          </button>
-        {{else if this.isDeletedPlaceholder}}
-          <div
-            class="nested-post__deleted-placeholder"
-            data-post-number={{@post.post_number}}
-          >
-            <span class="nested-post__deleted-label">{{i18n
-                "nested_replies.deleted_post_placeholder"
-              }}</span>
-          </div>
-        {{else}}
-          <article
-            class="nested-post__article boxed"
-            data-post-id={{@post.id}}
-            data-post-number={{@post.post_number}}
-            {{this.trackPost}}
-          >
-            <div class="nested-post__header">
-              {{#if this.isMobile}}
-                <PostAvatar @post={{@post}} @size="small" />
-              {{/if}}
-              <PostMetaData
-                @post={{@post}}
-                @editPost={{@editPost}}
-                @showHistory={{fn @showHistory @post}}
-              />
-              {{#if this.isOP}}
-                <span class="nested-post__op-badge">{{i18n
-                    "nested_replies.op_badge"
-                  }}</span>
-              {{/if}}
-              {{#if @isPinned}}
-                <span class="nested-post__pinned-badge">{{i18n
-                    "nested_replies.pinned_reply"
-                  }}</span>
-              {{/if}}
             </div>
-            <div class="nested-post__content">
-              <PostCookedHtml @post={{@post}} />
-            </div>
-            <section class="nested-post__menu post-menu-area clearfix">
-              <PostMenu
-                @post={{@post}}
-                @canCreatePost={{this.canCreatePost}}
-                @copyLink={{this.copyLink}}
-                @deletePost={{fn @deletePost @post}}
-                @editPost={{fn @editPost @post}}
-                @recoverPost={{fn @recoverPost @post}}
-                @replyToPost={{fn @replyToPost @post @depth}}
-                @share={{this.share}}
-                @showFlags={{fn @showFlags @post}}
-                @toggleLike={{this.toggleLike}}
-                @toggleReplies={{unless this.atMaxDepth this.toggleExpanded}}
-                @repliesShown={{if this.atMaxDepth true this.expanded}}
-                @showLogin={{this.showLogin}}
-              />
-            </section>
-            {{#if this.showContinueThread}}
-              <div class="nested-post__controls">
-                <a href={{this.contextUrl}} class="nested-post__continue-link">
-                  {{i18n "nested_replies.continue_thread"}}
-                </a>
+          {{else}}
+            <article
+              class="nested-post__article boxed"
+              data-post-id={{@post.id}}
+              data-post-number={{@post.post_number}}
+              {{@registerPost @post trackOnly=true}}
+            >
+              <div class="nested-post__header">
+                {{#if this.isMobile}}
+                  <PostAvatar @post={{@post}} @size="small" />
+                {{/if}}
+                <PostMetaData
+                  @post={{@post}}
+                  @editPost={{@editPost}}
+                  @showHistory={{fn @showHistory @post}}
+                />
+                {{#if this.isOP}}
+                  <span class="nested-post__op-badge">{{i18n
+                      "nested_replies.op_badge"
+                    }}</span>
+                {{/if}}
+                {{#if @isPinned}}
+                  <span class="nested-post__pinned-badge">{{i18n
+                      "nested_replies.pinned_reply"
+                    }}</span>
+                {{/if}}
               </div>
-            {{/if}}
-          </article>
-        {{/if}}
+              <div class="nested-post__content">
+                <PostCookedHtml @post={{@post}} />
+              </div>
+              <section class="nested-post__menu post-menu-area clearfix">
+                <PostMenu
+                  @post={{@post}}
+                  @canCreatePost={{this.canCreatePost}}
+                  @copyLink={{this.copyLink}}
+                  @deletePost={{fn @deletePost @post}}
+                  @editPost={{fn @editPost @post}}
+                  @recoverPost={{fn @recoverPost @post}}
+                  @replyToPost={{fn @replyToPost @post @depth}}
+                  @share={{this.share}}
+                  @showFlags={{fn @showFlags @post}}
+                  @toggleLike={{this.toggleLike}}
+                  @toggleReplies={{unless this.atMaxDepth this.toggleExpanded}}
+                  @repliesShown={{if this.atMaxDepth true this.expanded}}
+                  @showLogin={{this.showLogin}}
+                />
+              </section>
+              {{#if this.showContinueThread}}
+                <div class="nested-post__controls">
+                  <a
+                    href={{this.contextUrl}}
+                    class="nested-post__continue-link"
+                  >
+                    {{i18n "nested_replies.continue_thread"}}
+                  </a>
+                </div>
+              {{/if}}
+            </article>
+          {{/if}}
 
-        {{#if (and this.expanded (not this.collapsed) (not this.atMaxDepth))}}
-          <NestedPostChildren
-            @topic={{@topic}}
-            @parentPostNumber={{@post.post_number}}
-            @preloadedChildren={{@children}}
-            @directReplyCount={{@post.direct_reply_count}}
-            @totalDescendantCount={{@post.total_descendant_count}}
-            @depth={{@depth}}
-            @sort={{@sort}}
-            @defaultCollapsed={{@defaultCollapsed}}
-            @replyToPost={{@replyToPost}}
-            @editPost={{@editPost}}
-            @deletePost={{@deletePost}}
-            @recoverPost={{@recoverPost}}
-            @showFlags={{@showFlags}}
-            @showHistory={{@showHistory}}
-            @collapseParent={{this.toggleExpanded}}
-            @highlightParentLine={{this.highlightLine}}
-            @unhighlightParentLine={{this.unhighlightLine}}
-            @parentLineHighlighted={{this.lineHighlighted}}
-            @expansionState={{@expansionState}}
-            @fetchedChildrenCache={{@fetchedChildrenCache}}
-            @scrollAnchor={{@scrollAnchor}}
-          />
-        {{/if}}
-      </div>
+          {{#if (and this.expanded (not this.collapsed) (not this.atMaxDepth))}}
+            <NestedPostChildren
+              @topic={{@topic}}
+              @parentPostNumber={{@post.post_number}}
+              @preloadedChildren={{@children}}
+              @directReplyCount={{@post.direct_reply_count}}
+              @totalDescendantCount={{@post.total_descendant_count}}
+              @depth={{@depth}}
+              @sort={{@sort}}
+              @defaultCollapsed={{@defaultCollapsed}}
+              @replyToPost={{@replyToPost}}
+              @editPost={{@editPost}}
+              @deletePost={{@deletePost}}
+              @recoverPost={{@recoverPost}}
+              @showFlags={{@showFlags}}
+              @showHistory={{@showHistory}}
+              @collapseParent={{this.toggleExpanded}}
+              @highlightParentLine={{this.highlightLine}}
+              @unhighlightParentLine={{this.unhighlightLine}}
+              @parentLineHighlighted={{this.lineHighlighted}}
+              @expansionState={{@expansionState}}
+              @fetchedChildrenCache={{@fetchedChildrenCache}}
+              @scrollAnchor={{@scrollAnchor}}
+              @registerPost={{@registerPost}}
+            />
+          {{/if}}
+        </div>
+      {{/unless}}
     </div>
   </template>
 }

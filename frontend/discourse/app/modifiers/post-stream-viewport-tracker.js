@@ -151,6 +151,14 @@ export default class PostStreamViewportTracker {
   #currentPostElement;
 
   /**
+   * Whether eyeline tracking (current post, scroll position, URL updates) is enabled.
+   * When false, only cloaking and screen tracking are active.
+   * @type {boolean}
+   * @private
+   */
+  #eyeline = true;
+
+  /**
    * Callback function to notify when the scroll position within the current post changes
    * @type {Function|null}
    * @private
@@ -178,6 +186,14 @@ export default class PostStreamViewportTracker {
    * @private
    */
   #observedPostElements = new Set();
+
+  /**
+   * Subset of #observedPostElements that are viewport-only (trackOnly=true).
+   * These elements are NOT registered with the cloaking observer.
+   * @type {Set<HTMLElement>}
+   * @private
+   */
+  #trackOnlyElements = new Set();
 
   /**
    * Map of post numbers to their post models and DOM elements that are currently on screen
@@ -261,15 +277,24 @@ export default class PostStreamViewportTracker {
    * @type {Modifier}
    * @param {HTMLElement} element - The post element to register
    * @param {Array} [post] - Array containing the post model associated with the element
+   * @param {Object} [options] - Named arguments
+   * @param {boolean} [options.trackOnly=false] - When true, only register with the
+   *   viewport observer for screen-time tracking. Skip the cloaking observer so this
+   *   element's height is not used for cloaking decisions. Useful for child post
+   *   articles inside a subtree whose root wrapper already handles cloaking.
    * @returns {Function} Cleanup function that removes observers when the element is destroyed
    * @private
    */
-  #registerPost = modifier((element, [post]) => {
+  #registerPost = modifier((element, [post], { trackOnly = false } = {}) => {
     elementsToPost.set(element, post);
 
     if (!this.#observedPostElements.has(element)) {
       this.#observedPostElements.add(element);
-      this.#cloakingObserver?.observe(element);
+      if (trackOnly) {
+        this.#trackOnlyElements.add(element);
+      } else {
+        this.#cloakingObserver?.observe(element);
+      }
       this.#viewportObserver?.observe(element);
     }
 
@@ -279,7 +304,10 @@ export default class PostStreamViewportTracker {
 
       if (this.#observedPostElements.has(element)) {
         this.#observedPostElements.delete(element);
-        this.#cloakingObserver?.unobserve(element);
+        this.#trackOnlyElements.delete(element);
+        if (!trackOnly) {
+          this.#cloakingObserver?.unobserve(element);
+        }
         this.#viewportObserver?.unobserve(element);
       }
     };
@@ -310,6 +338,7 @@ export default class PostStreamViewportTracker {
       {
         currentPostChanged,
         currentPostScrolled,
+        eyeline = true,
         headerOffset,
         screenTrack,
         setCloakingBoundaries,
@@ -318,20 +347,30 @@ export default class PostStreamViewportTracker {
       }
     ) => {
       this.#wrapperElement = element;
+      this.#eyeline = eyeline;
 
-      this.#currentPostChanged = currentPostChanged;
-      this.#currentPostScrolled = currentPostScrolled;
       this.#headerOffset = headerOffset;
       this.#screenTrackService = screenTrack;
       this.#setCloakingBoundaries = setCloakingBoundaries;
 
+      if (this.#eyeline) {
+        this.#currentPostChanged = currentPostChanged;
+        this.#currentPostScrolled = currentPostScrolled;
+      }
+
       this.#updateCloakOffset();
-      this.#setupEventListeners();
 
       // intersection observers
       this.#resetViewportObservers();
-      // eyeline
-      this.#setupEyelineDebugElement();
+
+      if (this.#eyeline) {
+        this.#setupEventListeners();
+        this.#setupEyelineDebugElement();
+
+        schedule("afterRender", () => {
+          this.#scrollTriggered(true);
+        });
+      }
 
       // clear the list of posts with cloaking prevented when the topic changes
       if (cloakingPrevented.topicId !== topicId) {
@@ -343,21 +382,16 @@ export default class PostStreamViewportTracker {
       // https://github.com/emberjs/ember.js/issues/19277
       trackedArgs && Object.values(trackedArgs);
 
-      schedule("afterRender", () => {
-        // forces updates performed when the scroll is triggered to be performed after the initial rendering
-        this.#scrollTriggered(true);
-      });
-
       // cleanup
       return () => {
         // clear observers
         this.#cloakingObserver?.disconnect();
         this.#viewportObserver?.disconnect();
 
-        // clear event listeners
-        this.#setupEventListeners(false);
-        // remove the eyeline debug element
-        this.#setupEyelineDebugElement(false);
+        if (this.#eyeline) {
+          this.#setupEventListeners(false);
+          this.#setupEyelineDebugElement(false);
+        }
 
         // clear collections
         this.#cloakedPostsStyle = {};
@@ -387,6 +421,7 @@ export default class PostStreamViewportTracker {
 
     // clear DOM references
     this.#observedPostElements.clear();
+    this.#trackOnlyElements.clear();
 
     // clear the set of posts with cloaking prevented
     cloakingPrevented.topicId = null;
@@ -557,8 +592,9 @@ export default class PostStreamViewportTracker {
       )
     );
 
-    // forces updates performed when the scroll is triggered
-    this.#scrollTriggered();
+    if (this.#eyeline) {
+      this.#scrollTriggered();
+    }
   }
 
   /**
@@ -813,7 +849,9 @@ export default class PostStreamViewportTracker {
     });
 
     for (const element of this.#observedPostElements) {
-      this.#cloakingObserver.observe(element);
+      if (!this.#trackOnlyElements.has(element)) {
+        this.#cloakingObserver.observe(element);
+      }
       this.#viewportObserver.observe(element);
     }
   }

@@ -393,6 +393,26 @@ module PageObjects
         all(".nested-view__roots > .nested-post").count
       end
 
+      # ── Cloaking ─────────────────────────────────────────────────
+
+      def has_cloaked_root?
+        has_css?(".nested-view__roots > .nested-post--cloaked")
+      end
+
+      def has_no_cloaked_root?
+        has_no_css?(".nested-view__roots > .nested-post--cloaked")
+      end
+
+      def has_cloaked_root_for?(post)
+        root = nested_post_wrapper(post)
+        root[:class].include?("nested-post--cloaked")
+      end
+
+      def has_uncloaked_root_for?(post)
+        root = nested_post_wrapper(post)
+        !root[:class].include?("nested-post--cloaked")
+      end
+
       # ── Post counting ─────────────────────────────────────────────
 
       def posts_at_depth(depth)

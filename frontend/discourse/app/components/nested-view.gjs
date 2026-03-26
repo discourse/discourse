@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -7,6 +9,7 @@ import LoadMore from "discourse/components/load-more";
 import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
+import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import NestedFloatingActions from "./nested-floating-actions";
@@ -16,7 +19,18 @@ import NestedSortSelector from "./nested-sort-selector";
 import NestedViewHeader from "./nested-view-header";
 
 export default class NestedView extends Component {
+  @service header;
+  @service screenTrack;
   @service site;
+
+  @tracked cloakAbove = 0;
+  @tracked cloakBelow = 0;
+  viewportTracker = new PostStreamViewportTracker();
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.viewportTracker.destroy();
+  }
 
   // Core's TopicMap requires a @postStream arg for flat-view features
   // (filtering by participant, "Top Replies" toggle). The nested view has
@@ -41,12 +55,25 @@ export default class NestedView extends Component {
     return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}?flat=1`);
   }
 
+  @action
+  setCloakingBoundaries(above, below) {
+    this.cloakAbove = above;
+    this.cloakBelow = below;
+  }
+
   <template>
     <div
       class={{concatClass
         "nested-view"
         (if this.isAma "nested-view--ama")
         (if this.site.mobileView "nested-view--mobile")
+      }}
+      {{this.viewportTracker.setup
+        eyeline=false
+        headerOffset=this.header.headerOffset
+        screenTrack=this.screenTrack
+        setCloakingBoundaries=this.setCloakingBoundaries
+        topicId=@topic.id
       }}
     >
       <NestedViewHeader
@@ -70,6 +97,7 @@ export default class NestedView extends Component {
         @showHistory={{@showHistory}}
         @replyToPost={{@replyToPost}}
         @showPostMenu={{true}}
+        @registerPost={{this.viewportTracker.registerPost}}
       />
 
       <div class="nested-view__topic-map topic-map">
@@ -120,6 +148,10 @@ export default class NestedView extends Component {
             @expansionState={{@expansionState}}
             @fetchedChildrenCache={{@fetchedChildrenCache}}
             @scrollAnchor={{@scrollAnchor}}
+            @registerPost={{this.viewportTracker.registerPost}}
+            @getCloakingData={{this.viewportTracker.getCloakingData}}
+            @cloakAbove={{this.cloakAbove}}
+            @cloakBelow={{this.cloakBelow}}
           />
         {{else}}
           <div class="nested-view__empty">

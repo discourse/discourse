@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import NestedFloatingActions from "./nested-floating-actions";
@@ -15,8 +18,13 @@ import NestedSortSelector from "./nested-sort-selector";
 import NestedViewHeader from "./nested-view-header";
 
 export default class NestedContextView extends Component {
+  @service header;
+  @service screenTrack;
   @service site;
 
+  @tracked cloakAbove = 0;
+  @tracked cloakBelow = 0;
+  viewportTracker = new PostStreamViewportTracker();
   _scrollAttempts = 0;
   _maxScrollAttempts = 20; // ~1 second at 50ms intervals
 
@@ -30,6 +38,7 @@ export default class NestedContextView extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this._destroyed = true;
+    this.viewportTracker.destroy();
   }
 
   get flatViewUrl() {
@@ -64,11 +73,24 @@ export default class NestedContextView extends Component {
     }
   }
 
+  @action
+  setCloakingBoundaries(above, below) {
+    this.cloakAbove = above;
+    this.cloakBelow = below;
+  }
+
   <template>
     <div
       class={{concatClass
         "nested-view nested-context-view"
         (if this.site.mobileView "nested-view--mobile")
+      }}
+      {{this.viewportTracker.setup
+        eyeline=false
+        headerOffset=this.header.headerOffset
+        screenTrack=this.screenTrack
+        setCloakingBoundaries=this.setCloakingBoundaries
+        topicId=@topic.id
       }}
     >
       <NestedViewHeader
@@ -90,6 +112,7 @@ export default class NestedContextView extends Component {
         @topic={{@topic}}
         @editPost={{@editPost}}
         @showHistory={{@showHistory}}
+        @registerPost={{this.viewportTracker.registerPost}}
       />
 
       <div class="nested-view__controls">
@@ -146,6 +169,10 @@ export default class NestedContextView extends Component {
               @expansionState={{@expansionState}}
               @fetchedChildrenCache={{@fetchedChildrenCache}}
               @scrollAnchor={{@scrollAnchor}}
+              @registerPost={{this.viewportTracker.registerPost}}
+              @getCloakingData={{this.viewportTracker.getCloakingData}}
+              @cloakAbove={{this.cloakAbove}}
+              @cloakBelow={{this.cloakBelow}}
             />
           {{/each}}
         </div>
