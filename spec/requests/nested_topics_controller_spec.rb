@@ -411,6 +411,19 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_ids.first).to eq(root_post.id)
         expect(json["pinned_post_number"]).to eq(root_post.post_number)
       end
+
+      it "lazily creates a NestedTopic record when nested_replies_default is on" do
+        topic.nested_topic.destroy!
+        SiteSetting.nested_replies_default = true
+
+        sign_in(admin)
+        put pin_url(topic), params: { post_number: root_post.post_number }
+        expect(response.status).to eq(200)
+
+        topic.reload
+        expect(topic.nested_topic).to be_present
+        expect(topic.nested_topic.pinned_post_number).to eq(root_post.post_number)
+      end
     end
 
     describe "whisper visibility" do
@@ -519,17 +532,6 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_json["direct_reply_count"]).to eq(2)
         expect(root_json["total_descendant_count"]).to eq(2)
       end
-    end
-
-    it "skips the on_preload reply-count query for nested endpoints" do
-      root_post = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
-      Fabricate(:post, topic: topic, user: user, reply_to_post_number: root_post.post_number)
-
-      topic_view = TopicView.new(topic.id, user, skip_custom_fields: true, skip_post_loading: true)
-      topic_view.nested_replies_skip_preload = true
-      TopicView.preload(topic_view)
-
-      expect(topic_view.nested_replies_direct_reply_counts).to be_nil
     end
   end
 

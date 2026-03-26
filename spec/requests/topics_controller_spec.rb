@@ -2914,6 +2914,15 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
+    it "redirects to nested view when nested_replies_default is enabled" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}"
+
+      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}")
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 

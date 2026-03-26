@@ -149,7 +149,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def is_nested_view
-    object.nested_topic.present?
+    object.nested_topic.present? || SiteSetting.nested_replies_default
   end
 
   def include_is_nested_view?

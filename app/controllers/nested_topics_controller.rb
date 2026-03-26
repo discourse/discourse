@@ -226,8 +226,7 @@ class NestedTopicsController < ApplicationController
       end
     end
 
-    nested_topic = @topic.nested_topic
-    raise Discourse::NotFound unless nested_topic
+    nested_topic = @topic.nested_topic || @topic.create_nested_topic!
     nested_topic.update!(pinned_post_number: post_number)
 
     render json: { pinned_post_number: post_number }

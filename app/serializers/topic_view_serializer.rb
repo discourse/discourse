@@ -341,7 +341,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def is_nested_view
-    object.topic.nested_topic.present?
+    object.topic.nested_topic.present? || SiteSetting.nested_replies_default
   end
 
   def include_is_nested_view?

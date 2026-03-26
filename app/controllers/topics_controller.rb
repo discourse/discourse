@@ -182,7 +182,8 @@ class TopicsController < ApplicationController
     end
 
     if !request.format.json? && SiteSetting.nested_replies_enabled &&
-         @topic_view.topic.nested_topic.present? && params[:flat] != "1"
+         (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
+         params[:flat] != "1"
       url = "/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
       post_number = opts[:post_number].to_i
       url << "/#{post_number}" if post_number > 0

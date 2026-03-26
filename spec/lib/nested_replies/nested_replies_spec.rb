@@ -91,5 +91,26 @@ RSpec.describe NestedReplies do
 
       expect(json[:is_nested_view]).to eq(false)
     end
+
+    context "when nested_replies_default is enabled" do
+      before { SiteSetting.nested_replies_default = true }
+
+      it "returns true for is_nested_view even without a NestedTopic record" do
+        topic.nested_topic&.destroy!
+
+        topic_view = TopicView.new(topic.id, user)
+        json = TopicViewSerializer.new(topic_view, scope: Guardian.new(user), root: false).as_json
+
+        expect(json[:is_nested_view]).to eq(true)
+      end
+
+      it "returns true for is_nested_view on TopicListItemSerializer without a NestedTopic record" do
+        topic.nested_topic&.destroy!
+
+        json = TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+
+        expect(json[:is_nested_view]).to eq(true)
+      end
+    end
   end
 end

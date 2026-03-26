@@ -17,7 +17,6 @@ class TopicView
   memoize_for_posts :primary_group_names, :@group_names
   memoize_for_posts :post_user_badges
   memoize_for_posts :last_post
-  memoize_for_posts :nested_replies_direct_reply_counts
   memoize_for_posts :preloaded_post_data_store
 
   def self.on_preload(&blk)
@@ -60,8 +59,6 @@ class TopicView
     :post_number,
     :include_suggested,
     :include_related,
-    :nested_replies_direct_reply_counts,
-    :nested_replies_skip_preload,
   )
 
   # Generic store for plugins to stash per-post preloaded data (keyed by post_id)

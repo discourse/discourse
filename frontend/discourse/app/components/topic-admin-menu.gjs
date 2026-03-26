@@ -87,7 +87,11 @@ export default class TopicAdminMenu extends Component {
   }
 
   get showNestedRepliesToggle() {
-    return this.siteSettings.nested_replies_enabled && this.currentUser?.staff;
+    return (
+      this.siteSettings.nested_replies_enabled &&
+      !this.siteSettings.nested_replies_default &&
+      this.currentUser?.staff
+    );
   }
 
   get nestedRepliesToggleLabel() {

@@ -100,8 +100,7 @@ class PostSerializer < BasicPostSerializer
              :locale,
              :is_localized,
              :language,
-             :localization_outdated,
-             :direct_reply_count
+             :localization_outdated
 
   def initialize(object, opts)
     super(object, opts)
@@ -703,15 +702,6 @@ class PostSerializer < BasicPostSerializer
 
   def include_localization_outdated?
     include_is_localized? && is_localized
-  end
-
-  def direct_reply_count
-    counts = @topic_view&.nested_replies_direct_reply_counts
-    counts[object.post_number] || 0 if counts
-  end
-
-  def include_direct_reply_count?
-    @topic_view&.nested_replies_direct_reply_counts.present?
   end
 
   private
