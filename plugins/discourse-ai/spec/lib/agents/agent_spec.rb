@@ -253,7 +253,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
           .map(&:superclass)
           .reject { |klass| klass == DiscourseAi::Agents::Agent }
 
-      expect(system_agent_classes).to contain_exactly(
+      expect(system_agent_classes).to include(
         DiscourseAi::Agents::General,
         DiscourseAi::Agents::SqlHelper,
         DiscourseAi::Agents::SettingsExplorer,

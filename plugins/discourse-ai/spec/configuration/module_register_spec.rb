@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Configuration::Module do
-  after { described_class.registered_modules.clear }
+  after { described_class.registered_modules.delete("test_module") }
 
   describe ".register" do
     it "adds a module to registered_modules" do
@@ -18,6 +18,8 @@ describe DiscourseAi::Configuration::Module do
     end
 
     it "deduplicates by key on re-registration" do
+      initial_size = described_class.registered_modules.size
+
       2.times do
         described_class.register(
           "test_module",
@@ -27,7 +29,7 @@ describe DiscourseAi::Configuration::Module do
         )
       end
 
-      expect(described_class.registered_modules.size).to eq(1)
+      expect(described_class.registered_modules.size).to eq(initial_size + 1)
     end
 
     it "includes registered modules in .all" do

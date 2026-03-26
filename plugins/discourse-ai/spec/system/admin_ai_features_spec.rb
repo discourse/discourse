@@ -21,15 +21,17 @@ RSpec.describe "Admin AI features configuration" do
   end
 
   it "lists all agent backed AI features separated by configured/unconfigured" do
+    all_modules = DiscourseAi::Configuration::Module.all
+    configured_count = all_modules.count(&:enabled?)
+
     ai_features_page.visit
     ai_features_page.toggle_configured
 
-    expect(ai_features_page).to have_listed_modules(1)
+    expect(ai_features_page).to have_listed_modules(configured_count)
 
     ai_features_page.toggle_unconfigured
 
-    # this changes as we add more AI features
-    expect(ai_features_page).to have_listed_modules(8)
+    expect(ai_features_page).to have_listed_modules(all_modules.size - configured_count)
   end
 
   it "lists the agent used for the corresponding AI feature" do

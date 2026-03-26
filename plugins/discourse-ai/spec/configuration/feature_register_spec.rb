@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Configuration::Feature do
-  after { DiscourseAi::Configuration::Module.registered_modules.clear }
+  after { DiscourseAi::Configuration::Module.registered_modules.delete("test_module") }
 
   describe ".all with registered modules" do
     it "includes features from registered modules" do
