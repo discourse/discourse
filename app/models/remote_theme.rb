@@ -493,7 +493,16 @@ class RemoteTheme < ActiveRecord::Base
       ColorScheme.unscoped.where(id: to_be_deleted_ids).destroy_all
     end
 
-    theme.color_scheme = ordered_schemes.first if theme.new_record?
+    if theme.new_record? && ordered_schemes.present?
+      if theme.theme_modifier_set.only_theme_color_schemes
+        light = ordered_schemes.find { |s| !s.is_dark? } || ordered_schemes.first
+        dark = ordered_schemes.find { |s| s.is_dark? } || ordered_schemes.first
+        theme.color_scheme = light
+        theme.dark_color_scheme = dark
+      else
+        theme.color_scheme = ordered_schemes.first
+      end
+    end
   end
 
   def create_theme_site_settings(theme, theme_site_settings)

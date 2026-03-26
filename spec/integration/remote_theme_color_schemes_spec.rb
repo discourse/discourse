@@ -150,6 +150,38 @@ RSpec.describe "Remote theme update" do
     expect(ColorScheme.unscoped.exists?(id: scheme2.id)).to eq(false)
   end
 
+  it "auto-assigns light and dark color schemes when only_theme_color_schemes modifier is set" do
+    add_to_git_repo(
+      initial_repo,
+      "about.json" =>
+        JSON
+          .parse(about_json)
+          .merge(
+            "modifiers" => {
+              "only_theme_color_schemes" => true,
+            },
+            "color_schemes" => {
+              "Light Theme" => {
+                "primary" => "333333",
+                "secondary" => "FFFFFF",
+              },
+              "Dark Theme" => {
+                "primary" => "DDDDDD",
+                "secondary" => "222222",
+              },
+            },
+          )
+          .to_json,
+    )
+
+    theme = RemoteTheme.import_theme(initial_repo_url)
+    light = theme.color_schemes.find_by(name: "Light Theme")
+    dark = theme.color_schemes.find_by(name: "Dark Theme")
+
+    expect(theme.color_scheme_id).to eq(light.id)
+    expect(theme.dark_color_scheme_id).to eq(dark.id)
+  end
+
   it "does not delete custom color schemes when installing a new theme" do
     custom_scheme = ColorScheme.create!(name: "My Custom Palette")
     custom_scheme.color_scheme_colors.create!(name: "primary", hex: "ff0000")

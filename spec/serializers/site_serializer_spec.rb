@@ -101,6 +101,28 @@ RSpec.describe SiteSerializer do
     expect(serialized[:user_color_schemes][0][:is_dark]).to eq(true)
   end
 
+  describe "only_theme_color_schemes modifier" do
+    fab!(:theme)
+    fab!(:color_scheme) { Fabricate(:color_scheme, theme_id: theme.id, user_selectable: false) }
+
+    before do
+      theme.update!(user_selectable: true)
+      theme.theme_modifier_set.update!(only_theme_color_schemes: true)
+    end
+
+    it "includes theme color schemes in user_color_schemes when modifier is active" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      scheme_ids = serialized[:user_color_schemes].map { |s| s[:id] }
+      expect(scheme_ids).to include(color_scheme.id)
+    end
+
+    it "includes only_theme_color_schemes flag in user_themes" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      theme_data = serialized[:user_themes].find { |t| t["theme_id"] == theme.id }
+      expect(theme_data["only_theme_color_schemes"]).to eq(true)
+    end
+  end
+
   it "includes default dark mode scheme" do
     scheme = ColorScheme.last
     Theme.find_default.update!(dark_color_scheme_id: scheme.id)
