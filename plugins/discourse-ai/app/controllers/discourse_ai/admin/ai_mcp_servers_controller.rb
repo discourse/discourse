@@ -135,8 +135,15 @@ module DiscourseAi
         # For connected OAuth servers, use the persisted record directly so
         # the token association is intact. Form params may dirty fields
         # (e.g. "" vs nil) causing false reauth detection.
+        # However, if OAuth-relevant fields changed, build an ephemeral server
+        # without stale tokens so the new configuration is tested cleanly.
         if persisted_server&.oauth? && persisted_server.oauth_status == "connected"
-          ai_mcp_server = persisted_server.reload
+          if (ai_mcp_server.changes.keys & AiMcpServer::OAUTH_REAUTH_TRIGGER_FIELDS).any?
+            ai_mcp_server = AiMcpServer.new(ai_mcp_server_params)
+            restore_dynamic_oauth_credentials!(ai_mcp_server, persisted_server)
+          else
+            ai_mcp_server = persisted_server.reload
+          end
         end
 
         client = DiscourseAi::Mcp::Client.new(ai_mcp_server)

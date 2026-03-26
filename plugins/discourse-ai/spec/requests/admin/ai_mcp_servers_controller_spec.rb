@@ -181,13 +181,11 @@ RSpec.describe DiscourseAi::Admin::AiMcpServersController do
 
     it "does not reuse stored OAuth tokens when the OAuth configuration changes" do
       ai_mcp_server =
-        Fabricate(
-          :ai_mcp_server,
-          auth_type: "oauth",
-          oauth_status: "connected",
-          url: "https://docs.example.com/mcp",
-          oauth_access_token_expires_at: 10.minutes.from_now,
-        )
+        Fabricate(:ai_mcp_server, auth_type: "oauth", url: "https://docs.example.com/mcp")
+      ai_mcp_server.update_columns(
+        oauth_status: "connected",
+        oauth_access_token_expires_at: 10.minutes.from_now,
+      )
       ai_mcp_server.oauth_token_store.write!(
         access_token: "stale-access-token",
         refresh_token: "refresh-token",

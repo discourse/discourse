@@ -25,7 +25,7 @@ module DiscourseAi
           discovery = OAuthDiscovery.discover!(server)
           server.store_oauth_discovery!(discovery)
 
-          if server.oauth_client_registration != "manual" &&
+          if server.oauth_client_registration != "manual" && server.oauth_client_id.blank? &&
                discovery.registration_endpoint.present?
             OAuthClientRegistration.register!(server: server, discovery: discovery)
             server.reload
