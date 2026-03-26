@@ -18,6 +18,7 @@ class AiApiAuditLog < ActiveRecord::Base
     SambaNova = 8
     Mistral = 9
     OpenRouter = 10
+    BedrockConverse = 11
   end
 
   def next_log_id

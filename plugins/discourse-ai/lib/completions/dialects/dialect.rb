@@ -14,6 +14,7 @@ module DiscourseAi
               DiscourseAi::Completions::Dialects::OpenAiResponses,
               DiscourseAi::Completions::Dialects::ChatGpt,
               DiscourseAi::Completions::Dialects::Gemini,
+              DiscourseAi::Completions::Dialects::Converse,
               DiscourseAi::Completions::Dialects::Claude,
               DiscourseAi::Completions::Dialects::Command,
               DiscourseAi::Completions::Dialects::Ollama,

@@ -76,6 +76,14 @@ Fabricator(:bedrock_model, from: :anthropic_model) do
   provider_params { { region: "us-east-1", access_key_id: "123456" } }
 end
 
+Fabricator(:bedrock_converse_model, from: :anthropic_model) do
+  url ""
+  provider "aws_bedrock_converse"
+  api_key "asd-asd-asd"
+  name "claude-3-sonnet"
+  provider_params { { region: "us-east-1", access_key_id: "123456" } }
+end
+
 Fabricator(:nova_model, from: :llm_model) do
   display_name "Amazon Nova pro"
   name "amazon.nova-pro-v1:0"
