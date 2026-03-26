@@ -124,4 +124,41 @@ RSpec.describe "Topic voting" do
       )
     end
   end
+
+  context "when vote limits are disabled" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+    fab!(:voting_post2) { Fabricate(:post, topic: voting_topic2) }
+
+    before do
+      DiscourseTopicVoting::CategorySetting.create!(category: voting_category)
+      SiteSetting.topic_voting_enable_vote_limits = false
+      SiteSetting.topic_voting_tl4_vote_limit = 1
+    end
+
+    it "allows voting past the TL limit and hides limit UI" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      topic_page.vote
+      expect(topic_page).to have_see_all_votes_link
+      expect(topic_page).to have_no_votes_left_text
+      expect(topic_page.vote_count).to have_text("1")
+
+      visit("/t/#{voting_topic2.slug}/#{voting_topic2.id}")
+
+      topic_page.vote
+      expect(topic_page).to have_see_all_votes_link
+      expect(topic_page).to have_no_votes_left_text
+      expect(topic_page.vote_count).to have_text("1")
+    end
+
+    it "allows removing a vote" do
+      DiscourseTopicVoting::Vote.create!(user: admin, topic: voting_topic1)
+      voting_topic1.update_vote_count
+
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      topic_page.remove_vote
+      expect(topic_page.vote_count).to have_text("0")
+    end
+  end
 end

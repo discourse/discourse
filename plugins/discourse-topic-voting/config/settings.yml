@@ -1,7 +1,8 @@
 plugins:
-  topic_voting_alert_votes_left:
-    default: 10
   topic_voting_enabled:
+    default: true
+    client: true
+  topic_voting_enable_vote_limits:
     default: true
     client: true
   topic_voting_show_who_voted:
@@ -10,13 +11,33 @@ plugins:
   topic_voting_show_votes_on_profile:
     default: true
     client: true
+  topic_voting_alert_votes_left:
+    default: 10
+    depends_on:
+      - "topic_voting_enable_vote_limits"
+    depends_behavior: "hidden"
   topic_voting_tl0_vote_limit:
     default: 2
+    depends_on:
+      - "topic_voting_enable_vote_limits"
+    depends_behavior: "hidden"
   topic_voting_tl1_vote_limit:
     default: 4
+    depends_on:
+      - "topic_voting_enable_vote_limits"
+    depends_behavior: "hidden"
   topic_voting_tl2_vote_limit:
     default: 6
+    depends_on:
+      - "topic_voting_enable_vote_limits"
+    depends_behavior: "hidden"
   topic_voting_tl3_vote_limit:
     default: 8
+    depends_on:
+      - "topic_voting_enable_vote_limits"
+    depends_behavior: "hidden"
   topic_voting_tl4_vote_limit:
     default: 10
+    depends_on:
+      - "topic_voting_enable_vote_limits"
+    depends_behavior: "hidden"
