@@ -122,9 +122,6 @@ module DiscourseAi
         restore_dynamic_oauth_credentials!(ai_mcp_server, persisted_server)
 
         return render_json_error ai_mcp_server if !ai_mcp_server.valid?
-        if oauth_reauthorization_required_for_test?(ai_mcp_server)
-          ai_mcp_server = sanitized_oauth_test_server(ai_mcp_server)
-        end
 
         if ai_mcp_server.oauth? && persisted_server.blank?
           return(
@@ -133,6 +130,13 @@ module DiscourseAi
               status: 400,
             )
           )
+        end
+
+        # For connected OAuth servers, use the persisted record directly so
+        # the token association is intact. Form params may dirty fields
+        # (e.g. "" vs nil) causing false reauth detection.
+        if persisted_server&.oauth? && persisted_server.oauth_status == "connected"
+          ai_mcp_server = persisted_server.reload
         end
 
         client = DiscourseAi::Mcp::Client.new(ai_mcp_server)
@@ -274,27 +278,6 @@ module DiscourseAi
         ai_mcp_server.oauth_client_id = persisted_server.oauth_client_id
         ai_mcp_server.oauth_client_secret_ai_secret_id =
           persisted_server.oauth_client_secret_ai_secret_id
-      end
-
-      def oauth_reauthorization_required_for_test?(ai_mcp_server)
-        return false if !ai_mcp_server.oauth? || !ai_mcp_server.persisted?
-
-        trigger_fields = AiMcpServer::OAUTH_REAUTH_TRIGGER_FIELDS
-        if ai_mcp_server.oauth_client_registration != "manual"
-          trigger_fields -= %w[oauth_client_id oauth_client_secret_ai_secret_id]
-        end
-        (ai_mcp_server.changes_to_save.keys & trigger_fields).present?
-      end
-
-      def sanitized_oauth_test_server(ai_mcp_server)
-        ai_mcp_server.dup.tap do |server|
-          server.oauth_status = "disconnected"
-          server.oauth_access_token_expires_at = nil
-          server.oauth_token_type = nil
-          server.oauth_last_error = nil
-          server.oauth_last_authorized_at = nil
-          server.oauth_last_refreshed_at = nil
-        end
       end
     end
   end

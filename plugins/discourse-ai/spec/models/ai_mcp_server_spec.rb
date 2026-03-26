@@ -80,6 +80,19 @@ RSpec.describe AiMcpServer do
     expect(server.oauth_token.refresh_token).to eq("refresh")
   end
 
+  it "capitalizes a lowercase OAuth token type in the Authorization header" do
+    server =
+      Fabricate(
+        :ai_mcp_server,
+        auth_type: "oauth",
+        oauth_status: "connected",
+        oauth_token_type: "bearer",
+      )
+    server.oauth_token_store.write!(access_token: "oauth-access-token", refresh_token: "refresh")
+
+    expect(server.auth_header_value).to eq("Bearer oauth-access-token")
+  end
+
   it "uses the client metadata URL unless manual registration is selected" do
     server = Fabricate(:ai_mcp_server, auth_type: "oauth")
 

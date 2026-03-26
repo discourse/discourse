@@ -61,7 +61,7 @@ class AiMcpServer < ActiveRecord::Base
       token = oauth_token_store.access_token
       return nil if token.blank?
 
-      token_type = oauth_token_type.presence || "Bearer"
+      token_type = oauth_token_type.presence&.capitalize || "Bearer"
       return "#{token_type} #{token}"
     end
 
