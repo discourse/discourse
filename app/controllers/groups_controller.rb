@@ -780,7 +780,7 @@ class GroupsController < ApplicationController
   private
 
   def add_users_to_group(group, users, notify = false)
-    GroupManager.new(current_user, group).add(users)
+    GroupManager.new(current_user, group).bulk_add(users)
     GroupActionLogger.new(current_user, group).bulk_log_add_user_to_group(users)
     users.each { |user| group.notify_added_to_group(user) if notify }
   rescue ActiveRecord::RecordNotUnique

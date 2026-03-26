@@ -7,42 +7,33 @@ RSpec.describe GroupManager do
 
   subject(:manager) { GroupManager.new(Discourse.system_user, group) }
 
-  describe "#add" do
-    it "delegates to group.bulk_add and returns added user IDs" do
-      result = manager.add([user.id, user2.id])
+  describe "#bulk_add" do
+    it "adds users to group and returns added user IDs" do
+      result = manager.bulk_add([user.id, user2.id])
 
       expect(result).to contain_exactly(user.id, user2.id)
       expect(group.group_users.map(&:user_id)).to contain_exactly(user.id, user2.id)
     end
 
     it "returns empty array for blank input" do
-      expect(manager.add([])).to eq([])
-      expect(manager.add(nil)).to eq([])
-    end
-
-    it "passes automatic flag through to bulk_add" do
-      events =
-        DiscourseEvent.track_events(:user_added_to_group) do
-          manager.add([user.id], automatic: true)
-        end
-
-      expect(events.first[:params][2][:automatic]).to eq(true)
+      expect(manager.bulk_add([])).to eq([])
+      expect(manager.bulk_add(nil)).to eq([])
     end
   end
 
-  describe "#remove" do
-    before { group.bulk_add([user.id, user2.id]) }
+  describe "#bulk_remove" do
+    before { manager.bulk_add([user.id, user2.id]) }
 
-    it "delegates to group.bulk_remove and returns removed user IDs" do
-      result = manager.remove([user.id, user2.id])
+    it "removes users from group and returns removed user IDs" do
+      result = manager.bulk_remove([user.id, user2.id])
 
       expect(result).to contain_exactly(user.id, user2.id)
       expect(group.group_users.count).to eq(0)
     end
 
     it "returns empty array for blank input" do
-      expect(manager.remove([])).to eq([])
-      expect(manager.remove(nil)).to eq([])
+      expect(manager.bulk_remove([])).to eq([])
+      expect(manager.bulk_remove(nil)).to eq([])
     end
   end
 end
