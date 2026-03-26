@@ -5,7 +5,7 @@ RSpec.describe GroupManager do
   fab!(:user)
   fab!(:user2, :user)
 
-  subject(:manager) { GroupManager.new(Discourse.system_user, group) }
+  subject(:manager) { GroupManager.new(group) }
 
   describe "#bulk_add" do
     it "adds users to group and returns added user IDs" do
