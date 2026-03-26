@@ -197,7 +197,12 @@ after_initialize do
   end
 
   if defined?(DiscourseAi)
+    require_relative "lib/discourse_data_explorer/tools/validate_sql"
+    require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
+
+    register_ai_tool(DiscourseDataExplorer::Tools::ValidateSql)
+    register_ai_tool(DiscourseDataExplorer::Tools::RunSql)
 
     agent_id =
       DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_AGENT_IDS[:data_explorer_query_generator]

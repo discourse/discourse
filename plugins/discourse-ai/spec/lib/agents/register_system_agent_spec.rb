@@ -23,6 +23,16 @@ describe DiscourseAi::Agents::Agent do
     end
   end
 
+  describe ".register_tool" do
+    after { described_class.registered_tools.delete("TestTool") }
+
+    it "makes the tool discoverable by name" do
+      tool_klass = Class.new(DiscourseAi::Agents::Tools::Tool)
+      described_class.register_tool("TestTool", tool_klass)
+      expect(described_class.registered_tools["TestTool"]).to eq(tool_klass)
+    end
+  end
+
   describe "RESERVED_EXTERNAL_AGENT_IDS" do
     it "includes data_explorer_query_generator" do
       expect(described_class::RESERVED_EXTERNAL_AGENT_IDS[:data_explorer_query_generator]).to eq(

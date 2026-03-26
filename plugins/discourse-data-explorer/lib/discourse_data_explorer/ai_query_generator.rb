@@ -11,7 +11,11 @@ module DiscourseDataExplorer
     end
 
     def tools
-      [DiscourseAi::Agents::Tools::DbSchema]
+      [
+        DiscourseAi::Agents::Tools::DbSchema,
+        DiscourseDataExplorer::Tools::ValidateSql,
+        DiscourseDataExplorer::Tools::RunSql,
+      ]
     end
 
     def temperature
