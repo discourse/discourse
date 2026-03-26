@@ -143,7 +143,9 @@ class NestedTopicsController < ApplicationController
 
       store_preloaded(
         "nested_topic_#{@topic.id}",
-        MultiJson.dump(build_context_response(target_post_number, sort)),
+        MultiJson.dump(
+          build_context_response(target_post_number, sort, context_depth: params[:context]&.to_i),
+        ),
       )
       render "default/empty"
       return

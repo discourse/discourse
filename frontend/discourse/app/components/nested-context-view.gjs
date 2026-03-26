@@ -65,10 +65,9 @@ export default class NestedContextView extends Component {
       const postEl = target.closest(".nested-post");
       if (postEl) {
         postEl.classList.add("nested-post--highlighted");
-        postEl.addEventListener(
-          "animationend",
+        setTimeout(
           () => postEl.classList.remove("nested-post--highlighted"),
-          { once: true }
+          2000
         );
       }
       target.scrollIntoView({ behavior: "smooth", block: "center" });

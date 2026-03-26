@@ -415,9 +415,10 @@ module PageObjects
       end
 
       def wrapper_selector(post, child_selector = nil)
-        # Builds a CSS selector that targets the .nested-post wrapper containing
-        # the given post's data-post-number, without storing any find() results.
-        base = ".nested-post:has([data-post-number='#{post.post_number}'])"
+        # Builds a CSS selector that targets the DIRECT .nested-post wrapper for
+        # the given post, without storing any find() results. Uses > combinators
+        # to avoid matching ancestor .nested-post wrappers in the nested tree.
+        base = ".nested-post:has(> .nested-post__main > [data-post-number='#{post.post_number}'])"
         child_selector ? "#{base} #{child_selector}" : base
       end
     end
