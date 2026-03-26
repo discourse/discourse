@@ -205,6 +205,31 @@ export class SettingLinkFormatter {
   }
 }
 
+export class UpcomingChangeLinkFormatter {
+  /**
+   * @param {Object} upcomingChange - The upcoming change object from the upcoming changes API
+   */
+  constructor(upcomingChange) {
+    this.upcomingChange = upcomingChange;
+  }
+
+  format() {
+    return {
+      label: this.upcomingChange.humanized_name,
+      description: this.upcomingChange.description,
+      url: getURL(
+        `/admin/config/upcoming-changes?changeNamesFilter=${this.upcomingChange.setting}`
+      ),
+      keywords: buildKeywords(
+        this.upcomingChange.humanized_name,
+        this.upcomingChange.setting
+      ),
+      type: "upcoming_change",
+      icon: "flask",
+    };
+  }
+}
+
 export default class AdminSearchDataSource extends Service {
   @service router;
   @service adminNavManager;
@@ -215,6 +240,7 @@ export default class AdminSearchDataSource extends Service {
   themeDataSourceItems = [];
   componentDataSourceItems = [];
   reportDataSourceItems = [];
+  upcomingChangeDataSourceItems = [];
   settingPageMap = {
     categories: {},
     areas: {},
@@ -242,6 +268,7 @@ export default class AdminSearchDataSource extends Service {
     this.#processSettings(allItems.settings);
     this.#processThemesAndComponents(allItems.themes_and_components);
     this.#processReports(allItems.reports);
+    this.#processUpcomingChanges(allItems.upcoming_changes);
     this._mapCached = true;
   }
 
@@ -437,6 +464,16 @@ export default class AdminSearchDataSource extends Service {
         keywords: buildKeywords(report.title, report.description, report.type),
         type: "report",
       });
+    });
+  }
+
+  #processUpcomingChanges(upcomingChanges) {
+    upcomingChanges.forEach((upcomingChange) => {
+      const formattedUpcomingChangeLink = new UpcomingChangeLinkFormatter(
+        upcomingChange
+      ).format();
+
+      this.upcomingChangeDataSourceItems.push(formattedUpcomingChangeLink);
     });
   }
 }
