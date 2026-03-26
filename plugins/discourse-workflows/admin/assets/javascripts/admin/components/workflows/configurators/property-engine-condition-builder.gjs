@@ -58,12 +58,22 @@ function operationSchema(item) {
 }
 
 const CATEGORY_FIELDS = ["category_id", "category"];
+const USER_FIELDS = ["username"];
 
 function rightValueSchema(item) {
-  if (CATEGORY_FIELDS.includes(item?.leftValue)) {
+  const leftValue = item?.leftValue;
+
+  if (CATEGORY_FIELDS.includes(leftValue)) {
     return {
       type: "string",
       ui: { expression: true, show_label: false, control: "category" },
+    };
+  }
+
+  if (USER_FIELDS.includes(leftValue)) {
+    return {
+      type: "string",
+      ui: { expression: true, show_label: false, control: "user" },
     };
   }
 

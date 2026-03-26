@@ -1,14 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import FKControlInput from "discourse/form-kit/components/fk/control/input";
 import FKControlSelect from "discourse/form-kit/components/fk/control/select";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
@@ -168,7 +170,7 @@ export default class PropertyEngineField extends Component {
 
   get fieldDescription() {
     if (this.showDescription && this.description) {
-      return htmlSafe(this.description);
+      return trustHTML(this.description);
     }
     return undefined;
   }
@@ -211,6 +213,11 @@ export default class PropertyEngineField extends Component {
         api.set(key, value);
       }
     }
+  }
+
+  @action
+  handleUserChange(field, usernames) {
+    field.set(usernames[0] || "");
   }
 
   @action
@@ -344,6 +351,12 @@ export default class PropertyEngineField extends Component {
               />
             {{else if (eq this.control "category")}}
               <CategoryChooser @value={{field.value}} @onChange={{field.set}} />
+            {{else if (eq this.control "user")}}
+              <UserChooser
+                @value={{if field.value field.value null}}
+                @onChange={{fn this.handleUserChange field}}
+                @options={{hash maximum=1 excludeCurrentUser=false}}
+              />
             {{else if (eq this.control "select")}}
               <FKControlSelect @field={{field}} @includeNone={{false}} as |c|>
                 {{#each this.options as |choice|}}

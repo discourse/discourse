@@ -91,7 +91,8 @@
 
     .workflows-property-engine__control-wrapper:has(
         .d-select,
-        .category-chooser
+        .category-chooser,
+        .user-chooser
       )
       > & {
       right: 30px;
