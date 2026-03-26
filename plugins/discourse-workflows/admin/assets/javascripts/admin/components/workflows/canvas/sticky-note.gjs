@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import CookText from "discourse/components/cook-text";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
@@ -12,19 +12,19 @@ import { i18n } from "discourse-i18n";
 import CanvasHoverToolbar from "./hover-toolbar";
 
 const COLORS = [
-  { name: "yellow", value: "#fff9c4" },
-  { name: "blue", value: "#bbdefb" },
-  { name: "green", value: "#c8e6c9" },
-  { name: "pink", value: "#f8bbd0" },
-  { name: "purple", value: "#e1bee7" },
-  { name: "orange", value: "#ffe0b2" },
+  { name: "yellow", value: "var(--workflow-sticky-yellow)" },
+  { name: "blue", value: "var(--workflow-sticky-blue)" },
+  { name: "green", value: "var(--workflow-sticky-green)" },
+  { name: "pink", value: "var(--workflow-sticky-pink)" },
+  { name: "purple", value: "var(--workflow-sticky-purple)" },
+  { name: "orange", value: "var(--workflow-sticky-orange)" },
 ];
 
 const MIN_WIDTH = 140;
 const MIN_HEIGHT = 80;
 
 function swatchStyle(colorValue) {
-  return htmlSafe(`background:${colorValue}`);
+  return trustHTML(`background:${colorValue}`);
 }
 
 function focusElement(element) {
@@ -46,7 +46,7 @@ export default class StickyNote extends Component {
     const y = Number(position.y) || 0;
     const w = Number(size.width) || 200;
     const h = Number(size.height) || 150;
-    return htmlSafe(
+    return trustHTML(
       `left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${bg};`
     );
   }

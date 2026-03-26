@@ -17,6 +17,7 @@ end
 require_relative "lib/discourse_workflows/engine"
 
 register_asset "stylesheets/common/index.scss"
+register_asset "stylesheets/colors.scss", :color_definitions
 register_svg_icon "bolt"
 register_svg_icon "arrows-split-up-and-left"
 register_svg_icon "list"

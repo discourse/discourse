@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   overflow: visible;
-  border: 1px solid rgb(0 0 0 / 0.08);
+  border: 1px solid var(--primary-low-mid);
 
   &:active {
     cursor: grabbing;
@@ -85,7 +85,7 @@
     font-size: var(--font-down-1);
     font-family: inherit;
     line-height: 1.4;
-    color: #000;
+    color: var(--primary);
     outline: none;
     padding: 0;
     cursor: text;
@@ -94,7 +94,7 @@
   &__text {
     font-size: var(--font-down-1);
     line-height: 1.4;
-    color: #000;
+    color: var(--primary);
     word-break: break-word;
     overflow: hidden;
     height: 100%;
@@ -108,11 +108,11 @@
     }
 
     a {
-      color: #1a0dab;
+      color: var(--tertiary);
     }
 
     code {
-      background: rgb(0 0 0 / 0.06);
+      background: var(--primary-very-low);
       padding: 1px 4px;
       border-radius: 3px;
       font-size: var(--font-down-2);
@@ -120,7 +120,7 @@
   }
 
   &__placeholder {
-    color: rgb(0 0 0 / 0.4);
+    color: var(--primary-medium);
     font-style: italic;
   }
 
@@ -140,8 +140,8 @@
       right: 3px;
       width: 8px;
       height: 8px;
-      border-right: 2px solid rgb(0 0 0 / 0.2);
-      border-bottom: 2px solid rgb(0 0 0 / 0.2);
+      border-right: 2px solid var(--primary-low-mid);
+      border-bottom: 2px solid var(--primary-low-mid);
     }
   }
 }

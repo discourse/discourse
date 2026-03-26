@@ -8,31 +8,34 @@ const NODE_HEIGHT_WITH_DESC = 110;
 export { NODE_HEIGHT_BASE, NODE_HEIGHT_WITH_DESC, NODE_WIDTH };
 
 const DEFAULT_NODE_ICONS = {
-  "trigger:manual": { icon: "arrow-pointer", color: "var(--primary-medium)" },
-  "trigger:webhook": { icon: "globe", color: "#7c4dff" },
-  "trigger:stale_topic": { icon: "clock", color: "#ff7043" },
-  "trigger:schedule": { icon: "calendar-days", color: "#ff9800" },
-  "trigger:topic_closed": { icon: "lock", color: "#78909c" },
-  "trigger:post_created": { icon: "comment", color: "#5c6bc0" },
-  "trigger:topic_created": { icon: "plus", color: "#26a69a" },
-  "trigger:topic_category_changed": { icon: "folder-open", color: "#ff8a65" },
-  "trigger:form": { icon: "rectangle-list", color: "#26a69a" },
-  "condition:if": { icon: "arrows-split-up-and-left", color: "#42a5f5" },
-  "condition:filter": { icon: "filter", color: "#ab47bc" },
-  "action:code": { icon: "code", color: "#ef5350" },
-  "action:ai_agent": { icon: "robot", color: "#ec407a" },
-  "action:append_tags": { icon: "tags", color: "#ffa726" },
-  "action:set_fields": { icon: "list", color: "#66bb6a" },
-  "action:fetch_topic": { icon: "download", color: "#29b6f6" },
-  "action:create_post": { icon: "reply", color: "#26a69a" },
-  "action:create_topic": { icon: "plus", color: "#8bc34a" },
-  "action:split_out": { icon: "arrows-turn-to-dots", color: "#ffca28" },
-  "action:http_request": { icon: "globe", color: "#5c6bc0" },
-  "action:data_table": { icon: "table", prefix: "fas", color: "#8B5CF6" },
-  "action:wait_for_approval": { icon: "user-check", color: "#26c6da" },
-  "action:form": { icon: "rectangle-list", color: "#42a5f5" },
-  "action:award_badge": { icon: "certificate", color: "#f9a825" },
-  "core:loop_over_items": { icon: "arrow-rotate-right", color: "#8d6e63" },
+  "trigger:manual": { icon: "arrow-pointer" },
+  "trigger:webhook": { icon: "globe", colorKey: "purple" },
+  "trigger:stale_topic": { icon: "clock", colorKey: "deep-orange" },
+  "trigger:schedule": { icon: "calendar-days", colorKey: "orange" },
+  "trigger:topic_closed": { icon: "lock", colorKey: "grey" },
+  "trigger:post_created": { icon: "comment", colorKey: "indigo" },
+  "trigger:topic_created": { icon: "plus", colorKey: "teal" },
+  "trigger:topic_category_changed": {
+    icon: "folder-open",
+    colorKey: "deep-orange",
+  },
+  "trigger:form": { icon: "rectangle-list", colorKey: "teal" },
+  "condition:if": { icon: "arrows-split-up-and-left", colorKey: "blue" },
+  "condition:filter": { icon: "filter", colorKey: "violet" },
+  "action:code": { icon: "code", colorKey: "red" },
+  "action:ai_agent": { icon: "robot", colorKey: "pink" },
+  "action:append_tags": { icon: "tags", colorKey: "orange" },
+  "action:set_fields": { icon: "list", colorKey: "green" },
+  "action:fetch_topic": { icon: "download", colorKey: "light-blue" },
+  "action:create_post": { icon: "reply", colorKey: "teal" },
+  "action:create_topic": { icon: "plus", colorKey: "light-green" },
+  "action:split_out": { icon: "arrows-turn-to-dots", colorKey: "yellow" },
+  "action:http_request": { icon: "globe", colorKey: "indigo" },
+  "action:data_table": { icon: "table", prefix: "fas", colorKey: "violet" },
+  "action:wait_for_approval": { icon: "user-check", colorKey: "cyan" },
+  "action:form": { icon: "rectangle-list", colorKey: "blue" },
+  "action:award_badge": { icon: "certificate", colorKey: "yellow" },
+  "core:loop_over_items": { icon: "arrow-rotate-right", colorKey: "brown" },
 };
 
 export function getNodeIcons() {
@@ -41,7 +44,8 @@ export function getNodeIcons() {
 
 export function getNodeColor(identifier) {
   const icons = getNodeIcons();
-  return icons[identifier]?.color || "var(--primary-medium)";
+  const key = icons[identifier]?.colorKey;
+  return key ? `var(--workflow-node-color-${key})` : "var(--primary-medium)";
 }
 
 export function nodeLabel(node) {

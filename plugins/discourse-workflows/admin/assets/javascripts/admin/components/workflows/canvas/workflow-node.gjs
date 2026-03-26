@@ -73,7 +73,11 @@ export default class WorkflowNode extends Component {
   }
 
   get iconBlockStyle() {
-    return trustHTML(`--node-icon-color: ${this.iconInfo?.color}`);
+    const key = this.iconInfo?.colorKey;
+    const color = key
+      ? `var(--workflow-node-color-${key})`
+      : "var(--primary-medium)";
+    return trustHTML(`--node-icon-color: ${color}`);
   }
 
   <template>

@@ -30,7 +30,10 @@ function iconFor(nodeType) {
 }
 
 function iconStyle(nodeType) {
-  const color = getNodeIcons()[nodeType]?.color || "var(--primary-medium)";
+  const key = getNodeIcons()[nodeType]?.colorKey;
+  const color = key
+    ? `var(--workflow-node-color-${key})`
+    : "var(--primary-medium)";
   return htmlSafe(`color: ${color}`);
 }
 

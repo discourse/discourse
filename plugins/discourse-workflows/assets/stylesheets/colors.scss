@@ -1,0 +1,26 @@
+:root {
+  --workflow-node-color-purple: #{dark-light-choose(#5e35b1, #7c4dff)};
+  --workflow-node-color-deep-orange: #{dark-light-choose(#d84315, #ff7043)};
+  --workflow-node-color-orange: #{dark-light-choose(#e65100, #ff9800)};
+  --workflow-node-color-grey: #{$primary-medium};
+  --workflow-node-color-indigo: #{dark-light-choose(#3949ab, #5c6bc0)};
+  --workflow-node-color-teal: #{dark-light-choose(#00897b, #26a69a)};
+  --workflow-node-color-blue: #{dark-light-choose(#1e88e5, #42a5f5)};
+  --workflow-node-color-violet: #{dark-light-choose(#8e24aa, #ab47bc)};
+  --workflow-node-color-red: #{dark-light-choose(#e53935, #ef5350)};
+  --workflow-node-color-pink: #{dark-light-choose(#d81b60, #ec407a)};
+  --workflow-node-color-green: #{dark-light-choose(#43a047, #66bb6a)};
+  --workflow-node-color-light-blue: #{dark-light-choose(#0288d1, #29b6f6)};
+  --workflow-node-color-light-green: #{dark-light-choose(#689f38, #8bc34a)};
+  --workflow-node-color-yellow: #{dark-light-choose(#f57f17, #f9a825)};
+  --workflow-node-color-cyan: #{dark-light-choose(#00acc1, #26c6da)};
+  --workflow-node-color-brown: #{dark-light-choose(#6d4c41, #8d6e63)};
+
+  // Sticky note colors
+  --workflow-sticky-yellow: #{dark-light-choose(#fff9c4, #5c5424)};
+  --workflow-sticky-blue: #{dark-light-choose(#bbdefb, #1e3a5f)};
+  --workflow-sticky-green: #{dark-light-choose(#c8e6c9, #1b4332)};
+  --workflow-sticky-pink: #{dark-light-choose(#f8bbd0, #5c1a33)};
+  --workflow-sticky-purple: #{dark-light-choose(#e1bee7, #4a1a5e)};
+  --workflow-sticky-orange: #{dark-light-choose(#ffe0b2, #5c3a1a)};
+}

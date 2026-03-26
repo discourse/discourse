@@ -10,7 +10,7 @@
       "configuration": {},
       "position": {
         "x": 12,
-        "y": 12
+        "y": 22
       }
     },
     {
@@ -33,8 +33,8 @@
         ]
       },
       "position": {
-        "x": 274,
-        "y": 53
+        "x": 252,
+        "y": 17
       }
     },
     {
@@ -45,8 +45,8 @@
         "topic_id": "={{ $json.topic_id }} "
       },
       "position": {
-        "x": 544,
-        "y": 94
+        "x": 492,
+        "y": 12
       }
     }
   ],
@@ -65,38 +65,26 @@
   "sticky_notes": [
     {
       "position": {
-        "x": 250.5546875,
-        "y": -37.80078125
+        "x": 193.94921875,
+        "y": -49.4921875
       },
       "size": {
-        "width": 238.9921875,
-        "height": 148.59375
+        "width": 248.7421875,
+        "height": 172.73046875
       },
-      "color": "yellow",
+      "color": "green",
       "text": "Double click Check category to set the category id you want to auto tag"
     },
     {
       "position": {
-        "x": 645.84765625,
-        "y": -258.11328125
+        "x": 484.63671875,
+        "y": -104.71875
       },
       "size": {
-        "width": 235.84765625,
-        "height": 80
+        "width": 209.0859375,
+        "height": 213.1796875
       },
-      "color": "pink",
-      "text": "Make sure to publish when ready using the draft toggle above"
-    },
-    {
-      "position": {
-        "x": 539.95703125,
-        "y": 16.38671875
-      },
-      "size": {
-        "width": 184.625,
-        "height": 123.7109375
-      },
-      "color": "yellow",
+      "color": "blue",
       "text": "Double click Append tags to define the tags you want to apply"
     }
   ]
