@@ -17,13 +17,12 @@
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
   --d-sidebar-background: var(--token-surface);
-  --d-sidebar-admin-background: var(--token-surface);
 
   // must be rgba for gradient
   --d-sidebar-footer-fade: rgb(from var(--token-surface) r g b / 1);
   --d-sidebar-header-color: var(--token-text-subtle);
   --d-sidebar-header-icon-color: var(--token-text-subtle);
-  --d-sidebar-header-font-weight: bold;
+  --d-sidebar-header-font-weight: var(--token-font-weight-semibold);
   --d-sidebar-section-border-color: var(--token-border-default);
   --d-sidebar-border-color: var(--token-border-default);
   --d-sidebar-link-color: var(--token-text-subtle);
@@ -56,7 +55,7 @@
   --d-sidebar-active-prefix-background: var(--token-surface-hovered);
   --d-sidebar-active-suffix-color: var(--token-text-default);
   --d-sidebar-active-font-weight: var(
-    --token-font-weight-medium
+    --token-font-weight-semibold
   ); // example: active section link
 
   @include viewport.until(sm) {
@@ -175,7 +174,7 @@
       }
 
       .texts .name {
-        font-weight: normal;
+        font-weight: var(--token-font-weight-regular);
       }
     }
   }
@@ -372,7 +371,7 @@
     var(--d-sidebar-row-horizontal-padding);
 
   &__title {
-    font-weight: bold;
+    font-weight: var(--token-font-weight-bold);
   }
 }
 
