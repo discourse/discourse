@@ -79,6 +79,7 @@ en:
         "action:append_tags": "Append tags"
         "action:code": "Code"
         "action:fetch_topic": "Fetch topic"
+        "action:list_topics": "List topics"
         "action:create_post": "Create post"
         "action:create_topic": "Create topic"
         "action:set_fields": "Set fields"
@@ -105,6 +106,7 @@ en:
         "action:append_tags": "Add tags to a topic"
         "action:code": "Run custom JavaScript code"
         "action:fetch_topic": "Retrieve topic data by ID or URL"
+        "action:list_topics": "Query topics using filter syntax"
         "action:create_post": "Create a reply in an existing topic"
         "action:create_topic": "Create a new topic in a category"
         "action:set_fields": "Set or modify data fields in the workflow context"
@@ -149,6 +151,12 @@ en:
         tag_names_placeholder: "tag1, tag2 or use a variable"
       fetch_topic:
         topic_id: "Topic ID"
+      list_topics:
+        query: "Query"
+        query_description: "Filter query using the same syntax as /filter (e.g. category:support status:open order:activity)."
+        query_placeholder: "category:support status:open"
+        limit: "Limit"
+        limit_description: "Maximum number of topics to return (1-100, default 30)."
       award_badge:
         user_id: "User ID"
         badge_id: "Badge ID"

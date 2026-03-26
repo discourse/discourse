@@ -63,6 +63,7 @@ after_initialize do
       AppendTags
       Code
       FetchTopic
+      ListTopics
       CreatePost
       CreateTopic
       SetFields

@@ -63,6 +63,7 @@ const CATEGORIES = [
       "action:create_post",
       "action:create_topic",
       "action:fetch_topic",
+      "action:list_topics",
     ],
   },
   {

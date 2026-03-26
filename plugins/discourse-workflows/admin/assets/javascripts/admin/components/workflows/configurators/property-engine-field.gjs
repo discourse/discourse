@@ -31,11 +31,13 @@ import ExpressionInput from "./expression-input";
 import PropertyEngineComboBox from "./property-engine-combo-box";
 import PropertyEngineConditionBuilder from "./property-engine-condition-builder";
 import PropertyEngineDataTableFields from "./property-engine-data-table-fields";
+import PropertyEngineFilterQuery from "./property-engine-filter-query";
 import PropertyEngineUrlPreview from "./property-engine-url-preview";
 
 const BUILT_IN_FIELD_CONTROLS = {
   combo_box: PropertyEngineComboBox,
   data_table_fields: PropertyEngineDataTableFields,
+  filter_query: PropertyEngineFilterQuery,
   url_preview: PropertyEngineUrlPreview,
 };
 

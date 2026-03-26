@@ -60,6 +60,17 @@
   }
 }
 
+[data-identifier="filter-navigation-menu-list"] {
+  z-index: 1400;
+}
+
+.workflows-configurator-form {
+  .topic-query-filter__icon,
+  .topic-query-filter__clear-btn {
+    display: none;
+  }
+}
+
 .workflows-configurator-form {
   align-items: stretch;
 

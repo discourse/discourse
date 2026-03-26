@@ -33,6 +33,7 @@ const DEFAULT_NODE_ICONS = {
   "action:append_tags": { icon: "tags", colorKey: "orange" },
   "action:set_fields": { icon: "list", colorKey: "green" },
   "action:fetch_topic": { icon: "download", colorKey: "light-blue" },
+  "action:list_topics": { icon: "list", colorKey: "light-blue" },
   "action:create_post": { icon: "reply", colorKey: "teal" },
   "action:create_topic": { icon: "plus", colorKey: "light-green" },
   "action:split_out": { icon: "arrows-turn-to-dots", colorKey: "yellow" },
