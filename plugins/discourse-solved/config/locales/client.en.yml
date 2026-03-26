@@ -58,7 +58,7 @@ en:
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "your post was marked as solution"
-        topic_solved_title: "Topic has been solved"
+        topic_solved_title: "Topic solved"
       topic_notifications:
         tracking:
           description: "You will be notified if someone mentions your @name, replies to you, or when the topic is solved. A count of new replies will be shown for this topic."

@@ -114,15 +114,13 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def notify_tracking_and_watching_users(post:, topic:, guardian:)
-    already_notified_ids = Set.new([guardian.user.id])
-    already_notified_ids << post.user_id if should_notify_post_author(post:, guardian:)
-    already_notified_ids << topic.user_id if should_notify_topic_owner(topic:, guardian:)
+    already_notified_ids = [guardian.user.id, post.user_id, topic.user_id]
 
     topic_user_ids =
       TopicUser
         .where(topic:)
         .where("notification_level >= ?", TopicUser.notification_levels[:tracking])
-        .where.not(user_id: already_notified_ids.to_a)
+        .where.not(user_id: already_notified_ids)
         .pluck(:user_id)
 
     return if topic_user_ids.empty?
@@ -130,22 +128,30 @@ class DiscourseSolved::AcceptAnswer
     screener =
       UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: topic_user_ids)
 
-    topic_user_ids.each do |user_id|
-      next if screener.ignoring_or_muting_actor?(user_id)
+    notification_data = {
+      message: "solved.topic_solved_notification",
+      display_username: guardian.user.username,
+      topic_title: topic.title,
+      title: "solved.notification.topic_solved_title",
+    }.to_json
 
-      Notification.create!(
-        notification_type: Notification.types[:custom],
-        user_id: user_id,
-        topic_id: topic.id,
-        post_number: post.post_number,
-        data: {
-          message: "solved.topic_solved_notification",
-          display_username: guardian.user.username,
-          topic_title: topic.title,
-          title: "solved.notification.topic_solved_title",
-        }.to_json,
-      )
-    end
+    now = Time.zone.now
+    rows =
+      topic_user_ids.filter_map do |user_id|
+        next if screener.ignoring_or_muting_actor?(user_id)
+
+        {
+          notification_type: Notification.types[:custom],
+          user_id: user_id,
+          topic_id: topic.id,
+          post_number: post.post_number,
+          data: notification_data,
+          created_at: now,
+          updated_at: now,
+        }
+      end
+
+    Notification.insert_all(rows) if rows.present?
   end
 
   def topic_will_auto_close(solved:)
