@@ -2,10 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
@@ -20,7 +19,6 @@ import NestedViewHeader from "./nested-view-header";
 export default class NestedContextView extends Component {
   @service header;
   @service screenTrack;
-  @service site;
 
   @tracked cloakAbove = 0;
   @tracked cloakBelow = 0;
@@ -32,12 +30,13 @@ export default class NestedContextView extends Component {
     super(...arguments);
     // Use next() so this runs after RouteScrollManager's next() callback,
     // which otherwise resets scroll position on route transitions.
-    next(this, this._scrollToTarget);
+    this._nextTimer = next(this, this._scrollToTarget);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this._destroyed = true;
+    cancel(this._nextTimer);
     if (this._rafId) {
       cancelAnimationFrame(this._rafId);
     }
@@ -66,6 +65,11 @@ export default class NestedContextView extends Component {
       const postEl = target.closest(".nested-post");
       if (postEl) {
         postEl.classList.add("nested-post--highlighted");
+        postEl.addEventListener(
+          "animationend",
+          () => postEl.classList.remove("nested-post--highlighted"),
+          { once: true }
+        );
       }
       target.scrollIntoView({ behavior: "smooth", block: "center" });
     } else if (this._scrollAttempts < this._maxScrollAttempts) {
@@ -84,10 +88,7 @@ export default class NestedContextView extends Component {
 
   <template>
     <div
-      class={{concatClass
-        "nested-view nested-context-view"
-        (if this.site.mobileView "nested-view--mobile")
-      }}
+      class="nested-view nested-context-view"
       {{this.viewportTracker.setup
         eyeline=false
         headerOffset=this.header.headerOffset

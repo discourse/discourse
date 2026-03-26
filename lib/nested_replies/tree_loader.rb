@@ -24,9 +24,12 @@ module NestedReplies
     end
 
     def visible_post_types
-      types = [Post.types[:regular], Post.types[:moderator_action]]
-      types << Post.types[:whisper] if guardian.user&.whisperer?
-      types
+      @visible_post_types ||=
+        begin
+          types = [Post.types[:regular], Post.types[:moderator_action]]
+          types << Post.types[:whisper] if guardian.user&.whisperer?
+          types
+        end
     end
 
     def op_post

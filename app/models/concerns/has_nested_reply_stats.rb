@@ -11,6 +11,7 @@ module HasNestedReplyStats
   private
 
   def nested_replies_increment_stats
+    return unless SiteSetting.nested_replies_enabled
     return if reply_to_post_number.blank?
 
     ancestors =
@@ -49,6 +50,7 @@ module HasNestedReplyStats
   end
 
   def nested_replies_decrement_stats
+    return unless SiteSetting.nested_replies_enabled
     if reply_to_post_number.present?
       stat =
         NestedViewPostStat.where(post_id: id).pick(

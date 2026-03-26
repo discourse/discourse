@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // ── Top-level nested view ──────────────────────────────────────────
 .nested-view {
   background: var(--secondary);
@@ -36,7 +38,7 @@
         }
 
         &:hover,
-        &:focus {
+        &:focus-visible {
           .edit-topic {
             opacity: 1;
           }
@@ -172,7 +174,7 @@
     position: sticky;
     bottom: 2em;
     float: right;
-    z-index: 998;
+    z-index: z("header") - 2; // below header, above page content and footer-nav
     display: flex;
     align-items: center;
     gap: 0.5em;
@@ -268,11 +270,11 @@
     &::before {
       content: "";
       position: absolute;
-      top: -4px;
+      top: -4px; // overlap parent grid row by 4px to bridge gap
       left: calc(-1 * var(--nested-line-offset));
       width: var(--nested-hook-width);
       height: calc(
-        var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 5px
+        var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 5px // +5px visually centers the hook on the avatar
       );
       border-left: 2px solid var(--primary-low);
       border-bottom: 2px solid var(--primary-low);
@@ -288,6 +290,9 @@
       content: "";
       position: absolute;
       left: calc(-1 * var(--nested-line-offset));
+
+      // +1px aligns with L-connector bottom; -10px overlaps its border-radius
+      // curve to prevent subpixel gaps from anti-aliasing
       top: calc(
         var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 1px - 10px
       );
@@ -322,9 +327,10 @@
     cursor: pointer;
     padding: 0;
 
-    &:hover,
+    // Visual feedback is provided by --parent-line-highlighted class (JS).
+    // Transparent outline ensures visibility in Windows High Contrast Mode.
     &:focus-visible {
-      outline: none;
+      outline: 2px solid transparent;
     }
   }
 
@@ -388,9 +394,11 @@
       transition: background-color 0.15s ease;
     }
 
+    // Transparent outline preserves WHCM focus visibility while
+    // letting the tertiary line color serve as the primary indicator.
     &:focus-visible,
     &--highlighted {
-      outline: none;
+      outline: 2px solid transparent;
 
       &::after {
         background: var(--tertiary);
@@ -403,8 +411,6 @@
 
     @media (hover: hover) {
       &:hover {
-        outline: none;
-
         &::after {
           background: var(--tertiary);
         }
@@ -420,7 +426,7 @@
     &--collapsed {
       &::after {
         left: calc(var(--nested-avatar-size) / 2);
-        bottom: 20px;
+        bottom: 20px; // aligns L-bend with the "N replies" expand button
         width: calc(var(--nested-avatar-size) / 2);
         transform: none;
         background: none;
@@ -440,6 +446,8 @@
       }
 
       &:focus-visible {
+        outline: 2px solid transparent;
+
         &::after {
           background: none;
           border-color: var(--tertiary);
@@ -728,15 +736,17 @@
 
 // ── Mobile card layout ─────────────────────────────────────────────
 // Reddit-style mobile redesign: avatars move inline into the post
-// header (handled via JS this.isMobile), the gutter becomes a narrow
-// column holding only vertical depth-lines that run the full height
-// of each subtree for continuous visual hierarchy.
-.nested-view--mobile {
-  padding: 0.5em;
+// header (handled via JS template conditional), the gutter becomes a
+// narrow column holding only vertical depth-lines that run the full
+// height of each subtree for continuous visual hierarchy.
+@include viewport.until(sm) {
+  .nested-view {
+    padding: 0.5em;
 
-  // Grey background shows through the gaps between thread cards
-  background: var(--primary-very-low);
-  border-radius: 0;
+    // Grey background shows through the gaps between thread cards
+    background: var(--primary-very-low);
+    border-radius: 0;
+  }
 
   .nested-view__title {
     font-size: var(--font-up-3);
@@ -809,101 +819,96 @@
 // ── Mobile overrides for individual nested posts ───────────────────
 // Gutter shrinks to a narrow line-only column (avatar rendered inline
 // in the header instead).  Lines run full subtree height.
-.nested-post.--mobile {
-  --nested-line-gutter: 10px;
-  grid-template-columns: var(--nested-line-gutter) 1fr;
+@include viewport.until(sm) {
+  .nested-post {
+    --nested-line-gutter: 10px;
+    grid-template-columns: var(--nested-line-gutter) 1fr;
 
-  // Explicit rows are required so grid-row: 1 / -1 on the gutter
-  // can resolve -1 to the end of the explicit grid (line 3).
-  // Without this, -1 falls back to line 1 and the gutter only spans row 1.
-  grid-template-rows: auto 1fr;
-  column-gap: 4px;
+    // Explicit rows are required so grid-row: 1 / -1 on the gutter
+    // can resolve -1 to the end of the explicit grid (line 3).
+    // Without this, -1 falls back to line 1 and the gutter only spans row 1.
+    grid-template-rows: auto 1fr;
+    column-gap: 4px;
 
-  // Tighter vertical spacing between siblings
-  --nested-vertical-gap: 0.25em;
+    // Tighter vertical spacing between siblings
+    --nested-vertical-gap: 0.25em;
 
-  // Gutter spans all grid rows so the depth-line runs continuously
-  // through the article AND children areas
-  > .nested-post__gutter {
-    grid-row: 1 / -1;
-  }
-
-  // Depth-line: full-height vertical bar, no decorative hooks
-  > .nested-post__gutter .nested-post__depth-line {
-    &::after {
-      left: calc(var(--nested-line-gutter) / 2 - 1px);
-      top: 0;
-      bottom: 0;
+    // Gutter spans all grid rows so the depth-line runs continuously
+    // through the article AND children areas
+    > .nested-post__gutter {
+      grid-row: 1 / -1;
     }
 
-    // Override the desktop L-bend on collapsed lines — straight bar
-    &--collapsed::after {
-      border: none;
-      background: var(--primary-low);
-      width: 2px;
+    // Depth-line: full-height vertical bar, no decorative hooks
+    > .nested-post__gutter .nested-post__depth-line {
+      &::after {
+        left: calc(var(--nested-line-gutter) / 2 - 1px);
+        top: 0;
+        bottom: 0;
+      }
+
+      // Override the desktop L-bend on collapsed lines — straight bar
+      &--collapsed::after {
+        border: none;
+        background: var(--primary-low);
+        width: 2px;
+        border-radius: 0;
+        left: calc(var(--nested-line-gutter) / 2 - 1px);
+        bottom: 0;
+      }
+    }
+
+    // Hide the collapse icon — tapping the line itself collapses
+    .nested-post__depth-line-icon {
+      display: none;
+    }
+
+    // Inline avatar in the post header (rendered via template)
+    .nested-post__header .topic-avatar {
+      border-top: none;
+      float: none;
+      width: auto;
+      padding-top: 0;
+      height: auto;
+    }
+
+    // Strip all decorative connectors (L-hooks, sibling lines)
+    &:not(.--depth-0) {
+      &::before,
+      &:not(:last-child)::after {
+        content: none;
+      }
+    }
+
+    // No hover interaction on touch — depth-line handles collapse
+    > .nested-post__parent-line-btn {
+      display: none;
+    }
+
+    // Root threads rendered as full-width white cards.
+    // padding-left: 0 so the gutter starts at the card edge (= viewport
+    // edge after negative margins), giving consistent line spacing.
+    &.--depth-0 {
+      background: var(--secondary);
       border-radius: 0;
-      left: calc(var(--nested-line-gutter) / 2 - 1px);
-      bottom: 0;
+      padding: 0.5em 0.5em 0.5em 0;
+      margin-top: 0;
+    }
+
+    // Compact post headers
+    .nested-post__header {
+      flex-wrap: wrap;
+      gap: 0.25em;
+
+      .topic-meta-data {
+        margin-left: 0;
+      }
+    }
+
+    .nested-post__content {
+      overflow-x: auto;
     }
   }
-
-  // Hide the collapse icon — tapping the line itself collapses
-  .nested-post__depth-line-icon {
-    display: none;
-  }
-
-  // Inline avatar in the post header (rendered via template)
-  .nested-post__header .topic-avatar {
-    border-top: none;
-    float: none;
-    width: auto;
-    padding-top: 0;
-    height: auto;
-  }
-
-  // Strip all decorative connectors (L-hooks, sibling lines)
-  &:not(.--depth-0) {
-    &::before,
-    &:not(:last-child)::after {
-      content: none;
-    }
-  }
-
-  // No hover interaction on touch — depth-line handles collapse
-  > .nested-post__parent-line-btn {
-    display: none;
-  }
-
-  // Root threads rendered as full-width white cards.
-  // padding-left: 0 so the gutter starts at the card edge (= viewport
-  // edge after negative margins), giving consistent line spacing.
-  &.--depth-0 {
-    background: var(--secondary);
-    border-radius: 0;
-    padding: 0.5em 0.5em 0.5em 0;
-    margin-top: 0;
-  }
-
-  // Compact post headers
-  .nested-post__header {
-    flex-wrap: wrap;
-    gap: 0.25em;
-
-    .topic-meta-data {
-      margin-left: 0;
-    }
-  }
-
-  .nested-post__content {
-    overflow-x: auto;
-  }
-}
-
-// ── Deep nesting indent cap ────────────────────────────────────────
-// Reserved for future use — currently all depths use the same gutter
-// width for consistent line spacing.
-.nested-post.--deep {
-  // intentionally empty; --nested-line-gutter stays at 8px
 }
 
 html.footer-nav-visible {

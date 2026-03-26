@@ -13,6 +13,7 @@ import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
@@ -119,10 +120,6 @@ export default class NestedPost extends Component {
 
   get isMobile() {
     return this.site.mobileView;
-  }
-
-  get isDeepMobile() {
-    return this.site.mobileView && this.args.depth >= 4;
   }
 
   get canCreatePost() {
@@ -261,7 +258,11 @@ export default class NestedPost extends Component {
     const likeAction = post.likeAction;
 
     if (likeAction?.canToggle) {
-      await likeAction.togglePromise(post);
+      try {
+        await likeAction.togglePromise(post);
+      } catch (e) {
+        popupAjaxError(e);
+      }
     }
   }
 
@@ -275,8 +276,6 @@ export default class NestedPost extends Component {
       class={{concatClass
         "nested-post"
         this.depthClass
-        (if this.isMobile "--mobile")
-        (if this.isDeepMobile "--deep")
         (if @parentLineHighlighted "--parent-line-highlighted")
         (if this.collapsed "nested-post--collapsed")
         (if @isPinned "nested-post--pinned")

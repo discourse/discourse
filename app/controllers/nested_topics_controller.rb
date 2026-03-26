@@ -1,29 +1,38 @@
 # frozen_string_literal: true
 
 class NestedTopicsController < ApplicationController
-  skip_before_action :check_xhr, only: %i[respond]
+  skip_before_action :check_xhr, only: %i[roots context]
 
   before_action :ensure_nested_replies_enabled
-  before_action :find_topic, except: %i[respond]
+  before_action :find_topic
 
-  def respond
-    if use_crawler_layout?
-      url = "/t/#{params[:slug]}/#{params[:topic_id]}"
-      url += "/#{params[:post_number]}" if params[:post_number].present?
-      redirect_to url, status: :moved_permanently
+  # GET /n/:slug/:topic_id (HTML + JSON)
+  # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)
+  # JSON page 0: includes topic metadata, OP post, sort, and message_bus_last_id
+  # JSON page 1+: returns only roots for pagination
+  def roots
+    sort = validated_sort
+
+    if spa_boot_request?
+      if use_crawler_layout?
+        redirect_to "/t/#{params[:slug]}/#{params[:topic_id]}", status: :moved_permanently
+        return
+      end
+
+      store_preloaded(
+        "nested_topic_#{@topic.id}",
+        MultiJson.dump(build_initial_roots_response(sort)),
+      )
+      render "default/empty"
       return
     end
 
-    render
-  end
-
-  # GET /n/:slug/:topic_id/roots
-  # On page 0 (initial load), includes topic metadata, OP post, sort, and message_bus_last_id.
-  # On subsequent pages, returns only roots for pagination.
-  def roots
-    sort = validated_sort
     page = [params[:page].to_i, 0].max
-    initial_load = page == 0
+
+    if page == 0
+      render json: build_initial_roots_response(sort)
+      return
+    end
 
     roots =
       loader
@@ -33,51 +42,24 @@ class NestedTopicsController < ApplicationController
     roots = loader.load_posts_for_tree(roots).to_a
     has_more_roots = roots.size == NestedReplies::TreeLoader::ROOTS_PER_PAGE
 
-    # Pin: ensure the pinned root appears first on initial load
-    pinned_post_number = (@topic.nested_topic&.pinned_post_number if initial_load)
-
-    if pinned_post_number.present?
-      pinned_index = roots.index { |p| p.post_number == pinned_post_number }
-      if pinned_index
-        pinned_post = roots[pinned_index]
-        roots.unshift(roots.delete_at(pinned_index)) if pinned_post.deleted_at.nil?
-      else
-        pinned_post =
-          loader.load_posts_for_tree(
-            loader.apply_visibility(@topic.posts.where(post_number: pinned_post_number)),
-          ).first
-        roots.unshift(pinned_post) if pinned_post && pinned_post.deleted_at.nil?
-      end
-    end
-
     tree_data =
       loader.batch_preload_tree(roots, sort, max_depth: NestedReplies::TreeLoader::PRELOAD_DEPTH)
     children_map = tree_data[:children_map]
 
-    all_posts = initial_load ? [loader.op_post] + tree_data[:all_posts] : tree_data[:all_posts].dup
+    all_posts = tree_data[:all_posts].dup
 
     preloader.prepare(all_posts)
     reply_counts = loader.direct_reply_counts(all_posts.map(&:post_number))
     descendant_counts = loader.total_descendant_counts(all_posts.map(&:id))
 
-    result = {
-      roots:
-        roots.map do |root|
-          serializer.serialize_tree(root, children_map, reply_counts, descendant_counts)
-        end,
-      has_more_roots: has_more_roots,
-      page: page,
-    }
-
-    if initial_load
-      result[:topic] = serializer.serialize_topic
-      result[:op_post] = serializer.serialize_post(loader.op_post, reply_counts, descendant_counts)
-      result[:sort] = sort
-      result[:message_bus_last_id] = @topic_view.message_bus_last_id
-      result[:pinned_post_number] = pinned_post_number if pinned_post_number.present?
-    end
-
-    render json: result
+    render json: {
+             roots:
+               roots.map do |root|
+                 serializer.serialize_tree(root, children_map, reply_counts, descendant_counts)
+               end,
+             has_more_roots: has_more_roots,
+             page: page,
+           }
   end
 
   # GET /n/:slug/:topic_id/children/:post_number
@@ -143,14 +125,121 @@ class NestedTopicsController < ApplicationController
            }
   end
 
-  # GET /n/:slug/:topic_id/context/:post_number
-  # Optional param: context (integer) -- controls ancestor depth.
+  # GET /n/:slug/:topic_id/:post_number (HTML + JSON)
+  # HTML: preloads context data into the Ember shell (crawlers redirect to flat view)
+  # JSON param: context (integer) -- controls ancestor depth.
   #   nil/absent = windowed ancestor chain capped at max_depth (deep-links, notifications)
   #   0 = no ancestors, target at depth 0 ("Continue this thread")
   def context
     target_post_number = params[:post_number].to_i
     sort = validated_sort
-    context_depth = params[:context]&.to_i # nil = windowed chain, 0 = no ancestors
+
+    if spa_boot_request?
+      if use_crawler_layout?
+        redirect_to "/t/#{params[:slug]}/#{params[:topic_id]}/#{target_post_number}",
+                    status: :moved_permanently
+        return
+      end
+
+      store_preloaded(
+        "nested_topic_#{@topic.id}",
+        MultiJson.dump(build_context_response(target_post_number, sort)),
+      )
+      render "default/empty"
+      return
+    end
+
+    render json:
+             build_context_response(target_post_number, sort, context_depth: params[:context]&.to_i)
+  end
+
+  # PUT /n/:slug/:topic_id/pin
+  def pin
+    guardian.ensure_can_edit!(@topic)
+    raise Discourse::InvalidAccess unless guardian.is_staff?
+
+    post_number = params[:post_number].presence&.to_i
+
+    if post_number
+      post = @topic.posts.where(post_number: post_number).first
+      raise Discourse::NotFound unless post
+      if post.reply_to_post_number.present? && post.reply_to_post_number != 1
+        raise Discourse::InvalidParameters.new(:post_number)
+      end
+    end
+
+    nested_topic = @topic.nested_topic || NestedTopic.find_or_create_by!(topic: @topic)
+    nested_topic.update!(pinned_post_number: post_number)
+
+    render json: { pinned_post_number: post_number }
+  end
+
+  # PUT /n/:slug/:topic_id/toggle
+  def toggle
+    guardian.ensure_can_edit!(@topic)
+    raise Discourse::InvalidAccess unless guardian.is_staff?
+
+    enabled = params[:enabled].to_s == "true"
+
+    if enabled
+      NestedTopic.find_or_create_by!(topic: @topic) unless @topic.nested_topic
+    else
+      @topic.nested_topic&.destroy!
+    end
+
+    render json: { is_nested_view: enabled }
+  end
+
+  private
+
+  def build_initial_roots_response(sort)
+    roots = loader.root_posts_scope(sort).offset(0).limit(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
+    roots = loader.load_posts_for_tree(roots).to_a
+    has_more_roots = roots.size == NestedReplies::TreeLoader::ROOTS_PER_PAGE
+
+    pinned_post_number = @topic.nested_topic&.pinned_post_number
+
+    if pinned_post_number.present?
+      pinned_index = roots.index { |p| p.post_number == pinned_post_number }
+      if pinned_index
+        pinned_post = roots[pinned_index]
+        roots.unshift(roots.delete_at(pinned_index)) if pinned_post.deleted_at.nil?
+      else
+        pinned_post =
+          loader.load_posts_for_tree(
+            loader.apply_visibility(@topic.posts.where(post_number: pinned_post_number)),
+          ).first
+        roots.unshift(pinned_post) if pinned_post && pinned_post.deleted_at.nil?
+      end
+    end
+
+    tree_data =
+      loader.batch_preload_tree(roots, sort, max_depth: NestedReplies::TreeLoader::PRELOAD_DEPTH)
+    children_map = tree_data[:children_map]
+
+    all_posts = [loader.op_post] + tree_data[:all_posts]
+
+    preloader.prepare(all_posts)
+    reply_counts = loader.direct_reply_counts(all_posts.map(&:post_number))
+    descendant_counts = loader.total_descendant_counts(all_posts.map(&:id))
+
+    result = {
+      roots:
+        roots.map do |root|
+          serializer.serialize_tree(root, children_map, reply_counts, descendant_counts)
+        end,
+      has_more_roots: has_more_roots,
+      page: 0,
+      topic: serializer.serialize_topic,
+      op_post: serializer.serialize_post(loader.op_post, reply_counts, descendant_counts),
+      sort: sort,
+      message_bus_last_id: @topic_view.message_bus_last_id,
+    }
+    result[:pinned_post_number] = pinned_post_number if pinned_post_number.present?
+    result
+  end
+
+  def build_context_response(target_post_number, sort, context_depth: nil)
     max_depth = loader.configured_max_depth
 
     target = @topic.posts.find_by(post_number: target_post_number)
@@ -204,60 +293,20 @@ class NestedTopicsController < ApplicationController
     reply_counts = loader.direct_reply_counts(all_posts.map(&:post_number))
     descendant_counts = loader.total_descendant_counts(all_posts.map(&:id))
 
-    render json: {
-             topic: serializer.serialize_topic,
-             op_post: serializer.serialize_post(loader.op_post, reply_counts, descendant_counts),
-             ancestor_chain:
-               ancestors.map { |a| serializer.serialize_post(a, reply_counts, descendant_counts) },
-             ancestors_truncated: ancestors_truncated,
-             siblings:
-               siblings_map.transform_values { |posts|
-                 posts.map { |p| serializer.serialize_post(p, reply_counts, descendant_counts) }
-               },
-             target_post:
-               serializer.serialize_tree(target, children_map, reply_counts, descendant_counts),
-             message_bus_last_id: @topic_view.message_bus_last_id,
-           }
+    {
+      topic: serializer.serialize_topic,
+      op_post: serializer.serialize_post(loader.op_post, reply_counts, descendant_counts),
+      ancestor_chain:
+        ancestors.map { |a| serializer.serialize_post(a, reply_counts, descendant_counts) },
+      ancestors_truncated: ancestors_truncated,
+      siblings:
+        siblings_map.transform_values do |posts|
+          posts.map { |p| serializer.serialize_post(p, reply_counts, descendant_counts) }
+        end,
+      target_post: serializer.serialize_tree(target, children_map, reply_counts, descendant_counts),
+      message_bus_last_id: @topic_view.message_bus_last_id,
+    }
   end
-
-  # PUT /n/:slug/:topic_id/pin
-  def pin
-    guardian.ensure_can_edit!(@topic)
-    raise Discourse::InvalidAccess unless guardian.is_staff?
-
-    post_number = params[:post_number].presence&.to_i
-
-    if post_number
-      post = @topic.posts.where(post_number: post_number).first
-      raise Discourse::NotFound unless post
-      if post.reply_to_post_number.present? && post.reply_to_post_number != 1
-        raise Discourse::InvalidParameters.new(:post_number)
-      end
-    end
-
-    nested_topic = @topic.nested_topic || @topic.create_nested_topic!
-    nested_topic.update!(pinned_post_number: post_number)
-
-    render json: { pinned_post_number: post_number }
-  end
-
-  # PUT /n/:slug/:topic_id/toggle
-  def toggle
-    guardian.ensure_can_edit!(@topic)
-    raise Discourse::InvalidAccess unless guardian.is_staff?
-
-    enabled = params[:enabled].to_s == "true"
-
-    if enabled
-      @topic.create_nested_topic! unless @topic.nested_topic
-    else
-      @topic.nested_topic&.destroy!
-    end
-
-    render json: { is_nested_view: enabled }
-  end
-
-  private
 
   def ensure_nested_replies_enabled
     raise Discourse::NotFound unless SiteSetting.nested_replies_enabled

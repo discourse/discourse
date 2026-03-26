@@ -112,43 +112,35 @@ module PageObjects
       end
 
       def has_depth_line_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.find(".nested-post__gutter", match: :first).has_css?(".nested-post__depth-line")
+        has_css?(wrapper_selector(post, ".nested-post__gutter .nested-post__depth-line"))
       end
 
       def has_no_depth_line_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.find(".nested-post__gutter", match: :first).has_no_css?(".nested-post__depth-line")
+        has_no_css?(wrapper_selector(post, ".nested-post__gutter .nested-post__depth-line"))
       end
 
       def has_children_visible_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.has_css?(".nested-post-children")
+        has_css?(wrapper_selector(post, ".nested-post-children"))
       end
 
       def has_no_children_visible_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.has_no_css?(".nested-post-children")
+        has_no_css?(wrapper_selector(post, ".nested-post-children"))
       end
 
       def has_collapsed_bar_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.has_css?(".nested-post__collapsed-bar")
+        has_css?(wrapper_selector(post, ".nested-post__collapsed-bar"))
       end
 
       def has_no_collapsed_bar_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.has_no_css?(".nested-post__collapsed-bar")
+        has_no_css?(wrapper_selector(post, ".nested-post__collapsed-bar"))
       end
 
       def has_post_content_visible_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.has_css?(".nested-post__article")
+        has_css?(wrapper_selector(post, ".nested-post__article"))
       end
 
       def has_no_post_content_visible_for?(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.has_no_css?(".nested-post__article")
+        has_no_css?(wrapper_selector(post, ".nested-post__article"))
       end
 
       def has_flat_view_link?
@@ -269,14 +261,12 @@ module PageObjects
       end
 
       def click_depth_line(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.find(".nested-post__depth-line").click
+        find(wrapper_selector(post, ".nested-post__depth-line")).click
         self
       end
 
       def click_collapsed_bar(post)
-        wrapper = nested_post_wrapper(post)
-        wrapper.find(".nested-post__collapsed-bar").click
+        find(wrapper_selector(post, ".nested-post__collapsed-bar")).click
         self
       end
 
@@ -404,13 +394,12 @@ module PageObjects
       end
 
       def has_cloaked_root_for?(post)
-        root = nested_post_wrapper(post)
-        root[:class].include?("nested-post--cloaked")
+        has_css?(".nested-post--cloaked [data-post-number='#{post.post_number}']")
       end
 
       def has_uncloaked_root_for?(post)
-        root = nested_post_wrapper(post)
-        !root[:class].include?("nested-post--cloaked")
+        has_no_css?(".nested-post--cloaked [data-post-number='#{post.post_number}']") &&
+          has_css?("[data-post-number='#{post.post_number}']")
       end
 
       # ── Post counting ─────────────────────────────────────────────
@@ -425,11 +414,11 @@ module PageObjects
         find("[data-post-number='#{post.post_number}']")
       end
 
-      def nested_post_wrapper(post)
-        find("[data-post-number='#{post.post_number}']").find(
-          :xpath,
-          "ancestor::div[contains(concat(' ', @class, ' '), ' nested-post ')][1]",
-        )
+      def wrapper_selector(post, child_selector = nil)
+        # Builds a CSS selector that targets the .nested-post wrapper containing
+        # the given post's data-post-number, without storing any find() results.
+        base = ".nested-post:has([data-post-number='#{post.post_number}'])"
+        child_selector ? "#{base} #{child_selector}" : base
       end
     end
   end

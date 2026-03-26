@@ -21,30 +21,27 @@ import NestedViewHeader from "./nested-view-header";
 export default class NestedView extends Component {
   @service header;
   @service screenTrack;
-  @service site;
 
   @tracked cloakAbove = 0;
   @tracked cloakBelow = 0;
   viewportTracker = new PostStreamViewportTracker();
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.viewportTracker.destroy();
-  }
-
   // Core's TopicMap requires a @postStream arg for flat-view features
   // (filtering by participant, "Top Replies" toggle). The nested view has
   // no PostStream, so we supply a stub that satisfies the interface with
   // safe no-ops. The "Top Replies" button is hidden via CSS.
-  get postStreamStub() {
-    return {
-      summary: false,
-      loadingFilter: false,
-      userFilters: [],
-      showTopReplies() {},
-      cancelFilter() {},
-      refresh() {},
-    };
+  postStreamStub = {
+    summary: false,
+    loadingFilter: false,
+    userFilters: [],
+    showTopReplies() {},
+    cancelFilter() {},
+    refresh() {},
+  };
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.viewportTracker.destroy();
   }
 
   get isAma() {
@@ -63,11 +60,7 @@ export default class NestedView extends Component {
 
   <template>
     <div
-      class={{concatClass
-        "nested-view"
-        (if this.isAma "nested-view--ama")
-        (if this.site.mobileView "nested-view--mobile")
-      }}
+      class={{concatClass "nested-view" (if this.isAma "nested-view--ama")}}
       {{this.viewportTracker.setup
         eyeline=false
         headerOffset=this.header.headerOffset

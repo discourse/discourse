@@ -4,7 +4,10 @@ import { i18n } from "discourse-i18n";
 
 export default class NestedRepliesSettingsUpsert extends Component {
   static shouldRender(args, context) {
-    return context.siteSettings.enable_simplified_category_creation;
+    return (
+      context.siteSettings.nested_replies_enabled &&
+      context.siteSettings.enable_simplified_category_creation
+    );
   }
 
   get enabled() {

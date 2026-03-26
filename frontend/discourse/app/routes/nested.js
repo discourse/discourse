@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import PreloadStore from "discourse/lib/preload-store";
 import processNode from "../lib/process-node";
 
 export default class NestedRoute extends Route {
@@ -43,13 +44,20 @@ export default class NestedRoute extends Route {
         queryParts.push(`context=${params.context}`);
       }
       const contextQuery = `?${queryParts.join("&")}`;
-      const data = await ajax(
-        `/n/${slug}/${topic_id}/context/${post_number}.json${contextQuery}`
+      const data = await PreloadStore.getAndRemove(
+        `nested_topic_${topic_id}`,
+        () =>
+          ajax(
+            `/n/${slug}/${topic_id}/context/${post_number}.json${contextQuery}`
+          )
       );
       return this._processContextResponse(data, params, sort);
     }
 
-    const data = await ajax(`/n/${slug}/${topic_id}/roots.json?sort=${sort}`);
+    const data = await PreloadStore.getAndRemove(
+      `nested_topic_${topic_id}`,
+      () => ajax(`/n/${slug}/${topic_id}/roots.json?sort=${sort}`)
+    );
     return this._processResponse(data, params);
   }
 

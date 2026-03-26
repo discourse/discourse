@@ -1796,6 +1796,8 @@ content_localization:
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
+
+nested_replies:
   nested_replies_enabled:
     default: false
     client: true

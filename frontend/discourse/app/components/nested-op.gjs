@@ -8,6 +8,7 @@ import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import nestedPostUrl from "discourse/lib/nested-post-url";
@@ -111,7 +112,11 @@ export default class NestedOp extends Component {
     const post = this.args.post;
     const likeAction = post.likeAction;
     if (likeAction?.canToggle) {
-      await likeAction.togglePromise(post);
+      try {
+        await likeAction.togglePromise(post);
+      } catch (e) {
+        popupAjaxError(e);
+      }
     }
   }
 

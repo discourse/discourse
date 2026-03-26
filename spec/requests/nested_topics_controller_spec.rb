@@ -36,6 +36,15 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}/5")
       expect(response.status).to eq(301)
     end
+
+    it "returns 403 for anonymous users on private topics" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      Fabricate(:post, topic: private_topic, post_number: 1)
+
+      get "/n/#{private_topic.slug}/#{private_topic.id}"
+      expect(response.status).to eq(403)
+    end
   end
 
   describe "GET roots" do

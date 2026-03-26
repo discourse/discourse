@@ -5,6 +5,8 @@ module NestedReplies
     ALGORITHMS = %w[top new old].freeze
 
     def self.sql_order_expression(algorithm)
+      raise ArgumentError, "Invalid sort algorithm: #{algorithm}" unless valid?(algorithm)
+
       case algorithm
       when "top"
         "like_count DESC, post_number ASC"
@@ -12,8 +14,6 @@ module NestedReplies
         "created_at DESC"
       when "old"
         "post_number ASC"
-      else
-        "like_count DESC, post_number ASC"
       end
     end
 

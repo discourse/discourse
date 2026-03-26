@@ -2,6 +2,8 @@
 
 class NestedTopic < ActiveRecord::Base
   belongs_to :topic
+
+  validates :topic_id, presence: true, uniqueness: true
 end
 
 # == Schema Information

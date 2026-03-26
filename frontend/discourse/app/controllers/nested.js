@@ -393,8 +393,13 @@ export default class NestedController extends Controller {
   }
 
   async _handleCreated(data) {
+    const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
+      if (this.topic?.id !== topicId) {
+        return;
+      }
+
       const post = this.store.createRecord("post", postData);
       post.topic = this.topic;
 
@@ -425,8 +430,13 @@ export default class NestedController extends Controller {
       return;
     }
 
+    const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
+      if (this.topic?.id !== topicId) {
+        return;
+      }
+
       const existing = [...this.postRegistry.values()].find(
         (p) => p.id === data.id
       );

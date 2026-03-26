@@ -13,13 +13,8 @@ export default class NestedFloatingActions extends Component {
   @service composer;
   @service currentUser;
 
-  get topicController() {
-    return getOwner(this).lookup("controller:topic");
-  }
-
-  get topicRoute() {
-    return getOwner(this).lookup("route:topic");
-  }
+  topicController = getOwner(this).lookup("controller:topic");
+  topicRoute = getOwner(this).lookup("route:topic");
 
   get canCreatePost() {
     return this.currentUser && this.args.topic?.details?.can_create_post;
