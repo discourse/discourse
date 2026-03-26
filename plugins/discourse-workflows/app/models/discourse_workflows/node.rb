@@ -30,6 +30,8 @@ module DiscourseWorkflows
 
     scope :enabled_triggers, ->(trigger_type) { enabled_of_type("trigger:#{trigger_type}") }
 
+    before_validation :coerce_configuration_types
+
     validates :type, presence: true
     validates :name, presence: true
     validate :validate_configuration
@@ -50,6 +52,36 @@ module DiscourseWorkflows
     end
 
     private
+
+    def coerce_configuration_types
+      return if type.blank? || configuration.blank?
+
+      node_type = DiscourseWorkflows::Registry.find_node_type(type, version: type_version)
+      return unless node_type.respond_to?(:configuration_schema)
+
+      schema = node_type.configuration_schema
+      return if schema.blank?
+
+      coerced = configuration.dup
+      schema.each do |key, field_schema|
+        str_key = key.to_s
+        next unless coerced.key?(str_key)
+
+        value = coerced[str_key]
+        next if value.nil?
+
+        case field_schema[:type]
+        when :integer
+          coerced[str_key] = Integer(value) if !value.is_a?(Integer)
+        when :number
+          coerced[str_key] = Float(value) if !value.is_a?(Numeric)
+        end
+      rescue ArgumentError, TypeError
+        next
+      end
+
+      self.configuration = coerced
+    end
 
     def coerce_field_value(value, field_type)
       case field_type

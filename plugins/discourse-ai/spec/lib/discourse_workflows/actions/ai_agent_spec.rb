@@ -4,19 +4,12 @@ RSpec.describe DiscourseWorkflows::Actions::AiAgent do
   fab!(:enabled_agent) { Fabricate(:ai_agent, enabled: true, name: "Helper Bot") }
 
   describe ".configuration_schema" do
-    it "uses combo box ui hints for agent selection" do
-      expect(described_class.configuration_schema.dig(:agent_id, :ui)).to eq(
-        control: :combo_box,
-        expression: false,
-        filterable: true,
-        name_property: :name,
-        none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
-        options_source: :agents,
-        patch_from_option: {
-          agent_name: :name,
-        },
-        value_property: :id,
-      )
+    it "uses select control for agent selection" do
+      schema = described_class.configuration_schema[:agent_id]
+      expect(schema[:ui]).to eq(control: :select)
+      expect(schema[:type]).to eq(:integer)
+      expect(schema[:required]).to eq(true)
+      expect(schema[:options]).to include(value: enabled_agent.id, label: "Helper Bot")
     end
   end
 

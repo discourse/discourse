@@ -90,6 +90,59 @@ RSpec.describe DiscourseWorkflows::Node do
     end
   end
 
+  describe "#coerce_configuration_types" do
+    fab!(:workflow, :discourse_workflows_workflow)
+
+    before do
+      DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::StaleTopic::V1)
+    end
+
+    it "coerces string values to integers for integer schema fields" do
+      node =
+        Fabricate(
+          :discourse_workflows_node,
+          workflow: workflow,
+          type: "trigger:stale_topic",
+          name: "Stale",
+          configuration: {
+            "hours" => "48",
+          },
+        )
+
+      expect(node.configuration["hours"]).to eq(48)
+    end
+
+    it "leaves values that are already the correct type" do
+      node =
+        Fabricate(
+          :discourse_workflows_node,
+          workflow: workflow,
+          type: "trigger:stale_topic",
+          name: "Stale",
+          configuration: {
+            "hours" => 24,
+          },
+        )
+
+      expect(node.configuration["hours"]).to eq(24)
+    end
+
+    it "leaves string fields untouched" do
+      node =
+        Fabricate(
+          :discourse_workflows_node,
+          workflow: workflow,
+          type: "trigger:schedule",
+          name: "Schedule",
+          configuration: {
+            "cron" => "0 9 * * 1-5",
+          },
+        )
+
+      expect(node.configuration["cron"]).to eq("0 9 * * 1-5")
+    end
+  end
+
   describe "schedule configuration validation" do
     it "accepts a valid cron expression" do
       node =

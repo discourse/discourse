@@ -198,35 +198,12 @@ export default class PropertyEngineField extends Component {
     }
   }
 
-  coerceValue(value) {
-    if (value === undefined || value === null || value === "") {
-      return value;
-    }
-
-    const type = this.args.schema?.type;
-
-    if (type === "integer") {
-      const parsed = parseInt(value, 10);
-      if (!isNaN(parsed)) {
-        return parsed;
-      }
-    } else if (type === "number") {
-      const parsed = parseFloat(value);
-      if (!isNaN(parsed)) {
-        return parsed;
-      }
-    }
-
-    return value;
-  }
-
   @action
   handleSet(value, { set, name }) {
-    const coerced = this.coerceValue(value);
     if (this.args.onSet) {
-      this.args.onSet(coerced, { set, name });
+      this.args.onSet(value, { set, name });
     } else {
-      set(name, coerced);
+      set(name, value);
     }
   }
 
