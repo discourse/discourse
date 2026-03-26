@@ -138,12 +138,12 @@ export default class NestedPost extends Component {
   }
 
   get replyCount() {
-    return (
+    const count =
       this.args.post.total_descendant_count ||
       this.args.post.direct_reply_count ||
       this.args.children?.length ||
-      0
-    );
+      0;
+    return this._childWasCreated ? Math.max(count, 1) : count;
   }
 
   get atMaxDepth() {

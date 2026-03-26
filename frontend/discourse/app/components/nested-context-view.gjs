@@ -38,6 +38,9 @@ export default class NestedContextView extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this._destroyed = true;
+    if (this._rafId) {
+      cancelAnimationFrame(this._rafId);
+    }
     this.viewportTracker.destroy();
   }
 
@@ -69,7 +72,7 @@ export default class NestedContextView extends Component {
       // Element may not be in the DOM yet (async child rendering).
       // Retry on the next animation frame.
       this._scrollAttempts++;
-      requestAnimationFrame(() => this._scrollToTarget());
+      this._rafId = requestAnimationFrame(() => this._scrollToTarget());
     }
   }
 

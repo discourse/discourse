@@ -28,6 +28,20 @@ module NestedReplies
         json[:cooked] = ""
         json[:raw] = nil
         json[:actions_summary] = []
+        unless @guardian.is_staff?
+          json =
+            json.slice(
+              :id,
+              :post_number,
+              :reply_to_post_number,
+              :deleted_post_placeholder,
+              :cooked,
+              :raw,
+              :actions_summary,
+              :direct_reply_count,
+              :total_descendant_count,
+            )
+        end
       end
 
       json

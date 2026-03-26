@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateNestedViewPostStatsInCore < ActiveRecord::Migration[7.2]
+class CreateNestedViewPostStatsInCore < ActiveRecord::Migration[8.0]
   def up
     return if table_exists?(:nested_view_post_stats)
 

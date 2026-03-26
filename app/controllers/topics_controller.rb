@@ -1362,7 +1362,7 @@ class TopicsController < ApplicationController
     additional_allowed_query_parameters =
       DiscoursePluginRegistry.apply_modifier(
         :redirect_to_correct_topic_additional_query_parameters,
-        %w[post_number],
+        [],
       )
 
     opts =

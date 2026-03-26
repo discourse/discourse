@@ -22,6 +22,7 @@ class NestedTopicsController < ApplicationController
         .offset(page * NestedReplies::TreeLoader::ROOTS_PER_PAGE)
         .limit(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
     roots = loader.load_posts_for_tree(roots).to_a
+    has_more_roots = roots.size == NestedReplies::TreeLoader::ROOTS_PER_PAGE
 
     # Pin: ensure the pinned root appears first on initial load
     pinned_post_number = (@topic.nested_topic&.pinned_post_number if initial_load)
@@ -55,7 +56,7 @@ class NestedTopicsController < ApplicationController
         roots.map do |root|
           serializer.serialize_tree(root, children_map, reply_counts, descendant_counts)
         end,
-      has_more_roots: roots.size == NestedReplies::TreeLoader::ROOTS_PER_PAGE,
+      has_more_roots: has_more_roots,
       page: page,
     }
 
@@ -145,6 +146,7 @@ class NestedTopicsController < ApplicationController
 
     target = @topic.posts.find_by(post_number: target_post_number)
     raise Discourse::NotFound unless target
+    raise Discourse::NotFound if loader.visible_post_types.exclude?(target.post_type)
 
     ancestors = []
     ancestors_truncated = false

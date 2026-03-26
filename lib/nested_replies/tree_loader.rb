@@ -67,19 +67,40 @@ module NestedReplies
         parent_numbers = current_level.map(&:post_number)
         last_level = (depth + 1 >= max_depth) || (depth + 1 >= configured_max_depth)
 
-        scope = topic.posts.where(reply_to_post_number: parent_numbers).where(post_number: 2..)
-        scope = apply_visibility(scope)
-        scope = NestedReplies::Sort.apply(scope, sort)
-        all_children = load_posts_for_tree(scope).to_a
+        order_expr = NestedReplies::Sort.sql_order_expression(sort)
+        child_ids =
+          DB.query_single(
+            <<~SQL,
+              SELECT id FROM (
+                SELECT id,
+                       ROW_NUMBER() OVER (PARTITION BY reply_to_post_number ORDER BY #{order_expr}) AS rn
+                FROM posts
+                WHERE topic_id = :topic_id
+                  AND reply_to_post_number IN (:parent_numbers)
+                  AND post_type IN (:post_types)
+                  AND post_number > 1
+              ) ranked
+              WHERE rn <= :limit
+            SQL
+            topic_id: topic.id,
+            parent_numbers: parent_numbers,
+            limit: PRELOAD_CHILDREN_PER_PARENT,
+            post_types: visible_post_types,
+          )
+
+        break if child_ids.empty?
+
+        all_children =
+          load_posts_for_tree(topic.posts.with_deleted.where(id: child_ids)).to_a
 
         next_level = []
         all_children
           .group_by(&:reply_to_post_number)
           .each do |parent_number, child_posts|
-            limited = child_posts.first(PRELOAD_CHILDREN_PER_PARENT)
-            children_map[parent_number] = limited
-            all_posts.concat(limited)
-            next_level.concat(limited) unless last_level
+            sorted = NestedReplies::Sort.sort_in_memory(child_posts, sort)
+            children_map[parent_number] = sorted
+            all_posts.concat(sorted)
+            next_level.concat(sorted) unless last_level
           end
 
         current_level = next_level
@@ -148,17 +169,18 @@ module NestedReplies
         DB.query_single(
           <<~SQL,
           WITH RECURSIVE descendants AS (
-            SELECT post_number
+            SELECT post_number, 1 AS depth
             FROM posts
             WHERE topic_id = :topic_id
               AND reply_to_post_number = :parent_number
               AND post_number > 1
             UNION ALL
-            SELECT p.post_number
+            SELECT p.post_number, d.depth + 1
             FROM posts p
             JOIN descendants d ON p.reply_to_post_number = d.post_number
             WHERE p.topic_id = :topic_id
               AND p.post_number > 1
+              AND d.depth < :max_cte_depth
           )
           SELECT d.post_number
           FROM descendants d
@@ -173,6 +195,7 @@ module NestedReplies
           post_types: post_types,
           offset: offset,
           limit: limit,
+          max_cte_depth: 500,
         )
 
       scope =

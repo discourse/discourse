@@ -129,6 +129,9 @@ export default class NestedPostChildren extends Component {
       const data = await ajax(
         `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?sort=${this.args.sort || "top"}&depth=${this.childDepth}`
       );
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
       this.childNodes = (data.children || []).map((child) =>
         this._processNode(child)
       );
@@ -138,9 +141,13 @@ export default class NestedPostChildren extends Component {
       this._fetchedFromServer = true;
       this._reportToCache();
     } catch (e) {
-      popupAjaxError(e);
+      if (!(this.isDestroying || this.isDestroyed)) {
+        popupAjaxError(e);
+      }
     } finally {
-      this.loading = false;
+      if (!(this.isDestroying || this.isDestroyed)) {
+        this.loading = false;
+      }
     }
   }
 
@@ -159,6 +166,9 @@ export default class NestedPostChildren extends Component {
       const data = await ajax(
         `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.parentPostNumber}.json?page=${nextPage}&sort=${this.args.sort || "top"}&depth=${this.childDepth}`
       );
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
       const newNodes = (data.children || []).map((child) =>
         this._processNode(child)
       );
@@ -182,9 +192,13 @@ export default class NestedPostChildren extends Component {
       this.hasMore = data.has_more || false;
       this._reportToCache();
     } catch (e) {
-      popupAjaxError(e);
+      if (!(this.isDestroying || this.isDestroyed)) {
+        popupAjaxError(e);
+      }
     } finally {
-      this.loadingMore = false;
+      if (!(this.isDestroying || this.isDestroyed)) {
+        this.loadingMore = false;
+      }
     }
   }
 

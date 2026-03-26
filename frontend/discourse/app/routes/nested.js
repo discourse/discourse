@@ -190,6 +190,8 @@ export default class NestedRoute extends Route {
       contextNoAncestors: false,
       ancestorsTruncated: false,
       topAncestorPostNumber: null,
+      newRootPostIds: [],
+      editingTopic: false,
     };
   }
 
@@ -233,6 +235,8 @@ export default class NestedRoute extends Route {
       rootNodes: [],
       page: 0,
       hasMoreRoots: false,
+      newRootPostIds: [],
+      editingTopic: false,
     };
   }
 }

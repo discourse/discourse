@@ -55,15 +55,13 @@ module NestedReplies
 
       def where(conditions = nil, *rest)
         return self if conditions.nil?
-        result =
-          select do |record|
-            if conditions.is_a?(Hash)
-              conditions.all? { |k, v| record.public_send(k) == v }
-            else
-              true
-            end
-          end
-        PostsArray.new(result)
+        if conditions.is_a?(Hash) && rest.empty?
+          PostsArray.new(
+            select { |record| conditions.all? { |k, v| record.public_send(k) == v } },
+          )
+        else
+          Post.where(id: map(&:id)).where(conditions, *rest)
+        end
       end
 
       def limit(_n)
@@ -74,8 +72,14 @@ module NestedReplies
         self
       end
 
-      def not(*_args)
-        self
+      def not(conditions = {})
+        if conditions.is_a?(Hash)
+          PostsArray.new(
+            reject { |record| conditions.all? { |k, v| record.public_send(k) == v } },
+          )
+        else
+          Post.where(id: map(&:id)).where.not(conditions)
+        end
       end
 
       def reorder(*_args)

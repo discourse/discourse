@@ -144,7 +144,7 @@ export default class NestedController extends Controller {
         this.topic.slug,
         this.topic.id,
         this.targetPostNumber,
-        { queryParams: { sort: this.sort } }
+        { queryParams: { sort: this.sort, context: null } }
       );
     }
   }
@@ -426,8 +426,12 @@ export default class NestedController extends Controller {
 
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      const post = this.store.createRecord("post", postData);
-      post.topic = this.topic;
+      const existing = [...this.postRegistry.values()].find(
+        (p) => p.id === data.id
+      );
+      if (existing) {
+        existing.setProperties(postData);
+      }
     } catch {
       // Post may not be visible
     }
