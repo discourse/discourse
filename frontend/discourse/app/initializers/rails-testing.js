@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-jquery */
 import { DEBUG } from "@glimmer/env";
 import $ from "jquery";
+import { hasPendingBeaconRequests } from "discourse/lib/beacon-pageview";
 import { isRailsTesting } from "discourse/lib/environment";
 
 export default {
@@ -117,7 +118,11 @@ export default {
       track();
 
       const settled = () => {
-        return pendingRequests.length === 0 && pendingDomEvents.length === 0;
+        return (
+          pendingRequests.length === 0 &&
+          pendingDomEvents.length === 0 &&
+          !hasPendingBeaconRequests()
+        );
       };
 
       const timeoutErrorMessage = (timeoutMs) => {
@@ -149,6 +154,10 @@ export default {
 
         if (pendingDOMEventsText.length > 0) {
           errorMessage += `\n  Pending DOM events: ${pendingDOMEventsText.join(", ")}`;
+        }
+
+        if (hasPendingBeaconRequests()) {
+          errorMessage += `\n  Pending beacon pageview requests`;
         }
 
         return errorMessage;

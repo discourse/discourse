@@ -686,6 +686,10 @@ module Discourse
     nil
   end
 
+  def self.beacon_pv_tracking_path
+    "#{Discourse.base_path}/srv/pv"
+  end
+
   class << self
     alias_method :base_url_no_path, :base_url_no_prefix
   end

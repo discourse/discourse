@@ -760,6 +760,144 @@ RSpec.describe Middleware::RequestTracker do
     end
   end
 
+  describe "beacon pageview tracking via /srv/pv" do
+    before do
+      SiteSetting.use_beacon_for_browser_page_views = true
+      freeze_time
+      ApplicationRequest.clear_cache!
+    end
+
+    def beacon_env(body_hash, extra = {})
+      json_body = JSON.generate(body_hash)
+      env(
+        {
+          :path => "/srv/pv",
+          "REQUEST_METHOD" => "POST",
+          "CONTENT_TYPE" => "application/json",
+          "rack.input" => StringIO.new(json_body),
+        }.merge(extra),
+      )
+    end
+
+    it "returns 204 and does not call the app" do
+      app_called = false
+      middleware =
+        Middleware::RequestTracker.new(
+          lambda do |env|
+            app_called = true
+            [200, {}, ["OK"]]
+          end,
+        )
+      status, = middleware.call(beacon_env({}))
+
+      expect(status).to eq(204)
+      expect(app_called).to eq(false)
+    end
+
+    it "extracts beacon pageview data as BPV only" do
+      data =
+        Middleware::RequestTracker.get_data(
+          beacon_env(
+            {
+              url: "https://test.com/t/topic/123",
+              referrer: "https://test.com/",
+              session_id: "abc123",
+              topic_id: 123,
+            },
+          ),
+          ["204", {}],
+          0.1,
+        )
+
+      expect(data[:deferred_track_view]).to eq(true)
+      expect(data[:explicit_track_view]).to eq(false)
+      expect(data[:track_view]).to eq(false)
+      expect(data[:browser_page_view]).to eq(true)
+      expect(data[:topic_id]).to eq(123)
+      expect(data[:tracking_url]).to eq("https://test.com/t/topic/123")
+      expect(data[:tracking_referrer]).to eq("https://test.com/")
+      expect(data[:tracking_session_id]).to eq("abc123")
+    end
+
+    it "handles malformed JSON body gracefully" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, =
+        middleware.call(
+          env(
+            :path => "/srv/pv",
+            "REQUEST_METHOD" => "POST",
+            "CONTENT_TYPE" => "application/json",
+            "rack.input" => StringIO.new("not json"),
+          ),
+        )
+
+      expect(status).to eq(204)
+    end
+
+    it "increments only BPV counters, not legacy PV counters" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      middleware.call(beacon_env({ url: "https://test.com/" }))
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon.first).to be_nil
+    end
+
+    it "reads user_agent from the HTTP header, not the JSON body" do
+      data =
+        Middleware::RequestTracker.get_data(
+          beacon_env({}, { "HTTP_USER_AGENT" => "Mozilla/5.0 TestAgent" }),
+          ["204", {}],
+          0.1,
+        )
+
+      expect(data[:user_agent]).to eq("Mozilla/5.0 TestAgent")
+    end
+
+    it "suppresses BPV counting on non-beacon requests" do
+      data =
+        Middleware::RequestTracker.get_data(
+          env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
+          ["200", {}],
+          0.1,
+        )
+
+      expect(data[:track_view]).to eq(true)
+      expect(data[:browser_page_view]).to eq(false)
+    end
+
+    context "when SiteSetting.use_beacon_for_browser_page_views is false" do
+      before { SiteSetting.use_beacon_for_browser_page_views = false }
+
+      it "returns the app's response for beacon requests instead of 204" do
+        app_called = false
+        middleware =
+          Middleware::RequestTracker.new(
+            lambda do |env|
+              app_called = true
+              [404, {}, ["unknown app path"]]
+            end,
+          )
+        status, = middleware.call(beacon_env({}))
+
+        expect(status).to eq(404)
+        expect(app_called).to eq(true)
+      end
+
+      it "doesn't suppress BPV counting on regular requests" do
+        data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
+            ["200", {}],
+            0.1,
+          )
+
+        expect(data[:track_view]).to eq(true)
+        expect(data[:browser_page_view]).to eq(true)
+      end
+    end
+  end
+
   describe "rate limiting" do
     let(:fake_logger) { FakeLogger.new }
 

@@ -313,6 +313,11 @@ class Middleware::RequestTracker
 
     env["discourse.request_tracker"] = self
 
+    if self.class.is_beacon_tracking_request?(request)
+      result = [204, {}, []]
+      return result
+    end
+
     MethodProfiler.start
 
     if SiteSetting.instrument_gc_stat_per_request
@@ -518,6 +523,8 @@ class Middleware::RequestTracker
     status ||= 200
     headers ||= {}
 
+    return extract_beacon_view_tracking_data(env) if is_beacon_tracking_request?(request)
+
     is_html_request = headers["Content-Type"]&.include?("text/html")
     is_ajax_request = request.xhr?
 
@@ -555,7 +562,12 @@ class Middleware::RequestTracker
     # If the page view is explicit or deferred, then the X-Discourse-BrowserPageView header
     # is included in the response.
     track_view = !!(explicit_track_view || implicit_track_view)
-    browser_page_view = !!(explicit_track_view || deferred_track_view)
+    browser_page_view =
+      if SiteSetting.use_beacon_for_browser_page_views
+        false
+      else
+        !!(explicit_track_view || deferred_track_view)
+      end
 
     topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]&.to_i
     tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]&.slice(0, MAX_URL_LENGTH)
@@ -577,6 +589,42 @@ class Middleware::RequestTracker
       user_agent: user_agent,
     }
   end
+
+  def self.is_beacon_tracking_request?(request)
+    SiteSetting.use_beacon_for_browser_page_views && request.post? &&
+      request.path == Discourse.beacon_pv_tracking_path
+  end
+
+  def self.extract_beacon_view_tracking_data(env)
+    body = env["rack.input"]&.read
+    env["rack.input"]&.rewind
+    data =
+      begin
+        JSON.parse(body)
+      rescue JSON::ParserError
+        {}
+      end
+
+    topic_id = data["topic_id"]&.to_i
+    tracking_url = data["url"]&.slice(0, MAX_URL_LENGTH)
+    tracking_referrer = data["referrer"]&.slice(0, MAX_URL_LENGTH)
+    tracking_session_id = data["session_id"]&.slice(0, MAX_SESSION_ID_LENGTH)
+    user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
+
+    {
+      track_view: false,
+      explicit_track_view: false,
+      deferred_track_view: true,
+      implicit_track_view: false,
+      browser_page_view: true,
+      topic_id: topic_id,
+      tracking_url: tracking_url,
+      tracking_referrer: tracking_referrer,
+      tracking_session_id: tracking_session_id,
+      user_agent: user_agent,
+    }
+  end
+  private_class_method :extract_beacon_view_tracking_data
 
   def self.trigger_browser_pageview_event(data)
     if SiteSetting.trigger_browser_pageview_events
