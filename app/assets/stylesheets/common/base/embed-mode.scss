@@ -9,7 +9,16 @@ body.embed-mode {
   // Hide elements that don't make sense in embed context
   .signup-cta,
   .suggested-topics,
-  .more-topics__container {
+  .more-topics__container,
+  #topic-title,
+  .topic-above-footer-buttons-outlet.presence,
+  .above-main-container-outlet,
+  .topic-footer-main-buttons__actions .toggle-admin-menu,
+  .topic-footer-main-buttons__actions .bookmark,
+  .topic-footer-main-buttons__actions .flag-topic,
+  .topic-footer-main-buttons__actions .assign,
+  .topic-notifications-button,
+  nav.post-controls .actions .show-more-actions {
     display: none;
   }
 
