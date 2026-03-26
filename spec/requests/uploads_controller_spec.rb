@@ -595,7 +595,11 @@ RSpec.describe UploadsController do
           get upload.short_path
 
           expect(response).to redirect_to(
-            Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)),
+            Discourse.store.signed_url_for_path(
+              Discourse.store.get_path_for_upload(upload),
+              filename: upload.original_filename,
+              include_content_disposition: true,
+            ),
           )
           expect(response.header["Location"]).not_to include(
             "response-content-disposition=attachment",
@@ -669,6 +673,7 @@ RSpec.describe UploadsController do
 
         expect(response.status).to eq(302)
         expect(response.redirect_url).to match("Amz-Expires")
+        expect(response.redirect_url).to include("response-content-disposition=inline")
       end
 
       it "returns signed url for legitimate request with no extension" do
@@ -679,6 +684,7 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(302)
         expect(response.redirect_url).to match("Amz-Expires")
         expect(response.location).not_to include(".?")
+        expect(response.redirect_url).to include("response-content-disposition=inline")
       end
 
       it "should return secure uploads URL when looking up urls" do
