@@ -124,24 +124,72 @@
     font-style: italic;
   }
 
-  &__resize-handle {
+  &__edge {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 14px;
-    height: 14px;
-    cursor: nwse-resize;
     pointer-events: auto;
 
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 3px;
-      right: 3px;
-      width: 8px;
-      height: 8px;
-      border-right: 2px solid var(--primary-low-mid);
-      border-bottom: 2px solid var(--primary-low-mid);
+    &.--n,
+    &.--s {
+      left: 6px;
+      right: 6px;
+      height: 6px;
+      cursor: ns-resize;
+    }
+
+    &.--n {
+      top: -3px;
+    }
+
+    &.--s {
+      bottom: -3px;
+    }
+
+    &.--w,
+    &.--e {
+      top: 6px;
+      bottom: 6px;
+      width: 6px;
+      cursor: ew-resize;
+    }
+
+    &.--w {
+      left: -3px;
+    }
+
+    &.--e {
+      right: -3px;
+    }
+
+    &.--nw,
+    &.--ne,
+    &.--sw,
+    &.--se {
+      width: 10px;
+      height: 10px;
+    }
+
+    &.--nw {
+      top: -3px;
+      left: -3px;
+      cursor: nwse-resize;
+    }
+
+    &.--ne {
+      top: -3px;
+      right: -3px;
+      cursor: nesw-resize;
+    }
+
+    &.--sw {
+      bottom: -3px;
+      left: -3px;
+      cursor: nesw-resize;
+    }
+
+    &.--se {
+      bottom: -3px;
+      right: -3px;
+      cursor: nwse-resize;
     }
   }
 }

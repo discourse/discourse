@@ -12,19 +12,43 @@ import { i18n } from "discourse-i18n";
 import CanvasHoverToolbar from "./hover-toolbar";
 
 const COLORS = [
-  { name: "yellow", value: "var(--workflow-sticky-yellow)" },
-  { name: "blue", value: "var(--workflow-sticky-blue)" },
-  { name: "green", value: "var(--workflow-sticky-green)" },
-  { name: "pink", value: "var(--workflow-sticky-pink)" },
-  { name: "purple", value: "var(--workflow-sticky-purple)" },
-  { name: "orange", value: "var(--workflow-sticky-orange)" },
+  {
+    name: "yellow",
+    bg: "var(--workflow-sticky-yellow)",
+    border: "var(--workflow-sticky-yellow-border)",
+  },
+  {
+    name: "blue",
+    bg: "var(--workflow-sticky-blue)",
+    border: "var(--workflow-sticky-blue-border)",
+  },
+  {
+    name: "green",
+    bg: "var(--workflow-sticky-green)",
+    border: "var(--workflow-sticky-green-border)",
+  },
+  {
+    name: "pink",
+    bg: "var(--workflow-sticky-pink)",
+    border: "var(--workflow-sticky-pink-border)",
+  },
+  {
+    name: "purple",
+    bg: "var(--workflow-sticky-purple)",
+    border: "var(--workflow-sticky-purple-border)",
+  },
+  {
+    name: "orange",
+    bg: "var(--workflow-sticky-orange)",
+    border: "var(--workflow-sticky-orange-border)",
+  },
 ];
 
 const MIN_WIDTH = 140;
 const MIN_HEIGHT = 80;
 
-function swatchStyle(colorValue) {
-  return trustHTML(`background:${colorValue}`);
+function swatchStyle(colorBg) {
+  return trustHTML(`background:${colorBg}`);
 }
 
 function focusElement(element) {
@@ -41,13 +65,13 @@ export default class StickyNote extends Component {
 
   get style() {
     const { position, size, color } = this.args.note;
-    const bg = COLORS.find((c) => c.name === color)?.value || COLORS[0].value;
+    const match = COLORS.find((c) => c.name === color) || COLORS[0];
     const x = Number(position.x) || 0;
     const y = Number(position.y) || 0;
     const w = Number(size.width) || 200;
     const h = Number(size.height) || 150;
     return trustHTML(
-      `left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${bg};`
+      `left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${match.bg};border-color:${match.border};`
     );
   }
 
@@ -81,7 +105,7 @@ export default class StickyNote extends Component {
   @action
   handlePointerDown(event) {
     if (
-      event.target.closest(".workflow-sticky-note__resize-handle") ||
+      event.target.closest(".workflow-sticky-note__edge") ||
       event.target.closest(".workflow-canvas-toolbar") ||
       event.target.tagName === "TEXTAREA"
     ) {
@@ -101,15 +125,45 @@ export default class StickyNote extends Component {
 
   @action
   handleResizePointerDown(event) {
+    const edge = event.target.dataset.edge;
+    if (!edge) {
+      return;
+    }
+
     this.args.onDragStart?.();
 
     const { width, height } = this.args.note.size;
+    const { x, y } = this.args.note.position;
+    const resizeN = edge.includes("n");
+    const resizeS = edge.includes("s");
+    const resizeW = edge.includes("w");
+    const resizeE = edge.includes("e");
+
     this.#trackPointerDrag(event, {
-      onMove: (dx, dy) =>
-        this.args.onResize?.({
-          width: Math.max(MIN_WIDTH, width + dx),
-          height: Math.max(MIN_HEIGHT, height + dy),
-        }),
+      onMove: (dx, dy) => {
+        let newW = width;
+        let newH = height;
+        let newX = x;
+        let newY = y;
+
+        if (resizeE) {
+          newW = Math.max(MIN_WIDTH, width + dx);
+        }
+        if (resizeS) {
+          newH = Math.max(MIN_HEIGHT, height + dy);
+        }
+        if (resizeW) {
+          newW = Math.max(MIN_WIDTH, width - dx);
+          newX = x + width - newW;
+        }
+        if (resizeN) {
+          newH = Math.max(MIN_HEIGHT, height - dy);
+          newY = y + height - newH;
+        }
+
+        this.args.onResize?.({ width: newW, height: newH });
+        this.args.onMove?.({ x: newX, y: newY });
+      },
       onEnd: () => this.args.onDragEnd?.(),
     });
   }
@@ -188,7 +242,7 @@ export default class StickyNote extends Component {
               type="button"
               class="workflow-sticky-note__color-swatch
                 {{if (eq @note.color colorOpt.name) '--active'}}"
-              style={{swatchStyle colorOpt.value}}
+              style={{swatchStyle colorOpt.bg}}
               title={{colorOpt.name}}
               {{on "pointerdown" stopPropagation}}
               {{on "click" (fn this.selectColor colorOpt.name)}}
@@ -222,8 +276,45 @@ export default class StickyNote extends Component {
         {{/if}}
       </div>
 
+      {{! resize edges }}
       <div
-        class="workflow-sticky-note__resize-handle"
+        class="workflow-sticky-note__edge --n"
+        data-edge="n"
+        {{on "pointerdown" this.handleResizePointerDown}}
+      />
+      <div
+        class="workflow-sticky-note__edge --s"
+        data-edge="s"
+        {{on "pointerdown" this.handleResizePointerDown}}
+      />
+      <div
+        class="workflow-sticky-note__edge --w"
+        data-edge="w"
+        {{on "pointerdown" this.handleResizePointerDown}}
+      />
+      <div
+        class="workflow-sticky-note__edge --e"
+        data-edge="e"
+        {{on "pointerdown" this.handleResizePointerDown}}
+      />
+      <div
+        class="workflow-sticky-note__edge --nw"
+        data-edge="nw"
+        {{on "pointerdown" this.handleResizePointerDown}}
+      />
+      <div
+        class="workflow-sticky-note__edge --ne"
+        data-edge="ne"
+        {{on "pointerdown" this.handleResizePointerDown}}
+      />
+      <div
+        class="workflow-sticky-note__edge --sw"
+        data-edge="sw"
+        {{on "pointerdown" this.handleResizePointerDown}}
+      />
+      <div
+        class="workflow-sticky-note__edge --se"
+        data-edge="se"
         {{on "pointerdown" this.handleResizePointerDown}}
       />
     </div>

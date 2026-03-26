@@ -18,9 +18,15 @@
 
   // Sticky note colors
   --workflow-sticky-yellow: #{dark-light-choose(#fff9c4, #5c5424)};
+  --workflow-sticky-yellow-border: #{dark-light-choose(#f0e68c, #7a7232)};
   --workflow-sticky-blue: #{dark-light-choose(#bbdefb, #1e3a5f)};
+  --workflow-sticky-blue-border: #{dark-light-choose(#90caf9, #2a5080)};
   --workflow-sticky-green: #{dark-light-choose(#c8e6c9, #1b4332)};
+  --workflow-sticky-green-border: #{dark-light-choose(#a5d6a7, #275e43)};
   --workflow-sticky-pink: #{dark-light-choose(#f8bbd0, #5c1a33)};
+  --workflow-sticky-pink-border: #{dark-light-choose(#f48fb1, #7a2345)};
   --workflow-sticky-purple: #{dark-light-choose(#e1bee7, #4a1a5e)};
+  --workflow-sticky-purple-border: #{dark-light-choose(#ce93d8, #63247d)};
   --workflow-sticky-orange: #{dark-light-choose(#ffe0b2, #5c3a1a)};
+  --workflow-sticky-orange-border: #{dark-light-choose(#ffcc80, #7a5024)};
 }
