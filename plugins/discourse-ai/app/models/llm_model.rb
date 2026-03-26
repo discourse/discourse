@@ -58,6 +58,7 @@ class LlmModel < ActiveRecord::Base
         access_key_id: :secret,
         role_arn: :text,
         region: :text,
+        inference_profile_arn: :text,
         enable_reasoning: :checkbox,
         adaptive_thinking: {
           type: :checkbox,
