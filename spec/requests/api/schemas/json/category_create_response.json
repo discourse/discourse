@@ -211,6 +211,12 @@
                 "boolean",
                 "null"
               ]
+            },
+            "nested_replies_default": {
+              "type": [
+                "boolean",
+                "null"
+              ]
             }
           }
         },

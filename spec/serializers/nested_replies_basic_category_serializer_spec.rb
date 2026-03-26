@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "CategorySettingSerializer nested_replies_default" do
+RSpec.describe CategorySerializer do
   fab!(:category)
   fab!(:admin)
 

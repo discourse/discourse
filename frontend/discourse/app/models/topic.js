@@ -713,7 +713,7 @@ export default class Topic extends RestModel {
     if (property === "closed") {
       this.incrementProperty("posts_count");
     }
-    return ajax(`${this.url}/status`, {
+    return ajax(`${this.updateUrl}/status`, {
       type: "PUT",
       data: {
         status: property,

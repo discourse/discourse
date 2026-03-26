@@ -90,8 +90,7 @@ module NestedReplies
 
         break if child_ids.empty?
 
-        all_children =
-          load_posts_for_tree(topic.posts.with_deleted.where(id: child_ids)).to_a
+        all_children = load_posts_for_tree(topic.posts.with_deleted.where(id: child_ids)).to_a
 
         next_level = []
         all_children

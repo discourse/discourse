@@ -22,7 +22,7 @@ module HasNestedReplyStats
 
     return if ancestors.empty?
 
-    ancestor_ids = ancestors.map(&:id)
+    ancestor_ids = ancestors.map(&:id).uniq
     direct_parent_id = ancestors.find { |a| a.depth == 1 }&.id
     is_whisper = post_type == Post.types[:whisper] ? 1 : 0
 

@@ -1,5 +1,5 @@
 import { on } from "@ember/modifier";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import TopicCategory from "discourse/components/topic-category";
 import TopicMetadata from "discourse/components/topic-metadata";
 import TopicTitleEditor from "discourse/components/topic-title-editor";
@@ -34,7 +34,7 @@ import icon from "discourse/helpers/d-icon";
           {{on "click" @startEditingTopic}}
           class="fancy-title"
         >
-          {{htmlSafe @topic.fancyTitle~}}
+          {{trustHTML @topic.fancyTitle~}}
           {{~#if @topic.details.can_edit~}}
             <span class="edit-topic__wrapper">
               {{icon "pencil" class="edit-topic"}}
