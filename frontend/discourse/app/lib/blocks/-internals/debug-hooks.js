@@ -13,7 +13,7 @@
  * @module discourse/lib/blocks/-internals/debug-hooks
  */
 
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import { trackedMap } from "@ember/reactive/collections";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 
 /**
@@ -48,9 +48,9 @@ class DebugHooks {
    * Tracked callback registry for debug hooks.
    * Using TrackedMap enables reactivity when callbacks are set/cleared.
    *
-   * @type {TrackedMap<string, Function|null>}
+   * @type {Map<string, Function|null>}
    */
-  #callbacks = new TrackedMap(
+  #callbacks = trackedMap(
     Object.values(DEBUG_CALLBACK).map((key) => [key, null])
   );
 

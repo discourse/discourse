@@ -503,8 +503,6 @@ de:
         user: Benutzer
         create_user: Benutzer erstellen
         default_llm: Standard-Sprachmodell
-        question_consolidator_llm: Sprachmodell für Fragenkonsolidierer
-        question_consolidator_llm_help: Das Sprachmodell, das für den Fragenkonsolidierer verwendet werden soll. Du kannst ein weniger leistungsfähiges Modell wählen, um Kosten zu sparen.
         system_prompt: System-Eingabeaufforderung
         forced_tool_strategy: Erzwungene Tool-Strategie
         allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"
@@ -517,6 +515,9 @@ de:
         enabled: "Aktiviert?"
         tools: "Aktivierte Tools"
         tokens: "Token"
+        mcp_tools_modal:
+          select_all: "Alle auswählen"
+          clear_all: "Alle löschen"
         forced_tools: "Erzwungene Tools"
         allowed_groups: "Zulässige Gruppen"
         new: "Neuer Agent"
@@ -592,7 +593,6 @@ de:
         tool_name: "Name des Tools"
         description: "Beschreibung"
         description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
-        subheader_description: "Tools erweitern die Fähigkeiten von KI-Bots mit benutzerdefinierten JavaScript-Funktionen."
         summary: "Zusammenfassung"
         summary_help: "Zusammenfassung des Zwecks der Tools, die den Endnutzern angezeigt werden soll"
         script: "Skript"
@@ -646,6 +646,23 @@ de:
         tool: "Tool"
         modal:
           title: "Neue Anmeldedaten erstellen"
+      mcp_servers:
+        name: "Name"
+        description: "Beschreibung"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        secret: "Anmeldedaten"
+        oauth_statuses:
+          connected: "Verbunden"
+        oauth_connect: "Verbinden"
+        enabled: "Aktiviert"
+        save: "Speichern"
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        tools_modal:
+          parameters: "Parameter"
+          required: "Erforderlich"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"

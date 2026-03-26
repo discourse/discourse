@@ -306,6 +306,27 @@ en:
         secret_not_found: "Credential alias `%{alias}` is bound to a missing credential."
         unknown_error: "Unable to resolve the requested credential."
 
+    mcp_servers:
+      secret_not_found: "The selected credential does not exist."
+      invalid_url_not_https: "must be a valid HTTPS URL"
+      invalid_url_not_reachable: "must resolve to a publicly accessible address"
+      oauth_client_id_required: "OAuth client ID is required for manual client registration."
+      errors:
+        invalid_response: "The MCP server returned an invalid response."
+        request_failed: "The MCP server request failed with status %{status}."
+        session_expired: "The MCP session expired."
+        timeout: "The MCP server request timed out."
+        oauth_authorization_required: "OAuth authorization is required before this MCP server can be used. Connect it to %{issuer} from the admin UI."
+        oauth_discovery_failed: "Unable to discover OAuth authorization details for this MCP server."
+        oauth_discovery_failed_with_status: "OAuth discovery failed with status %{status}."
+        oauth_not_configured: "OAuth is not configured for this MCP server."
+        oauth_refresh_token_missing: "The OAuth refresh token is missing. Reconnect this MCP server."
+        oauth_save_before_connect: "Save the MCP server before testing the OAuth connection."
+        oauth_state_invalid: "The OAuth authorization state is invalid or has expired. Start the connection again."
+        oauth_token_exchange_failed: "The OAuth token exchange failed with status %{status}."
+        oauth_https_required: "OAuth requires your site to be served over HTTPS."
+        oauth_client_metadata_public_https_required: "Client metadata document registration requires a public HTTPS site URL. Current client metadata URL: %{url}"
+
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
@@ -520,6 +541,7 @@ en:
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
       tool_summary:
         read_artifact: "Read a web artifact"
+        search_uploaded_documents: "Search uploaded documents"
         update_artifact: "Update a web artifact"
         create_artifact: "Create web artifact"
         web_browser: "Browse Web"
@@ -562,6 +584,7 @@ en:
         researcher_dry_run: "Preparing research"
       tool_help:
         read_artifact: "Read a web artifact using the AI Bot"
+        search_uploaded_documents: "Search documents uploaded to this agent"
         update_artifact: "Update a web artifact using the AI Bot"
         create_artifact: "Create a web artifact using the AI Bot"
         web_browser: "Browse web page using the AI Bot"
@@ -603,6 +626,9 @@ en:
         researcher: "Research forum information using the AI Bot"
       tool_description:
         read_artifact: "Read a web artifact using the AI Bot"
+        search_uploaded_documents:
+          one: "Found %{count} uploaded document excerpt for '%{query}'"
+          other: "Found %{count} uploaded document excerpts for '%{query}'"
         update_artifact: "Updated a web artifact using the AI Bot"
         create_artifact: "Created a web artifact: %{name} - %{specification}"
         web_browser: "Reading <a href='%{url}'>%{url}</a>"
@@ -908,3 +934,5 @@ en:
       custom_tool_exists:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
+      mcp_server_missing: "The following MCP servers are not configured on this site: %{names}."
+      mcp_server_tools_not_found: "No matching tools from MCP server %{name} are available on this site."

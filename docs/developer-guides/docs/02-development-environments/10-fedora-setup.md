@@ -6,7 +6,7 @@ id: fedora-setup
 
 This guide has been tested against a fresh install of Fedora 31 and 33, but may work on older versions that also use dnf as the package management tool. This is not an official guide but may be useful for other developers using Fedora. This is largely based on the [Ubuntu development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-ubuntu-for-development/14727), with changes for the different packages for dnf. The assumption is that you do not have any of the packages installed already, although most will be skipped by the tooling if it is already installed.
 
-If you're looking to install Discourse for a **production environment**, prefer the [docker install instructions on github](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md).
+If you're looking to install Discourse for a **production environment**, prefer the [docker install instructions on github](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md).
 
 **Install required system and development packages**
 

@@ -119,6 +119,21 @@ module DiscoursePostEvent
         expect(body).to include("END:VEVENT")
       end
 
+      it "should include post url in description when no custom description is set" do
+        event =
+          Fabricate(:event, original_starts_at: 1.day.from_now, name: "Event Without Description")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+
+        description_line = body.lines.find { |l| l.start_with?("DESCRIPTION:") }
+        post_url = "#{Discourse.base_url}#{event.post.url}"
+
+        expect(description_line).to include(post_url)
+      end
+
       it "excludes events older than 3 months from ics feed by default" do
         recent_event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Future Event")
         old_event = Fabricate(:event, original_starts_at: 4.months.ago, name: "Old Event")

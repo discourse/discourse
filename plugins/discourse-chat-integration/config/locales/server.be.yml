@@ -43,8 +43,6 @@ be:
     chat_integration_rocketchat_webhook_url: "URL для Ракетна інтэграцыі чата webhook"
     chat_integration_rocketchat_excerpt_length: "Ракетна чат даўжыня пасля вытрымкі"
     chat_integration_gitter_enabled: "Ўключэнне GITTER чат правайдэра інтэграцыі"
-    chat_integration_flowdock_enabled: "Ўключэнне Flowdock чат правайдэра інтэграцыі"
-    chat_integration_flowdock_excerpt_length: "Flowdock даўжыня пасля вытрымкі"
   chat_integration:
     all_categories: "(Усе катэгорыі)"
     deleted_category: "(Сцёрта катэгорыя)"
@@ -94,5 +92,3 @@ be:
           success: "Правіла паспяхова выдалены"
         help: |
           * Новае правіла: * `
-      flowdock:
-        message_title: "адправіў"

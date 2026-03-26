@@ -50,6 +50,14 @@ export default class BulkSelectHelper {
     this._onBulkSelectToggle = callback;
   }
 
+  get onResetNew() {
+    return this._onResetNew;
+  }
+
+  set onResetNew(callback) {
+    this._onResetNew = callback;
+  }
+
   get selectedCategoryIds() {
     return uniqueItemsFromArray(this.selected.map((item) => item.category_id));
   }
@@ -90,6 +98,8 @@ export default class BulkSelectHelper {
 
       this.modal.close();
       this.router.refresh();
+      this.bulkSelectEnabled = false;
+      this.clear();
     });
   }
 }

@@ -421,7 +421,6 @@ es:
         action: "Crear invitación"
       start_posting:
         title: "Empezar a publicar"
-        action: "Ideas para romper el hielo"
         back: "Atrás"
         icebreakers:
           introduce_yourself:

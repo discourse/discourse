@@ -459,7 +459,7 @@ tr_TR:
       start_posting:
         title: "Paylaşmaya Başla"
         description: "İnsanlara birlikte konuşacakları bir konu verin"
-        action: "Buz kırıcı fikirler"
+        action: "Fikirleri gör"
         choose_option: "Nasıl başlamak istersiniz?"
         predefined_topics: "Buz kırıcı şablonlar"
         predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."
@@ -1813,7 +1813,7 @@ tr_TR:
         upcoming_changes: "Yaklaşan değişiklikler"
         calendar_subscriptions: "Takvim"
       calendar_subscriptions:
-        description: "Favori takvim uygulamanızla (Google Takvim, Apple Takvim, Outlook vb.) senkronize etmek için abonelik URL'leri oluşturun. Bu URL'ler, hesabınızdaki takvim etkinliklerine (hatırlatıcılar, takvim etkinlikleri vb.) yönlendiren özel bağlantılardır. Oluşturulan abonelik URL'lerini istediğiniz zaman iptal edebilir veya yenileyebilirsiniz. "
+        description: "Favori takvim uygulamanızla (Google Takvim, Apple Takvim, Outlook vb.) senkronize etmek için abonelik URL'leri oluşturun. Bu URL'ler, hesabınızdaki takvim etkinliklerine (hatırlatıcılar, takvim etkinlikleri vb.) yönlendiren özel bağlantılardır. Oluşturulan abonelik URL'lerini istediğiniz zaman iptal edebilir veya yenileyebilirsiniz."
         generate: "Abonelik URL'leri Oluştur"
         regenerate: "URL'leri Yeniden Oluştur"
         regenerate_confirm: "Bu işlem, mevcut takvim abonelik URL'lerinizi geçersiz kılacaktır. Eski URL'leri kullanan tüm takvim uygulamaları güncellemeleri almayı durduracaktır. Devam etmek istiyor musunuz?"

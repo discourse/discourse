@@ -370,8 +370,6 @@ es:
         user: Usuario
         create_user: Crear usuario
         default_llm: Modelo lingüístico por defecto
-        question_consolidator_llm: Modelo lingüístico para el consolidador de preguntas
-        question_consolidator_llm_help: El modelo lingüístico a utilizar para el consolidador de preguntas, puedes elegir un modelo menos potente para ahorrar costes.
         system_prompt: Instrucción del sistema
         forced_tool_strategy: Estrategia de herramienta forzada
         allow_chat_direct_messages: "Permitir mensajes directos de chat"
@@ -382,6 +380,9 @@ es:
         save: "Guardar"
         enabled: "¿Activado?"
         tools: "Herramientas habilitadas"
+        mcp_tools_modal:
+          select_all: "Seleccionar todo"
+          clear_all: "Limpiar todo"
         forced_tools: "Herramientas forzadas"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
@@ -454,7 +455,6 @@ es:
         tool_name: "Nombre de la herramienta"
         description: "Descripción"
         description_help: "Una descripción clara de la finalidad de la herramienta para el modelo lingüístico"
-        subheader_description: "Las herramientas amplían las capacidades de los robots de IA con funciones JavaScript definidas por el usuario."
         summary: "Resumen"
         summary_help: "Resumen de la finalidad de las herramientas que se mostrará a los usuarios finales"
         script: "Script"
@@ -488,6 +488,22 @@ es:
         delete: "Eliminar"
         embedding: "Incrustado"
         tool: "Herramienta"
+      mcp_servers:
+        name: "Nombre"
+        description: "Descripción"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Conectados"
+        oauth_connect: "Conectar"
+        enabled: "Activado"
+        save: "Guardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        tools_modal:
+          parameters: "Parámetros"
+          required: "Obligatorio"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"

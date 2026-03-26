@@ -133,6 +133,7 @@ acceptance("Category type setup page", function (needs) {
           {
             id: "discussion",
             name: "Discussion",
+            title: "discussion",
             icon: "comments",
             description: "General discussion",
             configuration_schema: {},
@@ -141,6 +142,7 @@ acceptance("Category type setup page", function (needs) {
           {
             id: "support",
             name: "Support",
+            title: "support",
             icon: "circle-question",
             description: "Q&A support",
             configuration_schema: {},

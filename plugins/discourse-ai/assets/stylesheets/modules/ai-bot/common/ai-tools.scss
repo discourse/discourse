@@ -53,12 +53,6 @@
       display: none;
     }
   }
-
-  .form-kit__actions {
-    .btn-danger {
-      margin-left: auto;
-    }
-  }
 }
 
 .ai-tool-test-modal {
@@ -88,6 +82,17 @@
     h3 {
       margin: 0;
     }
+  }
+
+  &__section-title {
+    margin: 1.25rem 0 0.5rem;
+  }
+
+  &__empty-list-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-top: 1em;
   }
 }
 
@@ -121,6 +126,165 @@
 .ai-tool-list__credential-not-set {
   font-style: italic;
   margin-left: 0.15em;
+}
+
+.ai-tool-list__mcp-meta {
+  margin-top: 0.35em;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.ai-tool-list__mcp-tools-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tertiary);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--tertiary-hover);
+    text-decoration-thickness: 2px;
+  }
+}
+
+.ai-mcp-server-tools-modal {
+  &__body {
+    display: grid;
+    gap: 1rem;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  &__summary {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+
+  &__tool {
+    padding: 1rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: var(--font-up-1);
+  }
+
+  &__name {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__description {
+    margin: 0.5rem 0 0;
+    color: var(--primary-high);
+  }
+
+  &__parameters-title {
+    margin: 1rem 0 0.5rem;
+    font-size: var(--font-0);
+  }
+
+  &__parameters {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__parameter {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--primary-low);
+
+    &:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+  }
+
+  &__parameter-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__parameter-type,
+  &__parameter-required {
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: var(--font-down-2);
+  }
+
+  &__parameter-type {
+    background: var(--primary-low);
+    color: var(--primary-high);
+  }
+
+  &__parameter-required {
+    background: var(--danger-low);
+    color: var(--danger);
+  }
+
+  &__parameter-description,
+  &__no-parameters {
+    margin-top: 0.35rem;
+    color: var(--primary-medium);
+  }
+}
+
+.ai-mcp-server-editor {
+  &__oauth-state,
+  &__test-result {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+
+    h3 {
+      margin-top: 0;
+    }
+
+    ul {
+      margin-bottom: 0;
+    }
+  }
+
+  &__oauth-row {
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    margin-top: 0.75rem;
+
+    @include viewport.until(md) {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+
+  &__oauth-label {
+    color: var(--primary-medium);
+    font-weight: 600;
+  }
+
+  &__oauth-value {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 }
 
 .ai-tool-editor__templates {

@@ -471,8 +471,6 @@ ja:
         user: ユーザー
         create_user: ユーザーを作成
         default_llm: デフォルトの言語モデル
-        question_consolidator_llm: 質問統合用の言語モデル
-        question_consolidator_llm_help: 質問統合に使用する言語モデル。それほど強力でないモデルを選択してコストを節約することも可能です。
         system_prompt: システムプロンプト
         forced_tool_strategy: 強制されるツール戦略
         allow_chat_direct_messages: "チャットダイレクトメッセージを許可"
@@ -483,6 +481,9 @@ ja:
         save: "保存"
         enabled: "有効ですか？"
         tools: "有効なツール"
+        mcp_tools_modal:
+          select_all: "すべて選択"
+          clear_all: "すべてクリア"
         forced_tools: "強制されたツール"
         allowed_groups: "許可されたグループ"
         delete: "削除"
@@ -554,7 +555,6 @@ ja:
         tool_name: "ツール名"
         description: "説明"
         description_help: "言語モデルに対するツールの目的の明確な説明"
-        subheader_description: "ツールは、ユーザー定義の JavaScript 関数を使用して、AI ボットの機能を拡張します。"
         summary: "要約"
         summary_help: "エンドユーザーに表示されるツールの目的の要約"
         script: "スクリプト"
@@ -588,6 +588,22 @@ ja:
         delete: "削除"
         embedding: "埋め込み"
         tool: "ツール"
+      mcp_servers:
+        name: "名前"
+        description: "説明"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "接続済み"
+        oauth_connect: "接続"
+        enabled: "有効"
+        save: "保存"
+        edit: "編集"
+        delete: "削除"
+        tools_modal:
+          parameters: "パラメーター"
+          required: "必須"
       llms:
         short_title: "LLM"
         no_llms: "まだ LLM がありません"

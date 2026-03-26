@@ -13,8 +13,6 @@ nl:
     discourse_reactions_desaturated_reaction_panel: "Vermindert visuele ruis van reacties door ze onverzadigd weer te geven totdat er met de muis overheen wordt gegaan."
     discourse_reactions_excluded_from_like: "Reacties die niet tellen als een Like. Alle reacties die niet op deze lijst staan, tellen als een Like voor badges, rapportage en andere doeleinden."
     discourse_reactions_like_sync_enabled: "Als dit is ingeschakeld, worden bij historische reacties de overeenkomende Like-gegevens gecreëerd, behalve reacties die zijn gedefinieerd in 'discourse_reactions_excluded_from_like'. Deze synchronisatie zal regelmatig op de achtergrond plaatsvinden, ook wanneer je 'discourse_reactions_excluded_from_like' wijzigt."
-    errors:
-      invalid_excluded_emoji: "Je kunt geen emoji's uitsluiten die niet voorkomen in 'discoursereacties ingeschakelde reacties' en je kunt de emoji's die worden gebruikt voor 'discoursereacties reactie voor like' niet uitsluiten."
   badges:
     first_reaction:
       name: Eerste reactie

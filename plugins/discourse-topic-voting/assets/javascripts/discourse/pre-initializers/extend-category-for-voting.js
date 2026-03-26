@@ -59,6 +59,7 @@ function initialize(api) {
     (Superclass) =>
       class extends Superclass {
         @tracked votes_exceeded;
+        @tracked vote_limit;
         @tracked votes_left;
       }
   );

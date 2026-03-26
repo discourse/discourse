@@ -140,6 +140,19 @@ ko:
         edit: "편집"
         delete: "삭제"
         embedding: "삽입(Embedding)"
+      mcp_servers:
+        name: "그룹명"
+        description: "내용"
+        url: "URL"
+        oauth_statuses:
+          connected: "연결됨"
+        oauth_connect: "연결"
+        enabled: "활성화"
+        save: "저장"
+        edit: "편집"
+        delete: "삭제"
+        tools_modal:
+          required: "필수"
       llms:
         display_name: "그룹명"
         provider: "공급자"

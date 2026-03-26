@@ -119,6 +119,17 @@ sq:
         edit: "Redaktoni"
         delete: "Fshij"
         embedding: "Embedding"
+      mcp_servers:
+        name: "Emri"
+        description: "Përshkrimi"
+        url: "URL"
+        oauth_connect: "Lidhu"
+        enabled: "Aktivizuar"
+        save: "Ruani"
+        edit: "Redaktoni"
+        delete: "Fshij"
+        tools_modal:
+          required: "E nevojshme"
       llms:
         display_name: "Emri"
         save: "Ruani"

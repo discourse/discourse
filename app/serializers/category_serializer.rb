@@ -15,7 +15,8 @@ class CategorySerializer < SiteCategorySerializer
     attributes :id, :locale, :name, :description
   end
 
-  attributes :read_restricted,
+  attributes :locale,
+             :read_restricted,
              :available_groups,
              :auto_close_hours,
              :auto_close_based_on_last_post,

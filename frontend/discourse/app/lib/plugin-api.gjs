@@ -1068,24 +1068,6 @@ class _PluginApi {
     warnWidgetsDecommissioned();
   }
 
-  addFlagProperty() {
-    deprecated(
-      "addFlagProperty has been removed. Use the reviewable API instead.",
-      { id: "discourse.add-flag-property" }
-    );
-  }
-
-  /**
-   * @deprecated Use `api.headerIcons` instead.
-   */
-  addHeaderPanel() {
-    // eslint-disable-next-line no-console
-    console.error(
-      consolePrefix(),
-      `api.addHeaderPanel: This API was decommissioned. Use api.headerIcons instead.`
-    );
-  }
-
   /**
    * Adds a pluralization to the store
    *

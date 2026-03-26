@@ -41,6 +41,14 @@ module TopicVotingTopic
   def has_no_remove_vote_button?
     has_no_css?("button.remove-vote")
   end
+
+  def has_see_all_votes_link?
+    has_css?(".see-votes", text: I18n.t("js.topic_voting.see_all_votes"))
+  end
+
+  def has_no_votes_left_text?
+    has_no_css?(".see-votes", text: %r{\d+/\d+})
+  end
 end
 
 PageObjects::Pages::Topic.include(TopicVotingTopic)

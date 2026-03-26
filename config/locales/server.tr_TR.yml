@@ -2617,6 +2617,8 @@ tr_TR:
       exclude_tag_group: "Belirli bir etiket grubundan etiketli konuları hariç tutun"
       activity_before: "Belirli bir tarihten önceki son aktiviteye sahip konuları gösterin (YYYY-AA-GG veya günler önce)"
       activity_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) son aktiviteye sahip konuları gösterin"
+      bookmarked_before: "Belirli bir tarihten önce (YYYY-AA-GG veya gün önce) yer imlerine eklenen konuları göster"
+      bookmarked_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya gün önce) yer imlerine eklenen konuları göster"
       created_before: "Belirli bir tarihten önce (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_by: "Belirli bir kullanıcı veya grup tarafından oluşturulan konuları göster"

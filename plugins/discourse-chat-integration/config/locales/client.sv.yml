@@ -14,15 +14,14 @@ sv:
     chat_integration:
       menu_title: "Chattintegreringar"
       settings: "Inställningar"
-      no_providers: "Du måste aktivera vissa leverantörer i tilläggsinställningarna"
+      more_providers: "Mer"
+      channels_title: "Kanaler"
       channels_with_errors: "Vissa kanaler för denna leverantör misslyckades förra gången meddelanden skickades. Klicka på felikonen/-erna för att få veta mer."
       group_mention_template: "Omnämnanden av: @%{name}"
       group_message_template: "Meddelanden till: @%{name}"
-      choose_group: "(välj en grupp)"
-      all_categories: "(alla kategorier)"
-      all_tags: "(alla taggar)"
-      create_rule: "Skapa regel"
-      create_channel: "Skapa kanal"
+      choose_group: "(Välj en grupp)"
+      all_categories: "(Alla kategorier)"
+      all_tags: "(Alla taggar)"
       delete_channel: "Ta bort"
       test_channel: "Testa"
       edit_channel: "Redigera"
@@ -30,13 +29,10 @@ sv:
       test_modal:
         title: "Skicka ett testmeddelande"
         topic: "Ämne"
-        send: "Skicka testmeddelande"
         close: "Stäng"
         success: "Meddelandet har skickats"
       type:
         normal: Normal
-        group_message: Gruppmeddelande
-        group_mention: Gruppomnämnande
       filter:
         mute: 'Tysta'
         follow: 'Endast första inlägget'
@@ -57,8 +53,6 @@ sv:
           ok: "Giltig"
           fail: "Ogiltigt format"
       edit_rule_modal:
-        title: Redigera regel
-        save: Spara regel
         cancel: Avbryt
         provider: Leverantör
         type: Typ
@@ -79,7 +73,6 @@ sv:
           param:
             identifier:
               title: Kanal
-              help: "t.ex. #kanal, @användarnamn."
           errors:
             action_prohibited: "Hjälpredan har inte behörighet att publicera inlägg i den kanalen"
         telegram:
@@ -102,7 +95,6 @@ sv:
               help: "Ett namn för att beskriva kanalen. Det används inte för anslutningen till Discord."
             webhook_url:
               title: Webhook-URL
-              help: Webhook-URL som skapats i dina Discord-serverinställningar
         guilded:
           param:
             name:
@@ -114,7 +106,6 @@ sv:
           param:
             identifier:
               title: Kanal
-              help: "t.ex. #kanal, @användarnamn."
           errors:
             channel_not_found: "Den angivna kanalen finns inte på Mattermost"
         matrix:
@@ -144,7 +135,6 @@ sv:
           param:
             identifier:
               title: Kanal
-              help: "t.ex. #kanal, @användarnamn."
           errors:
             invalid_channel: "Den kanalen finns inte på Rocket Chat"
         gitter:
@@ -152,16 +142,9 @@ sv:
           param:
             name:
               title: "Namn"
-              help: "Ett Gitter-rums namn, t.ex. gitterHQ/services."
             webhook_url:
               title: "Webhook-URL"
               help: "URL-adressen som tillhandahålls när du skapar en ny integrering i ett Gitter-rum."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flödesbevis"
-              help: "Flödesbeviset som tillhandahålls efter att du har skapat en källa för ett flöde till vilket du vill skicka meddelanden."
         groupme:
           title: "GroupMe"
           param:

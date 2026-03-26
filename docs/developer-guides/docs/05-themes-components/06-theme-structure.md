@@ -12,7 +12,7 @@ An example theme is at: https://github.com/SamSaffron/discourse-simple-theme
 
 ![32|341x499](/assets/theme-structure-2.png)
 
-The git repository will be checked for updates ([once a day](https://github.com/discourse/discourse/blob/master/app/jobs/scheduled/check_out_of_date_themes.rb)), or by using the <kbd>Check for Updates</kbd> button. When changes are detected the <kbd>Check for Updates</kbd> button will change to the <kbd>Update to Latest</kbd>.
+The git repository will be checked for updates ([once a day](https://github.com/discourse/discourse/blob/main/app/jobs/scheduled/check_out_of_date_themes.rb)), or by using the <kbd>Check for Updates</kbd> button. When changes are detected the <kbd>Check for Updates</kbd> button will change to the <kbd>Update to Latest</kbd>.
 
 ![image|299x90,50%](/assets/theme-structure-3.png)
 

@@ -592,24 +592,30 @@ export default class Post extends RestModel {
    This can only be called after setDeletedState was called, but the delete
    failed on the server.
    **/
-  undoDeleteState() {
-    if (this.oldCooked) {
-      this.setProperties({
-        deleted_at: null,
-        deleted_by: null,
-        cooked: this.oldCooked,
-        version: this.version - 1,
-        can_recover: false,
-        can_delete: true,
-        user_deleted: false,
-        can_edit: this.oldCanEdit ?? false,
-      });
+  undoDeleteState({ force_destroy = false } = {}) {
+    if (force_destroy || !this.oldCooked) {
+      return;
     }
+
+    this.setProperties({
+      deleted_at: null,
+      deleted_by: null,
+      cooked: this.oldCooked,
+      version: this.version - 1,
+      can_recover: false,
+      can_delete: true,
+      user_deleted: false,
+      can_edit: this.oldCanEdit ?? false,
+    });
   }
 
   destroy(deletedBy, opts) {
-    return this.setDeletedState(deletedBy).then(() => {
-      return ajax("/posts/" + this.id, {
+    const maybeSetDeletedState = opts?.force_destroy
+      ? Promise.resolve()
+      : this.setDeletedState(deletedBy);
+
+    return maybeSetDeletedState.then(() => {
+      return ajax(`/posts/${this.id}`, {
         data: { context: window.location.pathname, ...opts },
         type: "DELETE",
       });

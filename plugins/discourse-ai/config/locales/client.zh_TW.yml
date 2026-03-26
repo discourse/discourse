@@ -91,6 +91,8 @@ zh_TW:
         user: 使用者
         save: "儲存"
         enabled: "啟用?"
+        mcp_tools_modal:
+          clear_all: "清除全部"
         delete: "刪除"
         response_format:
           open_modal: "編輯"
@@ -125,6 +127,17 @@ zh_TW:
         edit: "編輯"
         delete: "刪除"
         embedding: "嵌入"
+      mcp_servers:
+        name: "名稱"
+        description: "描述"
+        url: "網址"
+        oauth_connect: "連結"
+        enabled: "啟用"
+        save: "儲存"
+        edit: "編輯"
+        delete: "刪除"
+        tools_modal:
+          required: "必要設定"
       llms:
         display_name: "名稱"
         save: "儲存"

@@ -295,6 +295,8 @@ ar:
         missing_required_aliases: "روابط بيانات الاعتماد المطلوبة مفقودة للأسماء المستعارة: %{aliases}."
         secret_not_found: "الاسم المستعار \"%{alias}\" لبيانات الاعتماد مرتبط ببيانات اعتماد مفقودة."
         unknown_error: "يتعذر حل بيانات الاعتماد المطلوبة."
+    mcp_servers:
+      secret_not_found: "بيانات الاعتماد المحددة غير موجودة."
     ai_helper:
       errors:
         completion_request_failed: "حدث خطأ في أثناء محاولة تقديم اقتراحات. يُرجى إعادة المحاولة."

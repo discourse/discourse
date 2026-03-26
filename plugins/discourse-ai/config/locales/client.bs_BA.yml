@@ -117,6 +117,17 @@ bs_BA:
         edit: "Izmijeni"
         delete: "Delete"
         embedding: "Embedding"
+      mcp_servers:
+        name: "Ime"
+        description: "Opis"
+        url: "URL"
+        oauth_connect: "Poveži"
+        enabled: "Omogućen"
+        save: "Sačuvaj"
+        edit: "Izmijeni"
+        delete: "Delete"
+        tools_modal:
+          required: "Required"
       llms:
         display_name: "Ime"
         save: "Sačuvaj"

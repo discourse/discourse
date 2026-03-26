@@ -12,7 +12,6 @@ export default [
       "plugins/discourse-math/public",
       "public/",
       "vendor/",
-      "frontend/discourse/tests/fixtures",
       "**/node_modules/",
       "spec/",
       "frontend/discourse/dist/",

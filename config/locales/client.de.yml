@@ -459,7 +459,6 @@ de:
       start_posting:
         title: "Beginne mit dem Erstellen von Beiträgen"
         description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
-        action: "Fragen zum Einstieg"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
         predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
@@ -788,7 +787,7 @@ de:
       view_all: "Alle anzeigen"
       grouped_by_topic: "Gruppiert nach Thema"
       none: "Es sind keine Elemente zur Überprüfung vorhanden."
-      view_pending: "zeige verbleibende"
+      view_pending: "zeige Ausstehende"
       topic_has_pending:
         one: "Dieses Thema hat <b>%{count}</b> Beitrag, der auf Genehmigung wartet."
         other: "Dieses Thema hat <b>%{count}</b> Beiträge, die auf Genehmigung warten."
@@ -1027,8 +1026,8 @@ de:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
         pending_posts:
-          one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
-          other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
+          one: "Du hast <strong>%{count}</strong> ausstehenden Beitrag."
+          other: "Du hast <strong>%{count}</strong> ausstehende Beiträge."
         ok: "OK"
       example_username: "Benutzername"
       reject_reason:
@@ -1813,7 +1812,6 @@ de:
         upcoming_changes: "Bevorstehende Änderungen"
         calendar_subscriptions: "Kalender"
       calendar_subscriptions:
-        description: "Generiere Abonnement-URLs für die Synchronisierung mit deiner bevorzugten Kalender-App (Google Calendar, Apple Calendar, Outlook, etc.). Bei diesen URLs handelt es sich um private Links zu Kalenderereignissen für dein Konto (Lesezeichen-Erinnerungen, Kalenderereignisse, etc.). Du kannst die generierten Abonnement-URLs jederzeit widerrufen oder erneuern. "
         generate: "Abonnement-URLs generieren"
         regenerate: "URLs neu generieren"
         regenerate_confirm: "Dadurch werden deine bestehenden Kalender-Abonnement-URLs ungültig. Alle Kalender-Apps, die die alten URLs verwenden, werden keine Updates mehr erhalten. Fortfahren?"

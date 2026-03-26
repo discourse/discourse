@@ -47,8 +47,6 @@ sk:
     chat_integration_rocketchat_webhook_url: "Adresa URL pre webový háčik integrácie služby Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Dĺžka úryvku z príspevku v chate Rocket Chat"
     chat_integration_gitter_enabled: "Povolenie poskytovateľa integrácie chatu Gitter"
-    chat_integration_flowdock_enabled: "Povolenie poskytovateľa integrácie chatu Flowdock"
-    chat_integration_flowdock_excerpt_length: "Dĺžka úryvku príspevku vo Flowdock"
     chat_integration_groupme_enabled: "Povolenie poskytovateľa integrácie chatu Groupme"
     chat_integration_groupme_excerpt_length: "Dĺžka úryvku príspevku Groupme"
     chat_integration_teams_enabled: "Povolenie poskytovateľa integrácie chatu v aplikácii Microsoft Teams"
@@ -59,9 +57,6 @@ sk:
     chat_integration_webex_excerpt_length: "Dĺžka úryvku z príspevku Webex Team"
     chat_integration_google_enabled: "Povolenie poskytovateľa integrácie chatu Google Chat"
     chat_integration_google_excerpt_length: "Dĺžka úryvku z príspevku v Google Chate"
-  dashboard:
-    problem:
-      channel_errors: "Niektoré kanály integrácie chatu majú chyby. Viac informácií nájdete v <a href='%{base_path}/admin/plugins/chat-integration'>časti o integrácii chatu</a>."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -217,8 +212,6 @@ sk:
           ~~~citácia
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "zverejnené"
       google:
         new_post: "Nový príspevok na %{site_title}"
         new_topic: "Nová téma na %{site_title}"

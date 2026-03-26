@@ -134,8 +134,6 @@ id:
         export: "Ekspor"
         description: "Deskripsi"
         user: Pengguna
-        question_consolidator_llm: Model Bahasa untuk Konsolidator Pertanyaan
-        question_consolidator_llm_help: Model bahasa yang digunakan untuk konsolidator pertanyaan, Anda dapat memilih model yang kurang kuat untuk menghemat biaya.
         save: "Simpan"
         enabled: "Diaktifkan?"
         allowed_groups: "Grup yang diizinkan"
@@ -161,6 +159,16 @@ id:
       secrets:
         short_title: "Kredensial"
         name: "Nama"
+        save: "Simpan"
+        edit: "Ubah"
+        delete: "Hapus"
+      mcp_servers:
+        name: "Nama"
+        description: "Deskripsi"
+        oauth_statuses:
+          connected: "Terhubung"
+        oauth_connect: "Hubungkan"
+        enabled: "Diaktifkan"
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"

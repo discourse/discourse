@@ -50,45 +50,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def import
     @theme = nil
-    if params[:theme] && params[:theme].content_type == "application/json"
-      ban_in_allowlist_mode!
-
-      # .dcstyle.json import. Deprecated, but still available to allow conversion
-      json = JSON.parse(params[:theme].read)
-      theme = json["theme"]
-
-      @theme = Theme.new(name: theme["name"], user_id: theme_user.id, auto_update: false)
-      theme["theme_fields"]&.each do |field|
-        if field["raw_upload"]
-          begin
-            tmp = Tempfile.new
-            tmp.binmode
-            file = Base64.decode64(field["raw_upload"])
-            tmp.write(file)
-            tmp.rewind
-            upload = UploadCreator.new(tmp, field["filename"]).create_for(theme_user.id)
-            field["upload_id"] = upload.id
-          ensure
-            tmp.unlink
-          end
-        end
-
-        @theme.set_field(
-          target: field["target"],
-          name: field["name"],
-          value: field["value"],
-          type_id: field["type_id"],
-          upload_id: field["upload_id"],
-        )
-      end
-
-      if @theme.save
-        log_theme_change(nil, @theme)
-        render json: serialize_data(@theme, ThemeSerializer), status: :created
-      else
-        render json: @theme.errors, status: :unprocessable_entity
-      end
-    elsif remote = params[:remote]
+    if remote = params[:remote]
       if remote.length > MAX_REMOTE_LENGTH
         error =
           I18n.t("themes.import_error.not_allowed_theme", { repo: remote[0..MAX_REMOTE_LENGTH] })

@@ -117,6 +117,16 @@ sr:
         edit: "Izmeni"
         delete: "Obriši"
         embedding: "Ugrađivanje"
+      mcp_servers:
+        name: "Ime foruma"
+        description: "Opis"
+        url: "URL"
+        enabled: "Omogućeno"
+        save: "Sačuvaj"
+        edit: "Izmeni"
+        delete: "Obriši"
+        tools_modal:
+          required: "Potrebno"
       llms:
         display_name: "Ime foruma"
         save: "Sačuvaj"

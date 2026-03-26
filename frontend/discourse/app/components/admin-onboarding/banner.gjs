@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
@@ -38,7 +38,7 @@ const STEPS = [
     @action
     performAction() {
       this.modal.show(CreateInvite, {
-        model: { invites: new TrackedArray() },
+        model: { invites: trackedArray() },
       });
     }
   },
@@ -137,12 +137,13 @@ const STEPS = [
 ];
 
 export default class AdminOnboardingBanner extends Component {
-  @service siteSettings;
   @service currentUser;
   @service appEvents;
   @service keyValueStore;
   @service router;
   @service toasts;
+
+  @tracked dismissed = false;
 
   constructor() {
     super(...arguments);
@@ -163,15 +164,11 @@ export default class AdminOnboardingBanner extends Component {
   }
 
   get shouldDisplay() {
-    if (!this.currentUser) {
+    if (this.dismissed) {
       return false;
     }
 
-    if (!this.siteSettings.enable_site_owner_onboarding) {
-      return false;
-    }
-
-    if (!this.currentUser.admin) {
+    if (!this.currentUser?.show_site_owner_onboarding) {
       return false;
     }
 
@@ -192,19 +189,18 @@ export default class AdminOnboardingBanner extends Component {
   @action
   async endOnboarding({ skipped = true } = {}) {
     await SiteSetting.update("enable_site_owner_onboarding", false);
+    this.dismissed = true;
     STEPS.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);
     });
 
-    const label = skipped
-      ? "admin_onboarding_banner.skipped"
-      : "admin_onboarding_banner.congrats_onboarding_complete";
-
-    this.toasts.success({
-      data: {
-        message: i18n(label),
-      },
-    });
+    if (!skipped) {
+      this.toasts.success({
+        data: {
+          message: i18n("admin_onboarding_banner.congrats_onboarding_complete"),
+        },
+      });
+    }
   }
 
   <template>

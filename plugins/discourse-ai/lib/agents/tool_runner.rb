@@ -374,79 +374,20 @@ module DiscourseAi
         @secrets_cache = secret_ids.present? ? AiSecret.where(id: secret_ids).index_by(&:id) : {}
       end
 
-      MAX_FRAGMENTS = 200
-      MAX_GET_FILE_CHARS = 500_000
-
       def rag_search(query, filenames: nil, limit: 10)
-        limit = limit.to_i
-        return [] if limit < 1
-        limit = [MAX_FRAGMENTS, limit].min
-
-        upload_refs =
-          UploadReference.where(target_id: tool.id, target_type: "AiTool").pluck(:upload_id)
-
-        if filenames
-          upload_refs = Upload.where(id: upload_refs).where(original_filename: filenames).pluck(:id)
-        end
-
-        return [] if upload_refs.empty?
-
-        query_vector = DiscourseAi::Embeddings::Vector.instance.vector_from(query)
-        fragment_ids =
-          DiscourseAi::Embeddings::Schema
-            .for(RagDocumentFragment)
-            .asymmetric_similarity_search(query_vector, limit: limit, offset: 0) do |builder|
-              builder.join(<<~SQL, target_id: tool.id, target_type: "AiTool")
-                rag_document_fragments ON
-                  rag_document_fragments.id = rag_document_fragment_id AND
-                  rag_document_fragments.target_id = :target_id AND
-                  rag_document_fragments.target_type = :target_type
-              SQL
-            end
-            .map(&:rag_document_fragment_id)
-
-        fragments =
-          RagDocumentFragment.where(id: fragment_ids, upload_id: upload_refs).pluck(
-            :id,
-            :fragment,
-            :metadata,
+        RagDocumentFragment
+          .search(
+            target_id: tool.id,
+            target_type: "AiTool",
+            query: query,
+            filenames: filenames,
+            limit: limit,
           )
-
-        mapped = {}
-        fragments.each do |id, fragment, metadata|
-          mapped[id] = { fragment: fragment, metadata: metadata }
-        end
-
-        fragment_ids.take(limit).map { |fragment_id| mapped[fragment_id] }
+          .map { |fragment| { fragment: fragment[:fragment], metadata: fragment[:metadata] } }
       end
 
       def rag_get_file(filename)
-        return nil if filename.blank?
-
-        upload_refs =
-          UploadReference.where(target_id: tool.id, target_type: "AiTool").pluck(:upload_id)
-        upload_id =
-          Upload.where(id: upload_refs, original_filename: filename).order(id: :desc).pick(:id)
-        return nil if upload_id.nil?
-
-        fragments =
-          RagDocumentFragment
-            .where(target_id: tool.id, target_type: "AiTool", upload_id: upload_id)
-            .order(:fragment_number)
-            .pluck(:fragment)
-
-        return nil if fragments.empty?
-
-        result = +""
-        fragments.each do |fragment|
-          if result.length + fragment.length + 1 > MAX_GET_FILE_CHARS
-            result << "\n[truncated]"
-            break
-          end
-          result << "\n" unless result.empty?
-          result << fragment
-        end
-        result
+        RagDocumentFragment.read_file(target_id: tool.id, target_type: "AiTool", filename: filename)
       end
 
       def attach_truncate(mini_racer_context)

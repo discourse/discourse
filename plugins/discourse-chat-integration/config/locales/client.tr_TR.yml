@@ -14,16 +14,15 @@ tr_TR:
     chat_integration:
       menu_title: "Sohbet Entegrasyonları"
       settings: "Ayarlar"
-      no_providers: "Eklenti ayarlarında bazı sağlayıcıları etkinleştirmeniz gerekiyor"
+      more_providers: "Daha fazla"
+      channels_title: "Kanallar"
       channels_with_errors: "Bu sağlayıcı için bazı kanallar en son mesaj gönderildiğinde başarısız oldu. Daha fazla bilgi edinmek için hata simgelerine tıklayın."
       channel_exception: "Bu kanala en son mesaj gönderilirken bilinmeyen bir hata oluştu."
       group_mention_template: "Şu kullanıcıdan bahsedildi: @%{name}"
       group_message_template: "Şu kullanıcıya mesaj gönderildi: @%{name}"
-      choose_group: "(bir grup seçin)"
-      all_categories: "(tüm kategoriler)"
-      all_tags: "(tüm etiketler)"
-      create_rule: "Kural Oluştur"
-      create_channel: "Kanal Oluştur"
+      choose_group: "(Grup seçin)"
+      all_categories: "(Tüm kategoriler)"
+      all_tags: "(Tüm etiketler)"
       delete_channel: "Sil"
       test_channel: "Test"
       edit_channel: "Düzenle"
@@ -31,14 +30,11 @@ tr_TR:
       test_modal:
         title: "Test mesajı gönderin"
         topic: "Konu"
-        send: "Test Mesajı gönderin"
         close: "Kapat"
         error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerini kontrol edin."
         success: "Mesaj başarıyla gönderildi"
       type:
         normal: Normal
-        group_message: Grup Mesajı
-        group_mention: Grup Bahsetmesi
       filter:
         mute: 'Sessize al'
         follow: 'Sadece ilk gönderi'
@@ -59,8 +55,6 @@ tr_TR:
           ok: "Geçerli"
           fail: "Geçersiz biçim"
       edit_rule_modal:
-        title: Kuralı Düzenle
-        save: Kuralı Kaydet
         cancel: İptal et
         provider: Sağlayıcı
         type: Tür
@@ -81,7 +75,6 @@ tr_TR:
           param:
             identifier:
               title: Kanal
-              help: "ör. #kanal, @kullanıcıadı."
           errors:
             action_prohibited: "Botun bu kanala gönderi yapma izni yok"
             channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
@@ -105,7 +98,6 @@ tr_TR:
               help: "Kanalı tanımlayan bir ad. Discord bağlantısı için kullanılmaz."
             webhook_url:
               title: Web kancası URL'si
-              help: Discord sunucu ayarlarınızda oluşturulan web kancası URL'si
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +112,6 @@ tr_TR:
           param:
             identifier:
               title: Kanal
-              help: "ör. #kanal, @kullanıcıadı."
           errors:
             channel_not_found: "Belirtilen kanal Mattermost'ta mevcut değil"
         matrix:
@@ -151,7 +142,6 @@ tr_TR:
           param:
             identifier:
               title: Kanal
-              help: "ör. #kanal, @kullanıcıadı."
           errors:
             invalid_channel: "Bu kanal Rocket Chat'te mevcut değil"
         gitter:
@@ -159,16 +149,9 @@ tr_TR:
           param:
             name:
               title: "Ad"
-              help: "Gitter odasının adı ör. gitterHQ/services."
             webhook_url:
               title: "Web kancası URL'si"
               help: "Bir Gitter odasında yeni bir entegrasyon oluşturduğunuzda sağlanan URL."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Akış Token'ı"
-              help: "Mesaj göndermek istediğiniz bir akış için bir kaynak oluşturduktan sonra sağlanan akış token'ı."
         groupme:
           title: "GroupMe"
           param:

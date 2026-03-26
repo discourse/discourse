@@ -287,6 +287,8 @@ pt_BR:
         missing_required_aliases: "Ausência de associações de credenciais necessárias para aliases: %{aliases}."
         secret_not_found: "O alias de credencial `%{alias}` está vinculado a uma credencial ausente."
         unknown_error: "Não foi possível resolver a credencial solicitada."
+    mcp_servers:
+      secret_not_found: "A credencial selecionada não existe."
     ai_helper:
       errors:
         completion_request_failed: "Algo deu errado ao tentar dar sugestões. Tente novamente."

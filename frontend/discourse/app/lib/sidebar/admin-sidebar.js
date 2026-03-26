@@ -359,18 +359,13 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       "service:admin-nav-manager"
     );
 
+    this.adminNavManager.resetNavMap();
+
     if (!session.get("safe_mode")) {
-      const existingPluginLinkNames = this.adminNavManager
-        .findSection("plugins")
-        .links.map((link) => link.name);
-      const pluginLinksToAdd = pluginAdminRouteLinks(router)
-        .map((pluginLink) => {
-          if (!existingPluginLinkNames.includes(pluginLink.name)) {
-            return pluginLink;
-          }
-        })
-        .filter((item) => item != null);
-      this.adminNavManager.amendLinksToSection("plugins", pluginLinksToAdd);
+      this.adminNavManager.amendLinksToSection(
+        "plugins",
+        pluginAdminRouteLinks(router)
+      );
 
       this.adminSidebarStateManager.setLinkKeywords(
         "admin_installed_plugins",
@@ -378,25 +373,16 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       );
 
       if (site.admin_config_login_routes) {
-        const adminLoginRoutesToAdd = () => {
-          const routes = [];
-
-          site.admin_config_login_routes.forEach((routeName) => {
-            routes.push({
-              name: `admin_login_${routeName}`,
-              route: `adminConfig.login.plugin-tab`,
-              routeModels: [routeName],
-              icon: "unlock",
-              label: `admin.config.login.sub_pages.${routeName}`,
-              settings_area: routeName,
-            });
-          });
-          return routes;
-        };
-
         this.adminNavManager.amendLinksToSubSection(
           "admin_login",
-          adminLoginRoutesToAdd()
+          site.admin_config_login_routes.map((routeName) => ({
+            name: `admin_login_${routeName}`,
+            route: `adminConfig.login.plugin-tab`,
+            routeModels: [routeName],
+            icon: "unlock",
+            label: `admin.config.login.sub_pages.${routeName}`,
+            settings_area: routeName,
+          }))
         );
       }
     }
@@ -431,22 +417,16 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       ]);
     }
 
-    const rootSection = this.adminNavManager.findSection("root");
-    const linkExists = rootSection?.links.some(
-      (link) => link.name === "admin_upcoming_changes"
-    );
-    if (!linkExists) {
-      this.adminNavManager.amendLinksToSection("root", [
-        {
-          name: "admin_upcoming_changes",
-          route: "adminConfig.upcomingChanges",
-          label: "admin.config.upcoming_changes.title",
-          description: "admin.config.upcoming_changes.header_description",
-          icon: "flask",
-          keywords: "admin.config.upcoming_changes.keywords",
-        },
-      ]);
-    }
+    this.adminNavManager.amendLinksToSection("root", [
+      {
+        name: "admin_upcoming_changes",
+        route: "adminConfig.upcomingChanges",
+        label: "admin.config.upcoming_changes.title",
+        description: "admin.config.upcoming_changes.header_description",
+        icon: "flask",
+        keywords: "admin.config.upcoming_changes.keywords",
+      },
+    ]);
 
     for (const [sectionName, additionalLinks] of Object.entries(
       additionalAdminSidebarSectionLinks

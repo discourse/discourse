@@ -7,7 +7,6 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
-import DismissNew from "discourse/components/modal/dismiss-new";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
@@ -238,12 +237,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         });
         break;
       case "dismiss-new":
-        this.modal.show(DismissNew, {
-          model: {
-            selectedTopics: this.args.bulkSelectHelper.selected,
-            dismissCallback: (dismissTopics) => this.dismissRead(dismissTopics),
-          },
-        });
+        this.args.bulkSelectHelper.onResetNew?.();
         break;
       case "update-category":
         this.showBulkTopicActionsModal(actionId, "change_category", {

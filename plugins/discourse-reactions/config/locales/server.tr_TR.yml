@@ -15,7 +15,7 @@ tr_TR:
     discourse_reactions_like_sync_enabled: "Bu etkinleştirilirse `se_reactions_excluded_from_like` içinde tanımlanan tepkiler dışında, geçmiş tepkilerin eşleşen Beğeni kayıtları oluşturulur. Bu senkronizasyon arka planda düzenli olarak gerçekleşir ve ayrıca `se_reactions_excluded_from_like` seçeneğini değiştirdiğinizde gerçekleşir."
     discourse_reactions_allow_any_emoji: "Bu özellik etkinleştirilirse, kullanıcıların tepki seçicide herhangi bir emojiyi seçmelerine olanak tanıyan bir düğme eklenir. Üyeler, tepkiler için özel emoji dahil olmak üzere herhangi bir emojiyi seçebilirler. Kullanılabilir tepkileri sınırlamak için `emoji_deny_list` site ayarını kullanın."
     errors:
-      invalid_excluded_emoji: "\"Discourse tepkileri etkinleştirilmiş tepkiler\" içinde olmayan emoji'leri hariç tutamazsınız ve \"beğeni için discourse tepkileri\" için kullanılan emoji'leri hariç tutamazsınız."
+      invalid_excluded_emoji: "\"Söylem tepkileri\" kapsamına girmeyen emojileri hariç tutamazsınız (yerleşik varsayılan hariç tutmalar hariç) ve \"Beğenme tepkisi\" için kullanılan emojiyi hariç tutamazsınız."
   badges:
     first_reaction:
       name: İlk Tepki

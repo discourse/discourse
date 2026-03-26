@@ -103,9 +103,9 @@ Block level rules apply to multiple lines of text like:
 
 `md.block.bbcode.ruler` holds a list of block level rules
 
-There are many examples for inline rules at: [bbcode-inline.js](https://github.com/discourse/discourse/blob/master/app/assets/javascripts/pretty-text/engines/discourse-markdown/bbcode-inline.js)
+There are many examples for inline rules at: [bbcode-inline.js](https://github.com/discourse/discourse/blob/main/frontend/discourse-markdown-it/src/features/bbcode-inline.js)
 
-[Quotes](https://github.com/discourse/discourse/blob/master/app/assets/javascripts/pretty-text/engines/discourse-markdown/quotes.js) and polls are good examples of bbcode block rules.
+[Quotes](https://github.com/discourse/discourse/blob/main/frontend/discourse-markdown-it/src/features/quotes.js) and polls are good examples of bbcode block rules.
 
 #### Inline BBCode rules
 

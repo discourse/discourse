@@ -1,6 +1,6 @@
+import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
 import { render } from "@ember/test-helpers";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { setupRenderingTest } from "ember-qunit";
 import { module, test } from "qunit";
 import slice from "discourse/helpers/slice";
@@ -25,7 +25,7 @@ module("Integration | Helper | {{slice}}", function (hooks) {
   });
 
   test("it recomputes the slice if an item in the array changes", async function (assert) {
-    let array = new TrackedArray([2, 4, 6]);
+    let array = trackedArray([2, 4, 6]);
     this.set("array", array);
 
     await render(<template>{{slice 1 3 this.array}}</template>);

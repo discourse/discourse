@@ -882,7 +882,7 @@ export default class TopicController extends Controller {
         if (replies.length === 0) {
           return post.destroy(user, opts).catch((error) => {
             popupAjaxError(error);
-            post.undoDeleteState();
+            post.undoDeleteState(opts);
           });
         }
 
@@ -930,7 +930,7 @@ export default class TopicController extends Controller {
           action: () => {
             post.destroy(user, opts).catch((error) => {
               popupAjaxError(error);
-              post.undoDeleteState();
+              post.undoDeleteState(opts);
             });
           },
         });
@@ -948,7 +948,7 @@ export default class TopicController extends Controller {
     } else {
       return post.destroy(user, opts).catch((error) => {
         popupAjaxError(error);
-        post.undoDeleteState();
+        post.undoDeleteState(opts);
       });
     }
   }

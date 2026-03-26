@@ -105,4 +105,4 @@ const result = await this.modal.show(MyModal);
 
 ## More customizability!
 
-`<DModal>` has a number of named blocks and arguments. Check out [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implementation](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/components/d-modal.hbs) for named blocks.
+`<DModal>` has a number of named blocks and arguments. Check out [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implementation](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/d-modal.gjs) for named blocks.

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
@@ -29,11 +29,11 @@ export default class EditTopicTimer extends Component {
     super(...arguments);
 
     if (this.args.model.topic?.topic_timer) {
-      this.topicTimer = new TrackedObject(this.args.model.topic?.topic_timer);
+      this.topicTimer = trackedObject(this.args.model.topic?.topic_timer);
     } else {
       // TODO: next() is a hack, to-be-removed
       next(() => {
-        this.topicTimer = new TrackedObject(this.createDefaultTimer());
+        this.topicTimer = trackedObject(this.createDefaultTimer());
       });
     }
   }

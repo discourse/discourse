@@ -439,8 +439,6 @@ he:
         user: משתמש
         create_user: יצירת משתמש
         default_llm: מודל שפה כברירת מחדל
-        question_consolidator_llm: מודל שפה למגבש השאלות
-        question_consolidator_llm_help: מודל השפה לשימוש עבור מגבש השאלות, אפשר לבחור במודל פחות חזק כדי לחסוך בעלויות.
         system_prompt: בקשת מערכת
         forced_tool_strategy: אסטרטגיית כלי כפוי
         allow_chat_direct_messages: "לאפשר הודעות ישירות בצ׳אט"
@@ -451,6 +449,9 @@ he:
         save: "שמירה"
         enabled: "מאופשר?"
         tools: "כלים פעילים"
+        mcp_tools_modal:
+          select_all: "בחירה בהכול"
+          clear_all: "לפנות הכול"
         forced_tools: "כלים נאכפים"
         allowed_groups: "קבוצות מורשות"
         delete: "מחיקה"
@@ -523,7 +524,6 @@ he:
         tool_name: "שם הכלי"
         description: "תיאור"
         description_help: "תיאור ברור של מטרת הכלי למודל השפה"
-        subheader_description: "כלים מרחיבים את היכולות של בוטים של בינה מלאכותית עם פונקציות JavaScript המוגדרות על ידי המשתמשים."
         summary: "תקציר"
         summary_help: "סיכום מטרת הכלים להצגה למשתמשי קצה"
         script: "סקריפט"
@@ -557,6 +557,22 @@ he:
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      mcp_servers:
+        name: "שם"
+        description: "תיאור"
+        url: "כתובת"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "מחובר"
+        oauth_connect: "התחברות"
+        enabled: "פעיל"
+        save: "שמירה"
+        edit: "עריכה"
+        delete: "מחיקה"
+        tools_modal:
+          parameters: "משתנים"
+          required: "נדרש"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"

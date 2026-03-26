@@ -18,6 +18,13 @@ body {
   @include viewport.until(sm) {
     background-color: var(--d-content-background);
   }
+
+  @include viewport.from(lg) {
+    &.account-created-page,
+    &.activate-account-page {
+      background: var(--background-color);
+    }
+  }
 }
 
 #main-outlet-wrapper {
@@ -125,5 +132,12 @@ aside.onebox {
   #main-outlet {
     border-radius: var(--d-border-radius-large);
     max-height: calc(100vh - 50px - 1em - var(--main-grid-gap));
+  }
+}
+
+.activate-account {
+  .activate-account-button,
+  .continue-button {
+    margin-inline: 0;
   }
 }

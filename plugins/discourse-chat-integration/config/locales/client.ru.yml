@@ -14,16 +14,15 @@ ru:
     chat_integration:
       menu_title: "Интеграция с чатами"
       settings: "Настройки"
-      no_providers: "Вам нужно включить некоторых провайдеров в настройках плагина"
+      more_providers: "Ещё"
+      channels_title: "Каналы"
       channels_with_errors: "Некоторые каналы этого провайдера не работали в последний раз, когда были отправлены сообщения. Нажмите на иконку(и), чтобы узнать больше."
       channel_exception: "При последней отправке сообщения в этот канал произошла неизвестная ошибка."
       group_mention_template: "Упоминания о: @ %{name}"
       group_message_template: "Сообщения: @ %{name}"
-      choose_group: "(выберите группу)"
-      all_categories: "(все категории)"
-      all_tags: "(все теги)"
-      create_rule: "Создать правило"
-      create_channel: "Создать канал"
+      choose_group: "(Выберите группу)"
+      all_categories: "(Все категории)"
+      all_tags: "(Все теги)"
       delete_channel: "Удалить"
       test_channel: "Тест"
       edit_channel: "Изменить"
@@ -31,14 +30,11 @@ ru:
       test_modal:
         title: "Отправить тестовое сообщение"
         topic: "Тема"
-        send: "Послать ТЕСТОВОЕ сообщение"
         close: "Закрыть"
         error: "При отправке сообщения произошла неизвестная ошибка. Для получения дополнительной информации проверьте журналы сайта."
         success: "Сообщение успешно отправлено"
       type:
         normal: Обычный
-        group_message: Групповое сообщение
-        group_mention: Групповая рассылка
       filter:
         mute: 'Отключить'
         follow: 'Только первая публикация'
@@ -59,8 +55,6 @@ ru:
           ok: "Валидный"
           fail: "Неверный формат"
       edit_rule_modal:
-        title: Изменить правило
-        save: Сохранить правило
         cancel: Отмена
         provider: Поставщик
         type: Тип
@@ -81,7 +75,6 @@ ru:
           param:
             identifier:
               title: Канал
-              help: "например, #channel, @username."
           errors:
             action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
             channel_not_found: "Указанный канал не существует в Slack."
@@ -105,7 +98,6 @@ ru:
               help: "Имя для описания канала. Оно не используется для подключения к Discord."
             webhook_url:
               title: URL вебхука
-              help: URL-адрес вебхука, созданный в настройках сервера Discord
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +112,6 @@ ru:
           param:
             identifier:
               title: Канал
-              help: "например, #channel, @username."
           errors:
             channel_not_found: "Указанный канал не существует в Mattermost"
         matrix:
@@ -151,7 +142,6 @@ ru:
           param:
             identifier:
               title: Канал
-              help: "например, #channel, @username."
           errors:
             invalid_channel: "Этот канал не существует в Rocket Chat"
         gitter:
@@ -159,16 +149,9 @@ ru:
           param:
             name:
               title: "Название"
-              help: "Название комнаты Gitter, например, gitterHQ/services."
             webhook_url:
               title: "URL вебхука"
               help: "URL, указанный при создании новой интеграции в комнате Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flow Token"
-              help: "Токен потока предоставляется после создания источника для потока, в который вы хотите отправлять сообщения."
         groupme:
           title: "GroupMe"
           param:

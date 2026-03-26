@@ -25,6 +25,7 @@ const LEGACY_FORMKIT_FIELDS = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "email_in",
   "email_in_enabled",
@@ -46,6 +47,7 @@ const SIMPLIFIED_FIELD_LIST = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "position",
   "num_featured_topics",
@@ -126,6 +128,10 @@ export default class EditCategoryTabsController extends Controller {
         : LEGACY_FORMKIT_FIELDS)
     );
 
+    if (this.siteSettings.content_localization_enabled && !data.locale) {
+      data.locale = this.siteSettings.default_locale;
+    }
+
     if (enableSimplifiedCategoryCreation) {
       if (!this.model.styleType) {
         data.style_type = "icon";
@@ -187,7 +193,7 @@ export default class EditCategoryTabsController extends Controller {
     const types = Object.values(this.model.categoryTypes ?? {});
     if (types.length > 0) {
       return i18n("category.create_with_type", {
-        typeName: types[0].name.toLowerCase(),
+        typeName: types[0].title,
       });
     }
 

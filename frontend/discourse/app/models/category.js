@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -497,7 +497,7 @@ export default class Category extends RestModel {
   }
 
   setupCategoryTypes() {
-    this.categoryTypes = new TrackedObject(this.category_types);
+    this.categoryTypes = trackedObject(this.category_types);
   }
 
   setupGroupsAndPermissions() {
@@ -508,7 +508,7 @@ export default class Category extends RestModel {
     if (this.group_permissions) {
       this.permissions = this.group_permissions.map((elem) => {
         removeValueFromArray(this.available_groups, elem.group_name);
-        return new TrackedObject(elem);
+        return trackedObject(elem);
       });
     }
   }
@@ -841,6 +841,7 @@ export default class Category extends RestModel {
         emoji: this.emoji,
         icon: this.icon,
         ...(this.siteSettings.content_localization_enabled && {
+          locale: this.locale,
           category_localizations: this.localizations,
         }),
         ...this._categoryTypeSaveProperties(id),
@@ -889,7 +890,7 @@ export default class Category extends RestModel {
   }
 
   addPermission(permission) {
-    addUniqueValueToArray(this.permissions, new TrackedObject(permission));
+    addUniqueValueToArray(this.permissions, trackedObject(permission));
     removeValueFromArray(this.available_groups, permission.group_name);
   }
 

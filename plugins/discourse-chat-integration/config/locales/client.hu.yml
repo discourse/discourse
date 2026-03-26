@@ -14,16 +14,15 @@ hu:
     chat_integration:
       menu_title: "Csevegésintegrációk"
       settings: "Beállítások"
-      no_providers: "Engedélyeznie kell néhány szolgáltatót a bővítmény beállításaiban"
+      more_providers: "Több"
+      channels_title: "Csatornák"
       channels_with_errors: "Néhány csatorna hibaüzenetet küldött a legutóbbi üzenetküldéskor ennél a szolgáltatónál. Kattints a hiba ikon(ok)ra a további részletekért."
       channel_exception: "Ismeretlen hiba történt a legutóbbi üzenetküldéskor ezen a csatornán."
       group_mention_template: "Említések: @%{name}"
       group_message_template: "Üzenetek: @%{name}"
-      choose_group: "(válassz egy csoportot)"
-      all_categories: "(összes kategória)"
-      all_tags: "(összes címke)"
-      create_rule: "Szabály létrehozása"
-      create_channel: "Csatorna létrehozása"
+      choose_group: "(Válassz egy csoportot)"
+      all_categories: "(Összes kategória)"
+      all_tags: "(Minden címke)"
       delete_channel: "Törlés"
       test_channel: "Teszt"
       edit_channel: "Szerkesztés"
@@ -31,14 +30,11 @@ hu:
       test_modal:
         title: "Tesztüzenet küldése"
         topic: "Téma"
-        send: "Szöveges üzenet küldése"
         close: "Bezárás"
         error: "Ismeretlen hiba történt az üzenet küldése közben. További információkért ellenőrizze az oldal naplófájljait."
         success: "Üzenet sikeresen elküldve"
       type:
         normal: Normál
-        group_message: Csoportos üzenet
-        group_mention: Csoportos megemlítés
       filter:
         mute: 'Lenémít'
         follow: 'Csak az első bejegyzés'
@@ -59,8 +55,6 @@ hu:
           ok: "Érvényes"
           fail: "Érvénytelen formátum"
       edit_rule_modal:
-        title: Szabály Szerkesztése
-        save: Szabály Mentése
         cancel: Mégse
         provider: Szolgáltató
         type: Típus
@@ -81,7 +75,6 @@ hu:
           param:
             identifier:
               title: Csatorna
-              help: "pl. #csatorna, @felhasználónév"
           errors:
             action_prohibited: "A botnak nincs engedélye posztolni ezen a csatornán."
             channel_not_found: "A megadott csatorna nem létezik a Slacken."
@@ -105,7 +98,6 @@ hu:
               help: "A csatorna leírására szolgáló név. Nem használatos a Discord-kapcsolathoz."
             webhook_url:
               title: Webhook webcíme
-              help: A Discord szerver beállításaiban létrehozott webhook URL
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +112,6 @@ hu:
           param:
             identifier:
               title: Csatorna
-              help: "pl. #csatorna, @felhasználónév"
           errors:
             channel_not_found: "A megadott csatorna nem létezik a Mattermoston."
         matrix:
@@ -151,7 +142,6 @@ hu:
           param:
             identifier:
               title: Csatorna
-              help: "pl. #csatorna, @felhasználónév"
           errors:
             invalid_channel: "Ez a csatorna nem létezik a Rocket Chaten."
         gitter:
@@ -159,16 +149,9 @@ hu:
           param:
             name:
               title: "Név"
-              help: "Egy Gitter szoba neve, pl. gitterHQ/services."
             webhook_url:
               title: "Webhook webcíme"
               help: "Az URL, amelyet egy új integráció létrehozásakor kap egy Gitter szobában."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Flow Token"
-              help: "A forrás létrehozása után megadott flow-token ahhoz az adatfolyamhoz, amelybe üzeneteket szeretne küldeni."
         groupme:
           title: "GroupMe"
           param:

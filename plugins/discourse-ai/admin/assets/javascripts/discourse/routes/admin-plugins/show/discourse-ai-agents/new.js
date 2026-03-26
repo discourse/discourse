@@ -5,6 +5,7 @@ export default class AdminPluginsShowDiscourseAiAgentsNew extends DiscourseRoute
   async model() {
     const record = this.store.createRecord("ai-agent");
     record.set("allowed_group_ids", [AUTO_GROUPS.trust_level_0.id]);
+    record.set("tools", []);
     record.set("rag_uploads", []);
     // these match the defaults on the table
     record.set("rag_chunk_tokens", 374);

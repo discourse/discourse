@@ -12,8 +12,6 @@ he:
     discourse_reactions_enabled_reactions: "מגדיר רשימה של תחושות מופעלות, מותר להשתמש כאן בכל אמוג׳י שהוא."
     discourse_reactions_desaturated_reaction_panel: "מפחית את העומס החזותי של סימוני התחושות על ידי הצגתם בצורה מעומעמת עד שמרחפים מעליהם."
     discourse_reactions_excluded_from_like: "תגובות שלא נחשבות ללייק. תגובות שאינן מופיעות ברשימה הזאת תיחשבנה כלייק לעיטורים, דיווחים ומטרות נוספות."
-    errors:
-      invalid_excluded_emoji: "אי אפשר להחריג אמוג׳ים שאינם חלק מ‚תגובות רגש מופעלות ב־discourse’ ואי אפשר להחריג את האמוג׳י שמשמש ל‚תגובות רגש discourse ללייק’."
   badges:
     first_reaction:
       name: תחושה ראשונה
