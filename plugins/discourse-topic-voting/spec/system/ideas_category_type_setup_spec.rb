@@ -92,6 +92,17 @@ RSpec.describe "Ideas Category Type Setup" do
       expect(SiteSetting.topic_voting_show_who_voted).to eq(false)
     end
 
+    it "hides vote limit settings when limit member votes is unchecked" do
+      visit("/c/#{category.slug}/edit/ideas")
+
+      expect(page).to have_field("category_type_site_settings.topic_voting_tl0_vote_limit")
+
+      form.field("category_type_site_settings.topic_voting_enable_vote_limits").toggle
+
+      expect(page).to have_no_field("category_type_site_settings.topic_voting_tl0_vote_limit")
+      expect(page).to have_no_field("category_type_site_settings.topic_voting_alert_votes_left")
+    end
+
     it "can remove the ideas type from the category" do
       visit("/c/#{category.slug}/edit/ideas")
       page.find(".ideas-category--danger-zone .ideas-category__remove-type").click
