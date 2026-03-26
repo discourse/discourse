@@ -8,8 +8,12 @@ class SiteSetting::Action::SimpleEmailSubjectToggled
   params { attribute :setting_enabled, :boolean }
 
   step :update_email_subject
-  step :copy_translation_overrides
+  only_if(:setting_enabled) { step :copy_translation_overrides }
   step :request_refresh
+
+  def setting_enabled?(params:)
+    params.setting_enabled
+  end
 
   private
 
@@ -23,14 +27,11 @@ class SiteSetting::Action::SimpleEmailSubjectToggled
     end
   end
 
-  def copy_translation_overrides(params:)
-    return unless params.setting_enabled
-
+  def copy_translation_overrides
     TranslationOverride
       .where(locale: SiteSetting.default_locale)
-      .each do |override|
-        next if override.translation_key.end_with?("_improved")
-
+      .where.not("translation_key LIKE '%_improved'")
+      .find_each do |override|
         if I18n.exists?("#{override.translation_key}_improved")
           TranslationOverride.upsert!(
             SiteSetting.default_locale,
