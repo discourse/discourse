@@ -151,6 +151,7 @@ export default class DataTablesManager extends Component {
           </LoadMore>
         {{else}}
           <EmptyState
+            @emoji="👋"
             @title={{i18n
               "discourse_workflows.data_tables.empty_title"
               username=this.currentUser.username

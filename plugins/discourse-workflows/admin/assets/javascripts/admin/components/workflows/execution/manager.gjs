@@ -270,6 +270,7 @@ export default class ExecutionsManager extends Component {
           </LoadMore>
         {{else}}
           <EmptyState
+            @emoji="👋"
             @title={{i18n
               "discourse_workflows.executions.empty_title"
               username=this.currentUser.username

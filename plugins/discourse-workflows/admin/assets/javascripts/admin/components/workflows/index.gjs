@@ -155,6 +155,7 @@ export default class WorkflowsIndex extends Component {
         </LoadMore>
       {{else}}
         <EmptyState
+          @emoji="👋"
           @title={{i18n
             "discourse_workflows.empty_title"
             username=this.currentUser.username

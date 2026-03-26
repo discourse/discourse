@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { concat, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { resolvePreviousOutput } from "../context/input";
-import ParameterField from "./parameter-field";
+import WorkflowsEmptyState from "../empty-state";
+import PropertyEngineField from "./property-engine-field";
 
 const OPERATORS_BY_TYPE = {
   string: [
@@ -33,25 +32,39 @@ function singleValueOperator(operation) {
   return SINGLE_VALUE_OPERATORS.includes(operation);
 }
 
-function conditionRows(conditions) {
-  return (conditions || []).map((condition, index) => {
-    const operatorType = condition.operator?.type || "string";
-    const operation =
-      condition.operator?.operation || operatorsForType(operatorType)[0];
-
-    return {
-      condition,
-      index,
-      isSingleValue: singleValueOperator(operation),
-      operators: operatorsForType(operatorType),
-      operation,
-    };
-  });
+function isSingleValueItem(item) {
+  return singleValueOperator(item?.operator?.operation);
 }
+
+function isExpression(value) {
+  return typeof value === "string" && value.startsWith("=");
+}
+
+function leftValueSchema(fieldOptions) {
+  return {
+    type: "options",
+    options: fieldOptions.map((f) => ({ value: f.id, label: f.label })),
+    ui: { expression: true, show_label: false },
+  };
+}
+
+function operationSchema(item) {
+  const type = item?.operator?.type || "string";
+  return {
+    type: "options",
+    options: operatorsForType(type),
+    ui: { expression: true, show_label: false },
+  };
+}
+
+const RIGHT_VALUE_SCHEMA = {
+  type: "string",
+  ui: { expression: true, show_label: false },
+};
 
 export default class PropertyEngineConditionBuilder extends Component {
   get conditions() {
-    return this.args.value || [];
+    return this.args.formApi?.get(this.args.fieldName) || [];
   }
 
   get fieldOptions() {
@@ -69,18 +82,11 @@ export default class PropertyEngineConditionBuilder extends Component {
     }));
   }
 
-  get rows() {
-    return conditionRows(this.conditions);
-  }
-
-  #patchConditions(conditions) {
-    this.args.onPatch?.({ [this.args.fieldName]: conditions });
-  }
-
   @action
   addCondition() {
-    this.#patchConditions([
-      ...this.conditions,
+    const conditions = this.conditions;
+    this.args.formApi.set(this.args.fieldName, [
+      ...conditions,
       {
         id: crypto.randomUUID(),
         leftValue: "",
@@ -95,160 +101,109 @@ export default class PropertyEngineConditionBuilder extends Component {
   }
 
   @action
-  removeCondition(index) {
-    this.#patchConditions(
-      this.conditions.filter((_, conditionIndex) => conditionIndex !== index)
-    );
-  }
+  handleLeftValueSet(index, value, { set, name }) {
+    set(name, value);
 
-  @action
-  updateConditionField(index, event) {
-    const fieldId = event.target.value;
-    const field = this.fieldOptions.find((option) => option.id === fieldId);
+    if (isExpression(value)) {
+      return;
+    }
+
+    const field = this.fieldOptions.find((option) => option.id === value);
     const type = field?.type || "string";
     const operation = operatorsForType(type)[0];
+    const basePath = `${this.args.fieldName}.${index}`;
 
-    this.#updateCondition(index, {
-      leftValue: fieldId,
-      operator: {
-        operation,
-        singleValue: singleValueOperator(operation),
-        type,
-      },
-      rightValue: "",
+    this.args.formApi.set(`${basePath}.operator`, {
+      operation,
+      type,
+      singleValue: singleValueOperator(operation),
     });
+    this.args.formApi.set(`${basePath}.rightValue`, "");
   }
 
   @action
-  updateConditionLeftExpression(index, value) {
-    this.#updateCondition(index, { leftValue: value });
-  }
+  handleOperatorSet(index, value, { set, name }) {
+    set(name, value);
 
-  @action
-  updateConditionOperator(index, event) {
-    const operation = event.target.value;
-    const currentCondition = this.conditions[index] || {};
+    if (isExpression(value)) {
+      return;
+    }
 
-    this.#updateCondition(index, {
-      operator: {
-        ...(currentCondition.operator || {}),
-        operation,
-        singleValue: singleValueOperator(operation),
-      },
-    });
-  }
-
-  @action
-  updateConditionValue(index, value) {
-    this.#updateCondition(index, { rightValue: value });
-  }
-
-  #updateCondition(index, updates) {
-    this.#patchConditions(
-      this.conditions.map((condition, conditionIndex) =>
-        conditionIndex === index
-          ? {
-              ...condition,
-              ...updates,
-              operator: {
-                ...(condition.operator || {}),
-                ...(updates.operator || {}),
-              },
-            }
-          : condition
-      )
+    this.args.formApi.set(
+      `${this.args.fieldName}.${index}.operator.singleValue`,
+      singleValueOperator(value)
     );
   }
 
   <template>
-    <div class="workflows-configurator-if">
-      {{#each this.rows key="@index" as |row|}}
-        <div class="workflows-configurator-if__row">
-          <div class="workflows-configurator-if__top">
-            <div class="workflows-configurator-if__left">
-              <ParameterField
-                @value={{row.condition.leftValue}}
-                @onChange={{fn this.updateConditionLeftExpression row.index}}
-              >
-                <:default as |fixedValue|>
-                  <select
-                    {{on "change" (fn this.updateConditionField row.index)}}
-                  >
-                    <option value="">--</option>
-                    {{#each this.fieldOptions as |fieldOption|}}
-                      <option
-                        value={{fieldOption.id}}
-                        selected={{eq fieldOption.id fixedValue}}
-                      >
-                        {{fieldOption.label}}
-                      </option>
-                    {{/each}}
-                  </select>
-                </:default>
-              </ParameterField>
-            </div>
-
-            <div class="workflows-configurator-if__operator">
-              <select
-                {{on "change" (fn this.updateConditionOperator row.index)}}
-              >
-                {{#each row.operators as |operator|}}
-                  <option
-                    value={{operator}}
-                    selected={{eq operator row.operation}}
-                  >
-                    {{i18n
-                      (concat
-                        "discourse_workflows.if_condition.operators." operator
-                      )
-                    }}
-                  </option>
-                {{/each}}
-              </select>
-            </div>
-          </div>
-
-          <div class="workflows-configurator-if__bottom">
-            {{#unless row.isSingleValue}}
-              <div class="workflows-configurator-if__right">
-                <ParameterField
-                  @value={{row.condition.rightValue}}
-                  @onChange={{fn this.updateConditionValue row.index}}
-                >
-                  <:default as |fixedValue onFixedInput|>
-                    <input
-                      type="text"
-                      value={{fixedValue}}
-                      {{on "input" onFixedInput}}
-                    />
-                  </:default>
-                </ParameterField>
-              </div>
-            {{/unless}}
-
-            <div class="workflows-configurator-if__delete">
-              <DButton
-                @action={{fn this.removeCondition row.index}}
-                @icon="trash-can"
-                class="btn-transparent btn-small btn-danger"
-              />
-            </div>
-          </div>
+    <@form.Collection
+      @name={{@fieldName}}
+      @tagName="div"
+      class="workflows-configurator-if"
+      as |collection index item|
+    >
+      <div class="workflows-configurator-if__row">
+        <div class="workflows-configurator-if__delete">
+          <DButton
+            @action={{fn collection.remove index}}
+            @icon="trash-can"
+            class="btn-transparent btn-small btn-danger"
+          />
         </div>
-      {{/each}}
 
+        <collection.Object
+          class="workflows-configurator-if__fields"
+          as |object|
+        >
+          <PropertyEngineField
+            @form={{object}}
+            @formApi={{@formApi}}
+            @fieldName="leftValue"
+            @formApiPath={{concat @fieldName "." index ".leftValue"}}
+            @schema={{leftValueSchema this.fieldOptions}}
+            @onSet={{fn this.handleLeftValueSet index}}
+          />
+
+          <object.Object @name="operator" as |operator|>
+            <PropertyEngineField
+              @form={{operator}}
+              @formApi={{@formApi}}
+              @fieldName="operation"
+              @formApiPath={{concat @fieldName "." index ".operator.operation"}}
+              @schema={{operationSchema item}}
+              @onSet={{fn this.handleOperatorSet index}}
+            />
+          </object.Object>
+
+          {{#unless (isSingleValueItem item)}}
+            <PropertyEngineField
+              @form={{object}}
+              @formApi={{@formApi}}
+              @fieldName="rightValue"
+              @formApiPath={{concat @fieldName "." index ".rightValue"}}
+              @schema={{RIGHT_VALUE_SCHEMA}}
+            />
+          {{/unless}}
+        </collection.Object>
+      </div>
+    </@form.Collection>
+
+    {{#if this.conditions.length}}
       <DButton
         @action={{this.addCondition}}
         @icon="plus"
         @label="discourse_workflows.if_condition.add_condition"
         class="btn-default btn-small"
       />
-
-      {{#unless this.rows.length}}
-        <p class="workflows-configurator__hint">
-          {{i18n "discourse_workflows.if_condition.no_conditions"}}
-        </p>
-      {{/unless}}
-    </div>
+    {{else}}
+      <WorkflowsEmptyState
+        @title={{i18n "discourse_workflows.if_condition.no_conditions_title"}}
+        @description={{i18n
+          "discourse_workflows.if_condition.no_conditions_body"
+        }}
+        @onAction={{this.addCondition}}
+        @buttonLabel="discourse_workflows.if_condition.add_condition"
+      />
+    {{/if}}
   </template>
 }

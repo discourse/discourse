@@ -62,7 +62,10 @@ export default class NodeConfigurator extends Component {
       if (this.initialConfiguration[key] === undefined) {
         if (fieldSchema.default !== undefined) {
           this.initialConfiguration[key] = fieldSchema.default;
-        } else if (fieldSchema.type === "collection") {
+        } else if (
+          fieldSchema.type === "collection" ||
+          fieldSchema.type === "array"
+        ) {
           this.initialConfiguration[key] = [];
         }
       }

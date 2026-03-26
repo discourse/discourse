@@ -1,16 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import DMenu from "discourse/float-kit/components/d-menu";
 import FKControlInput from "discourse/form-kit/components/fk/control/input";
 import FKControlSelect from "discourse/form-kit/components/fk/control/select";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
-import icon from "discourse/helpers/d-icon";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -36,7 +32,6 @@ import PropertyEngineUrlPreview from "./property-engine-url-preview";
 
 const BUILT_IN_FIELD_CONTROLS = {
   combo_box: PropertyEngineComboBox,
-  condition_builder: PropertyEngineConditionBuilder,
   data_table_fields: PropertyEngineDataTableFields,
   url_preview: PropertyEngineUrlPreview,
 };
@@ -182,26 +177,29 @@ export default class PropertyEngineField extends Component {
   }
 
   @action
-  selectMode(mode, closeFn) {
-    if (mode === "fixed" && this.expressionMode) {
-      const currentVal = this.args.formApi?.get(this.apiPath) || "";
+  toggleExpressionMode() {
+    const currentVal = this.args.formApi?.get(this.apiPath) || "";
+
+    if (this.expressionMode) {
       if (isExpression(currentVal)) {
         this.args.formApi?.set(this.apiPath, currentVal.slice(1));
       }
       this._expressionMode = false;
-    } else if (mode === "expression" && !this.expressionMode) {
-      const currentVal = this.args.formApi?.get(this.apiPath) || "";
+    } else {
       if (!isExpression(currentVal)) {
         this.args.formApi?.set(this.apiPath, `=${currentVal}`);
       }
       this._expressionMode = true;
     }
-    closeFn?.();
   }
 
   @action
   handleSet(value, { set, name }) {
-    set(name, value);
+    if (this.args.onSet) {
+      this.args.onSet(value, { set, name });
+    } else {
+      set(name, value);
+    }
   }
 
   @action
@@ -280,6 +278,18 @@ export default class PropertyEngineField extends Component {
       >
         <field.Control @height={{this.codeHeight}} @lang={{this.codeLang}} />
       </@form.Field>
+    {{else if (eq this.control "condition_builder")}}
+      <@form.Section @title={{this.fieldTitle}}>
+        <PropertyEngineConditionBuilder
+          @form={{@form}}
+          @formApi={{@formApi}}
+          @fieldName={{@fieldName}}
+          @node={{@node}}
+          @nodes={{@nodes}}
+          @connections={{@connections}}
+          @nodeTypes={{@nodeTypes}}
+        />
+      </@form.Section>
     {{else if this.controlComponent}}
       <@form.Field
         @name={{@fieldName}}
@@ -350,37 +360,12 @@ export default class PropertyEngineField extends Component {
             {{/if}}
 
             {{#if this.supportsExpression}}
-              <DMenu
-                class="workflows-property-engine__mode-trigger
+              <DButton
+                @action={{this.toggleExpressionMode}}
+                @icon="code"
+                class="btn-transparent btn-small workflows-property-engine__mode-trigger
                   {{if this.expressionMode '--active'}}"
-                @triggerClass="btn-transparent btn-small"
-                @inline={{true}}
-                @modalForwardRecipient={{true}}
-              >
-                <:trigger>
-                  {{icon "shuffle"}}
-                </:trigger>
-                <:content as |args|>
-                  <DropdownMenu as |dropdown|>
-                    <dropdown.item>
-                      <DButton
-                        class="btn-transparent"
-                        @action={{fn this.selectMode "fixed" args.close}}
-                        @translatedLabel="Fixed"
-                        @icon={{unless this.expressionMode "check"}}
-                      />
-                    </dropdown.item>
-                    <dropdown.item>
-                      <DButton
-                        class="btn-transparent"
-                        @action={{fn this.selectMode "expression" args.close}}
-                        @translatedLabel="Expression"
-                        @icon={{if this.expressionMode "check"}}
-                      />
-                    </dropdown.item>
-                  </DropdownMenu>
-                </:content>
-              </DMenu>
+              />
             {{/if}}
           </div>
         </field.Control>

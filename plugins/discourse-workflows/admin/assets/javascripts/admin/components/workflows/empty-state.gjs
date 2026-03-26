@@ -2,7 +2,9 @@ import DButton from "discourse/components/d-button";
 
 <template>
   <div class="workflows-empty-state">
-    <span class="workflows-empty-state__icon">👋</span>
+    {{#if @emoji}}
+      <span class="workflows-empty-state__icon">{{@emoji}}</span>
+    {{/if}}
     <h2 class="workflows-empty-state__title">{{@title}}</h2>
     <p class="workflows-empty-state__description">{{@description}}</p>
     {{#if @onAction}}

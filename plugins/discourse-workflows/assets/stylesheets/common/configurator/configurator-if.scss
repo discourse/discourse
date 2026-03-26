@@ -1,14 +1,20 @@
 .workflows-configurator-if {
-  .form-kit__container {
-    margin-bottom: 0;
-  }
-
-  .form-kit__control-custom {
-    margin-top: 0;
-  }
-
   &__row {
-    margin-bottom: var(--space-3);
+    display: flex;
+    align-items: start;
+  }
+
+  &__delete {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: var(--space-1);
+  }
+
+  &__fields {
+    flex: 1;
+    min-width: 0;
+    gap: 0;
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-border-radius);
     background: var(--secondary);
@@ -19,60 +25,46 @@
       box-shadow: 0 0 0 1px var(--tertiary);
     }
 
-    select,
+    .form-kit__container {
+      margin-bottom: 0;
+    }
+
+    .form-kit__control-custom,
+    .form-kit__control-select,
+    .form-kit__control-input-wrapper {
+      margin-top: 0;
+    }
+
+    .d-select,
     input,
     .workflows-variable-input {
       border: 0;
       border-radius: 0;
       margin: 0;
       box-shadow: none;
+      width: 100%;
+    }
+
+    input,
+    .workflows-variable-input {
       background: transparent;
+    }
 
-      &:focus {
-        outline: none;
-        box-shadow: none;
-      }
+    .form-kit__control-input,
+    .d-select {
+      border: 0 !important;
+      outline: none !important;
+      box-shadow: none !important;
     }
   }
 
-  &__top {
-    display: flex;
-    align-items: stretch;
-    border-bottom: 1px solid var(--primary-low-mid);
-  }
-
-  &__bottom {
-    display: flex;
-    align-items: stretch;
-  }
-
-  &__left {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__operator {
-    display: flex;
-    align-items: center;
-    border-left: 1px solid var(--primary-low-mid);
-    padding-right: var(--space-2);
-
-    select {
-      width: auto;
-      min-width: 120px;
-      height: 100%;
+  &__fields {
+    > * + * {
+      border-top: 1px solid var(--primary-low-mid);
     }
-  }
 
-  &__right {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__delete {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    border-left: 1px solid var(--primary-low-mid);
+    > .form-kit__object {
+      gap: 0;
+    }
   }
 }

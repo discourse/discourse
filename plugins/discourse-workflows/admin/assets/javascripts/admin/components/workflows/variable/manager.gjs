@@ -188,6 +188,7 @@ export default class VariablesManager extends Component {
           </LoadMore>
         {{else}}
           <EmptyState
+            @emoji="👋"
             @title={{i18n
               "discourse_workflows.variables.empty_title"
               username=this.currentUser.username
