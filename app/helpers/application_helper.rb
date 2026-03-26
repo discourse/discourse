@@ -707,6 +707,38 @@ module ApplicationHelper
     DiscoursePluginRegistry.build_html(name, controller, **kwargs) || ""
   end
 
+  def crawler_topic_container_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_container_schema,
+        { itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting" },
+        topic,
+      ),
+    )
+  end
+
+  def crawler_topic_main_entity_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, {}, topic),
+    ).presence
+  end
+
+  def crawler_post_schema(post, topic)
+    default = {
+      itemprop: "comment",
+      itemscope: true,
+      itemtype: "http://schema.org/Comment",
+    } unless post.is_first_post?
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_post_schema,
+        default || {},
+        post,
+        topic,
+      ),
+    )
+  end
+
   # If there is plugin HTML return that, otherwise yield to the template
   def replace_plugin_html(name)
     if (html = build_plugin_html(name)).present?

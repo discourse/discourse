@@ -1269,4 +1269,31 @@ RSpec.describe ApplicationHelper do
       end
     end
   end
+
+  describe "#crawler_topic_container_schema" do
+    fab!(:topic)
+
+    it "returns DiscussionForumPosting schema attributes by default" do
+      result = helper.crawler_topic_container_schema(topic)
+      expect(result).to include("itemscope")
+      expect(result).to include('itemtype="http://schema.org/DiscussionForumPosting"')
+    end
+  end
+
+  describe "#crawler_post_schema" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "returns empty string for the first post" do
+      expect(helper.crawler_post_schema(first_post, topic)).to eq("")
+    end
+
+    it "returns Comment schema attributes for reply posts" do
+      result = helper.crawler_post_schema(reply, topic)
+      expect(result).to include('itemprop="comment"')
+      expect(result).to include("itemscope")
+      expect(result).to include('itemtype="http://schema.org/Comment"')
+    end
+  end
 end
