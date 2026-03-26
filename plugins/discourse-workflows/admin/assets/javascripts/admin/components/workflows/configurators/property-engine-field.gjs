@@ -339,6 +339,7 @@ export default class PropertyEngineField extends Component {
               <ExpressionInput
                 @field={{field}}
                 @placeholder={{this.placeholder}}
+                @autofocus={{true}}
               />
             {{else if (eq this.control "select")}}
               <FKControlSelect @field={{field}} @includeNone={{false}} as |c|>

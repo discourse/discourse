@@ -20,6 +20,7 @@ export default class ExpressionInput extends Component {
     <VariableInput
       @value={{this.displayValue}}
       @onChange={{this.handleChange}}
+      @autofocus={{@autofocus}}
     />
   </template>
 }

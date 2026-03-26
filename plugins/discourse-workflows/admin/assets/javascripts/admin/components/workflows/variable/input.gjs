@@ -12,6 +12,10 @@ export default class VariableInput extends Component {
   setupEditor(element) {
     this.editorElement = element;
     this.#renderContent(this.args.value || "");
+
+    if (this.args.autofocus) {
+      this.#focusAtEnd();
+    }
   }
 
   @action
