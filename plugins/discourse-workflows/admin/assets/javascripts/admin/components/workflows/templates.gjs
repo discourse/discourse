@@ -3,11 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { loadNodeTypes } from "../../lib/workflows/node-types";
 import { getNodeIcons } from "../../lib/workflows/node-utils";
 import StickyNote from "../../models/sticky-note";
 
@@ -34,13 +36,20 @@ function iconStyle(nodeType) {
   const color = key
     ? `var(--workflow-node-color-${key})`
     : "var(--primary-medium)";
-  return htmlSafe(`color: ${color}`);
+  return trustHTML(`color: ${color}`);
 }
 
 export default class WorkflowsTemplates extends Component {
   @service router;
 
   @tracked creatingTemplateId = null;
+  @tracked nodeTypesLoaded = false;
+
+  @action
+  async ensureNodeTypes() {
+    await loadNodeTypes();
+    this.nodeTypesLoaded = true;
+  }
 
   @action
   async useTemplate(template) {
@@ -105,7 +114,7 @@ export default class WorkflowsTemplates extends Component {
   }
 
   <template>
-    <div class="workflows-templates">
+    <div class="workflows-templates" {{didInsert this.ensureNodeTypes}}>
       {{#each @templates as |tmpl|}}
         <button
           type="button"
@@ -116,21 +125,23 @@ export default class WorkflowsTemplates extends Component {
           <span class="workflows-templates__description">
             {{tmpl.description}}
           </span>
-          <div class="workflows-templates__icons">
-            {{#each (visibleNodeTypes tmpl.node_types) as |nodeType|}}
-              <span
-                class="workflows-templates__icon"
-                style={{iconStyle nodeType}}
-              >
-                {{icon (iconFor nodeType)}}
-              </span>
-            {{/each}}
-            {{#if (hasOverflow tmpl.node_types)}}
-              <span class="workflows-templates__icon --overflow">
-                +{{overflowCount tmpl.node_types}}
-              </span>
-            {{/if}}
-          </div>
+          {{#if this.nodeTypesLoaded}}
+            <div class="workflows-templates__icons">
+              {{#each (visibleNodeTypes tmpl.node_types) as |nodeType|}}
+                <span
+                  class="workflows-templates__icon"
+                  style={{iconStyle nodeType}}
+                >
+                  {{icon (iconFor nodeType)}}
+                </span>
+              {{/each}}
+              {{#if (hasOverflow tmpl.node_types)}}
+                <span class="workflows-templates__icon --overflow">
+                  +{{overflowCount tmpl.node_types}}
+                </span>
+              {{/if}}
+            </div>
+          {{/if}}
         </button>
       {{/each}}
     </div>
