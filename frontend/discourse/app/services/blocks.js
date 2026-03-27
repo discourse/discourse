@@ -1,6 +1,7 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
+/** @type {import("discourse/blocks/block-outlet.gjs")} */
 import { _hasLayout } from "discourse/blocks/block-outlet";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
