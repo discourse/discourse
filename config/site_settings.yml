@@ -4294,6 +4294,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/399432"
   lazy_load_categories_groups:
     default: ""
     type: group_list
