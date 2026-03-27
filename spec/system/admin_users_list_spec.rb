@@ -62,10 +62,10 @@ describe "Admin Users Page" do
       expect(confirmation_modal).to be_open
       expect(confirmation_modal).to have_confirm_button_disabled
 
-      confirmation_modal.fill_in_confirmation_phase(user_count: 3)
+      confirmation_modal.fill_in_confirmation_phrase(user_count: 3)
       expect(confirmation_modal).to have_confirm_button_disabled
 
-      confirmation_modal.fill_in_confirmation_phase(user_count: 2)
+      confirmation_modal.fill_in_confirmation_phrase(user_count: 2)
       expect(confirmation_modal).to have_confirm_button_enabled
 
       confirmation_modal.confirm
@@ -86,6 +86,21 @@ describe "Admin Users Page" do
 
       expect(admin_users_page).to have_no_users([user_1.id, user_2.id])
       expect(User.where(id: [user_1.id, user_2.id]).count).to eq(0)
+    end
+
+    it "accepts the confirmation phrase case-insensitively" do
+      admin_users_page.visit
+      admin_users_page.bulk_select_button.click
+
+      admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
+      admin_users_page.bulk_actions_dropdown.expand
+      admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
+
+      expect(confirmation_modal).to be_open
+      expect(confirmation_modal).to have_confirm_button_disabled
+
+      confirmation_modal.fill_in_confirmation_phrase(user_count: 1, upcase: true)
+      expect(confirmation_modal).to have_confirm_button_enabled
     end
 
     xit "remembers selected users when the user list refreshes due to search" do
@@ -109,7 +124,7 @@ describe "Admin Users Page" do
 
       expect(confirmation_modal).to be_open
 
-      confirmation_modal.fill_in_confirmation_phase(user_count: 2)
+      confirmation_modal.fill_in_confirmation_phrase(user_count: 2)
       confirmation_modal.confirm
 
       expect(confirmation_modal).to have_content("Starting bulk delete…")
@@ -136,7 +151,7 @@ describe "Admin Users Page" do
       admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
       admin_users_page.bulk_actions_dropdown.expand
       admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
-      confirmation_modal.fill_in_confirmation_phase(user_count: 1)
+      confirmation_modal.fill_in_confirmation_phrase(user_count: 1)
 
       user_1.update!(admin: true)
 
@@ -157,7 +172,7 @@ describe "Admin Users Page" do
       admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
       admin_users_page.bulk_actions_dropdown.expand
       admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
-      confirmation_modal.fill_in_confirmation_phase(user_count: 1)
+      confirmation_modal.fill_in_confirmation_phrase(user_count: 1)
       confirmation_modal.block_ip_and_email_checkbox.click
       confirmation_modal.confirm
 

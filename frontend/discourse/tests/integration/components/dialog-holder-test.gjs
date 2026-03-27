@@ -306,6 +306,8 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert.dom(".btn-danger").isDisabled();
     await fillIn("#confirm-phrase", "Disable");
     assert.dom(".btn-danger").isEnabled();
+    await fillIn("#confirm-phrase", "disable");
+    assert.dom(".btn-danger").isEnabled();
   });
 
   test("delete confirm with a component and model", async function (assert) {

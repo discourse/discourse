@@ -101,7 +101,8 @@ export default class BulkUserDeleteConfirmation extends Component {
   @action
   onPromptInput(event) {
     this.confirmButtonDisabled =
-      event.target.value.toLowerCase() !== this.confirmDeletePhrase;
+      event.target.value.toLocaleLowerCase() !==
+      this.confirmDeletePhrase.toLocaleLowerCase();
   }
 
   @action
