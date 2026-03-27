@@ -41,3 +41,11 @@ plugins:
     depends_on:
       - "topic_voting_enable_vote_limits"
     depends_behavior: "hidden"
+  enable_ideas_category_type_setup:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,admin"
+      learn_more_url: "https://meta.discourse.org/t/-/399365"
