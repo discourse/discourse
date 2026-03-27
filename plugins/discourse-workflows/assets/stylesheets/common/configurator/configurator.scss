@@ -110,17 +110,6 @@
     right: 0;
     padding: var(--space-half) var(--space-1);
     font-family: monospace;
-
-    .workflows-property-engine__control-wrapper:has(
-        .combo-box,
-        .d-select,
-        .icon-picker,
-        .category-chooser,
-        .user-chooser
-      )
-      > & {
-      right: 30px;
-    }
     z-index: 2;
   }
 
