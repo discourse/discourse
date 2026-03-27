@@ -23,10 +23,12 @@ export default class AiMcpServerEditorForm extends Component {
   @tracked testResult = null;
   @tracked formData = {};
   @tracked showOauthDetails = false;
+  @tracked showOauthAdvancedOptions = false;
 
   constructor() {
     super(...arguments);
     this.formData = this.buildFormData();
+    this.showOauthAdvancedOptions = this.hasOauthAdvancedOptions(this.formData);
   }
 
   buildFormData() {
@@ -47,9 +49,75 @@ export default class AiMcpServerEditorForm extends Component {
       oauth_client_secret_ai_secret_id:
         model.oauth_client_secret_ai_secret_id || null,
       oauth_scopes: model.oauth_scopes || "",
+      oauth_authorization_params: this.formatOauthParams(
+        model.oauth_authorization_params
+      ),
+      oauth_token_params: this.formatOauthParams(model.oauth_token_params),
+      oauth_require_refresh_token: model.oauth_require_refresh_token ?? false,
       enabled: model.enabled ?? true,
       timeout_seconds: model.timeout_seconds || 30,
     };
+  }
+
+  formatOauthParams(value) {
+    if (!value || Object.keys(value).length === 0) {
+      return "";
+    }
+
+    return JSON.stringify(value, null, 2);
+  }
+
+  hasOauthAdvancedOptions(data) {
+    return (
+      !!data.oauth_authorization_params ||
+      !!data.oauth_token_params ||
+      !!data.oauth_require_refresh_token
+    );
+  }
+
+  parseOauthParams(value, fieldKey) {
+    const trimmedValue = value?.trim();
+
+    if (!trimmedValue) {
+      return {};
+    }
+
+    let parsedValue;
+
+    try {
+      parsedValue = JSON.parse(trimmedValue);
+    } catch {
+      throw new Error(
+        i18n("discourse_ai.mcp_servers.oauth_json_object_required", {
+          field: i18n(fieldKey),
+        })
+      );
+    }
+
+    if (
+      !parsedValue ||
+      Array.isArray(parsedValue) ||
+      typeof parsedValue !== "object"
+    ) {
+      throw new Error(
+        i18n("discourse_ai.mcp_servers.oauth_json_object_required", {
+          field: i18n(fieldKey),
+        })
+      );
+    }
+
+    return parsedValue;
+  }
+
+  handleError(error) {
+    if (error?.jqXHR || error?.responseJSON) {
+      popupAjaxError(error);
+      return;
+    }
+
+    this.dialog.alert({
+      message: error?.message || String(error),
+    });
   }
 
   get authTypes() {
@@ -134,8 +202,21 @@ export default class AiMcpServerEditorForm extends Component {
       payload.oauth_client_id = null;
       payload.oauth_client_secret_ai_secret_id = null;
       payload.oauth_scopes = null;
+      payload.oauth_authorization_params = {};
+      payload.oauth_token_params = {};
+      payload.oauth_require_refresh_token = false;
     } else {
       payload.oauth_client_registration ||= "client_metadata_document";
+      payload.oauth_authorization_params = this.parseOauthParams(
+        payload.oauth_authorization_params,
+        "discourse_ai.mcp_servers.oauth_authorization_params"
+      );
+      payload.oauth_token_params = this.parseOauthParams(
+        payload.oauth_token_params,
+        "discourse_ai.mcp_servers.oauth_token_params"
+      );
+      payload.oauth_require_refresh_token =
+        !!payload.oauth_require_refresh_token;
 
       if (payload.oauth_client_registration !== "manual") {
         payload.oauth_client_id = null;
@@ -177,7 +258,7 @@ export default class AiMcpServerEditorForm extends Component {
     try {
       await this.persist(data);
     } catch (e) {
-      popupAjaxError(e);
+      this.handleError(e);
     } finally {
       later(() => {
         this.isSaving = false;
@@ -195,7 +276,7 @@ export default class AiMcpServerEditorForm extends Component {
         this.normalizeData(data)
       );
     } catch (e) {
-      popupAjaxError(e);
+      this.handleError(e);
     } finally {
       this.isTesting = false;
     }
@@ -209,7 +290,7 @@ export default class AiMcpServerEditorForm extends Component {
       await this.persist(data, { transition: false, toast: false });
       window.location.assign(this.args.model.oauthStartPath);
     } catch (e) {
-      popupAjaxError(e);
+      this.handleError(e);
       this.isConnecting = false;
     }
   }
@@ -231,6 +312,11 @@ export default class AiMcpServerEditorForm extends Component {
   @action
   toggleOauthDetails() {
     this.showOauthDetails = !this.showOauthDetails;
+  }
+
+  @action
+  toggleOauthAdvancedOptions() {
+    this.showOauthAdvancedOptions = !this.showOauthAdvancedOptions;
   }
 
   @action
@@ -398,6 +484,69 @@ export default class AiMcpServerEditorForm extends Component {
         >
           <field.Control />
         </form.Field>
+
+        <form.Button
+          @action={{this.toggleOauthAdvancedOptions}}
+          @label={{if
+            this.showOauthAdvancedOptions
+            "discourse_ai.mcp_servers.oauth_hide_advanced_options"
+            "discourse_ai.mcp_servers.oauth_show_advanced_options"
+          }}
+          class="btn-flat btn-small ai-mcp-server-editor__oauth-details-toggle"
+        />
+
+        {{#if this.showOauthAdvancedOptions}}
+          <form.Field
+            @name="oauth_authorization_params"
+            @title={{i18n
+              "discourse_ai.mcp_servers.oauth_authorization_params"
+            }}
+            @tooltip={{i18n
+              "discourse_ai.mcp_servers.oauth_authorization_params_help"
+            }}
+            @format="full"
+            @type="textarea"
+            as |field|
+          >
+            <field.Control
+              @height={{100}}
+              placeholder={{i18n
+                "discourse_ai.mcp_servers.oauth_authorization_params_placeholder"
+              }}
+            />
+          </form.Field>
+
+          <form.Field
+            @name="oauth_token_params"
+            @title={{i18n "discourse_ai.mcp_servers.oauth_token_params"}}
+            @tooltip={{i18n "discourse_ai.mcp_servers.oauth_token_params_help"}}
+            @format="full"
+            @type="textarea"
+            as |field|
+          >
+            <field.Control
+              @height={{100}}
+              placeholder={{i18n
+                "discourse_ai.mcp_servers.oauth_token_params_placeholder"
+              }}
+            />
+          </form.Field>
+
+          <form.Field
+            @name="oauth_require_refresh_token"
+            @title={{i18n
+              "discourse_ai.mcp_servers.oauth_require_refresh_token"
+            }}
+            @tooltip={{i18n
+              "discourse_ai.mcp_servers.oauth_require_refresh_token_help"
+            }}
+            @format="full"
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        {{/if}}
 
         {{#unless @model.isNew}}
           <div class="ai-mcp-server-editor__oauth-state">

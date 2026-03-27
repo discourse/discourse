@@ -12,6 +12,9 @@ class AiMcpServer < ActiveRecord::Base
     oauth_client_id
     oauth_client_secret_ai_secret_id
     oauth_scopes
+    oauth_authorization_params
+    oauth_token_params
+    oauth_require_refresh_token
   ].freeze
 
   belongs_to :ai_secret, optional: true
@@ -49,6 +52,7 @@ class AiMcpServer < ActiveRecord::Base
   validate :validate_ai_secret_id_exists
   validate :validate_oauth_client_secret_id_exists
   validate :validate_oauth_configuration
+  validate :validate_oauth_advanced_configuration
   validate :validate_public_https_url
 
   after_commit :flush_tool_cache
@@ -332,6 +336,15 @@ class AiMcpServer < ActiveRecord::Base
     self.auth_type = auth_type.presence || (ai_secret_id.present? ? "header_secret" : "none")
     self.auth_header = auth_header.presence || "Authorization"
     self.oauth_client_registration ||= "client_metadata_document" if oauth?
+    if oauth?
+      self.oauth_authorization_params = normalize_oauth_params(oauth_authorization_params)
+      self.oauth_token_params = normalize_oauth_params(oauth_token_params)
+      self.oauth_require_refresh_token = !!oauth_require_refresh_token
+    else
+      self.oauth_authorization_params = {}
+      self.oauth_token_params = {}
+      self.oauth_require_refresh_token = false
+    end
 
     if !oauth?
       self.oauth_client_registration =
@@ -363,6 +376,21 @@ class AiMcpServer < ActiveRecord::Base
 
     if oauth_client_registration == "manual" && oauth_client_id.blank?
       errors.add(:oauth_client_id, I18n.t("discourse_ai.mcp_servers.oauth_client_id_required"))
+    end
+  end
+
+  def validate_oauth_advanced_configuration
+    return unless oauth?
+
+    if !oauth_authorization_params.is_a?(Hash)
+      errors.add(
+        :oauth_authorization_params,
+        I18n.t("discourse_ai.mcp_servers.oauth_authorization_params_invalid"),
+      )
+    end
+
+    if !oauth_token_params.is_a?(Hash)
+      errors.add(:oauth_token_params, I18n.t("discourse_ai.mcp_servers.oauth_token_params_invalid"))
     end
   end
 
@@ -404,6 +432,14 @@ class AiMcpServer < ActiveRecord::Base
   def clear_oauth_tokens
     oauth_token_store.clear!
   end
+
+  def normalize_oauth_params(value)
+    return {} if value.blank?
+
+    value.is_a?(Hash) ? value : value.to_h
+  rescue NoMethodError, TypeError
+    value
+  end
 end
 
 # == Schema Information
@@ -423,18 +459,21 @@ end
 #  name                             :string(100)      not null
 #  oauth_access_token_expires_at    :datetime
 #  oauth_authorization_endpoint     :string(1000)
+#  oauth_authorization_params       :jsonb            not null
 #  oauth_client_registration        :string(50)       default("client_metadata_document")
 #  oauth_granted_scopes             :string(2000)
 #  oauth_issuer                     :string(1000)
 #  oauth_last_authorized_at         :datetime
 #  oauth_last_error                 :string(1000)
 #  oauth_last_refreshed_at          :datetime
+#  oauth_require_refresh_token      :boolean          default(FALSE), not null
 #  oauth_registration_endpoint      :string(1000)
 #  oauth_resource_metadata_url      :string(1000)
 #  oauth_revocation_endpoint        :string(1000)
 #  oauth_scopes                     :string(2000)
 #  oauth_status                     :string(50)       default("disconnected"), not null
 #  oauth_token_endpoint             :string(1000)
+#  oauth_token_params               :jsonb            not null
 #  oauth_token_type                 :string(100)
 #  protocol_version                 :string(100)
 #  server_capabilities              :jsonb            not null
