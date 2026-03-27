@@ -54,7 +54,7 @@ const WrappedControl = <template>
     {{#if @supportsExpression}}
       <DButton
         @action={{@toggleExpressionMode}}
-        @icon={{if @expressionMode "code" "a"}}
+        @icon={{if @expressionMode "code" "paragraph"}}
         class="btn-default btn-small workflows-property-engine__mode-trigger
           {{if @expressionMode '--active'}}"
         @label={{if
