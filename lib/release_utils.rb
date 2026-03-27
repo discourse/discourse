@@ -131,7 +131,7 @@ module ReleaseUtils
       confirm_or_abort "Ready to merge #{branch}?"
 
       if test_mode?
-        git "push", "origin", "#{branch}:#{base}"
+        git "push", "origin", "HEAD:#{base}"
         break
       else
         if !gh("pr", "ready", branch) # remove draft status

@@ -262,7 +262,7 @@ namespace :release do
       puts ReleaseUtils.git("log", "origin/#{base}..HEAD")
 
       ReleaseUtils.confirm_or_abort "Check the log above. Ready to push this branch to the origin and create a PR?"
-      ReleaseUtils.git("push", "-f", "origin", branch)
+      ReleaseUtils.git("push", "-f", "origin", "HEAD:refs/heads/#{branch}")
 
       ReleaseUtils.make_pr(
         base: base,
