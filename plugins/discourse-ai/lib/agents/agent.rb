@@ -3,9 +3,21 @@
 module DiscourseAi
   module Agents
     class Agent
-      # reserved agent IDs for external plugins
-      # discourse-ai system agents use -1 to -499, external plugins use -500 and below
-      RESERVED_EXTERNAL_AGENT_IDS = { data_explorer_query_generator: -501 }
+      # reserved IDs for external plugins
+      # add your plugin here to avoid collisions
+      #
+      # agent IDs: discourse-ai system agents use -1 to -1000, external plugins use -1001 and below
+      # module IDs: discourse-ai built-in modules use 1 to 1000, external plugins use 1001 and above
+      RESERVED_EXTERNAL_IDS = {
+        data_explorer: {
+          module_id: 1001,
+          features: {
+            query_generation: {
+              agent_id: -1001,
+            },
+          },
+        },
+      }
 
       class << self
         def default_enabled

@@ -52,15 +52,22 @@ module DiscourseAi
           module_name:,
           features:,
           enabled_by_setting: nil,
-          extra_check: nil
+          extra_check: nil,
+          visible: true
         )
-          registered_modules[key] = {
-            module_id: module_id,
-            module_name: module_name,
-            features: features,
-            enabled_by_setting: enabled_by_setting,
-            extra_check: extra_check,
-          }
+          existing = registered_modules[key]
+          if existing
+            existing[:features].concat(Array(features))
+          else
+            registered_modules[key] = {
+              module_id: module_id,
+              module_name: module_name,
+              features: Array(features),
+              enabled_by_setting: enabled_by_setting,
+              extra_check: extra_check,
+              visible:,
+            }
+          end
         end
 
         def all
@@ -139,15 +146,14 @@ module DiscourseAi
             )
           end
 
-          registered_modules.each_value do |rm|
-            resolved_features =
-              rm[:features].respond_to?(:call) ? rm[:features].call : rm[:features]
+          registered_modules.each_value do |mod|
             base_modules << new(
-              rm[:module_id],
-              rm[:module_name],
-              enabled_by_setting: rm[:enabled_by_setting],
-              features: Array(resolved_features),
-              extra_check: rm[:extra_check],
+              mod[:module_id],
+              mod[:module_name],
+              enabled_by_setting: mod[:enabled_by_setting],
+              features: mod[:features],
+              extra_check: mod[:extra_check],
+              visible: mod.fetch(:visible, true),
             )
           end
 
@@ -170,18 +176,30 @@ module DiscourseAi
         end
       end
 
-      def initialize(id, name, enabled_by_setting: nil, features: [], extra_check: nil)
+      def initialize(
+        id,
+        name,
+        enabled_by_setting: nil,
+        features: [],
+        extra_check: nil,
+        visible: true
+      )
         @id = id
         @name = name
         @enabled_by_setting = enabled_by_setting
         @features = features
         @extra_check = extra_check
+        @visible = visible
       end
 
       attr_reader :id, :name, :enabled_by_setting, :features
 
+      def visible?
+        @visible
+      end
+
       def enabled?
-        return @extra_check.call if enabled_by_setting.blank? && @extra_check.present?
+        return @extra_check.present? ? @extra_check.call : true if enabled_by_setting.blank?
 
         enabled_setting = SiteSetting.get(enabled_by_setting)
 

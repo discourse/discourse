@@ -201,19 +201,11 @@ after_initialize do
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
 
-    register_ai_tool(DiscourseDataExplorer::Tools::ValidateSql)
-    register_ai_tool(DiscourseDataExplorer::Tools::RunSql)
-
-    agent_id =
-      DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_AGENT_IDS[:data_explorer_query_generator]
-
-    register_ai_agent(id: agent_id, klass: DiscourseDataExplorer::AiQueryGenerator)
-
-    register_ai_module(
-      name: "data_explorer",
-      id: 100,
-      enabled_by_setting: "data_explorer_enabled",
-      features: [{ name: "query_generation", agent_id: agent_id }],
+    register_ai_feature(
+      module_name: :data_explorer,
+      feature: :query_generation,
+      klass: DiscourseDataExplorer::AiQueryGenerator,
+      enabled_by_setting: "data_explorer_ai_queries_enabled",
     )
   end
 end

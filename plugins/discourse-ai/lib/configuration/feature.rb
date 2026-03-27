@@ -321,9 +321,8 @@ module DiscourseAi
             ai_automation_triage_scripts,
           ].flatten
 
-          DiscourseAi::Configuration::Module.registered_modules.each_value do |rm|
-            resolved = rm[:features].respond_to?(:call) ? rm[:features].call : rm[:features]
-            base.concat(Array(resolved))
+          DiscourseAi::Configuration::Module.registered_modules.each_value do |mod|
+            base.concat(mod[:features])
           end
 
           base

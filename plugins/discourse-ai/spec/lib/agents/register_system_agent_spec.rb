@@ -33,11 +33,11 @@ describe DiscourseAi::Agents::Agent do
     end
   end
 
-  describe "RESERVED_EXTERNAL_AGENT_IDS" do
-    it "includes data_explorer_query_generator" do
-      expect(described_class::RESERVED_EXTERNAL_AGENT_IDS[:data_explorer_query_generator]).to eq(
-        -501,
-      )
+  describe "RESERVED_EXTERNAL_IDS" do
+    it "includes data_explorer with module and feature IDs" do
+      de = described_class::RESERVED_EXTERNAL_IDS[:data_explorer]
+      expect(de[:module_id]).to eq(1001)
+      expect(de.dig(:features, :query_generation, :agent_id)).to eq(-1001)
     end
   end
 end

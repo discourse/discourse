@@ -1,6 +1,13 @@
 en:
   site_settings:
     data_explorer_enabled: "Enable data explorer"
+    data_explorer_ai_queries_enabled: "Enable AI query generation in Data Explorer"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "Data Explorer Query Generator"
+          description: "Generates SQL queries for Data Explorer from natural language"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

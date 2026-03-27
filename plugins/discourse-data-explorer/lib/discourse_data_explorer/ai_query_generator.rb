@@ -2,14 +2,6 @@
 
 module DiscourseDataExplorer
   class AiQueryGenerator < DiscourseAi::Agents::Agent
-    def self.name
-      "Data Explorer Query Generator"
-    end
-
-    def self.description
-      "Generates SQL queries for Data Explorer from natural language"
-    end
-
     def tools
       [
         DiscourseAi::Agents::Tools::DbSchema,

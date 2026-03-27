@@ -47,27 +47,40 @@ describe DiscourseAi::Configuration::Module do
       expect(test_mod.id).to eq(200)
     end
 
-    it "resolves callable features" do
-      feature =
+    it "merges features when registered multiple times" do
+      feature1 =
         DiscourseAi::Configuration::Feature.new(
-          "test_feature",
+          "feature_one",
           nil,
           200,
           "test_module",
           agent_ids_lookup: -> { [-999] },
+        )
+      feature2 =
+        DiscourseAi::Configuration::Feature.new(
+          "feature_two",
+          nil,
+          200,
+          "test_module",
+          agent_ids_lookup: -> { [-998] },
         )
 
       described_class.register(
         "test_module",
         module_id: 200,
         module_name: "test_module",
-        features: -> { [feature] },
+        features: [feature1],
+      )
+      described_class.register(
+        "test_module",
+        module_id: 200,
+        module_name: "test_module",
+        features: [feature2],
       )
 
       all_modules = described_class.all
       test_mod = all_modules.find { |m| m.name == "test_module" }
-      expect(test_mod.features.size).to eq(1)
-      expect(test_mod.features.first.name).to eq("test_feature")
+      expect(test_mod.features.map(&:name)).to contain_exactly("feature_one", "feature_two")
     end
   end
 end
