@@ -2381,9 +2381,23 @@ RSpec.describe Topic do
           TopicTimer.types[:publish_to_category],
           72,
           by_user: admin,
+          category_id: Fabricate(:category).id,
         )
 
       expect(topic_timer.execute_at).to eq_time(3.days.from_now)
+    end
+
+    it "raises an error for publish_to_category when category_id is not provided" do
+      freeze_time
+      persisted_topic = Fabricate(:topic)
+
+      expect {
+        persisted_topic.set_or_create_timer(
+          TopicTimer.types[:publish_to_category],
+          72,
+          by_user: admin,
+        )
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "does not update topic's topic status created_at it was already set to close" do

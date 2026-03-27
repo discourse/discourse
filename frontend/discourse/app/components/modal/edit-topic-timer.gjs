@@ -145,7 +145,7 @@ export default class EditTopicTimer extends Component {
           this.args.closeModal();
         } else {
           const topicTimer = this.createDefaultTimer();
-          this.topicTime = topicTimer;
+          this.topicTimer = topicTimer;
           this.args.model.setTopicTimer(topicTimer);
           this.onChangeInput(null, null);
         }
@@ -210,6 +210,15 @@ export default class EditTopicTimer extends Component {
     }
 
     let statusType = this.topicTimer.status_type;
+
+    if (
+      statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE &&
+      !this.topicTimer.category_id
+    ) {
+      this.flash = i18n("topic.topic_status_update.category_required");
+      return;
+    }
+
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
     }

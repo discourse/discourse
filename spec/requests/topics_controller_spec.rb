@@ -5847,6 +5847,32 @@ RSpec.describe TopicsController do
         end
       end
 
+      describe "publishing topic to category without category_id" do
+        it "should return an error when setting a timer" do
+          post "/t/#{topic.id}/timer.json", params: { time: 24, status_type: "publish_to_category" }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "should allow removing a timer" do
+          topic.set_or_create_timer(
+            TopicTimer.types[:publish_to_category],
+            24,
+            by_user: admin,
+            category_id: topic.category_id,
+          )
+
+          post "/t/#{topic.id}/timer.json",
+               params: {
+                 time: nil,
+                 status_type: "publish_to_category",
+               }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.public_topic_timer).to eq(nil)
+        end
+      end
+
       describe "invalid status type" do
         it "should raise the right error" do
           post "/t/#{topic.id}/timer.json", params: { time: 10, status_type: "something" }

@@ -1666,7 +1666,7 @@ class Topic < ActiveRecord::Base
     time,
     by_user: nil,
     based_on_last_post: false,
-    category_id: SiteSetting.uncategorized_category_id,
+    category_id: nil,
     duration_minutes: nil,
     silent: nil
   )

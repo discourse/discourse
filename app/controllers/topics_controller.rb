@@ -626,7 +626,7 @@ class TopicsController < ApplicationController
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
 
-    if status_type == TopicTimer.types[:publish_to_category] && params[:category_id].present?
+    if status_type == TopicTimer.types[:publish_to_category] && params[:time].present?
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
