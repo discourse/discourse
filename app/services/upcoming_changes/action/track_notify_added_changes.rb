@@ -21,7 +21,7 @@ class UpcomingChanges::Action::TrackNotifyAddedChanges < Service::ActionBase
 
       # No point in notifying admins on brand new sites, the upcoming change system
       # is more about notifying admins of changes to established sites.
-      next if Migration::Helpers.new_site? && !Rails.env.development?
+      next if !UpcomingChanges.should_notify_admins?
 
       # We only want to notify admins once the change has reached a certain status,
       # which is the promotion status minus one (previous status).

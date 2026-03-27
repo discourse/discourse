@@ -333,4 +333,13 @@ module UpcomingChanges
         )&.upcoming_changes
       end
   end
+
+  # No point in notifying admins on brand new sites, the upcoming change system
+  # is more about notifying admins of changes to established sites.
+  #
+  # Of course we don't care about this in development, we need to test notifications,
+  # and we can stub this method in rspec.
+  def self.should_notify_admins?
+    Migration::Helpers.existing_site? || Rails.env.development?
+  end
 end

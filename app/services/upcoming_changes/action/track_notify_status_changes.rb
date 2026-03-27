@@ -118,6 +118,6 @@ class UpcomingChanges::Action::TrackNotifyStatusChanges < Service::ActionBase
     !UpcomingChangeEvent.exists?(
       upcoming_change_name: change_name,
       event_type: :admins_notified_available_change,
-    ) && (!Migration::Helpers.new_site? && !Rails.env.development?)
+    ) && UpcomingChanges.should_notify_admins?
   end
 end

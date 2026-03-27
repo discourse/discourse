@@ -11,6 +11,8 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
     let(:show_user_menu_avatars_status) { :beta }
 
     before do
+      # No upcoming change notifications are sent for new sites
+      UpcomingChanges.stubs(:should_notify_admins?).returns(true)
       SiteSetting.promote_upcoming_changes_on_status = :stable
       SiteSetting.stubs(:upcoming_change_site_settings).returns(
         %i[enable_upload_debug_mode show_user_menu_avatars],

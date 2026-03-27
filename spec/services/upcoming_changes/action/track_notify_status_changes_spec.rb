@@ -6,7 +6,7 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
 
   before do
     # No upcoming change notifications are sent for new sites
-    Migration::Helpers.stubs(:new_site?).returns(false)
+    UpcomingChanges.stubs(:should_notify_admins?).returns(true)
     mock_upcoming_change_metadata(
       {
         enable_upload_debug_mode: {
@@ -295,7 +295,7 @@ RSpec.describe UpcomingChanges::Action::TrackNotifyStatusChanges do
       end
 
       context "when the site is new (< 1 hour old)" do
-        before { Migration::Helpers.stubs(:new_site?).returns(true) }
+        before { UpcomingChanges.stubs(:should_notify_admins?).returns(false) }
 
         it "does not notify admins" do
           expect { result }.not_to change {
