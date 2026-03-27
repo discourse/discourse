@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { get } from "@ember/helper";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
@@ -78,6 +79,12 @@ export default class EditCategoryTypeSchemaFields extends Component {
     );
   }
 
+  get hasCustomFields() {
+    return this.schema.category_custom_fields?.some((entry) =>
+      this.shouldDisplayField(entry)
+    );
+  }
+
   get className() {
     let classes = [
       "edit-category-type-schema-fields",
@@ -85,6 +92,9 @@ export default class EditCategoryTypeSchemaFields extends Component {
     ];
     if (this.args.active) {
       classes.push("active");
+    }
+    if (!this.hasCustomFields) {
+      classes.push("--site-settings-only");
     }
     return classes.join(" ");
   }
@@ -100,19 +110,21 @@ export default class EditCategoryTypeSchemaFields extends Component {
 
   <template>
     <div class={{this.className}}>
-      <@form.Section>
-        <@form.Object @name="custom_fields" as |customFields|>
-          {{#each this.schema.category_custom_fields as |entry|}}
-            {{#if (this.shouldDisplayField entry)}}
-              <SchemaFormField
-                @category={{@category}}
-                @entry={{entry}}
-                @formObject={{customFields}}
-              />
-            {{/if}}
-          {{/each}}
-        </@form.Object>
-      </@form.Section>
+      {{#if this.hasCustomFields}}
+        <@form.Section>
+          <@form.Object @name="custom_fields" as |customFields|>
+            {{#each this.schema.category_custom_fields as |entry|}}
+              {{#if (this.shouldDisplayField entry)}}
+                <SchemaFormField
+                  @category={{@category}}
+                  @entry={{entry}}
+                  @formObject={{customFields}}
+                />
+              {{/if}}
+            {{/each}}
+          </@form.Object>
+        </@form.Section>
+      {{/if}}
 
       {{yield to="beforeSiteSettings"}}
 
@@ -120,13 +132,26 @@ export default class EditCategoryTypeSchemaFields extends Component {
         @title={{i18n "category.type_settings_schema.site_settings"}}
         @subtitle={{i18n "category.settings_apply_to_all_of_type_warning"}}
       >
-        <@form.Object @name="category_type_site_settings" as |siteSettings|>
+        <@form.Object
+          @name="category_type_site_settings"
+          as |siteSettings data|
+        >
           {{#each this.schema.site_settings as |entry|}}
-            <SchemaFormField
-              @category={{@category}}
-              @entry={{entry}}
-              @formObject={{siteSettings}}
-            />
+            {{#if entry.depends_on}}
+              {{#if (get data entry.depends_on)}}
+                <SchemaFormField
+                  @category={{@category}}
+                  @entry={{entry}}
+                  @formObject={{siteSettings}}
+                />
+              {{/if}}
+            {{else}}
+              <SchemaFormField
+                @category={{@category}}
+                @entry={{entry}}
+                @formObject={{siteSettings}}
+              />
+            {{/if}}
           {{/each}}
         </@form.Object>
       </@form.Emphasis>

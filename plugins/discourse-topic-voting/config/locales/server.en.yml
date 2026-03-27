@@ -1,5 +1,12 @@
 en:
+  category_types:
+    ideas:
+      name: "Ideas"
+      title: "ideas"
+      description: "Where members can submit ideas and vote on the ones they want most."
+
   site_settings:
+    enable_ideas_category_type_setup: "Enables the Ideas category type option during category creation setup. Note that 'enable simplified category creation' must be enabled for this to take effect."
     topic_voting_enabled: 'Allow users to vote on topics?'
     topic_voting_enable_vote_limits: 'Limit the number of votes per user based on trust level'
     topic_voting_tl0_vote_limit: 'How many active votes are TL0 users allowed?'
@@ -11,6 +18,25 @@ en:
     topic_voting_show_votes_on_profile: 'Allow users to see their votes in their activity feed?'
     topic_voting_alert_votes_left: 'Alert user when this many votes are left'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Show who voted"
+      show_votes_on_profile:
+        label: "Show votes on profile"
+      enable_vote_limits:
+        label: "Limit member votes"
+      tl0_vote_limit:
+        label: "TL0 vote limit"
+      tl1_vote_limit:
+        label: "TL1 vote limit"
+      tl2_vote_limit:
+        label: "TL2 vote limit"
+      tl3_vote_limit:
+        label: "TL3 vote limit"
+      tl4_vote_limit:
+        label: "TL4 vote limit"
+      alert_votes_left:
+        label: "Alert when votes remaining"
     votes_moved:
       one: "A vote has been moved."
       other: "%{count} votes have been moved."

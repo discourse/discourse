@@ -30,6 +30,7 @@ require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
   reloadable_patch do
+    register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
     CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
     Category.prepend(DiscourseTopicVoting::CategoryExtension)
     ListController.prepend(DiscourseTopicVoting::ListControllerExtension)

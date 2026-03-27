@@ -240,6 +240,91 @@ RSpec.describe Categories::Types::Base do
       schema = described_class.send(:resolved_configuration_schema)
       expect(schema).to be_a(Hash)
     end
+
+    it "uses custom labels from the labels hash when present" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_labels
+
+          def self.configuration_schema
+            { site_settings: { title: "My Forum", labels: { title: "Custom title label" } } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].first
+      expect(entry[:label]).to eq("Custom title label")
+    end
+
+    it "falls back to humanized_name when no label override exists" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_no_labels
+
+          def self.configuration_schema
+            { site_settings: { title: "My Forum" } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].first
+      expect(entry[:label]).to eq(SiteSetting.setting_metadata_hash(:title)[:humanized_name])
+    end
+
+    it "includes depends_on when site setting uses hash config" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_depends_on
+
+          def self.configuration_schema
+            {
+              site_settings: {
+                title: "My Forum",
+                site_description: {
+                  default: "A great forum",
+                  depends_on: :title,
+                },
+              },
+            }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      title_entry = schema[:site_settings].find { |e| e[:key] == "title" }
+      desc_entry = schema[:site_settings].find { |e| e[:key] == "site_description" }
+
+      expect(title_entry).not_to have_key(:depends_on)
+      expect(desc_entry[:depends_on]).to eq("title")
+      expect(desc_entry[:default]).to eq("A great forum")
+    end
+  end
+
+  describe ".configure_site_settings" do
+    it "extracts default from hash config values" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_hash_config
+
+          def self.configuration_schema
+            { site_settings: { title: { default: "Hash Default", depends_on: :some_toggle } } }
+          end
+        end
+
+      test_type.configure_site_settings(category, guardian: admin.guardian)
+      expect(SiteSetting.title).to eq("Hash Default")
+    end
+  end
+
+  describe ".validate_schema!" do
+    it "skips the labels key when validating site_settings" do
+      test_type =
+        Class.new(described_class) do
+          def self.configuration_schema
+            { site_settings: { title: "My Forum", labels: { title: "Custom label" } } }
+          end
+        end
+      expect { test_type.validate_schema! }.not_to raise_error
+    end
   end
 
   describe "category_type_site_setting_names with empty schema" do
