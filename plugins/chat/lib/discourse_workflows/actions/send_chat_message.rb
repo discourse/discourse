@@ -41,18 +41,20 @@ if defined?(DiscourseWorkflows)
           channel_id = config["channel_id"]
           message = config["message"]
 
-          result =
-            Chat::CreateMessage.call(
-              guardian: Discourse.system_user.guardian,
-              params: {
-                chat_channel_id: channel_id,
-                message: message,
-              },
-            )
-
-          raise "Failed to send chat message" if result.failure?
-
-          { "channel_id" => channel_id, "message" => message }
+          Chat::CreateMessage.call(
+            guardian: Discourse.system_user.guardian,
+            params: {
+              chat_channel_id: channel_id,
+              message: message,
+            },
+          ) do
+            on_success { { "channel_id" => channel_id, "message" => message } }
+            on_failed_contract do |contract|
+              raise "Invalid params: #{contract.errors.full_messages.join(", ")}"
+            end
+            on_model_not_found(:channel) { raise "Channel not found: #{channel_id}" }
+            on_failure { raise "Failed to send chat message" }
+          end
         end
       end
     end
