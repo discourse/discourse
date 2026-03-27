@@ -839,7 +839,8 @@ class Group < ActiveRecord::Base
     if group_user = self.group_users.find_by(user: user)
       group_user.update!(owner: true) if !group_user.owner
     else
-      self.group_users.create!(user: user, owner: true)
+      GroupManager.new(self).add([user.id])
+      self.group_users.where(user: user).update_all(owner: true)
     end
   end
 
