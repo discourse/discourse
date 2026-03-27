@@ -44,11 +44,11 @@ class GroupActionLogger
     )
   end
 
-  def bulk_log_add_user_to_group(target_user_ids, subject = nil)
+  def bulk_log_add_users_to_group(target_user_ids, subject = nil)
     bulk_log(target_user_ids, :add_user_to_group, subject)
   end
 
-  def bulk_log_remove_user_from_group(target_user_ids, subject = nil)
+  def bulk_log_remove_users_from_group(target_user_ids, subject = nil)
     bulk_log(target_user_ids, :remove_user_from_group, subject)
   end
 
