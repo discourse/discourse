@@ -206,6 +206,7 @@ en:
       parameter_field:
         fixed: "Fixed"
         expression: "Expression"
+        plain_text: "Plain text"
       property_engine:
         add_item: "Add item"
         remove_item: "Remove item"

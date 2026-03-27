@@ -105,9 +105,10 @@
 
   &__mode-trigger {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: calc(-1 * var(--space-1));
+    transform: translateY(-100%);
     right: 0;
+    padding: var(--space-half) var(--space-1);
 
     .workflows-property-engine__control-wrapper:has(
         .combo-box,

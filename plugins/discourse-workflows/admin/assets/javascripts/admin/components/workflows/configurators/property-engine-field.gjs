@@ -53,9 +53,14 @@ const WrappedControl = <template>
     {{#if @supportsExpression}}
       <DButton
         @action={{@toggleExpressionMode}}
-        @icon="code"
-        class="btn-transparent btn-small workflows-property-engine__mode-trigger
+        @icon={{if @expressionMode "code" "discourse-text"}}
+        class="btn-default btn-small workflows-property-engine__mode-trigger
           {{if @expressionMode '--active'}}"
+        @translatedLabel={{if
+          @expressionMode
+          "discourse_worfklows.parameter_field.expression"
+          "discourse_worfklows.parameter_field.plain_text"
+        }}
       />
     {{/if}}
   </div>
