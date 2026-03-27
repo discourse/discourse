@@ -7,6 +7,7 @@ import WorkflowNode from "./workflow-node";
 export default class DiscourseWorkflowsWorkflow extends RestModel {
   @tracked name;
   @tracked enabled;
+  @tracked error_workflow_id;
   @tracked last_execution_status;
   @tracked nodes = [];
   @tracked connections = [];

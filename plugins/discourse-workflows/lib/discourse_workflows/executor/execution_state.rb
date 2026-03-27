@@ -11,11 +11,12 @@ module DiscourseWorkflows
                   :waiting_step,
                   :user
 
-      def initialize(workflow:, trigger_node:, trigger_data:, user: nil)
+      def initialize(workflow:, trigger_node:, trigger_data:, user: nil, execution_mode: :normal)
         @workflow = workflow
         @trigger_node = trigger_node
         @trigger_data = trigger_data
         @user = user
+        @execution_mode = execution_mode
         reset_runtime_state
       end
 
@@ -27,6 +28,7 @@ module DiscourseWorkflows
             status: :running,
             trigger_data: trigger_data,
             workflow_data: WorkflowSnapshot.snapshot(workflow),
+            execution_mode: @execution_mode,
             started_at: Time.current,
           )
 

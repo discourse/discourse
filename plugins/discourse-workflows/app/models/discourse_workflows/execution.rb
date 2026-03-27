@@ -12,6 +12,7 @@ module DiscourseWorkflows
              dependent: :destroy
 
     enum :status, { pending: 0, running: 1, success: 2, error: 3, waiting: 4 }
+    enum :execution_mode, { normal: 0, error_mode: 1 }
 
     scope :expired_waiting,
           -> do

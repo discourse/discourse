@@ -647,4 +647,133 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(execution).to be_nil
     end
   end
+
+  describe "error workflow triggering" do
+    before do
+      DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Error::V1)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::SetFields::V1)
+    end
+
+    def build_error_workflow
+      error_wf = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+
+      error_trigger =
+        Fabricate(
+          :discourse_workflows_node,
+          workflow: error_wf,
+          type: "trigger:error",
+          name: "Error Trigger",
+          position_index: 0,
+        )
+
+      error_action =
+        Fabricate(
+          :discourse_workflows_node,
+          workflow: error_wf,
+          type: "action:set_fields",
+          name: "Log Error",
+          position_index: 1,
+          configuration: {
+            "include_input" => true,
+            "mode" => "manual",
+            "fields" => [{ "key" => "handled", "value" => "true", "type" => "string" }],
+          },
+        )
+
+      Fabricate(
+        :discourse_workflows_connection,
+        workflow: error_wf,
+        source_node: error_trigger,
+        target_node: error_action,
+      )
+
+      error_wf
+    end
+
+    it "triggers the error workflow when a workflow fails" do
+      error_wf = build_error_workflow
+      trigger_node = build_workflow
+      trigger_node.workflow.update!(error_workflow_id: error_wf.id)
+
+      trigger_data = { topic_id: -999, tags: [] }
+      executor = described_class.new(trigger_node, trigger_data)
+      execution = executor.run
+
+      expect(execution.status).to eq("error")
+      expect(execution.execution_mode).to eq("normal")
+
+      error_execution = error_wf.executions.last
+      expect(error_execution).to be_present
+      expect(error_execution.status).to eq("success")
+      expect(error_execution.execution_mode).to eq("error_mode")
+      expect(error_execution.trigger_data["workflow_name"]).to eq(trigger_node.workflow.name)
+      expect(error_execution.trigger_data["error_message"]).to be_present
+    end
+
+    it "does not trigger error workflow for error-mode executions (infinite loop prevention)" do
+      error_wf = build_error_workflow
+      error_wf.update!(error_workflow_id: error_wf.id)
+
+      trigger_node = build_workflow
+      trigger_node.workflow.update!(error_workflow_id: error_wf.id)
+
+      trigger_data = { topic_id: -999, tags: [] }
+      executor = described_class.new(trigger_node, trigger_data)
+      executor.run
+
+      error_executions = error_wf.executions.where(execution_mode: :error_mode)
+      expect(error_executions.count).to eq(1)
+    end
+
+    it "does not trigger error workflow when none is configured" do
+      trigger_node = build_workflow
+      trigger_data = { topic_id: -999, tags: [] }
+
+      expect {
+        described_class.new(trigger_node, trigger_data).run
+      }.not_to change { DiscourseWorkflows::Execution.where(execution_mode: :error_mode).count }
+    end
+
+    it "does not trigger error workflow when it is disabled" do
+      error_wf = build_error_workflow
+      error_wf.update!(enabled: false)
+      trigger_node = build_workflow
+      trigger_node.workflow.update!(error_workflow_id: error_wf.id)
+
+      trigger_data = { topic_id: -999, tags: [] }
+      execution = described_class.new(trigger_node, trigger_data).run
+
+      expect(execution.status).to eq("error")
+      expect(error_wf.executions.count).to eq(0)
+    end
+
+    it "does not trigger error workflow when it has no error trigger node" do
+      error_wf = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      trigger_node = build_workflow
+      trigger_node.workflow.update!(error_workflow_id: error_wf.id)
+
+      trigger_data = { topic_id: -999, tags: [] }
+      execution = described_class.new(trigger_node, trigger_data).run
+
+      expect(execution.status).to eq("error")
+      expect(error_wf.executions.count).to eq(0)
+    end
+
+    it "includes execution context in error trigger data" do
+      error_wf = build_error_workflow
+      trigger_node = build_workflow
+      trigger_node.workflow.update!(error_workflow_id: error_wf.id)
+
+      trigger_data = { topic_id: -999, tags: [] }
+      described_class.new(trigger_node, trigger_data).run
+
+      error_execution = error_wf.executions.last
+      expect(error_execution.trigger_data).to include(
+        "execution_id" => be_a(Integer),
+        "workflow_id" => trigger_node.workflow.id,
+        "workflow_name" => trigger_node.workflow.name,
+        "error_message" => be_present,
+      )
+    end
+  end
 end

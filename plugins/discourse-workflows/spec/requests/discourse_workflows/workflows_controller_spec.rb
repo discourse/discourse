@@ -160,6 +160,37 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       )
     end
 
+    it "updates error_workflow_id" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+      error_wf = Fabricate(:discourse_workflows_workflow, created_by: admin)
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            name: workflow.name,
+            error_workflow_id: error_wf.id,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["workflow"]["error_workflow_id"]).to eq(error_wf.id)
+      expect(workflow.reload.error_workflow_id).to eq(error_wf.id)
+    end
+
+    it "clears error_workflow_id" do
+      error_wf = Fabricate(:discourse_workflows_workflow, created_by: admin)
+      workflow =
+        Fabricate(:discourse_workflows_workflow, created_by: admin, error_workflow_id: error_wf.id)
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            name: workflow.name,
+            error_workflow_id: nil,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["workflow"]["error_workflow_id"]).to be_nil
+      expect(workflow.reload.error_workflow_id).to be_nil
+    end
+
     it "returns 400 when name is missing" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
 

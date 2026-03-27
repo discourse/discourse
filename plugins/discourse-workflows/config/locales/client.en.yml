@@ -33,6 +33,9 @@ en:
         executions: "Executions"
         settings: "Settings"
       settings:
+        error_workflow: "Error workflow"
+        error_workflow_description: "When this workflow fails, automatically trigger the selected error workflow. Only workflows with an Error Trigger node will appear as options."
+        error_workflow_none: "None"
         danger_zone: "Danger zone"
         delete_description: "Permanently delete this workflow and all its executions. This action cannot be undone."
       node_types:
@@ -95,6 +98,7 @@ en:
         "action:form": "Form"
         "action:respond_to_webhook": "Respond to Webhook"
         "trigger:topic_admin_button": "Topic admin button"
+        "trigger:error": "Error trigger"
       node_descriptions:
         "trigger:topic_closed": "Fires when a topic is closed by a user or auto-close timer"
         "trigger:post_created": "Fires when a new post or reply is created"
@@ -123,6 +127,7 @@ en:
         "action:form": "Adds a page to a multi-step form"
         "action:respond_to_webhook": "Send a custom HTTP response to the webhook caller"
         "trigger:topic_admin_button": "Adds a button to the topic admin menu that triggers this workflow"
+        "trigger:error": "Fires when another workflow fails"
       topic_admin_button:
         label: "Button label"
         label_placeholder: "Run workflow"

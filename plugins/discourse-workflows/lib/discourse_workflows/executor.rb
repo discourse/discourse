@@ -6,17 +6,19 @@ module DiscourseWorkflows
 
     delegate :execution, to: :@state
 
-    def initialize(trigger_node, trigger_data, user: nil)
+    def initialize(trigger_node, trigger_data, user: nil, execution_mode: :normal)
       @trigger_node = trigger_node
       @workflow = trigger_node.workflow
       @trigger_data = trigger_data.deep_stringify_keys
       @user = user
+      @execution_mode = execution_mode
       @state =
         ExecutionState.new(
           workflow: @workflow,
           trigger_node: @trigger_node,
           trigger_data: @trigger_data,
           user: @user,
+          execution_mode: @execution_mode,
         )
     end
 
@@ -24,7 +26,12 @@ module DiscourseWorkflows
       return nil unless execution.waiting?
       trigger_node = execution.workflow.nodes.find_by(id: execution.trigger_node_id)
       return nil unless trigger_node
-      new(trigger_node, execution.trigger_data, user: user).resume_from(execution, response_items)
+      new(
+        trigger_node,
+        execution.trigger_data,
+        user: user,
+        execution_mode: execution.execution_mode.to_sym,
+      ).resume_from(execution, response_items)
     end
 
     def run
@@ -186,6 +193,7 @@ module DiscourseWorkflows
         context: @state.context,
       )
       publish_form_status("error") if form_triggered?
+      trigger_error_workflow(error) if @execution_mode == :normal
       @state.execution
     end
 
@@ -197,6 +205,31 @@ module DiscourseWorkflows
 
     def form_triggered?
       @trigger_node.type == "trigger:form"
+    end
+
+    def trigger_error_workflow(error)
+      error_workflow = @workflow.error_workflow
+      return unless error_workflow&.enabled?
+
+      error_trigger_node = error_workflow.nodes.find_by(type: "trigger:error")
+      return unless error_trigger_node
+
+      last_failed_step = @state.execution.steps.where(status: :error).last
+
+      error_data = {
+        execution_id: @state.execution.id,
+        workflow_id: @workflow.id,
+        workflow_name: @workflow.name,
+        error_message: error.message,
+        failed_node_name: last_failed_step&.node_name,
+      }
+
+      self.class.new(
+        error_trigger_node,
+        error_data,
+        user: @user,
+        execution_mode: :error_mode,
+      ).run
     end
 
     def publish_form_status(status)

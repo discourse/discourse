@@ -8,6 +8,7 @@ module DiscourseWorkflows
       attribute :workflow_id, :integer
       attribute :name, :string
       attribute :enabled, :boolean
+      attribute :error_workflow_id, :integer
       attribute :nodes
       attribute :connections
       attribute :sticky_notes
@@ -49,6 +50,7 @@ module DiscourseWorkflows
       attrs = { name: params.name, updated_by: guardian.user }
       attrs[:enabled] = params.enabled unless params.enabled.nil?
       attrs[:sticky_notes] = params.sticky_notes if params.sticky_notes
+      attrs[:error_workflow_id] = params.error_workflow_id if params.respond_to?(:error_workflow_id)
       workflow.update!(**attrs)
     end
 

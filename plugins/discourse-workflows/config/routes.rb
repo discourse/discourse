@@ -20,6 +20,7 @@ DiscourseWorkflows::Engine.routes.draw do
             execution_id: /\d+/,
           }
       get "/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
     end
 
     scope format: :json do

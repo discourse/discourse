@@ -38,6 +38,7 @@ register_svg_icon "arrow-pointer"
 register_svg_icon "note-sticky"
 register_svg_icon "palette"
 register_svg_icon "reply"
+register_svg_icon "triangle-exclamation"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -54,6 +55,7 @@ after_initialize do
       Schedule
       Form
       TopicAdminButton
+      Error
     ].each do |name|
       DiscourseWorkflows::Registry.register_trigger(
         DiscourseWorkflows::Triggers.const_get(name)::V1,

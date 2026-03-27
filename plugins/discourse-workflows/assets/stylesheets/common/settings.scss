@@ -1,16 +1,25 @@
 .workflows-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
   padding: var(--space-4) 0;
 
   &__section {
-    border: 1px solid var(--danger-low);
-    border-radius: var(--d-border-radius);
     padding: var(--space-4);
+
+    &.--danger {
+      border: 1px solid var(--danger-low);
+      border-radius: var(--d-border-radius);
+    }
   }
 
   &__section-title {
-    color: var(--danger);
     font-size: var(--font-up-1);
     margin: 0 0 var(--space-2) 0;
+
+    .--danger & {
+      color: var(--danger);
+    }
   }
 
   &__section-description {
