@@ -27,8 +27,7 @@ body.embed-mode {
   nav.post-controls .actions .show-more-actions,
   .software-update-prompt,
   .time-gap,
-  .container.posts:not(:has(.post-stream .topic-post ~ .topic-post))
-    .topic-navigation {
+  .topic-navigation {
     display: none;
   }
 
