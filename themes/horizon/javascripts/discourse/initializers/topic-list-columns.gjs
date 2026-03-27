@@ -197,7 +197,12 @@ export default {
             .closest("tr")
             .querySelector("a.raw-topic-link");
 
-          // Redispatch the click on the topic link, so that all key-handing is sorted
+          if (event.button === 1) {
+            // click events with button=1 can't naturally trigger browser navigation
+            window.open(topicLink.href, "_blank", "noopener,noreferrer");
+            return;
+          }
+
           topicLink.dispatchEvent(
             new MouseEvent("click", {
               ctrlKey: event.ctrlKey,
