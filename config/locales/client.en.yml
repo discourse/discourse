@@ -6075,6 +6075,7 @@ en:
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
         default_warning: "The default for this setting has changed from %{oldDefaultValue} to %{newDefaultValue} due to an <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming change</a>."
+        default_warning_short: "The default for this setting has changed, read more about this in the <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming changes</a> page."
         enabled_for_options:
           no_one: "No one"
           everyone: "Everyone"

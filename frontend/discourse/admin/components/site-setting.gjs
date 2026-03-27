@@ -164,16 +164,38 @@ export default class SiteSettingComponent extends Component {
   }
 
   get upcomingChangeDefaultWarningText() {
+    // We only want to show the changed value for basic setting
+    // types otherwise the warning might get too long (e.g. strings)
+    // or hard to represent (e.g. upload, tag group list etc.)
+    if (
+      this.setting.type === "icon" ||
+      this.setting.type === "enum" ||
+      this.setting.type === "email" ||
+      this.setting.type === "username" ||
+      this.setting.type === "bool" ||
+      this.setting.type === "integer" ||
+      this.setting.type === "float"
+    ) {
+      return trustHTML(
+        i18n("admin.upcoming_changes.default_warning", {
+          basePath,
+          changeNamesFilter:
+            this.setting.upcoming_change_default_override_metadata
+              .change_setting_name,
+          oldDefaultValue:
+            this.setting.upcoming_change_default_override_metadata.old_default,
+          newDefaultValue:
+            this.setting.upcoming_change_default_override_metadata.new_default,
+        })
+      );
+    }
+
     return trustHTML(
-      i18n("admin.upcoming_changes.default_warning", {
+      i18n("admin.upcoming_changes.default_warning_short", {
         basePath,
         changeNamesFilter:
           this.setting.upcoming_change_default_override_metadata
             .change_setting_name,
-        oldDefaultValue:
-          this.setting.upcoming_change_default_override_metadata.old_default,
-        newDefaultValue:
-          this.setting.upcoming_change_default_override_metadata.new_default,
       })
     );
   }
