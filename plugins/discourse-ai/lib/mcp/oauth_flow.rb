@@ -31,6 +31,9 @@ module DiscourseAi
             server.reload
           end
 
+          validate_client_registration!(server, discovery)
+          token_endpoint_client_auth_method(server, discovery)
+
           state = SecureRandom.hex(32)
           code_verifier = generate_code_verifier
           Rails.cache.write(
@@ -72,14 +75,19 @@ module DiscourseAi
             token_request(
               server: server,
               endpoint: discovery.token_endpoint,
-              params: {
-                grant_type: "authorization_code",
-                code: params[:code].to_s,
-                redirect_uri: server.oauth_callback_url,
-                code_verifier: payload["code_verifier"],
-                client_id: server.effective_oauth_client_id,
-                resource: discovery.resource.presence || server.url,
-              },
+              auth_method: token_endpoint_client_auth_method(server, discovery),
+              params:
+                merged_oauth_params(
+                  {
+                    "grant_type" => "authorization_code",
+                    "code" => params[:code].to_s,
+                    "redirect_uri" => server.oauth_callback_url,
+                    "code_verifier" => payload["code_verifier"],
+                    "client_id" => server.effective_oauth_client_id,
+                    "resource" => discovery.resource.presence || server.url,
+                  },
+                  server.oauth_token_params,
+                ),
             )
 
           store_token_response!(server, token_payload, preserve_refresh_token: false)
@@ -104,12 +112,17 @@ module DiscourseAi
             token_request(
               server: server,
               endpoint: discovery.token_endpoint,
-              params: {
-                grant_type: "refresh_token",
-                refresh_token: refresh_token,
-                client_id: server.effective_oauth_client_id,
-                resource: discovery.resource.presence || server.url,
-              },
+              auth_method: token_endpoint_client_auth_method(server, discovery),
+              params:
+                merged_oauth_params(
+                  {
+                    "grant_type" => "refresh_token",
+                    "refresh_token" => refresh_token,
+                    "client_id" => server.effective_oauth_client_id,
+                    "resource" => discovery.resource.presence || server.url,
+                  },
+                  server.oauth_token_params,
+                ),
             )
 
           store_token_response!(server, token_payload, preserve_refresh_token: true)
@@ -146,23 +159,27 @@ module DiscourseAi
           code_challenge =
             Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).tr("+/", "-_").delete("=")
 
-          query = {
-            response_type: "code",
-            client_id: server.effective_oauth_client_id,
-            redirect_uri: server.oauth_callback_url,
-            state: state,
-            code_challenge: code_challenge,
-            code_challenge_method: "S256",
-            resource: discovery.resource.presence || server.url,
-          }
-          query[:scope] = server.oauth_scopes if server.oauth_scopes.present?
+          query =
+            merged_oauth_params(
+              {
+                "response_type" => "code",
+                "client_id" => server.effective_oauth_client_id,
+                "redirect_uri" => server.oauth_callback_url,
+                "state" => state,
+                "code_challenge" => code_challenge,
+                "code_challenge_method" => "S256",
+                "resource" => discovery.resource.presence || server.url,
+                "scope" => server.oauth_scopes.presence,
+              },
+              server.oauth_authorization_params,
+            )
 
           uri = URI(discovery.authorization_endpoint)
           uri.query = Rack::Utils.build_query(query)
           uri.to_s
         end
 
-        def token_request(server:, endpoint:, params:)
+        def token_request(server:, endpoint:, auth_method:, params:)
           connection =
             Faraday.new(request: { timeout: server.timeout_seconds }) do |builder|
               builder.request :url_encoded
@@ -172,14 +189,19 @@ module DiscourseAi
           validate_endpoint!(endpoint)
 
           headers = { "Accept" => "application/json" }
-          if server.oauth_client_secret_value.present?
+          request_params = params.deep_dup
+
+          case auth_method
+          when "client_secret_basic"
             headers["Authorization"] = basic_auth_header(
               server.effective_oauth_client_id,
               server.oauth_client_secret_value,
             )
+          when "client_secret_post"
+            request_params["client_secret"] = server.oauth_client_secret_value
           end
 
-          response = connection.post(endpoint, params, headers)
+          response = connection.post(endpoint, request_params, headers)
 
           if response.status != 200
             message =
@@ -209,6 +231,11 @@ module DiscourseAi
             else
               token_payload["refresh_token"]
             end
+
+          if server.oauth_require_refresh_token && refresh_token.blank?
+            raise DiscourseAi::Mcp::Client::Error,
+                  I18n.t("discourse_ai.mcp_servers.errors.oauth_refresh_token_required")
+          end
 
           server.update_oauth_tokens!(
             access_token: token_payload["access_token"],
@@ -251,6 +278,12 @@ module DiscourseAi
 
         def basic_auth_header(client_id, client_secret)
           "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}"
+        end
+
+        def merged_oauth_params(defaults, overrides)
+          defaults.merge(overrides.to_h.stringify_keys).compact
+        rescue NoMethodError, TypeError
+          defaults.compact
         end
 
         def generate_code_verifier
@@ -300,6 +333,60 @@ module DiscourseAi
                   "discourse_ai.mcp_servers.errors.oauth_client_metadata_public_https_required",
                   url: server.oauth_client_metadata_url,
                 )
+        end
+
+        def validate_client_registration!(server, discovery)
+          return if server.oauth_client_id.present?
+          return if server.oauth_client_registration == "manual"
+          return if discovery.registration_endpoint.present?
+
+          raise DiscourseAi::Mcp::Client::Error,
+                I18n.t(
+                  "discourse_ai.mcp_servers.errors.oauth_manual_client_registration_required",
+                  issuer: oauth_issuer_label(discovery, server),
+                )
+        end
+
+        def token_endpoint_client_auth_method(server, discovery)
+          methods = Array(discovery.token_endpoint_auth_methods_supported).map(&:to_s).presence
+          if methods.blank?
+            return server.oauth_client_secret_value.present? ? "client_secret_basic" : "none"
+          end
+
+          if server.oauth_client_secret_value.present?
+            return "client_secret_basic" if methods.include?("client_secret_basic")
+            return "client_secret_post" if methods.include?("client_secret_post")
+            return "none" if methods.include?("none")
+
+            raise unsupported_token_endpoint_client_auth_method_error(server, discovery, methods)
+          end
+
+          return "none" if methods.include?("none")
+
+          if methods.any? { |method| %w[client_secret_basic client_secret_post].include?(method) }
+            raise DiscourseAi::Mcp::Client::Error,
+                  I18n.t(
+                    "discourse_ai.mcp_servers.errors.oauth_client_secret_required",
+                    issuer: oauth_issuer_label(discovery, server),
+                    methods: methods.join(", "),
+                  )
+          end
+
+          raise unsupported_token_endpoint_client_auth_method_error(server, discovery, methods)
+        end
+
+        def unsupported_token_endpoint_client_auth_method_error(server, discovery, methods)
+          DiscourseAi::Mcp::Client::Error.new(
+            I18n.t(
+              "discourse_ai.mcp_servers.errors.oauth_token_endpoint_auth_method_unsupported",
+              issuer: oauth_issuer_label(discovery, server),
+              methods: methods.join(", "),
+            ),
+          )
+        end
+
+        def oauth_issuer_label(discovery, server)
+          discovery.issuer.presence || discovery.authorization_endpoint.presence || server.url
         end
       end
     end
