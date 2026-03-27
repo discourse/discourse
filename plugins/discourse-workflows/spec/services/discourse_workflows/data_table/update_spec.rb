@@ -50,6 +50,14 @@ RSpec.describe DiscourseWorkflows::DataTable::Update do
         result
         expect(data_table.reload.name).to eq("renamed")
       end
+
+      it "resets the cached size after updating" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+      end
     end
 
     context "when updating columns" do

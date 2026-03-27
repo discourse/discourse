@@ -70,17 +70,6 @@ module DiscourseWorkflows
           SQL
       end
 
-      def validate_size!
-        max = SiteSetting.discourse_workflows_data_table_max_total_size_bytes
-        return if max <= 0
-
-        current = total_size_bytes
-        if current >= max
-          raise DataTableValidationError,
-                "Data table storage limit exceeded (#{(current / 1.megabyte.to_f).round(1)}MB / #{(max / 1.megabyte.to_f).round(1)}MB)"
-        end
-      end
-
       def quoted_table(data_table_id)
         connection.quote_table_name(table_name(data_table_id))
       end

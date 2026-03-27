@@ -42,6 +42,14 @@ RSpec.describe DiscourseWorkflows::DataTableRow::DestroySingle do
         result
         expect(find_data_table_row(data_table, row["id"])).to be_nil
       end
+
+      it "resets the cached size after deleting" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+      end
     end
   end
 end

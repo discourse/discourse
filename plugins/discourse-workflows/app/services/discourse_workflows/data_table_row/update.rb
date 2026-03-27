@@ -13,13 +13,19 @@ module DiscourseWorkflows
     end
 
     model :data_table, :find_data_table
+    step :validate_storage_limit
     step :validate_update
     step :update_matching_rows
+    step :reset_cached_size
 
     private
 
     def find_data_table(params:)
       DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
+    end
+
+    def validate_storage_limit
+      DiscourseWorkflows::DataTableSizeValidator.validate_size!
     end
 
     def validate_update(data_table:, params:)
@@ -40,6 +46,10 @@ module DiscourseWorkflows
       ).update_many_normalized(filter: normalized_filter, data: normalized_data)
 
       fail!("No rows matched filter") if context[:updated_count] == 0
+    end
+
+    def reset_cached_size
+      DiscourseWorkflows::DataTableSizeValidator.reset!
     end
   end
 end

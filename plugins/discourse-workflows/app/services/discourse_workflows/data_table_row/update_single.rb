@@ -14,13 +14,19 @@ module DiscourseWorkflows
     end
 
     model :data_table, :fetch_data_table
+    step :validate_storage_limit
     step :validate_row_data
     model :row, :update_row
+    step :reset_cached_size
 
     private
 
     def fetch_data_table(params:)
       DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
+    end
+
+    def validate_storage_limit
+      DiscourseWorkflows::DataTableSizeValidator.validate_size!
     end
 
     def validate_row_data(data_table:, params:)
@@ -36,6 +42,10 @@ module DiscourseWorkflows
         params.row_id,
         normalized_data,
       )
+    end
+
+    def reset_cached_size
+      DiscourseWorkflows::DataTableSizeValidator.reset!
     end
   end
 end

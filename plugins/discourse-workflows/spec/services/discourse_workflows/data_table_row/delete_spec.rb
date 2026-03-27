@@ -58,6 +58,14 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Delete do
         result
         expect(find_data_table_row(data_table, row_id)).to be_nil
       end
+
+      it "resets the cached size after deleting" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+      end
     end
 
     context "when no rows match the filter" do

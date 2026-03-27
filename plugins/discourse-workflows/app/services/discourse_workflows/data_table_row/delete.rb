@@ -13,6 +13,7 @@ module DiscourseWorkflows
 
     model :data_table, :find_data_table
     step :destroy_matching_rows
+    step :reset_cached_size
 
     private
 
@@ -24,6 +25,10 @@ module DiscourseWorkflows
       context[:deleted_count] = DiscourseWorkflows::DataTableRowsRepository.new(
         data_table,
       ).delete_many(filter: params.filter)
+    end
+
+    def reset_cached_size
+      DiscourseWorkflows::DataTableSizeValidator.reset!
     end
   end
 end

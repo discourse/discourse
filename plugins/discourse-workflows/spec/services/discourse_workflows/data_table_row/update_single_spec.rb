@@ -22,6 +22,7 @@ RSpec.describe DiscourseWorkflows::DataTableRow::UpdateSingle do
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com", "score" => 1) }
 
     let(:params) { { data_table_id: data_table.id, row_id: row["id"], data: { "score" => 99 } } }
+    let(:storage_limit_error) { DiscourseWorkflows::DataTableValidationError.new("quota full") }
 
     before { SiteSetting.discourse_workflows_enabled = true }
 
@@ -43,6 +44,21 @@ RSpec.describe DiscourseWorkflows::DataTableRow::UpdateSingle do
       it { is_expected.to fail_to_find_a_model(:row) }
     end
 
+    context "when the storage limit is exceeded" do
+      before do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:validate_size!).and_raise(
+          storage_limit_error,
+        )
+      end
+
+      it "raises the validation error before updating" do
+        expect { result }.to raise_error(
+          DiscourseWorkflows::DataTableValidationError,
+          storage_limit_error.message,
+        )
+      end
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
@@ -52,6 +68,14 @@ RSpec.describe DiscourseWorkflows::DataTableRow::UpdateSingle do
           "email" => "test@test.com",
           "score" => 99,
         )
+      end
+
+      it "resets the cached size after updating" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
       end
     end
   end

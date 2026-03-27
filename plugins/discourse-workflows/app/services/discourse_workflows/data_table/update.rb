@@ -14,6 +14,7 @@ module DiscourseWorkflows
 
     model :data_table, :find_data_table
     step :update_data_table
+    step :reset_cached_size
 
     private
 
@@ -26,6 +27,10 @@ module DiscourseWorkflows
       attrs[:name] = params.name if params.name.present?
       attrs[:columns] = params.columns unless params.columns.nil?
       data_table.update!(attrs) if attrs.present?
+    end
+
+    def reset_cached_size
+      DiscourseWorkflows::DataTableSizeValidator.reset!
     end
   end
 end

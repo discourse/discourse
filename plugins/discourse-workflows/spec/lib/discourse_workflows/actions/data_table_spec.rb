@@ -13,6 +13,7 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
   end
 
   let(:context) { { "trigger" => {} } }
+  let(:storage_limit_error) { DiscourseWorkflows::DataTableValidationError.new("quota full") }
 
   describe ".identifier" do
     it "returns action:data_table" do
@@ -76,6 +77,26 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
       result = instance.execute_single(context, item: { "json" => {} }, config: config)
       expect(result).to include("email" => "test@example.com", "score" => 42)
       expect(count_data_table_rows(data_table)).to eq(1)
+    end
+
+    it "raises when the storage limit is exceeded" do
+      allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:validate_size!).and_raise(
+        storage_limit_error,
+      )
+
+      instance = described_class.new(configuration: {})
+      config = {
+        "operation" => "insert",
+        "data_table_id" => data_table.id.to_s,
+        "columns" => {
+          "email" => "test@example.com",
+          "score" => "42",
+        },
+      }
+
+      expect {
+        instance.execute_single(context, item: { "json" => {} }, config: config)
+      }.to raise_error(DiscourseWorkflows::DataTableValidationError, storage_limit_error.message)
     end
   end
 
@@ -145,6 +166,29 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
       result = instance.execute_single(context, item: { "json" => {} }, config: config)
       expect(result["updated_count"]).to eq(1)
       expect(find_data_table_row(data_table, row["id"])["score"]).to eq(99)
+    end
+
+    it "raises when the storage limit is exceeded" do
+      allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:validate_size!).and_raise(
+        storage_limit_error,
+      )
+
+      instance = described_class.new(configuration: {})
+      config = {
+        "operation" => "update",
+        "data_table_id" => data_table.id.to_s,
+        "filter" => {
+          "type" => "and",
+          "filters" => [{ "columnName" => "email", "condition" => "eq", "value" => "up@test.com" }],
+        },
+        "columns" => {
+          "score" => "99",
+        },
+      }
+
+      expect {
+        instance.execute_single(context, item: { "json" => {} }, config: config)
+      }.to raise_error(DiscourseWorkflows::DataTableValidationError, storage_limit_error.message)
     end
   end
 
@@ -216,6 +260,32 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
       expect(result["operation"]).to eq("update")
       expect(result["count"]).to eq(1)
       expect(find_data_table_row(data_table, row["id"])["score"]).to eq(99)
+    end
+
+    it "raises when the storage limit is exceeded" do
+      allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:validate_size!).and_raise(
+        storage_limit_error,
+      )
+
+      instance = described_class.new(configuration: {})
+      config = {
+        "operation" => "upsert",
+        "data_table_id" => data_table.id.to_s,
+        "filter" => {
+          "type" => "and",
+          "filters" => [
+            { "columnName" => "email", "condition" => "eq", "value" => "new@test.com" },
+          ],
+        },
+        "columns" => {
+          "email" => "new@test.com",
+          "score" => "50",
+        },
+      }
+
+      expect {
+        instance.execute_single(context, item: { "json" => {} }, config: config)
+      }.to raise_error(DiscourseWorkflows::DataTableValidationError, storage_limit_error.message)
     end
   end
 end

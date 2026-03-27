@@ -34,6 +34,7 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
         },
       }
     end
+    let(:storage_limit_error) { DiscourseWorkflows::DataTableValidationError.new("quota full") }
 
     before { SiteSetting.discourse_workflows_enabled = true }
 
@@ -60,6 +61,21 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
       end
     end
 
+    context "when the storage limit is exceeded" do
+      before do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:validate_size!).and_raise(
+          storage_limit_error,
+        )
+      end
+
+      it "raises the validation error before upserting" do
+        expect { result }.to raise_error(
+          DiscourseWorkflows::DataTableValidationError,
+          storage_limit_error.message,
+        )
+      end
+    end
+
     context "when no existing rows match" do
       it { is_expected.to run_successfully }
 
@@ -68,6 +84,14 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
 
         row = list_data_table_rows(data_table)[:rows].last
         expect(row.slice("email", "score")).to eq("email" => "test@test.com", "score" => 42)
+      end
+
+      it "resets the cached size after inserting" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
       end
     end
 
@@ -90,6 +114,14 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
 
       it "does not insert a new row" do
         expect { result }.not_to change { count_data_table_rows(data_table) }
+      end
+
+      it "resets the cached size after updating" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
       end
     end
   end

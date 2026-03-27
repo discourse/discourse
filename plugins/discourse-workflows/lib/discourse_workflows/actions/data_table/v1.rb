@@ -108,21 +108,32 @@ module DiscourseWorkflows
 
           case operation
           when "insert"
-            execute_insert(config)
+            validate_storage_limit!
+            execute_insert(config).tap { reset_cached_size! }
           when "get"
             execute_get(config)
           when "update"
-            execute_update(config)
+            validate_storage_limit!
+            execute_update(config).tap { reset_cached_size! }
           when "delete"
-            execute_delete(config)
+            execute_delete(config).tap { reset_cached_size! }
           when "upsert"
-            execute_upsert(config)
+            validate_storage_limit!
+            execute_upsert(config).tap { reset_cached_size! }
           else
             raise ArgumentError, "Unknown operation: #{operation}"
           end
         end
 
         private
+
+        def validate_storage_limit!
+          DiscourseWorkflows::DataTableSizeValidator.validate_size!
+        end
+
+        def reset_cached_size!
+          DiscourseWorkflows::DataTableSizeValidator.reset!
+        end
 
         def execute_insert(config)
           data = build_row_data(config["columns"] || {})

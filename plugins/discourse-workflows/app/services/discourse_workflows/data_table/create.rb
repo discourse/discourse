@@ -13,6 +13,7 @@ module DiscourseWorkflows
 
     model :data_table, :create_data_table
     step :log
+    step :reset_cached_size
 
     private
 
@@ -25,6 +26,10 @@ module DiscourseWorkflows
         "discourse_workflows_data_table_created",
         subject: data_table.name,
       )
+    end
+
+    def reset_cached_size
+      DiscourseWorkflows::DataTableSizeValidator.reset!
     end
   end
 end

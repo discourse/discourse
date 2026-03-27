@@ -48,7 +48,6 @@ module DiscourseWorkflows
     end
 
     def insert(data)
-      DataTableStorage.validate_size!
       row = DataTableRow.normalize_row_data(@data_table, data, fill_missing: true)
 
       result =

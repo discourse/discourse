@@ -41,6 +41,14 @@ RSpec.describe DiscourseWorkflows::DataTable::Delete do
         expect(log.custom_type).to eq("discourse_workflows_data_table_destroyed")
         expect(log.subject).to eq(data_table.name)
       end
+
+      it "resets the cached size after deleting the table" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+      end
     end
   end
 end

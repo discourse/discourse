@@ -21,6 +21,7 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Insert do
     let(:params) do
       { data_table_id: data_table.id, data: { "email" => "test@test.com", "score" => "42" } }
     end
+    let(:storage_limit_error) { DiscourseWorkflows::DataTableValidationError.new("quota full") }
 
     before { SiteSetting.discourse_workflows_enabled = true }
 
@@ -47,6 +48,21 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Insert do
       end
     end
 
+    context "when the storage limit is exceeded" do
+      before do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:validate_size!).and_raise(
+          storage_limit_error,
+        )
+      end
+
+      it "raises the validation error before inserting" do
+        expect { result }.to raise_error(
+          DiscourseWorkflows::DataTableValidationError,
+          storage_limit_error.message,
+        )
+      end
+    end
+
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 
@@ -62,6 +78,14 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Insert do
           "email" => "test@test.com",
           "score" => 42,
         )
+      end
+
+      it "resets the cached size after inserting" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
       end
     end
   end

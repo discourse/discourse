@@ -12,6 +12,7 @@ module DiscourseWorkflows
     model :data_table, :find_data_table
     step :log
     step :destroy_data_table
+    step :reset_cached_size
 
     private
 
@@ -28,6 +29,10 @@ module DiscourseWorkflows
 
     def destroy_data_table(data_table:)
       data_table.destroy!
+    end
+
+    def reset_cached_size
+      DiscourseWorkflows::DataTableSizeValidator.reset!
     end
   end
 end

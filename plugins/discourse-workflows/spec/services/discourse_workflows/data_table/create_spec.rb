@@ -51,6 +51,14 @@ RSpec.describe DiscourseWorkflows::DataTable::Create do
         expect(log.custom_type).to eq("discourse_workflows_data_table_created")
         expect(log.subject).to eq("my_table")
       end
+
+      it "resets the cached size after creating the table" do
+        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+
+        result
+
+        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+      end
     end
   end
 end

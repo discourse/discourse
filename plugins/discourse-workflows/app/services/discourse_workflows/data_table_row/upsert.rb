@@ -13,12 +13,18 @@ module DiscourseWorkflows
     end
 
     model :data_table, :find_data_table
+    step :validate_storage_limit
     step :upsert_rows
+    step :reset_cached_size
 
     private
 
     def find_data_table(params:)
       DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
+    end
+
+    def validate_storage_limit
+      DiscourseWorkflows::DataTableSizeValidator.validate_size!
     end
 
     def upsert_rows(data_table:, params:)
@@ -31,6 +37,10 @@ module DiscourseWorkflows
       context[:operation] = result[:operation]
       context[:row] = result[:row]
       context[:updated_count] = result[:updated_count]
+    end
+
+    def reset_cached_size
+      DiscourseWorkflows::DataTableSizeValidator.reset!
     end
   end
 end

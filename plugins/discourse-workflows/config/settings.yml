@@ -2,7 +2,3 @@ plugins:
   discourse_workflows_enabled:
     default: false
     client: true
-  discourse_workflows_data_table_max_total_size_bytes:
-    type: integer
-    default: 52428800
-    hidden: true
