@@ -41,19 +41,18 @@ if defined?(DiscourseWorkflows)
           channel_id = config["channel_id"]
           message = config["message"]
 
-          channel = Chat::Channel.find(channel_id)
-          creator =
+          result =
             Chat::CreateMessage.call(
               guardian: Discourse.system_user.guardian,
               params: {
-                chat_channel_id: channel.id,
+                chat_channel_id: channel_id,
                 message: message,
               },
             )
 
-          raise "Failed to send chat message" if creator.failure?
+          raise "Failed to send chat message" if result.failure?
 
-          { "channel_id" => channel.id, "message" => message }
+          { "channel_id" => channel_id, "message" => message }
         end
       end
     end
