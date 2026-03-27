@@ -14,7 +14,6 @@ export default class TopicFromParams extends DiscourseRoute {
   @service composer;
   @service header;
   @service router;
-  @service siteSettings;
 
   // Avoid default model hook
   model(params) {
@@ -46,7 +45,7 @@ export default class TopicFromParams extends DiscourseRoute {
   afterModel(model, transition) {
     const topic = this.modelFor("topic");
 
-    if (this.siteSettings.nested_replies_enabled && topic.is_nested_view) {
+    if (topic.is_nested_view) {
       const flatParam =
         transition?.to?.queryParams?.flat ||
         transition?.to?.parent?.queryParams?.flat;
