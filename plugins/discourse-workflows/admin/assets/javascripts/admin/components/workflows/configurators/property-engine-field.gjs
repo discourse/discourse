@@ -4,7 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
@@ -54,16 +54,12 @@ const WrappedControl = <template>
     {{/if}}
 
     {{#if @supportsExpression}}
-      <DButton
-        @action={{@toggleExpressionMode}}
-        @icon={{if @expressionMode "code" "paragraph"}}
-        class="btn-default btn-small workflows-property-engine__mode-trigger
-          {{if @expressionMode '--active'}}"
-        @label={{if
-          @expressionMode
-          "discourse_workflows.parameter_field.dynamic"
-          "discourse_workflows.parameter_field.plain_text"
-        }}
+      <DSegmentedControl
+        @items={{@modeItems}}
+        @value={{if @expressionMode "dynamic" "plain"}}
+        @onSelect={{@onModeChange}}
+        @size="small"
+        class="workflows-property-engine__mode-control"
       />
     {{/if}}
   </div>
@@ -243,6 +239,32 @@ export default class PropertyEngineField extends Component {
     return this.label || this.args.fieldName || "-";
   }
 
+  get modeItems() {
+    return [
+      {
+        value: "plain",
+        icon: "paragraph",
+        label: i18n("discourse_workflows.parameter_field.plain"),
+      },
+      {
+        value: "dynamic",
+        icon: "code",
+        label: i18n("discourse_workflows.parameter_field.dynamic"),
+      },
+    ];
+  }
+
+  @action
+  onModeChange(value) {
+    if (
+      (value === "dynamic" && this.expressionMode) ||
+      (value === "plain" && !this.expressionMode)
+    ) {
+      return;
+    }
+    this.toggleExpressionMode();
+  }
+
   @action
   toggleExpressionMode() {
     const currentVal = this.args.formApi?.get(this.apiPath) || "";
@@ -390,7 +412,8 @@ export default class PropertyEngineField extends Component {
             @field={{field}}
             @placeholder={{this.placeholder}}
             @supportsExpression={{this.supportsExpression}}
-            @toggleExpressionMode={{this.toggleExpressionMode}}
+            @modeItems={{this.modeItems}}
+            @onModeChange={{this.onModeChange}}
           >
             {{#if this.controlComponent}}
               <this.controlComponent
@@ -447,7 +470,8 @@ export default class PropertyEngineField extends Component {
           @field={{field}}
           @placeholder={{this.placeholder}}
           @supportsExpression={{this.supportsExpression}}
-          @toggleExpressionMode={{this.toggleExpressionMode}}
+          @modeItems={{this.modeItems}}
+          @onModeChange={{this.onModeChange}}
         >
           {{#if (eq this.control "select")}}
             <field.Control @includeNone={{false}} as |c|>

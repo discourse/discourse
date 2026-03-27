@@ -52,6 +52,26 @@
     clip-path: inset(50%);
   }
 
+  &--small {
+    gap: 2px;
+    padding: 1px;
+
+    .d-segmented-control__slider {
+      top: 1px;
+      height: calc(100% - 2px);
+    }
+
+    .d-segmented-control__label {
+      padding: 0 var(--space-1);
+      height: auto;
+      font-size: var(--font-down-2);
+
+      .d-icon {
+        font-size: var(--font-down-2);
+      }
+    }
+  }
+
   &__label {
     z-index: 1;
     display: flex;

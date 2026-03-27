@@ -103,13 +103,11 @@
     }
   }
 
-  &__mode-trigger {
+  &__mode-control {
     position: absolute;
     top: calc(-1 * var(--space-1));
     transform: translateY(-100%);
     right: 0;
-    padding: var(--space-half) var(--space-1);
-    font-family: monospace;
     z-index: 2;
   }
 

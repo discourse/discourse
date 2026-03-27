@@ -210,7 +210,7 @@ en:
         add_output_field: "Add field"
       parameter_field:
         fixed: "Fixed"
-        plain_text: "Plain text"
+        plain: "Plain"
         dynamic: "Dynamic"
       property_engine:
         add_item: "Add item"
