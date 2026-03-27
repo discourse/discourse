@@ -25,6 +25,9 @@ module Patreon
 
       limiter_day.performed! unless limiter_day.can_perform?
 
+      full_url = "#{base_url}#{uri}"
+      Rails.logger.warn("Patreon API request: GET #{full_url}") if SiteSetting.patreon_verbose_log
+
       response =
         Faraday.new(
           url: base_url,
@@ -35,6 +38,12 @@ module Patreon
 
       limiter_hr.performed!
       limiter_day.performed!
+
+      if SiteSetting.patreon_verbose_log
+        Rails.logger.warn(
+          "Patreon API response: status=#{response.status} body_size=#{response.body&.size || 0}",
+        )
+      end
 
       case response.status
       when 200
