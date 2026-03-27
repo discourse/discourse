@@ -876,6 +876,7 @@ en:
       invalid_email_in: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      groups_required_for_mode: "You must select at least one group for this approval mode."
       description_incomplete: "The category description post must have at least one paragraph."
       description_too_long:
         one: "Description is too long (maximum is %{count} character)."

@@ -633,10 +633,9 @@ RSpec.describe NewPostManager do
 
       it "creates the post when the user is in the exempt group and category's posting review mode is everyone_except" do
         posting_review_group.add(user)
-        category.category_setting.update_posting_review_mode!(
-          :topic,
-          :everyone_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          topic_posting_review_mode: :everyone_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
         )
 
         result =
@@ -651,10 +650,9 @@ RSpec.describe NewPostManager do
       end
 
       it "enqueues when the user is not in the exempt group and category's posting review mode is everyone_except" do
-        category.category_setting.update_posting_review_mode!(
-          :topic,
-          :everyone_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          topic_posting_review_mode: :everyone_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
         )
 
         result =
@@ -671,10 +669,9 @@ RSpec.describe NewPostManager do
 
       it "enqueues when the user is in the listed group and category's posting review mode is no_one_except" do
         posting_review_group.add(user)
-        category.category_setting.update_posting_review_mode!(
-          :topic,
-          :no_one_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          topic_posting_review_mode: :no_one_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
         )
 
         result =
@@ -690,10 +687,9 @@ RSpec.describe NewPostManager do
       end
 
       it "creates the post when the user is not in the listed group and category's posting review mode is no_one_except" do
-        category.category_setting.update_posting_review_mode!(
-          :topic,
-          :no_one_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          topic_posting_review_mode: :no_one_except,
+          topic_posting_review_group_ids: [posting_review_group.id],
         )
 
         result =
@@ -744,10 +740,9 @@ RSpec.describe NewPostManager do
 
       it "creates the post when the user is in the exempt group and category's posting review mode is everyone_except" do
         posting_review_group.add(user)
-        category.category_setting.update_posting_review_mode!(
-          :reply,
-          :everyone_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          reply_posting_review_mode: :everyone_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
         )
 
         result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
@@ -756,10 +751,9 @@ RSpec.describe NewPostManager do
       end
 
       it "enqueues when the user is not in the exempt group and category's posting review mode is everyone_except" do
-        category.category_setting.update_posting_review_mode!(
-          :reply,
-          :everyone_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          reply_posting_review_mode: :everyone_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
         )
 
         result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
@@ -770,10 +764,9 @@ RSpec.describe NewPostManager do
 
       it "enqueues when the user is in the listed group and category's posting review mode is no_one_except" do
         posting_review_group.add(user)
-        category.category_setting.update_posting_review_mode!(
-          :reply,
-          :no_one_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          reply_posting_review_mode: :no_one_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
         )
 
         result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform
@@ -783,10 +776,9 @@ RSpec.describe NewPostManager do
       end
 
       it "creates the post when the user is not in the listed group and category's posting review mode is no_one_except" do
-        category.category_setting.update_posting_review_mode!(
-          :reply,
-          :no_one_except,
-          group_ids: [posting_review_group.id],
+        category.update!(
+          reply_posting_review_mode: :no_one_except,
+          reply_posting_review_group_ids: [posting_review_group.id],
         )
 
         result = NewPostManager.new(user, raw: "this is a new post", topic_id: topic.id).perform

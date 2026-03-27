@@ -562,9 +562,11 @@ RSpec.describe CategoriesController do
           post "/categories.json",
                params: {
                  name: "Review Category",
-                 topic_posting_review_mode: "everyone_except",
+                 category_setting_attributes: {
+                   topic_posting_review_mode: "everyone_except",
+                   reply_posting_review_mode: "everyone",
+                 },
                  topic_posting_review_group_ids: [group.id],
-                 reply_posting_review_mode: "everyone",
                }
 
           expect(response.status).to eq(200)
@@ -1208,7 +1210,12 @@ RSpec.describe CategoriesController do
         end
 
         it "sets topic_posting_review_mode to everyone" do
-          put "/categories/#{category.id}.json", params: { topic_posting_review_mode: "everyone" }
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  topic_posting_review_mode: "everyone",
+                },
+              }
           expect(response.status).to eq(200)
           cat_json = response.parsed_body["category"]
           expect(cat_json["category_setting"]["topic_posting_review_mode"]).to eq("everyone")
@@ -1218,7 +1225,9 @@ RSpec.describe CategoriesController do
         it "sets topic_posting_review_mode to everyone_except with group IDs" do
           put "/categories/#{category.id}.json",
               params: {
-                topic_posting_review_mode: "everyone_except",
+                category_setting_attributes: {
+                  topic_posting_review_mode: "everyone_except",
+                },
                 topic_posting_review_group_ids: [mod_group_1.id, mod_group_2.id],
               }
           expect(response.status).to eq(200)
@@ -1233,7 +1242,9 @@ RSpec.describe CategoriesController do
         it "sets reply_posting_review_mode to no_one_except with group IDs" do
           put "/categories/#{category.id}.json",
               params: {
-                reply_posting_review_mode: "no_one_except",
+                category_setting_attributes: {
+                  reply_posting_review_mode: "no_one_except",
+                },
                 reply_posting_review_group_ids: [mod_group_3.id],
               }
           expect(response.status).to eq(200)
@@ -1243,13 +1254,17 @@ RSpec.describe CategoriesController do
         end
 
         it "clears groups when changing from everyone_except to everyone" do
-          category.category_setting.update_posting_review_mode!(
-            :topic,
-            "everyone_except",
-            group_ids: [mod_group_1.id],
+          category.update!(
+            topic_posting_review_mode: "everyone_except",
+            topic_posting_review_group_ids: [mod_group_1.id],
           )
 
-          put "/categories/#{category.id}.json", params: { topic_posting_review_mode: "everyone" }
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  topic_posting_review_mode: "everyone",
+                },
+              }
           expect(response.status).to eq(200)
           cat_json = response.parsed_body["category"]
           expect(cat_json["category_setting"]["topic_posting_review_mode"]).to eq("everyone")

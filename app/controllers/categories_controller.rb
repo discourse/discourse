@@ -157,10 +157,6 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
-    category_params.delete(:topic_posting_review_mode)
-    category_params.delete(:reply_posting_review_mode)
-    category_params.delete(:topic_posting_review_group_ids)
-    category_params.delete(:reply_posting_review_group_ids)
     category_type = params[:category_type]
 
     if category_params[:description].present? &&
@@ -214,18 +210,6 @@ class CategoriesController < ApplicationController
         end
       end
 
-      %i[topic reply].each do |post_type|
-        mode = params[:"#{post_type}_posting_review_mode"]
-        if mode.present?
-          group_ids = params[:"#{post_type}_posting_review_group_ids"] || []
-          @category.category_setting.update_posting_review_mode!(
-            post_type,
-            mode,
-            group_ids: group_ids.map(&:to_i),
-          )
-        end
-      end
-
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
       end
@@ -244,11 +228,6 @@ class CategoriesController < ApplicationController
 
       cat.move_to(category_params[:position].to_i) if category_params[:position]
       category_params.delete(:position)
-
-      category_params.delete(:topic_posting_review_mode)
-      category_params.delete(:reply_posting_review_mode)
-      category_params.delete(:topic_posting_review_group_ids)
-      category_params.delete(:reply_posting_review_group_ids)
 
       old_custom_fields = cat.custom_fields.dup
       category_params[:custom_fields]&.each do |key, value|
@@ -302,18 +281,6 @@ class CategoriesController < ApplicationController
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
-        %i[topic reply].each do |post_type|
-          mode = params[:"#{post_type}_posting_review_mode"]
-          if mode.present?
-            group_ids = params[:"#{post_type}_posting_review_group_ids"] || []
-            cat.category_setting.update_posting_review_mode!(
-              post_type,
-              mode,
-              group_ids: group_ids.map(&:to_i),
-            )
-          end
-        end
-
         Category.preload_user_fields!(guardian, [cat])
 
         Scheduler::Defer.later "Log staff action change category settings" do
@@ -629,9 +596,6 @@ class CategoriesController < ApplicationController
           conditional_param_keys << { moderating_group_ids: [] }
         end
 
-        conditional_param_keys << { topic_posting_review_group_ids: [] }
-        conditional_param_keys << { reply_posting_review_group_ids: [] }
-
         if SiteSetting.content_localization_enabled?
           conditional_param_keys << :locale
           conditional_param_keys << { category_localizations: %i[id locale name description] }
@@ -678,8 +642,8 @@ class CategoriesController < ApplicationController
           :allow_global_tags,
           :read_only_banner,
           :default_list_filter,
-          :topic_posting_review_mode,
-          :reply_posting_review_mode,
+          { topic_posting_review_group_ids: [] },
+          { reply_posting_review_group_ids: [] },
           *conditional_param_keys,
         ]
 
@@ -695,6 +659,8 @@ class CategoriesController < ApplicationController
               num_auto_bump_daily
               require_reply_approval
               require_topic_approval
+              topic_posting_review_mode
+              reply_posting_review_mode
             ],
             custom_fields: {
             },

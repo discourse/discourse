@@ -362,7 +362,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
       {{/if}}
 
       <section class="field topic-posting-review-mode">
-        <label>{{i18n "category.topic_posting_review_mode"}}</label>
+        <label>{{i18n "category.require_topic_approval_for"}}</label>
         <div class="controls">
           <ComboBox
             @valueProperty="value"
@@ -393,7 +393,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
       </section>
 
       <section class="field reply-posting-review-mode">
-        <label>{{i18n "category.reply_posting_review_mode"}}</label>
+        <label>{{i18n "category.require_reply_approval_for"}}</label>
         <div class="controls">
           <ComboBox
             @valueProperty="value"

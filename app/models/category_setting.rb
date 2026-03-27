@@ -33,30 +33,7 @@ class CategorySetting < ActiveRecord::Base
   end
   alias_method :require_reply_approval?, :require_reply_approval
 
-  def update_posting_review_mode!(post_type, mode, group_ids: [])
-    mode = mode.to_s
-
-    if %w[everyone_except no_one_except].include?(mode)
-      raise ArgumentError, "group_ids must be provided for #{mode} mode" if group_ids.blank?
-    elsif group_ids.present?
-      raise ArgumentError,
-            "group_ids can only be provided for everyone_except or no_one_except modes"
-    end
-
-    transaction do
-      update!("#{post_type}_posting_review_mode" => mode)
-
-      category.category_posting_review_groups.where(post_type: post_type).delete_all
-
-      if group_ids.present?
-        records =
-          group_ids.map do |group_id|
-            { category_id: category_id, group_id: group_id, post_type: post_type }
-          end
-        CategoryPostingReviewGroup.insert_all!(records, record_timestamps: true)
-      end
-    end
-  end
+  GROUP_BASED_MODES = %w[everyone_except no_one_except].freeze
 
   validates :num_auto_bump_daily,
             numericality: {

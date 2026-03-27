@@ -201,15 +201,11 @@ RSpec.describe CategorySerializer do
 
   describe "#topic_posting_review_mode and #reply_posting_review_mode" do
     it "includes posting review modes in category_setting" do
-      category.category_setting.update_posting_review_mode!(
-        :topic,
-        :everyone_except,
-        group_ids: [group.id],
-      )
-      category.category_setting.update_posting_review_mode!(
-        :reply,
-        :no_one_except,
-        group_ids: [group.id],
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+        reply_posting_review_mode: :no_one_except,
+        reply_posting_review_group_ids: [group.id],
       )
 
       json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
@@ -221,15 +217,11 @@ RSpec.describe CategorySerializer do
 
   describe "#topic_posting_review_group_ids and #reply_posting_review_group_ids" do
     it "returns group ids when groups exist" do
-      category.category_setting.update_posting_review_mode!(
-        :topic,
-        :everyone_except,
-        group_ids: [group.id],
-      )
-      category.category_setting.update_posting_review_mode!(
-        :reply,
-        :no_one_except,
-        group_ids: [group.id],
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+        reply_posting_review_mode: :no_one_except,
+        reply_posting_review_group_ids: [group.id],
       )
 
       json = described_class.new(category, scope: Guardian.new, root: false).as_json

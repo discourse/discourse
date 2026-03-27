@@ -65,11 +65,22 @@ describe "Edit Category Settings" do
       expect(category.topic_posting_review_group_ids).to contain_exactly(group.id)
     end
 
+    it "shows a validation error when selecting a group-based mode without groups" do
+      category_page.visit_settings(category)
+
+      topic_posting_review_mode_select_kit.expand
+      topic_posting_review_mode_select_kit.select_row_by_value("everyone_except")
+
+      category_page.save_settings
+
+      expect(page).to have_content(I18n.t("js.category.validations.groups_required"))
+      expect(category.reload.category_setting.topic_posting_review_mode).to eq("no_one")
+    end
+
     it "clears groups when switching from group-based mode to simple mode" do
-      category.category_setting.update_posting_review_mode!(
-        :topic,
-        :everyone_except,
-        group_ids: [group.id],
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
       )
 
       category_page.visit_settings(category)
