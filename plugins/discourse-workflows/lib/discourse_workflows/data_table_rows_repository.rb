@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTableRowsRepository
     SORT_DIRECTIONS = { "asc" => "ASC", "desc" => "DESC" }.freeze
+    MAX_LIMIT = 100
 
     class << self
       def count_for(data_table)
@@ -221,7 +222,7 @@ module DiscourseWorkflows
     def build_limit_clause(limit, binds)
       return "" if limit.blank?
 
-      parsed_limit = limit.to_i
+      parsed_limit = [limit.to_i, MAX_LIMIT].min
       raise DataTableValidationError, "Limit must be greater than 0" if parsed_limit <= 0
 
       binds[:limit] = parsed_limit
