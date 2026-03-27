@@ -4813,7 +4813,6 @@ lt:
           add_all: "Pridėti visus"
           import_web_tip: "Saugykla, kurioje yra tema"
           direct_install_tip: "Ar tikrai norite įdiegti <strong>%{name}</strong> iš toliau nurodytos saugyklos?"
-          import_file_tip: ".tar.gz, .zip arba .dcstyle.json failas, kuriame yra tema"
           is_private: "Tema yra privačioje „git“ saugykloje"
           remote_branch: "Filialo pavadinimas (neprivaloma)"
           install: "diegti"

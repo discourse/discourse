@@ -4528,7 +4528,6 @@ ko:
           add_all: "모두 추가"
           import_web_tip: "테마가 있는 저장소"
           direct_install_tip: "아래의 저장소에서 <strong>%{name}</strong> 설치를 진행할까요?"
-          import_file_tip: "테마가 포함된 .tar.gz, .zip 또는 .dcstyle.json 파일"
           is_private: "테마는 비공개 Git 저장소에 있습니다"
           finish_install: "테마 설치 완료"
           remote_branch: "브랜치 이름(선택사항)"

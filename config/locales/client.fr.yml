@@ -6571,7 +6571,6 @@ fr:
           import_web_tip: "Dépôt contenant le thème"
           direct_install_tip: "Voulez-vous vraiment installer <strong>%{name}</strong> depuis le dépôt indiqué ci-dessous ?"
           import_web_advanced: "Avancé…"
-          import_file_tip: "Fichier .tar.gz, .zip ou .dcstyle.json contenant le thème"
           is_private: "Le thème est dans un dépôt Git privé"
           finish_install: "Terminer l'installation du thème"
           last_attempt: "Le processus d'installation ne s'est pas terminé, dernière tentative :"

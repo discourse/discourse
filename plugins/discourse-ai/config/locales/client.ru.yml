@@ -649,6 +649,7 @@ ru:
         oauth_statuses:
           connected: "Связанный"
         oauth_connect: "Подключить"
+        oauth_hide_details: "Скрыть подробности"
         enabled: "Включено"
         save: "Сохранить"
         edit: "Изменить"

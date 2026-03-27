@@ -7,6 +7,7 @@
 zh_CN:
   site_settings:
     topic_voting_enabled: '允许用户为话题投票？'
+    topic_voting_enable_vote_limits: '根据信任级别限制每位用户的投票数'
     topic_voting_tl0_vote_limit: '信任级别为 0 的用户有多少次投票机会？'
     topic_voting_tl1_vote_limit: '信任级别为 1 的用户有多少次投票机会？'
     topic_voting_tl2_vote_limit: '信任级别为 2 的用户有多少次投票机会？'

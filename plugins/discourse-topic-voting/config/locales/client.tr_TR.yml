@@ -24,6 +24,7 @@ tr_TR:
       voting_closed_title: "Kapalı"
       voting_limit: "Sınır"
       see_votes: "%{count}/%{max} oy hakkınız kaldı"
+      see_all_votes: "Oylarınızı görün"
       locked: "Kilitli"
       locked_description: "Oy vermek için güven düzeyinizi artırın"
       votes:

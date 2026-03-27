@@ -6630,7 +6630,6 @@ vi:
           import_web_tip: "Kho chứa chủ đề"
           direct_install_tip: "Bạn có chắc chắn muốn cài đặt <strong>%{name}</strong> từ kho lưu trữ được liệt kê bên dưới không?"
           import_web_advanced: "Nâng cao…"
-          import_file_tip: "Tệp .tar.gz, .zip hoặc .dcstyle.json chứa chủ đề"
           is_private: "Theme nằm trong kho git riêng"
           finish_install: "Hoàn tất cài đặt theme"
           last_attempt: "Quá trình cài đặt chưa hoàn tất, lần thử cuối cùng:"

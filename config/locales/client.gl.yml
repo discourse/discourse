@@ -4106,7 +4106,6 @@ gl:
           add_all: "Engadir todos"
           import_web_tip: "Repositorio que contén o tema"
           direct_install_tip: "Confirma que quere instalar <strong>%{name}</strong> desde o repositorio que se lista a seguir?"
-          import_file_tip: "Ficheiro .tar.gz, .zip ou .dcstyle.json que contén o tema"
           is_private: "O tema está nun repositorio privado de git"
           remote_branch: "Nome da ramificación (opcional)"
           public_key: "Conceder á seguinte clave pública acceso ao repositorio:"

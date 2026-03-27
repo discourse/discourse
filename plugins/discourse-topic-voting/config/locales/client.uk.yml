@@ -24,6 +24,7 @@ uk:
       voting_closed_title: "Закриті"
       voting_limit: "Обмеження"
       see_votes: "У вас залишилося %{count}/%{max} голосів"
+      see_all_votes: "Побачити ваші голоси"
       locked: "Заблоковано"
       locked_description: "Підвищіть рівень своєї довіри, щоб проголосувати"
       votes:

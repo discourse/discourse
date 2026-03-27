@@ -492,6 +492,7 @@ fi:
         oauth_statuses:
           connected: "Yhdistetty"
         oauth_connect: "Yhdistä"
+        oauth_hide_details: "Piilota tiedot"
         enabled: "Käytössä"
         save: "Tallenna"
         edit: "Muokkaa"

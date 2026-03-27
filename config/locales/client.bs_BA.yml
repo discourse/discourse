@@ -3790,7 +3790,6 @@ bs_BA:
           stay: "Ostani"
           delete_upload_confirm: "Izbrisati ovaj upload? (Tematski CSS može prestati raditi!)"
           import_web_tip: "Tema sa spremištem"
-          import_file_tip: ".tar.gz, .zip ili .dcstyle.json datoteka koja sadrži temu"
           is_private: "Tema je u privatnom git repozitoriju"
           remote_branch: "Naziv podružnice (opcionalno)"
           public_key: "Dajte sljedeći pristup javnom ključu repo:"

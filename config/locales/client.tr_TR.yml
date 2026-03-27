@@ -450,7 +450,6 @@ tr_TR:
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
-      skipped: "Yönetici oryantasyon kontrol listesi artık atlanmıştır. Yeniden etkinleştirmek isterseniz, site ayarlarında “site sahibi oryantasyonunu etkinleştir” seçeneğini arayın."
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
@@ -662,6 +661,7 @@ tr_TR:
       storage_access_prompt: "Zaten %{site_name} hesabınız mı var? Oturumunuza erişim izni vererek kendi adınıza yorum yapabilirsiniz."
       allow_access: "Erişime İzin Ver"
       continue_as_guest: "Misafir olarak devam et"
+      be_first_to_reply: "İlk yanıtı siz verin!"
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -1141,6 +1141,7 @@ tr_TR:
       add_members:
         title: "%{group_name} grubuna Kullanıcı ekleyin"
         description: "Gruba davet etmek istediğiniz kullanıcıları birer birer veya virgülle ayrılmış bir liste olarak yapıştırarak girin :"
+        description_usernames_only: "Gruba davet etmek istediğiniz kullanıcıları birer birer veya virgülle ayrılmış bir liste olarak yapıştırarak girin :"
         usernames_placeholder: "kullanıcı adları"
         usernames_or_emails_placeholder: "kullanıcı adı veya e-posta"
         notify_users: "Kullanıcıları bilgilendir"
@@ -4384,6 +4385,8 @@ tr_TR:
       tags: "Etiketler"
       localizations: "Yerelleştirmeler"
       localization:
+        language: "Kategori dili"
+        language_description: "Bu kategorinin adının ve açıklamasının ana dili."
         locale: "Yerel Ayar"
         name: "Ad"
         description: "Açıklama"
@@ -7083,6 +7086,7 @@ tr_TR:
           dark_color_scheme: "Koyu Renk Paleti"
           default_light_scheme: "Açık (varsayılan)"
           color_scheme_select: "Tema tarafından kullanılacak renkleri seçin."
+          only_theme_color_schemes: "Bu tema, hangi renk paletlerinin kullanılabileceğini sınırlar."
           dark_color_scheme_select: "Koyu modda tema tarafından kullanılacak renkleri seçin."
           edit_colors: "Renkleri düzenle"
           custom_sections: "Özel bölümler:"
@@ -7143,7 +7147,7 @@ tr_TR:
           import_web_tip: "Tema içeren depo"
           direct_install_tip: "Aşağıda listelenen depodan şunu yüklemek istediğinizden emin misiniz: <strong>%{name}</strong>?"
           import_web_advanced: "Gelişmiş…"
-          import_file_tip: "Tema içeren .tar.gz, .zip veya .dcstyle.json dosyası"
+          import_file_tip: "Temayı içeren .tar.gz veya .zip dosyası"
           is_private: "Tema özel bir git deposunda"
           finish_install: "Tema Yüklemesini Bitir"
           last_attempt: "Yükleme işlemi bitmedi, son deneme zamanı:"

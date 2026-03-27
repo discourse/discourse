@@ -6547,7 +6547,6 @@ fi:
           import_web_tip: "Tietovarasto, jossa teema on"
           direct_install_tip: "Oletko varma, että haluat asentaa teeman <strong>%{name}</strong> alla olevasta tietovasrastosta?"
           import_web_advanced: "Lisäasetukset…"
-          import_file_tip: "Teeman sisältävä .tar.gz, .zip tai .dcstyle.json-tiedosto"
           is_private: "Teema on yksityisessä git-tietovarastossa"
           finish_install: "Viimeistele teeman asennus"
           last_attempt: "Asennusprosessi ei päättynyt, viimeisin yritys:"
