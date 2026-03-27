@@ -6,6 +6,7 @@ Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
   ONEBOX_CSS_CLASS = "onebox"
+  MAX_URL_LENGTH = 2_000
   AUDIO_REGEX = /\A\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)\z/i
   VIDEO_REGEX = /\A\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)\z/i
 
@@ -283,6 +284,7 @@ module Oneboxer
 
   def self.onebox_raw(url, opts = {})
     url = UrlHelper.normalized_encode(url).to_s
+    return blank_onebox if url.length > MAX_URL_LENGTH
     local_onebox(url, opts) || external_onebox(url)
   rescue => e
     # no point warning here, just cause we have an issue oneboxing a url

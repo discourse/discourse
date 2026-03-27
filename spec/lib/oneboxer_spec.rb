@@ -16,6 +16,13 @@ RSpec.describe Oneboxer do
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
+  it "returns blank onebox for URLs exceeding the onebox length limit" do
+    long_url = "https://example.com/#{"a" * Oneboxer::MAX_URL_LENGTH}"
+    result = Oneboxer.onebox_raw(long_url)
+    expect(result[:onebox]).to eq("")
+    expect(result[:preview]).to eq("")
+  end
+
   describe "#invalidate" do
     let(:url) { "http://test.com" }
     it "clears the cached preview for the onebox URL and the failed URL cache" do

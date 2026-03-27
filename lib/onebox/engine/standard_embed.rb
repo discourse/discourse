@@ -106,7 +106,7 @@ module Onebox
 
         absolute_url = Onebox::Helpers.get_absolute_image_url(favicon, url)
 
-        return nil if absolute_url.length > UrlHelper::MAX_URL_LENGTH
+        return nil if absolute_url.length > Oneboxer::MAX_URL_LENGTH
 
         absolute_url
       end
