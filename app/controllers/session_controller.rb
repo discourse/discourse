@@ -56,8 +56,7 @@ class SessionController < ApplicationController
     if result.second_factor_auth_skipped?
       data = result.data
       if data[:logout]
-        params[:return_url] = data[:return_sso_url]
-        destroy
+        destroy(trusted_return_url: data[:return_sso_url])
         return
       end
 
@@ -676,8 +675,13 @@ class SessionController < ApplicationController
     end
   end
 
-  def destroy
-    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+  def destroy(trusted_return_url: nil)
+    return_url = params[:return_url].presence
+    # only allow relative paths, reject protocol-relative (//evil.com) and backslash (/\evil.com)
+    return_url = nil if return_url &&
+      (!return_url.start_with?("/") || return_url[1] == "/" || return_url[1] == "\\")
+
+    redirect_url = trusted_return_url || return_url || SiteSetting.logout_redirect.presence
 
     redirect_url ||=
       if SiteSetting.login_required
