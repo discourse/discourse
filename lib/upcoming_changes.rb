@@ -137,7 +137,8 @@ module UpcomingChanges
   # @return [Object, nil] The override default value, or nil if not active
   def self.effective_default_for(target_setting_name)
     override = SiteSetting.upcoming_change_default_overrides[target_setting_name.to_sym]
-    return nil unless override || SiteSetting.upcoming_change_metadata.key?(override[:setting])
+    return nil unless override
+    return nil unless SiteSetting.upcoming_change_metadata.key?(override[:setting].to_sym)
 
     # If upcoming change is enabled, then use the new default override
     resolved_value(override[:setting]) ? override[:default] : nil
