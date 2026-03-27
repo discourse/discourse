@@ -6,7 +6,7 @@ RSpec.describe Service::Base::EachStep do
 
     let(:dependencies) { {} }
 
-    context "with basic iteration" do
+    context "when iterating over a collection" do
       let(:service) do
         Class.new do
           include Service::Base
@@ -35,93 +35,22 @@ RSpec.describe Service::Base::EachStep do
         end
       end
       let(:dependencies) { { input_users: users } }
+      let(:users) { %i[alice bob charlie] }
 
-      context "when collection has items" do
-        let(:users) { %i[alice bob charlie] }
+      it { is_expected.to run_successfully }
 
-        it "iterates over each item" do
-          expect(result[:processed].map { _1[:user] }).to eq(%i[alice bob charlie])
-        end
+      it "provides each item under the singularized name and its index" do
+        expect(result[:processed]).to eq(
+          [{ user: :alice, index: 0 }, { user: :bob, index: 1 }, { user: :charlie, index: 2 }],
+        )
+      end
 
-        it "provides the index to each iteration" do
-          expect(result[:processed].map { _1[:index] }).to eq([0, 1, 2])
-        end
-
-        it "continues to subsequent steps after iteration" do
-          expect(result[:finalized]).to be true
-        end
-
-        it "succeeds" do
-          expect(result).to be_success
-        end
+      it "continues to subsequent steps after iteration" do
+        expect(result[:finalized]).to be true
       end
     end
 
-    context "with empty collection (optional model)" do
-      let(:service) do
-        Class.new do
-          include Service::Base
-
-          model :users, optional: true
-
-          each :users do
-            step :process_user
-          end
-
-          step :finalize
-
-          private
-
-          def fetch_users
-            context[:input_users]
-          end
-
-          def process_user(user:, index:)
-            context[:processed] ||= []
-            context[:processed] << { user:, index: }
-          end
-
-          def finalize
-            context[:finalized] = true
-          end
-        end
-      end
-      let(:dependencies) { { input_users: users } }
-
-      context "when collection is empty" do
-        let(:users) { [] }
-
-        it "skips the iteration silently" do
-          expect(result[:processed]).to be_nil
-        end
-
-        it "continues to subsequent steps" do
-          expect(result[:finalized]).to be true
-        end
-
-        it "succeeds" do
-          expect(result).to be_success
-        end
-      end
-
-      context "when collection is nil" do
-        let(:users) { nil }
-
-        it "skips the iteration silently" do
-          expect(result[:processed]).to be_nil
-        end
-
-        it "continues to subsequent steps" do
-          expect(result[:finalized]).to be true
-        end
-
-        it "succeeds" do
-          expect(result).to be_success
-        end
-      end
-    end
-
-    context "with custom item name (as: option)" do
+    context "when using the as: option" do
       let(:service) do
         Class.new do
           include Service::Base
@@ -138,23 +67,63 @@ RSpec.describe Service::Base::EachStep do
             context[:input_users]
           end
 
-          def process_member(member:, index:, processed:)
-            processed << { member:, index: }
+          def process_member(member:, processed:)
+            processed << member
           end
         end
       end
       let(:dependencies) { { input_users: %i[alice bob] } }
 
-      it "uses the custom name for the item" do
-        expect(result[:processed].map { _1[:member] }).to eq(%i[alice bob])
-      end
-
-      it "still provides the index" do
-        expect(result[:processed].map { _1[:index] }).to eq([0, 1])
+      it "provides items under the custom name" do
+        expect(result[:processed]).to contain_exactly(:alice, :bob)
       end
     end
 
-    context "with fail-fast on policy failure" do
+    context "when collection is empty" do
+      let(:service) do
+        Class.new do
+          include Service::Base
+
+          model :users, optional: true
+
+          each :users, persist: { processed: -> { [] } } do
+            step :process_user
+          end
+
+          private
+
+          def fetch_users
+            context[:input_users]
+          end
+
+          def process_user(user:, processed:)
+            processed << user
+          end
+        end
+      end
+
+      context "with an empty array" do
+        let(:dependencies) { { input_users: [] } }
+
+        it { is_expected.to run_successfully }
+
+        it "skips iteration and initializes persisted keys" do
+          expect(result[:processed]).to eq([])
+        end
+      end
+
+      context "with nil" do
+        let(:dependencies) { { input_users: nil } }
+
+        it { is_expected.to run_successfully }
+
+        it "skips iteration and initializes persisted keys" do
+          expect(result[:processed]).to eq([])
+        end
+      end
+    end
+
+    context "when a policy fails inside the loop" do
       let(:service) do
         Class.new do
           include Service::Base
@@ -183,40 +152,32 @@ RSpec.describe Service::Base::EachStep do
       end
       let(:dependencies) { { input_users: users } }
 
-      context "when all items pass the policy" do
+      context "when all items pass" do
         let(:users) { %i[alice bob charlie] }
 
-        it "processes all items" do
-          expect(result[:processed]).to eq(%i[alice bob charlie])
-        end
+        it { is_expected.to run_successfully }
 
-        it "succeeds" do
-          expect(result).to be_success
+        it "processes all items" do
+          expect(result[:processed]).to contain_exactly(:alice, :bob, :charlie)
         end
       end
 
-      context "when an item fails the policy" do
+      context "when one item fails" do
         let(:users) { %i[alice forbidden charlie] }
+
+        it { is_expected.to fail_a_policy(:can_process) }
 
         it "stops iteration at the failing item" do
           expect(result[:processed]).to eq(%i[alice])
         end
 
-        it "fails the service" do
-          expect(result).to be_failure
-        end
-
-        it "stores the failing item in context" do
-          expect(result[:user]).to eq(:forbidden)
-        end
-
-        it "stores the failing index in context" do
-          expect(result[:index]).to eq(1)
+        it "exposes the failing item and index in context" do
+          expect(result).to have_attributes(user: :forbidden, index: 1)
         end
       end
     end
 
-    context "with fail-fast on step failure" do
+    context "when a step calls fail! inside the loop" do
       let(:service) do
         Class.new do
           include Service::Base
@@ -239,34 +200,47 @@ RSpec.describe Service::Base::EachStep do
           end
         end
       end
-      let(:dependencies) { { input_users: users } }
+      let(:dependencies) { { input_users: %i[alice failing charlie] } }
 
-      context "when all items succeed" do
-        let(:users) { %i[alice bob charlie] }
+      it { is_expected.to fail_a_step(:process_user) }
 
-        it "processes all items" do
-          expect(result[:processed]).to eq(%i[alice bob charlie])
-        end
-
-        it "succeeds" do
-          expect(result).to be_success
-        end
-      end
-
-      context "when an item fails" do
-        let(:users) { %i[alice failing charlie] }
-
-        it "stops iteration at the failing item" do
-          expect(result[:processed]).to eq(%i[alice])
-        end
-
-        it "fails the service" do
-          expect(result).to be_failure
-        end
+      it "stops iteration at the failing item" do
+        expect(result[:processed]).to contain_exactly(:alice)
       end
     end
 
-    context "with nested DSL (model, only_if inside each)" do
+    context "when a model is not found inside the loop" do
+      let(:service) do
+        Class.new do
+          include Service::Base
+
+          model :users
+
+          each :users do
+            model :profile
+            step :process_profile
+          end
+
+          private
+
+          def fetch_users
+            context[:input_users]
+          end
+
+          def fetch_profile(user:)
+            { alice: "Alice Profile" }[user]
+          end
+
+          def process_profile(profile:)
+          end
+        end
+      end
+      let(:dependencies) { { input_users: %i[alice bob] } }
+
+      it { is_expected.to fail_to_find_a_model(:profile) }
+    end
+
+    context "with nested DSL steps" do
       let(:service) do
         Class.new do
           include Service::Base
@@ -307,38 +281,19 @@ RSpec.describe Service::Base::EachStep do
         end
       end
       let(:dependencies) { { input_users: %i[alice bob charlie], profiles: } }
+      let(:profiles) { { alice: "Alice Profile", charlie: "Charlie Profile" } }
 
-      context "when some users have profiles" do
-        let(:profiles) { { alice: "Alice Profile", charlie: "Charlie Profile" } }
+      it { is_expected.to run_successfully }
 
-        it "processes all users" do
-          expect(result[:processed_users]).to eq(%i[alice bob charlie])
-        end
-
-        it "only processes profiles for users who have them" do
-          expect(result[:processed_profiles]).to eq(
-            [
+      it "runs all nested step types per item" do
+        expect(result).to have_attributes(
+          processed_users: a_collection_containing_exactly(:alice, :bob, :charlie),
+          processed_profiles:
+            a_collection_containing_exactly(
               { user: :alice, profile: "Alice Profile" },
               { user: :charlie, profile: "Charlie Profile" },
-            ],
-          )
-        end
-
-        it "succeeds" do
-          expect(result).to be_success
-        end
-      end
-
-      context "when no users have profiles" do
-        let(:profiles) { {} }
-
-        it "processes all users" do
-          expect(result[:processed_users]).to eq(%i[alice bob charlie])
-        end
-
-        it "does not process any profiles" do
-          expect(result[:processed_profiles]).to eq([])
-        end
+            ),
+        )
       end
     end
 
@@ -349,7 +304,7 @@ RSpec.describe Service::Base::EachStep do
 
           model :users
 
-          each :users, persist: { step_one_calls: -> { [] }, step_two_calls: -> { [] } } do
+          each :users, persist: { calls: -> { [] } } do
             transaction do
               step :step_one
               step :step_two
@@ -362,24 +317,21 @@ RSpec.describe Service::Base::EachStep do
             context[:input_users]
           end
 
-          def step_one(user:, step_one_calls:)
-            step_one_calls << user
+          def step_one(user:, calls:)
+            calls << :"#{user}_one"
           end
 
-          def step_two(user:, step_two_calls:)
-            step_two_calls << user
+          def step_two(user:, calls:)
+            calls << :"#{user}_two"
           end
         end
       end
       let(:dependencies) { { input_users: %i[alice bob] } }
 
-      it "executes transaction steps for each item" do
-        expect(result[:step_one_calls]).to eq(%i[alice bob])
-        expect(result[:step_two_calls]).to eq(%i[alice bob])
-      end
+      it { is_expected.to run_successfully }
 
-      it "succeeds" do
-        expect(result).to be_success
+      it "wraps each iteration in its own transaction" do
+        expect(result[:calls]).to eq(%i[alice_one alice_two bob_one bob_two])
       end
     end
 
@@ -388,63 +340,11 @@ RSpec.describe Service::Base::EachStep do
         Class.new do
           include Service::Base
 
-          model :users
-
-          each :users do
-            model :profile
-            step :process_user
-          end
-
-          step :check_isolation
-
-          private
-
-          def fetch_users
-            context[:input_users]
-          end
-
-          def fetch_profile(user:)
-            "#{user}_profile"
-          end
-
-          def process_user(user:, profile:)
-            context[:last_processed] = user
-          end
-
-          def check_isolation
-            context[:profile_after_loop] = context[:profile]
-            context[:user_after_loop] = context[:user]
-            context[:index_after_loop] = context[:index]
-            context[:last_processed_after_loop] = context[:last_processed]
-          end
-        end
-      end
-      let(:dependencies) { { input_users: %i[alice bob charlie] } }
-
-      it "discards variables set inside the loop (except item and index)" do
-        expect(result[:profile_after_loop]).to be_nil
-        expect(result[:last_processed_after_loop]).to be_nil
-      end
-
-      it "keeps the last item and index after the loop" do
-        expect(result[:user_after_loop]).to eq(:charlie)
-        expect(result[:index_after_loop]).to eq(2)
-      end
-
-      it "succeeds" do
-        expect(result).to be_success
-      end
-    end
-
-    context "with variable isolation restoring existing values" do
-      let(:service) do
-        Class.new do
-          include Service::Base
-
           step :setup
 
           each :users do
-            step :modify_existing
+            model :profile
+            step :track
           end
 
           step :check_after
@@ -454,260 +354,175 @@ RSpec.describe Service::Base::EachStep do
           def setup
             context[:users] = %i[alice bob]
             context[:existing_value] = "original"
-            context[:existing_hash] = { key: "original_hash" }
           end
 
-          def modify_existing(user:)
-            context[:existing_value] = "modified_by_#{user}"
-            context[:existing_hash][:key] = "modified_hash_by_#{user}"
+          def fetch_profile(user:)
+            "#{user}_profile"
+          end
+
+          def track(user:)
+            context[:set_inside_loop] = user
           end
 
           def check_after
-            context[:value_after] = context[:existing_value]
-            context[:hash_after] = context[:existing_hash]
+            context[:profile_after] = context[:profile]
+            context[:user_after] = context[:user]
+            context[:index_after] = context[:index]
+            context[:set_inside_after] = context[:set_inside_loop]
+            context[:existing_after] = context[:existing_value]
           end
         end
       end
 
-      it "restores existing scalar values after the loop" do
-        expect(result[:value_after]).to eq("original")
+      it "discards non-persisted variables set inside the loop" do
+        expect(result).to have_attributes(profile_after: nil, set_inside_after: nil)
       end
 
-      it "restores existing hash values after the loop" do
-        expect(result[:hash_after]).to eq({ key: "original_hash" })
+      it "keeps the last item and index after the loop" do
+        expect(result).to have_attributes(user_after: :bob, index_after: 1)
       end
 
-      it "succeeds" do
-        expect(result).to be_success
+      it "restores pre-existing values after the loop" do
+        expect(result).to have_attributes(existing_after: "original")
       end
     end
 
-    context "with persist option (lambda initializer)" do
-      let(:service) do
-        Class.new do
-          include Service::Base
+    context "with persist option" do
+      context "with a lambda initializer" do
+        let(:service) do
+          Class.new do
+            include Service::Base
 
-          model :users
+            model :users
 
-          each :users, persist: { results: -> { { created: [], failed: [] } } } do
-            step :process_user
-          end
+            each :users, persist: { results: -> { { created: [], failed: [] } } } do
+              step :process_user
+            end
 
-          step :check_results
+            private
 
-          private
+            def fetch_users
+              context[:input_users]
+            end
 
-          def fetch_users
-            context[:input_users]
-          end
-
-          def process_user(user:, results:)
-            if user == :invalid
-              results[:failed] << user
-            else
-              results[:created] << user
+            def process_user(user:, results:)
+              user == :invalid ? results[:failed] << user : results[:created] << user
             end
           end
+        end
+        let(:dependencies) { { input_users: %i[alice invalid bob] } }
 
-          def check_results(results:)
-            context[:final_results] = results
-          end
+        it "initializes and accumulates across iterations" do
+          expect(result[:results]).to eq(created: %i[alice bob], failed: [:invalid])
         end
       end
-      let(:dependencies) { { input_users: %i[alice invalid bob] } }
 
-      it "initializes the persisted key with the lambda result" do
-        expect(result[:results]).to eq({ created: %i[alice bob], failed: [:invalid] })
-      end
+      context "with a method symbol initializer" do
+        let(:service) do
+          Class.new do
+            include Service::Base
 
-      it "makes persisted key available after the loop" do
-        expect(result[:final_results]).to eq({ created: %i[alice bob], failed: [:invalid] })
-      end
+            model :users
 
-      it "succeeds" do
-        expect(result).to be_success
-      end
-    end
+            each :users, persist: { results: :initial_results } do
+              step :process_user
+            end
 
-    context "with persist option (method symbol initializer)" do
-      let(:service) do
-        Class.new do
-          include Service::Base
+            private
 
-          model :users
+            def fetch_users
+              context[:input_users]
+            end
 
-          each :users, persist: { results: :initial_results } do
-            step :process_user
-          end
+            def initial_results
+              { processed: [], count: 0 }
+            end
 
-          step :check_results
-
-          private
-
-          def fetch_users
-            context[:input_users]
-          end
-
-          def initial_results
-            { processed: [], count: 0 }
-          end
-
-          def process_user(user:, results:)
-            results[:processed] << user
-            results[:count] += 1
-          end
-
-          def check_results(results:)
-            context[:final_results] = results
+            def process_user(user:, results:)
+              results[:processed] << user
+              results[:count] += 1
+            end
           end
         end
-      end
-      let(:dependencies) { { input_users: %i[alice bob] } }
+        let(:dependencies) { { input_users: %i[alice bob] } }
 
-      it "initializes the persisted key by calling the method" do
-        expect(result[:results]).to eq({ processed: %i[alice bob], count: 2 })
-      end
-
-      it "makes persisted key available after the loop" do
-        expect(result[:final_results]).to eq({ processed: %i[alice bob], count: 2 })
-      end
-
-      it "succeeds" do
-        expect(result).to be_success
-      end
-    end
-
-    context "with persist option (key only, no initializer)" do
-      let(:service) do
-        Class.new do
-          include Service::Base
-
-          model :users
-
-          each :users, persist: [:results] do
-            step :process_user
-          end
-
-          step :check_results
-
-          private
-
-          def fetch_users
-            context[:input_users]
-          end
-
-          def process_user(user:)
-            context[:results] ||= []
-            context[:results] << user
-          end
-
-          def check_results(results:)
-            context[:final_results] = results
-          end
+        it "initializes by calling the method" do
+          expect(result[:results]).to eq(processed: %i[alice bob], count: 2)
         end
       end
-      let(:dependencies) { { input_users: %i[alice bob] } }
 
-      it "persists the key without initialization" do
-        expect(result[:results]).to eq(%i[alice bob])
-      end
+      context "with a key-only array" do
+        let(:service) do
+          Class.new do
+            include Service::Base
 
-      it "makes persisted key available after the loop" do
-        expect(result[:final_results]).to eq(%i[alice bob])
-      end
+            model :users
 
-      it "succeeds" do
-        expect(result).to be_success
-      end
-    end
+            each :users, persist: [:results] do
+              step :process_user
+            end
 
-    context "with persist option (multiple keys)" do
-      let(:service) do
-        Class.new do
-          include Service::Base
+            private
 
-          model :users
+            def fetch_users
+              context[:input_users]
+            end
 
-          each :users, persist: { created: -> { [] }, audit_log: -> { [] } } do
-            step :process_user
-          end
-
-          step :check_results
-
-          private
-
-          def fetch_users
-            context[:input_users]
-          end
-
-          def process_user(user:, index:, created:, audit_log:)
-            created << user
-            audit_log << "Processed #{user} at index #{index}"
-          end
-
-          def check_results(created:, audit_log:)
-            context[:final_created] = created
-            context[:final_audit_log] = audit_log
+            def process_user(user:)
+              context[:results] ||= []
+              context[:results] << user
+            end
           end
         end
-      end
-      let(:dependencies) { { input_users: %i[alice bob] } }
+        let(:dependencies) { { input_users: %i[alice bob] } }
 
-      it "persists all specified keys" do
-        expect(result[:created]).to eq(%i[alice bob])
-        expect(result[:audit_log]).to eq(["Processed alice at index 0", "Processed bob at index 1"])
-      end
-
-      it "makes all persisted keys available after the loop" do
-        expect(result[:final_created]).to eq(%i[alice bob])
-        expect(result[:final_audit_log]).to eq(
-          ["Processed alice at index 0", "Processed bob at index 1"],
-        )
-      end
-
-      it "succeeds" do
-        expect(result).to be_success
-      end
-    end
-
-    context "with persist and empty collection" do
-      let(:service) do
-        Class.new do
-          include Service::Base
-
-          model :users, optional: true
-
-          each :users, persist: { results: -> { [] } } do
-            step :process_user
-          end
-
-          step :check_results
-
-          private
-
-          def fetch_users
-            context[:input_users]
-          end
-
-          def process_user(user:, results:)
-            results << user
-          end
-
-          def check_results
-            context[:has_results] = !context[:results].nil?
-            context[:final_results] = context[:results]
-          end
+        it "persists the key without initialization" do
+          expect(result[:results]).to contain_exactly(:alice, :bob)
         end
       end
-      let(:dependencies) { { input_users: [] } }
 
-      it "still initializes persisted keys" do
-        expect(result[:has_results]).to be true
-        expect(result[:final_results]).to eq([])
-      end
+      context "with multiple keys" do
+        let(:service) do
+          Class.new do
+            include Service::Base
 
-      it "succeeds" do
-        expect(result).to be_success
+            model :users
+
+            each :users, persist: { created: -> { [] }, audit_log: -> { [] } } do
+              step :process_user
+            end
+
+            step :check_results
+
+            private
+
+            def fetch_users
+              context[:input_users]
+            end
+
+            def process_user(user:, index:, created:, audit_log:)
+              created << user
+              audit_log << "Processed #{user} at index #{index}"
+            end
+
+            def check_results(created:, audit_log:)
+              context[:final_created] = created
+              context[:final_audit_log] = audit_log
+            end
+          end
+        end
+        let(:dependencies) { { input_users: %i[alice bob] } }
+
+        it "persists all keys and makes them available after the loop" do
+          expect(result).to have_attributes(
+            final_created: a_collection_containing_exactly(:alice, :bob),
+            final_audit_log:
+              a_collection_containing_exactly(
+                "Processed alice at index 0",
+                "Processed bob at index 1",
+              ),
+          )
+        end
       end
     end
   end

@@ -30,7 +30,7 @@ module Service
         @isolated_store = to_h
         yield
       ensure
-        @store.merge!(@isolated_store.slice(*persist_keys))
+        @store.merge!(@isolated_store.slice(*persist_keys, *step_result_keys))
         @isolated_store = nil
       end
 
@@ -75,6 +75,10 @@ module Service
 
       def store
         @isolated_store || @store
+      end
+
+      def step_result_keys
+        store.keys.select { it.start_with?("result.") }
       end
 
       def method_missing(method_name, *args, &block)
