@@ -41,41 +41,7 @@ class GroupManager
 
     webhook_payloads = build_user_removed_webhook_payloads(group_users_to_remove)
 
-    Group.transaction do
-      @group.group_users.where(user_id: removed_user_ids).delete_all
-
-      User.where(primary_group_id: @group.id, id: removed_user_ids).update_all(
-        primary_group_id: nil,
-      )
-      User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
-
-      if @group.title.present?
-        DB.exec(<<~SQL, user_ids: removed_user_ids, title: @group.title)
-            UPDATE users u
-            SET title = NULL
-            WHERE u.id IN (:user_ids)
-              AND u.title = :title
-              AND NOT EXISTS (
-                SELECT 1 FROM group_users gu
-                JOIN groups g ON g.id = gu.group_id
-                WHERE gu.user_id = u.id
-                  AND g.title IS NOT NULL AND g.title <> ''
-              )
-              AND NOT EXISTS (
-                SELECT 1 FROM user_badges ub
-                JOIN badges b ON b.id = ub.badge_id
-                WHERE ub.user_id = u.id
-                  AND b.allow_title = true
-              )
-          SQL
-
-        User
-          .where(id: removed_user_ids, title: @group.title)
-          .find_each { |user| user.update_column(:title, user.next_best_title) }
-      end
-
-      Group.update_counters(@group.id, user_count: -removed_user_ids.size)
-    end
+    bulk_remove_transaction(removed_user_ids)
 
     if @group.grant_trust_level.present? && !@group.grant_trust_level.zero?
       Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
@@ -153,6 +119,44 @@ class GroupManager
     end
 
     added_user_ids
+  end
+
+  def bulk_remove_transaction(removed_user_ids)
+    Group.transaction do
+      @group.group_users.where(user_id: removed_user_ids).delete_all
+
+      User.where(primary_group_id: @group.id, id: removed_user_ids).update_all(
+        primary_group_id: nil,
+      )
+      User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
+
+      if @group.title.present?
+        DB.exec(<<~SQL, user_ids: removed_user_ids, title: @group.title)
+            UPDATE users u
+            SET title = NULL
+            WHERE u.id IN (:user_ids)
+              AND u.title = :title
+              AND NOT EXISTS (
+                SELECT 1 FROM group_users gu
+                JOIN groups g ON g.id = gu.group_id
+                WHERE gu.user_id = u.id
+                  AND g.title IS NOT NULL AND g.title <> ''
+              )
+              AND NOT EXISTS (
+                SELECT 1 FROM user_badges ub
+                JOIN badges b ON b.id = ub.badge_id
+                WHERE ub.user_id = u.id
+                  AND b.allow_title = true
+              )
+          SQL
+
+        User
+          .where(id: removed_user_ids, title: @group.title)
+          .find_each { |user| user.update_column(:title, user.next_best_title) }
+      end
+
+      Group.update_counters(@group.id, user_count: -removed_user_ids.size)
+    end
   end
 
   def publish_category_updates(user)
