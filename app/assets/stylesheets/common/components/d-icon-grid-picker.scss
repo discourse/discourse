@@ -1,0 +1,144 @@
+// Custom properties for the grid layout, set on the DMenu/modal container.
+// The DMenu identifier generates `.fk-d-menu.d-icon-grid-picker-content`
+// which doesn't follow the BEM `__` pattern, so it stays outside the block.
+.fk-d-menu.d-icon-grid-picker-content,
+.fk-d-menu-modal.d-icon-grid-picker-content {
+  --icon-grid-columns: 12;
+  --icon-grid-cell: 36px;
+  --icon-grid-gap: 2px;
+  --icon-grid-h-padding: 0.5rem;
+}
+
+.d-icon-grid-picker {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    width: calc(
+      var(--icon-grid-columns) * var(--icon-grid-cell) +
+        (var(--icon-grid-columns) - 1) * var(--icon-grid-gap) +
+        var(--icon-grid-h-padding) * 2 + 8px
+    );
+    max-height: 380px;
+  }
+
+  // Mirrors emoji-picker__filter-container
+  &__filter-container {
+    background: var(--primary-very-low);
+    display: flex;
+    height: 50px;
+  }
+
+  // Mirrors emoji-picker__filter
+  &__filter {
+    width: 100%;
+    margin: 0.5rem;
+    border-radius: var(--d-border-radius);
+    box-sizing: border-box;
+
+    input {
+      background-color: transparent !important;
+      width: 100%;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &.filter-input-container {
+      border-color: transparent;
+      background: var(--secondary);
+    }
+  }
+
+  // Parent grid that both favorites and icon grid share
+  &__grid-wrapper {
+    display: grid;
+    grid-template-columns: repeat(
+      var(--icon-grid-columns),
+      var(--icon-grid-cell)
+    );
+    gap: var(--icon-grid-gap);
+    padding: var(--icon-grid-h-padding);
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 300px;
+    scrollbar-width: thin;
+    box-sizing: border-box;
+  }
+
+  // Favorites row inherits parent columns via subgrid
+  &__favorites {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    padding-bottom: 0.25rem;
+  }
+
+  &__selected-name {
+    font-size: var(--font-down-1);
+    white-space: nowrap;
+    padding-left: 0.3em;
+    padding-right: 0.5em;
+  }
+
+  // Main icon grid inherits parent columns via subgrid
+  &__grid {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--icon-grid-cell);
+    height: var(--icon-grid-cell);
+    cursor: pointer;
+    color: var(--primary-high);
+
+    &:hover,
+    &:focus {
+      background: var(--primary-very-low);
+      border-radius: var(--d-border-radius);
+      transform: scale(1.25);
+    }
+
+    &.--selected {
+      background: var(--tertiary-low);
+      color: var(--tertiary);
+      border-radius: var(--d-border-radius);
+    }
+
+    // Inner grid so the chip icon aligns with the first grid column
+    &.d-icon-grid-picker__selected-chip {
+      display: grid;
+      grid-template-columns: var(--icon-grid-cell) 1fr;
+      align-items: center;
+      padding: 0;
+
+      .d-icon {
+        justify-self: center;
+      }
+    }
+
+    .d-icon {
+      font-size: var(--font-up-2);
+    }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    grid-column: 1 / -1;
+  }
+
+  &__empty {
+    padding: 1em;
+    text-align: center;
+    color: var(--primary-medium);
+    grid-column: 1 / -1;
+  }
+}
