@@ -40,6 +40,7 @@ describe "Embed mode" do
     visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
     expect(page).to have_css(".embed-topic-footer__first-reply")
+    expect(page).to have_css(".embed-topic-footer__first-reply .btn-primary")
   end
 
   it "shows powered by discourse badge" do
@@ -137,6 +138,12 @@ describe "Embed mode" do
 
       expect(page).to have_no_css("#reply-control.open")
       expect(page).to have_no_css("#reply-control.fullscreen")
+    end
+
+    it "shows login label on the embed first-reply footer" do
+      visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+
+      expect(page).to have_button(I18n.t("js.topic.login_reply"))
     end
   end
 end

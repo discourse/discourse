@@ -27,7 +27,10 @@ body.embed-mode {
   nav.post-controls .actions .show-more-actions,
   .software-update-prompt,
   .time-gap,
-  .topic-navigation {
+  .topic-navigation,
+  .post-stream .gap,
+  .container.posts:not(:has(.post-stream .topic-post ~ .topic-post))
+    ~ #topic-footer-buttons {
     display: none !important;
   }
 
@@ -96,7 +99,7 @@ body.embed-mode {
 
   // Hide OP
   // Use visibility hidden to prevent issues with jumpy behavior
-  .post-stream .topic-post.topic-owner {
+  .post-stream .topic-post.topic-owner:first-child {
     opacity: 0;
     height: 0;
     visibility: hidden;
