@@ -28,7 +28,7 @@ body.embed-mode {
   .software-update-prompt,
   .time-gap,
   .topic-navigation {
-    display: none;
+    display: none !important;
   }
 
   // Ensure content fills the width
