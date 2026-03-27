@@ -131,7 +131,7 @@ module ReleaseUtils
       confirm_or_abort "Ready to merge #{branch}?"
 
       if test_mode?
-        git "push", "origin", "#{branch}:#{base}"
+        git "push", "origin", "HEAD:#{base}"
         break
       else
         if !gh("pr", "ready", branch) # remove draft status
@@ -175,7 +175,7 @@ module ReleaseUtils
     path = "#{Rails.root}/tmp/version-bump-worktree-#{SecureRandom.hex}"
     begin
       FileUtils.mkdir_p(path)
-      git "worktree", "add", path, "origin/#{origin_branch}"
+      git "worktree", "add", "--detach", path, "origin/#{origin_branch}"
       Dir.chdir(path) { yield } # rubocop:disable Discourse/NoChdir
     ensure
       puts "Cleaning up temporary worktree..."

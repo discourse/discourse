@@ -235,9 +235,6 @@ namespace :release do
     branch = "security/#{base}-security-fixes"
 
     ReleaseUtils.with_clean_worktree(base) do
-      ReleaseUtils.git "branch", "-D", branch if ReleaseUtils.ref_exists?(branch)
-      ReleaseUtils.git "checkout", "-b", branch
-
       fix_refs.each do |ref|
         origin, origin_branch = ref.split("/", 2)
         ReleaseUtils.git "fetch", origin, origin_branch
@@ -261,11 +258,11 @@ namespace :release do
         ReleaseUtils.commit_version_bump(new_version, "DEV: Bump release branch to v#{new_version}")
       end
 
-      puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"
-      puts ReleaseUtils.git("log", "origin/#{base}..#{branch}")
+      puts "Finished merging commits into a locally-staged branch. Git log is:"
+      puts ReleaseUtils.git("log", "origin/#{base}..HEAD")
 
       ReleaseUtils.confirm_or_abort "Check the log above. Ready to push this branch to the origin and create a PR?"
-      ReleaseUtils.git("push", "-f", "--set-upstream", "origin", branch)
+      ReleaseUtils.git("push", "-f", "origin", "HEAD:refs/heads/#{branch}")
 
       ReleaseUtils.make_pr(
         base: base,
