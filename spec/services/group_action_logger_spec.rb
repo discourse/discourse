@@ -97,7 +97,7 @@ RSpec.describe GroupActionLogger do
     fab!(:user2, :user)
 
     it "creates a record for each user" do
-      expect { logger.bulk_log_add_user_to_group([user, user2]) }.to change {
+      expect { logger.bulk_log_add_user_to_group([user.id, user2.id]) }.to change {
         GroupHistory.where(action: GroupHistory.actions[:add_user_to_group]).count
       }.by(2)
 
@@ -117,7 +117,7 @@ RSpec.describe GroupActionLogger do
     fab!(:user2, :user)
 
     it "creates a record for each user" do
-      expect { logger.bulk_log_remove_user_from_group([user, user2]) }.to change {
+      expect { logger.bulk_log_remove_user_from_group([user.id, user2.id]) }.to change {
         GroupHistory.where(action: GroupHistory.actions[:remove_user_from_group]).count
       }.by(2)
 

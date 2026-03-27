@@ -44,12 +44,12 @@ class GroupActionLogger
     )
   end
 
-  def bulk_log_add_user_to_group(target_users, subject = nil)
-    bulk_log(target_users, :add_user_to_group, subject)
+  def bulk_log_add_user_to_group(target_user_ids, subject = nil)
+    bulk_log(target_user_ids, :add_user_to_group, subject)
   end
 
-  def bulk_log_remove_user_from_group(target_users, subject = nil)
-    bulk_log(target_users, :remove_user_from_group, subject)
+  def bulk_log_remove_user_from_group(target_user_ids, subject = nil)
+    bulk_log(target_user_ids, :remove_user_from_group, subject)
   end
 
   def log_change_group_settings
@@ -87,16 +87,16 @@ class GroupActionLogger
     { group: @group, acting_user: @acting_user }
   end
 
-  def bulk_log(target_users, action, subject = nil)
-    return if target_users.blank?
+  def bulk_log(target_user_ids, action, subject = nil)
+    return if target_user_ids.blank?
 
     now = Time.now
     GroupHistory.insert_all(
-      target_users.map do |user|
+      target_user_ids.map do |user_id|
         {
           group_id: @group.id,
           acting_user_id: @acting_user.id,
-          target_user_id: user.id,
+          target_user_id: user_id,
           action: GroupHistory.actions[action],
           created_at: now,
           updated_at: now,
