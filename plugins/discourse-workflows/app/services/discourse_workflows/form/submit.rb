@@ -24,10 +24,10 @@ module DiscourseWorkflows
       )
     end
 
-    def run_workflow(trigger_node:, params:)
+    def run_workflow(trigger_node:, params:, guardian:)
       form_data = trigger_node.form_data_from(params.form_data || {})
       trigger_data = { form_data: form_data, submitted_at: Time.current.utc.iso8601 }
-      DiscourseWorkflows::Executor.new(trigger_node, trigger_data).run
+      DiscourseWorkflows::Executor.new(trigger_node, trigger_data, user: guardian.user).run
     end
 
     def compute_response_metadata(trigger_node:)

@@ -50,7 +50,7 @@ module DiscourseWorkflows
           }
         end
 
-        def execute(context, input_items:, node_context:)
+        def execute(context, input_items:, node_context:, user: nil)
           config = resolve_config_with_items(context, input_items)
 
           raise WaitForHuman.new(

@@ -16,7 +16,7 @@ module DiscourseWorkflows
           %w[done loop]
         end
 
-        def execute(context, input_items:, node_context:)
+        def execute(context, input_items:, node_context:, user: nil)
           batch_size = (@configuration["batch_size"] || 1).to_i
           batch_size = 1 if batch_size < 1
 

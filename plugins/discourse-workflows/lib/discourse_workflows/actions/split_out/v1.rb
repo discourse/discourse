@@ -41,7 +41,7 @@ module DiscourseWorkflows
           {}
         end
 
-        def execute(context, input_items:, node_context:)
+        def execute(context, input_items:, node_context:, user: nil)
           field_names = parse_field_names(@configuration["field"])
           include_mode = @configuration["include"] || "no_other_fields"
           dest_names = parse_field_names(@configuration["destination_field_name"])

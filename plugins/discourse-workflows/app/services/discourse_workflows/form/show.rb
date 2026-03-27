@@ -47,20 +47,21 @@ module DiscourseWorkflows
       end
     end
 
-    def build_waiting_form_data(waiting_execution:, form_node:, params:)
+    def build_waiting_form_data(waiting_execution:, form_node:, params:, guardian:)
       wc = waiting_execution.waiting_config
+      resolver = ExpressionResolver.new({}, user: guardian.user)
       context[:form_data] = {
         uuid: params.uuid,
-        form_title: wc["form_title"],
-        form_description: wc["form_description"],
+        form_title: resolver.resolve(wc["form_title"]),
+        form_description: resolver.resolve(wc["form_description"]),
         form_fields: wc["form_fields"] || [],
         response_mode: "on_received",
         has_downstream_form: form_node.downstream_form?,
       }
     end
 
-    def build_trigger_form_data(form_node:, params:)
-      resolver = ExpressionResolver.new({})
+    def build_trigger_form_data(form_node:, params:, guardian:)
+      resolver = ExpressionResolver.new({}, user: guardian.user)
       config = resolver.resolve_hash(form_node.configuration.deep_stringify_keys)
       context[:form_data] = {
         uuid: params.uuid,

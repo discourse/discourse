@@ -19,9 +19,9 @@ module DiscourseWorkflows
         @configuration = configuration
       end
 
-      def execute(context, input_items:, node_context:)
+      def execute(context, input_items:, node_context:, user: nil)
         input_items.map do |item|
-          resolver = ExpressionResolver.new(context.merge("$json" => item["json"]))
+          resolver = ExpressionResolver.new(context.merge("$json" => item["json"]), user: user)
           resolved_config = resolver.resolve_hash(@configuration.deep_stringify_keys)
           result = execute_single(context, item: item, config: resolved_config)
           { "json" => result.deep_stringify_keys }

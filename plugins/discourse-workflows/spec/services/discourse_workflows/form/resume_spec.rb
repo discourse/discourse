@@ -6,7 +6,10 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, guardian:) }
+
+    fab!(:user)
+    let(:guardian) { Guardian.new(user) }
 
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, enabled: true) }
     fab!(:trigger_node) do

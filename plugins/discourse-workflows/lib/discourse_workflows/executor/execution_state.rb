@@ -3,12 +3,19 @@
 module DiscourseWorkflows
   class Executor
     class ExecutionState
-      attr_reader :workflow, :trigger_data, :execution, :context, :waiting_node, :waiting_step
+      attr_reader :workflow,
+                  :trigger_data,
+                  :execution,
+                  :context,
+                  :waiting_node,
+                  :waiting_step,
+                  :user
 
-      def initialize(workflow:, trigger_node:, trigger_data:)
+      def initialize(workflow:, trigger_node:, trigger_data:, user: nil)
         @workflow = workflow
         @trigger_node = trigger_node
         @trigger_data = trigger_data
+        @user = user
         reset_runtime_state
       end
 

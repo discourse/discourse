@@ -14,13 +14,15 @@ module DiscourseWorkflows
     def initialize(
       context,
       variable_store: VariableStore.new,
-      site_setting_store: SiteSettingStore.new
+      site_setting_store: SiteSettingStore.new,
+      user: nil
     )
       @lookup =
         LookupChain.new(
           context: context,
           variable_store: variable_store,
           site_setting_store: site_setting_store,
+          user: user,
         )
     end
 
@@ -79,11 +81,12 @@ module DiscourseWorkflows
     end
 
     class LookupChain
-      def initialize(context:, variable_store:, site_setting_store:)
+      def initialize(context:, variable_store:, site_setting_store:, user: nil)
         @resolvers = [
           NodeContextLookup.new(context),
           NodeOutputLookup.new(context),
           SiteSettingLookup.new(site_setting_store),
+          CurrentUserLookup.new(user),
           JsonLookup.new(context),
           VariableLookup.new(variable_store),
           ContextLookup.new(context),
@@ -171,6 +174,25 @@ module DiscourseWorkflows
       def resolve(expression)
         setting_name = expression.delete_prefix(PREFIX)
         @site_setting_store.fetch(setting_name)
+      end
+    end
+
+    class CurrentUserLookup
+      PREFIX = "$current_user."
+      ALLOWED_FIELDS = %w[id username].freeze
+
+      def initialize(user)
+        @user = user
+      end
+
+      def match?(expression)
+        expression.start_with?(PREFIX)
+      end
+
+      def resolve(expression)
+        field = expression.delete_prefix(PREFIX)
+        return nil if ALLOWED_FIELDS.exclude?(field)
+        @user&.public_send(field)
       end
     end
 

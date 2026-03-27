@@ -51,22 +51,23 @@ module DiscourseWorkflows
 
         attr_reader :logs
 
-        def execute(context, input_items:, node_context:)
+        def execute(context, input_items:, node_context:, user: nil)
           code = @configuration["code"].to_s
           @logs = []
           all_items_json = input_items.map { |item| item["json"] || {} }
           vars = DiscourseWorkflows::Variable.pluck(:key, :value).to_h
+          current_user_data = user ? { "id" => user.id, "username" => user.username } : {}
 
           input_items.map do |item|
             item_json = item["json"] || {}
-            result = execute_code(context, item_json, all_items_json, code, vars)
+            result = execute_code(context, item_json, all_items_json, code, vars, current_user_data)
             { "json" => result }
           end
         end
 
         private
 
-        def execute_code(context, item_json, all_items_json, code, vars)
+        def execute_code(context, item_json, all_items_json, code, vars, current_user_data)
           ctx = MiniRacer::Context.new(max_memory: MAX_MEMORY, timeout: TIMEOUT_MS)
           begin
             ctx.attach("__captureLog", proc { |*args| @logs << args.map(&:to_s).join(" ") })
@@ -88,6 +89,7 @@ module DiscourseWorkflows
             ctx.eval(<<~JS)
               var $json = #{item_json_js};
               var $vars = #{vars.to_json};
+              var $current_user = #{current_user_data.to_json};
               var $input = {
                 item: { json: #{item_json_js} },
                 all: function() { return #{all_items_json.to_json}.map(function(j) { return { json: j }; }); }

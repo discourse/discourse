@@ -44,7 +44,7 @@ module DiscourseWorkflows
           }
         end
 
-        def execute(context, input_items:, node_context:)
+        def execute(context, input_items:, node_context:, user: nil)
           config = resolve_config_with_items(context, input_items)
           query = config["query"]
           limit = [[(config["limit"] || DEFAULT_LIMIT).to_i, 1].max, MAX_LIMIT].min

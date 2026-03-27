@@ -28,14 +28,14 @@ module DiscourseWorkflows
       execution.workflow.nodes.find_by(id: execution.waiting_node_id)
     end
 
-    def resume_execution(execution:, waiting_node:, params:)
+    def resume_execution(execution:, waiting_node:, params:, guardian:)
       form_data =
         execution.accumulated_form_data.merge(waiting_node.form_data_from(params.form_data || {}))
 
       response_items = [
         { "json" => { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 } },
       ]
-      DiscourseWorkflows::Executor.resume(execution, response_items)
+      DiscourseWorkflows::Executor.resume(execution, response_items, user: guardian.user)
     end
   end
 end

@@ -26,7 +26,12 @@ module DiscourseWorkflows
         rescue => e
           metadata = step.metadata
           metadata["logs"] = instance.logs if instance.respond_to?(:logs) && instance.logs.present?
-          step.update!(status: :error, error: e.message, metadata: metadata, finished_at: Time.current)
+          step.update!(
+            status: :error,
+            error: e.message,
+            metadata: metadata,
+            finished_at: Time.current,
+          )
           raise
         end
       end
@@ -34,7 +39,7 @@ module DiscourseWorkflows
       private
 
       def resolve_config(node, input_items, raw_config)
-        resolver = ExpressionResolver.new(resolver_context(node, input_items))
+        resolver = ExpressionResolver.new(resolver_context(node, input_items), user: @state.user)
         resolver.resolve_hash(raw_config)
       end
 

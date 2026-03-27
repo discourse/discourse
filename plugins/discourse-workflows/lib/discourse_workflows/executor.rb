@@ -6,23 +6,25 @@ module DiscourseWorkflows
 
     delegate :execution, to: :@state
 
-    def initialize(trigger_node, trigger_data)
+    def initialize(trigger_node, trigger_data, user: nil)
       @trigger_node = trigger_node
       @workflow = trigger_node.workflow
       @trigger_data = trigger_data.deep_stringify_keys
+      @user = user
       @state =
         ExecutionState.new(
           workflow: @workflow,
           trigger_node: @trigger_node,
           trigger_data: @trigger_data,
+          user: @user,
         )
     end
 
-    def self.resume(execution, response_items)
+    def self.resume(execution, response_items, user: nil)
       return nil unless execution.waiting?
       trigger_node = execution.workflow.nodes.find_by(id: execution.trigger_node_id)
       return nil unless trigger_node
-      new(trigger_node, execution.trigger_data).resume_from(execution, response_items)
+      new(trigger_node, execution.trigger_data, user: user).resume_from(execution, response_items)
     end
 
     def run
@@ -119,6 +121,7 @@ module DiscourseWorkflows
             @state.context,
             input_items: input_items,
             node_context: @state.node_context_for(node),
+            user: @user,
           )
         end
 
