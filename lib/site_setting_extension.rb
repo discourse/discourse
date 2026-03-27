@@ -429,11 +429,18 @@ module SiteSettingExtension
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s
+        upcoming_change_default_override = upcoming_change_default_overrides[s]
+        upcoming_change_default_override_metadata = nil
 
-        if (override = upcoming_change_default_overrides[s]) &&
-             upcoming_change_metadata[override[:setting]] &&
-             UpcomingChanges.resolved_value(override[:setting])
-          default = override[:default].to_s
+        if upcoming_change_default_override &&
+             upcoming_change_metadata[upcoming_change_default_override[:setting]] &&
+             UpcomingChanges.resolved_value(upcoming_change_default_override[:setting])
+          upcoming_change_default_override_metadata = {
+            old_default: default,
+            new_default: upcoming_change_default_override[:default].to_s,
+            change_setting_name: upcoming_change_default_override[:setting],
+          }
+          default = upcoming_change_default_override[:default].to_s
         end
 
         if themeable[s]
@@ -484,7 +491,7 @@ module SiteSettingExtension
               value.to_s
             end
 
-          opts.merge!(
+          opts_data = {
             default: default,
             value: serialized_value,
             preview: previews[s],
@@ -496,8 +503,15 @@ module SiteSettingExtension
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
             depends_on: type_supervisor.dependencies[s],
-          )
-          opts.merge!(type_hash)
+          }
+
+          if upcoming_change_default_override_metadata
+            opts_data[
+              :upcoming_change_default_override_metadata
+            ] = upcoming_change_default_override_metadata
+          end
+
+          opts.merge!(opts_data.merge(type_hash))
         end
 
         opts[:plugin] = plugins[s] if plugins[s]

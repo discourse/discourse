@@ -149,12 +149,31 @@ export default class SiteSettingComponent extends Component {
     return this.setting.themeable;
   }
 
+  get showUpcomingChangeDefaultWarning() {
+    return this.setting.upcoming_change_default_override_metadata;
+  }
+
   get themeSiteSettingWarningText() {
     return trustHTML(
       i18n("admin.theme_site_settings.site_setting_warning", {
         basePath,
         defaultThemeName: sanitize(this.defaultTheme.name),
         defaultThemeId: this.defaultTheme.theme_id,
+      })
+    );
+  }
+
+  get upcomingChangeDefaultWarningText() {
+    return trustHTML(
+      i18n("admin.upcoming_changes.default_warning", {
+        basePath,
+        changeNamesFilter:
+          this.setting.upcoming_change_default_override_metadata
+            .change_setting_name,
+        oldDefaultValue:
+          this.setting.upcoming_change_default_override_metadata.old_default,
+        newDefaultValue:
+          this.setting.upcoming_change_default_override_metadata.new_default,
       })
     );
   }
@@ -496,10 +515,20 @@ export default class SiteSettingComponent extends Component {
             @outletArgs={{lazyHash setting=this.setting}}
           />
           {{#if this.showThemeSiteSettingWarning}}
-            <div class="setting-theme-warning">
+            <div class="setting-override-warning setting-theme-warning">
               <p class="setting-theme-warning__text">
                 {{icon "paintbrush"}}
                 {{this.themeSiteSettingWarningText}}
+              </p>
+            </div>
+          {{/if}}
+          {{#if this.showUpcomingChangeDefaultWarning}}
+            <div
+              class="setting-override-warning setting-upcoming-change-warning"
+            >
+              <p class="setting-upcoming-change-warning__text">
+                {{icon "flask"}}
+                {{this.upcomingChangeDefaultWarningText}}
               </p>
             </div>
           {{/if}}
