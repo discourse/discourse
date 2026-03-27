@@ -4,6 +4,8 @@ import {
   trackNextAjaxAsPageview,
   trackNextAjaxAsTopicView,
 } from "discourse/lib/ajax";
+import { sendBeaconPageview } from "discourse/lib/beacon-pageview";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
@@ -20,13 +22,17 @@ export default {
       document.querySelector("meta#discourse-error")?.dataset.discourseError ===
       "true";
     if (!isErrorPage) {
-      sendDeferredPageview();
+      const siteSettings = owner.lookup("service:site-settings");
+      if (!siteSettings.use_beacon_for_browser_page_views) {
+        sendDeferredPageview();
+      }
     }
 
     // Tell our AJAX system to track a page transition
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
+    router.on("routeDidChange", this.handleRouteDidChange);
 
     let appEvents = owner.lookup("service:app-events");
     let documentTitle = owner.lookup("service:document-title");
@@ -77,6 +83,55 @@ export default {
         }
       });
     }
+  },
+
+  handleRouteDidChange(transition) {
+    const owner = getOwner(this);
+    const siteSettings = owner.lookup("service:site-settings");
+
+    if (!siteSettings.use_beacon_for_browser_page_views) {
+      return;
+    }
+
+    const trackingSessionId = document.querySelector(
+      "meta[name=discourse-track-view-session-id]"
+    )?.content;
+    let destinationUrl, referrerUrl;
+
+    if (trackingSessionId) {
+      if (transition.from) {
+        const router = owner.lookup("service:router");
+        let referrerPath;
+        try {
+          referrerPath = router.urlFor(
+            transition.from.name,
+            ...Object.values(transition.from.params)
+          );
+        } catch {}
+
+        if (referrerPath) {
+          referrerUrl = getAbsoluteURL(referrerPath);
+        }
+      } else {
+        referrerUrl = document.referrer.length ? document.referrer : null;
+      }
+      destinationUrl = window.location.href;
+    }
+
+    let topicId;
+    if (
+      transition.to.name === "topic.fromParamsNear" ||
+      transition.to.name === "topic.fromParams"
+    ) {
+      topicId = transition.to.parent.params.id;
+    }
+
+    sendBeaconPageview({
+      sessionId: trackingSessionId,
+      url: destinationUrl,
+      referrer: referrerUrl,
+      topicId,
+    });
   },
 
   handleRouteWillChange(transition) {

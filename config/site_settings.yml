@@ -593,6 +593,10 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
+  use_beacon_for_browser_page_views:
+    default: false
+    hidden: true
+    client: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
