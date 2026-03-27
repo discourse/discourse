@@ -8,6 +8,14 @@ if defined?(DiscourseWorkflows)
           "action:ai_agent"
         end
 
+        def self.icon
+          "robot"
+        end
+
+        def self.color_key
+          "pink"
+        end
+
         def self.configuration_schema
           {
             agent_id: {

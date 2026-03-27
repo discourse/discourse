@@ -11,6 +11,14 @@ module DiscourseWorkflows
           "action:code"
         end
 
+        def self.icon
+          "code"
+        end
+
+        def self.color_key
+          "red"
+        end
+
         def self.configuration_schema
           {
             code: {

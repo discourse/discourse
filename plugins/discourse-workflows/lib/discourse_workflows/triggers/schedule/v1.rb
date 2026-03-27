@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:schedule"
         end
 
+        def self.icon
+          "calendar-days"
+        end
+
+        def self.color_key
+          "orange"
+        end
+
         def self.manually_triggerable?
           true
         end

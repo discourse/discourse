@@ -29,6 +29,9 @@ module DiscourseWorkflows
           available_versions: available_versions,
         }
 
+        schema[:icon] = latest_class.icon if latest_class.icon
+        schema[:color_key] = latest_class.color_key if latest_class.color_key
+
         if available_versions.size > 1
           schema[:configuration_schema_versions] = available_versions.to_h do |version|
             [version, Registry.find_node_type(identifier, version: version).configuration_schema]

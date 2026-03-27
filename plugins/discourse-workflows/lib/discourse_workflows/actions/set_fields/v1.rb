@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:set_fields"
         end
 
+        def self.icon
+          "list"
+        end
+
+        def self.color_key
+          "green"
+        end
+
         def self.configuration_schema
           {
             include_input: {

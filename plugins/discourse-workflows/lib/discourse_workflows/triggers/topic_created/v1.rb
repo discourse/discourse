@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:topic_created"
         end
 
+        def self.icon
+          "plus"
+        end
+
+        def self.color_key
+          "teal"
+        end
+
         def self.event_name
           :topic_created
         end

@@ -11,6 +11,14 @@ module DiscourseWorkflows
           "action:list_topics"
         end
 
+        def self.icon
+          "list"
+        end
+
+        def self.color_key
+          "light-blue"
+        end
+
         def self.configuration_schema
           {
             query: {

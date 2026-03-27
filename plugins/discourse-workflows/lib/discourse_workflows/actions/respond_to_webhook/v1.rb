@@ -10,6 +10,14 @@ module DiscourseWorkflows
           "action:respond_to_webhook"
         end
 
+        def self.icon
+          "reply"
+        end
+
+        def self.color_key
+          "purple"
+        end
+
         def self.metadata
           { icon: "reply" }
         end

@@ -88,7 +88,7 @@ export default class WorkflowNode extends Component {
     e.stopPropagation();
     e.preventDefault();
     this.router.transitionTo(
-      "adminPlugins.show.discourse-workflows.data-tables.show",
+      "adminPlugins.show.discourse-workflows-data-tables.show",
       this.dataTableId
     );
   }

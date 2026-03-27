@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:split_out"
         end
 
+        def self.icon
+          "arrows-turn-to-dots"
+        end
+
+        def self.color_key
+          "yellow"
+        end
+
         def self.configuration_schema
           {
             field: {

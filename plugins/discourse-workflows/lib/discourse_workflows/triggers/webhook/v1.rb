@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:webhook"
         end
 
+        def self.icon
+          "globe"
+        end
+
+        def self.color_key
+          "purple"
+        end
+
         def self.output_schema
           { body: :object, headers: :object, query: :object, method: :string, webhook_url: :string }
         end

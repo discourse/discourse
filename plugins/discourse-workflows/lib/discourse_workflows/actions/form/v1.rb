@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:form"
         end
 
+        def self.icon
+          "rectangle-list"
+        end
+
+        def self.color_key
+          "blue"
+        end
+
         def self.metadata
           { icon: "rectangle-list", category: "human_review" }
         end

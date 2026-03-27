@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:stale_topic"
         end
 
+        def self.icon
+          "clock"
+        end
+
+        def self.color_key
+          "deep-orange"
+        end
+
         def self.output_schema
           { topic_id: :integer, topic_title: :string, tags: :array, category_id: :integer }
         end

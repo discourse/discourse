@@ -6,6 +6,10 @@ import { getNodeColor, getNodeIcons } from "./node-utils";
 
 let cachedNodeTypes = null;
 
+export function getCachedNodeTypes() {
+  return cachedNodeTypes;
+}
+
 export async function loadNodeTypes() {
   if (cachedNodeTypes) {
     return cachedNodeTypes;

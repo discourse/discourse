@@ -7,6 +7,14 @@ module DiscourseWorkflows
         raise NotImplementedError
       end
 
+      def self.icon
+        nil
+      end
+
+      def self.color_key
+        nil
+      end
+
       def self.event_name
         nil
       end

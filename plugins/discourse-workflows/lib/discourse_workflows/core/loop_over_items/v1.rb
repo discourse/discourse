@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "core:loop_over_items"
         end
 
+        def self.icon
+          "arrow-rotate-right"
+        end
+
+        def self.color_key
+          "brown"
+        end
+
         def self.configuration_schema
           { batch_size: { type: :integer, required: true, default: 1, min: 1 } }
         end

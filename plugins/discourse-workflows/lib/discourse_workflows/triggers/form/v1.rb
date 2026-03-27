@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:form"
         end
 
+        def self.icon
+          "rectangle-list"
+        end
+
+        def self.color_key
+          "teal"
+        end
+
         def self.metadata
           { icon: "rectangle-list", category: "triggers" }
         end

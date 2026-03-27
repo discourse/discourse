@@ -8,6 +8,10 @@ module DiscourseWorkflows
           "trigger:manual"
         end
 
+        def self.icon
+          "arrow-pointer"
+        end
+
         def self.manually_triggerable?
           true
         end

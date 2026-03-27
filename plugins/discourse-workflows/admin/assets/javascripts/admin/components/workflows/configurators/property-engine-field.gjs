@@ -7,6 +7,7 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -107,7 +108,10 @@ export default class PropertyEngineField extends Component {
   }
 
   get fieldType() {
-    if (this.controlComponent || ["category", "user"].includes(this.control)) {
+    if (
+      this.controlComponent ||
+      ["category", "user", "user_or_group"].includes(this.control)
+    ) {
       return "custom";
     }
 
@@ -398,6 +402,16 @@ export default class PropertyEngineField extends Component {
                 @value={{if field.value field.value null}}
                 @onChange={{fn this.handleUserChange field}}
                 @options={{hash maximum=1 excludeCurrentUser=false}}
+              />
+            {{else if (eq this.control "user_or_group")}}
+              <EmailGroupUserChooser
+                @value={{if field.value field.value null}}
+                @onChange={{fn this.handleUserChange field}}
+                @options={{hash
+                  maximum=1
+                  includeGroups=true
+                  excludeCurrentUser=false
+                }}
               />
             {{/if}}
           </WrappedControl>

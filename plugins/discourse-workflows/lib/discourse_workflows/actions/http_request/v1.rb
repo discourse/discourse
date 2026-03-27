@@ -11,6 +11,14 @@ module DiscourseWorkflows
           "action:http_request"
         end
 
+        def self.icon
+          "globe"
+        end
+
+        def self.color_key
+          "indigo"
+        end
+
         def self.configuration_schema
           {
             method: {

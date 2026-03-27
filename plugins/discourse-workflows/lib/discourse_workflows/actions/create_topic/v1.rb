@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:create_topic"
         end
 
+        def self.icon
+          "plus"
+        end
+
+        def self.color_key
+          "light-green"
+        end
+
         def self.configuration_schema
           {
             title: {
@@ -60,7 +68,7 @@ module DiscourseWorkflows
             params: {
               title: config["title"],
               raw: config["raw"],
-              category_id: config["category_id"].present? ? config["category_id"].to_i : nil,
+              category_id: (config["category_id"].presence&.to_i),
             },
             options: {
               tags: tag_names.presence,

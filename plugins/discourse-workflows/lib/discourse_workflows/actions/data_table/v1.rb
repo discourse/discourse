@@ -10,6 +10,14 @@ module DiscourseWorkflows
           "action:data_table"
         end
 
+        def self.icon
+          "table"
+        end
+
+        def self.color_key
+          "violet"
+        end
+
         def self.configuration_schema
           {
             operation: {

@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:wait_for_approval"
         end
 
+        def self.icon
+          "user-check"
+        end
+
+        def self.color_key
+          "cyan"
+        end
+
         def self.output_schema
           { approved: :boolean, channel_id: :integer }
         end
@@ -58,8 +66,7 @@ module DiscourseWorkflows
                   approve_label: config["approve_label"].presence || "Approve",
                   deny_label: config["deny_label"].presence || "Deny",
                   channel_id: config["channel_id"],
-                  timeout_minutes:
-                    config["timeout_minutes"].present? ? config["timeout_minutes"].to_i : nil,
+                  timeout_minutes: (config["timeout_minutes"].presence&.to_i),
                   timeout_action: config["timeout_action"].presence || "deny",
                 )
         end

@@ -189,18 +189,17 @@ export default class WorkflowCanvas extends Component {
 
     this.args.onAreaReady?.(this.reteApi.area);
 
+    const types = await loadNodeTypes();
+    this.manuallyTriggerableTypes = new Set(
+      (types || [])
+        .filter((t) => t.manually_triggerable)
+        .map((t) => t.identifier)
+    );
+
     this.isLoading = false;
     await this.syncToRete();
     this.#syncAreaTransform();
     element.focus();
-
-    loadNodeTypes().then((types) => {
-      this.manuallyTriggerableTypes = new Set(
-        (types || [])
-          .filter((t) => t.manually_triggerable)
-          .map((t) => t.identifier)
-      );
-    });
   }
 
   #syncAreaTransform() {

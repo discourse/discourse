@@ -20,9 +20,11 @@ module DiscourseWorkflows
         threshold = hours.hours.ago
         triggered_ids = Set.new(node.triggered_topic_ids)
 
-        new_topic_ids = []
+        current_stale_ids = []
 
         stale_topics(threshold).find_each do |topic|
+          current_stale_ids << topic.id
+
           next if triggered_ids.include?(topic.id)
 
           trigger = DiscourseWorkflows::Triggers::StaleTopic::V1.new(topic)
@@ -32,11 +34,9 @@ module DiscourseWorkflows
             trigger_node_id: node.id,
             trigger_data: trigger.output,
           )
-
-          new_topic_ids << topic.id
         end
 
-        node.track_triggered_topics!(new_topic_ids)
+        node.replace_triggered_topic_ids!(current_stale_ids)
       end
     end
 

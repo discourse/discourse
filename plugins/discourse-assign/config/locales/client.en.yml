@@ -195,3 +195,11 @@ en:
       title: "Edit assignments"
       topic: "Topic"
       post: "Post"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "Assign topic"
+      node_descriptions:
+        "action:assign_topic": "Assign a topic to a user or group"
+      assign_topic:
+        topic_id: "Topic ID"
+        assignee: "Assignee"

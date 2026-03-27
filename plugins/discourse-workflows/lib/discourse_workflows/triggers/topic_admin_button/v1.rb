@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:topic_admin_button"
         end
 
+        def self.icon
+          "gear"
+        end
+
+        def self.color_key
+          "cyan"
+        end
+
         def self.manually_triggerable?
           true
         end

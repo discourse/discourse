@@ -1,5 +1,6 @@
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import { getCachedNodeTypes } from "./node-types";
 
 const NODE_WIDTH = 130;
 const NODE_HEIGHT_BASE = 90;
@@ -13,42 +14,24 @@ export {
   NODE_WIDTH,
 };
 
-const DEFAULT_NODE_ICONS = {
-  "trigger:manual": { icon: "arrow-pointer" },
-  "trigger:webhook": { icon: "globe", colorKey: "purple" },
-  "trigger:stale_topic": { icon: "clock", colorKey: "deep-orange" },
-  "trigger:schedule": { icon: "calendar-days", colorKey: "orange" },
-  "trigger:topic_closed": { icon: "lock", colorKey: "grey" },
-  "trigger:post_created": { icon: "comment", colorKey: "indigo" },
-  "trigger:topic_created": { icon: "plus", colorKey: "teal" },
-  "trigger:topic_category_changed": {
-    icon: "folder-open",
-    colorKey: "deep-orange",
-  },
-  "trigger:form": { icon: "rectangle-list", colorKey: "teal" },
-  "trigger:topic_admin_button": { icon: "gear", colorKey: "cyan" },
-  "condition:if": { icon: "arrows-split-up-and-left", colorKey: "blue" },
-  "condition:filter": { icon: "filter", colorKey: "violet" },
-  "action:code": { icon: "code", colorKey: "red" },
-  "action:ai_agent": { icon: "robot", colorKey: "pink" },
-  "action:append_tags": { icon: "tags", colorKey: "orange" },
-  "action:set_fields": { icon: "list", colorKey: "green" },
-  "action:fetch_topic": { icon: "download", colorKey: "light-blue" },
-  "action:list_topics": { icon: "list", colorKey: "light-blue" },
-  "action:create_post": { icon: "reply", colorKey: "teal" },
-  "action:create_topic": { icon: "plus", colorKey: "light-green" },
-  "action:split_out": { icon: "arrows-turn-to-dots", colorKey: "yellow" },
-  "action:http_request": { icon: "globe", colorKey: "indigo" },
-  "action:data_table": { icon: "table", prefix: "fas", colorKey: "violet" },
-  "action:wait_for_approval": { icon: "user-check", colorKey: "cyan" },
-  "action:form": { icon: "rectangle-list", colorKey: "blue" },
-  "action:award_badge": { icon: "certificate", colorKey: "yellow" },
-  "action:respond_to_webhook": { icon: "reply", colorKey: "purple" },
-  "core:loop_over_items": { icon: "arrow-rotate-right", colorKey: "brown" },
-};
+function buildNodeIcons() {
+  const icons = {};
+  const nodeTypes = getCachedNodeTypes();
+  if (nodeTypes) {
+    for (const nt of nodeTypes) {
+      if (nt.icon) {
+        icons[nt.identifier] = {
+          icon: nt.icon,
+          ...(nt.color_key && { colorKey: nt.color_key }),
+        };
+      }
+    }
+  }
+  return icons;
+}
 
 export function getNodeIcons() {
-  return applyValueTransformer("workflow-node-icons", DEFAULT_NODE_ICONS);
+  return applyValueTransformer("workflow-node-icons", buildNodeIcons());
 }
 
 export function getNodeColor(identifier) {

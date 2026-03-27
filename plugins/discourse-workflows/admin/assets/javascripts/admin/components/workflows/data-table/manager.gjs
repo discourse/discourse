@@ -129,7 +129,7 @@ export default class DataTablesManager extends Component {
                   <tr>
                     <td>
                       <LinkTo
-                        @route="adminPlugins.show.discourse-workflows.data-tables.show"
+                        @route="adminPlugins.show.discourse-workflows-data-tables.show"
                         @model={{dataTable.id}}
                         class="workflows-data-tables-manager__name-link"
                       >{{dataTable.name}}</LinkTo>

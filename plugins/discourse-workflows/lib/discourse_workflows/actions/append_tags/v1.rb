@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:append_tags"
         end
 
+        def self.icon
+          "tags"
+        end
+
+        def self.color_key
+          "orange"
+        end
+
         def self.configuration_schema
           {
             topic_id: {

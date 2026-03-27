@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:post_created"
         end
 
+        def self.icon
+          "comment"
+        end
+
+        def self.color_key
+          "indigo"
+        end
+
         def self.event_name
           :post_created
         end

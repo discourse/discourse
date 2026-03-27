@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:topic_category_changed"
         end
 
+        def self.icon
+          "folder-open"
+        end
+
+        def self.color_key
+          "deep-orange"
+        end
+
         def self.event_name
           :topic_category_changed
         end

@@ -137,7 +137,7 @@ export default class DataTableViewer extends Component {
   @action
   goBack() {
     this.router.transitionTo(
-      "adminPlugins.show.discourse-workflows.data-tables"
+      "adminPlugins.show.discourse-workflows-data-tables"
     );
   }
 

@@ -8,6 +8,14 @@ if defined?(DiscourseWorkflows)
           "action:send_chat_message"
         end
 
+        def self.icon
+          "comment"
+        end
+
+        def self.color_key
+          "teal"
+        end
+
         def self.output_schema
           { channel_id: :integer, message: :string }
         end

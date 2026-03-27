@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:award_badge"
         end
 
+        def self.icon
+          "certificate"
+        end
+
+        def self.color_key
+          "yellow"
+        end
+
         def self.configuration_schema
           {
             user_id: {

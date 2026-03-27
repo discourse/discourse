@@ -67,16 +67,22 @@ RSpec.describe DiscourseWorkflows::Execution::CheckStaleTopics do
       end
     end
 
-    context "when topic is removed from static_data" do
+    context "when a previously stale topic gets activity and goes stale again" do
       it "fires again" do
         described_class.call
         expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(1)
+        expect(trigger_node.reload.triggered_topic_ids).to include(topic.id)
 
-        trigger_node.update!(static_data: {})
+        topic.update!(last_posted_at: 1.hour.ago)
         Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+        described_class.call
+        expect(trigger_node.reload.triggered_topic_ids).not_to include(topic.id)
 
+        topic.update!(last_posted_at: 48.hours.ago)
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
         described_class.call
         expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(1)
+        expect(trigger_node.reload.triggered_topic_ids).to include(topic.id)
       end
     end
 

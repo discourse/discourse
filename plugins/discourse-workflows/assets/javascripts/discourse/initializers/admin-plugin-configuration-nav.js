@@ -21,19 +21,19 @@ export default {
         },
         {
           label: "discourse_workflows.variables.title",
-          route: "adminPlugins.show.discourse-workflows.variables",
+          route: "adminPlugins.show.discourse-workflows-variables",
         },
         {
           label: "discourse_workflows.data_tables.title",
-          route: "adminPlugins.show.discourse-workflows.data-tables",
+          route: "adminPlugins.show.discourse-workflows-data-tables",
         },
         {
           label: "discourse_workflows.executions.title",
-          route: "adminPlugins.show.discourse-workflows.executions",
+          route: "adminPlugins.show.discourse-workflows-executions",
         },
         {
           label: "discourse_workflows.templates.title",
-          route: "adminPlugins.show.discourse-workflows.templates",
+          route: "adminPlugins.show.discourse-workflows-templates",
         },
       ]);
     });

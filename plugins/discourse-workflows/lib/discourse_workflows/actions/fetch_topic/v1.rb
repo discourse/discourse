@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:fetch_topic"
         end
 
+        def self.icon
+          "download"
+        end
+
+        def self.color_key
+          "light-blue"
+        end
+
         def self.configuration_schema
           { topic_id: { type: :string, required: true } }
         end

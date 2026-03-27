@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "condition:if"
         end
 
+        def self.icon
+          "arrows-split-up-and-left"
+        end
+
+        def self.color_key
+          "blue"
+        end
+
         def self.configuration_schema
           {
             combinator: {

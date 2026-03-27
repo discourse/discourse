@@ -7,6 +7,14 @@ module DiscourseWorkflows
         def self.identifier
           "condition:filter"
         end
+
+        def self.icon
+          "filter"
+        end
+
+        def self.color_key
+          "violet"
+        end
       end
     end
   end

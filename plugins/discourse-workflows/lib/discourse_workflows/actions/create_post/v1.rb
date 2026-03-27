@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "action:create_post"
         end
 
+        def self.icon
+          "reply"
+        end
+
+        def self.color_key
+          "teal"
+        end
+
         def self.configuration_schema
           {
             topic_id: {

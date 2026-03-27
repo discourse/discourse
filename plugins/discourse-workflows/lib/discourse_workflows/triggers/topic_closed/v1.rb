@@ -8,6 +8,14 @@ module DiscourseWorkflows
           "trigger:topic_closed"
         end
 
+        def self.icon
+          "lock"
+        end
+
+        def self.color_key
+          "grey"
+        end
+
         def self.event_name
           :topic_status_updated
         end

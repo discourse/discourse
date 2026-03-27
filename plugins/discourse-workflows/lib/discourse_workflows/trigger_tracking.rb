@@ -16,13 +16,9 @@ module DiscourseWorkflows
       static_data.fetch("triggered_topic_ids", [])
     end
 
-    def track_triggered_topics!(topic_ids)
-      return if topic_ids.blank?
+    def replace_triggered_topic_ids!(topic_ids)
       reload
-      update!(
-        static_data:
-          static_data.merge("triggered_topic_ids" => (triggered_topic_ids + topic_ids).uniq),
-      )
+      update!(static_data: static_data.merge("triggered_topic_ids" => topic_ids))
     end
 
     private
