@@ -422,7 +422,7 @@ export default class AdminWelcomeBannerForm extends Component {
           @type="color"
           as |field|
         >
-          <field.Control @allowNamedColors={{true}} />
+          <field.Control @allowNamedColors={{true}} @prefixHex={{true}} />
         </form.Field>
 
         <form.Field

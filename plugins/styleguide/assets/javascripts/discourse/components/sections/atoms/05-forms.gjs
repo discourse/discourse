@@ -256,6 +256,18 @@ const USED_COLORS = ["00FF00"];
 </template>`;
   }
 
+  get colorPrefixHexCode() {
+    return `import Form from "discourse/components/form";
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Color" @name="color" @type="color" as |field|>
+      <field.Control @prefixHex={{true}} placeholder="RRGGBB" />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
   get sectionCode() {
     return `import Form from "discourse/components/form";
 
@@ -631,6 +643,17 @@ import Form from "discourse/components/form";
       <Form as |form|>
         <form.Field @title="Color" @name="color" @type="color" as |field|>
           <field.Control @allowNamedColors={{true}} placeholder="red, FF0000" />
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title="Color with # prefix in value"
+      @code={{this.colorPrefixHexCode}}
+    >
+      <Form as |form|>
+        <form.Field @title="Color" @name="color" @type="color" as |field|>
+          <field.Control @prefixHex={{true}} placeholder="RRGGBB" />
         </form.Field>
       </Form>
     </StyleguideExample>

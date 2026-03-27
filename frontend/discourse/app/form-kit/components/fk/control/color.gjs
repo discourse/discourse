@@ -66,7 +66,7 @@ export default class FKControlColor extends FKBaseControl {
   @service currentUser;
 
   get showPrefix() {
-    return !this.args.allowNamedColors;
+    return this.args.prefixHex || !this.args.allowNamedColors;
   }
 
   get maxLength() {
@@ -103,8 +103,13 @@ export default class FKControlColor extends FKBaseControl {
     );
   }
 
-  get normalizedValueForPicker() {
+  get bareValue() {
     const value = this.args.field.value;
+    return value?.replace(/^#/, "") ?? "";
+  }
+
+  get normalizedValueForPicker() {
+    const value = this.bareValue;
     if (!value) {
       return "#000000";
     }
@@ -121,7 +126,7 @@ export default class FKControlColor extends FKBaseControl {
   }
 
   get pickerIconClass() {
-    const value = this.args.field.value;
+    const value = this.bareValue;
     if (!value || !isValidHex(value)) {
       return "--is-light";
     }
@@ -130,33 +135,41 @@ export default class FKControlColor extends FKBaseControl {
     return calculateLuminance(hex) > 0.5 ? "--is-light" : "--is-dark";
   }
 
+  setValue(value) {
+    if (this.args.prefixHex && value && isValidHex(value.replace(/^#/, ""))) {
+      value = value.startsWith("#") ? value : `#${value}`;
+    }
+    this.args.field.set(value);
+  }
+
   @action
   handleTextInput(event) {
-    this.args.field.set(event.target.value);
+    this.setValue(event.target.value);
   }
 
   @action
   handleBlur() {
     if (!this.args.field.value && this.args.fallbackValue) {
-      this.args.field.set(this.args.fallbackValue);
+      this.setValue(this.args.fallbackValue);
     }
   }
 
   @action
   handlePickerInput(event) {
-    this.args.field.set(event.target.value.replace(/^#/, ""));
+    const value = event.target.value.replace(/^#/, "");
+    this.setValue(value);
   }
 
   @action
   handlePaste(event) {
     event.preventDefault();
     const colorCode = event.clipboardData.getData("text/plain") ?? "";
-    this.args.field.set(colorCode.replace(/^#/, ""));
+    this.setValue(colorCode.replace(/^#/, ""));
   }
 
   @action
   selectColor(color, closeMenu) {
-    this.args.field.set(color);
+    this.setValue(color);
     if (typeof closeMenu === "function") {
       closeMenu();
     }
@@ -170,7 +183,7 @@ export default class FKControlColor extends FKBaseControl {
         {{/if}}
         <input
           type="text"
-          value={{@field.value}}
+          value={{this.bareValue}}
           maxlength={{this.maxLength}}
           class="form-kit__control-color-input-hex"
           disabled={{@field.disabled}}
