@@ -21,6 +21,7 @@ module DiscourseWorkflows
       step :add_storage_column
     end
 
+    step :log
     step :reset_cached_size
 
     private
@@ -39,6 +40,15 @@ module DiscourseWorkflows
 
     def add_storage_column(data_table:, column:)
       DiscourseWorkflows::DataTableStorage.add_column!(data_table.id, column)
+    end
+
+    def log(guardian:, data_table:, column:)
+      StaffActionLogger.new(guardian.user).log_custom(
+        "discourse_workflows_data_table_column_created",
+        subject: data_table.name,
+        column_name: column.name,
+        column_type: column.column_type,
+      )
     end
 
     def reset_cached_size

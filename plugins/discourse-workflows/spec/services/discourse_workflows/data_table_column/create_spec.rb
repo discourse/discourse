@@ -8,7 +8,9 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Create do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, guardian: admin.guardian) }
+
+    fab!(:admin)
 
     fab!(:data_table) do
       Fabricate(
@@ -47,6 +49,14 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Create do
       it "creates the column metadata" do
         expect { result }.to change(data_table.columns, :count).by(1)
         expect(data_table.reload.columns.map(&:name)).to eq(%w[email score])
+      end
+
+      it "logs a staff action" do
+        result
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "discourse_workflows_data_table_column_created",
+          subject: data_table.name,
+        )
       end
 
       it "preserves existing row data" do

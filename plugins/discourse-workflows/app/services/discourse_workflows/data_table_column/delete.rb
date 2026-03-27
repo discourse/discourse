@@ -21,6 +21,7 @@ module DiscourseWorkflows
       step :resequence_columns
     end
 
+    step :log
     step :reset_cached_size
 
     private
@@ -44,6 +45,14 @@ module DiscourseWorkflows
     def resequence_columns(data_table:)
       data_table.reload
       data_table.reorder_columns!(data_table.columns.order(:position, :id))
+    end
+
+    def log(guardian:, data_table:, column:)
+      StaffActionLogger.new(guardian.user).log_custom(
+        "discourse_workflows_data_table_column_destroyed",
+        subject: data_table.name,
+        column_name: column.name,
+      )
     end
 
     def reset_cached_size

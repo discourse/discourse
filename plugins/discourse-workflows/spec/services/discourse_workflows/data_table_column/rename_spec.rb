@@ -8,7 +8,9 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Rename do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, guardian: admin.guardian) }
+
+    fab!(:admin)
 
     fab!(:data_table) do
       Fabricate(
@@ -44,6 +46,16 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Rename do
 
     context "when everything is ok" do
       it { is_expected.to run_successfully }
+
+      it "logs a staff action" do
+        result
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "discourse_workflows_data_table_column_renamed",
+          subject: data_table.name,
+          previous_value: "email",
+          new_value: "contact_email",
+        )
+      end
 
       it "renames the column metadata" do
         result

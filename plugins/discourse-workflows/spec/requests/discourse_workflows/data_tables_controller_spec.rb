@@ -2,14 +2,41 @@
 
 RSpec.describe DiscourseWorkflows::DataTablesController do
   fab!(:admin)
+  fab!(:user)
 
   before do
     SiteSetting.discourse_workflows_enabled = true
     sign_in(admin)
   end
 
+  shared_examples "requires admin" do |method, path_proc, params_proc = nil|
+    it "returns 404 when not logged in" do
+      sign_in(Fabricate(:anonymous))
+      public_send(
+        method,
+        instance_exec(&path_proc),
+        params: params_proc&.then { instance_exec(&_1) },
+      )
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when not admin" do
+      sign_in(user)
+      public_send(
+        method,
+        instance_exec(&path_proc),
+        params: params_proc&.then { instance_exec(&_1) },
+      )
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "GET /admin/plugins/discourse-workflows/data-tables" do
     fab!(:data_table, :discourse_workflows_data_table)
+
+    include_examples "requires admin",
+                     :get,
+                     -> { "/admin/plugins/discourse-workflows/data-tables.json" }
 
     it "lists data tables" do
       get "/admin/plugins/discourse-workflows/data-tables.json"
@@ -44,6 +71,10 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
   describe "GET /admin/plugins/discourse-workflows/data-tables/:id" do
     fab!(:data_table, :discourse_workflows_data_table)
 
+    include_examples "requires admin",
+                     :get,
+                     -> { "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json" }
+
     it "returns the data table" do
       get "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json"
       expect(response.status).to eq(200)
@@ -58,6 +89,11 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
   end
 
   describe "POST /admin/plugins/discourse-workflows/data-tables" do
+    include_examples "requires admin",
+                     :post,
+                     -> { "/admin/plugins/discourse-workflows/data-tables.json" },
+                     -> { { name: "t" } }
+
     it "creates a data table" do
       post "/admin/plugins/discourse-workflows/data-tables.json",
            params: {
@@ -86,6 +122,11 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
   describe "PUT /admin/plugins/discourse-workflows/data-tables/:id" do
     fab!(:data_table, :discourse_workflows_data_table)
 
+    include_examples "requires admin",
+                     :put,
+                     -> { "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json" },
+                     -> { { name: "t" } }
+
     it "updates a data table" do
       put "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json",
           params: {
@@ -104,6 +145,13 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       )
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com") }
+
+    include_examples "requires admin",
+                     :post,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns.json"
+                     end,
+                     -> { { name: "c", column_type: "string" } }
 
     it "creates a column without losing existing rows" do
       post "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns.json",
@@ -132,6 +180,13 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com") }
 
+    include_examples "requires admin",
+                     :patch,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns/#{data_table.columns.first.id}/rename.json"
+                     end,
+                     -> { { name: "renamed" } }
+
     it "renames a column without losing existing rows" do
       column = data_table.columns.first
 
@@ -151,6 +206,25 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
     end
   end
 
+  describe "PATCH /admin/plugins/discourse-workflows/data-tables/:id/columns/:column_id/move" do
+    fab!(:data_table) do
+      Fabricate(
+        :discourse_workflows_data_table,
+        columns: [
+          { "name" => "email", "type" => "string" },
+          { "name" => "score", "type" => "number" },
+        ],
+      )
+    end
+
+    include_examples "requires admin",
+                     :patch,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns/#{data_table.columns.first.id}/move.json"
+                     end,
+                     -> { { position: 0 } }
+  end
+
   describe "DELETE /admin/plugins/discourse-workflows/data-tables/:id/columns/:column_id" do
     fab!(:data_table) do
       Fabricate(
@@ -162,6 +236,12 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       )
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com", "score" => 7) }
+
+    include_examples "requires admin",
+                     :delete,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns/#{data_table.columns.find_by(name: "email").id}.json"
+                     end
 
     it "deletes the column and preserves remaining row data" do
       column = data_table.columns.find_by(name: "email")
@@ -175,6 +255,10 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
 
   describe "DELETE /admin/plugins/discourse-workflows/data-tables/:id" do
     fab!(:data_table, :discourse_workflows_data_table)
+
+    include_examples "requires admin",
+                     :delete,
+                     -> { "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json" }
 
     it "deletes a data table" do
       delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json"
@@ -190,6 +274,12 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       )
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com") }
+
+    include_examples "requires admin",
+                     :get,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json"
+                     end
 
     it "lists rows" do
       get "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json"
@@ -233,6 +323,13 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       )
     end
 
+    include_examples "requires admin",
+                     :post,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json"
+                     end,
+                     -> { { data: { email: "a@b.com" } } }
+
     it "inserts a row" do
       post "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json",
            params: {
@@ -256,6 +353,13 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       )
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "up@test.com", "score" => 1) }
+
+    include_examples "requires admin",
+                     :put,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json"
+                     end,
+                     -> { { data: { score: 99 } } }
 
     it "updates matching rows" do
       put "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json",
@@ -298,6 +402,12 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "del@test.com") }
 
+    include_examples "requires admin",
+                     :delete,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json"
+                     end
+
     it "deletes matching rows" do
       row_id = row["id"]
       delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json",
@@ -324,6 +434,13 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       )
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "cell@test.com", "score" => 1) }
+
+    include_examples "requires admin",
+                     :put,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows/#{row["id"]}.json"
+                     end,
+                     -> { { data: { score: 1 } } }
 
     it "updates a single row by id" do
       put "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows/#{row["id"]}.json",
@@ -366,6 +483,12 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       )
     end
     fab!(:row) { insert_data_table_row(data_table, "email" => "gone@test.com") }
+
+    include_examples "requires admin",
+                     :delete,
+                     -> do
+                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows/#{row["id"]}.json"
+                     end
 
     it "deletes a single row by id" do
       row_id = row["id"]
