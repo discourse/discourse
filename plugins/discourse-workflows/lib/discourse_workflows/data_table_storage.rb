@@ -9,6 +9,8 @@ module DiscourseWorkflows
       "date" => "TIMESTAMP",
     }.freeze
 
+    LOCK_TIMEOUT_MS = 5_000
+
     class << self
       def table_name(data_table_id)
         "discourse_workflows_data_table_#{data_table_id}_rows"
@@ -86,24 +88,38 @@ module DiscourseWorkflows
       end
 
       def add_column!(data_table_id, column)
-        DB.exec(
-          "ALTER TABLE #{quoted_table(data_table_id)} ADD COLUMN #{quoted_column(column_name(column))} #{sql_type(column_type(column))}",
-        )
+        with_lock_timeout do
+          DB.exec(
+            "ALTER TABLE #{quoted_table(data_table_id)} ADD COLUMN #{quoted_column(column_name(column))} #{sql_type(column_type(column))}",
+          )
+        end
       end
 
       def rename_column!(data_table_id, old_name, new_name)
-        DB.exec(
-          "ALTER TABLE #{quoted_table(data_table_id)} RENAME COLUMN #{quoted_column(old_name)} TO #{quoted_column(new_name)}",
-        )
+        with_lock_timeout do
+          DB.exec(
+            "ALTER TABLE #{quoted_table(data_table_id)} RENAME COLUMN #{quoted_column(old_name)} TO #{quoted_column(new_name)}",
+          )
+        end
       end
 
       def drop_column!(data_table_id, column_name)
-        DB.exec(
-          "ALTER TABLE #{quoted_table(data_table_id)} DROP COLUMN #{quoted_column(column_name)}",
-        )
+        with_lock_timeout do
+          DB.exec(
+            "ALTER TABLE #{quoted_table(data_table_id)} DROP COLUMN #{quoted_column(column_name)}",
+          )
+        end
       end
 
       private
+
+      def with_lock_timeout
+        DB.exec("SET LOCAL lock_timeout = '#{LOCK_TIMEOUT_MS}ms'")
+        yield
+      rescue PG::LockNotAvailable
+        raise DataTableValidationError,
+              "Could not acquire lock on the data table. It may be in use — please try again."
+      end
 
       def connection
         ActiveRecord::Base.connection
