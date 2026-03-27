@@ -57,7 +57,7 @@ function moveReactionAnimation(
   complete
 ) {
   if (isTesting()) {
-    return;
+    return run(complete);
   }
 
   const fakeReaction = buildFakeReaction(reactionId);
