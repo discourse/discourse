@@ -5,9 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import FKControlInput from "discourse/form-kit/components/fk/control/input";
-import FKControlSelect from "discourse/form-kit/components/fk/control/select";
-import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
@@ -15,6 +12,7 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
   fieldControl,
+  fieldFormat,
   fieldInputType,
   fieldRows,
   fieldShowDescription,
@@ -39,6 +37,29 @@ const BUILT_IN_FIELD_CONTROLS = {
   filter_query: PropertyEngineFilterQuery,
   url_preview: PropertyEngineUrlPreview,
 };
+
+const WrappedControl = <template>
+  <div class="workflows-property-engine__control-wrapper">
+    {{#if @expressionMode}}
+      <ExpressionInput
+        @field={{@field}}
+        @placeholder={{@placeholder}}
+        @autofocus={{true}}
+      />
+    {{else}}
+      {{yield}}
+    {{/if}}
+
+    {{#if @supportsExpression}}
+      <DButton
+        @action={{@toggleExpressionMode}}
+        @icon="code"
+        class="btn-transparent btn-small workflows-property-engine__mode-trigger
+          {{if @expressionMode '--active'}}"
+      />
+    {{/if}}
+  </div>
+</template>;
 
 function isExpression(value) {
   return typeof value === "string" && value.startsWith("=");
@@ -78,6 +99,23 @@ export default class PropertyEngineField extends Component {
       "workflow-property-engine-controls",
       BUILT_IN_FIELD_CONTROLS
     )[this.control];
+  }
+
+  get fieldType() {
+    if (this.controlComponent || ["category", "user"].includes(this.control)) {
+      return "custom";
+    }
+
+    switch (this.control) {
+      case "icon":
+        return "icon";
+      case "select":
+        return "select";
+      case "textarea":
+        return "textarea";
+      default:
+        return `input-${this.inputType}`;
+    }
   }
 
   get description() {
@@ -132,6 +170,10 @@ export default class PropertyEngineField extends Component {
 
   get showLabel() {
     return fieldShowLabel(this.args.schema);
+  }
+
+  get format() {
+    return fieldFormat(this.args.schema);
   }
 
   get supportsExpression() {
@@ -269,7 +311,7 @@ export default class PropertyEngineField extends Component {
         @name={{@fieldName}}
         @title={{this.label}}
         @type="toggle"
-        @format="full"
+        @format={{this.format}}
         @validation={{this.validation}}
         as |field|
       >
@@ -281,7 +323,7 @@ export default class PropertyEngineField extends Component {
         @title={{this.fieldTitle}}
         @showTitle={{this.showLabel}}
         @type="code"
-        @format="full"
+        @format={{this.format}}
         @validation={{this.validation}}
         as |field|
       >
@@ -308,56 +350,41 @@ export default class PropertyEngineField extends Component {
           @configuration={{@configuration}}
         />
       </@form.Section>
-    {{else if this.controlComponent}}
+    {{else if (eq this.fieldType "custom")}}
       <@form.Field
         @name={{@fieldName}}
         @title={{this.fieldTitle}}
         @showTitle={{this.showLabel}}
         @description={{this.fieldDescription}}
         @type="custom"
-        @format="full"
+        @format={{this.format}}
         @validation={{this.validation}}
         @validate={{this.customValidation}}
         @onSet={{this.handleSet}}
         as |field|
       >
         <field.Control>
-          <this.controlComponent
-            @configuration={{@configuration}}
-            @connections={{@connections}}
-            @fieldName={{@fieldName}}
-            @metadata={{this.metadata}}
-            @node={{@node}}
-            @nodeDefinition={{this.nodeDefinition}}
-            @nodes={{@nodes}}
-            @nodeType={{this.nodeType}}
-            @nodeTypes={{@nodeTypes}}
-            @onPatch={{this.handlePatch}}
-            @schema={{@schema}}
-            @value={{field.value}}
-          />
-        </field.Control>
-      </@form.Field>
-    {{else}}
-      <@form.Field
-        @name={{@fieldName}}
-        @title={{this.fieldTitle}}
-        @showTitle={{this.showLabel}}
-        @description={{this.fieldDescription}}
-        @type="custom"
-        @format="full"
-        @validation={{this.validation}}
-        @validate={{this.customValidation}}
-        @onSet={{this.handleSet}}
-        as |field|
-      >
-        <field.Control>
-          <div class="workflows-property-engine__control-wrapper">
-            {{#if this.expressionMode}}
-              <ExpressionInput
-                @field={{field}}
-                @placeholder={{this.placeholder}}
-                @autofocus={{true}}
+          <WrappedControl
+            @expressionMode={{this.expressionMode}}
+            @field={{field}}
+            @placeholder={{this.placeholder}}
+            @supportsExpression={{this.supportsExpression}}
+            @toggleExpressionMode={{this.toggleExpressionMode}}
+          >
+            {{#if this.controlComponent}}
+              <this.controlComponent
+                @configuration={{@configuration}}
+                @connections={{@connections}}
+                @fieldName={{@fieldName}}
+                @metadata={{this.metadata}}
+                @node={{@node}}
+                @nodeDefinition={{this.nodeDefinition}}
+                @nodes={{@nodes}}
+                @nodeType={{this.nodeType}}
+                @nodeTypes={{@nodeTypes}}
+                @onPatch={{this.handlePatch}}
+                @schema={{@schema}}
+                @value={{field.value}}
               />
             {{else if (eq this.control "category")}}
               <CategoryChooser @value={{field.value}} @onChange={{field.set}} />
@@ -367,35 +394,42 @@ export default class PropertyEngineField extends Component {
                 @onChange={{fn this.handleUserChange field}}
                 @options={{hash maximum=1 excludeCurrentUser=false}}
               />
-            {{else if (eq this.control "select")}}
-              <FKControlSelect @field={{field}} @includeNone={{false}} as |c|>
-                {{#each this.options as |choice|}}
-                  <c.Option @value={{choice.value}}>{{choice.label}}</c.Option>
-                {{/each}}
-              </FKControlSelect>
-            {{else if (eq this.control "textarea")}}
-              <FKControlTextarea
-                @field={{field}}
-                placeholder={{this.placeholder}}
-              />
-            {{else}}
-              <FKControlInput
-                @field={{field}}
-                @type={{this.inputType}}
-                placeholder={{this.placeholder}}
-              />
             {{/if}}
-
-            {{#if this.supportsExpression}}
-              <DButton
-                @action={{this.toggleExpressionMode}}
-                @icon="code"
-                class="btn-transparent btn-small workflows-property-engine__mode-trigger
-                  {{if this.expressionMode '--active'}}"
-              />
-            {{/if}}
-          </div>
+          </WrappedControl>
         </field.Control>
+      </@form.Field>
+    {{else}}
+      <@form.Field
+        @name={{@fieldName}}
+        @title={{this.fieldTitle}}
+        @showTitle={{this.showLabel}}
+        @description={{this.fieldDescription}}
+        @type={{this.fieldType}}
+        @format={{this.format}}
+        @validation={{this.validation}}
+        @validate={{this.customValidation}}
+        @onSet={{this.handleSet}}
+        as |field|
+      >
+        <WrappedControl
+          @expressionMode={{this.expressionMode}}
+          @field={{field}}
+          @placeholder={{this.placeholder}}
+          @supportsExpression={{this.supportsExpression}}
+          @toggleExpressionMode={{this.toggleExpressionMode}}
+        >
+          {{#if (eq this.control "select")}}
+            <field.Control @includeNone={{false}} as |c|>
+              {{#each this.options as |choice|}}
+                <c.Option @value={{choice.value}}>{{choice.label}}</c.Option>
+              {{/each}}
+            </field.Control>
+          {{else if (eq this.control "icon")}}
+            <field.Control />
+          {{else}}
+            <field.Control placeholder={{this.placeholder}} />
+          {{/if}}
+        </WrappedControl>
       </@form.Field>
     {{/if}}
   </template>

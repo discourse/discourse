@@ -34,12 +34,12 @@ RSpec.describe SiteSerializer do
       )
     end
 
-    it "uses gear as default icon" do
+    it "keeps the icon empty when none is configured" do
       trigger_node.update!(configuration: { "label" => "Run workflow" })
 
       data = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-      expect(data[:topic_admin_button_workflows].first[:icon]).to eq("gear")
+      expect(data[:topic_admin_button_workflows].first[:icon]).to be_nil
     end
 
     it "excludes disabled workflows" do

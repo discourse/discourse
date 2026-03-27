@@ -2,11 +2,18 @@ import { click, fillIn, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PropertyEngineConfigurator from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/property-engine";
 
 module("Integration | Component | workflows property engine", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    pretender.get("/svg-sprite/picker-search", () =>
+      response(200, [{ id: "bolt", name: "bolt" }])
+    );
+  });
 
   test("preserves focus for scalar fields while typing", async function (assert) {
     this.setProperties({
@@ -200,6 +207,59 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert
       .dom(".workflows-url-preview code")
       .includesText("/workflows/webhooks/my-hook");
+  });
+
+  test("renders icon fields with the form-kit icon control", async function (assert) {
+    this.setProperties({
+      configuration: { icon: "gear" },
+      formApi: null,
+      nodeType: "trigger:topic_admin_button",
+      schema: {
+        icon: {
+          type: "icon",
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-icon").exists();
+    assert.strictEqual(
+      selectKit(".form-kit__control-icon").header().value(),
+      "gear"
+    );
+
+    await selectKit(".form-kit__control-icon").expand();
+    await selectKit(".form-kit__control-icon").selectRowByValue("bolt");
+
+    assert.strictEqual(
+      selectKit(".form-kit__control-icon").header().value(),
+      "bolt"
+    );
+
+    await click(".workflows-property-engine__mode-trigger");
+
+    assert.strictEqual(this.formApi.get("icon"), "=bolt");
+    assert.dom(".workflows-variable-input").exists();
   });
 
   test("select fields render with correct initial value", async function (assert) {

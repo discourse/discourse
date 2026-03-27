@@ -148,7 +148,7 @@ export default class WorkflowNode extends Component {
                 {{on "pointerdown" this.stopPropagation}}
                 {{on "click" this.handleEditDataTable}}
               >
-                {{icon "pencil"}}
+                {{icon "eye"}}
               </button>
             {{/if}}
             <button

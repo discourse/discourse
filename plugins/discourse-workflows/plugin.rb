@@ -104,7 +104,7 @@ after_initialize do
           trigger_node_id: node.id,
           workflow_id: node.workflow_id,
           label: node.configuration["label"],
-          icon: node.configuration["icon"] || "gear",
+          icon: node.configuration["icon"],
         }
       end
   end

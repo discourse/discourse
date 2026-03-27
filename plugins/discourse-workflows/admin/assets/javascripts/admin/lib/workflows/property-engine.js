@@ -182,6 +182,8 @@ export function fieldControl(schema = {}) {
   switch (fieldType(schema)) {
     case "boolean":
       return "boolean";
+    case "icon":
+      return "icon";
     case "options":
       return "select";
     case "collection":
@@ -202,7 +204,7 @@ export function fieldSupportsExpression(schema = {}) {
     return Boolean(schema.expression);
   }
 
-  return ["string", "integer", "number"].includes(fieldType(schema));
+  return ["string", "integer", "number", "icon"].includes(fieldType(schema));
 }
 
 export function fieldRows(schema = {}) {
@@ -216,6 +218,10 @@ export function fieldShowDescription(schema = {}) {
 
 export function fieldShowLabel(schema = {}) {
   return fieldUi(schema).show_label !== false;
+}
+
+export function fieldFormat(schema = {}) {
+  return fieldUi(schema).format || schema.format || "full";
 }
 
 export function fieldInputType(schema = {}) {

@@ -92,6 +92,15 @@
   &__control-wrapper {
     position: relative;
     width: 100%;
+
+    > .combo-box,
+    > .d-select,
+    > .icon-picker,
+    > .category-chooser,
+    > .user-chooser {
+      width: 100%;
+      min-width: 0;
+    }
   }
 
   &__mode-trigger {
@@ -101,7 +110,9 @@
     right: 0;
 
     .workflows-property-engine__control-wrapper:has(
+        .combo-box,
         .d-select,
+        .icon-picker,
         .category-chooser,
         .user-chooser
       )

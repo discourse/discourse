@@ -3,6 +3,7 @@ import {
   collectionAddLabel,
   emptyCollectionItem,
   fieldControl,
+  fieldFormat,
   fieldSupportsExpression,
   fieldValue,
   fieldVisible,
@@ -105,7 +106,11 @@ module("Unit | Utility | workflows property engine", function () {
       fieldControl({ type: "string", ui: { control: "textarea" } }),
       "textarea"
     );
+    assert.strictEqual(fieldControl({ type: "icon" }), "icon");
+    assert.strictEqual(fieldFormat({ type: "string" }), "full");
+    assert.strictEqual(fieldFormat({ type: "string", ui: { format: "small" } }), "small");
     assert.true(fieldSupportsExpression({ type: "integer" }));
+    assert.true(fieldSupportsExpression({ type: "icon" }));
     assert.false(
       fieldSupportsExpression({ type: "string", ui: { expression: false } })
     );

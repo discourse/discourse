@@ -26,17 +26,7 @@ module DiscourseWorkflows
         end
 
         def self.configuration_schema
-          {
-            label: {
-              type: :string,
-              required: true,
-            },
-            icon: {
-              type: :string,
-              required: false,
-              default: "gear",
-            },
-          }
+          { label: { type: :string, required: true }, icon: { type: :icon, required: false } }
         end
 
         def initialize(topic)

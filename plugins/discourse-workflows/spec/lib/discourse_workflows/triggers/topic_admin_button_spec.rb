@@ -26,7 +26,7 @@ RSpec.describe DiscourseWorkflows::Triggers::TopicAdminButton::V1 do
     it "includes label and icon" do
       expect(described_class.configuration_schema).to include(
         label: include(type: :string, required: true),
-        icon: include(type: :string, required: false),
+        icon: include(type: :icon, required: false),
       )
     end
   end
