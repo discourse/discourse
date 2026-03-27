@@ -1247,6 +1247,7 @@ class Topic < ActiveRecord::Base
 
   def invite_group(user, group, should_notify: true)
     TopicAllowedGroup.create!(topic_id: self.id, group_id: group.id)
+    group.update_columns(has_messages: true) unless group.has_messages
     self.allowed_groups.reload
 
     last_post =
