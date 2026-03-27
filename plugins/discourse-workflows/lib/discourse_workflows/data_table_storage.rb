@@ -31,27 +31,6 @@ module DiscourseWorkflows
           SQL
       end
 
-      def sync_columns!(data_table, previous_columns:)
-        create_table!(data_table)
-
-        previous_map = index_columns(previous_columns)
-        current_map = index_columns(data_table.columns)
-
-        removed_columns = previous_map.keys - current_map.keys
-        added_columns = current_map.keys - previous_map.keys
-        changed_columns =
-          current_map.keys.filter do |name|
-            previous_map[name] && column_type(previous_map[name]) != column_type(current_map[name])
-          end
-
-        removed_columns.each { |name| drop_column!(data_table.id, name) }
-        changed_columns.each do |name|
-          drop_column!(data_table.id, name)
-          add_column!(data_table.id, current_map[name])
-        end
-        added_columns.each { |name| add_column!(data_table.id, current_map[name]) }
-      end
-
       def drop_table!(data_table_id)
         return unless connection.data_source_exists?(table_name(data_table_id))
 
@@ -78,6 +57,24 @@ module DiscourseWorkflows
         connection.quote_column_name(name)
       end
 
+      def add_column!(data_table_id, column)
+        DB.exec(
+          "ALTER TABLE #{quoted_table(data_table_id)} ADD COLUMN #{quoted_column(column_name(column))} #{sql_type(column_type(column))}",
+        )
+      end
+
+      def rename_column!(data_table_id, old_name, new_name)
+        DB.exec(
+          "ALTER TABLE #{quoted_table(data_table_id)} RENAME COLUMN #{quoted_column(old_name)} TO #{quoted_column(new_name)}",
+        )
+      end
+
+      def drop_column!(data_table_id, column_name)
+        DB.exec(
+          "ALTER TABLE #{quoted_table(data_table_id)} DROP COLUMN #{quoted_column(column_name)}",
+        )
+      end
+
       private
 
       def connection
@@ -94,22 +91,6 @@ module DiscourseWorkflows
         SQL_TYPES.fetch(type) do
           raise DataTableValidationError, "Unsupported column type '#{type}'"
         end
-      end
-
-      def index_columns(columns)
-        Array(columns).index_by { |column| column_name(column) }
-      end
-
-      def add_column!(data_table_id, column)
-        DB.exec(
-          "ALTER TABLE #{quoted_table(data_table_id)} ADD COLUMN #{quoted_column(column_name(column))} #{sql_type(column_type(column))}",
-        )
-      end
-
-      def drop_column!(data_table_id, column_name)
-        DB.exec(
-          "ALTER TABLE #{quoted_table(data_table_id)} DROP COLUMN #{quoted_column(column_name)}",
-        )
       end
 
       def column_name(column)

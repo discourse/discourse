@@ -32,17 +32,18 @@ RSpec.describe DiscourseWorkflows::DataTable::Create do
 
       it "creates the data table" do
         expect { result }.to change(DiscourseWorkflows::DataTable, :count).by(1)
-        expect(DiscourseWorkflows::DataTable.last).to have_attributes(
-          name: "my_table",
-          columns: [{ "name" => "value", "type" => "string" }],
-        )
+
+        data_table = DiscourseWorkflows::DataTable.last
+
+        expect(data_table.name).to eq("my_table")
+        expect(
+          data_table.columns.map { |column| [column.name, column.column_type, column.position] },
+        ).to eq([["value", "string", 0]])
       end
 
       it "returns the created data table" do
-        expect(result[:data_table]).to have_attributes(
-          name: "my_table",
-          columns: [{ "name" => "value", "type" => "string" }],
-        )
+        expect(result[:data_table].name).to eq("my_table")
+        expect(result[:data_table].columns.map(&:name)).to eq(["value"])
       end
 
       it "logs a staff action" do
@@ -58,6 +59,21 @@ RSpec.describe DiscourseWorkflows::DataTable::Create do
         result
 
         expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+      end
+    end
+
+    context "when columns are omitted" do
+      let(:params) { { name: "empty_table" } }
+
+      it { is_expected.to run_successfully }
+
+      it "creates the data table without custom columns" do
+        result
+
+        data_table = DiscourseWorkflows::DataTable.last
+
+        expect(data_table.name).to eq("empty_table")
+        expect(data_table.columns).to be_empty
       end
     end
   end

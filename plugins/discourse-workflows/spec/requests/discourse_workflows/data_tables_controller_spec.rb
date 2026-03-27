@@ -67,6 +67,19 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["data_table"]["name"]).to eq("users")
+      expect(json["data_table"]["columns"]).to contain_exactly(
+        include("name" => "email", "type" => "string", "position" => 0),
+      )
+    end
+
+    it "creates a data table when the modal submits only a name" do
+      post "/admin/plugins/discourse-workflows/data-tables.json", params: { name: "empty_table" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["data_table"]).to include(
+        "name" => "empty_table",
+        "columns" => [],
+      )
     end
   end
 
@@ -80,6 +93,83 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
           }
       expect(response.status).to eq(200)
       expect(response.parsed_body["data_table"]["name"]).to eq("renamed")
+    end
+  end
+
+  describe "POST /admin/plugins/discourse-workflows/data-tables/:id/columns" do
+    fab!(:data_table) do
+      Fabricate(
+        :discourse_workflows_data_table,
+        columns: [{ "name" => "email", "type" => "string" }],
+      )
+    end
+    fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com") }
+
+    it "creates a column without losing existing rows" do
+      post "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns.json",
+           params: {
+             name: "score",
+             column_type: "number",
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["data_table"]["columns"].map { |column| column["name"] }).to eq(
+        %w[email score],
+      )
+      expect(find_data_table_row(data_table, row["id"])).to include(
+        "email" => "test@test.com",
+        "score" => nil,
+      )
+    end
+  end
+
+  describe "PATCH /admin/plugins/discourse-workflows/data-tables/:id/columns/:column_id/rename" do
+    fab!(:data_table) do
+      Fabricate(
+        :discourse_workflows_data_table,
+        columns: [{ "name" => "email", "type" => "string" }],
+      )
+    end
+    fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com") }
+
+    it "renames a column without losing existing rows" do
+      column = data_table.columns.first
+
+      patch "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns/#{column.id}/rename.json",
+            params: {
+              name: "contact_email",
+            }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["data_table"]["columns"]).to contain_exactly(
+        include("id" => column.id, "name" => "contact_email", "type" => "string", "position" => 0),
+      )
+
+      row_data = find_data_table_row(data_table, row["id"])
+      expect(row_data["contact_email"]).to eq("test@test.com")
+      expect(row_data).not_to have_key("email")
+    end
+  end
+
+  describe "DELETE /admin/plugins/discourse-workflows/data-tables/:id/columns/:column_id" do
+    fab!(:data_table) do
+      Fabricate(
+        :discourse_workflows_data_table,
+        columns: [
+          { "name" => "email", "type" => "string" },
+          { "name" => "score", "type" => "number" },
+        ],
+      )
+    end
+    fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com", "score" => 7) }
+
+    it "deletes the column and preserves remaining row data" do
+      column = data_table.columns.find_by(name: "email")
+
+      delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/columns/#{column.id}.json"
+
+      expect(response.status).to eq(204)
+      expect(find_data_table_row(data_table, row["id"])).to include("score" => 7)
     end
   end
 

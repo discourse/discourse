@@ -21,7 +21,7 @@ module DiscourseWorkflows
     def list(params:)
       limit = params.limit || DEFAULT_LIMIT
 
-      scope = DiscourseWorkflows::DataTable.order(id: :desc)
+      scope = DiscourseWorkflows::DataTable.includes(:columns).order(id: :desc)
       scope = scope.where("id < ?", params.cursor) if params.cursor
 
       results = scope.limit(limit + 1).to_a

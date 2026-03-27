@@ -2,7 +2,7 @@
 
 module DataTableHelpers
   def data_table_repository(data_table)
-    DiscourseWorkflows::DataTableRowsRepository.new(data_table)
+    DiscourseWorkflows::DataTableRowsRepository.new(data_table.reload)
   end
 
   def insert_data_table_row(data_table, data = {})

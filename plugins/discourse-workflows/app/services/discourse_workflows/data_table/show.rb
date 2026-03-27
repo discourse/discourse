@@ -15,7 +15,7 @@ module DiscourseWorkflows
     private
 
     def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
+      DiscourseWorkflows::DataTable.includes(:columns).find_by(id: params.data_table_id)
     end
   end
 end

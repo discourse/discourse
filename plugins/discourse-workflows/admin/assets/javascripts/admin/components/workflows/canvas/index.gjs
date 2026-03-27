@@ -12,6 +12,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import { loadNodeTypes } from "../../../lib/workflows/node-types";
@@ -137,6 +138,18 @@ export default class WorkflowCanvas extends Component {
           );
         },
         onManualTrigger: async (clientId) => {
+          const node = (this.args.nodes || []).find(
+            (n) => n.clientId === clientId
+          );
+
+          if (node?.type === "trigger:form" && node.configuration?.uuid) {
+            window.open(
+              getAbsoluteURL(`/workflows/form/${node.configuration.uuid}`),
+              "_blank"
+            );
+            return;
+          }
+
           const result = await ajax(
             `/admin/plugins/discourse-workflows/executions.json`,
             {

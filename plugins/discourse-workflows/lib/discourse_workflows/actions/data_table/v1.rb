@@ -68,11 +68,15 @@ module DiscourseWorkflows
                 operation: "get",
               },
             },
-            sort_by: {
+            sort_column_id: {
               type: :string,
               required: false,
               visible_if: {
                 operation: "get",
+              },
+              ui: {
+                control: :data_table_column_select,
+                none: "discourse_workflows.data_table_node.sort_column_id_placeholder",
               },
             },
             sort_direction: {
@@ -143,9 +147,9 @@ module DiscourseWorkflows
         def execute_get(config)
           result =
             @repository.get_many_and_count(
-              filter: parse_filter(config["filter"]),
+              filter: resolve_filter(parse_filter(config["filter"])),
               limit: config["limit"]&.to_i,
-              sort_by: config["sort_by"],
+              sort_by: resolve_sort_column_name(config["sort_column_id"]),
               sort_direction: config["sort_direction"],
             )
 
@@ -155,20 +159,20 @@ module DiscourseWorkflows
         def execute_update(config)
           updated_count =
             @repository.update_many(
-              filter: parse_filter(config["filter"]),
+              filter: resolve_filter(parse_filter(config["filter"])),
               data: build_row_data(config["columns"] || {}),
             )
           { "updated_count" => updated_count }
         end
 
         def execute_delete(config)
-          count = @repository.delete_many(filter: parse_filter(config["filter"]))
+          count = @repository.delete_many(filter: resolve_filter(parse_filter(config["filter"])))
           { "deleted_count" => count }
         end
 
         def execute_upsert(config)
           data = build_row_data(config["columns"] || {})
-          filter = parse_filter(config["filter"])
+          filter = resolve_filter(parse_filter(config["filter"]))
           result = @repository.upsert(filter: filter, data: data)
 
           if result[:operation] == "update"
@@ -179,28 +183,29 @@ module DiscourseWorkflows
         end
 
         def build_row_data(fields)
-          column_map =
-            @data_table.columns.index_by do |column|
-              DiscourseWorkflows::DataTable.column_name(column)
-            end
+          normalize_fields(fields).each_with_object({}) do |(column_id, value), result|
+            column = @data_table.column_map_by_id[column_id.to_s]
+            raise DataTableValidationError, "Unknown column id '#{column_id}'" if column.blank?
 
-          normalize_fields(fields).each_with_object({}) do |(col_name, value), result|
-            col_def = column_map[col_name]
-            raise DataTableValidationError, "Unknown column name '#{col_name}'" if col_def.blank?
-
-            result[col_name] = DiscourseWorkflows::DataTableRow.normalize_value(
+            result[column.name] = DiscourseWorkflows::DataTableRow.normalize_value(
               value,
-              DiscourseWorkflows::DataTable.column_type(col_def),
+              DiscourseWorkflows::DataTable.column_type(column),
             )
           end
         end
 
         def normalize_fields(fields)
           if fields.is_a?(Hash)
-            fields
+            fields.stringify_keys
           elsif fields.is_a?(Array)
             fields.each_with_object({}) do |field, hash|
-              hash[field["column"] || field[:column]] = field["value"] || field[:value]
+              hash[field["columnId"] || field[:columnId]] = (
+                if field.key?("value")
+                  field["value"]
+                else
+                  field[:value]
+                end
+              )
             end
           else
             {}
@@ -213,6 +218,38 @@ module DiscourseWorkflows
           JSON.parse(filter)
         rescue JSON::ParserError => error
           raise DataTableValidationError, "Invalid filter JSON: #{error.message}"
+        end
+
+        def resolve_filter(filter)
+          return filter if filter.blank?
+
+          filters = filter["filters"] || []
+
+          {
+            "type" => filter["type"] || "and",
+            "filters" =>
+              filters.map do |condition|
+                column_id = condition["columnId"] || condition[:columnId]
+                column = @data_table.column_map_by_id[column_id.to_s]
+
+                raise DataTableValidationError, "Unknown column id '#{column_id}'" if column.blank?
+
+                {
+                  "columnName" => column.name,
+                  "condition" => condition["condition"] || condition[:condition],
+                  "value" => condition.key?("value") ? condition["value"] : condition[:value],
+                }
+              end,
+          }
+        end
+
+        def resolve_sort_column_name(column_id)
+          return if column_id.blank?
+
+          column = @data_table.column_map_by_id[column_id.to_s]
+          raise DataTableValidationError, "Unknown column id '#{column_id}'" if column.blank?
+
+          column.name
         end
       end
     end

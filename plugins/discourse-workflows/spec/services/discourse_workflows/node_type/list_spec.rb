@@ -23,6 +23,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Webhook::V1)
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Manual::V1)
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Schedule::V1)
+      DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Form::V1)
     end
 
     after { DiscourseWorkflows::Registry.reset! }
@@ -71,6 +72,9 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(data_table.dig(:configuration_schema, :columns, :ui, :control)).to eq(
           :data_table_columns,
         )
+        expect(data_table.dig(:configuration_schema, :sort_column_id, :ui, :control)).to eq(
+          :data_table_column_select,
+        )
         expect(condition.dig(:configuration_schema, :conditions, :ui, :control)).to eq(
           :condition_builder,
         )
@@ -91,10 +95,12 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       it "includes manually_triggerable for triggers that support it" do
         manual = result[:node_types].find { |nt| nt[:identifier] == "trigger:manual" }
         schedule = result[:node_types].find { |nt| nt[:identifier] == "trigger:schedule" }
+        form = result[:node_types].find { |nt| nt[:identifier] == "trigger:form" }
         topic_closed = result[:node_types].find { |nt| nt[:identifier] == "trigger:topic_closed" }
 
         expect(manual[:manually_triggerable]).to eq(true)
         expect(schedule[:manually_triggerable]).to eq(true)
+        expect(form[:manually_triggerable]).to eq(true)
         expect(topic_closed[:manually_triggerable]).to eq(false)
       end
     end

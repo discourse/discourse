@@ -29,12 +29,14 @@ import {
 import ExpressionInput from "./expression-input";
 import PropertyEngineComboBox from "./property-engine-combo-box";
 import PropertyEngineConditionBuilder from "./property-engine-condition-builder";
+import PropertyEngineDataTableColumnSelect from "./property-engine-data-table-column-select";
 import PropertyEngineDataTableColumns from "./property-engine-data-table-columns";
 import PropertyEngineFilterQuery from "./property-engine-filter-query";
 import PropertyEngineUrlPreview from "./property-engine-url-preview";
 
 const BUILT_IN_FIELD_CONTROLS = {
   combo_box: PropertyEngineComboBox,
+  data_table_column_select: PropertyEngineDataTableColumnSelect,
   filter_query: PropertyEngineFilterQuery,
   url_preview: PropertyEngineUrlPreview,
 };
@@ -136,6 +138,10 @@ export default class PropertyEngineField extends Component {
   }
 
   get label() {
+    if (this.args.label) {
+      return this.args.label;
+    }
+
     return propertyLabel(this.nodeDefinition, this.args.fieldName);
   }
 

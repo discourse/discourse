@@ -6,19 +6,39 @@ module DiscourseWorkflows
 
     params do
       attribute :name, :string
-      attribute :columns, default: []
+      attribute :columns, :array, default: []
 
       validates :name, presence: true
     end
 
-    model :data_table, :create_data_table
+    transaction do
+      model :data_table, :create_data_table
+      step :create_storage_table
+    end
+
     step :log
     step :reset_cached_size
 
     private
 
     def create_data_table(params:)
-      DiscourseWorkflows::DataTable.create(name: params.name, columns: params.columns)
+      DiscourseWorkflows::DataTable
+        .new(name: params.name)
+        .tap do |data_table|
+          params.columns.to_a.each_with_index do |column, index|
+            data_table.columns.build(
+              name: DiscourseWorkflows::DataTableColumn.definition_name(column),
+              column_type: DiscourseWorkflows::DataTableColumn.definition_type(column),
+              position: index,
+            )
+          end
+
+          data_table.save
+        end
+    end
+
+    def create_storage_table(data_table:)
+      DiscourseWorkflows::DataTableStorage.create_table!(data_table)
     end
 
     def log(data_table:, guardian:)

@@ -3,11 +3,7 @@
 module DiscourseWorkflows
   class DataTable < ActiveRecord::Base
     self.table_name = "discourse_workflows_data_tables"
-    self.ignored_columns = ["description"]
-
-    VALID_COLUMN_TYPES = %w[string number boolean date].freeze
-    RESERVED_COLUMN_NAMES = %w[id created_at updated_at].freeze
-    MAX_COLUMN_NAME_LENGTH = 63
+    self.ignored_columns = %w[columns description]
 
     validates :name,
               presence: true,
@@ -19,32 +15,32 @@ module DiscourseWorkflows
                 with: /\A[a-zA-Z_][a-zA-Z0-9_ ]*\z/,
               }
 
-    before_validation :normalize_columns_attribute
-    validate :validate_columns
-    after_create :create_storage_table
-    before_update :sync_storage_columns, if: :will_save_change_to_columns?
+    has_many :columns,
+             -> { order(:position) },
+             class_name: "DiscourseWorkflows::DataTableColumn",
+             inverse_of: :data_table,
+             validate: true,
+             dependent: :destroy
+
+    validate :validate_column_set
+
     before_destroy :drop_storage_table
 
     class << self
-      def normalize_columns(columns)
-        return [] if columns.nil?
-        return columns unless columns.is_a?(Array)
-
-        columns.map { |column| normalize_column(column) }
-      end
-
-      def normalize_column(column)
-        return column unless column.respond_to?(:to_h)
-
-        column.to_h.deep_stringify_keys
-      end
-
       def column_name(column)
-        column&.dig("name").to_s
+        if column.is_a?(DiscourseWorkflows::DataTableColumn)
+          column.name.to_s
+        else
+          DiscourseWorkflows::DataTableColumn.definition_name(column)
+        end
       end
 
       def column_type(column)
-        column&.dig("type").to_s
+        if column.is_a?(DiscourseWorkflows::DataTableColumn)
+          column.column_type.to_s
+        else
+          DiscourseWorkflows::DataTableColumn.definition_type(column)
+        end
       end
     end
 
@@ -52,73 +48,56 @@ module DiscourseWorkflows
       DiscourseWorkflows::DataTableStorage.table_name(id)
     end
 
-    def columns
-      self.class.normalize_columns(self[:columns])
+    def column_by_id!(column_id)
+      columns.find(column_id)
+    end
+
+    def column_map_by_id
+      columns.index_by { |column| column.id.to_s }
+    end
+
+    def column_map_by_name
+      columns.index_by(&:name)
+    end
+
+    def next_column_position
+      columns.size
+    end
+
+    def reorder_columns!(ordered_columns)
+      ordered_columns = ordered_columns.to_a
+
+      if ordered_columns.size != columns.size ||
+           ordered_columns.any? { |column| column.data_table_id != id }
+        raise ArgumentError, "Ordered columns must match the data table column set"
+      end
+
+      ordered_columns.each_with_index do |column, index|
+        column.update_columns(position: index + ordered_columns.size)
+      end
+
+      ordered_columns.each_with_index { |column, index| column.update_columns(position: index) }
     end
 
     private
-
-    def create_storage_table
-      DiscourseWorkflows::DataTableStorage.create_table!(self)
-    end
-
-    def sync_storage_columns
-      previous_columns = self.class.normalize_columns(changes_to_save["columns"]&.first)
-      DiscourseWorkflows::DataTableStorage.sync_columns!(self, previous_columns: previous_columns)
-    end
 
     def drop_storage_table
       DiscourseWorkflows::DataTableStorage.drop_table!(id)
     end
 
-    def normalize_columns_attribute
-      self[:columns] = self.class.normalize_columns(self[:columns]) if self[:columns].is_a?(Array)
+    def validate_column_set
+      validate_duplicate_column_attribute(:name, "must be unique")
+      validate_duplicate_column_attribute(:position, "must be unique")
     end
 
-    def validate_columns
-      return if columns.blank?
-
-      unless columns.is_a?(Array)
-        errors.add(:columns, "must be an array")
-        return
-      end
-
-      seen_names = Set.new
-
-      columns.each do |col|
-        name = self.class.column_name(col)
-        type = self.class.column_type(col)
-
-        if name.blank?
-          errors.add(:columns, "column name cannot be blank")
-          next
-        end
-
-        if name.length > MAX_COLUMN_NAME_LENGTH
-          errors.add(:columns, "column name '#{name}' exceeds #{MAX_COLUMN_NAME_LENGTH} characters")
-        end
-
-        unless name.match?(/\A[a-zA-Z_][a-zA-Z0-9_]*\z/)
-          errors.add(
-            :columns,
-            "column name '#{name}' must start with a letter or underscore and contain only letters, numbers, and underscores",
-          )
-        end
-
-        if RESERVED_COLUMN_NAMES.include?(name)
-          errors.add(:columns, "column name '#{name}' is reserved")
-        end
-
-        errors.add(:columns, "duplicate column name '#{name}'") if seen_names.include?(name)
-        seen_names << name
-
-        if VALID_COLUMN_TYPES.exclude?(type)
-          errors.add(
-            :columns,
-            "column '#{name}' has invalid type '#{type}' (must be one of: #{VALID_COLUMN_TYPES.join(", ")})",
-          )
-        end
-      end
+    def validate_duplicate_column_attribute(attribute, message)
+      values =
+        columns
+          .reject(&:marked_for_destruction?)
+          .map { |column| column.public_send(attribute) }
+          .compact
+      duplicate = values.find { |value| values.count(value) > 1 }
+      errors.add(:columns, "#{attribute} #{message}") if duplicate.present?
     end
   end
 end
@@ -128,7 +107,6 @@ end
 # Table name: discourse_workflows_data_tables
 #
 #  id         :bigint           not null, primary key
-#  columns    :jsonb            not null
 #  name       :string(100)      not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

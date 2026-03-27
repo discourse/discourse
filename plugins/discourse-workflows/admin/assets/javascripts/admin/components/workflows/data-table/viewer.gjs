@@ -243,18 +243,19 @@ export default class DataTableViewer extends Component {
   async renameColumn(index, event) {
     this.editingColumnIndex = null;
     const newName = event.target.value.trim();
-    const oldName = this.columns[index].name;
+    const column = this.columns[index];
+    const oldName = column.name;
     if (!newName || newName === oldName) {
       return;
     }
     try {
-      const newColumns = this.columns.map((col, i) =>
-        i === index ? { ...col, name: newName } : col
+      const result = await ajax(
+        `${this.apiBasePath}/columns/${column.id}/rename.json`,
+        {
+          type: "PATCH",
+          data: { name: newName },
+        }
       );
-      const result = await ajax(`${this.apiBasePath}.json`, {
-        type: "PUT",
-        data: { columns: newColumns },
-      });
       this.dataTable = result.data_table;
       await this.loadTable();
     } catch (e) {
@@ -268,15 +269,12 @@ export default class DataTableViewer extends Component {
       model: {
         onSave: async (data) => {
           try {
-            const newColumns = [
-              ...this.columns,
-              { name: data.name, type: data.type },
-            ];
-            const result = await ajax(`${this.apiBasePath}.json`, {
-              type: "PUT",
-              data: { columns: newColumns },
+            const result = await ajax(`${this.apiBasePath}/columns.json`, {
+              type: "POST",
+              data: { name: data.name, column_type: data.type },
             });
             this.dataTable = result.data_table;
+            await this.loadTable();
           } catch (e) {
             popupAjaxError(e);
           }

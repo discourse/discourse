@@ -16,6 +16,10 @@ module DiscourseWorkflows
           "teal"
         end
 
+        def self.manually_triggerable?
+          true
+        end
+
         def self.metadata
           { icon: "rectangle-list", category: "triggers" }
         end

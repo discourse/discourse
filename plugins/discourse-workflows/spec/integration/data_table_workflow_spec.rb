@@ -40,9 +40,9 @@ RSpec.describe "Data Table workflow integration" do
         "operation" => "insert",
         "data_table_id" => data_table.id.to_s,
         "columns" => {
-          "topic_id" => "={{ $json.topic_id }}",
-          "author" => "={{ $json.username }}",
-          "logged" => "true",
+          data_table.columns.find_by(name: "topic_id").id.to_s => "={{ $json.topic_id }}",
+          data_table.columns.find_by(name: "author").id.to_s => "={{ $json.username }}",
+          data_table.columns.find_by(name: "logged").id.to_s => "true",
         },
       },
     )
@@ -86,5 +86,33 @@ RSpec.describe "Data Table workflow integration" do
 
     row = list_data_table_rows(data_table)[:rows].first
     expect(row).to include("topic_id" => topic.id, "author" => admin.username, "logged" => true)
+  end
+
+  it "keeps workflow mappings working after a column rename" do
+    author_column = data_table.columns.find_by(name: "author")
+
+    DiscourseWorkflows::DataTableColumn::Rename.call(
+      params: {
+        data_table_id: data_table.id,
+        column_id: author_column.id,
+        name: "post_author",
+      },
+    )
+
+    topic = Fabricate(:topic, category: category, user: admin)
+    trigger_data = {
+      "post_id" => 1,
+      "topic_id" => topic.id,
+      "username" => admin.username,
+      "category_id" => category.id,
+      "raw" => "test post",
+    }
+
+    execution = DiscourseWorkflows::Executor.new(trigger_node, trigger_data).run
+
+    expect(execution.status).to eq("success")
+
+    row = list_data_table_rows(data_table)[:rows].first
+    expect(row["post_author"]).to eq(admin.username)
   end
 end

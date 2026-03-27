@@ -7,7 +7,6 @@ module DiscourseWorkflows
     params do
       attribute :data_table_id, :integer
       attribute :name, :string
-      attribute :columns
 
       validates :data_table_id, presence: true
     end
@@ -25,7 +24,6 @@ module DiscourseWorkflows
     def update_data_table(data_table:, params:)
       attrs = {}
       attrs[:name] = params.name if params.name.present?
-      attrs[:columns] = params.columns unless params.columns.nil?
       data_table.update!(attrs) if attrs.present?
     end
 

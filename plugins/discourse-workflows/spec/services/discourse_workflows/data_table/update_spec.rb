@@ -16,16 +16,7 @@ RSpec.describe DiscourseWorkflows::DataTable::Update do
       )
     end
 
-    let(:params) do
-      {
-        data_table_id: data_table.id,
-        name: "updated",
-        columns: [
-          { "name" => "value", "type" => "string" },
-          { "name" => "count", "type" => "number" },
-        ],
-      }
-    end
+    let(:params) { { data_table_id: data_table.id, name: "updated" } }
 
     before { SiteSetting.discourse_workflows_enabled = true }
 
@@ -60,25 +51,6 @@ RSpec.describe DiscourseWorkflows::DataTable::Update do
       end
     end
 
-    context "when updating columns" do
-      let(:params) do
-        {
-          data_table_id: data_table.id,
-          columns: [
-            { "name" => "value", "type" => "string" },
-            { "name" => "count", "type" => "number" },
-          ],
-        }
-      end
-
-      it { is_expected.to run_successfully }
-
-      it "updates the columns" do
-        result
-        expect(data_table.reload.columns.length).to eq(2)
-      end
-    end
-
     context "when doing a partial update" do
       let(:params) { { data_table_id: data_table.id, name: "partial" } }
 
@@ -88,7 +60,7 @@ RSpec.describe DiscourseWorkflows::DataTable::Update do
         result
         data_table.reload
         expect(data_table.name).to eq("partial")
-        expect(data_table.columns).to eq([{ "name" => "value", "type" => "string" }])
+        expect(data_table.columns.map(&:name)).to eq(["value"])
       end
     end
   end

@@ -8,7 +8,7 @@ RSpec.describe DiscourseWorkflows::DataTable do
     fab!(:data_table, :discourse_workflows_data_table)
 
     it "rejects duplicate names" do
-      dupe = described_class.new(name: data_table.name, columns: [])
+      dupe = described_class.new(name: data_table.name)
       expect(dupe).not_to be_valid
       expect(dupe.errors[:name]).to include("has already been taken")
     end
@@ -16,50 +16,33 @@ RSpec.describe DiscourseWorkflows::DataTable do
 
   describe "name format" do
     it "allows alphanumeric names with underscores and spaces" do
-      table = described_class.new(name: "My Table 1", columns: [])
+      table = described_class.new(name: "My Table 1")
       expect(table).to be_valid
     end
 
     it "rejects names starting with a number" do
-      table = described_class.new(name: "1table", columns: [])
+      table = described_class.new(name: "1table")
       expect(table).not_to be_valid
     end
   end
 
-  describe "columns validation" do
-    it "accepts valid column definitions" do
-      table =
-        described_class.new(name: "test", columns: [{ "name" => "email", "type" => "string" }])
-      expect(table).to be_valid
-    end
-
-    it "rejects columns with invalid types" do
-      table =
-        described_class.new(name: "test", columns: [{ "name" => "field", "type" => "invalid" }])
-      expect(table).not_to be_valid
-    end
-
-    it "rejects columns with reserved names" do
-      table = described_class.new(name: "test", columns: [{ "name" => "id", "type" => "string" }])
-      expect(table).not_to be_valid
-    end
-
+  describe "column validation" do
     it "rejects duplicate column names" do
-      table =
-        described_class.new(
-          name: "test",
-          columns: [
-            { "name" => "email", "type" => "string" },
-            { "name" => "email", "type" => "number" },
-          ],
-        )
+      table = described_class.new(name: "test")
+      table.columns.build(name: "email", column_type: "string", position: 0)
+      table.columns.build(name: "email", column_type: "number", position: 1)
+
       expect(table).not_to be_valid
+      expect(table.errors[:columns]).to include("name must be unique")
     end
 
-    it "rejects columns with names exceeding 63 characters" do
-      table =
-        described_class.new(name: "test", columns: [{ "name" => "a" * 64, "type" => "string" }])
+    it "rejects duplicate column positions" do
+      table = described_class.new(name: "test")
+      table.columns.build(name: "email", column_type: "string", position: 0)
+      table.columns.build(name: "score", column_type: "number", position: 0)
+
       expect(table).not_to be_valid
+      expect(table.errors[:columns]).to include("position must be unique")
     end
   end
 end

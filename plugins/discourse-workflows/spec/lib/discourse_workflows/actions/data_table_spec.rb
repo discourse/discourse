@@ -14,6 +14,8 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
 
   let(:context) { { "trigger" => {} } }
   let(:storage_limit_error) { DiscourseWorkflows::DataTableValidationError.new("quota full") }
+  let(:email_column) { data_table.columns.find_by(name: "email") }
+  let(:score_column) { data_table.columns.find_by(name: "score") }
 
   describe ".identifier" do
     it "returns action:data_table" do
@@ -43,13 +45,13 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "operation" => "insert",
         "data_table_id" => data_table.id.to_s,
         "columns" => {
-          "nonexistent" => "test",
+          "-1" => "test",
         },
       }
 
       expect {
         instance.execute_single(context, item: { "json" => {} }, config: config)
-      }.to raise_error(DiscourseWorkflows::DataTableValidationError, /Unknown column name/)
+      }.to raise_error(DiscourseWorkflows::DataTableValidationError, /Unknown column id/)
     end
 
     it "raises for unknown operations" do
@@ -69,8 +71,8 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "operation" => "insert",
         "data_table_id" => data_table.id.to_s,
         "columns" => {
-          "email" => "test@example.com",
-          "score" => "42",
+          email_column.id.to_s => "test@example.com",
+          score_column.id.to_s => "42",
         },
       }
 
@@ -89,8 +91,8 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "operation" => "insert",
         "data_table_id" => data_table.id.to_s,
         "columns" => {
-          "email" => "test@example.com",
-          "score" => "42",
+          email_column.id.to_s => "test@example.com",
+          score_column.id.to_s => "42",
         },
       }
 
@@ -113,7 +115,9 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "data_table_id" => data_table.id.to_s,
         "filter" => {
           "type" => "and",
-          "filters" => [{ "columnName" => "score", "condition" => "gt", "value" => "15" }],
+          "filters" => [
+            { "columnId" => score_column.id.to_s, "condition" => "gt", "value" => "15" },
+          ],
         },
       }
 
@@ -128,7 +132,7 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "operation" => "get",
         "data_table_id" => data_table.id.to_s,
         "filter" =>
-          '{"type":"and","filters":[{"columnName":"score","condition":"gt","value":"15"}]}',
+          %({"type":"and","filters":[{"columnId":"#{score_column.id}","condition":"gt","value":"15"}]}),
       }
 
       result = instance.execute_single(context, item: { "json" => {} }, config: config)
@@ -156,10 +160,12 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "data_table_id" => data_table.id.to_s,
         "filter" => {
           "type" => "and",
-          "filters" => [{ "columnName" => "email", "condition" => "eq", "value" => "up@test.com" }],
+          "filters" => [
+            { "columnId" => email_column.id.to_s, "condition" => "eq", "value" => "up@test.com" },
+          ],
         },
         "columns" => {
-          "score" => "99",
+          score_column.id.to_s => "99",
         },
       }
 
@@ -179,10 +185,12 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "data_table_id" => data_table.id.to_s,
         "filter" => {
           "type" => "and",
-          "filters" => [{ "columnName" => "email", "condition" => "eq", "value" => "up@test.com" }],
+          "filters" => [
+            { "columnId" => email_column.id.to_s, "condition" => "eq", "value" => "up@test.com" },
+          ],
         },
         "columns" => {
-          "score" => "99",
+          score_column.id.to_s => "99",
         },
       }
 
@@ -203,7 +211,7 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "filter" => {
           "type" => "and",
           "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "del@test.com" },
+            { "columnId" => email_column.id.to_s, "condition" => "eq", "value" => "del@test.com" },
           ],
         },
       }
@@ -223,12 +231,12 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "filter" => {
           "type" => "and",
           "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "new@test.com" },
+            { "columnId" => email_column.id.to_s, "condition" => "eq", "value" => "new@test.com" },
           ],
         },
         "columns" => {
-          "email" => "new@test.com",
-          "score" => "50",
+          email_column.id.to_s => "new@test.com",
+          score_column.id.to_s => "50",
         },
       }
 
@@ -247,12 +255,16 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "filter" => {
           "type" => "and",
           "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "exists@test.com" },
+            {
+              "columnId" => email_column.id.to_s,
+              "condition" => "eq",
+              "value" => "exists@test.com",
+            },
           ],
         },
         "columns" => {
-          "email" => "exists@test.com",
-          "score" => "99",
+          email_column.id.to_s => "exists@test.com",
+          score_column.id.to_s => "99",
         },
       }
 
@@ -274,12 +286,12 @@ RSpec.describe DiscourseWorkflows::Actions::DataTable::V1 do
         "filter" => {
           "type" => "and",
           "filters" => [
-            { "columnName" => "email", "condition" => "eq", "value" => "new@test.com" },
+            { "columnId" => email_column.id.to_s, "condition" => "eq", "value" => "new@test.com" },
           ],
         },
         "columns" => {
-          "email" => "new@test.com",
-          "score" => "50",
+          email_column.id.to_s => "new@test.com",
+          score_column.id.to_s => "50",
         },
       }
 
