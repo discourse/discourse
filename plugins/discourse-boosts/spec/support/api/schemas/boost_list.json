@@ -1,0 +1,49 @@
+{
+  "type": "object",
+  "required": ["boosts"],
+  "properties": {
+    "boosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "raw", "cooked", "created_at", "post_id", "user", "post"],
+        "properties": {
+          "id": { "type": "number" },
+          "raw": { "type": "string" },
+          "cooked": { "type": "string" },
+          "created_at": { "type": "string" },
+          "post_id": { "type": "number" },
+          "user": {
+            "type": "object",
+            "required": ["id", "username", "name", "avatar_template"],
+            "properties": {
+              "id": { "type": "number" },
+              "username": { "type": "string" },
+              "name": { "type": ["string", "null"] },
+              "avatar_template": { "type": "string" }
+            }
+          },
+          "post": {
+            "type": "object",
+            "required": ["id", "url", "excerpt", "username", "name", "avatar_template", "user_id", "user_title", "primary_group_name", "topic_id", "topic_title", "category_id", "post_type"],
+            "properties": {
+              "id": { "type": "number" },
+              "url": { "type": "string" },
+              "excerpt": { "type": "string" },
+              "username": { "type": "string" },
+              "name": { "type": ["string", "null"] },
+              "avatar_template": { "type": "string" },
+              "user_id": { "type": "number" },
+              "user_title": { "type": ["string", "null"] },
+              "primary_group_name": { "type": ["string", "null"] },
+              "topic_id": { "type": "number" },
+              "topic_title": { "type": "string" },
+              "category_id": { "type": "number" },
+              "post_type": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

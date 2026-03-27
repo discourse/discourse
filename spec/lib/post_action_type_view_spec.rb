@@ -71,11 +71,11 @@ RSpec.describe PostActionTypeView do
     expect(post_action_type_view.applies_to).to eq(
       {
         6 => %w[Post Chat::Message],
-        3 => %w[Post Chat::Message],
-        4 => %w[Post Topic Chat::Message],
-        8 => %w[Post Topic Chat::Message],
-        10 => %w[Post Topic Chat::Message],
-        7 => %w[Post Topic Chat::Message],
+        3 => %w[Post Chat::Message DiscourseBoosts::Boost],
+        4 => %w[Post Topic Chat::Message DiscourseBoosts::Boost],
+        8 => %w[Post Topic Chat::Message DiscourseBoosts::Boost],
+        10 => %w[Post Topic Chat::Message DiscourseBoosts::Boost],
+        7 => %w[Post Topic Chat::Message DiscourseBoosts::Boost],
         9 => [],
         2 => ["Post"],
       },
