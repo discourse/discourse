@@ -57,20 +57,20 @@ const extension = {
     }
 
     const rules = [
-      {
-        match: new RegExp(`(${RARE_RE.source})$`),
-        handler: (state, match, start, end) => {
+      new InputRule(
+        new RegExp(`(${RARE_RE.source})$`),
+        (state, match, start, end) => {
           return state.tr.replaceWith(
             start,
             end,
             state.schema.text(replaceRareStr(match[0]).trim())
           );
-        },
-      },
-      {
-        // existing for markdown-it, plus: en-dash + hyphen -> em-dash
-        match: new RegExp(`(${SCOPED_ABBR_RE.source}|\u2013-)$`, "i"),
-        handler: (state, match, start, end) => {
+        }
+      ),
+      // existing for markdown-it, plus: en-dash + hyphen -> em-dash
+      new InputRule(
+        new RegExp(`(${SCOPED_ABBR_RE.source}|\u2013-)$`, "i"),
+        (state, match, start, end) => {
           return state.tr.replaceWith(
             start,
             end,
@@ -78,8 +78,8 @@ const extension = {
               replaceScopedStr(match[0]).replace(/\u2013-$/, "\u2014")
             )
           );
-        },
-      },
+        }
+      ),
     ];
 
     const quotes =
