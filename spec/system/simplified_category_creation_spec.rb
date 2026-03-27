@@ -299,10 +299,15 @@ describe "Simplified Category Creation" do
     it "enables topic approval requirement" do
       category_page.visit_settings(category)
 
-      form.field("category_setting.require_topic_approval").toggle
+      topic_posting_review_mode_select_kit =
+        PageObjects::Components::SelectKit.new(
+          ".form-kit__field[data-name='category_setting.topic_posting_review_mode'] .combo-box",
+        )
+      topic_posting_review_mode_select_kit.expand
+      topic_posting_review_mode_select_kit.select_row_by_value("everyone")
       category_page.save_settings
 
-      expect(category.reload.require_topic_approval?).to eq(true)
+      expect(category.reload.category_setting.topic_posting_review_mode).to eq("everyone")
     end
   end
 

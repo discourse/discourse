@@ -1054,6 +1054,14 @@ class Category < ActiveRecord::Base
     category_moderation_groups.pluck(:group_id)
   end
 
+  def topic_posting_review_group_ids
+    category_posting_review_groups.where(post_type: :topic).pluck(:group_id)
+  end
+
+  def reply_posting_review_group_ids
+    category_posting_review_groups.where(post_type: :reply).pluck(:group_id)
+  end
+
   def self.find_by_slug_path(slug_path)
     return nil if slug_path.empty?
     return nil if slug_path.size > SiteSetting.max_category_nesting

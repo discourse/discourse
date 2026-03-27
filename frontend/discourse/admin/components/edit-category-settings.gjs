@@ -17,6 +17,7 @@ import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategorySettings extends buildCategoryPanel(
@@ -181,6 +182,54 @@ export default class EditCategorySettings extends buildCategoryPanel(
     this.form.set(field, event.target.checked);
   }
 
+  @computed
+  get postingReviewModeOptions() {
+    return [
+      {
+        name: i18n("category.posting_review_modes.no_one"),
+        value: "no_one",
+      },
+      {
+        name: i18n("category.posting_review_modes.everyone"),
+        value: "everyone",
+      },
+      {
+        name: i18n("category.posting_review_modes.everyone_except"),
+        value: "everyone_except",
+      },
+      {
+        name: i18n("category.posting_review_modes.no_one_except"),
+        value: "no_one_except",
+      },
+    ];
+  }
+
+  @action
+  onTopicPostingReviewModeChange(value) {
+    this.set("category.category_setting.topic_posting_review_mode", value);
+    if (value !== "everyone_except" && value !== "no_one_except") {
+      this.set("category.topic_posting_review_group_ids", []);
+    }
+  }
+
+  @action
+  onReplyPostingReviewModeChange(value) {
+    this.set("category.category_setting.reply_posting_review_mode", value);
+    if (value !== "everyone_except" && value !== "no_one_except") {
+      this.set("category.reply_posting_review_group_ids", []);
+    }
+  }
+
+  @action
+  onTopicPostingReviewGroupsChange(groupIds) {
+    this.set("category.topic_posting_review_group_ids", groupIds);
+  }
+
+  @action
+  onReplyPostingReviewGroupsChange(groupIds) {
+    this.set("category.reply_posting_review_group_ids", groupIds);
+  }
+
   <template>
     <section>
       {{#if this.showPositionInput}}
@@ -312,24 +361,66 @@ export default class EditCategorySettings extends buildCategoryPanel(
         </section>
       {{/if}}
 
-      <section class="field require-topic-approval">
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.category.category_setting.require_topic_approval}}
+      <section class="field topic-posting-review-mode">
+        <label>{{i18n "category.topic_posting_review_mode"}}</label>
+        <div class="controls">
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.postingReviewModeOptions}}
+            @value={{this.category.category_setting.topic_posting_review_mode}}
+            @onChange={{this.onTopicPostingReviewModeChange}}
+            @options={{hash placementStrategy="absolute"}}
           />
-          {{i18n "category.require_topic_approval"}}
-        </label>
+        </div>
+        {{#if
+          (or
+            (eq
+              this.category.category_setting.topic_posting_review_mode
+              "everyone_except"
+            )
+            (eq
+              this.category.category_setting.topic_posting_review_mode
+              "no_one_except"
+            )
+          )
+        }}
+          <GroupChooser
+            @content={{this.site.groups}}
+            @value={{this.category.topic_posting_review_group_ids}}
+            @onChange={{this.onTopicPostingReviewGroupsChange}}
+          />
+        {{/if}}
       </section>
 
-      <section class="field require-reply-approval">
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.category.category_setting.require_reply_approval}}
+      <section class="field reply-posting-review-mode">
+        <label>{{i18n "category.reply_posting_review_mode"}}</label>
+        <div class="controls">
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.postingReviewModeOptions}}
+            @value={{this.category.category_setting.reply_posting_review_mode}}
+            @onChange={{this.onReplyPostingReviewModeChange}}
+            @options={{hash placementStrategy="absolute"}}
           />
-          {{i18n "category.require_reply_approval"}}
-        </label>
+        </div>
+        {{#if
+          (or
+            (eq
+              this.category.category_setting.reply_posting_review_mode
+              "everyone_except"
+            )
+            (eq
+              this.category.category_setting.reply_posting_review_mode
+              "no_one_except"
+            )
+          )
+        }}
+          <GroupChooser
+            @content={{this.site.groups}}
+            @value={{this.category.reply_posting_review_group_ids}}
+            @onChange={{this.onReplyPostingReviewGroupsChange}}
+          />
+        {{/if}}
       </section>
 
       <section class="field default-slow-mode">

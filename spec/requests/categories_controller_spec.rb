@@ -556,6 +556,24 @@ RSpec.describe CategoriesController do
           expect(UserHistory.count).to eq(1)
         end
 
+        it "creates a category with posting review mode" do
+          group = Fabricate(:group)
+
+          post "/categories.json",
+               params: {
+                 name: "Review Category",
+                 topic_posting_review_mode: "everyone_except",
+                 topic_posting_review_group_ids: [group.id],
+                 reply_posting_review_mode: "everyone",
+               }
+
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+          expect(cat_json["category_setting"]["topic_posting_review_mode"]).to eq("everyone_except")
+          expect(cat_json["topic_posting_review_group_ids"]).to contain_exactly(group.id)
+          expect(cat_json["category_setting"]["reply_posting_review_mode"]).to eq("everyone")
+        end
+
         it "creates category with description containing markdown" do
           post "/categories.json",
                params: {
@@ -1187,6 +1205,55 @@ RSpec.describe CategoriesController do
           put "/categories/#{category.id}.json", params: { moderating_group_ids: [] }
           expect(response.status).to eq(200)
           expect(category.reload.moderating_groups).to be_blank
+        end
+
+        it "sets topic_posting_review_mode to everyone" do
+          put "/categories/#{category.id}.json", params: { topic_posting_review_mode: "everyone" }
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+          expect(cat_json["category_setting"]["topic_posting_review_mode"]).to eq("everyone")
+          expect(category.reload.category_setting.topic_posting_review_mode).to eq("everyone")
+        end
+
+        it "sets topic_posting_review_mode to everyone_except with group IDs" do
+          put "/categories/#{category.id}.json",
+              params: {
+                topic_posting_review_mode: "everyone_except",
+                topic_posting_review_group_ids: [mod_group_1.id, mod_group_2.id],
+              }
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+          expect(cat_json["category_setting"]["topic_posting_review_mode"]).to eq("everyone_except")
+          expect(cat_json["topic_posting_review_group_ids"]).to contain_exactly(
+            mod_group_1.id,
+            mod_group_2.id,
+          )
+        end
+
+        it "sets reply_posting_review_mode to no_one_except with group IDs" do
+          put "/categories/#{category.id}.json",
+              params: {
+                reply_posting_review_mode: "no_one_except",
+                reply_posting_review_group_ids: [mod_group_3.id],
+              }
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+          expect(cat_json["category_setting"]["reply_posting_review_mode"]).to eq("no_one_except")
+          expect(cat_json["reply_posting_review_group_ids"]).to contain_exactly(mod_group_3.id)
+        end
+
+        it "clears groups when changing from everyone_except to everyone" do
+          category.category_setting.update_posting_review_mode!(
+            :topic,
+            "everyone_except",
+            group_ids: [mod_group_1.id],
+          )
+
+          put "/categories/#{category.id}.json", params: { topic_posting_review_mode: "everyone" }
+          expect(response.status).to eq(200)
+          cat_json = response.parsed_body["category"]
+          expect(cat_json["category_setting"]["topic_posting_review_mode"]).to eq("everyone")
+          expect(cat_json["topic_posting_review_group_ids"]).to be_empty
         end
 
         it "can correctly convert blank strings to appropriate null values" do

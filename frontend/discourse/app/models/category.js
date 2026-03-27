@@ -835,6 +835,12 @@ export default class Category extends RestModel {
         ),
         search_priority: this.search_priority,
         moderating_group_ids: this.moderating_group_ids,
+        topic_posting_review_mode:
+          this.category_setting?.topic_posting_review_mode,
+        reply_posting_review_mode:
+          this.category_setting?.reply_posting_review_mode,
+        topic_posting_review_group_ids: this.topic_posting_review_group_ids,
+        reply_posting_review_group_ids: this.reply_posting_review_group_ids,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
         style_type: this.style_type,

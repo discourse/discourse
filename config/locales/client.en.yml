@@ -4834,6 +4834,13 @@ en:
       review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
+      topic_posting_review_mode: "New topic approval"
+      reply_posting_review_mode: "New reply approval"
+      posting_review_modes:
+        no_one: "No one"
+        everyone: "Everyone"
+        everyone_except: "Everyone except users in certain groups"
+        no_one_except: "No one except users in certain groups"
       this_year: "this year"
       position: "Position on the categories page:"
       default_position: "Default position"

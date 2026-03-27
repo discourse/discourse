@@ -13,7 +13,7 @@ import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import getUrl from "discourse/lib/get-url";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import { eq } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySettings extends Component {
@@ -72,6 +72,40 @@ export default class UpsertCategorySettings extends Component {
     return this.categorySetting?.auto_bump_cooldown_days;
   }
 
+  get postingReviewModeOptions() {
+    return [
+      { name: i18n("category.posting_review_modes.no_one"), value: "no_one" },
+      {
+        name: i18n("category.posting_review_modes.everyone"),
+        value: "everyone",
+      },
+      {
+        name: i18n("category.posting_review_modes.everyone_except"),
+        value: "everyone_except",
+      },
+      {
+        name: i18n("category.posting_review_modes.no_one_except"),
+        value: "no_one_except",
+      },
+    ];
+  }
+
+  get topicPostingReviewMode() {
+    return this.categorySetting?.topic_posting_review_mode;
+  }
+
+  get replyPostingReviewMode() {
+    return this.categorySetting?.reply_posting_review_mode;
+  }
+
+  get topicPostingReviewGroupIds() {
+    return this.args.transientData?.topic_posting_review_group_ids;
+  }
+
+  get replyPostingReviewGroupIds() {
+    return this.args.transientData?.reply_posting_review_group_ids;
+  }
+
   @action
   onAutoCloseDurationChange(minutes) {
     let hours = minutes ? minutes / 60 : null;
@@ -104,6 +138,32 @@ export default class UpsertCategorySettings extends Component {
   @action
   onAutoBumpCooldownDaysChange(value) {
     this.#updateCategorySetting("auto_bump_cooldown_days", value);
+  }
+
+  @action
+  onTopicPostingReviewModeChange(value) {
+    this.#updateCategorySetting("topic_posting_review_mode", value);
+    if (value !== "everyone_except" && value !== "no_one_except") {
+      this.args.form.set("topic_posting_review_group_ids", []);
+    }
+  }
+
+  @action
+  onReplyPostingReviewModeChange(value) {
+    this.#updateCategorySetting("reply_posting_review_mode", value);
+    if (value !== "everyone_except" && value !== "no_one_except") {
+      this.args.form.set("reply_posting_review_group_ids", []);
+    }
+  }
+
+  @action
+  onTopicPostingReviewGroupsChange(groupIds) {
+    this.args.form.set("topic_posting_review_group_ids", groupIds);
+  }
+
+  @action
+  onReplyPostingReviewGroupsChange(groupIds) {
+    this.args.form.set("reply_posting_review_group_ids", groupIds);
   }
 
   <template>
@@ -239,23 +299,71 @@ export default class UpsertCategorySettings extends Component {
 
         <@form.Object @name="category_setting" as |object|>
           <object.Field
-            @name="require_topic_approval"
-            @title={{i18n "category.require_topic_approval"}}
-            @type="checkbox"
+            @name="topic_posting_review_mode"
+            @title={{i18n "category.topic_posting_review_mode"}}
+            @type="custom"
             as |field|
           >
-            <field.Control />
-          </object.Field>
-
-          <object.Field
-            @name="require_reply_approval"
-            @title={{i18n "category.require_reply_approval"}}
-            @type="checkbox"
-            as |field|
-          >
-            <field.Control />
+            <field.Control>
+              <ComboBox
+                @valueProperty="value"
+                @content={{this.postingReviewModeOptions}}
+                @value={{field.value}}
+                @onChange={{this.onTopicPostingReviewModeChange}}
+                @options={{hash placementStrategy="absolute"}}
+              />
+            </field.Control>
           </object.Field>
         </@form.Object>
+
+        {{#if
+          (or
+            (eq this.topicPostingReviewMode "everyone_except")
+            (eq this.topicPostingReviewMode "no_one_except")
+          )
+        }}
+          <@form.Container>
+            <GroupChooser
+              @content={{this.site.groups}}
+              @value={{this.topicPostingReviewGroupIds}}
+              @onChange={{this.onTopicPostingReviewGroupsChange}}
+            />
+          </@form.Container>
+        {{/if}}
+
+        <@form.Object @name="category_setting" as |object|>
+          <object.Field
+            @name="reply_posting_review_mode"
+            @title={{i18n "category.reply_posting_review_mode"}}
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <ComboBox
+                @valueProperty="value"
+                @content={{this.postingReviewModeOptions}}
+                @value={{field.value}}
+                @onChange={{this.onReplyPostingReviewModeChange}}
+                @options={{hash placementStrategy="absolute"}}
+              />
+            </field.Control>
+          </object.Field>
+        </@form.Object>
+
+        {{#if
+          (or
+            (eq this.replyPostingReviewMode "everyone_except")
+            (eq this.replyPostingReviewMode "no_one_except")
+          )
+        }}
+          <@form.Container>
+            <GroupChooser
+              @content={{this.site.groups}}
+              @value={{this.replyPostingReviewGroupIds}}
+              @onChange={{this.onReplyPostingReviewGroupsChange}}
+            />
+          </@form.Container>
+        {{/if}}
 
         <@form.Container @title={{i18n "category.default_slow_mode"}}>
           <RelativeTimePicker
