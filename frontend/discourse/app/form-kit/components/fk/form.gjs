@@ -48,6 +48,7 @@ class FKForm extends Component {
       set: this.set,
       setProperties: this.setProperties,
       get: this.get,
+      commitField: this.commitField,
       submit: this.onSubmit,
       reset: this.onReset,
       addError: this.addError,
@@ -186,6 +187,11 @@ class FKForm extends Component {
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       await this.triggerRevalidationFor(name);
     }
+  }
+
+  @action
+  commitField(name) {
+    this.formData.commitField(name);
   }
 
   @action
@@ -350,6 +356,7 @@ class FKForm extends Component {
           CheckboxGroup=(this.componentFor FKCheckboxGroup)
           set=this.set
           setProperties=this.setProperties
+          commitField=this.commitField
           addItemToCollection=this.addItemToCollection
         )
         this.formData.draftData
