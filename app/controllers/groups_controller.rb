@@ -779,8 +779,9 @@ class GroupsController < ApplicationController
   private
 
   def add_users_to_group(group, users, notify = false)
-    GroupManager.new(group).add(users)
-    GroupActionLogger.new(current_user, group).bulk_log_add_users_to_group(users.map(&:id))
+    user_ids = users.map(&:id)
+    GroupManager.new(group).add(user_ids)
+    GroupActionLogger.new(current_user, group).bulk_log_add_users_to_group(user_ids)
     users.each { |user| group.notify_added_to_group(user) if notify }
   rescue ActiveRecord::RecordNotUnique
     # Under concurrency, we might attempt to insert two records quickly and hit a DB
