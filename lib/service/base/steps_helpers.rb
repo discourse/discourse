@@ -49,6 +49,14 @@ module Service
       def only_if(name, &block)
         steps << OnlyIfStep.new(name, &block)
       end
+
+      def each(collection_name, as: nil, persist: nil, &block)
+        steps << EachStep.new(collection_name, as:, persist:, &block)
+      end
+
+      def reduce(collection_name, into:, initial: -> { {} }, as: nil, &block)
+        each(collection_name, as:, persist: { into => initial }, &block)
+      end
     end
   end
 end

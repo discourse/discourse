@@ -129,6 +129,20 @@ class Service::StepsInspector
   end
 
   # @!visibility private
+  class Each < Step
+    def steps
+      [
+        self,
+        *step.steps.map { Step.for(it, result, nesting_level: nesting_level + 1, color:).steps },
+      ]
+    end
+
+    def inspect
+      "#{"  " * nesting_level}\e[#{ansi_color}m[#{inspect_type}] #{name}#{runtime}\e[0m #{emoji}".rstrip
+    end
+  end
+
+  # @!visibility private
   class Options < Step
   end
 
