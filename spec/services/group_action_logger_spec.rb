@@ -111,6 +111,12 @@ RSpec.describe GroupActionLogger do
     it "does nothing when target_users is empty" do
       expect { logger.bulk_log_add_users_to_group([]) }.not_to change { GroupHistory.count }
     end
+
+    it "forwards the subject when present" do
+      logger.bulk_log_add_users_to_group([user.id], "added_users")
+
+      expect(GroupHistory.last.subject).to eq("added_users")
+    end
   end
 
   describe "#bulk_log_remove_users_from_group" do
@@ -133,6 +139,12 @@ RSpec.describe GroupActionLogger do
 
     it "does nothing when target_users is empty" do
       expect { logger.bulk_log_remove_users_from_group([]) }.not_to change { GroupHistory.count }
+    end
+
+    it "forwards the subject when present" do
+      logger.bulk_log_remove_users_from_group([user.id], "remove_users")
+
+      expect(GroupHistory.last.subject).to eq("remove_users")
     end
   end
 
