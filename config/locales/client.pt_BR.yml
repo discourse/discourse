@@ -450,7 +450,6 @@ pt_BR:
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
-      skipped: "A lista de verificação de integração de administradores foi ignorada. Se quiser reativá-la, procure por `enable site owner onboarding` nas configurações do site."
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
       invite_collaborators:
         title: "Convidar colaboradores"
@@ -7056,7 +7055,6 @@ pt_BR:
           import_web_tip: "Repositório contendo tema"
           direct_install_tip: "Tem certeza de que quer instalar <strong>%{name}</strong> do repositório listado abaixo?"
           import_web_advanced: "Avançado…"
-          import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json com o tema"
           is_private: "O tema está em um repositório git privado"
           finish_install: "Concluir a instalação do tema"
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"

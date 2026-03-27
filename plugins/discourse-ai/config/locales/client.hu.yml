@@ -154,6 +154,7 @@ hu:
         oauth_statuses:
           connected: "Kapcsolódva"
         oauth_connect: "Kapcsolódás"
+        oauth_hide_details: "Részletek elrejtése"
         enabled: "Bekapcsolva"
         save: "Mentés"
         edit: "Szerkesztés"

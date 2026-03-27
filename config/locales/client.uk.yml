@@ -514,7 +514,6 @@ uk:
       pm_title: "Схожі повідомлення"
     admin_onboarding_banner:
       launch_in_easy_steps: "Запуск за %{step_count} простих кроків"
-      skipped: "Контрольний список реєстрації адміністратора зараз пропущено. Якщо ви хочете увімкнути його знову, знайдіть \"увімкнути реєстрацію власника сайту\" в налаштуваннях сайту."
       congrats_onboarding_complete: "Вітаємо із завершенням процесу адаптації!"
       invite_collaborators:
         title: "Запросити співавторів"
@@ -523,6 +522,7 @@ uk:
       start_posting:
         title: "Розпочати публікацію"
         description: "Дайте людям щось, про що можна поговорити разом"
+        action: "Переглянути ідеї"
         choose_option: "З чого б ви хотіли почати?"
         predefined_topics: "Шаблони криголамів"
         predefined_topics_subtitle: "Дайте новим учасникам тему для обговорення, виберіть шаблон для редагування та створіть свій власний."
@@ -763,6 +763,7 @@ uk:
       storage_access_prompt: "Вже маєте обліковий запис %{site_name} ? Дозвольте доступ до своєї сесії, щоб коментувати від свого імені."
       allow_access: "Дозволити доступ"
       continue_as_guest: "Продовжити як гість"
+      be_first_to_reply: "Будьте першим, хто відповість!"
     topic_count_all:
       one: "Переглянути %{count} нову тему"
       few: "Переглянути %{count} нові теми"
@@ -1290,6 +1291,7 @@ uk:
       add_members:
         title: "Додати учасників до %{group_name}"
         description: "Введіть список користувачів, яких потрібно запросити до групи, або вставте список, розділений комами:"
+        description_usernames_only: "Введіть список імен користувачів, яких ви хочете додати до групи, або вставте список через кому:"
         usernames_placeholder: "імена користувачів"
         usernames_or_emails_placeholder: "імʼя користувачів або адреси електронної пошти"
         notify_users: "Сповістити користувачів"
@@ -4871,6 +4873,8 @@ uk:
       tags: "Теґи"
       localizations: "Локалізації"
       localization:
+        language: "Мова категорії"
+        language_description: "Основна мова назви та опису цієї категорії."
         locale: "Локаль"
         name: "Імʼя"
         description: "Опис"
@@ -7752,7 +7756,7 @@ uk:
           import_web_tip: "Репозиторій стилю"
           direct_install_tip: "Ви дійсно хочете встановити <strong>%{name}</strong> зі сховища, наведеного нижче?"
           import_web_advanced: "Додатково"
-          import_file_tip: ".tar.gz, .zip, або .dcstyle .json файл, який містить тему"
+          import_file_tip: "Файл .tar.gz або .zip, що містить тему"
           is_private: "Тема знаходиться в приватному репозиторії git"
           finish_install: "Завершити встановлення теми"
           last_attempt: "Процес встановлення не завершено, остання спроба:"

@@ -701,13 +701,21 @@ zh_CN:
         modal:
           title: "创建新凭据"
       mcp_servers:
+        short_title: "MCP 服务器"
         name: "名称"
         description: "描述"
         url: "URL"
+        auth_type: "身份验证"
         auth_types:
+          none: "无身份验证"
+          header_secret: "请求头凭据"
           oauth: "OAuth"
         secret: "凭据"
+        auth_header: "认证请求头名称"
+        auth_scheme: "认证方案"
+        oauth_client_registration: "OAuth 客户端注册"
         oauth_connect: "连接"
+        oauth_hide_details: "隐藏详细信息"
         enabled: "已启用"
         save: "保存"
         edit: "编辑"

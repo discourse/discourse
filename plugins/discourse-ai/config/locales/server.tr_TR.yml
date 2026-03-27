@@ -297,6 +297,28 @@ tr_TR:
         unknown_error: "İstenen kimlik bilgisi çözülemiyor."
     mcp_servers:
       secret_not_found: "Seçilen kimlik bilgisi mevcut değildir."
+      invalid_url_not_https: "geçerli bir HTTPS URL'si olmalıdır."
+      invalid_url_not_reachable: "herkese açık bir adrese yönlendirilmelidir."
+      oauth_client_id_required: "Manuel istemci kaydı için OAuth istemci kimliği gereklidir."
+      errors:
+        invalid_response: "MCP sunucusu geçersiz bir yanıt döndürdü."
+        request_failed: "MCP sunucu isteği %{status} durumuyla başarısız oldu."
+        session_expired: "MCP oturumunun süresi doldu."
+        timeout: "MCP sunucu isteği zaman aşımına uğradı."
+        oauth_authorization_required: "Bu MCP sunucusunun kullanılabilmesi için OAuth yetkilendirmesi gereklidir. Yönetici arayüzünden %{issuer} adresine bağlayın."
+        oauth_discovery_failed: "Bu MCP sunucusu için OAuth yetkilendirme ayrıntıları bulunamadı."
+        oauth_discovery_failed_with_status: "OAuth keşfi %{status} durumuyla başarısız oldu."
+        oauth_not_configured: "Bu MCP sunucusu için OAuth yapılandırılmamıştır."
+        oauth_refresh_token_missing: "OAuth yenileme belirteci eksik. Lütfen bu MCP sunucusuna yeniden bağlanın."
+        oauth_save_before_connect: "OAuth bağlantısını test etmeden önce MCP sunucusunu kaydedin."
+        oauth_state_invalid: "OAuth yetkilendirme durumu geçersiz veya süresi dolmuş. Bağlantıyı yeniden başlatın."
+        oauth_token_exchange_failed: "OAuth belirteci değişimi %{status} durumuyla başarısız oldu."
+        oauth_https_required: "OAuth, sitenizin HTTPS üzerinden sunulmasını gerektirir."
+        oauth_callback_failed: "OAuth bağlantısı başarısız: %{message}"
+        oauth_client_metadata_public_https_required: "İstemci meta veri belgesi kaydı için herkese açık bir HTTPS site URL'si gereklidir. Mevcut istemci meta veri URL'si: %{url}"
+        oauth_registration_endpoint_missing: "OAuth yetkilendirme sunucusu bir kayıt uç noktası bildirmez."
+        oauth_client_registration_failed: "Dinamik istemci kaydı, %{status} durumuyla başarısız oldu."
+        oauth_client_registration_failed_no_id: "Dinamik istemci kaydı başarıyla gerçekleştirildi, ancak client_id değeri döndürülmedi."
     ai_helper:
       errors:
         completion_request_failed: "Öneriler sunulmaya çalışılırken bir şeyler ters gitti. Lütfen tekrar deneyin."
@@ -874,3 +896,5 @@ tr_TR:
       custom_tool_exists:
         one: "%{names} adlı bir özel araç zaten mevcut."
         other: "%{names} adlı özel araçlar zaten mevcut."
+      mcp_server_missing: "Bu sitede aşağıdaki MCP sunucuları yapılandırılmamıştır: %{names}."
+      mcp_server_tools_not_found: "Bu sitede MCP sunucusu %{name} 'dan eşleşen hiçbir araç bulunmamaktadır."

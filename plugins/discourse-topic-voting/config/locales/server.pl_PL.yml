@@ -7,6 +7,7 @@
 pl_PL:
   site_settings:
     topic_voting_enabled: 'Pozwolić użytkownikom głosować na tematy?'
+    topic_voting_enable_vote_limits: 'Ogranicz liczbę głosów na użytkownika na podstawie poziomu zaufania'
     topic_voting_tl0_vote_limit: 'Ile głosów mogą oddać użytkownicy TL0?'
     topic_voting_tl1_vote_limit: 'Ile głosów mogą oddać użytkownicy TL1?'
     topic_voting_tl2_vote_limit: 'Ile głosów mogą oddać użytkownicy TL2?'

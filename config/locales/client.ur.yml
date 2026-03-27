@@ -6671,7 +6671,6 @@ ur:
           add_all: "سب شامل کریں"
           import_web_tip: "رِیپَوزِٹَری میں موجود تِھیم"
           direct_install_tip: "کیا آپ واقعی ذیل میں درج ریپوزٹری سے <strong>%{name}</strong> انسٹال کرنا چاہتے ہیں؟"
-          import_file_tip: ".tar.gz، .zip، یا .dcstyle.json فائل میں موجود تِھیم"
           is_private: "تھِیم ایک ذاتی گِٹ رِیپَوزِٹَری میں ہے"
           last_attempt: "انسٹال کرنے کا پراسیس ختم نہیں ہوا، آخری بار کوشش کی گئی:"
           remote_branch: "برانچ کا نام (اختیاری)"

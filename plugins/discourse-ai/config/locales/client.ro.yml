@@ -176,6 +176,7 @@ ro:
         description: "Descriere"
         url: "URL"
         oauth_connect: "Conectează-te"
+        oauth_hide_details: "Ascunde detalii"
         enabled: "Activate"
         save: "Salvează"
         edit: "Editează"

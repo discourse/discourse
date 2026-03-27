@@ -418,7 +418,6 @@ zh_CN:
       pm_title: "建议的消息"
     admin_onboarding_banner:
       launch_in_easy_steps: "只需 %{step_count} 个简单步骤启动"
-      skipped: "管理员入门核对清单现已跳过。如果您想重新启用该清单，请在站点设置中查找 `enable site owner onboarding` 选项。"
       congrats_onboarding_complete: "恭喜您完成入门流程！"
       invite_collaborators:
         title: "邀请协作者"
@@ -6822,7 +6821,6 @@ zh_CN:
           import_web_tip: "包含主题的仓库"
           direct_install_tip: "确定要从下面列出的仓库中安装 <strong>%{name}</strong> 吗？"
           import_web_advanced: "高级…"
-          import_file_tip: "包含主题的 .tar.gz、.zip 或 .dcstyle.json 文件"
           is_private: "主题位于私有 git 仓库中"
           finish_install: "完成主题安装"
           last_attempt: "安装过程未完成，最后一次尝试："

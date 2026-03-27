@@ -3703,7 +3703,6 @@ ca:
           stay: "Roman"
           delete_upload_confirm: "Voleu suprimir aquesta càrrega? (L'aparença CSS pot deixar de funcionar!)"
           import_web_tip: "Repositori que conté l'aparença"
-          import_file_tip: "fitxer .tar.gz, .zip o .dcstyle.json que conté l'aparença"
           is_private: "L'aparença és en un repositori git privat"
           remote_branch: "Nom de branca (opcional)"
           public_key: "Atorga el següent accés de clau pública al repositori:"

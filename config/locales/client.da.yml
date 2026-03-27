@@ -5272,7 +5272,6 @@ da:
           import_web_tip: "Depot som har temaet"
           direct_install_tip: "Er du sikker på, at du vil installere <strong>%{name}</strong> fra lageret nedenfor?"
           import_web_advanced: "Avanceret…"
-          import_file_tip: ".tar.gz, .zip eller .dcstyle.json fil indeholdende tema"
           is_private: "Temaet er i et privat git-repository"
           remote_branch: "Filialnavn (valgfrit)"
           public_key: "Giv følgende offentlig nøgle adgang til repoen:"

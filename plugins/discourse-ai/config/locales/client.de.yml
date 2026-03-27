@@ -582,6 +582,7 @@ de:
           remove: "Upload entfernen"
       tools:
         short_title: "Tools"
+        keywords: "mcp|mcp-Server|Modellkontextprotokoll"
         export: "Exportieren"
         import: "Importieren"
         import_error_conflict: "Tool existiert bereits, möchtest du es aktualisieren?"
@@ -656,6 +657,8 @@ de:
         oauth_statuses:
           connected: "Verbunden"
         oauth_connect: "Verbinden"
+        oauth_show_details: "Details anzeigen"
+        oauth_hide_details: "Details ausblenden"
         enabled: "Aktiviert"
         save: "Speichern"
         edit: "Bearbeiten"

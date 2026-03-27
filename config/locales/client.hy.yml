@@ -4467,7 +4467,6 @@ hy:
           included_components: "Ներառված բաղադրիչներ"
           add_all: "Ավելացնել բոլորը "
           import_web_tip: "Թեմա պարունակող ռեպոզիտորիա"
-          import_file_tip: ".tar.gz, .zip, կամ .dcstyle.json ֆայլ, պարունակող թեման"
           is_private: "Թեման մասնավոր git ռեպոզիտորիայում է:"
           remote_branch: "Ճյուղի անունը (ըստ ցանկության)"
           public_key: "Շնորհել հետևյալ public key թույլտվություն ռեպոյին՝ "

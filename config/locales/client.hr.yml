@@ -6519,7 +6519,6 @@ hr:
           add_all: "Dodaj Sve"
           import_web_tip: "Repozitorijum koji sadrži temu"
           direct_install_tip: "Jeste li sigurni da želite instalirati <strong>%{name}</strong> iz dolje navedenog spremišta?"
-          import_file_tip: ".tar.gz, .zip ili .dcstyle.json datoteka koja sadrži temu"
           is_private: "Tema je u privatnom git repozitoriju"
           finish_install: "Završite instalaciju teme"
           last_attempt: "Proces instalacije nije dovršen, posljednji pokušaj:"

@@ -24,6 +24,7 @@ pl_PL:
       voting_closed_title: "Zamknięte"
       voting_limit: "Limit"
       see_votes: "Masz jeszcze głosów: %{count}/%{max}"
+      see_all_votes: "Zobacz swoje głosy"
       locked: "Zablokowano"
       locked_description: "Zwiększ poziom zaufania do głosowania"
       votes:
