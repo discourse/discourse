@@ -11,6 +11,7 @@
  * @property {import("discourse/services/modal").default} modal
  * @property {import("discourse/float-kit/services/toasts").default} toasts
  * @property {import("discourse/models/site").default} site
+ * @property {Record<string, unknown>} siteSettings
  * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} replaceToolbar
  * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} addGlimmerNodeView
  * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} removeGlimmerNodeView
