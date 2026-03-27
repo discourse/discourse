@@ -109,6 +109,7 @@
     transform: translateY(-100%);
     right: 0;
     padding: var(--space-half) var(--space-1);
+    font-family: monospace;
 
     .workflows-property-engine__control-wrapper:has(
         .combo-box,
@@ -121,12 +122,6 @@
       right: 30px;
     }
     z-index: 2;
-
-    &.--active {
-      .d-icon {
-        color: var(--tertiary);
-      }
-    }
   }
 
   &__collection-row {
