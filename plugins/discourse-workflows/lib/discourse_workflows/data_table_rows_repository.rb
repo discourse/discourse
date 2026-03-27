@@ -30,15 +30,18 @@ module DiscourseWorkflows
       limit_clause = build_limit_clause(limit, binds)
       offset_clause = build_offset_clause(offset, binds)
 
-      rows = DB.query_hash(<<~SQL, binds).map { |row| serialize_row(row) }
-            SELECT * FROM #{@table}
+      results = DB.query_hash(<<~SQL, binds)
+            SELECT *, COUNT(*) OVER() AS _total_count FROM #{@table}
             #{where_clause}
             #{order_clause}
             #{limit_clause}
             #{offset_clause}
           SQL
 
-      { rows: rows, count: count(filter: normalized_filter) }
+      total_count = results.first&.dig("_total_count").to_i
+      rows = results.map { |row| serialize_row(row.except("_total_count")) }
+
+      { rows: rows, count: total_count }
     end
 
     def find(row_id)
