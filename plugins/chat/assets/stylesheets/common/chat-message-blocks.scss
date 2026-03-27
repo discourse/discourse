@@ -8,6 +8,7 @@
 .chat-message__block {
   .block__actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5em;
   }
 
