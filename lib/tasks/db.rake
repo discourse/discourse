@@ -86,33 +86,6 @@ end
 # this ensures we can run migrations concurrently to save huge amounts of time
 Rake::Task["multisite:migrate"].clear
 
-class StdOutDemux
-  def initialize(stdout)
-    @stdout = stdout
-    @data = {}
-  end
-
-  def write(data)
-    (@data[Thread.current] ||= +"") << data
-  end
-
-  def close
-    finish_chunk
-  end
-
-  def finish_chunk
-    data = @data[Thread.current]
-    if data
-      @stdout.write(data)
-      @data.delete Thread.current
-    end
-  end
-
-  def flush
-    # Do nothing
-  end
-end
-
 class SeedHelper
   def self.paths
     DiscoursePluginRegistry.seed_paths
@@ -128,106 +101,96 @@ class SeedHelper
   end
 end
 
+def execute_db_migration
+  ActiveRecord::Tasks::DatabaseTasks.migrate
+
+  if ENV["SKIP_SEED_FU"] != "1"
+    Rake::Task["db:seed"].reenable
+    Rake::Task["db:seed"].invoke
+  end
+
+  if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
+    SiteIconManager.ensure_optimized!
+  end
+end
+
 task "multisite:migrate" => %w[
        db:load_config
        environment
        set_locale
        assets:precompile:asset_processor
      ] do |_, args|
-  raise "Multisite migrate is only supported in production" if ENV["RAILS_ENV"] != "production"
-
   DistributedMutex.synchronize(
     "db_migration",
     redis: Discourse.redis.without_namespace,
     validity: 1200,
   ) do
-    # TODO: Switch to processes for concurrent migrations because Rails migration
-    # is not thread safe by default.
-    concurrency = 1
+    concurrency = ENV["DISCOURSE_MULTISITE_MIGRATE_CONCURRENCY"]&.to_i || 1
 
-    puts "Multisite migrator is running using #{concurrency} threads"
-    puts
+    puts "Multisite migrator is running using #{concurrency} processes"
 
-    exceptions = Queue.new
+    databases = RailsMultisite::ConnectionManagement.all_dbs
 
-    if concurrency > 1
-      old_stdout = $stdout
-      $stdout = StdOutDemux.new($stdout)
-    end
+    puts "Running migrations and seeds for #{databases.join(", ")} database(s)"
 
-    SeedFu.quiet = true
+    migrate_database =
+      lambda do |db|
+        output = StringIO.new
+        error = nil
 
-    def execute_concurrently(concurrency, exceptions)
-      queue = Queue.new
-
-      RailsMultisite::ConnectionManagement.each_connection { |db| queue << db }
-
-      concurrency.times { queue << :done }
-
-      (1..concurrency)
-        .map do
-          Thread.new do
-            while true
-              db = queue.pop
-              break if db == :done
-
-              RailsMultisite::ConnectionManagement.with_connection(db) do
-                begin
-                  yield(db) if block_given?
-                rescue => e
-                  exceptions << [db, e]
-                ensure
-                  begin
-                    $stdout.finish_chunk if concurrency > 1
-                  rescue => ex
-                    STDERR.puts ex.inspect
-                    STDERR.puts ex.backtrace
-                  end
-                end
-              end
-            end
+        begin
+          $stdout = output
+          RailsMultisite::ConnectionManagement.with_connection(db) do
+            puts "-" * 40
+            start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+            puts "Migrating #{db}"
+            execute_db_migration
+            puts "Migrating #{db} done (#{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)}s)"
+            puts "Completed"
           end
+        rescue => e
+          error = e
+        ensure
+          $stdout = STDOUT
         end
-        .each(&:join)
-    end
 
-    def check_exceptions(exceptions)
-      if exceptions.length > 0
-        STDERR.puts
-        STDERR.puts "-" * 80
-        STDERR.puts "#{exceptions.length} migrations failed!"
-        while !exceptions.empty?
-          db, e = exceptions.pop
-          STDERR.puts
-          STDERR.puts "Failed to migrate #{db}"
-          STDERR.puts e.inspect
-          STDERR.puts e.backtrace
-          STDERR.puts
-        end
-        exit 1
+        { db: db, stdout: output.string, error: error }
       end
-    end
 
-    execute_concurrently(concurrency, exceptions) do |db|
-      puts "Migrating #{db}"
-      ActiveRecord::Tasks::DatabaseTasks.migrate
-    end
+    Discourse.before_fork if concurrency > 1
 
-    check_exceptions(exceptions)
-
-    SeedFu.seed(SeedHelper.paths, /001_refresh/)
-
-    execute_concurrently(concurrency, exceptions) do |db|
-      puts "Seeding #{db}"
-      SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
-
-      if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
-        SiteIconManager.ensure_optimized!
+    results =
+      Parallel.map(
+        databases,
+        in_processes: concurrency == 1 ? 0 : concurrency,
+        isolation: false,
+        finish_in_order: true,
+        finish:
+          lambda do |db, _index, result|
+            result[:stdout]&.lines&.each { |line| puts "[#{db}] #{line}" }
+          end,
+      ) do |db|
+        $after_fork_called ||= (Discourse.after_fork || true) if concurrency > 1
+        migrate_database.call(db)
       end
-    end
 
-    $stdout = old_stdout if concurrency > 1
-    check_exceptions(exceptions)
+    errors = results.select { |r| r[:error] }
+
+    if errors.any?
+      $stderr.puts
+      $stderr.puts "-" * 80
+      $stderr.puts "#{errors.length} database(s) failed!"
+
+      errors.each do |result|
+        $stderr.puts
+        $stderr.puts "Failed to process #{result[:db]}"
+        $stderr.puts result[:error].inspect
+        $stderr.puts result[:error].backtrace
+        $stderr.puts
+      end
+
+      raise errors.first[:error]
+    end
 
     Rake::Task["db:_dump"].invoke
   end
@@ -264,15 +227,8 @@ task "db:migrate" => %w[
       end
     end
 
-    ActiveRecord::Tasks::DatabaseTasks.migrate
-
-    Rake::Task["db:seed"].invoke if ENV["SKIP_SEED_FU"] != "1"
-
+    execute_db_migration
     Rake::Task["db:schema:cache:dump"].invoke if Rails.env.development? && !ENV["RAILS_DB"]
-
-    if !Discourse.skip_post_deployment_migrations? && ENV["SKIP_OPTIMIZE_ICONS"] != "1"
-      SiteIconManager.ensure_optimized!
-    end
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
