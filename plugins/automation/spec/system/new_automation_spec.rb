@@ -9,7 +9,6 @@ describe "DiscourseAutomation | New automation", type: :system do
   end
 
   let(:new_automation_page) { PageObjects::Pages::NewAutomation.new }
-  let(:composer) { PageObjects::Components::Composer.new }
 
   context "when a script is clicked" do
     it "navigates to automation edit route" do
@@ -22,7 +21,7 @@ describe "DiscourseAutomation | New automation", type: :system do
       new_automation_page.select_trigger("recurring")
 
       expect(page).to have_css(".scriptables")
-      expect(composer).to have_rich_editor
+      expect(page).to have_css(".d-editor")
     end
   end
 end
