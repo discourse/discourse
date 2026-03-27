@@ -4750,6 +4750,7 @@ en:
       validations:
         emoji_required: "Select an emoji."
         icon_required: "Select an icon."
+        groups_required: "Select at least one group for this approval mode."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4836,11 +4837,13 @@ en:
       require_reply_approval: "Require moderator approval of all new replies"
       topic_posting_review_mode: "New topic approval"
       reply_posting_review_mode: "New reply approval"
+      require_topic_approval_for: "Require moderator approval of new topics for..."
+      require_reply_approval_for: "Require moderator approval of new replies for..."
       posting_review_modes:
         no_one: "No one"
         everyone: "Everyone"
-        everyone_except: "Everyone except users in certain groups"
-        no_one_except: "No one except users in certain groups"
+        everyone_except: "Everyone except selected groups"
+        no_one_except: "No one except selected groups"
       this_year: "this year"
       position: "Position on the categories page:"
       default_position: "Default position"

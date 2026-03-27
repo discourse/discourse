@@ -58,6 +58,8 @@ const SIMPLIFIED_FIELD_LIST = [
   "all_topics_wiki",
   "allow_unlimited_owner_edits_on_first_post",
   "moderating_group_ids",
+  "topic_posting_review_group_ids",
+  "reply_posting_review_group_ids",
   "auto_close_hours",
   "auto_close_based_on_last_post",
   "default_view",
@@ -221,6 +223,24 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   validateForm(data, { addError }) {
+    for (const type of ["topic", "reply"]) {
+      const mode =
+        data.category_setting?.[`${type}_posting_review_mode`] ??
+        this.model.category_setting?.[`${type}_posting_review_mode`];
+      const groupField = `${type}_posting_review_group_ids`;
+
+      if (
+        ["everyone_except", "no_one_except"].includes(mode) &&
+        !data[groupField]?.length &&
+        !this.model[groupField]?.length
+      ) {
+        addError(groupField, {
+          title: i18n(`category.${type}_posting_review_mode`),
+          message: i18n("category.validations.groups_required"),
+        });
+      }
+    }
+
     if (!this.siteSettings.enable_simplified_category_creation) {
       return;
     }

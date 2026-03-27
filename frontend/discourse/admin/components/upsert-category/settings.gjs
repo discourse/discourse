@@ -300,7 +300,7 @@ export default class UpsertCategorySettings extends Component {
         <@form.Object @name="category_setting" as |object|>
           <object.Field
             @name="topic_posting_review_mode"
-            @title={{i18n "category.topic_posting_review_mode"}}
+            @title={{i18n "category.require_topic_approval_for"}}
             @type="custom"
             as |field|
           >
@@ -334,7 +334,7 @@ export default class UpsertCategorySettings extends Component {
         <@form.Object @name="category_setting" as |object|>
           <object.Field
             @name="reply_posting_review_mode"
-            @title={{i18n "category.reply_posting_review_mode"}}
+            @title={{i18n "category.require_reply_approval_for"}}
             @type="custom"
             as |field|
           >

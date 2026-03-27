@@ -378,6 +378,11 @@ div.edit-category {
     padding: 0.5em 0;
     color: var(--primary-medium);
   }
+
+  .topic-posting-review-groups,
+  .reply-posting-review-groups {
+    margin-top: -0.5em;
+  }
 }
 
 .edit-category .add-group {

@@ -33,15 +33,18 @@ class CategorySetting < ActiveRecord::Base
   end
   alias_method :require_reply_approval?, :require_reply_approval
 
+  GROUP_BASED_MODES = %w[everyone_except no_one_except].freeze
+
   def update_posting_review_mode!(post_type, mode, group_ids: [])
     mode = mode.to_s
+    group_based = GROUP_BASED_MODES.include?(mode)
 
-    if %w[everyone_except no_one_except].include?(mode)
-      raise ArgumentError, "group_ids must be provided for #{mode} mode" if group_ids.blank?
-    elsif group_ids.present?
-      raise ArgumentError,
-            "group_ids can only be provided for everyone_except or no_one_except modes"
+    if group_based && group_ids.blank?
+      errors.add(:base, I18n.t("category.errors.groups_required_for_mode"))
+      raise ActiveRecord::RecordInvalid.new(self)
     end
+
+    group_ids = [] unless group_based
 
     transaction do
       update!("#{post_type}_posting_review_mode" => mode)

@@ -362,7 +362,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
       {{/if}}
 
       <section class="field topic-posting-review-mode">
-        <label>{{i18n "category.topic_posting_review_mode"}}</label>
+        <label>{{i18n "category.require_topic_approval_for"}}</label>
         <div class="controls">
           <ComboBox
             @valueProperty="value"
@@ -372,28 +372,31 @@ export default class EditCategorySettings extends buildCategoryPanel(
             @options={{hash placementStrategy="absolute"}}
           />
         </div>
-        {{#if
-          (or
-            (eq
-              this.category.category_setting.topic_posting_review_mode
-              "everyone_except"
-            )
-            (eq
-              this.category.category_setting.topic_posting_review_mode
-              "no_one_except"
-            )
+      </section>
+
+      {{#if
+        (or
+          (eq
+            this.category.category_setting.topic_posting_review_mode
+            "everyone_except"
           )
-        }}
+          (eq
+            this.category.category_setting.topic_posting_review_mode
+            "no_one_except"
+          )
+        )
+      }}
+        <section class="field topic-posting-review-groups">
           <GroupChooser
             @content={{this.site.groups}}
             @value={{this.category.topic_posting_review_group_ids}}
             @onChange={{this.onTopicPostingReviewGroupsChange}}
           />
-        {{/if}}
-      </section>
+        </section>
+      {{/if}}
 
       <section class="field reply-posting-review-mode">
-        <label>{{i18n "category.reply_posting_review_mode"}}</label>
+        <label>{{i18n "category.require_reply_approval_for"}}</label>
         <div class="controls">
           <ComboBox
             @valueProperty="value"
@@ -403,25 +406,28 @@ export default class EditCategorySettings extends buildCategoryPanel(
             @options={{hash placementStrategy="absolute"}}
           />
         </div>
-        {{#if
-          (or
-            (eq
-              this.category.category_setting.reply_posting_review_mode
-              "everyone_except"
-            )
-            (eq
-              this.category.category_setting.reply_posting_review_mode
-              "no_one_except"
-            )
+      </section>
+
+      {{#if
+        (or
+          (eq
+            this.category.category_setting.reply_posting_review_mode
+            "everyone_except"
           )
-        }}
+          (eq
+            this.category.category_setting.reply_posting_review_mode
+            "no_one_except"
+          )
+        )
+      }}
+        <section class="field reply-posting-review-groups">
           <GroupChooser
             @content={{this.site.groups}}
             @value={{this.category.reply_posting_review_group_ids}}
             @onChange={{this.onReplyPostingReviewGroupsChange}}
           />
-        {{/if}}
-      </section>
+        </section>
+      {{/if}}
 
       <section class="field default-slow-mode">
         <div class="control-group">

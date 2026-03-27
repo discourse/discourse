@@ -157,10 +157,7 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
-    category_params.delete(:topic_posting_review_mode)
-    category_params.delete(:reply_posting_review_mode)
-    category_params.delete(:topic_posting_review_group_ids)
-    category_params.delete(:reply_posting_review_group_ids)
+    strip_posting_review_params!
     category_type = params[:category_type]
 
     if category_params[:description].present? &&
@@ -184,56 +181,50 @@ class CategoriesController < ApplicationController
         return render json: { errors: [e.message] }, status: :unprocessable_entity
       end
 
-    if @category.save
-      @category.move_to(position.to_i) if position
+    Category.transaction do
+      if @category.save
+        @category.move_to(position.to_i) if position
 
-      if category_type.present? &&
-           UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
-        Categories::Configure.call(
-          guardian:,
-          params: {
-            category_id: @category.id,
-            category_type:,
-            site_setting_configuration_values: params[:category_type_site_settings],
-            category_configuration_values: category_params[:custom_fields],
-          },
-        ) do |result|
-          on_failed_policy(:type_is_available) do
-            return(
-              render json: {
-                       errors: [
-                         I18n.t(
-                           "category_types.not_available",
-                           type_name: category_type.capitalize,
-                         ),
-                       ],
-                     },
-                     status: :unprocessable_entity
-            )
+        if category_type.present? &&
+             UpcomingChanges.enabled_for_user?(:enable_simplified_category_creation, current_user)
+          Categories::Configure.call(
+            guardian:,
+            params: {
+              category_id: @category.id,
+              category_type:,
+              site_setting_configuration_values: params[:category_type_site_settings],
+              category_configuration_values: category_params[:custom_fields],
+            },
+          ) do |result|
+            on_failed_policy(:type_is_available) do
+              return(
+                render json: {
+                         errors: [
+                           I18n.t(
+                             "category_types.not_available",
+                             type_name: category_type.capitalize,
+                           ),
+                         ],
+                       },
+                       status: :unprocessable_entity
+              )
+            end
           end
         end
-      end
 
-      %i[topic reply].each do |post_type|
-        mode = params[:"#{post_type}_posting_review_mode"]
-        if mode.present?
-          group_ids = params[:"#{post_type}_posting_review_group_ids"] || []
-          @category.category_setting.update_posting_review_mode!(
-            post_type,
-            mode,
-            group_ids: group_ids.map(&:to_i),
-          )
+        update_posting_review_modes!(@category)
+
+        Scheduler::Defer.later "Log staff action create category" do
+          @staff_action_logger.log_category_creation(@category)
         end
-      end
 
-      Scheduler::Defer.later "Log staff action create category" do
-        @staff_action_logger.log_category_creation(@category)
+        render_serialized(@category, CategorySerializer)
+      else
+        render_json_error(@category)
       end
-
-      render_serialized(@category, CategorySerializer)
-    else
-      render_json_error(@category)
     end
+  rescue ActiveRecord::RecordInvalid => e
+    render_json_error(e.record)
   end
 
   def update
@@ -245,10 +236,7 @@ class CategoriesController < ApplicationController
       cat.move_to(category_params[:position].to_i) if category_params[:position]
       category_params.delete(:position)
 
-      category_params.delete(:topic_posting_review_mode)
-      category_params.delete(:reply_posting_review_mode)
-      category_params.delete(:topic_posting_review_group_ids)
-      category_params.delete(:reply_posting_review_group_ids)
+      strip_posting_review_params!
 
       old_custom_fields = cat.custom_fields.dup
       category_params[:custom_fields]&.each do |key, value|
@@ -301,19 +289,12 @@ class CategoriesController < ApplicationController
       old_permissions = cat.permissions_params
       old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
-      if result = cat.update(category_params)
-        %i[topic reply].each do |post_type|
-          mode = params[:"#{post_type}_posting_review_mode"]
-          if mode.present?
-            group_ids = params[:"#{post_type}_posting_review_group_ids"] || []
-            cat.category_setting.update_posting_review_mode!(
-              post_type,
-              mode,
-              group_ids: group_ids.map(&:to_i),
-            )
-          end
-        end
-
+      if result =
+           Category.transaction {
+             next false unless cat.update(category_params)
+             update_posting_review_modes!(cat)
+             true
+           }
         Category.preload_user_fields!(guardian, [cat])
 
         Scheduler::Defer.later "Log staff action change category settings" do
@@ -579,6 +560,27 @@ class CategoriesController < ApplicationController
   end
 
   private
+
+  def strip_posting_review_params!
+    category_params.delete(:topic_posting_review_mode)
+    category_params.delete(:reply_posting_review_mode)
+    category_params.delete(:topic_posting_review_group_ids)
+    category_params.delete(:reply_posting_review_group_ids)
+  end
+
+  def update_posting_review_modes!(category)
+    %i[topic reply].each do |post_type|
+      mode = params[:"#{post_type}_posting_review_mode"]
+      if mode.present?
+        group_ids = params[:"#{post_type}_posting_review_group_ids"] || []
+        category.category_setting.update_posting_review_mode!(
+          post_type,
+          mode,
+          group_ids: group_ids.map(&:to_i),
+        )
+      end
+    end
+  end
 
   def topics_per_page
     return SiteSetting.categories_topics if SiteSetting.categories_topics > 0

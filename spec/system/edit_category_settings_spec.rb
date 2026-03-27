@@ -54,7 +54,7 @@ describe "Edit Category Settings" do
       topic_posting_review_mode_select_kit.select_row_by_value("everyone_except")
 
       group_chooser =
-        PageObjects::Components::SelectKit.new(".topic-posting-review-mode .group-chooser")
+        PageObjects::Components::SelectKit.new(".topic-posting-review-groups .group-chooser")
       group_chooser.expand
       group_chooser.select_row_by_value(group.id)
 
@@ -63,6 +63,18 @@ describe "Edit Category Settings" do
       category.reload
       expect(category.category_setting.topic_posting_review_mode).to eq("everyone_except")
       expect(category.topic_posting_review_group_ids).to contain_exactly(group.id)
+    end
+
+    it "shows a validation error when selecting a group-based mode without groups" do
+      category_page.visit_settings(category)
+
+      topic_posting_review_mode_select_kit.expand
+      topic_posting_review_mode_select_kit.select_row_by_value("everyone_except")
+
+      category_page.save_settings
+
+      expect(page).to have_content(I18n.t("js.category.validations.groups_required"))
+      expect(category.reload.category_setting.topic_posting_review_mode).to eq("no_one")
     end
 
     it "clears groups when switching from group-based mode to simple mode" do

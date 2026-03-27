@@ -76,36 +76,34 @@ RSpec.describe CategorySetting do
       expect(category.category_posting_review_groups.where(post_type: :topic).count).to eq(0)
     end
 
-    it "raises ArgumentError when group_ids are provided for everyone topic_posting_review_mode" do
-      expect {
-        category.category_setting.update_posting_review_mode!(
-          :topic,
-          :everyone,
-          group_ids: [group.id],
-        )
-      }.to raise_error(ArgumentError)
+    it "ignores group_ids when provided for everyone topic_posting_review_mode" do
+      category.category_setting.update_posting_review_mode!(
+        :topic,
+        :everyone,
+        group_ids: [group.id],
+      )
+
+      expect(category.category_setting.topic_posting_review_mode).to eq("everyone")
+      expect(category.category_posting_review_groups.where(post_type: :topic).count).to eq(0)
     end
 
-    it "raises ArgumentError when group_ids are provided for no_one topic_posting_review_mode" do
-      expect {
-        category.category_setting.update_posting_review_mode!(
-          :topic,
-          :no_one,
-          group_ids: [group.id],
-        )
-      }.to raise_error(ArgumentError)
+    it "ignores group_ids when provided for no_one topic_posting_review_mode" do
+      category.category_setting.update_posting_review_mode!(:topic, :no_one, group_ids: [group.id])
+
+      expect(category.category_setting.topic_posting_review_mode).to eq("no_one")
+      expect(category.category_posting_review_groups.where(post_type: :topic).count).to eq(0)
     end
 
-    it "raises ArgumentError when group_ids are blank for everyone_except topic_posting_review_mode" do
+    it "raises ActiveRecord::RecordInvalid when group_ids are blank for everyone_except topic_posting_review_mode" do
       expect {
         category.category_setting.update_posting_review_mode!(:topic, :everyone_except)
-      }.to raise_error(ArgumentError)
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it "raises ArgumentError when group_ids are blank for no_one_except topic_posting_review_mode" do
+    it "raises ActiveRecord::RecordInvalid when group_ids are blank for no_one_except topic_posting_review_mode" do
       expect {
         category.category_setting.update_posting_review_mode!(:topic, :no_one_except)
-      }.to raise_error(ArgumentError)
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 end
