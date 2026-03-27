@@ -7,6 +7,7 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:icon_picker) { PageObjects::Components::DIconGridPicker.new }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -125,10 +126,9 @@ describe "Simplified Category Creation" do
 
       form.field("name").fill_in("Test Category")
 
-      icon_picker = PageObjects::Components::SelectKit.new(".form-kit__control-icon")
       icon_picker.expand
+      icon_picker.select_first_icon
       icon_picker.clear
-      icon_picker.collapse
 
       category_page.save_settings
 
