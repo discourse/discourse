@@ -33,6 +33,7 @@ module Patreon
           url: base_url,
           headers: {
             "Authorization" => "Bearer #{SiteSetting.patreon_creator_access_token}",
+            "User-Agent" => "Discourse Patreon Plugin/#{Discourse::VERSION::STRING}",
           },
         ).get(uri)
 
