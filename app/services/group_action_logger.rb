@@ -25,23 +25,11 @@ class GroupActionLogger
   end
 
   def log_add_user_to_group(target_user, subject = nil)
-    GroupHistory.create!(
-      default_params.merge(
-        action: GroupHistory.actions[:add_user_to_group],
-        target_user: target_user,
-        subject: subject,
-      ),
-    )
+    bulk_log_add_users_to_group([target_user.id], subject)
   end
 
   def log_remove_user_from_group(target_user, subject = nil)
-    GroupHistory.create!(
-      default_params.merge(
-        action: GroupHistory.actions[:remove_user_from_group],
-        target_user: target_user,
-        subject: subject,
-      ),
-    )
+    bulk_log_remove_users_from_group([target_user.id], subject)
   end
 
   def bulk_log_add_users_to_group(target_user_ids, subject = nil)
