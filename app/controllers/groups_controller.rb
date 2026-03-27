@@ -572,8 +572,7 @@ class GroupsController < ApplicationController
     end
 
     removed_user_ids = GroupManager.new(group).remove(users.map(&:id))
-    removed_users = users.where(id: removed_user_ids)
-    GroupActionLogger.new(current_user, group).bulk_log_remove_user_from_group(removed_users)
+    GroupActionLogger.new(current_user, group).bulk_log_remove_user_from_group(removed_user_ids)
 
     removed_users = []
     skipped_users = []
@@ -781,7 +780,7 @@ class GroupsController < ApplicationController
 
   def add_users_to_group(group, users, notify = false)
     GroupManager.new(group).add(users)
-    GroupActionLogger.new(current_user, group).bulk_log_add_user_to_group(users)
+    GroupActionLogger.new(current_user, group).bulk_log_add_user_to_group(users.map(&:id))
     users.each { |user| group.notify_added_to_group(user) if notify }
   rescue ActiveRecord::RecordNotUnique
     # Under concurrency, we might attempt to insert two records quickly and hit a DB
