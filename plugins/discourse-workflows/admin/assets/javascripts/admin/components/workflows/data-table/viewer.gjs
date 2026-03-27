@@ -45,6 +45,8 @@ export default class DataTableViewer extends Component {
   @tracked editingColumnIndex = null;
   @tracked editingName = false;
 
+  lastClickedRowIndex = null;
+
   constructor() {
     super(...arguments);
     this.loadTable();
@@ -120,14 +122,30 @@ export default class DataTableViewer extends Component {
   }
 
   @action
-  toggleRowSelection(rowId) {
+  toggleRowSelection(rowId, event) {
+    const currentIndex = this.rows.findIndex((r) => r.id === rowId);
     const next = new Set(this.selectedRowIds);
-    if (next.has(rowId)) {
+
+    if (event?.shiftKey && this.lastClickedRowIndex !== null) {
+      const from = Math.min(this.lastClickedRowIndex, currentIndex);
+      const to = Math.max(this.lastClickedRowIndex, currentIndex);
+      for (let i = from; i <= to; i++) {
+        next.add(this.rows[i].id);
+      }
+    } else if (next.has(rowId)) {
       next.delete(rowId);
     } else {
       next.add(rowId);
     }
+
+    this.lastClickedRowIndex = currentIndex;
     this.selectedRowIds = next;
+  }
+
+  @action
+  clearSelection() {
+    this.selectedRowIds = new Set();
+    this.lastClickedRowIndex = null;
   }
 
   @action
@@ -317,6 +335,12 @@ export default class DataTableViewer extends Component {
               @label="discourse_workflows.data_tables.delete_selected"
               class="btn-danger btn-small"
             />
+            <DButton
+              @action={{this.clearSelection}}
+              @icon="xmark"
+              @label="discourse_workflows.data_tables.clear_selection"
+              class="btn-default btn-small"
+            />
           {{/if}}
         </div>
       </div>
@@ -384,7 +408,7 @@ export default class DataTableViewer extends Component {
                         type="checkbox"
                         checked={{this.isRowSelected row.id}}
                         class="workflows-data-table-viewer__checkbox"
-                        {{on "change" (fn this.toggleRowSelection row.id)}}
+                        {{on "click" (fn this.toggleRowSelection row.id)}}
                       />
                       {{row.id}}
                     </td>

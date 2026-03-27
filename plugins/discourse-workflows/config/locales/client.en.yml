@@ -353,6 +353,7 @@ en:
         empty_title: "Hey %{username}, no runs yet"
         empty_description: "Once your first workflow runs, execution logs will appear here so you can monitor activity and troubleshoot issues."
         delete_selected: "Delete selected"
+        clear_selection: "Clear selection"
         delete_confirm:
           one: "Are you sure you want to delete %{count} execution?"
           other: "Are you sure you want to delete %{count} executions?"
@@ -416,6 +417,7 @@ en:
         back: "Back"
         delete_confirm: "Are you sure you want to delete this data table and all its rows?"
         delete_selected: "Delete selected"
+        clear_selection: "Clear selection"
         delete_rows_confirm:
           one: "Are you sure you want to delete %{count} row?"
           other: "Are you sure you want to delete %{count} rows?"

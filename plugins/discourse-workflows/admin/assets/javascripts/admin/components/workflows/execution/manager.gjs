@@ -30,6 +30,8 @@ export default class ExecutionsManager extends Component {
   @tracked loadingMore = false;
   @tracked selectedIds = new Set();
 
+  lastClickedRowIndex = null;
+
   constructor() {
     super(...arguments);
     this.loadExecutions();
@@ -104,14 +106,30 @@ export default class ExecutionsManager extends Component {
   }
 
   @action
-  toggleRowSelection(id) {
+  toggleRowSelection(id, event) {
+    const currentIndex = this.executions.findIndex((e) => e.id === id);
     const next = new Set(this.selectedIds);
-    if (next.has(id)) {
+
+    if (event?.shiftKey && this.lastClickedRowIndex !== null) {
+      const from = Math.min(this.lastClickedRowIndex, currentIndex);
+      const to = Math.max(this.lastClickedRowIndex, currentIndex);
+      for (let i = from; i <= to; i++) {
+        next.add(this.executions[i].id);
+      }
+    } else if (next.has(id)) {
       next.delete(id);
     } else {
       next.add(id);
     }
+
+    this.lastClickedRowIndex = currentIndex;
     this.selectedIds = next;
+  }
+
+  @action
+  clearSelection() {
+    this.selectedIds = new Set();
+    this.lastClickedRowIndex = null;
   }
 
   @action
@@ -188,6 +206,12 @@ export default class ExecutionsManager extends Component {
                 @icon="trash-can"
                 class="btn-danger btn-small"
               />
+              <DButton
+                @action={{this.clearSelection}}
+                @icon="xmark"
+                @label="discourse_workflows.executions.clear_selection"
+                class="btn-default btn-small"
+              />
             </div>
           {{/if}}
           <LoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
@@ -222,10 +246,7 @@ export default class ExecutionsManager extends Component {
                       <input
                         type="checkbox"
                         checked={{this.isRowSelected execution.id}}
-                        {{on
-                          "change"
-                          (fn this.toggleRowSelection execution.id)
-                        }}
+                        {{on "click" (fn this.toggleRowSelection execution.id)}}
                         class="workflows-executions-manager__checkbox"
                       />
                       {{execution.id}}
