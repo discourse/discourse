@@ -19,6 +19,7 @@ function topicHasSolvedEnabled(topic) {
     return true;
   }
 
+  // TODO: change to category.isType("support") once enable_simplified_category_creation is permanent
   const category = Category.findById(topic.category_id);
   if (category?.custom_fields?.enable_accepted_answers === "true") {
     return true;
