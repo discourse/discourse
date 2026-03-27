@@ -461,4 +461,28 @@ RSpec.describe CurrentUserSerializer do
       expect(payload).not_to have_key(:show_site_owner_onboarding)
     end
   end
+
+  describe "#can_toggle_nested_mode" do
+    it "is not included when nested replies is disabled" do
+      SiteSetting.nested_replies_enabled = false
+      expect(serializer.as_json).not_to have_key(:can_toggle_nested_mode)
+    end
+
+    context "when nested replies is enabled" do
+      before { SiteSetting.nested_replies_enabled = true }
+
+      it "is true when user is in an allowed group" do
+        SiteSetting.nested_replies_toggle_mode_groups = Group::AUTO_GROUPS[:staff].to_s
+        user.update!(admin: true)
+        Group.refresh_automatic_groups!
+        user.reload
+        expect(serializer.as_json[:can_toggle_nested_mode]).to eq(true)
+      end
+
+      it "is false when user is not in an allowed group" do
+        SiteSetting.nested_replies_toggle_mode_groups = Group::AUTO_GROUPS[:staff].to_s
+        expect(serializer.as_json[:can_toggle_nested_mode]).to eq(false)
+      end
+    end
+  end
 end

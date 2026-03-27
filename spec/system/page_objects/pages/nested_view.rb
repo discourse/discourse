@@ -147,6 +147,10 @@ module PageObjects
         has_css?(".nested-view__flat-link")
       end
 
+      def has_no_flat_view_link?
+        has_no_css?(".nested-view__flat-link")
+      end
+
       def has_view_as_nested_link?
         has_css?(".nested-view-link")
       end

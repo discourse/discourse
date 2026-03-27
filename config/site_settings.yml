@@ -960,6 +960,7 @@ users:
     min: 8
     max: 500
     requires_confirmation: "simple"
+    nested_replies: "Nested replies"
   min_admin_password_length:
     client: true
     default: 15
@@ -1822,13 +1823,16 @@ nested_replies:
     min: 1
     max: 10
     area: "posts_and_topics"
-  nested_replies_show_view_as_nested_button:
-    default: false
-    client: true
-    area: "posts_and_topics"
   nested_replies_cap_nesting_depth:
     default: false
     client: true
+    area: "posts_and_topics"
+  nested_replies_toggle_mode_groups:
+    type: group_list
+    list_type: compact
+    default: "3"
+    allow_any: false
+    refresh: true
     area: "posts_and_topics"
 
 email:

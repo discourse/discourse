@@ -4,19 +4,11 @@ import { i18n } from "discourse-i18n";
 
 export default class NestedViewLink extends Component {
   static shouldRender(args, context) {
-    if (!context.siteSettings.nested_replies_enabled) {
-      return false;
-    }
-
-    if (context.siteSettings.nested_replies_show_view_as_nested_button) {
-      return true;
-    }
-
-    if (args.topic?.is_nested_view) {
-      return true;
-    }
-
-    return false;
+    return (
+      context.siteSettings.nested_replies_enabled &&
+      args.topic?.is_nested_view &&
+      context.currentUser?.can_toggle_nested_mode
+    );
   }
 
   get nestedUrl() {

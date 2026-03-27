@@ -2773,7 +2773,7 @@ en:
     nested_replies_default: "Use nested replies as the default view for all topics."
     nested_replies_default_sort: "Default sort algorithm for nested replies view."
     nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
-    nested_replies_show_view_as_nested_button: "Show a 'View as nested' button on all topics, allowing users to switch any topic to the nested view even when nested replies is not the default for the site or category."
+    nested_replies_toggle_mode_groups: "Groups that can toggle between nested and flat view."
     nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"

@@ -18,6 +18,7 @@ import NestedSortSelector from "./nested-sort-selector";
 import NestedViewHeader from "./nested-view-header";
 
 export default class NestedView extends Component {
+  @service currentUser;
   @service header;
   @service screenTrack;
 
@@ -99,9 +100,11 @@ export default class NestedView extends Component {
 
       <div class="nested-view__controls">
         <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-        <a href={{this.flatViewUrl}} class="nested-view__flat-link">{{i18n
-            "nested_replies.view_as_flat"
-          }}</a>
+        {{#if this.currentUser.can_toggle_nested_mode}}
+          <a href={{this.flatViewUrl}} class="nested-view__flat-link">{{i18n
+              "nested_replies.view_as_flat"
+            }}</a>
+        {{/if}}
       </div>
 
       {{#if (gt @newRootPostCount 0)}}

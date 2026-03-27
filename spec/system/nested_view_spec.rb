@@ -210,8 +210,10 @@ RSpec.describe "Nested view" do
 
   describe "flat view toggle" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "A reply") }
+    fab!(:admin)
 
-    it "navigates to flat view" do
+    it "shows the link and navigates to flat view for allowed groups" do
+      sign_in(admin)
       nested_view.visit_nested(topic)
 
       expect(nested_view).to have_flat_view_link
@@ -220,6 +222,12 @@ RSpec.describe "Nested view" do
       expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(page).to have_current_path(/flat=1/)
       expect(nested_view).to have_no_nested_view
+    end
+
+    it "does not show the link for users outside allowed groups" do
+      nested_view.visit_nested(topic)
+
+      expect(nested_view).to have_no_flat_view_link
     end
   end
 
