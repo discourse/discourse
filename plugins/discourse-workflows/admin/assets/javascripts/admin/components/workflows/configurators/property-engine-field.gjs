@@ -204,10 +204,16 @@ export default class PropertyEngineField extends Component {
   }
 
   get validation() {
+    if (this.expressionMode) {
+      return undefined;
+    }
     return this.args.schema?.required ? "required" : undefined;
   }
 
   get customValidation() {
+    if (this.expressionMode) {
+      return undefined;
+    }
     const key = this.args.schema?.validate;
     return key ? FIELD_VALIDATORS[key] : undefined;
   }
@@ -236,15 +242,15 @@ export default class PropertyEngineField extends Component {
     const currentVal = this.args.formApi?.get(this.apiPath) || "";
 
     if (this.expressionMode) {
+      this._expressionMode = false;
       if (isExpression(currentVal)) {
         this.args.formApi?.set(this.apiPath, currentVal.slice(1));
       }
-      this._expressionMode = false;
     } else {
+      this._expressionMode = true;
       if (!isExpression(currentVal)) {
         this.args.formApi?.set(this.apiPath, `=${currentVal}`);
       }
-      this._expressionMode = true;
     }
   }
 
