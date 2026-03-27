@@ -76,120 +76,163 @@ module(
 
     // _onMessage routing tests
     module("_onMessage routing", function () {
-      test("routes 'created' type correctly", function (assert) {
+      function createMessageHandler() {
         const handled = [];
-        const handler = {
-          _handleCreated(data) {
-            handled.push({ type: "created", data });
-          },
-          _handlePostChanged(data) {
-            handled.push({ type: "changed", data });
-          },
-        };
+        const state = { messageBusLastId: 0 };
 
-        // Simulate _onMessage logic
-        function onMessage(data) {
+        function onMessage(data, globalId, messageId) {
+          if (messageId != null) {
+            state.messageBusLastId = messageId;
+          }
+
           switch (data.type) {
             case "created":
-              handler._handleCreated(data);
+              handled.push({ type: "created", data });
               break;
             case "revised":
             case "rebaked":
             case "deleted":
             case "recovered":
             case "acted":
-              handler._handlePostChanged(data);
+              handled.push({ type: "changed", data });
               break;
           }
         }
 
-        onMessage({ type: "created", id: 1 });
+        return { handled, state, onMessage };
+      }
+
+      test("routes 'created' type correctly", function (assert) {
+        const { handled, onMessage } = createMessageHandler();
+
+        onMessage({ type: "created", id: 1 }, 10, 5);
         assert.strictEqual(handled.length, 1);
         assert.strictEqual(handled[0].type, "created");
       });
 
       test("routes 'deleted' to _handlePostChanged", function (assert) {
-        const handled = [];
-        function onMessage(data) {
-          switch (data.type) {
-            case "created":
-              handled.push("created");
-              break;
-            case "revised":
-            case "rebaked":
-            case "deleted":
-            case "recovered":
-            case "acted":
-              handled.push("changed");
-              break;
-          }
-        }
+        const { handled, onMessage } = createMessageHandler();
 
-        onMessage({ type: "deleted", id: 1 });
-        assert.strictEqual(handled[0], "changed");
+        onMessage({ type: "deleted", id: 1 }, 10, 5);
+        assert.strictEqual(handled[0].type, "changed");
       });
 
       test("routes 'revised' to _handlePostChanged", function (assert) {
-        const handled = [];
-        function onMessage(data) {
-          switch (data.type) {
-            case "created":
-              handled.push("created");
-              break;
-            case "revised":
-            case "rebaked":
-            case "deleted":
-            case "recovered":
-            case "acted":
-              handled.push("changed");
-              break;
-          }
-        }
+        const { handled, onMessage } = createMessageHandler();
 
-        onMessage({ type: "revised", id: 1 });
-        assert.strictEqual(handled[0], "changed");
+        onMessage({ type: "revised", id: 1 }, 10, 5);
+        assert.strictEqual(handled[0].type, "changed");
       });
 
       test("routes 'acted' to _handlePostChanged", function (assert) {
-        const handled = [];
-        function onMessage(data) {
-          switch (data.type) {
-            case "created":
-              handled.push("created");
-              break;
-            case "revised":
-            case "rebaked":
-            case "deleted":
-            case "recovered":
-            case "acted":
-              handled.push("changed");
-              break;
-          }
-        }
+        const { handled, onMessage } = createMessageHandler();
 
-        onMessage({ type: "acted", id: 1 });
-        assert.strictEqual(handled[0], "changed");
+        onMessage({ type: "acted", id: 1 }, 10, 5);
+        assert.strictEqual(handled[0].type, "changed");
       });
 
       test("ignores unknown message types", function (assert) {
-        const handled = [];
-        function onMessage(data) {
-          switch (data.type) {
-            case "created":
-              handled.push("created");
-              break;
-            case "revised":
-            case "rebaked":
-            case "deleted":
-            case "recovered":
-            case "acted":
-              handled.push("changed");
-              break;
+        const { handled, onMessage } = createMessageHandler();
+
+        onMessage({ type: "unknown_type", id: 1 }, 10, 5);
+        assert.strictEqual(handled.length, 0);
+      });
+
+      test("updates messageBusLastId from messageId", function (assert) {
+        const { state, onMessage } = createMessageHandler();
+
+        onMessage({ type: "created", id: 1 }, 10, 42);
+        assert.strictEqual(state.messageBusLastId, 42);
+      });
+
+      test("tracks messageBusLastId across multiple messages", function (assert) {
+        const { state, onMessage } = createMessageHandler();
+
+        onMessage({ type: "created", id: 1 }, 10, 5);
+        assert.strictEqual(state.messageBusLastId, 5);
+
+        onMessage({ type: "revised", id: 2 }, 20, 8);
+        assert.strictEqual(state.messageBusLastId, 8);
+
+        onMessage({ type: "acted", id: 3 }, 30, 12);
+        assert.strictEqual(state.messageBusLastId, 12);
+      });
+
+      test("does not update messageBusLastId when messageId is null", function (assert) {
+        const { state, onMessage } = createMessageHandler();
+        state.messageBusLastId = 100;
+
+        onMessage({ type: "created", id: 1 }, 10, null);
+        assert.strictEqual(state.messageBusLastId, 100);
+      });
+
+      test("does not update messageBusLastId when messageId is undefined", function (assert) {
+        const { state, onMessage } = createMessageHandler();
+        state.messageBusLastId = 100;
+
+        onMessage({ type: "created", id: 1 }, 10, undefined);
+        assert.strictEqual(state.messageBusLastId, 100);
+      });
+    });
+
+    // _isPostKnown deduplication
+    module("_isPostKnown", function () {
+      function isPostKnown(
+        postId,
+        { rootNodes, newRootPostIds, postRegistry }
+      ) {
+        if (rootNodes.some((n) => n.post.id === postId)) {
+          return true;
+        }
+        if (newRootPostIds.includes(postId)) {
+          return true;
+        }
+        for (const post of postRegistry.values()) {
+          if (post.id === postId) {
+            return true;
           }
         }
+        return false;
+      }
 
-        onMessage({ type: "unknown_type", id: 1 });
-        assert.strictEqual(handled.length, 0);
+      test("detects post in rootNodes", function (assert) {
+        const state = {
+          rootNodes: [{ post: makePost(100, 2), children: [] }],
+          newRootPostIds: [],
+          postRegistry: new Map(),
+        };
+        assert.true(isPostKnown(100, state));
+      });
+
+      test("detects post in newRootPostIds", function (assert) {
+        const state = {
+          rootNodes: [],
+          newRootPostIds: [100],
+          postRegistry: new Map(),
+        };
+        assert.true(isPostKnown(100, state));
+      });
+
+      test("detects post in postRegistry", function (assert) {
+        const registry = new Map();
+        registry.set(2, makePost(100, 2));
+        const state = {
+          rootNodes: [],
+          newRootPostIds: [],
+          postRegistry: registry,
+        };
+        assert.true(isPostKnown(100, state));
+      });
+
+      test("returns false for unknown post", function (assert) {
+        const registry = new Map();
+        registry.set(2, makePost(100, 2));
+        const state = {
+          rootNodes: [{ post: makePost(200, 3), children: [] }],
+          newRootPostIds: [300],
+          postRegistry: registry,
+        };
+        assert.false(isPostKnown(999, state));
       });
     });
 

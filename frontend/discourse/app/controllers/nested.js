@@ -377,7 +377,11 @@ export default class NestedController extends Controller {
   }
 
   @bind
-  _onMessage(data) {
+  _onMessage(data, globalId, messageId) {
+    if (messageId != null) {
+      this.messageBusLastId = messageId;
+    }
+
     switch (data.type) {
       case "created":
         this._handleCreated(data);
@@ -393,6 +397,12 @@ export default class NestedController extends Controller {
   }
 
   async _handleCreated(data) {
+    // Skip if this post is already known (e.g. cache restore replaying
+    // messages that were already processed before navigating away)
+    if (this._isPostKnown(data.id)) {
+      return;
+    }
+
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
@@ -422,6 +432,21 @@ export default class NestedController extends Controller {
     } catch {
       // Post may not be visible to this user
     }
+  }
+
+  _isPostKnown(postId) {
+    if (this.rootNodes.some((n) => n.post.id === postId)) {
+      return true;
+    }
+    if (this.newRootPostIds.includes(postId)) {
+      return true;
+    }
+    for (const post of this.postRegistry.values()) {
+      if (post.id === postId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   async _handlePostChanged(data) {
