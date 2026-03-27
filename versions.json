@@ -1,9 +1,17 @@
 {
+  "2026.4": {
+    "developmentStartDate": "2026-03-27",
+    "releaseDate": "2026-04",
+    "supportEndDate": "2026-06",
+    "released": false,
+    "esr": false,
+    "supported": true
+  },
   "2026.3": {
     "developmentStartDate": "2026-02-26",
-    "releaseDate": "2026-03",
+    "releaseDate": "2026-03-27",
     "supportEndDate": "2026-05",
-    "released": false,
+    "released": true,
     "esr": false,
     "supported": true
   },
