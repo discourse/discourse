@@ -148,7 +148,7 @@ export default {
             classes.push("--high-context");
           }
 
-          if (context.topic.replyCount > 1) {
+          if (context.topic.replyCount) {
             classes.push("--has-replies");
           }
 
