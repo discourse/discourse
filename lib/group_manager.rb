@@ -5,7 +5,7 @@ class GroupManager
     @group = group
   end
 
-  def bulk_add(user_ids, automatic: false)
+  def add(user_ids, automatic: false)
     return [] if user_ids.blank?
 
     added_user_ids = bulk_add_transaction(user_ids)
@@ -31,7 +31,7 @@ class GroupManager
     added_user_ids
   end
 
-  def bulk_remove(user_ids)
+  def remove(user_ids)
     return [] if user_ids.blank?
 
     group_users_to_remove = @group.group_users.where(user_id: user_ids)
