@@ -4,9 +4,11 @@
   gap: var(--space-2);
 
   &__section {
-    border: 1px solid var(--primary-low);
+    border: 1px solid;
+    border-color: light-dark(var(--primary-100), var(--primary-200));
     border-radius: var(--d-border-radius);
     padding: var(--space-2);
+    background-color: light-dark(var(--secondary), var(--primary-50));
   }
 
   &__title {
@@ -19,6 +21,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--primary-medium);
+    font-family: monospace;
   }
 
   &__empty {

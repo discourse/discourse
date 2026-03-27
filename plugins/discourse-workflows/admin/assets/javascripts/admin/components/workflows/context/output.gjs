@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { resolvePreviousOutput } from "./input";
 import resolveNodeFields from "./resolve-node-fields";
@@ -30,21 +31,25 @@ export default class OutputContext extends Component {
 
   <template>
     <div class="workflows-context-panel">
-      <h3 class="workflows-context-panel__title">
-        {{i18n "discourse_workflows.configurator.output_context"}}
-      </h3>
+      <div class="workflows-context-panel__section">
+        <h3 class="workflows-context-panel__title">
+          {{i18n "discourse_workflows.configurator.output_context"}}{{icon
+            "right-from-bracket"
+          }}
+        </h3>
 
-      {{#if this.fields.length}}
-        <ul class="workflows-schema-field-list">
-          {{#each this.fields as |field|}}
-            <SchemaField @field={{field}} />
-          {{/each}}
-        </ul>
-      {{else}}
-        <p class="workflows-context-panel__empty">
-          {{i18n "discourse_workflows.configurator.no_output_context"}}
-        </p>
-      {{/if}}
+        {{#if this.fields.length}}
+          <ul class="workflows-schema-field-list">
+            {{#each this.fields as |field|}}
+              <SchemaField @field={{field}} />
+            {{/each}}
+          </ul>
+        {{else}}
+          <p class="workflows-context-panel__empty">
+            {{i18n "discourse_workflows.configurator.no_output_context"}}
+          </p>
+        {{/if}}
+      </div>
     </div>
   </template>
 }

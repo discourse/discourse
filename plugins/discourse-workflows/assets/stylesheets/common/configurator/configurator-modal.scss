@@ -85,7 +85,7 @@
 
     &.--left,
     &.--right {
-      background-color: var(--primary-very-low);
+      background-color: light-dark(var(--primary-very-low), var(--secondary));
       border-color: var(--primary-low);
     }
 
