@@ -115,6 +115,8 @@ export default class EditCategoryTabsController extends Controller {
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
+  afterResetCallbacks = [];
+
   @action
   initFormData() {
     const enableSimplifiedCategoryCreation =
@@ -214,9 +216,13 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  validateForm(data, { addError }) {
+  validateForm(data, { addError, removeError }) {
     if (!this.siteSettings.enable_simplified_category_creation) {
       return;
+    }
+
+    for (const validator of this.validators) {
+      validator(data, { addError, removeError });
     }
 
     if (this.selectedTab === "general") {
@@ -257,6 +263,16 @@ export default class EditCategoryTabsController extends Controller {
   @action
   registerValidator(validator) {
     this.validators.push(validator);
+  }
+
+  @action
+  registerAfterReset(callback) {
+    this.afterResetCallbacks.push(callback);
+  }
+
+  @action
+  onFormReset() {
+    this.afterResetCallbacks.forEach((callback) => callback());
   }
 
   @action

@@ -1,0 +1,22 @@
+.fk-d-menu-modal.d-icon-grid-picker-content {
+  .d-modal__body {
+    padding: 0;
+  }
+
+  .d-icon-grid-picker__content {
+    width: 100%;
+  }
+
+  .d-icon-grid-picker__filter-container {
+    width: 100%;
+  }
+
+  .d-icon-grid-picker__grid-wrapper {
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, var(--icon-grid-cell));
+    justify-content: center;
+    max-height: calc(
+      var(--composer-vh, 1dvh) * 100 - 50px - env(safe-area-inset-bottom)
+    );
+  }
+}
