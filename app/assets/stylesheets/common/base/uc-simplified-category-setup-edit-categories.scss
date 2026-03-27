@@ -146,6 +146,11 @@
 
     .edit-category-type-schema-fields {
       display: contents;
+
+      &.--site-settings-only > .form-kit__section.emphasis {
+        border: none;
+        padding: 0;
+      }
     }
   }
 

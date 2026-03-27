@@ -79,6 +79,12 @@ export default class EditCategoryTypeSchemaFields extends Component {
     );
   }
 
+  get hasCustomFields() {
+    return this.schema.category_custom_fields?.some((entry) =>
+      this.shouldDisplayField(entry)
+    );
+  }
+
   get className() {
     let classes = [
       "edit-category-type-schema-fields",
@@ -86,6 +92,9 @@ export default class EditCategoryTypeSchemaFields extends Component {
     ];
     if (this.args.active) {
       classes.push("active");
+    }
+    if (!this.hasCustomFields) {
+      classes.push("--site-settings-only");
     }
     return classes.join(" ");
   }
@@ -101,19 +110,21 @@ export default class EditCategoryTypeSchemaFields extends Component {
 
   <template>
     <div class={{this.className}}>
-      <@form.Section>
-        <@form.Object @name="custom_fields" as |customFields|>
-          {{#each this.schema.category_custom_fields as |entry|}}
-            {{#if (this.shouldDisplayField entry)}}
-              <SchemaFormField
-                @category={{@category}}
-                @entry={{entry}}
-                @formObject={{customFields}}
-              />
-            {{/if}}
-          {{/each}}
-        </@form.Object>
-      </@form.Section>
+      {{#if this.hasCustomFields}}
+        <@form.Section>
+          <@form.Object @name="custom_fields" as |customFields|>
+            {{#each this.schema.category_custom_fields as |entry|}}
+              {{#if (this.shouldDisplayField entry)}}
+                <SchemaFormField
+                  @category={{@category}}
+                  @entry={{entry}}
+                  @formObject={{customFields}}
+                />
+              {{/if}}
+            {{/each}}
+          </@form.Object>
+        </@form.Section>
+      {{/if}}
 
       {{yield to="beforeSiteSettings"}}
 
