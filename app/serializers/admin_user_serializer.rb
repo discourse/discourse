@@ -14,6 +14,11 @@ class AdminUserSerializer < AdminUserListSerializer
 
   has_one :single_sign_on_record, serializer: SingleSignOnRecordSerializer, embed: :objects
 
+  def include_single_sign_on_record?
+    scope.can_check_sso_details?(object) ||
+      (scope.is_staff? && SiteSetting.moderators_view_sso_details)
+  end
+
   def can_approve
     scope.can_approve?(object)
   end
