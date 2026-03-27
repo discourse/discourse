@@ -235,7 +235,7 @@ namespace :release do
 
         ReleaseUtils.git "merge", "--squash", "privatemirror/#{pr["headRefName"]}"
 
-        commit_message = pr["body"].present? ? "#{pr["title"]}\n\n#{pr["body"]}" : pr["title"]
+        commit_message = "#{pr["title"]}\n\n#{pr["body"]}".strip
 
         ReleaseUtils.git "commit", "-m", commit_message
       end
