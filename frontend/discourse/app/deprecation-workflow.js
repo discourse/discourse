@@ -360,7 +360,6 @@ const workflows = [
   },
   { handler: "notify-admin", matchId: "discourse.jquery-cookie" },
   { handler: "notify-admin", matchId: "discourse.markdown-it.whitelist" },
-  { handler: "notify-admin", matchId: "discourse.modal-controllers" },
   { handler: "notify-admin", matchId: "discourse.models-store" },
   {
     handler: "notify-admin",
