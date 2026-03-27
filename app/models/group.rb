@@ -761,10 +761,7 @@ class Group < ActiveRecord::Base
 
     desired.each do |id|
       if group = find_by(id: id)
-        unless GroupUser.where(group_id: id, user_id: user_id).exists?
-          group_user = group.group_users.create!(user_id: user_id)
-          group.trigger_user_added_event(group_user.user, true)
-        end
+        GroupManager.new(group).add([user_id], automatic: true)
       else
         name = AUTO_GROUP_IDS[trust_level]
         refresh_automatic_group!(name)
