@@ -8,15 +8,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.35em 0.5em;
+  padding: 0.35em 0;
   font-size: var(--font-down-1);
 
   &[draggable="true"] {
     cursor: grab;
 
-    &:hover {
-      background-color: var(--primary-low);
-      border-radius: var(--d-border-radius);
+    &:hover .workflows-schema-field__key {
+      color: var(--primary);
     }
   }
 
@@ -25,12 +24,10 @@
   }
 
   &__key {
-    font-family: var(--d-font-family--monospace);
     color: var(--primary-high);
   }
 
   &__type {
-    font-family: var(--d-font-family--monospace);
     font-size: var(--font-down-2);
     padding: 0.1em 0.5em;
     border-radius: 0.75em;

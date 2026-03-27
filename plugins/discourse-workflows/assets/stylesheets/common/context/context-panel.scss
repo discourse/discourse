@@ -1,39 +1,24 @@
 .workflows-context-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  &__section {
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-2);
+  }
+
   &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     font-size: var(--font-down-1);
     font-weight: 700;
     margin: 0 0 var(--space-2);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--primary-medium);
-
-    & + .workflows-schema-field-list + & {
-      margin-top: var(--space-4);
-    }
-
-    & + .workflows-context-panel__empty + & {
-      margin-top: var(--space-4);
-    }
-  }
-
-  &__group {
-    margin-bottom: var(--space-5);
-
-    &.--current {
-      border-top: 1px solid var(--primary-low);
-      padding-top: var(--space-4);
-    }
-  }
-
-  &__group-label {
-    display: block;
-    font-weight: 700;
-    font-size: var(--font-down-1);
-    margin-bottom: var(--space-2);
-
-    .--current & {
-      color: var(--tertiary);
-    }
   }
 
   &__empty {

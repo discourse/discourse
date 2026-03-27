@@ -1,7 +1,18 @@
 import Component from "@glimmer/component";
+import { trustHTML } from "@ember/template";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { getNodeColor, getNodeIcons } from "../../../lib/workflows/node-utils";
 import resolveNodeFields, { fieldsFromSchema } from "./resolve-node-fields";
 import SchemaField from "./schema-field";
+
+function ancestorIcon(type) {
+  return getNodeIcons()[type]?.icon;
+}
+
+function ancestorIconStyle(type) {
+  return trustHTML(`color: ${getNodeColor(type)}`);
+}
 
 const ENVIRONMENT_FIELDS = [
   { key: "site_settings", type: "object", id: "$site_settings" },
@@ -32,6 +43,7 @@ export default class InputContext extends Component {
 
     return allAncestors.slice(1).map((ancestor) => ({
       name: ancestor.node.name,
+      type: ancestor.node.type,
       fields: ancestor.fields.map((field) => ({
         ...field,
         id: `$('${ancestor.node.name}').item.json.${field.key}`,
@@ -41,42 +53,53 @@ export default class InputContext extends Component {
 
   <template>
     <div class="workflows-context-panel">
-      <h3 class="workflows-context-panel__title">
-        {{i18n "discourse_workflows.configurator.input_context"}}
-      </h3>
-
-      {{#if this.fields.length}}
-        <ul class="workflows-schema-field-list">
-          {{#each this.fields as |field|}}
-            <SchemaField @field={{field}} @draggable={{true}} />
-          {{/each}}
-        </ul>
-      {{else}}
-        <p class="workflows-context-panel__empty">
-          {{i18n "discourse_workflows.configurator.no_input_context"}}
-        </p>
-      {{/if}}
-
-      <h3 class="workflows-context-panel__title">
-        {{i18n "discourse_workflows.configurator.environment"}}
-      </h3>
-
-      <ul class="workflows-schema-field-list">
-        {{#each ENVIRONMENT_FIELDS as |field|}}
-          <SchemaField @field={{field}} @draggable={{true}} />
-        {{/each}}
-      </ul>
-
-      {{#each this.ancestorNodes as |ancestor|}}
+      <div class="workflows-context-panel__section">
         <h3 class="workflows-context-panel__title">
-          {{ancestor.name}}
+          {{icon "right-to-bracket"}}
+          {{i18n "discourse_workflows.configurator.input_context"}}
+        </h3>
+
+        {{#if this.fields.length}}
+          <ul class="workflows-schema-field-list">
+            {{#each this.fields as |field|}}
+              <SchemaField @field={{field}} @draggable={{true}} />
+            {{/each}}
+          </ul>
+        {{else}}
+          <p class="workflows-context-panel__empty">
+            {{i18n "discourse_workflows.configurator.no_input_context"}}
+          </p>
+        {{/if}}
+      </div>
+
+      <div class="workflows-context-panel__section">
+        <h3 class="workflows-context-panel__title">
+          {{icon "gear"}}
+          {{i18n "discourse_workflows.configurator.environment"}}
         </h3>
 
         <ul class="workflows-schema-field-list">
-          {{#each ancestor.fields as |field|}}
+          {{#each ENVIRONMENT_FIELDS as |field|}}
             <SchemaField @field={{field}} @draggable={{true}} />
           {{/each}}
         </ul>
+      </div>
+
+      {{#each this.ancestorNodes as |ancestor|}}
+        <div class="workflows-context-panel__section">
+          <h3 class="workflows-context-panel__title">
+            <span style={{ancestorIconStyle ancestor.type}}>
+              {{icon (ancestorIcon ancestor.type)}}
+            </span>
+            {{ancestor.name}}
+          </h3>
+
+          <ul class="workflows-schema-field-list">
+            {{#each ancestor.fields as |field|}}
+              <SchemaField @field={{field}} @draggable={{true}} />
+            {{/each}}
+          </ul>
+        </div>
       {{/each}}
     </div>
   </template>
