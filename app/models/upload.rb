@@ -254,11 +254,11 @@ class Upload < ActiveRecord::Base
     false
   end
 
-  def self.signed_url_from_secure_uploads_url(url)
+  def self.signed_url_from_secure_uploads_url(url, include_content_disposition:)
     route = UrlHelper.rails_route_from_url(url)
     url = Rails.application.routes.url_for(route.merge(only_path: true))
     secure_upload_s3_path = url[url.index(route[:path])..-1]
-    Discourse.store.signed_url_for_path(secure_upload_s3_path)
+    Discourse.store.signed_url_for_path(secure_upload_s3_path, include_content_disposition:)
   end
 
   def self.secure_uploads_url_from_upload_url(url)
