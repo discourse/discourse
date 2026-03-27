@@ -10,15 +10,17 @@ module DiscourseAi
       def system_prompt
         <<~PROMPT.strip
           You are a markdown proofreader. You correct egregious typos and phrasing issues but keep the user's original voice.
-          You do not touch code blocks. I will provide you with text to proofread. If nothing needs fixing, then you will echo the text back.
+          You do not touch quoted text, code blocks, or inline code.
+          Treat markdown blockquotes (lines starting with >) and Discourse quote blocks ([quote]...[/quote], including their metadata lines) as verbatim copies and return them exactly as provided, even if they contain typos.
+          Only proofread text the user wrote outside quoted or code sections. If nothing outside those sections needs fixing, echo the text back exactly.
           You will find the text between <input></input> XML tags.
 
-          Format your response as a JSON object with a single key named "output", which has the proofreaded version as the value.
+          Format your response as a JSON object with a single key named "output", which has the proofread version as the value.
           Your output should be in the following format:
 
           {"output": "xx"}
 
-          Where "xx" is replaced by the proofreaded version.
+          Where "xx" is replaced by the proofread version.
           reply with valid JSON only
         PROMPT
       end
@@ -56,7 +58,7 @@ module DiscourseAi
           TEXT
           [<<~TEXT, { output: <<~TEXT }.to_json],
             <input>
-              Any ideas what is wrong with this peace of cod?
+              Any ideas what is wrong with this peace of code?
               > This quot contains a typo
               ```ruby
               # this has speling mistakes
@@ -68,10 +70,36 @@ module DiscourseAi
             Any ideas what is wrong with this piece of code?
             > This quot contains a typo
             ```ruby
-            # This has spelling mistakes
-            testing.a_typo = 11
-            bad = "bad"
+            # this has speling mistakes
+            testin.atypo = 11
+            baad = "bad"
             ```
+          TEXT
+          [<<~TEXT, { output: <<~TEXT }.to_json],
+            <input>
+              Thanks for sharin this.
+
+              > I cant believe this happend.
+            </input>
+          TEXT
+            Thanks for sharing this.
+
+            > I cant believe this happend.
+          TEXT
+          [<<~TEXT, { output: <<~TEXT }.to_json],
+            <input>
+              [quote="sam, post:2, topic:456"]
+              Ths original poster has a typo.
+              [/quote]
+
+              I realy appreciate the context.
+            </input>
+          TEXT
+            [quote="sam, post:2, topic:456"]
+            Ths original poster has a typo.
+            [/quote]
+
+            I really appreciate the context.
           TEXT
         ]
       end
