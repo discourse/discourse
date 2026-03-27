@@ -10,7 +10,7 @@
 #       then don't send another notification
 #     * If the change was not added, send a notification about the status change if  it's the correct
 #       status (promotion_status - 1) to indicate it's available to admins
-class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
+class UpcomingChanges::Action::TrackNotifyStatusChanges < Service::ActionBase
   # Every admin user that are not bots
   option :all_admins
 
@@ -67,13 +67,17 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
         # However, if the status was later changed and it meets the promotion status
         # minus one (previous status) criteria for notification, then we should notify
         # admins here.
+        #
+        # Note that on new sites (< 1 hour old), we don't notify admins about added
+        # changes, since the upcoming change system is more about notifying admins of
+        # changes to established sites.
         if should_notify_admins?(change_name) &&
              !UpcomingChanges.meets_or_exceeds_status?(
                change_name,
                SiteSetting.promote_upcoming_changes_on_status.to_sym,
              )
           Rails.logger.info(
-            "Notifying admins about available change #{change_name} from TrackStatusChanges",
+            "Notifying admins about available change #{change_name} from TrackNotifyStatusChanges",
           )
           notified =
             UpcomingChanges::Action::NotifyAdminsOfAvailableChange.call(change_name:, all_admins:)
@@ -114,6 +118,6 @@ class UpcomingChanges::Action::TrackStatusChanges < Service::ActionBase
     !UpcomingChangeEvent.exists?(
       upcoming_change_name: change_name,
       event_type: :admins_notified_available_change,
-    )
+    ) && (!Migration::Helpers.new_site? && !Rails.env.development?)
   end
 end

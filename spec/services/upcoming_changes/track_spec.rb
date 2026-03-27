@@ -20,13 +20,13 @@ RSpec.describe UpcomingChanges::Track do
     end
 
     before do
-      allow(UpcomingChanges::Action::TrackAddedChanges).to receive(:call).and_return(
+      allow(UpcomingChanges::Action::TrackNotifyAddedChanges).to receive(:call).and_return(
         added_changes_result,
       )
       allow(UpcomingChanges::Action::TrackRemovedChanges).to receive(:call).and_return(
         removed_changes_result,
       )
-      allow(UpcomingChanges::Action::TrackStatusChanges).to receive(:call).and_return(
+      allow(UpcomingChanges::Action::TrackNotifyStatusChanges).to receive(:call).and_return(
         status_changes_result,
       )
     end
@@ -35,9 +35,11 @@ RSpec.describe UpcomingChanges::Track do
       expect(result).to run_successfully
     end
 
-    it "calls TrackAddedChanges with correct arguments" do
+    it "calls TrackNotifyAddedChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackAddedChanges).to have_received(:call).with(all_admins:)
+      expect(UpcomingChanges::Action::TrackNotifyAddedChanges).to have_received(:call).with(
+        all_admins:,
+      )
     end
 
     it "calls TrackRemovedChanges" do
@@ -45,9 +47,9 @@ RSpec.describe UpcomingChanges::Track do
       expect(UpcomingChanges::Action::TrackRemovedChanges).to have_received(:call)
     end
 
-    it "calls TrackStatusChanges with correct arguments" do
+    it "calls TrackNotifyStatusChanges with correct arguments" do
       result
-      expect(UpcomingChanges::Action::TrackStatusChanges).to have_received(:call).with(
+      expect(UpcomingChanges::Action::TrackNotifyStatusChanges).to have_received(:call).with(
         all_admins:,
         added_changes: [:added_change],
         removed_changes: [:removed_change],
