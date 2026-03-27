@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import LoadMore from "discourse/components/load-more";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
@@ -38,6 +39,8 @@ export default class DataTableViewer extends Component {
 
   @tracked rows = null;
   @tracked dataTable = null;
+  @tracked totalCount = 0;
+  @tracked loadingMore = false;
   @tracked selectedRowIds = new Set();
   @tracked editingColumnIndex = null;
   @tracked editingName = false;
@@ -59,8 +62,33 @@ export default class DataTableViewer extends Component {
       ]);
       this.dataTable = tableResult.data_table;
       this.rows = rowsResult.rows;
+      this.totalCount = rowsResult.count;
     } catch (e) {
       popupAjaxError(e);
+    }
+  }
+
+  get canLoadMore() {
+    return this.rows && this.rows.length < this.totalCount;
+  }
+
+  @action
+  async loadMore() {
+    if (!this.canLoadMore || this.loadingMore) {
+      return;
+    }
+
+    this.loadingMore = true;
+    try {
+      const result = await ajax(`${this.apiBasePath}/rows.json`, {
+        data: { offset: this.rows.length },
+      });
+      this.rows = [...this.rows, ...result.rows];
+      this.totalCount = result.count;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingMore = false;
     }
   }
 
@@ -167,6 +195,7 @@ export default class DataTableViewer extends Component {
         data: { data: {} },
       });
       this.rows = [...this.rows, result.row];
+      this.totalCount += 1;
     } catch (e) {
       popupAjaxError(e);
     }
@@ -295,99 +324,102 @@ export default class DataTableViewer extends Component {
       </div>
 
       <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-        <div class="workflows-data-table-viewer__scroll">
-          <table class="workflows-data-table-viewer__table">
-            <thead>
-              <tr>
-                <th class="workflows-data-table-viewer__th --id">
-                  <input
-                    type="checkbox"
-                    checked={{this.allSelected}}
-                    class="workflows-data-table-viewer__checkbox"
-                    {{indeterminate this.isIndeterminate}}
-                    {{on "change" this.toggleAllSelection}}
-                  />
-                  id
-                </th>
-                {{#each this.columns as |col index|}}
-                  <th class="workflows-data-table-viewer__th">
-                    <span
-                      class="workflows-data-table-viewer__col-type"
-                    >{{col.type}}</span>
-                    {{#if (eq this.editingColumnIndex index)}}
-                      <input
-                        type="text"
-                        value={{col.name}}
-                        class="workflows-data-table-viewer__col-name-input"
-                        {{autofocus}}
-                        {{on "blur" (fn this.renameColumn index)}}
-                        {{on "keydown" (fn this.handleEditKeydown col.name)}}
-                      />
-                    {{else}}
-                      {{! template-lint-disable no-nested-interactive }}
-                      <button
-                        type="button"
-                        class="workflows-data-table-viewer__col-name"
-                        {{on "click" (fn this.startEditingColumn index)}}
-                      >{{col.name}}</button>
-                    {{/if}}
-                  </th>
-                {{/each}}
-                <th
-                  class="workflows-data-table-viewer__th --system"
-                >created_at</th>
-                <th
-                  class="workflows-data-table-viewer__th --system"
-                >updated_at</th>
-                <th class="workflows-data-table-viewer__th --add-column">
-                  <DButton
-                    @action={{this.addColumn}}
-                    @icon="plus"
-                    class="btn-transparent btn-small"
-                  />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each this.rows as |row|}}
-                <tr class="workflows-data-table-viewer__row">
-                  <td class="workflows-data-table-viewer__cell --id">
+        <LoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
+          <div class="workflows-data-table-viewer__scroll">
+            <table class="workflows-data-table-viewer__table">
+              <thead>
+                <tr>
+                  <th class="workflows-data-table-viewer__th --id">
                     <input
                       type="checkbox"
-                      checked={{this.isRowSelected row.id}}
+                      checked={{this.allSelected}}
                       class="workflows-data-table-viewer__checkbox"
-                      {{on "change" (fn this.toggleRowSelection row.id)}}
+                      {{indeterminate this.isIndeterminate}}
+                      {{on "change" this.toggleAllSelection}}
                     />
-                    {{row.id}}
-                  </td>
-                  {{#each this.columns as |col|}}
-                    <CellEditor
-                      @column={{col}}
-                      @value={{get row col.name}}
-                      @onSave={{fn this.saveCell row}}
-                    />
+                    id
+                  </th>
+                  {{#each this.columns as |col index|}}
+                    <th class="workflows-data-table-viewer__th">
+                      <span
+                        class="workflows-data-table-viewer__col-type"
+                      >{{col.type}}</span>
+                      {{#if (eq this.editingColumnIndex index)}}
+                        <input
+                          type="text"
+                          value={{col.name}}
+                          class="workflows-data-table-viewer__col-name-input"
+                          {{autofocus}}
+                          {{on "blur" (fn this.renameColumn index)}}
+                          {{on "keydown" (fn this.handleEditKeydown col.name)}}
+                        />
+                      {{else}}
+                        {{! template-lint-disable no-nested-interactive }}
+                        <button
+                          type="button"
+                          class="workflows-data-table-viewer__col-name"
+                          {{on "click" (fn this.startEditingColumn index)}}
+                        >{{col.name}}</button>
+                      {{/if}}
+                    </th>
                   {{/each}}
-                  <td
-                    class="workflows-data-table-viewer__cell --system"
-                  >{{row.created_at}}</td>
-                  <td
-                    class="workflows-data-table-viewer__cell --system"
-                  >{{row.updated_at}}</td>
-                  <td class="--add-column"></td>
+                  <th
+                    class="workflows-data-table-viewer__th --system"
+                  >created_at</th>
+                  <th
+                    class="workflows-data-table-viewer__th --system"
+                  >updated_at</th>
+                  <th class="workflows-data-table-viewer__th --add-column">
+                    <DButton
+                      @action={{this.addColumn}}
+                      @icon="plus"
+                      class="btn-transparent btn-small"
+                    />
+                  </th>
                 </tr>
-              {{/each}}
-              <tr class="workflows-data-table-viewer__add-row">
-                <td colspan="99">
-                  <DButton
-                    @action={{this.addRow}}
-                    @icon="plus"
-                    class="btn-transparent btn-small"
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {{#each this.rows as |row|}}
+                  <tr class="workflows-data-table-viewer__row">
+                    <td class="workflows-data-table-viewer__cell --id">
+                      <input
+                        type="checkbox"
+                        checked={{this.isRowSelected row.id}}
+                        class="workflows-data-table-viewer__checkbox"
+                        {{on "change" (fn this.toggleRowSelection row.id)}}
+                      />
+                      {{row.id}}
+                    </td>
+                    {{#each this.columns as |col|}}
+                      <CellEditor
+                        @column={{col}}
+                        @value={{get row col.name}}
+                        @onSave={{fn this.saveCell row}}
+                      />
+                    {{/each}}
+                    <td
+                      class="workflows-data-table-viewer__cell --system"
+                    >{{row.created_at}}</td>
+                    <td
+                      class="workflows-data-table-viewer__cell --system"
+                    >{{row.updated_at}}</td>
+                    <td class="--add-column"></td>
+                  </tr>
+                {{/each}}
+                <tr class="workflows-data-table-viewer__add-row">
+                  <td colspan="99">
+                    <DButton
+                      @action={{this.addRow}}
+                      @icon="plus"
+                      class="btn-transparent btn-small"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+        </LoadMore>
       </ConditionalLoadingSpinner>
     </div>
   </template>

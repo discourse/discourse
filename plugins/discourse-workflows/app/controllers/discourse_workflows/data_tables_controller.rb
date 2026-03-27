@@ -219,7 +219,7 @@ module DiscourseWorkflows
     end
 
     def row_query_params
-      extract_row_params(:filter, :limit, :sort_by, :sort_direction, deep_keys: [:filter])
+      extract_row_params(:filter, :limit, :offset, :sort_by, :sort_direction, deep_keys: [:filter])
     end
 
     def row_data_params

@@ -22,17 +22,19 @@ module DiscourseWorkflows
       result.first.to_i
     end
 
-    def get_many_and_count(filter: nil, limit: nil, sort_by: nil, sort_direction: nil)
+    def get_many_and_count(filter: nil, limit: nil, offset: nil, sort_by: nil, sort_direction: nil)
       normalized_filter = normalize_filter(filter, optional: true)
       where_clause, binds = build_where_clause(normalized_filter, optional: true)
       order_clause = build_order_clause(sort_by, sort_direction)
       limit_clause = build_limit_clause(limit, binds)
+      offset_clause = build_offset_clause(offset, binds)
 
       rows = DB.query_hash(<<~SQL, binds).map { |row| serialize_row(row) }
             SELECT * FROM #{@table}
             #{where_clause}
             #{order_clause}
             #{limit_clause}
+            #{offset_clause}
           SQL
 
       { rows: rows, count: count(filter: normalized_filter) }
@@ -224,6 +226,16 @@ module DiscourseWorkflows
 
       binds[:limit] = parsed_limit
       "LIMIT :limit"
+    end
+
+    def build_offset_clause(offset, binds)
+      return "" if offset.blank?
+
+      parsed_offset = offset.to_i
+      return "" if parsed_offset <= 0
+
+      binds[:offset] = parsed_offset
+      "OFFSET :offset"
     end
 
     def build_assignments(attributes)

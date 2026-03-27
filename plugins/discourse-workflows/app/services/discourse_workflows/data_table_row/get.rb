@@ -4,14 +4,20 @@ module DiscourseWorkflows
   class DataTableRow::Get
     include Service::Base
 
+    DEFAULT_LIMIT = 25
+    MAX_LIMIT = 100
+
     params do
       attribute :data_table_id, :integer
       attribute :filter
       attribute :limit, :integer
+      attribute :offset, :integer
       attribute :sort_by, :string
       attribute :sort_direction, :string
 
       validates :data_table_id, presence: true
+
+      before_validation { self.limit = [[limit.to_i, 1].max, MAX_LIMIT].min if limit.present? }
     end
 
     model :data_table, :find_data_table
@@ -27,7 +33,8 @@ module DiscourseWorkflows
       result =
         DiscourseWorkflows::DataTableRowsRepository.new(data_table).get_many_and_count(
           filter: params.filter,
-          limit: params.limit,
+          limit: params.limit || DEFAULT_LIMIT,
+          offset: params.offset,
           sort_by: params.sort_by,
           sort_direction: params.sort_direction,
         )
