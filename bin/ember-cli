@@ -96,6 +96,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   server_name = ENV["RUN_PITCHFORK"] == "0" ? "unicorn" : "pitchfork"
   unicorn_pid = spawn(unicorn_env, "#{__dir__}/#{server_name}")
   ember_cli_pid = nil
+  sigint_received = false
 
   Thread.new do
     Open3.popen2e(pnpm_env, "pnpm", *args.to_a.flatten) do |i, oe, t|
@@ -110,15 +111,43 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
         end
       end
     end
-    if process_running?(unicorn_pid)
+    # Only send TERM to the server if ember exited on its own (not from
+    # Ctrl+C). When the user presses Ctrl+C, all processes in the foreground
+    # group already received INT directly from the terminal. Sending an
+    # additional TERM races with the server's hard shutdown and can cause it
+    # to fall back to a slow graceful shutdown, making the process appear
+    # stuck for up to 60 seconds.
+    if !sigint_received && process_running?(unicorn_pid)
       puts "[bin/ember-cli] ember-cli process stopped. Terminating unicorn."
       Process.kill("TERM", unicorn_pid)
     end
   end
 
-  trap("SIGINT") do
-    # we got to swallow sigint to give time for
-    # children to handle it
+  int_count = 0
+  trap("INT") do
+    sigint_received = true
+    int_count += 1
+    case int_count
+    when 1
+      # Swallowed to give children time to handle it
+    when 2
+      puts "\n[bin/ember-cli] Interrupt again to force shutdown..."
+    else
+      puts "\n[bin/ember-cli] Forcing shutdown..."
+      begin
+        Process.kill("KILL", unicorn_pid)
+      rescue StandardError
+        nil
+      end
+      if ember_cli_pid
+        begin
+          Process.kill("KILL", ember_cli_pid)
+        rescue StandardError
+          nil
+        end
+      end
+      exit!(1)
+    end
   end
 
   Process.wait(unicorn_pid)
