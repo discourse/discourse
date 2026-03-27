@@ -299,7 +299,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
   test("renders combo boxes from metadata and applies option patches", async function (assert) {
     this.setProperties({
-      configuration: { agent_id: null, agent_name: "" },
+      configuration: { agent_id: 2, agent_name: "" },
       formApi: null,
       nodeType: "action:ai_agent",
       nodeTypes: [
@@ -357,10 +357,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     const selector = selectKit(".combo-box");
-    await selector.expand();
-    await selector.selectRowByValue("2");
+    assert.strictEqual(selector.header().value(), "2");
+    assert.strictEqual(selector.header().label(), "Helper Bot");
 
-    assert.strictEqual(String(this.formApi.get("agent_id")), "2");
-    assert.strictEqual(this.formApi.get("agent_name"), "Helper Bot");
+    await selector.expand();
+    await selector.selectRowByValue("1");
+
+    assert.strictEqual(String(this.formApi.get("agent_id")), "1");
+    assert.strictEqual(this.formApi.get("agent_name"), "Support Bot");
   });
 });

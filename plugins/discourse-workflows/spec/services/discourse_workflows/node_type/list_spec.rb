@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::NodeType::List do
+  fab!(:badge) { Fabricate(:badge, name: "Helpful") }
+
   describe ".call" do
     subject(:result) { described_class.call }
 
@@ -13,6 +15,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::CreatePost::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::CreateTopic::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::DataTable::V1)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::AwardBadge::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::SetFields::V1)
       DiscourseWorkflows::Registry.register_condition(
         DiscourseWorkflows::Conditions::IfCondition::V1,
@@ -57,19 +60,27 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
 
       it "includes specialized property-engine controls in node schemas" do
+        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:award_badge" }
         code = result[:node_types].find { |nt| nt[:identifier] == "action:code" }
         data_table = result[:node_types].find { |nt| nt[:identifier] == "action:data_table" }
         condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
         webhook = result[:node_types].find { |nt| nt[:identifier] == "trigger:webhook" }
 
+        expect(award_badge.dig(:configuration_schema, :badge_id, :ui, :control)).to eq(:combo_box)
         expect(code.dig(:configuration_schema, :code, :ui, :control)).to eq(:code)
-        expect(data_table.dig(:configuration_schema, :fields, :ui, :control)).to eq(
-          :data_table_fields,
+        expect(data_table.dig(:configuration_schema, :columns, :ui, :control)).to eq(
+          :data_table_columns,
         )
         expect(condition.dig(:configuration_schema, :conditions, :ui, :control)).to eq(
           :condition_builder,
         )
         expect(webhook.dig(:configuration_schema, :url_preview, :ui, :control)).to eq(:url_preview)
+      end
+
+      it "includes metadata for badge chooser options" do
+        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:award_badge" }
+
+        expect(award_badge[:metadata][:badges]).to include({ id: badge.id, name: badge.name })
       end
 
       it "includes branching for condition nodes" do

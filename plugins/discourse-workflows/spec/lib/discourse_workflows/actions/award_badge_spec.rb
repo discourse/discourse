@@ -3,12 +3,22 @@
 RSpec.describe DiscourseWorkflows::Actions::AwardBadge::V1 do
   fab!(:user)
   fab!(:badge)
+  fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
 
   before { SiteSetting.discourse_workflows_enabled = true }
 
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:award_badge")
+    end
+  end
+
+  describe ".metadata" do
+    it "returns badges for the chooser" do
+      expect(described_class.metadata[:badges]).to include(
+        { id: badge_2.id, name: badge_2.name },
+        { id: badge.id, name: badge.name },
+      )
     end
   end
 

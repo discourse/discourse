@@ -86,7 +86,9 @@ export default class PropertyEngineComboBox extends Component {
   <template>
     <ComboBox
       @content={{this.options}}
+      @nameProperty="name"
       @value={{@value}}
+      @valueProperty="id"
       @onChange={{this.handleChange}}
       @options={{hash filterable=this.filterable none=this.none}}
     />

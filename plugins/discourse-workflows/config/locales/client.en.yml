@@ -165,7 +165,8 @@ en:
         limit_description: "Maximum number of topics to return (1-100, default 30)."
       award_badge:
         user_id: "User ID"
-        badge_id: "Badge ID"
+        badge_id: "Badge"
+        badge_id_placeholder: "Select a badge"
       create_post:
         topic_id: "Topic ID"
         raw: "Body"

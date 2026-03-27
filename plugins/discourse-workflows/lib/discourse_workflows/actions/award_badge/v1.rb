@@ -15,10 +15,22 @@ module DiscourseWorkflows
               required: true,
             },
             badge_id: {
-              type: :string,
+              type: :integer,
               required: true,
+              ui: {
+                control: :combo_box,
+                options_source: "badges",
+                value_property: "id",
+                name_property: "name",
+                filterable: true,
+                none: "discourse_workflows.award_badge.badge_id_placeholder",
+              },
             },
           }
+        end
+
+        def self.metadata
+          { badges: Badge.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } } }
         end
 
         def self.output_schema
