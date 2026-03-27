@@ -134,7 +134,7 @@ module DiscourseWorkflows
           params: row_mutation_params.merge(data_table_id: params[:data_table_id]),
         ),
       ) do |result|
-        on_success { |rows:| render json: { rows: rows, count: rows.length } }
+        on_success { |updated_count:| render json: { updated_count: updated_count } }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_failed_contract do |contract|
           render(

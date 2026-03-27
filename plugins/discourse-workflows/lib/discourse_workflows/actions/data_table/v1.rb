@@ -142,12 +142,12 @@ module DiscourseWorkflows
         end
 
         def execute_update(config)
-          rows =
+          updated_count =
             @repository.update_many(
               filter: parse_filter(config["filter"]),
               data: build_row_data(config["columns"] || {}),
             )
-          { "updated_count" => rows.length }
+          { "updated_count" => updated_count }
         end
 
         def execute_delete(config)
@@ -161,7 +161,7 @@ module DiscourseWorkflows
           result = @repository.upsert(filter: filter, data: data)
 
           if result[:operation] == "update"
-            { "operation" => "update", "count" => result[:rows].length }
+            { "operation" => "update", "count" => result[:updated_count] }
           else
             { "operation" => "insert" }.merge(result[:row])
           end

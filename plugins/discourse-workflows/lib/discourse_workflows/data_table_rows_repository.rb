@@ -108,12 +108,11 @@ module DiscourseWorkflows
       where_clause, binds = build_where_clause(filter)
       assignments, assignment_binds = build_assignments(data)
 
-      DB.query_hash(<<~SQL, binds.merge(assignment_binds)).map { |row| serialize_row(row) }
-          UPDATE #{@table}
-          SET #{assignments.join(", ")}, #{DataTableStorage.quoted_column("updated_at")} = CURRENT_TIMESTAMP
-          #{where_clause}
-          RETURNING *
-        SQL
+      DB.exec(<<~SQL, binds.merge(assignment_binds))
+        UPDATE #{@table}
+        SET #{assignments.join(", ")}, #{DataTableStorage.quoted_column("updated_at")} = CURRENT_TIMESTAMP
+        #{where_clause}
+      SQL
     end
 
     def delete(row_id)
@@ -127,7 +126,7 @@ module DiscourseWorkflows
     def delete_many(filter:)
       normalized_filter = normalize_filter(filter, optional: false)
       where_clause, binds = build_where_clause(normalized_filter)
-      DB.query_hash("DELETE FROM #{@table}#{where_clause} RETURNING id", binds).size
+      DB.exec("DELETE FROM #{@table}#{where_clause}", binds)
     end
 
     def upsert(filter:, data:)
@@ -135,8 +134,10 @@ module DiscourseWorkflows
       attributes = DataTableRow.normalize_row_data(@data_table, data, fill_missing: false)
       raise DataTableValidationError, "Data columns must not be empty" if attributes.empty?
 
-      if count(filter: normalized_filter) > 0
-        { operation: "update", rows: update_many(filter: normalized_filter, data: attributes) }
+      updated_count = update_many_normalized(filter: normalized_filter, data: attributes)
+
+      if updated_count > 0
+        { operation: "update", updated_count: updated_count }
       else
         { operation: "insert", row: insert(attributes) }
       end

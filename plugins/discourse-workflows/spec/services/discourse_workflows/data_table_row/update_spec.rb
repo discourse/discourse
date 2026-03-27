@@ -56,6 +56,10 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Update do
     context "when matching rows exist" do
       it { is_expected.to run_successfully }
 
+      it "returns the updated count" do
+        expect(result[:updated_count]).to eq(1)
+      end
+
       it "updates matching rows with merged data" do
         result
         expect(find_data_table_row(data_table, row["id"]).slice("email", "score")).to eq(
@@ -75,7 +79,7 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Update do
         }
       end
 
-      it { is_expected.to fail_to_find_a_model(:rows) }
+      it { is_expected.to fail_a_step(:update_matching_rows) }
     end
   end
 end

@@ -30,7 +30,7 @@ module DiscourseWorkflows
 
       context[:operation] = result[:operation]
       context[:row] = result[:row]
-      context[:rows] = result[:rows]
+      context[:updated_count] = result[:updated_count]
     end
   end
 end

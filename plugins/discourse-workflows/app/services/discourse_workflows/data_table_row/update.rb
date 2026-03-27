@@ -14,7 +14,7 @@ module DiscourseWorkflows
 
     model :data_table, :find_data_table
     step :validate_update
-    model :rows, :update_matching_rows
+    step :update_matching_rows
 
     private
 
@@ -35,10 +35,11 @@ module DiscourseWorkflows
     end
 
     def update_matching_rows(data_table:, normalized_filter:, normalized_data:)
-      DiscourseWorkflows::DataTableRowsRepository.new(data_table).update_many_normalized(
-        filter: normalized_filter,
-        data: normalized_data,
-      )
+      context[:updated_count] = DiscourseWorkflows::DataTableRowsRepository.new(
+        data_table,
+      ).update_many_normalized(filter: normalized_filter, data: normalized_data)
+
+      fail!("No rows matched filter") if context[:updated_count] == 0
     end
   end
 end

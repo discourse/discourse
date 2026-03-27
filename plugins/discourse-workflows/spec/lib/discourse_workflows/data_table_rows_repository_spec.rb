@@ -151,4 +151,61 @@ RSpec.describe DiscourseWorkflows::DataTableRowsRepository do
       )
     end
   end
+
+  describe "#update_many" do
+    it "updates matching rows and returns the affected count" do
+      updated_count =
+        repository.update_many(
+          filter: {
+            "type" => "and",
+            "filters" => [
+              { "columnName" => "email", "condition" => "eq", "value" => "alice@example.com" },
+            ],
+          },
+          data: {
+            "score" => 99,
+          },
+        )
+
+      expect(updated_count).to eq(1)
+      expect(find_data_table_row(data_table, row_1["id"])["score"]).to eq(99)
+    end
+  end
+
+  describe "#delete_many" do
+    it "deletes matching rows and returns the affected count" do
+      deleted_count =
+        repository.delete_many(
+          filter: {
+            "type" => "and",
+            "filters" => [
+              { "columnName" => "email", "condition" => "eq", "value" => "bob@example.com" },
+            ],
+          },
+        )
+
+      expect(deleted_count).to eq(1)
+      expect(find_data_table_row(data_table, row_2["id"])).to be_nil
+    end
+  end
+
+  describe "#upsert" do
+    it "updates matching rows and returns the affected count" do
+      result =
+        repository.upsert(
+          filter: {
+            "type" => "and",
+            "filters" => [
+              { "columnName" => "email", "condition" => "eq", "value" => "alice@example.com" },
+            ],
+          },
+          data: {
+            "score" => 100,
+          },
+        )
+
+      expect(result).to eq(operation: "update", updated_count: 1)
+      expect(find_data_table_row(data_table, row_1["id"])["score"]).to eq(100)
+    end
+  end
 end

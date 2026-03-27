@@ -179,6 +179,7 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
             },
           }
       expect(response.status).to eq(200)
+      expect(response.parsed_body["updated_count"]).to eq(1)
       expect(find_data_table_row(data_table, row["id"])["score"]).to eq(99)
     end
 

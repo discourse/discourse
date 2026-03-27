@@ -76,6 +76,10 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
 
       it { is_expected.to run_successfully }
 
+      it "returns the updated count" do
+        expect(result[:updated_count]).to eq(1)
+      end
+
       it "updates the existing row with merged data" do
         result
         expect(find_data_table_row(data_table, row["id"]).slice("email", "score")).to eq(
