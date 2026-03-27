@@ -27,6 +27,9 @@ module DiscourseWorkflows
       results = scope.limit(limit + 1).to_a
       has_more = results.size > limit
       context[:data_tables] = has_more ? results.first(limit) : results
+      context[:table_sizes] = DiscourseWorkflows::DataTableStorage.batch_size_bytes(
+        context[:data_tables].map(&:id),
+      )
       context[:total_rows] = DiscourseWorkflows::DataTable.count
       context[:load_more_url] = if has_more
         "/admin/plugins/discourse-workflows/data-tables.json?cursor=#{context[:data_tables].last.id}&limit=#{limit}"

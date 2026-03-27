@@ -49,6 +49,34 @@ module DiscourseWorkflows
           SQL
       end
 
+      def size_bytes(data_table_id)
+        batch_size_bytes([data_table_id]).fetch(data_table_id, 0)
+      end
+
+      def batch_size_bytes(data_table_ids)
+        return {} if data_table_ids.empty?
+
+        names = data_table_ids.map { |id| table_name(id) }
+        DB
+          .query(<<~SQL, names: names)
+            SELECT c.relname, pg_relation_size(c.oid) AS size_bytes
+            FROM pg_class c
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE n.nspname = current_schema()
+              AND c.relname = ANY(ARRAY[:names])
+              AND c.relkind = 'r'
+          SQL
+          .to_h do |row|
+            id =
+              row
+                .relname
+                .delete_prefix("discourse_workflows_data_table_")
+                .delete_suffix("_rows")
+                .to_i
+            [id, row.size_bytes.to_i]
+          end
+      end
+
       def quoted_table(data_table_id)
         connection.quote_table_name(table_name(data_table_id))
       end

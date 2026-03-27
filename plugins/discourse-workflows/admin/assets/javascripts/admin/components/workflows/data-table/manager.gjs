@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import humanSize from "discourse/admin/helpers/human-size";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
@@ -120,7 +121,7 @@ export default class DataTablesManager extends Component {
                 <tr>
                   <th>{{i18n "discourse_workflows.data_tables.name"}}</th>
                   <th>{{i18n "discourse_workflows.data_tables.columns"}}</th>
-                  <th>{{i18n "discourse_workflows.data_tables.rows"}}</th>
+                  <th>{{i18n "discourse_workflows.data_tables.size"}}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -135,7 +136,7 @@ export default class DataTablesManager extends Component {
                       >{{dataTable.name}}</LinkTo>
                     </td>
                     <td>{{dataTable.columns.length}}</td>
-                    <td>{{dataTable.row_count}}</td>
+                    <td>{{humanSize dataTable.size}}</td>
                     <td class="workflows-data-tables-manager__actions">
                       <DButton
                         @action={{fn this.deleteDataTable dataTable}}

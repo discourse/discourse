@@ -412,6 +412,7 @@ en:
         empty_description: "Data tables can be used to store structured data that your workflows can read and write."
         add_first: "Add first data table"
         columns: "Columns"
+        size: "Size"
         rows: "Rows"
         column_name: "Column name"
         column_type: "Column type"
@@ -426,9 +427,6 @@ en:
         delete_rows_confirm:
           one: "Are you sure you want to delete %{count} row?"
           other: "Are you sure you want to delete %{count} rows?"
-        row_count:
-          one: "%{count} row"
-          other: "%{count} rows"
       canvas:
         fit_to_view: "Fit"
         zoom_to_fit: "Zoom to fit [1]"
