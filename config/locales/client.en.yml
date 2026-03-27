@@ -3058,6 +3058,11 @@ en:
       dark_tone: Dark skin tone
       default: Custom emojis
 
+    d_icon_grid_picker:
+      search_placeholder: "Search icons..."
+      no_results: "No icons found"
+      favorites: "Favorites"
+
     shared_drafts:
       title: "Shared Drafts"
       notice: "This topic is only visible to those who can publish shared drafts."
@@ -4762,6 +4767,7 @@ en:
       icon: "Icon"
       emoji: "Emoji"
       select_emoji: "Select emoji"
+      select_icon: "Select icon"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
