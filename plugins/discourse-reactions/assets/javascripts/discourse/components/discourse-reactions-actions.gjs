@@ -18,7 +18,7 @@ import curryComponent from "ember-curry-component";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and, eq, not } from "discourse/truth-helpers";
@@ -56,7 +56,7 @@ function moveReactionAnimation(
   endPosition,
   complete
 ) {
-  if (isTesting()) {
+  if (isTesting() || isRailsTesting()) {
     return run(complete);
   }
 
@@ -95,7 +95,7 @@ function dropReaction(list, reactionId, complete) {
 }
 
 function scaleReactionAnimation(mainReaction, start, end, complete) {
-  if (isTesting()) {
+  if (isTesting() || isRailsTesting()) {
     return run(this, complete);
   }
 
