@@ -205,8 +205,8 @@ en:
         add_output_field: "Add field"
       parameter_field:
         fixed: "Fixed"
-        expression: "Expression"
         plain_text: "Plain text"
+        dynamic: "Dynamic"
       property_engine:
         add_item: "Add item"
         remove_item: "Remove item"

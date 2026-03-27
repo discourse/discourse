@@ -58,7 +58,7 @@ const WrappedControl = <template>
           {{if @expressionMode '--active'}}"
         @label={{if
           @expressionMode
-          "discourse_workflows.parameter_field.expression"
+          "discourse_workflows.parameter_field.dynamic"
           "discourse_workflows.parameter_field.plain_text"
         }}
       />
