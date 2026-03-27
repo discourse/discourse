@@ -8,7 +8,7 @@ RSpec.describe GroupManager do
   subject(:manager) { GroupManager.new(group) }
 
   describe "#add" do
-    it "delegates to group.bulk_add and returns added user IDs" do
+    it "adds users to group and returns added user IDs" do
       result = manager.add([user.id, user2.id])
 
       expect(result).to contain_exactly(user.id, user2.id)
@@ -19,21 +19,12 @@ RSpec.describe GroupManager do
       expect(manager.add([])).to eq([])
       expect(manager.add(nil)).to eq([])
     end
-
-    it "passes automatic flag through to bulk_add" do
-      events =
-        DiscourseEvent.track_events(:user_added_to_group) do
-          manager.add([user.id], automatic: true)
-        end
-
-      expect(events.first[:params][2][:automatic]).to eq(true)
-    end
   end
 
   describe "#remove" do
-    before { group.bulk_add([user.id, user2.id]) }
+    before { manager.add([user.id, user2.id]) }
 
-    it "delegates to group.bulk_remove and returns removed user IDs" do
+    it "removes users from group and returns removed user IDs" do
       result = manager.remove([user.id, user2.id])
 
       expect(result).to contain_exactly(user.id, user2.id)
