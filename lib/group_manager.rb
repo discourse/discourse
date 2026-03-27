@@ -8,65 +8,8 @@ class GroupManager
   def bulk_add(user_ids, automatic: false)
     return [] if user_ids.blank?
 
-    added_user_ids = nil
-
-    Group.transaction do
-      sql = <<~SQL
-      INSERT INTO group_users
-        (group_id, user_id, notification_level, created_at, updated_at)
-      SELECT
-        :group_id,
-        u.id,
-        :notification_level,
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
-      FROM users AS u
-      WHERE u.id IN (:user_ids)
-      AND NOT EXISTS (
-        SELECT 1 FROM group_users AS gu
-        WHERE gu.user_id = u.id AND
-        gu.group_id = :group_id
-      )
-      RETURNING user_id
-      SQL
-
-      added_user_ids =
-        DB.query_single(
-          sql,
-          group_id: @group.id,
-          user_ids: user_ids,
-          notification_level: @group.default_notification_level,
-        )
-
-      return [] if added_user_ids.blank?
-
-      if @group.primary_group?
-        User
-          .where(id: added_user_ids)
-          .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
-          .update_all(flair_group_id: @group.id)
-
-        DB.exec(<<~SQL, user_ids: added_user_ids, new_title: @group.title)
-            UPDATE users u
-            SET title = :new_title
-            WHERE u.id IN (:user_ids)
-              AND u.primary_group_id IS NOT NULL
-              AND EXISTS (
-                SELECT 1 FROM groups g
-                WHERE g.id = u.primary_group_id
-                  AND g.title = u.title
-              )
-          SQL
-
-        User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
-      end
-
-      if @group.title.present?
-        User.where(id: added_user_ids, title: [nil, ""]).update_all(title: @group.title)
-      end
-
-      Group.update_counters(@group.id, user_count: added_user_ids.size)
-    end
+    added_user_ids = bulk_add_transaction(user_ids)
+    return [] if added_user_ids.blank?
 
     if @group.grant_trust_level.present? && !@group.grant_trust_level.zero?
       Jobs.enqueue(
@@ -147,6 +90,70 @@ class GroupManager
   end
 
   private
+
+  def bulk_add_transaction(user_ids)
+    added_user_ids = nil
+
+    Group.transaction do
+      sql = <<~SQL
+      INSERT INTO group_users
+        (group_id, user_id, notification_level, created_at, updated_at)
+      SELECT
+        :group_id,
+        u.id,
+        :notification_level,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+      FROM users AS u
+      WHERE u.id IN (:user_ids)
+      AND NOT EXISTS (
+        SELECT 1 FROM group_users AS gu
+        WHERE gu.user_id = u.id AND
+        gu.group_id = :group_id
+      )
+      RETURNING user_id
+      SQL
+
+      added_user_ids =
+        DB.query_single(
+          sql,
+          group_id: @group.id,
+          user_ids: user_ids,
+          notification_level: @group.default_notification_level,
+        )
+
+      return added_user_ids if added_user_ids.blank?
+
+      if @group.primary_group?
+        User
+          .where(id: added_user_ids)
+          .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
+          .update_all(flair_group_id: @group.id)
+
+        DB.exec(<<~SQL, user_ids: added_user_ids, new_title: @group.title)
+            UPDATE users u
+            SET title = :new_title
+            WHERE u.id IN (:user_ids)
+              AND u.primary_group_id IS NOT NULL
+              AND EXISTS (
+                SELECT 1 FROM groups g
+                WHERE g.id = u.primary_group_id
+                  AND g.title = u.title
+              )
+          SQL
+
+        User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
+      end
+
+      if @group.title.present?
+        User.where(id: added_user_ids, title: [nil, ""]).update_all(title: @group.title)
+      end
+
+      Group.update_counters(@group.id, user_count: added_user_ids.size)
+    end
+
+    added_user_ids
+  end
 
   def publish_category_updates(user)
     if @group.categories.count < Group::PUBLISH_CATEGORIES_LIMIT
