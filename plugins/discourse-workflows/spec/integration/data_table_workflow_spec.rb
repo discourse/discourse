@@ -97,6 +97,7 @@ RSpec.describe "Data Table workflow integration" do
         column_id: author_column.id,
         name: "post_author",
       },
+      guardian: admin.guardian,
     )
 
     topic = Fabricate(:topic, category: category, user: admin)

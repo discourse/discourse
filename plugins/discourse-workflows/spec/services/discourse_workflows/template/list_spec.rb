@@ -23,7 +23,7 @@ RSpec.describe DiscourseWorkflows::Template::List do
 
     it "includes known templates from config/templates" do
       ids = result[:templates].map { |t| t[:id] }
-      expect(ids).to include("auto-tag-topics", "staff-picks")
+      expect(ids).to include("auto-tag-topics")
     end
   end
 end

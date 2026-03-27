@@ -9,7 +9,7 @@ RSpec.describe DiscourseWorkflows::Template::Show do
     subject(:result) { described_class.call(params:) }
 
     let(:params) { { template_id: } }
-    let(:template_id) { "staff-picks" }
+    let(:template_id) { "auto-tag-topics" }
 
     context "when contract is invalid" do
       let(:template_id) { nil }
@@ -28,7 +28,7 @@ RSpec.describe DiscourseWorkflows::Template::Show do
 
       it "returns the parsed template data" do
         expect(result[:template]).to be_a(Hash)
-        expect(result[:template]["name"]).to eq("Staff picks")
+        expect(result[:template]["name"]).to eq("Auto-tag new topics")
       end
     end
   end

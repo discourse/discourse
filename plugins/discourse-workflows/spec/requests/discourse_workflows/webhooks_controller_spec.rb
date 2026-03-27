@@ -18,7 +18,14 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
     )
   end
 
-  before { SiteSetting.discourse_workflows_enabled = true }
+  before do
+    SiteSetting.discourse_workflows_enabled = true
+    DiscourseWorkflows::Registry.reset!
+    DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Webhook::V1)
+    DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::RespondToWebhook::V1)
+  end
+
+  after { DiscourseWorkflows::Registry.reset! }
 
   describe "POST /workflows/webhooks/:path" do
     it "enqueues workflow execution for matching webhook" do

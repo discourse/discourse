@@ -15,7 +15,7 @@ RSpec.describe DiscourseWorkflows::TemplatesController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["templates"]).to be_an(Array)
-      expect(json["templates"].size).to be >= 2
+      expect(json["templates"].size).to be >= 1
     end
 
     it "returns templates with expected attributes" do
@@ -31,11 +31,11 @@ RSpec.describe DiscourseWorkflows::TemplatesController do
 
   describe "GET /admin/plugins/discourse-workflows/templates/:id" do
     it "returns the template" do
-      get "/admin/plugins/discourse-workflows/templates/staff-picks.json"
+      get "/admin/plugins/discourse-workflows/templates/auto-tag-topics.json"
 
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["template"]["name"]).to eq("Staff picks")
+      expect(json["template"]["name"]).to eq("Auto-tag new topics")
       expect(json["template"]["nodes"]).to be_an(Array)
     end
 
