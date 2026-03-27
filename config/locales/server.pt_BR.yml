@@ -4284,7 +4284,7 @@ pt_BR:
     see_more: "Mais"
     search_title: "Que tal tentar pesquisar?"
     search_button: "Pesquisar"
-    home: "Me leve para casa"
+    home: "Voltar para o início"
     placeholder: "Procurar tópicos por título ou palavras-chave…"
   offline:
     title: "Não é possível carregar o aplicativo"
