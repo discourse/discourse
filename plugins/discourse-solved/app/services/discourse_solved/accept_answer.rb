@@ -21,7 +21,7 @@ class DiscourseSolved::AcceptAnswer
       only_if(:should_notify_post_author) { step :notify_post_author }
       only_if(:should_notify_topic_owner) { step :notify_topic_owner }
       model :topic_user_ids, optional: true
-      only_if(:topic_user_ids_present) do
+      only_if(:has_topic_users?) do
         model :screener
         step :notify_tracking_and_watching_users
       end
@@ -117,6 +117,10 @@ class DiscourseSolved::AcceptAnswer
     )
   end
 
+  def has_topic_users?(topic_user_ids:)
+    topic_user_ids.present?
+  end
+
   def fetch_topic_user_ids(post:, topic:, guardian:)
     already_notified_ids = [guardian.user.id, post.user_id, topic.user_id]
 
@@ -125,10 +129,6 @@ class DiscourseSolved::AcceptAnswer
       .where("notification_level >= ?", TopicUser.notification_levels[:tracking])
       .where.not(user_id: already_notified_ids)
       .pluck(:user_id)
-  end
-
-  def topic_user_ids_present(topic_user_ids:)
-    topic_user_ids.present?
   end
 
   def fetch_screener(guardian:, topic_user_ids:)

@@ -232,19 +232,23 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
           }
         end
 
-        it "does not notify the user who marked the solution" do
-          TopicUser.change(
-            acting_user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:watching],
-          )
+        context "when the acting user is also watching the topic" do
+          before do
+            TopicUser.change(
+              acting_user.id,
+              topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+            )
+          end
 
-          expect { result }.not_to change {
-            Notification.where(
-              notification_type: Notification.types[:custom],
-              user: acting_user,
-            ).count
-          }
+          it "does not notify the user who marked the solution" do
+            expect { result }.not_to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: acting_user,
+              ).count
+            }
+          end
         end
 
         it "uses the topic_solved_notification message" do
@@ -259,24 +263,32 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
           expect(data["title"]).to eq("solved.notification.topic_solved_title")
         end
 
-        it "does not double-notify the post author who is already notified" do
-          TopicUser.change(
-            post.user_id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:watching],
-          )
-
-          result
-          notifications =
-            Notification.where(
-              notification_type: Notification.types[:custom],
-              user: post.user,
-              topic: topic,
+        context "when the post author is also watching the topic" do
+          before do
+            TopicUser.change(
+              post.user_id,
+              topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
             )
-          expect(notifications.count).to eq(1)
-          expect(JSON.parse(notifications.first.data)["message"]).to eq(
-            "solved.accepted_notification",
-          )
+          end
+
+          it "does not double-notify the post author" do
+            expect { result }.to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: post.user,
+                topic: topic,
+              ).count
+            }.by(1)
+
+            notification =
+              Notification.find_by(
+                notification_type: Notification.types[:custom],
+                user: post.user,
+                topic: topic,
+              )
+            expect(JSON.parse(notification.data)["message"]).to eq("solved.accepted_notification")
+          end
         end
 
         it "links to the solution post" do
