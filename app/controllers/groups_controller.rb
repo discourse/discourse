@@ -574,22 +574,22 @@ class GroupsController < ApplicationController
     removed_user_ids = GroupManager.new(group).remove(users.map(&:id))
     GroupActionLogger.new(current_user, group).bulk_log_remove_users_from_group(removed_user_ids)
 
-    removed_users = []
-    skipped_users = []
+    removed_usernames = []
+    skipped_usernames = []
 
     users.each do |user|
       if removed_user_ids.include?(user.id)
-        removed_users << user.username
+        removed_usernames << user.username
       else
         if group.users.exclude? user
-          skipped_users << user.username
+          skipped_usernames << user.username
         else
           raise Discourse::InvalidParameters
         end
       end
     end
 
-    render json: success_json.merge!(usernames: removed_users, skipped_usernames: skipped_users)
+    render json: success_json.merge!(usernames: removed_usernames, skipped_usernames:)
   end
 
   def leave
