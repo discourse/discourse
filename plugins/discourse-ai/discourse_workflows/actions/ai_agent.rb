@@ -59,10 +59,10 @@ if defined?(DiscourseWorkflows)
 
         attr_reader :logs
 
-        def execute(context, input_items:, node_context:)
+        def execute(context, input_items:, node_context:, user: nil)
           @logs = []
           first_item = input_items.first || {}
-          resolver = ExpressionResolver.new(context.merge("$json" => first_item["json"] || {}))
+          resolver = ExpressionResolver.new(context.merge("$json" => first_item["json"] || {}), user: user)
           resolved_config = resolver.resolve_hash(@configuration.deep_stringify_keys)
 
           agent_id = resolved_config["agent_id"]
