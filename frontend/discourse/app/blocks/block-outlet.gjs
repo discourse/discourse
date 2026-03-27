@@ -380,12 +380,13 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
 
 /**
  * Checks if a layout has been registered for a given outlet.
- * Used in templates to conditionally render content based on block presence.
+ *
+ * @internal This is an internal API. Use the `blocks` service's `hasLayout()` method instead.
  *
  * @param {string} outletName - The outlet identifier to check.
  * @returns {boolean} True if a layout is registered for this outlet.
  */
-function hasLayout(outletName) {
+export function _hasLayout(outletName) {
   return outletLayouts.has(outletName);
 }
 
@@ -560,7 +561,7 @@ export default class BlockOutlet extends Component {
     {{! yield to :before block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on
         the presence of a registered layout if necessary }}
-    {{yield (hasLayout this.outletName) to="before"}}
+    {{yield (_hasLayout this.outletName) to="before"}}
 
     {{#let
       (if
@@ -631,7 +632,7 @@ export default class BlockOutlet extends Component {
     {{! yield to :after block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on
         the presence of a registered layout if necessary }}
-    {{yield (hasLayout this.outletName) to="after"}}
+    {{yield (_hasLayout this.outletName) to="after"}}
   </template>
 }
 

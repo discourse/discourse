@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
+import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
@@ -96,6 +97,25 @@ module("Unit | Service | blocks", function (hooks) {
       assert.deepEqual(found.metadata.args, {
         title: { type: "string", required: true },
       });
+    });
+  });
+
+  module("block outlet", function () {
+    test("hasLayout returns false when no layout is registered", function (assert) {
+      assert.false(this.blocks.hasLayout("hero-blocks"));
+    });
+
+    test("hasLayout returns true after a layout is registered", function (assert) {
+      @block("has-layout-test-block")
+      class HasLayoutTestBlock extends Component {}
+
+      withTestBlockRegistration(() => {
+        registerBlock(HasLayoutTestBlock);
+      });
+
+      _renderBlocks("hero-blocks", [{ block: HasLayoutTestBlock }]);
+
+      assert.true(this.blocks.hasLayout("hero-blocks"));
     });
   });
 
