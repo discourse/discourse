@@ -14,15 +14,14 @@ he:
     chat_integration:
       menu_title: "שילובי צ׳אט"
       settings: "הגדרות"
-      no_providers: "עליך לאפשר מספר ספקים בהגדרות התוסף"
+      more_providers: "עוד"
+      channels_title: "ערוצים"
       channels_with_errors: "בפעם האחרונה שנשלחו מסרים כמה ערוצים נכשלו עבור הספר הזה. לחץ על סמליל(י) השגיאה כדי לקבל עוד מידע"
       group_mention_template: "אזכורים של: ‎@%{name}‎"
       group_message_template: "הודעות אל: ‎@%{name}‎"
       choose_group: "(נא לבחור קבוצה)"
       all_categories: "(כל הקטגוריות)"
       all_tags: "(כל התגיות)"
-      create_rule: "יצירת כלל"
-      create_channel: "יצירת ערוץ"
       delete_channel: "מחיקה"
       test_channel: "נסיון"
       edit_channel: "עריכה"
@@ -30,13 +29,10 @@ he:
       test_modal:
         title: "שליחת הודעת ניסיון"
         topic: "נושא"
-        send: "שליחת הודעת ניסיון"
         close: "סגירה"
         success: "ההודעה נשלחה בהצלחה"
       type:
         normal: רגיל
-        group_message: הודעה קבוצתית
-        group_mention: איזכור קבוצה
       filter:
         mute: 'השתקה'
         follow: 'הודעה ראשונה בלבד'
@@ -57,8 +53,6 @@ he:
           ok: "מאומת"
           fail: "פורמט לא חוקי"
       edit_rule_modal:
-        title: שינוי כלל
-        save: שמירת כלל
         cancel: ביטול
         provider: ספק
         type: סוג
@@ -79,7 +73,6 @@ he:
           param:
             identifier:
               title: ערוץ
-              help: "למשל #ערוץ, @שם_משתמש."
           errors:
             action_prohibited: "לבוט אין הרשה לפרסם לערוץ הזה"
             channel_not_found: "הערוץ שצוין לא קיים ב־Slack"
@@ -103,7 +96,6 @@ he:
               help: "שם לתיאור הערוץ. הוא לא משמש לחיבור אל Discord."
             webhook_url:
               title: כתובת התלייה
-              help: כתובת ההתלייה נוצרה בהגדרות שרת ה־Discord שלך
         guilded:
           title: "Guilded"
           param:
@@ -118,7 +110,6 @@ he:
           param:
             identifier:
               title: ערוץ
-              help: "למשל #ערוץ, @שם_משתמש."
           errors:
             channel_not_found: "הערוץ שצוין לא קיים ב־Mattermost"
         matrix:
@@ -149,7 +140,6 @@ he:
           param:
             identifier:
               title: ערוץ
-              help: "למשל #ערוץ, @שם_משתמש."
           errors:
             invalid_channel: "ערוץ זה לא קיים ב־‏Rocket Chat"
         gitter:
@@ -157,7 +147,6 @@ he:
           param:
             name:
               title: "שם"
-              help: "שם חדר ב־Gitter למשל gitterHQ/services."
             webhook_url:
               title: "כתובת התלייה"
               help: "הכתובת שסופקה בעת יצירת שילוב בחדר Gitter."

@@ -14,16 +14,15 @@ uk:
     chat_integration:
       menu_title: "Інтеграція чату"
       settings: "Налаштування"
-      no_providers: "Потрібно включити деяких постачальників у налаштуваннях плагіна"
+      more_providers: "Більше"
+      channels_title: "Канали"
       channels_with_errors: "Деякі канали цього провайдера не вдавалися, коли останній раз надсилалися повідомлення. Клацніть піктограму помилок, щоб дізнатися більше."
       channel_exception: "Невідома помилка сталася під час останнього надсилання повідомлення на цей канал."
       group_mention_template: "Згадки про: @%{name}"
       group_message_template: "Повідомлення до: @ %{name}"
-      choose_group: "(виберіть групу)"
-      all_categories: "(усі розділи)"
-      all_tags: "(усі теги)"
-      create_rule: "Створити правило"
-      create_channel: "Створити канал"
+      choose_group: "(Виберіть групу)"
+      all_categories: "(Всі розділи)"
+      all_tags: "(Всі теґи)"
       delete_channel: "Видалити"
       test_channel: "Тест"
       edit_channel: "Редагувати"
@@ -31,14 +30,11 @@ uk:
       test_modal:
         title: "Надіслати тестове повідомлення"
         topic: "Тема"
-        send: "Надіслати тестове повідомлення"
         close: "Закрити"
         error: "Під час надсилання повідомлення сталася невідома помилка. Перегляньте журнали сайту для отримання додаткової інформації."
         success: "Повідомлення успішно надіслано"
       type:
         normal: Нормальний
-        group_message: Групове повідомлення
-        group_mention: Згадування групи
       filter:
         mute: 'Приглушити'
         follow: 'Лише перший допис'
@@ -59,8 +55,6 @@ uk:
           ok: "Дійсний"
           fail: "Недійсний формат"
       edit_rule_modal:
-        title: Редагувати правило
-        save: Збережіть правило
         cancel: Скасувати
         provider: Провайдер
         type: Тип
@@ -81,7 +75,6 @@ uk:
           param:
             identifier:
               title: Канал
-              help: "наприклад #channel, @username."
           errors:
             action_prohibited: "Бот не має дозволу на публікацію в цьому каналі"
             channel_not_found: "Зазначений канал не існує в Slack"
@@ -105,7 +98,6 @@ uk:
               help: "Назва для опису каналу. Він не використовується для з’єднання з Discord."
             webhook_url:
               title: URL-адреса веб-хука
-              help: URL-адреса webhook, створена у налаштуваннях вашого сервера Discord
         guilded:
           title: "Гільдійний"
           param:
@@ -120,7 +112,6 @@ uk:
           param:
             identifier:
               title: Канал
-              help: "наприклад #channel, @username."
           errors:
             channel_not_found: "Зазначений канал не існує в Найважливіших"
         matrix:
@@ -151,7 +142,6 @@ uk:
           param:
             identifier:
               title: Канал
-              help: "наприклад #channel, @username."
           errors:
             invalid_channel: "Цей канал не існує в Rocket Chat"
         gitter:
@@ -159,7 +149,6 @@ uk:
           param:
             name:
               title: "Імʼя"
-              help: "Назва кімнати Gitter, наприклад gitterHQ/services."
             webhook_url:
               title: "URL-адреса веб-хука"
               help: "URL-адреса, яка створюється під час створення нової інтеграції з Gitter кімнатою."

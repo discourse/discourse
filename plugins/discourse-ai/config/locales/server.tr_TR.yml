@@ -295,6 +295,8 @@ tr_TR:
         missing_required_aliases: "Takma adlar için gerekli kimlik bilgisi bağlamaları eksik: %{aliases}."
         secret_not_found: "Kimlik bilgisi takma adı `%{alias}` eksik bir kimlik bilgisine bağlıdır."
         unknown_error: "İstenen kimlik bilgisi çözülemiyor."
+    mcp_servers:
+      secret_not_found: "Seçilen kimlik bilgisi mevcut değildir."
     ai_helper:
       errors:
         completion_request_failed: "Öneriler sunulmaya çalışılırken bir şeyler ters gitti. Lütfen tekrar deneyin."

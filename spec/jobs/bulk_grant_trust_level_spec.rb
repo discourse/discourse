@@ -24,4 +24,15 @@ RSpec.describe Jobs::BulkGrantTrustLevel do
     expect(user1.trust_level).to eq(3)
     expect(user2.trust_level).to eq(3)
   end
+
+  it "recalculates trust level when recalculate is true" do
+    group = Fabricate(:group, grant_trust_level: 3)
+    user = Fabricate(:user, trust_level: 3)
+    group.bulk_add([user.id])
+
+    group.bulk_remove([user.id])
+    Jobs::BulkGrantTrustLevel.new.execute(user_ids: [user.id], recalculate: true)
+
+    expect(user.reload.trust_level).to eq(0)
+  end
 end

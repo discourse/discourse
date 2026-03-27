@@ -331,21 +331,6 @@ const workflows = [
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
-  { handler: "notify-admin", matchId: "discourse.add-flag-property" },
-  { handler: "notify-admin", matchId: "discourse.add-header-panel" },
-  { handler: "notify-admin", matchId: "discourse.bootbox" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.childCategories" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.firstCategory" },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategories",
-  },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategoriesSorted",
-  },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.parentCategory" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.secondCategory" },
   {
     handler: "notify-admin",
     matchId: "discourse.category-hashtags.categoryHashtagTriggerRule",
@@ -402,8 +387,6 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.qunit.global-exists" },
   { handler: "notify-admin", matchId: "discourse.resolver-resolutions" },
   { handler: "notify-admin", matchId: "discourse.safari-hacks-disabled" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-discourse-plugin" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
   { handler: "notify-admin", matchId: "discourse.user.resolved-timezone" },
   { handler: "notify-admin", matchId: "discourse.user.userOptions" },
   { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },

@@ -14,16 +14,15 @@ de:
     chat_integration:
       menu_title: "Chat-Integrationen"
       settings: "Einstellungen"
-      no_providers: "Du musst Provider in den Plug-in-Einstellungen aktivieren"
+      more_providers: "Mehr"
+      channels_title: "Kanäle"
       channels_with_errors: "Das letzte Versenden von Nachrichten ist bei einigen Kanälen dieses Providers fehlgeschlagen. Klicke auf das/die Fehlersymbol(e), um mehr zu erfahren."
       channel_exception: "Ein unbekannter Fehler ist aufgetreten, als zuletzt eine Nachricht an diesen Kanal gesendet wurde."
       group_mention_template: "Erwähnungen von: @%{name}"
       group_message_template: "Nachrichten an: @%{name}"
-      choose_group: "(wähle eine Gruppe)"
-      all_categories: "(alle Kategorien)"
-      all_tags: "(alle Schlagwörter)"
-      create_rule: "Regel erstellen"
-      create_channel: "Kanal erstellen"
+      choose_group: "(Wähle eine Gruppe)"
+      all_categories: "(Alle Kategorien)"
+      all_tags: "(Alle Schlagwörter)"
       delete_channel: "Löschen"
       test_channel: "Test"
       edit_channel: "Bearbeiten"
@@ -31,14 +30,11 @@ de:
       test_modal:
         title: "Test-Nachricht senden"
         topic: "Thema"
-        send: "Test-Nachricht senden"
         close: "Schließen"
         error: "Ein unbekannter Fehler ist beim Senden der Nachricht aufgetreten. Bitte überprüfe die Website-Protokolle für weitere Informationen."
         success: "Nachricht erfolgreich versendet"
       type:
         normal: Normal
-        group_message: Gruppennachricht
-        group_mention: Gruppenerwähnung
       filter:
         mute: 'Stummschalten'
         follow: 'Nur erster Beitrag'
@@ -59,8 +55,6 @@ de:
           ok: "Gültig"
           fail: "Ungültiges Format"
       edit_rule_modal:
-        title: Regel bearbeiten
-        save: Regel speichern
         cancel: Abbrechen
         provider: Anbieter
         type: Art
@@ -81,7 +75,6 @@ de:
           param:
             identifier:
               title: Kanal
-              help: "z. B. #kanal, @benutzername."
           errors:
             action_prohibited: "Der Bot hat keine Berechtigung, in diesem Kanal zu schreiben"
             channel_not_found: "Der angegebene Kanal existiert nicht auf Slack"
@@ -105,7 +98,6 @@ de:
               help: "Ein Name, um den Kanal zu beschreiben. Dieser wird nicht verwendet, um die Verbindung mit Discord herzustellen."
             webhook_url:
               title: Webhook-URL
-              help: Die Webhook-URL, die in den Einstellungen deines Discord-Servers erstellt wurde
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +112,6 @@ de:
           param:
             identifier:
               title: Kanal
-              help: "z. B. #kanal, @benutzername."
           errors:
             channel_not_found: "Der angegebene Kanal existiert nicht in Mattermost"
         matrix:
@@ -151,7 +142,6 @@ de:
           param:
             identifier:
               title: Kanal
-              help: "z. B. #kanal, @benutzername."
           errors:
             invalid_channel: "Dieser Kanal exisitert nicht in Rocket Chat"
         gitter:
@@ -159,7 +149,6 @@ de:
           param:
             name:
               title: "Name"
-              help: "Der Name eines Gitter-Raums, z. B. gitterHQ/services"
             webhook_url:
               title: "Webhook-URL"
               help: "Die URL, welche beim Erstellen einer neuen Integration in einem Gitter-Raum angegeben wird."

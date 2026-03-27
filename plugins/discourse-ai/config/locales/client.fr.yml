@@ -376,6 +376,9 @@ fr:
         save: "Enregistrer"
         enabled: "Activé ?"
         tools: "Outils activés"
+        mcp_tools_modal:
+          select_all: "Tout sélectionner"
+          clear_all: "Tout effacer"
         forced_tools: "Outils forcés"
         allowed_groups: "Groupes autorisés"
         delete: "Supprimer"
@@ -448,7 +451,6 @@ fr:
         tool_name: "Nom de l'outil"
         description: "Description"
         description_help: "Une description claire de l'objectif de l'outil pour le modèle linguistique"
-        subheader_description: "Les outils étendent les capacités des robots IA avec des fonctions JavaScript définies par l'utilisateur."
         summary: "Résumé"
         summary_help: "Résumé des outils destinés à être affichés aux utilisateurs finaux"
         script: "Script"
@@ -482,6 +484,22 @@ fr:
         delete: "Supprimer"
         embedding: "Intégration"
         tool: "Outil"
+      mcp_servers:
+        name: "Nom"
+        description: "Description"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Connecté"
+        oauth_connect: "Connecter"
+        enabled: "Activé"
+        save: "Enregistrer"
+        edit: "Modifier"
+        delete: "Supprimer"
+        tools_modal:
+          parameters: "Paramètres"
+          required: "Requis"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"

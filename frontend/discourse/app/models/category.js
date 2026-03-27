@@ -841,6 +841,7 @@ export default class Category extends RestModel {
         emoji: this.emoji,
         icon: this.icon,
         ...(this.siteSettings.content_localization_enabled && {
+          locale: this.locale,
           category_localizations: this.localizations,
         }),
         ...this._categoryTypeSaveProperties(id),

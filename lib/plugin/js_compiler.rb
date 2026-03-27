@@ -28,6 +28,8 @@ class Plugin::JsCompiler
         filenameSuffix: @filename_suffix,
       },
     )
+  rescue AssetProcessor::TimeoutError => e
+    raise AssetProcessor::TimeoutError, "[PLUGIN #{@plugin_name}] #{e.message}"
   rescue AssetProcessor::TranspileError => e
     message = "[PLUGIN #{@plugin_name}] Compile error: #{e.message}"
     {

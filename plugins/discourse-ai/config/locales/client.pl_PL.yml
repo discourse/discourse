@@ -509,6 +509,11 @@ pl_PL:
         credit_allocations: "Alokacje kredytów"
       ai_agent:
         ai_tools: "Narzędzia"
+        mcp_server_tool_count:
+          one: "%{count} narzędzie"
+          few: "%{count} narzędzia"
+          many: "%{count} narzędzi"
+          other: "%{count} narzędzi"
         tool_strategies:
           all: "Zastosuj do wszystkich odpowiedzi"
           replies:
@@ -580,6 +585,11 @@ pl_PL:
           many: "%{count} narzędzi"
           other: "%{count} narzędzi"
         tool_tokens_total: "~%{tokens} Tokeny"
+        mcp_server_tokens_only: "~%{tokens} tokeny"
+        mcp_tools_modal:
+          title: "%{name} narzędzi"
+          select_all: "Zaznacz wszystkie"
+          clear_all: "Wyczyść wszystkie"
         tool_severity_medium: "Umiarkowana pojemność"
         tool_severity_high: "Duża pojemność"
         tool_severity_too_many: "Zbyt wiele narzędzi"
@@ -671,7 +681,6 @@ pl_PL:
         tool_name_help: "Nazwa narzędzia jest prezentowana w dużym modelu językowym. Nie jest ona odrębna, ale jest odrębna dla każdego agenta. (agent sprawdza poprawność przy zapisywaniu)"
         description: "Opis"
         description_help: "Jasny opis celu narzędzia dla modelu językowego"
-        subheader_description: "Narzędzia rozszerzają możliwości botów AI o zdefiniowane przez użytkownika funkcje JavaScript."
         summary: "Podsumowanie"
         summary_help: "Podsumowanie celu narzędzi wyświetlane użytkownikom końcowym"
         script: "Skrypt"
@@ -727,6 +736,28 @@ pl_PL:
         tool: "Narzędzie"
         modal:
           title: "Utwórz nowe poświadczenie"
+      mcp_servers:
+        name: "Nazwa"
+        description: "Opis"
+        url: "URL"
+        secret: "Poświadczenie"
+        oauth_statuses:
+          connected: "Połączony"
+        oauth_connect: "Połącz"
+        enabled: "Włączona"
+        save: "Zapisz"
+        edit: "Edytuj"
+        delete: "Usuń"
+        back: "Powrót do narzędzi"
+        tool_count:
+          one: "%{count} narzędzie"
+          few: "%{count} narzędzia"
+          many: "%{count} narzędzi"
+          other: "%{count} narzędzi"
+        tools_modal:
+          title: "%{name} narzędzi"
+          parameters: "Parametry"
+          required: "Wymagane"
       llms:
         short_title: "LLMs"
         no_llms: "Nie ma jeszcze LLM"

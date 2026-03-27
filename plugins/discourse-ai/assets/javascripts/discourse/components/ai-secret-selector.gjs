@@ -13,10 +13,15 @@ export default class AiSecretSelector extends Component {
   @tracked addedSecrets = [];
 
   get secretOptions() {
-    return [...(this.args.secrets || []), ...this.addedSecrets].map((s) => ({
-      id: s.id,
-      name: s.name,
-    }));
+    const seen = new Set();
+    const options = [];
+    for (const s of [...(this.args.secrets || []), ...this.addedSecrets]) {
+      if (!seen.has(s.id)) {
+        seen.add(s.id);
+        options.push({ id: s.id, name: s.name });
+      }
+    }
+    return options;
   }
 
   get hasSecrets() {
@@ -34,6 +39,7 @@ export default class AiSecretSelector extends Component {
       model: {
         onSave: (newSecret) => {
           this.addedSecrets = [...this.addedSecrets, newSecret];
+          this.args.secrets?.push(newSecret);
           this.args.onChange?.(newSecret.id);
         },
       },

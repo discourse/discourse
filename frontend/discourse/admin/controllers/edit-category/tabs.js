@@ -25,6 +25,7 @@ const LEGACY_FORMKIT_FIELDS = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "email_in",
   "email_in_enabled",
@@ -46,6 +47,7 @@ const SIMPLIFIED_FIELD_LIST = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "position",
   "num_featured_topics",
@@ -125,6 +127,10 @@ export default class EditCategoryTabsController extends Controller {
         ? SIMPLIFIED_FIELD_LIST
         : LEGACY_FORMKIT_FIELDS)
     );
+
+    if (this.siteSettings.content_localization_enabled && !data.locale) {
+      data.locale = this.siteSettings.default_locale;
+    }
 
     if (enableSimplifiedCategoryCreation) {
       if (!this.model.styleType) {

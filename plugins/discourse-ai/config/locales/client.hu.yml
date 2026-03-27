@@ -107,6 +107,9 @@ hu:
         user: Felhasználó
         save: "Mentés"
         enabled: "Engedélyezve?"
+        mcp_tools_modal:
+          select_all: "Összes kiválasztása"
+          clear_all: "Összes törlése"
         delete: "Törlés"
         response_format:
           open_modal: "Szerkesztés"
@@ -142,6 +145,21 @@ hu:
         edit: "Szerkesztés"
         delete: "Törlés"
         embedding: "Beágyazás"
+      mcp_servers:
+        name: "Név"
+        description: "Leírás"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Kapcsolódva"
+        oauth_connect: "Kapcsolódás"
+        enabled: "Bekapcsolva"
+        save: "Mentés"
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        tools_modal:
+          required: "Kötelező"
       llms:
         display_name: "Név"
         provider: "Szolgáltató"

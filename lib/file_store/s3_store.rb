@@ -245,12 +245,18 @@ module FileStore
     def signed_url_for_path(
       path,
       expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
-      force_download: false
+      force_download: false,
+      filename: nil,
+      include_content_disposition:
     )
       key = path.sub(absolute_base_url + "/", "")
 
-      filename = force_download ? File.basename(path) : false
-      presigned_get_url(key, expires_in:, force_download:, filename:)
+      presigned_get_url(
+        key,
+        expires_in:,
+        force_download:,
+        filename: include_content_disposition ? (filename || File.basename(path)) : nil,
+      )
     end
 
     def signed_request_for_temporary_upload(
@@ -439,10 +445,12 @@ module FileStore
     )
       opts = { expires_in: expires_in }
 
-      if force_download && filename
+      if filename
+        disposition =
+          (force_download || !FileHelper.is_inline_safe?(filename)) ? "attachment" : "inline"
         opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-          disposition: "attachment",
-          filename: filename,
+          disposition:,
+          filename:,
         )
       end
 

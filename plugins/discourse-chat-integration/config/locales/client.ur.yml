@@ -14,15 +14,14 @@ ur:
     chat_integration:
       menu_title: "چَیٹ اِنٹیگرَیشَن"
       settings: "سیٹِنگ"
-      no_providers: "آپ کو پلَگ اِن کی سیٹِنگ میں کچھ پرووَائیڈرز کو فعال کرنے کی ضرورت ہے"
+      more_providers: "مزید "
+      channels_title: "چینلوں"
       channels_with_errors: "اس فراہم کنندہ کے کچھ چینلز آخری بار پیغامات بھیجنے میں ناکام ہو گئے۔ مزید جاننے کے لیے ایرر آئیکن(ز) پر کلک کریں۔"
       group_mention_template: "ذکر: @%{name} کے"
       group_message_template: "پیغامات: @%{name} کیلئے"
       choose_group: "(ایک گروپ منتخب کریں)"
       all_categories: "(تمام زمرہ جات)"
-      all_tags: "(تمام ٹَیگز)"
-      create_rule: "اصول بنائیں"
-      create_channel: "چینل بنائیں"
+      all_tags: "(تمام دہجیاں)"
       delete_channel: "مٹائیں"
       test_channel: "ٹیسٹ"
       edit_channel: "ترمیم کریں"
@@ -30,13 +29,10 @@ ur:
       test_modal:
         title: "ایک ٹیسٹ پیغام بھیجیں"
         topic: "موضوع"
-        send: "ٹیسٹ پیغام بھیجیں"
         close: "بند کریں"
         success: "پیغام کامیابی سے بھیجا گیا"
       type:
         normal: عمومی
-        group_message: گروپ پیغام
-        group_mention: گروپ ذکر
       filter:
         mute: 'خاموش کریں'
         follow: 'صرف پہلی پوسٹ'
@@ -56,8 +52,6 @@ ur:
           ok: "درست"
           fail: "غلط فارمَیٹ"
       edit_rule_modal:
-        title: اصول ترمیم کریں
-        save: اصول محفوظ کریں
         cancel: منسوخ
         provider: پرووَائیڈر
         type: قِسم
@@ -78,7 +72,6 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
         telegram:
@@ -101,7 +94,6 @@ ur:
               help: "چَینل کی وضاحت کرنے کیلئے نام۔ یہ ڈِسکَورڈ کے ساتھ کنکشن کیلئے استعمال نہیں کیا جاتا ہے۔"
             webhook_url:
               title: وَیب ھُوک URL
-              help: آپ کے ڈِسکَورڈ سروَر کی سیٹِنگ میں بنایا گیا وَیب ھُوک URL
         guilded:
           param:
             name:
@@ -113,7 +105,6 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             channel_not_found: "یہ مخصوص چینل مَیٹرمَوسٹ پر موجود نہیں ہے"
         matrix:
@@ -143,7 +134,6 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             invalid_channel: "وہ چینل راکٹ چَیٹ پر موجود نہیں ہے"
         gitter:
@@ -151,7 +141,6 @@ ur:
           param:
             name:
               title: "نام"
-              help: "ایک گِیٹر روم کا نام مثال کے طور پر gitterHQ/services۔"
             webhook_url:
               title: "وَیب ھُوک URL"
               help: "فراہم کیے جانے والا URL، جب آپ گِیٹر روم میں ایک نئی اِنٹیگرَیشَن بناتے ہیں۔"

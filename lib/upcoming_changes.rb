@@ -300,7 +300,7 @@ module UpcomingChanges
   # to save time in other places in the codebase when we have to figure out
   # when an upcoming change moved to its current status.
   #
-  # This cache is automatically cleared when UpcomingChanges::Action::TrackStatusChanges
+  # This cache is automatically cleared when UpcomingChanges::Action::TrackNotifyStatusChanges
   # is called, since that adds new UpcomingChangeEvent records.
   def self.current_statuses
     Discourse

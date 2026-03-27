@@ -138,37 +138,7 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.set_category_notifications(group, user)
-    group_levels =
-      group
-        .group_category_notification_defaults
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.category_id
-        end
-
-    return if group_levels.empty?
-
-    user_levels =
-      CategoryUser
-        .where(user_id: user.id)
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.category_id
-        end
-
-    higher_level_category_ids = user_levels.values.flatten
-
-    %i[muted regular tracking watching_first_post watching].each do |level|
-      level_num = NotificationLevels.all[level]
-      higher_level_category_ids -= (user_levels[level_num] || [])
-      if group_category_ids = group_levels[level_num]
-        CategoryUser.batch_set(
-          user,
-          level,
-          group_category_ids + (user_levels[level_num] || []) - higher_level_category_ids,
-        )
-      end
-    end
+    bulk_set_category_notifications(group, [user.id])
   end
 
   def set_tag_notifications
@@ -176,37 +146,52 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.set_tag_notifications(group, user)
-    group_levels =
-      group
-        .group_tag_notification_defaults
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.tag_id
-        end
+    bulk_set_tag_notifications(group, [user.id])
+  end
 
-    return if group_levels.empty?
+  def self.bulk_set_category_notifications(group, user_ids)
+    defaults = group.group_category_notification_defaults.to_a
+    return if defaults.empty?
 
-    user_levels =
-      TagUser
-        .where(user_id: user.id)
-        .each_with_object({}) do |r, h|
-          h[r.notification_level] ||= []
-          h[r.notification_level] << r.tag_id
-        end
-
-    higher_level_tag_ids = user_levels.values.flatten
-
-    %i[muted regular tracking watching_first_post watching].each do |level|
-      level_num = NotificationLevels.all[level]
-      higher_level_tag_ids -= (user_levels[level_num] || [])
-      if group_tag_ids = group_levels[level_num]
-        TagUser.batch_set(
-          user,
-          level,
-          group_tag_ids + (user_levels[level_num] || []) - higher_level_tag_ids,
-        )
-      end
+    defaults.each do |default|
+      DB.exec(
+        <<~SQL,
+          INSERT INTO category_users (user_id, category_id, notification_level)
+          SELECT unnest(ARRAY[:user_ids]::int[]), :category_id, :notification_level
+          ON CONFLICT (user_id, category_id) DO UPDATE
+            SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "category_users.notification_level")}
+        SQL
+        user_ids: user_ids,
+        category_id: default.category_id,
+        notification_level: default.notification_level,
+      )
     end
+
+    CategoryUser.auto_watch(user_ids: user_ids)
+    CategoryUser.auto_track(user_ids: user_ids)
+  end
+
+  def self.bulk_set_tag_notifications(group, user_ids)
+    defaults = group.group_tag_notification_defaults.to_a
+    return if defaults.empty?
+
+    defaults.each do |default|
+      DB.exec(
+        <<~SQL,
+          INSERT INTO tag_users (user_id, tag_id, notification_level, created_at, updated_at)
+          SELECT unnest(ARRAY[:user_ids]::int[]), :tag_id, :notification_level, NOW(), NOW()
+          ON CONFLICT (user_id, tag_id) DO UPDATE
+            SET notification_level = #{semantically_higher_notification_level_sql("EXCLUDED.notification_level", "tag_users.notification_level")},
+                updated_at = NOW()
+        SQL
+        user_ids: user_ids,
+        tag_id: default.tag_id,
+        notification_level: default.notification_level,
+      )
+    end
+
+    TagUser.auto_watch(user_ids: user_ids)
+    TagUser.auto_track(user_ids: user_ids)
   end
 
   def increase_group_user_count
@@ -216,6 +201,18 @@ class GroupUser < ActiveRecord::Base
   def decrease_group_user_count
     Group.decrement_counter(:user_count, self.group_id)
   end
+
+  def self.semantically_higher_notification_level_sql(new_col, existing_col)
+    <<~SQL.squish
+      CASE
+        WHEN (CASE #{new_col} WHEN 3 THEN 5 ELSE #{new_col} END) >=
+             (CASE #{existing_col} WHEN 3 THEN 5 ELSE #{existing_col} END)
+        THEN #{new_col}
+        ELSE #{existing_col}
+      END
+    SQL
+  end
+  private_class_method :semantically_higher_notification_level_sql
 end
 
 # == Schema Information

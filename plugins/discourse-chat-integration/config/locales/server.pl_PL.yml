@@ -61,7 +61,7 @@ pl_PL:
     chat_integration_google_excerpt_length: "Długość fragmentu posta na czacie Google Chat"
   dashboard:
     problem:
-      channel_errors: "Niektóre kanały integracji czatu zawierają błędy. Odwiedź <a href='%{base_path}/admin/plugins/chat-integration'>sekcję integracji czatu</a> , aby dowiedzieć się więcej."
+      channel_errors: "Niektóre kanały integracji czatu zawierają błędy. Odwiedź <a href='%{base_path}/admin/plugins/discourse-chat-integration'>sekcję integracji czatu</a> , aby dowiedzieć się więcej."
   discourse_automation:
     scriptables:
       send_slack_message:

@@ -120,6 +120,9 @@ cs:
         user: Uživatel
         save: "Uložit"
         enabled: "Zapnuto?"
+        mcp_tools_modal:
+          select_all: "Vybrat vše"
+          clear_all: "Zrušit vše"
         delete: "Smazat"
         response_format:
           open_modal: "Upravit"
@@ -156,6 +159,21 @@ cs:
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
+      mcp_servers:
+        name: "Název"
+        description: "Popis"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Připojeno"
+        oauth_connect: "Připojit"
+        enabled: "Zapnuto"
+        save: "Uložit"
+        edit: "Upravit"
+        delete: "Smazat"
+        tools_modal:
+          required: "Povinné"
       llms:
         display_name: "Název"
         save: "Uložit"

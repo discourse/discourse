@@ -654,8 +654,8 @@ RSpec.describe Discourse do
         target_id: Theme.targets[:common],
         name: "head_tag",
         value: <<~HTML,
-          <script type="text/discourse-plugin" version="0.1">
-            console.log(settings.uploads.imajee);
+          <script>
+            console.log("hello world");
           </script>
         HTML
       )
@@ -690,14 +690,6 @@ RSpec.describe Discourse do
 
       old_upload_url = Discourse.store.cdn_url(upload.url)
 
-      head_tag_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("link[rel=modulepreload]")
-          .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
-      expect(head_tag_js).to include(old_upload_url)
-
       js_file_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
@@ -719,14 +711,6 @@ RSpec.describe Discourse do
       SiteSetting.s3_cdn_url = "https://new.s3.cdn.com/gg"
       new_upload_url = Discourse.store.cdn_url(upload.url)
 
-      head_tag_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("link[rel=modulepreload]")
-          .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
-      expect(head_tag_js).to include(old_upload_url)
-
       js_file_script =
         Nokogiri::HTML5
           .fragment(Theme.lookup_field(theme.id, :extra_js, nil))
@@ -746,14 +730,6 @@ RSpec.describe Discourse do
       expect(css).to include("url(#{old_upload_url})")
 
       Discourse.clear_all_theme_cache!
-
-      head_tag_script =
-        Nokogiri::HTML5
-          .fragment(Theme.lookup_field(theme.id, :desktop, "head_tag"))
-          .css("link[rel=modulepreload]")
-          .first
-      head_tag_js = JavascriptCache.find_by(digest: head_tag_script[:href][/\h{40}/]).content
-      expect(head_tag_js).to include(new_upload_url)
 
       js_file_script =
         Nokogiri::HTML5

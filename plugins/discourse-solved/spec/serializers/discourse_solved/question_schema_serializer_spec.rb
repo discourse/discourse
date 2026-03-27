@@ -26,8 +26,9 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       )
     end
 
-    it "does not include acceptedAnswer" do
+    it "does not include acceptedAnswer or suggestedAnswer" do
       expect(json).not_to have_key("acceptedAnswer")
+      expect(json).not_to have_key("suggestedAnswer")
     end
   end
 
@@ -53,6 +54,26 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(accepted["author"]).to eq(
         { "@type" => "Person", "name" => answer_user.username, "url" => answer_user.full_url },
       )
+    end
+  end
+
+  context "with suggested answers" do
+    fab!(:answer_post) { Fabricate(:post, topic: topic) }
+    fab!(:suggested_post) { Fabricate(:post, topic: topic) }
+
+    subject(:json) do
+      described_class
+        .new(topic, root: false, accepted_answer: answer_post, suggested_answers: [suggested_post])
+        .serializable_hash
+        .deep_stringify_keys
+    end
+
+    it "sets answerCount to total of accepted and suggested" do
+      expect(json["answerCount"]).to eq(2)
+    end
+
+    it "includes suggestedAnswer as an array of Answer objects" do
+      expect(json["suggestedAnswer"].sole["@type"]).to eq("Answer")
     end
   end
 end

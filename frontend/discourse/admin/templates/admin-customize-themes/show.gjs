@@ -245,6 +245,12 @@ export default <template>
         </div>
       {{/if}}
 
+      {{#if @controller.model.only_theme_color_schemes}}
+        <div class="alert alert-info">
+          {{i18n "admin.customize.theme.only_theme_color_schemes"}}
+        </div>
+      {{/if}}
+
       {{outlet}}
     {{/if}}
   </div>

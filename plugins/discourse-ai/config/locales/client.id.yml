@@ -162,6 +162,16 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      mcp_servers:
+        name: "Nama"
+        description: "Deskripsi"
+        oauth_statuses:
+          connected: "Terhubung"
+        oauth_connect: "Hubungkan"
+        enabled: "Diaktifkan"
+        save: "Simpan"
+        edit: "Ubah"
+        delete: "Hapus"
       llms:
         display_name: "Nama"
         save: "Simpan"

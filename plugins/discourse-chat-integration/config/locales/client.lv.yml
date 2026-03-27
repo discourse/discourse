@@ -8,6 +8,7 @@ lv:
   js:
     chat_integration:
       settings: "Iestatījumi"
+      more_providers: "Vairāk"
       all_categories: "(Visas kategorijas)"
       delete_channel: "Dzēst"
       edit_channel: "Labot"

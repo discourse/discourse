@@ -77,12 +77,25 @@ after_initialize do
     { answer: { actions: %w[discourse_solved/answer#accept discourse_solved/answer#unaccept] } },
   )
 
+  register_modifier(:topic_crawler_container_schema) do |schema, topic|
+    DiscourseSolved::SchemaUtils.container_schema(topic) || schema
+  end
+
+  register_modifier(:topic_crawler_main_entity_schema) do |schema, topic|
+    DiscourseSolved::SchemaUtils.main_entity_schema(topic) || schema
+  end
+
+  register_modifier(:topic_crawler_post_schema) do |schema, post, topic|
+    DiscourseSolved::SchemaUtils.post_schema(post, topic) || schema
+  end
+
   register_html_builder("server:before-head-close-crawler") do |controller|
-    topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
+    topic_view = controller.instance_variable_get(:@topic_view)
     result =
       DiscourseSolved::BuildSchemaMarkup.call(
         params: {
-          topic_id: topic_id,
+          topic_id: topic_view&.topic&.id,
+          post_ids: topic_view&.posts&.ids,
         },
         guardian: controller.guardian,
       )
@@ -90,11 +103,12 @@ after_initialize do
   end
 
   register_html_builder("server:before-head-close") do |controller|
-    topic_id = controller.instance_variable_get(:@topic_view)&.topic&.id
+    topic_view = controller.instance_variable_get(:@topic_view)
     result =
       DiscourseSolved::BuildSchemaMarkup.call(
         params: {
-          topic_id: topic_id,
+          topic_id: topic_view&.topic&.id,
+          post_ids: topic_view&.posts&.ids,
         },
         guardian: controller.guardian,
       )

@@ -376,6 +376,8 @@ nl:
         save: "Opslaan"
         enabled: "Ingeschakeld?"
         tools: "Ingeschakelde tools"
+        mcp_tools_modal:
+          clear_all: "Alles wissen"
         forced_tools: "Geforceerde tools"
         allowed_groups: "Toegestane groepen"
         delete: "Verwijderen"
@@ -448,7 +450,6 @@ nl:
         tool_name: "Toolnaam"
         description: "Beschrijving"
         description_help: "Een duidelijke beschrijving van het doel van de tool voor het taalmodel"
-        subheader_description: "Tools breiden de mogelijkheden van AI-bots uit met door de gebruiker gedefinieerde JavaScript-functies."
         summary: "Samenvatting"
         summary_help: "Samenvatting van de tools die voor eindgebruikers moeten worden weergegeven"
         script: "Script"
@@ -482,6 +483,22 @@ nl:
         delete: "Verwijderen"
         embedding: "Insluiting"
         tool: "Tool"
+      mcp_servers:
+        name: "Naam"
+        description: "Beschrijving"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Verbonden"
+        oauth_connect: "Verbinden"
+        enabled: "Ingeschakeld"
+        save: "Opslaan"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        tools_modal:
+          parameters: "Parameters"
+          required: "Vereist"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"

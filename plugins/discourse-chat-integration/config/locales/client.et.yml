@@ -14,23 +14,21 @@ et:
     chat_integration:
       menu_title: "Jututoa integratsioonid"
       settings: "Seaded"
-      choose_group: "(vali grupp)"
-      all_categories: "(kõik kategooriad)"
-      all_tags: "(kõik sildid)"
-      create_rule: "Loo reegel"
-      create_channel: "Loo kanal"
+      more_providers: "Veel"
+      channels_title: "Kanalid"
+      choose_group: "(Vali grupp)"
+      all_categories: "(Kõik kategooriad)"
+      all_tags: "(Kõik sildid)"
       delete_channel: "Kustuta"
       test_channel: "Proovi"
       edit_channel: "Muuda"
       test_modal:
         title: "Saada proovisõnum"
         topic: "Teema"
-        send: "Saada proovisõnum"
         close: "Sulge"
         success: "Sõnum on saadetud"
       type:
         normal: Tavaline
-        group_message: Grupisõnumid
       filter:
         mute: 'Vaigista'
         follow: 'Ainult esimene postitus'
@@ -50,8 +48,6 @@ et:
           ok: "Kehtiv"
           fail: "Vigane vorming"
       edit_rule_modal:
-        title: Muuda reeglit
-        save: Salvesta reegel
         cancel: Loobu
         provider: Teenusepakkuja
         type: Tüüp
@@ -65,7 +61,6 @@ et:
           param:
             identifier:
               title: Kanal
-              help: "nt. #channel, @username."
         telegram:
           title: "Telegramm"
           param:
@@ -85,7 +80,6 @@ et:
           param:
             identifier:
               title: Kanal
-              help: "nt. #channel, @username."
         matrix:
           param:
             name:
@@ -103,7 +97,6 @@ et:
           param:
             identifier:
               title: Kanal
-              help: "nt. #channel, @username."
         gitter:
           param:
             name:

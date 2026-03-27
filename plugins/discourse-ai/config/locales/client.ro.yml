@@ -137,6 +137,9 @@ ro:
         user: Utilizator
         save: "Salvează"
         enabled: "Activată?"
+        mcp_tools_modal:
+          select_all: "Selectează tot"
+          clear_all: "Șterge tot"
         delete: "Șterge"
         response_format:
           open_modal: "Editează"
@@ -168,6 +171,17 @@ ro:
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      mcp_servers:
+        name: "Nume"
+        description: "Descriere"
+        url: "URL"
+        oauth_connect: "Conectează-te"
+        enabled: "Activate"
+        save: "Salvează"
+        edit: "Editează"
+        delete: "Șterge"
+        tools_modal:
+          required: "Obligatoriu"
       llms:
         display_name: "Nume"
         provider: "Furnizor"

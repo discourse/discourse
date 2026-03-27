@@ -169,6 +169,9 @@ el:
         allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
+        mcp_tools_modal:
+          select_all: "Επιλογή όλων"
+          clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
         delete: "Σβήσιμο"
         response_format:
@@ -203,6 +206,21 @@ el:
         edit: "Επεξεργασία"
         delete: "Σβήσιμο"
         embedding: "Ενσωμάτωση"
+      mcp_servers:
+        name: "Όνομα"
+        description: "Περιγραφή"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Συνδεδεμένος"
+        oauth_connect: "Συνδεθείτε"
+        enabled: "Ενεργοποιημένα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Διαγραφή"
+        tools_modal:
+          required: "Απαιτείται"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"

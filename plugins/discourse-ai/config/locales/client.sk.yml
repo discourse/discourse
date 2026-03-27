@@ -379,6 +379,8 @@ sk:
         save: "Uložiť"
         enabled: "Povolené?"
         tools: "Povolené nástroje"
+        mcp_tools_modal:
+          clear_all: "Vymazať všetko"
         forced_tools: "Vynútené nástroje"
         allowed_groups: "Povolené skupiny"
         delete: "Odstrániť"
@@ -453,7 +455,6 @@ sk:
         tool_name: "Názov nástroja"
         description: "Popis"
         description_help: "Jasný opis účelu nástroja pre jazykový model"
-        subheader_description: "Nástroje rozširujú možnosti AI botov pomocou používateľom definovaných funkcií JavaScriptu."
         summary: "Zhrnutie"
         summary_help: "Zhrnutie účelu nástrojov, ktoré sa zobrazí koncovým používateľom"
         script: "Skript"
@@ -487,6 +488,22 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      mcp_servers:
+        name: "Meno"
+        description: "Popis"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Pripojené"
+        oauth_connect: "Pripojiť"
+        enabled: "Povolené"
+        save: "Uložiť"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        tools_modal:
+          parameters: "Parametre"
+          required: "Povinné"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"

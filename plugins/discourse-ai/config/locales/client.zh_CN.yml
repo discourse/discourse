@@ -485,6 +485,8 @@ zh_CN:
         credit_allocations: "点数分配"
       ai_agent:
         ai_tools: "工具"
+        mcp_server_tool_count:
+          other: "%{count} 个工具"
         tool_strategies:
           all: "应用于所有回复"
           replies:
@@ -550,6 +552,11 @@ zh_CN:
         tool_count_value:
           other: "%{count} 个工具"
         tool_tokens_total: "~%{tokens} 代币"
+        mcp_server_tokens_only: "~%{tokens} 代币"
+        mcp_tools_modal:
+          title: "%{name} 个工具"
+          select_all: "全选"
+          clear_all: "全部清除"
         tool_severity_medium: "中等容量"
         tool_severity_high: "高容量"
         tool_severity_too_many: "工具太多了"
@@ -638,7 +645,6 @@ zh_CN:
         tool_name_help: "工具名称会呈现给大型语言模型。它本身并不唯一，但每个代理的工具名称都是唯一的。（代理会在保存时进行验证）"
         description: "描述"
         description_help: "向语言模型介绍工具用途的清晰描述"
-        subheader_description: "工具可以通过用户定义的 JavaScript 函数扩展 AI 机器人的功能。"
         summary: "摘要"
         summary_help: "显示给最终用户的工具用途摘要"
         script: "脚本"
@@ -694,6 +700,25 @@ zh_CN:
         tool: "工具"
         modal:
           title: "创建新凭据"
+      mcp_servers:
+        name: "名称"
+        description: "描述"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        secret: "凭据"
+        oauth_connect: "连接"
+        enabled: "已启用"
+        save: "保存"
+        edit: "编辑"
+        delete: "删除"
+        back: "返回工具"
+        tool_count:
+          other: "%{count} 个工具"
+        tools_modal:
+          title: "%{name} 个工具"
+          parameters: "参数"
+          required: "必选"
       llms:
         short_title: "LLM"
         no_llms: "暂无 LLM"

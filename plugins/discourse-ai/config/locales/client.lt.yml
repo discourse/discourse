@@ -317,6 +317,19 @@ lt:
         delete: "Pašalinti"
         embedding: "Įterpimai"
         tool: "Įrankis"
+      mcp_servers:
+        name: "Vardas"
+        description: "Aprašymas"
+        url: "Nuoroda"
+        oauth_statuses:
+          connected: "Prijungtas"
+        oauth_connect: "Prisijungti"
+        enabled: "Galimas"
+        save: "Saugoti"
+        edit: "Redaguoti"
+        delete: "Pašalinti"
+        tools_modal:
+          required: "Privalomi"
       llms:
         display_name: "Vardas"
         save: "Saugoti"

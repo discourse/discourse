@@ -122,6 +122,19 @@ ca:
         edit: "Edita"
         delete: "Suprimeix"
         embedding: "Incrustant"
+      mcp_servers:
+        name: "Nom"
+        description: "Descripció"
+        url: "URL"
+        oauth_statuses:
+          connected: "Connectat"
+        oauth_connect: "Connecta"
+        enabled: "Activat"
+        save: "Desa"
+        edit: "Edita"
+        delete: "Suprimeix"
+        tools_modal:
+          required: "Necessari"
       llms:
         display_name: "Nom"
         provider: "Proveïdor"

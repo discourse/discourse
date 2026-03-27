@@ -32,6 +32,30 @@ RSpec.describe DiscourseAi::AgentExporter do
       end
     end
 
+    context "when the agent has assigned mcp servers" do
+      fab!(:ai_mcp_server) { Fabricate(:ai_mcp_server, name: "Jira") }
+      fab!(:ai_agent) { Fabricate(:ai_agent, tools: []) }
+
+      let(:exporter) { described_class.new(agent: ai_agent) }
+
+      before { ai_agent.ai_mcp_servers << ai_mcp_server }
+
+      it "exports mcp server names" do
+        expect(export_json["agent"]["mcp_servers"]).to eq([{ "name" => "Jira" }])
+      end
+
+      it "exports selected MCP tool names when present" do
+        ai_agent
+          .ai_agent_mcp_servers
+          .find_by!(ai_mcp_server_id: ai_mcp_server.id)
+          .update!(selected_tool_names: ["search_issues"])
+
+        expect(export_json["agent"]["mcp_servers"]).to eq(
+          [{ "name" => "Jira", "selected_tool_names" => ["search_issues"] }],
+        )
+      end
+    end
+
     context "when the agent does not exist" do
       it "raises an error if initialized with a non agent" do
         expect { described_class.new(agent: nil) }.to raise_error(

@@ -97,6 +97,9 @@ vi:
         user: Thành viên
         save: "Lưu lại"
         enabled: "Kích hoạt"
+        mcp_tools_modal:
+          select_all: "Chọn hết"
+          clear_all: "Xóa hết"
         delete: "Xóa"
         response_format:
           open_modal: "Sửa"
@@ -131,6 +134,19 @@ vi:
         edit: "Sửa"
         delete: "Xóa"
         embedding: "Nhúng"
+      mcp_servers:
+        name: "Tên"
+        description: "Mô tả"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_connect: "Kết nối"
+        enabled: "Đã bật"
+        save: "Lưu lại"
+        edit: "Sửa"
+        delete: "Xóa"
+        tools_modal:
+          required: "Bắt buộc"
       llms:
         display_name: "Tên"
         save: "Lưu lại"

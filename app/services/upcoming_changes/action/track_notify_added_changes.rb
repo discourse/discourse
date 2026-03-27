@@ -7,7 +7,7 @@
 #   * Compare with SiteSetting.upcoming_change_site_settings to see if there are any missing
 #     * If so, create an `added` event for the added changes
 #     * Send notifications to all admins if the change is the correct status (promotion_status - 1)
-class UpcomingChanges::Action::TrackAddedChanges < Service::ActionBase
+class UpcomingChanges::Action::TrackNotifyAddedChanges < Service::ActionBase
   # Every admin user that are not bots
   option :all_admins
 
@@ -19,6 +19,10 @@ class UpcomingChanges::Action::TrackAddedChanges < Service::ActionBase
       added_changes << change_name
       UpcomingChangeEvent.create!(event_type: :added, upcoming_change_name: change_name)
 
+      # No point in notifying admins on brand new sites, the upcoming change system
+      # is more about notifying admins of changes to established sites.
+      next if Migration::Helpers.new_site? && !Rails.env.development?
+
       # We only want to notify admins once the change has reached a certain status,
       # which is the promotion status minus one (previous status).
       #
@@ -26,25 +30,24 @@ class UpcomingChanges::Action::TrackAddedChanges < Service::ActionBase
       # send a notification to admins that the UC is available in a later deploy.
       notify_at_status =
         UpcomingChanges.previous_status(SiteSetting.promote_upcoming_changes_on_status)
+      next if !UpcomingChanges.meets_or_exceeds_status?(change_name, notify_at_status)
 
-      if UpcomingChanges.meets_or_exceeds_status?(change_name, notify_at_status)
-        # However, we want to skip notifying if the change already meets the
-        # promotion status criteria. The UpcomingChanges::Promote service will
-        # handle it instead.
-        #
-        # We don't want to notify admins that a change is available then
-        # immediately notify them it's enabled.
-        if !UpcomingChanges.meets_or_exceeds_status?(
-             change_name,
-             SiteSetting.promote_upcoming_changes_on_status.to_sym,
-           )
-          Rails.logger.info(
-            "Notifying admins about available change #{change_name} from TrackAddedChanges",
-          )
-          notified =
-            UpcomingChanges::Action::NotifyAdminsOfAvailableChange.call(change_name:, all_admins:)
-          notified_changes << change_name if notified
-        end
+      # However, we want to skip notifying if the change already meets the
+      # promotion status criteria. The UpcomingChanges::Promote service will
+      # handle it instead.
+      #
+      # We don't want to notify admins that a change is available then
+      # immediately notify them it's enabled.
+      if !UpcomingChanges.meets_or_exceeds_status?(
+           change_name,
+           SiteSetting.promote_upcoming_changes_on_status.to_sym,
+         )
+        Rails.logger.info(
+          "Notifying admins about available change #{change_name} from TrackNotifyAddedChanges",
+        )
+        notified =
+          UpcomingChanges::Action::NotifyAdminsOfAvailableChange.call(change_name:, all_admins:)
+        notified_changes << change_name if notified
       end
     end
 

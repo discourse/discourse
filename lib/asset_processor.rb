@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 105
+  BASE_COMPILER_VERSION = 107
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
@@ -18,6 +18,9 @@ class AssetProcessor
   @ctx_init = Mutex.new
 
   class TranspileError < StandardError
+  end
+
+  class TimeoutError < StandardError
   end
 
   def self.booted?
@@ -186,6 +189,10 @@ class AssetProcessor
       v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
       result
     end
+  rescue MiniRacer::ScriptTerminatedError => e
+    timeout_error = TimeoutError.new("Script terminated: timeout after #{timeout / 1000}s")
+    timeout_error.set_backtrace(e.backtrace)
+    raise timeout_error
   rescue MiniRacer::RuntimeError => e
     message = e.message
     begin
