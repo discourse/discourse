@@ -42,7 +42,7 @@ module DiscourseWorkflows
       def total_size_bytes
         pattern = table_name("%")
         DB.query_single(<<~SQL, pattern: pattern).first.to_i
-            SELECT COALESCE(SUM(pg_relation_size(c.oid)), 0)
+            SELECT COALESCE(SUM(pg_total_relation_size(c.oid)), 0)
             FROM pg_class c
             JOIN pg_namespace n ON n.oid = c.relnamespace
             WHERE n.nspname = current_schema()
@@ -61,7 +61,7 @@ module DiscourseWorkflows
         names = data_table_ids.map { |id| table_name(id) }
         DB
           .query(<<~SQL, names: names)
-            SELECT c.relname, pg_relation_size(c.oid) AS size_bytes
+            SELECT c.relname, pg_total_relation_size(c.oid) AS size_bytes
             FROM pg_class c
             JOIN pg_namespace n ON n.oid = c.relnamespace
             WHERE n.nspname = current_schema()
