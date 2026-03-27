@@ -210,7 +210,7 @@ namespace :release do
 
     selected =
       if (pr_numbers = ENV["SECURITY_FIX_PR_NUMBERS"])
-        requested = pr_numbers.split(",").map { |n| n.strip.to_i }
+        requested = pr_numbers.split(",").map(&:to_i)
         choices.select { |pr| requested.include?(pr["number"]) }
       else
         prompt = TTY::Prompt.new
