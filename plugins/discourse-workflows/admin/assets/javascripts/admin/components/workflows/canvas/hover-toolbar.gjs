@@ -42,6 +42,7 @@ export default class CanvasHoverToolbar extends Component {
 
   @action
   scheduleHide() {
+    cancel(this.#hideTimer);
     this.#hideTimer = later(() => {
       this.isVisible = false;
     }, this.hideDelay);
