@@ -414,7 +414,7 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  paste(e) {
+  async paste(e) {
     const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
@@ -489,7 +489,9 @@ export default class TextareaTextManipulation {
     }
 
     if (canPasteHtml && !handled) {
-      let markdown = toMarkdown(html);
+      e.preventDefault();
+
+      let markdown = await toMarkdown(html);
 
       if (!plainText || plainText.length < markdown.length) {
         if (isInlinePasting) {

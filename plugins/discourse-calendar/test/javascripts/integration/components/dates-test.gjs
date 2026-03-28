@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, settled, waitFor } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
@@ -61,6 +61,11 @@ module("Integration | Component | Dates", function (hooks) {
     },
   };
 
+  async function waitForDates() {
+    await waitFor(".discourse-local-date");
+    await settled();
+  }
+
   module("dates without time", function () {
     test("formats weekdays within range 1 day before and 2 days after the specified day", async function (assert) {
       await render(
@@ -70,6 +75,7 @@ module("Integration | Component | Dates", function (hooks) {
           </div>
         </template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -83,6 +89,7 @@ module("Integration | Component | Dates", function (hooks) {
       await render(
         <template><Dates @event={{events.currentYear.starts}} /></template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -98,6 +105,7 @@ module("Integration | Component | Dates", function (hooks) {
           <Dates @event={{events.currentYear.endsSameWeek}} />
         </template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -113,6 +121,7 @@ module("Integration | Component | Dates", function (hooks) {
           <Dates @event={{events.currentYear.endsSameMonth}} />
         </template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -128,6 +137,7 @@ module("Integration | Component | Dates", function (hooks) {
           <Dates @event={{events.currentYear.endsDiffMonth}} />
         </template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -141,6 +151,7 @@ module("Integration | Component | Dates", function (hooks) {
       await render(
         <template><Dates @event={{events.endsDiffYear}} /></template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -160,6 +171,7 @@ module("Integration | Component | Dates", function (hooks) {
           </div>
         </template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -177,6 +189,7 @@ module("Integration | Component | Dates", function (hooks) {
           </div>
         </template>
       );
+      await waitForDates();
 
       assert
         .dom(".event-dates")
@@ -186,7 +199,7 @@ module("Integration | Component | Dates", function (hooks) {
         );
     });
 
-    // this test goest against the current implementation in local-dates
+    // this test goes against the current implementation in local-dates
     skip("formats same day range", async function (assert) {
       await render(
         <template><Dates @event={{events.currentYear.endsSameDay}} /></template>

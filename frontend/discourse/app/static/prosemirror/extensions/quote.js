@@ -104,14 +104,15 @@ const extension = {
 
   serializeNode: {
     quote(state, node) {
-      const { username, displayName, postNumber, topicId } = node.attrs;
+      const { username, displayName, postNumber, topicId, full } = node.attrs;
       const postNumberParam = postNumber ? `, post:${postNumber}` : "";
       const topicIdParam = topicId ? `, topic:${topicId}` : "";
+      const fullParam = full === "true" ? `, full:true` : "";
       const usernameParam =
         displayName && username ? `, username:${username}` : "";
       const name = displayName || username;
       const quoteValue = name
-        ? `="${name}${postNumberParam}${topicIdParam}${usernameParam}"`
+        ? `="${name}${postNumberParam}${topicIdParam}${fullParam}${usernameParam}"`
         : "";
 
       state.write(`[quote${quoteValue}]\n`);
