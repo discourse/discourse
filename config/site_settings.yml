@@ -960,6 +960,7 @@ users:
     min: 8
     max: 500
     requires_confirmation: "simple"
+    nested_replies: "Nested replies"
   min_admin_password_length:
     client: true
     default: 15
@@ -1796,6 +1797,43 @@ content_localization:
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
+
+nested_replies:
+  nested_replies_enabled:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  nested_replies_default:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  nested_replies_default_sort:
+    default: "top"
+    client: true
+    type: enum
+    choices:
+      - top
+      - new
+      - old
+    area: "posts_and_topics"
+  nested_replies_max_depth:
+    default: 10
+    client: true
+    type: integer
+    min: 1
+    max: 10
+    area: "posts_and_topics"
+  nested_replies_cap_nesting_depth:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  nested_replies_toggle_mode_groups:
+    type: group_list
+    list_type: compact
+    default: "3"
+    allow_any: false
+    refresh: true
+    area: "posts_and_topics"
 
 email:
   email_time_window_mins:

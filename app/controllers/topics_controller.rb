@@ -181,6 +181,16 @@ class TopicsController < ApplicationController
       return
     end
 
+    if !request.format.json? && !use_crawler_layout? && SiteSetting.nested_replies_enabled &&
+         (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
+         params[:flat] != "1"
+      url = "/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
+      post_number = opts[:post_number].to_i
+      url << "/#{post_number}" if post_number > 0
+      redirect_to url, status: :found
+      return
+    end
+
     track_visit_to_topic
 
     if should_track_visit_to_topic?

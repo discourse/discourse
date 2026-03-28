@@ -11,6 +11,9 @@ export default class PostAdapter extends RestAdapter {
 
   createRecord(store, type, args) {
     const typeField = underscore(type);
+    // "nested_post" is unrelated to the nested replies feature — it tells
+    // the server to return the full JSON envelope ({post, action, success})
+    // instead of the bare post object (legacy API compat).
     args.nested_post = true;
     return ajax(this.pathFor(store, type), { type: "POST", data: args }).then(
       function (json) {

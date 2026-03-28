@@ -54,6 +54,8 @@ class Category < ActiveRecord::Base
            :require_topic_approval,
            :require_topic_approval=,
            :require_topic_approval?,
+           :nested_replies_default,
+           :nested_replies_default=,
            to: :category_setting,
            allow_nil: true
 

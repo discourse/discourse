@@ -62,6 +62,103 @@ after_initialize do
 
   Discourse::Application.routes.append { mount DiscourseReactions::Engine, at: "/" }
 
+  TopicView.on_preload do |topic_view|
+    next unless SiteSetting.discourse_reactions_enabled
+
+    posts = topic_view.posts
+    next if posts.blank?
+
+    ActiveRecord::Associations::Preloader.new(
+      records: posts,
+      associations: [:post_actions, { reactions: { reaction_users: :user } }],
+    ).call
+
+    post_ids = posts.map(&:id).uniq
+
+    reaction_users_count_map = TopicViewSerializer.posts_reaction_users_count(post_ids)
+    post_actions_with_reaction_users =
+      DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
+        post_ids,
+      )
+
+    main_reaction = DiscourseReactions::Reaction.main_reaction_id
+    excluded = DiscourseReactions::Reaction.reactions_excluded_from_like
+
+    excluded_filter =
+      if excluded.present?
+        "AND dr.reaction_value NOT IN (:excluded)"
+      else
+        ""
+      end
+
+    sql_params = {
+      post_ids: post_ids,
+      like_type: PostActionType::LIKE_POST_ACTION_ID,
+      main_reaction: main_reaction,
+    }
+    sql_params[:excluded] = excluded if excluded.present?
+
+    likes_rows = DB.query(<<~SQL, **sql_params)
+        SELECT pa.post_id, COUNT(*) as likes_count
+        FROM post_actions pa
+        WHERE pa.deleted_at IS NULL
+          AND pa.post_id IN (:post_ids)
+          AND pa.post_action_type_id = :like_type
+          AND NOT EXISTS (
+            SELECT 1 FROM discourse_reactions_reaction_users dru
+            JOIN discourse_reactions_reactions dr ON dr.id = dru.reaction_id
+            WHERE dr.post_id = pa.post_id
+              AND dru.user_id = pa.user_id
+              AND dr.reaction_value != :main_reaction
+              #{excluded_filter}
+          )
+          AND NOT EXISTS (
+            SELECT 1 FROM discourse_reactions_reaction_users dru
+            JOIN discourse_reactions_reactions dr ON dr.id = dru.reaction_id
+            WHERE dr.post_id = pa.post_id
+              AND dru.user_id = pa.user_id
+              AND dr.reaction_value = :main_reaction
+          )
+        GROUP BY pa.post_id
+      SQL
+
+    likes_map = likes_rows.each_with_object({}) { |row, h| h[row.post_id] = row.likes_count }
+
+    precomputed_reactions_map = {}
+
+    posts.each do |post|
+      post.reaction_users_count = reaction_users_count_map[post.id].to_i
+      post.post_actions_with_reaction_users = post_actions_with_reaction_users[post.id] || {}
+
+      emoji_reactions = post.emoji_reactions.select { |r| r.reaction_users_count.to_i > 0 }
+
+      reactions =
+        emoji_reactions.map do |reaction|
+          {
+            id: reaction.reaction_value,
+            type: reaction.reaction_type.to_sym,
+            count: reaction.reaction_users_count,
+          }
+        end
+
+      likes = likes_map[post.id] || 0
+
+      if likes > 0
+        reaction_likes, reactions = reactions.partition { |r| r[:id] == main_reaction }
+        reactions << {
+          id: main_reaction,
+          type: :emoji,
+          count: likes + reaction_likes.sum { |r| r[:count] },
+        }
+      end
+
+      precomputed_reactions_map[post.id] = reactions.sort_by { |r| [-r[:count].to_i, r[:id]] }
+    end
+
+    topic_view.set_preloaded_post_data(:reactions, precomputed_reactions_map)
+    topic_view.set_preloaded_post_data(:reaction_users_count, reaction_users_count_map)
+  end
+
   # Helper module for shared reactions serialization logic
   module ReactionsSerializerHelpers
     def self.reactions_for_post(post)
@@ -240,14 +337,26 @@ after_initialize do
     end
   end
 
-  add_to_serializer(:post, :reactions) { ReactionsSerializerHelpers.reactions_for_post(object) }
+  add_to_serializer(:post, :reactions) do
+    map = topic_view&.preloaded_post_data(:reactions)
+    if map && map.key?(object.id)
+      map[object.id]
+    else
+      ReactionsSerializerHelpers.reactions_for_post(object)
+    end
+  end
 
   add_to_serializer(:post, :current_user_reaction) do
     ReactionsSerializerHelpers.current_user_reaction_for_post(object, scope)
   end
 
   add_to_serializer(:post, :reaction_users_count) do
-    ReactionsSerializerHelpers.reaction_users_count_for_post(object)
+    map = topic_view&.preloaded_post_data(:reaction_users_count)
+    if map && map.key?(object.id)
+      map[object.id].to_i
+    else
+      ReactionsSerializerHelpers.reaction_users_count_for_post(object)
+    end
   end
 
   add_to_serializer(:post, :current_user_used_main_reaction) do

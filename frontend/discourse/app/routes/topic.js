@@ -40,6 +40,7 @@ export default class TopicRoute extends DiscourseRoute {
   queryParams = {
     filter: { replace: true },
     username_filters: { replace: true },
+    flat: { replace: true },
   };
 
   buildRouteInfoMetadata() {

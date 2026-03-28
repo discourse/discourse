@@ -42,8 +42,30 @@ export default class TopicFromParams extends DiscourseRoute {
       });
   }
 
-  afterModel(model) {
+  afterModel(model, transition) {
     const topic = this.modelFor("topic");
+
+    if (topic.is_nested_view) {
+      const flatParam =
+        transition?.to?.queryParams?.flat ||
+        transition?.to?.parent?.queryParams?.flat;
+      if (flatParam || topic._forcedFlat) {
+        topic.set("_forcedFlat", true);
+      } else {
+        const postNumber = model.nearPost;
+        if (postNumber && postNumber > 1) {
+          this.router.replaceWith(
+            "nestedPost",
+            topic.slug,
+            topic.id,
+            postNumber
+          );
+        } else {
+          this.router.replaceWith("nested", topic.slug, topic.id);
+        }
+        return;
+      }
+    }
 
     const isLoadingFirstPost =
       topic.postStream.firstPostPresent &&

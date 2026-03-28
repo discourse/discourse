@@ -11,6 +11,7 @@ class Post < ActiveRecord::Base
   include LimitedEdit
   include Localizable
   include HasPostUploadReferences
+  include HasNestedReplyStats
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}

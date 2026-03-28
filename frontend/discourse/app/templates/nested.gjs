@@ -1,0 +1,81 @@
+import NestedContextView from "discourse/components/nested-context-view";
+import NestedView from "discourse/components/nested-view";
+import PostTextSelection from "discourse/components/post-text-selection";
+
+export default <template>
+  <PostTextSelection
+    @quoteState={{@controller.quoteState}}
+    @selectText={{@controller.selectText}}
+    @buildQuoteMarkdown={{@controller.buildQuoteMarkdown}}
+    @editPost={{@controller.editPost}}
+    @topic={{@controller.topic}}
+  />
+
+  {{#if @controller.contextMode}}
+    <NestedContextView
+      @topic={{@controller.topic}}
+      @opPost={{@controller.opPost}}
+      @contextChain={{@controller.contextChain}}
+      @targetPostNumber={{@controller.targetPostNumber}}
+      @contextNoAncestors={{@controller.contextNoAncestors}}
+      @ancestorsTruncated={{@controller.ancestorsTruncated}}
+      @sort={{@controller.sort}}
+      @changeSort={{@controller.changeSort}}
+      @viewFullThread={{@controller.viewFullThread}}
+      @viewParentContext={{@controller.viewParentContext}}
+      @replyToPost={{@controller.replyToPost}}
+      @editPost={{@controller.editPost}}
+      @deletePost={{@controller.deletePost}}
+      @recoverPost={{@controller.recoverPost}}
+      @showFlags={{@controller.showFlags}}
+      @showHistory={{@controller.showHistory}}
+      @editingTopic={{@controller.editingTopic}}
+      @startEditingTopic={{@controller.startEditingTopic}}
+      @cancelEditingTopic={{@controller.cancelEditingTopic}}
+      @finishedEditingTopic={{@controller.finishedEditingTopic}}
+      @showCategoryChooser={{@controller.showCategoryChooser}}
+      @canEditTags={{@controller.canEditTags}}
+      @buffered={{@controller.buffered}}
+      @topicCategoryChanged={{@controller.topicCategoryChanged}}
+      @topicTagsChanged={{@controller.topicTagsChanged}}
+      @minimumRequiredTags={{@controller.minimumRequiredTags}}
+      @expansionState={{@controller.expansionState}}
+      @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
+      @scrollAnchor={{@controller.scrollAnchor}}
+    />
+  {{else}}
+    <NestedView
+      @topic={{@controller.topic}}
+      @opPost={{@controller.opPost}}
+      @rootNodes={{@controller.rootNodes}}
+      @hasMoreRoots={{@controller.hasMoreRoots}}
+      @loadingMore={{@controller.loadingMore}}
+      @loadMoreRoots={{@controller.loadMoreRoots}}
+      @sort={{@controller.sort}}
+      @changeSort={{@controller.changeSort}}
+      @replyToPost={{@controller.replyToPost}}
+      @editPost={{@controller.editPost}}
+      @deletePost={{@controller.deletePost}}
+      @recoverPost={{@controller.recoverPost}}
+      @showFlags={{@controller.showFlags}}
+      @showHistory={{@controller.showHistory}}
+      @postNumber={{@controller.postNumber}}
+      @pinnedPostNumber={{@controller.pinnedPostNumber}}
+      @newRootPostCount={{@controller.newRootPostIds.length}}
+      @loadNewRoots={{@controller.loadNewRoots}}
+      @editingTopic={{@controller.editingTopic}}
+      @startEditingTopic={{@controller.startEditingTopic}}
+      @cancelEditingTopic={{@controller.cancelEditingTopic}}
+      @finishedEditingTopic={{@controller.finishedEditingTopic}}
+      @showCategoryChooser={{@controller.showCategoryChooser}}
+      @canEditTags={{@controller.canEditTags}}
+      @buffered={{@controller.buffered}}
+      @topicCategoryChanged={{@controller.topicCategoryChanged}}
+      @topicTagsChanged={{@controller.topicTagsChanged}}
+      @minimumRequiredTags={{@controller.minimumRequiredTags}}
+      @expansionState={{@controller.expansionState}}
+      @fetchedChildrenCache={{@controller.fetchedChildrenCache}}
+      @scrollAnchor={{@controller.scrollAnchor}}
+    />
+  {{/if}}
+</template>
