@@ -7,6 +7,12 @@
     padding: var(--space-3);
     border-radius: 0.25em;
     margin-bottom: var(--space-4);
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow: auto;
+    max-height: 300px;
+    font-size: var(--font-down-1);
+    margin-top: 0;
   }
 
   &__step {
@@ -32,6 +38,10 @@
 
     &.--filtered {
       border-left-color: var(--highlight);
+    }
+
+    &.--waiting {
+      border-left-color: var(--workflow-status-waiting);
     }
   }
 
@@ -78,6 +88,11 @@
     &.--filtered {
       background: var(--highlight-low);
       color: var(--highlight);
+    }
+
+    &.--waiting {
+      background: var(--workflow-status-waiting-low);
+      color: var(--workflow-status-waiting);
     }
   }
 

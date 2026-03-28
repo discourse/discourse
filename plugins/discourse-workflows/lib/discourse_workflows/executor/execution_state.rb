@@ -32,7 +32,8 @@ module DiscourseWorkflows
             started_at: Time.current,
           )
 
-        @context = { "trigger" => trigger_data }
+        @resume_token = SecureRandom.uuid
+        @context = { "trigger" => trigger_data, "__resume_token" => @resume_token }
         @node_contexts = {}
         @step_position = 0
         @queue = []
@@ -42,6 +43,7 @@ module DiscourseWorkflows
       def resume!(execution)
         @execution = execution
         @context = execution.context.deep_stringify_keys
+        @resume_token = @context["__resume_token"]
         @node_contexts = (execution.waiting_config["node_contexts"] || {}).deep_stringify_keys
         @step_position = execution.waiting_config["step_position"] || execution.steps.count
         @queue = []
@@ -64,7 +66,11 @@ module DiscourseWorkflows
       end
 
       def resolver_context(extra_context = {})
-        @context.merge("_node_contexts" => @node_contexts, **extra_context)
+        @context.merge(
+          "_node_contexts" => @node_contexts,
+          "_execution" => execution_variables,
+          **extra_context,
+        )
       end
 
       def node_context_for(node)
@@ -104,6 +110,17 @@ module DiscourseWorkflows
       end
 
       private
+
+      def execution_variables
+        @execution_variables ||=
+          begin
+            vars = { "id" => @execution&.id }
+            if @resume_token
+              vars["resumeWebhookUrl"] = "#{Discourse.base_url}/workflows/webhooks/#{@resume_token}"
+            end
+            vars
+          end
+      end
 
       def reset_runtime_state
         @context = {}

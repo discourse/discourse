@@ -17,42 +17,22 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          { body: :object, headers: :object, query: :object, method: :string, webhook_url: :string }
+          WebhookSchema::OUTPUT_FIELDS
         end
 
         def self.configuration_schema
           {
             url_preview: {
               type: :custom,
-              required: true,
+              required: false,
               ui: {
                 control: :url_preview,
               },
             },
-            http_method: {
-              type: :options,
-              required: true,
-              default: "GET",
-              options: %w[GET POST PUT DELETE PATCH HEAD],
-              expression: true,
-            },
+            **WebhookSchema::CONFIGURATION_FIELDS,
             path: {
               type: :string,
               required: true,
-            },
-            response_mode: {
-              type: :options,
-              required: true,
-              default: "immediately",
-              options: %w[immediately when_last_node_finishes respond_to_webhook],
-            },
-            response_code: {
-              type: :string,
-              required: false,
-              default: "200",
-              visible_if: {
-                response_mode: %w[when_last_node_finishes],
-              },
             },
           }
         end

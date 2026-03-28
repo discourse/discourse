@@ -61,7 +61,7 @@ module DiscourseWorkflows
         def execute(context, input_items:, node_context:, user: nil)
           config = resolve_config_with_items(context, input_items)
 
-          raise WaitForHuman.new(
+          raise WaitForResume.new(
                   message_text: config["message"],
                   approve_label: config["approve_label"].presence || "Approve",
                   deny_label: config["deny_label"].presence || "Deny",

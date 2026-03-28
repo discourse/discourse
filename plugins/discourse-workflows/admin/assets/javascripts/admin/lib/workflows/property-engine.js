@@ -188,6 +188,8 @@ export function fieldControl(schema = {}) {
       return "select";
     case "collection":
       return "collection";
+    case "notice":
+      return "notice";
     default:
       return "input";
   }

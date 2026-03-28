@@ -206,9 +206,6 @@ export default class PropertyEngineField extends Component {
   }
 
   get validation() {
-    if (this.expressionMode) {
-      return undefined;
-    }
     return this.args.schema?.required ? "required" : undefined;
   }
 
@@ -343,6 +340,10 @@ export default class PropertyEngineField extends Component {
           {{on "input" @onInlineChange}}
         />
       {{/if}}
+    {{else if (eq this.control "notice")}}
+      <@form.Alert @type="info">
+        {{this.fieldDescription}}
+      </@form.Alert>
     {{else if (eq this.control "boolean")}}
       <@form.Field
         @name={{@fieldName}}

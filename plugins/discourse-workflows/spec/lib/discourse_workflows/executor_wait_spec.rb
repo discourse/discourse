@@ -15,7 +15,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
   after { DiscourseWorkflows::Registry.reset! }
 
-  describe "pause on WaitForHuman" do
+  describe "pause on WaitForResume" do
     it "pauses execution and sends a chat message with approval buttons" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
 

@@ -8,7 +8,7 @@ RSpec.describe DiscourseWorkflows::Actions::Form::V1 do
   end
 
   describe "#execute" do
-    it "raises WaitForHuman with form type" do
+    it "raises WaitForResume with form type" do
       action =
         described_class.new(
           configuration: {
@@ -18,7 +18,7 @@ RSpec.describe DiscourseWorkflows::Actions::Form::V1 do
         )
 
       expect { action.execute({}, input_items: [], node_context: {}) }.to raise_error(
-        DiscourseWorkflows::WaitForHuman,
+        DiscourseWorkflows::WaitForResume,
       ) do |error|
         expect(error.type).to eq(:form)
         expect(error.form_title).to eq("Page 2")

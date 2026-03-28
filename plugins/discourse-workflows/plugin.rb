@@ -39,6 +39,7 @@ register_svg_icon "note-sticky"
 register_svg_icon "palette"
 register_svg_icon "reply"
 register_svg_icon "triangle-exclamation"
+register_svg_icon "clock"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -88,6 +89,7 @@ after_initialize do
     end
 
     DiscourseWorkflows::Registry.register_core(DiscourseWorkflows::Core::LoopOverItems::V1)
+    DiscourseWorkflows::Registry.register_core(DiscourseWorkflows::Core::Wait::V1)
   end
 
   DiscourseWorkflows::Registry.triggers.each do |trigger_class|

@@ -29,4 +29,17 @@
   --workflow-sticky-purple-border: #{dark-light-choose(#ce93d8, #63247d)};
   --workflow-sticky-orange: #{dark-light-choose(#ffe0b2, #5c3a1a)};
   --workflow-sticky-orange-border: #{dark-light-choose(#ffcc80, #7a5024)};
+
+  // Execution status colors
+  --workflow-status-success: var(--success);
+  --workflow-status-success-low: var(--success-low);
+  --workflow-status-error: var(--danger);
+  --workflow-status-error-low: var(--danger-low);
+  --workflow-status-running: var(--highlight);
+  --workflow-status-running-low: var(--highlight-low);
+  --workflow-status-waiting: #{dark-light-choose(#5e35b1, #7c4dff)};
+  --workflow-status-waiting-low: #{dark-light-choose(
+      rgba(#5e35b1, 0.15),
+      rgba(#7c4dff, 0.15)
+    )};
 }

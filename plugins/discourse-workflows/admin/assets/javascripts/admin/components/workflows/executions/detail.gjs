@@ -129,9 +129,9 @@ export default class ExecutionDetail extends Component {
   <template>
     <div class="workflows-execution-detail">
       {{#if @execution.error}}
-        <div class="workflows-execution-detail__error">
-          {{@execution.error}}
-        </div>
+        <pre
+          class="workflows-execution-detail__error"
+        >{{@execution.error}}</pre>
       {{/if}}
 
       <div class="workflows-execution-detail__steps">

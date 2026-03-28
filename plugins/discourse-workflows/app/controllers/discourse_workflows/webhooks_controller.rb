@@ -19,9 +19,12 @@ module DiscourseWorkflows
             render json: { success: true }
           end
         end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
-        on_model_not_found(:webhook_nodes) do
-          render json: { error: "not_found" }, status: :not_found
+        on_failure do
+          if result[:not_found]
+            render json: { error: "not_found" }, status: :not_found
+          else
+            render(json: failed_json, status: :unprocessable_entity)
+          end
         end
       end
     end

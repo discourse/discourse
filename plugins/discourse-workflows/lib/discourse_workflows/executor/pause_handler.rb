@@ -16,7 +16,11 @@ module DiscourseWorkflows
 
         step.update!(status: :waiting)
 
-        if wait.form?
+        if wait.timer?
+          pause_for_timer!(wait, node)
+        elsif wait.webhook?
+          pause_for_webhook!(wait, node)
+        elsif wait.form?
           pause_for_form!(wait, step, node)
         else
           pause_for_approval!(wait, step, node)
@@ -24,6 +28,44 @@ module DiscourseWorkflows
       end
 
       private
+
+      def pause_for_timer!(wait, node)
+        duration = wait.wait_amount.to_i.public_send(wait.wait_unit)
+        waiting_until = duration.from_now
+
+        pause_execution!(
+          node,
+          waiting_until: waiting_until,
+          extra_config: {
+            "wait_type" => "timer",
+            "wait_amount" => wait.wait_amount,
+            "wait_unit" => wait.wait_unit,
+          },
+        )
+
+        Jobs.enqueue_in(
+          duration,
+          Jobs::DiscourseWorkflows::ResumeTimer,
+          execution_id: @state.execution.id,
+        )
+
+        @state.execution
+      end
+
+      def pause_for_webhook!(wait, node)
+        pause_execution!(
+          node,
+          extra_config: {
+            "wait_type" => "webhook",
+            "resume_token" => @state.context["__resume_token"],
+            "http_method" => wait.http_method,
+            "response_mode" => wait.response_mode,
+            "response_code" => wait.response_code,
+          },
+        )
+
+        @state.execution
+      end
 
       def pause_for_approval!(wait, step, node)
         channel_id = wait.channel_id.to_i
@@ -73,18 +115,23 @@ module DiscourseWorkflows
       end
 
       def send_approval_chat_message(channel_id, step, wait)
-        result =
-          Chat::CreateMessage.call(
-            guardian: Discourse.system_user.guardian,
-            params: {
-              chat_channel_id: channel_id,
-              message: wait.message_text,
-              blocks: approval_blocks(step, wait),
-            },
-          )
-
-        raise "Failed to send approval chat message" if result.failure?
-        result.message_instance
+        Chat::CreateMessage.call(
+          guardian: Discourse.system_user.guardian,
+          params: {
+            chat_channel_id: channel_id,
+            message: wait.message_text,
+            blocks: approval_blocks(step, wait),
+          },
+        ) do |result|
+          on_success { return result.message_instance }
+          on_model_not_found(:channel) do
+            raise "Chat message failed: channel #{channel_id} not found"
+          end
+          on_failed_contract do |contract|
+            raise "Chat message failed: #{contract.errors.full_messages.join(", ")}"
+          end
+          on_failure { raise "Chat message failed: #{result.inspect_steps}" }
+        end
       end
 
       def approval_blocks(step, wait)

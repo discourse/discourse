@@ -75,8 +75,12 @@ module DiscourseWorkflows
       yield
       process_queue
       finish_execution
-    rescue WaitForHuman => e
-      pause_handler.pause!(e)
+    rescue WaitForResume => e
+      begin
+        pause_handler.pause!(e)
+      rescue => pause_error
+        fail_execution(pause_error)
+      end
     rescue => e
       fail_execution(e)
     end
@@ -125,7 +129,7 @@ module DiscourseWorkflows
       result =
         step_runner.run(node, input_items, node_type_class) do |instance|
           instance.execute(
-            @state.context,
+            @state.resolver_context,
             input_items: input_items,
             node_context: @state.node_context_for(node),
             user: @user,

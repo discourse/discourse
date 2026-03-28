@@ -87,6 +87,7 @@ module DiscourseWorkflows
           NodeOutputLookup.new(context),
           SiteSettingLookup.new(site_setting_store),
           CurrentUserLookup.new(user),
+          ExecutionLookup.new(context),
           JsonLookup.new(context),
           VariableLookup.new(variable_store),
           ContextLookup.new(context),
@@ -193,6 +194,25 @@ module DiscourseWorkflows
         field = expression.delete_prefix(PREFIX)
         return nil if ALLOWED_FIELDS.exclude?(field)
         @user&.public_send(field)
+      end
+    end
+
+    class ExecutionLookup
+      PREFIX = "$execution."
+      ALLOWED_FIELDS = %w[id resumeWebhookUrl].freeze
+
+      def initialize(context)
+        @context = context
+      end
+
+      def match?(expression)
+        expression.start_with?(PREFIX)
+      end
+
+      def resolve(expression)
+        field = expression.delete_prefix(PREFIX)
+        return nil if ALLOWED_FIELDS.exclude?(field)
+        @context.dig("_execution", field)
       end
     end
 

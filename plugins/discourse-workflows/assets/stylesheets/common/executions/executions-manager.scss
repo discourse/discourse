@@ -38,7 +38,7 @@
     }
 
     &.--waiting .d-icon {
-      color: var(--highlight);
+      color: var(--workflow-status-waiting);
     }
 
     &.--pending .d-icon {

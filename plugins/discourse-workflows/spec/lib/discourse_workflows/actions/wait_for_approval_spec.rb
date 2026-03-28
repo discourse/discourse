@@ -15,7 +15,7 @@ RSpec.describe DiscourseWorkflows::Actions::WaitForApproval::V1 do
   end
 
   describe "#execute" do
-    it "raises WaitForHuman with channel config" do
+    it "raises WaitForResume with channel config" do
       instance =
         described_class.new(
           configuration: {
@@ -30,7 +30,7 @@ RSpec.describe DiscourseWorkflows::Actions::WaitForApproval::V1 do
 
       expect {
         instance.execute({}, input_items: [{ "json" => {} }], node_context: {})
-      }.to raise_error(DiscourseWorkflows::WaitForHuman) do |error|
+      }.to raise_error(DiscourseWorkflows::WaitForResume) do |error|
         expect(error.message_text).to eq("Please approve this")
         expect(error.approve_label).to eq("Yes")
         expect(error.deny_label).to eq("No")

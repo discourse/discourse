@@ -1,3 +1,5 @@
+import { fieldVisible } from "../../../lib/workflows/property-engine";
+
 function toFieldEntry(key, type) {
   return { key, type: type || "string", id: key };
 }
@@ -30,5 +32,21 @@ export default function resolveNodeFields(node, nodeTypes) {
   }
 
   const nodeType = nodeTypes.find((nt) => nt.identifier === node.type);
-  return fieldsFromSchema(nodeType?.output_schema);
+  const schema = nodeType?.output_schema;
+  if (!schema || !Object.keys(schema).length) {
+    return null;
+  }
+
+  const filtered = {};
+  for (const [key, value] of Object.entries(schema)) {
+    if (typeof value === "object" && value !== null) {
+      if (fieldVisible(value, node.configuration || {})) {
+        filtered[key] = value.type || "string";
+      }
+    } else {
+      filtered[key] = value;
+    }
+  }
+
+  return fieldsFromSchema(filtered);
 }

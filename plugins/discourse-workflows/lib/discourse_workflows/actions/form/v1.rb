@@ -117,7 +117,7 @@ module DiscourseWorkflows
             return input_items
           end
 
-          raise WaitForHuman.new(
+          raise WaitForResume.new(
                   type: :form,
                   form_fields: config["form_fields"],
                   form_title: config["form_title"],

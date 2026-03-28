@@ -20,7 +20,7 @@ module DiscourseWorkflows
           result = yield instance
           update_step_success!(step, node, raw_config, instance, result)
           result
-        rescue WaitForHuman
+        rescue WaitForResume
           @state.mark_wait(node: node, step: step)
           raise
         rescue => e
