@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
@@ -16,6 +17,9 @@ import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
 
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
+  @service site;
+  @service siteSettings;
+
   @tracked model;
   @tracked listContext = "user-activity";
 
@@ -49,6 +53,19 @@ export default class UserTopicsListController extends Controller {
 
   get selected() {
     return this.bulkSelectHelper.selected;
+  }
+
+  get showBottomDismissButtons() {
+    return (
+      !this.site.mobileView ||
+      (this.site.mobileView &&
+        !this.siteSettings.floating_dismiss_topics_on_mobile)
+    );
+  }
+
+  @computed("model.params.subset")
+  get showDismissNewStopTracking() {
+    return this.model.params?.subset !== "topics";
   }
 
   @computed("model.topics.length", "incomingCount")

@@ -3702,6 +3702,11 @@ en:
           other: "Dismiss (%{count})…"
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
+        dismiss_all: "Dismiss all"
+        dismiss_new_topics: "Dismiss new topics"
+        dismiss_new_replies: "Dismiss new replies"
+        dismiss_new_menu: "Dismiss options"
+        dismiss_and_stop_tracking: "Dismiss and stop tracking"
         dismiss_new: "Dismiss New"
         dismiss_new_modal:
           title: "Dismiss new"
