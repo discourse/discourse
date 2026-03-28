@@ -12,11 +12,11 @@ const RESERVED_NAMES = ["created_at", "id", "updated_at"];
 function schemaForColumn(column) {
   switch (column.type) {
     case "number":
-      return { type: "integer", name: column.name };
+      return { type: "integer", name: column.name, ui: { expression: true } };
     case "boolean":
-      return { type: "boolean", name: column.name };
+      return { type: "boolean", name: column.name, ui: { expression: true } };
     default:
-      return { type: "string", name: column.name };
+      return { type: "string", name: column.name, ui: { expression: true } };
   }
 }
 

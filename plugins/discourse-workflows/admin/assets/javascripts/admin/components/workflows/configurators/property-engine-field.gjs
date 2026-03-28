@@ -353,16 +353,48 @@ export default class PropertyEngineField extends Component {
         {{this.fieldDescription}}
       </@form.Alert>
     {{else if (eq this.control "boolean")}}
-      <@form.Field
-        @name={{@fieldName}}
-        @title={{this.label}}
-        @type="toggle"
-        @format={{this.format}}
-        @validation={{this.validation}}
-        as |field|
-      >
-        <field.Control />
-      </@form.Field>
+      {{#if this.expressionMode}}
+        <@form.Field
+          @name={{@fieldName}}
+          @title={{this.fieldTitle}}
+          @showTitle={{this.showLabel}}
+          @type="custom"
+          @format={{this.format}}
+          @onSet={{this.handleSet}}
+          as |field|
+        >
+          <field.Control>
+            <WrappedControl
+              @expressionMode={{true}}
+              @field={{field}}
+              @placeholder={{this.placeholder}}
+              @supportsExpression={{this.supportsExpression}}
+              @modeItems={{this.modeItems}}
+              @onModeChange={{this.onModeChange}}
+            />
+          </field.Control>
+        </@form.Field>
+      {{else}}
+        <@form.Field
+          @name={{@fieldName}}
+          @title={{this.label}}
+          @type="toggle"
+          @format={{this.format}}
+          @validation={{this.validation}}
+          as |field|
+        >
+          <field.Control />
+          {{#if this.supportsExpression}}
+            <DSegmentedControl
+              @items={{this.modeItems}}
+              @value="plain"
+              @onSelect={{this.onModeChange}}
+              @size="small"
+              class="workflows-property-engine__mode-control --toggle"
+            />
+          {{/if}}
+        </@form.Field>
+      {{/if}}
     {{else if (eq this.control "code")}}
       <@form.Field
         @name={{@fieldName}}
