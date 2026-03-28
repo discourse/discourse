@@ -1,0 +1,58 @@
+:root {
+  // Text
+  //
+  --token-text-default: var(--primary);
+  --token-text-subtle: var(--primary-700);
+  --token-text-subtlest: var(--primary-500);
+  --token-text-accent: light-dark(var(--tertiary-800), var(--tertiary-300));
+  --token-text-accent-bolder: light-dark(
+    var(--tertiary-900),
+    var(--tertiary-200)
+  );
+
+  // for use on "bold" backgrounds
+  --token-text-inverse: light-dark(var(--secondary), var(--primary));
+
+  // Icon
+  //
+  --token-icon-default: var(--primary-900);
+  --token-icon-subtle: var(--primary-700);
+  --token-icon-subtlest: var(--primary-500);
+  --token-icon-danger: var(--danger);
+
+  // Border
+  --token-border-input: var(--primary-300);
+  --token-border-default: var(--primary-200);
+  --token-border-focused: var(--tertiary);
+  --token-border-accent: var(--tertiary-400);
+
+  // Backgrounds
+  // Use as the primary background for the UI.
+  // ---
+  --token-surface: var(--secondary);
+  --token-surface-hovered: var(--primary-100);
+  --token-surface-pressed: var(--primary-200);
+  --token-background-input: var(--secondary);
+
+  // Accents
+  --token-background-accent-subtlest: var(--tertiary-200);
+  --token-background-accent-subtler: var(--tertiary-400);
+  --token-background-accent-subtle: var(--tertiary-600);
+  --token-background-accent-bolder: var(--tertiary);
+
+  // Sizing
+  --token-border-width: 1px;
+  --token-radius-xsmall: 2px;
+  --token-radius-small: 4px;
+  --token-radius-medium: 6px; // interactive elements (buttons, inputs, nav items, etc)
+  --token-radius-large: 8px;
+  --token-radius-xlarge: 12px;
+  --token-radius-xxlarge: 16px;
+  --token-radius-full: 9999px;
+
+  // font weight
+  --token-font-weight-bold: 650;
+  --token-font-weight-semibold: 600;
+  --token-font-weight-medium: 500;
+  --token-font-weight-regular: normal;
+}

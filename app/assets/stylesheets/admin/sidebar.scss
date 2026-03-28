@@ -1,15 +1,11 @@
 .admin-area .sidebar-wrapper .admin-panel {
+  --d-sidebar-admin-background: var(--token-surface-hovered);
+  --d-sidebar-active-background: var(--token-background-accent-subtler);
+  --d-sidebar-highlight-background: var(--token-surface-pressed);
+  --d-sidebar-link-color: var(--token-text-default);
   background-color: var(--d-sidebar-admin-background);
-
-  --d-sidebar-highlight-background: var(--primary-200);
-  --d-sidebar-link-icon-color: var(--primary-600);
-
-  .sidebar-section-header-text {
-    font-weight: bold;
-    color: var(--primary-very-high);
-  }
 }
 
 .admin-sidebar-nav-link__dot {
-  color: var(--tertiary-med-or-tertiary);
+  color: var(--token-background-accent-subtler);
 }
