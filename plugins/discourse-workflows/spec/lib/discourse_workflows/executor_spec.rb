@@ -725,6 +725,27 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(error_executions.count).to eq(1)
     end
 
+    it "does not trigger error workflow when it is the same workflow (self-loop prevention)" do
+      trigger_node = build_workflow
+      workflow = trigger_node.workflow
+
+      Fabricate(
+        :discourse_workflows_node,
+        workflow: workflow,
+        type: "trigger:error",
+        name: "Error Trigger",
+        position_index: 2,
+      )
+
+      workflow.update!(error_workflow_id: workflow.id)
+
+      trigger_data = { topic_id: -999, tags: [] }
+      execution = described_class.new(trigger_node, trigger_data).run
+
+      expect(execution.status).to eq("error")
+      expect(workflow.executions.where(execution_mode: :error_mode).count).to eq(0)
+    end
+
     it "does not trigger error workflow when none is configured" do
       trigger_node = build_workflow
       trigger_data = { topic_id: -999, tags: [] }

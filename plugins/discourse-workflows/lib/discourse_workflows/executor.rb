@@ -214,6 +214,7 @@ module DiscourseWorkflows
     def trigger_error_workflow(error)
       error_workflow = @workflow.error_workflow
       return unless error_workflow&.enabled?
+      return if error_workflow.id == @workflow.id
 
       error_trigger_node = error_workflow.nodes.find_by(type: "trigger:error")
       return unless error_trigger_node
