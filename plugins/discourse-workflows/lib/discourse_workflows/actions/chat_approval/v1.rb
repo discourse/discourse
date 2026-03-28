@@ -2,10 +2,10 @@
 
 module DiscourseWorkflows
   module Actions
-    module WaitForApproval
+    module ChatApproval
       class V1 < Actions::Base
         def self.identifier
-          "action:wait_for_approval"
+          "action:chat_approval"
         end
 
         def self.icon

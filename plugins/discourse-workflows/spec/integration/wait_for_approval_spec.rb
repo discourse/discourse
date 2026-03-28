@@ -11,7 +11,7 @@ RSpec.describe "Wait for Approval end-to-end" do
     DiscourseWorkflows::Registry.reset!
     DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Manual::V1)
     DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::SetFields::V1)
-    DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::WaitForApproval::V1)
+    DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::ChatApproval::V1)
     DiscourseWorkflows::Registry.register_condition(DiscourseWorkflows::Conditions::IfCondition::V1)
   end
 
@@ -33,7 +33,7 @@ RSpec.describe "Wait for Approval end-to-end" do
       Fabricate(
         :discourse_workflows_node,
         workflow: workflow,
-        type: "action:wait_for_approval",
+        type: "action:chat_approval",
         name: "Approval",
         position_index: 1,
         configuration: {

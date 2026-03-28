@@ -67,7 +67,7 @@ module("Unit | Utility | workflows property engine", function () {
 
     assert.deepEqual(options, [{ value: "GET" }, { value: "deny" }]);
     assert.strictEqual(
-      propertyOptionLabel("action:wait_for_approval", "timeout_action", {
+      propertyOptionLabel("action:chat_approval", "timeout_action", {
         value: "deny",
       }),
       "Resume as denied"
@@ -108,7 +108,10 @@ module("Unit | Utility | workflows property engine", function () {
     );
     assert.strictEqual(fieldControl({ type: "icon" }), "icon");
     assert.strictEqual(fieldFormat({ type: "string" }), "full");
-    assert.strictEqual(fieldFormat({ type: "string", ui: { format: "small" } }), "small");
+    assert.strictEqual(
+      fieldFormat({ type: "string", ui: { format: "small" } }),
+      "small"
+    );
     assert.true(fieldSupportsExpression({ type: "integer" }));
     assert.true(fieldSupportsExpression({ type: "icon" }));
     assert.false(

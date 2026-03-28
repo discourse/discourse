@@ -74,7 +74,7 @@ after_initialize do
       SplitOut
       HttpRequest
       DataTable
-      WaitForApproval
+      ChatApproval
       AwardBadge
       Form
       RespondToWebhook

@@ -92,7 +92,7 @@ en:
         "action:split_out": "Split Out"
         "action:http_request": "HTTP Request"
         "action:data_table": "Data Table"
-        "action:wait_for_approval": "Wait For Approval"
+        "action:chat_approval": "Chat Approval"
         "action:award_badge": "Award Badge"
         "trigger:form": "Form Trigger"
         "action:form": "Form"
@@ -122,7 +122,7 @@ en:
         "action:split_out": "Split an array into individual items for parallel processing"
         "action:http_request": "Make an HTTP request to an external API"
         "action:data_table": "Read, write, or query a workflow data table"
-        "action:wait_for_approval": "Pause and wait for human approval before continuing"
+        "action:chat_approval": "Send an approval request to a chat channel and wait for a response"
         "action:award_badge": "Award a badge to a user"
         "trigger:form": "Generates a public web form and fires when it is submitted"
         "action:form": "Adds a page to a multi-step form"
@@ -283,7 +283,7 @@ en:
         fields_to_include_placeholder: "company, id"
         destination_field_name: "Destination Field Name"
         destination_field_name_description: "Rename the split field in output. If splitting multiple fields, provide matching count of names."
-      wait_for_approval:
+      chat_approval:
         message: "Message"
         approve_label: "Approve button label"
         approve_label_description: "Defaults to \"Approve\" if left blank."

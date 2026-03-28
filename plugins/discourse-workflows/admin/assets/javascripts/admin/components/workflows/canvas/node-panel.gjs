@@ -94,7 +94,7 @@ const CATEGORIES = [
   {
     id: "human_review",
     icon: "user-check",
-    identifiers: ["action:wait_for_approval"],
+    identifiers: ["action:chat_approval"],
   },
 ];
 

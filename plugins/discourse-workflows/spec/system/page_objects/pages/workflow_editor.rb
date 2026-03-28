@@ -60,7 +60,7 @@ module PageObjects
         "action:split_out" => "Split Out",
         "action:http_request" => "HTTP Request",
         "action:data_table" => "Data Table",
-        "action:wait_for_approval" => "Wait For Approval",
+        "action:chat_approval" => "Chat Approval",
         "core:loop_over_items" => "Loop Over Items",
       }.freeze
 

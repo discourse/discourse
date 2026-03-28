@@ -1,4 +1,5 @@
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { i18n } from "discourse-i18n";
 import WorkflowNode from "../../../models/workflow-node";
 
 const NODE_DEFAULTS = {
@@ -12,11 +13,7 @@ const NODE_DEFAULTS = {
 };
 
 export function generateNodeName(identifier, existingNodes) {
-  const baseName = identifier
-    .split(":")
-    .pop()
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  const baseName = i18n(`discourse_workflows.nodes.${identifier}`);
 
   const existingNames = new Set(existingNodes.map((n) => n.name));
   let name = baseName;

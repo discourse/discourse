@@ -12,7 +12,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
       SiteSetting.chat_enabled = true
       DiscourseWorkflows::Registry.reset!
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Manual::V1)
-      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::WaitForApproval::V1)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::ChatApproval::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::SetFields::V1)
     end
 
@@ -34,7 +34,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
         Fabricate(
           :discourse_workflows_node,
           workflow: workflow,
-          type: "action:wait_for_approval",
+          type: "action:chat_approval",
           name: "Wait",
           position_index: 1,
           configuration: {

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::Actions::WaitForApproval::V1 do
+RSpec.describe DiscourseWorkflows::Actions::ChatApproval::V1 do
   fab!(:channel, :chat_channel)
 
   before do
@@ -10,7 +10,7 @@ RSpec.describe DiscourseWorkflows::Actions::WaitForApproval::V1 do
 
   describe ".identifier" do
     it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:wait_for_approval")
+      expect(described_class.identifier).to eq("action:chat_approval")
     end
   end
 
