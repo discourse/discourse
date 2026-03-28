@@ -16,6 +16,7 @@ import categoryLink, {
 import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 @tagName("")
 export default class CategoriesBoxes extends Component {
@@ -34,6 +35,12 @@ export default class CategoriesBoxes extends Component {
         link: false,
       })
     );
+  }
+
+  categoryUrl(category) {
+    return applyValueTransformer("category-boxes-url", category.url, {
+      category,
+    });
   }
 
   <template>
@@ -59,7 +66,7 @@ export default class CategoriesBoxes extends Component {
             style={{categoryColorVariable c.color}}
             data-category-id={{c.id}}
             data-notification-level={{c.notificationLevelString}}
-            data-url={{c.url}}
+            data-url={{this.categoryUrl c}}
             class="category category-box category-box-{{c.slug}}
               {{if c.isMuted 'muted'}}"
           >
@@ -74,7 +81,7 @@ export default class CategoriesBoxes extends Component {
 
               <div class="category-details">
                 <div class="category-box-heading">
-                  <a class="parent-box-link" href={{c.url}}>
+                  <a class="parent-box-link" href={{this.categoryUrl c}}>
                     <h3>
                       <CategoryTitleBefore @category={{c}} />
                       {{this.categoryName c}}
@@ -133,7 +140,7 @@ export default class CategoriesBoxes extends Component {
                   {{else if c.subcategories}}
                     <div class="subcategories">
                       {{#each c.subcategories as |sc|}}
-                        <a class="subcategory" href={{sc.url}}>
+                        <a class="subcategory" href={{this.categoryUrl sc}}>
                           {{#if sc.uploaded_logo.url}}
                             <span class="subcategory-image-placeholder">
                               <CategoryLogo @category={{sc}} />
