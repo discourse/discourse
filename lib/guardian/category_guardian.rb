@@ -70,4 +70,40 @@ module CategoryGuardian
     @topic_featured_link_allowed_category_ids =
       Category.where(topic_featured_link_allowed: true).pluck(:id)
   end
+
+  def topic_posting_review_required?(category)
+    posting_review_required?(category, :topic)
+  end
+
+  def reply_posting_review_required?(category)
+    posting_review_required?(category, :reply)
+  end
+
+  private
+
+  def posting_review_required?(category, post_type)
+    return false if category.nil?
+
+    mode = category.category_setting.public_send(:"#{post_type}_posting_review_mode")
+    case mode
+    when "no_one"
+      false
+    when "everyone"
+      true
+    when "everyone_except"
+      !CategoryPostingReviewGroup.user_in_group?(
+        category: category,
+        user: @user,
+        post_type: post_type,
+      )
+    when "no_one_except"
+      CategoryPostingReviewGroup.user_in_group?(
+        category: category,
+        user: @user,
+        post_type: post_type,
+      )
+    else
+      false
+    end
+  end
 end

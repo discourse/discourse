@@ -38,8 +38,16 @@ class Category < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
   has_many :category_posting_review_groups, dependent: :destroy
+  has_many :topic_posting_review_records,
+           -> { where(post_type: :topic) },
+           class_name: "CategoryPostingReviewGroup"
+  has_many :reply_posting_review_records,
+           -> { where(post_type: :reply) },
+           class_name: "CategoryPostingReviewGroup"
   has_many :groups, through: :category_groups
   has_many :moderating_groups, through: :category_moderation_groups, source: :group
+  has_many :topic_posting_review_groups, through: :topic_posting_review_records, source: :group
+  has_many :reply_posting_review_groups, through: :reply_posting_review_records, source: :group
   has_many :topic_timers, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
@@ -54,6 +62,10 @@ class Category < ActiveRecord::Base
            :require_topic_approval,
            :require_topic_approval=,
            :require_topic_approval?,
+           :topic_posting_review_mode,
+           :topic_posting_review_mode=,
+           :reply_posting_review_mode,
+           :reply_posting_review_mode=,
            to: :category_setting,
            allow_nil: true
 
@@ -86,6 +98,7 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
   validate :ensure_slug
   validate :permissions_compatibility_validator
+  validate :posting_review_groups_validator
 
   validates :default_slow_mode_seconds,
             numericality: {
@@ -107,6 +120,7 @@ class Category < ActiveRecord::Base
   before_save :downcase_email
   before_save :downcase_name
   before_save :ensure_category_setting
+  before_save :clear_posting_review_groups_for_non_group_modes
   after_create :create_category_definition
   after_create :delete_category_permalink
   after_update :rename_category_definition, if: :saved_change_to_name?
@@ -1239,6 +1253,25 @@ class Category < ActiveRecord::Base
 
   def ensure_category_setting
     self.build_category_setting if self.category_setting.blank?
+  end
+
+  def posting_review_groups_validator
+    %i[topic reply].each do |post_type|
+      mode = category_setting&.public_send(:"#{post_type}_posting_review_mode")
+      next if CategorySetting::GROUP_BASED_MODES.exclude?(mode)
+
+      group_ids = public_send(:"#{post_type}_posting_review_group_ids")
+      errors.add(:base, I18n.t("category.errors.groups_required_for_mode")) if group_ids.blank?
+    end
+  end
+
+  def clear_posting_review_groups_for_non_group_modes
+    %i[topic reply].each do |post_type|
+      mode = category_setting&.public_send(:"#{post_type}_posting_review_mode")
+      if CategorySetting::GROUP_BASED_MODES.exclude?(mode)
+        public_send(:"#{post_type}_posting_review_group_ids=", [])
+      end
+    end
   end
 
   def check_permissions_compatibility(parent_permissions, child_permissions)

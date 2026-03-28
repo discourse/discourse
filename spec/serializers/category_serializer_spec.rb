@@ -199,6 +199,45 @@ RSpec.describe CategorySerializer do
     end
   end
 
+  describe "#topic_posting_review_mode and #reply_posting_review_mode" do
+    it "includes posting review modes in category_setting" do
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+        reply_posting_review_mode: :no_one_except,
+        reply_posting_review_group_ids: [group.id],
+      )
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:topic_posting_review_mode]).to eq("everyone_except")
+      expect(json[:category_setting][:reply_posting_review_mode]).to eq("no_one_except")
+    end
+  end
+
+  describe "#topic_posting_review_group_ids and #reply_posting_review_group_ids" do
+    it "returns group ids when groups exist" do
+      category.update!(
+        topic_posting_review_mode: :everyone_except,
+        topic_posting_review_group_ids: [group.id],
+        reply_posting_review_mode: :no_one_except,
+        reply_posting_review_group_ids: [group.id],
+      )
+
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json[:topic_posting_review_group_ids]).to eq([group.id])
+      expect(json[:reply_posting_review_group_ids]).to eq([group.id])
+    end
+
+    it "returns empty arrays when no groups are associated" do
+      json = described_class.new(category, scope: Guardian.new, root: false).as_json
+
+      expect(json[:topic_posting_review_group_ids]).to eq([])
+      expect(json[:reply_posting_review_group_ids]).to eq([])
+    end
+  end
+
   describe "#require_topic_approval" do
     it "returns false when topic approval is not required" do
       category.require_topic_approval = false
