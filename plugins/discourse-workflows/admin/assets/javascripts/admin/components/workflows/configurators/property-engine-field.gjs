@@ -267,18 +267,12 @@ export default class PropertyEngineField extends Component {
 
   @action
   toggleExpressionMode() {
-    const currentVal = this.args.formApi?.get(this.apiPath) || "";
-
     if (this.expressionMode) {
       this._expressionMode = false;
-      if (isExpression(currentVal)) {
-        this.args.formApi?.set(this.apiPath, currentVal.slice(1));
-      }
+      this.args.formApi?.set(this.apiPath, "");
     } else {
       this._expressionMode = true;
-      if (!isExpression(currentVal)) {
-        this.args.formApi?.set(this.apiPath, `=${currentVal}`);
-      }
+      this.args.formApi?.set(this.apiPath, "=");
     }
   }
 
