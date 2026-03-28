@@ -344,6 +344,53 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
         get "#{path}/preview/#{user_pm_share.id}.json"
         expect(response).not_to have_http_status(:success)
       end
+
+      it "denies preview when there are other people in the PM" do
+        other_user = Fabricate(:user)
+        pm_topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+        pm_topic.topic_allowed_users.create!(user_id: other_user.id)
+        Fabricate(:post, topic: pm_topic, user: user)
+        Fabricate(:post, topic: pm_topic, user: bot_user)
+
+        get "#{path}/preview/#{pm_topic.id}.json"
+        expect(response).not_to have_http_status(:success)
+      end
+
+      it "denies preview when there is other content in the PM" do
+        pm_topic = Fabricate(:private_message_topic, user: user, recipient: bot_user)
+        Fabricate(:post, topic: pm_topic, user: user)
+        Fabricate(:post, topic: pm_topic)
+
+        get "#{path}/preview/#{pm_topic.id}.json"
+        expect(response).not_to have_http_status(:success)
+      end
+
+      it "does not share artifacts publicly when previewing a valid conversation" do
+        SiteSetting.ai_artifact_security = "lax"
+        first_post = user_pm_share.posts.first
+
+        artifact =
+          AiArtifact.create!(
+            user: bot_user,
+            post: first_post,
+            name: "test",
+            html: "<div>test</div>",
+          )
+
+        cooked_html =
+          "<p>Post with artifact</p>\n<div class=\"ai-artifact\" data-ai-artifact-id=\"#{artifact.id}\"></div>"
+        first_post.update_columns(
+          raw:
+            "Post with artifact\n<div class=\"ai-artifact\" data-ai-artifact-id=\"#{artifact.id}\"></div>",
+          cooked: cooked_html,
+        )
+
+        get "#{path}/preview/#{user_pm_share.id}.json"
+        expect(response).to have_http_status(:success)
+
+        artifact.reload
+        expect(artifact.metadata&.dig("public")).not_to eq(true)
+      end
     end
   end
 
