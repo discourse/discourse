@@ -9,6 +9,11 @@ module DiscourseWorkflows
       attribute :form_data, default: -> { {} }
 
       validates :resume_token, presence: true
+      validate :form_data_must_be_hash
+
+      def form_data_must_be_hash
+        errors.add(:form_data, :invalid) unless form_data.is_a?(Hash)
+      end
     end
 
     model :execution

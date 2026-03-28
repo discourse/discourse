@@ -322,7 +322,9 @@ module DiscourseWorkflows
       p = p.respond_to?(:to_unsafe_h) ? p.to_unsafe_h : p.to_h
       cols = params[:columns]
       cols = cols.values if cols.is_a?(ActionController::Parameters)
-      p["columns"] = Array(cols).map { |c| c.respond_to?(:to_unsafe_h) ? c.to_unsafe_h : c.to_h }
+      p["columns"] = Array(cols)
+        .select { |c| c.is_a?(Hash) || c.is_a?(ActionController::Parameters) }
+        .map { |c| c.respond_to?(:to_unsafe_h) ? c.to_unsafe_h : c.to_h }
       p
     end
 
