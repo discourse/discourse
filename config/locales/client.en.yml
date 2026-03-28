@@ -7205,6 +7205,7 @@ en:
           themes:
             title: "Themes"
             description: "Site-wide themes that change the overall look and feel of your site for all users."
+            added_date: "Date added: %{date}"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
