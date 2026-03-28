@@ -22,19 +22,18 @@ module DiscourseWorkflows
     private
 
     def create_data_table(params:)
-      DiscourseWorkflows::DataTable
-        .new(name: params.name)
-        .tap do |data_table|
-          params.columns.to_a.each_with_index do |column, index|
-            data_table.columns.build(
-              name: DiscourseWorkflows::DataTableColumn.definition_name(column),
-              column_type: DiscourseWorkflows::DataTableColumn.definition_type(column),
-              position: index,
-            )
-          end
+      data_table = DiscourseWorkflows::DataTable.new(name: params.name)
 
-          data_table.save
-        end
+      params.columns.to_a.each_with_index do |column, index|
+        data_table.columns.build(
+          name: DiscourseWorkflows::DataTableColumn.definition_name(column),
+          column_type: DiscourseWorkflows::DataTableColumn.definition_type(column),
+          position: index,
+        )
+      end
+
+      data_table.save
+      data_table
     end
 
     def create_storage_table(data_table:)

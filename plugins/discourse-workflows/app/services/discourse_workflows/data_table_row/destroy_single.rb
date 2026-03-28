@@ -28,9 +28,7 @@ module DiscourseWorkflows
     end
 
     def destroy_row(data_table:, params:)
-      context[:row_deleted] = DiscourseWorkflows::DataTableRowsRepository.new(data_table).delete(
-        params.row_id,
-      )
+      DiscourseWorkflows::DataTableRowsRepository.new(data_table).delete(params.row_id)
     end
 
     def reset_cached_size

@@ -12,36 +12,44 @@ module DiscourseWorkflows
       attribute :query_params, default: -> { {} }
     end
 
-    step :route_request
+    model :waiting_execution, optional: true
+
+    only_if(:resuming_execution) do
+      step :validate_waiting_http_method
+      step :resume_waiting_execution
+    end
+
+    only_if(:triggering_new_workflow) do
+      model :webhook_nodes, :find_webhook_nodes
+      step :trigger_webhook_nodes
+    end
 
     private
 
-    def route_request(params:)
-      waiting = find_waiting_execution(params.path)
-
-      if waiting
-        resume_waiting_execution(waiting, params)
-      else
-        trigger_webhooks(params)
-      end
-    end
-
-    def find_waiting_execution(token)
+    def fetch_waiting_execution(params:)
       DiscourseWorkflows::Execution
         .where(status: :waiting)
-        .where("waiting_config->>'resume_token' = ?", token)
+        .where("waiting_config->>'resume_token' = ?", params.path)
         .where("waiting_config->>'wait_type' = ?", "webhook")
         .first
     end
 
-    def resume_waiting_execution(execution, params)
-      config = execution.waiting_config
+    def resuming_execution(waiting_execution:)
+      waiting_execution.present?
+    end
 
-      unless config["http_method"] == params.http_method
-        context[:not_found] = true
-        return
+    def triggering_new_workflow(waiting_execution:)
+      waiting_execution.nil?
+    end
+
+    def validate_waiting_http_method(waiting_execution:, params:)
+      unless waiting_execution.waiting_config["http_method"] == params.http_method
+        fail!("HTTP method mismatch")
       end
+    end
 
+    def resume_waiting_execution(waiting_execution:, params:)
+      config = waiting_execution.waiting_config
       token = config["resume_token"]
       response_items = [
         {
@@ -60,25 +68,31 @@ module DiscourseWorkflows
       if response_mode == "immediately"
         Jobs.enqueue(
           Jobs::DiscourseWorkflows::ResumeWebhookWaiting,
-          execution_id: execution.id,
+          execution_id: waiting_execution.id,
           response_items: response_items,
         )
       else
-        result_execution = DiscourseWorkflows::Executor.resume(execution, response_items)
-        context[:sync_execution] = result_execution
+        context[:sync_execution] = DiscourseWorkflows::Executor.resume(
+          waiting_execution,
+          response_items,
+        )
         context[:sync_response_mode] = response_mode
         context[:sync_response_code] = config["response_code"]
       end
     end
 
-    def trigger_webhooks(params)
-      webhook_nodes = find_webhook_nodes(params)
+    def find_webhook_nodes(params:)
+      candidates =
+        DiscourseWorkflows::Node.enabled_of_type("trigger:webhook").where(
+          "discourse_workflows_nodes.configuration->>'http_method' = ?",
+          params.http_method,
+        )
 
-      if webhook_nodes.blank?
-        context[:not_found] = true
-        return
-      end
+      resolver = DiscourseWorkflows::ExpressionResolver.new({})
+      candidates.select { |node| resolver.resolve(node.configuration["path"]) == params.path }
+    end
 
+    def trigger_webhook_nodes(webhook_nodes:, params:)
       trigger_data = {
         body: params.body,
         headers: params.headers,
@@ -105,17 +119,6 @@ module DiscourseWorkflows
           context[:sync_response_code] ||= node.configuration["response_code"]
         end
       end
-    end
-
-    def find_webhook_nodes(params)
-      candidates =
-        DiscourseWorkflows::Node.enabled_of_type("trigger:webhook").where(
-          "discourse_workflows_nodes.configuration->>'http_method' = ?",
-          params.http_method,
-        )
-
-      resolver = DiscourseWorkflows::ExpressionResolver.new({})
-      candidates.select { |node| resolver.resolve(node.configuration["path"]) == params.path }
     end
   end
 end

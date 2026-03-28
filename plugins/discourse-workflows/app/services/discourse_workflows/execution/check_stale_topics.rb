@@ -22,30 +22,27 @@ module DiscourseWorkflows
 
         current_stale_ids = []
 
-        stale_topics(threshold).find_each do |topic|
-          current_stale_ids << topic.id
+        Topic
+          .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
+          .where(closed: false, archived: false, deleted_at: nil, visible: true)
+          .where("topics.archetype = ?", Archetype.default)
+          .includes(:tags)
+          .find_each do |topic|
+            current_stale_ids << topic.id
 
-          next if triggered_ids.include?(topic.id)
+            next if triggered_ids.include?(topic.id)
 
-          trigger = DiscourseWorkflows::Triggers::StaleTopic::V1.new(topic)
+            trigger = DiscourseWorkflows::Triggers::StaleTopic::V1.new(topic)
 
-          Jobs.enqueue(
-            Jobs::DiscourseWorkflows::ExecuteWorkflow,
-            trigger_node_id: node.id,
-            trigger_data: trigger.output,
-          )
-        end
+            Jobs.enqueue(
+              Jobs::DiscourseWorkflows::ExecuteWorkflow,
+              trigger_node_id: node.id,
+              trigger_data: trigger.output,
+            )
+          end
 
         node.replace_triggered_topic_ids!(current_stale_ids)
       end
-    end
-
-    def stale_topics(threshold)
-      Topic
-        .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
-        .where(closed: false, archived: false, deleted_at: nil, visible: true)
-        .where("topics.archetype = ?", Archetype.default)
-        .includes(:tags)
     end
   end
 end

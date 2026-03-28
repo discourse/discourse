@@ -26,15 +26,6 @@ module DiscourseWorkflows
 
     private
 
-    def log(guardian:, data_table:, column:)
-      StaffActionLogger.new(guardian.user).log_custom(
-        "discourse_workflows_data_table_column_renamed",
-        subject: data_table.name,
-        previous_value: column.name_before_last_save,
-        new_value: column.name,
-      )
-    end
-
     def find_data_table(params:)
       DiscourseWorkflows::DataTable.includes(:columns).find_by(id: params.data_table_id)
     end
@@ -55,6 +46,15 @@ module DiscourseWorkflows
       )
 
       data_table.reload
+    end
+
+    def log(guardian:, data_table:, column:)
+      StaffActionLogger.new(guardian.user).log_custom(
+        "discourse_workflows_data_table_column_renamed",
+        subject: data_table.name,
+        previous_value: column.name_before_last_save,
+        new_value: column.name,
+      )
     end
   end
 end

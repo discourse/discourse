@@ -14,7 +14,8 @@ module DiscourseWorkflows
 
     model :data_table, :find_data_table
     step :validate_storage_limit
-    step :validate_update
+    step :normalize_filter
+    step :normalize_data
     step :update_matching_rows
     step :reset_cached_size
 
@@ -28,11 +29,14 @@ module DiscourseWorkflows
       DiscourseWorkflows::DataTableSizeValidator.validate_size!
     end
 
-    def validate_update(data_table:, params:)
+    def normalize_filter(data_table:, params:)
       context[:normalized_filter] = DiscourseWorkflows::DataTableFilter.new(
         data_table,
         params.filter,
       ).normalize(optional: false)
+    end
+
+    def normalize_data(data_table:, params:)
       context[:normalized_data] = DiscourseWorkflows::DataTableRow.normalize_row_data(
         data_table,
         params.data,
