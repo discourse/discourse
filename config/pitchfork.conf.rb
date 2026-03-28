@@ -52,6 +52,7 @@ end
 
 after_mold_fork do |server, mold|
   if mold.generation.zero?
+    MiniRacerForkSafety.block_initialization!
     Discourse.preload_rails!
 
     supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
@@ -76,6 +77,7 @@ end
 oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSION >= "3.4"
 
 after_worker_fork do |server, worker|
+  MiniRacerForkSafety.allow_initialization!
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
