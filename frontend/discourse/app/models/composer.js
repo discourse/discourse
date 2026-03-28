@@ -215,7 +215,7 @@ export default class Composer extends RestModel {
     ? this.post?.locale
     : null;
 
-  unlistTopic = false;
+  @tracked unlistTopic = false;
   noBump = false;
   draftSaving = false;
   draftForceSave = false;
