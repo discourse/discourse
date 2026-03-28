@@ -138,6 +138,9 @@ en:
         no_conditions_body: "Conditions are used to filter items based on their values."
         add_condition: "Add condition"
         conditions: "Conditions"
+        field: "Field"
+        operator: "Operator"
+        value: "Value"
         combinator:
           title: "Match mode"
           all: "All conditions must pass"

@@ -164,7 +164,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
       </template>
     );
 
-    await click(".btn-default.btn-small");
+    await click(".workflows-empty-state .btn-primary");
 
     const conditions = this.formApi.get("conditions");
     assert.strictEqual(conditions.length, 1);

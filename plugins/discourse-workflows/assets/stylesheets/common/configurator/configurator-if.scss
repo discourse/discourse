@@ -29,6 +29,20 @@
       margin-bottom: 0;
     }
 
+    .form-kit__container-title {
+      padding: var(--space-1) var(--space-2) 0;
+      font-size: var(--font-down-2);
+      color: var(--primary-medium);
+    }
+
+    .form-kit__errors {
+      padding: 0 var(--space-2) var(--space-1);
+    }
+
+    .workflows-property-engine__mode-control {
+      right: 2px;
+    }
+
     .form-kit__control-custom,
     .form-kit__control-select,
     .form-kit__control-input-wrapper {

@@ -43,8 +43,9 @@ function isExpression(value) {
 function leftValueSchema(fieldOptions) {
   return {
     type: "options",
+    required: true,
     options: fieldOptions.map((f) => ({ value: f.id, label: f.label })),
-    ui: { expression: true, show_label: false },
+    ui: { expression: true },
   };
 }
 
@@ -52,8 +53,9 @@ function operationSchema(item) {
   const type = item?.operator?.type || "string";
   return {
     type: "options",
+    required: true,
     options: operatorsForType(type),
-    ui: { expression: true, show_label: false },
+    ui: { expression: true },
   };
 }
 
@@ -66,20 +68,23 @@ function rightValueSchema(item) {
   if (CATEGORY_FIELDS.includes(leftValue)) {
     return {
       type: "string",
-      ui: { expression: true, show_label: false, control: "category" },
+      required: true,
+      ui: { expression: true, control: "category" },
     };
   }
 
   if (USER_FIELDS.includes(leftValue)) {
     return {
       type: "string",
-      ui: { expression: true, show_label: false, control: "user" },
+      required: true,
+      ui: { expression: true, control: "user" },
     };
   }
 
   return {
     type: "string",
-    ui: { expression: true, show_label: false },
+    required: true,
+    ui: { expression: true },
   };
 }
 
@@ -182,6 +187,7 @@ export default class PropertyEngineConditionBuilder extends Component {
             @fieldName="leftValue"
             @formApiPath={{concat @fieldName "." index ".leftValue"}}
             @schema={{leftValueSchema this.fieldOptions}}
+            @label={{i18n "discourse_workflows.if_condition.field"}}
             @onSet={{fn this.handleLeftValueSet index}}
           />
 
@@ -192,6 +198,7 @@ export default class PropertyEngineConditionBuilder extends Component {
               @fieldName="operation"
               @formApiPath={{concat @fieldName "." index ".operator.operation"}}
               @schema={{operationSchema item}}
+              @label={{i18n "discourse_workflows.if_condition.operator"}}
               @onSet={{fn this.handleOperatorSet index}}
             />
           </object.Object>
@@ -203,6 +210,7 @@ export default class PropertyEngineConditionBuilder extends Component {
               @fieldName="rightValue"
               @formApiPath={{concat @fieldName "." index ".rightValue"}}
               @schema={{rightValueSchema item}}
+              @label={{i18n "discourse_workflows.if_condition.value"}}
             />
           {{/unless}}
         </collection.Object>

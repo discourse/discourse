@@ -264,12 +264,20 @@ export default class PropertyEngineField extends Component {
 
   @action
   toggleExpressionMode() {
+    const currentValue = this.args.formApi?.get(this.apiPath) || "";
+
     if (this.expressionMode) {
       this._expressionMode = false;
-      this.args.formApi?.set(this.apiPath, "");
+      const plainValue = currentValue.startsWith("=")
+        ? currentValue.slice(1)
+        : currentValue;
+      this.args.formApi?.set(this.apiPath, plainValue);
     } else {
       this._expressionMode = true;
-      this.args.formApi?.set(this.apiPath, "=");
+      const dynamicValue = currentValue.startsWith("=")
+        ? currentValue
+        : `=${currentValue}`;
+      this.args.formApi?.set(this.apiPath, dynamicValue);
     }
   }
 
