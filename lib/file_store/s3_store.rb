@@ -22,11 +22,25 @@ module FileStore
 
     def s3_helper
       @s3_helper ||=
-        S3Helper.new(
-          s3_bucket,
-          Rails.configuration.multisite ? multisite_tombstone_prefix : TOMBSTONE_PREFIX,
-          use_accelerate_endpoint: SiteSetting.Upload.enable_s3_transfer_acceleration,
-        )
+        begin
+          # GlobalSetting (env vars) takes precedence over SiteSetting (UI config)
+          creds =
+            if GlobalAwsCredentials.configured?
+              GlobalAwsCredentials.instance
+            else
+              SiteAwsCredentials.instance.tap(&:validate!)
+            end
+
+          options = creds.to_sdk_options
+          options[:use_accelerate_endpoint] = SiteSetting.Upload.enable_s3_transfer_acceleration
+          options[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
+
+          S3Helper.new(
+            s3_bucket,
+            Rails.configuration.multisite ? multisite_tombstone_prefix : TOMBSTONE_PREFIX,
+            options,
+          )
+        end
     end
 
     def store_upload(file, upload, content_type = nil)
