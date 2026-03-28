@@ -419,6 +419,7 @@ en:
           waiting: "Waiting"
           kept: "Kept"
           rejected: "Rejected"
+          rate_limited: "Rate limited"
       stats:
         executions: "Executions"
         failures: "Failures"

@@ -2,3 +2,6 @@ plugins:
   discourse_workflows_enabled:
     default: false
     client: true
+  discourse_workflows_max_executions_per_minute:
+    default: 20
+    hidden: true

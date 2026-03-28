@@ -36,6 +36,19 @@ module DiscourseWorkflows
 
     def run
       return nil unless @workflow.enabled?
+      unless rate_limiter.performed!(raise_error: false)
+        now = Time.current
+        return DiscourseWorkflows::Execution.create!(
+                 workflow: @workflow,
+                 trigger_node_id: @trigger_node.id,
+                 status: :rate_limited,
+                 trigger_data: @trigger_data,
+                 workflow_data: WorkflowSnapshot.snapshot(@workflow),
+                 execution_mode: @execution_mode,
+                 started_at: now,
+                 finished_at: now,
+               )
+      end
 
       @state.start!
       @snapshot = WorkflowSnapshot.new(@state.execution.workflow_data)
@@ -179,6 +192,16 @@ module DiscourseWorkflows
         yield items if block_given?
         enqueue_downstream(node, output_name, items)
       end
+    end
+
+    def rate_limiter
+      RateLimiter.new(
+        nil,
+        "discourse_workflows_executions",
+        SiteSetting.discourse_workflows_max_executions_per_minute,
+        60,
+        global: true,
+      )
     end
 
     def step_runner

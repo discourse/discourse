@@ -646,6 +646,21 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       expect(execution).to be_nil
     end
+
+    it "creates a rate_limited execution when rate limit is exceeded" do
+      RateLimiter.enable
+      SiteSetting.discourse_workflows_max_executions_per_minute = 1
+      trigger_node = build_workflow
+      trigger_data = { topic_id: topic.id, tags: topic.tags.pluck(:name) }
+
+      described_class.new(trigger_node, trigger_data).run
+      execution = described_class.new(trigger_node, trigger_data).run
+
+      expect(execution.status).to eq("rate_limited")
+      expect(execution.finished_at).to be_present
+    ensure
+      RateLimiter.disable
+    end
   end
 
   describe "error workflow triggering" do
