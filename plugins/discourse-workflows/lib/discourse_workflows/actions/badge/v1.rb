@@ -2,10 +2,12 @@
 
 module DiscourseWorkflows
   module Actions
-    module AwardBadge
+    module Badge
       class V1 < Actions::Base
+        OPERATIONS = %w[grant revoke].freeze
+
         def self.identifier
-          "action:award_badge"
+          "action:badge"
         end
 
         def self.icon
@@ -18,9 +20,21 @@ module DiscourseWorkflows
 
         def self.configuration_schema
           {
-            user_id: {
+            operation: {
+              type: :options,
+              required: true,
+              options: OPERATIONS,
+              default: "grant",
+              ui: {
+                expression: true,
+              },
+            },
+            username: {
               type: :string,
               required: true,
+              ui: {
+                control: :user,
+              },
             },
             badge_id: {
               type: :integer,
@@ -31,14 +45,14 @@ module DiscourseWorkflows
                 value_property: "id",
                 name_property: "name",
                 filterable: true,
-                none: "discourse_workflows.award_badge.badge_id_placeholder",
+                none: "discourse_workflows.badge.badge_id_placeholder",
               },
             },
           }
         end
 
         def self.metadata
-          { badges: Badge.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } } }
+          { badges: ::Badge.order(:name).pluck(:id, :name).map { |id, name| { id:, name: } } }
         end
 
         def self.output_schema
@@ -46,10 +60,17 @@ module DiscourseWorkflows
         end
 
         def execute_single(_context, item:, config:)
-          user = User.find(config["user_id"])
-          badge = Badge.find(config["badge_id"])
+          user = User.find_by_username(config["username"])
+          raise ActiveRecord::RecordNotFound.new("Couldn't find User") if user.nil?
+          badge = ::Badge.find(config["badge_id"])
 
-          BadgeGranter.grant(badge, user, granted_by: Discourse.system_user)
+          case config["operation"]
+          when "revoke"
+            user_badge = UserBadge.find_by(user: user, badge: badge)
+            BadgeGranter.revoke(user_badge, revoked_by: Discourse.system_user) if user_badge
+          else
+            BadgeGranter.grant(badge, user, granted_by: Discourse.system_user)
+          end
 
           { user_id: user.id, username: user.username, badge_id: badge.id, badge_name: badge.name }
         end

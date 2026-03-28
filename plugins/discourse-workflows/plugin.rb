@@ -77,7 +77,7 @@ after_initialize do
       HttpRequest
       DataTable
       ChatApproval
-      AwardBadge
+      Badge
       Group
       Form
       RespondToWebhook

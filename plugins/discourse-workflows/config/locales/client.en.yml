@@ -95,7 +95,7 @@ en:
         "action:data_table": "Data Table"
         "action:chat_approval": "Chat Approval"
         "action:group": "Group"
-        "action:award_badge": "Award Badge"
+        "action:badge": "Badge"
         "trigger:form": "Form Trigger"
         "action:form": "Form"
         "action:respond_to_webhook": "Respond to Webhook"
@@ -127,7 +127,7 @@ en:
         "action:data_table": "Read, write, or query a workflow data table"
         "action:chat_approval": "Send an approval request to a chat channel and wait for a response"
         "action:group": "Add or remove a user from a group"
-        "action:award_badge": "Award a badge to a user"
+        "action:badge": "Grant or revoke a badge"
         "trigger:form": "Generates a public web form and fires when it is submitted"
         "action:form": "Adds a page to a multi-step form"
         "action:respond_to_webhook": "Send a custom HTTP response to the webhook caller"
@@ -184,8 +184,11 @@ en:
         username: "Username"
         group_id: "Group"
         group_id_placeholder: "Select a group"
-      award_badge:
-        user_id: "User ID"
+      badge:
+        operation: "Operation"
+        grant: "Grant badge"
+        revoke: "Revoke badge"
+        username: "Username"
         badge_id: "Badge"
         badge_id_placeholder: "Select a badge"
       create_post:

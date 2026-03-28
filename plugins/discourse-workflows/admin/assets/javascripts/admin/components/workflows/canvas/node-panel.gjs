@@ -59,7 +59,7 @@ const CATEGORIES = [
     icon: "discourse-other-tab",
     identifiers: [
       "action:append_tags",
-      "action:award_badge",
+      "action:badge",
       "action:group",
       "action:create_post",
       "action:create_topic",
