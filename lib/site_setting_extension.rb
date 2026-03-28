@@ -165,6 +165,21 @@ module SiteSettingExtension
     @upcoming_change_metadata ||= {}
   end
 
+  # Hash mapping target setting names to their upcoming change default overrides.
+  # When an upcoming change is enabled, the linked target setting's default
+  # shifts to the override value (only if the admin hasn't manually set it).
+  #
+  # @example In site_settings.yml:
+  #   discourse_reactions_enabled:
+  #     default: false
+  #     client: true
+  #     upcoming_change_default_override:
+  #       setting: "enable_discourse_reactions_by_default"
+  #       default: true
+  def upcoming_change_default_overrides
+    @upcoming_change_default_overrides ||= {}
+  end
+
   def hidden_settings_provider
     @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
   end
@@ -414,6 +429,19 @@ module SiteSettingExtension
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s
+        upcoming_change_default_override = upcoming_change_default_overrides[s]
+        upcoming_change_default_override_metadata = nil
+
+        if upcoming_change_default_override &&
+             upcoming_change_metadata[upcoming_change_default_override[:setting]] &&
+             UpcomingChanges.resolved_value(upcoming_change_default_override[:setting])
+          upcoming_change_default_override_metadata = {
+            old_default: default,
+            new_default: upcoming_change_default_override[:default].to_s,
+            change_setting_name: upcoming_change_default_override[:setting],
+          }
+          default = upcoming_change_default_override[:default].to_s
+        end
 
         if themeable[s]
           value = public_send(s, { theme_id: SiteSetting.default_theme_id })
@@ -463,7 +491,7 @@ module SiteSettingExtension
               value.to_s
             end
 
-          opts.merge!(
+          opts_data = {
             default: default,
             value: serialized_value,
             preview: previews[s],
@@ -475,8 +503,15 @@ module SiteSettingExtension
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
             depends_on: type_supervisor.dependencies[s],
-          )
-          opts.merge!(type_hash)
+          }
+
+          if upcoming_change_default_override_metadata
+            opts_data[
+              :upcoming_change_default_override_metadata
+            ] = upcoming_change_default_override_metadata
+          end
+
+          opts.merge!(opts_data.merge(type_hash))
         end
 
         opts[:plugin] = plugins[s] if plugins[s]
@@ -543,6 +578,12 @@ module SiteSettingExtension
 
         defaults_view = defaults.all(new_hash[:default_locale])
 
+        # If the "modified" value is the same as the setting default,
+        # this doesn't really count and is more of a quirk on how we
+        # store site settings. In this case, we should not consider this
+        # setting to be modified.
+        new_modified.reject! { |name, val| val.to_s == defaults_view[name].to_s }
+
         # add locale default and defaults based on default_locale, cause they are cached
         new_hash = defaults_view.merge!(new_hash)
 
@@ -553,6 +594,7 @@ module SiteSettingExtension
 
         changes.each { |name, val| current[name] = val }
         deletions.each { |name, _| current[name] = defaults_view[name] }
+
         modified.clear
         modified.merge!(new_modified)
         uploads.clear
@@ -1031,6 +1073,10 @@ module SiteSettingExtension
         value =
           if upcoming_change_metadata[name]
             UpcomingChanges.resolved_value(name)
+          elsif (override = upcoming_change_default_overrides[name]) && !modified.key?(name) &&
+                upcoming_change_metadata[override[:setting]] &&
+                UpcomingChanges.resolved_value(override[:setting])
+            override[:default]
           else
             current[name]
           end
@@ -1136,6 +1182,13 @@ module SiteSettingExtension
         upcoming_change_metadata[name][:impact_type] = impact_type
         upcoming_change_metadata[name][:impact_role] = impact_role
         upcoming_change_metadata[name][:status] = opts[:upcoming_change][:status].to_sym
+      end
+
+      if opts[:upcoming_change_default_override]
+        upcoming_change_default_overrides[name] = {
+          setting: opts[:upcoming_change_default_override][:setting].to_sym,
+          default: opts[:upcoming_change_default_override][:default],
+        }
       end
 
       categories[name] = opts[:category] || :uncategorized
