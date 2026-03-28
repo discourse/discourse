@@ -19,20 +19,20 @@ module DiscourseWorkflows
                 }
     end
 
-    model :data_table, :find_data_table
+    model :data_table
 
     transaction do
-      model :column, :find_column
+      model :column
       step :move_column
     end
 
     private
 
-    def find_data_table(params:)
+    def fetch_data_table(params:)
       DiscourseWorkflows::DataTable.includes(:columns).find_by(id: params.data_table_id)
     end
 
-    def find_column(data_table:, params:)
+    def fetch_column(data_table:, params:)
       data_table.columns.find_by(id: params.column_id)
     end
 
@@ -41,8 +41,7 @@ module DiscourseWorkflows
       target_position = params.position
 
       if target_position >= ordered_columns.length
-        raise DataTableValidationError,
-              "Position must be between 0 and #{ordered_columns.length - 1}"
+        fail!("Position must be between 0 and #{ordered_columns.length - 1}")
       end
 
       ordered_columns.delete(column)

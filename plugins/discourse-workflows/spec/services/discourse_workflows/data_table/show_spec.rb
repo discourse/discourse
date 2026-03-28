@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::DataTable::Show do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:data_table_id) }
+  end
+
   describe ".call" do
     subject(:result) { described_class.call(params:) }
 
@@ -9,6 +13,12 @@ RSpec.describe DiscourseWorkflows::DataTable::Show do
     let(:params) { { data_table_id: data_table.id } }
 
     before { SiteSetting.discourse_workflows_enabled = true }
+
+    context "when contract is invalid" do
+      let(:params) { { data_table_id: nil } }
+
+      it { is_expected.to fail_a_contract }
+    end
 
     context "when data table does not exist" do
       let(:params) { { data_table_id: -1 } }

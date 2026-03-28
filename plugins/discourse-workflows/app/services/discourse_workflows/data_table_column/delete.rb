@@ -12,10 +12,10 @@ module DiscourseWorkflows
       validates :column_id, presence: true
     end
 
-    model :data_table, :find_data_table
+    model :data_table
 
     transaction do
-      model :column, :find_column
+      model :column
       step :drop_storage_column
       step :destroy_column
       step :resequence_columns
@@ -26,11 +26,11 @@ module DiscourseWorkflows
 
     private
 
-    def find_data_table(params:)
+    def fetch_data_table(params:)
       DiscourseWorkflows::DataTable.includes(:columns).find_by(id: params.data_table_id)
     end
 
-    def find_column(data_table:, params:)
+    def fetch_column(data_table:, params:)
       data_table.columns.find_by(id: params.column_id)
     end
 

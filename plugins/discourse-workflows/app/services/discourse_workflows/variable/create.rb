@@ -4,6 +4,8 @@ module DiscourseWorkflows
   class Variable::Create
     include Service::Base
 
+    policy :can_manage_workflows
+
     params do
       attribute :key, :string
       attribute :value, :string
@@ -14,19 +16,19 @@ module DiscourseWorkflows
     end
 
     model :variable, :create_variable
-    step :log
+    step :log_variable_creation
 
     private
 
-    def create_variable(params:)
-      DiscourseWorkflows::Variable.create(
-        key: params.key,
-        value: params.value,
-        description: params.description,
-      )
+    def can_manage_workflows(guardian:)
+      guardian.is_admin?
     end
 
-    def log(variable:, guardian:)
+    def create_variable(params:)
+      DiscourseWorkflows::Variable.create(**params)
+    end
+
+    def log_variable_creation(variable:, guardian:)
       StaffActionLogger.new(guardian.user).log_custom(
         "discourse_workflows_variable_created",
         subject: variable.key,

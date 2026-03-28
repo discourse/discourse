@@ -9,7 +9,7 @@ module DiscourseWorkflows
     params { attribute :workflow_id, :integer }
 
     model :recent_executions, :fetch_recent_executions, optional: true
-    model :stats, :summarize_executions
+    step :summarize_executions
 
     private
 
@@ -33,7 +33,12 @@ module DiscourseWorkflows
       avg_seconds = durations.any? ? (durations.sum / durations.size).round(1) : 0
       avg_duration = avg_seconds < 1 ? "#{(avg_seconds * 1000).round}ms" : "#{avg_seconds}s"
 
-      { total: total, failed: failed, failure_rate: "#{failure_rate}%", avg_duration: avg_duration }
+      context[:stats] = {
+        total: total,
+        failed: failed,
+        failure_rate: "#{failure_rate}%",
+        avg_duration: avg_duration,
+      }
     end
   end
 end

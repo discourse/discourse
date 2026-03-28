@@ -2,14 +2,13 @@
 
 RSpec.describe DiscourseWorkflows::Workflow::Destroy do
   describe ".call" do
-    subject(:result) { described_class.call(params:, guardian: user.guardian) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:user, :admin)
-    fab!(:workflow, :discourse_workflows_workflow) do
-      Fabricate(:discourse_workflows_workflow, created_by: user)
-    end
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
 
     let(:params) { { workflow_id: workflow.id } }
+    let(:dependencies) { { guardian: user.guardian } }
 
     before { SiteSetting.discourse_workflows_enabled = true }
 

@@ -9,11 +9,11 @@ module DiscourseWorkflows
       validates :ids, presence: true
     end
 
-    step :destroy
+    step :delete_executions
 
     private
 
-    def destroy(params:)
+    def delete_executions(params:)
       context[:deleted_count] = DiscourseWorkflows::Execution.where(id: params.ids).delete_all
     end
   end

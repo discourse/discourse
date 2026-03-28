@@ -25,6 +25,14 @@ module DiscourseWorkflows
 
       validates :workflow_id, presence: true
       validates :name, presence: true
+
+      def updatable_attributes
+        attrs = { name: }
+        attrs[:enabled] = enabled unless enabled.nil?
+        attrs[:sticky_notes] = sticky_notes if sticky_notes
+        attrs[:error_workflow_id] = error_workflow_id
+        attrs
+      end
     end
 
     model :workflow
@@ -47,11 +55,7 @@ module DiscourseWorkflows
     end
 
     def update_workflow(workflow:, params:, guardian:)
-      attrs = { name: params.name, updated_by: guardian.user }
-      attrs[:enabled] = params.enabled unless params.enabled.nil?
-      attrs[:sticky_notes] = params.sticky_notes if params.sticky_notes
-      attrs[:error_workflow_id] = params.error_workflow_id if params.respond_to?(:error_workflow_id)
-      workflow.update!(**attrs)
+      workflow.update!(**params.updatable_attributes, updated_by: guardian.user)
     end
 
     def populate_graph(workflow:, params:)

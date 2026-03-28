@@ -24,11 +24,12 @@ module DiscourseWorkflows
       before_validation { self.limit = [[limit.to_i, 1].max, MAX_LIMIT].min if limit.present? }
     end
 
-    step :list
+    model :workflows, optional: true
+    step :compute_pagination
 
     private
 
-    def list(params:)
+    def fetch_workflows(params:)
       limit = params.limit || DEFAULT_LIMIT
 
       scope =
@@ -44,9 +45,14 @@ module DiscourseWorkflows
 
       scope = scope.where("discourse_workflows_workflows.id < ?", params.cursor) if params.cursor
 
-      results = scope.limit(limit + 1).to_a
-      has_more = results.size > limit
-      context[:workflows] = has_more ? results.first(limit) : results
+      scope.limit(limit + 1)
+    end
+
+    def compute_pagination(workflows:, params:)
+      limit = params.limit || DEFAULT_LIMIT
+      has_more = workflows.size > limit
+
+      context[:workflows] = has_more ? workflows.first(limit) : workflows
       context[:total_rows] = DiscourseWorkflows::Workflow.count
       context[:load_more_url] = if has_more
         "/admin/plugins/discourse-workflows/workflows.json?cursor=#{context[:workflows].last.id}&limit=#{limit}"

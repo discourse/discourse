@@ -7,6 +7,8 @@ module DiscourseWorkflows
     params do
       attribute :trigger_node_id, :integer
       attribute :trigger_data
+
+      validates :trigger_node_id, presence: true
     end
 
     model :trigger_node

@@ -12,8 +12,8 @@ module DiscourseWorkflows
       validates :row_id, presence: true
     end
 
-    model :data_table, :fetch_data_table
-    model :row, :fetch_row
+    model :data_table
+    model :row
     step :destroy_row
     step :reset_cached_size
 

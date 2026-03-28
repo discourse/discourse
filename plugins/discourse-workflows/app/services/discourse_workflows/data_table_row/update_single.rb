@@ -13,7 +13,7 @@ module DiscourseWorkflows
       validates :row_id, presence: true
     end
 
-    model :data_table, :fetch_data_table
+    model :data_table
     step :validate_storage_limit
     step :normalize_data
     model :row, :update_row

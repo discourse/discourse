@@ -30,7 +30,7 @@ module DiscourseWorkflows
 
     def resume_execution(execution:, waiting_node:, params:, guardian:)
       form_data =
-        execution.accumulated_form_data.merge(waiting_node.form_data_from(params.form_data || {}))
+        execution.accumulated_form_data.merge(waiting_node.form_data_from(params.form_data))
 
       response_items = [
         { "json" => { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 } },

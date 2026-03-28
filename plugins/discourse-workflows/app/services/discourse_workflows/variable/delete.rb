@@ -7,8 +7,9 @@ module DiscourseWorkflows
     params { attribute :variable_id, :integer }
 
     model :variable
-    step :log
-    step :delete_variable
+    policy :can_manage_workflows
+    step :log_variable_deletion
+    step :destroy_variable
 
     private
 
@@ -16,14 +17,18 @@ module DiscourseWorkflows
       DiscourseWorkflows::Variable.find_by(id: params.variable_id)
     end
 
-    def log(variable:, guardian:)
+    def can_manage_workflows(guardian:)
+      guardian.is_admin?
+    end
+
+    def log_variable_deletion(variable:, guardian:)
       StaffActionLogger.new(guardian.user).log_custom(
         "discourse_workflows_variable_destroyed",
         subject: variable.key,
       )
     end
 
-    def delete_variable(variable:)
+    def destroy_variable(variable:)
       variable.destroy!
     end
   end

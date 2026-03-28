@@ -7,6 +7,8 @@ module DiscourseWorkflows
     DEFAULT_LIMIT = 25
     MAX_LIMIT = 100
 
+    policy :can_manage_workflows
+
     params do
       attribute :cursor, :integer
       attribute :limit, :integer
@@ -14,11 +16,15 @@ module DiscourseWorkflows
       before_validation { self.limit = [[limit.to_i, 1].max, MAX_LIMIT].min if limit.present? }
     end
 
-    step :list
+    step :list_variables
 
     private
 
-    def list(params:)
+    def can_manage_workflows(guardian:)
+      guardian.is_admin?
+    end
+
+    def list_variables(params:)
       limit = params.limit || DEFAULT_LIMIT
 
       scope = DiscourseWorkflows::Variable.order(id: :desc)
@@ -26,6 +32,7 @@ module DiscourseWorkflows
 
       results = scope.limit(limit + 1).to_a
       has_more = results.size > limit
+
       context[:variables] = has_more ? results.first(limit) : results
       context[:total_rows] = DiscourseWorkflows::Variable.count
       context[:load_more_url] = if has_more

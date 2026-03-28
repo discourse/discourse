@@ -14,7 +14,7 @@ module DiscourseWorkflows
       validates :column_type, presence: true
     end
 
-    model :data_table, :find_data_table
+    model :data_table
 
     transaction do
       model :column, :create_column
@@ -26,7 +26,7 @@ module DiscourseWorkflows
 
     private
 
-    def find_data_table(params:)
+    def fetch_data_table(params:)
       DiscourseWorkflows::DataTable.includes(:columns).find_by(id: params.data_table_id)
     end
 

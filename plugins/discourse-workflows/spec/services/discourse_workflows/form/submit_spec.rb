@@ -6,10 +6,10 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, guardian:) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:user)
-    let(:guardian) { Guardian.new(user) }
+    let(:dependencies) { { guardian: Guardian.new(user) } }
 
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, enabled: true) }
     fab!(:trigger_node) do
@@ -71,9 +71,12 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
         expect(result[:execution]).to be_a(DiscourseWorkflows::Execution)
       end
 
-      it "sets response_mode from trigger configuration" do
+      it "computes response metadata" do
         result
-        expect(result[:response_mode]).to eq("on_received")
+        expect(result[:response_metadata]).to include(
+          has_downstream_form: false,
+          response_mode: "on_received",
+        )
       end
     end
   end

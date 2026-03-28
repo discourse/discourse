@@ -10,9 +10,7 @@ module DiscourseWorkflows
 
     def show
       if request.format.json?
-        DiscourseWorkflows::Form::Show.call(
-          service_params.deep_merge(params: { uuid: params[:uuid] }),
-        ) do
+        DiscourseWorkflows::Form::Show.call(service_params) do
           on_success { |form_data:| render json: form_data }
           on_failure { render(json: failed_json, status: :unprocessable_entity) }
           on_model_not_found(:form_node) { raise Discourse::NotFound }
@@ -23,19 +21,12 @@ module DiscourseWorkflows
     end
 
     def create
-      DiscourseWorkflows::Form::Submit.call(
-        service_params.deep_merge(
-          params: {
-            uuid: params[:uuid],
-            form_data: params[:form_data]&.to_unsafe_h,
-          },
-        ),
-      ) do
-        on_success do |execution:, has_downstream_form:, response_mode:|
+      DiscourseWorkflows::Form::Submit.call(service_params) do
+        on_success do |execution:, response_metadata:|
           render json: {
                    execution_id: execution&.id,
-                   has_downstream_form: has_downstream_form,
-                   response_mode: response_mode,
+                   has_downstream_form: response_metadata[:has_downstream_form],
+                   response_mode: response_metadata[:response_mode],
                    form_channel: DiscourseWorkflows::Executor.form_channel(execution&.id),
                  }
         end
@@ -45,14 +36,7 @@ module DiscourseWorkflows
     end
 
     def update
-      DiscourseWorkflows::Form::Resume.call(
-        service_params.deep_merge(
-          params: {
-            execution_id: params[:execution_id],
-            form_data: params[:form_data]&.to_unsafe_h,
-          },
-        ),
-      ) do
+      DiscourseWorkflows::Form::Resume.call(service_params) do
         on_success { |execution:| render json: { execution_id: execution.id } }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:execution) { raise Discourse::NotFound }

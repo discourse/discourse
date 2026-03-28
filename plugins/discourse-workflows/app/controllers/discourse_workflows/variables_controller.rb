@@ -16,17 +16,17 @@ module DiscourseWorkflows
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
       end
     end
 
     def create
-      DiscourseWorkflows::Variable::Create.call(
-        service_params.deep_merge(params: variable_params),
-      ) do |result|
+      DiscourseWorkflows::Variable::Create.call(service_params) do |result|
         on_success do |variable:|
           render_serialized(variable, DiscourseWorkflows::VariableSerializer, root: "variable")
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -44,12 +44,13 @@ module DiscourseWorkflows
 
     def update
       DiscourseWorkflows::Variable::Update.call(
-        service_params.deep_merge(params: variable_params.merge(variable_id: params[:id])),
+        service_params.deep_merge(params: { variable_id: params[:id] }),
       ) do |result|
         on_success do |variable:|
           render_serialized(variable, DiscourseWorkflows::VariableSerializer, root: "variable")
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_failed_contract do |contract|
           render(
             json: failed_json.merge(errors: contract.errors.full_messages),
@@ -72,15 +73,9 @@ module DiscourseWorkflows
       ) do |result|
         on_success { head :no_content }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
         on_model_not_found(:variable) { raise Discourse::NotFound }
       end
-    end
-
-    private
-
-    def variable_params
-      value = params.slice(:key, :value, :description)
-      value.respond_to?(:to_unsafe_h) ? value.to_unsafe_h : value.to_h
     end
   end
 end

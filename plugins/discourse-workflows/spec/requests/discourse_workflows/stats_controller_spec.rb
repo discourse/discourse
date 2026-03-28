@@ -20,4 +20,19 @@ RSpec.describe DiscourseWorkflows::StatsController do
       expect(json).to have_key("avg_duration")
     end
   end
+
+  describe "GET /admin/plugins/discourse-workflows/stats/:workflow_id" do
+    fab!(:workflow, :discourse_workflows_workflow)
+
+    it "returns stats JSON scoped to the workflow" do
+      get "/admin/plugins/discourse-workflows/stats/#{workflow.id}.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json).to have_key("total")
+      expect(json).to have_key("failed")
+      expect(json).to have_key("failure_rate")
+      expect(json).to have_key("avg_duration")
+    end
+  end
 end

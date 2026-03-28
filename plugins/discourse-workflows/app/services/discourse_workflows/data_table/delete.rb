@@ -9,14 +9,14 @@ module DiscourseWorkflows
       validates :data_table_id, presence: true
     end
 
-    model :data_table, :find_data_table
+    model :data_table
     step :log
     step :destroy_data_table
     step :reset_cached_size
 
     private
 
-    def find_data_table(params:)
+    def fetch_data_table(params:)
       DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
     end
 

@@ -7,12 +7,13 @@ RSpec.describe DiscourseWorkflows::Workflow::Update do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, guardian: user.guardian) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:user, :admin)
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
 
     let(:params) { { workflow_id: workflow.id, name:, enabled:, nodes:, connections: } }
+    let(:dependencies) { { guardian: user.guardian } }
     let(:name) { "Updated Workflow" }
     let(:enabled) { true }
     let(:nodes) { [] }

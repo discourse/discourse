@@ -4,14 +4,14 @@ module DiscourseWorkflows
   class NodeType::List
     include Service::Base
 
-    model :node_types, :build_node_type_schemas, optional: true
+    step :build_node_type_schemas
 
     private
 
     def build_node_type_schemas
       seen = Set.new
 
-      DiscourseWorkflows::Registry.all_node_types.filter_map do |klass|
+      context[:node_types] = DiscourseWorkflows::Registry.all_node_types.filter_map do |klass|
         identifier = klass.identifier
         next if seen.include?(identifier)
         seen.add(identifier)

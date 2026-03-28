@@ -7,13 +7,12 @@ RSpec.describe DiscourseWorkflows::Variable::Create do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, guardian: admin.guardian) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
 
     let(:params) { { key: "API_BASE_URL", value: "https://example.com", description: "Base URL" } }
-
-    before { SiteSetting.discourse_workflows_enabled = true }
+    let(:dependencies) { { guardian: admin.guardian } }
 
     context "when contract is invalid" do
       let(:params) { { key: nil, value: nil } }
@@ -21,13 +20,20 @@ RSpec.describe DiscourseWorkflows::Variable::Create do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when user cannot manage workflows" do
+      fab!(:user)
+
+      let(:dependencies) { { guardian: user.guardian } }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
       it "creates the variable" do
-        result
-        variable = DiscourseWorkflows::Variable.last
-        expect(variable).to have_attributes(
+        expect { result }.to change { DiscourseWorkflows::Variable.count }.by(1)
+        expect(DiscourseWorkflows::Variable.last).to have_attributes(
           key: "API_BASE_URL",
           value: "https://example.com",
           description: "Base URL",
@@ -35,7 +41,7 @@ RSpec.describe DiscourseWorkflows::Variable::Create do
       end
 
       it "logs a staff action" do
-        result
+        expect { result }.to change { UserHistory.count }.by(1)
         expect(UserHistory.last).to have_attributes(
           custom_type: "discourse_workflows_variable_created",
           subject: "API_BASE_URL",

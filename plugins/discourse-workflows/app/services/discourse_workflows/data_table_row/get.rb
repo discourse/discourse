@@ -20,12 +20,12 @@ module DiscourseWorkflows
       before_validation { self.limit = [[limit.to_i, 1].max, MAX_LIMIT].min if limit.present? }
     end
 
-    model :data_table, :find_data_table
+    model :data_table
     step :query_rows
 
     private
 
-    def find_data_table(params:)
+    def fetch_data_table(params:)
       DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
     end
 

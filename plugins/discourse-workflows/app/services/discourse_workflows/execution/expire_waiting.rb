@@ -5,14 +5,19 @@ module DiscourseWorkflows
     include Service::Base
 
     policy :workflows_enabled, class_name: DiscourseWorkflows::Policy::WorkflowsEnabled
-    step :expire_executions
+    model :expired_executions
+    step :process_expired_executions
 
     private
 
-    def expire_executions
-      DiscourseWorkflows::Execution.expired_waiting.find_each do |execution|
-        wait_type = execution.waiting_config&.dig("wait_type")
+    def fetch_expired_executions
+      DiscourseWorkflows::Execution.expired_waiting
+    end
+
+    def process_expired_executions(expired_executions:)
+      expired_executions.find_each do |execution|
         timeout_action = execution.waiting_config&.dig("timeout_action")
+        wait_type = execution.waiting_config&.dig("wait_type")
 
         if timeout_action == "fail"
           execution.fail_with_timeout!
@@ -22,8 +27,10 @@ module DiscourseWorkflows
           input_items = waiting_step&.input || [{ "json" => {} }]
           DiscourseWorkflows::Executor.resume(execution, input_items)
         else
-          response_items = [{ "json" => { "approved" => false, "timed_out" => true } }]
-          DiscourseWorkflows::Executor.resume(execution, response_items)
+          DiscourseWorkflows::Executor.resume(
+            execution,
+            [{ "json" => { "approved" => false, "timed_out" => true } }],
+          )
         end
       end
     end

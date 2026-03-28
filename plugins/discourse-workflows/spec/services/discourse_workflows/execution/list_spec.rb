@@ -4,9 +4,9 @@ RSpec.describe DiscourseWorkflows::Execution::List do
   describe ".call" do
     subject(:result) { described_class.call(params:) }
 
-    let(:params) { {} }
+    fab!(:workflow, :discourse_workflows_workflow)
 
-    before { SiteSetting.discourse_workflows_enabled = true }
+    let(:params) { {} }
 
     context "when there are no executions" do
       it { is_expected.to run_successfully }
@@ -25,7 +25,6 @@ RSpec.describe DiscourseWorkflows::Execution::List do
     end
 
     context "when there are executions" do
-      fab!(:workflow, :discourse_workflows_workflow)
       fab!(:execution_a, :discourse_workflows_execution) do
         Fabricate(:discourse_workflows_execution, workflow: workflow)
       end
@@ -47,7 +46,6 @@ RSpec.describe DiscourseWorkflows::Execution::List do
     context "with pagination" do
       let(:params) { { limit: 2 } }
 
-      fab!(:workflow, :discourse_workflows_workflow)
       fab!(:execution_1, :discourse_workflows_execution) do
         Fabricate(:discourse_workflows_execution, workflow: workflow)
       end
@@ -100,11 +98,6 @@ RSpec.describe DiscourseWorkflows::Execution::List do
 
       it "returns the scoped total count" do
         expect(result[:total_rows]).to eq(1)
-      end
-
-      it "includes workflow_id in load more url" do
-        # Only 1 result, no load_more
-        expect(result[:load_more_url]).to be_nil
       end
     end
   end

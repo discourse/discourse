@@ -12,7 +12,7 @@ module DiscourseWorkflows
       validates :data_table_id, presence: true
     end
 
-    model :data_table, :find_data_table
+    model :data_table
     step :validate_storage_limit
     step :normalize_filter
     step :normalize_data
@@ -21,7 +21,7 @@ module DiscourseWorkflows
 
     private
 
-    def find_data_table(params:)
+    def fetch_data_table(params:)
       DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
     end
 

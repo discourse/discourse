@@ -13,7 +13,7 @@ module DiscourseWorkflows
 
     model :trigger_node
     model :execution, :run_workflow
-    step :compute_response_metadata
+    model :response_metadata, :compute_response_metadata
 
     private
 
@@ -25,14 +25,16 @@ module DiscourseWorkflows
     end
 
     def run_workflow(trigger_node:, params:, guardian:)
-      form_data = trigger_node.form_data_from(params.form_data || {})
+      form_data = trigger_node.form_data_from(params.form_data)
       trigger_data = { form_data: form_data, submitted_at: Time.current.utc.iso8601 }
       DiscourseWorkflows::Executor.new(trigger_node, trigger_data, user: guardian.user).run
     end
 
     def compute_response_metadata(trigger_node:)
-      context[:has_downstream_form] = trigger_node.downstream_form?
-      context[:response_mode] = trigger_node.configuration["response_mode"] || "on_received"
+      {
+        has_downstream_form: trigger_node.downstream_form?,
+        response_mode: trigger_node.configuration["response_mode"] || "on_received",
+      }
     end
   end
 end

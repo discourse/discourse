@@ -12,9 +12,7 @@ module DiscourseWorkflows
     end
 
     def show
-      DiscourseWorkflows::Stats::Summary.call(
-        service_params.deep_merge(params: { workflow_id: params[:workflow_id] }),
-      ) do |result|
+      DiscourseWorkflows::Stats::Summary.call(service_params) do |result|
         on_success { |stats:| render json: stats }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end

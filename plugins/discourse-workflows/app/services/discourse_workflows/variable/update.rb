@@ -15,8 +15,12 @@ module DiscourseWorkflows
     end
 
     model :variable
-    step :update_variable
-    step :log
+    policy :can_manage_workflows
+
+    transaction do
+      step :update_variable
+      step :log_variable_update
+    end
 
     private
 
@@ -24,11 +28,15 @@ module DiscourseWorkflows
       DiscourseWorkflows::Variable.find_by(id: params.variable_id)
     end
 
-    def update_variable(variable:, params:)
-      variable.update!(key: params.key, value: params.value, description: params.description)
+    def can_manage_workflows(guardian:)
+      guardian.is_admin?
     end
 
-    def log(variable:, guardian:)
+    def update_variable(variable:, params:)
+      variable.update!(**params.slice(:key, :value, :description))
+    end
+
+    def log_variable_update(variable:, guardian:)
       StaffActionLogger.new(guardian.user).log_custom(
         "discourse_workflows_variable_updated",
         subject: variable.key,

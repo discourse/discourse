@@ -4,17 +4,12 @@ RSpec.describe DiscourseWorkflows::Execution::Show do
   describe ".call" do
     subject(:result) { described_class.call(params:) }
 
-    fab!(:user)
-    fab!(:workflow, :discourse_workflows_workflow) do
-      Fabricate(:discourse_workflows_workflow, created_by: user)
-    end
+    fab!(:workflow, :discourse_workflows_workflow)
     fab!(:execution, :discourse_workflows_execution) do
       Fabricate(:discourse_workflows_execution, workflow: workflow)
     end
 
     let(:params) { { execution_id: execution.id } }
-
-    before { SiteSetting.discourse_workflows_enabled = true }
 
     context "when execution does not exist" do
       let(:params) { { execution_id: -1 } }

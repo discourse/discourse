@@ -89,7 +89,17 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
     context "when cron expression is invalid" do
       it "skips the node" do
         freeze_time Time.utc(2026, 3, 18, 9, 0)
-        create_schedule_workflow(cron: "invalid")
+        workflow = Fabricate(:discourse_workflows_workflow, enabled: true, created_by: user)
+        node =
+          Fabricate.build(
+            :discourse_workflows_node,
+            workflow: workflow,
+            type: "trigger:schedule",
+            configuration: {
+              "cron" => "invalid",
+            },
+          )
+        node.save!(validate: false)
 
         expect { result }.not_to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }
       end

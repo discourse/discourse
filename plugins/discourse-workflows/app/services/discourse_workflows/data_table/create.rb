@@ -12,7 +12,7 @@ module DiscourseWorkflows
     end
 
     transaction do
-      model :data_table, :create_data_table
+      model :data_table, :build_data_table
       step :create_storage_table
     end
 
@@ -21,7 +21,7 @@ module DiscourseWorkflows
 
     private
 
-    def create_data_table(params:)
+    def build_data_table(params:)
       data_table = DiscourseWorkflows::DataTable.new(name: params.name)
 
       params.columns.to_a.each_with_index do |column, index|

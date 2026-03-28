@@ -12,27 +12,33 @@ module DiscourseWorkflows
       attribute :limit, :integer
 
       before_validation { self.limit = [[limit.to_i, 1].max, MAX_LIMIT].min if limit.present? }
+
+      def normalized_limit
+        limit || DEFAULT_LIMIT
+      end
     end
 
-    step :list
+    step :list_data_tables
+    step :compute_metadata
 
     private
 
-    def list(params:)
-      limit = params.limit || DEFAULT_LIMIT
-
+    def list_data_tables(params:)
       scope = DiscourseWorkflows::DataTable.includes(:columns).order(id: :desc)
       scope = scope.where("id < ?", params.cursor) if params.cursor
 
-      results = scope.limit(limit + 1).to_a
-      has_more = results.size > limit
-      context[:data_tables] = has_more ? results.first(limit) : results
+      results = scope.limit(params.normalized_limit + 1).to_a
+      context[:has_more] = results.size > params.normalized_limit
+      context[:data_tables] = context[:has_more] ? results.first(params.normalized_limit) : results
+    end
+
+    def compute_metadata(data_tables:, params:, has_more:)
       context[:table_sizes] = DiscourseWorkflows::DataTableStorage.batch_size_bytes(
-        context[:data_tables].map(&:id),
+        data_tables.map(&:id),
       )
       context[:total_rows] = DiscourseWorkflows::DataTable.count
       context[:load_more_url] = if has_more
-        "/admin/plugins/discourse-workflows/data-tables.json?cursor=#{context[:data_tables].last.id}&limit=#{limit}"
+        "/admin/plugins/discourse-workflows/data-tables.json?cursor=#{data_tables.last.id}&limit=#{params.normalized_limit}"
       end
     end
   end
