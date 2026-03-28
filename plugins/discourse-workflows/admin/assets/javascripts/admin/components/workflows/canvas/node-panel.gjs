@@ -60,6 +60,7 @@ const CATEGORIES = [
     identifiers: [
       "action:append_tags",
       "action:award_badge",
+      "action:group",
       "action:create_post",
       "action:create_topic",
       "action:fetch_topic",
