@@ -255,6 +255,195 @@ acceptance("Category Edit", function (needs) {
   });
 });
 
+acceptance(
+  "Category Edit - parent category permission inheritance",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_simplified_category_creation: true });
+    needs.pretender((server, helper) => {
+      // Sub-category with only moderator permissions
+      server.get("/c/restricted-group/find_by_slug.json", () =>
+        helper.response(200, {
+          category: {
+            id: 2481,
+            name: "restricted-group",
+            color: "e9dd00",
+            text_color: "000000",
+            style_type: "square",
+            slug: "restricted-group",
+            read_restricted: true,
+            can_edit: true,
+            permission: 1,
+            available_groups: ["admins", "moderators", "staff", "custom_group"],
+            group_permissions: [
+              { permission_type: 1, group_name: "moderators", group_id: 2 },
+            ],
+            custom_fields: {},
+          },
+        })
+      );
+
+      // Parent with moderators + custom_group permissions
+      server.get("/c/3/show.json", () =>
+        helper.response(200, {
+          category: {
+            id: 3,
+            name: "meta",
+            color: "aaaaaa",
+            text_color: "FFFFFF",
+            slug: "meta",
+            read_restricted: true,
+            available_groups: ["admins", "staff"],
+            group_permissions: [
+              { permission_type: 1, group_name: "moderators", group_id: 2 },
+              { permission_type: 1, group_name: "custom_group", group_id: 4 },
+            ],
+          },
+        })
+      );
+
+      // Parent with only custom_group permissions
+      server.get("/c/6/show.json", () =>
+        helper.response(200, {
+          category: {
+            id: 6,
+            name: "support",
+            color: "b99",
+            text_color: "FFFFFF",
+            slug: "support",
+            read_restricted: true,
+            available_groups: ["admins", "moderators", "staff"],
+            group_permissions: [
+              { permission_type: 1, group_name: "custom_group", group_id: 4 },
+            ],
+          },
+        })
+      );
+
+      // Public parent (everyone full permissions)
+      server.get("/c/4/show.json", () =>
+        helper.response(200, {
+          category: {
+            id: 4,
+            name: "faq",
+            color: "33b",
+            text_color: "FFFFFF",
+            slug: "faq",
+            read_restricted: false,
+            available_groups: ["admins", "moderators", "staff"],
+            group_permissions: [
+              { permission_type: 1, group_name: "everyone", group_id: 0 },
+            ],
+          },
+        })
+      );
+
+      // Sub-category with partial permissions (everyone: read, staff: full)
+      server.get("/c/partial-group/find_by_slug.json", () =>
+        helper.response(200, {
+          category: {
+            id: 2482,
+            name: "partial-group",
+            color: "e9dd00",
+            text_color: "000000",
+            style_type: "square",
+            slug: "partial-group",
+            read_restricted: false,
+            can_edit: true,
+            permission: 1,
+            available_groups: ["admins", "moderators", "custom_group"],
+            group_permissions: [
+              { permission_type: 3, group_name: "everyone", group_id: 0 },
+              { permission_type: 1, group_name: "staff", group_id: 3 },
+            ],
+            custom_fields: {},
+          },
+        })
+      );
+    });
+
+    test("retains sub-category permissions when sub is more restrictive than new parent", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(3);
+
+      await click(".admin-changes-banner .btn-primary");
+
+      const payload = JSON.parse(
+        pretender.handledRequests[pretender.handledRequests.length - 1]
+          .requestBody
+      );
+      assert.deepEqual(payload.permissions, { moderators: 1 });
+    });
+
+    test("adopts parent permissions when parent is more restrictive than sub", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(6);
+
+      await click(".admin-changes-banner .btn-primary");
+
+      const payload = JSON.parse(
+        pretender.handledRequests[pretender.handledRequests.length - 1]
+          .requestBody
+      );
+      assert.deepEqual(payload.permissions, { custom_group: 1 });
+    });
+
+    test("retains sub-category permissions when changing to a public parent", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(4);
+
+      await click(".admin-changes-banner .btn-primary");
+
+      const payload = JSON.parse(
+        pretender.handledRequests[pretender.handledRequests.length - 1]
+          .requestBody
+      );
+      assert.deepEqual(payload.permissions, { moderators: 1 });
+    });
+
+    test("retains partial permissions (everyone=readonly + staff=full) when changing to a fully public parent", async function (assert) {
+      await visit("/c/partial-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(4);
+
+      await click(".admin-changes-banner .btn-primary");
+
+      const payload = JSON.parse(
+        pretender.handledRequests[pretender.handledRequests.length - 1]
+          .requestBody
+      );
+      assert.deepEqual(payload.permissions, { everyone: 3, staff: 1 });
+    });
+
+    test("adopts private parent permissions when sub has partial public permissions", async function (assert) {
+      await visit("/c/partial-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(6);
+
+      await click(".admin-changes-banner .btn-primary");
+
+      const payload = JSON.parse(
+        pretender.handledRequests[pretender.handledRequests.length - 1]
+          .requestBody
+      );
+      assert.deepEqual(payload.permissions, { custom_group: 1 });
+    });
+  }
+);
+
 acceptance("Category Edit - no permission to edit", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
