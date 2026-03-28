@@ -1266,6 +1266,14 @@ RSpec.describe Topic do
             expect(topic.allowed_groups.include?(admins)).to eq(false)
           end
 
+          it "sets has_messages to true on the invited group" do
+            group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone], has_messages: false)
+
+            topic.invite_group(topic.user, group)
+
+            expect(group.reload.has_messages).to eq(true)
+          end
+
           def set_state!(group, user, state)
             group
               .group_users
