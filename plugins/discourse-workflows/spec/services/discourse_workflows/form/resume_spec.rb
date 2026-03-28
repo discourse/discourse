@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Form::Resume do
   describe described_class::Contract, type: :model do
-    it { is_expected.to validate_presence_of(:execution_id) }
+    it { is_expected.to validate_presence_of(:resume_token) }
   end
 
   describe ".call" do
@@ -52,6 +52,9 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
         target_node: form_action_node,
       )
     end
+
+    let(:resume_token) { SecureRandom.uuid }
+
     fab!(:execution) do
       Fabricate(
         :discourse_workflows_execution,
@@ -60,6 +63,7 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
         waiting_node_id: form_action_node.id,
         waiting_config: {
           "wait_type" => "form",
+          "resume_token" => "placeholder",
           "form_title" => "Resume Form",
           "form_fields" => [
             { "field_label" => "Feedback", "field_type" => "text", "required" => false },
@@ -76,6 +80,7 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
               },
             },
           ],
+          "__resume_token" => "placeholder",
         },
         trigger_data: {
           "form_data" => {
@@ -89,27 +94,36 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
       )
     end
 
-    let(:execution_id) { execution.id }
     let(:form_data) { { "feedback" => "Looks good" } }
-    let(:params) { { execution_id: execution_id, form_data: form_data } }
+    let(:params) { { resume_token: resume_token, form_data: form_data } }
 
     before do
       SiteSetting.discourse_workflows_enabled = true
       DiscourseWorkflows::Registry.reset!
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Form::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::Form::V1)
+      execution.update!(
+        waiting_config: execution.waiting_config.merge("resume_token" => resume_token),
+        context: execution.context.merge("__resume_token" => resume_token),
+      )
     end
 
     after { DiscourseWorkflows::Registry.reset! }
 
     context "when contract is invalid" do
-      let(:execution_id) { nil }
+      let(:params) { { resume_token: nil } }
 
       it { is_expected.to fail_a_contract }
     end
 
-    context "when execution is not found" do
-      let(:execution_id) { -1 }
+    context "when resume token does not match any waiting execution" do
+      let(:resume_token) { SecureRandom.uuid }
+
+      before do
+        execution.update!(
+          waiting_config: execution.waiting_config.merge("resume_token" => "different-token"),
+        )
+      end
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end

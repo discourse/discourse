@@ -32,7 +32,7 @@ export default class WorkflowsForm extends Component {
   @tracked state = "form";
   @tracked errorMessage = null;
   @tracked completionData = null;
-  executionId = null;
+  resumeToken = null;
   @tracked _formSchema = null;
 
   _channel = null;
@@ -77,10 +77,10 @@ export default class WorkflowsForm extends Component {
 
     try {
       const payload = { form_data: formData };
-      const isResume = !!this.executionId;
+      const isResume = !!this.resumeToken;
 
       if (isResume) {
-        payload.execution_id = this.executionId;
+        payload.resume_token = this.resumeToken;
       }
 
       const result = await ajax(
@@ -91,7 +91,7 @@ export default class WorkflowsForm extends Component {
         }
       );
 
-      this.executionId = result.execution_id;
+      this.resumeToken = result.resume_token;
 
       const shouldWait =
         result.has_downstream_form ||
@@ -134,7 +134,7 @@ export default class WorkflowsForm extends Component {
     if (message.status === "waiting_for_form") {
       try {
         const schema = await ajax(
-          `/workflows/form/${this.args.model.uuid}.json?execution_id=${this.executionId}`
+          `/workflows/form/${this.args.model.uuid}.json?resume_token=${this.resumeToken}`
         );
         this.formSchema = schema;
         this.state = "form";

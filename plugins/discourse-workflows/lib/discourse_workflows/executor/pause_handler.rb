@@ -88,6 +88,7 @@ module DiscourseWorkflows
           node,
           extra_config: {
             "wait_type" => "form",
+            "resume_token" => @state.context["__resume_token"],
             "form_title" => wait.form_title,
             "form_description" => wait.form_description,
             "form_fields" => wait.form_fields,

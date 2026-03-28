@@ -24,7 +24,7 @@ module DiscourseWorkflows
       DiscourseWorkflows::Form::Submit.call(service_params) do
         on_success do |execution:, response_metadata:|
           render json: {
-                   execution_id: execution&.id,
+                   resume_token: execution&.context&.dig("__resume_token"),
                    has_downstream_form: response_metadata[:has_downstream_form],
                    response_mode: response_metadata[:response_mode],
                    form_channel: DiscourseWorkflows::Executor.form_channel(execution&.id),
@@ -37,7 +37,9 @@ module DiscourseWorkflows
 
     def update
       DiscourseWorkflows::Form::Resume.call(service_params) do
-        on_success { |execution:| render json: { execution_id: execution.id } }
+        on_success do |execution:|
+          render json: { resume_token: execution.context["__resume_token"] }
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:execution) { raise Discourse::NotFound }
         on_model_not_found(:waiting_node) { raise Discourse::NotFound }

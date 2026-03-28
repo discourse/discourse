@@ -41,7 +41,7 @@ RSpec.describe DiscourseWorkflows::FormsController do
   end
 
   describe "POST /workflows/form/:uuid.json" do
-    it "executes workflow and returns execution id" do
+    it "executes workflow and returns resume token" do
       post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
            params: {
              form_data: {
@@ -51,10 +51,11 @@ RSpec.describe DiscourseWorkflows::FormsController do
       expect(response.status).to eq(200)
 
       json = response.parsed_body
-      expect(json["execution_id"]).to be_present
+      expect(json["resume_token"]).to be_present
 
-      execution = DiscourseWorkflows::Execution.find(json["execution_id"])
+      execution = DiscourseWorkflows::Execution.last
       expect(execution.trigger_node_id).to eq(trigger_node.id)
+      expect(execution.context["__resume_token"]).to eq(json["resume_token"])
     end
   end
 end

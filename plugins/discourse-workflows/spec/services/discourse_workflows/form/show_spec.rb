@@ -90,6 +90,9 @@ RSpec.describe DiscourseWorkflows::Form::Show do
           },
         )
       end
+
+      let(:resume_token) { SecureRandom.uuid }
+
       fab!(:execution) do
         Fabricate(
           :discourse_workflows_execution,
@@ -98,6 +101,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
           waiting_node_id: form_action_node.id,
           waiting_config: {
             "wait_type" => "form",
+            "resume_token" => "placeholder",
             "form_title" => "Waiting Form",
             "form_description" => "A waiting form",
             "form_fields" => [
@@ -107,7 +111,13 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         )
       end
 
-      let(:params) { { uuid: uuid, execution_id: execution.id } }
+      let(:params) { { uuid: uuid, resume_token: resume_token } }
+
+      before do
+        execution.update!(
+          waiting_config: execution.waiting_config.merge("resume_token" => resume_token),
+        )
+      end
 
       it { is_expected.to run_successfully }
 

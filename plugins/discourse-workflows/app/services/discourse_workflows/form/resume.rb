@@ -5,10 +5,10 @@ module DiscourseWorkflows
     include Service::Base
 
     params do
-      attribute :execution_id, :integer
+      attribute :resume_token, :string
       attribute :form_data, default: -> { {} }
 
-      validates :execution_id, presence: true
+      validates :resume_token, presence: true
     end
 
     model :execution
@@ -18,10 +18,11 @@ module DiscourseWorkflows
     private
 
     def fetch_execution(params:)
-      execution = DiscourseWorkflows::Execution.find_by(id: params.execution_id, status: :waiting)
-      return if execution.nil?
-      return if execution.waiting_config&.dig("wait_type") != "form"
-      execution
+      DiscourseWorkflows::Execution
+        .where(status: :waiting)
+        .where("waiting_config->>'resume_token' = ?", params.resume_token)
+        .where("waiting_config->>'wait_type' = ?", "form")
+        .first
     end
 
     def fetch_waiting_node(execution:)

@@ -6,7 +6,7 @@ module DiscourseWorkflows
 
     params do
       attribute :uuid, :string
-      attribute :execution_id, :integer
+      attribute :resume_token, :string
 
       validates :uuid, presence: true
     end
@@ -18,11 +18,12 @@ module DiscourseWorkflows
     private
 
     def fetch_waiting_execution(params:)
-      return unless params.execution_id
-      execution = DiscourseWorkflows::Execution.find_by(id: params.execution_id, status: :waiting)
-      return if execution.nil?
-      return if execution.waiting_config&.dig("wait_type") != "form"
-      execution
+      return unless params.resume_token
+      DiscourseWorkflows::Execution
+        .where(status: :waiting)
+        .where("waiting_config->>'resume_token' = ?", params.resume_token)
+        .where("waiting_config->>'wait_type' = ?", "form")
+        .first
     end
 
     def fetch_form_node(params:, waiting_execution:)
