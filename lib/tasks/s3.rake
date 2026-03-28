@@ -148,8 +148,12 @@ task "s3:expire_missing_assets" => :environment do
       message = "Deleting #{slice.size} assets...\n"
       message += slice.join("\n").indent(2)
       puts message
-      helper.delete_objects(slice)
-      puts "... done"
+      begin
+        helper.delete_objects(slice)
+        puts "... done"
+      rescue => e
+        abort "... failed: #{e.message}"
+      end
     end
   else
     puts "No stale assets found"
