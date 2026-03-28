@@ -285,7 +285,7 @@ GEM
       net-smtp
     matrix (0.4.3)
     maxminddb (0.1.22)
-    mcp (0.8.0)
+    mcp (0.9.2)
       json-schema (>= 4.1)
     memory_profiler (1.1.0)
     message_bus (4.5.2)
@@ -1066,7 +1066,7 @@ CHECKSUMS
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
-  mcp (0.8.0) sha256=ae8bd146bb8e168852866fd26f805f52744f6326afb3211e073f78a95e0c34fb
+  mcp (0.9.2) sha256=d413926f4f9dc1274f462196c2a9fbf9cb261ecd3c66a60c82eb71ee62bd2932
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
   message_bus (4.5.2) sha256=f1381bce05d9560e5ea7dfa56e44dfdf0080bda0ac02f4011eb662bb7dd9e778
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
