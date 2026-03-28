@@ -18,6 +18,7 @@ export default class DataTablesManager extends Component {
   @service currentUser;
   @service modal;
   @service dialog;
+  @service router;
 
   @tracked dataTables = null;
   @tracked loadMoreUrl = null;
@@ -76,11 +77,14 @@ export default class DataTablesManager extends Component {
       model: {
         dataTable: null,
         onSave: async (data) => {
-          await ajax("/admin/plugins/discourse-workflows/data-tables.json", {
-            type: "POST",
-            data,
-          });
-          await this.loadDataTables();
+          const result = await ajax(
+            "/admin/plugins/discourse-workflows/data-tables.json",
+            { type: "POST", data }
+          );
+          this.router.transitionTo(
+            "adminPlugins.show.discourse-workflows-data-tables.show",
+            result.data_table.id
+          );
         },
       },
     });
