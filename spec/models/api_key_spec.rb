@@ -195,6 +195,12 @@ RSpec.describe ApiKey do
         request.path_parameters = { controller: "topics", action: "create" }
         expect(key.request_allowed?(env)).to eq(false)
       end
+
+      it "always allows about#index" do
+        request.path_parameters = { controller: "about", action: "index" }
+        request.request_method = "GET"
+        expect(key.request_allowed?(env)).to eq(true)
+      end
     end
 
     context "with global:read scope" do
