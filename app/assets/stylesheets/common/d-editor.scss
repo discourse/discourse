@@ -331,23 +331,25 @@
   z-index: 2;
   background: var(--fade-color);
   border: none;
-  padding: 0 var(--space-1);
+  padding: 0;
   margin-block: 1px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: var(--primary-high);
+  color: transparent;
+  width: 0;
+  overflow: visible;
+  pointer-events: none;
 
-  .discourse-touch & {
-    width: 0;
-    padding: 0;
-    overflow: visible;
-    pointer-events: none;
-    color: transparent;
-  }
+  @media (pointer: fine) {
+    width: auto;
+    padding: 0 var(--space-1);
+    pointer-events: auto;
+    color: var(--primary-high);
 
-  .discourse-no-touch &:hover {
-    color: var(--primary);
+    &:hover {
+      color: var(--primary);
+    }
   }
 
   &.--left {
