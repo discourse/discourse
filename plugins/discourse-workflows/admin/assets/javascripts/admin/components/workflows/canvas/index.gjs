@@ -58,15 +58,16 @@ export default class WorkflowCanvas extends Component {
       event.preventDefault();
       this.args.onRedo?.();
     } else if (isMeta && key === "c") {
-      this.#copyStickyNote();
+      this.#copy();
     } else if (isMeta && key === "v") {
-      this.#pasteStickyNote();
+      this.#paste();
     }
   };
 
   @tracked _selectedNodeIds = new Set();
   @tracked _selectedStickyNoteId = null;
   _copiedStickyNote = null;
+  _copiedNode = null;
   _isFirstSync = true;
 
   willDestroy() {
@@ -352,35 +353,35 @@ export default class WorkflowCanvas extends Component {
     this._selectedNodeIds = new Set();
   }
 
-  #copyStickyNote() {
-    if (!this._selectedStickyNoteId) {
-      return;
-    }
-    const note = (this.args.stickyNotes || []).find(
-      (n) => n.clientId === this._selectedStickyNoteId
-    );
-    if (note) {
-      this._copiedStickyNote = structuredClone(note);
+  #copy() {
+    if (this._selectedStickyNoteId) {
+      const note = (this.args.stickyNotes || []).find(
+        (n) => n.clientId === this._selectedStickyNoteId
+      );
+      if (note) {
+        this._copiedStickyNote = structuredClone(note);
+        this._copiedNode = null;
+      }
+    } else if (this._selectedNodeIds.size === 1) {
+      const [clientId] = this._selectedNodeIds;
+      const node = (this.args.nodes || []).find((n) => n.clientId === clientId);
+      if (node) {
+        this._copiedNode = structuredClone(node);
+        this._copiedStickyNote = null;
+      }
     }
   }
 
-  #pasteStickyNote() {
-    if (!this._copiedStickyNote) {
-      return;
-    }
-    const offset = 20;
-    const newClientId = this.args.onPasteStickyNote?.({
-      position: {
-        x: this._copiedStickyNote.position.x + offset,
-        y: this._copiedStickyNote.position.y + offset,
-      },
-      size: { ...this._copiedStickyNote.size },
-      color: this._copiedStickyNote.color,
-      text: this._copiedStickyNote.text,
-    });
-    if (newClientId) {
-      this._selectedStickyNoteId = newClientId;
-      this._selectedNodeIds = new Set();
+  #paste() {
+    if (this._copiedStickyNote) {
+      const result = this.args.onPasteStickyNote?.(this._copiedStickyNote);
+      if (result) {
+        this._copiedStickyNote.position = result.position;
+        this._selectedStickyNoteId = result.clientId;
+        this._selectedNodeIds = new Set();
+      }
+    } else if (this._copiedNode) {
+      this._copiedNode.position = this.args.onPasteNode?.(this._copiedNode);
     }
   }
 

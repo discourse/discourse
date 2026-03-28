@@ -17,7 +17,7 @@ import NodePanel from "../canvas/node-panel";
 import NodeConfigurator from "../node/configurator";
 import autoLayout from "./auto-layout";
 import { LOOP_NODE_TYPE, removeNodesFromGraph } from "./graph-utils";
-import { createNode } from "./node-factory";
+import { createNode, generateNodeName } from "./node-factory";
 import UndoManager from "./undo-manager";
 
 export default class WorkflowsEditor extends Component {
@@ -689,14 +689,48 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  pasteStickyNote({ position, size, color, text }) {
+  pasteStickyNote(copiedNote) {
     this.#captureUndo();
-    const stickyNotes = [...this.formApi.get("stickyNotes")];
-    const note = StickyNote.create({ position, size, color, text });
-    stickyNotes.push(note);
+    const offset = 20;
+    const position = {
+      x: (copiedNote.position?.x ?? 0) + offset,
+      y: (copiedNote.position?.y ?? 0) + offset,
+    };
+    const note = StickyNote.create({
+      position,
+      size: copiedNote.size,
+      color: copiedNote.color,
+      text: copiedNote.text,
+    });
+    const stickyNotes = [...this.formApi.get("stickyNotes"), note];
     this.formApi.set("stickyNotes", stickyNotes);
     this.handleSubmit();
-    return note.clientId;
+    return { clientId: note.clientId, position };
+  }
+
+  @action
+  pasteNode(copiedNode) {
+    this.#captureUndo();
+    const offset = 20;
+    const existingNodes = this.formApi.get("nodes");
+    const position = copiedNode.position
+      ? {
+          x: copiedNode.position.x + offset,
+          y: copiedNode.position.y + offset,
+        }
+      : null;
+
+    const newNode = WorkflowNode.create({
+      type: copiedNode.type,
+      type_version: copiedNode.type_version,
+      name: generateNodeName(copiedNode.type, existingNodes),
+      configuration: structuredClone(copiedNode.configuration || {}),
+      position,
+    });
+
+    this.formApi.set("nodes", [...existingNodes, newNode]);
+    this.handleSubmit();
+    return position;
   }
 
   @action
@@ -862,6 +896,7 @@ export default class WorkflowsEditor extends Component {
           @onStickyNoteChangeColor={{this.stickyNoteChangeColor}}
           @onStickyNoteDelete={{this.stickyNoteDelete}}
           @onPasteStickyNote={{this.pasteStickyNote}}
+          @onPasteNode={{this.pasteNode}}
         />
 
         {{#if this.nodePanelContext}}

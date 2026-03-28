@@ -11,7 +11,7 @@ const NODE_DEFAULTS = {
   }),
 };
 
-function generateNodeName(identifier, existingNodes) {
+export function generateNodeName(identifier, existingNodes) {
   const baseName = identifier
     .split(":")
     .pop()
