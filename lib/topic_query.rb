@@ -994,6 +994,9 @@ class TopicQuery
     if options && (options[:include_muted].nil? || options[:include_muted]) &&
          options[:state] != "muted"
       list = remove_muted_topics(list, user)
+      if SiteSetting.ignored_users_topics_gets_hidden
+        list = remove_topics_from_ignored_users(list, user)
+      end
     end
 
     list = remove_muted_categories(list, user, exclude: options[:category])
@@ -1007,6 +1010,15 @@ class TopicQuery
           "COALESCE(tu.notification_level,1) > :muted",
           muted: TopicUser.notification_levels[:muted],
         )
+    end
+
+    list
+  end
+
+  def remove_topics_from_ignored_users(list, user)
+    if user
+      ignored_users = user.ignored_user_ids.join(",")
+      list = list.where("topics.user_id NOT IN (#{ignored_users})") if ignored_users.present?
     end
 
     list
