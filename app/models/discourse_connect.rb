@@ -435,16 +435,10 @@ class DiscourseConnect < DiscourseConnectBase
   end
 
   def add_user_to_groups(user, groups)
-    groups.each do |group|
-      GroupUser.create!(user_id: user.id, group_id: group.id)
-      GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
-    end
+    groups.each { |group| GroupManager.new(Discourse.system_user, group).add(user) }
   end
 
   def remove_user_from_groups(user, groups)
-    GroupUser.where(user_id: user.id, group_id: groups.map(&:id)).destroy_all
-    groups.each do |group|
-      GroupActionLogger.new(Discourse.system_user, group).log_remove_user_from_group(user)
-    end
+    groups.each { |group| GroupManager.new(Discourse.system_user, group).remove(user) }
   end
 end

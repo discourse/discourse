@@ -379,12 +379,17 @@ class GroupsController < ApplicationController
     users = users_from_params.to_a
     emails = []
     if params[:emails]
-      params[:emails]
-        .split(",")
-        .each do |email|
-          existing_user = User.find_by_email(email)
-          existing_user.present? ? users.push(existing_user) : emails.push(email)
-        end
+      email_list = params[:emails].split(",").map { |e| e.strip.downcase }
+      found_users = User.with_email(email_list).to_a
+      users.concat(found_users)
+
+      if found_users.any?
+        matched_emails =
+          UserEmail.where(user_id: found_users.map(&:id)).where(email: email_list).pluck(:email)
+        emails = email_list - matched_emails
+      else
+        emails = email_list
+      end
     end
 
     if emails.present? && !guardian.can_invite_to_forum?([group])
@@ -414,7 +419,14 @@ class GroupsController < ApplicationController
     else
       notify = params[:notify_users]&.to_s == "true"
       uniq_users = users.uniq
-      uniq_users.each { |user| add_user_to_group(group, user, notify) }
+      added_user_ids = GroupManager.new(current_user, group).bulk_add(uniq_users.map(&:id))
+
+      if notify && added_user_ids.present?
+        added_id_set = added_user_ids.to_set
+        uniq_users.each do |user|
+          group.notify_added_to_group(user) if added_id_set.include?(user.id)
+        end
+      end
 
       emails.each do |email|
         begin
@@ -449,20 +461,17 @@ class GroupsController < ApplicationController
     guardian.ensure_can_edit_group!(group)
 
     users = users_from_params
+    non_member_ids =
+      users.map(&:id) - group.group_users.where(user_id: users.map(&:id)).pluck(:user_id)
+    GroupManager.new(current_user, group).bulk_add(non_member_ids) if non_member_ids.present?
+
+    group.group_users.where(user_id: users.map(&:id)).update_all(owner: true)
+
     group_action_logger = GroupActionLogger.new(current_user, group)
-
     users.each do |user|
-      if !group.users.include?(user)
-        group.add(user)
-        group_action_logger.log_add_user_to_group(user)
-      end
-      group.group_users.where(user_id: user.id).update_all(owner: true)
       group_action_logger.log_make_user_group_owner(user)
-
       group.notify_added_to_group(user, owner: true) if params[:notify_users].to_s == "true"
     end
-
-    group.restore_user_count!
 
     render json: success_json.merge!(usernames: users.pluck(:username))
   end
@@ -477,8 +486,7 @@ class GroupsController < ApplicationController
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_admission
 
-    return if group.users.exists?(id: current_user.id)
-    add_user_to_group(group, current_user)
+    GroupManager.new(current_user, group).add(current_user)
   end
 
   def handle_membership_request
@@ -503,11 +511,7 @@ class GroupsController < ApplicationController
       )
 
     ActiveRecord::Base.transaction do
-      if params[:accept]
-        group.add(user)
-        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-      end
-
+      GroupManager.new(current_user, group).add(user) if params[:accept]
       GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
     end
 
@@ -571,19 +575,21 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
+    existing_member_ids = group.group_users.where(user_id: users.map(&:id)).pluck(:user_id).to_set
+
+    removed_user_ids = GroupManager.new(current_user, group).bulk_remove(users.map(&:id))
+    removed_id_set = removed_user_ids.to_set
+
     removed_users = []
     skipped_users = []
 
     users.each do |user|
-      if group.remove(user)
+      if removed_id_set.include?(user.id)
         removed_users << user.username
-        GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
+      elsif !existing_member_ids.include?(user.id)
+        skipped_users << user.username
       else
-        if group.users.exclude? user
-          skipped_users << user.username
-        else
-          raise Discourse::InvalidParameters
-        end
+        raise Discourse::InvalidParameters
       end
     end
 
@@ -600,9 +606,7 @@ class GroupsController < ApplicationController
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_exit
 
-    if group.remove(current_user)
-      GroupActionLogger.new(current_user, group).log_remove_user_from_group(current_user)
-    end
+    GroupManager.new(current_user, group).remove(current_user)
   end
 
   MAX_NOTIFIED_OWNERS = 20
@@ -775,16 +779,6 @@ class GroupsController < ApplicationController
   end
 
   private
-
-  def add_user_to_group(group, user, notify = false)
-    group.add(user)
-    GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-    group.notify_added_to_group(user) if notify
-  rescue ActiveRecord::RecordNotUnique
-    # Under concurrency, we might attempt to insert two records quickly and hit a DB
-    # constraint. In this case we can safely ignore the error and act as if the user
-    # was added to the group.
-  end
 
   def group_params(automatic: false)
     attributes = %i[

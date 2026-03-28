@@ -432,6 +432,7 @@ RSpec.describe InviteRedeemer do
       end
 
       it "adds user to group" do
+        Jobs.run_immediately!
         group = Fabricate(:group, grant_trust_level: 2)
         InvitedGroup.create(group_id: group.id, invite_id: invite.id)
         group.add_owner(invite.invited_by)
@@ -446,7 +447,7 @@ RSpec.describe InviteRedeemer do
           ).redeem
 
         expect(user.group_users.count).to eq(4)
-        expect(user.trust_level).to eq(2)
+        expect(user.reload.trust_level).to eq(2)
       end
 
       it "adds an entry to the group logs when the invited user is added to a group" do

@@ -858,7 +858,7 @@ class Group < ActiveRecord::Base
   def bulk_add(user_ids, automatic: false)
     return [] if user_ids.blank?
 
-    added_user_ids = nil
+    added_user_ids = []
 
     Group.transaction do
       sql = <<~SQL
@@ -1005,17 +1005,11 @@ class Group < ActiveRecord::Base
   end
 
   def add_automatically(user, subject: nil)
-    if users.exclude?(user) && add(user)
-      logger = GroupActionLogger.new(Discourse.system_user, self)
-      logger.log_add_user_to_group(user, subject)
-    end
+    GroupManager.new(Discourse.system_user, self).add(user, subject:) if users.exclude?(user)
   end
 
   def remove_automatically(user, subject: nil)
-    if users.include?(user) && remove(user)
-      logger = GroupActionLogger.new(Discourse.system_user, self)
-      logger.log_remove_user_from_group(user, subject)
-    end
+    GroupManager.new(Discourse.system_user, self).remove(user, subject:) if users.include?(user)
   end
 
   def staff?
