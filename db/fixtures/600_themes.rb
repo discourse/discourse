@@ -15,6 +15,8 @@ if !theme_exists
     { name: I18n.t("color_schemes.dracula"), base_scheme_name: "Dracula" },
     { name: I18n.t("color_schemes.solarized_light"), base_scheme_name: "Solarized Light" },
     { name: I18n.t("color_schemes.solarized_dark"), base_scheme_name: "Solarized Dark" },
+    { name: I18n.t("color_schemes.gruvbox_light"), base_scheme_name: "Gruvbox Light" },
+    { name: I18n.t("color_schemes.gruvbox_dark"), base_scheme_name: "Gruvbox Dark" },
   ]
 
   color_schemes.each do |cs|

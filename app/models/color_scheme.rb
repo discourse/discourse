@@ -15,6 +15,8 @@ class ColorScheme < ActiveRecord::Base
     "Dracula" => -11,
     "Solarized Light" => -12,
     "Solarized Dark" => -13,
+    "Gruvbox Light" => -14,
+    "Gruvbox Dark" => -15,
   }
 
   BUILT_IN_SCHEMES = {
@@ -245,6 +247,21 @@ class ColorScheme < ActiveRecord::Base
       "love_low" => "FCDDD2",
       "love" => "fa6c8d",
     },
+    # By @morhetz & @ducks
+    "Gruvbox Light": {
+      "primary" => "3c3836",
+      "secondary" => "fbf1c7",
+      "tertiary" => "458588",
+      "quaternary" => "d65d0e",
+      "header_background" => "ebdbb2",
+      "header_primary" => "3c3836",
+      "highlight" => "d79921",
+      "selected" => "ebdbb2",
+      "hover" => "f2e5bc",
+      "danger" => "cc241d",
+      "success" => "98971a",
+      "love" => "b16286",
+    },
     # By @altercation
     "Solarized Dark": {
       "primary_very_low" => "0D353F",
@@ -290,6 +307,21 @@ class ColorScheme < ActiveRecord::Base
       "success" => "009900",
       "love_low" => "4B3F50",
       "love" => "fa6c8d",
+    },
+    # By @morhetz & @ducks
+    "Gruvbox Dark": {
+      "primary" => "ebdbb2",
+      "secondary" => "282828",
+      "tertiary" => "83a598",
+      "quaternary" => "fe8019",
+      "header_background" => "1d2021",
+      "header_primary" => "ebdbb2",
+      "highlight" => "fabd2f",
+      "selected" => "3c3836",
+      "hover" => "32302f",
+      "danger" => "fb4934",
+      "success" => "b8bb26",
+      "love" => "d3869b",
     },
   }
 
