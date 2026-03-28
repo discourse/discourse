@@ -98,10 +98,18 @@ module ReleaseUtils
     stdout
   end
 
-  def self.gh(*args)
+  def self.gh(*args, capture: false)
     puts "> gh #{args.inspect}"
     return true if test_mode?
-    system "gh", *args
+    if capture
+      stdout, stderr, status = Open3.capture3("gh", *args)
+      if !status.success?
+        raise "Command failed: gh #{args.inspect}\n#{stdout.indent(2)}\n#{stderr.indent(2)}"
+      end
+      stdout
+    else
+      system "gh", *args
+    end
   end
 
   def self.ref_exists?(ref)
