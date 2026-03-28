@@ -53,7 +53,7 @@ module DiscourseWorkflows
         )
 
         MessageBus.publish(
-          "/discourse-workflows/form-execution/#{@state.execution.id}",
+          Executor.form_channel(@state.execution.id),
           { status: "waiting_for_form" },
         )
 

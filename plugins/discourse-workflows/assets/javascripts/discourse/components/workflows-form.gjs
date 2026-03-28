@@ -31,6 +31,7 @@ export default class WorkflowsForm extends Component {
 
   @tracked state = "form";
   @tracked errorMessage = null;
+  @tracked completionData = null;
   executionId = null;
   @tracked _formSchema = null;
 
@@ -98,7 +99,7 @@ export default class WorkflowsForm extends Component {
 
       if (shouldWait) {
         this.state = "waiting";
-        this.#subscribe(result.execution_id);
+        this.#subscribe(result.form_channel);
       } else {
         this.state = "complete";
       }
@@ -110,9 +111,9 @@ export default class WorkflowsForm extends Component {
     }
   }
 
-  #subscribe(executionId) {
+  #subscribe(channel) {
     this.#unsubscribe();
-    this._channel = `/discourse-workflows/form-execution/${executionId}`;
+    this._channel = channel;
     this.messageBus.subscribe(
       this._channel,
       (message) => {
@@ -142,6 +143,12 @@ export default class WorkflowsForm extends Component {
       }
     } else if (message.status === "success") {
       this.#unsubscribe();
+      const completion = message.form_completion;
+      if (completion?.on_submission === "redirect" && completion.redirect_url) {
+        window.location.href = completion.redirect_url;
+        return;
+      }
+      this.completionData = completion || null;
       this.state = "complete";
     } else if (message.status === "error") {
       this.#unsubscribe();
@@ -252,7 +259,28 @@ export default class WorkflowsForm extends Component {
         <ConditionalLoadingSpinner @condition={{true}} />
       {{else if (eq this.state "complete")}}
         <div class="workflows-form__complete">
-          <p>{{i18n "discourse_workflows.form.thank_you"}}</p>
+          {{#if this.completionData}}
+            {{#if (eq this.completionData.on_submission "redirect")}}
+              <p>{{i18n "discourse_workflows.form.redirecting"}}</p>
+            {{else if (eq this.completionData.on_submission "show_text")}}
+              <p>{{this.completionData.completion_text}}</p>
+            {{else}}
+              {{#if this.completionData.completion_title}}
+                <h2
+                  class="workflows-form__completion-title"
+                >{{this.completionData.completion_title}}</h2>
+              {{/if}}
+              {{#if this.completionData.completion_message}}
+                <p
+                  class="workflows-form__completion-message"
+                >{{this.completionData.completion_message}}</p>
+              {{else}}
+                <p>{{i18n "discourse_workflows.form.thank_you"}}</p>
+              {{/if}}
+            {{/if}}
+          {{else}}
+            <p>{{i18n "discourse_workflows.form.thank_you"}}</p>
+          {{/if}}
         </div>
       {{else if (eq this.state "error")}}
         <div class="workflows-form__error">

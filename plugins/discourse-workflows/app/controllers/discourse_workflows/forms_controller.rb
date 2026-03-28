@@ -36,6 +36,7 @@ module DiscourseWorkflows
                    execution_id: execution&.id,
                    has_downstream_form: has_downstream_form,
                    response_mode: response_mode,
+                   form_channel: DiscourseWorkflows::Executor.form_channel(execution&.id),
                  }
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }

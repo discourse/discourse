@@ -199,7 +199,7 @@ module DiscourseWorkflows
 
     def finish_execution
       @state.execution.update!(status: :success, context: @state.context, finished_at: Time.current)
-      publish_form_status("success") if form_triggered?
+      publish_form_completion if form_triggered?
       @state.execution
     end
 
@@ -224,19 +224,27 @@ module DiscourseWorkflows
         failed_node_name: last_failed_step&.node_name,
       }
 
-      self.class.new(
-        error_trigger_node,
-        error_data,
-        user: @user,
-        execution_mode: :error_mode,
-      ).run
+      self.class.new(error_trigger_node, error_data, user: @user, execution_mode: :error_mode).run
+    end
+
+    def publish_form_completion
+      completion = @state.context["__form_completion"]
+      message = { status: "success" }
+      message[:form_completion] = completion if completion.present?
+      MessageBus.publish(form_channel(@state.execution.id), message)
     end
 
     def publish_form_status(status)
-      MessageBus.publish(
-        "/discourse-workflows/form-execution/#{@state.execution.id}",
-        { status: status },
-      )
+      MessageBus.publish(form_channel(@state.execution.id), { status: status })
+    end
+
+    def form_channel(execution_id)
+      self.class.form_channel(execution_id)
+    end
+
+    def self.form_channel(execution_id)
+      token = HmacSigner.sign("form_execution:#{execution_id}")
+      "/discourse-workflows/form-execution/#{execution_id}-#{token}"
     end
   end
 end

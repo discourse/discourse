@@ -26,22 +26,96 @@ module DiscourseWorkflows
 
         def self.configuration_schema
           {
+            page_type: {
+              type: :options,
+              default: "page",
+              options: %w[page completion],
+              ui: {
+                expression: false,
+              },
+            },
             form_title: {
               type: :string,
+              visible_if: {
+                page_type: %w[page],
+              },
             },
             form_description: {
               type: :string,
+              visible_if: {
+                page_type: %w[page],
+              },
               ui: {
                 control: :textarea,
                 rows: 3,
               },
             },
-            form_fields: FormFieldsSchema::SCHEMA,
+            form_fields: FormFieldsSchema::SCHEMA.merge(visible_if: { page_type: %w[page] }),
+            on_submission: {
+              type: :options,
+              default: "completion_screen",
+              options: %w[completion_screen redirect show_text],
+              visible_if: {
+                page_type: %w[completion],
+              },
+              ui: {
+                expression: false,
+              },
+            },
+            completion_title: {
+              type: :string,
+              visible_if: {
+                page_type: %w[completion],
+                on_submission: %w[completion_screen],
+              },
+            },
+            completion_message: {
+              type: :string,
+              visible_if: {
+                page_type: %w[completion],
+                on_submission: %w[completion_screen],
+              },
+              ui: {
+                control: :textarea,
+                rows: 4,
+              },
+            },
+            redirect_url: {
+              type: :string,
+              visible_if: {
+                page_type: %w[completion],
+                on_submission: %w[redirect],
+              },
+            },
+            completion_text: {
+              type: :string,
+              visible_if: {
+                page_type: %w[completion],
+                on_submission: %w[show_text],
+              },
+              ui: {
+                control: :textarea,
+                rows: 6,
+              },
+            },
           }
         end
 
         def execute(context, input_items:, node_context:, user: nil)
           config = resolve_config_with_items(context, input_items)
+
+          page_type = config["page_type"] || "page"
+
+          if page_type == "completion"
+            context["__form_completion"] = {
+              "on_submission" => config["on_submission"] || "completion_screen",
+              "completion_title" => config["completion_title"],
+              "completion_message" => config["completion_message"],
+              "redirect_url" => config["redirect_url"],
+              "completion_text" => config["completion_text"],
+            }
+            return input_items
+          end
 
           raise WaitForHuman.new(
                   type: :form,
