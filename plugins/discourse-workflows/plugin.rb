@@ -50,6 +50,7 @@ after_initialize do
       PostCreated
       TopicCreated
       TopicCategoryChanged
+      TopicTagChanged
       StaleTopic
       Webhook
       Manual
