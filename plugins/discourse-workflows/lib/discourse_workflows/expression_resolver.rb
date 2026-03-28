@@ -4,12 +4,6 @@ module DiscourseWorkflows
   class ExpressionResolver
     EXPRESSION_REGEX = /\{\{(.*?)\}\}/
     WHOLE_EXPRESSION_REGEX = /\A\{\{\s*([^{}]*?)\s*\}\}\z/
-    NODE_REF_REGEX = /\A\$\(['"](.+?)['"]\)\.item\.json\.(.+)\z/
-    NODE_CONTEXT_REGEX = /\A\$\(['"](.+?)['"]\)\.context\["(.+?)"\]\z/
-    LOOKUP_FAILURES = [
-      Discourse::InvalidParameters,
-      SiteSettingExtension::InvalidSettingAccess,
-    ].freeze
 
     def initialize(
       context,
@@ -17,13 +11,10 @@ module DiscourseWorkflows
       site_setting_store: SiteSettingStore.new,
       user: nil
     )
-      @lookup =
-        LookupChain.new(
-          context: context,
-          variable_store: variable_store,
-          site_setting_store: site_setting_store,
-          user: user,
-        )
+      @context = context
+      @variable_store = variable_store
+      @site_setting_store = site_setting_store
+      @user = user
     end
 
     def resolve(value)
@@ -32,7 +23,7 @@ module DiscourseWorkflows
       template = value[1..].strip
       expression = template.match(WHOLE_EXPRESSION_REGEX)&.captures&.first
 
-      return resolve_expression(expression) if expression
+      return js_evaluator.evaluate(expression) if expression
 
       render_template(template)
     end
@@ -58,210 +49,26 @@ module DiscourseWorkflows
       value.is_a?(String) && value.start_with?("=")
     end
 
-    def resolve_expression(expression)
-      safely_lookup(expression, fallback: nil)
-    end
-
     def render_template(template)
       template.gsub(EXPRESSION_REGEX) do
         expression = Regexp.last_match(1).strip
-        safely_lookup(expression, fallback: "") { |value| format_value(value) }
+        format_value(js_evaluator.evaluate(expression))
       end
     end
 
-    def safely_lookup(expression, fallback:)
-      value = @lookup.resolve(expression)
-      block_given? ? yield(value) : value
-    rescue *LOOKUP_FAILURES
-      fallback
+    def js_evaluator
+      @js_evaluator ||=
+        JsEvaluator.new(
+          @context,
+          variable_store: @variable_store,
+          site_setting_store: @site_setting_store,
+          user: @user,
+        )
     end
 
     def format_value(value)
+      return "" if value.nil?
       value.is_a?(Array) ? value.join(", ") : value.to_s
-    end
-
-    class LookupChain
-      def initialize(context:, variable_store:, site_setting_store:, user: nil)
-        @resolvers = [
-          NodeContextLookup.new(context),
-          NodeOutputLookup.new(context),
-          SiteSettingLookup.new(site_setting_store),
-          CurrentUserLookup.new(user),
-          ExecutionLookup.new(context),
-          JsonLookup.new(context),
-          VariableLookup.new(variable_store),
-          ContextLookup.new(context),
-        ]
-      end
-
-      def resolve(expression)
-        normalized_expression = expression.strip
-        resolver_for(normalized_expression).resolve(normalized_expression)
-      end
-
-      private
-
-      def resolver_for(expression)
-        @resolvers.find { |resolver| resolver.match?(expression) }
-      end
-    end
-
-    class LookupBase
-      private
-
-      def resolve_dot_path(object, path)
-        keys = path.split(".")
-        keys.reduce(object) { |value, key| value.is_a?(Hash) ? value[key] : nil }
-      end
-    end
-
-    class NodeContextLookup < LookupBase
-      def initialize(context)
-        @context = context
-      end
-
-      def match?(expression)
-        expression.match?(NODE_CONTEXT_REGEX)
-      end
-
-      def resolve(expression)
-        match = expression.match(NODE_CONTEXT_REGEX)
-        node_context = @context.dig("_node_contexts", match[1]) || {}
-        node_context[match[2]]
-      end
-    end
-
-    class NodeOutputLookup < LookupBase
-      def initialize(context)
-        @context = context
-      end
-
-      def match?(expression)
-        expression.match?(NODE_REF_REGEX)
-      end
-
-      def resolve(expression)
-        match = expression.match(NODE_REF_REGEX)
-        node_items = @context[match[1]]
-        item_json = extract_first_item_json(node_items)
-
-        resolve_dot_path(item_json, match[2])
-      end
-
-      private
-
-      def extract_first_item_json(node_data)
-        if node_data.is_a?(Array) && node_data.first.is_a?(Hash) && node_data.first.key?("json")
-          node_data.first["json"] || {}
-        elsif node_data.is_a?(Hash)
-          node_data
-        else
-          {}
-        end
-      end
-    end
-
-    class SiteSettingLookup
-      PREFIX = "$site_settings."
-
-      def initialize(site_setting_store)
-        @site_setting_store = site_setting_store
-      end
-
-      def match?(expression)
-        expression.start_with?(PREFIX)
-      end
-
-      def resolve(expression)
-        setting_name = expression.delete_prefix(PREFIX)
-        @site_setting_store.fetch(setting_name)
-      end
-    end
-
-    class CurrentUserLookup
-      PREFIX = "$current_user."
-      ALLOWED_FIELDS = %w[id username].freeze
-
-      def initialize(user)
-        @user = user
-      end
-
-      def match?(expression)
-        expression.start_with?(PREFIX)
-      end
-
-      def resolve(expression)
-        field = expression.delete_prefix(PREFIX)
-        return nil if ALLOWED_FIELDS.exclude?(field)
-        @user&.public_send(field)
-      end
-    end
-
-    class ExecutionLookup
-      PREFIX = "$execution."
-      ALLOWED_FIELDS = %w[id resumeWebhookUrl].freeze
-
-      def initialize(context)
-        @context = context
-      end
-
-      def match?(expression)
-        expression.start_with?(PREFIX)
-      end
-
-      def resolve(expression)
-        field = expression.delete_prefix(PREFIX)
-        return nil if ALLOWED_FIELDS.exclude?(field)
-        @context.dig("_execution", field)
-      end
-    end
-
-    class JsonLookup < LookupBase
-      PREFIX = "$json."
-
-      def initialize(context)
-        @context = context
-      end
-
-      def match?(expression)
-        expression.start_with?(PREFIX)
-      end
-
-      def resolve(expression)
-        key = expression.delete_prefix(PREFIX)
-        resolve_dot_path(@context["$json"] || {}, key)
-      end
-    end
-
-    class VariableLookup
-      PREFIX = "$vars."
-
-      def initialize(variable_store)
-        @variable_store = variable_store
-      end
-
-      def match?(expression)
-        expression.start_with?(PREFIX)
-      end
-
-      def resolve(expression)
-        key = expression.delete_prefix(PREFIX)
-        @variable_store.fetch(key)
-      end
-    end
-
-    class ContextLookup < LookupBase
-      def initialize(context)
-        @context = context
-      end
-
-      def match?(_expression)
-        true
-      end
-
-      def resolve(expression)
-        resolve_dot_path(@context, expression)
-      end
     end
 
     class VariableStore
@@ -285,6 +92,113 @@ module DiscourseWorkflows
         return @values_by_name[name] if @values_by_name.key?(name)
 
         @values_by_name[name] = SiteSetting.get(name)
+      end
+    end
+
+    class JsEvaluator
+      TIMEOUT = 500
+      MAX_MEMORY = 10_000_000
+      MARSHAL_STACK_DEPTH = 20
+
+      def initialize(context, variable_store:, site_setting_store:, user: nil)
+        @context = context
+        @variable_store = variable_store
+        @site_setting_store = site_setting_store
+        @user = user
+        @js_context = nil
+      end
+
+      def evaluate(expression)
+        ensure_context!
+        @js_context.eval(expression)
+      rescue MiniRacer::Error
+        nil
+      end
+
+      private
+
+      def ensure_context!
+        return if @js_context
+
+        @js_context =
+          MiniRacer::Context.new(
+            timeout: TIMEOUT,
+            max_memory: MAX_MEMORY,
+            marshal_stack_depth: MARSHAL_STACK_DEPTH,
+          )
+        inject_data!
+      end
+
+      def inject_data!
+        data = build_data
+        @js_context.eval("var __data = #{data.to_json};")
+        @js_context.attach(
+          "__getSiteSetting",
+          ->(name) do
+            @site_setting_store.fetch(name)&.to_s
+          rescue StandardError
+            nil
+          end,
+        )
+        @js_context.eval(setup_js)
+      end
+
+      def build_data
+        node_outputs = {}
+        node_contexts = @context["_node_contexts"] || {}
+
+        @context.each do |key, value|
+          next if key.start_with?("_") || key == "$json"
+          node_outputs[key] = extract_item_json(value)
+        end
+
+        {
+          "$json" => @context["$json"] || {},
+          "trigger" => @context["trigger"] || {},
+          "$vars" => DiscourseWorkflows::Variable.pluck(:key, :value).to_h,
+          "$current_user" => build_current_user,
+          "$execution" => @context["_execution"] || {},
+          "_nodes" => node_outputs,
+          "_node_contexts" => node_contexts,
+        }
+      end
+
+      def setup_js
+        <<~JS
+          var $json = __data["$json"];
+          var trigger = __data["trigger"];
+          var $vars = __data["$vars"];
+          var $current_user = __data["$current_user"];
+          var $execution = __data["$execution"];
+          var $site_settings = new Proxy({}, {
+            get: function(target, prop) {
+              if (prop in target) return target[prop];
+              target[prop] = __getSiteSetting(prop);
+              return target[prop];
+            }
+          });
+          function $(name) {
+            return {
+              item: { json: __data._nodes[name] || {} },
+              context: __data._node_contexts[name] || {}
+            };
+          }
+        JS
+      end
+
+      def build_current_user
+        return {} unless @user
+        { "id" => @user.id, "username" => @user.username }
+      end
+
+      def extract_item_json(node_data)
+        if node_data.is_a?(Array) && node_data.first.is_a?(Hash) && node_data.first.key?("json")
+          node_data.first["json"] || {}
+        elsif node_data.is_a?(Hash)
+          node_data
+        else
+          {}
+        end
       end
     end
   end

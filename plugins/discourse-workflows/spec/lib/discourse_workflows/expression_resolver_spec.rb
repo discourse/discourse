@@ -113,6 +113,67 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
     end
   end
 
+  describe "JavaScript expressions" do
+    it "evaluates .join() on arrays" do
+      expect(resolver.resolve("={{ $json.tags.join(', ') }}")).to eq("bug, help")
+    end
+
+    it "evaluates JSON.stringify()" do
+      result = resolver.resolve("={{ JSON.stringify($json.tags) }}")
+      expect(result).to eq('["bug","help"]')
+    end
+
+    it "evaluates .length on arrays" do
+      expect(resolver.resolve("={{ $json.tags.length }}")).to eq(2)
+    end
+
+    it "evaluates .includes() on arrays" do
+      expect(resolver.resolve("={{ $json.tags.includes('bug') }}")).to eq(true)
+      expect(resolver.resolve("={{ $json.tags.includes('nope') }}")).to eq(false)
+    end
+
+    it "evaluates ternary expressions" do
+      expect(resolver.resolve("={{ $json.topic_id > 10 ? 'high' : 'low' }}")).to eq("high")
+    end
+
+    it "evaluates arithmetic" do
+      expect(resolver.resolve("={{ $json.topic_id + 8 }}")).to eq(50)
+    end
+
+    it "evaluates string concatenation" do
+      expect(resolver.resolve("={{ 'topic-' + $json.topic_id }}")).to eq("topic-42")
+    end
+
+    it "evaluates .toUpperCase() on strings" do
+      ctx = { "trigger" => { "name" => "hello" }, "$json" => { "name" => "hello" } }
+      r = described_class.new(ctx)
+      expect(r.resolve("={{ $json.name.toUpperCase() }}")).to eq("HELLO")
+    end
+
+    it "evaluates parseInt and parseFloat" do
+      ctx = { "$json" => { "val" => "42.5" } }
+      r = described_class.new(ctx)
+      expect(r.resolve("={{ parseInt($json.val) }}")).to eq(42)
+      expect(r.resolve("={{ parseFloat($json.val) }}")).to eq(42.5)
+    end
+
+    it "returns nil for JS errors" do
+      expect(resolver.resolve("={{ $json.nonexistent.join(', ') }}")).to be_nil
+    end
+
+    it "works in template interpolation" do
+      expect(resolver.resolve("=tags: {{ $json.tags.join(' | ') }}")).to eq("tags: bug | help")
+    end
+
+    it "evaluates node output references with JS methods" do
+      node_context = {
+        "Previous Step" => [{ "json" => { "items" => %w[a b c] } }],
+      }
+      r = described_class.new(node_context.merge("$json" => context["trigger"]))
+      expect(r.resolve("={{ $('Previous Step').item.json.items.join('-') }}")).to eq("a-b-c")
+    end
+  end
+
   describe "#resolve_hash" do
     it "resolves all string values in a hash" do
       config = {
