@@ -1040,11 +1040,58 @@ export async function createReteEditor(container, { iconHTML, callbacks }) {
     renderer.scheduleConnectionUpdate();
   }
 
-  async function fitToView() {
+  async function fitToView(extraRects) {
     const nodes = editor.getNodes();
-    if (nodes.length > 0) {
-      await AreaExtensions.zoomAt(area, nodes);
+    if (nodes.length === 0) {
+      return;
     }
+
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+
+    for (const node of nodes) {
+      const view = area.nodeViews.get(node.id);
+      if (!view) {
+        continue;
+      }
+
+      const { x, y } = view.position;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x + (node.width || 0));
+      maxY = Math.max(maxY, y + (node.height || 0));
+    }
+
+    if (extraRects) {
+      for (const rect of extraRects) {
+        minX = Math.min(minX, rect.x);
+        minY = Math.min(minY, rect.y);
+        maxX = Math.max(maxX, rect.x + rect.width);
+        maxY = Math.max(maxY, rect.y + rect.height);
+      }
+    }
+
+    if (!isFinite(minX)) {
+      return;
+    }
+
+    const bw = maxX - minX;
+    const bh = maxY - minY;
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+
+    const padding = 0.9;
+    const kw = bw > 0 ? w / bw : 1;
+    const kh = bh > 0 ? h / bh : 1;
+    const k = Math.min(kw * padding, kh * padding, 1.5);
+
+    area.area.transform.x = w / 2 - cx * k;
+    area.area.transform.y = h / 2 - cy * k;
+    await area.area.zoom(k, 0, 0);
   }
 
   function getZoom() {

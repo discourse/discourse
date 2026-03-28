@@ -237,7 +237,7 @@ export default class WorkflowCanvas extends Component {
 
     if (this._isFirstSync) {
       this._isFirstSync = false;
-      await this.reteApi.fitToView();
+      await this.reteApi.fitToView(this.#stickyNoteRects);
     }
 
     this.zoom = this.reteApi.getZoom();
@@ -475,12 +475,21 @@ export default class WorkflowCanvas extends Component {
     await this.#applyZoom(-this.#ZOOM_STEP);
   }
 
+  get #stickyNoteRects() {
+    return (this.args.stickyNotes || []).map((n) => ({
+      x: n.position.x,
+      y: n.position.y,
+      width: n.size.width,
+      height: n.size.height,
+    }));
+  }
+
   @action
   async fitToView() {
     if (!this.reteApi) {
       return;
     }
-    await this.reteApi.fitToView();
+    await this.reteApi.fitToView(this.#stickyNoteRects);
     this.zoom = this.reteApi.getZoom();
   }
 
@@ -491,7 +500,7 @@ export default class WorkflowCanvas extends Component {
     }
     const positions = await this.reteApi.autoArrange();
     this.args.onAutoLayout?.(positions);
-    await this.reteApi.fitToView();
+    await this.reteApi.fitToView(this.#stickyNoteRects);
     this.zoom = this.reteApi.getZoom();
   }
 
