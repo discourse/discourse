@@ -40,6 +40,7 @@ register_svg_icon "palette"
 register_svg_icon "reply"
 register_svg_icon "triangle-exclamation"
 register_svg_icon "clock"
+register_svg_icon "user-plus"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -77,6 +78,7 @@ after_initialize do
       DataTable
       ChatApproval
       AwardBadge
+      Group
       Form
       RespondToWebhook
     ].each do |name|
