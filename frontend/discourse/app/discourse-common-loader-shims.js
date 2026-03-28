@@ -36,9 +36,6 @@ loaderShim("discourse-common/helpers/i18n", () =>
   importSync("discourse/helpers/i18n")
 );
 
-loaderShim("discourse-common/lib/attribute-hook", () =>
-  importSync("discourse/lib/attribute-hook")
-);
 loaderShim("discourse-common/lib/avatar-utils", () =>
   importSync("discourse/lib/avatar-utils")
 );

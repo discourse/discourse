@@ -3,13 +3,11 @@ import { untrack } from "@glimmer/validator";
 import { trackedArray } from "@ember/reactive/collections";
 import { isHTMLSafe, trustHTML } from "@ember/template";
 import helperFn from "discourse/helpers/helper-fn";
-import deprecated from "discourse/lib/deprecated";
 import {
   isProduction,
   isRailsTesting,
   isTesting,
 } from "discourse/lib/environment";
-import { WIDGET_DECOMMISSION_OPTIONS } from "discourse/widgets/widget";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
@@ -242,21 +240,15 @@ class DecorateHtmlHelper {
    */
   renderGlimmer(targetElement, component, data, opts = {}) {
     if (!(targetElement instanceof Element)) {
-      deprecated(
-        "Invalid `targetElement` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `targetElement` must be a valid HTML element. This call has been ignored to prevent errors.",
-        WIDGET_DECOMMISSION_OPTIONS
+      throw new Error(
+        "Invalid `targetElement` passed to `helper.renderGlimmer`. `targetElement` must be a valid HTML element."
       );
-
-      return;
     }
 
     if (component.name === "factory") {
-      deprecated(
-        "Invalid `component` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax. This call has been ignored to prevent errors.",
-        WIDGET_DECOMMISSION_OPTIONS
+      throw new Error(
+        "Invalid `component` passed to `helper.renderGlimmer`. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax."
       );
-
-      return;
     }
 
     const info = {
@@ -278,13 +270,6 @@ class DecorateHtmlHelper {
 
   getModel() {
     return this.model;
-  }
-
-  get widget() {
-    deprecated(
-      "Using `helper.widget` has been decommissioned. See https://meta.discourse.org/t/372063/1",
-      WIDGET_DECOMMISSION_OPTIONS
-    );
   }
 
   teardown() {

@@ -140,7 +140,6 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
-import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
@@ -198,7 +197,6 @@ function wrapWithErrorHandler(func, messageKey) {
 class _PluginApi {
   constructor(container) {
     this.container = container;
-    this.h = warnWidgetsDecommissioned;
   }
 
   /**
@@ -695,20 +693,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  decorateWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  attachWidgetAction() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * @deprecated
    *
    * This function is now an alias to `api.addTrackedPostProperties`.
@@ -924,13 +908,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  cleanupStream() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * Called whenever the "page" changes. This allows us to set up analytics
    * and other tracking.
    *
@@ -1027,13 +1004,6 @@ class _PluginApi {
   }
 
   /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  changeWidgetSetting() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
    * Prevents a specific post from being cloaked during scroll.
    *
    * This is useful, for example, for posts that apply customizations that hold state which
@@ -1052,20 +1022,6 @@ class _PluginApi {
    **/
   preventCloak(postId, prevent = true) {
     preventCloaking(postId, prevent);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  createWidget() {
-    warnWidgetsDecommissioned();
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  reopenWidget() {
-    warnWidgetsDecommissioned();
   }
 
   /**
@@ -1399,13 +1355,6 @@ class _PluginApi {
 
   addCustomUserFieldValidationCallback(callback) {
     addCustomUserFieldValidationCallback(callback);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  addPostTransformCallback() {
-    warnWidgetsDecommissioned();
   }
 
   /**
@@ -2478,13 +2427,6 @@ class _PluginApi {
    */
   addUserSearchOption(value) {
     CUSTOM_USER_SEARCH_OPTIONS.push(value);
-  }
-
-  /**
-   * @deprecated the widget rendering system was decommissioned
-   */
-  dispatchWidgetAppEvent() {
-    warnWidgetsDecommissioned();
   }
 
   /**
