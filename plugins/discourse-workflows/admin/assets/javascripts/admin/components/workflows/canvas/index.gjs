@@ -700,6 +700,7 @@ export default class WorkflowCanvas extends Component {
             @onManualTrigger={{this.reteApi.renderer.onManualTrigger}}
             @onSocketRendered={{this.reteApi.renderer.onSocketRendered}}
             @manuallyTriggerableTypes={{this.manuallyTriggerableTypes}}
+            @workflowEnabled={{@workflowEnabled}}
           />
         {{/in-element}}
       {{/each}}

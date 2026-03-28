@@ -134,7 +134,9 @@ export default class WorkflowNode extends Component {
             {{#if this.isManuallyTriggerable}}
               <button
                 type="button"
-                class="workflow-canvas-toolbar__btn --success"
+                class="workflow-canvas-toolbar__btn --success
+                  {{unless @workflowEnabled '--disabled'}}"
+                disabled={{unless @workflowEnabled true}}
                 {{on "pointerdown" this.stopPropagation}}
                 {{on "click" this.handleManualTrigger}}
               >

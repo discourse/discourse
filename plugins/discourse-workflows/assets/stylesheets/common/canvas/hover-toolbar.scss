@@ -58,5 +58,14 @@
         background: var(--success-hover);
       }
     }
+
+    &.--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+
+      &:hover {
+        background: var(--success);
+      }
+    }
   }
 }

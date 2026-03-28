@@ -897,6 +897,7 @@ export default class WorkflowsEditor extends Component {
           @onStickyNoteDelete={{this.stickyNoteDelete}}
           @onPasteStickyNote={{this.pasteStickyNote}}
           @onPasteNode={{this.pasteNode}}
+          @workflowEnabled={{@workflow.enabled}}
         />
 
         {{#if this.nodePanelContext}}
