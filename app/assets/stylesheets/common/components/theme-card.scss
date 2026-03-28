@@ -165,6 +165,12 @@
     margin: 0 0 10px 0;
   }
 
+  &__meta {
+    margin: 10px 0 0 0;
+    font-size: var(--font-down-3);
+    opacity: 0.3;
+  }
+
   &__components {
     display: -webkit-box;
     font-size: var(--font-down-1);

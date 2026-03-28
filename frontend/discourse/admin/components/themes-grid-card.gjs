@@ -11,7 +11,7 @@ import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
 // NOTE (martin): We will need to revisit and improve this component
@@ -82,6 +82,26 @@ export default class ThemeCard extends Component {
       "themes",
       this.args.theme.id
     );
+  }
+
+  get themeAddedDate() {
+    const date = new Date(this.args.theme.created_at);
+
+    if (!date) {
+      return "N/A";
+    }
+
+    const locale = I18n.locale?.replace(/_/g, "-") || "en-GB";
+    const formattedDate = new Intl.DateTimeFormat(locale, {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(date);
+
+    return formattedDate;
   }
 
   @action
@@ -354,6 +374,14 @@ export default class ThemeCard extends Component {
               </DMenu>
             </div>
           </div>
+          {{#if @theme.created_at}}
+            <p class="theme-card__meta">
+              {{i18n
+                "admin.config_areas.themes_and_components.themes.added_date"
+                date=this.themeAddedDate
+              }}
+            </p>
+          {{/if}}
         </div>
       </:content>
     </AdminConfigAreaCard>
