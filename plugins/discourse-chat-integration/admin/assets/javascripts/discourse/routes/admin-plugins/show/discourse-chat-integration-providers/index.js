@@ -8,10 +8,10 @@ export default class DiscourseChatIntegrationProvidersIndex extends DiscourseRou
     const providers = this.modelFor(
       "adminPlugins.show.discourse-chat-integration-providers"
     );
-    if (providers.totalRows > 0) {
+    if (providers.enabled_providers.length > 0) {
       this.router.transitionTo(
         "adminPlugins.show.discourse-chat-integration-providers.show",
-        providers.content[0].name
+        providers.enabled_providers[0].name
       );
     }
   }

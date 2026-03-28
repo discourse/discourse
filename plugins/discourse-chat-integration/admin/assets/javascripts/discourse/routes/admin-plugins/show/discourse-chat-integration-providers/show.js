@@ -14,7 +14,7 @@ export default class DiscourseChatIntegrationProvidersShow extends DiscourseRout
       Group.findAll(),
     ]);
 
-    const provider = providers.content.find(
+    const provider = providers.enabled_providers.find(
       (item) => item.id === params.provider
     );
 

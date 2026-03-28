@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::SlackProvider
   PROVIDER_NAME = "slack"
+  POPULARITY_SCORE = 100
   THREAD_CUSTOM_FIELD_PREFIX = "slack_thread_id_"
 
   # In the past, only one thread_ts was stored for each topic.
@@ -20,6 +21,10 @@ module DiscourseChatIntegration::Provider::SlackProvider
     DiscourseChatIntegration::Provider::SlackProvider::THREAD_LEGACY,
     :string,
   )
+
+  def self.setup_form_settings
+    { either: %i[chat_integration_slack_outbound_webhook_url chat_integration_slack_access_token] }
+  end
 
   def self.excerpt(post, max_length = SiteSetting.chat_integration_slack_excerpt_length)
     doc =

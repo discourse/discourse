@@ -9,15 +9,52 @@ class DiscourseChatIntegration::ChatController < ApplicationController
 
   def list_providers
     providers =
-      DiscourseChatIntegration::Provider.enabled_providers.map do |x|
+      DiscourseChatIntegration::Provider.enabled_providers.map do |provider_klass|
         {
-          name: x::PROVIDER_NAME,
-          id: x::PROVIDER_NAME,
-          channel_parameters: (defined?(x::CHANNEL_PARAMETERS)) ? x::CHANNEL_PARAMETERS : [],
+          name: provider_klass::PROVIDER_NAME,
+          id: provider_klass::PROVIDER_NAME,
+          channel_parameters:
+            (
+              if (defined?(provider_klass::CHANNEL_PARAMETERS))
+                provider_klass::CHANNEL_PARAMETERS
+              else
+                []
+              end
+            ),
         }
       end
 
-    render json: providers, root: "providers"
+    available_providers =
+      DiscourseChatIntegration::Provider.available_providers.map do |provider_klass|
+        {
+          name: provider_klass::PROVIDER_NAME,
+          id: provider_klass::PROVIDER_NAME,
+          setup_form_settings:
+            if provider_klass.respond_to?(:setup_form_settings)
+              provider_klass.setup_form_settings
+            else
+              nil
+            end,
+        }
+      end
+
+    render json: { enabled_providers: providers, available_providers: }, root: "providers"
+  end
+
+  def setup_provider
+    begin
+      hash = params.require(:provider).permit(:name)
+      name = hash[:name].to_s.strip
+      raise Discourse::InvalidParameters.new("provider not found") if name.blank?
+
+      provider_klass = DiscourseChatIntegration::Provider.get_by_name(name)
+      raise Discourse::InvalidParameters.new("provider not found") if provider_klass.nil?
+
+      DiscourseChatIntegration::Provider.setup(provider_klass, current_user)
+      render json: success_json
+    rescue Discourse::InvalidParameters => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
+    end
   end
 
   def test
