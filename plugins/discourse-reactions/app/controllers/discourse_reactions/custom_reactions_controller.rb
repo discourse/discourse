@@ -101,6 +101,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     reaction_users =
       DiscourseReactions::ReactionUser
         .joins(:reaction)
+        .includes(:user, :post, :reaction)
         .where(post_id: post_ids)
         .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
 
