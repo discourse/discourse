@@ -944,7 +944,8 @@ class TopicView
 
   def filter_post_types(posts)
     return posts.where(post_type: Post.types[:regular]) if @only_regular
-    posts.where(post_type: Topic.visible_post_types(@user))
+    result = posts.where(post_type: Topic.visible_post_types(@user))
+    DiscoursePluginRegistry.apply_modifier(:topic_view_post_type_filter, result, @user, @topic)
   end
 
   def filter_posts_by_post_number(post_number, asc)

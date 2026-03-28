@@ -919,4 +919,47 @@ RSpec.describe Assigner do
       }
     end
   end
+
+  describe "private assign post visibility" do
+    fab!(:group)
+    fab!(:user) { Fabricate(:user, groups: [group]) }
+    fab!(:admin)
+    fab!(:post)
+    fab!(:topic) { post.topic }
+
+    before do
+      SiteSetting.assigns_public = false
+      SiteSetting.assign_allowed_on_groups = "#{group.id}"
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+    end
+
+    it "assign posts are visible to users in assign_allowed_on_groups even if not in whispers_allowed_groups" do
+      described_class.new(topic, admin).assign(admin)
+
+      assign_post = topic.posts.where(post_type: Post.types[:whisper]).last
+      expect(assign_post).to be_present
+
+      guardian = Guardian.new(user)
+      expect(guardian.can_see_post?(assign_post)).to eq(true)
+    end
+
+    it "assign posts are included in topic view post stream for assign-allowed users" do
+      described_class.new(topic, admin).assign(admin)
+
+      topic_view = TopicView.new(topic.id, user)
+      post_types = topic_view.filtered_post_ids.map { |id| Post.find(id).post_type }
+      assign_post = topic.posts.where(post_type: Post.types[:whisper]).last
+
+      expect(topic_view.filtered_post_ids).to include(assign_post.id)
+    end
+
+    it "assign posts are not visible to users outside assign_allowed_on_groups" do
+      other_user = Fabricate(:user)
+      described_class.new(topic, admin).assign(admin)
+
+      assign_post = topic.posts.where(post_type: Post.types[:whisper]).last
+      guardian = Guardian.new(other_user)
+      expect(guardian.can_see_post?(assign_post)).to eq(false)
+    end
+  end
 end

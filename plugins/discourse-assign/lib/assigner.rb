@@ -403,6 +403,12 @@ class ::Assigner
       assigned_to = assignment.assigned_to
 
       if SiteSetting.unassign_creates_tracking_post && !silent
+        action_code = moderator_post_unassign_action_code(assignment)
+
+        if !DiscourseAssign::ASSIGN_ACTION_CODES.include?(action_code)
+          raise "Unknown assign action code '#{action_code}'. Add it to DiscourseAssign::ASSIGN_ACTION_CODES."
+        end
+
         post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
 
         custom_fields = small_action_username_or_name(assigned_to)
@@ -416,9 +422,9 @@ class ::Assigner
           @assigned_by,
           nil,
           bump: false,
-          post_type: post_type,
-          custom_fields: custom_fields,
-          action_code: moderator_post_unassign_action_code(assignment),
+          post_type:,
+          custom_fields:,
+          action_code:,
         )
       end
 
@@ -504,6 +510,12 @@ class ::Assigner
   end
 
   def add_small_action_post(action_code, assign_to, text)
+    if !DiscourseAssign::ASSIGN_ACTION_CODES.include?(action_code)
+      raise "Unknown assign action code '#{action_code}'. Add it to DiscourseAssign::ASSIGN_ACTION_CODES."
+    end
+
+    post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+
     custom_fields = small_action_username_or_name(assign_to)
 
     if post_target?
@@ -517,9 +529,9 @@ class ::Assigner
       text,
       bump: false,
       auto_track: false,
-      post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
-      action_code: action_code,
-      custom_fields: custom_fields,
+      post_type:,
+      action_code:,
+      custom_fields:,
     )
   end
 

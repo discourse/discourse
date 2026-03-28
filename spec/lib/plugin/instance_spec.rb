@@ -298,6 +298,39 @@ TEXT
         expect(@serializer.include_conditional_scales?).to eq(false)
       end
 
+      it "adds a safe default to Guardian::AnonymousUser when adding methods to Guardian" do
+        @plugin.enabled = true
+        @plugin.add_to_class(:guardian, :can_do_something?) { user && true }
+
+        guardian = Guardian.new(Fabricate(:user))
+        expect(guardian.can_do_something?).to eq(true)
+
+        anon = Guardian::AnonymousUser.new
+        expect(anon).to respond_to(:can_do_something?)
+        expect(anon.can_do_something?).to be_nil
+      end
+
+      it "does not override an existing Guardian::AnonymousUser method" do
+        @plugin.enabled = true
+
+        Guardian::AnonymousUser.define_method(:custom_anon_check?) { false }
+        @plugin.add_to_class(:guardian, :custom_anon_check?) { true }
+
+        anon = Guardian::AnonymousUser.new
+        expect(anon.custom_anon_check?).to eq(false)
+      ensure
+        if Guardian::AnonymousUser.method_defined?(:custom_anon_check?)
+          Guardian::AnonymousUser.undef_method(:custom_anon_check?)
+        end
+      end
+
+      it "does not add AnonymousUser stubs when adding to non-Guardian classes" do
+        @plugin.enabled = true
+        @plugin.add_to_class(:trout, :something_trouty?) { true }
+
+        expect(Guardian::AnonymousUser.method_defined?(:something_trouty?)).to eq(false)
+      end
+
       it "only returns HTML if enabled" do
         ctx = Trout.new
         ctx.data = "hello"
