@@ -16,6 +16,7 @@ import Creator from "./creator";
 import Dates from "./dates";
 import Description from "./description";
 import EventStatus from "./event-status";
+import Image from "./image";
 import Invitees from "./invitees";
 import Location from "./location";
 import MoreMenu from "./more-menu";
@@ -204,6 +205,9 @@ export default class DiscoursePostEvent extends Component {
                   Invitees=(component Invitees event=event)
                   Status=(component Status event=event)
                   ChatChannel=(component ChatChannel event=event)
+                  Image=(component
+                    Image imageUpload=event.imageUpload alt=this.eventName
+                  )
                 }}
               >
                 <Dates
@@ -214,6 +218,10 @@ export default class DiscoursePostEvent extends Component {
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
                 <Invitees @event={{event}} />
+                <Image
+                  @imageUpload={{event.imageUpload}}
+                  @alt={{this.eventName}}
+                />
 
                 {{#if this.withDescription}}
                   <Description @description={{event.description}} />
