@@ -9,7 +9,7 @@ module DiscourseWorkflows
         end
 
         def self.icon
-          "user-check"
+          "comments"
         end
 
         def self.color_key

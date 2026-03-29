@@ -11,11 +11,11 @@ module DiscourseWorkflows
         end
 
         def self.icon
-          "clock"
+          "pause"
         end
 
         def self.color_key
-          "brown"
+          "salmon"
         end
 
         def self.output_schema
