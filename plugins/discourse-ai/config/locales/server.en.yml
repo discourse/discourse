@@ -567,6 +567,8 @@ en:
         set_slow_mode: "Set slow mode"
         move_posts: "Move posts"
         grant_badge: "Grant badge"
+        list_reviewables: "List review queue"
+        perform_reviewable_action: "Review queue action"
         assign: "Assign topic"
         mark_as_solved: "Mark as solved"
         search: "Search"
@@ -610,6 +612,8 @@ en:
         set_slow_mode: "Enable or disable slow mode on a topic"
         move_posts: "Move posts to a new or existing topic"
         grant_badge: "Grant a badge to a user"
+        list_reviewables: "List pending review queue items with optional filtering"
+        perform_reviewable_action: "Perform an action on a review queue item"
         assign: "Assign or unassign a topic to a user or group"
         mark_as_solved: "Mark or unmark a post as the accepted solution"
         search: "Search all public topics on the forum"
@@ -653,6 +657,8 @@ en:
         set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
         move_posts: "Moving posts %{post_ids} from topic %{topic_id}"
         grant_badge: "Granting badge '%{badge_name}' to %{username}"
+        list_reviewables: "Listing review queue items (type: %{type})"
+        perform_reviewable_action: "Performing %{action} on reviewable %{reviewable_id}"
         assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
         mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
@@ -808,6 +814,26 @@ en:
           no_reason: "A reason is required to mark or unmark a post as solved."
           action_failed: "Failed to update the solved status."
         success: "Solved status updated successfully."
+
+      list_reviewables:
+        errors:
+          not_allowed: "You are not allowed to view the review queue."
+          invalid_type: "Invalid reviewable type."
+          invalid_status: "Invalid status. Must be one of: pending, approved, rejected, ignored, deleted, reviewed, all."
+        empty: "No review queue items found matching the given filters."
+        found:
+          one: "Found %{count} review queue item."
+          other: "Found %{count} review queue items."
+
+      perform_reviewable_action:
+        errors:
+          not_allowed: "You are not allowed to access the review queue."
+          not_found: "Review queue item not found."
+          no_reason: "A reason is required to perform an action on a review queue item."
+          invalid_action: "Invalid action '%{action}'. Available actions: %{available}"
+          conflict: "This review queue item was updated by someone else. Please try again."
+          action_failed: "Failed to perform the action."
+        success: "Successfully performed '%{action}' on review queue item %{reviewable_id}."
 
     reviewables:
       ai_tool_action:
