@@ -526,7 +526,7 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
         socketEl = nodeEl.querySelector(".workflow-rete-node__socket.--input");
       } else {
         socketEl = nodeEl.querySelector(
-          `.workflow-rete-node__socket.--output[data-socket-key="${key}"]`
+          `.workflow-rete-node__socket.--output[data-socket-key="${CSS.escape(key)}"]`
         );
       }
 

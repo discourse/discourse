@@ -5,3 +5,6 @@ plugins:
   discourse_workflows_max_executions_per_minute:
     default: 20
     hidden: true
+  discourse_workflows_max_executions_per_minute_per_workflow:
+    default: 10
+    hidden: true

@@ -116,7 +116,10 @@ module DiscourseWorkflows
           begin
             vars = { "id" => @execution&.id }
             if @resume_token
-              vars["resumeWebhookUrl"] = "#{Discourse.base_url}/workflows/webhooks/#{@resume_token}"
+              signature = DiscourseWorkflows::HmacSigner.sign(@resume_token)
+              vars[
+                "resumeWebhookUrl"
+              ] = "#{Discourse.base_url}/workflows/webhooks/#{@resume_token}:#{signature}"
             end
             vars
           end

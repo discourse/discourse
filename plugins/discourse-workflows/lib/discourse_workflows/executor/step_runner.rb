@@ -57,6 +57,8 @@ module DiscourseWorkflows
         node.action? || node.condition? ? raw_config : resolved_config
       end
 
+      SENSITIVE_HEADER_PATTERNS = [/key/i, /secret/i, /token/i, /authorization/i, /password/i]
+
       def create_step(node, input_items, resolved_config)
         DiscourseWorkflows::ExecutionStep.create!(
           execution: @state.execution,
@@ -67,10 +69,27 @@ module DiscourseWorkflows
           status: :running,
           input: input_items,
           metadata: {
-            "resolved_configuration" => resolved_config,
+            "resolved_configuration" => redact_sensitive_headers(resolved_config),
           },
           started_at: Time.current,
         )
+      end
+
+      def redact_sensitive_headers(config)
+        return config unless config.is_a?(Hash) && config["headers"].is_a?(Array)
+
+        filter = ActiveSupport::ParameterFilter.new(SENSITIVE_HEADER_PATTERNS)
+        filtered_headers =
+          config["headers"].map do |header|
+            if header.is_a?(Hash) && header["key"].present?
+              filtered = filter.filter(header["key"] => header["value"])
+              header.merge("value" => filtered[header["key"]])
+            else
+              header
+            end
+          end
+
+        config.merge("headers" => filtered_headers)
       end
 
       def update_step_success!(step, node, raw_config, instance, result)

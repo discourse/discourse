@@ -64,9 +64,13 @@ module DiscourseWorkflows
     private
 
     def fetch_waiting_execution(params:)
+      token, signature = params.path.to_s.split(":", 2)
+      return nil if token.blank? || signature.blank?
+      return nil unless DiscourseWorkflows::HmacSigner.verify(token, signature)
+
       DiscourseWorkflows::Execution
         .where(status: :waiting)
-        .where("waiting_config->>'resume_token' = ?", params.path)
+        .where("waiting_config->>'resume_token' = ?", token)
         .where("waiting_config->>'wait_type' = ?", "webhook")
         .lock("FOR UPDATE SKIP LOCKED")
         .first
@@ -141,9 +145,7 @@ module DiscourseWorkflows
       return true if auth_mode == "none"
 
       unless auth_mode == "basic_auth"
-        Rails.logger.warn(
-          "Unsupported webhook auth mode '#{auth_mode}' for node #{node.id}",
-        )
+        Rails.logger.warn("Unsupported webhook auth mode '#{auth_mode}' for node #{node.id}")
         return false
       end
 

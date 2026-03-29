@@ -126,6 +126,10 @@ after_initialize do
       end
   end
 
+  add_to_serializer :site, :include_topic_admin_button_workflows? do
+    scope.is_staff?
+  end
+
   on(:chat_message_interaction) do |interaction|
     next unless SiteSetting.discourse_workflows_enabled
 
@@ -140,9 +144,12 @@ after_initialize do
     payload = "#{execution_id}:#{step_id}"
     next unless DiscourseWorkflows::HmacSigner.verify(payload, signature)
 
+    execution = DiscourseWorkflows::Execution.find_by(id: execution_id.to_i)
+    next unless execution&.waiting?
+
     Jobs.enqueue(
       Jobs::DiscourseWorkflows::ResumeExecution,
-      execution_id: execution_id.to_i,
+      execution_id: execution.id,
       approved: decision == "approve",
     )
   end

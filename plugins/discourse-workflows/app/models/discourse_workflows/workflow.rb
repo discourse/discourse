@@ -25,11 +25,23 @@ module DiscourseWorkflows
                optional: true
 
     validates :name, presence: true, length: { maximum: 100 }
+    validate :error_workflow_must_exist
 
     scope :enabled, -> { where(enabled: true) }
 
     def trigger_node
       nodes.find_by("type LIKE ?", "trigger:%")
+    end
+
+    private
+
+    def error_workflow_must_exist
+      return if error_workflow_id.nil?
+      if error_workflow_id == id
+        errors.add(:error_workflow_id, :invalid)
+      elsif !Workflow.exists?(error_workflow_id)
+        errors.add(:error_workflow_id, :invalid)
+      end
     end
   end
 end

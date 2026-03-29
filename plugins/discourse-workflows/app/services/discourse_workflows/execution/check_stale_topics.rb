@@ -4,6 +4,8 @@ module DiscourseWorkflows
   class Execution::CheckStaleTopics
     include Service::Base
 
+    MAX_TOPICS_PER_CYCLE = 100
+
     policy :workflows_enabled, class_name: DiscourseWorkflows::Policy::WorkflowsEnabled
     model :stale_trigger_nodes
     step :process_stale_topics
@@ -21,6 +23,7 @@ module DiscourseWorkflows
         triggered_ids = Set.new(node.triggered_topic_ids)
 
         current_stale_ids = []
+        newly_stale_ids = []
 
         Topic
           .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
@@ -29,8 +32,14 @@ module DiscourseWorkflows
           .includes(:tags)
           .find_each do |topic|
             current_stale_ids << topic.id
+            newly_stale_ids << topic.id if triggered_ids.exclude?(topic.id)
+          end
 
-            next if triggered_ids.include?(topic.id)
+        newly_stale_ids
+          .first(MAX_TOPICS_PER_CYCLE)
+          .each do |topic_id|
+            topic = Topic.find_by(id: topic_id)
+            next unless topic
 
             trigger = DiscourseWorkflows::Triggers::StaleTopic::V1.new(topic)
 

@@ -3,15 +3,17 @@
 module DiscourseWorkflows
   class Executor
     MAX_ITERATIONS = 1000
+    MAX_ERROR_DEPTH = 3
 
     delegate :execution, to: :@state
 
-    def initialize(trigger_node, trigger_data, user: nil, execution_mode: :normal)
+    def initialize(trigger_node, trigger_data, user: nil, execution_mode: :normal, error_depth: 0)
       @trigger_node = trigger_node
       @workflow = trigger_node.workflow
       @trigger_data = trigger_data.deep_stringify_keys
       @user = user
       @execution_mode = execution_mode
+      @error_depth = error_depth
       @state =
         ExecutionState.new(
           workflow: @workflow,
@@ -36,7 +38,8 @@ module DiscourseWorkflows
 
     def run
       return nil unless @workflow.enabled?
-      unless rate_limiter.performed!(raise_error: false)
+      unless rate_limiter.performed!(raise_error: false) &&
+               per_workflow_rate_limiter.performed!(raise_error: false)
         now = Time.current
         return(
           DiscourseWorkflows::Execution.create!(
@@ -206,6 +209,15 @@ module DiscourseWorkflows
       )
     end
 
+    def per_workflow_rate_limiter
+      RateLimiter.new(
+        nil,
+        "discourse_workflows_workflow_#{@workflow.id}",
+        SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow,
+        1.minute,
+      )
+    end
+
     def step_runner
       @step_runner ||= StepRunner.new(@state)
     end
@@ -237,6 +249,8 @@ module DiscourseWorkflows
     end
 
     def trigger_error_workflow(error)
+      return if @error_depth >= MAX_ERROR_DEPTH
+
       error_workflow = @workflow.error_workflow
       return unless error_workflow&.enabled?
       return if error_workflow.id == @workflow.id
@@ -254,7 +268,16 @@ module DiscourseWorkflows
         failed_node_name: last_failed_step&.node_name,
       }
 
-      self.class.new(error_trigger_node, error_data, user: @user, execution_mode: :error_mode).run
+      self
+        .class
+        .new(
+          error_trigger_node,
+          error_data,
+          user: @user,
+          execution_mode: :error_mode,
+          error_depth: @error_depth + 1,
+        )
+        .run
     end
 
     def publish_form_completion

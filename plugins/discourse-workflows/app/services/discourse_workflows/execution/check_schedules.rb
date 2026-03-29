@@ -20,15 +20,18 @@ module DiscourseWorkflows
       schedule_triggers.find_each do |node|
         cron = node.configuration&.dig("cron")
         next unless DiscourseWorkflows::CronParser.matches?(cron, now)
-        next if node.triggered_this_minute?(now)
 
-        Jobs.enqueue(
-          Jobs::DiscourseWorkflows::ExecuteWorkflow,
-          trigger_node_id: node.id,
-          trigger_data: DiscourseWorkflows::Triggers::Schedule::V1.new.output,
-        )
+        node.with_lock do
+          next if node.triggered_this_minute?(now)
 
-        node.mark_triggered!(now)
+          node.mark_triggered!(now)
+
+          Jobs.enqueue(
+            Jobs::DiscourseWorkflows::ExecuteWorkflow,
+            trigger_node_id: node.id,
+            trigger_data: DiscourseWorkflows::Triggers::Schedule::V1.new.output,
+          )
+        end
       end
     end
   end

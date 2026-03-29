@@ -83,7 +83,11 @@ module DiscourseWorkflows
 
       case response_type
       when "redirect"
-        redirect_to output["redirect_url"], status: status_code, allow_other_host: true
+        url = output["redirect_url"]
+        unless valid_redirect_url?(url)
+          return render json: { error: "invalid_redirect_url" }, status: :bad_request
+        end
+        redirect_to url, status: status_code, allow_other_host: true
       when "json"
         body = output["response_body"]
         parsed =
@@ -171,6 +175,14 @@ module DiscourseWorkflows
             end
           end
         end
+    end
+
+    def valid_redirect_url?(url)
+      return false if url.blank?
+      uri = URI.parse(url)
+      uri.scheme.in?(%w[http https]) && uri.host.present?
+    rescue URI::InvalidURIError
+      false
     end
 
     def sanitize_status_code(code)

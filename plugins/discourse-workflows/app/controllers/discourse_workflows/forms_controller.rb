@@ -8,6 +8,8 @@ module DiscourseWorkflows
     skip_before_action :redirect_to_login_if_required
     skip_before_action :check_xhr
 
+    before_action :check_form_resume_rate_limit, only: :update
+
     def show
       if request.format.json?
         DiscourseWorkflows::Form::Show.call(service_params) do
@@ -44,6 +46,12 @@ module DiscourseWorkflows
         on_model_not_found(:execution) { raise Discourse::NotFound }
         on_model_not_found(:waiting_node) { raise Discourse::NotFound }
       end
+    end
+
+    private
+
+    def check_form_resume_rate_limit
+      RateLimiter.new(current_user, "workflow_form_resume:#{request.remote_ip}", 10, 60).performed!
     end
   end
 end
