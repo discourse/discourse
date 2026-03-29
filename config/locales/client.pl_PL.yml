@@ -514,7 +514,6 @@ pl_PL:
       pm_title: "Sugerowane wiadomości"
     admin_onboarding_banner:
       launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
-      skipped: "Lista kontrolna dotycząca wdrażania administratora została pominięta. Jeśli chcesz ją ponownie włączyć, poszukaj opcji „włącz wdrażanie właściciela witryny” w ustawieniach witryny."
       congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
       invite_collaborators:
         title: "Zaproś współpracowników"
@@ -760,6 +759,7 @@ pl_PL:
       storage_access_prompt: "Masz już konto %{site_name} ? Zezwól na dostęp do swojej sesji, aby móc komentować jako Ty."
       allow_access: "Zezwól na dostęp"
       continue_as_guest: "Kontynuuj jako gość"
+      be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -4868,6 +4868,8 @@ pl_PL:
       tags: "Tagi"
       localizations: "Języki"
       localization:
+        language: "Język kategorii"
+        language_description: "Podstawowy język nazwy i opisu tej kategorii."
         locale: "Ustawienia regionalne"
         name: "Nazwa"
         description: "Opis"
@@ -7683,6 +7685,7 @@ pl_PL:
           dark_color_scheme: "Ciemna paleta kolorów"
           default_light_scheme: "Jasny (domyślnie)"
           color_scheme_select: "Wybierz kolory, które mają być użyte w zależności od motywu."
+          only_theme_color_schemes: "Ten motyw ogranicza palety kolorów, które mogą być używane."
           dark_color_scheme_select: "Wybierz kolory, które mają być używane w trybie ciemnym."
           edit_colors: "Edytuj kolory"
           custom_sections: "Spersonalizowane sekcje:"
@@ -7747,7 +7750,7 @@ pl_PL:
           import_web_tip: "Repozytorium zawierające motyw"
           direct_install_tip: "Czy na pewno chcesz zainstalować <strong>%{name}</strong> z repozytorium wymienionego poniżej?"
           import_web_advanced: "Zaawansowane…"
-          import_file_tip: "plik .tar.gz, .zip, lub .dcstyle.json zawierający motyw"
+          import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"

@@ -5839,7 +5839,6 @@ zh_TW:
           import_web_tip: "含有佈景主題的版本庫"
           direct_install_tip: "您確定要從下面列出的存儲庫中安裝 <strong>%{name}</strong> 嗎？"
           import_web_advanced: "進階…"
-          import_file_tip: "包含主題的 .tar.gz、.zip 或 .dcstyle.json 檔案"
           is_private: "佈景主題在私人git版本庫中"
           finish_install: "完成佈景主題安裝"
           last_attempt: "安裝過程未完成，最後一次嘗試："

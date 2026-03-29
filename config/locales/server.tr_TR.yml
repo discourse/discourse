@@ -596,6 +596,7 @@ tr_TR:
         one: "Tek seferde en fazla %{count} kullanıcı eklenebilir"
         other: "Tek seferde en fazla %{count} kullanıcı eklenebilir"
       usernames_or_emails_required: "Kullanıcı adları veya e-postalar mevcut olmalıdır"
+      cannot_add_emails: "Bu gruba üye eklemek için yalnızca kullanıcı adları kullanılabilir. Eposta ile davet etmek için Davet et düğmesini kullanın."
       counting_too_many_email_domains:
         one: "Aynı anda en fazla %{count} e-posta alan adı sayılabilir"
         other: "Aynı anda en fazla %{count} e-posta alan adı sayılabilir"
@@ -2454,6 +2455,7 @@ tr_TR:
     show_bottom_topic_map: "Konuya 10 veya daha fazla yanıt geldiğinde konu haritasını konunun altında gösterir."
     show_topic_map_in_topics_without_replies: "Konuya yanıt gelmese bile konu haritasını gösterir."
     enable_site_owner_onboarding: "Yeni yöneticilere başlangıçta yardımcı olmak için ana sayfada bir panel gösterir. Bu ayarı yeniden etkinleştirerek başlangıç adımlarını tekrar görebilirsiniz."
+    site_owner_onboarding_max_days: "Site oluşturulduktan sonra karşılama banner'ının gösterilebileceği maksimum gün sayısı."
     enable_welcome_banner: "Üyeleri karşılamak ve site içeriğinde arama yapmalarına olanak sağlamak için ana konu listenizin sayfalarında bir başlık gösterin"
     welcome_banner_image: "Hoş geldiniz banner'ının arka planında gösterilecek bir görüntü ayarlayın."
     welcome_banner_location: "Hoş geldiniz banner'ının sayfada nerede görüneceğini belirler."

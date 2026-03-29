@@ -14,8 +14,18 @@ tr_TR:
     chat_integration:
       menu_title: "Sohbet Entegrasyonları"
       settings: "Ayarlar"
+      nav:
+        providers: "Sağlayıcılar"
+        providers_description: "Sohbet sağlayıcısı entegrasyonlarını yapılandırın"
+      add_provider: "Sağlayıcı ekle"
       more_providers: "Daha fazla"
+      empty_state:
+        title: "Sohbet platformunuzu bağlayın."
+        body: "Discourse'tan ekibinizin sohbetine bildirimler gönderin. Başlamak için bir sağlayıcı seçin."
       channels_title: "Kanallar"
+      no_channels: "Henüz hiçbir kanal yapılandırılmadı."
+      channel_actions: "Kanal işlemleri"
+      add_first_channel: "İlk %{provider} kanalınızı ekleyin"
       channels_with_errors: "Bu sağlayıcı için bazı kanallar en son mesaj gönderildiğinde başarısız oldu. Daha fazla bilgi edinmek için hata simgelerine tıklayın."
       channel_exception: "Bu kanala en son mesaj gönderilirken bilinmeyen bir hata oluştu."
       group_mention_template: "Şu kullanıcıdan bahsedildi: @%{name}"
@@ -23,6 +33,8 @@ tr_TR:
       choose_group: "(Grup seçin)"
       all_categories: "(Tüm kategoriler)"
       all_tags: "(Tüm etiketler)"
+      create_rule: "Kural oluştur"
+      add_channel: "Kanal ekle"
       delete_channel: "Sil"
       test_channel: "Test"
       edit_channel: "Düzenle"
@@ -30,11 +42,14 @@ tr_TR:
       test_modal:
         title: "Test mesajı gönderin"
         topic: "Konu"
+        send: "Test mesajı gönder"
         close: "Kapat"
         error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerini kontrol edin."
         success: "Mesaj başarıyla gönderildi"
       type:
         normal: Normal
+        group_message: Grup mesajı
+        group_mention: Grup bahsetmesi
       filter:
         mute: 'Sessize al'
         follow: 'Sadece ilk gönderi'
@@ -55,6 +70,9 @@ tr_TR:
           ok: "Geçerli"
           fail: "Geçersiz biçim"
       edit_rule_modal:
+        edit_title: Kuralı düzenle
+        create_title: Kural oluştur
+        save: Kuralı kaydet
         cancel: İptal et
         provider: Sağlayıcı
         type: Tür
@@ -75,7 +93,9 @@ tr_TR:
           param:
             identifier:
               title: Kanal
+              help: "Örneğin #kanal veya @kullanıcıadı"
           errors:
+            auth_error: "Verilen kimlik doğrulama belirteci geçersiz."
             action_prohibited: "Botun bu kanala gönderi yapma izni yok"
             channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
         telegram:
@@ -98,6 +118,7 @@ tr_TR:
               help: "Kanalı tanımlayan bir ad. Discord bağlantısı için kullanılmaz."
             webhook_url:
               title: Web kancası URL'si
+              help: 'Discord sunucu ayarlarınızda oluşturulan webhook URL''si şu formatta olmalıdır: https://discord.com/api/webhooks/<webhook-id>/<webhook-token>'
         guilded:
           title: "Guilded"
           param:
@@ -112,6 +133,7 @@ tr_TR:
           param:
             identifier:
               title: Kanal
+              help: "Örneğin #kanal veya @kullanıcıadı"
           errors:
             channel_not_found: "Belirtilen kanal Mattermost'ta mevcut değil"
         matrix:
@@ -142,6 +164,7 @@ tr_TR:
           param:
             identifier:
               title: Kanal
+              help: "Örneğin #kanal veya @kullanıcıadı"
           errors:
             invalid_channel: "Bu kanal Rocket Chat'te mevcut değil"
         gitter:
@@ -149,6 +172,7 @@ tr_TR:
           param:
             name:
               title: "Ad"
+              help: "Gitter odasının adı örneğin gitterHQ/services"
             webhook_url:
               title: "Web kancası URL'si"
               help: "Bir Gitter odasında yeni bir entegrasyon oluşturduğunuzda sağlanan URL."

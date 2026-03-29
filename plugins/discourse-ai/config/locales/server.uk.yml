@@ -301,6 +301,13 @@ uk:
         unknown_error: "Не вдалося вирішити запитані облікові дані."
     mcp_servers:
       secret_not_found: "Вибраний обліковий запис не існує."
+      errors:
+        oauth_refresh_token_missing: "Маркер оновлення OAuth відсутній. Підключіть цей сервер MCP знову."
+        oauth_save_before_connect: "Збережіть сервер MCP перед тестуванням з’єднання OAuth."
+        oauth_state_invalid: "Стан авторизації OAuth недійсний або термін її дії минув. Перезапустіть з’єднання."
+        oauth_token_exchange_failed: "Обмін токеном OAuth не вдався, статус %{status}."
+        oauth_https_required: "OAuth вимагає, щоб ваш сайт обслуговувався через HTTPS."
+        oauth_client_metadata_public_https_required: "Реєстрація документа метаданих клієнта вимагає публічної URL-адреси сайту HTTPS. Поточна URL-адреса метаданих клієнта: %{url}"
     ai_helper:
       errors:
         completion_request_failed: "Щось пішло не так під час спроби надати пропозиції. Будь ласка, спробуйте ще раз."
@@ -904,3 +911,5 @@ uk:
         few: "Користувацькі інструменти з назвами %{names} вже існують."
         many: "Користувацькі інструменти з назвами %{names} вже існують."
         other: "Користувацькі інструменти з назвами %{names} вже існують."
+      mcp_server_missing: "На цьому сайті не налаштовано такі MCP-сервери: %{names}."
+      mcp_server_tools_not_found: "На цьому сайті немає відповідних інструментів із сервера MCP %{name}."

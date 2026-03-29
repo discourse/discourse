@@ -14,7 +14,7 @@ tr_TR:
               search: "YZ aramasına izin verir"
               stream_completion: "AI ajanı tamamlamalarının akışına izin verir"
               update_agents: "AI ajanlarının güncellenmesine olanak tanır"
-              manage_artifacts: "AI artefaktlarını yönetmeye izin verir (liste, görüntüleme, oluşturma, güncelleme, silme)"
+              manage_artifacts: "Yapay zeka ürünlerinin yönetimini sağlar (listeleme, görüntüleme, oluşturma, güncelleme, silme)."
       site_settings:
         categories:
           discourse_ai: "Discourse YZ"
@@ -131,7 +131,7 @@ tr_TR:
               label: "Ajan"
               description: "Triyaj için kullanılacak AI ajanı (varsayılan LLM ve kullanıcı ayarları bulunmalıdır)"
             whisper:
-              label: "Fısıltı olarak yanıtla"
+              label: "Whisper olarak yanıtla"
               description: "Temsilcinin cevabı fısıltı şeklinde mi olmalı?"
             silent_mode:
               label: "Sessiz Mod"
@@ -493,9 +493,20 @@ tr_TR:
         credit_allocations: "Kredi tahsisleri"
       ai_agent:
         ai_tools: "Araçlar"
+        mcp_servers: "MCP sunucuları"
+        mcp_server_tools_help: "Seçilen MCP sunucuları, varsayılan olarak tüm araçlarını kullanıma sunar. Jeton kullanımını azaltmak ve araç seçimini odaklı tutmak için bunları aracı başına daraltın."
         mcp_server_tool_count:
           one: "%{count} araç"
           other: "%{count} araç"
+        mcp_server_enabled_tool_count:
+          one: "%{count} araç etkinleştirildi"
+          other: "%{count} araç etkinleştirildi"
+        mcp_server_all_tools_enabled: "Tüm araçlar etkinleştirildi."
+        mcp_server_enabled_tools:
+          one: "%{count} / %{total} araç etkinleştirildi"
+          other: "%{count} / %{total} araç etkinleştirildi"
+        mcp_server_choose_tools: "Araçları seçin"
+        mcp_server_edit_tools: "Araçları düzenleyin"
         tool_strategies:
           all: "Tüm yanıtlara uygula"
           replies:
@@ -563,11 +574,21 @@ tr_TR:
           one: "%{count} araç"
           other: "%{count} araç"
         tool_tokens_total: "~%{tokens} Jetonlar"
+        mcp_server_cost_name: "%{name} (MCP sunucusu)"
+        mcp_server_cost_value:
+          one: "~%{tokens} belirteç, %{count} araç"
+          other: "~%{tokens} belirteç, %{count} araç"
         mcp_server_tokens_only: "~%{tokens} jetonlar"
         mcp_tools_modal:
           title: "%{name} araç"
+          summary: "Varsayılan olarak bu aracı, bu sunucudaki tüm araçları kullanabilir. Erişimi sınırlamak ve işlem maliyetini düşürmek için daha küçük bir küme seçin."
+          filter_placeholder: "Filtreleme araçları"
           select_all: "Tümünü seç"
           clear_all: "Tümünü temizle"
+          selection_summary:
+            one: "%{count} / %{total} araç seçildi"
+            other: "%{count} / %{total} araç seçildi"
+          empty: "Bu filtreye uyan hiçbir araç bulunamadı."
         tool_severity_medium: "Orta kapasite"
         tool_severity_high: "Yüksek kapasite"
         tool_severity_too_many: "Çok fazla araç"
@@ -600,7 +621,7 @@ tr_TR:
             key_title: "Anahtar"
         examples:
           title: Örnekler
-          examples_help: LLM ile daha önceki etkileşimleri simüle edin ve daha iyi sonuçlar elde etmek için bunları temellendirin.
+          examples_help: Önceki etkileşimleri LLM ile simüle edin ve daha iyi sonuçlar elde etmek için onu temellendirin.
           new: Yeni örnek
           remove: Örneği sil
           collapsable_title: "Örnek #%{number}"
@@ -645,6 +666,8 @@ tr_TR:
       tools:
         back: "Araçlara geri dön"
         short_title: "Araçlar"
+        keywords: "mcp|mcp sunucusu|model bağlam protokolü"
+        script_tools: "Komut dosyası araçları"
         export: "Dışa Aktar"
         import: "İçe Aktar"
         import_error_conflict: "Araç zaten mevcut, güncellemek ister misiniz?"
@@ -657,6 +680,7 @@ tr_TR:
         tool_name_help: "\"Araç Adı\" büyük dil modeline sunulur. Bu değer genel olarak tek değildir, ancak her bir ajan için farklıdır. (ajan, kaydetme sırasında doğrulama yapar)"
         description: "Açıklama"
         description_help: "Dil modeli için aracın amacının net bir açıklaması"
+        subheader_description: "Araçlar ve MCP sunucuları, yapay zeka ajanlarının yeteneklerini genişletir."
         summary: "Özet"
         summary_help: "Son kullanıcılara gösterilecek araçların amacının özeti"
         script: "Komut Dosyası"
@@ -710,30 +734,80 @@ tr_TR:
         embedding: "Gömme"
         cannot_delete_in_use: "Bu kimlik bilgisi şu anda kullanıldığından silinemez:"
         tool: "Araç"
+        mcp_server: "MCP sunucusu"
+        mcp_server_oauth_client_secret: "MCP sunucusu OAuth istemci gizli anahtarı"
         modal:
           title: "Yeni kimlik bilgisi oluştur"
       mcp_servers:
+        short_title: "MCP sunucuları"
+        new: "Yeni MCP sunucusu"
         name: "Ad"
         description: "Açıklama"
         url: "URL"
+        auth_type: "Kimlik doğrulama"
         auth_types:
+          none: "Kimlik doğrulaması yok"
+          header_secret: "Başlık kimlik bilgisi"
           oauth: "OAuth"
         secret: "Kimlik bilgisi"
+        auth_header: "Kimlik doğrulama başlığı"
+        auth_scheme: "Kimlik doğrulama şeması"
+        oauth_client_registration: "OAuth istemci kaydı"
+        oauth_client_registration_types:
+          client_metadata_document: "Müşteri meta veri belgesi"
+          manual: "Manuel istemci kimlik bilgileri"
+        oauth_client_id: "OAuth istemci kimliği"
+        oauth_client_secret: "OAuth istemci gizli anahtarı"
+        oauth_scopes: "OAuth kapsamları"
+        oauth_connection: "OAuth bağlantısı"
+        oauth_status: "OAuth durumu"
         oauth_statuses:
+          disconnected: "Bağlantı kesildi"
           connected: "Bağlı"
+          refresh_failed: "Yenileme başarısız oldu"
+          error: "İlgilenilmesi gerekiyor"
         oauth_connect: "Bağlan"
+        oauth_reconnect: "Yeniden bağlan"
+        oauth_disconnect: "Bağlantıyı kes"
+        oauth_connect_help: "Sunucuyu kaydetmek ve yetkilendirmek için Connect'i kullanın."
+        oauth_client_metadata_url: "İstemci meta veri URL'si"
+        oauth_granted_scopes: "Verilen kapsamlar"
+        oauth_access_token_expires_at: "Erişim belirtecinin geçerlilik süresi şu tarihte sona eriyor:"
+        oauth_authorization_endpoint: "Yetkilendirme uç noktası"
+        oauth_token_endpoint: "Token uç noktası"
+        oauth_revocation_endpoint: "İptal uç noktası"
+        oauth_issuer: "Hizmeti sağlayan"
+        oauth_last_error: "Son OAuth hatası"
+        oauth_show_details: "Ayrıntıları göster"
+        oauth_hide_details: "Ayrıntıları gizle"
+        timeout_seconds: "İstek zaman aşımı (saniye)"
+        timeout_seconds_tooltip: "Discourse'un isteğin başarısız olmasından önce MCP sunucusunu ne kadar süre beklediği. Sunucu sürekli olarak yavaş çalışmadığı sürece 30 saniye olarak ayarlayın."
         enabled: "Etkin mi"
         save: "Kaydet"
         edit: "Düzenle"
         delete: "Sil"
+        test: "Bağlantıyı test et"
+        saved: "MCP sunucusu kaydedildi"
+        confirm_delete: "Bu MCP sunucusunu silmek istediğinizden emin misiniz?"
         back: "Araçlara geri dön"
+        health: "Sağlık"
+        healthy: "Sağlıklı"
+        unhealthy: "İlgiye ihtiyaç var"
         tool_count:
           one: "%{count} araç"
           other: "%{count} araç"
         tools_modal:
           title: "%{name} araç"
+          summary:
+            one: "Bu sunucu şu anda %{count} aracını kullanıma sunmaktadır."
+            other: "Bu sunucu şu anda %{count} araç sunmaktadır."
           parameters: "Parametreler"
           required: "Gerekli"
+          no_parameters: "Bu araç herhangi bir parametre gerektirmez."
+        test_result: "Bağlantı sonucu"
+        test_summary:
+          one: "%{version} protokolü kullanılarak %{count} aracı keşfedildi."
+          other: "%{version} protokolü kullanılarak %{count} aracı keşfedildi."
       llms:
         short_title: "LLM'ler"
         no_llms: "Henüz LLM yok"

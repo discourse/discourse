@@ -2710,7 +2710,7 @@ security:
     list_type: compact
   crawler_check_bypass_agents:
     hidden: true
-    default: "cubot"
+    default: "cubot|MetaIAB"
   cors_origins:
     default: ""
     type: list

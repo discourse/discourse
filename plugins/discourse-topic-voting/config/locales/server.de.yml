@@ -7,6 +7,7 @@
 de:
   site_settings:
     topic_voting_enabled: 'Benutzern erlauben, für Themen zu stimmen?'
+    topic_voting_enable_vote_limits: 'Begrenze die Anzahl der Stimmen pro Benutzer auf Basis der Vertrauensstufe'
     topic_voting_tl0_vote_limit: 'Wie viele aktive Stimmen sind für VS0-Benutzer erlaubt?'
     topic_voting_tl1_vote_limit: 'Wie viele aktive Stimmen sind für VS1-Benutzer erlaubt?'
     topic_voting_tl2_vote_limit: 'Wie viele aktive Stimmen sind für VS2-Benutzer erlaubt?'

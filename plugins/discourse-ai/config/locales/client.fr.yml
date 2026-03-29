@@ -493,6 +493,7 @@ fr:
         oauth_statuses:
           connected: "Connecté"
         oauth_connect: "Connecter"
+        oauth_hide_details: "Masquer les détails"
         enabled: "Activé"
         save: "Enregistrer"
         edit: "Modifier"

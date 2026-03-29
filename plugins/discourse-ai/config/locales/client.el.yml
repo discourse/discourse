@@ -215,6 +215,7 @@ el:
         oauth_statuses:
           connected: "Συνδεδεμένος"
         oauth_connect: "Συνδεθείτε"
+        oauth_hide_details: "Απόκρυψη λεπτομερειών"
         enabled: "Ενεργοποιημένα"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"

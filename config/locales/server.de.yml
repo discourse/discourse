@@ -2451,6 +2451,7 @@ de:
     show_bottom_topic_map: "Zeigt die Themenübersicht am Ende des Themas an, wenn es 10 Antworten oder mehr hat."
     show_topic_map_in_topics_without_replies: "Zeigt die Themenübersicht an, auch wenn es zum Thema keine Antworten gibt."
     enable_site_owner_onboarding: "Zeigt neuen Administratoren auf der Startseite ein Panel an, das ihnen den Einstieg erleichtert. Aktiviere diese Einstellung wieder, um die Einführungsschritte erneut zu sehen."
+    site_owner_onboarding_max_days: "Maximale Anzahl von Tagen nach der Erstellung der Website, an denen das Onboarding-Banner angezeigt wird."
     enable_welcome_banner: "Zeige auf den Hauptseiten mit Themenlisten ein Banner an, um Mitglieder willkommen zu heißen und ihnen die Suche nach Website-Inhalten zu ermöglichen"
     welcome_banner_image: "Lege ein Bild fest, das im Hintergrund des Willkommensbanners angezeigt werden soll."
     welcome_banner_location: "Legt fest, wo auf der Seite das Willkommensbanner erscheinen soll."

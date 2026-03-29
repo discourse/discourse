@@ -6542,7 +6542,6 @@ it:
           import_web_tip: "Archivio contenente il tema"
           direct_install_tip: "Sei sicuro di voler installare <strong>%{name}</strong> dall'archivio elencato di seguito?"
           import_web_advanced: "Avanzato…"
-          import_file_tip: "File .tar.gz, .zip, o .dcstyle.json contenente il tema"
           is_private: "Il tema è in un archivio git privato"
           finish_install: "Completa l'installazione del tema"
           last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"

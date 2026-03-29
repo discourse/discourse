@@ -506,6 +506,7 @@ zh_CN:
             description: "控制帖子是被审核、隐藏、删除还是视为垃圾信息。"
       tool_summary:
         read_artifact: "阅读 Web 工件"
+        search_uploaded_documents: "搜索已上传的文档"
         update_artifact: "更新 Web 工件"
         create_artifact: "创建 Web 工件"
         web_browser: "浏览网页"
@@ -548,6 +549,7 @@ zh_CN:
         researcher_dry_run: "准备研究"
       tool_help:
         read_artifact: "使用 AI 机器人阅读 Web 工件"
+        search_uploaded_documents: "搜索上传至此 agent 的文档"
         update_artifact: "使用 AI 机器人更新 Web 工件"
         create_artifact: "使用 AI 机器人创建 Web 工件"
         web_browser: "使用 AI 机器人浏览网页"
@@ -589,6 +591,8 @@ zh_CN:
         researcher: "使用 AI 机器人研究论坛信息"
       tool_description:
         read_artifact: "使用 AI 机器人阅读 Web 工件"
+        search_uploaded_documents:
+          other: "找到 %{count} 个已上传的文档摘录，对应 '%{query}'"
         update_artifact: "已使用 AI 机器人更新 Web 工件"
         create_artifact: "创建了一个 Web 工件：%{name} - %{specification}"
         web_browser: "正在阅读 <a href='%{url}'>%{url}</a>"

@@ -134,8 +134,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(postcss@8.5.8)
       '@rollup/browser':
-        specifier: ^4.59.0
-        version: 4.59.0
+        specifier: ^4.60.0
+        version: 4.60.0
       '@rollup/plugin-babel':
         specifier: ^7.0.0
         version: 7.0.0(@babel/core@7.29.0)(rollup@4.59.0)
@@ -2786,8 +2786,8 @@ packages:
     peerDependencies:
       prettier: 3.x
 
-  '@rollup/browser@4.59.0':
-    resolution: {integrity: sha512-JYr/cF9L7MSJ/RLWFT705NIv44jXzSHxXWs3miV2sO3+wk5PHeQnG8uzSBb9u4IG12n4zApjUwtJLrYjxFZYxw==}
+  '@rollup/browser@4.60.0':
+    resolution: {integrity: sha512-1nIWaajiT+XB+GQi1l6VxxZuaNdF4OuIUeRbaRPqqefrPa/w4bdn3ugVLVmOV8ia+a7MfoTgSlobt11xVsGUGQ==}
 
   '@rollup/plugin-babel@7.0.0':
     resolution: {integrity: sha512-NS2+P7v80N3MQqehZEjgpaFb9UyX3URNMW/zvoECKGo4PY4DvJfQusTI7BX/Ks+CPvtTfk3TqcR6S9VYBi/C+A==}
@@ -3361,6 +3361,7 @@ packages:
   '@xmldom/xmldom@0.8.11':
     resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -11836,7 +11837,7 @@ snapshots:
       prettier: 3.8.1
       rxjs: 6.6.7
 
-  '@rollup/browser@4.59.0':
+  '@rollup/browser@4.60.0':
     dependencies:
       '@types/estree': 1.0.8
 

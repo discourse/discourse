@@ -29,7 +29,7 @@ class UpcomingChanges::NotifyPromotion
   policy :meets_or_exceeds_status
   policy :change_has_not_already_been_notified_about_promotion
   policy :admin_has_not_manually_toggled
-  policy :site_is_not_new
+  policy :should_notify_admins
 
   try do
     step :log_promotion
@@ -61,8 +61,8 @@ class UpcomingChanges::NotifyPromotion
     !SiteSetting.modified.key?(params.setting_name)
   end
 
-  def site_is_not_new(params:)
-    !Migration::Helpers.new_site? && !Rails.env.development?
+  def should_notify_admins(params:)
+    UpcomingChanges.should_notify_admins?
   end
 
   def log_promotion(params:, guardian:)
