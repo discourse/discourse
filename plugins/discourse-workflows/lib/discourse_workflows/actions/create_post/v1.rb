@@ -42,16 +42,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          {
-            post_id: :integer,
-            post_number: :integer,
-            post_raw: :string,
-            reply_to_post_number: :integer,
-            topic_id: :integer,
-            topic_title: :string,
-            user_id: :integer,
-            username: :string,
-          }
+          { post: Schemas::Post.fields }
         end
 
         def execute_single(_context, item:, config:)
@@ -61,16 +52,7 @@ module DiscourseWorkflows
           author = resolve_author(config["user_id"])
           post = PostCreator.new(author, build_post_args(topic, config)).create!
 
-          {
-            post_id: post.id,
-            post_number: post.post_number,
-            post_raw: post.raw,
-            reply_to_post_number: post.reply_to_post_number,
-            topic_id: post.topic_id,
-            topic_title: topic.title,
-            user_id: post.user_id,
-            username: post.user&.username,
-          }
+          { post: Schemas::Post.resolve(post) }
         end
 
         private

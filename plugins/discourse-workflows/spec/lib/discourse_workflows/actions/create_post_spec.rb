@@ -38,13 +38,11 @@ RSpec.describe DiscourseWorkflows::Actions::CreatePost::V1 do
 
       expect(reply.raw).to eq("Workflow reply")
       expect(reply.user_id).to eq(admin.id)
-      expect(result).to include(
-        post_id: reply.id,
+      expect(result[:post]).to include(
+        id: reply.id,
         post_number: reply.post_number,
-        post_raw: "Workflow reply",
+        raw: "Workflow reply",
         reply_to_post_number: nil,
-        topic_id: topic.id,
-        topic_title: topic.title,
         user_id: admin.id,
         username: admin.username,
       )
@@ -187,10 +185,10 @@ RSpec.describe DiscourseWorkflows::Actions::CreatePost::V1 do
       expect(reply.raw).to eq("Hello Ada")
       expect(reply.reply_to_post_number).to eq(first_post.post_number)
       expect(reply.user_id).to eq(admin.id)
-      expect(result.first["json"]).to include(
-        "post_id" => reply.id,
-        "topic_id" => topic.id,
-        "post_raw" => "Hello Ada",
+      expect(result.first["json"]["post"]).to include(
+        "id" => reply.id,
+        "post_number" => reply.post_number,
+        "raw" => "Hello Ada",
       )
     end
   end

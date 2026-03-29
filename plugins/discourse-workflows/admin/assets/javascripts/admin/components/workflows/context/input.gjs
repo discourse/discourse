@@ -122,7 +122,9 @@ function findPreviousNode(node, nodes, connections, visited) {
 
   const incoming = connections.find(
     (c) =>
-      c.targetClientId === node.clientId && c.sourceClientId !== node.clientId
+      c.targetClientId === node.clientId &&
+      c.sourceClientId !== node.clientId &&
+      !visited.has(c.sourceClientId)
   );
   if (!incoming) {
     return null;
