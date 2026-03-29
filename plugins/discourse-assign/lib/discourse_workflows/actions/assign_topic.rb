@@ -4,6 +4,8 @@ if defined?(DiscourseWorkflows)
   module DiscourseWorkflows
     module Actions
       class AssignTopic < Base
+        OPERATIONS = %w[assign unassign].freeze
+
         def self.identifier
           "action:assign_topic"
         end
@@ -18,6 +20,15 @@ if defined?(DiscourseWorkflows)
 
         def self.configuration_schema
           {
+            operation: {
+              type: :options,
+              required: true,
+              options: OPERATIONS,
+              default: "assign",
+              ui: {
+                expression: true,
+              },
+            },
             topic_id: {
               type: :string,
               required: true,
@@ -27,6 +38,9 @@ if defined?(DiscourseWorkflows)
               required: true,
               ui: {
                 control: :user_or_group,
+                visible_if: {
+                  operation: "assign",
+                },
               },
             },
           }
@@ -43,29 +57,42 @@ if defined?(DiscourseWorkflows)
 
         def execute_single(_context, item:, config:)
           topic = Topic.find(config["topic_id"])
-          assignee = find_assignee(config["assignee"])
           assigner = ::Assigner.new(topic, Discourse.system_user)
-          result = assigner.assign(assignee)
 
-          unless result[:success]
-            raise I18n.t(
-                    "discourse_assign.discourse_workflows.assign_topic.error",
-                    reason: result[:reason],
-                  )
+          case config["operation"]
+          when "unassign"
+            assigner.unassign
+
+            {
+              topic_id: topic.id,
+              topic_title: topic.title,
+              assigned_to: nil,
+              assigned_to_type: nil,
+            }
+          else
+            assignee = find_assignee(config["assignee"])
+            result = assigner.assign(assignee)
+
+            unless result[:success]
+              raise I18n.t(
+                      "discourse_assign.discourse_workflows.assign_topic.error",
+                      reason: result[:reason],
+                    )
+            end
+
+            {
+              topic_id: topic.id,
+              topic_title: topic.title,
+              assigned_to: config["assignee"],
+              assigned_to_type: assignee.is_a?(User) ? "User" : "Group",
+            }
           end
-
-          {
-            topic_id: topic.id,
-            topic_title: topic.title,
-            assigned_to: config["assignee"],
-            assigned_to_type: assignee.is_a?(User) ? "User" : "Group",
-          }
         end
 
         private
 
         def find_assignee(identifier)
-          User.find_by(username: identifier) || Group.find_by(name: identifier) ||
+          User.find_by(username: identifier) || ::Group.find_by(name: identifier) ||
             raise(
               I18n.t(
                 "discourse_assign.discourse_workflows.assign_topic.assignee_not_found",

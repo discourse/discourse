@@ -199,7 +199,11 @@ en:
       nodes:
         "action:assign_topic": "Assign topic"
       node_descriptions:
-        "action:assign_topic": "Assign a topic to a user or group"
+        "action:assign_topic": "Assign or unassign a topic"
       assign_topic:
+        operation: "Operation"
+        operations:
+          assign: "Assign"
+          unassign: "Unassign"
         topic_id: "Topic ID"
         assignee: "Assignee"
