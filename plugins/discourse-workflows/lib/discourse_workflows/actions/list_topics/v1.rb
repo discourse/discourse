@@ -37,19 +37,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          {
-            topic_id: :integer,
-            title: :string,
-            category_id: :integer,
-            tags: :array,
-            username: :string,
-            created_at: :string,
-            bumped_at: :string,
-            posts_count: :integer,
-            views: :integer,
-            like_count: :integer,
-            status: :string,
-          }
+          Schemas::Topic.fields
         end
 
         def execute(context, input_items:, node_context:, user: nil)
@@ -61,33 +49,7 @@ module DiscourseWorkflows
           topic_list = topic_query.list_filter
 
           topic_list.topics.map do |topic|
-            {
-              "json" => {
-                "topic_id" => topic.id,
-                "title" => topic.title,
-                "category_id" => topic.category_id,
-                "tags" => topic.tags.pluck(:name),
-                "username" => topic.user&.username,
-                "created_at" => topic.created_at&.iso8601,
-                "bumped_at" => topic.bumped_at&.iso8601,
-                "posts_count" => topic.posts_count,
-                "views" => topic.views,
-                "like_count" => topic.like_count,
-                "status" => topic_status(topic),
-              },
-            }
-          end
-        end
-
-        private
-
-        def topic_status(topic)
-          if topic.archived
-            "archived"
-          elsif topic.closed
-            "closed"
-          else
-            "open"
+            { "json" => Schemas::Topic.resolve(topic).deep_stringify_keys }
           end
         end
       end

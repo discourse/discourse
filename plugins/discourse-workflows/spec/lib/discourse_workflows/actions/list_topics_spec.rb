@@ -83,7 +83,7 @@ RSpec.describe DiscourseWorkflows::Actions::ListTopics::V1 do
 
       topic_1_result = result.find { |r| r["json"]["topic_id"] == topic_1.id }["json"]
       expect(topic_1_result).to include(
-        "title" => topic_1.title,
+        "topic_title" => topic_1.title,
         "category_id" => category.id,
         "username" => user.username,
         "status" => "open",

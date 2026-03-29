@@ -7,6 +7,15 @@ module DiscourseWorkflows
         raise NotImplementedError
       end
 
+      def self.schema_extensions
+        @schema_extensions || []
+      end
+
+      def self.extend_schema(name, fields:, resolver:)
+        @schema_extensions ||= []
+        @schema_extensions << { name: name, fields: fields, resolver: resolver }
+      end
+
       def self.icon
         nil
       end

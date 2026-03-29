@@ -21,28 +21,12 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          {
-            topic_id: :integer,
-            topic_title: :string,
-            topic_raw: :string,
-            username: :string,
-            tags: :array,
-            category_id: :integer,
-          }
+          Schemas::Topic.fields
         end
 
-        def execute_single(context, item:, config:)
+        def execute_single(_context, item:, config:)
           topic = Topic.find(config["topic_id"])
-          first_post = topic.first_post
-
-          {
-            topic_id: topic.id,
-            topic_title: topic.title,
-            topic_raw: first_post&.raw,
-            username: first_post&.user&.username,
-            tags: topic.tags.pluck(:name),
-            category_id: topic.category_id,
-          }
+          Schemas::Topic.resolve(topic)
         end
       end
     end

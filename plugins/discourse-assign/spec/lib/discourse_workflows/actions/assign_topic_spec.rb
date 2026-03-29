@@ -30,7 +30,6 @@ RSpec.describe DiscourseWorkflows::Actions::AssignTopic do
         expect(result[:topic_id]).to eq(topic.id)
         expect(result[:topic_title]).to eq(topic.title)
         expect(result[:assigned_to]).to eq(user.username)
-        expect(result[:assigned_to_type]).to eq("User")
         expect(Assignment.exists?(target: topic, assigned_to: user)).to eq(true)
       end
 
@@ -43,7 +42,6 @@ RSpec.describe DiscourseWorkflows::Actions::AssignTopic do
         result = action.execute_single({}, item: item, config: config)
 
         expect(result[:assigned_to]).to eq(group.name)
-        expect(result[:assigned_to_type]).to eq("Group")
         expect(Assignment.exists?(target: topic, assigned_to: group)).to eq(true)
       end
 

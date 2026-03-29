@@ -50,6 +50,13 @@ module DiscourseWorkflows
         register(core_entries, klass, version)
       end
 
+      def schema_extensions_for(schema_name)
+        all_node_types.flat_map do |klass|
+          next [] unless klass.respond_to?(:schema_extensions)
+          klass.schema_extensions.select { |ext| ext[:name] == schema_name }
+        end
+      end
+
       def all_node_types
         classes = all_entries.map { |e| e[:klass] }
         DiscoursePluginRegistry.apply_modifier(:discourse_workflows_node_types, classes)

@@ -6,6 +6,23 @@ if defined?(DiscourseWorkflows)
       class AssignTopic < Base
         OPERATIONS = %w[assign unassign].freeze
 
+        extend_schema :topic,
+                      fields: {
+                        assigned_to: :string,
+                      },
+                      resolver: ->(topic) do
+                        assignment = Assignment.find_by(target: topic)
+                        if assignment
+                          {
+                            assigned_to:
+                              assignment.assigned_to.try(:username) ||
+                                assignment.assigned_to.try(:name),
+                          }
+                        else
+                          { assigned_to: nil }
+                        end
+                      end
+
         def self.identifier
           "action:assign_topic"
         end
@@ -47,12 +64,7 @@ if defined?(DiscourseWorkflows)
         end
 
         def self.output_schema
-          {
-            topic_id: :integer,
-            topic_title: :string,
-            assigned_to: :string,
-            assigned_to_type: :string,
-          }
+          { topic_id: :integer, topic_title: :string, assigned_to: :string }
         end
 
         def execute_single(_context, item:, config:)
@@ -63,12 +75,7 @@ if defined?(DiscourseWorkflows)
           when "unassign"
             assigner.unassign
 
-            {
-              topic_id: topic.id,
-              topic_title: topic.title,
-              assigned_to: nil,
-              assigned_to_type: nil,
-            }
+            { topic_id: topic.id, topic_title: topic.title, assigned_to: nil }
           else
             assignee = find_assignee(config["assignee"])
             result = assigner.assign(assignee)
@@ -80,12 +87,7 @@ if defined?(DiscourseWorkflows)
                     )
             end
 
-            {
-              topic_id: topic.id,
-              topic_title: topic.title,
-              assigned_to: config["assignee"],
-              assigned_to_type: assignee.is_a?(User) ? "User" : "Group",
-            }
+            { topic_id: topic.id, topic_title: topic.title, assigned_to: config["assignee"] }
           end
         end
 
