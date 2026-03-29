@@ -175,7 +175,7 @@ RSpec.describe DiscourseWorkflows::Actions::HttpRequest::V1 do
           "POST https://api.example.com/data",
           "Authorization: [FILTERED]",
           "Content-Type: application/json",
-          '{"name":"test"}',
+          "[body omitted]",
         ],
       )
     end

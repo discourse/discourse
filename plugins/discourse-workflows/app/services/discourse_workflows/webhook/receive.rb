@@ -10,6 +10,7 @@ module DiscourseWorkflows
       attribute :body, default: -> { {} }
       attribute :headers, default: -> { {} }
       attribute :query_params, default: -> { {} }
+      attribute :raw_authorization, :string
 
       validates :path, presence: true
       validates :http_method, presence: true
@@ -139,7 +140,12 @@ module DiscourseWorkflows
       auth_mode = node.configuration["authentication"] || "none"
       return true if auth_mode == "none"
 
-      return false unless auth_mode == "basic_auth"
+      unless auth_mode == "basic_auth"
+        Rails.logger.warn(
+          "Unsupported webhook auth mode '#{auth_mode}' for node #{node.id}",
+        )
+        return false
+      end
 
       credential_id = node.configuration["credential_id"]
       credential = DiscourseWorkflows::Credential.find_by(id: credential_id)
@@ -150,9 +156,9 @@ module DiscourseWorkflows
 
       begin
         cred_data = credential.decrypted_data
-      rescue ActiveSupport::MessageEncryptor::InvalidMessage => e
+      rescue ActiveSupport::MessageEncryptor::InvalidMessage
         Rails.logger.warn(
-          "Workflow credential decryption failed (id=#{credential_id}) for node #{node.id}: #{e.message}",
+          "Workflow credential decryption failed (id=#{credential_id}) for node #{node.id}",
         )
         return false
       end
@@ -161,10 +167,7 @@ module DiscourseWorkflows
       expected_user = resolver.resolve(cred_data["user"])
       expected_password = resolver.resolve(cred_data["password"])
 
-      headers = params.headers
-      auth_header =
-        headers[:authorization] || headers["authorization"] || headers[:Authorization] ||
-          headers["Authorization"]
+      auth_header = params.raw_authorization
       return false unless auth_header&.start_with?("Basic ")
 
       decoded = Base64.decode64(auth_header.split(" ", 2).last)

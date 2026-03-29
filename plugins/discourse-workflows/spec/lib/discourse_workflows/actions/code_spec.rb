@@ -31,6 +31,20 @@ RSpec.describe DiscourseWorkflows::Actions::Code::V1 do
       expect(result.first["json"]["name"]).to eq("Alice")
     end
 
+    it "caps console.log output at MAX_LOG_ENTRIES" do
+      action =
+        described_class.new(
+          configuration: {
+            "code" => "for (var i = 0; i < 200; i++) { console.log('line ' + i); } return {};",
+          },
+        )
+      items = [{ "json" => {} }]
+
+      action.execute(context, input_items: items, node_context: node_context)
+
+      expect(action.logs.size).to eq(described_class::MAX_LOG_ENTRIES)
+    end
+
     it "captures console.log output" do
       action =
         described_class.new(configuration: { "code" => 'console.log("debug message"); return {};' })
@@ -78,6 +92,67 @@ RSpec.describe DiscourseWorkflows::Actions::Code::V1 do
       result = action.execute(context, input_items: items, node_context: node_context)
 
       expect(result.first["json"]["key"]).to eq("secret123")
+    end
+
+    it "filters secret site settings from $site_settings" do
+      action =
+        described_class.new(
+          configuration: {
+            "code" => "return { val: $site_settings.discourse_connect_secret };",
+          },
+        )
+      items = [{ "json" => {} }]
+
+      result = action.execute(context, input_items: items, node_context: node_context)
+
+      expect(result.first["json"]["val"]).to eq("[FILTERED]")
+    end
+
+    it "filters hidden site settings from $site_settings" do
+      action =
+        described_class.new(
+          configuration: {
+            "code" => "return { val: $site_settings.vapid_public_key };",
+          },
+        )
+      items = [{ "json" => {} }]
+
+      result = action.execute(context, input_items: items, node_context: node_context)
+
+      expect(result.first["json"]["val"]).to eq("[FILTERED]")
+    end
+
+    it "filters internal context keys from $() node output accessor" do
+      context_with_internal = {
+        "__resume_token" => "secret-token-123",
+        "MyNode" => [{ "json" => { "data" => "visible" } }],
+      }
+      action =
+        described_class.new(configuration: { "code" => 'return $("__resume_token");' })
+      items = [{ "json" => {} }]
+
+      result =
+        action.execute(context_with_internal, input_items: items, node_context: node_context)
+
+      expect(result.first["json"]["item"]["json"]).to eq({})
+    end
+
+    it "allows accessing normal node outputs via $()" do
+      context_with_node = {
+        "MyNode" => [{ "json" => { "data" => "visible" } }],
+      }
+      action =
+        described_class.new(
+          configuration: {
+            "code" => 'return $("MyNode").item.json;',
+          },
+        )
+      items = [{ "json" => {} }]
+
+      result =
+        action.execute(context_with_node, input_items: items, node_context: node_context)
+
+      expect(result.first["json"]["data"]).to eq("visible")
     end
 
     it "raises on invalid JavaScript" do

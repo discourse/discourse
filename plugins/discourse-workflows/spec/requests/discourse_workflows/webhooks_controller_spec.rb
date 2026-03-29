@@ -108,6 +108,32 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       expect(response.status).to eq(200)
     end
 
+    it "rate limits webhook requests" do
+      RateLimiter.enable
+
+      stub_const(
+        DiscourseWorkflows::WebhooksController,
+        "WEBHOOK_RATE_LIMIT",
+        1,
+      ) do
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+        expect(response.status).to eq(200)
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+        expect(response.status).to eq(429)
+      end
+    ensure
+      RateLimiter.disable
+    end
+
     it "handles non-JSON content type" do
       post "/workflows/webhooks/my-hook.json", params: { data: "test" }
 

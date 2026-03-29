@@ -146,7 +146,10 @@ export default class WorkflowsForm extends Component {
       const completion = message.form_completion;
       if (completion?.on_submission === "redirect" && completion.redirect_url) {
         const url = completion.redirect_url;
-        if (url.startsWith("/") || url.startsWith(window.location.origin)) {
+        if (
+          (url.startsWith("/") && !url.startsWith("//")) ||
+          url.startsWith(window.location.origin)
+        ) {
           window.location.href = url;
         }
         return;

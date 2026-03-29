@@ -25,6 +25,11 @@ module DiscourseWorkflows
 
     MAX_WEBHOOK_BODY_SIZE = 1.megabyte
 
+    WEBHOOK_RATE_LIMIT = 20
+    WEBHOOK_RATE_PERIOD = 10
+
+    before_action :check_webhook_rate_limit, only: [:receive]
+
     def receive
       DiscourseWorkflows::Webhook::Receive.call(
         service_params.deep_merge(params: webhook_params),
@@ -113,6 +118,14 @@ module DiscourseWorkflows
       end
     end
 
+    def check_webhook_rate_limit
+      key = "workflow_webhook:#{request.ip}"
+      limiter = RateLimiter.new(nil, key, WEBHOOK_RATE_LIMIT, WEBHOOK_RATE_PERIOD)
+      unless limiter.performed!(raise_error: false)
+        render json: { error: "rate_limit" }, status: :too_many_requests
+      end
+    end
+
     def webhook_params
       {
         path: params[:path],
@@ -120,6 +133,7 @@ module DiscourseWorkflows
         body: parse_body,
         headers: extract_headers,
         query_params: request.query_parameters,
+        raw_authorization: request.headers["Authorization"],
       }
     end
 
@@ -129,7 +143,11 @@ module DiscourseWorkflows
       end
 
       if request.content_type&.include?("application/json")
-        JSON.parse(request.raw_post).presence || {}
+        body = request.raw_post
+        if body.bytesize > MAX_WEBHOOK_BODY_SIZE
+          raise Discourse::InvalidParameters, "Request body too large"
+        end
+        JSON.parse(body).presence || {}
       else
         params.except(:path, :controller, :action, :format).to_unsafe_h
       end

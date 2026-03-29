@@ -6,6 +6,7 @@ module DiscourseWorkflows
       class V1 < Actions::Base
         TIMEOUT_MS = 1_000
         MAX_MEMORY = 10 * 1024 * 1024
+        MAX_LOG_ENTRIES = 100
 
         def self.identifier
           "action:code"
@@ -76,13 +77,23 @@ module DiscourseWorkflows
         private
 
         def execute_code(context, item_json, all_items_json, code, vars, current_user_data)
-          ctx = MiniRacer::Context.new(max_memory: MAX_MEMORY, timeout: TIMEOUT_MS)
+          ctx =
+            MiniRacer::Context.new(
+              max_memory: MAX_MEMORY,
+              timeout: TIMEOUT_MS,
+              marshal_stack_depth: 20,
+            )
           begin
-            ctx.attach("__captureLog", proc { |*args| @logs << args.map(&:to_s).join(" ") })
+            ctx.attach(
+              "__captureLog",
+              proc { |*args| @logs << args.map(&:to_s).join(" ") if @logs.size < MAX_LOG_ENTRIES },
+            )
             ctx.attach(
               "__getSiteSetting",
               proc do |name|
-                if SiteSetting.secret_settings.include?(name.to_s.to_sym)
+                sym = name.to_s.to_sym
+                if SiteSetting.secret_settings.include?(sym) ||
+                     SiteSetting.hidden_settings.include?(sym)
                   "[FILTERED]"
                 else
                   SiteSetting.get(name).to_s
@@ -94,12 +105,16 @@ module DiscourseWorkflows
             ctx.attach(
               "__getNodeOutput",
               proc do |name|
-                node_items = context[name]
-                if node_items.is_a?(Array) && node_items.first.is_a?(Hash) &&
-                     node_items.first.key?("json")
-                  node_items.first["json"].to_json
+                if name.to_s.start_with?("_")
+                  {}.to_json
                 else
-                  (node_items || {}).to_json
+                  node_items = context[name]
+                  if node_items.is_a?(Array) && node_items.first.is_a?(Hash) &&
+                       node_items.first.key?("json")
+                    node_items.first["json"].to_json
+                  else
+                    (node_items || {}).to_json
+                  end
                 end
               end,
             )

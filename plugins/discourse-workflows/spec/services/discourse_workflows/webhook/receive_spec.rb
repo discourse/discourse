@@ -186,10 +186,12 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
         context "when request has valid basic auth" do
           let(:params) do
+            auth = "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}"
             super().merge(
               headers: {
-                "authorization" => "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}",
+                "authorization" => auth,
               },
+              raw_authorization: auth,
             )
           end
 
@@ -204,10 +206,12 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
         context "when request has wrong credentials" do
           let(:params) do
+            auth = "Basic #{Base64.strict_encode64("wrong:creds")}"
             super().merge(
               headers: {
-                "authorization" => "Basic #{Base64.strict_encode64("wrong:creds")}",
+                "authorization" => auth,
               },
+              raw_authorization: auth,
             )
           end
 
@@ -229,6 +233,20 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
           it "skips the node and logs error" do
             Rails.logger.expects(:warn).with(regexp_matches(/credential.*not found/i))
+            result
+            expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+          end
+        end
+
+        context "when auth mode is unsupported" do
+          before do
+            webhook_node.update!(
+              configuration: webhook_node.configuration.merge("authentication" => "bearer_token"),
+            )
+          end
+
+          it "skips the node and logs warning" do
+            Rails.logger.expects(:warn).with(regexp_matches(/unsupported.*auth.*mode/i))
             result
             expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
           end
@@ -285,10 +303,12 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
         context "when request has valid auth" do
           let(:params) do
+            auth = "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}"
             super().merge(
               headers: {
-                "authorization" => "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}",
+                "authorization" => auth,
               },
+              raw_authorization: auth,
             )
           end
 

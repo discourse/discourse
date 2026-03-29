@@ -111,7 +111,7 @@ module DiscourseWorkflows
             filtered = ActiveSupport::ParameterFilter.new(FILTERED_HEADER_PATTERNS).filter(headers)
             filtered.each { |k, v| @logs << "#{k}: #{v}" }
           end
-          @logs << body if body.present?
+          @logs << "[body omitted]" if body.present?
 
           conn =
             Faraday.new(nil, request: { timeout: TIMEOUT_SECONDS }) do |f|
@@ -121,7 +121,7 @@ module DiscourseWorkflows
           response = conn.run_request(method, uri.to_s, body, headers)
 
           unless (200..299).cover?(response.status)
-            raise "HTTP request failed with status #{response.status}: #{response.body.to_s.truncate(500)}"
+            raise "HTTP request failed with status #{response.status}"
           end
 
           {
@@ -133,11 +133,14 @@ module DiscourseWorkflows
 
         private
 
+        ALLOWED_PORTS = Set[80, 443].freeze
+
         def build_uri(url, query_params)
           uri = URI.parse(url)
           if %w[http https].exclude?(uri.scheme&.downcase)
             raise "Only HTTP and HTTPS URLs are supported"
           end
+          raise "Only standard ports (80/443) are supported" if ALLOWED_PORTS.exclude?(uri.port)
 
           if query_params.is_a?(Array) && query_params.any?
             existing = URI.decode_www_form(uri.query || "")
