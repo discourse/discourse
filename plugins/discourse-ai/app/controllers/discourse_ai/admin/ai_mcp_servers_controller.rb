@@ -179,8 +179,13 @@ module DiscourseAi
           :oauth_client_id,
           :oauth_client_secret_ai_secret_id,
           :oauth_scopes,
+          :oauth_require_refresh_token,
           :enabled,
           :timeout_seconds,
+          oauth_authorization_params: {
+          },
+          oauth_token_params: {
+          },
         )
       end
 
@@ -211,6 +216,14 @@ module DiscourseAi
             extract: false,
           },
           oauth_scopes: {
+          },
+          oauth_authorization_params: {
+            type: :large_text,
+          },
+          oauth_token_params: {
+            type: :large_text,
+          },
+          oauth_require_refresh_token: {
           },
           oauth_token_type: {
           },
