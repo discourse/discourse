@@ -348,7 +348,7 @@ importers:
         version: link:../pretty-text
       prosemirror-codemark:
         specifier: ^0.4.2
-        version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)
+        version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)
       prosemirror-commands:
         specifier: ^1.7.1
         version: 1.7.1
@@ -360,7 +360,7 @@ importers:
         version: 1.4.1
       prosemirror-highlightjs:
         specifier: ^0.9.1
-        version: 0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6)
+        version: 0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)
       prosemirror-history:
         specifier: ^1.5.0
         version: 1.5.0
@@ -386,8 +386,8 @@ importers:
         specifier: ^1.11.0
         version: 1.11.0
       prosemirror-view:
-        specifier: ^1.41.6
-        version: 1.41.6
+        specifier: ^1.41.7
+        version: 1.41.7
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
@@ -1658,8 +1658,8 @@ packages:
   '@cacheable/memory@2.0.8':
     resolution: {integrity: sha512-FvEb29x5wVwu/Kf93IWwsOOEuhHh6dYCJF3vcKLzXc0KXIW181AOzv6ceT4ZpBHDvAfG60eqb+ekmrnLHIy+jw==}
 
-  '@cacheable/utils@2.4.0':
-    resolution: {integrity: sha512-PeMMsqjVq+bF0WBsxFBxr/WozBJiZKY0rUojuaCoIaKnEl3Ju1wfEwS+SV1DU/cSe8fqHIPiYJFif8T3MVt4cQ==}
+  '@cacheable/utils@2.4.1':
+    resolution: {integrity: sha512-eiFgzCbIneyMlLOmNG4g9xzF7Hv3Mga4LjxjcSC/ues6VYq2+gUbQI8JqNuw/ZM8tJIeIaBGpswAsqV2V7ApgA==}
 
   '@cnakazawa/watch@1.0.4':
     resolution: {integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==}
@@ -1713,6 +1713,14 @@ packages:
 
   '@csstools/css-syntax-patches-for-csstree@1.1.1':
     resolution: {integrity: sha512-BvqN0AMWNAnLk9G8jnUT77D+mUbY/H2b3uDTvg2isJkHaOufUE2R3AOwxWo7VBQKT1lOdwdvorddo2B/lk64+w==}
+    peerDependencies:
+      css-tree: ^3.2.1
+    peerDependenciesMeta:
+      css-tree:
+        optional: true
+
+  '@csstools/css-syntax-patches-for-csstree@1.1.2':
+    resolution: {integrity: sha512-5GkLzz4prTIpoyeUiIu3iV6CSG3Plo7xRVOFPKI7FVEJ3mZ0A8SwK0XU3Gl7xAkiQ+mDyam+NNp875/C5y+jSA==}
     peerDependencies:
       css-tree: ^3.2.1
     peerDependenciesMeta:
@@ -3361,6 +3369,7 @@ packages:
   '@xmldom/xmldom@0.8.11':
     resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -3857,11 +3866,14 @@ packages:
   body@5.1.0:
     resolution: {integrity: sha512-chUsBxGRtuElD6fmw1gHLpvnKdVLK302peeFa9ZqAEk8TyzZ3fygLyUEDDPTJvL9+Bor0dIwn6ePOsRM2y0zQQ==}
 
-  brace-expansion@1.1.12:
-    resolution: {integrity: sha512-9T9UjW3r0UW5c1Q7GTwllptXwhvYmEzFhzMfZ9H7FQWt+uZePjZPjBP/W1ZEyZ1twGWom5/56TF4lPcqjnDHcg==}
+  brace-expansion@1.1.13:
+    resolution: {integrity: sha512-9ZLprWS6EENmhEOpjCYW2c8VkmOvckIJZfkr7rBW6dObmfgJ/L1GpSYW5Hpo9lDz4D1+n0Ckz8rU7FwHDQiG/w==}
 
   brace-expansion@2.0.2:
     resolution: {integrity: sha512-Jt0vHyM+jmUBqojB7E1NIYadt0vI0Qxjxd2TErW94wDz+E2LAm5vKMXXwg6ZZBTHPuUlDgQHKXvjGBdfcF1ZDQ==}
+
+  brace-expansion@2.0.3:
+    resolution: {integrity: sha512-MCV/fYJEbqx68aE58kv2cA/kiky1G8vux3OR6/jbS+jIMe/6fJWa0DTzJU7dqijOWYwHi1t29FlfYI9uytqlpA==}
 
   brace-expansion@5.0.4:
     resolution: {integrity: sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg==}
@@ -5265,6 +5277,16 @@ packages:
       jiti:
         optional: true
 
+  eslint@9.39.4:
+    resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    hasBin: true
+    peerDependencies:
+      jiti: '*'
+    peerDependenciesMeta:
+      jiti:
+        optional: true
+
   esm@3.2.25:
     resolution: {integrity: sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==}
     engines: {node: '>=6'}
@@ -5599,8 +5621,8 @@ packages:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
     engines: {node: '>=16'}
 
-  flat-cache@6.1.21:
-    resolution: {integrity: sha512-2u7cJfSf7Th7NxEk/VzQjnPoglok2YCsevS7TSbJjcDQWJPbqUUnSYtriHSvtnq+fRZHy1s0ugk4ApnQyhPGoQ==}
+  flat-cache@6.1.22:
+    resolution: {integrity: sha512-N2dnzVJIphnNsjHcrxGW7DePckJ6haPrSFqpsBUhHYgwtKGVq4JrBGielEGD2fCVnsGm1zlBVZ8wGhkyuetgug==}
 
   flatted@3.4.2:
     resolution: {integrity: sha512-PjDse7RzhcPkIJwy5t7KPWQSZ9cAbzQXcafsetQoD7sOJRQlGikNbx7yZp2OotDnJyrDcbyRq3Ttb18iYOqkxA==}
@@ -5901,6 +5923,10 @@ packages:
     resolution: {integrity: sha512-dW7vl+yiAJSp6aCekaVnVJxurRv7DCOLyXqEG3RYMYUg7AuJ2jCqPkZTA8ooqC2vtnkaMcV5WfFBMuEnTu1OQg==}
     engines: {node: '>=20'}
 
+  globby@16.2.0:
+    resolution: {integrity: sha512-QrJia2qDf5BB/V6HYlDTs0I0lBahyjLzpGQg3KT7FnCdTonAyPy2RtY802m2k4ALx6Dp752f82WsOczEVr3l6Q==}
+    engines: {node: '>=20'}
+
   globjoin@0.1.4:
     resolution: {integrity: sha512-xYfnw62CKG8nLkZBfWbhWwDw02CHty86jfPcc2cr3ZfeuK9ysoVPPEUxf21bAD/rWAgk52SuBrLJlefNy8mvFg==}
 
@@ -6011,8 +6037,8 @@ packages:
   hookified@1.15.1:
     resolution: {integrity: sha512-MvG/clsADq1GPM2KGo2nyfaWVyn9naPiXrqIe4jYjXNZQt238kWyOGrsyc/DmRAQ+Re6yeo6yX/yoNCG5KAEVg==}
 
-  hookified@2.1.0:
-    resolution: {integrity: sha512-ootKng4eaxNxa7rx6FJv2YKef3DuhqbEj3l70oGXwddPQEEnISm50TEZQclqiLTAtilT2nu7TErtCO523hHkyg==}
+  hookified@2.1.1:
+    resolution: {integrity: sha512-AHb76R16GB5EsPBE2J7Ko5kiEyXwviB9P5SMrAKcuAu4vJPZttViAbj9+tZeaQE5zjDme+1vcHP78Yj/WoAveA==}
 
   hosted-git-info@7.0.2:
     resolution: {integrity: sha512-puUZAUKT5m8Zzvs72XWy3HtvVbTWljRE66cP60bxJzAqf2DgICo7lYTY2IHUmLnNpjYvw5bvmoHvPc0QO2a62w==}
@@ -7941,8 +7967,8 @@ packages:
   prosemirror-transform@1.11.0:
     resolution: {integrity: sha512-4I7Ce4KpygXb9bkiPS3hTEk4dSHorfRw8uI0pE8IhxlK2GXsqv5tIA7JUSxtSu7u8APVOTtbUBxTmnHIxVkIJw==}
 
-  prosemirror-view@1.41.6:
-    resolution: {integrity: sha512-mxpcDG4hNQa/CPtzxjdlir5bJFDlm0/x5nGBbStB2BWX+XOQ9M8ekEG+ojqB5BcVu2Rc80/jssCMZzSstJuSYg==}
+  prosemirror-view@1.41.7:
+    resolution: {integrity: sha512-jUwKNCEIGiqdvhlS91/2QAg21e4dfU5bH2iwmSDQeosXJgKF7smG0YSplOWK0cjSNgIqXe7VXqo7EIfUFJdt3w==}
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -8816,6 +8842,11 @@ packages:
 
   stylelint@17.4.0:
     resolution: {integrity: sha512-3kQ2/cHv3Zt8OBg+h2B8XCx9evEABQIrv4hh3uXahGz/ZEHrTR80zxBiK2NfXNaSoyBzxO1pjsz1Vhdzwn5XSw==}
+    engines: {node: '>=20.19.0'}
+    hasBin: true
+
+  stylelint@17.6.0:
+    resolution: {integrity: sha512-tokrsMIVAR9vAQ/q3UVEr7S0dGXCi7zkCezPRnS2kqPUulvUh5Vgfwngrk4EoAoW7wnrThqTdnTFN5Ra7CaxIg==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -9713,11 +9744,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))':
+  '@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))':
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
       '@nicolo-ribaudo/eslint-scope-5-internals': 5.1.1-v1
-      eslint: 9.39.2(jiti@2.6.1)
+      eslint: 9.39.4(jiti@2.6.1)
       eslint-visitor-keys: 2.1.0
       semver: 6.3.1
 
@@ -10483,12 +10514,12 @@ snapshots:
 
   '@cacheable/memory@2.0.8':
     dependencies:
-      '@cacheable/utils': 2.4.0
+      '@cacheable/utils': 2.4.1
       '@keyv/bigmap': 1.3.1(keyv@5.6.0)
       hookified: 1.15.1
       keyv: 5.6.0
 
-  '@cacheable/utils@2.4.0':
+  '@cacheable/utils@2.4.1':
     dependencies:
       hashery: 1.5.1
       keyv: 5.6.0
@@ -10531,6 +10562,10 @@ snapshots:
       '@csstools/css-tokenizer': 4.0.0
 
   '@csstools/css-syntax-patches-for-csstree@1.1.1(css-tree@3.2.1)':
+    optionalDependencies:
+      css-tree: 3.2.1
+
+  '@csstools/css-syntax-patches-for-csstree@1.1.2(css-tree@3.2.1)':
     optionalDependencies:
       css-tree: 3.2.1
 
@@ -10579,25 +10614,25 @@ snapshots:
   '@discourse/lint-configs@2.44.0(jiti@2.6.1)(postcss@8.5.8)(prettier@3.8.1)':
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.28.6(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))
+      '@babel/eslint-parser': 7.28.6(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))
       '@babel/plugin-proposal-decorators': 7.29.0(@babel/core@7.29.0)
       '@eslint/js': 9.39.4
-      ember-eslint-parser: 0.5.13(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+      ember-eslint-parser: 0.5.13(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
       ember-template-lint: 7.9.3
-      eslint: 9.39.2(jiti@2.6.1)
-      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))
-      eslint-plugin-ember: 12.7.5(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
-      eslint-plugin-import: 2.32.0(eslint@9.39.2(jiti@2.6.1))
-      eslint-plugin-qunit: 8.2.6(eslint@9.39.2(jiti@2.6.1))
-      eslint-plugin-simple-import-sort: 12.1.1(eslint@9.39.2(jiti@2.6.1))
-      eslint-plugin-sort-class-members: 1.21.0(eslint@9.39.2(jiti@2.6.1))
+      eslint: 9.39.4(jiti@2.6.1)
+      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1))
+      eslint-plugin-ember: 12.7.5(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
+      eslint-plugin-import: 2.32.0(eslint@9.39.4(jiti@2.6.1))
+      eslint-plugin-qunit: 8.2.6(eslint@9.39.4(jiti@2.6.1))
+      eslint-plugin-simple-import-sort: 12.1.1(eslint@9.39.4(jiti@2.6.1))
+      eslint-plugin-sort-class-members: 1.21.0(eslint@9.39.4(jiti@2.6.1))
       globals: 17.4.0
       prettier: 3.8.1
       prettier-plugin-ember-template-tag: 2.1.3(prettier@3.8.1)
-      stylelint: 17.4.0(typescript@5.9.3)
-      stylelint-config-standard: 40.0.0(stylelint@17.4.0(typescript@5.9.3))
-      stylelint-config-standard-scss: 17.0.0(postcss@8.5.8)(stylelint@17.4.0(typescript@5.9.3))
-      stylelint-scss: 7.0.0(stylelint@17.4.0(typescript@5.9.3))
+      stylelint: 17.6.0(typescript@5.9.3)
+      stylelint-config-standard: 40.0.0(stylelint@17.6.0(typescript@5.9.3))
+      stylelint-config-standard-scss: 17.0.0(postcss@8.5.8)(stylelint@17.6.0(typescript@5.9.3))
+      stylelint-scss: 7.0.0(stylelint@17.6.0(typescript@5.9.3))
       typescript: 5.9.3
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
@@ -11141,6 +11176,11 @@ snapshots:
   '@eslint-community/eslint-utils@4.9.1(eslint@9.39.2(jiti@2.6.1))':
     dependencies:
       eslint: 9.39.2(jiti@2.6.1)
+      eslint-visitor-keys: 3.4.3
+
+  '@eslint-community/eslint-utils@4.9.1(eslint@9.39.4(jiti@2.6.1))':
+    dependencies:
+      eslint: 9.39.4(jiti@2.6.1)
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.2': {}
@@ -12956,12 +12996,16 @@ snapshots:
       raw-body: 1.1.7
       safe-json-parse: 1.0.1
 
-  brace-expansion@1.1.12:
+  brace-expansion@1.1.13:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
   brace-expansion@2.0.2:
+    dependencies:
+      balanced-match: 1.0.2
+
+  brace-expansion@2.0.3:
     dependencies:
       balanced-match: 1.0.2
 
@@ -13450,7 +13494,7 @@ snapshots:
   cacheable@2.3.4:
     dependencies:
       '@cacheable/memory': 2.0.8
-      '@cacheable/utils': 2.4.0
+      '@cacheable/utils': 2.4.1
       hookified: 1.15.1
       keyv: 5.6.0
       qified: 0.9.0
@@ -14481,10 +14525,10 @@ snapshots:
 
   ember-disable-prototype-extensions@1.1.3: {}
 
-  ember-eslint-parser@0.5.13(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3):
+  ember-eslint-parser@0.5.13(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3):
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.28.6(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))
+      '@babel/eslint-parser': 7.28.6(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))
       '@glimmer/syntax': 0.95.0
       '@typescript-eslint/tsconfig-utils': 8.46.4(typescript@5.9.3)
       content-tag: 2.0.3
@@ -14902,36 +14946,36 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1)):
+  eslint-module-utils@2.12.1(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      eslint: 9.39.2(jiti@2.6.1)
+      eslint: 9.39.4(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)):
+  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1)))(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
       '@babel/plugin-proposal-decorators': 7.29.0(@babel/core@7.29.0)
       '@ember-data/rfc395-data': 0.0.4
       ember-rfc176-data: 0.3.18
-      eslint: 9.39.2(jiti@2.6.1)
+      eslint: 9.39.4(jiti@2.6.1)
       snake-case: 3.0.4
     optionalDependencies:
-      '@babel/eslint-parser': 7.28.6(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))
+      '@babel/eslint-parser': 7.28.6(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-ember@12.7.5(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3):
+  eslint-plugin-ember@12.7.5(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3):
     dependencies:
       '@ember-data/rfc395-data': 0.0.4
       css-tree: 3.2.1
-      ember-eslint-parser: 0.5.13(@babel/core@7.29.0)(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+      ember-eslint-parser: 0.5.13(@babel/core@7.29.0)(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
       ember-rfc176-data: 0.3.18
-      eslint: 9.39.2(jiti@2.6.1)
-      eslint-utils: 3.0.0(eslint@9.39.2(jiti@2.6.1))
+      eslint: 9.39.4(jiti@2.6.1)
+      eslint-utils: 3.0.0(eslint@9.39.4(jiti@2.6.1))
       estraverse: 5.3.0
       lodash.camelcase: 4.3.0
       lodash.kebabcase: 4.1.1
@@ -14941,7 +14985,7 @@ snapshots:
       - '@babel/core'
       - typescript
 
-  eslint-plugin-import@2.32.0(eslint@9.39.2(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -14950,9 +14994,9 @@ snapshots:
       array.prototype.flatmap: 1.3.3
       debug: 3.2.7
       doctrine: 2.1.0
-      eslint: 9.39.2(jiti@2.6.1)
+      eslint: 9.39.4(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1))
+      eslint-module-utils: 2.12.1(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.6.1))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -14968,19 +15012,19 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-qunit@8.2.6(eslint@9.39.2(jiti@2.6.1)):
+  eslint-plugin-qunit@8.2.6(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.2(jiti@2.6.1))
-      eslint: 9.39.2(jiti@2.6.1)
+      '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.4(jiti@2.6.1))
+      eslint: 9.39.4(jiti@2.6.1)
       requireindex: 1.2.0
 
-  eslint-plugin-simple-import-sort@12.1.1(eslint@9.39.2(jiti@2.6.1)):
+  eslint-plugin-simple-import-sort@12.1.1(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
-      eslint: 9.39.2(jiti@2.6.1)
+      eslint: 9.39.4(jiti@2.6.1)
 
-  eslint-plugin-sort-class-members@1.21.0(eslint@9.39.2(jiti@2.6.1)):
+  eslint-plugin-sort-class-members@1.21.0(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
-      eslint: 9.39.2(jiti@2.6.1)
+      eslint: 9.39.4(jiti@2.6.1)
 
   eslint-scope@5.1.1:
     dependencies:
@@ -14997,9 +15041,9 @@ snapshots:
       esrecurse: 4.3.0
       estraverse: 5.3.0
 
-  eslint-utils@3.0.0(eslint@9.39.2(jiti@2.6.1)):
+  eslint-utils@3.0.0(eslint@9.39.4(jiti@2.6.1)):
     dependencies:
-      eslint: 9.39.2(jiti@2.6.1)
+      eslint: 9.39.4(jiti@2.6.1)
       eslint-visitor-keys: 2.1.0
 
   eslint-visitor-keys@2.1.0: {}
@@ -15017,6 +15061,47 @@ snapshots:
       '@eslint/core': 0.17.0
       '@eslint/eslintrc': 3.3.5
       '@eslint/js': 9.39.2
+      '@eslint/plugin-kit': 0.4.1
+      '@humanfs/node': 0.16.7
+      '@humanwhocodes/module-importer': 1.0.1
+      '@humanwhocodes/retry': 0.4.3
+      '@types/estree': 1.0.8
+      ajv: 6.14.0
+      chalk: 4.1.2
+      cross-spawn: 7.0.6
+      debug: 4.4.3(supports-color@8.1.1)
+      escape-string-regexp: 4.0.0
+      eslint-scope: 8.4.0
+      eslint-visitor-keys: 4.2.1
+      espree: 10.4.0
+      esquery: 1.7.0
+      esutils: 2.0.3
+      fast-deep-equal: 3.1.3
+      file-entry-cache: 8.0.0
+      find-up: 5.0.0
+      glob-parent: 6.0.2
+      ignore: 5.3.2
+      imurmurhash: 0.1.4
+      is-glob: 4.0.3
+      json-stable-stringify-without-jsonify: 1.0.1
+      lodash.merge: 4.6.2
+      minimatch: 3.1.5
+      natural-compare: 1.4.0
+      optionator: 0.9.4
+    optionalDependencies:
+      jiti: 2.6.1
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint@9.39.4(jiti@2.6.1):
+    dependencies:
+      '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.4(jiti@2.6.1))
+      '@eslint-community/regexpp': 4.12.2
+      '@eslint/config-array': 0.21.2
+      '@eslint/config-helpers': 0.4.2
+      '@eslint/core': 0.17.0
+      '@eslint/eslintrc': 3.3.5
+      '@eslint/js': 9.39.4
       '@eslint/plugin-kit': 0.4.1
       '@humanfs/node': 0.16.7
       '@humanwhocodes/module-importer': 1.0.1
@@ -15379,7 +15464,7 @@ snapshots:
 
   file-entry-cache@11.1.2:
     dependencies:
-      flat-cache: 6.1.21
+      flat-cache: 6.1.22
 
   file-entry-cache@8.0.0:
     dependencies:
@@ -15540,7 +15625,7 @@ snapshots:
       flatted: 3.4.2
       keyv: 4.5.4
 
-  flat-cache@6.1.21:
+  flat-cache@6.1.22:
     dependencies:
       cacheable: 2.3.4
       flatted: 3.4.2
@@ -15922,6 +16007,15 @@ snapshots:
       slash: 5.1.0
       unicorn-magic: 0.4.0
 
+  globby@16.2.0:
+    dependencies:
+      '@sindresorhus/merge-streams': 4.0.0
+      fast-glob: 3.3.3
+      ignore: 7.0.5
+      is-path-inside: 4.0.0
+      slash: 5.1.0
+      unicorn-magic: 0.4.0
+
   globjoin@0.1.4: {}
 
   globrex@0.1.2: {}
@@ -16036,7 +16130,7 @@ snapshots:
 
   hookified@1.15.1: {}
 
-  hookified@2.1.0: {}
+  hookified@2.1.1: {}
 
   hosted-git-info@7.0.2:
     dependencies:
@@ -17105,15 +17199,15 @@ snapshots:
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 1.1.12
+      brace-expansion: 1.1.13
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 2.0.2
+      brace-expansion: 2.0.3
 
   minimatch@8.0.7:
     dependencies:
-      brace-expansion: 2.0.2
+      brace-expansion: 2.0.3
 
   minimatch@9.0.9:
     dependencies:
@@ -17910,12 +18004,12 @@ snapshots:
       retry: 0.12.0
       signal-exit: 3.0.7
 
-  prosemirror-codemark@0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6):
+  prosemirror-codemark@0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7):
     dependencies:
       prosemirror-inputrules: 1.5.1
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.6
+      prosemirror-view: 1.41.7
 
   prosemirror-commands@1.7.1:
     dependencies:
@@ -17927,27 +18021,27 @@ snapshots:
     dependencies:
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.11.0
-      prosemirror-view: 1.41.6
+      prosemirror-view: 1.41.7
 
   prosemirror-gapcursor@1.4.1:
     dependencies:
       prosemirror-keymap: 1.2.3
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.6
+      prosemirror-view: 1.41.7
 
-  prosemirror-highlightjs@0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.6):
+  prosemirror-highlightjs@0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7):
     dependencies:
       highlight.js: 11.11.1
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.6
+      prosemirror-view: 1.41.7
 
   prosemirror-history@1.5.0:
     dependencies:
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.11.0
-      prosemirror-view: 1.41.6
+      prosemirror-view: 1.41.7
       rope-sequence: 1.3.4
 
   prosemirror-inputrules@1.5.1:
@@ -17980,13 +18074,13 @@ snapshots:
     dependencies:
       prosemirror-model: 1.25.4
       prosemirror-transform: 1.11.0
-      prosemirror-view: 1.41.6
+      prosemirror-view: 1.41.7
 
   prosemirror-transform@1.11.0:
     dependencies:
       prosemirror-model: 1.25.4
 
-  prosemirror-view@1.41.6:
+  prosemirror-view@1.41.7:
     dependencies:
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
@@ -18046,7 +18140,7 @@ snapshots:
 
   qified@0.9.0:
     dependencies:
-      hookified: 2.1.0
+      hookified: 2.1.1
 
   qs@6.14.0:
     dependencies:
@@ -19039,33 +19133,33 @@ snapshots:
 
   styled_string@0.0.1: {}
 
-  stylelint-config-recommended-scss@17.0.0(postcss@8.5.8)(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-recommended-scss@17.0.0(postcss@8.5.8)(stylelint@17.6.0(typescript@5.9.3)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.8)
-      stylelint: 17.4.0(typescript@5.9.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.4.0(typescript@5.9.3))
-      stylelint-scss: 7.0.0(stylelint@17.4.0(typescript@5.9.3))
+      stylelint: 17.6.0(typescript@5.9.3)
+      stylelint-config-recommended: 18.0.0(stylelint@17.6.0(typescript@5.9.3))
+      stylelint-scss: 7.0.0(stylelint@17.6.0(typescript@5.9.3))
     optionalDependencies:
       postcss: 8.5.8
 
-  stylelint-config-recommended@18.0.0(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-recommended@18.0.0(stylelint@17.6.0(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.6.0(typescript@5.9.3)
 
-  stylelint-config-standard-scss@17.0.0(postcss@8.5.8)(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-standard-scss@17.0.0(postcss@8.5.8)(stylelint@17.6.0(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.4.0(typescript@5.9.3)
-      stylelint-config-recommended-scss: 17.0.0(postcss@8.5.8)(stylelint@17.4.0(typescript@5.9.3))
-      stylelint-config-standard: 40.0.0(stylelint@17.4.0(typescript@5.9.3))
+      stylelint: 17.6.0(typescript@5.9.3)
+      stylelint-config-recommended-scss: 17.0.0(postcss@8.5.8)(stylelint@17.6.0(typescript@5.9.3))
+      stylelint-config-standard: 40.0.0(stylelint@17.6.0(typescript@5.9.3))
     optionalDependencies:
       postcss: 8.5.8
 
-  stylelint-config-standard@40.0.0(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-standard@40.0.0(stylelint@17.6.0(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.4.0(typescript@5.9.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.4.0(typescript@5.9.3))
+      stylelint: 17.6.0(typescript@5.9.3)
+      stylelint-config-recommended: 18.0.0(stylelint@17.6.0(typescript@5.9.3))
 
-  stylelint-scss@7.0.0(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-scss@7.0.0(stylelint@17.6.0(typescript@5.9.3)):
     dependencies:
       css-tree: 3.2.1
       is-plain-object: 5.0.0
@@ -19075,7 +19169,7 @@ snapshots:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.6.0(typescript@5.9.3)
 
   stylelint@17.4.0(typescript@5.9.3):
     dependencies:
@@ -19101,6 +19195,48 @@ snapshots:
       ignore: 7.0.5
       import-meta-resolve: 4.2.0
       imurmurhash: 0.1.4
+      is-plain-object: 5.0.0
+      mathml-tag-names: 4.0.0
+      meow: 14.1.0
+      micromatch: 4.0.8
+      normalize-path: 3.0.0
+      picocolors: 1.1.1
+      postcss: 8.5.8
+      postcss-safe-parser: 7.0.1(postcss@8.5.8)
+      postcss-selector-parser: 7.1.1
+      postcss-value-parser: 4.2.0
+      string-width: 8.2.0
+      supports-hyperlinks: 4.4.0
+      svg-tags: 1.0.0
+      table: 6.9.0
+      write-file-atomic: 7.0.1
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  stylelint@17.6.0(typescript@5.9.3):
+    dependencies:
+      '@csstools/css-calc': 3.1.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-syntax-patches-for-csstree': 1.1.2(css-tree@3.2.1)
+      '@csstools/css-tokenizer': 4.0.0
+      '@csstools/media-query-list-parser': 5.0.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/selector-resolve-nested': 4.0.0(postcss-selector-parser@7.1.1)
+      '@csstools/selector-specificity': 6.0.0(postcss-selector-parser@7.1.1)
+      colord: 2.9.3
+      cosmiconfig: 9.0.1(typescript@5.9.3)
+      css-functions-list: 3.3.3
+      css-tree: 3.2.1
+      debug: 4.4.3(supports-color@8.1.1)
+      fast-glob: 3.3.3
+      fastest-levenshtein: 1.0.16
+      file-entry-cache: 11.1.2
+      global-modules: 2.0.0
+      globby: 16.2.0
+      globjoin: 0.1.4
+      html-tags: 5.1.0
+      ignore: 7.0.5
+      import-meta-resolve: 4.2.0
       is-plain-object: 5.0.0
       mathml-tag-names: 4.0.0
       meow: 14.1.0
