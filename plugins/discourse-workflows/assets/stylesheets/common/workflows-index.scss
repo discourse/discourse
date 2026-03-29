@@ -33,9 +33,18 @@
 
   &__table {
     width: 100%;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
 
+    th,
     td {
-      padding: var(--space-2) var(--space-1);
+      padding: var(--space-2) var(--space-3);
+    }
+
+    th {
+      text-align: left;
+      font-weight: normal;
+      border-bottom: 1px solid var(--primary-low);
     }
   }
 
