@@ -79,7 +79,7 @@ export default class PropertyEngineCredential extends Component {
           @action={{this.setupCredential}}
           @label="discourse_workflows.credentials.set_up_credential"
           @icon="plus"
-          class="btn-small"
+          class="btn-default"
         />
       {{/unless}}
     </div>
