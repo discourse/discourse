@@ -71,17 +71,10 @@ export default class DiscourseReactionsListEmoji extends Component {
 
   @bind
   displayNameForUser(user) {
-    if (
-      !this.siteSettings.prioritize_username_in_ux &&
-      this.siteSettings.prioritize_full_name_in_ux
-    ) {
+    if (!this.siteSettings.prioritize_username_in_ux) {
       return user.name || user.username;
-    } else if (this.siteSettings.prioritize_username_in_ux) {
-      return user.username;
-    } else if (!user.name) {
-      return user.username;
     } else {
-      return user.name;
+      return user.username;
     }
   }
 

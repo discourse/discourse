@@ -12,10 +12,10 @@ export default class AssignedToPost extends Component {
   @service siteSettings;
 
   get nameOrUsername() {
-    if (this.siteSettings.prioritize_full_name_in_ux) {
-      return this.args.assignedToUser.name || this.args.assignedToUser.username;
-    } else {
+    if (this.siteSettings.prioritize_username_in_ux) {
       return this.args.assignedToUser.username;
+    } else {
+      return this.args.assignedToUser.name || this.args.assignedToUser.username;
     }
   }
 
