@@ -65,7 +65,7 @@ pre-commit:
         - "app/assets/stylesheets/**/*.scss"
         - "plugins/**/assets/stylesheets/**/*.scss"
         - "themes/**/*.scss"
-      run: pnpm stylelint {staged_files}
+      run: pnpm gale {staged_files}
 
 fix-staged:
   parallel: false
@@ -94,7 +94,7 @@ fix-staged:
         - "app/assets/stylesheets/**/*.scss"
         - "plugins/**/assets/stylesheets/**/*.scss"
         - "themes/**/*.scss"
-      run: pnpm stylelint --fix {staged_files}
+      run: pnpm gale --fix {staged_files}
     rubocop:
       exclude:
         - "bin/notify_file_change"
