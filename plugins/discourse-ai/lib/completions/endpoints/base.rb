@@ -18,6 +18,7 @@ module DiscourseAi
         class << self
           def endpoint_for(llm_model)
             endpoints = [
+              DiscourseAi::Completions::Endpoints::AwsBedrockConverse,
               DiscourseAi::Completions::Endpoints::AwsBedrock,
               DiscourseAi::Completions::Endpoints::OpenAi,
               DiscourseAi::Completions::Endpoints::OpenAiResponses,
