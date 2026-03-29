@@ -15,7 +15,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::CreatePost::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::CreateTopic::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::DataTable::V1)
-      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::AwardBadge::V1)
+      DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::Badge::V1)
       DiscourseWorkflows::Registry.register_action(DiscourseWorkflows::Actions::SetFields::V1)
       DiscourseWorkflows::Registry.register_condition(
         DiscourseWorkflows::Conditions::IfCondition::V1,
@@ -24,6 +24,9 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Manual::V1)
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Schedule::V1)
       DiscourseWorkflows::Registry.register_trigger(DiscourseWorkflows::Triggers::Form::V1)
+      DiscourseWorkflows::Registry.register_credential_type(
+        DiscourseWorkflows::CredentialTypes::BasicAuth,
+      )
     end
 
     after { DiscourseWorkflows::Registry.reset! }
@@ -61,7 +64,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
 
       it "includes specialized property-engine controls in node schemas" do
-        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:award_badge" }
+        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:badge" }
         code = result[:node_types].find { |nt| nt[:identifier] == "action:code" }
         data_table = result[:node_types].find { |nt| nt[:identifier] == "action:data_table" }
         condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
@@ -82,7 +85,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
 
       it "includes metadata for badge chooser options" do
-        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:award_badge" }
+        award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:badge" }
 
         expect(award_badge[:metadata][:badges]).to include({ id: badge.id, name: badge.name })
       end
@@ -102,6 +105,17 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(schedule[:manually_triggerable]).to eq(true)
         expect(form[:manually_triggerable]).to eq(true)
         expect(topic_closed[:manually_triggerable]).to eq(false)
+      end
+
+      it "includes credential_types in the result" do
+        expect(result[:credential_types]).to contain_exactly(
+          a_hash_including(
+            identifier: "basic_auth",
+            display_name: "Basic Auth",
+            configuration_schema:
+              DiscourseWorkflows::CredentialTypes::BasicAuth.configuration_schema,
+          ),
+        )
       end
     end
   end

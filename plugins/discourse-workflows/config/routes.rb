@@ -12,6 +12,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/templates" => "admin#index"
       get "/data-tables" => "admin#index"
       get "/data-tables/:id" => "admin#index", :constraints => { id: /\d+/ }
+      get "/credentials" => "admin#index"
       get "/:id" => "admin#index", :constraints => { id: /\d+/ }
       get "/:id/executions" => "admin#index", :constraints => { id: /\d+/ }
       get "/:id/executions/:execution_id" => "admin#index",
@@ -49,6 +50,10 @@ DiscourseWorkflows::Engine.routes.draw do
       post "/variables" => "variables#create"
       put "/variables/:id" => "variables#update"
       delete "/variables/:id" => "variables#destroy"
+      get "/credentials" => "credentials#index"
+      post "/credentials" => "credentials#create"
+      put "/credentials/:id" => "credentials#update"
+      delete "/credentials/:id" => "credentials#destroy"
       get "/data-tables" => "data_tables#index"
       post "/data-tables" => "data_tables#create"
       get "/data-tables/:id" => "data_tables#show", :constraints => { id: /\d+/ }

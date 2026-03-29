@@ -21,6 +21,19 @@ module DiscourseWorkflows
         core_entries.map { |e| e[:klass] }
       end
 
+      def credential_types
+        credential_type_entries.map { |e| e[:klass] }
+      end
+
+      def register_credential_type(klass)
+        return if credential_type_entries.any? { |e| e[:klass] == klass }
+        credential_type_entries << { klass: klass }
+      end
+
+      def find_credential_type(identifier)
+        credential_type_entries.find { |e| e[:klass].identifier == identifier }&.dig(:klass)
+      end
+
       def register_trigger(klass, version: nil)
         register(trigger_entries, klass, version)
       end
@@ -69,6 +82,7 @@ module DiscourseWorkflows
         @action_entries = []
         @condition_entries = []
         @core_entries = []
+        @credential_type_entries = []
         @versioned_node_types = nil
       end
 
@@ -88,6 +102,10 @@ module DiscourseWorkflows
 
       def core_entries
         @core_entries ||= []
+      end
+
+      def credential_type_entries
+        @credential_type_entries ||= []
       end
 
       def all_entries

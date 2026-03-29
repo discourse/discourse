@@ -5,6 +5,21 @@ module DiscourseWorkflows
     HTTP_METHODS = %w[GET POST PUT DELETE PATCH HEAD].freeze
 
     CONFIGURATION_FIELDS = {
+      authentication: {
+        type: :options,
+        options: %w[none basic_auth],
+        default: "none",
+        ui: {
+          expression: true,
+        },
+      },
+      credential_id: {
+        type: :credential,
+        credential_type: :basic_auth,
+        visible_if: {
+          authentication: %w[basic_auth],
+        },
+      },
       http_method: {
         type: :options,
         required: true,

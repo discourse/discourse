@@ -16,7 +16,8 @@ export {
 
 function buildNodeIcons() {
   const icons = {};
-  const nodeTypes = getCachedNodeTypes();
+  const cached = getCachedNodeTypes();
+  const nodeTypes = cached?.node_types;
   if (nodeTypes) {
     for (const nt of nodeTypes) {
       if (nt.icon) {

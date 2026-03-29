@@ -190,6 +190,8 @@ export function fieldControl(schema = {}) {
       return "collection";
     case "notice":
       return "notice";
+    case "credential":
+      return "credential";
     default:
       return "input";
   }
@@ -227,6 +229,10 @@ export function fieldFormat(schema = {}) {
 }
 
 export function fieldInputType(schema = {}) {
+  const ui = fieldUi(schema);
+  if (ui.control === "password") {
+    return "password";
+  }
   return ["integer", "number"].includes(fieldType(schema)) ? "number" : "text";
 }
 

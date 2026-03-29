@@ -5,6 +5,7 @@ module DiscourseWorkflows
     include Service::Base
 
     step :build_node_type_schemas
+    step :build_credential_type_schemas
 
     private
 
@@ -48,6 +49,16 @@ module DiscourseWorkflows
         end
 
         schema
+      end
+    end
+
+    def build_credential_type_schemas
+      context[:credential_types] = DiscourseWorkflows::Registry.credential_types.map do |klass|
+        {
+          identifier: klass.identifier,
+          display_name: klass.display_name,
+          configuration_schema: klass.configuration_schema,
+        }
       end
     end
   end

@@ -24,6 +24,10 @@ export default {
           route: "adminPlugins.show.discourse-workflows-variables",
         },
         {
+          label: "discourse_workflows.credentials.title",
+          route: "adminPlugins.show.discourse-workflows-credentials",
+        },
+        {
           label: "discourse_workflows.data_tables.title",
           route: "adminPlugins.show.discourse-workflows-data-tables",
         },

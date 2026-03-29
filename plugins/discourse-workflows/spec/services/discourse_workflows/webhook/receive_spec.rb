@@ -160,6 +160,148 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
           )
         end
       end
+
+      context "with basic auth" do
+        fab!(:credential, :discourse_workflows_credential) do
+          Fabricate(
+            :discourse_workflows_credential,
+            credential_type: "basic_auth",
+            data:
+              DiscourseWorkflows::CredentialEncryptor.encrypt(
+                { "user" => "webhook_user", "password" => "webhook_pass" },
+              ),
+          )
+        end
+
+        before do
+          webhook_node.update!(
+            configuration: {
+              "path" => "my-hook",
+              "http_method" => "POST",
+              "authentication" => "basic_auth",
+              "credential_id" => credential.id,
+            },
+          )
+        end
+
+        context "when request has valid basic auth" do
+          let(:params) do
+            super().merge(
+              headers: {
+                "authorization" => "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}",
+              },
+            )
+          end
+
+          it { is_expected.to run_successfully }
+
+          it "executes the workflow" do
+            result
+            job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
+            expect(job["args"].first["trigger_node_id"]).to eq(webhook_node.id)
+          end
+        end
+
+        context "when request has wrong credentials" do
+          let(:params) do
+            super().merge(
+              headers: {
+                "authorization" => "Basic #{Base64.strict_encode64("wrong:creds")}",
+              },
+            )
+          end
+
+          it "skips the auth-protected node" do
+            result
+            expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+          end
+        end
+
+        context "when request has no authorization header" do
+          it "skips the auth-protected node" do
+            result
+            expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+          end
+        end
+
+        context "when credential record is missing" do
+          before { credential.destroy! }
+
+          it "skips the node and logs error" do
+            Rails.logger.expects(:warn).with(regexp_matches(/credential.*not found/i))
+            result
+            expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+          end
+        end
+      end
+
+      context "with mixed auth nodes on same path" do
+        fab!(:credential, :discourse_workflows_credential) do
+          Fabricate(
+            :discourse_workflows_credential,
+            credential_type: "basic_auth",
+            data:
+              DiscourseWorkflows::CredentialEncryptor.encrypt(
+                { "user" => "webhook_user", "password" => "webhook_pass" },
+              ),
+          )
+        end
+
+        fab!(:unprotected_node) do
+          Fabricate(
+            :discourse_workflows_node,
+            workflow: Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true),
+            type: "trigger:webhook",
+            name: "Unprotected Webhook",
+            configuration: {
+              "path" => "my-hook",
+              "http_method" => "POST",
+              "authentication" => "none",
+            },
+          )
+        end
+
+        before do
+          webhook_node.update!(
+            configuration: {
+              "path" => "my-hook",
+              "http_method" => "POST",
+              "authentication" => "basic_auth",
+              "credential_id" => credential.id,
+            },
+          )
+        end
+
+        context "when request has no auth" do
+          it "only executes unprotected node" do
+            result
+            node_ids =
+              Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |j|
+                j["args"].first["trigger_node_id"]
+              end
+            expect(node_ids).to contain_exactly(unprotected_node.id)
+          end
+        end
+
+        context "when request has valid auth" do
+          let(:params) do
+            super().merge(
+              headers: {
+                "authorization" => "Basic #{Base64.strict_encode64("webhook_user:webhook_pass")}",
+              },
+            )
+          end
+
+          it "executes both nodes" do
+            result
+            node_ids =
+              Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |j|
+                j["args"].first["trigger_node_id"]
+              end
+            expect(node_ids).to contain_exactly(webhook_node.id, unprotected_node.id)
+          end
+        end
+      end
     end
   end
 end

@@ -13,7 +13,10 @@ module DiscourseWorkflows
         service_params.deep_merge(params: webhook_params),
       ) do |result|
         on_success do
-          if result[:sync_execution]
+          if result[:all_nodes_rejected_auth]
+            response.headers["WWW-Authenticate"] = 'Basic realm="Webhook"'
+            render json: { error: "unauthorized" }, status: :unauthorized
+          elsif result[:sync_execution]
             render_sync_response(result)
           else
             render json: { success: true }

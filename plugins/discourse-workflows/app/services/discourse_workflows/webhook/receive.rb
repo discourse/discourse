@@ -55,6 +55,7 @@ module DiscourseWorkflows
 
     only_if(:triggering_new_workflow) do
       model :webhook_nodes, :find_webhook_nodes
+      step :authenticate_nodes
       step :enqueue_async_workflows
       step :execute_sync_workflows
     end
@@ -123,6 +124,53 @@ module DiscourseWorkflows
 
       resolver = DiscourseWorkflows::ExpressionResolver.new({})
       candidates.select { |node| resolver.resolve(node.configuration["path"]) == params.path }
+    end
+
+    def authenticate_nodes(webhook_nodes:, params:)
+      authenticated = webhook_nodes.select { |node| node_passes_auth?(node, params) }
+
+      context[:all_nodes_rejected_auth] = true if authenticated.empty? && webhook_nodes.any?
+
+      context[:webhook_nodes] = authenticated
+    end
+
+    def node_passes_auth?(node, params)
+      auth_mode = node.configuration["authentication"] || "none"
+      return true if auth_mode == "none"
+
+      return false unless auth_mode == "basic_auth"
+
+      credential_id = node.configuration["credential_id"]
+      credential = DiscourseWorkflows::Credential.find_by(id: credential_id)
+      unless credential
+        Rails.logger.warn("Workflow credential not found (id=#{credential_id}) for node #{node.id}")
+        return false
+      end
+
+      begin
+        cred_data = credential.decrypted_data
+      rescue ActiveSupport::MessageEncryptor::InvalidMessage => e
+        Rails.logger.warn(
+          "Workflow credential decryption failed (id=#{credential_id}) for node #{node.id}: #{e.message}",
+        )
+        return false
+      end
+
+      resolver = DiscourseWorkflows::ExpressionResolver.new({})
+      expected_user = resolver.resolve(cred_data["user"])
+      expected_password = resolver.resolve(cred_data["password"])
+
+      headers = params.headers
+      auth_header =
+        headers[:authorization] || headers["authorization"] || headers[:Authorization] ||
+          headers["Authorization"]
+      return false unless auth_header&.start_with?("Basic ")
+
+      decoded = Base64.decode64(auth_header.split(" ", 2).last)
+      request_user, request_password = decoded.split(":", 2)
+
+      ActiveSupport::SecurityUtils.secure_compare(request_user.to_s, expected_user.to_s) &&
+        ActiveSupport::SecurityUtils.secure_compare(request_password.to_s, expected_password.to_s)
     end
 
     def enqueue_async_workflows(webhook_nodes:, params:)

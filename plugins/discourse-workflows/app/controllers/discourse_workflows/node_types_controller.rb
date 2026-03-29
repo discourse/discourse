@@ -6,7 +6,9 @@ module DiscourseWorkflows
 
     def index
       DiscourseWorkflows::NodeType::List.call(service_params) do |result|
-        on_success { |node_types:| render json: { node_types: node_types } }
+        on_success do |node_types:, credential_types:|
+          render json: { node_types: node_types, credential_types: credential_types }
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end

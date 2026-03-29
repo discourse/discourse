@@ -12,15 +12,18 @@ export function getCachedNodeTypes() {
 
 export async function loadNodeTypes() {
   if (cachedNodeTypes) {
-    return cachedNodeTypes;
+    return cachedNodeTypes.node_types;
   }
 
   try {
     const result = await ajax(
       "/admin/plugins/discourse-workflows/node-types.json"
     );
-    cachedNodeTypes = result.node_types;
-    return cachedNodeTypes;
+    cachedNodeTypes = {
+      node_types: result.node_types,
+      credential_types: result.credential_types,
+    };
+    return cachedNodeTypes.node_types;
   } catch (e) {
     popupAjaxError(e);
     return [];

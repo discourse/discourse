@@ -93,6 +93,10 @@ after_initialize do
 
     DiscourseWorkflows::Registry.register_core(DiscourseWorkflows::Core::LoopOverItems::V1)
     DiscourseWorkflows::Registry.register_core(DiscourseWorkflows::Core::Wait::V1)
+
+    DiscourseWorkflows::Registry.register_credential_type(
+      DiscourseWorkflows::CredentialTypes::BasicAuth,
+    )
   end
 
   DiscourseWorkflows::Registry.triggers.each do |trigger_class|

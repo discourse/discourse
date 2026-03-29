@@ -309,5 +309,52 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
         expect(response.parsed_body).to be_a(Hash)
       end
     end
+
+    context "with basic auth webhook" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "basic_auth",
+          data:
+            DiscourseWorkflows::CredentialEncryptor.encrypt(
+              { "user" => "hook_user", "password" => "hook_pass" },
+            ),
+        )
+      end
+
+      before do
+        webhook_node.update!(
+          configuration: {
+            "path" => "my-hook",
+            "http_method" => "POST",
+            "response_mode" => "immediately",
+            "authentication" => "basic_auth",
+            "credential_id" => credential.id,
+          },
+        )
+      end
+
+      it "returns 401 with WWW-Authenticate when no auth header" do
+        post "/workflows/webhooks/my-hook.json",
+             params: { data: "test" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(401)
+        expect(response.headers["WWW-Authenticate"]).to eq('Basic realm="Webhook"')
+      end
+
+      it "returns 200 with valid credentials" do
+        post "/workflows/webhooks/my-hook.json",
+             params: { data: "test" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_AUTHORIZATION" => "Basic #{Base64.strict_encode64("hook_user:hook_pass")}",
+             }
+
+        expect(response.status).to eq(200)
+      end
+    end
   end
 end

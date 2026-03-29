@@ -26,3 +26,11 @@ Fabricator(:discourse_workflows_variable, class_name: "DiscourseWorkflows::Varia
   key { sequence(:key) { |n| "variable_#{n}" } }
   value "test_value"
 end
+
+Fabricator(:discourse_workflows_credential, class_name: "DiscourseWorkflows::Credential") do
+  name { sequence(:name) { |n| "Credential #{n}" } }
+  credential_type "basic_auth"
+  data do
+    DiscourseWorkflows::CredentialEncryptor.encrypt({ "user" => "admin", "password" => "secret" })
+  end
+end
