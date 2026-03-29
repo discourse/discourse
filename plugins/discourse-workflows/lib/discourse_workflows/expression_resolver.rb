@@ -91,7 +91,11 @@ module DiscourseWorkflows
       def fetch(name)
         return @values_by_name[name] if @values_by_name.key?(name)
 
-        @values_by_name[name] = SiteSetting.get(name)
+        @values_by_name[name] = if SiteSetting.secret_settings.include?(name.to_s.to_sym)
+          "[FILTERED]"
+        else
+          SiteSetting.get(name)
+        end
       end
     end
 

@@ -17,10 +17,17 @@ module DiscourseWorkflows
     end
 
     model :trigger_node
+    step :check_rate_limit
     model :execution, :run_workflow
     model :response_metadata, :compute_response_metadata
 
     private
+
+    def check_rate_limit(trigger_node:, guardian:)
+      key = "workflow_form_submit:#{trigger_node.id}:#{guardian.user&.id || "anon"}"
+      limiter = RateLimiter.new(guardian.user, key, 10, 60)
+      fail_with("rate_limit.limit_reached") unless limiter.performed!(raise_error: false)
+    end
 
     def fetch_trigger_node(params:)
       DiscourseWorkflows::Node.enabled_of_type("trigger:form").find_by(
@@ -29,8 +36,11 @@ module DiscourseWorkflows
       )
     end
 
+    MAX_FIELD_VALUE_LENGTH = 10_000
+
     def run_workflow(trigger_node:, params:, guardian:)
       form_data = trigger_node.form_data_from(params.form_data)
+      form_data.transform_values! { |v| v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v }
       trigger_data = { form_data: form_data, submitted_at: Time.current.utc.iso8601 }
       DiscourseWorkflows::Executor.new(trigger_node, trigger_data, user: guardian.user).run
     end

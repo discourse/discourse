@@ -17,7 +17,10 @@ module DiscourseWorkflows
     private
 
     def fetch_execution(params:)
-      DiscourseWorkflows::Execution.find_by(id: params.execution_id, status: :waiting)
+      DiscourseWorkflows::Execution
+        .where(id: params.execution_id, status: :waiting)
+        .lock("FOR UPDATE SKIP LOCKED")
+        .first
     end
 
     def resume_execution(execution:, params:)

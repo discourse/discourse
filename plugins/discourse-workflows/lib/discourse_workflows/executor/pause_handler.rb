@@ -30,7 +30,11 @@ module DiscourseWorkflows
       private
 
       def pause_for_timer!(wait, node)
-        duration = wait.wait_amount.to_i.public_send(wait.wait_unit)
+        unit = wait.wait_unit
+        if Core::Wait::V1::WAIT_UNITS.exclude?(unit)
+          raise ArgumentError, "Invalid wait unit: #{unit}"
+        end
+        duration = wait.wait_amount.to_i.public_send(unit)
         waiting_until = duration.from_now
 
         pause_execution!(

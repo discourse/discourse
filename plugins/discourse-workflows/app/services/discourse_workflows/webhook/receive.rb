@@ -67,6 +67,7 @@ module DiscourseWorkflows
         .where(status: :waiting)
         .where("waiting_config->>'resume_token' = ?", params.path)
         .where("waiting_config->>'wait_type' = ?", "webhook")
+        .lock("FOR UPDATE SKIP LOCKED")
         .first
     end
 

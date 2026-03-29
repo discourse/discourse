@@ -217,7 +217,7 @@ module DiscourseWorkflows
     def fail_execution(error)
       @state.execution.update!(
         status: :error,
-        error: error.message,
+        error: error.message.to_s.truncate(1000),
         finished_at: Time.current,
         context: @state.context,
       )
@@ -250,7 +250,7 @@ module DiscourseWorkflows
         execution_id: @state.execution.id,
         workflow_id: @workflow.id,
         workflow_name: @workflow.name,
-        error_message: error.message,
+        error_message: error.message.to_s.truncate(1000),
         failed_node_name: last_failed_step&.node_name,
       }
 

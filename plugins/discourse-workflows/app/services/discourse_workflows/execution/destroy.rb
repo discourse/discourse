@@ -14,6 +14,7 @@ module DiscourseWorkflows
     private
 
     def delete_executions(params:)
+      DiscourseWorkflows::ExecutionStep.where(execution_id: params.ids).delete_all
       context[:deleted_count] = DiscourseWorkflows::Execution.where(id: params.ids).delete_all
     end
   end

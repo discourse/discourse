@@ -79,7 +79,18 @@ module DiscourseWorkflows
           ctx = MiniRacer::Context.new(max_memory: MAX_MEMORY, timeout: TIMEOUT_MS)
           begin
             ctx.attach("__captureLog", proc { |*args| @logs << args.map(&:to_s).join(" ") })
-            ctx.attach("__getSiteSetting", proc { |name| SiteSetting.get(name).to_s })
+            ctx.attach(
+              "__getSiteSetting",
+              proc do |name|
+                if SiteSetting.secret_settings.include?(name.to_s.to_sym)
+                  "[FILTERED]"
+                else
+                  SiteSetting.get(name).to_s
+                end
+              rescue StandardError
+                nil
+              end,
+            )
             ctx.attach(
               "__getNodeOutput",
               proc do |name|

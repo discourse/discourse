@@ -8,6 +8,23 @@ module DiscourseWorkflows
     skip_before_action :redirect_to_login_if_required
     skip_before_action :check_xhr
 
+    BLOCKED_RESPONSE_HEADERS = %w[
+      set-cookie
+      content-security-policy
+      content-security-policy-report-only
+      x-frame-options
+      access-control-allow-origin
+      access-control-allow-credentials
+      access-control-allow-methods
+      access-control-allow-headers
+      strict-transport-security
+      transfer-encoding
+      host
+      connection
+    ].to_set.freeze
+
+    MAX_WEBHOOK_BODY_SIZE = 1.megabyte
+
     def receive
       DiscourseWorkflows::Webhook::Receive.call(
         service_params.deep_merge(params: webhook_params),
@@ -51,10 +68,13 @@ module DiscourseWorkflows
 
       output = step.output.first["json"]
       response_type = output["response_type"]
-      status_code = output["status_code"] || 200
+      status_code = sanitize_status_code(output["status_code"])
       custom_headers = output["headers"] || {}
 
-      custom_headers.each { |key, value| response.headers[key] = value }
+      custom_headers.each do |key, value|
+        next if BLOCKED_RESPONSE_HEADERS.include?(key.to_s.downcase)
+        response.headers[key] = value
+      end
 
       case response_type
       when "redirect"
@@ -82,7 +102,7 @@ module DiscourseWorkflows
     end
 
     def render_last_node_output(execution, response_code)
-      status = (response_code.presence || 200).to_i
+      status = sanitize_status_code(response_code)
       last_step = execution.steps.where(status: :success).order(:position).last
       output = last_step&.output&.first&.dig("json")
 
@@ -104,6 +124,10 @@ module DiscourseWorkflows
     end
 
     def parse_body
+      if request.content_length.to_i > MAX_WEBHOOK_BODY_SIZE
+        raise Discourse::InvalidParameters, "Request body too large"
+      end
+
       if request.content_type&.include?("application/json")
         JSON.parse(request.raw_post).presence || {}
       else
@@ -113,6 +137,8 @@ module DiscourseWorkflows
       {}
     end
 
+    FILTERED_INCOMING_HEADERS = %w[authorization cookie proxy-authorization].to_set.freeze
+
     def extract_headers
       request
         .headers
@@ -120,9 +146,18 @@ module DiscourseWorkflows
         .each_with_object({}) do |(key, value), headers|
           if key.start_with?("HTTP_")
             header_name = key.delete_prefix("HTTP_").downcase.tr("_", "-")
-            headers[header_name] = value
+            if FILTERED_INCOMING_HEADERS.include?(header_name)
+              headers[header_name] = "[FILTERED]"
+            else
+              headers[header_name] = value
+            end
           end
         end
+    end
+
+    def sanitize_status_code(code)
+      status = (code.presence || 200).to_i
+      (200..599).cover?(status) ? status : 200
     end
   end
 end

@@ -7,7 +7,7 @@ module DiscourseWorkflows
     params do
       attribute :template_id, :string
 
-      validates :template_id, presence: true
+      validates :template_id, presence: true, format: { with: /\A[a-z0-9_-]+\z/ }
     end
 
     model :template

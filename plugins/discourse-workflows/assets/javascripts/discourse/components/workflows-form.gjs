@@ -145,7 +145,10 @@ export default class WorkflowsForm extends Component {
       this.#unsubscribe();
       const completion = message.form_completion;
       if (completion?.on_submission === "redirect" && completion.redirect_url) {
-        window.location.href = completion.redirect_url;
+        const url = completion.redirect_url;
+        if (url.startsWith("/") || url.startsWith(window.location.origin)) {
+          window.location.href = url;
+        }
         return;
       }
       this.completionData = completion || null;

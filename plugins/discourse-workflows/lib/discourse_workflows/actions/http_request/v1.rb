@@ -5,6 +5,7 @@ module DiscourseWorkflows
     module HttpRequest
       class V1 < Actions::Base
         TIMEOUT_SECONDS = 30
+        MAX_RESPONSE_BODY_SIZE = 1.megabyte
         FILTERED_HEADER_PATTERNS = [/key/i, /secret/i, /token/i, /authorization/i, /password/i]
 
         def self.identifier
@@ -134,6 +135,9 @@ module DiscourseWorkflows
 
         def build_uri(url, query_params)
           uri = URI.parse(url)
+          if %w[http https].exclude?(uri.scheme&.downcase)
+            raise "Only HTTP and HTTPS URLs are supported"
+          end
 
           if query_params.is_a?(Array) && query_params.any?
             existing = URI.decode_www_form(uri.query || "")
@@ -184,7 +188,7 @@ module DiscourseWorkflows
 
         def parse_response_body(response)
           content_type = response.headers["content-type"] || ""
-          body = response.body.to_s
+          body = response.body.to_s.truncate(MAX_RESPONSE_BODY_SIZE)
 
           if content_type.include?("application/json")
             JSON.parse(body)

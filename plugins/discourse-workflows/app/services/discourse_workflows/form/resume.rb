@@ -27,6 +27,7 @@ module DiscourseWorkflows
         .where(status: :waiting)
         .where("waiting_config->>'resume_token' = ?", params.resume_token)
         .where("waiting_config->>'wait_type' = ?", "form")
+        .lock("FOR UPDATE SKIP LOCKED")
         .first
     end
 
