@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 import CredentialModal from "../credential/modal";
 
@@ -41,8 +41,7 @@ export default class PropertyEngineCredential extends Component {
   }
 
   @action
-  onChange(event) {
-    const value = event.target.value;
+  handleChange(value) {
     this.args.onPatch({
       [this.args.fieldName]: value ? parseInt(value, 10) : null,
     });
@@ -67,17 +66,16 @@ export default class PropertyEngineCredential extends Component {
 
   <template>
     <div class="workflows-property-engine-credential">
-      <select {{on "change" this.onChange}}>
-        <option value="">{{i18n
-            "discourse_workflows.credentials.select_type"
-          }}</option>
-        {{#each this.options as |credentialOption|}}
-          <option
-            value={{credentialOption.id}}
-            selected={{eq credentialOption.id @value}}
-          >{{credentialOption.name}}</option>
-        {{/each}}
-      </select>
+      <ComboBox
+        @content={{this.options}}
+        @value={{@value}}
+        @nameProperty="name"
+        @valueProperty="id"
+        @onChange={{this.handleChange}}
+        @options={{hash
+          none=(i18n "discourse_workflows.credentials.select_type")
+        }}
+      />
       <DButton
         @action={{this.setupCredential}}
         @label="discourse_workflows.credentials.set_up_credential"
