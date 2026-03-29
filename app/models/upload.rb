@@ -191,7 +191,9 @@ class Upload < ActiveRecord::Base
 
       image_info =
         begin
-          FastImage.new(original_path)
+          image = FastImage.new(original_path)
+          image.type # eager load to rescue errors early
+          image
         rescue StandardError
           nil
         end
