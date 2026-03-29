@@ -72,9 +72,7 @@ export default class PropertyEngineCredential extends Component {
         @nameProperty="name"
         @valueProperty="id"
         @onChange={{this.handleChange}}
-        @options={{hash
-          none=(i18n "discourse_workflows.credentials.select_type")
-        }}
+        @options={{hash none="discourse_workflows.credentials.select_type"}}
       />
       <DButton
         @action={{this.setupCredential}}
