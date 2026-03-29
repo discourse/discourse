@@ -203,6 +203,40 @@ describe "Composer - ProseMirror - Toolbar" do
 
       expect(rich).to have_css("ol li", text: "A list item")
     end
+
+    it "splits multi-line plain text into bullet list items" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("apple\nbanana\ncoconut")
+      composer.select_all
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-bullet']").click
+
+      expect(rich).to have_css("ul li", count: 3)
+      expect(rich).to have_css("ul li", text: "apple")
+      expect(rich).to have_css("ul li", text: "banana")
+      expect(rich).to have_css("ul li", text: "coconut")
+    end
+
+    it "splits multi-line plain text into ordered list items" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("apple\nbanana\ncoconut")
+      composer.select_all
+
+      list_menu = composer.list_menu
+      list_menu.expand
+      list_menu.option("[data-name='list-ordered']").click
+
+      expect(rich).to have_css("ol li", count: 3)
+      expect(rich).to have_css("ol li", text: "apple")
+      expect(rich).to have_css("ol li", text: "banana")
+      expect(rich).to have_css("ol li", text: "coconut")
+    end
   end
 
   describe "heading toolbar" do

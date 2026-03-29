@@ -17,6 +17,41 @@ import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
+function splitNonEmptyLines(text) {
+  return text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+}
+
+function buildListNode(schema, listType, lines) {
+  const listItems = lines.map((line) =>
+    schema.nodes.list_item.create(null, [
+      schema.nodes.paragraph.create(
+        null,
+        line.length > 0 ? schema.text(line) : undefined
+      ),
+    ])
+  );
+
+  return listType.create(null, listItems);
+}
+
+function isPlainTextFragment(fragment, schema) {
+  return fragment.content.every((node) => {
+    if (node.isText) {
+      return node.marks.length === 0;
+    }
+
+    if (node.type === schema.nodes.hard_break) {
+      return true;
+    }
+
+    if (node.type === schema.nodes.paragraph) {
+      return isPlainTextFragment(node.content, schema);
+    }
+
+    return false;
+  });
+}
+
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
  * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
@@ -208,6 +243,35 @@ export default class ProsemirrorTextManipulation {
       return null;
     };
 
+    const replaceSelectionWithList = (targetType) => {
+      const { state } = this.view;
+      const selectedContent = state.selection.content().content;
+
+      if (!isPlainTextFragment(selectedContent, this.schema)) {
+        return false;
+      }
+
+      const selectedText = state.doc.textBetween(
+        state.selection.from,
+        state.selection.to,
+        "\n",
+        "\n"
+      );
+      const lines = splitNonEmptyLines(selectedText);
+
+      if (lines.length <= 1) {
+        return false;
+      }
+
+      const listNode = buildListNode(this.schema, targetType, lines);
+
+      this.view.dispatch(
+        state.tr.replaceSelectionWith(listNode).scrollIntoView()
+      );
+
+      return true;
+    };
+
     if (exampleKey === "list_item") {
       const targetType =
         head === "* "
@@ -242,6 +306,11 @@ export default class ProsemirrorTextManipulation {
           };
         }
       } else {
+        if (replaceSelectionWithList(targetType)) {
+          this.focus();
+          return;
+        }
+
         // Not in a list - wrap in the target type
         command = wrapInList(targetType);
       }
