@@ -13,7 +13,7 @@ module DiscourseWorkflows
                :finished_at,
                :created_at
 
-    WAITING_NODE_TYPES = %w[action:chat_approval].freeze
+    WAITING_NODE_TYPES = %w[action:chat_approval action:form core:wait].freeze
 
     has_many :steps, serializer: DiscourseWorkflows::ExecutionStepSerializer, embed: :objects
 
