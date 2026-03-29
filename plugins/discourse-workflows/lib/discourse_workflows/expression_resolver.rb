@@ -5,15 +5,8 @@ module DiscourseWorkflows
     EXPRESSION_REGEX = /\{\{(.*?)\}\}/
     WHOLE_EXPRESSION_REGEX = /\A\{\{\s*([^{}]*?)\s*\}\}\z/
 
-    def initialize(
-      context,
-      variable_store: VariableStore.new,
-      site_setting_store: SiteSettingStore.new,
-      user: nil
-    )
+    def initialize(context, user: nil, **_)
       @context = context
-      @variable_store = variable_store
-      @site_setting_store = site_setting_store
       @user = user
     end
 
@@ -57,13 +50,7 @@ module DiscourseWorkflows
     end
 
     def js_evaluator
-      @js_evaluator ||=
-        JsEvaluator.new(
-          @context,
-          variable_store: @variable_store,
-          site_setting_store: @site_setting_store,
-          user: @user,
-        )
+      @js_evaluator ||= JsEvaluator.new(@context, user: @user)
     end
 
     def format_value(value)
@@ -71,116 +58,58 @@ module DiscourseWorkflows
       value.is_a?(Array) ? value.join(", ") : value.to_s
     end
 
-    class VariableStore
-      def initialize
-        @values_by_key = {}
-      end
-
-      def fetch(key)
-        return @values_by_key[key] if @values_by_key.key?(key)
-
-        @values_by_key[key] = DiscourseWorkflows::Variable.find_by(key: key)&.value
-      end
-    end
-
-    class SiteSettingStore
-      def initialize
-        @values_by_name = {}
-      end
-
-      def fetch(name)
-        return @values_by_name[name] if @values_by_name.key?(name)
-
-        @values_by_name[name] = if SiteSetting.secret_settings.include?(name.to_s.to_sym)
-          "[FILTERED]"
-        else
-          SiteSetting.get(name)
-        end
-      end
-    end
-
     class JsEvaluator
-      TIMEOUT = 500
-      MAX_MEMORY = 10_000_000
-      MARSHAL_STACK_DEPTH = 20
-
-      def initialize(context, variable_store:, site_setting_store:, user: nil)
+      def initialize(context, user: nil)
         @context = context
-        @variable_store = variable_store
-        @site_setting_store = site_setting_store
         @user = user
-        @js_context = nil
+        @sandbox = nil
       end
 
       def evaluate(expression)
-        ensure_context!
-        @js_context.eval(expression)
+        ensure_sandbox!
+        @sandbox.eval(expression)
       rescue MiniRacer::Error
         nil
       end
 
       private
 
-      def ensure_context!
-        return if @js_context
+      def ensure_sandbox!
+        return if @sandbox
 
-        @js_context =
-          MiniRacer::Context.new(
-            timeout: TIMEOUT,
-            max_memory: MAX_MEMORY,
-            marshal_stack_depth: MARSHAL_STACK_DEPTH,
-          )
-        inject_data!
+        @sandbox = JsSandbox.new(@context, user: @user)
+        inject_expression_data!
       end
 
-      def inject_data!
-        data = build_data
-        @js_context.eval("var __data = #{data.to_json};")
-        @js_context.attach(
-          "__getSiteSetting",
-          ->(name) do
-            @site_setting_store.fetch(name)&.to_s
-          rescue StandardError
-            nil
-          end,
-        )
-        @js_context.eval(setup_js)
+      def inject_expression_data!
+        data = build_expression_data
+        @sandbox.eval("var __data = #{data.to_json};")
+        @sandbox.eval(expression_setup_js)
       end
 
-      def build_data
+      def build_expression_data
         node_outputs = {}
         node_contexts = @context["_node_contexts"] || {}
 
         @context.each do |key, value|
           next if key.start_with?("_") || key == "$json"
-          node_outputs[key] = extract_item_json(value)
+          node_outputs[key] = JsSandbox.extract_item_json(value)
         end
 
         {
           "$json" => @context["$json"] || {},
           "trigger" => @context["trigger"] || {},
-          "$vars" => DiscourseWorkflows::Variable.pluck(:key, :value).to_h,
-          "$current_user" => build_current_user,
           "$execution" => @context["_execution"] || {},
           "_nodes" => node_outputs,
           "_node_contexts" => node_contexts,
         }
       end
 
-      def setup_js
+      def expression_setup_js
         <<~JS
           var $json = __data["$json"];
           var trigger = __data["trigger"];
-          var $vars = __data["$vars"];
-          var $current_user = __data["$current_user"];
           var $execution = __data["$execution"];
-          var $site_settings = new Proxy({}, {
-            get: function(target, prop) {
-              if (prop in target) return target[prop];
-              target[prop] = __getSiteSetting(prop);
-              return target[prop];
-            }
-          });
           function $(name) {
             return {
               item: { json: __data._nodes[name] || {} },
@@ -188,21 +117,6 @@ module DiscourseWorkflows
             };
           }
         JS
-      end
-
-      def build_current_user
-        return {} unless @user
-        { "id" => @user.id, "username" => @user.username }
-      end
-
-      def extract_item_json(node_data)
-        if node_data.is_a?(Array) && node_data.first.is_a?(Hash) && node_data.first.key?("json")
-          node_data.first["json"] || {}
-        elsif node_data.is_a?(Hash)
-          node_data
-        else
-          {}
-        end
       end
     end
   end

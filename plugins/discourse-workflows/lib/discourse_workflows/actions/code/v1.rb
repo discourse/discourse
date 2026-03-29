@@ -4,8 +4,6 @@ module DiscourseWorkflows
   module Actions
     module Code
       class V1 < Actions::Base
-        TIMEOUT_MS = 1_000
-        MAX_MEMORY = 10 * 1024 * 1024
         MAX_LOG_ENTRIES = 100
 
         def self.identifier
@@ -65,71 +63,31 @@ module DiscourseWorkflows
           @logs = []
           all_items_json = input_items.map { |item| item["json"] || {} }
           vars = DiscourseWorkflows::Variable.pluck(:key, :value).to_h
-          current_user_data = user ? { "id" => user.id, "username" => user.username } : {}
 
           input_items.map do |item|
             item_json = item["json"] || {}
-            result = execute_code(context, item_json, all_items_json, code, vars, current_user_data)
+            result = execute_code(context, item_json, all_items_json, code, vars, user)
             { "json" => result }
           end
         end
 
         private
 
-        def execute_code(context, item_json, all_items_json, code, vars, current_user_data)
-          ctx =
-            MiniRacer::Context.new(
-              max_memory: MAX_MEMORY,
-              timeout: TIMEOUT_MS,
-              marshal_stack_depth: 20,
-            )
+        def execute_code(context, item_json, all_items_json, code, vars, user)
+          sandbox = JsSandbox.new(context, user: user, vars: vars)
           begin
-            ctx.attach(
+            sandbox.attach(
               "__captureLog",
               proc { |*args| @logs << args.map(&:to_s).join(" ") if @logs.size < MAX_LOG_ENTRIES },
             )
-            ctx.attach(
-              "__getSiteSetting",
-              proc do |name|
-                sym = name.to_s.to_sym
-                if SiteSetting.secret_settings.include?(sym) ||
-                     SiteSetting.hidden_settings.include?(sym)
-                  "[FILTERED]"
-                else
-                  SiteSetting.get(name).to_s
-                end
-              rescue StandardError
-                nil
-              end,
-            )
-            ctx.attach(
-              "__getNodeOutput",
-              proc do |name|
-                if name.to_s.start_with?("_")
-                  {}.to_json
-                else
-                  node_items = context[name]
-                  if node_items.is_a?(Array) && node_items.first.is_a?(Hash) &&
-                       node_items.first.key?("json")
-                    node_items.first["json"].to_json
-                  else
-                    (node_items || {}).to_json
-                  end
-                end
-              end,
-            )
 
             item_json_js = item_json.to_json
-            ctx.eval(<<~JS)
+            sandbox.eval(<<~JS)
               var $json = #{item_json_js};
-              var $vars = #{vars.to_json};
-              var $current_user = #{current_user_data.to_json};
               var $input = {
                 item: { json: #{item_json_js} },
                 all: function() { return #{all_items_json.to_json}.map(function(j) { return { json: j }; }); }
               };
-              var $site_settings = new Proxy({}, { get: function(_, name) { return __getSiteSetting(name); } });
-              function $(nodeName) { var data = JSON.parse(__getNodeOutput(nodeName)); return { item: { json: data } }; }
               var console = {
                 log: function() { __captureLog(...arguments); },
                 warn: function() { __captureLog(...arguments); },
@@ -137,12 +95,12 @@ module DiscourseWorkflows
                 info: function() { __captureLog(...arguments); }
               };
             JS
-            raw = ctx.eval("(function() { #{code} })()")
+            raw = sandbox.eval("(function() { #{code} })()")
 
             result = raw.is_a?(Hash) ? raw : { "result" => raw.to_s }
             result.deep_stringify_keys
           ensure
-            ctx.dispose
+            sandbox.dispose
           end
         end
       end
