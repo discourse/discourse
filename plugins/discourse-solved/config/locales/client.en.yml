@@ -9,6 +9,7 @@ en:
       alt:
         solved:
           accepted_notification: "accepted"
+          topic_solved_notification: "solved"
     solutions: "Solutions"
 
     solved:
@@ -54,8 +55,15 @@ en:
       no_answer:
         title: Has your question been answered?
         description: "Highlight the answer and help others by using the solution button below the correct reply."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "your post was marked as solution"
+        topic_solved_title: "Topic solved"
+      topic_notifications:
+        tracking:
+          description: "You will be notified if someone mentions your @name, replies to you, or when the topic is solved. A count of new replies will be shown for this topic."
+        watching:
+          description: "You will be notified of every new reply in this topic and when the topic is solved. A count of new replies will be shown for this topic."
       category_type_support:
         title: "Support"
         not_support_type: "Heads up! You've disabled the ability to mark posts as solutions in this category. To turn that back on, you'll find the relevant settings in the Settings tab."

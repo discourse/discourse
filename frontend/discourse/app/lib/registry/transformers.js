@@ -72,6 +72,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "move-to-topic-move-options",
   "navigation-bar-dropdown-icon",
   "navigation-bar-dropdown-mode",
+  "notifications-tracking-description",
   "parent-category-row-class",
   "parent-category-row-class-mobile",
   "post-article-class",
