@@ -49,10 +49,15 @@ export default class AssistantItem extends Component {
   get prefix() {
     let prefix = "";
     if (this.args.suggestionKeyword !== "+") {
-      prefix =
-        this.search.activeGlobalSearchTerm
-          ?.split(this.args.suggestionKeyword)[0]
-          .trim() || "";
+      const term = this.search.activeGlobalSearchTerm || "";
+      const lastIndex = term.lastIndexOf(this.args.suggestionKeyword);
+
+      if (lastIndex > 0) {
+        prefix = term.substring(0, lastIndex).trim();
+      } else if (lastIndex < 0) {
+        prefix = term.trim();
+      }
+
       if (prefix.length) {
         prefix = `${prefix} `;
       }
