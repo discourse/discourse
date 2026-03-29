@@ -281,8 +281,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.1
       ace-builds:
-        specifier: ^1.43.5
-        version: 1.43.5
+        specifier: ^1.43.6
+        version: 1.43.6
       chart.js:
         specifier: 4.5.1
         version: 4.5.1
@@ -3391,8 +3391,8 @@ packages:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
     engines: {node: '>= 0.6'}
 
-  ace-builds@1.43.5:
-    resolution: {integrity: sha512-iH5FLBKdB7SVn9GR37UgA/tpQS8OTWIxWAuq3Ofaw+Qbc69FfPXsXd9jeW7KRG2xKpKMqBDnu0tHBrCWY5QI7A==}
+  ace-builds@1.43.6:
+    resolution: {integrity: sha512-L1ddibQ7F3vyXR2k2fg+I8TQTPWVA6CKeDQr/h2+8CeyTp3W6EQL8xNFZRTztuP8xNOAqL3IYPqdzs31GCjDvg==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -12453,7 +12453,7 @@ snapshots:
       mime-types: 3.0.2
       negotiator: 1.0.0
 
-  ace-builds@1.43.5: {}
+  ace-builds@1.43.6: {}
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
