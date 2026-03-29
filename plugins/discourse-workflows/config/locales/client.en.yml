@@ -278,6 +278,11 @@ en:
         batch_size: "Batch Size"
         batch_size_description: "Number of items to process per iteration."
       http_request:
+        authentication: "Authentication"
+        authentication_none: "None"
+        authentication_basic_auth: "Basic Auth"
+        authentication_bearer_token: "Bearer Token"
+        credential_id: "Credential"
         method: "Method"
         url: "URL"
         headers: "Headers"

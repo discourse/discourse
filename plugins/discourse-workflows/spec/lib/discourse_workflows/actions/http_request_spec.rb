@@ -188,5 +188,97 @@ RSpec.describe DiscourseWorkflows::Actions::HttpRequest::V1 do
         "URL is required",
       )
     end
+
+    context "with basic_auth authentication" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "basic_auth",
+          data:
+            DiscourseWorkflows::CredentialEncryptor.encrypt(
+              { "user" => "api_user", "password" => "api_pass" },
+            ),
+        )
+      end
+
+      it "injects Authorization header" do
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "Authorization" => "Basic #{Base64.strict_encode64("api_user:api_pass")}",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "basic_auth",
+          "credential_id" => credential.id,
+        }
+
+        result = action.execute_single(context, item: item, config: config)
+        expect(result[:status]).to eq(200)
+      end
+    end
+
+    context "with bearer_token authentication" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "bearer_token",
+          data: DiscourseWorkflows::CredentialEncryptor.encrypt({ "token" => "my-secret-token" }),
+        )
+      end
+
+      it "injects Bearer Authorization header" do
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "Authorization" => "Bearer my-secret-token",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "bearer_token",
+          "credential_id" => credential.id,
+        }
+
+        result = action.execute_single(context, item: item, config: config)
+        expect(result[:status]).to eq(200)
+      end
+    end
+
+    context "with authentication set to none" do
+      it "does not add Authorization header" do
+        stub_request(:get, "https://api.example.com/data").to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "none",
+        }
+
+        result = action.execute_single(context, item: item, config: config)
+        expect(result[:status]).to eq(200)
+      end
+    end
   end
 end

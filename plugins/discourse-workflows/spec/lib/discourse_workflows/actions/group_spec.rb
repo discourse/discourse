@@ -106,7 +106,11 @@ RSpec.describe DiscourseWorkflows::Actions::Group::V1 do
     end
 
     it "raises when user does not exist" do
-      config = { "operation" => "add", "username" => "nonexistent_user", "group_id" => group.id.to_s }
+      config = {
+        "operation" => "add",
+        "username" => "nonexistent_user",
+        "group_id" => group.id.to_s,
+      }
 
       expect { action.execute_single({}, item: item, config: config) }.to raise_error(
         ActiveRecord::RecordNotFound,

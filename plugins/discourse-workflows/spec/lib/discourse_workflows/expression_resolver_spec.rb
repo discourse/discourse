@@ -166,9 +166,7 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
     end
 
     it "evaluates node output references with JS methods" do
-      node_context = {
-        "Previous Step" => [{ "json" => { "items" => %w[a b c] } }],
-      }
+      node_context = { "Previous Step" => [{ "json" => { "items" => %w[a b c] } }] }
       r = described_class.new(node_context.merge("$json" => context["trigger"]))
       expect(r.resolve("={{ $('Previous Step').item.json.items.join('-') }}")).to eq("a-b-c")
     end

@@ -38,16 +38,18 @@ module DiscourseWorkflows
       return nil unless @workflow.enabled?
       unless rate_limiter.performed!(raise_error: false)
         now = Time.current
-        return DiscourseWorkflows::Execution.create!(
-                 workflow: @workflow,
-                 trigger_node_id: @trigger_node.id,
-                 status: :rate_limited,
-                 trigger_data: @trigger_data,
-                 workflow_data: WorkflowSnapshot.snapshot(@workflow),
-                 execution_mode: @execution_mode,
-                 started_at: now,
-                 finished_at: now,
-               )
+        return(
+          DiscourseWorkflows::Execution.create!(
+            workflow: @workflow,
+            trigger_node_id: @trigger_node.id,
+            status: :rate_limited,
+            trigger_data: @trigger_data,
+            workflow_data: WorkflowSnapshot.snapshot(@workflow),
+            execution_mode: @execution_mode,
+            started_at: now,
+            finished_at: now,
+          )
+        )
       end
 
       @state.start!

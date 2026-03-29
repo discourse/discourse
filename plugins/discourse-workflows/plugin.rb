@@ -97,6 +97,10 @@ after_initialize do
     DiscourseWorkflows::Registry.register_credential_type(
       DiscourseWorkflows::CredentialTypes::BasicAuth,
     )
+
+    DiscourseWorkflows::Registry.register_credential_type(
+      DiscourseWorkflows::CredentialTypes::BearerToken,
+    )
   end
 
   DiscourseWorkflows::Registry.triggers.each do |trigger_class|

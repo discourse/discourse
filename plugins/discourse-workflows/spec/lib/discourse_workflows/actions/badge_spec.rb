@@ -28,7 +28,11 @@ RSpec.describe DiscourseWorkflows::Actions::Badge::V1 do
 
     context "with grant operation" do
       it "grants the badge to the user" do
-        config = { "operation" => "grant", "username" => user.username, "badge_id" => badge.id.to_s }
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+        }
 
         result = action.execute_single({}, item: item, config: config)
 
@@ -42,7 +46,11 @@ RSpec.describe DiscourseWorkflows::Actions::Badge::V1 do
       it "does not duplicate a non-multiple-grant badge" do
         BadgeGranter.grant(badge, user, granted_by: Discourse.system_user)
 
-        config = { "operation" => "grant", "username" => user.username, "badge_id" => badge.id.to_s }
+        config = {
+          "operation" => "grant",
+          "username" => user.username,
+          "badge_id" => badge.id.to_s,
+        }
 
         expect { action.execute_single({}, item: item, config: config) }.not_to change {
           UserBadge.where(user: user, badge: badge).count

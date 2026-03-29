@@ -765,9 +765,9 @@ RSpec.describe DiscourseWorkflows::Executor do
       trigger_node = build_workflow
       trigger_data = { topic_id: -999, tags: [] }
 
-      expect {
-        described_class.new(trigger_node, trigger_data).run
-      }.not_to change { DiscourseWorkflows::Execution.where(execution_mode: :error_mode).count }
+      expect { described_class.new(trigger_node, trigger_data).run }.not_to change {
+        DiscourseWorkflows::Execution.where(execution_mode: :error_mode).count
+      }
     end
 
     it "does not trigger error workflow when it is disabled" do

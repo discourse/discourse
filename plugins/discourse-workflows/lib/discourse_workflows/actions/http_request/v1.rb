@@ -34,6 +34,20 @@ module DiscourseWorkflows
               type: :string,
               required: true,
             },
+            authentication: {
+              type: :options,
+              options: %w[none basic_auth bearer_token],
+              default: "none",
+              ui: {
+                expression: true,
+              },
+            },
+            credential_id: {
+              type: :credential,
+              visible_if: {
+                authentication: %w[basic_auth bearer_token],
+              },
+            },
             headers: {
               type: :collection,
               item_schema: {
@@ -87,6 +101,7 @@ module DiscourseWorkflows
 
           uri = build_uri(url, config["query_params"])
           headers = build_headers(config["headers"])
+          apply_authentication(config, headers)
           body = build_body(method, config["body"], headers)
 
           @logs ||= []
@@ -141,6 +156,30 @@ module DiscourseWorkflows
           return nil if %i[post put patch].exclude?(method) || body_config.blank?
           headers["Content-Type"] ||= "application/json"
           body_config
+        end
+
+        def apply_authentication(config, headers)
+          auth_mode = config["authentication"] || "none"
+          return if auth_mode == "none"
+
+          credential_id = config["credential_id"]
+          return if credential_id.blank?
+
+          credential = DiscourseWorkflows::Credential.find_by(id: credential_id)
+          return unless credential
+
+          cred_data = credential.decrypted_data
+          resolver = DiscourseWorkflows::ExpressionResolver.new({})
+
+          case auth_mode
+          when "basic_auth"
+            user = resolver.resolve(cred_data["user"])
+            password = resolver.resolve(cred_data["password"])
+            headers["Authorization"] = "Basic #{Base64.strict_encode64("#{user}:#{password}")}"
+          when "bearer_token"
+            token = resolver.resolve(cred_data["token"])
+            headers["Authorization"] = "Bearer #{token}"
+          end
         end
 
         def parse_response_body(response)
