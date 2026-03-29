@@ -74,12 +74,14 @@ export default class PropertyEngineCredential extends Component {
         @onChange={{this.handleChange}}
         @options={{hash none="discourse_workflows.credentials.select_type"}}
       />
-      <DButton
-        @action={{this.setupCredential}}
-        @label="discourse_workflows.credentials.set_up_credential"
-        @icon="plus"
-        class="btn-small"
-      />
+      {{#unless @value}}
+        <DButton
+          @action={{this.setupCredential}}
+          @label="discourse_workflows.credentials.set_up_credential"
+          @icon="plus"
+          class="btn-small btn-icon-text"
+        />
+      {{/unless}}
     </div>
   </template>
 }
