@@ -9,6 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import AdminTable from "../admin-table";
 import EmptyState from "../empty-state";
+import InUseDialog from "./in-use-dialog";
 import CredentialModal from "./modal";
 
 export default class CredentialsManager extends Component {
@@ -113,7 +114,19 @@ export default class CredentialsManager extends Component {
           );
           await this.loadCredentials();
         } catch (e) {
-          popupAjaxError(e);
+          const body = e.jqXHR?.responseJSON;
+          if (body?.type === "credential_in_use") {
+            this.dialog.alert({
+              title: i18n("discourse_workflows.credentials.in_use_title"),
+              bodyComponent: InUseDialog,
+              bodyComponentModel: {
+                workflows: body.referencing_workflows,
+                close: () => this.dialog.cancel(),
+              },
+            });
+          } else {
+            popupAjaxError(e);
+          }
         }
       },
     });

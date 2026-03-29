@@ -480,6 +480,8 @@ en:
         set_up_credential: "Set up credential"
         select_type: "Select type"
         referenced_by_workflows: "This credential is used by workflows and cannot be deleted. Remove references first."
+        in_use_title: "Credential in use"
+        in_use_description: "This credential cannot be deleted because it is used by the following workflows:"
       data_tables:
         title: "Data Tables"
         add: "Add Data Table"

@@ -5,6 +5,7 @@ en:
       invalid_cron_expression: "Cron expression must be a valid 5-field cron expression."
       not_enabled: "The discourse-workflows plugin is not enabled."
       invalid_credential_type: "Unknown credential type"
+      credential_referenced_by_workflows: "This credential is used by the following workflows: %{workflows}. Remove references first."
       create_post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
     wait:

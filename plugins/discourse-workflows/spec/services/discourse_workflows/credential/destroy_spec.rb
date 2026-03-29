@@ -40,7 +40,7 @@ RSpec.describe DiscourseWorkflows::Credential::Destroy do
         )
       end
 
-      it { is_expected.to fail_a_policy(:not_referenced_by_nodes) }
+      it { is_expected.to fail_a_policy(:not_referenced_by_workflows) }
     end
 
     context "when everything is valid" do

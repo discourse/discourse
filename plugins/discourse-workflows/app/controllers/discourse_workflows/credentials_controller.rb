@@ -86,8 +86,18 @@ module DiscourseWorkflows
         on_success { head :no_content }
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_failed_policy(:can_manage_workflows) { raise Discourse::InvalidAccess }
-        on_failed_policy(:not_referenced_by_nodes) do
-          render(json: failed_json, status: :unprocessable_entity)
+        on_failed_policy(:not_referenced_by_workflows) do
+          render(
+            json:
+              failed_json.merge(
+                type: "credential_in_use",
+                referencing_workflows:
+                  result[:referencing_workflows]
+                    .pluck(:id, :name)
+                    .map { |id, name| { id:, name: } },
+              ),
+            status: :unprocessable_entity,
+          )
         end
         on_model_not_found(:credential) { raise Discourse::NotFound }
       end

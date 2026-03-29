@@ -8,7 +8,8 @@ module DiscourseWorkflows
 
     model :credential
     policy :can_manage_workflows
-    policy :not_referenced_by_nodes
+    model :referencing_workflows, optional: true
+    policy :not_referenced_by_workflows
     step :log_credential_deletion
     step :destroy_credential
 
@@ -22,11 +23,15 @@ module DiscourseWorkflows
       guardian.is_admin?
     end
 
-    def not_referenced_by_nodes(credential:)
-      !DiscourseWorkflows::Node.where(
-        "configuration->>'credential_id' = ?",
-        credential.id.to_s,
-      ).exists?
+    def fetch_referencing_workflows(credential:)
+      DiscourseWorkflows::Workflow
+        .joins(:nodes)
+        .where("discourse_workflows_nodes.configuration->>'credential_id' = ?", credential.id.to_s)
+        .distinct
+    end
+
+    def not_referenced_by_workflows(referencing_workflows:)
+      referencing_workflows.empty?
     end
 
     def log_credential_deletion(credential:, guardian:)
