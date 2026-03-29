@@ -515,7 +515,7 @@ en:
         zoom_out: "Zoom out [-]"
         undo: "Undo"
         redo: "Redo"
-        auto_layout: "Auto layout"
+        auto_layout: "Auto layout [2]"
         add_step: "Add step"
         remove_connection: "Remove connection"
         export_nodes: "Export"

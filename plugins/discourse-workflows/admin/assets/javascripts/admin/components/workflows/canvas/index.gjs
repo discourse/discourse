@@ -153,9 +153,7 @@ export default class WorkflowCanvas extends Component {
 
           if (node?.type === "trigger:webhook" && node.configuration?.path) {
             window.open(
-              getAbsoluteURL(
-                `/workflows/webhooks/${node.configuration.path}`
-              ),
+              getAbsoluteURL(`/workflows/webhooks/${node.configuration.path}`),
               "_blank"
             );
             return;
@@ -455,6 +453,8 @@ export default class WorkflowCanvas extends Component {
       default:
         if (event.code === "Digit1") {
           this.fitToView();
+        } else if (event.code === "Digit2") {
+          this.autoLayout();
         }
         break;
     }

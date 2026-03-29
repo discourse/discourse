@@ -3,6 +3,11 @@
 module PageObjects
   module Pages
     class WorkflowEditor < PageObjects::Pages::Base
+      def visit(workflow_id)
+        page.visit("/admin/plugins/discourse-workflows/#{workflow_id}")
+        self
+      end
+
       def visit_new
         page.visit("/admin/plugins/discourse-workflows/new")
         self
@@ -39,6 +44,26 @@ module PageObjects
 
       def has_empty_state_add_node?
         page.has_css?(".workflows-canvas__empty-state-trigger")
+      end
+
+      def press_canvas_shortcut(key)
+        find(".workflows-canvas").click
+        find(".workflows-canvas").send_keys(key)
+        self
+      end
+
+      def node_left(label)
+        page.evaluate_script(<<~JS)
+            (() => {
+              const label = #{label.to_json};
+              const node = [...document.querySelectorAll(".workflow-rete-node")].find(
+                (element) =>
+                  element.querySelector(".workflow-rete-node__label")?.textContent?.trim() === label
+              );
+
+              return node?.getBoundingClientRect().left;
+            })()
+          JS
       end
 
       NODE_TYPE_LABELS = {
