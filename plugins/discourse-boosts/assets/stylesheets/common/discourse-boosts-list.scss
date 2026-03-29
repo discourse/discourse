@@ -1,0 +1,20 @@
+.discourse-boosts {
+  &__post-menu {
+    padding: var(--space-1) 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    align-items: center;
+  }
+
+  &__add-btn {
+    color: var(--primary-medium);
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}

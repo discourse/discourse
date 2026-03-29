@@ -1615,6 +1615,7 @@ en:
       activity_stream: "Activity"
       read: "Read"
       read_help: "Recently read topics"
+      appreciations: "Appreciations"
       preferences:
         title: "Preferences"
         profile:

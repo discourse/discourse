@@ -208,12 +208,21 @@
 
 .user-stream .child-actions, /* DEPRECATED: '.user-stream .child-actions' selector*/
 .user-stream-item-actions,
+.appreciation-action,
 .user-stream-item-draft-actions {
   margin-top: 8px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25em;
 
   .avatar-link {
     float: none;
     margin-right: 3px;
+  }
+
+  .reaction-emoji {
+    height: 15px;
   }
 
   .fa {
