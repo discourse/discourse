@@ -16,6 +16,10 @@ module DiscourseWorkflows
           "purple"
         end
 
+        def self.manually_triggerable?
+          true
+        end
+
         def self.output_schema
           WebhookSchema::OUTPUT_FIELDS
         end

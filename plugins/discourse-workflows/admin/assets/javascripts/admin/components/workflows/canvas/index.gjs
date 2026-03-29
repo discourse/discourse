@@ -151,6 +151,16 @@ export default class WorkflowCanvas extends Component {
             return;
           }
 
+          if (node?.type === "trigger:webhook" && node.configuration?.path) {
+            window.open(
+              getAbsoluteURL(
+                `/workflows/webhooks/${node.configuration.path}`
+              ),
+              "_blank"
+            );
+            return;
+          }
+
           const result = await ajax(
             `/admin/plugins/discourse-workflows/executions.json`,
             {
