@@ -3,6 +3,12 @@ import { cancel, later } from "@ember/runloop";
 import loadRete from "discourse/lib/load-rete";
 import { i18n } from "discourse-i18n";
 import {
+  buildOutgoingIndex,
+  collectLoopBodyNodeIds,
+  LOOP_NODE_TYPE,
+  LOOP_OUTPUT,
+} from "../../../lib/workflows/graph-constants";
+import {
   nodeHeight,
   nodeLabel,
   nodeWidth,
@@ -548,9 +554,13 @@ function createCustomRenderer(Scope, iconHTML, callbacks) {
         }
 
         let finalX = pos.x + x + socketEl.offsetWidth / 2;
-        const pill = socketEl.querySelector(".workflow-rete-node__port-pill");
-        if (pill) {
-          finalX += pill.offsetWidth + 12;
+        if (side === "output" && key !== "loop") {
+          const pill = socketEl.parentElement?.querySelector(
+            ".workflow-rete-node__port-pill"
+          );
+          if (pill) {
+            finalX += pill.offsetWidth + 12;
+          }
         }
 
         return {
@@ -1110,6 +1120,47 @@ export async function createReteEditor(container, { iconHTML, callbacks }) {
   }
 
   async function autoArrange() {
+    const allConns = editor.getConnections();
+    const outgoing = buildOutgoingIndex(allConns, "source");
+
+    // Identify loop nodes and collect full body chains
+    const loopReteIds = new Set();
+    for (const node of editor.getNodes()) {
+      if (node.workflowData?.type === LOOP_NODE_TYPE) {
+        loopReteIds.add(node.id);
+      }
+    }
+
+    const bodyByLoop = new Map();
+    const allBodyIds = new Set();
+    for (const loopId of loopReteIds) {
+      const bodyIds = collectLoopBodyNodeIds(loopId, outgoing, {
+        targetKey: "target",
+        outputKey: "sourceOutput",
+      });
+      if (bodyIds.size > 0) {
+        bodyByLoop.set(loopId, bodyIds);
+        for (const id of bodyIds) {
+          allBodyIds.add(id);
+        }
+      }
+    }
+
+    // Temporarily break cycles: remove self-loops, body→loop returns,
+    // and all connections between body nodes (we'll position them manually)
+    const removedConnections = allConns.filter(
+      (c) =>
+        (c.source === c.target && loopReteIds.has(c.source)) ||
+        (loopReteIds.has(c.target) && allBodyIds.has(c.source)) ||
+        (allBodyIds.has(c.source) && allBodyIds.has(c.target)) ||
+        (loopReteIds.has(c.source) &&
+          c.sourceOutput === LOOP_OUTPUT &&
+          c.source !== c.target)
+    );
+    for (const conn of removedConnections) {
+      await editor.removeConnection(conn.id);
+    }
+
     await arrange.layout({
       options: {
         "elk.algorithm": "layered",
@@ -1118,6 +1169,58 @@ export async function createReteEditor(container, { iconHTML, callbacks }) {
         "elk.layered.spacing.nodeNodeBetweenLayers": "80",
       },
     });
+
+    for (const conn of removedConnections) {
+      await editor.addConnection(conn);
+    }
+
+    // Arrange body nodes below their loop node in chain order
+    for (const [loopId, bodyIds] of bodyByLoop) {
+      const loopView = area.nodeViews.get(loopId);
+      if (!loopView) {
+        continue;
+      }
+
+      // Walk the chain from the loop's direct target to get correct order
+      const ordered = [];
+      const visited = new Set();
+      let current = null;
+      for (const c of allConns) {
+        if (
+          c.source === loopId &&
+          c.sourceOutput === LOOP_OUTPUT &&
+          c.target !== loopId
+        ) {
+          current = c.target;
+          break;
+        }
+      }
+      while (current && bodyIds.has(current) && !visited.has(current)) {
+        ordered.push(current);
+        visited.add(current);
+        let next = null;
+        for (const c of outgoing.get(current) || []) {
+          if (c.target !== loopId) {
+            next = c.target;
+            break;
+          }
+        }
+        current = next;
+      }
+
+      // Layout in a row below the loop node.
+      // Reverse so first body node (loop output target) is on the right
+      // and last body node (returns to loop input) is on the left.
+      ordered.reverse();
+      const totalWidth = ordered.length * 180 - 50;
+      const startX = loopView.position.x - totalWidth / 2 + 65;
+      for (let i = 0; i < ordered.length; i++) {
+        const bodyView = area.nodeViews.get(ordered[i]);
+        if (bodyView) {
+          await bodyView.translate(startX + i * 180, loopView.position.y + 160);
+        }
+      }
+    }
 
     const positions = new Map();
     for (const [clientId, reteId] of nodeMap) {

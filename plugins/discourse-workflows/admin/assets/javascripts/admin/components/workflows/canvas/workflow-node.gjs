@@ -28,10 +28,20 @@ function isPositivePort(key) {
   return key === "true" || key === "loop" || key === "done";
 }
 
+function isOutputConnected(connectedOutputKeys, key) {
+  return connectedOutputKeys?.has(key) ?? false;
+}
+
 export default class WorkflowNode extends Component {
   @service router;
 
   stopPropagation = (e) => e.stopPropagation();
+
+  handleOutputAddNode = (key, e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    this.args.onOutputAddNode?.(this.data.clientId, key);
+  };
 
   handleDelete = (e) => {
     e.stopPropagation();
@@ -172,14 +182,15 @@ export default class WorkflowNode extends Component {
 
         <div class="workflow-rete-node__outputs">
           {{#each this.outputKeys as |key|}}
-            <div
-              class="workflow-rete-node__socket --output
-                {{if (eq key 'loop') ' --loop'}}"
-              data-socket-key={{key}}
-              {{didInsert
-                (fn @onSocketRendered @node.id "output" key @node.outputs)
-              }}
-            >
+            <div class="workflow-rete-node__output-row">
+              <div
+                class="workflow-rete-node__socket --output
+                  {{if (eq key 'loop') ' --loop'}}"
+                data-socket-key={{key}}
+                {{didInsert
+                  (fn @onSocketRendered @node.id "output" key @node.outputs)
+                }}
+              />
               {{#if this.isBranching}}
                 <span
                   class="workflow-rete-node__port-pill
@@ -188,6 +199,16 @@ export default class WorkflowNode extends Component {
                   {{portLabel this.data.type key}}
                 </span>
               {{/if}}
+              {{#unless (isOutputConnected @connectedOutputKeys key)}}
+                <button
+                  type="button"
+                  class="workflow-rete-node__output-add-btn"
+                  {{on "pointerdown" this.stopPropagation}}
+                  {{on "click" (fn this.handleOutputAddNode key)}}
+                >
+                  {{icon "plus"}}
+                </button>
+              {{/unless}}
             </div>
           {{/each}}
         </div>

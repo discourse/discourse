@@ -787,6 +787,23 @@ export default class WorkflowsEditor extends Component {
 
     if (ctx.loopNodeClientId) {
       this.addNodeToLoop(ctx.loopNodeClientId, nodeType);
+    } else if (ctx.sourceClientId) {
+      const sourceNode = this.formApi
+        .get("nodes")
+        .find((n) => n.clientId === ctx.sourceClientId);
+      const position = sourceNode?.position
+        ? { x: sourceNode.position.x + 200, y: sourceNode.position.y }
+        : null;
+      if (position) {
+        this.addNodeAtPosition(
+          ctx.sourceClientId,
+          ctx.sourceOutput,
+          nodeType,
+          position
+        );
+      } else {
+        this.addNode(ctx.sourceClientId, ctx.sourceOutput, nodeType);
+      }
     } else if (ctx.connectionSource) {
       this.insertNodeOnConnection(
         ctx.connectionSource,

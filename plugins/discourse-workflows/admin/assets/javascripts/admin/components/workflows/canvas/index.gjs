@@ -22,6 +22,10 @@ import { createReteEditor } from "./rete-editor";
 import StickyNotesLayer from "./sticky-notes-layer";
 import WorkflowNode from "./workflow-node";
 
+function connectedOutputKeysFor(map, clientId) {
+  return map?.get(clientId);
+}
+
 const PAUSED_SHORTCUTS = ["-", "="];
 
 export default class WorkflowCanvas extends Component {
@@ -238,12 +242,17 @@ export default class WorkflowCanvas extends Component {
       return;
     }
 
+    const prevNodeCount = this.reteApi.editor.getNodes().length;
+
     await this.reteApi.syncState(
       this.args.nodes || [],
       this.args.connections || []
     );
 
-    if (this._isFirstSync) {
+    const nodeCountChanged =
+      this.reteApi.editor.getNodes().length !== prevNodeCount;
+
+    if (this._isFirstSync || nodeCountChanged) {
       this._isFirstSync = false;
       await this.reteApi.fitToView(this.#stickyNoteRects);
     }
@@ -253,6 +262,19 @@ export default class WorkflowCanvas extends Component {
 
   get nodeEntries() {
     return this.reteApi?.renderer?.nodeEntryList ?? [];
+  }
+
+  get connectedOutputKeysByNode() {
+    const map = new Map();
+    for (const conn of this.args.connections || []) {
+      const nodeId = conn.sourceClientId;
+      const output = conn.sourceOutput || "main";
+      if (!map.has(nodeId)) {
+        map.set(nodeId, new Set());
+      }
+      map.get(nodeId).add(output);
+    }
+    return map;
   }
 
   get showEmptyState() {
@@ -317,6 +339,14 @@ export default class WorkflowCanvas extends Component {
     }
     this.closeContextMenu();
     this.args.onOpenNodePanel?.(this.#viewportCenter());
+  }
+
+  @action
+  handleOutputAddNode(sourceClientId, sourceOutput) {
+    this.args.onOpenNodePanel?.({
+      sourceClientId,
+      sourceOutput,
+    });
   }
 
   @action
@@ -718,6 +748,11 @@ export default class WorkflowCanvas extends Component {
             @onDelete={{this.reteApi.renderer.onNodeDelete}}
             @onManualTrigger={{this.reteApi.renderer.onManualTrigger}}
             @onSocketRendered={{this.reteApi.renderer.onSocketRendered}}
+            @onOutputAddNode={{this.handleOutputAddNode}}
+            @connectedOutputKeys={{connectedOutputKeysFor
+              this.connectedOutputKeysByNode
+              entry.node.workflowData.clientId
+            }}
             @manuallyTriggerableTypes={{this.manuallyTriggerableTypes}}
             @workflowEnabled={{@workflowEnabled}}
           />

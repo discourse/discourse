@@ -287,10 +287,6 @@
     }
 
     &.--output {
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-
       &.--loop {
         cursor: default;
         pointer-events: none;
@@ -309,7 +305,27 @@
   }
 
   &.--branching &__outputs {
-    top: calc(50% - 15px);
+    top: calc(50% - 16px);
+    gap: var(--space-2);
+  }
+
+  &__output-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    position: relative;
+    width: 12px;
+    height: 12px;
+
+    &:has(.workflow-rete-node__output-add-btn)::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: 0;
+      right: -80px;
+      bottom: -4px;
+    }
   }
 
   &__port-pill {
@@ -321,11 +337,52 @@
     line-height: 1;
     white-space: nowrap;
     position: absolute;
-    left: 16px;
+    left: 22px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--primary-medium);
     padding: 1px 3px;
+  }
+
+  &__output-add-btn {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-low-mid);
+    background: var(--secondary);
+    color: var(--primary-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: absolute;
+    left: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+
+    .d-icon {
+      width: 10px;
+      height: 10px;
+    }
+
+    &:hover {
+      border-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+  }
+
+  &.--branching &__output-add-btn {
+    left: 70px;
+  }
+
+  &:hover &__output-add-btn,
+  &__output-row:hover &__output-add-btn {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
