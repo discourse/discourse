@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-jquery, ember/no-private-routing-service */
+/* eslint-disable ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
@@ -395,6 +395,16 @@ class DiscourseURL extends EmberObject {
 
         if (!routeOpts.keepFilter) {
           opts.cancelFilter = true;
+        }
+
+        // If the post is not currently in the post stream, scroll to the top
+        // so the loading spinner will be visible while loading new posts,
+        // regardless of the previous post number.
+        const nearPostNumber = parseInt(opts.nearPost, 10);
+        if (
+          !postStream.posts.some((post) => post.post_number === nearPostNumber)
+        ) {
+          window.scrollTo(0, 0);
         }
 
         postStream.refresh(opts).then(() => {

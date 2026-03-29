@@ -39,12 +39,13 @@ import TopicTitle from "discourse/components/topic-title";
 import TopicTitleEditor from "discourse/components/topic-title-editor";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import { and, eq } from "discourse/truth-helpers";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import booleanString from "../helpers/boolean-string";
 
@@ -100,7 +101,12 @@ export default <template>
     {{/unless}}
 
     {{#if @controller.model.postStream.loaded}}
-      {{#if @controller.model.postStream.firstPostPresent}}
+      {{#if
+        (and
+          @controller.model.postStream.firstPostPresent
+          (not @controller.model.postStream.loadingFilter)
+        )
+      }}
         <TopicTitle
           @cancelled={{@controller.cancelEditingTopic}}
           @save={{@controller.finishedEditingTopic}}
@@ -232,7 +238,12 @@ export default <template>
 
       {{/if}}
 
-      <div class="container posts">
+      <div
+        class={{concatClass
+          "container posts"
+          (if @controller.model.postStream.loadingFilter "posts--loading")
+        }}
+      >
         <div class="selected-posts {{unless @controller.multiSelect 'hidden'}}">
           <SelectedPosts
             @selectedPostsCount={{@controller.selectedPostsCount}}
@@ -250,7 +261,13 @@ export default <template>
           />
         </div>
 
-        {{#if (and @controller.showBottomTopicMap @controller.loadedAllPosts)}}
+        {{#if
+          (and
+            @controller.showBottomTopicMap
+            @controller.loadedAllPosts
+            (not @controller.model.postStream.loadingFilter)
+          )
+        }}
           <div class="topic-map --bottom">
             <TopicMap
               @model={{@controller.model}}
@@ -435,7 +452,12 @@ export default <template>
                 />
               {{/unless}}
 
-              {{#if @controller.model.postStream.lastPostNotLoaded}}
+              {{#if
+                (or
+                  @controller.model.postStream.lastPostNotLoaded
+                  @controller.model.postStream.loadingFilter
+                )
+              }}
                 {{hideScrollableContent "below"}}
               {{/if}}
             </div>
@@ -571,7 +593,12 @@ export default <template>
         </div>
 
       </div>
-      {{#if @controller.loadedAllPosts}}
+      {{#if
+        (and
+          @controller.loadedAllPosts
+          (not @controller.model.postStream.loadingFilter)
+        )
+      }}
         {{#if @controller.session.showSignupCta}}
           {{! replace "Log In to Reply" with the infobox }}
           <SignupCta />

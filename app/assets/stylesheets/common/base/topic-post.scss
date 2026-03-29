@@ -2345,3 +2345,17 @@ span.post-count {
     }
   }
 }
+
+.container.posts.posts--loading {
+  box-sizing: border-box;
+  min-height: calc(100dvh - var(--main-outlet-offset));
+  margin-bottom: 0;
+}
+
+#main-outlet:has(.container.posts.posts--loading):not(:has(#topic-title)) {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 0;
+}
