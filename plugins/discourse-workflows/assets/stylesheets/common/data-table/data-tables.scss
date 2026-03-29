@@ -1,42 +1,12 @@
-.workflows-data-tables-manager {
-  &__toolbar {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: var(--space-3);
-  }
+.workflows-data-tables-manager__name-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--tertiary);
 
-  &__table {
-    width: 100%;
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-
-    th,
-    td {
-      padding: var(--space-2) var(--space-3);
-    }
-
-    th {
-      text-align: left;
-      font-weight: normal;
-      border-bottom: 1px solid var(--primary-low);
-    }
-  }
-
-  &__actions {
-    text-align: right;
-    white-space: nowrap;
-  }
-
-  &__name-link {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--tertiary);
-
-    &:hover {
-      text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
   }
 }
 

@@ -1,24 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, concat, fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import AdminTable from "../admin-table";
 import EmptyState from "../empty-state";
-
-const indeterminate = modifier((element, [value]) => {
-  element.indeterminate = value;
-});
 
 export default class ExecutionsManager extends Component {
   @service currentUser;
@@ -28,9 +20,6 @@ export default class ExecutionsManager extends Component {
   @tracked loadMoreUrl = null;
   @tracked totalRows = 0;
   @tracked loadingMore = false;
-  @tracked selectedIds = new Set();
-
-  lastClickedRowIndex = null;
 
   constructor() {
     super(...arguments);
@@ -79,80 +68,18 @@ export default class ExecutionsManager extends Component {
     return this.executions === null;
   }
 
-  get hasSelection() {
-    return this.selectedIds.size > 0;
-  }
-
-  get allSelected() {
-    return (
-      this.executions?.length > 0 &&
-      this.selectedIds.size === this.executions.length
-    );
-  }
-
-  get headerCheckboxState() {
-    if (this.selectedIds.size === 0) {
-      return "none";
-    }
-    if (this.selectedIds.size === this.executions?.length) {
-      return "all";
-    }
-    return "indeterminate";
-  }
-
   @action
-  isRowSelected(id) {
-    return this.selectedIds.has(id);
-  }
-
-  @action
-  toggleRowSelection(id, event) {
-    const currentIndex = this.executions.findIndex((e) => e.id === id);
-    const next = new Set(this.selectedIds);
-
-    if (event?.shiftKey && this.lastClickedRowIndex !== null) {
-      const from = Math.min(this.lastClickedRowIndex, currentIndex);
-      const to = Math.max(this.lastClickedRowIndex, currentIndex);
-      for (let i = from; i <= to; i++) {
-        next.add(this.executions[i].id);
-      }
-    } else if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
-    }
-
-    this.lastClickedRowIndex = currentIndex;
-    this.selectedIds = next;
-  }
-
-  @action
-  clearSelection() {
-    this.selectedIds = new Set();
-    this.lastClickedRowIndex = null;
-  }
-
-  @action
-  toggleAllSelection() {
-    if (this.allSelected) {
-      this.selectedIds = new Set();
-    } else {
-      this.selectedIds = new Set(this.executions.map((e) => e.id));
-    }
-  }
-
-  @action
-  async deleteSelected() {
-    const count = this.selectedIds.size;
+  async deleteSelected(selectedIds, clearSelection) {
+    const count = selectedIds.size;
     this.dialog.yesNoConfirm({
       message: i18n("discourse_workflows.executions.delete_confirm", { count }),
       didConfirm: async () => {
         try {
           await ajax("/admin/plugins/discourse-workflows/executions.json", {
             type: "DELETE",
-            data: { ids: [...this.selectedIds] },
+            data: { ids: [...selectedIds] },
           });
-          this.selectedIds = new Set();
+          clearSelection();
           await this.loadExecutions();
         } catch (e) {
           popupAjaxError(e);
@@ -195,113 +122,88 @@ export default class ExecutionsManager extends Component {
   }
 
   <template>
-    <div class="workflows-executions-manager">
-      <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-        {{#if this.executions.length}}
-          {{#if this.hasSelection}}
-            <div class="workflows-executions-manager__toolbar">
-              <DButton
-                @action={{this.deleteSelected}}
-                @label="discourse_workflows.executions.delete_selected"
-                @icon="trash-can"
-                class="btn-danger btn-small"
-              />
-              <DButton
-                @action={{this.clearSelection}}
-                @icon="xmark"
-                @label="discourse_workflows.executions.clear_selection"
-                class="btn-default btn-small"
-              />
-            </div>
-          {{/if}}
-          <LoadMore @action={{this.loadMore}} @enabled={{this.canLoadMore}}>
-            <table class="workflows-executions-manager__table">
-              <thead>
-                <tr>
-                  <th class="workflows-executions-manager__checkbox-cell">
-                    <input
-                      type="checkbox"
-                      checked={{this.allSelected}}
-                      {{indeterminate
-                        (eq this.headerCheckboxState "indeterminate")
-                      }}
-                      {{on "change" this.toggleAllSelection}}
-                      class="workflows-executions-manager__checkbox"
-                    />
-                    {{i18n "discourse_workflows.executions.id"}}
-                  </th>
-                  {{#unless @workflowId}}
-                    <th>{{i18n "discourse_workflows.executions.workflow"}}</th>
-                  {{/unless}}
-                  <th>{{i18n "discourse_workflows.executions.status"}}</th>
-                  <th>{{i18n "discourse_workflows.executions.started_at"}}</th>
-                  <th>{{i18n "discourse_workflows.executions.run_time"}}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {{#each this.executions as |execution|}}
-                  <tr>
-                    <td class="workflows-executions-manager__checkbox-cell">
-                      <input
-                        type="checkbox"
-                        checked={{this.isRowSelected execution.id}}
-                        {{on "click" (fn this.toggleRowSelection execution.id)}}
-                        class="workflows-executions-manager__checkbox"
-                      />
-                      {{execution.id}}
-                    </td>
-                    {{#unless @workflowId}}
-                      <td>
-                        <LinkTo
-                          @route="adminPlugins.show.discourse-workflows.show"
-                          @model={{execution.workflow_id}}
-                        >{{execution.workflow_name}}</LinkTo>
-                      </td>
-                    {{/unless}}
-                    <td>
-                      <span
-                        class="workflows-executions-manager__status --{{execution.status}}"
-                      >
-                        {{icon (this.statusIcon execution.status)}}
-                        {{i18n
-                          (concat
-                            "discourse_workflows.executions.statuses."
-                            execution.status
-                          )
-                        }}
-                      </span>
-                    </td>
-                    <td>{{this.formatTime execution.started_at}}</td>
-                    <td>{{this.runTime execution}}</td>
-                    <td class="workflows-executions-manager__actions">
-                      <LinkTo
-                        @route="adminPlugins.show.discourse-workflows.show.executions.show"
-                        @models={{array execution.workflow_id execution.id}}
-                        class="btn btn-flat btn-small"
-                      >
-                        {{i18n "discourse_workflows.executions.details"}}
-                      </LinkTo>
-                    </td>
-                  </tr>
-                {{/each}}
-              </tbody>
-            </table>
-            <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
-          </LoadMore>
-        {{else}}
-          <EmptyState
-            @emoji="👋"
-            @title={{i18n
-              "discourse_workflows.executions.empty_title"
-              username=this.currentUser.username
+    <AdminTable
+      @items={{this.executions}}
+      @isLoading={{this.isLoading}}
+      @canLoadMore={{this.canLoadMore}}
+      @loadMore={{this.loadMore}}
+      @loadingMore={{this.loadingMore}}
+      @selectable={{true}}
+    >
+      <:empty>
+        <EmptyState
+          @emoji="👋"
+          @title={{i18n
+            "discourse_workflows.executions.empty_title"
+            username=this.currentUser.username
+          }}
+          @description={{i18n
+            "discourse_workflows.executions.empty_description"
+          }}
+        />
+      </:empty>
+      <:toolbar as |toolbar|>
+        {{#if toolbar.hasSelection}}
+          <DButton
+            @action={{fn
+              this.deleteSelected
+              toolbar.selectedIds
+              toolbar.clearSelection
             }}
-            @description={{i18n
-              "discourse_workflows.executions.empty_description"
-            }}
+            @label="discourse_workflows.executions.delete_selected"
+            @icon="trash-can"
+            class="btn-danger btn-small"
+          />
+          <DButton
+            @action={{toolbar.clearSelection}}
+            @icon="xmark"
+            @label="discourse_workflows.executions.clear_selection"
+            class="btn-default btn-small"
           />
         {{/if}}
-      </ConditionalLoadingSpinner>
-    </div>
+      </:toolbar>
+      <:head>
+        {{#unless @workflowId}}
+          <th>{{i18n "discourse_workflows.executions.workflow"}}</th>
+        {{/unless}}
+        <th>{{i18n "discourse_workflows.executions.status"}}</th>
+        <th>{{i18n "discourse_workflows.executions.started_at"}}</th>
+        <th>{{i18n "discourse_workflows.executions.run_time"}}</th>
+        <th></th>
+      </:head>
+      <:row as |execution|>
+        {{#unless @workflowId}}
+          <td>
+            <LinkTo
+              @route="adminPlugins.show.discourse-workflows.show"
+              @model={{execution.workflow_id}}
+            >{{execution.workflow_name}}</LinkTo>
+          </td>
+        {{/unless}}
+        <td>
+          <span
+            class="workflows-executions-manager__status --{{execution.status}}"
+          >
+            {{icon (this.statusIcon execution.status)}}
+            {{i18n
+              (concat
+                "discourse_workflows.executions.statuses." execution.status
+              )
+            }}
+          </span>
+        </td>
+        <td>{{this.formatTime execution.started_at}}</td>
+        <td>{{this.runTime execution}}</td>
+        <td class="workflows-admin-table__actions">
+          <LinkTo
+            @route="adminPlugins.show.discourse-workflows.show.executions.show"
+            @models={{array execution.workflow_id execution.id}}
+            class="btn btn-flat btn-small"
+          >
+            {{i18n "discourse_workflows.executions.details"}}
+          </LinkTo>
+        </td>
+      </:row>
+    </AdminTable>
   </template>
 }

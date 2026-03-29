@@ -1,7 +1,8 @@
-.workflows-variables-manager {
+.workflows-admin-table {
   &__toolbar {
     display: flex;
     justify-content: flex-end;
+    gap: var(--space-2);
     margin-bottom: var(--space-3);
   }
 
@@ -25,5 +26,14 @@
   &__actions {
     text-align: right;
     white-space: nowrap;
+  }
+
+  &__checkbox-cell {
+    white-space: nowrap;
+  }
+
+  &__checkbox {
+    cursor: pointer;
+    margin: 0;
   }
 }
