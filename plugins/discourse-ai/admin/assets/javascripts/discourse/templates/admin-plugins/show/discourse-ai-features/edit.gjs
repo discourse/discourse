@@ -26,47 +26,85 @@ export default <template>
               class="ai-feature-editor"
               as |form|
             >
-              {{#each @model.settingGroups as |group|}}
-                <form.Section @title={{i18n group.titleKey}}>
-                  {{#each group.settings as |settingName|}}
-                    {{#let (@controller.findSetting settingName) as |setting|}}
-                      {{#if setting}}
-                        <form.Field
-                          @name={{setting.setting}}
-                          @title={{setting.humanized_name}}
-                          @description={{if
-                            (eq setting.type "bool")
-                            null
-                            setting.description
-                          }}
-                          @format="large"
-                          @validation={{@controller.getValidationFor setting}}
-                          @type={{if
-                            (eq setting.type "bool")
-                            "checkbox"
-                            (if
-                              (eq setting.type "integer")
-                              "input-number"
+              {{#if @model.settingGroups.length}}
+                {{#each @model.settingGroups as |group|}}
+                  <form.Section @title={{i18n group.titleKey}}>
+                    {{#each group.settings as |settingName|}}
+                      {{#let
+                        (@controller.findSetting settingName)
+                        as |setting|
+                      }}
+                        {{#if setting}}
+                          <form.Field
+                            @name={{setting.setting}}
+                            @title={{setting.humanized_name}}
+                            @description={{if
+                              (eq setting.type "bool")
+                              null
+                              setting.description
+                            }}
+                            @format="large"
+                            @validation={{@controller.getValidationFor setting}}
+                            @type={{if
+                              (eq setting.type "bool")
+                              "checkbox"
                               (if
-                                (eq setting.type "enum")
-                                "select"
-                                (if (eq setting.type "list") "custom" "input")
+                                (eq setting.type "integer")
+                                "input-number"
+                                (if
+                                  (eq setting.type "enum")
+                                  "select"
+                                  (if (eq setting.type "list") "custom" "input")
+                                )
                               )
-                            )
-                          }}
-                          as |field|
-                        >
-                          <AiFeatureSettingField
-                            @Control={{field.Control}}
-                            @setting={{setting}}
-                            @field={{field}}
-                          />
-                        </form.Field>
-                      {{/if}}
-                    {{/let}}
-                  {{/each}}
-                </form.Section>
-              {{/each}}
+                            }}
+                            as |field|
+                          >
+                            <AiFeatureSettingField
+                              @Control={{field.Control}}
+                              @setting={{setting}}
+                              @field={{field}}
+                            />
+                          </form.Field>
+                        {{/if}}
+                      {{/let}}
+                    {{/each}}
+                  </form.Section>
+                {{/each}}
+              {{else}}
+                {{#each @model.feature_settings as |setting|}}
+                  <form.Field
+                    @name={{setting.setting}}
+                    @title={{setting.humanized_name}}
+                    @description={{if
+                      (eq setting.type "bool")
+                      null
+                      setting.description
+                    }}
+                    @format="large"
+                    @type={{if
+                      (eq setting.type "bool")
+                      "checkbox"
+                      (if
+                        (eq setting.type "integer")
+                        "input-number"
+                        (if
+                          (eq setting.type "enum")
+                          "select"
+                          (if (eq setting.type "list") "custom" "input")
+                        )
+                      )
+                    }}
+                    as |field|
+                  >
+                    <AiFeatureSettingField
+                      @Control={{field.Control}}
+                      @setting={{setting}}
+                      @field={{field}}
+                    />
+                  </form.Field>
+                {{/each}}
+              {{/if}}
               <form.Actions>
                 <form.Submit />
               </form.Actions>

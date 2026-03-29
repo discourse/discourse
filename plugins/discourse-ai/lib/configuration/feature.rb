@@ -307,7 +307,7 @@ module DiscourseAi
         end
 
         def all
-          [
+          base = [
             summarization_features,
             search_features,
             discord_features,
@@ -320,6 +320,12 @@ module DiscourseAi
             ai_automation_report_scripts,
             ai_automation_triage_scripts,
           ].flatten
+
+          DiscourseAi::Configuration::Module.registered_modules.each_value do |mod|
+            base.concat(mod[:features])
+          end
+
+          base
         end
 
         def find_features_using(agent_id:)

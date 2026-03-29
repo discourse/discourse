@@ -3,6 +3,22 @@
 module DiscourseAi
   module Agents
     class Agent
+      # reserved IDs for external plugins
+      # add your plugin here to avoid collisions
+      #
+      # agent IDs: discourse-ai system agents use -1 to -1000, external plugins use -1001 and below
+      # module IDs: discourse-ai built-in modules use 1 to 1000, external plugins use 1001 and above
+      RESERVED_EXTERNAL_IDS = {
+        data_explorer: {
+          module_id: 1001,
+          features: {
+            query_generation: {
+              agent_id: -1001,
+            },
+          },
+        },
+      }
+
       class << self
         def default_enabled
           true
@@ -81,6 +97,19 @@ module DiscourseAi
             Discover => -34,
             ChatThreadTitler => -35,
           }
+        end
+
+        def register_system_agent(klass, id)
+          system_agents[klass] = id
+          @system_agents_by_id = nil
+        end
+
+        def registered_tools
+          @registered_tools ||= {}
+        end
+
+        def register_tool(name, klass)
+          registered_tools[name] = klass
         end
 
         def system_agents_by_id
