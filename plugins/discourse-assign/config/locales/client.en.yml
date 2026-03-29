@@ -207,3 +207,4 @@ en:
           unassign: "Unassign"
         topic_id: "Topic ID"
         assignee: "Assignee"
+        replace_existing: "Replace existing assignment"

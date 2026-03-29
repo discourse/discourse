@@ -7,6 +7,19 @@ import { resolvePreviousOutput } from "../context/input";
 import WorkflowsEmptyState from "../empty-state";
 import PropertyEngineField from "./property-engine-field";
 
+function flattenFields(fields, prefix = "") {
+  const result = [];
+  for (const field of fields) {
+    const path = prefix ? `${prefix}.${field.key}` : field.key;
+    if (field.children?.length) {
+      result.push(...flattenFields(field.children, path));
+    } else {
+      result.push({ id: path, label: path, type: field.type });
+    }
+  }
+  return result;
+}
+
 const OPERATORS_BY_TYPE = {
   string: [
     "equals",
@@ -62,10 +75,18 @@ function operationSchema(item) {
 const CATEGORY_FIELDS = ["category_id", "category"];
 const USER_FIELDS = ["username"];
 
-function rightValueSchema(item) {
-  const leftValue = item?.leftValue;
+function leafKey(fieldPath) {
+  if (!fieldPath) {
+    return fieldPath;
+  }
+  const parts = fieldPath.split(".");
+  return parts[parts.length - 1];
+}
 
-  if (CATEGORY_FIELDS.includes(leftValue)) {
+function rightValueSchema(item) {
+  const leaf = leafKey(item?.leftValue);
+
+  if (CATEGORY_FIELDS.includes(leaf)) {
     return {
       type: "string",
       required: true,
@@ -73,7 +94,7 @@ function rightValueSchema(item) {
     };
   }
 
-  if (USER_FIELDS.includes(leftValue)) {
+  if (USER_FIELDS.includes(leaf)) {
     return {
       type: "string",
       required: true,
@@ -101,11 +122,7 @@ export default class PropertyEngineConditionBuilder extends Component {
       this.args.nodeTypes || []
     );
 
-    return fields.map((field) => ({
-      id: field.key,
-      label: field.key,
-      type: field.type,
-    }));
+    return flattenFields(fields);
   }
 
   @action

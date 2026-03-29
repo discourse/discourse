@@ -36,7 +36,12 @@ module DiscourseWorkflows
         @configuration = configuration
       end
 
-      def execute(context, input_items:, node_context:, user: nil)
+      def run_as_user
+        @run_as_user || Discourse.system_user
+      end
+
+      def execute(context, input_items:, node_context:, user: nil, run_as_user: nil)
+        @run_as_user = run_as_user || Discourse.system_user
         input_items.map do |item|
           resolver = ExpressionResolver.new(context.merge("$json" => item["json"]), user: user)
           resolved_config = resolver.resolve_hash(@configuration.deep_stringify_keys)
@@ -52,7 +57,7 @@ module DiscourseWorkflows
       private
 
       def resolve_author(user_id)
-        user_id.present? ? User.find(user_id) : Discourse.system_user
+        user_id.present? ? User.find(user_id) : run_as_user
       end
 
       def resolve_config_with_items(context, input_items)

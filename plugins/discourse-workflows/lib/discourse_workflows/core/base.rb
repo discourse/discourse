@@ -31,7 +31,7 @@ module DiscourseWorkflows
         @configuration = configuration
       end
 
-      def execute(context, input_items:, node_context:, user: nil)
+      def execute(context, input_items:, node_context:, user: nil, run_as_user: nil)
         raise NotImplementedError
       end
     end

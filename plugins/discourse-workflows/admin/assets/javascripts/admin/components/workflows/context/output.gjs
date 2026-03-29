@@ -11,7 +11,9 @@ export default class OutputContext extends Component {
     const currentNode = this.args.node;
     const nodes = this.args.nodes || [];
     const connections = this.args.connections || [];
-    const ownFields = resolveNodeFields(currentNode, nodeTypes) || [];
+    const configuration = this.args.configuration || currentNode.configuration;
+    const ownFields =
+      resolveNodeFields(currentNode, nodeTypes, configuration) || [];
 
     if (currentNode.type?.startsWith("action:")) {
       return ownFields;

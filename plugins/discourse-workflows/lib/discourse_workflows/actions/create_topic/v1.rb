@@ -37,6 +37,9 @@ module DiscourseWorkflows
             tag_names: {
               type: :string,
               required: false,
+              ui: {
+                control: :tags,
+              },
             },
             user_id: {
               type: :integer,
@@ -46,7 +49,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          Schemas::Topic.fields.merge(post_id: :integer, post_number: :integer)
+          { topic: Schemas::Topic.fields, post_id: :integer, post_number: :integer }
         end
 
         def execute_single(_context, item:, config:)
@@ -67,7 +70,11 @@ module DiscourseWorkflows
           ) do
             on_success do |post:|
               topic = post.topic
-              Schemas::Topic.resolve(topic).merge(post_id: post.id, post_number: post.post_number)
+              {
+                topic: Schemas::Topic.resolve(topic),
+                post_id: post.id,
+                post_number: post.post_number,
+              }
             end
             on_failed_step(:create_post) { |step| raise step.error }
             on_failure { raise "Failed to create topic" }

@@ -282,6 +282,7 @@ export default class NodeConfigurator extends Component {
                 @connections={{@model.connections}}
                 @triggerType={{@model.triggerType}}
                 @nodeTypes={{this.nodeTypes}}
+                @configuration={{this.configuration}}
               />
             </div>
           </div>

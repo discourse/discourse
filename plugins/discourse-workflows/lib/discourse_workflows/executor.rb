@@ -151,6 +151,7 @@ module DiscourseWorkflows
             input_items: input_items,
             node_context: @state.node_context_for(node),
             user: @user,
+            run_as_user: run_as_user,
           )
         end
 
@@ -216,6 +217,18 @@ module DiscourseWorkflows
         SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow,
         1.minute,
       )
+    end
+
+    def run_as_user
+      @run_as_user ||=
+        begin
+          username = @workflow.run_as_username
+          if username.blank? || username == "system"
+            Discourse.system_user
+          else
+            User.find_by(username: username) || Discourse.system_user
+          end
+        end
     end
 
     def step_runner

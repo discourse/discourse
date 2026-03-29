@@ -67,9 +67,9 @@ module DiscourseWorkflows
           case config["operation"]
           when "revoke"
             user_badge = UserBadge.find_by(user: user, badge: badge)
-            BadgeGranter.revoke(user_badge, revoked_by: Discourse.system_user) if user_badge
+            BadgeGranter.revoke(user_badge, revoked_by: run_as_user) if user_badge
           else
-            BadgeGranter.grant(badge, user, granted_by: Discourse.system_user)
+            BadgeGranter.grant(badge, user, granted_by: run_as_user)
           end
 
           { user_id: user.id, username: user.username, badge_id: badge.id, badge_name: badge.name }

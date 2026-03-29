@@ -33,6 +33,9 @@ en:
         executions: "Executions"
         settings: "Settings"
       settings:
+        saved: "Settings saved."
+        run_as: "Run as"
+        run_as_description: "The user identity workflow actions will use when performing operations. Defaults to the system user. It is your responsibility to ensure the specified user has the necessary permissions for all actions in this workflow."
         error_workflow: "Error workflow"
         error_workflow_description: "When this workflow fails, automatically trigger the selected error workflow. Only workflows with an Error Trigger node will appear as options."
         error_workflow_none: "None"
@@ -167,8 +170,6 @@ en:
       append_tags:
         topic_id: "Topic ID"
         tag_names: "Tags"
-        tag_names_description: "Comma separated list of tags"
-        tag_names_placeholder: "tag1, tag2 or use a variable"
       fetch_topic:
         topic_id: "Topic ID"
       list_topics:
@@ -206,7 +207,6 @@ en:
         category_id: "Category ID"
         category_id_description: "Leave blank to rely on normal category validation."
         tag_names: "Tags"
-        tag_names_description: "Comma-separated tags or an expression that returns an array."
         user_id: "Author User ID"
         user_id_description: "Leave blank to use the system user."
       set_fields:

@@ -43,14 +43,16 @@ RSpec.describe DiscourseWorkflows::Actions::CreateTopic::V1 do
       expect(topic.category_id).to eq(category.id)
       expect(topic.user_id).to eq(admin.id)
 
-      expect(result).to include(
-        topic_id: topic.id,
-        topic_title: topic.title,
-        topic_raw: "First post body",
+      expect(result[:topic]).to include(
+        id: topic.id,
+        title: topic.title,
+        raw: "First post body",
         category_id: category.id,
         user_id: admin.id,
         username: admin.username,
         archetype: Archetype.default,
+      )
+      expect(result).to include(
         post_id: topic.first_post.id,
         post_number: 1,
       )

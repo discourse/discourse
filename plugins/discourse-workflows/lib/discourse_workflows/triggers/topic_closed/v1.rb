@@ -21,13 +21,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          {
-            topic_id: :integer,
-            topic_title: :string,
-            topic_raw: :string,
-            tags: :array,
-            category_id: :integer,
-          }
+          { topic: Schemas::Topic.fields }
         end
 
         def initialize(topic, status, enabled)
@@ -41,13 +35,7 @@ module DiscourseWorkflows
         end
 
         def output
-          {
-            topic_id: @topic.id,
-            topic_title: @topic.title,
-            topic_raw: @topic.first_post&.raw,
-            tags: @topic.tags.pluck(:name),
-            category_id: @topic.category_id,
-          }
+          { topic: Schemas::Topic.resolve(@topic) }
         end
       end
     end

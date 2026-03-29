@@ -21,15 +21,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          {
-            topic_id: :integer,
-            topic_title: :string,
-            tags: :array,
-            category_id: :integer,
-            old_category_id: :integer,
-            user_id: :integer,
-            username: :string,
-          }
+          { topic: Schemas::Topic.fields, old_category_id: :integer }
         end
 
         def initialize(topic, old_category)
@@ -42,15 +34,7 @@ module DiscourseWorkflows
         end
 
         def output
-          {
-            topic_id: @topic.id,
-            topic_title: @topic.title,
-            tags: @topic.tags.pluck(:name),
-            category_id: @topic.category_id,
-            old_category_id: @old_category.id,
-            user_id: @topic.user_id,
-            username: @topic.user&.username,
-          }
+          { topic: Schemas::Topic.resolve(@topic), old_category_id: @old_category.id }
         end
       end
     end

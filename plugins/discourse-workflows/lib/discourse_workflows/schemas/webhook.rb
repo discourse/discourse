@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  module WebhookSchema
+  module Schemas::Webhook
     HTTP_METHODS = %w[GET POST PUT DELETE PATCH HEAD].freeze
 
     CONFIGURATION_FIELDS = {

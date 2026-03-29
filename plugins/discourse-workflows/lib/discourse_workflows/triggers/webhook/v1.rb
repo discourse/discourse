@@ -21,7 +21,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          WebhookSchema::OUTPUT_FIELDS
+          Schemas::Webhook::OUTPUT_FIELDS
         end
 
         def self.configuration_schema
@@ -33,7 +33,7 @@ module DiscourseWorkflows
                 control: :url_preview,
               },
             },
-            **WebhookSchema::CONFIGURATION_FIELDS,
+            **Schemas::Webhook::CONFIGURATION_FIELDS,
             path: {
               type: :string,
               required: true,

@@ -124,5 +124,22 @@ RSpec.describe DiscourseWorkflows::Actions::Group::V1 do
         ActiveRecord::RecordNotFound,
       )
     end
+
+    it "uses run_as_user for group action logging" do
+      run_as = Fabricate(:admin)
+      action.instance_variable_set(:@run_as_user, run_as)
+
+      config = { "operation" => "add", "username" => user.username, "group_id" => group.id.to_s }
+
+      action.execute_single({}, item: item, config: config)
+
+      expect(
+        GroupHistory.find_by(
+          group: group,
+          target_user: user,
+          action: GroupHistory.actions[:add_user_to_group],
+        ).acting_user_id,
+      ).to eq(run_as.id)
+    end
   end
 end

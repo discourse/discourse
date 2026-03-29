@@ -36,7 +36,7 @@ RSpec.describe DiscourseWorkflows::Actions::ListTopics::V1 do
       result = action.execute(context, input_items: input_items, node_context: {})
 
       expect(result.length).to eq(2)
-      expect(result.map { |r| r["json"]["topic_id"] }).to contain_exactly(topic_1.id, topic_2.id)
+      expect(result.map { |r| r["json"]["topic"]["id"] }).to contain_exactly(topic_1.id, topic_2.id)
     end
 
     it "respects the limit parameter" do
@@ -81,19 +81,20 @@ RSpec.describe DiscourseWorkflows::Actions::ListTopics::V1 do
 
       result = action.execute(context, input_items: input_items, node_context: {})
 
-      topic_1_result = result.find { |r| r["json"]["topic_id"] == topic_1.id }["json"]
-      expect(topic_1_result).to include(
-        "topic_title" => topic_1.title,
+      topic_data =
+        result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json", "topic")
+      expect(topic_data).to include(
+        "title" => topic_1.title,
         "category_id" => category.id,
         "username" => user.username,
         "status" => "open",
       )
-      expect(topic_1_result["tags"]).to contain_exactly(tag.name)
-      expect(topic_1_result["posts_count"]).to be_present
-      expect(topic_1_result["views"]).to be_present
-      expect(topic_1_result["like_count"]).to be_present
-      expect(topic_1_result["created_at"]).to be_present
-      expect(topic_1_result["bumped_at"]).to be_present
+      expect(topic_data["tags"]).to contain_exactly(tag.name)
+      expect(topic_data["posts_count"]).to be_present
+      expect(topic_data["views"]).to be_present
+      expect(topic_data["like_count"]).to be_present
+      expect(topic_data["created_at"]).to be_present
+      expect(topic_data["bumped_at"]).to be_present
     end
 
     it "returns empty array when no topics match" do
@@ -127,6 +128,35 @@ RSpec.describe DiscourseWorkflows::Actions::ListTopics::V1 do
       result = action.execute(context, input_items: input_items, node_context: {})
 
       expect(result.length).to eq(2)
+    end
+
+    it "defaults to system user for topic queries" do
+      action =
+        described_class.new(
+          configuration: {
+            "query" => "category:#{category.slug}",
+          },
+        )
+      context = {}
+      input_items = [{ "json" => {} }]
+
+      expect(action.run_as_user).to eq(Discourse.system_user)
+
+      result = action.execute(context, input_items: input_items, node_context: {})
+      expect(result.length).to eq(2)
+    end
+
+    it "uses run_as_user when set" do
+      run_as = Fabricate(:user)
+      action =
+        described_class.new(
+          configuration: {
+            "query" => "category:#{category.slug}",
+          },
+        )
+      action.instance_variable_set(:@run_as_user, run_as)
+
+      expect(action.run_as_user).to eq(run_as)
     end
   end
 end

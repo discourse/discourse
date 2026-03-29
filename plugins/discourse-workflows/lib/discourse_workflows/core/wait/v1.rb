@@ -19,7 +19,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          WebhookSchema::OUTPUT_FIELDS.transform_values do |type|
+          Schemas::Webhook::OUTPUT_FIELDS.transform_values do |type|
             { type: type, visible_if: { resume: "webhook" } }
           end
         end
@@ -34,7 +34,7 @@ module DiscourseWorkflows
 
         def self.configuration_schema
           webhook_fields =
-            WebhookSchema::CONFIGURATION_FIELDS.transform_values do |field|
+            Schemas::Webhook::CONFIGURATION_FIELDS.transform_values do |field|
               visible_if = (field[:visible_if] || {}).merge(resume: "webhook")
               field.merge(visible_if: visible_if)
             end
@@ -73,7 +73,7 @@ module DiscourseWorkflows
           }
         end
 
-        def execute(context, input_items:, node_context:, user: nil)
+        def execute(context, input_items:, node_context:, user: nil, run_as_user: nil)
           resume_mode = @configuration["resume"]
 
           if resume_mode == "webhook"

@@ -71,7 +71,7 @@ module DiscourseWorkflows
           raise ActiveRecord::RecordNotFound.new("Couldn't find User") if user.nil?
           group = ::Group.find(config["group_id"])
 
-          logger = GroupActionLogger.new(Discourse.system_user, group)
+          logger = GroupActionLogger.new(run_as_user, group)
 
           case config["operation"]
           when "remove"

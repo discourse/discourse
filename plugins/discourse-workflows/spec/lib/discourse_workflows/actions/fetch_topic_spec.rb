@@ -24,12 +24,12 @@ RSpec.describe DiscourseWorkflows::Actions::FetchTopic::V1 do
 
       result = action.execute_single(context, item: item, config: config)
 
-      expect(result[:topic_id]).to eq(topic.id)
-      expect(result[:topic_title]).to eq(topic.title)
-      expect(result[:topic_raw]).to eq("This is the topic body")
-      expect(result[:username]).to eq(user.username)
-      expect(result[:category_id]).to eq(category.id)
-      expect(result[:tags]).to eq([])
+      expect(result[:topic][:id]).to eq(topic.id)
+      expect(result[:topic][:title]).to eq(topic.title)
+      expect(result[:topic][:raw]).to eq("This is the topic body")
+      expect(result[:topic][:username]).to eq(user.username)
+      expect(result[:topic][:category_id]).to eq(category.id)
+      expect(result[:topic][:tags]).to eq([])
     end
 
     it "returns tag names when topic has tags" do
@@ -42,7 +42,7 @@ RSpec.describe DiscourseWorkflows::Actions::FetchTopic::V1 do
 
       result = action.execute_single({}, item: item, config: config)
 
-      expect(result[:tags]).to contain_exactly(tag.name)
+      expect(result[:topic][:tags]).to contain_exactly(tag.name)
     end
 
     it "raises when topic is not found" do

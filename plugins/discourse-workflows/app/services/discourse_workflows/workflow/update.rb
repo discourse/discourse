@@ -9,6 +9,7 @@ module DiscourseWorkflows
       attribute :name, :string
       attribute :enabled, :boolean
       attribute :error_workflow_id, :integer
+      attribute :run_as_username, :string
       attribute :nodes
       attribute :connections
       attribute :sticky_notes
@@ -31,6 +32,7 @@ module DiscourseWorkflows
         attrs[:enabled] = enabled unless enabled.nil?
         attrs[:sticky_notes] = sticky_notes if sticky_notes
         attrs[:error_workflow_id] = error_workflow_id
+        attrs[:run_as_username] = run_as_username if run_as_username
         attrs
       end
     end

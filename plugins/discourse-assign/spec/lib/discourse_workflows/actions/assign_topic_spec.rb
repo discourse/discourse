@@ -27,9 +27,8 @@ RSpec.describe DiscourseWorkflows::Actions::AssignTopic do
 
         result = action.execute_single({}, item: item, config: config)
 
-        expect(result[:topic_id]).to eq(topic.id)
-        expect(result[:topic_title]).to eq(topic.title)
-        expect(result[:assigned_to]).to eq(user.username)
+        expect(result[:assigned_user][:user_id]).to eq(user.id)
+        expect(result[:assigned_user][:username]).to eq(user.username)
         expect(Assignment.exists?(target: topic, assigned_to: user)).to eq(true)
       end
 
@@ -41,7 +40,7 @@ RSpec.describe DiscourseWorkflows::Actions::AssignTopic do
 
         result = action.execute_single({}, item: item, config: config)
 
-        expect(result[:assigned_to]).to eq(group.name)
+        expect(result[:assigned_user][:user_id]).to be_nil
         expect(Assignment.exists?(target: topic, assigned_to: group)).to eq(true)
       end
 
@@ -56,6 +55,68 @@ RSpec.describe DiscourseWorkflows::Actions::AssignTopic do
           RuntimeError,
         )
       end
+
+      context "when topic is already assigned" do
+        fab!(:other_user, :moderator)
+
+        before { ::Assigner.new(topic, Discourse.system_user).assign(other_user) }
+
+        it "replaces the existing assignment by default" do
+          config = {
+            "operation" => "assign",
+            "topic_id" => topic.id.to_s,
+            "assignee" => user.username,
+          }
+
+          result = action.execute_single({}, item: item, config: config)
+
+          expect(result[:assigned_user][:username]).to eq(user.username)
+          expect(result[:unassigned_user][:username]).to eq(other_user.username)
+          expect(Assignment.find_by(target: topic).assigned_to).to eq(user)
+        end
+
+        it "replaces the existing assignment when replace_existing is true" do
+          config = {
+            "operation" => "assign",
+            "topic_id" => topic.id.to_s,
+            "assignee" => user.username,
+            "replace_existing" => true,
+          }
+
+          result = action.execute_single({}, item: item, config: config)
+
+          expect(result[:assigned_user][:username]).to eq(user.username)
+          expect(Assignment.find_by(target: topic).assigned_to).to eq(user)
+        end
+
+        it "raises when replace_existing is false and same user is assigned" do
+          config = {
+            "operation" => "assign",
+            "topic_id" => topic.id.to_s,
+            "assignee" => other_user.username,
+            "replace_existing" => false,
+          }
+
+          expect { action.execute_single({}, item: item, config: config) }.to raise_error(
+            RuntimeError,
+          )
+        end
+      end
+
+      it "uses run_as_user for the assigner" do
+        run_as = Fabricate(:moderator)
+        action.instance_variable_set(:@run_as_user, run_as)
+
+        config = {
+          "operation" => "assign",
+          "topic_id" => topic.id.to_s,
+          "assignee" => user.username,
+        }
+
+        action.execute_single({}, item: item, config: config)
+
+        expect(topic.assignment.assigned_by_user_id).to eq(run_as.id)
+      end
     end
 
     context "with unassign operation" do
@@ -66,8 +127,7 @@ RSpec.describe DiscourseWorkflows::Actions::AssignTopic do
 
         result = action.execute_single({}, item: item, config: config)
 
-        expect(result[:topic_id]).to eq(topic.id)
-        expect(result[:assigned_to]).to be_nil
+        expect(result[:unassigned_user][:username]).to eq(user.username)
         expect(Assignment.exists?(target: topic)).to eq(false)
       end
 

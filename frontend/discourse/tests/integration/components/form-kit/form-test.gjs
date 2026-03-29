@@ -21,6 +21,30 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await formKit().submit();
   });
 
+  test("@onSet", async function (assert) {
+    const calls = [];
+    const onSet = (name, value, data) => {
+      calls.push({ name, value, data: { ...data } });
+    };
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} @onSet={{onSet}} as |form|>
+          <form.Field @type="input" @name="foo" @title="Foo" as |field|>
+            <field.Control />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    await formKit().field("foo").fillIn("2");
+
+    assert.strictEqual(calls.length, 1);
+    assert.strictEqual(calls[0].name, "foo");
+    assert.strictEqual(calls[0].value, "2");
+    assert.strictEqual(calls[0].data.foo, "2");
+  });
+
   test("addItemToCollection", async function (assert) {
     await render(
       <template>

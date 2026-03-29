@@ -8,6 +8,7 @@ import DSegmentedControl from "discourse/components/d-segmented-control";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -110,7 +111,7 @@ export default class PropertyEngineField extends Component {
   get fieldType() {
     if (
       this.controlComponent ||
-      ["category", "user", "user_or_group"].includes(this.control)
+      ["category", "user", "user_or_group", "tags"].includes(this.control)
     ) {
       return "custom";
     }
@@ -307,6 +308,22 @@ export default class PropertyEngineField extends Component {
     field.set(usernames[0] || "");
   }
 
+  tagValue(value) {
+    if (Array.isArray(value)) {
+      return value;
+    }
+    if (typeof value === "string" && value.length > 0) {
+      return value.split(",").map((t) => t.trim());
+    }
+    return [];
+  }
+
+  @action
+  handleTagChange(field, tags) {
+    const names = (tags || []).map((t) => (typeof t === "string" ? t : t.name || t.id || t));
+    field.set(names);
+  }
+
   @action
   handleInlineChange(fieldSet, valueOrEvent) {
     const value =
@@ -466,6 +483,11 @@ export default class PropertyEngineField extends Component {
                 @onPatch={{this.handlePatch}}
                 @schema={{@schema}}
                 @value={{field.value}}
+              />
+            {{else if (eq this.control "tags")}}
+              <MiniTagChooser
+                @value={{this.tagValue field.value}}
+                @onChange={{fn this.handleTagChange field}}
               />
             {{else if (eq this.control "category")}}
               <CategoryChooser @value={{field.value}} @onChange={{field.set}} />

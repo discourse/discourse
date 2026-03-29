@@ -4,9 +4,9 @@ module DiscourseWorkflows
   module Schemas
     class Topic
       BASE_FIELDS = {
-        topic_id: :integer,
-        topic_title: :string,
-        topic_raw: :string,
+        id: :integer,
+        title: :string,
+        raw: :string,
         username: :string,
         user_id: :integer,
         tags: :array,
@@ -29,9 +29,9 @@ module DiscourseWorkflows
         first_post = topic.first_post
 
         data = {
-          topic_id: topic.id,
-          topic_title: topic.title,
-          topic_raw: first_post&.raw,
+          id: topic.id,
+          title: topic.title,
+          raw: first_post&.raw,
           username: first_post&.user&.username,
           user_id: topic.user_id,
           tags: topic.tags.pluck(:name),

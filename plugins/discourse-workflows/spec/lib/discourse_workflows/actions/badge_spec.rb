@@ -103,5 +103,50 @@ RSpec.describe DiscourseWorkflows::Actions::Badge::V1 do
         ActiveRecord::RecordNotFound,
       )
     end
+
+    it "uses run_as_user when granting" do
+      run_as = Fabricate(:admin)
+      action.instance_variable_set(:@run_as_user, run_as)
+
+      config = {
+        "operation" => "grant",
+        "username" => user.username,
+        "badge_id" => badge.id.to_s,
+      }
+
+      action.execute_single({}, item: item, config: config)
+
+      expect(UserBadge.find_by(user: user, badge: badge).granted_by_id).to eq(run_as.id)
+    end
+
+    it "uses run_as_user when revoking" do
+      user_badge = BadgeGranter.grant(badge, user, granted_by: Discourse.system_user)
+      run_as = Fabricate(:admin)
+      action.instance_variable_set(:@run_as_user, run_as)
+
+      config = {
+        "operation" => "revoke",
+        "username" => user.username,
+        "badge_id" => badge.id.to_s,
+      }
+
+      action.execute_single({}, item: item, config: config)
+
+      expect(UserBadge.exists?(user: user, badge: badge)).to eq(false)
+    end
+
+    it "defaults to system user when run_as_user is not set" do
+      config = {
+        "operation" => "grant",
+        "username" => user.username,
+        "badge_id" => badge.id.to_s,
+      }
+
+      action.execute_single({}, item: item, config: config)
+
+      expect(UserBadge.find_by(user: user, badge: badge).granted_by_id).to eq(
+        Discourse.system_user.id,
+      )
+    end
   end
 end

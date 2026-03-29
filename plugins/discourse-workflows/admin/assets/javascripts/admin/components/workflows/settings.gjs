@@ -1,32 +1,31 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { i18n } from "discourse-i18n";
 
 export default class WorkflowSettings extends Component {
   @service router;
   @service dialog;
+  @service toasts;
 
   @tracked errorWorkflows = [];
   @tracked loadingErrorWorkflows = true;
 
+  formData = {
+    run_as_username: this.args.workflow.run_as_username ?? "system",
+    error_workflow_id: this.args.workflow.error_workflow_id,
+  };
+
   constructor() {
     super(...arguments);
     this.loadErrorWorkflows();
-  }
-
-  @cached
-  get formData() {
-    return {
-      error_workflow_id: this.args.workflow.error_workflow_id,
-    };
   }
 
   async loadErrorWorkflows() {
@@ -48,33 +47,6 @@ export default class WorkflowSettings extends Component {
   }
 
   @action
-  async handleErrorWorkflowChange(value, { set, name }) {
-    set(name, value);
-
-    const previousValue = this.args.workflow.error_workflow_id;
-    this.args.workflow.set("error_workflow_id", value);
-
-    try {
-      await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}.json`,
-        {
-          type: "PUT",
-          data: {
-            workflow: {
-              name: this.args.workflow.name,
-              error_workflow_id: value,
-            },
-          },
-        }
-      );
-    } catch (e) {
-      this.args.workflow.set("error_workflow_id", previousValue);
-      set(name, previousValue);
-      popupAjaxError(e);
-    }
-  }
-
-  @action
   async deleteWorkflow() {
     await this.dialog.deleteConfirm({
       message: i18n("discourse_workflows.delete_confirm", {
@@ -87,48 +59,92 @@ export default class WorkflowSettings extends Component {
     });
   }
 
-  <template>
-    <div class="workflows-settings">
-      <Form @data={{this.formData}} as |form|>
-        <form.Field
-          @name="error_workflow_id"
-          @title={{i18n "discourse_workflows.settings.error_workflow"}}
-          @description={{i18n
-            "discourse_workflows.settings.error_workflow_description"
-          }}
-          @type="custom"
-          @onSet={{this.handleErrorWorkflowChange}}
-          as |field|
-        >
-          {{#unless this.loadingErrorWorkflows}}
-            <field.Control>
-              <ComboBox
-                @content={{this.errorWorkflows}}
-                @value={{field.value}}
-                @onChange={{field.set}}
-                @options={{hash
-                  none="discourse_workflows.settings.error_workflow_none"
-                }}
-              />
-            </field.Control>
-          {{/unless}}
-        </form.Field>
-      </Form>
+  @action
+  async submitForm(name, value, data) {
+    try {
+      await ajax(
+        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}.json`,
+        {
+          type: "PUT",
+          data: {
+            workflow: {
+              name: this.args.workflow.name,
+              run_as_username: data.run_as_username?.[0] || "system",
+              error_workflow_id: data.error_workflow_id,
+            },
+          },
+        }
+      );
 
-      <section class="workflows-settings__section --danger">
-        <h3 class="workflows-settings__section-title">{{i18n
-            "discourse_workflows.settings.danger_zone"
-          }}</h3>
-        <p class="workflows-settings__section-description">{{i18n
-            "discourse_workflows.settings.delete_description"
-          }}</p>
-        <DButton
-          @action={{this.deleteWorkflow}}
-          @icon="trash-can"
-          @label="discourse_workflows.delete"
-          class="btn-danger btn-small"
-        />
-      </section>
-    </div>
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("discourse_workflows.settings.saved") },
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  <template>
+    <Form
+      @onSet={{this.submitForm}}
+      @data={{this.formData}}
+      class="workflows-settings"
+      as |form|
+    >
+      <form.Field
+        @name="run_as_username"
+        @title={{i18n "discourse_workflows.settings.run_as"}}
+        @description={{i18n "discourse_workflows.settings.run_as_description"}}
+        @type="custom"
+        as |field|
+      >
+        <field.Control>
+          <UserChooser
+            @value={{field.value}}
+            @onChange={{field.set}}
+            @options={{hash maximum=1 excludeCurrentUser=false}}
+          />
+        </field.Control>
+      </form.Field>
+
+      <form.Field
+        @name="error_workflow_id"
+        @title={{i18n "discourse_workflows.settings.error_workflow"}}
+        @description={{i18n
+          "discourse_workflows.settings.error_workflow_description"
+        }}
+        @type="custom"
+        @onSet={{this.handleErrorWorkflowChange}}
+        as |field|
+      >
+        {{#unless this.loadingErrorWorkflows}}
+          <field.Control>
+            <ComboBox
+              @content={{this.errorWorkflows}}
+              @value={{field.value}}
+              @onChange={{field.set}}
+              @options={{hash
+                none="discourse_workflows.settings.error_workflow_none"
+              }}
+            />
+          </field.Control>
+        {{/unless}}
+      </form.Field>
+
+      <form.Emphasis
+        @title={{i18n "discourse_workflows.settings.danger_zone"}}
+        @subtitle={{i18n "discourse_workflows.settings.delete_description"}}
+        @type="error"
+      >
+        <form.Actions>
+          <form.Button
+            @label="discourse_workflows.delete"
+            @action={{this.deleteWorkflow}}
+            class="btn-danger"
+          />
+        </form.Actions>
+      </form.Emphasis>
+    </Form>
   </template>
 }

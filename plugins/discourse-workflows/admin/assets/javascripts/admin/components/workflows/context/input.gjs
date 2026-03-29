@@ -17,7 +17,15 @@ function ancestorIconStyle(type) {
 const ENVIRONMENT_FIELDS = [
   { key: "site_settings", type: "object", id: "$site_settings" },
   { key: "vars", type: "object", id: "$vars" },
-  { key: "current_user", type: "object", id: "$current_user" },
+  {
+    key: "current_user",
+    type: "object",
+    id: "$current_user",
+    children: [
+      { key: "id", type: "integer", id: "id" },
+      { key: "username", type: "string", id: "username" },
+    ],
+  },
   { key: "execution", type: "object", id: "$execution" },
 ];
 

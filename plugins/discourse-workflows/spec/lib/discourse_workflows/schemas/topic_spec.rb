@@ -14,9 +14,9 @@ RSpec.describe DiscourseWorkflows::Schemas::Topic do
   describe ".fields" do
     it "returns the base topic fields" do
       expect(described_class.fields).to include(
-        topic_id: :integer,
-        topic_title: :string,
-        topic_raw: :string,
+        id: :integer,
+        title: :string,
+        raw: :string,
         username: :string,
         tags: :array,
         category_id: :integer,
@@ -43,9 +43,9 @@ RSpec.describe DiscourseWorkflows::Schemas::Topic do
     it "returns all base topic data" do
       data = described_class.resolve(topic)
 
-      expect(data[:topic_id]).to eq(topic.id)
-      expect(data[:topic_title]).to eq(topic.title)
-      expect(data[:topic_raw]).to eq(post.raw)
+      expect(data[:id]).to eq(topic.id)
+      expect(data[:title]).to eq(topic.title)
+      expect(data[:raw]).to eq(post.raw)
       expect(data[:username]).to eq(post.user.username)
       expect(data[:tags]).to contain_exactly(tag.name)
       expect(data[:category_id]).to eq(topic.category_id)

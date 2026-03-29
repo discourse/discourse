@@ -17,7 +17,7 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          { topic_id: :integer, topic_title: :string, tags: :array, category_id: :integer }
+          { topic: Schemas::Topic.fields }
         end
 
         def self.configuration_schema
@@ -29,12 +29,7 @@ module DiscourseWorkflows
         end
 
         def output
-          {
-            topic_id: @topic.id,
-            topic_title: @topic.title,
-            tags: @topic.tags.pluck(:name),
-            category_id: @topic.category_id,
-          }
+          { topic: Schemas::Topic.resolve(@topic) }
         end
       end
     end

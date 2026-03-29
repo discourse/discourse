@@ -22,15 +22,11 @@ module DiscourseWorkflows
 
         def self.output_schema
           {
-            topic_id: :integer,
-            topic_title: :string,
-            category_id: :integer,
+            topic: Schemas::Topic.fields,
             old_tags: :array,
             new_tags: :array,
             added_tags: :array,
             removed_tags: :array,
-            user_id: :integer,
-            username: :string,
           }
         end
 
@@ -47,15 +43,11 @@ module DiscourseWorkflows
 
         def output
           {
-            topic_id: @topic.id,
-            topic_title: @topic.title,
-            category_id: @topic.category_id,
+            topic: Schemas::Topic.resolve(@topic),
             old_tags: @old_tag_names,
             new_tags: @new_tag_names,
             added_tags: @new_tag_names - @old_tag_names,
             removed_tags: @old_tag_names - @new_tag_names,
-            user_id: @user&.id,
-            username: @user&.username,
           }
         end
       end

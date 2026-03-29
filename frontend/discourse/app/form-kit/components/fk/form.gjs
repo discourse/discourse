@@ -186,6 +186,11 @@ class FKForm extends Component {
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       await this.triggerRevalidationFor(name);
     }
+
+    if (this.args.onSet) {
+      await this.args.onSet(name, value, this.formData.draftData);
+      this.formData.save();
+    }
   }
 
   @action
@@ -370,6 +375,7 @@ const Form = <template>
       @validateOn={{@validateOn}}
       @onRegisterApi={{@onRegisterApi}}
       @onReset={{@onReset}}
+      @onSet={{@onSet}}
       @onDirtyCheck={{@onDirtyCheck}}
       ...attributes
       as |components draftData|

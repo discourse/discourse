@@ -101,7 +101,7 @@ module DiscourseWorkflows
           }
         end
 
-        def execute(context, input_items:, node_context:, user: nil)
+        def execute(context, input_items:, node_context:, user: nil, run_as_user: nil)
           config = resolve_config_with_items(context, input_items)
 
           page_type = config["page_type"] || "page"

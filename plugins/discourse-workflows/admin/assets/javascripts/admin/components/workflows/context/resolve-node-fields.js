@@ -17,15 +17,29 @@ export function fieldsFromSchema(outputSchema) {
   if (!outputSchema || !Object.keys(outputSchema).length) {
     return null;
   }
-  return Object.entries(outputSchema).map(([key, type]) =>
-    toFieldEntry(key, type)
-  );
+  return Object.entries(outputSchema).map(([key, value]) => {
+    if (value && typeof value === "object" && !value.type) {
+      return {
+        key,
+        type: "object",
+        id: key,
+        children: Object.entries(value).map(([childKey, childType]) =>
+          toFieldEntry(childKey, childType)
+        ),
+      };
+    }
+    return toFieldEntry(key, value);
+  });
 }
 
-export default function resolveNodeFields(node, nodeTypes) {
+export default function resolveNodeFields(
+  node,
+  nodeTypes,
+  configuration = null
+) {
+  const config = configuration || node.configuration || {};
   const result =
-    fieldsFromConfig(node.configuration?.output_fields) ||
-    fieldsFromConfig(node.configuration?.fields);
+    fieldsFromConfig(config.output_fields) || fieldsFromConfig(config.fields);
 
   if (result) {
     return result;
@@ -40,8 +54,12 @@ export default function resolveNodeFields(node, nodeTypes) {
   const filtered = {};
   for (const [key, value] of Object.entries(schema)) {
     if (typeof value === "object" && value !== null) {
-      if (fieldVisible(value, node.configuration || {})) {
-        filtered[key] = value.type || "string";
+      if (value.type) {
+        if (fieldVisible(value, config)) {
+          filtered[key] = value.fields || value.type;
+        }
+      } else {
+        filtered[key] = value;
       }
     } else {
       filtered[key] = value;

@@ -21,12 +21,12 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          Schemas::Topic.fields
+          { topic: Schemas::Topic.fields }
         end
 
         def execute_single(_context, item:, config:)
           topic = Topic.find(config["topic_id"])
-          Schemas::Topic.resolve(topic)
+          { topic: Schemas::Topic.resolve(topic) }
         end
       end
     end

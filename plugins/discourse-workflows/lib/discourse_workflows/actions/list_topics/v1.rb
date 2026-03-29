@@ -37,19 +37,20 @@ module DiscourseWorkflows
         end
 
         def self.output_schema
-          Schemas::Topic.fields
+          { topic: Schemas::Topic.fields }
         end
 
-        def execute(context, input_items:, node_context:, user: nil)
+        def execute(context, input_items:, node_context:, user: nil, run_as_user: nil)
+          @run_as_user = run_as_user || Discourse.system_user
           config = resolve_config_with_items(context, input_items)
           query = config["query"]
           limit = [[(config["limit"] || DEFAULT_LIMIT).to_i, 1].max, MAX_LIMIT].min
 
-          topic_query = TopicQuery.new(Discourse.system_user, q: query, per_page: limit)
+          topic_query = TopicQuery.new(run_as_user, q: query, per_page: limit)
           topic_list = topic_query.list_filter
 
           topic_list.topics.map do |topic|
-            { "json" => Schemas::Topic.resolve(topic).deep_stringify_keys }
+            { "json" => { topic: Schemas::Topic.resolve(topic) }.deep_stringify_keys }
           end
         end
       end

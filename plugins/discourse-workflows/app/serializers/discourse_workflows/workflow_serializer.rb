@@ -7,6 +7,7 @@ module DiscourseWorkflows
                :enabled,
                :sticky_notes,
                :error_workflow_id,
+               :run_as_username,
                :created_at,
                :updated_at,
                :last_execution_status,

@@ -58,7 +58,7 @@ module DiscourseWorkflows
 
         attr_reader :logs
 
-        def execute(context, input_items:, node_context:, user: nil)
+        def execute(context, input_items:, node_context:, user: nil, run_as_user: nil)
           code = @configuration["code"].to_s
           @logs = []
           all_items_json = input_items.map { |item| item["json"] || {} }

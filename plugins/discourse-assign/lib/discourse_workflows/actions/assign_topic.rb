@@ -60,24 +60,55 @@ if defined?(DiscourseWorkflows)
                 },
               },
             },
+            replace_existing: {
+              type: :boolean,
+              default: true,
+              ui: {
+                visible_if: {
+                  operation: "assign",
+                },
+              },
+            },
           }
         end
 
         def self.output_schema
-          { topic_id: :integer, topic_title: :string, assigned_to: :string }
+          {
+            assigned_user: {
+              type: :object,
+              fields: DiscourseWorkflows::Schemas::User.fields,
+              visible_if: {
+                operation: "assign",
+              },
+            },
+            unassigned_user: {
+              type: :object,
+              fields: DiscourseWorkflows::Schemas::User.fields,
+              visible_if: {
+                operation: "unassign",
+              },
+            },
+          }
         end
 
         def execute_single(_context, item:, config:)
           topic = Topic.find(config["topic_id"])
-          assigner = ::Assigner.new(topic, Discourse.system_user)
+          assigner = ::Assigner.new(topic, run_as_user)
 
           case config["operation"]
           when "unassign"
+            previously_assigned = topic.assignment&.assigned_to
+            previous_user = previously_assigned.is_a?(User) ? previously_assigned : nil
             assigner.unassign
 
-            { topic_id: topic.id, topic_title: topic.title, assigned_to: nil }
+            { unassigned_user: DiscourseWorkflows::Schemas::User.resolve(previous_user) }
           else
             assignee = find_assignee(config["assignee"])
+
+            previously_assigned = topic.assignment&.assigned_to
+            previous_user = previously_assigned.is_a?(User) ? previously_assigned : nil
+            assigner.unassign if config["replace_existing"] != false && topic.assignment
+
             result = assigner.assign(assignee)
 
             unless result[:success]
@@ -87,7 +118,11 @@ if defined?(DiscourseWorkflows)
                     )
             end
 
-            { topic_id: topic.id, topic_title: topic.title, assigned_to: config["assignee"] }
+            assigned_user = assignee.is_a?(User) ? assignee : nil
+            {
+              assigned_user: DiscourseWorkflows::Schemas::User.resolve(assigned_user),
+              unassigned_user: DiscourseWorkflows::Schemas::User.resolve(previous_user),
+            }
           end
         end
 

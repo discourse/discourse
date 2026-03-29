@@ -25,6 +25,9 @@ module DiscourseWorkflows
             tag_names: {
               type: :string,
               required: true,
+              ui: {
+                control: :tags,
+              },
             },
           }
         end
@@ -32,7 +35,11 @@ module DiscourseWorkflows
         def execute_single(context, item:, config:)
           topic = Topic.find(config["topic_id"])
 
-          names = config["tag_names"].to_s.split(",").filter_map { |n| n.strip.presence }
+          names =
+            Array
+              .wrap(config["tag_names"])
+              .flat_map { |n| n.to_s.split(",") }
+              .filter_map { |n| n.strip.presence }
           raise "No tag names provided" if names.empty?
 
           tags = names.map { |name| Tag.find_or_create_by!(name: name) }
