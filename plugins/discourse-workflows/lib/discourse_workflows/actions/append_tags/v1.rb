@@ -24,7 +24,7 @@ module DiscourseWorkflows
             },
             tag_names: {
               type: :string,
-              required: true,
+              required: false,
               ui: {
                 control: :tags,
               },

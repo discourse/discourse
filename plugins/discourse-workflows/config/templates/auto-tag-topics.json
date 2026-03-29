@@ -27,7 +27,7 @@
               "operation": "equals",
               "singleValue": false
             },
-            "leftValue": "={{ $json.category_id }} ",
+            "leftValue": "topic.category_id",
             "rightValue": ""
           }
         ]
@@ -42,7 +42,7 @@
       "type_version": "1.0",
       "name": "Append tags",
       "configuration": {
-        "topic_id": "={{ $json.topic_id }} "
+        "topic_id": "={{ $json.topic.id }} "
       },
       "position": {
         "x": 492,

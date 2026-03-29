@@ -39,6 +39,7 @@ en:
         error_workflow: "Error workflow"
         error_workflow_description: "When this workflow fails, automatically trigger the selected error workflow. Only workflows with an Error Trigger node will appear as options."
         error_workflow_none: "None"
+        no_error_workflows_available: "No workflows with an Error Trigger node are available."
         danger_zone: "Danger zone"
         delete_description: "Permanently delete this workflow and all its executions. This action cannot be undone."
       node_types:

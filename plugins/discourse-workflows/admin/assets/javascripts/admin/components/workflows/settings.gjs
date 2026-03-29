@@ -97,6 +97,7 @@ export default class WorkflowSettings extends Component {
         @title={{i18n "discourse_workflows.settings.run_as"}}
         @description={{i18n "discourse_workflows.settings.run_as_description"}}
         @type="custom"
+        @format="full"
         as |field|
       >
         <field.Control>
@@ -108,29 +109,36 @@ export default class WorkflowSettings extends Component {
         </field.Control>
       </form.Field>
 
-      <form.Field
-        @name="error_workflow_id"
-        @title={{i18n "discourse_workflows.settings.error_workflow"}}
-        @description={{i18n
-          "discourse_workflows.settings.error_workflow_description"
-        }}
-        @type="custom"
-        @onSet={{this.handleErrorWorkflowChange}}
-        as |field|
-      >
-        {{#unless this.loadingErrorWorkflows}}
-          <field.Control>
-            <ComboBox
-              @content={{this.errorWorkflows}}
-              @value={{field.value}}
-              @onChange={{field.set}}
-              @options={{hash
-                none="discourse_workflows.settings.error_workflow_none"
-              }}
-            />
-          </field.Control>
-        {{/unless}}
-      </form.Field>
+      {{#unless this.loadingErrorWorkflows}}
+        {{#if this.errorWorkflows.length}}
+          <form.Field
+            @name="error_workflow_id"
+            @title={{i18n "discourse_workflows.settings.error_workflow"}}
+            @description={{i18n
+              "discourse_workflows.settings.error_workflow_description"
+            }}
+            @type="custom"
+            @format="full"
+            @onSet={{this.handleErrorWorkflowChange}}
+            as |field|
+          >
+            <field.Control>
+              <ComboBox
+                @content={{this.errorWorkflows}}
+                @value={{field.value}}
+                @onChange={{field.set}}
+                @options={{hash
+                  none="discourse_workflows.settings.error_workflow_none"
+                }}
+              />
+            </field.Control>
+          </form.Field>
+        {{else}}
+          <form.Alert @type="info">
+            {{i18n "discourse_workflows.settings.no_error_workflows_available"}}
+          </form.Alert>
+        {{/if}}
+      {{/unless}}
 
       <form.Emphasis
         @title={{i18n "discourse_workflows.settings.danger_zone"}}
