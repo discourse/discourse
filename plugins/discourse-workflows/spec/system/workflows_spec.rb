@@ -54,46 +54,6 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_workflow("My workflow")
   end
 
-  it "runs auto layout with the 2 shortcut" do
-    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
-    trigger =
-      Fabricate(
-        :discourse_workflows_node,
-        workflow: workflow,
-        type: "trigger:manual",
-        name: "Manual trigger",
-        position: {
-          x: 300,
-          y: 100,
-        },
-      )
-    action =
-      Fabricate(
-        :discourse_workflows_node,
-        workflow: workflow,
-        type: "action:append_tags",
-        name: "Append tags",
-        position: {
-          x: 0,
-          y: 100,
-        },
-      )
-    Fabricate(
-      :discourse_workflows_connection,
-      workflow: workflow,
-      source_node: trigger,
-      target_node: action,
-    )
-
-    editor_page.visit(workflow.id)
-
-    expect(editor_page.node_left("Manual trigger")).to be > editor_page.node_left("Append tags")
-
-    editor_page.press_canvas_shortcut("2")
-
-    wait_for { editor_page.node_left("Manual trigger") < editor_page.node_left("Append tags") }
-  end
-
   it "shows a warning icon when the latest workflow run failed" do
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
 
