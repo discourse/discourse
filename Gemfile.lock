@@ -188,25 +188,25 @@ GEM
     goldiloader (6.0.0)
       activerecord (>= 7.2, < 8.3)
       activesupport (>= 7.2, < 8.3)
-    google-protobuf (4.34.0)
+    google-protobuf (4.34.1)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.34.0-aarch64-linux-gnu)
+    google-protobuf (4.34.1-aarch64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.34.0-aarch64-linux-musl)
+    google-protobuf (4.34.1-aarch64-linux-musl)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.34.0-arm64-darwin)
+    google-protobuf (4.34.1-arm64-darwin)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.34.0-x86_64-darwin)
+    google-protobuf (4.34.1-x86_64-darwin)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.34.0-x86_64-linux-gnu)
+    google-protobuf (4.34.1-x86_64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.34.0-x86_64-linux-musl)
+    google-protobuf (4.34.1-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
     guess_html_encoding (0.0.11)
@@ -1016,13 +1016,13 @@ CHECKSUMS
   fspath (3.1.2) sha256=b5ac9bafb97e2c8f8f9e303cd98ebd484be76fe9aa588bc4d01c6d99e78c9d75
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   goldiloader (6.0.0) sha256=613db1b28e9964291255a67a521f04d481b6afd6b9ca56ea1a612fd86e9a89c7
-  google-protobuf (4.34.0) sha256=bffaea30fbe2807c80667a78953b15645b3bef62b25c10ca187e4418119be531
-  google-protobuf (4.34.0-aarch64-linux-gnu) sha256=0ab8a8a97976a2265d647e69b3ff1980c89184abdaf06d36091856c5ab37cc55
-  google-protobuf (4.34.0-aarch64-linux-musl) sha256=0632a86df6d320eac3b335bd779499d43ad8ee6d1f8c8494b773ed5d3d5c6ab4
-  google-protobuf (4.34.0-arm64-darwin) sha256=f83967a8095a9da676b79ba372c58fef2ca3878428bd40febfce65b3752c90d1
-  google-protobuf (4.34.0-x86_64-darwin) sha256=4a5b67281993345adca54bb32947f25a289597eafaa240e5b714d0a740f99321
-  google-protobuf (4.34.0-x86_64-linux-gnu) sha256=bbb333fbe79c16f35a2e2154cf29f3ce26f60390dba286b339861206d5435ef9
-  google-protobuf (4.34.0-x86_64-linux-musl) sha256=0b75858a388b17e73aa4176df2e722762dbc92551b7075fdc562d33c1c6de0b0
+  google-protobuf (4.34.1) sha256=347181542b8d659c60f028fa3791c9cccce651a91ad27782dbc5c5e374796cdc
+  google-protobuf (4.34.1-aarch64-linux-gnu) sha256=f9c07607dc139c895f2792a7740fcd01cd94d4d7b0e0a939045b50d7999f0b1d
+  google-protobuf (4.34.1-aarch64-linux-musl) sha256=db58e5a4a492b43c6614486aea31b7fb86955b175d1d48f28ebf388f058d78a9
+  google-protobuf (4.34.1-arm64-darwin) sha256=2745061f973119e6e7f3c81a0c77025d291a3caa6585a2cd24a25bbc7bedb267
+  google-protobuf (4.34.1-x86_64-darwin) sha256=4dc498376e218871613589c4d872400d42ad9ae0c700bdb2606fe1c77a593075
+  google-protobuf (4.34.1-x86_64-linux-gnu) sha256=87088c9fd8e47b5b40ca498fc1195add6149e941ff7e81c532a5b0b8876d4cc9
+  google-protobuf (4.34.1-x86_64-linux-musl) sha256=8c0e91436fbe504ffc64f0bd621f2e69adbcce8ed2c58439d7a21117069cfdd7
   guess_html_encoding (0.0.11) sha256=cab6468b945f38673fc41ad147fbbc89693b3c6c34b03b071e2ed669a603e098
   hana (1.3.7) sha256=5425db42d651fea08859811c29d20446f16af196308162894db208cac5ce9b0d
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
