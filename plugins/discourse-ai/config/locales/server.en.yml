@@ -817,23 +817,23 @@ en:
 
       list_reviewables:
         errors:
-          not_allowed: "You are not allowed to view the review queue."
-          invalid_type: "Invalid reviewable type."
+          not_allowed: "You are not allowed to view the review queue"
+          invalid_type: "Invalid reviewable type"
           invalid_status: "Invalid status. Must be one of: pending, approved, rejected, ignored, deleted, reviewed, all."
-        empty: "No review queue items found matching the given filters."
+        empty: "No review queue items found matching the given filters"
         found:
-          one: "Found %{count} review queue item."
-          other: "Found %{count} review queue items."
+          one: "Found %{count} review queue item"
+          other: "Found %{count} review queue items"
 
       perform_reviewable_action:
         errors:
-          not_allowed: "You are not allowed to access the review queue."
-          not_found: "Review queue item not found."
-          no_reason: "A reason is required to perform an action on a review queue item."
+          not_allowed: "You are not allowed to access the review queue"
+          not_found: "Review queue item not found"
+          no_reason: "A reason is required to perform an action on a review queue item"
           invalid_action: "Invalid action '%{action}'. Available actions: %{available}"
-          conflict: "This review queue item was updated by someone else. Please try again."
-          action_failed: "Failed to perform the action."
-        success: "Successfully performed '%{action}' on review queue item %{reviewable_id}."
+          conflict: "This review queue item was updated by someone else. Please try again"
+          action_failed: "Failed to perform the action"
+        success: "Successfully performed '%{action}' on review queue item %{reviewable_id}"
 
     reviewables:
       ai_tool_action:
