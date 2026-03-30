@@ -2826,6 +2826,13 @@ RSpec.describe UsersController do
               expect(user.custom_fields["test3"]).to be_blank
             end
 
+            it "does not allow regular users to update staff-only custom fields" do
+              put "/u/#{user.username}.json", params: { custom_fields: { test3: :hello3 } }
+
+              expect(response.status).to eq(200)
+              expect(user.reload.custom_fields["test3"]).to be_blank
+            end
+
             it "works alongside a user field" do
               user_field = Fabricate(:user_field, editable: true)
               put "/u/#{user.username}.json",
