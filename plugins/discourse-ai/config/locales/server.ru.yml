@@ -10,6 +10,10 @@ ru:
       llm_model:
         name: "Идентификатор модели"
         max_prompt_tokens: "Контекстное окно"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "%{model_name} осталось всего %{percentage_remaining}% кредитов. Кредиты будут обнулены при %{reset_date}. <a href='%{url}'>Просмотреть модели ИИ</a>"
+      ai_credit_hard_limit: "У вас закончились кредиты ИИ на %{model_name}. Функции ИИ будут недоступны до %{reset_date}. <a href='%{url}'>Просмотреть модели ИИ</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -25,6 +29,10 @@ ru:
       llm_triage:
         title: Сортировка публикаций с помощью AI
         description: "Сортировка публикаций с использованием большой языковой модели"
+        flagged_post: |
+          <div>Ответ от модели:</div>
+          <p>%{llm_response}</p>
+          <b>Срабатывает по правилу <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Ваш пост был временно удален для проверки"
           body: |
@@ -71,6 +79,8 @@ ru:
     ai_nsfw_flag_threshold_sexy: "Пороговое значение, при котором изображение, отнесенное к категории «сексуальное», определяется как NSFW-контент."
     ai_nsfw_models: "Модели, используемые для оценки NSFW-контента."
     ai_spam_detection_enabled: "Включить AI-модуль обнаружения спама"
+    ai_spam_detection_max_post_count: "Максимальное количество сообщений, которое может разместить пользователь, прежде чем его перестанут проверять на спам."
+    ai_spam_detection_max_trust_level: "Максимальный уровень доверия пользователей к сканированию на спам."
     ai_openai_api_key: "Ключ API для OpenAI. Используется ТОЛЬКО для создания и редактирования изображений. Для GPT используйте вкладку конфигурации LLM."
     ai_helper_enabled: "Включить AI-помощника"
     composer_ai_helper_allowed_groups: "Для пользователей в этих группах будет отображаться кнопка AI-помощника в редакторе."

@@ -173,7 +173,7 @@ el:
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
         allowed_groups: "Επιτρεπόμενες ομάδες"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         response_format:
           open_modal: "Επεξεργασία"
           modal:
@@ -199,7 +199,7 @@ el:
         credential_not_set: "(δεν έχει οριστεί)"
         edit: "Επεξεργασία"
         test: "Δοκιμή"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
       secrets:
         short_title: "Διαπιστευτήρια"
         name: "Όνομα"
@@ -207,7 +207,7 @@ el:
         back: "Πίσω"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
       llms:
         no_llms: "Κανένα LLM ακόμη"
@@ -216,7 +216,7 @@ el:
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         back: "Πίσω"
-        delete: Σβήσιμο
+        delete: Διαγραφή
         quotas:
           group: "Ομάδα"
           max_usages: "Μέγιστες χρήσεις"
@@ -258,7 +258,7 @@ el:
       embeddings:
         back: "Πίσω"
         save: "Αποθήκευση"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         edit: "Επεξεργασία"
         tests:
           success: "Επιτυχία!"
