@@ -97,13 +97,17 @@ module UpcomingChanges
     ).order(created_at: :desc)
   end
 
+  def self.exists?(change_setting_name)
+    change_metadata(change_setting_name.to_sym).present?
+  end
+
   # We dynamically determine if an upcoming change is enabled
   # or disabled based on the current status of the change as well
   # as whether the admin has manually toggled the change.
   #
   # @param change_setting_name [Symbol] The name of the upcoming change
   # @return [Boolean]
-  def self.resolved_value(change_setting_name)
+  def self.enabled?(change_setting_name)
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
     # is false.
@@ -164,7 +168,7 @@ module UpcomingChanges
   # @return [Boolean]
   def self.enabled_for_user?(change_setting_name, user)
     change_setting_name = change_setting_name.to_sym
-    setting_enabled = SiteSetting.public_send(change_setting_name)
+    setting_enabled = UpcomingChanges.enabled?(change_setting_name)
 
     # Anon users can only have upcoming changes enabled if it's set for Everyone
     if user.blank?

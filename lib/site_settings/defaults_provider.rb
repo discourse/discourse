@@ -5,12 +5,16 @@ end
 
 # A cache for providing default value based on site locale
 class SiteSettings::DefaultsProvider
+  attr_reader :upcoming_change_default_overrides
+
   DEFAULT_LOCALE = "en"
 
   def initialize(site_setting)
     @site_setting = site_setting
     @defaults = {}
     @defaults[DEFAULT_LOCALE.to_sym] = {}
+    @upcoming_change_default_overrides = {}
+    @active_upcoming_change_overrides = Set.new
   end
 
   def load_setting(name_arg, value, locale_defaults)
@@ -26,19 +30,66 @@ class SiteSettings::DefaultsProvider
     end
   end
 
+  def load_upcoming_change_override(upcoming_change_setting, name_arg, value)
+    @upcoming_change_default_overrides[name_arg.to_sym] = {
+      upcoming_change: upcoming_change_setting,
+      new_default: value,
+    }
+  end
+
+  def activate_upcoming_change_override(upcoming_change_setting)
+    @active_upcoming_change_overrides.add(upcoming_change_setting)
+  end
+
+  # TODO (martin) Make sure this is called when an upcoming change is toggled off...
+  # maybe...I already do it in SiteSettings.refresh!
+  def deactivate_upcoming_change_override
+    @active_upcoming_change_overrides.delete(upcoming_change_setting)
+  end
+
   def db_all
     @site_setting.provider.all
   end
 
+  # Defaults loaded from yaml files before mutation by upcoming
+  # changes and modifiers.
+  def all_clean(locale = nil)
+    if locale
+      @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults[locale.to_sym] || {})
+    else
+      @defaults[DEFAULT_LOCALE.to_sym].dup
+    end
+  end
+
   def all(locale = nil)
-    result =
-      if locale
-        @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults[locale.to_sym] || {})
-      else
-        @defaults[DEFAULT_LOCALE.to_sym].dup
-      end
+    result = all_clean(locale)
+
+    # NOTE (martin): Only support upcoming change default overrides on default locale for now,
+    # we can come back to this later if we need the extra complexity.
+    @upcoming_change_default_overrides.each do |setting_name, override|
+      result[setting_name] = override[:new_default] if @active_upcoming_change_overrides.include?(
+        override[:upcoming_change],
+      )
+    end
 
     DiscoursePluginRegistry.apply_modifier(:site_setting_defaults, result)
+  end
+
+  def upcoming_change_override_metadata(setting_name)
+    upcoming_change_default_override = @upcoming_change_default_overrides[setting_name.to_sym]
+
+    if upcoming_change_default_override.blank? ||
+         !@active_upcoming_change_overrides.include?(
+           upcoming_change_default_override[:upcoming_change],
+         )
+      return
+    end
+
+    {
+      old_default: all_clean[setting_name].to_s,
+      new_default: upcoming_change_default_override[:new_default].to_s,
+      change_setting_name: upcoming_change_default_override[:upcoming_change],
+    }
   end
 
   def get(name, locale = DEFAULT_LOCALE)
