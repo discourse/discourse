@@ -76,6 +76,8 @@ require_relative "lib/mcp/oauth_flow"
 require_relative "plugin_instance_extension"
 Plugin::Instance.prepend DiscourseAi::PluginInstanceExtension
 
+DiscoursePluginRegistry.define_filtered_register(:ai_features)
+
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end

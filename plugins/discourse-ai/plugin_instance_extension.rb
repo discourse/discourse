@@ -64,24 +64,24 @@ module DiscourseAi
         )
       end
 
-      reloadable_patch do
-        feature_obj =
-          ::DiscourseAi::Configuration::Feature.new(
-            feature.to_s,
-            setting_name.to_s,
-            module_id,
-            module_name.to_s,
-          )
+      feature_obj =
+        ::DiscourseAi::Configuration::Feature.new(
+          feature.to_s,
+          setting_name.to_s,
+          module_id,
+          module_name.to_s,
+        )
 
-        ::DiscourseAi::Configuration::Module.register(
-          module_name,
+      DiscoursePluginRegistry.register_ai_feature(
+        {
           module_id: module_id,
           module_name: module_name,
-          features: [feature_obj],
+          feature: feature_obj,
           enabled_by_setting: enabled_by_setting,
-          visible:,
-        )
-      end
+          visible: visible,
+        },
+        self,
+      )
     end
 
     private

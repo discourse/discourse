@@ -42,34 +42,6 @@ module DiscourseAi
       AUTOMATION_TRIAGE_ID = 11
 
       class << self
-        def registered_modules
-          @registered_modules ||= {}
-        end
-
-        def register(
-          key,
-          module_id:,
-          module_name:,
-          features:,
-          enabled_by_setting: nil,
-          extra_check: nil,
-          visible: true
-        )
-          existing = registered_modules[key]
-          if existing
-            existing[:features].concat(Array(features))
-          else
-            registered_modules[key] = {
-              module_id: module_id,
-              module_name: module_name,
-              features: Array(features),
-              enabled_by_setting: enabled_by_setting,
-              extra_check: extra_check,
-              visible:,
-            }
-          end
-        end
-
         def all
           base_modules = [
             new(
@@ -146,16 +118,20 @@ module DiscourseAi
             )
           end
 
-          registered_modules.each_value do |mod|
-            base_modules << new(
-              mod[:module_id],
-              mod[:module_name],
-              enabled_by_setting: mod[:enabled_by_setting],
-              features: mod[:features],
-              extra_check: mod[:extra_check],
-              visible: mod.fetch(:visible, true),
-            )
-          end
+          # group registered features by module (filtered registry excludes disabled plugins)
+          DiscoursePluginRegistry
+            .ai_features
+            .group_by { |f| f[:module_name] }
+            .each do |_, features|
+              first = features.first
+              base_modules << new(
+                first[:module_id],
+                first[:module_name],
+                enabled_by_setting: first[:enabled_by_setting],
+                features: features.map { |f| f[:feature] },
+                visible: first[:visible],
+              )
+            end
 
           base_modules
         end

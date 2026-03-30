@@ -1,49 +1,25 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Configuration::Feature do
-  after { DiscourseAi::Configuration::Module.registered_modules.delete("test_module") }
+  before { SiteSetting.data_explorer_enabled = true }
 
-  describe ".all with registered modules" do
-    it "includes features from registered modules" do
-      feature =
-        described_class.new(
-          "test_feature",
-          nil,
-          200,
-          "test_module",
-          agent_ids_lookup: -> { [-999] },
-        )
-
-      DiscourseAi::Configuration::Module.register(
-        "test_module",
-        module_id: 200,
-        module_name: "test_module",
-        features: [feature],
-      )
-
+  describe ".all with filtered registry" do
+    it "includes features from registered AI features" do
       all_features = described_class.all
-      expect(all_features).to include(feature)
+      de_feature = all_features.find { |f| f.name == "query_generation" }
+      expect(de_feature).to be_present
     end
 
     it "finds registered features by agent_id" do
-      feature =
-        described_class.new(
-          "test_feature",
-          nil,
-          200,
-          "test_module",
-          agent_ids_lookup: -> { [-501] },
+      agent_id =
+        DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS.dig(
+          :data_explorer,
+          :features,
+          :query_generation,
+          :agent_id,
         )
-
-      DiscourseAi::Configuration::Module.register(
-        "test_module",
-        module_id: 200,
-        module_name: "test_module",
-        features: [feature],
-      )
-
-      found = described_class.find_features_using(agent_id: -501)
-      expect(found).to include(feature)
+      found = described_class.find_features_using(agent_id: agent_id)
+      expect(found.map(&:name)).to include("query_generation")
     end
   end
 end
