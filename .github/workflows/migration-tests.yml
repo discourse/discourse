@@ -112,11 +112,13 @@ jobs:
 
       - name: Validate IntermediateDB schema
         run: |
+          chown -R postgres migrations/config/schema migrations/db migrations/lib/database
+
           # Show structured differences between DSL config and database
-          migrations/bin/cli schema diff --db=intermediate_db || true
+          sudo -E -u postgres migrations/bin/cli schema diff --db=intermediate_db || true
 
           # Regenerate schema from DSL config
-          migrations/bin/cli schema generate --db=intermediate_db
+          sudo -E -u postgres migrations/bin/cli schema generate --db=intermediate_db
 
           # Check if generated output matches what's committed
           if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/)" ]; then
