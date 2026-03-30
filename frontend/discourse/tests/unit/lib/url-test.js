@@ -358,6 +358,31 @@ module("Unit | Utility | url", function (hooks) {
     );
   });
 
+  test("routeTo redirects server-side-only routes", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+
+    const routes = [
+      "/safe-mode",
+      "/dev-mode",
+      "/theme-qunit",
+      "/llms.txt",
+      "/robots.txt",
+      "/offline.html",
+      "/manifest.webmanifest",
+      "/opensearch.xml",
+    ];
+
+    for (const route of routes) {
+      DiscourseURL.redirectTo.resetHistory();
+      DiscourseURL.routeTo(route);
+      assert.true(
+        DiscourseURL.redirectTo.calledWith(route),
+        `${route} is redirected to server`
+      );
+    }
+  });
+
   test("anchor handling", async function (assert) {
     sinon.stub(DiscourseURL, "jumpToElement");
     sinon.stub(DiscourseURL, "replaceState");
