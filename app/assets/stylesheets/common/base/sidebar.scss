@@ -43,9 +43,7 @@
   --d-sidebar-highlight-prefix-background: var(--token-color-surface-pressed);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-link-color);
   --d-sidebar-highlight-suffix-color: var(--d-sidebar-link-color);
-  --d-sidebar-highlight-hover-background: var(
-    --token-color-background-accent-bolder
-  );
+  --d-sidebar-highlight-hover-background: var(--token-color-surface-pressed);
 
   // example: hovering a button within a highlighted section
   --d-sidebar-highlight-hover-icon: var(--d-sidebar-link-color);
