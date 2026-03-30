@@ -32,6 +32,7 @@ class Group < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
+  has_many :category_posting_review_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
   has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
