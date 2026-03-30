@@ -1,24 +1,42 @@
+@use "lib/viewport";
+
 .login-welcome-header {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
   overflow-wrap: anywhere;
 
   .login-title {
-    font-size: var(--font-up-6);
+    font-size: var(--font-up-5);
     margin: 0;
     line-height: var(--line-height-medium);
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-6);
+    }
   }
 
   .login-subheader {
-    font-size: var(--font-up-1);
+    font-size: var(--font-0);
     margin: 0;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-1);
+    }
   }
 
   .waving-hand {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     margin-left: 0.5em;
     align-self: center;
+
+    @include viewport.from(sm) {
+      .waving-hand {
+        width: 35px;
+        height: 35px;
+      }
+    }
   }
 }
