@@ -79,22 +79,30 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           INPUT_PR_NUMBER: ${{ github.event.inputs.pr_number }}
           EVENT_PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: ruby {0}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            PR_NUMBER="$INPUT_PR_NUMBER"
-          else
-            PR_NUMBER="$EVENT_PR_NUMBER"
-          fi
-          echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          require "json"
+          require "securerandom"
 
-          PR_JSON=$(gh pr view "$PR_NUMBER" --repo "${{ github.repository }}" --json title,author,headRefOid,baseRefName)
+          pr_number =
+            if ENV["GITHUB_EVENT_NAME"] == "workflow_dispatch"
+              ENV["INPUT_PR_NUMBER"]
+            else
+              ENV["EVENT_PR_NUMBER"]
+            end
 
-          # Use random delimiters to prevent newline injection via PR title/author
-          D=$(openssl rand -hex 8)
-          { echo "title<<$D"; echo "$PR_JSON" | jq -r '.title'; echo "$D"; } >> $GITHUB_OUTPUT
-          { echo "author<<$D"; echo "$PR_JSON" | jq -r '.author.login'; echo "$D"; } >> $GITHUB_OUTPUT
-          echo "sha=$(echo "$PR_JSON" | jq -r '.headRefOid')" >> $GITHUB_OUTPUT
-          echo "base_branch=$(echo "$PR_JSON" | jq -r '.baseRefName')" >> $GITHUB_OUTPUT
+          pr = JSON.parse(
+            `gh pr view #{pr_number} --repo #{ENV["GITHUB_REPOSITORY"]} --json title,author,headRefOid,baseRefName`
+          )
+
+          d = SecureRandom.hex(8)
+          File.open(ENV["GITHUB_OUTPUT"], "a") do |f|
+            f.puts "number=#{pr_number}"
+            f.puts "title<<#{d}"; f.puts pr["title"]; f.puts d
+            f.puts "author<<#{d}"; f.puts pr.dig("author", "login"); f.puts d
+            f.puts "sha=#{pr["headRefOid"]}"
+            f.puts "base_branch=#{pr["baseRefName"]}"
+          end
 
       - name: Fetch PR diff
         env:
