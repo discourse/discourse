@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class CreateNestedViewPostStatsInCore < ActiveRecord::Migration[8.0]
-  def up
-    return if table_exists?(:nested_view_post_stats)
-
+  def change
     create_table :nested_view_post_stats do |t|
       t.bigint :post_id, null: false
       t.integer :direct_reply_count, default: 0, null: false
@@ -14,9 +12,15 @@ class CreateNestedViewPostStatsInCore < ActiveRecord::Migration[8.0]
     end
 
     add_index :nested_view_post_stats, :post_id, unique: true
-  end
 
-  def down
-    drop_table :nested_view_post_stats if table_exists?(:nested_view_post_stats)
+    create_table :nested_topics do |t|
+      t.bigint :topic_id, null: false
+      t.bigint :pinned_post_ids, array: true, default: [], null: false
+      t.timestamps
+    end
+
+    add_index :nested_topics, :topic_id, unique: true
+
+    add_column :category_settings, :nested_replies_default, :boolean, default: false, null: false
   end
 end
