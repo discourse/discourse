@@ -471,14 +471,47 @@ RSpec.describe "tasks/release" do
     let(:origin_main_commits) do
       Dir.chdir(origin_path) { git("log", "--pretty=%s", base_branch).lines.map(&:strip) }
     end
-    let(:security_fixes) { "origin/security-fix-one,origin/security-fix-two" }
+    let(:pr_list_json) do
+      [
+        {
+          "number" => 1,
+          "title" => "Security fix one",
+          "body" => "Description for fix one",
+          "headRefName" => "security-fix-one",
+        },
+        {
+          "number" => 2,
+          "title" => "Security fix two",
+          "body" => "",
+          "headRefName" => "security-fix-two",
+        },
+      ].to_json
+    end
 
     def origin_file(path)
       Dir.chdir(origin_path) { git("show", "#{base_branch}:#{path}") }
     end
 
     before do
-      ENV["SECURITY_FIX_REFS"] = security_fixes
+      allow(ReleaseUtils).to receive(:gh).and_call_original
+      allow(ReleaseUtils).to receive(:gh).with(
+        "pr",
+        "list",
+        "--repo",
+        "discourse/discourse-private-mirror",
+        "--base",
+        base_branch,
+        "--state",
+        "open",
+        "--json",
+        "number,title,body,headRefName",
+        "--limit",
+        "100",
+        capture: true,
+      ).and_return(pr_list_json)
+
+      ENV["SECURITY_FIX_PR_NUMBERS"] = "1,2"
+
       Dir.chdir(origin_path) do
         git "checkout", "-b", "security-fix-one"
         File.write("firstfile.txt", "contents")
@@ -493,20 +526,22 @@ RSpec.describe "tasks/release" do
         git "add", "somefile.txt"
         git "commit", "-m", "security fix two"
       end
+
+      # Add privatemirror as alias for origin so fetch works
+      Dir.chdir(local_path) { git "remote", "add", "privatemirror", origin_path }
     end
 
-    after { ENV.delete("SECURITY_FIX_REFS") }
+    after { ENV.delete("SECURITY_FIX_PR_NUMBERS") }
 
     context "when accepting the version bump" do
       before { run_task }
 
-      it "cherry-picks all security fix commits in order" do
+      it "squash-merges security fix PRs in order" do
         expect(origin_main_commits).to eq(
           [
             "DEV: Bump development branch to v2025.12.0-latest.1",
-            "security fix two",
-            "security fix one, commit two",
-            "security fix one, commit one",
+            "Security fix two",
+            "Security fix one",
             "Initial commit",
           ],
         )
@@ -529,14 +564,9 @@ RSpec.describe "tasks/release" do
         run_task
       end
 
-      it "cherry-picks security fix commits without a version bump" do
+      it "squash-merges security fix PRs without a version bump" do
         expect(origin_main_commits).to eq(
-          [
-            "security fix two",
-            "security fix one, commit two",
-            "security fix one, commit one",
-            "Initial commit",
-          ],
+          ["Security fix two", "Security fix one", "Initial commit"],
         )
       end
 
@@ -547,7 +577,16 @@ RSpec.describe "tasks/release" do
 
     context "when targeting a release branch" do
       let(:base_branch) { "release/2025.6" }
-      let(:security_fixes) { "origin/security-fix-for-release-branch" }
+      let(:pr_list_json) do
+        [
+          {
+            "number" => 1,
+            "title" => "Security fix for release branch",
+            "body" => "",
+            "headRefName" => "security-fix-for-release-branch",
+          },
+        ].to_json
+      end
 
       before do
         Dir.chdir(origin_path) do
@@ -572,12 +611,12 @@ RSpec.describe "tasks/release" do
         expect(origin_file("lib/version.rb")).to include('STRING = "2025.6.1"')
       end
 
-      it "cherry-picks security fixes and adds version bump commit" do
+      it "squash-merges security fixes and adds version bump commit" do
         run_task
         expect(origin_main_commits.first(3)).to eq(
           [
             "DEV: Bump release branch to v2025.6.1",
-            "security fix for release branch",
+            "Security fix for release branch",
             "Initial release branch commit",
           ],
         )
