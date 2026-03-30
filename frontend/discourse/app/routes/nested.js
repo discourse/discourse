@@ -56,7 +56,7 @@ export default class NestedRoute extends Route {
 
     const data = await PreloadStore.getAndRemove(
       `nested_topic_${topic_id}`,
-      () => ajax(`/n/${slug}/${topic_id}/roots.json?sort=${sort}`)
+      () => ajax(`/n/${slug}/${topic_id}.json?sort=${sort}`)
     );
     return this._processResponse(data, params);
   }

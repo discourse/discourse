@@ -1415,7 +1415,6 @@ Discourse::Application.routes.draw do
 
     # Nested replies routes
     scope "n/:slug/:topic_id", constraints: { topic_id: /\d+/ } do
-      get "/roots" => "nested_topics#roots"
       get "/children/:post_number" => "nested_topics#children",
           :constraints => {
             post_number: /\d+/,
@@ -1424,7 +1423,7 @@ Discourse::Application.routes.draw do
       put "/pin" => "nested_topics#pin"
       put "/toggle" => "nested_topics#toggle"
       get "/:post_number" => "nested_topics#context", :constraints => { post_number: /\d+/ }
-      get "/" => "nested_topics#roots"
+      get "/" => "nested_topics#show"
     end
 
     # Topics resource

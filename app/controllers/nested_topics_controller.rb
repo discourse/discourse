@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NestedTopicsController < ApplicationController
-  skip_before_action :check_xhr, only: %i[roots context]
+  skip_before_action :check_xhr, only: %i[show context]
 
   before_action :ensure_nested_replies_enabled
   before_action :find_topic
@@ -10,7 +10,7 @@ class NestedTopicsController < ApplicationController
   # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)
   # JSON page 0: includes topic metadata, OP post, sort, and message_bus_last_id
   # JSON page 1+: returns only roots for pagination
-  def roots
+  def show
     sort = validated_sort
 
     if spa_boot_request?

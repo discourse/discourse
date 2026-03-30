@@ -98,7 +98,7 @@ export default class NestedController extends Controller {
     try {
       const nextPage = this.page + 1;
       const data = await ajax(
-        `/n/${this.topic.slug}/${this.topic.id}/roots.json?page=${nextPage}&sort=${this.sort}`
+        `/n/${this.topic.slug}/${this.topic.id}.json?page=${nextPage}&sort=${this.sort}`
       );
 
       const newNodes = (data.roots || []).map((root) =>

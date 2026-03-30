@@ -8,8 +8,8 @@ RSpec.describe NestedTopicsController, type: :request do
 
   before { SiteSetting.nested_replies_enabled = true }
 
-  def roots_url(topic, page: 0, sort: "top")
-    "/n/#{topic.slug}/#{topic.id}/roots.json?page=#{page}&sort=#{sort}"
+  def show_url(topic, page: 0, sort: "top")
+    "/n/#{topic.slug}/#{topic.id}.json?page=#{page}&sort=#{sort}"
   end
 
   def children_url(topic, post_number, page: 0, sort: "top", depth: 1)
@@ -47,11 +47,11 @@ RSpec.describe NestedTopicsController, type: :request do
     end
   end
 
-  describe "GET roots" do
+  describe "GET show" do
     it "returns 404 when plugin is disabled" do
       SiteSetting.nested_replies_enabled = false
       sign_in(user)
-      get roots_url(topic)
+      get show_url(topic)
       expect(response.status).to eq(404)
     end
 
@@ -59,7 +59,7 @@ RSpec.describe NestedTopicsController, type: :request do
       private_category = Fabricate(:private_category, group: Fabricate(:group))
       private_topic = Fabricate(:topic, category: private_category)
       Fabricate(:post, topic: private_topic, post_number: 1)
-      get roots_url(private_topic)
+      get show_url(private_topic)
       expect(response.status).to eq(403)
     end
 
@@ -68,7 +68,7 @@ RSpec.describe NestedTopicsController, type: :request do
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       sign_in(user)
 
-      get roots_url(topic, page: 0)
+      get show_url(topic, page: 0)
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -84,7 +84,7 @@ RSpec.describe NestedTopicsController, type: :request do
       25.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
       sign_in(user)
 
-      get roots_url(topic, page: 1)
+      get show_url(topic, page: 1)
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -97,7 +97,7 @@ RSpec.describe NestedTopicsController, type: :request do
       20.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
       sign_in(user)
 
-      get roots_url(topic, page: 0)
+      get show_url(topic, page: 0)
       json = response.parsed_body
       expect(json["has_more_roots"]).to eq(true)
       expect(json["roots"].length).to eq(20)
@@ -107,7 +107,7 @@ RSpec.describe NestedTopicsController, type: :request do
       5.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
       sign_in(user)
 
-      get roots_url(topic, page: 0)
+      get show_url(topic, page: 0)
       json = response.parsed_body
       expect(json["has_more_roots"]).to eq(false)
     end
@@ -116,7 +116,7 @@ RSpec.describe NestedTopicsController, type: :request do
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       sign_in(user)
 
-      get roots_url(topic, sort: "invalid")
+      get show_url(topic, sort: "invalid")
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["sort"]).to eq(SiteSetting.nested_replies_default_sort)
@@ -127,7 +127,7 @@ RSpec.describe NestedTopicsController, type: :request do
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       sign_in(user)
 
-      get "/n/#{topic.slug}/#{topic.id}/roots.json"
+      get "/n/#{topic.slug}/#{topic.id}.json"
       json = response.parsed_body
       expect(json["sort"]).to eq("old")
     end
@@ -137,7 +137,7 @@ RSpec.describe NestedTopicsController, type: :request do
       high = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
       sign_in(user)
 
-      get roots_url(topic, sort: "top")
+      get show_url(topic, sort: "top")
       json = response.parsed_body
       root_ids = json["roots"].map { |r| r["id"] }
       expect(root_ids).to eq([high.id, low.id])
@@ -162,7 +162,7 @@ RSpec.describe NestedTopicsController, type: :request do
         )
       sign_in(user)
 
-      get roots_url(topic, sort: "new")
+      get show_url(topic, sort: "new")
       json = response.parsed_body
       root_ids = json["roots"].map { |r| r["id"] }
       expect(root_ids).to eq([new_post.id, old_post.id])
@@ -173,7 +173,7 @@ RSpec.describe NestedTopicsController, type: :request do
       second = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       sign_in(user)
 
-      get roots_url(topic, sort: "old")
+      get show_url(topic, sort: "old")
       json = response.parsed_body
       root_ids = json["roots"].map { |r| r["id"] }
       expect(root_ids).to eq([first.id, second.id])
@@ -184,7 +184,7 @@ RSpec.describe NestedTopicsController, type: :request do
       child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
       sign_in(user)
 
-      get roots_url(topic, sort: "top")
+      get show_url(topic, sort: "top")
       json = response.parsed_body
       root_json = json["roots"].first
       expect(root_json["children"]).to be_an(Array)
@@ -212,12 +212,12 @@ RSpec.describe NestedTopicsController, type: :request do
         )
       sign_in(user)
 
-      get roots_url(topic, sort: "top")
+      get show_url(topic, sort: "top")
       json = response.parsed_body
       children_ids = json["roots"].first["children"].map { |c| c["id"] }
       expect(children_ids).to eq([high_child.id, low_child.id])
 
-      get roots_url(topic, sort: "old")
+      get show_url(topic, sort: "old")
       json = response.parsed_body
       children_ids = json["roots"].first["children"].map { |c| c["id"] }
       expect(children_ids).to eq([low_child.id, high_child.id])
@@ -228,7 +228,7 @@ RSpec.describe NestedTopicsController, type: :request do
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
       sign_in(user)
 
-      get roots_url(topic)
+      get show_url(topic)
       json = response.parsed_body
       root_json = json["roots"].first
       expect(root_json).to have_key("direct_reply_count")
@@ -241,7 +241,7 @@ RSpec.describe NestedTopicsController, type: :request do
         root.update!(deleted_at: Time.current)
         sign_in(user)
 
-        get roots_url(topic)
+        get show_url(topic)
         json = response.parsed_body
         root_json = json["roots"].find { |r| r["id"] == root.id }
         expect(root_json).to be_present
@@ -257,7 +257,7 @@ RSpec.describe NestedTopicsController, type: :request do
         root.update!(deleted_at: Time.current)
         sign_in(user)
 
-        get roots_url(topic)
+        get show_url(topic)
         json = response.parsed_body
         root_json = json["roots"].find { |r| r["id"] == root.id }
         expect(root_json["children"]).to be_an(Array)
@@ -270,7 +270,7 @@ RSpec.describe NestedTopicsController, type: :request do
         root.update!(deleted_at: Time.current)
         sign_in(admin)
 
-        get roots_url(topic)
+        get show_url(topic)
         json = response.parsed_body
         root_json = json["roots"].find { |r| r["id"] == root.id }
         expect(root_json).to be_present
@@ -297,7 +297,7 @@ RSpec.describe NestedTopicsController, type: :request do
         pin_post(low_post.post_number)
         sign_in(user)
 
-        get roots_url(topic, sort: "top")
+        get show_url(topic, sort: "top")
 
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
@@ -308,7 +308,7 @@ RSpec.describe NestedTopicsController, type: :request do
       it "does not include pinned_post_number when no reply is pinned" do
         sign_in(user)
 
-        get roots_url(topic, sort: "top")
+        get show_url(topic, sort: "top")
 
         json = response.parsed_body
         expect(json).not_to have_key("pinned_post_number")
@@ -321,7 +321,7 @@ RSpec.describe NestedTopicsController, type: :request do
         pin_post(low_post.post_number)
         sign_in(user)
 
-        get roots_url(topic, sort: "top")
+        get show_url(topic, sort: "top")
 
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
@@ -333,7 +333,7 @@ RSpec.describe NestedTopicsController, type: :request do
         pin_post(low_post.post_number)
         sign_in(user)
 
-        get roots_url(topic, sort: "top")
+        get show_url(topic, sort: "top")
 
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
@@ -344,7 +344,7 @@ RSpec.describe NestedTopicsController, type: :request do
         pin_post(99_999)
         sign_in(user)
 
-        get roots_url(topic, sort: "top")
+        get show_url(topic, sort: "top")
 
         json = response.parsed_body
         expect(response.status).to eq(200)
@@ -359,7 +359,7 @@ RSpec.describe NestedTopicsController, type: :request do
         pin_post(low_post.post_number)
         sign_in(user)
 
-        get roots_url(topic, page: 1, sort: "top")
+        get show_url(topic, page: 1, sort: "top")
 
         json = response.parsed_body
         expect(json).not_to have_key("pinned_post_number")
@@ -430,7 +430,7 @@ RSpec.describe NestedTopicsController, type: :request do
         put pin_url(topic), params: { post_number: root_post.post_number }
         expect(response.status).to eq(200)
 
-        get roots_url(topic, sort: "top")
+        get show_url(topic, sort: "top")
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
         expect(root_ids.first).to eq(root_post.id)
@@ -466,7 +466,7 @@ RSpec.describe NestedTopicsController, type: :request do
 
       it "excludes whispers for regular users" do
         sign_in(user)
-        get roots_url(topic)
+        get show_url(topic)
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
         expect(root_ids).not_to include(whisper.id)
@@ -474,7 +474,7 @@ RSpec.describe NestedTopicsController, type: :request do
 
       it "includes whispers for staff" do
         sign_in(admin)
-        get roots_url(topic)
+        get show_url(topic)
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
         expect(root_ids).to include(whisper.id)
@@ -532,7 +532,7 @@ RSpec.describe NestedTopicsController, type: :request do
         )
         sign_in(user)
 
-        get roots_url(topic)
+        get show_url(topic)
         json = response.parsed_body
         root_json = json["roots"].find { |r| r["id"] == root.id }
         expect(root_json["direct_reply_count"]).to eq(1)
@@ -551,7 +551,7 @@ RSpec.describe NestedTopicsController, type: :request do
         )
         sign_in(admin)
 
-        get roots_url(topic)
+        get show_url(topic)
         json = response.parsed_body
         root_json = json["roots"].find { |r| r["id"] == root.id }
         expect(root_json["direct_reply_count"]).to eq(2)
