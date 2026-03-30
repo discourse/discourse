@@ -331,26 +331,38 @@ export default class UpcomingChangeItem extends Component {
         {{/if}}
 
         <div class="upcoming-change__badges">
-          <span
-            title={{i18n
+          <DTooltip
+            @content={{i18n
               (concat
-                "admin.upcoming_changes.statuses."
+                "admin.upcoming_changes.status_descriptions."
                 @change.upcoming_change.status
               )
-            }}
-            class={{concatClass
-              "upcoming-change__badge"
-              (concat "--status-" @change.upcoming_change.status)
             }}
           >
-            {{icon "far-circle-dot"}}
-            {{i18n
-              (concat
-                "admin.upcoming_changes.statuses."
-                @change.upcoming_change.status
-              )
-            }}
-          </span>
+            <:trigger>
+              <span
+                class={{concatClass
+                  "upcoming-change__badge"
+                  "--has-tooltip"
+                  (concat "--status-" @change.upcoming_change.status)
+                }}
+              >
+                <span class="upcoming-change__badge-content">
+
+                  {{icon "flask"}}
+                  {{i18n
+                    (concat
+                      "admin.upcoming_changes.statuses."
+                      @change.upcoming_change.status
+                    )
+                  }}
+                </span>
+                <span class="upcoming-change__badge-info">
+                  {{icon "info"}}
+                </span>
+              </span>
+            </:trigger>
+          </DTooltip>
 
           <span
             title={{i18n
@@ -364,13 +376,15 @@ export default class UpcomingChangeItem extends Component {
               (concat "--impact-role-" @change.upcoming_change.impact_role)
             }}
           >
-            {{icon (this.impactRoleIcon @change.upcoming_change.impact_role)}}
-            {{i18n
-              (concat
-                "admin.upcoming_changes.impact_roles."
-                @change.upcoming_change.impact_role
-              )
-            }}
+            <span class="upcoming-change__badge-content">
+              {{icon (this.impactRoleIcon @change.upcoming_change.impact_role)}}
+              {{i18n
+                (concat
+                  "admin.upcoming_changes.impact_roles."
+                  @change.upcoming_change.impact_role
+                )
+              }}
+            </span>
           </span>
         </div>
       </td>
