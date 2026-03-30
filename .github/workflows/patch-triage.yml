@@ -1,14 +1,14 @@
-# PR Security Scan
+# Patch Triage
 #
 # Runs on every non-draft pull request. Fetches the PR diff and sends it to
-# the patch-triage VM for security analysis. Results are posted back as a
-# GitHub Check Run — staff can click "Details" to see the full scan in
-# patch-triage (login required).
+# the patch-triage VM for analysis. Results are posted back as a GitHub Check
+# Run — staff can click "Details" to see the full review in patch-triage
+# (login required).
 #
 # Also notifies the VM when a PR is closed (merged or not) so patch-triage
-# can auto-resolve the associated finding.
+# can auto-resolve the associated record.
 
-name: PR Security Scan
+name: Patch Triage
 
 on:
   pull_request:
