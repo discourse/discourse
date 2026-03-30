@@ -23,7 +23,7 @@ el:
       all_tags: "(όλες οι ετικέτες)"
       create_rule: "Δημιουργία Κανόνα"
       create_channel: "Δημιουργία Καναλιού"
-      delete_channel: "Σβήσιμο"
+      delete_channel: "Διαγραφή"
       test_channel: "Δοκιμή"
       edit_channel: "Επεξεργασία"
       channel_delete_confirm: "Σίγουρα θέλετε να διαγράψετε αυτό το κανάλι; Όλοι οι σχετικοί κανόνες θα διαγραφούν."
@@ -47,7 +47,7 @@ el:
         category: "Κατηγορία"
         tags: "Ετικέτες"
         edit_rule: "Επεξεργασία"
-        delete_rule: "Σβήσιμο"
+        delete_rule: "Διαγραφή"
       edit_channel_modal:
         title: "Επεξεργασία Καναλιού"
         save: "Αποθήκευση Καναλιού"
