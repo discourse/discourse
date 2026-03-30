@@ -279,7 +279,7 @@ RSpec.describe NestedTopicsController, type: :request do
       end
     end
 
-    describe "pinned reply" do
+    describe "pinned replies" do
       fab!(:low_post) do
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 1)
       end
@@ -289,12 +289,12 @@ RSpec.describe NestedTopicsController, type: :request do
 
       before { @nested_topic_record = NestedTopic.create!(topic: topic) }
 
-      def pin_post(post_number)
-        @nested_topic_record.update!(pinned_post_number: post_number)
+      def pin_posts(*posts)
+        @nested_topic_record.update!(pinned_post_ids: posts.map(&:id))
       end
 
-      it "places the pinned reply first regardless of sort" do
-        pin_post(low_post.post_number)
+      it "places pinned replies first regardless of sort" do
+        pin_posts(low_post)
         sign_in(user)
 
         get show_url(topic, sort: "top")
@@ -302,23 +302,23 @@ RSpec.describe NestedTopicsController, type: :request do
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
         expect(root_ids.first).to eq(low_post.id)
-        expect(json["pinned_post_number"]).to eq(low_post.post_number)
+        expect(json["pinned_post_ids"]).to contain_exactly(low_post.id)
       end
 
-      it "does not include pinned_post_number when no reply is pinned" do
+      it "does not include pinned_post_ids when none are pinned" do
         sign_in(user)
 
         get show_url(topic, sort: "top")
 
         json = response.parsed_body
-        expect(json).not_to have_key("pinned_post_number")
+        expect(json).not_to have_key("pinned_post_ids")
       end
 
-      it "fetches the pinned reply even when it would be on a later page" do
+      it "fetches a pinned reply even when it would be on a later page" do
         19.times do
           Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 5)
         end
-        pin_post(low_post.post_number)
+        pin_posts(low_post)
         sign_in(user)
 
         get show_url(topic, sort: "top")
@@ -330,7 +330,7 @@ RSpec.describe NestedTopicsController, type: :request do
 
       it "does not promote a deleted post to pinned position" do
         low_post.update!(deleted_at: Time.current)
-        pin_post(low_post.post_number)
+        pin_posts(low_post)
         sign_in(user)
 
         get show_url(topic, sort: "top")
@@ -340,8 +340,8 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_ids.first).not_to eq(low_post.id)
       end
 
-      it "ignores a pinned post_number that does not exist" do
-        pin_post(99_999)
+      it "ignores a pinned post_id that does not exist" do
+        @nested_topic_record.update!(pinned_post_ids: [99_999])
         sign_in(user)
 
         get show_url(topic, sort: "top")
@@ -356,13 +356,25 @@ RSpec.describe NestedTopicsController, type: :request do
         25.times do
           Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 5)
         end
-        pin_post(low_post.post_number)
+        pin_posts(low_post)
         sign_in(user)
 
         get show_url(topic, page: 1, sort: "top")
 
         json = response.parsed_body
-        expect(json).not_to have_key("pinned_post_number")
+        expect(json).not_to have_key("pinned_post_ids")
+      end
+
+      it "places multiple pinned replies first in pin order" do
+        pin_posts(low_post, high_post)
+        sign_in(user)
+
+        get show_url(topic, sort: "top")
+
+        json = response.parsed_body
+        root_ids = json["roots"].map { |r| r["id"] }
+        expect(root_ids[0]).to eq(low_post.id)
+        expect(root_ids[1]).to eq(high_post.id)
       end
     end
 
@@ -377,39 +389,45 @@ RSpec.describe NestedTopicsController, type: :request do
 
       it "returns 403 for non-staff users" do
         sign_in(user)
-        put pin_url(topic), params: { post_number: root_post.post_number }
+        put pin_url(topic), params: { post_id: root_post.id }
         expect(response.status).to eq(403)
       end
 
       it "allows staff to pin a post" do
         sign_in(admin)
-        put pin_url(topic), params: { post_number: root_post.post_number }
+        put pin_url(topic), params: { post_id: root_post.id }
         expect(response.status).to eq(200)
 
         json = response.parsed_body
-        expect(json["pinned_post_number"]).to eq(root_post.post_number)
+        expect(json["pinned_post_ids"]).to contain_exactly(root_post.id)
 
         topic.reload
-        expect(topic.nested_topic&.pinned_post_number).to eq(root_post.post_number)
+        expect(topic.nested_topic.pinned_post_ids).to contain_exactly(root_post.id)
       end
 
-      it "allows staff to unpin a post" do
-        topic.reload.nested_topic.update!(pinned_post_number: root_post.post_number)
+      it "allows staff to unpin a post by toggling" do
+        topic.reload.nested_topic.update!(pinned_post_ids: [root_post.id])
 
         sign_in(admin)
-        put pin_url(topic), params: { post_number: nil }
+        put pin_url(topic), params: { post_id: root_post.id }
         expect(response.status).to eq(200)
 
         json = response.parsed_body
-        expect(json["pinned_post_number"]).to be_nil
+        expect(json["pinned_post_ids"]).to eq([])
 
         topic.reload
-        expect(topic.nested_topic&.pinned_post_number).to be_nil
+        expect(topic.nested_topic.pinned_post_ids).to eq([])
       end
 
-      it "returns 404 for a nonexistent post_number" do
+      it "returns 404 for a nonexistent post_id" do
         sign_in(admin)
-        put pin_url(topic), params: { post_number: 99_999 }
+        put pin_url(topic), params: { post_id: 99_999 }
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when no post_id is provided" do
+        sign_in(admin)
+        put pin_url(topic)
         expect(response.status).to eq(404)
       end
 
@@ -418,7 +436,7 @@ RSpec.describe NestedTopicsController, type: :request do
           Fabricate(:post, topic: topic, user: user, reply_to_post_number: root_post.post_number)
 
         sign_in(admin)
-        put pin_url(topic), params: { post_number: child_post.post_number }
+        put pin_url(topic), params: { post_id: child_post.id }
         expect(response.status).to eq(400)
       end
 
@@ -427,14 +445,29 @@ RSpec.describe NestedTopicsController, type: :request do
           Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
 
         sign_in(admin)
-        put pin_url(topic), params: { post_number: root_post.post_number }
+        put pin_url(topic), params: { post_id: root_post.id }
         expect(response.status).to eq(200)
 
         get show_url(topic, sort: "top")
         json = response.parsed_body
         root_ids = json["roots"].map { |r| r["id"] }
         expect(root_ids.first).to eq(root_post.id)
-        expect(json["pinned_post_number"]).to eq(root_post.post_number)
+        expect(json["pinned_post_ids"]).to contain_exactly(root_post.id)
+      end
+
+      it "allows pinning multiple posts" do
+        second_root =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
+
+        sign_in(admin)
+        put pin_url(topic), params: { post_id: root_post.id }
+        expect(response.status).to eq(200)
+
+        put pin_url(topic), params: { post_id: second_root.id }
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["pinned_post_ids"]).to contain_exactly(root_post.id, second_root.id)
       end
 
       it "lazily creates a NestedTopic record when nested_replies_default is on" do
@@ -442,12 +475,12 @@ RSpec.describe NestedTopicsController, type: :request do
         SiteSetting.nested_replies_default = true
 
         sign_in(admin)
-        put pin_url(topic), params: { post_number: root_post.post_number }
+        put pin_url(topic), params: { post_id: root_post.id }
         expect(response.status).to eq(200)
 
         topic.reload
         expect(topic.nested_topic).to be_present
-        expect(topic.nested_topic.pinned_post_number).to eq(root_post.post_number)
+        expect(topic.nested_topic.pinned_post_ids).to contain_exactly(root_post.id)
       end
     end
 

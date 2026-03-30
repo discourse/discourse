@@ -60,7 +60,7 @@ export default <template>
       @showFlags={{@controller.showFlags}}
       @showHistory={{@controller.showHistory}}
       @postNumber={{@controller.postNumber}}
-      @pinnedPostNumber={{@controller.pinnedPostNumber}}
+      @pinnedPostIds={{@controller.pinnedPostIds}}
       @newRootPostCount={{@controller.newRootPostIds.length}}
       @loadNewRoots={{@controller.loadNewRoots}}
       @editingTopic={{@controller.editingTopic}}

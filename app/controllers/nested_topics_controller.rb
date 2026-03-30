@@ -160,20 +160,27 @@ class NestedTopicsController < ApplicationController
     guardian.ensure_can_edit!(@topic)
     raise Discourse::InvalidAccess unless guardian.is_staff?
 
-    post_number = params[:post_number].presence&.to_i
+    post_id = params[:post_id].presence&.to_i
+    raise Discourse::NotFound if post_id.nil?
 
-    if post_number
-      post = @topic.posts.where(post_number: post_number).first
-      raise Discourse::NotFound unless post
-      if post.reply_to_post_number.present? && post.reply_to_post_number != 1
-        raise Discourse::InvalidParameters.new(:post_number)
-      end
+    post = @topic.posts.find_by(id: post_id)
+    raise Discourse::NotFound unless post
+    if post.reply_to_post_number.present? && post.reply_to_post_number != 1
+      raise Discourse::InvalidParameters.new(:post_id)
     end
 
     nested_topic = @topic.nested_topic || NestedTopic.find_or_create_by!(topic: @topic)
-    nested_topic.update!(pinned_post_number: post_number)
+    pinned_ids = nested_topic.pinned_post_ids || []
 
-    render json: { pinned_post_number: post_number }
+    if pinned_ids.include?(post_id)
+      pinned_ids = pinned_ids - [post_id]
+    else
+      pinned_ids = pinned_ids + [post_id]
+    end
+
+    nested_topic.update!(pinned_post_ids: pinned_ids)
+
+    render json: { pinned_post_ids: pinned_ids }
   end
 
   # PUT /n/:slug/:topic_id/toggle
@@ -199,20 +206,33 @@ class NestedTopicsController < ApplicationController
     roots = loader.load_posts_for_tree(roots).to_a
     has_more_roots = roots.size == NestedReplies::TreeLoader::ROOTS_PER_PAGE
 
-    pinned_post_number = @topic.nested_topic&.pinned_post_number
+    pinned_post_ids = @topic.nested_topic&.pinned_post_ids.presence
 
-    if pinned_post_number.present?
-      pinned_index = roots.index { |p| p.post_number == pinned_post_number }
-      if pinned_index
-        pinned_post = roots[pinned_index]
-        roots.unshift(roots.delete_at(pinned_index)) if pinned_post.deleted_at.nil?
-      else
-        pinned_post =
-          loader.load_posts_for_tree(
-            loader.apply_visibility(@topic.posts.where(post_number: pinned_post_number)),
-          ).first
-        roots.unshift(pinned_post) if pinned_post && pinned_post.deleted_at.nil?
+    if pinned_post_ids.present?
+      pinned_in_page = []
+      pinned_missing_ids = []
+
+      pinned_post_ids.each do |pid|
+        idx = roots.index { |p| p.id == pid }
+        if idx
+          pinned_in_page << roots.delete_at(idx) if roots[idx].deleted_at.nil?
+        else
+          pinned_missing_ids << pid
+        end
       end
+
+      if pinned_missing_ids.present?
+        fetched =
+          loader.load_posts_for_tree(
+            loader.apply_visibility(@topic.posts.where(id: pinned_missing_ids)),
+          ).index_by(&:id)
+        pinned_missing_ids.each do |pid|
+          post = fetched[pid]
+          pinned_in_page << post if post && post.deleted_at.nil?
+        end
+      end
+
+      roots = pinned_in_page + roots
     end
 
     tree_data =
@@ -237,7 +257,7 @@ class NestedTopicsController < ApplicationController
       sort: sort,
       message_bus_last_id: @topic_view.message_bus_last_id,
     }
-    result[:pinned_post_number] = pinned_post_number if pinned_post_number.present?
+    result[:pinned_post_ids] = pinned_post_ids if pinned_post_ids.present?
     result
   end
 

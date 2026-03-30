@@ -47,7 +47,7 @@ export default class AdminPostMenu extends Component {
     }
 
     const nestedController = getOwner(this).lookup("controller:nested");
-    const isPinned = nestedController?.pinnedPostNumber === post.post_number;
+    const isPinned = nestedController?.pinnedPostIds?.includes(post.id);
 
     return {
       isPinned,

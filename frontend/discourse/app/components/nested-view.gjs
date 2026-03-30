@@ -9,7 +9,7 @@ import LoadMore from "discourse/components/load-more";
 import TopicMap from "discourse/components/topic-map";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
-import { eq, gt } from "discourse/truth-helpers";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import NestedFloatingActions from "./nested-floating-actions";
 import NestedOp from "./nested-op";
@@ -37,6 +37,10 @@ export default class NestedView extends Component {
     showTopReplies() {},
     cancelFilter() {},
     refresh() {},
+  };
+
+  isPinned = (post) => {
+    return this.args.pinnedPostIds?.includes(post.id);
   };
 
   willDestroy() {
@@ -128,7 +132,7 @@ export default class NestedView extends Component {
             @topic={{@topic}}
             @depth={{0}}
             @sort={{@sort}}
-            @isPinned={{eq node.post.post_number @pinnedPostNumber}}
+            @isPinned={{this.isPinned node.post}}
             @replyToPost={{@replyToPost}}
             @editPost={{@editPost}}
             @deletePost={{@deletePost}}

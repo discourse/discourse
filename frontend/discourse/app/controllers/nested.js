@@ -38,7 +38,7 @@ export default class NestedController extends Controller {
   @tracked topAncestorPostNumber = null;
   @tracked newRootPostIds = [];
   @tracked editingTopic = false;
-  @tracked pinnedPostNumber = null;
+  @tracked pinnedPostIds = [];
   queryParams = ["sort", "context"];
 
   // Externalized expansion state: postNumber → { expanded, collapsed }
@@ -205,22 +205,20 @@ export default class NestedController extends Controller {
       return;
     }
 
-    const isPinned = this.pinnedPostNumber === post.post_number;
-    const newValue = isPinned ? null : post.post_number;
-
     try {
-      await ajax(`/n/${this.topic.slug}/${this.topic.id}/pin.json`, {
-        type: "PUT",
-        data: { post_number: newValue },
-      });
+      const result = await ajax(
+        `/n/${this.topic.slug}/${this.topic.id}/pin.json`,
+        {
+          type: "PUT",
+          data: { post_id: post.id },
+        }
+      );
 
-      this.pinnedPostNumber = newValue;
+      this.pinnedPostIds = result.pinned_post_ids || [];
 
-      if (newValue) {
-        // Move pinned post to front of rootNodes
-        const idx = this.rootNodes.findIndex(
-          (n) => n.post.post_number === newValue
-        );
+      if (this.pinnedPostIds.includes(post.id)) {
+        // Move newly pinned post to front of rootNodes
+        const idx = this.rootNodes.findIndex((n) => n.post.id === post.id);
         if (idx > 0) {
           const pinned = this.rootNodes[idx];
           const rest = this.rootNodes.filter((_, i) => i !== idx);

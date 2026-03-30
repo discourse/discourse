@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class NestedTopic < ActiveRecord::Base
+  self.ignored_columns = ["pinned_post_number"]
+
   belongs_to :topic
 
   validates :topic_id, presence: true, uniqueness: true
@@ -10,11 +12,11 @@ end
 #
 # Table name: nested_topics
 #
-#  id                 :bigint           not null, primary key
-#  pinned_post_number :integer
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  topic_id           :bigint           not null
+#  id              :bigint           not null, primary key
+#  pinned_post_ids :bigint           default([]), not null, is an Array
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  topic_id        :bigint           not null
 #
 # Indexes
 #
