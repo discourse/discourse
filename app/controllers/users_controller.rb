@@ -208,7 +208,7 @@ class UsersController < ApplicationController
 
     # Exclude some attributes that are only for user creation because they have
     # dedicated update routes.
-    attributes = user_params.except(:username, :email, :password)
+    attributes = params.except(:username, :email, :password).permit!
 
     if params[:user_fields].present?
       attributes[:custom_fields] ||= {}
