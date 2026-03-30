@@ -173,7 +173,7 @@ el:
           select_all: "Επιλογή όλων"
           clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         response_format:
           open_modal: "Επεξεργασία"
           modal:
@@ -197,14 +197,14 @@ el:
         credential_not_set: "(δεν έχει οριστεί)"
         edit: "Επεξεργασία"
         test: "Δοκιμή"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
       secrets:
         short_title: "Διαπιστευτήρια"
         name: "Όνομα"
         secret: "Τιμή"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
       mcp_servers:
         name: "Όνομα"
@@ -228,7 +228,7 @@ el:
         attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        delete: Σβήσιμο
+        delete: Διαγραφή
         quotas:
           group: "Ομάδα"
           max_usages: "Μέγιστες χρήσεις"
@@ -269,7 +269,7 @@ el:
           save_caption: "Αποθήκευση"
       embeddings:
         save: "Αποθήκευση"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         edit: "Επεξεργασία"
         tests:
           success: "Επιτυχία!"

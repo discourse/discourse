@@ -370,7 +370,7 @@ el:
     ok_value: "OK"
     cancel_value: "Ακύρωση"
     submit: "Υποβολή"
-    delete: "Σβήσιμο"
+    delete: "Διαγραφή"
     generic_error: "Λυπάμαι, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
     multiple_errors: "Εμφανίστηκαν πολλαπλά σφάλματα: %{errors}"
@@ -743,7 +743,7 @@ el:
       unclaim:
         help: "Αφαίρεση αυτής της διεκδίκησης"
       awaiting_approval: "Αναμονή έγκρισης"
-      delete: "Σβήσιμο"
+      delete: "Διαγραφή"
       settings:
         saved: "Αποθηκεύτηκε! "
         save_changes: "Αποθήκευση Αλλαγών"
@@ -947,7 +947,7 @@ el:
         placeholder: "Γράψτε τη σημείωση σας εδώ..."
         chars_remaining: "%{count} χαρακτήρες απομένουν"
         delete_note: "Διαγραφή αυτής της σημείωσης"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
       topic_label: "Θέμα"
       queued_user: "Χρήστης σε ουρά"
       posted_in: "Δημοσιεύτηκε σε"
@@ -3110,7 +3110,7 @@ el:
         admin_problems: "νέα συμβουλή στον πίνακα ελέγχου του ιστότοπού σας"
     upload_selector:
       change: "Αλλαγή"
-      delete: "Σβήσιμο"
+      delete: "Διαγραφή"
       uploading: "Ανεβαίνει"
       processing: "Επεξεργασία μεταφόρτωσης"
       select_file: "Πατήστε για να ανεβάσετε ή σύρετε και αποθέστε αρχείο"
@@ -3417,7 +3417,7 @@ el:
       replace_tags:
         name: "Αντικατάσταση Ετικετών "
       delete_topics:
-        name: "Σβήσιμο"
+        name: "Διαγραφή"
       update_category:
         name: "Ενημέρωση Κατηγορίας"
       defer:
@@ -3966,7 +3966,7 @@ el:
         table:
           actions: "Ενέργειες"
           edit: "Επεξεργασία"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
         add: "Προσθήκη νέας μετάφρασης"
         manage:
           one: "Διαχείριση μεταφράσεων (%{count} υπάρχουσες)"
@@ -4206,7 +4206,7 @@ el:
       allow_global_tags_label: "Επιτρέψτε επίσης άλλες ετικέτες"
       required_tag_group:
         description: "Να απαιτείται τα νέα θέματα να έχουν ετικέτες από ομάδες ετικετών:"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         add: "Προσθήκη απαιτούμενης ομάδας ετικετών"
         placeholder: "Επιλέξτε ομάδα ετικετών…"
         tag_group: "Ομάδα ετικετών"
@@ -5025,7 +5025,7 @@ el:
           add: "Προσθήκη προσαρμοσμένης ενότητας"
           edit: "Επεξεργασία προσαρμοσμένης ενότητας"
           save: "Αποθήκευση"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
           delete_confirm: "Σίγουρα θέλετε να διαγράψετε αυτήν την ενότητα;"
           delete_public_confirm: "Αυτή η ενότητα είναι ορατή σε όλους, σίγουρα θέλετε να τη διαγράψετε;"
           update_public_confirm: "Οι αλλαγές θα είναι <strong>ορατές σε όλους</strong> σε αυτόν τον ιστότοπο. Είστε σίγουροι;"
@@ -6106,7 +6106,7 @@ el:
         edit: "Επεξεργασία"
         save: "Αποθήκευση"
         show: "Συμβάντα"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         cancel: "Ακύρωση"
         description_label: "Εναύσματα συμβάντων"
         controls: "Έλεγχοι"
@@ -6331,7 +6331,7 @@ el:
           add: "Προσθήκη αναφοράς"
           edit: "Επεξεργασία"
           back: "Πίσω στις αναφορές"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
           delete_confirm: 'Σίγουρα θέλετε να διαγράψετε το «%{name}»;'
           flags_tab: "Σημάνσεις"
           settings: "Ρυθμίσεις αναφορών"
@@ -6362,10 +6362,10 @@ el:
             move_down: "Μετακίνηση κάτω"
         permalinks:
           edit: "Επεξεργασία"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
         embeddable_host:
           edit: "Επεξεργασία"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
           more_options:
             title: "Περισσότερες επιλογές"
         themes_and_components:
@@ -6401,7 +6401,7 @@ el:
             update_available: "Διαθέσιμη ενημέρωση!"
             export: "Εξαγωγή"
             convert: "Μετατρέψτε"
-            delete: "Σβήσιμο"
+            delete: "Διαγραφή"
             filter_by: "Φιλτράρισμα κατά"
             filter_by_all: "Όλα"
             filter_by_used: "Χρησιμοποιημένο"
@@ -6422,7 +6422,7 @@ el:
             title: "Περισσότερες επιλογές"
             move_up: "Μετακίνηση πάνω"
             move_down: "Μετακίνηση κάτω"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
           delete_successful: "Πεδίο χρήστη διαγράφηκε."
           save_successful: "Πεδίο χρήστη αποθηκεύτηκε."
         color_palettes:
@@ -6431,7 +6431,7 @@ el:
           copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
           copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
           duplicate: "Διπλότυπο"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
           color_options:
             title: "Επιλογές χρωμάτων"
             toggle: "Επιλέξιμο από τον χρήστη"
@@ -6515,7 +6515,7 @@ el:
             title: "Αποστολή email με σύνδεσμο λήψης"
             alert: "Σας στάλθηκε με email ένας σύνδεσμος για να κάνετε λήψη αυτού του αντιγράφου ασφαλείας"
           destroy:
-            title: "Σβήσιμο"
+            title: "Διαγραφή"
             confirm: "Είσαι σίγουρος ότι θέλεις να σβήσεις αυτό το αντίγραφο ασφαλείας;"
           restore:
             label: "Επαναφορά"
@@ -6554,7 +6554,7 @@ el:
         new: "Νέο"
         new_style: "Νέα Μορφή"
         install: "Εγκαταστήστε"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         delete_confirm: 'Σίγουρα θέλετε να διαγράψετε το «%{theme_name}»;'
         bulk_delete: "Είστε σίγουροι;"
         color: "Χρώμα"
@@ -6829,6 +6829,7 @@ el:
             name: "τονισμός"
           danger:
             name: "κίνδυνος "
+            description: "Σφάλματα και ενέργειες διαγραφής"
           success:
             name: "επιτυχία"
           love:
@@ -7128,7 +7129,7 @@ el:
         view_template:
           close: "Κλείσιμο"
           edit: "Επεξεργασία"
-          delete: "Σβήσιμο"
+          delete: "Διαγραφή"
           toggle_preview: "Εναλλαγή Προεπισκόπησης"
         new_template_form:
           submit: "Αποθήκευση"
@@ -7180,7 +7181,7 @@ el:
           delete:
             confirmation_modal:
               close: "Κλείσιμο"
-              confirm: "Σβήσιμο"
+              confirm: "Διαγραφή"
         nav:
           new: "Νέα"
           active: "Ενεργοί"
@@ -7647,7 +7648,7 @@ el:
       emoji:
         title: "Emoji"
         no_emoji: "Δεν έχετε κανένα προσαρμοσμένο emoji ακόμη."
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         uploading: "Μεταφορτώνεται…"
         name: "Όνομα"
         group: "Ομάδα"
@@ -7657,7 +7658,7 @@ el:
         settings: "Ρυθμίσεις"
       embedding:
         get_started: "Εάν θέλεις να ενσωματώσεις το Discourse σε μια άλλη ιστοσελίδα, ξεκίνα με το να προσθέσεις το host του."
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις το host;"
         title: "Ενσωμάτωση"
         edit: "Επεξεργασία"
