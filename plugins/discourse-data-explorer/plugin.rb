@@ -201,11 +201,14 @@ after_initialize do
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
 
-    register_ai_feature(
-      module_name: :data_explorer,
-      feature: :query_generation,
-      klass: DiscourseDataExplorer::AiQueryGenerator,
-      enabled_by_setting: "data_explorer_ai_queries_enabled",
+    DiscoursePluginRegistry.register_ai_feature(
+      {
+        module_name: :data_explorer,
+        feature: :query_generation,
+        klass: DiscourseDataExplorer::AiQueryGenerator,
+        enabled_by_setting: "data_explorer_ai_queries_enabled",
+      },
+      self,
     )
   end
 end

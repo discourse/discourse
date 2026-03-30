@@ -118,25 +118,43 @@ module DiscourseAi
             )
           end
 
-          # group registered features by module (filtered registry excludes disabled plugins)
-          DiscoursePluginRegistry
-            .ai_features
-            .group_by { |f| f[:module_name] }
-            .each do |_, features|
-              first = features.first
+          # external modules from plugin registry
+          ExternalFeatureSetup.ensure_setup!
+          external_features
+            .group_by { |mod_name, _| mod_name }
+            .each do |mod_name, entries|
+              reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[mod_name]
+              first_entry = entries.first[1]
               base_modules << new(
-                first[:module_id],
-                first[:module_name],
-                enabled_by_setting: first[:enabled_by_setting],
-                features: features.map { |f| f[:feature] },
-                visible: first[:visible],
+                reserved[:module_id],
+                mod_name,
+                enabled_by_setting: first_entry[:enabled_by_setting],
+                features: entries.map { |_, e| build_external_feature(e, reserved) },
+                visible: first_entry.fetch(:visible, true),
               )
             end
 
           base_modules
         end
 
-        # Private
+        def external_features
+          DiscoursePluginRegistry.ai_features.filter_map do |entry|
+            reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[entry[:module_name]]
+            next if reserved.nil? || reserved.dig(:features, entry[:feature]).nil?
+            [entry[:module_name], entry]
+          end
+        end
+
+        def build_external_feature(entry, reserved)
+          setting_name = "#{entry[:module_name]}_#{entry[:feature]}_agent"
+          DiscourseAi::Configuration::Feature.new(
+            entry[:feature].to_s,
+            setting_name,
+            reserved[:module_id],
+            entry[:module_name].to_s,
+          )
+        end
+
         def has_scripts?(script_names)
           DB
             .query_single(

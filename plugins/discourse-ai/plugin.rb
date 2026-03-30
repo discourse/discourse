@@ -73,9 +73,6 @@ require_relative "lib/mcp/oauth_token_store"
 require_relative "lib/mcp/oauth_discovery"
 require_relative "lib/mcp/oauth_client_registration"
 require_relative "lib/mcp/oauth_flow"
-require_relative "plugin_instance_extension"
-Plugin::Instance.prepend DiscourseAi::PluginInstanceExtension
-
 DiscoursePluginRegistry.define_filtered_register(:ai_features)
 
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
