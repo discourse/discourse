@@ -12,4 +12,10 @@ RSpec.describe ProblemCheck::PatreonApiV1Deprecated do
     SiteSetting.patreon_api_version = "2"
     expect(described_class.new.call).to be_blank
   end
+
+  it "does not warn when the plugin is disabled" do
+    SiteSetting.patreon_enabled = false
+    SiteSetting.patreon_api_version = "1"
+    expect(described_class.new.call).to be_blank
+  end
 end
