@@ -111,14 +111,19 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Validate IntermediateDB schema
+        env:
+          HOME: /tmp
+          PGUSER: postgres
+          PGPASSWORD: ""
         run: |
-          chown -R postgres migrations/config/schema migrations/db migrations/lib/database
+          chown -R postgres migrations
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
           # Show structured differences between DSL config and database
-          sudo -E -u postgres migrations/bin/cli schema diff --db=intermediate_db || true
+          sudo -u postgres migrations/bin/cli schema diff --db=intermediate_db || true
 
           # Regenerate schema from DSL config
-          sudo -E -u postgres migrations/bin/cli schema generate --db=intermediate_db
+          sudo -u postgres migrations/bin/cli schema generate --db=intermediate_db
 
           # Check if generated output matches what's committed
           if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/ migrations/lib/database/intermediate_db/ migrations/lib/database/intermediate_db/enums/)" ]; then
