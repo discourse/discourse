@@ -6,9 +6,9 @@ const ruleName = "discourse/require-design-tokens";
 // Each entry maps a CSS property to the token prefix(es) that should be used.
 const enforcedProperties = {
   // Colors — must use token vars, not raw colors
-  color: "--token-text-* or --token-icon-*",
-  "background-color": "--token-surface-* or --token-background-*",
-  "border-color": "--token-border-*",
+  color: "--token-color-text-* or --token-color-icon-*",
+  "background-color": "--token-color-surface-* or --token-color-background-*",
+  "border-color": "--token-color-border-*",
 
   // Font weight — must use --token-font-weight-*
   "font-weight": "--token-font-weight-*",
