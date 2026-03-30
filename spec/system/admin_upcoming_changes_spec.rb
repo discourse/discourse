@@ -336,11 +336,6 @@ describe "Admin upcoming changes" do
       clear_mocked_upcoming_change_default_overrides
     end
 
-    # it "displays the override default in the change item" do
-    #   upcoming_changes_page.visit
-    #   expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to have_default("true")
-    # end
-
     it "shows information about the default override in the site settings UI" do
       settings_page.visit("suggested_topics_unread_max_days_old")
       expect(settings_page).to have_upcoming_change_default_warning(

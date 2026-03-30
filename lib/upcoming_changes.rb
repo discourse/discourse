@@ -358,4 +358,24 @@ module UpcomingChanges
   def self.should_notify_admins?
     Migration::Helpers.existing_site? || Rails.env.development?
   end
+
+  # Some upcoming changes have a depends_on relationship with other settings,
+  # where it doesn't make sense to show the dependent settings in the site
+  # settings UI unless the upcoming change is enabled.
+  #
+  # This is done via depends_on and depends_behavior: hidden in site_settings.yml.
+  def self.find_dependents_for_change(change_setting_name)
+    SiteSetting.type_supervisor.dependencies.dependents(change_setting_name.to_s)
+  end
+
+  # Some upcoming changes when enabled will override the default value
+  # of another setting.
+  #
+  # This is done via upcoming_change_default_override in site_settings.yml.
+  def self.find_related_default_override_for_change(change_setting_name)
+    SiteSetting
+      .upcoming_change_default_overrides
+      .find { |_, override| override[:setting] == change_setting_name }
+      &.first
+  end
 end
