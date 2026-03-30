@@ -4,6 +4,7 @@ import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
+import icon from "discourse/helpers/d-icon";
 import { eq, or } from "discourse/truth-helpers";
 
 export default class FKControlCheckbox extends FKBaseControl {
@@ -28,6 +29,7 @@ export default class FKControlCheckbox extends FKBaseControl {
         ...attributes
         {{on "change" this.handleInput}}
       />
+      <span class="form-kit__control-checkbox-checkmark">{{icon "check"}}</span>
       <span class="form-kit__control-checkbox-content">
         <span class="form-kit__control-checkbox-title">
           <span>{{or @title @field.title}}</span>
