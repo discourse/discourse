@@ -687,16 +687,26 @@ class BulkImport::Generic < BulkImport::Base
     existing_user_field_names = UserField.pluck(:name).to_set
 
     user_fields.each do |row|
-      next if existing_user_field_names.include?(row["name"])
-
       # TODO: Use `id` and store it in mapping table, but for now just ignore it.
       row.delete("id")
       options = row.delete("options")
-      field = UserField.create!(row)
 
-      if options.present?
-        JSON.parse(options).each { |option| field.user_field_options.create!(value: option) }
-      end
+      field =
+        if existing_user_field_names.include?(row["name"])
+          UserField.find_by(name: row["name"])
+        else
+          UserField.create!(row)
+        end
+
+      next if options.blank?
+      next if field.field_type != "dropdown"
+
+      existing_options = field.user_field_options.pluck(:value).to_set
+      JSON
+        .parse(options)
+        .each do |option|
+          field.user_field_options.create!(value: option) if existing_options.exclude?(option)
+        end
     end
 
     user_fields.close
