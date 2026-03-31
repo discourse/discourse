@@ -919,6 +919,7 @@ tr_TR:
           cost_measure: "$/1 milyon token"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -936,6 +937,7 @@ tr_TR:
         provider_fields:
           access_key_id: "AWS Bedrock erişim anahtarı kimliği"
           role_arn: "AWS Bedrock Rolü ARN'si"
+          inference_profile_arn: "AWS Bedrock uygulama çıkarım profili ARN'si"
           region: "AWS Bedrock bölgesi"
           organization: "İsteğe bağlı OpenAI kuruluş kimliği"
           disable_system_prompt: "İstemlerde sistem mesajını devre dışı bırakın"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User API Key Show Page", type: :system do
+RSpec.describe "User API Key Show Page" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:cdp) { PageObjects::CDP.new }
 

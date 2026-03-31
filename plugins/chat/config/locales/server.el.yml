@@ -137,7 +137,42 @@ el:
   user_notifications:
     chat_summary:
       deleted_user: "Διαγραμμένος χρήστης"
+      description:
+        one: "Έχετε ένα νέο μήνυμα συνομιλίας"
+        other: "Έχετε νέα μηνύματα συνομιλίας"
       from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Νέο μήνυμα"
+          other: "[%{site_name}] Νέα μηνύματα"
+        watched_thread:
+          one: "[%{site_name}] Νέο μήνυμα νήματος στο %{channel}"
+          other: "[%{site_name}] Νέα μηνύματα νήματος στο %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Νέο μήνυμα νήματος στο %{channel} και %{count} άλλο κανάλι"
+          other: "[%{site_name}] Νέα μηνύματα νήματος σε %{channel} και %{count} άλλα κανάλια"
+        chat_dm_1:
+          one: "[%{site_name}] Νέο μήνυμα από %{name}"
+          other: "[%{site_name}] Νέα μηνύματα από %{name}"
+        chat_dm_2: "[%{site_name}] Νέα μηνύματα από %{name_1} και %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Νέα μηνύματα από %{name} και %{count} άλλα κανάλια άμεσων μηνυμάτων"
+        chat_channel_1:
+          one: "[%{site_name}] Νέο μήνυμα στο %{channel}"
+          other: "[%{site_name}] Νέα μηνύματα στο %{channel}"
+        chat_channel_2: "[%{site_name}] Νέα μηνύματα στο %{channel_1} και στο %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Νέα μηνύματα στο %{channel} και %{count} άλλα κανάλια"
+        chat_channel_and_dm: "[%{site_name}] Νέα μηνύματα στο %{channel} και από %{name}"
+      unsubscribe: "Αυτή η σύνοψη συνομιλίας αποστέλλεται από %{site_link} όταν είστε μακριά. Αλλάξτε την %{email_preferences_link}, ή %{unsubscribe_link} για να απεγγραφείτε."
+      unsubscribe_no_link: "Αυτή η σύνοψη συνομιλίας αποστέλλεται από %{site_link} όταν είστε μακριά. Αλλάξτε την %{email_preferences_link}."
+      view_messages:
+        one: "Προβολή μηνύματος"
+        other: "Προβολή %{count} μηνυμάτων"
+      view_more:
+        one: "Προβολή %{count} ακόμα μηνύματος"
+        other: "Προβολή %{count} ακόμα μηνυμάτων"
+      your_chat_settings: "προτίμηση email συνομιλίας"
   unsubscribe:
     chat_summary:
+      select_title: "Ορίστε τα email σύνοψης συνομιλίας σε:"
       never: Ποτέ
+      when_away: Μόνο όταν είμαι μακριά
