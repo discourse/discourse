@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 107
+  BASE_COMPILER_VERSION = 108
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
@@ -153,7 +153,6 @@ class AssetProcessor
 
     source = load_or_build_processor_source
 
-    ctx.eval("globalThis.ROLLUP_PLUGIN_COMPILER = #{ENV["ROLLUP_PLUGIN_COMPILER"].to_json}")
     ctx.eval(source, filename: "asset-processor.js")
     ctx.low_memory_notification # GC to free up memory used during init
 
