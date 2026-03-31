@@ -450,6 +450,9 @@ RSpec.describe TagsController do
       get "/tag/test"
       expect(response.status).to eq(404)
 
+      get "/tag/#{tag.id}.json"
+      expect(response.status).to eq(404)
+
       sign_in(admin)
 
       get "/tag/#{tag.slug}/#{tag.id}"
@@ -609,6 +612,9 @@ RSpec.describe TagsController do
       _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"
       expect(response.status).to eq(404)
+
+      get "/tag/#{tag.id}/info.json"
+      expect(response.status).to eq(404)
     end
 
     it "staff-only tags can be retrieved for staff user" do
@@ -683,6 +689,20 @@ RSpec.describe TagsController do
           expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
         end
       end
+    end
+  end
+
+  describe "#tag_feed" do
+    fab!(:tag) { Fabricate(:tag, name: "test") }
+
+    it "returns 404 if tag is staff-only" do
+      _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+      get "/tag/test.rss"
+      expect(response.status).to eq(404)
+
+      get "/tag/#{tag.slug}/#{tag.id}.rss"
+      expect(response.status).to eq(404)
     end
   end
 
