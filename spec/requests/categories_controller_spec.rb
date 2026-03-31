@@ -844,6 +844,19 @@ RSpec.describe CategoriesController do
           expect(category.form_template_ids).to eq([form_template_1.id, form_template_2.id])
         end
 
+        it "updates description and revises category topic OP to stay in sync" do
+          cat = Fabricate(:category_with_definition, user: admin)
+          raw_description = "New **markdown** description here"
+
+          put "/categories/#{cat.id}.json", params: { description: raw_description }
+
+          expect(response.status).to eq(200)
+          cat.reload
+          expect(cat.description).to include("<strong>markdown</strong>")
+          expect(cat.topic.first_post.raw).to eq(raw_description)
+          expect(cat.topic.first_post.cooked).to include("<strong>markdown</strong>")
+        end
+
         it "logs the changes correctly" do
           category.update!(
             permissions: {
