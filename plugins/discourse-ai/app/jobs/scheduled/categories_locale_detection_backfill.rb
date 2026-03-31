@@ -19,10 +19,12 @@ module Jobs
         return
       end
 
-      categories = Category.where(locale: nil)
-
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
-        categories = categories.where(read_restricted: false)
+      target_category_ids = SiteSetting.ai_translation_target_categories
+      if target_category_ids.present?
+        categories =
+          Category.where(locale: nil).where(id: target_category_ids.split("|").map(&:to_i))
+      else
+        return
       end
 
       limit = SiteSetting.ai_translation_backfill_hourly_rate

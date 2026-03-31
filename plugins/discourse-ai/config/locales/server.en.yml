@@ -141,7 +141,8 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
-    ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
+    ai_translation_target_categories: "Only content in the selected categories will be translated. Subcategories must be added separately. Leave empty to disable translation of topics in categories."
+    ai_translation_personal_messages: "Controls which personal messages are translated. 'none' disables PM translation. 'group' translates only group PMs. 'all' translates all PMs."
     ai_translation_include_bot_content: "When enabled, content written by bots (user IDs below 0) will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
