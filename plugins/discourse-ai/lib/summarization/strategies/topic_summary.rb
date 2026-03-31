@@ -18,7 +18,7 @@ module DiscourseAi
             post_attributes.push(:name)
           end
 
-          posts_data = (target.has_summary? ? best_replies : pick_selection).pluck(post_attributes)
+          posts_data = selected_posts.pluck(post_attributes)
 
           posts_data.reduce([]) do |memo, (pn, raw, username, last_version_at, name)|
             raw_text = raw
@@ -36,6 +36,15 @@ module DiscourseAi
               last_version_at: last_version_at,
             }
           end
+        end
+
+        def summary_fingerprint
+          posts_data = selected_posts.pluck(:post_number, :last_version_at)
+          {
+            original_content_sha:
+              AiSummary.build_sha(posts_data.map { |post_number, _| post_number }.join),
+            latest_version_at: posts_data.map { |_, last_version_at| last_version_at }.compact.max,
+          }
         end
 
         def as_llm_messages(contents)
@@ -65,6 +74,10 @@ module DiscourseAi
         private
 
         attr_reader :topic
+
+        def selected_posts
+          target.has_summary? ? best_replies : pick_selection
+        end
 
         def best_replies
           Post
