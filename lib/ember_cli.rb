@@ -88,4 +88,15 @@ class EmberCli < ActiveSupport::CurrentAttributes
     self.request_cache = nil
     @production_cache = nil
   end
+
+  def self.watch!
+    Listen
+      .to(dist_dir) do |modified, added, removed|
+        if [*modified, *added, *removed].any? { |path| path.end_with?("manifest.json") }
+          puts "refreshing"
+          MessageBus.publish("/file-change", ["refresh"])
+        end
+      end
+      .start
+  end
 end

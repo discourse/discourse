@@ -28,9 +28,11 @@ const devEngine = await dev(resolvedConfig, resolvedConfig.output, {
     console.log(`Build complete: ${result.output.length} files`);
     if (initialBuild) {
       initialBuild = false;
-      console.log(`Initial build complete in ${Date.now() - buildStart}ms`);
+      console.log(
+        `Initial build complete in ${(Date.now() - buildStart) / 1000.0}s`
+      );
     } else {
-      console.log(`Rebuild complete in ${Date.now() - buildStart}ms`);
+      console.log(`Rebuild complete in ${(Date.now() - buildStart) / 1000.0}s`);
     }
   },
   rebuildStrategy: "always",
