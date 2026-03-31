@@ -430,7 +430,7 @@ importers:
         version: 3.5.5(@glint/template@1.7.7)
       '@embroider/macros':
         specifier: ^1.16.12
-        version: 1.20.1(@babel/core@7.29.0)(@glint/template@1.7.7)
+        version: 1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)
       '@embroider/router':
         specifier: ^2.1.8
         version: 2.1.8(@babel/core@7.29.0)(@embroider/core@3.5.5(@glint/template@1.7.7))(@glint/template@1.7.7)
@@ -1872,15 +1872,6 @@ packages:
 
   '@embroider/macros@1.16.12':
     resolution: {integrity: sha512-cgaEbzCvUOZF7Xs9FNMGknSCTgE01A1cXkkEhSTuaPbf6F/2z9pZAdQpVrBbTvo1Sg8CwMsm+piahjy43KoGuA==}
-    engines: {node: 12.* || 14.* || >= 16}
-    peerDependencies:
-      '@glint/template': ^1.0.0
-    peerDependenciesMeta:
-      '@glint/template':
-        optional: true
-
-  '@embroider/macros@1.20.1':
-    resolution: {integrity: sha512-Ia3uPg4kgunvI3XySzHqKpC/niyxKSjjI8b6OIDf1KL9gtfztbC8x1dthHvX2823KnHcOhdHMudGWAhVuj2BKg==}
     engines: {node: 12.* || 14.* || >= 16}
     peerDependencies:
       '@glint/template': ^1.0.0
@@ -5777,11 +5768,6 @@ packages:
   growly@1.3.0:
     resolution: {integrity: sha512-+xGQY0YyAWCnqy7Cd++hc2JqMYzlm0dG30Jd0beaA64sROr8C4nt8Yc9V5Ro3avlSUDTN0ulqP/VBKi1/lLygw==}
 
-  handlebars@4.7.8:
-    resolution: {integrity: sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ==}
-    engines: {node: '>=0.4.7'}
-    hasBin: true
-
   handlebars@4.7.9:
     resolution: {integrity: sha512-4E71E0rpOaQuJR2A3xDZ+GM1HyWYv1clR58tC8emQNeQe3RH7MAzSbat+V0wG78LQBo6m6bzSG/L4pBuCsgnUQ==}
     engines: {node: '>=0.4.7'}
@@ -6915,21 +6901,11 @@ packages:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
 
-  mini-css-extract-plugin@2.10.0:
-    resolution: {integrity: sha512-540P2c5dYnJlyJxTaSloliZexv8rji6rY8FhQN+WF/82iHQfA23j/xtJx97L+mXOML27EqksSek/g4eK7jaL3g==}
-    engines: {node: '>= 12.13.0'}
-    peerDependencies:
-      webpack: ^5.0.0
-
   mini-css-extract-plugin@2.10.2:
     resolution: {integrity: sha512-AOSS0IdEB95ayVkxn5oGzNQwqAi2J0Jb/kKm43t7H73s8+f5873g0yuj0PNvK4dO75mu5DHg4nlgp4k6Kga8eg==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.0.0
-
-  minimatch@10.2.4:
-    resolution: {integrity: sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg==}
-    engines: {node: 18 || 20 || >=22}
 
   minimatch@10.2.5:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
@@ -8732,10 +8708,6 @@ packages:
   tap-parser@7.0.0:
     resolution: {integrity: sha512-05G8/LrzqOOFvZhhAk32wsGiPZ1lfUrl+iV7+OkKgfofZxiceZWMHkKmow71YsyVQ8IvGBP2EjcIjE5gL4l5lA==}
     hasBin: true
-
-  tapable@2.3.0:
-    resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
-    engines: {node: '>=6'}
 
   tapable@2.3.2:
     resolution: {integrity: sha512-1MOpMXuhGzGL5TTCZFItxCc0AARf1EZFQkGqMm7ERKj8+Hgr5oLvJOVFcC+lRmR8hCe2S3jC4T5D7Vg/d7/fhA==}
@@ -10570,7 +10542,7 @@ snapshots:
   '@ember/render-modifiers@3.0.0(@glint/template@1.7.7)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))':
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
-      '@embroider/macros': 1.20.1(@babel/core@7.29.0)(@glint/template@1.7.7)
+      '@embroider/macros': 1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)
       ember-cli-babel: 8.3.1(@babel/core@7.29.0)
       ember-modifier-manager-polyfill: 1.2.0(@babel/core@7.29.0)
       ember-source: 6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)
@@ -10585,7 +10557,7 @@ snapshots:
     dependencies:
       '@ember/test-waiters': 4.1.1(@babel/core@7.29.0)(@glint/template@1.7.7)
       '@embroider/addon-shim': 1.10.2
-      '@embroider/macros': 1.20.1(@babel/core@7.29.0)(@glint/template@1.7.7)
+      '@embroider/macros': 1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)
       '@simple-dom/interface': 1.4.0
       decorator-transforms: 2.3.1(@babel/core@7.29.0)
       dom-element-descriptors: 0.5.1
@@ -10597,7 +10569,7 @@ snapshots:
   '@ember/test-waiters@4.1.1(@babel/core@7.29.0)(@glint/template@1.7.7)':
     dependencies:
       '@embroider/addon-shim': 1.10.2
-      '@embroider/macros': 1.20.1(@babel/core@7.29.0)(@glint/template@1.7.7)
+      '@embroider/macros': 1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)
     transitivePeerDependencies:
       - '@babel/core'
       - '@glint/template'
@@ -10657,7 +10629,7 @@ snapshots:
       fs-extra: 9.1.0
       fs-tree-diff: 2.0.1
       jsdom: 25.0.1(supports-color@8.1.1)
-      lodash: 4.17.23
+      lodash: 4.17.21
       pkg-up: 3.1.0
       resolve: 1.22.11
       resolve-package-path: 4.0.3
@@ -10692,10 +10664,10 @@ snapshots:
       filesize: 10.1.6
       fs-extra: 9.1.0
       fs-tree-diff: 2.0.1
-      handlebars: 4.7.8
+      handlebars: 4.7.9
       js-string-escape: 1.0.1
       jsdom: 25.0.1(supports-color@8.1.1)
-      lodash: 4.17.23
+      lodash: 4.17.21
       resolve: 1.22.11
       resolve-package-path: 4.0.3
       semver: 7.7.4
@@ -10726,22 +10698,6 @@ snapshots:
     optionalDependencies:
       '@glint/template': 1.7.7
     transitivePeerDependencies:
-      - supports-color
-
-  '@embroider/macros@1.20.1(@babel/core@7.29.0)(@glint/template@1.7.7)':
-    dependencies:
-      '@embroider/shared-internals': 3.0.2
-      assert-never: 1.4.0
-      babel-import-util: 3.0.1
-      ember-cli-babel: 8.3.1(@babel/core@7.29.0)
-      find-up: 5.0.0
-      lodash: 4.17.23
-      resolve: 1.22.11
-      semver: 7.7.4
-    optionalDependencies:
-      '@glint/template': 1.7.7
-    transitivePeerDependencies:
-      - '@babel/core'
       - supports-color
 
   '@embroider/macros@1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)':
@@ -10830,7 +10786,7 @@ snapshots:
 
   '@embroider/test-setup@4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.7.7))(@glint/template@1.7.7))(@embroider/core@3.5.5(@glint/template@1.7.7))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.7.7))(webpack@5.99.9(@swc/core@1.15.21)(esbuild@0.27.4)))':
     dependencies:
-      lodash: 4.17.23
+      lodash: 4.17.21
       resolve: 1.22.11
     optionalDependencies:
       '@embroider/compat': 3.8.5(@embroider/core@3.5.5(@glint/template@1.7.7))(@glint/template@1.7.7)
@@ -10854,8 +10810,8 @@ snapshots:
       escape-string-regexp: 4.0.0
       fs-extra: 9.1.0
       jsdom: 25.0.1(supports-color@8.1.1)
-      lodash: 4.17.23
-      mini-css-extract-plugin: 2.10.0(webpack@5.99.9(@swc/core@1.15.21)(esbuild@0.27.4))
+      lodash: 4.17.21
+      mini-css-extract-plugin: 2.10.2(webpack@5.99.9(@swc/core@1.15.21)(esbuild@0.27.4))
       semver: 7.7.4
       source-map-url: 0.4.1
       style-loader: 2.0.0(webpack@5.99.9(@swc/core@1.15.21)(esbuild@0.27.4))
@@ -12052,7 +12008,7 @@ snapshots:
       '@transloadit/prettier-bytes': 0.3.4
       '@uppy/store-default': 4.1.0
       '@uppy/utils': 6.0.3
-      lodash: 4.17.23
+      lodash: 4.17.21
       mime-match: 1.0.2
       namespace-emitter: 2.0.1
       nanoid: 5.0.8
@@ -12067,7 +12023,7 @@ snapshots:
 
   '@uppy/utils@6.0.3':
     dependencies:
-      lodash: 4.17.23
+      lodash: 4.17.21
       preact: 10.23.2
 
   '@uppy/xhr-upload@4.2.1(@uppy/core@4.2.2)':
@@ -13558,13 +13514,13 @@ snapshots:
       ora: 3.4.0
       through2: 3.0.2
 
-  consolidate@0.16.0(ejs@3.1.10)(handlebars@4.7.9)(lodash@4.17.23)(mustache@4.2.0)(underscore@1.13.8):
+  consolidate@0.16.0(ejs@3.1.10)(handlebars@4.7.9)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.8):
     dependencies:
       bluebird: 3.7.2
     optionalDependencies:
       ejs: 3.1.10
       handlebars: 4.7.9
-      lodash: 4.17.23
+      lodash: 4.17.21
       mustache: 4.2.0
       underscore: 1.13.8
 
@@ -14181,10 +14137,10 @@ snapshots:
       inquirer: 13.3.0(@types/node@25.5.0)
       is-git-url: 1.0.0
       is-language-code: 5.1.3
-      lodash: 4.17.23
+      lodash: 4.17.21
       markdown-it: 14.1.1
       markdown-it-terminal: 0.4.0(markdown-it@14.1.1)
-      minimatch: 10.2.4
+      minimatch: 10.2.5
       morgan: 1.10.1
       nopt: 3.0.6
       npm-package-arg: 13.0.2
@@ -14360,7 +14316,7 @@ snapshots:
     dependencies:
       '@ember/test-helpers': 5.4.1(@babel/core@7.29.0)(@glint/template@1.7.7)
       '@embroider/addon-shim': 1.10.2
-      '@embroider/macros': 1.20.1(@babel/core@7.29.0)(@glint/template@1.7.7)
+      '@embroider/macros': 1.20.2(@babel/core@7.29.0)(@glint/template@1.7.7)
       qunit: 2.25.0
       qunit-theme-ember: 1.0.0
     transitivePeerDependencies:
@@ -14470,7 +14426,7 @@ snapshots:
       ember-cli-htmlbars: 7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
       ember-cli-typescript: 5.3.0
       ember-source: 6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)
-      lodash: 4.17.23
+      lodash: 4.17.21
       winston: 3.14.2
       zod: 3.25.76
     transitivePeerDependencies:
@@ -14526,7 +14482,7 @@ snapshots:
   enhanced-resolve@5.18.3:
     dependencies:
       graceful-fs: 4.2.11
-      tapable: 2.3.0
+      tapable: 2.3.2
 
   ensure-posix-path@1.1.1: {}
 
@@ -15628,7 +15584,7 @@ snapshots:
 
   glob@13.0.6:
     dependencies:
-      minimatch: 10.2.4
+      minimatch: 10.2.5
       minipass: 7.1.3
       path-scurry: 2.0.2
 
@@ -15718,15 +15674,6 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   growly@1.3.0: {}
-
-  handlebars@4.7.8:
-    dependencies:
-      minimist: 1.2.8
-      neo-async: 2.6.2
-      source-map: 0.6.1
-      wordwrap: 1.0.0
-    optionalDependencies:
-      uglify-js: 3.19.3
 
   handlebars@4.7.9:
     dependencies:
@@ -16883,21 +16830,11 @@ snapshots:
 
   mimic-fn@4.0.0: {}
 
-  mini-css-extract-plugin@2.10.0(webpack@5.99.9(@swc/core@1.15.21)(esbuild@0.27.4)):
-    dependencies:
-      schema-utils: 4.3.3
-      tapable: 2.3.2
-      webpack: 5.99.9(@swc/core@1.15.21)(esbuild@0.27.4)
-
   mini-css-extract-plugin@2.10.2(webpack@5.99.9(@swc/core@1.15.21)(esbuild@0.27.4)):
     dependencies:
       schema-utils: 4.3.3
       tapable: 2.3.2
       webpack: 5.99.9(@swc/core@1.15.21)(esbuild@0.27.4)
-
-  minimatch@10.2.4:
-    dependencies:
-      brace-expansion: 5.0.5
 
   minimatch@10.2.5:
     dependencies:
@@ -18961,8 +18898,6 @@ snapshots:
       js-yaml: 3.14.2
       minipass: 2.9.0
 
-  tapable@2.3.0: {}
-
   tapable@2.3.2: {}
 
   tar-fs@3.1.2:
@@ -19042,14 +18977,14 @@ snapshots:
       charm: 1.0.2
       commander: 2.20.3
       compression: 1.8.1
-      consolidate: 0.16.0(ejs@3.1.10)(handlebars@4.7.9)(lodash@4.17.23)(mustache@4.2.0)(underscore@1.13.8)
+      consolidate: 0.16.0(ejs@3.1.10)(handlebars@4.7.9)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.8)
       execa: 9.6.1
       express: 4.22.1
       fireworm: 0.7.2
       glob: 13.0.6
       http-proxy: 1.18.1(patch_hash=3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73)
       js-yaml: 3.14.2
-      lodash: 4.17.23
+      lodash: 4.17.21
       mkdirp: 3.0.1
       mustache: 4.2.0
       node-notifier: 10.0.1
@@ -19675,7 +19610,7 @@ snapshots:
       mime-types: 2.1.35
       neo-async: 2.6.2
       schema-utils: 4.3.3
-      tapable: 2.3.0
+      tapable: 2.3.2
       terser-webpack-plugin: 5.3.14(@swc/core@1.15.21)(esbuild@0.27.4)(webpack@5.99.9(@swc/core@1.15.21)(esbuild@0.27.4))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
