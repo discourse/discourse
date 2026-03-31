@@ -62,7 +62,6 @@ html.discourse-reactions-no-select {
       min-height: 80px;
       width: max-content;
       top: 0;
-      left: 0;
 
       .spinner {
         animation-play-state: paused;
@@ -128,7 +127,6 @@ html.discourse-reactions-no-select {
   padding: 15px 0;
   width: max-content;
   top: 0;
-  left: 0;
 
   &.is-expanded {
     visibility: visible;
@@ -194,7 +192,6 @@ html.discourse-reactions-no-select {
   padding: 15px 0;
   width: max-content;
   top: 0;
-  left: 0;
 
   &.is-expanded {
     min-width: 80px;
