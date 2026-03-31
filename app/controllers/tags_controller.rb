@@ -481,7 +481,7 @@ class TagsController < ::ApplicationController
 
   def fetch_tag
     @tag = Tag.find_by_name(params[:tag_name].force_encoding("UTF-8"))
-    raise Discourse::NotFound unless @tag
+    raise Discourse::NotFound if @tag ? !guardian.can_see_tag?(@tag) : true
   end
 
   def ensure_tags_enabled

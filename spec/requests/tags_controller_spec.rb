@@ -450,6 +450,9 @@ RSpec.describe TagsController do
       get "/tag/test"
       expect(response.status).to eq(404)
 
+      get "/tag/#{tag.id}.json"
+      expect(response.status).to eq(404)
+
       sign_in(admin)
 
       get "/tag/test"
@@ -608,6 +611,9 @@ RSpec.describe TagsController do
     it "returns 404 if tag is staff-only" do
       _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"
+      expect(response.status).to eq(404)
+
+      get "/tag/#{tag.id}/info.json"
       expect(response.status).to eq(404)
     end
 
