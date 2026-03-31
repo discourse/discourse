@@ -10,6 +10,14 @@ function captchaSelector(siteSettings) {
   }
 }
 
+function captchaSelector(siteSettings) {
+  if (siteSettings.discourse_hcaptcha_enabled) {
+    return "hcaptcha";
+  } else if (siteSettings.discourse_recaptcha_enabled) {
+    return "recaptcha";
+  }
+}
+
 function initializeHCaptcha(api, container) {
   const siteSettings = container.lookup("service:site-settings");
 
