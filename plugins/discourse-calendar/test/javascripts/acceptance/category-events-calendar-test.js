@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -13,6 +13,36 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
   });
 
   needs.pretender((server, helper) => {
+    server.get("/discourse-post-event/events/:id", () => {
+      return helper.response({
+        event: {
+          id: 67501,
+          starts_at: moment()
+            .tz("Asia/Calcutta")
+            .add(1, "days")
+            .format("YYYY-MM-DDT15:14:00.000Z"),
+          ends_at: moment()
+            .tz("Asia/Calcutta")
+            .add(1, "days")
+            .format("YYYY-MM-DDT16:14:00.000Z"),
+          timezone: "Asia/Calcutta",
+          post: {
+            id: 67501,
+            post_number: 1,
+            url: "/t/this-is-an-event/18449/1",
+            topic: {
+              id: 18449,
+              title: "This is an event",
+            },
+          },
+          name: "Awesome Event",
+          creator: { id: 1, username: "admin", name: "Admin" },
+          status: "public",
+          should_display_invitees: false,
+        },
+      });
+    });
+
     server.get("/discourse-post-event/events", () => {
       return helper.response({
         events: [
@@ -188,5 +218,23 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
       secondCell,
       "events are in different days"
     );
+  });
+
+  test("clicking an event shows a popup instead of navigating away", async function (assert) {
+    await visit("/c/bug/1");
+
+    const eventLink = document.querySelector(
+      ".fc-daygrid-event-harness a[href='/t/-/18449/1']"
+    );
+    assert.notStrictEqual(eventLink, null, "event link exists");
+
+    await click(eventLink);
+
+    assert
+      .dom(".discourse-post-event")
+      .exists("event popup is shown after clicking");
+    assert
+      .dom("#category-events-calendar")
+      .exists("still on the category page after clicking");
   });
 });

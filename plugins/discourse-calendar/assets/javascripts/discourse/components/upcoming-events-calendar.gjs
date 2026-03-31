@@ -3,12 +3,9 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
-import getURL from "discourse/lib/get-url";
-import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
-import { formatEventName } from "../helpers/format-event-name";
 import { normalizeViewForRoute } from "../lib/calendar-view-helper";
-import { isNotFullDayEvent } from "../lib/guess-best-date-format";
+import formatEventForCalendar from "../lib/format-event-for-calendar";
 import FullCalendar from "./full-calendar";
 
 export default class UpcomingEventsCalendar extends Component {
@@ -58,57 +55,15 @@ export default class UpcomingEventsCalendar extends Component {
       attending_user: this.args.mine ? this.currentUser?.username : null,
     });
 
-    const tagsColorsMap = JSON.parse(this.siteSettings.map_events_to_color);
+    const timezone = this.currentUser?.user_option?.timezone;
 
-    return events.map((event) => {
-      const { startsAt, endsAt, post, categoryId } = event;
-
-      let backgroundColor;
-
-      if (post?.topic?.tags) {
-        const tagColorEntry = tagsColorsMap.find(
-          (entry) =>
-            entry.type === "tag" &&
-            post.topic.tags.some(
-              (t) => (typeof t === "string" ? t : t.name) === entry.slug
-            )
-        );
-        backgroundColor = tagColorEntry?.color;
-      }
-
-      if (!backgroundColor) {
-        const categoryColorEntry = tagsColorsMap.find(
-          (entry) =>
-            entry.type === "category" && entry.slug === post?.category_slug
-        );
-        backgroundColor = categoryColorEntry?.color;
-      }
-
-      const categoryColor = Category.findById(categoryId)?.color;
-      if (!backgroundColor && categoryColor) {
-        backgroundColor = `#${categoryColor}`;
-      }
-
-      const isAllDay =
-        event.allDay || !isNotFullDayEvent(moment(startsAt), moment(endsAt));
-
-      // FullCalendar treats end as exclusive for allDay events,
-      // so add one day to make the end date inclusive
-      let calendarEnd = endsAt || startsAt;
-      if (isAllDay && calendarEnd) {
-        calendarEnd = moment(calendarEnd).add(1, "day").format("YYYY-MM-DD");
-      }
-
-      return {
-        extendedProps: { postEvent: event },
-        title: formatEventName(event, this.currentUser?.user_option?.timezone),
-        start: startsAt,
-        end: calendarEnd,
-        allDay: isAllDay,
-        url: getURL(`/t/-/${post?.topic?.id}/${post?.post_number}`),
-        backgroundColor,
-      };
-    });
+    return events.map((event) =>
+      formatEventForCalendar(
+        event,
+        this.siteSettings.map_events_to_color,
+        timezone
+      )
+    );
   }
 
   get leftHeaderToolbar() {
