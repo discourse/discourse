@@ -208,6 +208,34 @@ RSpec.describe ExportCsvController do
         expect(job_data["entity"]).to eq("staff_action")
         expect(job_data["user_id"]).to eq(moderator.id)
       end
+
+      it "does not allow moderators to export admin-only reports" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "top_uploads",
+                 start_date: "2026-01-01",
+                 end_date: "2026-02-15",
+               },
+             }
+        expect(response.status).to eq(422)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+      end
+
+      it "allows moderators to export non-hidden reports" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "likes",
+                 start_date: "2026-01-01",
+                 end_date: "2026-02-15",
+               },
+             }
+        expect(response.status).to eq(200)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
+      end
     end
 
     describe "#latest_user_archive" do
