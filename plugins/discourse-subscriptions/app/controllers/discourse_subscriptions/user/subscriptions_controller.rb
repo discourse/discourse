@@ -8,7 +8,6 @@ module DiscourseSubscriptions
 
       requires_plugin PLUGIN_NAME
 
-      before_action :set_api_key
       before_action :find_subscription, only: %i[update destroy]
       requires_login
 
@@ -28,7 +27,7 @@ module DiscourseSubscriptions
             prices = []
             price_params = { limit: 100, expand: ["data.product"] }
             loop do
-              response = ::Stripe::Price.list(price_params)
+              response = ::Stripe::Price.list(price_params, stripe_request_opts)
               prices.concat(response[:data])
               break unless response[:has_more]
               price_params[:starting_after] = response[:data].last.id
@@ -37,7 +36,10 @@ module DiscourseSubscriptions
 
             stripe_customer_ids.each do |stripe_customer_id|
               customer_subscriptions =
-                ::Stripe::Subscription.list(customer: stripe_customer_id, status: "all")
+                ::Stripe::Subscription.list(
+                  { customer: stripe_customer_id, status: "all" },
+                  stripe_request_opts,
+                )
               all_subscriptions.concat(customer_subscriptions[:data])
             end
 
@@ -59,7 +61,12 @@ module DiscourseSubscriptions
         # we cancel but don't remove until the end of the period
         # full removal is done via webhooks
         begin
-          subscription = ::Stripe::Subscription.update(params[:id], { cancel_at_period_end: true })
+          subscription =
+            ::Stripe::Subscription.update(
+              params[:id],
+              { cancel_at_period_end: true },
+              stripe_request_opts,
+            )
 
           if subscription
             render_json_dump subscription
@@ -79,6 +86,7 @@ module DiscourseSubscriptions
           ::Stripe::Subscription.update(
             params[:id],
             { default_payment_method: params[:payment_method] },
+            stripe_request_opts,
           )
           render json: success_json
         rescue ::Stripe::InvalidRequestError
@@ -90,7 +98,11 @@ module DiscourseSubscriptions
 
       def attach_method_to_customer(customer_id, method)
         customer = Customer.find(customer_id)
-        ::Stripe::PaymentMethod.attach(method, { customer: customer.customer_id })
+        ::Stripe::PaymentMethod.attach(
+          method,
+          { customer: customer.customer_id },
+          stripe_request_opts,
+        )
       end
 
       def find_subscription
