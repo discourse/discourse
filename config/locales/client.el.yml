@@ -9,8 +9,13 @@ el:
     blocks:
       ghost:
         status: "Κατάσταση"
+        conditions: "Συνθήκες"
+        arguments: "Παράμετροι"
+        container_args: "Παράμετροι Κοντέινερ"
         in_location: "σε"
         hidden: "κρυφό"
+        not_registered: "μη εγγεγραμμένο"
+        no_visible_children: "κανένα ορατό παιδί"
         failed: "απέτυχε"
     carousel:
       go_to_slide: "Μετάβαση στη διαφάνεια %{index}"
@@ -336,6 +341,12 @@ el:
       unknown_source: "Ένα από τα θέματα ή τα πρόσθετα σας"
     dev_tools:
       drag_to_move: "Σύρετε για μετακίνηση"
+      toggle_plugin_outlet_debug: "Εναλλαγή αποσφαλμάτωσης εξόδου πρόσθετου"
+      block_debug:
+        condition_debugging: "Αποσφαλμάτωση συνθήκης"
+      toggle_safe_mode: "Εναλλαγή ασφαλούς λειτουργίας"
+      toggle_mobile_view: "Εναλλαγή προβολής για κινητά"
+      disable_dev_tools: "Απενεργοποίηση εργαλείων προγραμματιστών"
     s3:
       regions:
         ap_northeast_1: "Ασία Ειρηνικός (Τόκιο)"
@@ -6563,10 +6574,12 @@ el:
         copy_to_clipboard: "Αντιγραφή στο Clipboard"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
+        theme_owner: "Κάτοχος:"
         email_templates:
           title: "Διεύθυνση Email"
           subject: "Θέμα"
           multiple_subjects: "Αυτό το πρότυπο email έχει πολλά θέματα."
+          multiple_bodies: "Αυτό το πρότυπο email έχει πολλά σώματα."
           body: "Σώμα"
           revert: "Επαναφορά Αλλαγών"
           revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
@@ -6847,6 +6860,7 @@ el:
           overridden: Το προεπιλεγμένο αρχείο robots.txt του ιστότοπού σας έχει παρακαμφθεί.
         email_style:
           title: "Στυλ email"
+          heading: "Προσαρμογή στυλ email"
           html: "HTML"
           css: "CSS"
           reset: "Επαναφορά στο προεπιλεγμένο"
@@ -6857,11 +6871,16 @@ el:
         title: "Emails"
         settings: "Ρυθμίσεις"
         templates: "Πρότυπα"
+        templates_title: "Πρότυπα email"
         preview_digest: "Προεπισκόπηση σύνοψης"
         advanced_test:
+          title: "Προχωρημένη δοκιμή"
           desc: "Δείτε πώς το Discourse επεξεργάζεται τα emails. Για να μπορείτε να επεξεργαστείτε σωστά το email, παρακαλώ επικολλήστε παρακάτω ολόκληρο το αρχικό μήνυμα email."
           email: "Αρχικό μήνυμα"
+          run: "Εκτέλεση δοκιμής"
           text: "Σώμα επιλεγμένου κειμένου"
+          elided: "Παραλειπόμενο κείμενο"
+        sending_test: "Γίνεται αποστολή δοκιμαστικού email…"
         error: "<b>ΣΦΑΛΜΑ</b> - %{server_error}"
         test_error: "Υπήρξε πρόβλημα με την αποστολή του δοκιμαστικού μηνύματος email. Έλεγξε τις ρυθμίσεις email, βεβαιώσου πως ο πάροχός σου δεν μπλοκάρει τις συνδέσεις email και δοκίμασε πάλι."
         sent: "Στάλθηκε"
@@ -6869,21 +6888,29 @@ el:
         bounced: "Επιστρεφόμενα μηνύματα"
         received: "Ελήφθη"
         rejected: "Απορρίφθηκε"
+        sent_at: "Στάλθηκε στις"
         time: "Ώρα"
         user: "Χρήστης"
+        email_type: "Τύπος email"
+        details_title: "Εμφάνιση λεπτομερειών email"
+        to_address: "Παραλήπτης"
         test_email_address: "διεύθυνση email για δοκιμή"
+        send_test: "Αποστολή δοκιμαστικού email"
         sent_test: "στάλθηκε!"
         delivery_method: "Τρόπος αποστολής"
         preview_digest_desc: "Προεπισκόπηση του περιεχομένου των συνοπτικών email που στάλθηκαν στους χρήστες που δεν ήταν ενεργοί."
         refresh: "Ανανέωση"
         send_digest_label: "Στείλε αυτό το αποτέλεσμα στον/στην:"
         send_digest: "Αποστολή"
+        sending_email: "Γίνεται αποστολή email…"
         format: "Μορφή"
         html: "html"
         text: "text"
         html_preview: "Προεπισκόπηση περιεχομένου email"
         last_seen_user: "Εμφανίστηκε τελευταία:"
         no_result: "Δεν βρέθηκαν αποτελέσματα για περίληψη."
+        post_link_with_smtp: "Λεπτομέρειες αποστολής και SMTP"
+        skipped_reason: "Παράβλεψη λόγου"
         incoming_emails:
           from_address: "Από"
           to_addresses: "Προς"
@@ -6892,10 +6919,12 @@ el:
           error: "Σφάλμα"
           none: "Δε βρέθηκε κανένα εισερχόμενο email."
           modal:
+            title: "Λεπτομέρειες εισερχόμενου email"
             error: "Σφάλμα"
             headers: "Headers"
             subject: "Θέμα"
             body: "Σώμα"
+            rejection_message: "Μήνυμα απόρριψης"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -6911,6 +6940,7 @@ el:
             reply_key_placeholder: "κλειδί απάντησης"
           email_addresses:
             see_more: "[Δείτε περισσότερα...]"
+          post_id: "(ID αποστολής: %{post_id})"
       moderation_history:
         performed_by: "Εκτελέστηκε από"
         no_results: "Δεν υπάρχει διαθέσιμο ιστορικό συντονισμού."
@@ -7092,28 +7122,50 @@ el:
       watched_words:
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"
+        show_words:
+          one: "εμφάνισε %{count} λέξη"
+          other: "εμφάνισε %{count} λέξεις"
+        case_sensitive: "(διάκριση πεζών-κεφαλαίων)"
         html: "(html)"
         download: Κατέβασμα
         clear_all: Εκκαθάριση όλων
+        invalid_regex_multiple: "Μη έγκυρες κανονικές εκφράσεις:"
         actions:
           block: "Αποκλεισμός"
           censor: "Λογοκρισία"
           require_approval: "Απαιτεί Έγκριση"
           flag: "Αναφορά"
           replace: "Αντικατάσταση"
+          tag: "Ετικέτα"
           silence: "Σίγαση"
           link: "Σύνδεσμος"
+        action_descriptions:
+          block: "Θα εμφανιστεί ένα μήνυμα σφάλματος κατά την προσπάθεια δημιουργίας μιας ανάρτησης που περιέχει αυτές τις λέξεις."
+          require_approval: "Να απαιτείται η έγκριση του προσωπικού για αναρτήσεις που περιέχουν αυτές τις λέξεις, προτού αυτές γίνουν ορατές σε άλλους."
+          flag: "Να επιτρέπονται αναρτήσεις που περιέχουν αυτές τις λέξεις, αλλά να αναφέρονται ως ακατάλληλες για έλεγχο από τους συντονιστές."
+          replace: "Αντικατάσταση λέξεων σε αναρτήσεις με άλλες λέξεις."
+          tag: "Αυτόματη προσθήκη ετικετών σε θέματα εάν η πρώτη ανάρτηση περιέχει μια συγκεκριμένη λέξη."
+          silence: "Να γίνεται σίγαση νέων λογαριασμών εάν η πρώτη τους ανάρτηση περιέχει οποιαδήποτε από αυτές τις λέξεις. Η ανάρτηση θα αποκρύπτεται αυτόματα μέχρι να την εγκρίνει το προσωπικό."
+          link: "Αντικατάσταση λέξεων σε αναρτήσεις με συνδέσμους."
         form:
+          label: "Περιέχει λέξεις ή φράσεις"
           placeholder: "λέξεις ή φράσεις (το * είναι μπαλαντέρ)"
           placeholder_regexp: "κανονικές εκφράσεις"
+          replace_label: "Αντικατάσταση"
           replace_placeholder: "παράδειγμα"
+          tag_label: "Ετικέτα"
           link_label: "Σύνδεσμος"
           link_placeholder: "https://example.com"
           add: "Προσθήκη"
           success: "Επιτυχία"
           exists: "Υπάρχει ήδη"
           upload: "Προσθήκη από αρχείο"
+          upload_successful: "Επιτυχές ανέβασμα. Οι λέξεις θα υποβληθούν σε επεξεργασία σύντομα."
+          case_sensitivity_label: "Έχει διάκριση πεζών-κεφαλαίων"
+          case_sensitivity_description: "Μόνο λέξεις με αντιστοίχιση πεζών και κεφαλαίων χαρακτήρων"
           html_label: "HTML"
+          html_description: "Εξάγει HTML στην αντικατάσταση"
+          words_or_phrases: "λέξεις ή φράσεις"
         test:
           button_label: "Δοκιμή"
           description: "Εισαγάγετε κείμενο παρακάτω για να ελέγξετε για αντιστοιχίες με τις παρακολουθούμενες λέξεις"
@@ -7121,11 +7173,16 @@ el:
           no_matches: "Δεν βρέθηκαν αποτελέσματα"
       form_templates:
         nav_title: "Πρότυπα"
+        new_template: "Νέο πρότυπο"
         list_table:
           headings:
             name: "Όνομα"
             active_categories: "Ενεργές Κατηγορίες"
             actions: "Ενέργειες"
+          actions:
+            view: "Προβολή προτύπου"
+            edit: "Επεξεργασία προτύπου"
+            delete: "Διαγραφή προτύπου"
         view_template:
           close: "Κλείσιμο"
           edit: "Επεξεργασία"
@@ -7135,13 +7192,25 @@ el:
           submit: "Αποθήκευση"
           cancel: "Ακύρωση"
           name:
+            label: "Όνομα προτύπου"
             placeholder: "Εισαγάγετε ένα όνομα για αυτό το πρότυπο…"
+          template:
+            label: "Πρότυπο"
+            placeholder: "Δημιουργήστε ένα πρότυπο YAML εδώ…"
           preview: "Προεπισκόπηση"
         delete_confirm: "Σίγουρα θέλετε να διαγράψετε αυτό το πρότυπο;"
         quick_insert_fields:
           add_new_field: "Προσθήκη"
+          input: "Σύντομη απάντηση"
+          textarea: "Εκτενής απάντηση"
           dropdown: "Dropdown"
+          upload: "Ανεβάστε ένα αρχείο"
+          multiselect: "Πολλαπλή επιλογή"
+          tagchooser: "Επιλογέας ομάδας ετικετών"
+          composer: "Απάντηση Markdown"
         validations_modal:
+          button_title: "Επικυρώσεις"
+          modal_title: "Επιλογές επικύρωσης"
           table_headers:
             key: "Κλειδί"
             type: "Τύπος"
@@ -7200,6 +7269,8 @@ el:
           leader: "Χρήστες με Επίπεδο Εμπιστοσύνης 4 (Αρχηγός)"
           staff: "Συνεργάτες"
           moderators: "Συντονιστές"
+          silenced: "Χρήστες σε σίγαση"
+          suspended: "Χρήστες σε αναστολή"
         not_verified: "Μη επαληθευμένος"
         check_email:
           title: "Εμφάνισε το email αυτού του χρήστη"
@@ -7215,6 +7286,8 @@ el:
         suspend_reason: "Αιτία"
         suspend_reason_title: "Αιτιολόγηση Αποβολής"
         suspend_reasons:
+          combative: "Πολύ επιθετικός"
+          in_wrong_place: "Σε λάθος μέρος"
           custom: "Προσαρμοσμένο…"
         suspend_message: "Μήνυμα Email"
         suspend_message_placeholder: "Προαιρετικά, δώστε περισσότερες πληροφορίες σχετικά με την αναστολή και αυτή θα αποσταλεί στον χρήστη μέσω email."
@@ -7228,17 +7301,42 @@ el:
         silence_message: "Μήνυμα email"
         silence_message_placeholder: "(αφήστε κενό για να στείλετε το προκαθορισμένο μήνυμα)"
         suspended_until: "(έως %{until})"
+        suspend_forever: "Αναστολή για πάντα"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
+        cant_silence: "Δεν είναι δυνατή η σίγαση αυτού του χρήστη."
         delete_posts_failed: "Παρουσιάστηκε πρόβλημα κατά τη διαγραφή των αναρτήσεων."
+        post_edits: "Επεξεργασμένες Αναρτήσεις"
+        view_edits: "Προβολή Επεξεργασιών"
         penalty_post_actions: "Τι θα θέλατε να κάνετε με τη σχετική ανάρτηση;"
         penalty_post_delete: "Διαγραφή ανάρτησης"
         penalty_post_delete_replies: "Διαγραφή της ανάρτησης + τυχόν απαντήσεων"
+        penalty_post_delete_all: "Διαγραφή όλων των θεμάτων από τον χρήστη + οποιεσδήποτε απαντήσεις"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Αυτό θα διαγράψει
+          { TOPICS, plural,
+              one {# θέμα}
+            other {# θέματα}
+          } και
+          { REPLIES, plural,
+              one {# απάντηση}
+            other {# απαντήσεις}
+          }. <b>Αυτό δεν μπορεί να αναιρεθεί!</b> Σίγουρα θέλετε να το κάνετε;</span>
         penalty_post_edit: "Επεξεργασία ανάρτησης"
         penalty_post_none: "Μην κάνετε τίποτα"
         penalty_count: "Αριθμός ποινών"
+        penalty_history_MF: >-
+          Τους τελευταίους 6 μήνες αυτός ο χρήστης έχει γίνει <b>αναστολή { SUSPENDED, plural, one {# φορά} other {# φορές} }</b> και έχει γίνει <b>σίγαση { SILENCED, plural, one {# φορά} other {# φορές} }</b>.
         clear_penalty_history:
           title: "Καθαρισμός ιστορικού ποινών"
           description: "χρήστες με ποινές δε μπορούν να φτάσουν στο ΕΕ3"
+        delete_all_posts_confirm_MF: |
+          Πρόκειται να διαγράψετε { POSTS, plural,
+              one {# ανάρτηση}
+            other {# αναρτήσεις}
+          } και { TOPICS, plural,
+              one {# θέμα}
+            other {# θέματα}
+          }. Σίγουρα το θέλετε;
         silence: "Σίγαση"
         unsilence: "Αναίρεση Σίγασης"
         silenced: "Σε Σιγή;"
@@ -7247,6 +7345,7 @@ el:
         suspended: "Αποβλημένος;"
         staged: "Στάδιο Μετάβασης;"
         show_admin_profile: "Διαχείριση"
+        manage_user: "Διαχείριση χρήστη"
         show_public_profile: "Εμφάνισε το Δημόσιο Προφίλ"
         action_logs: "Καταγραφές Ενεργειών"
         ip_lookup: "Αναζήτηση διεύθυνσης IP"
@@ -7271,6 +7370,7 @@ el:
         private_topics_count: Προσωπικά μηνύματα
         posts_read_count: Διαβασμένες Αναρτήσεις
         post_count: Δημιουργημένες Αναρτήσεις
+        second_factor_enabled: Έλεγχος Ταυτότητας Δύο Παραγόντων Ενεργοποιημένος
         topics_entered: Προβεβλημένα Θέματα
         flags_given_count: Δοσμένες Σημάνσεις
         flags_received_count: Ληφθείσες Αναφορές
@@ -7283,20 +7383,45 @@ el:
         approve_success: "Ο χρήστης εγκρίθηκε και του αποστάλθηκε ένα email με οδηγίες για την ενεργοποίηση του λογαριασμού του."
         approve_bulk_success: "Επιτυχία! Όλοι οι επιλεγμένοι χρήστες εγκρίθηκαν και ειδοποιήθηκαν."
         time_read: "Χρόνος Ανάγνωσης"
+        post_edits_count: "Επεξεργασμένες Αναρτήσεις"
         upcoming_changes:
+          title: "Επερχόμενες αλλαγές χρήστη"
+          description: "Για να τροποποιήσετε ομάδες ή να ενεργοποιήσετε ή να απενεργοποιήσετε τις επερχόμενες αλλαγές, επισκεφθείτε τη <a href='%{basePath}/admin/config/upcoming-changes'>σελίδα διαμόρφωσης επερχόμενων αλλαγών</a>."
           filter_placeholder: "Φιλτράρετε τις επερχόμενες αλλαγές με βάση το όνομα ή την περιγραφή"
+          filter_no_results: "Δεν βρέθηκαν επερχόμενες αλλαγές"
         exports:
+          title: Εξαγωγές χρηστών
           download:
             description: Λήψη της τελευταίας εξαγωγής
+            expires_in:
+              one: Λήγει σε %{count} ώρα
+              other: Λήγει σε %{count} ώρες
+            not_available: Δεν υπάρχει διαθέσιμη εξαγωγή
             button: Αίτημα λήψης αρχείου
+            success: Το αρχείο είναι έτοιμο για λήψη.
         anonymize: "Ανωνυμοποίηση Χρήστη"
         anonymize_yes: "Ναι, ανωνυμοποίησε αυτόν τον λογαριασμό"
         anonymize_failed: "Παρουσιάστηκε ένα σφάλμα κατά την ανωνυμοποίηση του λογαριασμού."
         delete: "Διαγραφή χρήστη"
         delete_posts:
           button: "Σβήσε όλες τις αναρτήσεις"
+          progress:
+            title: "Πρόοδος διαγραφής αναρτήσεων"
+            description:
+              one: "Γίνεται διαγραφή %{count} ανάρτησης από @%{username}..."
+              other: "Γίνεται διαγραφή %{count} αναρτήσεων από @%{username}..."
           confirmation:
+            title: "Διαγραφή όλων των αναρτήσεων από @%{username}"
+            description: |
+              <p>Σίγουρα θέλετε να διαγράψετε <b>%{post_count}</b> αναρτήσεις από @%{username}?
+
+              <p><b>Αυτό δεν μπορεί να αναιρεθεί!</b></p>
+
+              <p>Για να συνεχίσετε, πληκτρολογήστε: <code>%{text}</code></p>
+            text: "διαγραφή αναρτήσεων από @%{username}"
+            delete: "Διαγραφή αναρτήσεων από @%{username}"
             cancel: "Άκυρο"
+          all_enqueued: "Όλες οι αναρτήσεις του χρήστη @%{username} έχουν μπει στην ουρά για διαγραφή"
         merge:
           button: "Συγχώνευση"
           prompt:
@@ -7308,6 +7433,8 @@ el:
             target_username_placeholder: "Όνομα χρήστη του νέου ιδιοκτήτη"
             transfer_and_delete: "Μεταφορά & διαγραφή @%{username}"
             cancel: "Άκυρο"
+          progress:
+            title: "Πρόοδος συγχώνευσης"
           confirmation:
             title: "Μεταφορά & διαγραφή @%{username}"
             description: |
@@ -7319,7 +7446,10 @@ el:
             text: "μεταφορά @%{username} σε @%{targetUsername}"
             transfer_and_delete: "Μεταφορά & διαγραφή @%{username}"
             cancel: "Άκυρο"
+        merging_user: "Γίνεται συγχώνευση χρήστη…"
         merge_failed: "Παρουσιάστηκε σφάλμα κατά τη συγχώνευση των χρηστών."
+        delete_forbidden_because_admin: "Δεν είναι δυνατή η διαγραφή των διαχειριστών."
+        delete_posts_forbidden_because_admin: "Δεν είναι δυνατή η διαγραφή όλων των αναρτήσεων των διαχειριστών."
         delete_forbidden:
           one: "Οι χρήστες δεν γίνεται να διαγραφούν εάν έχουν αναρτήσεις. Σβήσε όλες τις αναρτήσεις του πριν διαγράψεις το χρήστη. (Δεν γίνεται να σβηστούν αναρτήσεις που είναι παλαιότερες από %{count} ημέρα)"
           other: "Οι χρήστες δεν γίνεται να διαγραφούν εάν έχουν αναρτήσεις. Σβήσε όλες τις αναρτήσεις τους πριν τους διαγράψεις. (Δεν γίνεται να σβηστούν αναρτήσεις που είναι παλαιότερες από %{count} ημέρες)"
@@ -7329,6 +7459,10 @@ el:
         cant_delete_all_too_many_posts:
           one: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
           other: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
+        delete_confirm_title: "Σίγουρα θέλετε να διαγράψετε αυτόν τον χρήστη; Αυτό είναι μόνιμο!"
+        delete_confirm: "Γενικά, είναι προτιμότερο να ανωνυμοποιείτε τους χρήστες παρά να τους διαγράφετε, για να αποφευχθεί η αφαίρεση περιεχομένου από υπάρχουσες συζητήσεις."
+        delete_dont_block: "Διαγραφή χρήστη"
+        deleting_user: "Γίνεται διαγραφή χρήστη…"
         deleted: "Ο χρήστης διαγράφτηκε."
         delete_failed: "Παρουσιάστηκε ένα σφάλμα κατά τη διαγραφή αυτού του χρήστη. Βεβαιώσου πρώτα πως έχουν σβηστεί όλες οι αναρτήσεις του."
         send_activation_email: "Αποστολή Email Ενεργοποίησης"
@@ -7365,6 +7499,7 @@ el:
         unlock_trust_level: "Ξεκλείδωσε το επίπεδο εμπιστοσύνης"
         silenced_count: "Σιγήθηκαν"
         suspended_count: "Αποβλημένοι"
+        last_six_months: "Τελευταίοι 6 μήνες"
         other_matches_list:
           username: "Όνομα Χρήστη"
           trust_level: "Επίπεδο Εμπιστοσύνης"
@@ -7377,6 +7512,7 @@ el:
             other: "Τις τελευταίες %{count} μέρες:"
           value_heading: "Τιμή"
           requirement_heading: "Προϋπόθεση"
+          posts_read_days: "Διαβασμένες Αναρτήσεις: μοναδικές μέρες"
           days: "ημέρες"
           topics_replied_to: "Θέματα που απάντησε"
           topics_viewed: "Θέματα που είδε"
@@ -7399,13 +7535,20 @@ el:
           locked_will_not_be_promoted: "Το επίπεδο εμπιστοσύνης είναι κλειδωμένο. Δε θα προβιβαστεί ποτέ."
           locked_will_not_be_demoted: "Το επίπεδο εμπιστοσύνης είναι κλειδωμένο. Δεν θα υποβιβαστεί ποτέ. "
         discourse_connect:
+          title: "DiscourseConnect Single Sign On"
           external_id: "External ID"
           external_username: "Όνομα Χρήστη"
           external_name: "Όνομα"
           external_email: "Διεύθυνση Email"
           external_avatar_url: "URL Εικόνας Προφίλ"
+          delete_sso_record: "Διαγραφή εγγραφής SSO"
       user_fields:
+        title: "Πεδία χρήστη"
         no_user_fields: "Δεν έχετε κανένα προσαρμοσμένο πεδίο χρήστη ακόμη."
+        add: "Προσθήκη πεδίου χρήστη"
+        back: "Επιστροφή στα πεδία χρήστη"
+        edit_header: "Επεξεργασία πεδίου χρήστη"
+        new_header: "Προσθήκη πεδίου χρήστη"
         untitled: "Χωρίς τίτλο"
         name: "Όνομα πεδίου"
         type: "Τύπος πεδίου"
@@ -7418,16 +7561,40 @@ el:
         delete_confirm: "Είσαι σίγουρος πως θέλεις να διαγράψεις αυτό το πεδίο χρήστη;"
         options: "Επιλογές"
         required:
+          title: "Να απαιτείται κατά την εγγραφή"
           enabled: "απαραίτητο"
           disabled: "δεν είναι απαραίτητο"
         requirement:
+          title: "Απαίτηση πεδίου"
           optional:
             title: "Προεραιτικό"
+          for_all_users:
+            title: "Για όλους τους χρήστες"
+          on_signup:
+            title: "Κατά την εγγραφή"
+        editable:
+          title: "Επεξεργάσιμο μετά την εγγραφή"
+          enabled: "Επεξεργάσιμο"
+          disabled: "Μη επεξεργάσιμο"
+        show_on_profile:
+          title: "Εμφάνιση στο δημόσιο προφίλ"
+          enabled: "Εμφανίζεται στο προφίλ"
+          disabled: "Δεν εμφανίζεται στο προφίλ"
+        show_on_user_card:
+          title: "Εμφάνιση στην κάρτα χρήστη"
+          enabled: "Εμφανίζεται στην κάρτα χρήστη"
+          disabled: "Δεν εμφανίζεται στην κάρτα χρήστη"
+        show_on_signup:
+          title: "Εμφάνιση στη φόρμα εγγραφής"
+          enabled: "Εμφανίζεται στη φόρμα εγγραφής"
+          disabled: "Δεν εμφανίζεται στη φόρμα εγγραφής"
         searchable:
           title: "Αναζητήσιμο"
           enabled: "Αναζητήσιμο"
+          disabled: "Μη αναζητήσιμο"
         field_types:
           text: "Κείμενο"
+          textarea: "Περιοχή κειμένου"
           date: "Ημερομηνία"
           confirm: "Επιβεβαίωση"
           dropdown: "Dropdown"
@@ -7458,10 +7625,13 @@ el:
           dismiss: "Παράβλεψη"
       settings:
         show_overriden: "Δείξε μόνο αυτά που άλλαξαν"
+        history: "Προβολή ιστορικού αλλαγών"
         reset: "επαναφορά"
         none: "κανένα"
         save: "αποθήκευση"
         cancel: "ακύρωση"
+        unmask: "αποκάλυψη εισόδου"
+        not_found: "Δεν ήταν δυνατή η εύρεση των ρυθμίσεων"
       site_settings:
         title: "Ρυθμίσεις ιστότοπου"
         discard:
@@ -7531,6 +7701,9 @@ el:
           invalid_input: "Τα πεδία εισαγωγής δε μπορούν να είναι κενά ή να περιέχουν χαρακτήρα κάθετης γραμμής."
           already_exists: "Η καταχώριση για %{key} υπάρχει ήδη."
         default_categories:
+          modal_description:
+            one: "Θα θέλατε να εφαρμόσετε αυτήν την αλλαγή αναδρομικά; Αυτό θα αλλάξει τις προτιμήσεις για %{count} υπάρχων χρήστη."
+            other: "Θα θέλατε να εφαρμόσετε αυτήν την αλλαγή αναδρομικά; Αυτό θα αλλάξει τις προτιμήσεις για %{count} υπάρχοντες χρήστες."
           modal_yes: "Ναι "
           modal_no: "Όχι, εφαρμόστε την αλλαγή μόνο προς τα εμπρός"
         simple_list:
@@ -7546,6 +7719,15 @@ el:
           add_types_title: "Να επιτρέπονται επεκτάσεις %{types}"
           add_types_toast: "Προστέθηκαν τύποι αρχείων %{types}"
         mandatory_group: "Η ομάδα είναι υποχρεωτική"
+        requires_confirmation_messages:
+          default:
+            confirm: "Ναι, σίγουρα"
+          min_password_length:
+            confirm: "Ναι, ενημέρωση πολιτικής κωδικού πρόσβασης"
+          min_admin_password_length:
+            confirm: "Ναι, ενημέρωση πολιτικής κωδικού πρόσβασης"
+          block_common_passwords:
+            confirm: "Ναι, ενημέρωση πολιτικής κωδικού πρόσβασης"
         job_status:
           completed: "Η ενημέρωση ολοκληρώθηκε"
           enqueued: "Ενημέρωση σε εξέλιξη"
@@ -7648,10 +7830,14 @@ el:
       emoji:
         title: "Emoji"
         no_emoji: "Δεν έχετε κανένα προσαρμοσμένο emoji ακόμη."
+        add: "Προσθήκη emoji"
         delete: "Διαγραφή"
+        back: "Επιστροφή στα emoji"
+        choose_files: "Επιλογή αρχείων"
         uploading: "Μεταφορτώνεται…"
         name: "Όνομα"
         group: "Ομάδα"
+        created_by: "Δημιουργήθηκε από"
         image: "Εικόνα"
         alt: "προεπισκόπηση προσαρμοσμένου emoji"
         delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις το emoji :%{name}:;"
@@ -7662,8 +7848,11 @@ el:
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις το host;"
         title: "Ενσωμάτωση"
         edit: "Επεξεργασία"
+        category: "Δημοσίευση στην κατηγορία"
+        tags: "Ετικέτες θέματος"
         post_author: "Συντάκτης ανάρτησης"
         post_author_with_default: "Συντάκτης ανάρτησης (προεπιλογή σε %{author})"
+        posts_and_topics: "Διαμόρφωση αναρτήσεων και θεμάτων"
         crawlers: "Διαμόρφωση ανιχνευτών"
         crawlers_description: "Όταν η ιστοσελίδα δημιουργεί θέματα για τις αναρτήσεις σου, αν δεν υπάρχει RSS/ATOM τροφοδότηση θα προσπαθήσει να αναλύσει το περιεχόμενο της HTML σου. Κάποιες φορές μπορεί να αποτελεί πρόκληση το να εξάγει το περιεχόμενο σου, έτσι σου παρέχουμε την ικανότητα να προσδιορίσεις τους κανόνες CSS για να κάνεις την εξαγωγή ευκολότερη."
         embed_by_username: "Όνομα χρήστη για δημιουργία θέματος"
@@ -7675,11 +7864,15 @@ el:
         blocked_embed_selectors: "CSS selector για στοιχεία που έχουν αφαιρεθεί από τις ενσωματώσεις"
         allowed_embed_classnames: "Επιτρεπόμενα CSS class names"
         save: "Αποθήκευση"
+        posts_and_topics_settings_saved: "Οι ρυθμίσεις αναρτήσεων και θεμάτων αποθηκεύτηκαν"
         crawler_settings_saved: "Οι ρυθμίσεις ανιχνευτή αποθηκεύτηκαν"
+        back: "Επιστροφή στην ενσωμάτωση"
+        configuration_snippet: "Απόσπασμα διαμόρφωσης"
         host_form:
           save: "Αποθήκευση"
         nav:
           settings: "Ρυθμίσεις"
+          posts_and_topics: "Αναρτήσεις & θέματα"
           crawlers: "Ανιχνευτές"
       permalink:
         title: "Permalinks"
@@ -7692,6 +7885,7 @@ el:
         category_id: "ID Κατηγορίας"
         category_title: "Κατηγορία"
         tag_name: "Όνομα ετικέτας"
+        tag_title: "Ετικέτα"
         external_url: "Εξωτερική ή σχετική διεύθυνση URL"
         user_title: "Χρήστης"
         username: "Όνομα Χρήστη"
@@ -7699,6 +7893,7 @@ el:
         copy_to_clipboard: "Αντιγραφή permalink στο πρόχειρο"
         delete_confirm: Είσαι βέβαιος πως θέλεις να διαγράψεις αυτόν τον μόνιμο σύνδεσμο;
         no_permalinks: "Δεν έχετε κανέναν μόνιμο σύνδεσμο ακόμη."
+        more_options: "Περισσότερες επιλογές"
         nav:
           settings: "Ρυθμίσεις"
           permalinks: "Permalinks"
@@ -7708,6 +7903,7 @@ el:
           save: "Αποθήκευση"
       reseed:
         action:
+          label: "Αντικατάσταση κειμένου…"
           title: "Αντικατάσταση κειμένου κατηγοριών και θεμάτων με μεταφράσεις"
         modal:
           title: "Αντικατάσταση κειμένου"
@@ -7715,3 +7911,6 @@ el:
           categories: "Κατηγορίες"
           topics: "Θέματα"
           replace: "Αντικατάσταση"
+  wizard_js:
+    wizard:
+      jump_in: "Πάμε!"

@@ -116,6 +116,16 @@ RSpec.describe SharedAiConversation, type: :model do
       expect(onebox).not_to include("</marquee>")
       expect(onebox).to include("AI Conversation with Claude-2")
     end
+
+    it "escapes HTML in the title to prevent XSS" do
+      conversation = described_class.share_conversation(user, topic)
+      xss_title = "<img src=x onerror=alert(1)>"
+      conversation.update!(title: xss_title)
+      onebox = conversation.onebox
+
+      expect(onebox).not_to include(xss_title)
+      expect(onebox).to include(ERB::Util.html_escape(xss_title))
+    end
   end
 
   describe "#onebox" do

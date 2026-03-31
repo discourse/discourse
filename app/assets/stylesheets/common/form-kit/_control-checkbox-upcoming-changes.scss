@@ -1,0 +1,92 @@
+.uc-enable-new-checkbox-style {
+  .form-kit {
+    &__control-checkbox {
+      /* hide native checkbox */
+      position: absolute;
+      opacity: 0;
+
+      &-label {
+        display: flex;
+        gap: 0.75em;
+        margin: 0;
+        font-weight: normal !important;
+        color: var(--primary);
+        font-size: var(--font-down-1-rem);
+        cursor: pointer;
+
+        .form-kit__field[data-disabled] & {
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    &__control-checkbox-checkmark {
+      /* custom box */
+      width: 1.25em;
+      height: 1.25em;
+      border: 2px solid var(--primary-low-mid);
+      border-radius: 5px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
+      background: var(--secondary);
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: border 0.2s ease;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        height: 50%;
+        background: var(--tertiary-high);
+        border-radius: 50%;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+      }
+
+      .d-icon {
+        display: none;
+        width: 75%;
+        height: 75%;
+      }
+    }
+
+    &__control-checkbox-content {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    &__control-checkbox-description {
+      color: var(--primary-medium);
+
+      &:empty {
+        display: none;
+      }
+    }
+  }
+
+  .form-kit__control-checkbox-label:hover
+    .form-kit__control-checkbox-checkmark {
+    border-color: var(--tertiary-high);
+  }
+
+  .form-kit__control-checkbox:checked + .form-kit__control-checkbox-checkmark {
+    border-color: var(--tertiary-low);
+
+    &::before {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(3);
+    }
+
+    .d-icon {
+      display: initial;
+      color: var(--secondary);
+    }
+  }
+}

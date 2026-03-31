@@ -729,12 +729,20 @@ class GroupsController < ApplicationController
     params.require(:password)
 
     group = Group.find(params[:group_id])
-    guardian.ensure_can_edit!(group)
+    guardian.ensure_can_admin_group!(group)
 
     RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
 
     settings = params.except(:name, :protocol)
     email_host = params[:host]
+
+    begin
+      FinalDestination::SSRFDetector.lookup_and_filter_ips(email_host)
+    rescue FinalDestination::SSRFDetector::DisallowedIpError
+      raise Discourse::InvalidParameters.new(I18n.t("email_settings.invalid_host"))
+    rescue FinalDestination::SSRFDetector::LookupFailedError
+      raise Discourse::InvalidParameters.new(I18n.t("email_settings.host_resolve_failed"))
+    end
 
     if params[:protocol] != "smtp"
       raise Discourse::InvalidParameters.new("Valid protocol to test is smtp")
