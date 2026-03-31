@@ -3,8 +3,12 @@
 module PageObjects
   module Components
     class DIconGridPicker < PageObjects::Components::Base
+      def initialize(scope = nil)
+        @scope = scope
+      end
+
       def expand
-        find(".d-icon-grid-picker-trigger").click
+        trigger.click
       end
 
       def select_icon(icon_id)
@@ -16,23 +20,50 @@ module PageObjects
       end
 
       def clear
-        find(".d-icon-grid-picker__clear").click
+        scoped(".d-icon-grid-picker__clear").click
+      end
+
+      def value
+        wrapper["data-value"]
       end
 
       def has_selected_icon?(icon_id)
-        page.has_css?(".d-icon-grid-picker-trigger .d-icon-#{icon_id}")
+        wrapper["data-value"] == icon_id
       end
 
       def has_no_selected_icon?
-        page.has_no_css?(".d-icon-grid-picker-trigger .d-icon")
+        wrapper["data-value"].blank?
       end
 
       def has_clear_button?
-        page.has_css?(".d-icon-grid-picker__clear")
+        scoped(".d-icon-grid-picker__clear", wait: false).present?
+      rescue Capybara::ElementNotFound
+        false
       end
 
       def has_no_clear_button?
-        page.has_no_css?(".d-icon-grid-picker__clear")
+        !has_clear_button?
+      end
+
+      private
+
+      def wrapper
+        scoped(".d-icon-grid-picker")
+      end
+
+      def trigger
+        scoped(".d-icon-grid-picker-trigger")
+      end
+
+      def scoped(selector)
+        case @scope
+        when Capybara::Node::Element
+          @scope.find(selector)
+        when String
+          find("#{@scope} #{selector}")
+        else
+          find(selector)
+        end
       end
     end
   end

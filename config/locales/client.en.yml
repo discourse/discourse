@@ -3059,6 +3059,7 @@ en:
       default: Custom emojis
 
     d_icon_grid_picker:
+      select_icon: "Select icon"
       search_placeholder: "Search icons..."
       no_results: "No icons found"
       favorites: "Favorites"

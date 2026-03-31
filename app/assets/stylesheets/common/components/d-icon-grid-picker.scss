@@ -3,6 +3,8 @@
 // which doesn't follow the BEM `__` pattern, so it stays outside the block.
 .fk-d-menu.d-icon-grid-picker-content,
 .fk-d-menu-modal.d-icon-grid-picker-content {
+  z-index: z("modal", "dialog");
+
   --icon-grid-columns: 12;
   --icon-grid-cell: 36px;
   --icon-grid-gap: 2px;
@@ -10,6 +12,11 @@
 }
 
 .d-icon-grid-picker {
+  /* Apply icon color to the trigger icon when --icon-color is set */
+  .fk-d-menu__trigger > .d-icon {
+    color: var(--icon-color, currentColor);
+  }
+
   /* Split-button layout: DMenu trigger + clear button side by side */
   &.--has-clear {
     display: inline-flex;
@@ -32,6 +39,11 @@
         font-size: var(--font-down-2);
       }
     }
+  }
+
+  &__caret {
+    margin-left: 1em;
+    font-size: var(--font-down-2);
   }
 
   &__content {
@@ -119,7 +131,7 @@
     width: var(--icon-grid-cell);
     height: var(--icon-grid-cell);
     cursor: pointer;
-    color: var(--primary-high);
+    color: var(--icon-color, var(--primary-high));
 
     &:hover,
     &:focus {

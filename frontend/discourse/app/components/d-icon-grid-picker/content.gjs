@@ -25,6 +25,8 @@ import { i18n } from "discourse-i18n";
  * @param {string[]} [favorites] - Icon IDs to display in a pinned favorites row above the grid.
  * @param {boolean} [showSelectedName] - When true, the selected favorite chip also displays
  *   the icon name alongside the icon.
+ * @param {boolean} [onlyAvailable] - When true, only shows icons available in the
+ *   current SVG sprite set. Defaults to true.
  */
 export default class DIconGridPickerContent extends Component {
   @service tooltip;
@@ -136,12 +138,15 @@ export default class DIconGridPickerContent extends Component {
   @action
   async fetchIcons(filter) {
     return ajax("/svg-sprite/picker-search", {
-      data: { filter: filter || "", only_available: true },
+      data: {
+        filter: filter || "",
+        only_available: this.args.onlyAvailable ?? true,
+      },
     });
   }
 
   <template>
-    <div class="d-icon-grid-picker__content">
+    <div class="d-icon-grid-picker__content" style={{@iconColorStyle}}>
       <div class="d-icon-grid-picker__filter-container">
         <FilterInput
           {{! @glint-expect-error: FilterInput lacks Element type declaration }}

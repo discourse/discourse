@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -535,11 +535,8 @@ export default class UpsertCategoryGeneral extends Component {
                       @value={{field.value}}
                       @onChange={{field.set}}
                       @allowClear={{true}}
-                      @btnClass="btn-default btn-icon"
-                      @label={{unless
-                        field.value
-                        (i18n "category.select_icon")
-                      }}
+                      @iconColor={{concat "#" @transientData.color}}
+                      @btnClass="btn-icon"
                     />
                   </field.Control>
                 </@form.Field>
