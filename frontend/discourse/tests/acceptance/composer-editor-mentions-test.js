@@ -144,7 +144,7 @@ acceptance("Composer - editor mentions", function (needs) {
     );
   });
 
-  test("shows users immediately when @ is typed in a reply", async function (assert) {
+  test("shows users and groups immediately when @ is typed in a reply", async function (assert) {
     await visit("/");
     await click(".topic-list-item .title");
     await click(".btn-primary.create");
@@ -155,7 +155,7 @@ acceptance("Composer - editor mentions", function (needs) {
       [...document.querySelectorAll(".ac-user .username")].map(
         (e) => e.innerText
       ),
-      ["user_group", "user", "user2", "johndoe", "foo"]
+      ["user", "user2", "johndoe", "foo", "user_group"]
     );
   });
 

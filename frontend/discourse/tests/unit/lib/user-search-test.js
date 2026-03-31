@@ -198,6 +198,8 @@ module("Unit | Utility | user-search", function (hooks) {
           groups: [
             { name: "testers", usernames: [] }, // partial group match
             { name: "test", usernames: [] }, // exact group match
+            { name: "group_2", full_name: "Testers", usernames: [] }, // partial group match
+            { name: "group_4", full_name: "Test", usernames: [] }, // exact group match
           ],
         });
       }
@@ -210,30 +212,56 @@ module("Unit | Utility | user-search", function (hooks) {
       limit: 10,
     });
 
-    // Expected order: exact username, exact group, partial username, partial group, exact name, partial name
+    // Expected order:
+    // exact user username, exact group name,
+    // partial user username, partial group name,
+    // exact user name, partial user name
+    // exact group full_name, partial group full_name
     assert.strictEqual(
       results[0].username,
       "test",
-      "Exact username match first"
+      "First: Exact user username match"
     );
-    assert.strictEqual(results[1].name, "test", "Exact group match second");
+    assert.strictEqual(
+      results[1].name,
+      "test",
+      "Second: Exact group name match"
+    );
     assert.strictEqual(
       results[2].username,
       "testing",
-      "Partial username match third"
+      "Third: Partial user username match"
     );
     assert.strictEqual(
       results[3].name,
       "testers",
-      "Partial group match fourth"
+      "Fourth: Partial group name match"
     );
-    assert.strictEqual(results[4].username, "player", "Exact name match fifth");
+    assert.strictEqual(
+      results[4].username,
+      "player",
+      "Fifth: Exact user name match"
+    );
     assert.strictEqual(
       results[5].username,
       "gamer",
-      "Partial name match sixth"
+      "Sixth: Partial user name match"
     );
-    assert.strictEqual(results[6].username, "user123", "Metadata match last");
+    assert.strictEqual(
+      results[6].full_name,
+      "Test",
+      "Seventh: Exact group full name match"
+    );
+    assert.strictEqual(
+      results[7].full_name,
+      "Testers",
+      "Eighth: Partial group full name match"
+    );
+    assert.strictEqual(
+      results[8].username,
+      "user123",
+      "Ninth/Last: Metadata match"
+    );
   });
 
   test("it includes all matching groups when limit allows", async function (assert) {
