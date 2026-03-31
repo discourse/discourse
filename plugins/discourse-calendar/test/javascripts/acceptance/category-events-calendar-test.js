@@ -67,6 +67,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               },
             },
             name: "Awesome Event",
+            recurrence: "every_day",
             rrule: `DTSTART:${moment().format("YYYYMMDDTHHmmss")}Z\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=${moment().add(2, "days").format("YYYYMMDD")}`,
             occurrences: [
               {
@@ -218,6 +219,33 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
       secondCell,
       "events are in different days"
     );
+  });
+
+  test("recurring events show a visual indicator", async function (assert) {
+    await visit("/c/bug/1");
+
+    const recurringEvent = document.querySelector(
+      ".fc-daygrid-event-harness a[href='/t/-/18449/1']"
+    );
+    assert
+      .dom(recurringEvent)
+      .hasClass("fc-recurring-event", "recurring event has the CSS class");
+    assert
+      .dom(".d-icon-arrows-rotate", recurringEvent)
+      .exists("recurring event shows the recurring icon");
+
+    const nonRecurringEvent = document.querySelector(
+      ".fc-daygrid-event-harness a[href='/t/-/18450/1']"
+    );
+    assert
+      .dom(nonRecurringEvent)
+      .doesNotHaveClass(
+        "fc-recurring-event",
+        "non-recurring event does not have the CSS class"
+      );
+    assert
+      .dom(".d-icon-arrows-rotate", nonRecurringEvent)
+      .doesNotExist("non-recurring event does not show the recurring icon");
   });
 
   test("clicking an event shows a popup instead of navigating away", async function (assert) {
