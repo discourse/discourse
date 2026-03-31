@@ -13,6 +13,10 @@ module Chat
     def bot?
       false
     end
+
+    def user_option
+      UserOption.new
+    end
   end
 end
 
