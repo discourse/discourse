@@ -12,6 +12,18 @@ describe DiscourseAi::TopicSummarization do
     SiteSetting.ai_summarization_enabled = true
   end
 
+  def create_cached_summary(topic)
+    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic)
+    content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
+
+    Fabricate(
+      :ai_summary,
+      target: topic,
+      original_content_sha: content_sha,
+      highest_target_number: topic.highest_post_number,
+    )
+  end
+
   let(:strategy) { DiscourseAi::Summarization.topic_summary(topic) }
 
   let(:summary) { "This is the final summary" }
@@ -44,7 +56,6 @@ describe DiscourseAi::TopicSummarization do
         cached_summary_text = "This is a cached summary"
         AiSummary.find_by(target: topic, summary_type: AiSummary.summary_types[:complete]).update!(
           summarized_text: cached_summary_text,
-          updated_at: 24.hours.ago,
         )
 
         summarization = described_class.new(strategy, user)
@@ -114,6 +125,43 @@ describe DiscourseAi::TopicSummarization do
             end
           end
         end
+
+        context "when posts were edited" do
+          before do
+            cached_summary.update!(created_at: 30.minutes.ago)
+            post_2.update_columns(last_version_at: 1.minute.from_now)
+          end
+
+          it "regenerates even when the cached summary is less than one hour old" do
+            DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+              section = summarization.summarize
+
+              expect(section.summarized_text).to eq(summary)
+            end
+          end
+        end
+      end
+    end
+
+    context "when the user is anonymous" do
+      let(:summarization) { described_class.new(strategy, nil) }
+
+      it "returns a fresh cached summary" do
+        cached_summary = create_cached_summary(topic)
+
+        section = summarization.summarize
+
+        expect(section.id).to eq(cached_summary.id)
+      end
+
+      it "returns nil when the cached summary is outdated" do
+        create_cached_summary(topic)
+        Fabricate(:post, topic: topic, post_number: 3)
+        topic.update!(highest_post_number: 3)
+
+        section = summarization.summarize
+
+        expect(section).to be_nil
       end
     end
 

@@ -62,6 +62,20 @@ RSpec.describe Chat::AddUsersToChannel do
         )
       end
 
+      it "does not include users from groups the acting user cannot see" do
+        secret_group =
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:staff],
+            members_visibility_level: Group.visibility_levels[:staff],
+          )
+        secret_user = Fabricate(:user)
+        secret_group.add(secret_user)
+
+        params.merge!(groups: [secret_group.name])
+        expect(result.target_users.map(&:username)).not_to include(secret_user.username)
+      end
+
       context "with user count validation" do
         before { SiteSetting.chat_max_direct_message_users = 8 }
 

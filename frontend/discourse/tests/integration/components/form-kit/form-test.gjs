@@ -181,6 +181,34 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     }, 0);
   });
 
+  test("@onRegisterApi - commitField", async function (assert) {
+    let formApi;
+    const model = { foo: "a", bar: "b" };
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form @data={{model}} @onRegisterApi={{registerApi}} as |form data|>
+          <div class="foo">{{data.foo}}</div>
+          <div class="bar">{{data.bar}}</div>
+        </Form>
+      </template>
+    );
+
+    await formApi.set("foo", "a2");
+    await formApi.set("bar", "b2");
+    formApi.commitField("foo");
+
+    assert.true(formApi.isDirty, "still dirty because 'bar' is uncommitted");
+
+    await formApi.reset();
+
+    assert
+      .dom(".foo")
+      .hasText("a2", "'foo' keeps its committed value after reset");
+    assert.dom(".bar").hasText("b", "'bar' reverts to original after reset");
+  });
+
   test("@onRegisterApi - isDirty", async function (assert) {
     let formApi;
     const model = { foo: 1 };
@@ -294,6 +322,39 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await click(".test");
 
     assert.dom(".foo").hasText("2");
+  });
+
+  test("yielded commitField", async function (assert) {
+    let formApi;
+    const registerApi = (api) => (formApi = api);
+
+    await render(
+      <template>
+        <Form
+          @data={{hash foo=1 bar=2}}
+          @onRegisterApi={{registerApi}}
+          as |form data|
+        >
+          <div class="foo">{{data.foo}}</div>
+          <div class="bar">{{data.bar}}</div>
+          <form.Button class="set-foo" @action={{fn form.set "foo" 10}} />
+          <form.Button
+            class="commit-foo"
+            @action={{fn form.commitField "foo"}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(".set-foo");
+    assert.dom(".foo").hasText("10");
+
+    await click(".commit-foo");
+
+    await formApi.reset();
+
+    assert.dom(".foo").hasText("10", "committed field survives reset");
+    assert.dom(".bar").hasText("2", "uncommitted field keeps original value");
   });
 
   test("yielded setProperties", async function (assert) {

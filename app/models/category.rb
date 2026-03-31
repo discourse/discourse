@@ -111,6 +111,7 @@ class Category < ActiveRecord::Base
   after_create :delete_category_permalink
   after_update :rename_category_definition, if: :saved_change_to_name?
   after_update :create_category_permalink, if: :saved_change_to_slug?
+  after_update :revise_category_definition, if: :saved_change_to_description?
   after_update :run_plugin_category_update_param_callbacks
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
@@ -550,6 +551,15 @@ class Category < ActiveRecord::Base
 
       t
     end
+  end
+
+  def revise_category_definition
+    return if skip_category_definition
+    return if self.topic.blank? || self.topic.first_post.blank?
+
+    # NOTE: Revising the first post will also update the category description,
+    # see PostRevisor#update_category_description
+    self.topic.first_post.revise(self.user, { raw: self.description }, skip_validations: true)
   end
 
   def trash_category_definition

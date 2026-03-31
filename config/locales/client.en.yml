@@ -6088,6 +6088,11 @@ en:
           beta: "Beta"
           stable: "Stable"
           permanent: "Permanent"
+        status_descriptions:
+          experimental: "This is in early development and may change significantly or be discontinued. May not be fully compatible with other features."
+          alpha: "This is being actively developed and refined. Functionality may change, and it may not be fully polished but it's stable enough to try."
+          beta: "This is nearing completion and available for early adoption. Minor changes are still possible."
+          stable: "This is complete and well supported. It will soon be available on all Discourse sites."
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"

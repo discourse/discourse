@@ -7,7 +7,6 @@ module DiscourseSubscriptions
 
     requires_plugin PLUGIN_NAME
 
-    before_action :set_api_key
     requires_login except: %i[index contributors show]
 
     def index
@@ -16,7 +15,7 @@ module DiscourseSubscriptions
         products = []
 
         if product_ids.present? && is_stripe_configured?
-          response = ::Stripe::Product.list({ ids: product_ids, active: true })
+          response = ::Stripe::Product.list({ ids: product_ids, active: true }, stripe_request_opts)
 
           products = response[:data].map { |p| serialize_product(p) }
         end
@@ -46,8 +45,8 @@ module DiscourseSubscriptions
     def show
       params.require(:id)
       begin
-        product = ::Stripe::Product.retrieve(params[:id])
-        plans = ::Stripe::Price.list(active: true, product: params[:id])
+        product = ::Stripe::Product.retrieve(params[:id], stripe_request_opts)
+        plans = ::Stripe::Price.list({ active: true, product: params[:id] }, stripe_request_opts)
 
         response = { product: serialize_product(product), plans: serialize_plans(plans) }
 
@@ -66,10 +65,10 @@ module DiscourseSubscriptions
             params[:cardholder_name],
             params[:cardholder_address],
           )
-        plan = ::Stripe::Price.retrieve(params[:plan])
+        plan = ::Stripe::Price.retrieve(params[:plan], stripe_request_opts)
 
         if params[:promo].present?
-          promo_code = ::Stripe::PromotionCode.list({ code: params[:promo] })
+          promo_code = ::Stripe::PromotionCode.list({ code: params[:promo] }, stripe_request_opts)
           promo_code = promo_code[:data][0] # we assume promo codes have a unique name
 
           if promo_code.blank?
@@ -97,7 +96,7 @@ module DiscourseSubscriptions
             subscription_params[:automatic_tax] = { enabled: true }
           end
 
-          transaction = ::Stripe::Subscription.create(subscription_params)
+          transaction = ::Stripe::Subscription.create(subscription_params, stripe_request_opts)
 
           payment_intent = retrieve_payment_intent(transaction[:latest_invoice]) if transaction[
             :status
@@ -110,16 +109,19 @@ module DiscourseSubscriptions
           if SiteSetting.discourse_subscriptions_enable_automatic_tax
             invoice_params[:automatic_tax] = { enabled: true }
           end
-          invoice = ::Stripe::Invoice.create(invoice_params)
+          invoice = ::Stripe::Invoice.create(invoice_params, stripe_request_opts)
 
           invoice_item =
             ::Stripe::InvoiceItem.create(
-              customer: customer[:id],
-              price: params[:plan],
-              discounts: [{ coupon: coupon_id }],
-              invoice: invoice[:id],
+              {
+                customer: customer[:id],
+                price: params[:plan],
+                discounts: [{ coupon: coupon_id }],
+                invoice: invoice[:id],
+              },
+              stripe_request_opts,
             )
-          transaction = ::Stripe::Invoice.finalize_invoice(invoice[:id])
+          transaction = ::Stripe::Invoice.finalize_invoice(invoice[:id], {}, stripe_request_opts)
           payment_intent = retrieve_payment_intent(transaction[:id]) if transaction[:status] ==
             "open"
           if payment_intent.nil?
@@ -127,11 +129,20 @@ module DiscourseSubscriptions
               render_json_error I18n.t("js.discourse_subscriptions.subscribe.transaction_error")
             )
           end
-          transaction = ::Stripe::Invoice.pay(invoice[:id]) if payment_intent[:status] ==
-            "successful"
+          transaction =
+            ::Stripe::Invoice.pay(invoice[:id], {}, stripe_request_opts) if payment_intent[
+            :status
+          ] == "successful"
         end
 
-        finalize_transaction(transaction, plan) if transaction_ok(transaction)
+        if transaction_ok(transaction)
+          finalize_transaction(transaction, plan)
+        else
+          server_session["pending_subscription"] = {
+            transaction_id: transaction[:id],
+            plan_id: plan[:id],
+          }
+        end
 
         transaction = transaction.to_h.merge(transaction, payment_intent: payment_intent)
 
@@ -142,13 +153,19 @@ module DiscourseSubscriptions
     end
 
     def finalize
-      params.require(%i[plan transaction])
-      begin
-        price = ::Stripe::Price.retrieve(params[:plan])
-        transaction = retrieve_transaction(params[:transaction])
-        finalize_transaction(transaction, price) if transaction_ok(transaction)
+      pending = server_session["pending_subscription"]
+      raise Discourse::InvalidAccess if pending.blank?
 
-        render_json_dump params[:transaction]
+      begin
+        transaction = retrieve_transaction(pending[:transaction_id])
+        raise Discourse::InvalidAccess unless transaction_ok(transaction)
+
+        plan = ::Stripe::Price.retrieve(pending[:plan_id], stripe_request_opts)
+        finalize_transaction(transaction, plan)
+
+        server_session.delete("pending_subscription")
+
+        render_json_dump pending[:transaction_id]
       rescue ::Stripe::InvalidRequestError => e
         render_json_error e.message
       end
@@ -227,29 +244,32 @@ module DiscourseSubscriptions
         )
 
       if customer.present?
-        ::Stripe::Customer.retrieve(customer.customer_id)
+        ::Stripe::Customer.retrieve(customer.customer_id, stripe_request_opts)
       else
         ::Stripe::Customer.create(
-          email: current_user.email,
-          source: source,
-          name: cardholder_name,
-          address: cardholder_address,
+          {
+            email: current_user.email,
+            source: source,
+            name: cardholder_name,
+            address: cardholder_address,
+          },
+          stripe_request_opts,
         )
       end
     end
 
     def retrieve_payment_intent(invoice_id)
-      invoice = ::Stripe::Invoice.retrieve(invoice_id)
-      ::Stripe::PaymentIntent.retrieve(invoice[:payment_intent])
+      invoice = ::Stripe::Invoice.retrieve(invoice_id, stripe_request_opts)
+      ::Stripe::PaymentIntent.retrieve(invoice[:payment_intent], stripe_request_opts)
     end
 
     def retrieve_transaction(transaction)
       begin
         case transaction
         when /^sub_/
-          ::Stripe::Subscription.retrieve(transaction)
+          ::Stripe::Subscription.retrieve(transaction, stripe_request_opts)
         when /^in_/
-          ::Stripe::Invoice.retrieve(transaction)
+          ::Stripe::Invoice.retrieve(transaction, stripe_request_opts)
         end
       rescue ::Stripe::InvalidRequestError => e
         e.message

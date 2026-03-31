@@ -4243,6 +4243,14 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
+  enable_new_checkbox_style:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true

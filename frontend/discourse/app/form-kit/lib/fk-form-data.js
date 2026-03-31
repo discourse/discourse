@@ -198,6 +198,21 @@ export default class FKFormData {
   }
 
   /**
+   * Commits the current draft value of a specific field as the new baseline
+   * and removes only its patches from the history. Other fields' dirty state
+   * is unaffected.
+   * @param {string} name - The top-level property name to commit.
+   */
+  commitField(name) {
+    this.data = produce(this.data, (target) => {
+      target[name] = this.draftData[name];
+    });
+
+    this.patches = this.patches.filter((p) => p.path[0] !== name);
+    this.inversePatches = this.inversePatches.filter((p) => p.path[0] !== name);
+  }
+
+  /**
    * Resets the patches and inverse patches.
    */
   resetPatches() {

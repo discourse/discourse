@@ -484,6 +484,76 @@ RSpec.describe StaticController do
         end
       end
     end
+
+    context "with sso_destination_url cookie" do
+      before { SiteSetting.enable_discourse_connect_provider = true }
+
+      it "redirects to valid SSO destination URL when provider is configured" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://allowed-site.com/sso?token=abc"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("https://allowed-site.com/sso?token=abc")
+        expect(response.cookies["sso_destination_url"]).to be_nil
+      end
+
+      it "redirects to valid SSO destination URL with wildcard domain" do
+        SiteSetting.discourse_connect_provider_secrets = "*.allowed-domain.com|secret123"
+        cookies[:sso_destination_url] = "https://sub.allowed-domain.com/sso?token=abc"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("https://sub.allowed-domain.com/sso?token=abc")
+      end
+
+      it "ignores SSO destination URL when domain is not in provider secrets" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://evil-site.com/phishing"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+        expect(response.cookies["sso_destination_url"]).to be_nil
+      end
+
+      it "ignores SSO destination URL when provider secrets is empty" do
+        SiteSetting.discourse_connect_provider_secrets = ""
+        cookies[:sso_destination_url] = "https://some-site.com/sso"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "ignores malformed SSO destination URL" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "not a valid url"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "ignores SSO destination URL when discourse_connect_provider is disabled" do
+        SiteSetting.enable_discourse_connect_provider = false
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://allowed-site.com/sso"
+
+        post "/login.json"
+
+        expect(response).to redirect_to("/")
+      end
+
+      it "deletes sso_destination_url cookie regardless of validity" do
+        SiteSetting.discourse_connect_provider_secrets = "allowed-site.com|secret123"
+        cookies[:sso_destination_url] = "https://evil-site.com/phishing"
+
+        post "/login.json"
+
+        expect(response.cookies["sso_destination_url"]).to be_nil
+      end
+    end
   end
 
   describe "#service_worker_asset" do

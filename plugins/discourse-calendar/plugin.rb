@@ -197,7 +197,7 @@ after_initialize do
   end
 
   add_to_class(:guardian, :can_act_on_invitee?) do |invitee|
-    user && (user.staff? || user.id == invitee.user_id)
+    user && (user.id == invitee.user_id || can_act_on_discourse_post_event?(invitee.event))
   end
 
   add_to_class(:guardian, :can_create_discourse_post_event?) do
