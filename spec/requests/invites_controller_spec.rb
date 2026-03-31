@@ -58,13 +58,62 @@ RSpec.describe InvitesController do
       end
     end
 
-    it "shows default user fields" do
+    it "does not expose staged user fields without email verification" do
       user_field = Fabricate(:user_field)
       staged_user = Fabricate(:user, staged: true, email: invite.email)
       staged_user.set_user_field(user_field.id, "some value")
       staged_user.save_custom_fields
 
       get "/invites/#{invite.invite_key}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["username"]).not_to eq(staged_user.username)
+        expect(invite_info["user_fields"]).to be_nil
+      end
+    end
+
+    it "does not expose staged user fields when authentication email is unverified" do
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.set_user_field(user_field.id, "some value")
+      staged_user.save_custom_fields
+
+      server_session[:authentication] = { email: invite.email, email_valid: false }
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["email"]).to eq(invite.email)
+        expect(invite_info["user_fields"]).to be_nil
+      end
+    end
+
+    it "shows staged user fields when authentication email is verified" do
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.set_user_field(user_field.id, "some value")
+      staged_user.save_custom_fields
+
+      server_session[:authentication] = { email: invite.email, email_valid: true }
+
+      get "/invites/#{invite.invite_key}"
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["username"]).to eq(staged_user.username)
+        expect(invite_info["user_fields"][user_field.id.to_s]).to eq("some value")
+      end
+    end
+
+    it "shows staged user fields when email is verified by link token" do
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.set_user_field(user_field.id, "some value")
+      staged_user.save_custom_fields
+
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
       expect(response.body).to have_tag("div#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
         invite_info = JSON.parse(json["invite_info"])
