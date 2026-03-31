@@ -3444,6 +3444,10 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    reviewable_queued_post_revise_and_reject_edit_post: "You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "You can edit your original post below and re-submit to make the suggested changes."
+    reviewable_queued_post_revise_and_reject_edit_topic: "You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "You can edit your topic's original post below and re-submit to make the suggested changes."
     reviewable_queued_post_revise_and_reject:
       title: "Feedback on your post"
       subject_template: "Feedback on your post in %{topic_title}"
@@ -3456,7 +3460,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -3479,7 +3483,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 

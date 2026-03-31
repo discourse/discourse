@@ -164,6 +164,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             feedback: args[:revise_feedback],
             original_post: reviewable.payload["raw"],
             site_name: SiteSetting.title,
+            edit_instructions:
+              I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_post"),
           }
           expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
           expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
@@ -173,6 +175,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
               translation_params,
             ).chomp,
           )
+          expect(topic.first_post.raw).to include("reply to this message")
         end
 
         it "supports sending a custom revise reason" do
@@ -190,6 +193,21 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
           expect(topic.first_post.raw).not_to include("Other...")
           expect(topic.first_post.raw).to include("Boring")
+        end
+
+        context "when no site contact user is configured" do
+          before do
+            SiteSetting.site_contact_group_name = ""
+            SiteSetting.site_contact_username = ""
+          end
+
+          it "omits reply instructions from the PM" do
+            args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
+            reviewable.perform(moderator, :revise_and_reject_post, args)
+
+            topic = Topic.where(archetype: Archetype.private_message).last
+            expect(topic.first_post.raw).not_to include("reply to this message")
+          end
         end
 
         context "when the topic is nil in the case of a new topic being created" do
@@ -216,6 +234,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
               feedback: args[:revise_feedback],
               original_post: reviewable.payload["raw"],
               site_name: SiteSetting.title,
+              edit_instructions:
+                I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_topic"),
             }
             expect(topic.first_post.raw.chomp).to eq(
               I18n.t(
