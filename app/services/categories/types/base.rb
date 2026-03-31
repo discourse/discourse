@@ -327,6 +327,8 @@ module Categories
               show_on_edit: true,
             }
             entry[:depends_on] = depends_on if depends_on
+            entry[:min] = meta[:min] if meta[:min]
+            entry[:max] = meta[:max] if meta[:max]
             entries[:site_settings] << entry
           end
 

@@ -52,7 +52,7 @@ const SchemaFormField = <template>
       @type="input-number"
       as |field|
     >
-      <field.Control />
+      <field.Control min={{@entry.min}} max={{@entry.max}} />
     </@formObject.Field>
   {{else}}
     <@formObject.Field
@@ -100,6 +100,23 @@ export default class EditCategoryTypeSchemaFields extends Component {
   }
 
   @bind
+  groupEntries(entries) {
+    const groups = [];
+    let currentGroup = null;
+
+    entries?.forEach((entry) => {
+      const dependsOn = entry.depends_on || null;
+      if (!currentGroup || currentGroup.dependsOn !== dependsOn) {
+        currentGroup = { dependsOn, entries: [] };
+        groups.push(currentGroup);
+      }
+      currentGroup.entries.push(entry);
+    });
+
+    return groups;
+  }
+
+  @bind
   shouldDisplayField(entry) {
     if (this.args.category.isCreated) {
       return entry.show_on_edit;
@@ -136,21 +153,30 @@ export default class EditCategoryTypeSchemaFields extends Component {
           @name="category_type_site_settings"
           as |siteSettings data|
         >
-          {{#each this.schema.site_settings as |entry|}}
-            {{#if entry.depends_on}}
-              {{#if (get data entry.depends_on)}}
+          {{#each (this.groupEntries this.schema.site_settings) as |group|}}
+            {{#if group.dependsOn}}
+              {{#if (get data group.dependsOn)}}
+                <div class="--dependent">
+                  <div class="--dependent-border"></div>
+                  <div class="--dependent-fields">
+                    {{#each group.entries as |entry|}}
+                      <SchemaFormField
+                        @category={{@category}}
+                        @entry={{entry}}
+                        @formObject={{siteSettings}}
+                      />
+                    {{/each}}
+                  </div>
+                </div>
+              {{/if}}
+            {{else}}
+              {{#each group.entries as |entry|}}
                 <SchemaFormField
                   @category={{@category}}
                   @entry={{entry}}
                   @formObject={{siteSettings}}
                 />
-              {{/if}}
-            {{else}}
-              <SchemaFormField
-                @category={{@category}}
-                @entry={{entry}}
-                @formObject={{siteSettings}}
-              />
+              {{/each}}
             {{/if}}
           {{/each}}
         </@form.Object>

@@ -271,6 +271,40 @@ RSpec.describe Categories::Types::Base do
       expect(entry[:label]).to eq(SiteSetting.setting_metadata_hash(:title)[:humanized_name])
     end
 
+    it "includes min and max when present in site setting metadata" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_min_max
+
+          def self.configuration_schema
+            { site_settings: { suggested_topics_unread_max_days_old: 7 } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].find { |e| e[:key] == "suggested_topics_unread_max_days_old" }
+
+      expect(entry[:min]).to eq(0)
+      expect(entry[:max]).to eq(36_500)
+    end
+
+    it "does not include min or max when absent from site setting metadata" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_no_min_max
+
+          def self.configuration_schema
+            { site_settings: { title: "My Forum" } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].find { |e| e[:key] == "title" }
+
+      expect(entry).not_to have_key(:min)
+      expect(entry).not_to have_key(:max)
+    end
+
     it "includes depends_on when site setting uses hash config" do
       test_type =
         Class.new(described_class) do
