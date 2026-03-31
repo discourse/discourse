@@ -127,6 +127,10 @@ export default class DiscoursePostEvent extends Component {
         <div class="discourse-post-event">
           <div class="discourse-post-event-widget">
             {{#if event}}
+              <Image
+                @imageUpload={{event.imageUpload}}
+                @alt={{this.eventName}}
+              />
               <header class="event-header" {{this.setupMessageBus}}>
                 <div class="event-date">
                   <div class="month">
@@ -218,10 +222,6 @@ export default class DiscoursePostEvent extends Component {
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
                 <Invitees @event={{event}} />
-                <Image
-                  @imageUpload={{event.imageUpload}}
-                  @alt={{this.eventName}}
-                />
 
                 {{#if this.withDescription}}
                   <Description @description={{event.description}} />

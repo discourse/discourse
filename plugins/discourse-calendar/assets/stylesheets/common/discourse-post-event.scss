@@ -10,7 +10,6 @@ $show-interested: inherit;
   justify-content: center;
 
   .event__section {
-    grid-column: 1/1;
     padding: 0.5em 0.75rem;
 
     &:first-child {
@@ -31,34 +30,32 @@ $show-interested: inherit;
   }
 
   .event-image {
-    grid-row: 1/4;
-    grid-column: 2/2;
-    display: flex;
-    justify-content: flex-end;
-    align-items: start;
-    padding: 0.75em;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+    padding: 0;
+    padding-bottom: 50%;
+    border-top: none;
 
     img {
-      max-height: 240px;
-      border-radius: var(--d-border-radius);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 
   .discourse-post-event-widget {
-    display: grid;
+    display: flex;
     background: var(--secondary);
     flex-direction: column;
     flex: 1 0 auto;
     max-width: 100%;
     box-sizing: border-box;
-
-    &:has(.event-image) {
-      grid-template-columns: 1fr fit-content(280px);
-
-      .event-actions {
-        grid-column: span 2;
-      }
-    }
+    overflow: hidden;
 
     .cooked & {
       box-shadow: 0 0 0 3px var(--primary-100);
@@ -177,7 +174,6 @@ $show-interested: inherit;
     .status-and-creators {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
       color: var(--primary-medium);
       font-size: var(--font-down-1);
       font-weight: 400;
@@ -205,7 +201,6 @@ $show-interested: inherit;
       .creators {
         display: flex;
         align-items: center;
-        flex-wrap: wrap;
 
         .event-creator {
           @include ellipsis;
