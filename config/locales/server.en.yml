@@ -1155,6 +1155,8 @@ en:
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
+    invalid_host: "The provided host resolves to a disallowed IP address."
+    host_resolve_failed: "The provided host could not be resolved."
   webauthn:
     validation:
       invalid_type_error: "The webauthn type provided was invalid. Valid types are webauthn.get and webauthn.create."
@@ -1261,6 +1263,8 @@ en:
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
+    copy_key: "Copy Key"
+    copied: "Copied!"
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
       confirm_title: Continue to %{site_name}
