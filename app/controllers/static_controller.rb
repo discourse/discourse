@@ -152,12 +152,21 @@ class StaticController < ApplicationController
     params.delete(:password)
 
     destination = extract_redirect_param
-
     allow_other_host = false
 
+    # We need this to redirect the user back when Discourse Connect Provider is used.
     if cookies[:sso_destination_url]
-      destination = cookies.delete(:sso_destination_url)
-      allow_other_host = true
+      sso_url = cookies.delete(:sso_destination_url)
+
+      begin
+        uri = URI(sso_url)
+        if valid_sso_redirect_uri?(uri)
+          destination = sso_url
+          allow_other_host = true
+        end
+      rescue URI::Error, ArgumentError
+        # Invalid URI, ignore and use default destination
+      end
     end
 
     destination = path(destination) if destination == "/"
@@ -268,6 +277,20 @@ class StaticController < ApplicationController
   end
 
   protected
+
+  def valid_sso_redirect_uri?(uri)
+    return false unless SiteSetting.enable_discourse_connect_provider
+    return false if uri.host.blank?
+
+    provider_domains =
+      SiteSetting
+        .discourse_connect_provider_secrets
+        .split("\n")
+        .map { |row| row.split("|", 2).first }
+        .compact
+
+    provider_domains.any? { |domain| WildcardDomainChecker.check_domain(domain, uri.host) }
+  end
 
   def serve_asset(suffix = nil)
     path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
