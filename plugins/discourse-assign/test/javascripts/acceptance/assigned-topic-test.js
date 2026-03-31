@@ -262,3 +262,131 @@ acceptance(`Discourse Assign | Reassign topic conditionals`, function (needs) {
     assert.false(menu.rowByValue("reassign-self").exists());
   });
 });
+
+acceptance(`Discourse Assign | Assignee name XSS escaping`, function (needs) {
+  const XSS_PAYLOAD = '<img src="xss-test">';
+
+  needs.user();
+  needs.settings({
+    assign_enabled: true,
+    tagging_enabled: true,
+    assigns_user_url_path: "/",
+    assigns_public: true,
+    prioritize_full_name_in_ux: true,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/t/44.json", () => {
+      let topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
+      topic["assigned_to_user"] = {
+        username: "eviltrout",
+        name: XSS_PAYLOAD,
+        avatar_template:
+          "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+      };
+      topic["indirectly_assigned_to"] = {};
+
+      // Add a small action post with XSS payload in action_code_who
+      const smallActionPost = {
+        id: 999,
+        username: "system",
+        avatar_template: "/images/avatar.png",
+        created_at: "2026-03-10T00:00:00.000Z",
+        cooked: "",
+        post_number: 3,
+        post_type: 3,
+        updated_at: "2026-03-10T00:00:00.000Z",
+        yours: false,
+        topic_id: topic.id,
+        topic_slug: topic.slug,
+        action_code: "assigned",
+        action_code_who: XSS_PAYLOAD,
+      };
+      topic.post_stream.posts.push(smallActionPost);
+      topic.post_stream.stream.push(999);
+
+      return helper.response(topic);
+    });
+
+    server.get("/t/45.json", () => {
+      let topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
+      topic["assigned_to_group"] = {
+        name: XSS_PAYLOAD,
+      };
+      return helper.response(topic);
+    });
+  });
+
+  test("escapes HTML in user assignee name on first post", async function (assert) {
+    updateCurrentUser({ can_assign: true });
+    await visit("/t/assignment-topic/44");
+
+    assert
+      .dom("#post_1 .assigned-to--user img[src='xss-test']")
+      .doesNotExist("does not render injected img from user name");
+
+    assert
+      .dom("#post_1 .assigned-to--user")
+      .includesText(XSS_PAYLOAD, "renders payload as escaped text");
+  });
+
+  test("escapes HTML in user assignee name in topic tag", async function (assert) {
+    updateCurrentUser({ can_assign: true });
+    await visit("/t/assignment-topic/44");
+
+    assert
+      .dom(".discourse-tags .assigned-to img[src='xss-test']")
+      .doesNotExist("does not render injected img in topic tag");
+
+    assert
+      .dom(".discourse-tags .assigned-to span")
+      .includesText(XSS_PAYLOAD, "renders payload as escaped text in tag");
+  });
+
+  test("escapes HTML in group assignee name on first post", async function (assert) {
+    updateCurrentUser({ can_assign: true });
+    await visit("/t/assignment-topic/45");
+
+    assert
+      .dom("#post_1 .assigned-to--group img[src='xss-test']")
+      .doesNotExist("does not render injected img from group name");
+
+    assert
+      .dom("#post_1 .assigned-to--group")
+      .includesText(XSS_PAYLOAD, "renders payload as escaped text");
+  });
+
+  test("escapes HTML in group assignee name in topic tag", async function (assert) {
+    updateCurrentUser({ can_assign: true });
+    await visit("/t/assignment-topic/45");
+
+    assert
+      .dom(".discourse-tags .assigned-to img[src='xss-test']")
+      .doesNotExist("does not render injected img in topic tag");
+
+    assert
+      .dom(".discourse-tags .assigned-to span")
+      .includesText(XSS_PAYLOAD, "renders payload as escaped text in tag");
+  });
+
+  test("escapes HTML in small action description", async function (assert) {
+    updateCurrentUser({ can_assign: true });
+    await visit("/t/assignment-topic/44");
+
+    assert
+      .dom(".small-action .small-action-desc img[src='xss-test']")
+      .doesNotExist("does not render injected img in small action");
+  });
+
+  test("escapes HTML in topic-level unassign menu", async function (assert) {
+    updateCurrentUser({ can_assign: true });
+    const menu = selectKit("#topic-footer-dropdown-reassign");
+
+    await visit("/t/assignment-topic/44");
+    await menu.expand();
+
+    assert
+      .dom("#topic-footer-dropdown-reassign img[src='xss-test']")
+      .doesNotExist("does not render injected img in unassign menu");
+  });
+});
