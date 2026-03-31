@@ -86,7 +86,7 @@ class SiteSettings::TypeSupervisor
     when TrueClass, FalseClass
       self.types[:bool]
     else
-      raise ArgumentError.new :val
+      raise ArgumentError.new("Invalid value type for site setting: #{val.class}")
     end
   end
 

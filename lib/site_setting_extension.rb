@@ -585,31 +585,23 @@ module SiteSettingExtension
         # upcoming change is enabled.
         defaults_view = defaults.all(new_current_hash[:default_locale])
 
-        # Hash mapping target setting names to their upcoming change default overrides.
-        # When an upcoming change is enabled, the linked target setting's default
-        # shifts to the override value (only if the admin hasn't manually set it).
-        #
-        # @example In site_settings.yml:
-        #   discourse_reactions_enabled:
-        #     default: false
-        #     client: true
-        #     upcoming_change_default_override:
-        #       setting: "enable_discourse_reactions_by_default"
-        #       default: true
         defaults.upcoming_change_default_overrides.each do |setting_name, override|
+          upcoming_change_status = UpcomingChanges.change_status(override[:upcoming_change])
+          promote_upcoming_changes_on_status =
+            (
+              new_modified[:promote_upcoming_changes_on_status] ||
+                defaults_view[:promote_upcoming_changes_on_status]
+            ).to_sym
+
           # This follows the same logic as UpcomingChanges.enabled?, which cannot be
           # used here since it would cause an infinite loop or mutex error because it
           # looks at SiteSetting.current
-          upcoming_change_status = UpcomingChanges.change_status(override[:upcoming_change])
           upcoming_change_enabled =
             if new_modified.key?(override[:upcoming_change]) && upcoming_change_status != :permanent
               new_modified[override[:upcoming_change]]
             elsif UpcomingChanges.meets_or_exceeds_status?(
                   override[:upcoming_change],
-                  (
-                    new_modified[:promote_upcoming_changes_on_status] ||
-                      defaults_view[:promote_upcoming_changes_on_status]
-                  ).to_sym,
+                  promote_upcoming_changes_on_status,
                 ) || upcoming_change_status == :permanent
               true
             else

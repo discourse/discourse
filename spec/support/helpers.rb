@@ -363,16 +363,16 @@ module Helpers
   end
 
   def mock_upcoming_change_default_overrides(overrides)
-    @original_upcoming_change_default_overrides = SiteSetting.upcoming_change_default_overrides.dup
-    SiteSetting.instance_variable_set(
-      :@upcoming_change_default_overrides,
-      @original_upcoming_change_default_overrides.merge(overrides),
-    )
+    @original_upcoming_change_default_overrides =
+      SiteSetting.defaults.upcoming_change_default_overrides.transform_values(&:dup)
+    merged = @original_upcoming_change_default_overrides.merge(overrides)
+    SiteSetting.defaults.assign_upcoming_change_default_overrides_for_test!(merged)
   end
 
   def clear_mocked_upcoming_change_default_overrides
-    SiteSetting.instance_variable_set(
-      :@upcoming_change_default_overrides,
+    return if @original_upcoming_change_default_overrides.blank?
+
+    SiteSetting.defaults.assign_upcoming_change_default_overrides_for_test!(
       @original_upcoming_change_default_overrides,
     )
   end

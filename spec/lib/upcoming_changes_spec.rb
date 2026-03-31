@@ -385,7 +385,7 @@ RSpec.describe UpcomingChanges do
     end
   end
 
-  describe ".resolved_value" do
+  describe ".enabled?" do
     after do
       SiteSetting.remove_override!(setting_name)
       SiteSetting.promote_upcoming_changes_on_status = :stable
@@ -410,9 +410,7 @@ RSpec.describe UpcomingChanges do
         )
         SiteSetting.promote_upcoming_changes_on_status = :stable
 
-        expect(described_class.resolved_value(setting_name)).to eq(
-          SiteSetting.defaults[setting_name],
-        )
+        expect(described_class.enabled?(setting_name)).to eq(SiteSetting.defaults[setting_name])
       end
 
       it "returns true when the change meets or exceeds promote_upcoming_changes_on_status" do
@@ -428,7 +426,7 @@ RSpec.describe UpcomingChanges do
         )
         SiteSetting.promote_upcoming_changes_on_status = :stable
 
-        expect(described_class.resolved_value(setting_name)).to eq(true)
+        expect(described_class.enabled?(setting_name)).to eq(true)
       end
     end
 
@@ -438,7 +436,7 @@ RSpec.describe UpcomingChanges do
       it "returns the stored value when true" do
         SiteSetting.enable_upload_debug_mode = true
 
-        expect(described_class.resolved_value(setting_name)).to eq(true)
+        expect(described_class.enabled?(setting_name)).to eq(true)
       end
 
       it "returns the stored value when false even when the change meets promote_upcoming_changes_on_status" do
@@ -455,7 +453,7 @@ RSpec.describe UpcomingChanges do
         SiteSetting.promote_upcoming_changes_on_status = :beta
         SiteSetting.enable_upload_debug_mode = false
 
-        expect(described_class.resolved_value(setting_name)).to eq(false)
+        expect(described_class.enabled?(setting_name)).to eq(false)
       end
     end
 
@@ -478,7 +476,7 @@ RSpec.describe UpcomingChanges do
       it "returns true even when the database value is false" do
         SiteSetting.enable_upload_debug_mode = false
 
-        expect(described_class.resolved_value(setting_name)).to eq(true)
+        expect(described_class.enabled?(setting_name)).to eq(true)
       end
     end
   end
@@ -666,48 +664,6 @@ RSpec.describe UpcomingChanges do
         it "returns false" do
           expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
         end
-      end
-    end
-  end
-
-  describe ".effective_default_for" do
-    before do
-      mock_upcoming_change_default_overrides(
-        { enable_upload_debug_mode: { setting: :enable_upload_debug_mode, default: true } },
-      )
-    end
-
-    after { clear_mocked_upcoming_change_default_overrides }
-
-    context "when the linked upcoming change is active" do
-      before { SiteSetting.enable_upload_debug_mode = true }
-
-      it "returns the override default value" do
-        expect(described_class.effective_default_for(:enable_upload_debug_mode)).to eq(true)
-      end
-    end
-
-    context "when the linked upcoming change is not active" do
-      it "returns nil" do
-        expect(described_class.effective_default_for(:enable_upload_debug_mode)).to be_nil
-      end
-    end
-
-    context "when the setting has no default override" do
-      it "returns nil" do
-        expect(described_class.effective_default_for(:nonexistent_setting)).to be_nil
-      end
-    end
-
-    context "when the linked upcoming change metadata does not exist" do
-      before do
-        mock_upcoming_change_default_overrides(
-          { enable_upload_debug_mode: { setting: :nonexistent_upcoming_change, default: true } },
-        )
-      end
-
-      it "returns nil" do
-        expect(described_class.effective_default_for(:enable_upload_debug_mode)).to be_nil
       end
     end
   end

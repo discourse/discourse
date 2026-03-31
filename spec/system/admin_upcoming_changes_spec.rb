@@ -323,12 +323,13 @@ describe "Admin upcoming changes" do
       mock_upcoming_change_default_overrides(
         {
           suggested_topics_unread_max_days_old: {
-            setting: :enable_upload_debug_mode,
-            default: 180,
+            upcoming_change: :enable_upload_debug_mode,
+            new_default: 180,
           },
         },
       )
       SiteSetting.enable_upload_debug_mode = true
+      SiteSetting.refresh!
     end
 
     after do

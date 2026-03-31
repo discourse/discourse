@@ -43,7 +43,7 @@ class SiteSettings::DefaultsProvider
 
   # TODO (martin) Make sure this is called when an upcoming change is toggled off...
   # maybe...I already do it in SiteSettings.refresh!
-  def deactivate_upcoming_change_override
+  def deactivate_upcoming_change_override(upcoming_change_setting)
     @active_upcoming_change_overrides.delete(upcoming_change_setting)
   end
 
@@ -115,6 +115,13 @@ class SiteSettings::DefaultsProvider
 
   def has_setting?(name)
     has_key?(name.to_sym) || has_key?("#{name}?".to_sym) || name.to_sym == :default_locale
+  end
+
+  def assign_upcoming_change_default_overrides_for_test!(overrides)
+    raise "assign_upcoming_change_default_overrides_for_test! is test-only" if !Rails.env.test?
+
+    @upcoming_change_default_overrides =
+      overrides.transform_keys(&:to_sym).transform_values { |v| v.dup }
   end
 
   private

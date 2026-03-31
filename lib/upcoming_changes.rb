@@ -24,6 +24,12 @@ module UpcomingChanges
       )
   end
 
+  # Mostly used for testing, to allow stubbing the SiteSetting provider,
+  # like for SiteSettingExtension spec.
+  def self.settings_provider
+    SiteSetting
+  end
+
   def self.previous_status_value(status)
     status_value = self.statuses[status.to_sym]
     self.statuses.values.select { |value| value < status_value }.max || -100
@@ -39,7 +45,7 @@ module UpcomingChanges
   end
 
   def self.image_path(change_setting_name)
-    plugin_name = SiteSetting.plugins[change_setting_name.to_sym]
+    plugin_name = settings_provider.plugins[change_setting_name.to_sym]
     if plugin_name.present?
       File.join("plugins", plugin_name, "images", "upcoming_changes", "#{change_setting_name}.png")
     else
@@ -66,7 +72,7 @@ module UpcomingChanges
 
   def self.change_metadata(change_setting_name)
     change_setting_name = change_setting_name.to_sym
-    SiteSetting.upcoming_change_metadata[change_setting_name] || {}
+    settings_provider.upcoming_change_metadata[change_setting_name] || {}
   end
 
   def self.not_yet_stable?(change_setting_name)
@@ -114,38 +120,22 @@ module UpcomingChanges
     #
     # If the change is permanent though, the admin has no choice
     # in the matter.
-    if SiteSetting.modified.key?(change_setting_name) &&
+    if settings_provider.modified.key?(change_setting_name) &&
          UpcomingChanges.change_status(change_setting_name) != :permanent
-      SiteSetting.current[change_setting_name]
+      settings_provider.current[change_setting_name]
 
       # The change has reached the promotion status and is forcibly
       # enabled, admins can still disable it.
     elsif UpcomingChanges.meets_or_exceeds_status?(
           change_setting_name,
-          SiteSetting.promote_upcoming_changes_on_status.to_sym,
+          settings_provider.promote_upcoming_changes_on_status.to_sym,
         ) || UpcomingChanges.change_status(change_setting_name) == :permanent
       true
     else
       # Otherwise use the default value, which for upcoming changes
       # is false.
-      SiteSetting.defaults[change_setting_name]
+      settings_provider.defaults[change_setting_name]
     end
-  end
-
-  # Returns the effective default for a target setting that has an
-  # upcoming_change_default_override, or nil if the override is not active.
-  # When the linked upcoming change is enabled (via resolved_value), the
-  # target setting's default shifts to the override value.
-  #
-  # @param target_setting_name [Symbol] The name of the target setting
-  # @return [Object, nil] The override default value, or nil if not active
-  def self.effective_default_for(target_setting_name)
-    override = SiteSetting.upcoming_change_default_overrides[target_setting_name.to_sym]
-    return nil unless override
-    return nil unless SiteSetting.upcoming_change_metadata.key?(override[:setting].to_sym)
-
-    # If upcoming change is enabled, then use the new default override
-    resolved_value(override[:setting]) ? override[:default] : nil
   end
 
   def self.has_groups?(change_setting_name)
@@ -154,7 +144,7 @@ module UpcomingChanges
 
   def self.group_ids_for(change_setting_name)
     change_setting_name = change_setting_name.to_sym
-    SiteSetting.site_setting_group_ids[change_setting_name].presence || []
+    settings_provider.site_setting_group_ids[change_setting_name].presence || []
   end
 
   # Checks if a given upcoming change is enabled for a user,
@@ -220,7 +210,7 @@ module UpcomingChanges
     guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
     user_belonging_to_group_ids = user.belonging_to_group_ids
 
-    SiteSetting.upcoming_change_site_settings.filter_map do |name|
+    settings_provider.upcoming_change_site_settings.filter_map do |name|
       next if UpcomingChanges.change_status(name) == :conceptual
       enabled = user.upcoming_change_enabled?(name)
       has_groups = UpcomingChanges.has_groups?(name)
@@ -246,8 +236,8 @@ module UpcomingChanges
 
       {
         name:,
-        humanized_name: SiteSetting.humanized_name(name),
-        description: SiteSetting.description(name),
+        humanized_name: settings_provider.humanized_name(name),
+        description: settings_provider.description(name),
         enabled:,
         specific_groups:,
         reason:,
@@ -269,7 +259,7 @@ module UpcomingChanges
   # @example
   #   enabled_for_with_groups(:new_feature, true, { 1 => "Group 1", 2 => "Group 2" })
   def self.enabled_for_with_groups(setting_name, setting_value, upcoming_change_selected_groups)
-    group_ids_for_setting = SiteSetting.site_setting_group_ids[setting_name]
+    group_ids_for_setting = settings_provider.site_setting_group_ids[setting_name]
     setting_groups =
       upcoming_change_selected_groups.values_at(*group_ids_for_setting).join(
         ",",
@@ -377,7 +367,7 @@ module UpcomingChanges
   #
   # This is done via depends_on and depends_behavior: hidden in site_settings.yml.
   def self.find_dependents_for_change(change_setting_name)
-    SiteSetting.type_supervisor.dependencies.dependents(change_setting_name.to_s)
+    settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
   end
 
   # Some upcoming changes when enabled will override the default value
@@ -385,7 +375,7 @@ module UpcomingChanges
   #
   # This is done via upcoming_change_default_override in site_settings.yml.
   def self.find_related_default_override_for_change(change_setting_name)
-    SiteSetting
+    settings_provider
       .defaults
       .upcoming_change_default_overrides
       .find { |_, override| override[:upcoming_change] == change_setting_name }

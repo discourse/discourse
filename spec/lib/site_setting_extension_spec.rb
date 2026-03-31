@@ -697,9 +697,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
-            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
-              true,
-            )
+            allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 
           it "is present in all_settings" do
@@ -720,9 +718,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
-            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
-              true,
-            )
+            allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 
           it "is present in all_settings" do
@@ -1880,16 +1876,18 @@ RSpec.describe SiteSettingExtension do
         :reactions_enabled,
         false,
         upcoming_change_default_override: {
-          setting: "enable_reactions_by_default",
-          default: true,
+          upcoming_change: "enable_reactions_by_default",
+          new_default: true,
         },
       )
-      settings.refresh!
+      settings.setting(:promote_upcoming_changes_on_status, "stable")
+      UpcomingChanges.stubs(:settings_provider).returns(settings)
     end
 
     context "when the linked upcoming change is active" do
       before do
-        UpcomingChanges.stubs(:resolved_value).with(:enable_reactions_by_default).returns(true)
+        settings.provider.save(:enable_reactions_by_default, true, SiteSetting.types[:bool])
+        settings.refresh!
       end
 
       context "when the admin has not manually set the target setting" do
@@ -1912,10 +1910,6 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "when the linked upcoming change is not active" do
-      before do
-        UpcomingChanges.expects(:resolved_value).with(:enable_reactions_by_default).returns(false)
-      end
-
       it "returns the YAML default" do
         expect(settings.reactions_enabled).to eq(false)
       end
@@ -1924,7 +1918,8 @@ RSpec.describe SiteSettingExtension do
     describe "all_settings effective default" do
       context "when the linked upcoming change is active" do
         before do
-          UpcomingChanges.stubs(:resolved_value).with(:enable_reactions_by_default).returns(true)
+          settings.provider.save(:enable_reactions_by_default, true, SiteSetting.types[:bool])
+          settings.refresh!
         end
 
         it "shows the override default in all_settings" do
@@ -1939,12 +1934,6 @@ RSpec.describe SiteSettingExtension do
       end
 
       context "when the linked upcoming change is not active" do
-        before do
-          allow(UpcomingChanges).to receive(:resolved_value).with(
-            :enable_reactions_by_default,
-          ).and_return(false)
-        end
-
         it "shows the original YAML default in all_settings" do
           setting = settings.all_settings.find { |s| s[:setting] == :reactions_enabled }
           expect(setting[:default]).to eq("false")
