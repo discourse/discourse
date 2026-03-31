@@ -20,5 +20,12 @@ export default {
         "discourse/require-design-tokens": true,
       },
     },
+    {
+      files: ["themes/horizon/scss/**"],
+      rules: {
+        "discourse/no-core-color-variables": null,
+        "discourse/require-design-tokens": null,
+      },
+    },
   ],
 };
