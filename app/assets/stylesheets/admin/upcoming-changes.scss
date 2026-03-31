@@ -71,7 +71,7 @@
     }
 
     svg {
-      height: 0.75em;
+      font-size: var(--font-down-2);
       color: var(--primary-high);
     }
 
@@ -79,7 +79,7 @@
       border-left: 1px solid var(--secondary);
       border-radius: 0 var(--d-button-border-radius)
         var(--d-button-border-radius) 0;
-      padding: var(--space-half) var(--space-2) var(--space-half) var(--space-1);
+      padding: var(--space-half) var(--space-1);
     }
 
     &:focus-visible,
