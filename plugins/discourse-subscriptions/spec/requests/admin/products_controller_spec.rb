@@ -42,12 +42,14 @@ RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
   context "when authenticated" do
     let(:admin) { Fabricate(:admin) }
 
-    before { sign_in(admin) }
+    before do
+      SiteSetting.discourse_subscriptions_secret_key = "secret-key"
+      sign_in(admin)
+    end
 
     describe "index" do
       it "gets the empty products" do
         SiteSetting.discourse_subscriptions_public_key = "public-key"
-        SiteSetting.discourse_subscriptions_secret_key = "secret-key"
         get "/s/admin/products.json"
         expect(response.parsed_body).to be_empty
       end
@@ -55,23 +57,33 @@ RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
 
     describe "create" do
       it "is of product type service" do
-        ::Stripe::Product.expects(:create).with(has_entry(:type, "service"))
+        ::Stripe::Product.expects(:create).with(
+          has_entry(:type, "service"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/products.json", params: {}
       end
 
       it "has a name" do
-        ::Stripe::Product.expects(:create).with(has_entry(:name, "Jesse Pinkman"))
+        ::Stripe::Product.expects(:create).with(
+          has_entry(:name, "Jesse Pinkman"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/products.json", params: { name: "Jesse Pinkman" }
       end
 
       it "has an active attribute" do
-        ::Stripe::Product.expects(:create).with(has_entry(active: "false"))
+        ::Stripe::Product.expects(:create).with(
+          has_entry(active: "false"),
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         post "/s/admin/products.json", params: { active: "false" }
       end
 
       it "has a statement descriptor" do
         ::Stripe::Product.expects(:create).with(
           has_entry(statement_descriptor: "Blessed are the cheesemakers"),
+          DiscourseSubscriptions::Stripe.request_opts,
         )
         post "/s/admin/products.json",
              params: {
@@ -80,7 +92,10 @@ RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
       end
 
       it "has no statement descriptor if empty" do
-        ::Stripe::Product.expects(:create).with(has_key(:statement_descriptor)).never
+        ::Stripe::Product
+          .expects(:create)
+          .with(has_key(:statement_descriptor), DiscourseSubscriptions::Stripe.request_opts)
+          .never
         post "/s/admin/products.json", params: { statement_descriptor: "" }
       end
 
@@ -92,6 +107,7 @@ RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
               repurchaseable: "false",
             },
           ),
+          DiscourseSubscriptions::Stripe.request_opts,
         )
 
         post "/s/admin/products.json",
@@ -106,21 +122,32 @@ RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
 
     describe "show" do
       it "retrieves the product" do
-        ::Stripe::Product.expects(:retrieve).with("prod_walterwhite")
+        ::Stripe::Product.expects(:retrieve).with(
+          "prod_walterwhite",
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         get "/s/admin/products/prod_walterwhite.json"
       end
     end
 
     describe "update" do
       it "updates the product" do
-        ::Stripe::Product.expects(:update)
+        ::Stripe::Product.expects(:update).with(
+          "prod_walterwhite",
+          anything,
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         patch "/s/admin/products/prod_walterwhite.json", params: {}
       end
     end
 
     describe "delete" do
       it "deletes the product" do
-        ::Stripe::Product.expects(:delete).with("prod_walterwhite")
+        ::Stripe::Product.expects(:delete).with(
+          "prod_walterwhite",
+          anything,
+          DiscourseSubscriptions::Stripe.request_opts,
+        )
         delete "/s/admin/products/prod_walterwhite.json"
       end
     end

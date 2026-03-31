@@ -18,13 +18,16 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
   context "when authenticated" do
     let(:admin) { Fabricate(:admin) }
 
-    before { sign_in(admin) }
+    before do
+      SiteSetting.discourse_subscriptions_secret_key = "secret-key"
+      sign_in(admin)
+    end
 
     describe "#index" do
       it "returns a list of promo codes" do
         ::Stripe::PromotionCode
           .expects(:list)
-          .with({ limit: 100 })
+          .with({ limit: 100 }, DiscourseSubscriptions::Stripe.request_opts)
           .returns({ data: [{ id: "promo_123", coupon: { valid: true } }] })
 
         get "/s/admin/coupons.json"
@@ -35,7 +38,7 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
       it "only returns valid promo codes" do
         ::Stripe::PromotionCode
           .expects(:list)
-          .with({ limit: 100 })
+          .with({ limit: 100 }, DiscourseSubscriptions::Stripe.request_opts)
           .returns({ data: [{ id: "promo_123", coupon: { valid: false } }] })
 
         get "/s/admin/coupons.json"
@@ -46,10 +49,14 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
 
     describe "#create" do
       it "creates a coupon with an amount off" do
-        ::Stripe::Coupon.expects(:create).returns(id: "coup_123")
-        ::Stripe::PromotionCode.expects(:create).returns(
-          { code: "p123", coupon: { amount_off: 2000 } },
-        )
+        ::Stripe::Coupon
+          .expects(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns(id: "coup_123")
+        ::Stripe::PromotionCode
+          .expects(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns({ code: "p123", coupon: { amount_off: 2000 } })
 
         post "/s/admin/coupons.json",
              params: {
@@ -64,10 +71,14 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
       end
 
       it "creates a coupon with a percent off" do
-        ::Stripe::Coupon.expects(:create).returns(id: "coup_123")
-        ::Stripe::PromotionCode.expects(:create).returns(
-          { code: "p123", coupon: { percent_off: 20 } },
-        )
+        ::Stripe::Coupon
+          .expects(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns(id: "coup_123")
+        ::Stripe::PromotionCode
+          .expects(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns({ code: "p123", coupon: { percent_off: 20 } })
 
         post "/s/admin/coupons.json",
              params: {

@@ -172,12 +172,10 @@ export default class SubscribeShowController extends Controller {
         if (result.error) {
           this.dialog.alert(result.error.message || result.error);
         } else if (result.status === "incomplete" || result.status === "open") {
-          const transactionId = result.id;
-          const planId = this.selectedPlan;
           this.handleAuthentication(plan, result).then(
             (authenticationResult) => {
               if (authenticationResult && !authenticationResult.error) {
-                return Transaction.finalize(transactionId, planId).then(() => {
+                return Transaction.finalize().then(() => {
                   this._advanceSuccessfulTransaction(plan);
                 });
               }

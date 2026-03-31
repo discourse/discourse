@@ -7,15 +7,13 @@ module DiscourseSubscriptions
 
       requires_plugin PLUGIN_NAME
 
-      before_action :set_api_key
-
       def index
         begin
           product_ids = Product.all.pluck(:external_id)
           products = []
 
           if product_ids.present? && is_stripe_configured?
-            products = ::Stripe::Product.list({ ids: product_ids, limit: 100 })
+            products = ::Stripe::Product.list({ ids: product_ids, limit: 100 }, stripe_request_opts)
             products = products[:data]
           elsif !is_stripe_configured?
             products = nil
@@ -33,7 +31,7 @@ module DiscourseSubscriptions
 
           create_params.except!(:statement_descriptor) if params[:statement_descriptor].blank?
 
-          product = ::Stripe::Product.create(create_params)
+          product = ::Stripe::Product.create(create_params, stripe_request_opts)
 
           Product.create(external_id: product[:id])
 
@@ -45,7 +43,7 @@ module DiscourseSubscriptions
 
       def show
         begin
-          product = ::Stripe::Product.retrieve(params[:id])
+          product = ::Stripe::Product.retrieve(params[:id], stripe_request_opts)
 
           render_json_dump product
         rescue ::Stripe::InvalidRequestError => e
@@ -55,7 +53,7 @@ module DiscourseSubscriptions
 
       def update
         begin
-          product = ::Stripe::Product.update(params[:id], product_params)
+          product = ::Stripe::Product.update(params[:id], product_params, stripe_request_opts)
 
           render_json_dump product
         rescue ::Stripe::InvalidRequestError => e
@@ -65,7 +63,7 @@ module DiscourseSubscriptions
 
       def destroy
         begin
-          product = ::Stripe::Product.delete(params[:id])
+          product = ::Stripe::Product.delete(params[:id], {}, stripe_request_opts)
 
           Product.delete_by(external_id: params[:id])
 

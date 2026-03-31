@@ -462,4 +462,50 @@ RSpec.describe "DiscoursePoll endpoints" do
       end
     end
   end
+
+  describe "toggle_status" do
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
+    fab!(:group)
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+    fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+    before do
+      sign_in(user)
+      group.add(user)
+      Group.refresh_automatic_groups!
+    end
+
+    fab!(:private_poll_post) do
+      Fabricate(:post, topic: private_topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]")
+    end
+
+    it "prevents OP from toggling poll status when they no longer have access to the topic" do
+      put "/polls/toggle_status.json",
+          params: {
+            post_id: private_poll_post.id,
+            poll_name: "poll",
+            status: "closed",
+          }
+      expect(response.status).to eq(200)
+
+      put "/polls/toggle_status.json",
+          params: {
+            post_id: private_poll_post.id,
+            poll_name: "poll",
+            status: "open",
+          }
+      expect(response.status).to eq(200)
+
+      group.remove(user)
+
+      put "/polls/toggle_status.json",
+          params: {
+            post_id: private_poll_post.id,
+            poll_name: "poll",
+            status: "closed",
+          }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"][0]).to eq(I18n.t("poll.user_cant_post_in_topic"))
+    end
+  end
 end

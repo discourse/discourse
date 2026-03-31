@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import {
   assignedToGroupPath,
@@ -65,6 +66,11 @@ export default class AssignedToFirstPost extends Component {
       : assignee.username;
   }
 
+  @bind
+  escapedPrioritizedAssigneeName(assignee) {
+    return escapeExpression(this.prioritizedAssigneeName(assignee));
+  }
+
   <template>
     {{#if this.isAssigned}}
       <p class="assigned-to">
@@ -75,7 +81,9 @@ export default class AssignedToFirstPost extends Component {
               {{trustHTML
                 (i18n
                   "discourse_assign.assigned_topic_to"
-                  username=(this.prioritizedAssigneeName this.assignedToUser)
+                  username=(this.escapedPrioritizedAssigneeName
+                    this.assignedToUser
+                  )
                   path=(assignedToUserPath this.assignedToUser)
                 )
               }}
@@ -89,7 +97,9 @@ export default class AssignedToFirstPost extends Component {
               {{trustHTML
                 (i18n
                   "discourse_assign.assigned_topic_to"
-                  username=this.assignedToGroup.name
+                  username=(this.escapedPrioritizedAssigneeName
+                    this.assignedToGroup
+                  )
                   path=(assignedToGroupPath this.assignedToGroup)
                 )
               }}

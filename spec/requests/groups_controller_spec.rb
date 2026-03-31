@@ -2863,10 +2863,7 @@ RSpec.describe GroupsController do
       }
     end
 
-    before do
-      sign_in(user)
-      group.group_users.where(user: user).last.update(owner: user)
-    end
+    before { sign_in(admin) }
 
     context "when validating smtp" do
       let(:protocol) { "smtp" }
@@ -2895,6 +2892,74 @@ RSpec.describe GroupsController do
       end
     end
 
+    context "when user is a non-staff group owner" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl_mode) { Group.smtp_ssl_modes[:starttls] }
+      let(:ssl) { nil }
+      let(:host) { "smtp.somemailsite.com" }
+      let(:port) { 587 }
+
+      before do
+        sign_in(user)
+        group.group_users.where(user: user).last.update(owner: true)
+      end
+
+      it "does not allow testing email settings" do
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when the host resolves to a private IP address" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl_mode) { Group.smtp_ssl_modes[:starttls] }
+      let(:ssl) { nil }
+      let(:host) { "127.0.0.1" }
+      let(:port) { 587 }
+
+      before do
+        FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).raises(
+          FinalDestination::SSRFDetector::DisallowedIpError,
+        )
+      end
+
+      it "rejects the request" do
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to include(
+          I18n.t("email_settings.invalid_host"),
+        )
+      end
+    end
+
+    context "when the host cannot be resolved" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl_mode) { Group.smtp_ssl_modes[:starttls] }
+      let(:ssl) { nil }
+      let(:host) { "nonexistent.internal.host" }
+      let(:port) { 587 }
+
+      before do
+        FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).raises(
+          FinalDestination::SSRFDetector::LookupFailedError,
+        )
+      end
+
+      it "rejects the request" do
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to include(
+          I18n.t("email_settings.host_resolve_failed"),
+        )
+      end
+    end
+
     describe "global param validation and rate limit" do
       let(:protocol) { "smtp" }
       let(:host) { "smtp.gmail.com" }
@@ -2913,8 +2978,8 @@ RSpec.describe GroupsController do
         end
       end
 
-      context "when user does not have access to the group" do
-        before { group.group_users.destroy_all }
+      context "when user is a regular user without staff access" do
+        before { sign_in(user) }
         it "errors if the user does not have access to the group" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
 
@@ -2923,8 +2988,9 @@ RSpec.describe GroupsController do
       end
 
       context "when rate limited" do
-        it "rate limits anon searches per user" do
+        it "rate limits per user" do
           RateLimiter.enable
+          RateLimiter.any_instance.stubs(:rate_unlimited?).returns(false)
 
           5.times { post "/groups/#{group.id}/test_email_settings.json", params: params }
           post "/groups/#{group.id}/test_email_settings.json", params: params
