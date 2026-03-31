@@ -14,6 +14,8 @@ module HasNestedReplyStats
     return unless SiteSetting.nested_replies_enabled
     return if reply_to_post_number.blank?
 
+    # Only increment living ancestors — deleted ancestors are shown as
+    # placeholders and their stats aren't visible to anyone.
     ancestors =
       NestedReplies.walk_ancestors(
         topic_id: topic_id,
@@ -63,6 +65,8 @@ module HasNestedReplyStats
       is_whisper = post_type == Post.types[:whisper] ? 1 : 0
       whisper_removed = is_whisper + my_whisper_descendants
 
+      # Include deleted ancestors — they may still have stat rows from when
+      # they were alive, and those counts need to be decremented.
       ancestors =
         NestedReplies.walk_ancestors(
           topic_id: topic_id,

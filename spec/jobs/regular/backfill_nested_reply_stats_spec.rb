@@ -80,7 +80,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(stat.direct_reply_count).to eq(1)
   end
 
-  it "overwrites existing stale stats via upsert" do
+  it "preserves higher live-incremented stats over backfill-computed values" do
     parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
     Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
 
@@ -89,13 +89,31 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
       post_id: parent.id,
       direct_reply_count: 999,
       total_descendant_count: 999,
+      whisper_direct_reply_count: 50,
+      whisper_total_descendant_count: 50,
     )
 
     execute(from_topic_id: 0)
 
     stat = NestedViewPostStat.find_by(post_id: parent.id)
-    expect(stat.direct_reply_count).to eq(1)
-    expect(stat.total_descendant_count).to eq(1)
+    expect(stat.direct_reply_count).to eq(999)
+    expect(stat.total_descendant_count).to eq(999)
+    expect(stat.whisper_direct_reply_count).to eq(50)
+    expect(stat.whisper_total_descendant_count).to eq(50)
+  end
+
+  it "updates stats when backfill computes higher values than existing" do
+    parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    3.times { Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number) }
+
+    NestedViewPostStat.delete_all
+    NestedViewPostStat.create!(post_id: parent.id, direct_reply_count: 1, total_descendant_count: 1)
+
+    execute(from_topic_id: 0)
+
+    stat = NestedViewPostStat.find_by(post_id: parent.id)
+    expect(stat.direct_reply_count).to eq(3)
+    expect(stat.total_descendant_count).to eq(3)
   end
 
   it "processes multiple topics across batches" do

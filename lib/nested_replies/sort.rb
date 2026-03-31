@@ -22,6 +22,8 @@ module NestedReplies
     end
 
     def self.sort_in_memory(posts, algorithm)
+      raise ArgumentError, "Invalid sort algorithm: #{algorithm}" unless valid?(algorithm)
+
       case algorithm
       when "top"
         posts.sort_by { |p| [-p.like_count, p.post_number] }
@@ -29,8 +31,6 @@ module NestedReplies
         posts.sort_by { |p| -p.created_at.to_i }
       when "old"
         posts.sort_by(&:post_number)
-      else
-        posts.sort_by { |p| [-p.like_count, p.post_number] }
       end
     end
 

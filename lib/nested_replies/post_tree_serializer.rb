@@ -15,6 +15,8 @@ module NestedReplies
     end
 
     def serialize_post(post, reply_counts, descendant_counts = {})
+      # Assign the already-loaded topic to avoid an N+1 query per post
+      # in PostSerializer#topic, which reads object.topic.
       post.topic = @topic
       serializer = PostSerializer.new(post, scope: @guardian, root: false)
       serializer.topic_view = @topic_view

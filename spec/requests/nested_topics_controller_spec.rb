@@ -393,6 +393,13 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(response.status).to eq(403)
       end
 
+      it "allows moderators to pin a post" do
+        sign_in(Fabricate(:moderator))
+        put pin_url(topic), params: { post_id: root_post.id }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["pinned_post_ids"]).to contain_exactly(root_post.id)
+      end
+
       it "allows staff to pin a post" do
         sign_in(admin)
         put pin_url(topic), params: { post_id: root_post.id }
@@ -959,6 +966,13 @@ RSpec.describe NestedTopicsController, type: :request do
       sign_in(user)
       put toggle_url(topic), params: { enabled: true }
       expect(response.status).to eq(403)
+    end
+
+    it "allows moderators to toggle nested view" do
+      sign_in(Fabricate(:moderator))
+      put toggle_url(topic), params: { enabled: true }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["is_nested_view"]).to eq(true)
     end
 
     it "allows staff to enable nested view" do

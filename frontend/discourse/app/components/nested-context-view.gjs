@@ -38,6 +38,7 @@ export default class NestedContextView extends Component {
     super.willDestroy(...arguments);
     this._destroyed = true;
     cancel(this._nextTimer);
+    clearTimeout(this._highlightTimer);
     if (this._rafId) {
       cancelAnimationFrame(this._rafId);
     }
@@ -66,7 +67,7 @@ export default class NestedContextView extends Component {
       const postEl = target.closest(".nested-post");
       if (postEl) {
         postEl.classList.add("nested-post--highlighted");
-        setTimeout(
+        this._highlightTimer = setTimeout(
           () => postEl.classList.remove("nested-post--highlighted"),
           2000
         );

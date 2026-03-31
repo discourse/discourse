@@ -67,13 +67,6 @@ module Jobs
             AND reply_to_post_number IS NOT NULL
             AND post_number > 1
         ),
-        -- Leaf nodes (posts with no children)
-        leaves AS (
-          SELECT e.post_number
-          FROM edges e
-          LEFT JOIN edges c ON c.reply_to_post_number = e.post_number
-          WHERE c.post_number IS NULL
-        ),
         -- Walk from each post upward, accumulating descendant counts
         -- Each post contributes 1 to every ancestor's total_descendant_count
         ancestor_walk AS (
@@ -84,7 +77,7 @@ module Jobs
           FROM edges e
           UNION ALL
           SELECT p.reply_to_post_number,
-                 a.descendant_count + 0, -- still counts as 1 per original post
+                 a.descendant_count,
                  a.whisper_descendant_count,
                  a.depth + 1
           FROM ancestor_walk a
@@ -121,10 +114,10 @@ module Jobs
                NOW(), NOW()
         FROM combined
         ON CONFLICT (post_id) DO UPDATE SET
-          direct_reply_count = EXCLUDED.direct_reply_count,
-          whisper_direct_reply_count = EXCLUDED.whisper_direct_reply_count,
-          total_descendant_count = EXCLUDED.total_descendant_count,
-          whisper_total_descendant_count = EXCLUDED.whisper_total_descendant_count,
+          direct_reply_count = GREATEST(EXCLUDED.direct_reply_count, nested_view_post_stats.direct_reply_count),
+          whisper_direct_reply_count = GREATEST(EXCLUDED.whisper_direct_reply_count, nested_view_post_stats.whisper_direct_reply_count),
+          total_descendant_count = GREATEST(EXCLUDED.total_descendant_count, nested_view_post_stats.total_descendant_count),
+          whisper_total_descendant_count = GREATEST(EXCLUDED.whisper_total_descendant_count, nested_view_post_stats.whisper_total_descendant_count),
           updated_at = NOW()
       SQL
     end

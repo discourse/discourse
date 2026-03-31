@@ -144,12 +144,15 @@
     margin-top: 0.5em;
   }
 
-  &__op-menu {
-    margin: 0.25em 0;
-
+  &__op-menu,
+  &__menu {
     .post-action-menu__show-replies {
       display: none;
     }
+  }
+
+  &__op-menu {
+    margin: 0.25em 0;
   }
 
   &__roots {
@@ -542,12 +545,6 @@
   &__menu {
     margin: 0.25em 0;
 
-    nav.post-controls {
-      .post-action-menu__show-replies {
-        display: none;
-      }
-    }
-
     .post-action-menu__nested-replies-expand {
       color: var(--tertiary);
       font-size: var(--font-down-1);
@@ -726,12 +723,13 @@
   }
 }
 
-// ── Mobile card layout ─────────────────────────────────────────────
+// ── Mobile layout ─────────────────────────────────────────────────
 // Reddit-style mobile redesign: avatars move inline into the post
 // header (handled via JS template conditional), the gutter becomes a
 // narrow column holding only vertical depth-lines that run the full
 // height of each subtree for continuous visual hierarchy.
 @include viewport.until(sm) {
+  // ── View-level overrides ──
   .nested-view {
     padding: 0.5em;
 
@@ -806,12 +804,10 @@
   .nested-post-children__load-more::before {
     content: none;
   }
-}
 
-// ── Mobile overrides for individual nested posts ───────────────────
-// Gutter shrinks to a narrow line-only column (avatar rendered inline
-// in the header instead).  Lines run full subtree height.
-@include viewport.until(sm) {
+  // ── Individual nested post overrides ──
+  // Gutter shrinks to a narrow line-only column (avatar rendered inline
+  // in the header instead). Lines run full subtree height.
   .nested-post {
     --nested-line-gutter: 10px;
     grid-template-columns: var(--nested-line-gutter) 1fr;

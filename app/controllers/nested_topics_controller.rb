@@ -27,7 +27,7 @@ class NestedTopicsController < ApplicationController
       return
     end
 
-    page = [params[:page].to_i, 0].max
+    page = params[:page].to_i.clamp(0, 1000)
 
     if page == 0
       render json: build_initial_roots_response(sort)
@@ -66,8 +66,8 @@ class NestedTopicsController < ApplicationController
   def children
     parent_post_number = params[:post_number].to_i
     sort = validated_sort
-    page = [params[:page].to_i, 0].max
-    depth = [params[:depth].to_i, 1].max
+    page = params[:page].to_i.clamp(0, 1000)
+    depth = params[:depth].to_i.clamp(1, 100)
 
     flatten = SiteSetting.nested_replies_cap_nesting_depth && depth >= loader.configured_max_depth
 

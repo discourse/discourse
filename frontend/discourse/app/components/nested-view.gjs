@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, get } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -114,7 +114,7 @@ export default class NestedView extends Component {
             @topic={{@topic}}
             @depth={{0}}
             @sort={{@sort}}
-            @isPinned={{includes @pinnedPostIds (get node.post "id")}}
+            @isPinned={{includes @pinnedPostIds node.post.id}}
             @replyToPost={{@replyToPost}}
             @editPost={{@editPost}}
             @deletePost={{@deletePost}}
