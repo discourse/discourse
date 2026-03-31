@@ -168,13 +168,15 @@ export default class SiteSettingComponent extends Component {
     // types otherwise the warning might get too long (e.g. strings)
     // or hard to represent (e.g. upload, tag group list etc.)
     if (
-      this.setting.type === "icon" ||
-      this.setting.type === "enum" ||
-      this.setting.type === "email" ||
-      this.setting.type === "username" ||
-      this.setting.type === "bool" ||
-      this.setting.type === "integer" ||
-      this.setting.type === "float"
+      [
+        "icon",
+        "enum",
+        "email",
+        "username",
+        "bool",
+        "integer",
+        "float",
+      ].includes(this.setting.type)
     ) {
       return trustHTML(
         i18n("admin.upcoming_changes.default_warning", {

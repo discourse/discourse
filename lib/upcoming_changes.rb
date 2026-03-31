@@ -24,8 +24,9 @@ module UpcomingChanges
       )
   end
 
-  # Mostly used for testing, to allow stubbing the SiteSetting provider,
-  # like for SiteSettingExtension spec.
+  # NOTE (martin): Mostly used for testing, to allow stubbing the SiteSetting provider,
+  # like for SiteSettingExtension spec. This is not ideal, but the SiteSettingExtension spec
+  # is extremely gnarly.
   def self.settings_provider
     SiteSetting
   end

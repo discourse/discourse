@@ -45,6 +45,12 @@ class UpcomingChanges::Toggle
     context[:previous_value] = SiteSetting.public_send(params.setting_name)
 
     SiteSetting.send("#{params.setting_name}=", params.enabled)
+
+    if params.enabled
+      SiteSetting.defaults.activate_upcoming_change_override(params.setting_name)
+    else
+      SiteSetting.defaults.deactivate_upcoming_change_override(params.setting_name)
+    end
   end
 
   def clear_groups_if_disallowed(params:)

@@ -41,8 +41,6 @@ class SiteSettings::DefaultsProvider
     @active_upcoming_change_overrides.add(upcoming_change_setting)
   end
 
-  # TODO (martin) Make sure this is called when an upcoming change is toggled off...
-  # maybe...I already do it in SiteSettings.refresh!
   def deactivate_upcoming_change_override(upcoming_change_setting)
     @active_upcoming_change_overrides.delete(upcoming_change_setting)
   end

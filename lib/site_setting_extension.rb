@@ -414,8 +414,8 @@ module SiteSettingExtension
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
 
-        # NOTE: This can be overridden by an upcoming change, see [refresh!] for the
-        # logic here, and [setting] for where we load the upcoming change default overrides
+        # NOTE: This can be overridden by an upcoming change, see .refresh!() for the
+        # logic here, and .setting() for where we load the upcoming change default overrides
         # from yaml.
         default = defaults.get(s, default_locale).to_s
 
@@ -1111,9 +1111,6 @@ module SiteSettingExtension
         refresh! if current[name].nil?
 
         value =
-          # Upcoming change site settings are always booleans, so we can just
-          # check if the change is enabled, which could be true because the
-          # change is Permanent or because the admin has manually toggled it.
           if UpcomingChanges.exists?(name)
             UpcomingChanges.enabled?(name)
           else
