@@ -41,6 +41,7 @@
     "@jsquash/heic": "^1.0.0",
     "@jsquash/jpeg": "^1.6.0",
     "@jsquash/jxl": "^1.0.0",
+    "@jsquash/oxipng": "^2.0.0",
     "@jsquash/resize": "^2.1.0",
     "@jsquash/webp": "^1.0.0",
     "ace-builds": "^1.43.6",

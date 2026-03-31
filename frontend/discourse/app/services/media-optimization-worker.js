@@ -260,6 +260,8 @@ export default class MediaOptimizationWorkerService extends Service {
     switch (outputType) {
       case "image/jpeg":
         return baseName + ".jpg";
+      case "image/png":
+        return baseName + ".png";
       case "image/webp":
         return baseName + ".webp";
       default:

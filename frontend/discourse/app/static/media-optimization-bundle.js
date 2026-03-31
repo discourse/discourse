@@ -2,6 +2,7 @@ import { decodeAnimated as decodeGifAnimated } from "@jsquash/gif";
 import { decode as decodeHeic } from "@jsquash/heic";
 import { encode as encodeJpeg } from "@jsquash/jpeg";
 import { decode as decodeJxl } from "@jsquash/jxl";
+import { encode as encodePng } from "@jsquash/oxipng";
 import resize from "@jsquash/resize";
 import { encodeAnimated as encodeWebpAnimated } from "@jsquash/webp";
 
@@ -173,11 +174,8 @@ globalThis.convert = async function (
   settings
 ) {
   setPublicPath(settings);
-  const mozJpegOptions = buildMozJpegOptions(settings);
 
-  logIfDebug(
-    `Converting ${fileName} (${fileType}, ${originalFileSize} bytes) to JPEG`
-  );
+  logIfDebug(`Converting ${fileName} (${fileType}, ${originalFileSize} bytes)`);
 
   let imageData;
   if (/jxl$/i.test(fileType)) {
@@ -192,9 +190,7 @@ globalThis.convert = async function (
     `Decoded ${fileName} to ${imageData.width}x${imageData.height} ImageData`
   );
 
-  if (hasTransparency(imageData)) {
-    throw `Image ${fileName} has transparent pixels, cannot convert to JPEG`;
-  }
+  const transparent = hasTransparency(imageData);
 
   const resized = await maybeResize(
     imageData,
@@ -203,7 +199,19 @@ globalThis.convert = async function (
     settings
   );
 
-  const result = await encodeJpeg(resized, mozJpegOptions);
+  if (transparent) {
+    logIfDebug(
+      `Image ${fileName} has transparency, encoding as optimized PNG instead of JPEG`
+    );
+    const result = await encodePng(resized, { level: 2 });
+    const finalSize = result.byteLength;
+    logIfDebug(
+      `Converted ${fileName} from ${originalFileSize} bytes to ${finalSize} bytes PNG (OxiPNG)`
+    );
+    return { data: result, outputType: "image/png" };
+  }
+
+  const result = await encodeJpeg(resized, buildMozJpegOptions(settings));
 
   const finalSize = result.byteLength;
   logIfDebug(
