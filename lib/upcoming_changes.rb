@@ -345,12 +345,20 @@ module UpcomingChanges
     Discourse
       .cache
       .fetch(permanent_upcoming_changes_cache_key) do
-        UpcomingChanges::List.call(
-          guardian: Discourse.system_user.guardian,
-          options: {
-            filter_statuses: [:permanent],
-          },
-        )&.upcoming_changes
+        result =
+          UpcomingChanges::List.call(
+            guardian: Discourse.system_user.guardian,
+            options: {
+              filter_statuses: [:permanent],
+            },
+          )
+
+        if !result.success? && Rails.env.local?
+          puts result.inspect_steps
+          raise
+        end
+
+        result.upcoming_changes
       end
   end
 
@@ -378,8 +386,9 @@ module UpcomingChanges
   # This is done via upcoming_change_default_override in site_settings.yml.
   def self.find_related_default_override_for_change(change_setting_name)
     SiteSetting
+      .defaults
       .upcoming_change_default_overrides
-      .find { |_, override| override[:setting] == change_setting_name }
+      .find { |_, override| override[:upcoming_change] == change_setting_name }
       &.first
   end
 end
