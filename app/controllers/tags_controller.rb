@@ -10,8 +10,6 @@ class TagsController < ::ApplicationController
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   end
 
-  before_action :ensure_visible, only: [:show, :info, *show_methods]
-
   requires_login except: [:index, :show, :tag_feed, :search, :info, *show_methods]
 
   skip_before_action :check_xhr, only: [:tag_feed, :show, :index, *show_methods]
@@ -565,7 +563,7 @@ class TagsController < ::ApplicationController
       elsif params[:tag_name].present?
         Tag.find_by_name(params[:tag_name].force_encoding("UTF-8"))
       end
-    raise Discourse::NotFound if raise_not_found && @tag.nil?
+    raise Discourse::NotFound if @tag ? !guardian.can_see_tag?(@tag) : raise_not_found
     @tag
   end
 
@@ -610,12 +608,6 @@ class TagsController < ::ApplicationController
 
   def ensure_tags_enabled
     raise Discourse::NotFound unless SiteSetting.tagging_enabled?
-  end
-
-  def ensure_visible
-    if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_name])
-      raise Discourse::NotFound
-    end
   end
 
   def self.tag_counts_json(tags, guardian)
