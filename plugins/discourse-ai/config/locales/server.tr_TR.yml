@@ -140,7 +140,6 @@ tr_TR:
     ai_translation_max_post_length: "Çevrilecek bir gönderinin maksimum karakter sayısı. Bu uzunluktan daha uzun gönderiler çevrilmeyecektir."
     ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."
     ai_translation_backfill_hourly_rate: "Doldurma işlemleri sırasında saat başına çevrilecek gönderi ve konu sayısı. Mevcut içeriklerin çevirilerinin otomatik olarak doldurulmasını devre dışı bırakmak için 0 olarak ayarlayın."
-    ai_translation_max_tokens_multiplier: "Çeviri için kullanılacak maksimum token sayısını belirleyen çarpan. Varsayılan olarak, maksimum token sayısını gönderideki karakter sayısının yaklaşık iki ila beş katı olarak ayarlıyoruz. Bu çarpan, daha fazla token kullanacak düşünme veya akıl yürütme modellerine izin vermek için ayarlanabilir."
     ai_usage_rollup_after_days: "Günlük toplamlara aktarılmadan önce istek başına AI kullanım istatistiklerinin saklanacağı gün sayısı. Toplamları devre dışı bırakmak için 0 olarak ayarlayın."
     ai_audit_logs_purge_after_days: "Bu kadar gün öncesine ait AI API denetim günlüklerini sil. Varsayılan değer yaklaşık 6 aydır. Süresiz olarak saklamak için 0 olarak ayarlayın."
   reviewables:
@@ -552,6 +551,8 @@ tr_TR:
         set_slow_mode: "Yavaş modu ayarla"
         move_posts: "Gönderileri taşı"
         grant_badge: "Rozet ver"
+        list_reviewables: "İnceleme kuyruğunu görüntüle"
+        perform_reviewable_action: "İnceleme kuyruğunda gerçekleştirilecek işlem"
         assign: "Konu Ata"
         mark_as_solved: "Çözüldü olarak işaretle"
         search: "Ara"
@@ -595,6 +596,8 @@ tr_TR:
         set_slow_mode: "Bir konuda yavaş modu etkinleştirme veya devre dışı bırakma"
         move_posts: "Gönderileri yeni veya mevcut bir konuya taşı"
         grant_badge: "Bir kullanıcıya rozet ver"
+        list_reviewables: "İnceleme kuyruğundaki öğeleri isteğe bağlı filtrelemeyle listele"
+        perform_reviewable_action: "İnceleme kuyruğundaki bir öğe üzerinde bir işlem gerçekleştir"
         assign: "Bir kullanıcıya veya gruba konu atama veya atamayı kaldırma"
         mark_as_solved: "Bir gönderiyi kabul edilen çözüm olarak işaretle veya işaretini kaldır"
         search: "Forumdaki tüm herkese açık konuları arayın"
@@ -638,6 +641,8 @@ tr_TR:
         set_slow_mode: "%{topic_id} başlığında yavaş mod ayarlama (%{slow_mode_seconds} saniye)"
         move_posts: "%{post_ids} numaralı gönderileri %{topic_id} başlığından taşıma"
         grant_badge: "%{username} kullanıcsına '%{badge_name}' rozeti veriliyor"
+        list_reviewables: "İncelenmeyi bekleyen öğeleri listeleme (tür: %{type})"
+        perform_reviewable_action: "%{reviewable_id} numaralı incelemeye açık öğe üzerinde %{action} işlemi gerçekleştiriliyor"
         assign: "%{topic_id} başlığı atanıyor (atanan: %{assigned})"
         mark_as_solved: "%{post_id} numaralı gönderiyi çözüldü olarak işaretleniyor (çözüldü: %{solved})"
         read: "Okunuyor: <a href='%{url}'>%{title}</a>"
@@ -779,6 +784,24 @@ tr_TR:
           no_reason: "Bir gönderiyi \"çözüldü\" olarak işaretlemek veya bu işaretlemeyi kaldırmak için bir neden belirtmeniz gerekir."
           action_failed: "Çözüldü durumu güncellenemedi."
         success: "\"Çözüldü\" durumu başarıyla güncellendi."
+      list_reviewables:
+        errors:
+          not_allowed: "İnceleme kuyruğunu görüntülemenize izin verilmiyor."
+          invalid_type: "Geçersiz denetlenebilir tür"
+          invalid_status: "Geçersiz durum. Aşağıdakilerden biri olmalıdır: beklemede, onaylandı, reddedildi, göz ardı edildi, silindi, incelendi, tümü."
+        empty: "Belirtilen filtrelere uyan inceleme kuyruğundaki öğe bulunamadı"
+        found:
+          one: "%{count} adet inceleme kuyruğu öğesi bulundu"
+          other: "%{count} adet inceleme kuyruğu öğesi bulundu"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "İnceleme kuyruğuna erişiminiz yok"
+          not_found: "İnceleme kuyruğundaki öğe bulunamadı"
+          no_reason: "Bir inceleme kuyruğu öğesi üzerinde işlem gerçekleştirmek için bir neden belirtilmesi gerekir"
+          invalid_action: "'%{action}' eylemi geçersiz. Kullanılabilir eylemler: %{available}"
+          conflict: "Bu inceleme kuyruğundaki öğe başka biri tarafından güncellendi. Lütfen tekrar deneyin"
+          action_failed: "İşlem gerçekleştirilemedi"
+        success: "İnceleme kuyruğundaki %{reviewable_id} öğesi üzerinde '%{action}' işlemi başarıyla gerçekleştirildi"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"

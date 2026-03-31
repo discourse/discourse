@@ -142,7 +142,6 @@ pl_PL:
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
-    ai_translation_max_tokens_multiplier: "Mnożnik określający maksymalną liczbę tokenów do wykorzystania w tłumaczeniu. Domyślnie maksymalna liczba tokenów jest równa około dwukrotności do pięciokrotności liczby znaków we wpisie. Ten mnożnik można dostosować, aby uwzględnić modele myślenia lub rozumowania, które będą wykorzystywać więcej tokenów."
     ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."
     ai_audit_logs_purge_after_days: "Usuń dzienniki audytu API AI starsze niż podana liczba dni. Domyślnie około 6 miesięcy. Ustaw na 0, aby zachować je na czas nieokreślony."
   reviewables:
@@ -556,6 +555,8 @@ pl_PL:
         set_slow_mode: "Ustaw tryb powolny"
         move_posts: "Przenieś wpisy"
         grant_badge: "Przyznaj odznakę"
+        list_reviewables: "Kolejka do przeglądu listy"
+        perform_reviewable_action: "Działanie kolejki przeglądu"
         assign: "Przypisz temat"
         mark_as_solved: "Oznacz jako rozwiązany"
         search: "Szukaj"
@@ -599,6 +600,8 @@ pl_PL:
         set_slow_mode: "Włączanie lub wyłączanie trybu powolnego w temacie"
         move_posts: "Przenieś wpisy do nowego lub istniejącego tematu"
         grant_badge: "Przyznaj użytkownikowi odznakę"
+        list_reviewables: "Wyświetl listę oczekujących na przegląd elementów w kolejce z opcjonalnym filtrowaniem"
+        perform_reviewable_action: "Wykonaj działanie w kolejce przeglądu"
         assign: "Przypisz lub usuń przypisanie tematu użytkownikowi lub grupie"
         mark_as_solved: "Oznacz lub odznacz wpis jako zaakceptowane rozwiązanie"
         search: "Przeszukaj wszystkie publiczne tematy na forum"
@@ -644,6 +647,8 @@ pl_PL:
         set_slow_mode: "Ustawianie trybu powolnego w temacie %{topic_id} (%{slow_mode_seconds}s)"
         move_posts: "Przenoszenie wpisów %{post_ids} z tematu %{topic_id}"
         grant_badge: "Przyznanie odznaki „%{badge_name}” użytkownikowi %{username}"
+        list_reviewables: "Wyświetlanie listy elementów kolejki przeglądu (typ: %{type})"
+        perform_reviewable_action: "Wykonywanie %{action} na %{reviewable_id} do przejrzenia"
         assign: "Przypisanie tematu %{topic_id} (przypisano: %{assigned})"
         mark_as_solved: "Oznaczanie wpisu %{post_id} jako rozwiązany (rozwiązany: %{solved})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
@@ -801,6 +806,26 @@ pl_PL:
           no_reason: "Aby oznaczyć lub odznaczyć wpis jako rozwiązany, należy podać powód."
           action_failed: "Nie udało się zaktualizować statusu rozwiązania."
         success: "Status rozwiązany zaktualizowano pomyślnie."
+      list_reviewables:
+        errors:
+          not_allowed: "Nie masz uprawnień do przeglądania kolejki przeglądu"
+          invalid_type: "Nieprawidłowy typ podlegający przeglądowi"
+          invalid_status: "Nieprawidłowy status. Musi być jednym z następujących: oczekujący, zatwierdzony, odrzucony, zignorowany, usunięty, sprawdzony, wszystkie."
+        empty: "Nie znaleziono żadnych elementów kolejki przeglądu odpowiadających podanym filtrom"
+        found:
+          one: "Znaleziono %{count} element kolejki przeglądu"
+          few: "Znaleziono %{count} elementy kolejki przeglądu"
+          many: "Znaleziono %{count} elementów kolejki przeglądu"
+          other: "Znaleziono %{count} elementów kolejki przeglądu"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "Nie masz dostępu do kolejki przeglądu"
+          not_found: "Nie znaleziono elementu kolejki przeglądu"
+          no_reason: "Aby wykonać działanie na elemencie kolejki przeglądu, wymagany jest powód"
+          invalid_action: "Nieprawidłowe działanie „%{action}”. Dostępne działania: %{available}"
+          conflict: "Ten element kolejki przeglądu został zaktualizowany przez kogoś innego. Spróbuj ponownie."
+          action_failed: "Nie udało się wykonać działania"
+        success: "Pomyślnie wykonano działanie „%{action}” na elemencie kolejki przeglądu %{reviewable_id}"
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"

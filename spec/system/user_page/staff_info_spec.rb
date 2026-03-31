@@ -39,6 +39,27 @@ describe "Viewing user staff info as an admin" do
     end
   end
 
+  context "for flags given" do
+    fab!(:flagged_post) { Fabricate(:post, user: admin) }
+
+    before do
+      Group.refresh_automatic_groups!
+      PostActionCreator.create(user, flagged_post, :inappropriate)
+    end
+
+    it "shows count and links to review queue filtered by flagger" do
+      user_page.visit(user)
+
+      expect(user_page).to have_staff_counter_flags_given(count: 1)
+
+      user_page.click_staff_info_flags_given_link
+
+      expect(page).to have_current_path(%r{/review})
+      expect(page).to have_current_path(/flagged_by=#{user.username}/)
+      expect(page).to have_current_path(/status=approved/)
+    end
+  end
+
   context "for flags" do
     fab!(:reviewable_flagged_post) { Fabricate(:reviewable_flagged_post, target_created_by: user) }
     fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }

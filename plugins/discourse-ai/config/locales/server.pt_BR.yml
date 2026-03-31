@@ -132,7 +132,6 @@ pt_BR:
     ai_translation_max_post_length: "O número máximo de caracteres para uma postagem ser traduzida. Postagens com mais caracteres do que esse limite não serão traduzidas."
     ai_translation_backfill_max_age_days: "A idade máxima da postagem ou tópico a ser traduzido. Postagens e tópicos mais antigos que esta não serão traduzidos. O valor 0 desativa o preenchimento sem desativar a tradução de postagens novas."
     ai_translation_backfill_hourly_rate: "Número de posts e tópicos a serem traduzidos por hora durante operações de backfill. Defina como 0 para desativar o backfill automático de traduções para conteúdo existente."
-    ai_translation_max_tokens_multiplier: "Multiplicador para determinar o número máximo de tokens a serem usados na tradução. Por padrão, definimos o número máximo de tokens para aproximadamente duas a cinco vezes o número de caracteres da postagem. Esse multiplicador pode ser ajustado para permitir modelos de pensamento ou raciocínio que utilizem mais tokens."
     ai_usage_rollup_after_days: "Número de dias para manter as estatísticas de uso de IA por solicitação antes de consolidá-las em agregados diários. Defina como 0 para desativar rollups."
     ai_audit_logs_purge_after_days: "Excluir logs de auditoria da API de IA com mais de um determinado número de dias. O padrão é de aproximadamente 6 meses. Defina como 0 para manter para sempre."
   reviewables:

@@ -186,62 +186,72 @@ namespace :release do
     base = args[:base]
     raise "Unknown base: #{base.inspect}" unless base.start_with?("release/") || base == "main"
 
-    fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
-    private_mirror_pr_numbers = []
+    json_output =
+      ReleaseUtils.gh(
+        "pr",
+        "list",
+        "--repo",
+        "discourse/discourse-private-mirror",
+        "--base",
+        base,
+        "--state",
+        "open",
+        "--json",
+        "number,title,body,headRefName",
+        "--limit",
+        "100",
+        capture: true,
+      )
 
-    if fix_refs.nil? || fix_refs.empty?
-      json_output, status =
-        Open3.capture2(
-          "gh",
-          "pr",
-          "list",
-          "--repo",
-          "discourse/discourse-private-mirror",
-          "--base",
-          base,
-          "--state",
-          "open",
-          "--json",
-          "number,title,headRefName",
-          "--limit",
-          "100",
-        )
-      raise "Failed to fetch PRs from private-mirror" if !status.success?
+    prs = JSON.parse(json_output)
+    raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
 
-      prs = JSON.parse(json_output)
-      raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
-
-      prompt = TTY::Prompt.new
-      choices =
-        prs.map do |pr|
-          { name: "##{pr["number"]}: #{pr["title"]}", value: pr.slice("number", "headRefName") }
-        end
-
-      selected =
-        prompt.multi_select(
-          "Select security fix PRs to include (space to toggle, enter to finish):",
-          choices,
-          default: [],
-          per_page: choices.size,
-        )
-      raise "No PRs selected" if selected.empty?
-
-      fix_refs = selected.map { |pr| "privatemirror/#{pr["headRefName"]}" }
-      private_mirror_pr_numbers = selected.map { |pr| pr["number"] }
+    extract_ghsa_id = ->(body) do
+      return nil if body.nil?
+      match = body.match(%r{github\.com/discourse/discourse/security/advisories/(GHSA-[\w-]+)})
+      match&.[](1)
     end
 
-    puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
+    choices =
+      prs.map do |pr|
+        pr.slice("number", "title", "body", "headRefName").merge(
+          "ghsa_id" => extract_ghsa_id.call(pr["body"]),
+        )
+      end
+
+    selected =
+      if (ghsa_ids = ENV["SECURITY_FIX_GHSA_IDS"])
+        requested = ghsa_ids.split(",").map(&:strip)
+        choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"]) }
+      else
+        prompt = TTY::Prompt.new
+        prompt_choices =
+          choices.map do |pr|
+            ghsa_label = pr["ghsa_id"] || "GHSA MISSING"
+            { name: "##{pr["number"]} [#{ghsa_label}]: #{pr["title"]}", value: pr }
+          end
+        prompt.multi_select(
+          "Select security fix PRs to include (space to toggle, enter to finish):",
+          prompt_choices,
+          default: [],
+          per_page: prompt_choices.size,
+        )
+      end
+    raise "No PRs selected" if selected.empty?
+
+    puts "Staging security fixes for #{base} branch: #{selected.map { |pr| pr["headRefName"] }.inspect}"
 
     branch = "security/#{base}-security-fixes"
 
     ReleaseUtils.with_clean_worktree(base) do
-      fix_refs.each do |ref|
-        origin, origin_branch = ref.split("/", 2)
-        ReleaseUtils.git "fetch", origin, origin_branch
+      selected.each do |pr|
+        ReleaseUtils.git "fetch", "privatemirror", pr["headRefName"]
 
-        first_commit_on_branch =
-          ReleaseUtils.git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
-        ReleaseUtils.git "cherry-pick", "#{first_commit_on_branch}^..#{ref}"
+        ReleaseUtils.git "merge", "--squash", "privatemirror/#{pr["headRefName"]}"
+
+        commit_message = "#{pr["title"]}\n\n#{pr["body"]}".strip
+
+        ReleaseUtils.git "commit", "-m", commit_message
       end
 
       if base == "main" &&
@@ -279,13 +289,13 @@ namespace :release do
       ReleaseUtils.merge_pr(base: base, branch: branch)
     end
 
-    if private_mirror_pr_numbers.any?
+    if selected.any?
       puts "Closing associated PRs in private-mirror..."
-      private_mirror_pr_numbers.each do |pr_number|
+      selected.each do |pr|
         ReleaseUtils.gh(
           "pr",
           "close",
-          pr_number.to_s,
+          pr["number"].to_s,
           "--repo",
           "discourse/discourse-private-mirror",
           "--delete-branch",

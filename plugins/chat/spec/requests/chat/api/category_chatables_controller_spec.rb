@@ -97,6 +97,31 @@ describe Chat::Api::CategoryChatablesController do
 
         expect(response.status).to eq(200)
       end
+
+      it "does not include groups the moderator cannot see" do
+        group.add(moderator)
+
+        secret_group =
+          Fabricate(
+            :group,
+            visibility_level: Group.visibility_levels[:owners],
+            members_visibility_level: Group.visibility_levels[:owners],
+          )
+        secret_group.add(Fabricate(:user))
+        Fabricate(
+          :category_group,
+          category: private_category,
+          group: secret_group,
+          permission_type: CategoryGroup.permission_types[:full],
+        )
+
+        get "/chat/api/category-chatables/#{private_category.id}/permissions"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["allowed_groups"]).to contain_exactly("@#{group.name}")
+        expect(response.parsed_body["allowed_groups"]).not_to include("@#{secret_group.name}")
+        expect(response.parsed_body["members_count"]).to eq(1)
+      end
     end
 
     context "as anon" do

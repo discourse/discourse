@@ -37,7 +37,7 @@ RSpec.describe Patreon::PatreonWebhookController do
         expect_not_enqueued_with(job: :patreon_sync_patrons_to_groups) do
           post "/patreon/webhook",
                headers: {
-                 "X-Patreon-Event": "pledges:create",
+                 "X-Patreon-Event": "members:pledge:create",
                  "X-Patreon-Signature": "foo",
                }
         end
@@ -48,7 +48,7 @@ RSpec.describe Patreon::PatreonWebhookController do
 
       it "returns a 403 error when webhook secret is blank" do
         SiteSetting.patreon_webhook_secret = ""
-        body = get_patreon_response("pledge.json")
+        body = get_patreon_response("member.json")
         digest = OpenSSL::Digest.new("MD5")
         forged_signature = OpenSSL::HMAC.hexdigest(digest, "", body)
 
@@ -56,7 +56,7 @@ RSpec.describe Patreon::PatreonWebhookController do
           post "/patreon/webhook",
                params: body,
                headers: {
-                 "X-Patreon-Event": "pledges:create",
+                 "X-Patreon-Event": "members:pledge:create",
                  "X-Patreon-Signature": forged_signature,
                }
         end
@@ -66,8 +66,81 @@ RSpec.describe Patreon::PatreonWebhookController do
       end
     end
 
-    describe "enqueue job" do
-      let(:body) { get_patreon_response("pledge.json") }
+    describe "v2 member webhooks" do
+      let(:body) { get_patreon_response("member.json") }
+      let(:digest) { OpenSSL::Digest.new("MD5") }
+      let(:secret) { SiteSetting.patreon_webhook_secret = "WEBHOOK SECRET" }
+
+      before do
+        Patreon.set(
+          "rewards",
+          "0": {
+            title: "All Patrons",
+            amount_cents: 0,
+          },
+          "999999": {
+            title: "Premium",
+            amount_cents: 1000,
+          },
+        )
+      end
+
+      def add_member
+        member_data = JSON.parse(body)
+        Patreon::Pledge.create!(member_data.dup, adapter: Patreon::ApiVersion::V2)
+        member_data
+      end
+
+      def post_request(body, event)
+        post "/patreon/webhook",
+             params: body,
+             headers: {
+               "X-Patreon-Event": "members:pledge:#{event}",
+               "X-Patreon-Signature": OpenSSL::HMAC.hexdigest(digest, secret, body),
+             }
+      end
+
+      it "for event members:pledge:create" do
+        user = Fabricate(:user, email: "roo@aar.com")
+        group = Fabricate(:group)
+        Patreon.set("filters", group.id.to_s => ["0"])
+
+        expect { post_request(body, "create") }.to change { Patreon::Pledge.all.keys.count }.by(
+          1,
+        ).and change { Patreon::Patron.all.keys.count }.by(1).and change {
+                      Patreon::RewardUser.all.keys.count
+                    }.by(2)
+
+        expect(group.users).to include(user)
+      end
+
+      it "for event members:pledge:update" do
+        member_data = add_member
+        member = member_data["data"]
+        member["attributes"]["currently_entitled_amount_cents"] = 987
+        patron_id = member["relationships"]["user"]["data"]["id"]
+        member_data = JSON.pretty_generate(member_data)
+
+        expect(Patreon.get("pledges")[patron_id]).to eq(250)
+        post_request(member_data, "update")
+        expect(Patreon.get("pledges")[patron_id]).to eq(987)
+      end
+
+      it "for event members:pledge:delete" do
+        add_member
+        tier_id =
+          JSON.parse(body)["data"]["relationships"]["currently_entitled_tiers"]["data"][0]["id"]
+
+        expect { post_request(body, "delete") }.to change { Patreon::Pledge.all.keys.count }.by(
+          -1,
+        ).and change { Patreon::Patron.all.keys.count }.by(-1).and change {
+                      Patreon::RewardUser.all[tier_id].count
+                    }.by(-1)
+      end
+    end
+
+    describe "v1 pledge webhooks" do
+      let(:body) { get_patreon_response("v1/pledge.json") }
       let(:digest) { OpenSSL::Digest.new("MD5") }
       let(:secret) { SiteSetting.patreon_webhook_secret = "WEBHOOK SECRET" }
 
@@ -87,21 +160,20 @@ RSpec.describe Patreon::PatreonWebhookController do
 
       def add_pledge
         pledge_data = JSON.parse(body)
-        Patreon::Pledge.create!(pledge_data.dup)
-
+        Patreon::Pledge.create!(pledge_data.dup, adapter: Patreon::ApiVersion::V1)
         pledge_data
       end
 
-      def post_request(body, event, type = "pledges")
+      def post_request(body, event)
         post "/patreon/webhook",
              params: body,
              headers: {
-               "X-Patreon-Event": "#{type}:#{event}",
+               "X-Patreon-Event": "pledges:#{event}",
                "X-Patreon-Signature": OpenSSL::HMAC.hexdigest(digest, secret, body),
              }
       end
 
-      it "for event pledge:create" do
+      it "for event pledges:create" do
         user = Fabricate(:user, email: "roo@aar.com")
         group = Fabricate(:group)
         Patreon.set("filters", group.id.to_s => ["0"])
@@ -115,22 +187,7 @@ RSpec.describe Patreon::PatreonWebhookController do
         expect(group.users).to include(user)
       end
 
-      it "for event members:pledge:create" do
-        body = get_patreon_response("member.json")
-        user = Fabricate(:user, email: "roo@aar.com")
-        group = Fabricate(:group)
-        Patreon.set("filters", group.id.to_s => ["0"])
-
-        expect { post_request(body, "create", "members:pledge") }.to change {
-          Patreon::Pledge.all.keys.count
-        }.by(1).and change { Patreon::Patron.all.keys.count }.by(1).and change {
-                      Patreon::RewardUser.all.keys.count
-                    }.by(2)
-
-        expect(group.users).to include(user)
-      end
-
-      it "for event pledge:update" do
+      it "for event pledges:update" do
         pledge_data = add_pledge
         pledge = pledge_data["data"]
         pledge["attributes"]["amount_cents"] = 987
@@ -142,9 +199,8 @@ RSpec.describe Patreon::PatreonWebhookController do
         expect(Patreon.get("pledges")[patron_id]).to eq(987)
       end
 
-      it "for event pledge:delete" do
+      it "for event pledges:delete" do
         pledge_data = add_pledge
-        patron_id = pledge_data["data"]["relationships"]["patron"]["data"]["id"]
         reward_id = pledge_data["data"]["relationships"]["reward"]["data"]["id"]
 
         expect { post_request(body, "delete") }.to change { Patreon::Pledge.all.keys.count }.by(
