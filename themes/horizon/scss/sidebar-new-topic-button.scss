@@ -10,7 +10,7 @@
   &__wrapper {
     box-sizing: border-box;
     display: flex;
-    border-radius: 6.25em;
+    border-radius: var(--token-radius-full);
     margin-top: 4px; // hover & focus effect visibility
 
     &:focus-visible,
@@ -63,23 +63,6 @@
             oklch(from var(--accent-color) 40% c h),
             oklch(from var(--accent-color) 50% c h)
           );
-        }
-      }
-    }
-
-    .fk-d-button-tooltip:has(button[disabled]) {
-      + .topic-drafts-menu-trigger {
-        display: none;
-      }
-
-      .fk-d-tooltip__trigger {
-        background: var(--accent-color);
-        border-radius: 0 var(--d-button-border-radius)
-          var(--d-button-border-radius) 0;
-        padding-right: 0.65em;
-
-        .d-icon {
-          color: var(--secondary);
         }
       }
     }
