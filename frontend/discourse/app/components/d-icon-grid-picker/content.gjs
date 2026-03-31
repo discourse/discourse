@@ -16,6 +16,9 @@ import { ajax } from "discourse/lib/ajax";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+/* Module-level cache for the unfiltered icon list, keyed by onlyAvailable flag */
+const unfilteredIconCache = new Map();
+
 /**
  * The content panel rendered inside the DMenu dropdown or modal.
  * Handles icon search, favorites row, and the async-loaded icon grid.
@@ -137,12 +140,21 @@ export default class DIconGridPickerContent extends Component {
    */
   @action
   async fetchIcons(filter) {
-    return ajax("/svg-sprite/picker-search", {
-      data: {
-        filter: filter || "",
-        only_available: this.args.onlyAvailable ?? true,
-      },
+    const onlyAvailable = this.args.onlyAvailable ?? true;
+
+    if (!filter && unfilteredIconCache.has(onlyAvailable)) {
+      return unfilteredIconCache.get(onlyAvailable);
+    }
+
+    const icons = await ajax("/svg-sprite/picker-search", {
+      data: { filter: filter || "", only_available: onlyAvailable },
     });
+
+    if (!filter) {
+      unfilteredIconCache.set(onlyAvailable, icons);
+    }
+
+    return icons;
   }
 
   <template>

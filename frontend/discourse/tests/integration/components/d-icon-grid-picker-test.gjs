@@ -233,6 +233,199 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
       .exists("shows the empty state message");
   });
 
+  test("shows caret icon when @showCaret is true", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker
+          @value="pencil"
+          @onChange={{noop}}
+          @showCaret={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-icon-grid-picker-trigger .d-icon-grid-picker__caret")
+      .exists("shows caret icon");
+  });
+
+  test("does not show caret icon by default", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-icon-grid-picker-trigger .d-icon-grid-picker__caret")
+      .doesNotExist("caret is hidden by default");
+  });
+
+  test("disables trigger when @disabled is true", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker
+          @value="pencil"
+          @onChange={{noop}}
+          @disabled={{true}}
+        />
+      </template>
+    );
+
+    assert.dom(".d-icon-grid-picker-trigger").isDisabled();
+  });
+
+  test("shows default label when no value", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-icon-grid-picker-trigger .d-button-label")
+      .exists("shows label when no value");
+  });
+
+  test("shows custom label", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} @label="Pick one" />
+      </template>
+    );
+
+    assert
+      .dom(".d-icon-grid-picker-trigger .d-button-label")
+      .hasText("Pick one");
+  });
+
+  test("hides label when value is set and no explicit label", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-icon-grid-picker-trigger .d-button-label")
+      .doesNotExist("label hidden when icon is selected");
+  });
+
+  test("applies default btn-default class to trigger", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    assert.dom(".d-icon-grid-picker-trigger").hasClass("btn-default");
+  });
+
+  test("applies custom @btnClass to trigger", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker
+          @value={{null}}
+          @onChange={{noop}}
+          @btnClass="btn-primary"
+        />
+      </template>
+    );
+
+    assert.dom(".d-icon-grid-picker-trigger").hasClass("btn-primary");
+    assert.dom(".d-icon-grid-picker-trigger").doesNotHaveClass("btn-default");
+  });
+
+  test("sets --icon-color CSS variable when @iconColor is provided", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker
+          @value="pencil"
+          @onChange={{noop}}
+          @iconColor="#FF0000"
+        />
+      </template>
+    );
+
+    const wrapper = document.querySelector(".d-icon-grid-picker");
+    assert.true(
+      wrapper.style.cssText.includes("--icon-color: #FF0000"),
+      "sets --icon-color custom property"
+    );
+  });
+
+  test("does not set --icon-color when @iconColor is not provided", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+      </template>
+    );
+
+    const wrapper = document.querySelector(".d-icon-grid-picker");
+    assert.false(
+      wrapper.style.cssText.includes("--icon-color"),
+      "no --icon-color custom property"
+    );
+  });
+
+  test("sets data-value attribute", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+      </template>
+    );
+
+    assert.dom(".d-icon-grid-picker").hasAttribute("data-value", "pencil");
+  });
+
+  test("sets title on trigger when value is selected", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+      </template>
+    );
+
+    assert.dom(".d-icon-grid-picker-trigger").hasAttribute("title");
+  });
+
+  test("fires @onShow callback when menu opens", async function (assert) {
+    let showCalled = false;
+    const onShow = () => (showCalled = true);
+
+    await render(
+      <template>
+        <DIconGridPicker
+          @value={{null}}
+          @onChange={{noop}}
+          @onShow={{onShow}}
+        />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    assert.true(showCalled, "onShow was called");
+  });
+
+  test("fires @onClose callback when menu closes", async function (assert) {
+    let closeCalled = false;
+    const onClose = () => (closeCalled = true);
+
+    await render(
+      <template>
+        <DIconGridPicker
+          @value={{null}}
+          @onChange={{noop}}
+          @onClose={{onClose}}
+        />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+    await click(".d-icon-grid-picker-trigger");
+    assert.true(closeCalled, "onClose was called");
+  });
+
   test("hides favorites row while filtering", async function (assert) {
     const favorites = ["heart"];
 
