@@ -79,9 +79,18 @@ module Chat
     end
 
     def fetch_target_users(params:, channel:, guardian:)
+      target_groups =
+        if params.groups.present?
+          Group
+            .where(name: params.groups)
+            .visible_groups(guardian.user)
+            .members_visible_groups(guardian.user)
+            .pluck(:name)
+        end
+
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
         usernames: params.usernames,
-        groups: params.groups,
+        groups: target_groups,
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
         dm_channel: channel.direct_message_channel?,
       ) + channel.chatable.users.where.not(id: guardian.user)
