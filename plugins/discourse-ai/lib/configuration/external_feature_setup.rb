@@ -7,8 +7,7 @@ module DiscourseAi
         return if @setup_done
         @setup_done = true
 
-        DiscoursePluginRegistry._raw_ai_features.each do |entry|
-          config = entry[:value]
+        raw_external_ai_features.each do |config|
           reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[config[:module_name]]
           next if reserved.nil?
 
@@ -53,6 +52,10 @@ module DiscourseAi
             "Failed to set up AI feature #{config[:module_name]}/#{config[:feature]}: #{e.message}",
           )
         end
+      end
+
+      def self.raw_external_ai_features
+        DiscoursePluginRegistry._raw_external_ai_features.pluck(:value)
       end
     end
   end

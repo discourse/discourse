@@ -138,7 +138,7 @@ module DiscourseAi
         end
 
         def external_features
-          DiscoursePluginRegistry.ai_features.filter_map do |entry|
+          DiscoursePluginRegistry.external_ai_features.filter_map do |entry|
             reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[entry[:module_name]]
             next if reserved.nil? || reserved.dig(:features, entry[:feature]).nil?
             [entry[:module_name], entry]
@@ -152,6 +152,7 @@ module DiscourseAi
             setting_name,
             reserved[:module_id],
             entry[:module_name].to_s,
+            enabled_by_setting: entry[:enabled_by_setting],
           )
         end
 

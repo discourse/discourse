@@ -8,7 +8,14 @@ ai_agents_is_view =
   ).present?
 return if ai_agents_is_view
 
+DiscourseAi::Configuration::ExternalFeatureSetup.ensure_setup!
+
 summarization_agents = [DiscourseAi::Agents::Summarizer, DiscourseAi::Agents::ShortSummarizer]
+external_agent_ids =
+  DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS
+    .values
+    .flat_map { |config| config.fetch(:features).values }
+    .pluck(:agent_id)
 
 def from_setting(setting_name)
   DB
@@ -28,6 +35,8 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
 
     if agent_class == DiscourseAi::Agents::WebArtifactCreator
       # this is somewhat sensitive, so we default it to staff
+      agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
+    elsif external_agent_ids.include?(id)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
     elsif summarization_agents.include?(agent_class)
       # Copy group permissions from site settings.
