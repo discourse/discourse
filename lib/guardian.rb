@@ -485,13 +485,18 @@ class Guardian
       @user.in_any_groups?(SiteSetting.send_email_messages_allowed_groups_map)
   end
 
-  def can_export_entity?(entity, entity_id = nil)
+  def can_export_entity?(entity, entity_id = nil, args = nil)
     return false if anonymous?
     return true if is_admin?
     return can_see_emails? if entity == "screened_email"
     return can_see_ip? if entity == "screened_ip"
 
     if is_moderator? && (entity != "user_archive" || entity_id.nil?)
+      if entity == "report"
+        report_name = args&.[](:name) || args&.[]("name")
+        return true if report_name.blank?
+        return !Report.hidden?(report_name, admin: false)
+      end
       return %w[staff_action screened_url report user_archive].include?(entity)
     end
 
