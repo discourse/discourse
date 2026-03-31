@@ -51,6 +51,21 @@ describe Chat::DirectMessageSerializer do
 
         expect(json[:users][0][:username]).to eq(I18n.t("chat.deleted_chat_username"))
       end
+
+      it "serializes without error when user status is enabled" do
+        SiteSetting.enable_user_status = true
+        me = Fabricate(:user)
+        you = Fabricate(:user)
+        direct_message = Fabricate(:direct_message, users: [me, you])
+
+        you.destroy!
+
+        serializer =
+          described_class.new(direct_message.reload, scope: Guardian.new(me), root: false)
+        json = serializer.as_json
+
+        expect(json[:users][0][:username]).to eq(I18n.t("chat.deleted_chat_username"))
+      end
     end
   end
 end
