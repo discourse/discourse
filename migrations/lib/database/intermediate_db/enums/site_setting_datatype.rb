@@ -42,7 +42,6 @@ module Migrations
           LOCALE_ENUM = 29
           TOPIC = 30
           DATETIME = 31
-          ICON = 32
         end
       end
     end
