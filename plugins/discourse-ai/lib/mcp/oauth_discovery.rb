@@ -11,6 +11,7 @@ module DiscourseAi
           :authorization_endpoint,
           :token_endpoint,
           :revocation_endpoint,
+          :registration_endpoint,
           keyword_init: true,
         )
 
@@ -45,6 +46,9 @@ module DiscourseAi
           revocation_endpoint = auth_server_metadata["revocation_endpoint"].presence
           validate_discovered_url!(revocation_endpoint) if revocation_endpoint.present?
 
+          registration_endpoint = auth_server_metadata["registration_endpoint"].presence
+          validate_discovered_url!(registration_endpoint) if registration_endpoint.present?
+
           Result.new(
             resource: resource_metadata["resource"].presence || server.url,
             resource_metadata_url: resource_metadata_url,
@@ -52,6 +56,7 @@ module DiscourseAi
             authorization_endpoint: authorization_endpoint,
             token_endpoint: token_endpoint,
             revocation_endpoint: revocation_endpoint,
+            registration_endpoint: registration_endpoint,
           )
         end
 

@@ -58,8 +58,22 @@ if dev_mode
     pid = fork { load Gem.bin_path("pitchfork", "pitchfork") }
     done = false
 
+    int_count = 0
     Signal.trap("INT") do
-      # wait for parent to be done
+      int_count += 1
+      case int_count
+      when 1
+        # Swallowed to give the child time to handle it
+      when 2
+        STDERR.puts "\nInterrupt again to force shutdown..."
+      else
+        begin
+          Process.kill("KILL", pid)
+        rescue StandardError
+          nil
+        end
+        exit!(1)
+      end
     end
 
     Signal.trap("USR2") do

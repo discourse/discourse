@@ -5958,7 +5958,6 @@ fa_IR:
           import_web_tip: "مخزن شامل قالب است"
           direct_install_tip: "آیا مطمئن هستید که می خواهید <strong>%{name}</strong> را از مخزن ذکر شده در زیر نصب کنید؟"
           import_web_advanced: "پیشرفته…"
-          import_file_tip: "فایل .tar.gz، .zip یا .dcstyle.json حاوی پوسته"
           is_private: "تم در یک مخزن git خصوصی است"
           finish_install: "پایان نصب پوسته"
           last_attempt: "مراحل نصب تمام نشد، آخرین تلاش:"

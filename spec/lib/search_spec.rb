@@ -697,9 +697,8 @@ RSpec.describe Search do
 
       # can search group PMs as well as non admin
       user = Fabricate(:user)
-      group = Fabricate.build(:group)
+      group = Fabricate(:group)
       group.add(user)
-      group.save!
 
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 

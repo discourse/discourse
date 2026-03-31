@@ -509,11 +509,26 @@ uk:
         credit_allocations: "Кредитні асигнування"
       ai_agent:
         ai_tools: "Інструменти"
+        mcp_servers: "Сервери MCP"
+        mcp_server_tools_help: "Вибрані MCP-сервери за замовчуванням надають доступ до всіх своїх інструментів. Звузьте їх для кожного агента, щоб зменшити використання токенів і зосередити вибір інструментів."
         mcp_server_tool_count:
           one: "%{count} інструмент"
           few: "%{count} інструменти"
           many: "%{count} інструментів"
           other: "%{count} інструментів"
+        mcp_server_enabled_tool_count:
+          one: "%{count} інструмент увімкнено"
+          few: "%{count} інструменти увімкнено"
+          many: "%{count} інструментів увімкнено"
+          other: "%{count} інструментів увімкнено"
+        mcp_server_all_tools_enabled: "Усі інструменти ввімкнено"
+        mcp_server_enabled_tools:
+          one: "%{count} інструмент з %{total} увімкнено"
+          few: "%{count} інструменти з %{total} увімкнено"
+          many: "%{count} інструментів з %{total} увімкнено"
+          other: "%{count} інструментів з %{total} увімкнено"
+        mcp_server_choose_tools: "Виберіть інструменти"
+        mcp_server_edit_tools: "Інструменти редагування"
         tool_strategies:
           all: "Застосувати до всіх відповідей"
           replies:
@@ -585,11 +600,25 @@ uk:
           many: "%{count} інструментів"
           other: "%{count} інструментів"
         tool_tokens_total: "~%{tokens} Маркери"
+        mcp_server_cost_name: "%{name} (сервер MCP)"
+        mcp_server_cost_value:
+          one: "~%{tokens} токени, %{count} інструмент"
+          few: "~%{tokens} токени, %{count} інструменти"
+          many: "~%{tokens} токени, %{count} інструментів"
+          other: "~%{tokens} токени, %{count} інструментів"
         mcp_server_tokens_only: "~%{tokens} маркери"
         mcp_tools_modal:
           title: "%{name} інструментів"
+          summary: "За замовчуванням цей агент може використовувати всі інструменти з цього сервера. Виберіть менший набір, щоб обмежити доступ і зменшити вартість запиту."
+          filter_placeholder: "Інструменти фільтрації"
           select_all: "Вибрати все"
           clear_all: "Очистити все"
+          selection_summary:
+            one: "Вибрано %{count} інструмент з %{total}"
+            few: "Вибрано %{count} інструменти з %{total}"
+            many: "Вибрано %{count} інструментів з %{total}"
+            other: "Вибрано %{count} інструментів з %{total}"
+          empty: "Жоден інструмент не відповідає цьому фільтру."
         tool_severity_medium: "Помірна місткість"
         tool_severity_high: "Висока ємність"
         tool_severity_too_many: "Занадто багато інструментів"
@@ -669,6 +698,7 @@ uk:
       tools:
         back: "Назад до інструментів"
         short_title: "Інструменти"
+        script_tools: "Інструменти скриптів"
         export: "Експорт"
         import: "Імпорт"
         import_error_conflict: "Інструмент вже існує, бажаєте його оновити?"
@@ -681,6 +711,7 @@ uk:
         tool_name_help: "Назва інструменту представлена у великій мовній моделі. Вона не є окремою, але є окремою для кожного агента. (агент перевіряє під час збереження)"
         description: "Опис"
         description_help: "Чіткий опис призначення інструменту для мовної моделі"
+        subheader_description: "Інструменти та MCP-сервери розширюють можливості ШІ-агентів."
         summary: "Підсумок"
         summary_help: "Короткий опис призначення інструментів для відображення кінцевим користувачам"
         script: "Скрипт"
@@ -734,9 +765,13 @@ uk:
         embedding: "Взаємодія"
         cannot_delete_in_use: "Ці облікові дані не можна видалити, оскільки вони використовуються:"
         tool: "Інструмент"
+        mcp_server: "Сервер MCP"
+        mcp_server_oauth_client_secret: "Секрет клієнта OAuth сервера MCP"
         modal:
           title: "Створити нові облікові дані"
       mcp_servers:
+        short_title: "Сервери MCP"
+        new: "Новий MCP-сервер"
         name: "Імʼя"
         description: "Опис"
         url: "Посилання"
@@ -746,6 +781,7 @@ uk:
         oauth_statuses:
           connected: "Пов’язаний"
         oauth_connect: "Підключити"
+        oauth_hide_details: "Приховати подробиці"
         enabled: "Включено"
         save: "Зберегти"
         edit: "Редагувати"

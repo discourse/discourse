@@ -450,7 +450,6 @@ hu:
       pm_title: "Ajánlott üzenetek"
     admin_onboarding_banner:
       launch_in_easy_steps: "Indítás %{step_count} egyszerű lépésben"
-      skipped: "Az adminisztrátori bevezetési ellenőrzőlista átugrásra került. Ha szeretné újra engedélyezni, keresse az enable site owner onboarding beállítást az oldalbeállítások között."
       congrats_onboarding_complete: "Gratulálunk a bevezetési folyamat elvégzéséhez!"
       invite_collaborators:
         title: "Együttműködők meghívása"
@@ -7080,7 +7079,6 @@ hu:
           import_web_tip: "Témát tartalmazó tároló"
           direct_install_tip: "Biztos, hogy telepíteni akarja a <strong>%{name}</strong> témát az alább felsorolt tárolóból?"
           import_web_advanced: "Speciális…"
-          import_file_tip: ".tar.gz, .zip vagy .dcstyle.json fájl, amely témát tartalmaz"
           is_private: "A téma egy privát git tárolóban van"
           finish_install: "Téma telepítésének befejezése"
           last_attempt: "A telepítési folyamat nem fejeződött be, utolsó próbálkozás:"

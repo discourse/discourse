@@ -43,6 +43,7 @@ Rails.autoloaders.each do |autoloader|
     "json" => "JSON",
     "ssrf_detector" => "SSRFDetector",
     "http" => "HTTP",
+    "oauth_client_registration" => "OAuthClientRegistration",
     "oauth_discovery" => "OAuthDiscovery",
     "oauth_flow" => "OAuthFlow",
     "oauth_token_store" => "OAuthTokenStore",

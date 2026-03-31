@@ -133,6 +133,8 @@ module DiscourseAi
             Tools::SetSlowMode,
             Tools::MovePosts,
             Tools::GrantBadge,
+            Tools::ListReviewables,
+            Tools::PerformReviewableAction,
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,

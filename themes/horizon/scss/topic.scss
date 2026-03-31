@@ -19,7 +19,6 @@
     .timeline-scroller {
       @include viewport.from(lg) {
         margin-left: -4.5px;
-        background: var(--d-content-background);
         height: 40px !important; // height is coming from element style have no other choice
       }
 
@@ -31,6 +30,7 @@
 
     .timeline-handle {
       background-color: var(--accent-color);
+      outline: 3px solid var(--d-content-background);
 
       @include viewport.from(lg) {
         width: 8px;

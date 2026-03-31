@@ -578,7 +578,6 @@ ar:
       pm_title: "الرسائل المقترحة"
     admin_onboarding_banner:
       launch_in_easy_steps: "الإطلاق عبر %{step_count} خطوات سهلة"
-      skipped: "تم الآن تخطي قائمة مراجعة إعداد المسؤول. إذا كنت ترغب في إعادة تمكينها، ابحث عن «تفعيل ضم مالك الموقع» في إعدادات الموقع."
       congrats_onboarding_complete: "تهانينا على إكمال عملية الانضمام!"
       invite_collaborators:
         title: "دعوة المتعاونين"
@@ -8211,7 +8210,6 @@ ar:
           import_web_tip: "المستودع الذي يحتوي السمة"
           direct_install_tip: "هل تريد بالتأكيد تثبيت <strong>%{name}</strong> من المستودع المُدرَج أدناه؟"
           import_web_advanced: "متقدمة…"
-          import_file_tip: "ملف .tar.gz, .zip, or .dcstyle.json الذي يحتوي على السمة"
           is_private: "السمة موجودة في مستودع Git خاص"
           finish_install: "إنهاء تثبيت السمة"
           last_attempt: "لم تنتهِ عملية التثبيت، آخر محاولة:"

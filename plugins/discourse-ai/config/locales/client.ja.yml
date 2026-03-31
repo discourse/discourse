@@ -597,6 +597,7 @@ ja:
         oauth_statuses:
           connected: "接続済み"
         oauth_connect: "接続"
+        oauth_hide_details: "詳細を非表示"
         enabled: "有効"
         save: "保存"
         edit: "編集"

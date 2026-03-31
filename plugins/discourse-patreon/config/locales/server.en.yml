@@ -14,12 +14,14 @@ en:
     patreon_verbose_log: 'enable verbose logging of patreon payload'
     patreon_donation_prompt_enabled: "Enable donation prompt?"
     patreon_donation_prompt_show_after_topics: "Show donation prompt after n topics"
+    patreon_api_version: "Patreon API version. Version 1 is deprecated — create a new OAuth client on Patreon and switch to version 2."
     patreon_donation_prompt_campaign_url: "Donation prompt campaign URL"
     errors:
       patreon_creator_username_not_set: "You need to set the Patreon Creator Discourse Username setting before enabling Patreon Login."
   dashboard:
     problem:
       access_token_invalid: "Patreon Creator's access and refresh token values are incorrect. You must copy-paste new tokens from <a href='https://www.patreon.com/platform/documentation/clients'>Patreon website</a> to <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>site settings</a>."
+      patreon_api_v1_deprecated: "You are using Patreon API v1, which is deprecated. Please <a href='https://www.patreon.com/portal/registration/register-clients'>create a new v2 OAuth client on Patreon</a>, update your credentials, and switch to API v2 in <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon_api_version'>site settings</a>."
   patreon:
     error:
       invalid_response: "Invalid response from Patreon API"

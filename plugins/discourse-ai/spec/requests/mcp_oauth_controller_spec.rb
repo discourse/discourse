@@ -15,5 +15,14 @@ RSpec.describe DiscourseAi::McpOauthController do
       expect(response.parsed_body["grant_types"]).to eq(%w[authorization_code refresh_token])
       expect(response.parsed_body["token_endpoint_auth_method"]).to eq("none")
     end
+
+    it "is accessible when login is required" do
+      SiteSetting.login_required = true
+
+      get "/discourse-ai/mcp/oauth/client-metadata.json"
+
+      expect(response).to be_successful
+      expect(response.parsed_body["client_name"]).to eq("Discourse AI MCP Client")
+    end
   end
 end

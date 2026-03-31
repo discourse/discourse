@@ -48,8 +48,14 @@ module DiscourseAi
 
       def update
         initial_attributes = @ai_mcp_server.attributes.dup
+        update_params = ai_mcp_server_params
 
-        if @ai_mcp_server.update(ai_mcp_server_params)
+        if @ai_mcp_server.oauth? && update_params[:oauth_client_registration] != "manual" &&
+             @ai_mcp_server.oauth_client_registration != "manual"
+          update_params = update_params.except(:oauth_client_id, :oauth_client_secret_ai_secret_id)
+        end
+
+        if @ai_mcp_server.update(update_params)
           log_ai_mcp_server_update(@ai_mcp_server, initial_attributes)
           render json: AiMcpServerSerializer.new(@ai_mcp_server)
         else
@@ -87,9 +93,19 @@ module DiscourseAi
         ai_mcp_server =
           DiscourseAi::Mcp::OAuthFlow.complete!(params: params, current_user: current_user)
         redirect_to ai_mcp_server.admin_edit_url
-      rescue StandardError => e
-        Rails.logger.warn("Discourse AI MCP OAuth callback failed: #{e.message}")
-        redirect_to "/admin/plugins/discourse-ai/ai-tools"
+      rescue DiscourseAi::Mcp::OAuthFlow::OAuthError => e
+        Rails.logger.warn(
+          "Discourse AI MCP OAuth callback failed: #{e.message} (#{e.cause&.class}: #{e.cause&.message})",
+        )
+        if e.server.present?
+          redirect_to e.server.admin_edit_url
+        else
+          flash[:error] = I18n.t(
+            "discourse_ai.mcp_servers.errors.oauth_callback_failed",
+            message: e.message,
+          )
+          redirect_to "/admin/plugins/discourse-ai/ai-tools"
+        end
       end
 
       def oauth_disconnect
@@ -103,11 +119,9 @@ module DiscourseAi
         persisted_server = params[:id].present? ? AiMcpServer.find(params[:id]) : nil
         ai_mcp_server = persisted_server || AiMcpServer.new
         ai_mcp_server.assign_attributes(ai_mcp_server_params)
+        restore_dynamic_oauth_credentials!(ai_mcp_server, persisted_server)
 
         return render_json_error ai_mcp_server if !ai_mcp_server.valid?
-        if oauth_reauthorization_required_for_test?(ai_mcp_server)
-          ai_mcp_server = sanitized_oauth_test_server(ai_mcp_server)
-        end
 
         if ai_mcp_server.oauth? && persisted_server.blank?
           return(
@@ -116,6 +130,20 @@ module DiscourseAi
               status: 400,
             )
           )
+        end
+
+        # For connected OAuth servers, use the persisted record directly so
+        # the token association is intact. Form params may dirty fields
+        # (e.g. "" vs nil) causing false reauth detection.
+        # However, if OAuth-relevant fields changed, build an ephemeral server
+        # without stale tokens so the new configuration is tested cleanly.
+        if persisted_server&.oauth? && persisted_server.oauth_status == "connected"
+          if (ai_mcp_server.changes.keys & AiMcpServer::OAUTH_REAUTH_TRIGGER_FIELDS).any?
+            ai_mcp_server = AiMcpServer.new(ai_mcp_server_params)
+            restore_dynamic_oauth_credentials!(ai_mcp_server, persisted_server)
+          else
+            ai_mcp_server = persisted_server.reload
+          end
         end
 
         client = DiscourseAi::Mcp::Client.new(ai_mcp_server)
@@ -250,21 +278,13 @@ module DiscourseAi
         logger.log_deletion("mcp_server", details)
       end
 
-      def oauth_reauthorization_required_for_test?(ai_mcp_server)
-        return false if !ai_mcp_server.oauth? || !ai_mcp_server.persisted?
+      def restore_dynamic_oauth_credentials!(ai_mcp_server, persisted_server)
+        return if persisted_server.blank? || !ai_mcp_server.oauth?
+        return if ai_mcp_server.oauth_client_registration == "manual"
 
-        (ai_mcp_server.changes_to_save.keys & AiMcpServer::OAUTH_REAUTH_TRIGGER_FIELDS).present?
-      end
-
-      def sanitized_oauth_test_server(ai_mcp_server)
-        ai_mcp_server.dup.tap do |server|
-          server.oauth_status = "disconnected"
-          server.oauth_access_token_expires_at = nil
-          server.oauth_token_type = nil
-          server.oauth_last_error = nil
-          server.oauth_last_authorized_at = nil
-          server.oauth_last_refreshed_at = nil
-        end
+        ai_mcp_server.oauth_client_id = persisted_server.oauth_client_id
+        ai_mcp_server.oauth_client_secret_ai_secret_id =
+          persisted_server.oauth_client_secret_ai_secret_id
       end
     end
   end

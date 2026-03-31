@@ -285,7 +285,7 @@ module UpcomingChanges
   # to save time in other places in the codebase when we have to figure out
   # when an upcoming change moved to its current status.
   #
-  # This cache is automatically cleared when UpcomingChanges::Action::TrackStatusChanges
+  # This cache is automatically cleared when UpcomingChanges::Action::TrackNotifyStatusChanges
   # is called, since that adds new UpcomingChangeEvent records.
   def self.current_statuses
     Discourse
@@ -332,5 +332,14 @@ module UpcomingChanges
           },
         )&.upcoming_changes
       end
+  end
+
+  # No point in notifying admins on brand new sites, the upcoming change system
+  # is more about notifying admins of changes to established sites.
+  #
+  # Of course we don't care about this in development, we need to test notifications,
+  # and we can stub this method in rspec.
+  def self.should_notify_admins?
+    Migration::Helpers.existing_site? || Rails.env.development?
   end
 end

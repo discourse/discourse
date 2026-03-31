@@ -200,7 +200,7 @@ class ExternalUploadManager
   end
 
   def download(key, type)
-    url = @store.signed_url_for_path(external_upload_stub.key)
+    url = @store.signed_url_for_path(external_upload_stub.key, include_content_disposition: false)
     uri = URI(url)
     FileHelper.download(
       url,

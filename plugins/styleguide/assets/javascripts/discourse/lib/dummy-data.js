@@ -120,10 +120,6 @@ export function createData(store) {
     can_delete: false,
     can_close_topic: false,
   });
-  topic.setProperties({
-    category_id: categories[0].id,
-    suggested_topics: [topic, topic, topic],
-  });
 
   let invisibleTopic = createTopic({ visible: false });
   let closedTopic = createTopic({ closed: true });
@@ -135,9 +131,77 @@ export function createData(store) {
   pinnedTopic.set("category_id", categories[2].id);
   let unpinnedTopic = createTopic({ unpinned: true });
   let warningTopic = createTopic({ is_warning: true });
+
+  topic.setProperties({
+    category_id: categories[0].id,
+    suggested_topics: [
+      {
+        id: 200001,
+        title: "Suggested Topic 1",
+        fancy_title: "Suggested Topic 1",
+        slug: "suggested-1",
+        posts_count: 5,
+        views: 100,
+        like_count: 2,
+        created_at: "2017-03-01T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200002,
+        title: "Suggested Topic 2",
+        fancy_title: "Suggested Topic 2",
+        slug: "suggested-2",
+        posts_count: 3,
+        views: 50,
+        like_count: 1,
+        created_at: "2017-03-02T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200003,
+        title: "Suggested Topic 3",
+        fancy_title: "Suggested Topic 3",
+        slug: "suggested-3",
+        posts_count: 7,
+        views: 200,
+        like_count: 4,
+        created_at: "2017-03-03T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+    ],
+  });
+
   let pmTopic = createTopic({
     archetype: "private_message",
-    related_messages: [topic, topic],
+    related_messages: [
+      {
+        id: 200004,
+        title: "Related Message 1",
+        fancy_title: "Related Message 1",
+        slug: "related-1",
+        posts_count: 2,
+        views: 30,
+        like_count: 0,
+        created_at: "2017-03-04T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200005,
+        title: "Related Message 2",
+        fancy_title: "Related Message 2",
+        slug: "related-2",
+        posts_count: 4,
+        views: 60,
+        like_count: 1,
+        created_at: "2017-03-05T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+    ],
   });
 
   const bunchOfTopics = [

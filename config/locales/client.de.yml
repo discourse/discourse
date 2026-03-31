@@ -450,7 +450,6 @@ de:
       pm_title: "Vorgeschlagene Nachrichten"
     admin_onboarding_banner:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
-      skipped: "Die Checkliste für das Onboarding von Administratoren wurde übersprungen. Um sie wieder zu aktivieren, suche in den Website-Einstellungen nach „enable site owner onboarding“."
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       invite_collaborators:
         title: "Mitwirkende einladen"
@@ -459,6 +458,7 @@ de:
       start_posting:
         title: "Beginne mit dem Erstellen von Beiträgen"
         description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
+        action: "Ideen ansehen"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
         predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
@@ -661,6 +661,7 @@ de:
       storage_access_prompt: "Hast du bereits ein Konto bei %{site_name}? Erlaube den Zugriff auf deine Sitzung, um als angemeldeter Benutzer zu kommentieren."
       allow_access: "Zugriff erlauben"
       continue_as_guest: "Als Gast fortfahren"
+      be_first_to_reply: "Schreib die erste Antwort!"
     topic_count_all:
       one: "Zeige %{count} neues Thema"
       other: "Zeige %{count} neue Themen"
@@ -4361,6 +4362,8 @@ de:
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
       localization:
+        language: "Sprache der Kategorie"
+        language_description: "Die Hauptsprache für den Namen und die Beschreibung dieser Kategorie."
         locale: "Sprachvariante"
         name: "Name"
         description: "Beschreibung"
@@ -7060,6 +7063,7 @@ de:
           dark_color_scheme: "Dunkle Farbpalette"
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme."
+          only_theme_color_schemes: "Dieses Theme schränkt die verwendbaren Farbpaletten ein."
           dark_color_scheme_select: "Wähle Farben im dunklen Modus für dieses Theme."
           edit_colors: "Farben bearbeiten"
           custom_sections: "Benutzerdefinierte Abschnitte:"
@@ -7120,7 +7124,7 @@ de:
           import_web_tip: "Repository mit dem Theme"
           direct_install_tip: "Möchtest du wirklich <strong>%{name}</strong> aus dem unten aufgeführten Repository installieren?"
           import_web_advanced: "Erweitert …"
-          import_file_tip: ".tar.gz-, .zip- oder .dcstyle.json-Datei, die ein Theme enthält"
+          import_file_tip: ".tar.gz- oder .zip-Datei, die das Theme enthält"
           is_private: "Theme ist in einem privaten Git-Repository"
           finish_install: "Theme-Installation beenden"
           last_attempt: "Der Installationsvorgang wurde nicht abgeschlossen, letzter Versuch:"

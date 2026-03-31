@@ -14,11 +14,11 @@ export default class SecondFactorConfirmPhrase extends Component {
 
   @action
   onConfirmPhraseInput(event) {
-    if (event.target.value === this.disabledString) {
-      this.dialog.set("confirmButtonDisabled", false);
-    } else {
-      this.dialog.set("confirmButtonDisabled", true);
-    }
+    this.dialog.set(
+      "confirmButtonDisabled",
+      event.target.value.toLocaleLowerCase() !==
+        this.disabledString.toLocaleLowerCase()
+    );
   }
 
   <template>

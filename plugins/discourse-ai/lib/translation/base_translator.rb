@@ -28,7 +28,7 @@ module DiscourseAi
 
         ContentSplitter
           .split(content: @text, chunk_size: model.max_output_tokens)
-          .map { |text| get_translation(text:, bot:, translation_user:) }
+          .map { |text| get_translation(text:, bot:, translation_user:, model:) }
           .join("")
       end
 
@@ -38,7 +38,7 @@ module DiscourseAi
         { content:, target_locale: @target_locale }.to_json
       end
 
-      def get_translation(text:, bot:, translation_user:)
+      def get_translation(text:, bot:, translation_user:, model:)
         context =
           DiscourseAi::Agents::BotContext.new(
             user: translation_user,
@@ -48,30 +48,11 @@ module DiscourseAi
             topic: @topic,
             post: @post,
           )
-        max_tokens = get_max_tokens(text)
-        llm_args = { max_tokens: }
+        llm_args = { max_tokens: model.max_output_tokens }
 
         result = +""
         bot.reply(context, llm_args:) { |partial| result << partial }
         result
-      end
-
-      def get_max_tokens(text)
-        base_tokens =
-          if text.length < 100
-            500
-          elsif text.length < 500
-            1000
-          else
-            text.length * 2
-          end
-
-        (base_tokens * max_token_multiplier).to_i
-      end
-
-      def max_token_multiplier
-        multiplier = SiteSetting.ai_translation_max_tokens_multiplier
-        multiplier > 0 ? multiplier : 1.0
       end
 
       def agent_setting

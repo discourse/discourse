@@ -20,6 +20,13 @@ class Admin::SearchController < Admin::AdminController
           themes_and_components:
             serialize_data(Theme.include_relations.order(:name), BasicThemeSerializer),
           reports: Reports::ListQuery.call(admin: current_user.admin?),
+          upcoming_changes:
+            UpcomingChanges::List.call(
+              guardian: current_user.guardian,
+              options: {
+                filter_statuses: %w[experimental alpha beta stable],
+              },
+            ).upcoming_changes,
         )
       end
 

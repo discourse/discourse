@@ -289,6 +289,11 @@ de:
         unknown_error: "Die angeforderte Anmeldedaten konnten nicht ermittelt werden."
     mcp_servers:
       secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
+      errors:
+        oauth_callback_failed: "OAuth-Verbindung fehlgeschlagen: %{message}"
+        oauth_registration_endpoint_missing: "Der OAuth-Autorisierungsserver bietet keinen Registrierungsendpunkt an."
+        oauth_client_registration_failed: "Die dynamische Client-Registrierung ist mit dem Status „%{status}“ fehlgeschlagen."
+        oauth_client_registration_failed_no_id: "Die dynamische Client-Registrierung war erfolgreich, aber es wurde keine „client_id“ zurückgegeben."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."

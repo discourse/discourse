@@ -22,6 +22,7 @@ export default class AiMcpServerEditorForm extends Component {
   @tracked isDisconnecting = false;
   @tracked testResult = null;
   @tracked formData = {};
+  @tracked showOauthDetails = false;
 
   constructor() {
     super(...arguments);
@@ -228,6 +229,11 @@ export default class AiMcpServerEditorForm extends Component {
   }
 
   @action
+  toggleOauthDetails() {
+    this.showOauthDetails = !this.showOauthDetails;
+  }
+
+  @action
   delete() {
     return this.dialog.confirm({
       message: i18n("discourse_ai.mcp_servers.confirm_delete"),
@@ -413,87 +419,6 @@ export default class AiMcpServerEditorForm extends Component {
               </span>
             </div>
 
-            {{#if @model.oauth_client_metadata_url}}
-              <div class="ai-mcp-server-editor__oauth-row">
-                <span class="ai-mcp-server-editor__oauth-label">
-                  {{i18n "discourse_ai.mcp_servers.oauth_client_metadata_url"}}
-                </span>
-                <code class="ai-mcp-server-editor__oauth-value">
-                  {{@model.oauth_client_metadata_url}}
-                </code>
-              </div>
-            {{/if}}
-
-            {{#if @model.oauth_granted_scopes}}
-              <div class="ai-mcp-server-editor__oauth-row">
-                <span class="ai-mcp-server-editor__oauth-label">
-                  {{i18n "discourse_ai.mcp_servers.oauth_granted_scopes"}}
-                </span>
-                <span class="ai-mcp-server-editor__oauth-value">
-                  {{@model.oauth_granted_scopes}}
-                </span>
-              </div>
-            {{/if}}
-
-            {{#if @model.oauth_access_token_expires_at}}
-              <div class="ai-mcp-server-editor__oauth-row">
-                <span class="ai-mcp-server-editor__oauth-label">
-                  {{i18n
-                    "discourse_ai.mcp_servers.oauth_access_token_expires_at"
-                  }}
-                </span>
-                <span class="ai-mcp-server-editor__oauth-value">
-                  {{@model.oauth_access_token_expires_at}}
-                </span>
-              </div>
-            {{/if}}
-
-            {{#if @model.oauth_issuer}}
-              <div class="ai-mcp-server-editor__oauth-row">
-                <span class="ai-mcp-server-editor__oauth-label">
-                  {{i18n "discourse_ai.mcp_servers.oauth_issuer"}}
-                </span>
-                <span class="ai-mcp-server-editor__oauth-value">
-                  {{@model.oauth_issuer}}
-                </span>
-              </div>
-            {{/if}}
-
-            {{#if @model.oauth_authorization_endpoint}}
-              <div class="ai-mcp-server-editor__oauth-row">
-                <span class="ai-mcp-server-editor__oauth-label">
-                  {{i18n
-                    "discourse_ai.mcp_servers.oauth_authorization_endpoint"
-                  }}
-                </span>
-                <code class="ai-mcp-server-editor__oauth-value">
-                  {{@model.oauth_authorization_endpoint}}
-                </code>
-              </div>
-            {{/if}}
-
-            {{#if @model.oauth_token_endpoint}}
-              <div class="ai-mcp-server-editor__oauth-row">
-                <span class="ai-mcp-server-editor__oauth-label">
-                  {{i18n "discourse_ai.mcp_servers.oauth_token_endpoint"}}
-                </span>
-                <code class="ai-mcp-server-editor__oauth-value">
-                  {{@model.oauth_token_endpoint}}
-                </code>
-              </div>
-            {{/if}}
-
-            {{#if @model.oauth_revocation_endpoint}}
-              <div class="ai-mcp-server-editor__oauth-row">
-                <span class="ai-mcp-server-editor__oauth-label">
-                  {{i18n "discourse_ai.mcp_servers.oauth_revocation_endpoint"}}
-                </span>
-                <code class="ai-mcp-server-editor__oauth-value">
-                  {{@model.oauth_revocation_endpoint}}
-                </code>
-              </div>
-            {{/if}}
-
             {{#if @model.oauth_last_error}}
               <div class="ai-mcp-server-editor__oauth-row">
                 <span class="ai-mcp-server-editor__oauth-label">
@@ -504,6 +429,103 @@ export default class AiMcpServerEditorForm extends Component {
                 </span>
               </div>
             {{/if}}
+
+            {{#if this.showOauthDetails}}
+              {{#if @model.oauth_client_metadata_url}}
+                <div class="ai-mcp-server-editor__oauth-row">
+                  <span class="ai-mcp-server-editor__oauth-label">
+                    {{i18n
+                      "discourse_ai.mcp_servers.oauth_client_metadata_url"
+                    }}
+                  </span>
+                  <code class="ai-mcp-server-editor__oauth-value">
+                    {{@model.oauth_client_metadata_url}}
+                  </code>
+                </div>
+              {{/if}}
+
+              {{#if @model.oauth_granted_scopes}}
+                <div class="ai-mcp-server-editor__oauth-row">
+                  <span class="ai-mcp-server-editor__oauth-label">
+                    {{i18n "discourse_ai.mcp_servers.oauth_granted_scopes"}}
+                  </span>
+                  <span class="ai-mcp-server-editor__oauth-value">
+                    {{@model.oauth_granted_scopes}}
+                  </span>
+                </div>
+              {{/if}}
+
+              {{#if @model.oauth_access_token_expires_at}}
+                <div class="ai-mcp-server-editor__oauth-row">
+                  <span class="ai-mcp-server-editor__oauth-label">
+                    {{i18n
+                      "discourse_ai.mcp_servers.oauth_access_token_expires_at"
+                    }}
+                  </span>
+                  <span class="ai-mcp-server-editor__oauth-value">
+                    {{@model.oauth_access_token_expires_at}}
+                  </span>
+                </div>
+              {{/if}}
+
+              {{#if @model.oauth_issuer}}
+                <div class="ai-mcp-server-editor__oauth-row">
+                  <span class="ai-mcp-server-editor__oauth-label">
+                    {{i18n "discourse_ai.mcp_servers.oauth_issuer"}}
+                  </span>
+                  <span class="ai-mcp-server-editor__oauth-value">
+                    {{@model.oauth_issuer}}
+                  </span>
+                </div>
+              {{/if}}
+
+              {{#if @model.oauth_authorization_endpoint}}
+                <div class="ai-mcp-server-editor__oauth-row">
+                  <span class="ai-mcp-server-editor__oauth-label">
+                    {{i18n
+                      "discourse_ai.mcp_servers.oauth_authorization_endpoint"
+                    }}
+                  </span>
+                  <code class="ai-mcp-server-editor__oauth-value">
+                    {{@model.oauth_authorization_endpoint}}
+                  </code>
+                </div>
+              {{/if}}
+
+              {{#if @model.oauth_token_endpoint}}
+                <div class="ai-mcp-server-editor__oauth-row">
+                  <span class="ai-mcp-server-editor__oauth-label">
+                    {{i18n "discourse_ai.mcp_servers.oauth_token_endpoint"}}
+                  </span>
+                  <code class="ai-mcp-server-editor__oauth-value">
+                    {{@model.oauth_token_endpoint}}
+                  </code>
+                </div>
+              {{/if}}
+
+              {{#if @model.oauth_revocation_endpoint}}
+                <div class="ai-mcp-server-editor__oauth-row">
+                  <span class="ai-mcp-server-editor__oauth-label">
+                    {{i18n
+                      "discourse_ai.mcp_servers.oauth_revocation_endpoint"
+                    }}
+                  </span>
+                  <code class="ai-mcp-server-editor__oauth-value">
+                    {{@model.oauth_revocation_endpoint}}
+                  </code>
+                </div>
+              {{/if}}
+            {{/if}}
+
+            <form.Button
+              @action={{this.toggleOauthDetails}}
+              @label={{if
+                this.showOauthDetails
+                "discourse_ai.mcp_servers.oauth_hide_details"
+                "discourse_ai.mcp_servers.oauth_show_details"
+              }}
+              class="btn-flat btn-small ai-mcp-server-editor__oauth-details-toggle"
+            />
           </div>
         {{/unless}}
       {{/if}}
