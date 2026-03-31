@@ -73,7 +73,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.has_tests?
-    File.exist?("#{dist_dir}/tests/index.html")
+    script_chunks["tests/test-entrypoint"].present?
   end
 
   def self.cache

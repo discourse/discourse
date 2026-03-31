@@ -1,4 +1,6 @@
 import { ember } from "@embroider/vite";
+import * as fs from "fs";
+import path from "path";
 import { defineConfig } from "vite";
 import customProxy from "../custom-proxy";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
@@ -19,7 +21,7 @@ writeResolverConfig(
   }
 );
 
-const BUNDLED_DEV = false;
+const BUNDLED_DEV = true;
 
 export default defineConfig(({ mode }) => {
   const aliases = [
@@ -80,6 +82,44 @@ export default defineConfig(({ mode }) => {
             source.startsWith("/bootstrap/")
           ) {
             return { external: true, id: source };
+          }
+        },
+      },
+      {
+        name: "bundle-manifest",
+        generateBundle(_outputOptions, bundle) {
+          const manifest = {};
+
+          for (const [fileName, chunk] of Object.entries(bundle)) {
+            if (chunk.type === "chunk") {
+              manifest[`${chunk.name}.js`] = {
+                file: fileName,
+                name: chunk.name,
+                isEntry: chunk.isEntry,
+                isDynamicEntry: chunk.isDynamicEntry,
+                imports: chunk.imports,
+              };
+            }
+          }
+
+          this.emitFile({
+            type: "asset",
+            fileName: "manifest.json",
+            source: JSON.stringify(manifest, null, 2),
+          });
+        },
+      },
+      {
+        name: "write-incremental-build-to-disk",
+        generateBundle(outputOptions, bundle) {
+          console.log("Generating bundle incremental build to disk...", bundle);
+          // delete contents of dist/ directory
+          fs.rmSync("dist", { recursive: true, force: true });
+          // write bundle to dist/ directory
+          for (const [fileName, chunkInfo] of Object.entries(bundle)) {
+            const filePath = path.join("dist", fileName);
+            fs.mkdirSync(path.dirname(filePath), { recursive: true });
+            fs.writeFileSync(filePath, chunkInfo.code || chunkInfo.source);
           }
         },
       },
