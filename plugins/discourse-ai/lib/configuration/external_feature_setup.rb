@@ -18,7 +18,7 @@ module DiscourseAi
           agent_id = feature_config[:agent_id]
           klass = config[:klass]
 
-          # register agent class and tools
+          # register agent class and tools for runtime discovery
           DiscourseAi::Agents::Agent.register_system_agent(klass, agent_id)
           klass.new.tools.each do |tool_klass|
             tool_name = tool_klass.to_s.split("::").last
@@ -27,7 +27,7 @@ module DiscourseAi
             DiscourseAi::Agents::Agent.register_tool(tool_name, tool_klass)
           end
 
-          # create site settings
+          # create agent picker site setting
           area = "ai-features/#{config[:module_name]}"
           setting_name = :"#{config[:module_name]}_#{config[:feature]}_agent"
           next if SiteSetting.respond_to?(setting_name)
@@ -47,6 +47,10 @@ module DiscourseAi
             enum: "DiscourseAi::Configuration::AgentEnumerator",
             area: area,
             client: false,
+          )
+        rescue => e
+          Rails.logger.warn(
+            "Failed to set up AI feature #{config[:module_name]}/#{config[:feature]}: #{e.message}",
           )
         end
       end
