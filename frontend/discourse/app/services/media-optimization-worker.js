@@ -6,6 +6,10 @@ import { fileToImageData } from "discourse/lib/media-optimization-utils";
 
 const WORKER_INSTALL_TIMEOUT_MS = 3000;
 
+const CONVERT_FORMAT_REGEX = /(\.|\/)(jxl|hei[cf])$/i;
+const ANIMATED_GIF_REGEX = /(\.|\/)(gif)$/i;
+const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
+
 /**
  * This worker follows a particular promise/callback flow to ensure
  * that the media-optimization-worker is installed and has its libraries
@@ -43,20 +47,49 @@ export default class MediaOptimizationWorkerService extends Service {
       : true;
 
     let file = data;
-    if (!/(\.|\/)(jpe?g|png)$/i.test(file.type)) {
+    const typeOrName = file.type || file.name;
+
+    const isConvertFormat = CONVERT_FORMAT_REGEX.test(typeOrName);
+    const isAnimatedGif = ANIMATED_GIF_REGEX.test(typeOrName);
+    const isOptimizable = OPTIMIZABLE_REGEX.test(typeOrName);
+
+    if (!isConvertFormat && !isAnimatedGif && !isOptimizable) {
       return Promise.resolve();
     }
+
+    // JXL/HEIC/GIF conversion is gated behind a separate site setting
     if (
-      file.size <
-      this.siteSettings
-        .composer_media_optimization_image_bytes_optimization_threshold
+      (isConvertFormat || isAnimatedGif) &&
+      !this.siteSettings.composer_media_optimization_image_convert_enabled
     ) {
-      this.logIfDebug(
-        `The file ${file.name} was less than the image optimization bytes threshold (${this.siteSettings.composer_media_optimization_image_bytes_optimization_threshold} bytes), skipping`,
-        file
-      );
       return Promise.resolve();
     }
+
+    if (isOptimizable) {
+      if (
+        file.size <
+        this.siteSettings
+          .composer_media_optimization_image_bytes_optimization_threshold
+      ) {
+        this.logIfDebug(
+          `The file ${file.name} was less than the image optimization bytes threshold (${this.siteSettings.composer_media_optimization_image_bytes_optimization_threshold} bytes), skipping`,
+          file
+        );
+        return Promise.resolve();
+      }
+    } else if (isAnimatedGif) {
+      if (
+        file.size <
+        this.siteSettings.composer_media_optimization_gif_conversion_threshold
+      ) {
+        this.logIfDebug(
+          `The GIF ${file.name} was less than the GIF conversion threshold (${this.siteSettings.composer_media_optimization_gif_conversion_threshold} bytes), skipping`,
+          file
+        );
+        return Promise.resolve();
+      }
+    }
+
     await this.ensureAvailableWorker();
 
     // eslint-disable-next-line no-async-promise-executor
@@ -66,49 +99,92 @@ export default class MediaOptimizationWorkerService extends Service {
       this.currentComposerUploadData = data;
       this.promiseResolvers[file.id] = resolve;
 
-      let imageData;
-      try {
-        imageData = await fileToImageData(file.data, this.capabilities.isIOS);
-      } catch (error) {
-        this.logIfDebug(error);
-        return resolve();
+      const settings = {
+        resize_threshold:
+          this.siteSettings
+            .composer_media_optimization_image_resize_dimensions_threshold,
+        resize_target:
+          this.siteSettings
+            .composer_media_optimization_image_resize_width_target,
+        resize_pre_multiply:
+          this.siteSettings
+            .composer_media_optimization_image_resize_pre_multiply,
+        resize_linear_rgb:
+          this.siteSettings.composer_media_optimization_image_resize_linear_rgb,
+        encode_quality:
+          this.siteSettings.composer_media_optimization_image_encode_quality !==
+          0
+            ? this.siteSettings.composer_media_optimization_image_encode_quality
+            : this.siteSettings.image_quality,
+        debug_mode: this.siteSettings.composer_media_optimization_debug_mode,
+        mediaOptimizationBundle: this.session.mediaOptimizationBundle,
+      };
+
+      if (isConvertFormat) {
+        let arrayBuffer;
+        try {
+          arrayBuffer = await file.data.arrayBuffer();
+        } catch (error) {
+          this.logIfDebug(error);
+          return resolve();
+        }
+
+        this.worker.postMessage(
+          {
+            type: "convert",
+            fileId: file.id,
+            file: arrayBuffer,
+            fileName: file.name,
+            fileType: file.type || file.data.type,
+            originalFileSize: file.size,
+            settings,
+          },
+          [arrayBuffer]
+        );
+      } else if (isAnimatedGif) {
+        let arrayBuffer;
+        try {
+          arrayBuffer = await file.data.arrayBuffer();
+        } catch (error) {
+          this.logIfDebug(error);
+          return resolve();
+        }
+
+        this.worker.postMessage(
+          {
+            type: "convertAnimated",
+            fileId: file.id,
+            file: arrayBuffer,
+            fileName: file.name,
+            originalFileSize: file.size,
+            settings,
+          },
+          [arrayBuffer]
+        );
+      } else {
+        let imageData;
+        try {
+          imageData = await fileToImageData(file.data, this.capabilities.isIOS);
+        } catch (error) {
+          this.logIfDebug(error);
+          return resolve();
+        }
+
+        this.worker.postMessage(
+          {
+            type: "compress",
+            fileId: file.id,
+            file: imageData.data.buffer,
+            fileName: file.name,
+            width: imageData.width,
+            height: imageData.height,
+            originalFileSize: file.size,
+            settings,
+          },
+          [imageData.data.buffer]
+        );
       }
 
-      this.worker.postMessage(
-        {
-          type: "compress",
-          fileId: file.id,
-          file: imageData.data.buffer,
-          fileName: file.name,
-          width: imageData.width,
-          height: imageData.height,
-          originalFileSize: file.size,
-          settings: {
-            resize_threshold:
-              this.siteSettings
-                .composer_media_optimization_image_resize_dimensions_threshold,
-            resize_target:
-              this.siteSettings
-                .composer_media_optimization_image_resize_width_target,
-            resize_pre_multiply:
-              this.siteSettings
-                .composer_media_optimization_image_resize_pre_multiply,
-            resize_linear_rgb:
-              this.siteSettings
-                .composer_media_optimization_image_resize_linear_rgb,
-            encode_quality:
-              this.siteSettings
-                .composer_media_optimization_image_encode_quality !== 0
-                ? this.siteSettings
-                    .composer_media_optimization_image_encode_quality
-                : this.siteSettings.image_quality,
-            debug_mode:
-              this.siteSettings.composer_media_optimization_debug_mode,
-            mediaOptimizationBundle: this.session.mediaOptimizationBundle,
-          },
-        },
-        [imageData.data.buffer]
-      );
       this.workerPendingCount++;
     });
   }
@@ -179,15 +255,32 @@ export default class MediaOptimizationWorkerService extends Service {
     this.workerPendingCount = 0;
   }
 
+  _renameForOutputType(fileName, outputType) {
+    const baseName = fileName.replace(/\.[^.]+$/, "");
+    switch (outputType) {
+      case "image/jpeg":
+        return baseName + ".jpg";
+      case "image/webp":
+        return baseName + ".webp";
+      default:
+        return fileName;
+    }
+  }
+
   registerMessageHandler() {
     this.worker.onmessage = (workerMessage) => {
       switch (workerMessage.data.type) {
         case "file":
+          const outputType = workerMessage.data.outputType || "image/jpeg";
+          const outputFileName = this._renameForOutputType(
+            workerMessage.data.fileName,
+            outputType
+          );
           const optimizedFile = new File(
             [workerMessage.data.file],
-            workerMessage.data.fileName,
+            outputFileName,
             {
-              type: "image/jpeg",
+              type: outputType,
             }
           );
           this.logIfDebug(
@@ -214,6 +307,15 @@ export default class MediaOptimizationWorkerService extends Service {
           }
 
           this.promiseResolvers[workerMessage.data.fileId]();
+          this.workerPendingCount--;
+          break;
+        case "skipped":
+          this.logIfDebug(
+            `Conversion skipped for ${workerMessage.data.fileName} (output not smaller than original)`
+          );
+
+          this.promiseResolvers[workerMessage.data.fileId]();
+          this.workerDoneCount++;
           this.workerPendingCount--;
           break;
         case "installed":

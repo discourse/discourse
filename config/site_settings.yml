@@ -2249,7 +2249,7 @@ files:
     list_type: file_types
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg"
+    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg|jxl"
     refresh: true
     type: list
     list_type: file_types
@@ -2518,6 +2518,13 @@ files:
     default: 0
     client: true
     hidden: true
+  composer_media_optimization_image_convert_enabled:
+    default: false
+    client: true
+  composer_media_optimization_gif_conversion_threshold:
+    default: 512000
+    hidden: true
+    client: true
   composer_media_optimization_debug_mode:
     default: false
     client: true

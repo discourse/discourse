@@ -31,6 +31,75 @@ onmessage = async function (e) {
         });
       }
       break;
+    case "convert":
+      try {
+        globalThis.debugMode = e.data.settings.debug_mode;
+
+        let converted = await globalThis.convert(
+          e.data.file,
+          e.data.fileName,
+          e.data.fileType,
+          e.data.originalFileSize,
+          e.data.settings
+        );
+        postMessage(
+          {
+            type: "file",
+            file: converted.data,
+            fileName: e.data.fileName,
+            fileId: e.data.fileId,
+            outputType: converted.outputType,
+          },
+          [converted.data]
+        );
+      } catch (error) {
+        console.error(error);
+        postMessage({
+          type: "error",
+          file: e.data.file,
+          fileName: e.data.fileName,
+          fileId: e.data.fileId,
+        });
+      }
+      break;
+    case "convertAnimated":
+      try {
+        globalThis.debugMode = e.data.settings.debug_mode;
+
+        let animatedResult = await globalThis.convertAnimated(
+          e.data.file,
+          e.data.fileName,
+          e.data.originalFileSize,
+          e.data.settings
+        );
+        if (animatedResult) {
+          postMessage(
+            {
+              type: "file",
+              file: animatedResult.data,
+              fileName: e.data.fileName,
+              fileId: e.data.fileId,
+              outputType: animatedResult.outputType,
+            },
+            [animatedResult.data]
+          );
+        } else {
+          postMessage({
+            type: "skipped",
+            fileName: e.data.fileName,
+            fileId: e.data.fileId,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        postMessage({
+          type: "error",
+          file: e.data.file,
+          fileName: e.data.fileName,
+          fileId: e.data.fileId,
+        });
+      }
+      break;
     case "install":
       try {
         globalThis.document = {}; // webpack expects this to exist
