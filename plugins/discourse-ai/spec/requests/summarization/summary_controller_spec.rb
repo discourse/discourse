@@ -6,6 +6,18 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
     fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
 
+    def create_cached_summary(topic)
+      strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic)
+      content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
+
+      Fabricate(
+        :ai_summary,
+        target: topic,
+        original_content_sha: content_sha,
+        highest_target_number: topic.highest_post_number,
+      )
+    end
+
     before do
       enable_current_plugin
       assign_fake_provider_to(:ai_default_llm_model)
@@ -14,7 +26,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
 
     context "when streaming" do
       it "return a cached summary with json payload and does not trigger job if it exists" do
-        summary = Fabricate(:ai_summary, target: topic)
+        summary = create_cached_summary(topic)
         sign_in(Fabricate(:admin))
 
         get "/discourse-ai/summarization/t/#{topic.id}.json?stream=true"
@@ -36,8 +48,8 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response.status).to eq(404)
       end
 
-      it "returns a cached summary" do
-        summary = Fabricate(:ai_summary, target: topic)
+      it "returns a fresh cached summary" do
+        summary = create_cached_summary(topic)
         get "/discourse-ai/summarization/t/#{topic.id}.json"
 
         expect(response.status).to eq(200)
@@ -46,6 +58,16 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response_summary.dig("ai_topic_summary", "summarized_text")).to eq(
           summary.summarized_text,
         )
+      end
+
+      it "returns a 404 for outdated cached summaries" do
+        create_cached_summary(topic)
+        Fabricate(:post, topic: topic, post_number: 3)
+        topic.update!(highest_post_number: 3)
+
+        get "/discourse-ai/summarization/t/#{topic.id}.json"
+
+        expect(response.status).to eq(404)
       end
     end
 
@@ -118,8 +140,8 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response.status).to eq(404)
       end
 
-      it "returns a cached summary" do
-        summary = Fabricate(:ai_summary, target: topic)
+      it "returns a fresh cached summary" do
+        summary = create_cached_summary(topic)
 
         get "/discourse-ai/summarization/t/#{topic.id}.json"
 
@@ -129,6 +151,16 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response_summary.dig("ai_topic_summary", "summarized_text")).to eq(
           summary.summarized_text,
         )
+      end
+
+      it "returns a 404 for outdated cached summaries" do
+        create_cached_summary(topic)
+        Fabricate(:post, topic: topic, post_number: 3)
+        topic.update!(highest_post_number: 3)
+
+        get "/discourse-ai/summarization/t/#{topic.id}.json"
+
+        expect(response.status).to eq(404)
       end
     end
   end
