@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -9,7 +9,7 @@ import LoadMore from "discourse/components/load-more";
 import TopicMap from "discourse/components/topic-map";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
-import { gt } from "discourse/truth-helpers";
+import { gt, includes } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import NestedFloatingActions from "./nested-floating-actions";
 import NestedOp from "./nested-op";
@@ -25,23 +25,6 @@ export default class NestedView extends Component {
   @tracked cloakAbove = 0;
   @tracked cloakBelow = 0;
   viewportTracker = new PostStreamViewportTracker();
-
-  // Core's TopicMap requires a @postStream arg for flat-view features
-  // (filtering by participant, "Top Replies" toggle). The nested view has
-  // no PostStream, so we supply a stub that satisfies the interface with
-  // safe no-ops. The "Top Replies" button is hidden via CSS.
-  postStreamStub = {
-    summary: false,
-    loadingFilter: false,
-    userFilters: [],
-    showTopReplies() {},
-    cancelFilter() {},
-    refresh() {},
-  };
-
-  isPinned = (post) => {
-    return this.args.pinnedPostIds?.includes(post.id);
-  };
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -97,7 +80,6 @@ export default class NestedView extends Component {
         <TopicMap
           @model={{@topic}}
           @topicDetails={{@topic.details}}
-          @postStream={{this.postStreamStub}}
           @showPMMap={{@topic.isPrivateMessage}}
         />
       </div>
@@ -132,7 +114,7 @@ export default class NestedView extends Component {
             @topic={{@topic}}
             @depth={{0}}
             @sort={{@sort}}
-            @isPinned={{this.isPinned node.post}}
+            @isPinned={{includes @pinnedPostIds (get node.post "id")}}
             @replyToPost={{@replyToPost}}
             @editPost={{@editPost}}
             @deletePost={{@deletePost}}

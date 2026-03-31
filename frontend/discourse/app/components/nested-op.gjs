@@ -22,47 +22,6 @@ export default class NestedOp extends Component {
   @service modal;
   @service site;
 
-  <template>
-    {{#if @post}}
-      <div class="nested-view__op">
-        <article
-          class="nested-view__op-article boxed"
-          data-post-id={{@post.id}}
-          data-post-number={{@post.post_number}}
-          {{@registerPost @post}}
-        >
-          <div class="nested-view__op-row">
-            <PostAvatar @post={{@post}} />
-            <div class="nested-view__op-body">
-              <PostMetaData
-                @post={{@post}}
-                @editPost={{fn @editPost @post}}
-                @showHistory={{fn @showHistory @post}}
-              />
-              <div class="nested-view__op-content">
-                <PostCookedHtml @post={{@post}} />
-              </div>
-              {{#if @showPostMenu}}
-                <section class="nested-view__op-menu post-menu-area clearfix">
-                  <PostMenu
-                    @post={{@post}}
-                    @canCreatePost={{this.canCreatePost}}
-                    @copyLink={{this.copyLink}}
-                    @replyToPost={{@replyToPost}}
-                    @editPost={{fn @editPost @post}}
-                    @share={{this.share}}
-                    @toggleLike={{this.toggleLike}}
-                    @showLogin={{this.showLogin}}
-                  />
-                </section>
-              {{/if}}
-            </div>
-          </div>
-        </article>
-      </div>
-    {{/if}}
-  </template>
-
   get nestedShareUrl() {
     return nestedPostUrl(this.args.topic, this.args.post.post_number);
   }
@@ -128,4 +87,45 @@ export default class NestedOp extends Component {
   showLogin() {
     getOwner(this).lookup("route:application").send("showLogin");
   }
+
+  <template>
+    {{#if @post}}
+      <div class="nested-view__op">
+        <article
+          class="nested-view__op-article boxed"
+          data-post-id={{@post.id}}
+          data-post-number={{@post.post_number}}
+          {{@registerPost @post}}
+        >
+          <div class="nested-view__op-row">
+            <PostAvatar @post={{@post}} />
+            <div class="nested-view__op-body">
+              <PostMetaData
+                @post={{@post}}
+                @editPost={{fn @editPost @post}}
+                @showHistory={{fn @showHistory @post}}
+              />
+              <div class="nested-view__op-content">
+                <PostCookedHtml @post={{@post}} />
+              </div>
+              {{#if @showPostMenu}}
+                <section class="nested-view__op-menu post-menu-area clearfix">
+                  <PostMenu
+                    @post={{@post}}
+                    @canCreatePost={{this.canCreatePost}}
+                    @copyLink={{this.copyLink}}
+                    @replyToPost={{@replyToPost}}
+                    @editPost={{fn @editPost @post}}
+                    @share={{this.share}}
+                    @toggleLike={{this.toggleLike}}
+                    @showLogin={{this.showLogin}}
+                  />
+                </section>
+              {{/if}}
+            </div>
+          </div>
+        </article>
+      </div>
+    {{/if}}
+  </template>
 }
