@@ -2,10 +2,14 @@
 
 class DropPinnedPostNumberFromNestedTopics < ActiveRecord::Migration[8.0]
   def up
-    remove_column :nested_topics, :pinned_post_number
+    if column_exists?(:nested_topics, :pinned_post_number)
+      remove_column :nested_topics, :pinned_post_number
+    end
   end
 
   def down
-    add_column :nested_topics, :pinned_post_number, :integer
+    unless column_exists?(:nested_topics, :pinned_post_number)
+      add_column :nested_topics, :pinned_post_number, :integer
+    end
   end
 end
