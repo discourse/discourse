@@ -9,21 +9,24 @@
 # required_version: 2.7.0
 # meta_topic_id: 291383
 
-enabled_site_setting :discourse_hcaptcha_enabled
-
 register_svg_icon "hand"
 
-extend_content_security_policy(script_src: %w[https://hcaptcha.com])
+extend_content_security_policy(
+  script_src: %w[https://hcaptcha.com https://www.google.com/recaptcha],
+)
 
 module ::DiscourseHcaptcha
   PLUGIN_NAME = "discourse-hcaptcha"
 end
 
 require_relative "lib/discourse_hcaptcha/engine"
+require_relative "lib/discourse_hcaptcha/captcha_provider"
 
 after_initialize do
   reloadable_patch { UsersController.include(DiscourseHcaptcha::CreateUsersControllerPatch) }
 
   require_relative "app/services/problem_check/hcaptcha_configuration"
+  require_relative "app/services/problem_check/recaptcha_configuration"
   register_problem_check ProblemCheck::HcaptchaConfiguration
+  register_problem_check ProblemCheck::RecaptchaConfiguration
 end

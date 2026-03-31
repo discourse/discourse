@@ -1,9 +1,9 @@
 en:
   js:
-    discourse_hCaptcha:
-      missing_token: "Please complete the hCaptcha challenge."
+    discourse_captcha:
+      missing_token: "Please complete the captcha challenge."
       placeholder: placeholder
-      contact_system_administrator: "There has been a problem with hCaptcha, if this problem persists please contact a system administrator"
+      contact_system_administrator: "There has been a problem with your captcha provider, if this problem persists please contact a system administrator"
 
   admin_js:
     admin:

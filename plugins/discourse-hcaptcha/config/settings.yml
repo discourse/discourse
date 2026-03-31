@@ -9,3 +9,13 @@ discourse_hcaptcha:
     default: ''
     client: false
     secret: true
+  discourse_recaptcha_enabled:
+    default: false
+    client: true
+  recaptcha_site_key:
+    default: ''
+    client: true
+  recaptcha_secret_key:
+    default: ''
+    client: false
+    secret: true
