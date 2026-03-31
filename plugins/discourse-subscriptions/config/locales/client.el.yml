@@ -8,6 +8,9 @@ el:
   site_settings:
     discourse_subscriptions_enable_verbose_logging: Ενεργοποιεί πιο λεπτομερή καταγραφή για να βοηθήσει στην αποσφαλμάτωση. Παρακαλούμε μην την αφήνετε μόνιμα ενεργοποιημένη στην παραγωγή.
   js:
+    filters:
+      subscribe:
+        help: Υποστηρίξτε αυτόν τον ιστότοπο με την εγγραφή σας
     discourse_subscriptions:
       title: Συνδρομές Discourse
       admin_navigation: Συνδρομές
@@ -66,6 +69,7 @@ el:
             destroy:
               confirm: Σίγουρα θέλετε να ακυρώσετε αυτή τη συνδρομή;
       subscribe:
+        title: Εγγραφή
         view_past: Προβολή προηγούμενων αγορών
         no_products: Δεν υπάρχουν διαθέσιμα προϊόντα αυτήν τη στιγμή.
         unauthenticated: Συνδεθείτε ή δημιουργήστε ένα λογαριασμό για να κάνετε συνδρομή.
@@ -80,7 +84,10 @@ el:
         customer:
           title: Στοιχεία Πελάτη
         promo_code: Κουπόνι
+        buttons:
+          subscribe: Εγγραφή
         purchased: Αγοράστηκε
+        go_to_billing: Μετάβαση στην Χρέωση
         already_purchased: Σας ευχαριστούμε πολύ για την προηγούμενη αγορά αυτού του προϊόντος!
         cardholder_name: Όνομα Κάτοχος Κάρτας
         cardholder_address:

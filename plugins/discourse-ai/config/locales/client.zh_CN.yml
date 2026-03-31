@@ -485,8 +485,17 @@ zh_CN:
         credit_allocations: "点数分配"
       ai_agent:
         ai_tools: "工具"
+        mcp_servers: "MCP 服务器"
+        mcp_server_tools_help: "选定的 MCP 服务器默认会公开所有工具。您可以针对每个代理筛选工具，以减少令牌使用量并专注于特定工具。"
         mcp_server_tool_count:
           other: "%{count} 个工具"
+        mcp_server_enabled_tool_count:
+          other: "%{count} 工具已启用"
+        mcp_server_all_tools_enabled: "所有工具均已启用"
+        mcp_server_enabled_tools:
+          other: "%{total} 工具中的 %{count} 已启用"
+        mcp_server_choose_tools: "选择工具"
+        mcp_server_edit_tools: "编辑工具"
         tool_strategies:
           all: "应用于所有回复"
           replies:
@@ -552,11 +561,19 @@ zh_CN:
         tool_count_value:
           other: "%{count} 个工具"
         tool_tokens_total: "~%{tokens} 代币"
+        mcp_server_cost_name: "%{name} (MCP 服务器)"
+        mcp_server_cost_value:
+          other: "~%{tokens} 代币， %{count} 工具"
         mcp_server_tokens_only: "~%{tokens} 代币"
         mcp_tools_modal:
           title: "%{name} 个工具"
+          summary: "默认情况下，此代理可以使用此服务器上的所有工具。选择较小的工具集可以限制访问权限并降低请求成本。"
+          filter_placeholder: "筛选工具"
           select_all: "全选"
           clear_all: "全部清除"
+          selection_summary:
+            other: "已选择 %{total} 个工具中的 %{count} 个"
+          empty: "没有工具符合此筛选条件。"
         tool_severity_medium: "中等容量"
         tool_severity_high: "高容量"
         tool_severity_too_many: "工具太多了"
@@ -633,6 +650,8 @@ zh_CN:
       tools:
         back: "返回工具"
         short_title: "工具"
+        keywords: "mcp|mcp 服务器|模型上下文协议"
+        script_tools: "脚本工具"
         export: "导出"
         import: "导入"
         import_error_conflict: "工具已存在，是否要更新？"
@@ -645,6 +664,7 @@ zh_CN:
         tool_name_help: "工具名称会呈现给大型语言模型。它本身并不唯一，但每个代理的工具名称都是唯一的。（代理会在保存时进行验证）"
         description: "描述"
         description_help: "向语言模型介绍工具用途的清晰描述"
+        subheader_description: "工具和 MCP 服务器扩展了 AI 代理的功能。"
         summary: "摘要"
         summary_help: "显示给最终用户的工具用途摘要"
         script: "脚本"
@@ -698,10 +718,13 @@ zh_CN:
         embedding: "嵌入向量"
         cannot_delete_in_use: "此凭据无法删除，因为它正被以下用户使用："
         tool: "工具"
+        mcp_server: "MCP 服务器"
+        mcp_server_oauth_client_secret: "MCP 服务器 OAuth 客户端密钥"
         modal:
           title: "创建新凭据"
       mcp_servers:
         short_title: "MCP 服务器"
+        new: "新 MCP 服务器"
         name: "名称"
         description: "描述"
         url: "URL"
@@ -714,19 +737,58 @@ zh_CN:
         auth_header: "认证请求头名称"
         auth_scheme: "认证方案"
         oauth_client_registration: "OAuth 客户端注册"
+        oauth_client_registration_types:
+          client_metadata_document: "客户端元数据文档"
+          manual: "手动客户端凭据"
+        oauth_client_id: "OAuth客户端ID"
+        oauth_client_secret: "OAuth 客户端密钥"
+        oauth_scopes: "OAuth 范围"
+        oauth_connection: "OAuth 连接"
+        oauth_status: "OAuth 状态"
+        oauth_statuses:
+          disconnected: "断开连接"
+          connected: "（已连接）"
+          refresh_failed: "刷新页面"
+          error: "需要关注"
         oauth_connect: "连接"
+        oauth_reconnect: "重新连接"
+        oauth_disconnect: "断开连接"
+        oauth_connect_help: "使用 \"连接 \"保存服务器并进行授权。"
+        oauth_client_metadata_url: "客户端元数据 URL"
+        oauth_granted_scopes: "已授予范围"
+        oauth_access_token_expires_at: "访问令牌的过期时间为"
+        oauth_authorization_endpoint: "授权端点"
+        oauth_token_endpoint: "令牌端点"
+        oauth_revocation_endpoint: "撤销端点"
+        oauth_issuer: "发行人"
+        oauth_last_error: "最后一次 OAuth 错误"
+        oauth_show_details: "显示详情"
         oauth_hide_details: "隐藏详细信息"
+        timeout_seconds: "请求超时时间（秒）"
+        timeout_seconds_tooltip: "Discourse 在请求失败前会等待 MCP 服务器多长时间。除非服务器持续运行缓慢，否则请保持此值为 30 秒。"
         enabled: "已启用"
         save: "保存"
         edit: "编辑"
         delete: "删除"
+        test: "测试连接"
+        saved: "MCP 服务器已保存"
+        confirm_delete: "您确定要删除此 MCP 服务器吗？"
         back: "返回工具"
+        health: "健康"
+        healthy: "健康的"
+        unhealthy: "需要关注"
         tool_count:
           other: "%{count} 个工具"
         tools_modal:
           title: "%{name} 个工具"
+          summary:
+            other: "此服务器目前公开了 %{count} 工具。"
           parameters: "参数"
           required: "必选"
+          no_parameters: "此工具不需要任何参数。"
+        test_result: "连接结果"
+        test_summary:
+          other: "发现了使用协议 %{version} 的 %{count} 工具。"
       llms:
         short_title: "LLM"
         no_llms: "暂无 LLM"
@@ -837,6 +899,7 @@ zh_CN:
           cost_measure: "$/100 万个词元"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock（Converse API）"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -854,6 +917,7 @@ zh_CN:
         provider_fields:
           access_key_id: "AWS Bedrock 访问密钥 ID"
           role_arn: "AWS Bedrock 角色 ARN"
+          inference_profile_arn: "AWS Bedrock 应用程序推理配置文件 ARN"
           region: "AWS Bedrock 区域"
           organization: "可选 OpenAI 组织 ID"
           disable_system_prompt: "在提示中禁用系统消息"

@@ -132,7 +132,6 @@ de:
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
-    ai_translation_max_tokens_multiplier: "Multiplikator, um die maximale Anzahl der Token festzulegen, die für die Übersetzung verwendet werden sollen. Standardmäßig wird die maximale Anzahl der Token auf etwa das Zwei- bis Fünffache der Anzahl der Zeichen im Beitrag gesetzt. Dieser Multiplikator kann angepasst werden, um Denk- oder Argumentationsmodelle zu berücksichtigen, die mehr Token benötigen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
     ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:

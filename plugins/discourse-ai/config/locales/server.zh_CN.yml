@@ -139,7 +139,6 @@ zh_CN:
     ai_translation_max_post_length: "要翻译的帖子的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
     ai_translation_backfill_hourly_rate: "回填操作期间每小时翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
-    ai_translation_max_tokens_multiplier: "倍数来决定用于翻译的最大词元数量。默认情况下，我们将最大词元数设置为帖子中字符数的大约 2-5 倍。这个倍数可以调整，以考虑将使用更多词元允许思考或推理模型。"
     ai_usage_rollup_after_days: "每次请求的 AI 使用数据在被汇总到每日统计之前要保留的天数。设为 0 表示不进行汇总。"
     ai_audit_logs_purge_after_days: "删除超过此天数的 AI API 审核日志。默认值约为 6 个月。设置为 0 则无限期保留。"
   reviewables:
