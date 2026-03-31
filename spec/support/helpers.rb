@@ -354,6 +354,8 @@ module Helpers
   end
 
   def clear_mocked_upcoming_change_metadata
+    return if @original_upcoming_changes_metadata.blank?
+
     SiteSetting.instance_variable_set(
       :@upcoming_change_metadata,
       @original_upcoming_changes_metadata,

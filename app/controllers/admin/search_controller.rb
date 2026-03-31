@@ -6,7 +6,7 @@ class Admin::SearchController < Admin::AdminController
   def index
     respond_to do |format|
       format.json do
-        Admin::Search::List.call(service_params) do
+        Admin::Search::List.call(service_params) do |result|
           on_success do |settings:, themes_and_components:, reports:, upcoming_changes:|
             themes_and_components_json =
               ActiveModel::ArraySerializer.new(
