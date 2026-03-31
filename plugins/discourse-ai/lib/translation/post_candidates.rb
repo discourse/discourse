@@ -30,21 +30,36 @@ module DiscourseAi
           posts.where("posts.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
         posts = posts.joins(:topic)
-        if SiteSetting.ai_translation_backfill_limit_to_public_content
-          # exclude all PMs
-          # and only include posts from public categories
-          posts =
-            posts
-              .where.not(topics: { archetype: Archetype.private_message })
-              .where(topics: { category_id: Category.where(read_restricted: false).select(:id) })
-        else
-          # all regular topics, and group PMs
+
+        target_category_ids = SiteSetting.ai_translation_target_categories
+        pm_scope = SiteSetting.ai_translation_personal_messages
+
+        # Category filter: include target categories + PMs (PMs filtered in next step)
+        if target_category_ids.present?
+          category_ids = target_category_ids.split("|").map(&:to_i)
           posts =
             posts.where(
-              "topics.archetype != ? OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
-              Archetype.private_message,
+              "topics.category_id IN (:cats) OR topics.archetype = :pm",
+              cats: category_ids,
+              pm: Archetype.private_message,
             )
+        else
+          posts = posts.where(topics: { archetype: Archetype.private_message })
         end
+
+        # PM scope filter
+        case pm_scope
+        when "group"
+          posts =
+            posts.where(
+              "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
+              pm: Archetype.private_message,
+            )
+        when "none", nil
+          posts = posts.where.not(topics: { archetype: Archetype.private_message })
+        end
+
+        posts
       end
 
       def self.completion_all_locales

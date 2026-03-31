@@ -426,6 +426,7 @@ zh_CN:
       start_posting:
         title: "开始发帖"
         description: "给人们一些共同谈论的话题"
+        action: "查看想法"
         choose_option: "您想如何开始？"
         predefined_topics: "破冰模板"
         predefined_topics_subtitle: "给新成员一些话题，选择一个模板进行编辑，然后自行制作。"
@@ -609,6 +610,7 @@ zh_CN:
       storage_access_prompt: "已有 %{site_name} 帐户？允许访问您的会话，以您的身份发表评论。"
       allow_access: "允许访问"
       continue_as_guest: "以访客身份继续"
+      be_first_to_reply: "成为第一个回复的人！"
     topic_count_all:
       other: "查看 %{count} 个新话题"
     topic_count_categories:
@@ -1064,6 +1066,7 @@ zh_CN:
       add_members:
         title: "将用户添加到 %{group_name}"
         description: "输入您要邀请加入群组中的用户列表或粘贴到逗号分隔的列表中："
+        description_usernames_only: "请输入要添加到群组的用户名列表，或粘贴以逗号分隔的列表："
         usernames_placeholder: "用户名"
         usernames_or_emails_placeholder: "用户名或电子邮件"
         notify_users: "通知用户"
@@ -1707,6 +1710,7 @@ zh_CN:
         upcoming_changes: "即将推出的更改"
         calendar_subscriptions: "日历"
       calendar_subscriptions:
+        description: "生成订阅链接，以便与您常用的日历应用（例如 Google 日历、Apple 日历、Outlook 等）同步。这些链接是您帐户中日历事件（例如书签提醒、日历事件等）的私有链接。您可以随时撤销或续订生成的订阅链接。"
         generate: "生成订阅 URL"
         regenerate: "重新生成 URL"
         regenerate_confirm: "这将使您现有的日历订阅 URL 失效。任何使用旧 URL 的日历应用都将无法收到更新。是否继续？"
@@ -4123,6 +4127,8 @@ zh_CN:
       tags: "标签"
       localizations: "本地化"
       localization:
+        language: "类别语言"
+        language_description: "该类别名称和描述的主要语言。"
         locale: "语言区域"
         name: "名称"
         description: "描述"
@@ -6763,6 +6769,7 @@ zh_CN:
           dark_color_scheme: "深色调色板"
           default_light_scheme: "浅色（默认）"
           color_scheme_select: "选择主题使用的颜色。"
+          only_theme_color_schemes: "该主题限制了可使用的调色板。"
           dark_color_scheme_select: "选择主题在深色模式下使用的颜色。"
           edit_colors: "编辑颜色"
           custom_sections: "自定义部分："
@@ -6821,6 +6828,7 @@ zh_CN:
           import_web_tip: "包含主题的仓库"
           direct_install_tip: "确定要从下面列出的仓库中安装 <strong>%{name}</strong> 吗？"
           import_web_advanced: "高级…"
+          import_file_tip: "包含主题的 .tar.gz 或 .zip 文件"
           is_private: "主题位于私有 git 仓库中"
           finish_install: "完成主题安装"
           last_attempt: "安装过程未完成，最后一次尝试："

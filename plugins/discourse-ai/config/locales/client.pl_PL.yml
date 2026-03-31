@@ -958,6 +958,7 @@ pl_PL:
           cost_measure: "Tokeny o wartości 1 mln USD"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (API Converse)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -975,6 +976,7 @@ pl_PL:
         provider_fields:
           access_key_id: "Identyfikator klucza dostępu AWS Bedrock"
           role_arn: "Role ARN AWS Bedrock"
+          inference_profile_arn: "Profil wnioskowania aplikacji AWS Bedrock ARN"
           region: "Region AWS Bedrock"
           organization: "Opcjonalny identyfikator organizacji OpenAI"
           disable_system_prompt: "Wyłącz wiadomość systemową w promptach"
