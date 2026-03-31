@@ -19,6 +19,10 @@ module PageObjects
         find("[data-icon-id]", match: :first).click
       end
 
+      def filter(term)
+        find(".d-icon-grid-picker__filter .filter-input").fill_in(with: term)
+      end
+
       def clear
         scoped(".d-icon-grid-picker__clear").click
       end
