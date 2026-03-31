@@ -18,12 +18,6 @@ export default class UppyChecksum extends UploadPreProcessorPlugin {
       );
       return false;
     }
-    if (this.capabilities.isIE11) {
-      this._consoleWarn(
-        "The required cipher suite is unavailable in Internet Explorer 11."
-      );
-      return false;
-    }
     if (!Blob.prototype.arrayBuffer) {
       this._consoleWarn(
         "The required File API is unavailable in this browser."
