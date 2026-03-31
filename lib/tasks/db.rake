@@ -158,12 +158,14 @@ task "multisite:migrate" => %w[
         { db: db, output: output.string, error: error }
       end
 
-    Discourse.before_fork if concurrency > 1
+    should_fork = concurrency > 1 && databases.length > 1
+
+    Discourse.before_fork if should_fork
 
     results =
       Parallel.map(
         databases,
-        in_processes: concurrency == 1 ? 0 : concurrency,
+        in_processes: should_fork ? concurrency : 0,
         isolation: false,
         finish_in_order: true,
         finish:
@@ -171,7 +173,7 @@ task "multisite:migrate" => %w[
             result[:output]&.lines&.each { |line| puts "[#{db}] #{line}" }
           end,
       ) do |db|
-        $after_fork_called ||= (Discourse.after_fork || true) if concurrency > 1
+        $after_fork_called ||= (Discourse.after_fork || true) if should_fork
         ENV["RAISE_SEED_ERRORS"] = "1"
         migrate_database.call(db)
       end
