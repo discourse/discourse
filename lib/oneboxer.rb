@@ -365,6 +365,8 @@ module Oneboxer
 
     if current_category.blank? || current_category.id != topic.category_id
       return unless Guardian.new.can_see_topic?(topic)
+    else
+      return unless Guardian.new(current_user).can_see_topic?(topic)
     end
 
     topic
