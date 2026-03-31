@@ -186,62 +186,58 @@ namespace :release do
     base = args[:base]
     raise "Unknown base: #{base.inspect}" unless base.start_with?("release/") || base == "main"
 
-    fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
-    private_mirror_pr_numbers = []
+    json_output =
+      ReleaseUtils.gh(
+        "pr",
+        "list",
+        "--repo",
+        "discourse/discourse-private-mirror",
+        "--base",
+        base,
+        "--state",
+        "open",
+        "--json",
+        "number,title,body,headRefName",
+        "--limit",
+        "100",
+        capture: true,
+      )
 
-    if fix_refs.nil? || fix_refs.empty?
-      json_output, status =
-        Open3.capture2(
-          "gh",
-          "pr",
-          "list",
-          "--repo",
-          "discourse/discourse-private-mirror",
-          "--base",
-          base,
-          "--state",
-          "open",
-          "--json",
-          "number,title,headRefName",
-          "--limit",
-          "100",
-        )
-      raise "Failed to fetch PRs from private-mirror" if !status.success?
+    prs = JSON.parse(json_output)
+    raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
 
-      prs = JSON.parse(json_output)
-      raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
+    choices = prs.map { |pr| pr.slice("number", "title", "body", "headRefName") }
 
-      prompt = TTY::Prompt.new
-      choices =
-        prs.map do |pr|
-          { name: "##{pr["number"]}: #{pr["title"]}", value: pr.slice("number", "headRefName") }
-        end
-
-      selected =
+    selected =
+      if (pr_numbers = ENV["SECURITY_FIX_PR_NUMBERS"])
+        requested = pr_numbers.split(",").map(&:to_i)
+        choices.select { |pr| requested.include?(pr["number"]) }
+      else
+        prompt = TTY::Prompt.new
+        prompt_choices =
+          choices.map { |pr| { name: "##{pr["number"]}: #{pr["title"]}", value: pr } }
         prompt.multi_select(
           "Select security fix PRs to include (space to toggle, enter to finish):",
-          choices,
+          prompt_choices,
           default: [],
-          per_page: choices.size,
+          per_page: prompt_choices.size,
         )
-      raise "No PRs selected" if selected.empty?
+      end
+    raise "No PRs selected" if selected.empty?
 
-      fix_refs = selected.map { |pr| "privatemirror/#{pr["headRefName"]}" }
-      private_mirror_pr_numbers = selected.map { |pr| pr["number"] }
-    end
-
-    puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
+    puts "Staging security fixes for #{base} branch: #{selected.map { |pr| pr["headRefName"] }.inspect}"
 
     branch = "security/#{base}-security-fixes"
 
     ReleaseUtils.with_clean_worktree(base) do
-      fix_refs.each do |ref|
-        origin, origin_branch = ref.split("/", 2)
-        ReleaseUtils.git "fetch", origin, origin_branch
+      selected.each do |pr|
+        ReleaseUtils.git "fetch", "privatemirror", pr["headRefName"]
 
-        first_commit_on_branch =
-          ReleaseUtils.git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
-        ReleaseUtils.git "cherry-pick", "#{first_commit_on_branch}^..#{ref}"
+        ReleaseUtils.git "merge", "--squash", "privatemirror/#{pr["headRefName"]}"
+
+        commit_message = "#{pr["title"]}\n\n#{pr["body"]}".strip
+
+        ReleaseUtils.git "commit", "-m", commit_message
       end
 
       if base == "main" &&
@@ -279,18 +275,125 @@ namespace :release do
       ReleaseUtils.merge_pr(base: base, branch: branch)
     end
 
-    if private_mirror_pr_numbers.any?
+    if selected.any?
       puts "Closing associated PRs in private-mirror..."
-      private_mirror_pr_numbers.each do |pr_number|
+      selected.each do |pr|
         ReleaseUtils.gh(
           "pr",
           "close",
-          pr_number.to_s,
+          pr["number"].to_s,
           "--repo",
           "discourse/discourse-private-mirror",
           "--delete-branch",
         )
       end
     end
+  end
+
+  desc "Update advisory affected versions on GitHub for all supported Discourse versions"
+  task "update_security_advisories" do
+    advisories_base = "repos/discourse/discourse/security-advisories"
+
+    puts "Fetching draft security advisories..."
+    pages =
+      JSON.parse(
+        ReleaseUtils.gh(
+          "api",
+          "#{advisories_base}?state=draft",
+          "--paginate",
+          "--slurp",
+          capture: true,
+        ),
+      )
+    advisories = pages.flat_map { |page| page.is_a?(Array) ? page : [page] }
+
+    draft_advisories =
+      advisories.reject { |advisory| advisory.fetch("summary").start_with?("DRAFT") }
+
+    if draft_advisories.empty?
+      puts "No draft advisories to update."
+      next
+    end
+
+    puts "Found #{draft_advisories.size} draft advisory(ies) to update."
+
+    # Calculate patched versions for all supported versions
+    version_patches = []
+    version_info = ReleaseUtils.supported_version_info
+
+    version_info.each do |series, info|
+      branch = info["released"] ? "release/#{series}" : "main"
+
+      current_version = ReleaseUtils.with_clean_worktree(branch) { ReleaseUtils::Version.current }
+
+      if info["released"]
+        # For released versions, next patch is current patch + 1
+        next_version =
+          "#{current_version.major}.#{current_version.minor}.#{current_version.patch + 1}"
+        version_patches << { series:, patched_version: next_version }
+        puts "  #{series}: #{current_version} -> #{next_version}"
+      else
+        # For unreleased (latest/development) version, ask about release type
+        prompt = TTY::Prompt.new
+        release_type =
+          prompt.select(
+            "What type of release for #{series} (currently #{current_version})?",
+            {
+              "Intermediate release (security patch)" => :intermediate,
+              "Monthly release" => :monthly,
+            },
+          )
+
+        next_version =
+          if release_type == :intermediate
+            current_version.next_revision.to_s
+          else
+            "#{current_version.major}.#{current_version.minor}.#{current_version.patch}"
+          end
+
+        version_patches << { series:, patched_version: next_version }
+        puts "  #{series}: #{current_version} -> #{next_version} (#{release_type})"
+      end
+    end
+
+    vulnerabilities =
+      version_patches.map.with_index do |entry, index|
+        vulnerable_range = index == 0 ? ">= 0" : ">= #{entry[:series]}.0-latest"
+        {
+          package: {
+            ecosystem: "other",
+            name: "Discourse",
+          },
+          vulnerable_version_range: vulnerable_range,
+          patched_versions: entry[:patched_version],
+        }
+      end
+
+    patched_versions = version_patches.map { |e| e[:patched_version] }
+    puts "\nAdvisories to update:"
+    draft_advisories.each { |a| puts "  - #{a.fetch("ghsa_id")}: #{a.fetch("summary")}" }
+    puts "\nPatched versions: #{patched_versions.join(", ")}"
+
+    ReleaseUtils.confirm_or_abort("Proceed with updating #{draft_advisories.size} advisory(ies)?")
+
+    draft_advisories.each do |advisory|
+      ghsa_id = advisory.fetch("ghsa_id")
+      payload = { vulnerabilities: vulnerabilities }
+
+      ReleaseUtils.gh(
+        "api",
+        "#{advisories_base}/#{ghsa_id}",
+        "--method",
+        "PATCH",
+        "--input",
+        "-",
+        capture: true,
+        input: JSON.pretty_generate(payload),
+      )
+
+      puts "Updated #{ghsa_id}"
+    end
+
+    puts "\nDone! Updated #{draft_advisories.size} advisory(ies)."
   end
 end

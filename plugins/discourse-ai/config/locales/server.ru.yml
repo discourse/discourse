@@ -10,6 +10,10 @@ ru:
       llm_model:
         name: "Идентификатор модели"
         max_prompt_tokens: "Контекстное окно"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "%{model_name} осталось всего %{percentage_remaining}% кредитов. Кредиты будут обнулены при %{reset_date}. <a href='%{url}'>Просмотреть модели ИИ</a>"
+      ai_credit_hard_limit: "У вас закончились кредиты ИИ на %{model_name}. Функции ИИ будут недоступны до %{reset_date}. <a href='%{url}'>Просмотреть модели ИИ</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -22,6 +26,10 @@ ru:
       llm_triage:
         title: Сортировка публикаций с помощью AI
         description: "Сортировка публикаций с использованием большой языковой модели"
+        flagged_post: |
+          <div>Ответ от модели:</div>
+          <p>%{llm_response}</p>
+          <b>Срабатывает по правилу <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Ваш пост был временно удален для проверки"
           body: |
@@ -68,6 +76,8 @@ ru:
     ai_nsfw_flag_threshold_sexy: "Пороговое значение, при котором изображение, отнесенное к категории «сексуальное», определяется как NSFW-контент."
     ai_nsfw_models: "Модели, используемые для оценки NSFW-контента."
     ai_spam_detection_enabled: "Включить AI-модуль обнаружения спама"
+    ai_spam_detection_max_post_count: "Максимальное количество сообщений, которое может разместить пользователь, прежде чем его перестанут проверять на спам."
+    ai_spam_detection_max_trust_level: "Максимальный уровень доверия пользователей к сканированию на спам."
     ai_openai_api_key: "Ключ API для OpenAI. Используется ТОЛЬКО для создания и редактирования изображений. Для GPT используйте вкладку конфигурации LLM."
     ai_helper_enabled: "Включить AI-помощника"
     composer_ai_helper_allowed_groups: "Для пользователей в этих группах будет отображаться кнопка AI-помощника в редакторе."
@@ -87,6 +97,7 @@ ru:
     ai_embeddings_semantic_related_include_closed_topics: "Включать в результаты семантического поиска закрытые темы"
     ai_embeddings_per_post_enabled: Генерировать эмбеддинги для каждой публикации
     ai_summarization_enabled: "Включить функцию резюмирования"
+    ai_summarization_agent: "Агент для использования функции суммирования"
     ai_pm_summarization_allowed_groups: "Группам разрешено создавать и просматривать сводки в личных сообщениях."
     ai_summary_gists_enabled: "Автоматически создает краткие сводки последних ответов в темах"
     ai_summary_backfill_maximum_topics_per_hour: "Число сводок по теме для заполнения за час."
@@ -96,12 +107,14 @@ ru:
     ai_bot_public_sharing_allowed_groups: "Разрешить этим группам делиться личными сообщениями AI с общественностью по уникальной общедоступной ссылке. Примечание: если ваш сайт требует входа, для доступа также потребуется вход."
     ai_bot_github_access_token: "Токен доступа к GitHub для использования с инструментами GitHub AI (требуется для поддержки поиска)"
     ai_discover_enabled: "Включить функцию поиска по обнаруженным данным"
+    ai_discover_agent: "Агент для использования в функции поиска."
     ai_google_custom_search_api_key: "API-ключ для API программируемого поиска Google — см. https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX для API программируемого поиска Google"
     ai_discord_search_enabled: "Включает функцию поиска Discord"
     ai_discord_app_id: "ID приложения Discord, к которому вы хотите подключить поиск Discord"
     ai_discord_app_public_key: "Открытый ключ приложения Discord, к которому вы хотите подключить поиск Discord"
     ai_discord_search_mode: "Выберите режим поиска, который будет использоваться при поиске в Discord"
+    ai_discord_search_agent: "Агент для поиска в Discord."
     ai_discord_allowed_guilds: "Серверы Discord (гильдии), на которых боту разрешено выполнять поиск"
     ai_translation_backfill_limit_to_public_content: "Если параметр включен, будет переводиться только контент из общедоступных категорий. Если отключен — на перевод также будет отправляться контент из групповых ЛС и закрытых категорий."
     ai_translation_max_post_length: "Максимальное количество символов для перевода сообщения. Сообщения длиннее этого значения не будут переведены."
@@ -237,6 +250,12 @@ ru:
           name: "Начать с нуля..."
       name:
         characters: "может содержать только цифры, буквы и символы подчеркивания"
+    mcp_servers:
+      errors:
+        invalid_response: "Сервер MCP вернул недействительный ответ."
+        request_failed: "Запрос к серверу MCP завершился с ошибкой со статусом %{status}."
+        session_expired: "Сессия MCP завершилась."
+        timeout: "Время ожидания запроса к серверу MCP истекло."
     ai_helper:
       errors:
         completion_request_failed: "При попытке дать рекомендации произошла ошибка. Попробуйте еще раз."

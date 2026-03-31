@@ -63,6 +63,7 @@ esbuild
     define: {
       "import.meta.url": "'http://example.com'",
     },
+    supported: { "from-base64": false },
     external: [],
     entryPoints: ["./transpiler.js"],
     plugins: [wasmPlugin],

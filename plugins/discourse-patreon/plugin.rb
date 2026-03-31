@@ -28,13 +28,16 @@ require_relative "lib/discourse_patreon/engine"
 after_initialize do
   require_dependency "admin_constraint"
 
+  require_relative "lib/api_version/v1"
+  require_relative "lib/api_version/v2"
+  require_relative "lib/api"
   require_relative "app/controllers/patreon/patreon_admin_controller"
   require_relative "app/controllers/patreon/patreon_webhook_controller"
   require_relative "app/jobs/regular/sync_patron_groups"
   require_relative "app/jobs/scheduled/patreon_sync_patrons_to_groups"
   require_relative "app/jobs/scheduled/patreon_update_tokens"
   require_relative "app/services/problem_check/access_token_invalid"
-  require_relative "lib/api"
+  require_relative "app/services/problem_check/patreon_api_v1_deprecated"
   require_relative "lib/seed"
   require_relative "lib/campaign"
   require_relative "lib/pledge"
@@ -99,6 +102,7 @@ after_initialize do
   end
 
   register_problem_check ProblemCheck::AccessTokenInvalid
+  register_problem_check ProblemCheck::PatreonApiV1Deprecated
 end
 
 # Authentication with Patreon
@@ -137,7 +141,7 @@ class ::OmniAuth::Strategies::Patreon < ::OmniAuth::Strategies::OAuth2
         response =
           client.request(
             :get,
-            "https://api.patreon.com/oauth2/api/current_user",
+            Patreon::ApiVersion.current.oauth_identity_url,
             headers: {
               "Authorization" => "Bearer #{access_token.token}",
             },
@@ -162,6 +166,7 @@ class Auth::PatreonAuthenticator < Auth::ManagedAuthenticator
                       setup:
                         lambda { |env|
                           strategy = env["omniauth.strategy"]
+                          adapter = Patreon::ApiVersion.current
                           strategy.options[:client_id] = SiteSetting.patreon_client_id
                           strategy.options[:client_secret] = SiteSetting.patreon_client_secret
                           strategy.options[
@@ -170,6 +175,8 @@ class Auth::PatreonAuthenticator < Auth::ManagedAuthenticator
                           strategy.options[
                             :provider_ignores_state
                           ] = SiteSetting.patreon_login_ignore_state
+                          strategy.options[:client_options][:token_url] = adapter.oauth_token_url
+                          strategy.options[:authorize_params] = adapter.oauth_authorize_params
                         }
   end
 

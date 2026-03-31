@@ -24,6 +24,7 @@ ru:
       voting_closed_title: "Закрытое"
       voting_limit: "Лимит"
       see_votes: "У вас осталось %{count}/%{max} голосов"
+      see_all_votes: "Посмотрите свои голоса"
       locked: "Заблокировано"
       locked_description: "Повысьте уровень доверия, чтобы проголосовать"
       votes:

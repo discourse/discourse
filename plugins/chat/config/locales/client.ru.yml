@@ -102,6 +102,8 @@ ru:
         title: "Настройки канала"
         edit: "Изменить"
         add: "Добавить"
+        star_channel: "Помеченные каналы"
+        unstar_channel: "Убрать Избранное"
         close_channel: "Закрыть канал"
         open_channel: "Открыть канал"
         open_channel_disabled_archived: "Архивированные каналы нельзя открыть повторно."

@@ -170,7 +170,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "ai_translation_include_bot_content",
         "ai_translation_max_post_length",
         "ai_translation_backfill_max_age_days",
-        "ai_translation_max_tokens_multiplier",
+
         "ai_translation_verbose_logs",
       ],
     },

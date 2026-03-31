@@ -385,4 +385,28 @@ describe "Post event" do
       expect(bulk_invite_modal_page).to be_closed
     end
   end
+
+  context "with add to calendar from more menu" do
+    it "includes rrule for recurring events" do
+      admin.user_option.update!(default_calendar: "ics")
+
+      title = "Weekly standup"
+      raw = <<~MD
+        [event start='2222-02-22 14:00' recurrence='every_week']
+        [/event]
+      MD
+      post = PostCreator.create!(admin, title:, raw:)
+
+      visit(post.topic.url)
+
+      ics_content = nil
+      page.driver.with_playwright_page do |pw_page|
+        download = pw_page.expect_download { post_event_page.add_to_calendar }
+        ics_content = download.path.then { |path| File.read(path) }
+      end
+
+      expect(ics_content).to include("RRULE:")
+      expect(ics_content).to include("FREQ=WEEKLY")
+    end
+  end
 end

@@ -372,6 +372,8 @@ zh_TW:
       pill: "建議"
       pm_title: "推薦訊息"
     admin_onboarding_banner:
+      invite_collaborators:
+        title: "邀請協作者"
       start_posting:
         back: "上一步"
       spread_the_word:
@@ -655,6 +657,7 @@ zh_TW:
         scrubbed_reason: "原因"
         scrub_record:
           reason_placeholder: "原因..."
+          confirm_button: "確認移除"
           cancel_button: "取消"
       user_percentage:
         summary:
@@ -702,6 +705,7 @@ zh_TW:
           low: "低"
           medium: "中間的"
           high: "高"
+        clear_filter: "移除 %{filter}"
       conversation:
         view_full: "查看完整對話"
       scores:
@@ -4497,6 +4501,9 @@ zh_TW:
             invite:
               content: "邀請"
               title: "邀請新成員"
+            my_messages:
+              content: "我的訊息"
+              title: "我的個人訊息"
         global_section: "全域區段，所有人都可以看到"
       panels:
         forum:
