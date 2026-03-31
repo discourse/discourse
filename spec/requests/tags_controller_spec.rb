@@ -1485,12 +1485,12 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
     end
 
-    it "returns 403 when tag is hidden and user is not in permitted group" do
+    it "returns 404 when tag is hidden and user is not in permitted group" do
       SiteSetting.edit_tags_allowed_groups = "1|2|13"
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
       sign_in(regular_user)
       post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "synonym1" }] }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "succeeds when tag is hidden and user is admin" do
