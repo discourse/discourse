@@ -12,6 +12,7 @@ module DiscourseAi
           :token_endpoint,
           :revocation_endpoint,
           :registration_endpoint,
+          :token_endpoint_auth_methods_supported,
           keyword_init: true,
         )
 
@@ -57,6 +58,8 @@ module DiscourseAi
             token_endpoint: token_endpoint,
             revocation_endpoint: revocation_endpoint,
             registration_endpoint: registration_endpoint,
+            token_endpoint_auth_methods_supported:
+              Array(auth_server_metadata["token_endpoint_auth_methods_supported"]).presence,
           )
         end
 

@@ -65,6 +65,41 @@ RSpec.describe AiMcpServer do
     )
   end
 
+  it "requires advanced OAuth params to be JSON objects" do
+    server =
+      Fabricate.build(
+        :ai_mcp_server,
+        auth_type: "oauth",
+        oauth_authorization_params: "access_type=offline",
+        oauth_token_params: ["audience"],
+      )
+
+    expect(server).not_to be_valid
+    expect(server.errors[:oauth_authorization_params]).to include(
+      I18n.t("discourse_ai.mcp_servers.oauth_authorization_params_invalid"),
+    )
+    expect(server.errors[:oauth_token_params]).to include(
+      I18n.t("discourse_ai.mcp_servers.oauth_token_params_invalid"),
+    )
+  end
+
+  it "clears advanced OAuth options when auth_type is not oauth" do
+    server =
+      Fabricate.build(
+        :ai_mcp_server,
+        auth_type: "header_secret",
+        ai_secret: ai_secret,
+        oauth_authorization_params: "access_type=offline",
+        oauth_token_params: ["audience"],
+        oauth_require_refresh_token: true,
+      )
+
+    expect(server).to be_valid
+    expect(server.oauth_authorization_params).to eq({})
+    expect(server.oauth_token_params).to eq({})
+    expect(server.oauth_require_refresh_token).to eq(false)
+  end
+
   it "builds an OAuth bearer header from the stored access token" do
     server =
       Fabricate(
@@ -145,6 +180,23 @@ RSpec.describe AiMcpServer do
 
     expect(server.reload.oauth_status).to eq("disconnected")
     expect(server.oauth_token).to be_blank
+    expect(server.oauth_token_store.access_token).to be_blank
+    expect(server.oauth_token_store.refresh_token).to be_blank
+  end
+
+  it "clears stored OAuth credentials when advanced OAuth options change" do
+    server =
+      Fabricate(
+        :ai_mcp_server,
+        auth_type: "oauth",
+        oauth_status: "connected",
+        oauth_token_type: "Bearer",
+      )
+    server.oauth_token_store.write!(access_token: "access-token", refresh_token: "refresh-token")
+
+    server.update!(oauth_authorization_params: { "access_type" => "offline" })
+
+    expect(server.reload.oauth_status).to eq("disconnected")
     expect(server.oauth_token_store.access_token).to be_blank
     expect(server.oauth_token_store.refresh_token).to be_blank
   end

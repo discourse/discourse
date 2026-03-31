@@ -8,7 +8,17 @@
   .nav {
     margin-block: 0;
 
+    @include viewport.until(sm) {
+      margin-block: 0 7px;
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
     li {
+      @include viewport.until(sm) {
+        position: relative;
+        bottom: -1px; // compensate for the border-bottom
+      }
+
       .btn {
         color: var(--d-nav-color);
         background-color: var(--d-nav-bg-color);

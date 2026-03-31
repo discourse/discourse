@@ -783,6 +783,17 @@ en:
         oauth_client_id: "OAuth client ID"
         oauth_client_secret: "OAuth client secret"
         oauth_scopes: "OAuth scopes"
+        oauth_authorization_params: "OAuth authorization params"
+        oauth_authorization_params_help: "Optional JSON object merged into the authorization request. Use null to remove a default parameter."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "OAuth token params"
+        oauth_token_params_help: "Optional JSON object merged into token requests. Use null to remove a default parameter."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Require refresh token"
+        oauth_require_refresh_token_help: "Fail the OAuth connection if the provider does not return a refresh token."
+        oauth_json_object_required: "%{field} must be a JSON object."
+        oauth_show_advanced_options: "Show advanced options"
+        oauth_hide_advanced_options: "Hide advanced options"
         oauth_connection: "OAuth connection"
         oauth_status: "OAuth status"
         oauth_statuses:
