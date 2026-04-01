@@ -77,6 +77,7 @@ oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSI
 
 after_worker_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
+  # Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
 
