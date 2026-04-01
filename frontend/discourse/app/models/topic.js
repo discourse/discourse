@@ -108,9 +108,19 @@ export default class Topic extends RestModel {
 
     const data = { ...props };
 
-    // SHOULD NOT normalize tags to names - backend expects string array
+    // Send tag objects with IDs so the backend can resolve
+    // original names, avoiding issues with localized tag names
     if (Array.isArray(data.tags)) {
-      data.tags = data.tags.map((t) => (typeof t === "string" ? t : t.name));
+      data.tags = data.tags.map((t) => {
+        if (typeof t === "string") {
+          return { name: t };
+        }
+        const numId = Number(t.id);
+        if (Number.isInteger(numId) && numId > 0) {
+          return { id: numId, name: t.name };
+        }
+        return { name: t.name };
+      });
     }
 
     if (opts.fastEdit) {

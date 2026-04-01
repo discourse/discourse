@@ -512,7 +512,7 @@ module("Unit | Model | composer", function (hooks) {
     assert.strictEqual(composer.composerVersion, 1);
   });
 
-  test("serialize normalizes tags to names and keeps original_tags as objects", function (assert) {
+  test("serialize normalizes tags to {id, name} objects", function (assert) {
     const composer = createComposer.call(this, {
       tags: [
         { id: 1, name: "bug", slug: "bug" },
@@ -531,8 +531,11 @@ module("Unit | Model | composer", function (hooks) {
 
     assert.deepEqual(
       serialized.tags,
-      ["bug", "feature"],
-      "tags are normalized to string names"
+      [
+        { id: 1, name: "bug" },
+        { id: 2, name: "feature" },
+      ],
+      "tags are sent as objects with IDs for backend to resolve original names"
     );
     assert.deepEqual(
       serialized.original_tags,
