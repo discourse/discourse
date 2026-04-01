@@ -8152,6 +8152,7 @@ pt_BR:
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
         no_results: "Nennhum texto de site correspondente encontrado"
         interpolation_keys: "Chaves de interpolação disponíveis:"
+        interpolation_key_used: "Já utilizado"
         outdated:
           title: "Esta tradução está desatualizada"
           description: "A tradução padrão para esta chave mudou desde que esta substituição foi criada. Verifique abaixo que a sua tradução corresponde a quaisquer alterações feitas na intenção original."
@@ -8271,6 +8272,7 @@ pt_BR:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) administradores(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           password_unique_characters:
+            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           block_common_passwords:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
