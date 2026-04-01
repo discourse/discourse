@@ -64,6 +64,7 @@ RSpec.describe "Admin EmbeddableHost Management" do
     Fabricate(:embeddable_host)
 
     admin_embedding_page.visit
+    admin_embedding_page.expand_snippet
 
     expect(admin_embedding_page).to have_full_app_mode_disabled
     expect(admin_embedding_page).to have_no_snippet_containing("fullApp")

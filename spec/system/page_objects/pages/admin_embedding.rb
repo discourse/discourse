@@ -40,18 +40,17 @@ module PageObjects
         ).present?
       end
 
+      def expand_snippet
+        find(".admin-embedding-index__code .admin-config-area-card__title").click
+        self
+      end
+
       def has_snippet_containing?(text)
-        if page.has_css?(".admin-embedding-index__code.-collapsed")
-          find(".admin-embedding-index__code").click
-        end
-        find(".highlighted-code", text: text).present?
+        page.has_css?(".admin-embedding-index__code .highlighted-code", text: text)
       end
 
       def has_no_snippet_containing?(text)
-        if page.has_css?(".admin-embedding-index__code.-collapsed")
-          find(".admin-embedding-index__code").click
-        end
-        page.has_no_css?(".highlighted-code", text: text)
+        page.has_no_css?(".admin-embedding-index__code .highlighted-code", text: text)
       end
 
       def click_delete
