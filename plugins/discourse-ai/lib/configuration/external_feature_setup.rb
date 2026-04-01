@@ -12,26 +12,12 @@ module DiscourseAi
           next if feature_config.nil?
 
           agent_id = feature_config[:agent_id]
-          klass = config[:klass]
-
-          # register agent class and tools for runtime discovery
-          DiscourseAi::Agents::Agent.register_system_agent(klass, agent_id)
-          klass.new.tools.each do |tool_klass|
-            tool_name = tool_klass.to_s.split("::").last
-            next if "DiscourseAi::Agents::Tools::#{tool_name}".safe_constantize
-            next if DiscourseAi::Agents::Agent.registered_tools.key?(tool_name)
-            DiscourseAi::Agents::Agent.register_tool(tool_name, tool_klass)
-          end
 
           # create agent picker site setting
           area = "ai-features/#{config[:module_name]}"
           setting_name = :"#{config[:module_name]}_#{config[:feature]}_agent"
-          next if SiteSetting.respond_to?(setting_name)
 
-          if config[:enabled_by_setting].present? &&
-               SiteSetting.respond_to?(config[:enabled_by_setting])
-            SiteSetting.areas[config[:enabled_by_setting].to_sym] ||= area
-          end
+          next if SiteSetting.respond_to?(setting_name)
           SiteSetting.send(
             :setting,
             setting_name,

@@ -88,10 +88,7 @@ after_initialize do
 
   # register setting areas for external AI features from the reservation list
   DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS.each_key do |mod_name|
-    area = "ai-features/#{mod_name}"
-    if DiscoursePluginRegistry.site_setting_areas.exclude?(area)
-      DiscoursePluginRegistry.site_setting_areas << area
-    end
+    DiscoursePluginRegistry.site_setting_areas << "ai-features/#{mod_name}"
   end
 
   # do not autoload this cause we may have no namespace

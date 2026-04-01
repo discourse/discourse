@@ -263,7 +263,7 @@ class AiAgent < ActiveRecord::Base
 
           klass =
             "DiscourseAi::Agents::Tools::#{inner_name}".safe_constantize ||
-              DiscourseAi::Agents::Agent.registered_tools[inner_name]
+              DiscourseAi::Agents::Agent.external_tool_by_name(inner_name)
           options[klass] = current_options if klass && current_options
         end
 

@@ -61,59 +61,17 @@ module DiscourseAi
         end
 
         def system_agents
-          @system_agents ||= {
-            General => -1,
-            SqlHelper => -2,
-            Artist => -3,
-            SettingsExplorer => -4,
-            Researcher => -5,
-            Creative => -6,
-            DiscourseHelper => -8,
-            GithubHelper => -9,
-            WebArtifactCreator => -10,
-            Summarizer => -11,
-            ShortSummarizer => -12,
-            Designer => -13,
-            ForumResearcher => -14,
-            ConceptFinder => -15,
-            ConceptMatcher => -16,
-            ConceptDeduplicator => -17,
-            CustomPrompt => -18,
-            SmartDates => -19,
-            MarkdownTableGenerator => -20,
-            PostIllustrator => -21,
-            Proofreader => -22,
-            TitlesGenerator => -23,
-            Tutor => -24,
-            Translator => -25,
-            ImageCaptioner => -26,
-            LocaleDetector => -27,
-            PostRawTranslator => -28,
-            TopicTitleTranslator => -29,
-            ShortTextTranslator => -30,
-            SpamDetector => -31,
-            ContentCreator => -32,
-            ReportRunner => -33,
-            Discover => -34,
-            ChatThreadTitler => -35,
-          }
-        end
-
-        def register_system_agent(klass, id)
-          system_agents[klass] = id
-          @system_agents_by_id = nil
-        end
-
-        def registered_tools
-          @registered_tools ||= {}
-        end
-
-        def register_tool(name, klass)
-          registered_tools[name] = klass
+          sync_external_registry!
+          @system_agents ||= builtin_system_agents
         end
 
         def system_agents_by_id
           @system_agents_by_id ||= system_agents.invert
+        end
+
+        def external_tool_by_name(name)
+          sync_external_registry!
+          @external_tools_by_name[name]
         end
 
         def all(user:)
@@ -206,6 +164,88 @@ module DiscourseAi
           tools << Tools::MarkAsSolved if defined?(::DiscourseSolved)
 
           tools
+        end
+
+        private
+
+        def sync_external_registry!
+          configs = external_feature_configs
+          signature = configs.hash
+          return if @external_registry_signature == signature
+
+          @external_registry_signature = signature
+          external_agents = {}
+          external_tools_by_name = {}
+
+          configs.each do |config|
+            reserved = RESERVED_EXTERNAL_IDS[config[:module_name]]
+            next if reserved.nil?
+
+            feature_config = reserved.dig(:features, config[:feature])
+            next if feature_config.nil?
+
+            agent_id = feature_config[:agent_id]
+            klass = config[:klass]
+            next if klass.nil?
+
+            external_agents[klass] = agent_id
+
+            klass.new.tools.each do |tool_klass|
+              tool_name = tool_klass.to_s.split("::").last
+              next if "DiscourseAi::Agents::Tools::#{tool_name}".safe_constantize
+              external_tools_by_name[tool_name] ||= tool_klass
+            end
+          end
+
+          new_system_agents = builtin_system_agents.merge(external_agents)
+          @system_agents_by_id = nil if @system_agents != new_system_agents
+          @system_agents = new_system_agents
+          @external_tools_by_name = external_tools_by_name
+        end
+
+        def external_feature_configs
+          return [] if !DiscoursePluginRegistry.respond_to?(:_raw_external_ai_features)
+
+          DiscoursePluginRegistry._raw_external_ai_features.pluck(:value)
+        end
+
+        def builtin_system_agents
+          @builtin_system_agents ||= {
+            General => -1,
+            SqlHelper => -2,
+            Artist => -3,
+            SettingsExplorer => -4,
+            Researcher => -5,
+            Creative => -6,
+            DiscourseHelper => -8,
+            GithubHelper => -9,
+            WebArtifactCreator => -10,
+            Summarizer => -11,
+            ShortSummarizer => -12,
+            Designer => -13,
+            ForumResearcher => -14,
+            ConceptFinder => -15,
+            ConceptMatcher => -16,
+            ConceptDeduplicator => -17,
+            CustomPrompt => -18,
+            SmartDates => -19,
+            MarkdownTableGenerator => -20,
+            PostIllustrator => -21,
+            Proofreader => -22,
+            TitlesGenerator => -23,
+            Tutor => -24,
+            Translator => -25,
+            ImageCaptioner => -26,
+            LocaleDetector => -27,
+            PostRawTranslator => -28,
+            TopicTitleTranslator => -29,
+            ShortTextTranslator => -30,
+            SpamDetector => -31,
+            ContentCreator => -32,
+            ReportRunner => -33,
+            Discover => -34,
+            ChatThreadTitler => -35,
+          }.freeze
         end
       end
 
