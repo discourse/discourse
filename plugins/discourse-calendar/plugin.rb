@@ -629,7 +629,7 @@ after_initialize do
             rows << <<~HTML
               <tr>
                 <td style="padding: 0;">
-                  <img src="#{image_url}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
+                  <img src="#{CGI.escape_html(image_url)}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
                 </td>
               </tr>
             HTML
