@@ -5,6 +5,7 @@ plugins:
   data_explorer_ai_queries_enabled:
     default: false
     client: true
+    area: "ai-features/data_explorer"
   data_explorer_query_result_limit:
     default: 1000
     hidden: true

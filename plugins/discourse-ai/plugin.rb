@@ -81,14 +81,15 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end
 
+# register setting areas for external AI features before settings.yml is processed
+require_relative "lib/agents/agent"
+DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS.each_key do |mod_name|
+  register_site_setting_area("ai-features/#{mod_name}")
+end
+
 after_initialize do
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
-  end
-
-  # register setting areas for external AI features from the reservation list
-  DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS.each_key do |mod_name|
-    DiscoursePluginRegistry.site_setting_areas << "ai-features/#{mod_name}"
   end
 
   # do not autoload this cause we may have no namespace

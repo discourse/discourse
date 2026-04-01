@@ -27,4 +27,30 @@ describe DiscourseAi::Agents::Agent do
       )
     end
   end
+
+  describe "external feature discovery" do
+    before { SiteSetting.data_explorer_enabled = false }
+
+    it "discovers agents and tools from the raw registry even when the plugin is disabled" do
+      expect(
+        DiscoursePluginRegistry.external_ai_features.none? do |e|
+          e[:module_name] == :data_explorer
+        end,
+      ).to eq(true)
+
+      expect(
+        DiscoursePluginRegistry._raw_external_ai_features.any? do |e|
+          e[:value][:module_name] == :data_explorer
+        end,
+      ).to eq(true)
+
+      expect(described_class.system_agents[DiscourseDataExplorer::AiQueryGenerator]).to eq(-1001)
+      expect(described_class.external_tool_by_name("ValidateSql")).to eq(
+        DiscourseDataExplorer::Tools::ValidateSql,
+      )
+      expect(described_class.external_tool_by_name("RunSql")).to eq(
+        DiscourseDataExplorer::Tools::RunSql,
+      )
+    end
+  end
 end

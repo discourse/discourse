@@ -8,8 +8,6 @@ ai_agents_is_view =
   ).present?
 return if ai_agents_is_view
 
-DiscourseAi::Configuration::ExternalFeatureSetup.ensure_setup!
-
 summarization_agents = [DiscourseAi::Agents::Summarizer, DiscourseAi::Agents::ShortSummarizer]
 external_agent_ids =
   DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS
