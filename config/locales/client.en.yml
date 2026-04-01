@@ -8993,7 +8993,7 @@ en:
         back: "Back to embedding"
         configuration_snippet: "Configuration snippet"
         full_app_mode: "Full app mode"
-        full_app_mode_description: "Load the full Discourse application in the embed iframe, allowing users to reply, like, quote, and interact with topics directly."
+        full_app_mode_description: "Load the full Discourse application in the embed iframe, allowing users to reply, like, quote, and interact with topics directly"
         host_form:
           add_header: "Add host"
           edit_header: "Edit host"
