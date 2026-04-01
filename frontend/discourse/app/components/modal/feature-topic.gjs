@@ -12,6 +12,7 @@ import PopupInputTip from "discourse/components/popup-input-tip";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import { i18n } from "discourse-i18n";
 
 export default class FeatureTopic extends Component {
@@ -107,7 +108,7 @@ export default class FeatureTopic extends Component {
   }
 
   _parseDate(date) {
-    return moment(date, ["YYYY-MM-DD", "YYYY-MM-DD HH:mm"]);
+    return moment(date, FORMAT);
   }
 
   _isDateValid(parsedDate) {
