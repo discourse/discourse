@@ -115,6 +115,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 1
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Git
         run: |
