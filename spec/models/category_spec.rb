@@ -417,6 +417,36 @@ RSpec.describe Category do
     end
   end
 
+  describe "description sanitization" do
+    fab!(:admin)
+
+    it "sanitizes description to prevent XSS on create" do
+      category =
+        Category.create!(
+          name: "XSS Test Category",
+          user: admin,
+          description:
+            "This has <script>alert('xss')</script> and <img src=x onerror=alert('xss')>",
+        )
+
+      expect(category.description).not_to include("<script>")
+      expect(category.description).not_to include("&lt;script&gt;")
+      expect(category.description).to include("&lt;img")
+    end
+
+    it "sanitizes description to prevent XSS on update" do
+      category = Fabricate(:category_with_definition, user: admin)
+      category.update(
+        description: "This has <script>alert('xss')</script> and <img src=x onerror=alert('xss')>",
+      )
+
+      category.reload
+      expect(category.description).not_to include("<script>")
+      expect(category.description).not_to include("&lt;script&gt;")
+      expect(category.description).to include("&lt;img")
+    end
+  end
+
   describe "after create" do
     fab!(:category) { Fabricate(:category_with_definition, name: "Amazing Category") }
     let(:topic) { category.topic }

@@ -206,16 +206,30 @@ namespace :release do
     prs = JSON.parse(json_output)
     raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
 
-    choices = prs.map { |pr| pr.slice("number", "title", "body", "headRefName") }
+    extract_ghsa_id = ->(body) do
+      return nil if body.nil?
+      match = body.match(%r{github\.com/discourse/discourse/security/advisories/(GHSA-[\w-]+)})
+      match&.[](1)
+    end
+
+    choices =
+      prs.map do |pr|
+        pr.slice("number", "title", "body", "headRefName").merge(
+          "ghsa_id" => extract_ghsa_id.call(pr["body"]),
+        )
+      end
 
     selected =
-      if (pr_numbers = ENV["SECURITY_FIX_PR_NUMBERS"])
-        requested = pr_numbers.split(",").map(&:to_i)
-        choices.select { |pr| requested.include?(pr["number"]) }
+      if (ghsa_ids = ENV["SECURITY_FIX_GHSA_IDS"])
+        requested = ghsa_ids.split(",").map(&:strip)
+        choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"]) }
       else
         prompt = TTY::Prompt.new
         prompt_choices =
-          choices.map { |pr| { name: "##{pr["number"]}: #{pr["title"]}", value: pr } }
+          choices.map do |pr|
+            ghsa_label = pr["ghsa_id"] || "GHSA MISSING"
+            { name: "##{pr["number"]} [#{ghsa_label}]: #{pr["title"]}", value: pr }
+          end
         prompt.multi_select(
           "Select security fix PRs to include (space to toggle, enter to finish):",
           prompt_choices,

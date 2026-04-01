@@ -12,7 +12,16 @@ el:
     unaccepted-policies:
       labels:
         topic_id: ID Θέματος
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Μια πολιτική χρειάζεται τον έλεγχό σας: %{topic_title}"
+      visit_topic: "Επισκεφθείτε το θέμα"
+      visit_link_to_respond: "%{visit_topic_link} για να απαντήσετε."
+      unsubscribe: "Αλλάξτε την %{email_preferences_link} ή το %{unsubscribe_link} για να απεγγραφείτε."
+      your_policy_email_settings: "προτίμηση συχνότητας email πολιτικής"
   unsubscribe:
     policy_emails:
       never: Ποτέ
+      when_away: Μόνο όταν είμαι μακριά
       always: Πάντα

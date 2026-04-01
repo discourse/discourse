@@ -94,6 +94,7 @@ el:
         not_valid_integer_value: "πρέπει να είναι ακέραιος αριθμός"
         not_valid_float_value: "πρέπει να είναι float"
         not_valid_boolean_value: "πρέπει να είναι boolean"
+        not_valid_enum_value: "πρέπει να είναι ένα από τα ακόλουθα: %{choices}"
         string_value_not_valid_max:
           one: "πρέπει να είναι το πολύ %{count} χαρακτήρα"
           other: "πρέπει να είναι το πολύ %{count} χαρακτήρες"
@@ -192,6 +193,9 @@ el:
     site_settings:
       invalid_site_setting: "Δεν υπάρχει ρύθμιση με όνομα '%{name}'"
       invalid_category_id: "Καθορίσατε μια κατηγορία που δεν υπάρχει"
+      invalid_choice:
+        one: "'%{name}' δεν είναι έγκυρη επιλογή."
+        other: "'%{name}' δεν είναι έγκυρες επιλογές."
       default_categories_already_selected: "Δεν μπορείς να επιλέξεις μια κατηγορία που χρησιμοποιείται σε άλλη λίστα."
       default_tags_already_selected: "Δε μπορείτε να επιλέξετε μια ετικέτα που χρησιμοποιείται σε άλλη λίστα."
       s3_upload_bucket_is_required: "Δεν μπορείτε να ενεργοποιήσετε μεταφορτώσεις στο S3 εάν δεν παρέχετε το 's3_upload_bucket'."
@@ -214,6 +218,7 @@ el:
       <p>Αυτή η πρόσκληση προς <a href="%{base_url}">%{site_name}</a> δεν μπορεί πλέον να εξαργυρωθεί. Παρακαλούμε ζητήστε από το άτομο που σας προσκάλεσε να σας στείλει μια νέα πρόσκληση.</p>
     existing_user_cannot_redeem: "Αυτή η πρόσκληση δεν μπορεί να εξαργυρωθεί. Παρακαλούμε ζητήστε από το άτομο που σας προσκάλεσε να σας στείλει μια νέα πρόσκληση."
     invite_exists: "Έχετε ήδη προσκαλέσει το <b>%{email}</b>."
+    invalid_email: "Το %{email} δεν είναι έγκυρη διεύθυνση email."
     confirm_email: "<p>Έχετε σχεδόν τελειώσει! Στείλαμε ένα email ενεργοποίησης στη διεύθυνση email σας. Παρακαλούμε ακολουθήστε τις οδηγίες στο μήνυμα για να ενεργοποιήσετε τον λογαριασμό σας.</p><p>Εάν δε φτάσει, ελέγξτε τον φάκελο ανεπιθύμητων μηνυμάτων.</p>"
     disabled_errors:
       invalid_access: "Δεν έχεις δικαίωμα να δεις τους πόρους που ζήτησες."
@@ -476,6 +481,10 @@ el:
           attributes:
             word:
               too_many: "Πάρα πολλές λέξεις για την ενέργεια"
+            base:
+              invalid_url: "Το URL αντικατάστασης δεν είναι έγκυρο"
+              invalid_tag_list: "Η λίστα ετικετών αντικατάστασης δεν είναι έγκυρη"
+              invalid_html: "Η HTML μπορεί να χρησιμοποιηθεί μόνο για αντικατάσταση"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -484,6 +493,7 @@ el:
           base:
             at_least_one_granular_scope: "πρέπει να επιλεγεί τουλάχιστον ένα"
       <<: *errors
+  uncategorized_category_name: "Χωρίς κατηγορία"
   general_category_name: "Γενικά"
   meta_category_name: "Σχολιασμός Ιστοσελίδας"
   meta_category_description: "Συζήτηση σχετικά με την ιστοσελίδα, την οργάνωσή της, τον τρόπο λειτουργίας της και πώς αυτή μπορεί να βελτιωθεί."
@@ -492,6 +502,8 @@ el:
   discourse_welcome_topic:
     title: "Καλώς ήλθατε στο %{site_title}! :wave:"
   admin_quick_start_title: "Οδηγός Διαχειριστή: Ξεκινώντας"
+  topic_view_stats:
+    invalid_date: "Η ημερομηνία είναι σε μη έγκυρη μορφή, χρησιμοποιήστε ΕΕΕΕ-ΜΜ-ΗΗ"
   category:
     topic_prefix: "Σχετικά με την κατηγορία %{category} "
     post_template: "%{replace_paragraph}\n\nΧρησιμοποιήστε τις επόμενες παραγράφους για μια μεγαλύτερη περιγραφή ή για να ορίσεις οδηγίες και κανόνες για τις κατηγορίες:\n\n- Γιατί μπορεί να χρησιμοποιηθεί αυτή η κατηγορία; Ποιος είναι ο σκοπός της;\n\n- Αυτή η κατηγορία είναι διαφορετική από αυτές που έχουμε ήδη;\n\n- Τι πρέπει να περιέχουν τα θέματα αυτής της κατηγορίας γενικότερα;\n\n- Χρειαζόμαστε αυτή την κατηγορία; Μπορούμε να την ενώσουμε με άλλη κατηγορία ή υποκατηγορία;\n"
@@ -714,6 +726,10 @@ el:
     pm_body: "Θέμα που περιέχει αντίγραφα ασφαλείας προσχεδίων"
   user_activity:
     no_log_search_queries: "Οι καταγραφές των ερωτημάτων αναζήτησης είναι αυτήν τη στιγμή απενεργοποιημένες (ένας διαχειριστής μπορεί να τις ενεργοποιήσει στις ρυθμίσεις του ιστότοπου)."
+  webauthn:
+    validation:
+      user_presence_error: "Απαιτείται η παρουσία του χρήστη."
+      user_verification_error: "Απαιτείται η επαλήθευση του χρήστη."
   topic_flag_types:
     spam:
       title: "Ανεπιθύμητα"
@@ -757,10 +773,16 @@ el:
     mute_topic: "Σίγαση όλων των ειδοποιήσεων για αυτό το νήμα, %{link}"
     unwatch_category: "Διακοπή επιτήρησης όλων των θεμάτων της κατηγορίας %{category}"
     mailing_list_mode: "Απενεργοποιήστε τη λειτουργία της ταχυδρομικής λίστας"
+    all: "Να μην μου στέλνετε μηνύματα από %{sitename}"
     different_user_description: "Έχετε συνδεθεί ως διαφορετικός χρήστης από αυτόν που επικοινωνήσαμε μέσω email. Παρακαλούμε αποσυνδεθείτε ή χρησιμοποιήστε την ανώνυμη λειτουργία και δοκιμάστε ξανά."
+    not_found_description: "Λυπούμαστε, δεν μπορέσαμε να βρούμε αυτήν τη συνδρομή. Είναι πιθανό ο σύνδεσμος στο email σας να είναι πολύ παλιός και να έχει λήξει;"
+    user_not_found_description: "Λυπούμαστε, δεν μπορέσαμε να βρούμε χρήστη για αυτήν τη συνδρομή. Πιθανώς προσπαθείτε να απεγγραφείτε από έναν λογαριασμό που δεν υπάρχει πλέον."
     log_out: "Αποσύνδεση"
     submit: "Αποθήκευση προτιμήσεων"
     digest_frequency:
+      title: "Λαμβάνετε email σύνοψης %{frequency}"
+      never_title: "Δεν λαμβάνετε email σύνοψης"
+      select_title: "Ορίστε τη συχνότητα των email σύνοψης σε:"
       never: "ποτέ"
       every_30_minutes: "κάθε 30 λεπτά"
       every_hour: "ωριαία"
@@ -888,7 +910,10 @@ el:
       description: "Προβολές σελίδας για συνδεδεμένους χρήστες, ανώνυμους χρήστες, γνωστούς ανιχνευτές και άλλη επισκεψιμότητα."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
+      title: "ΗΕΧ / ΜΕΧ"
       xaxis: "Ημέρα"
+      yaxis: "ΗΕΧ/ΜΕΧ"
+      description: "Το ποσοστό των μηνιαίων ενεργών μελών που επέστρεψαν την τελευταία ημέρα. Αυτό το ποσοστό δείχνει πόσο τακτικά επιστρέφουν οι άνθρωποι. Αυτό ονομάζεται επίσης «κολλότητα» της κοινότητας. Στόχος είναι > 20%."
     daily_engaged_users:
       xaxis: "Ημέρα"
     profile_views:
@@ -1055,8 +1080,10 @@ el:
       xaxis: "Ημέρα"
       yaxis: "Σύνολο"
     mobile_visits:
+      title: "Επισκέψεις χρηστών (κινητά)"
       xaxis: "Ημέρα"
       yaxis: "Αριθμός επισκέψεων"
+      description: "Αριθμός μοναδικών συνδεδεμένων χρηστών που επισκέφθηκαν χρησιμοποιώντας κινητή συσκευή."
     web_crawlers:
       labels:
         page_views: "Προβολές σελίδας"
@@ -1112,6 +1139,11 @@ el:
         logged_in_views: Συνδεδεμένοι
         anon_views: Ανώνυμοι
         total_views: Σύνολο
+    associated_accounts_by_provider:
+      title: "Συσχετισμένοι λογαριασμοί ανά μέθοδο σύνδεσης"
+      labels:
+        provider: Πάροχος σύνδεσης
+        total_users: "Σύνολο ενεργών λογαριασμών χρηστών"
   dashboard:
     problem:
       upcoming_change_stable_opted_out: 'Ο ιστότοπός σας έχει εξαιρεθεί από την επερχόμενη αλλαγή "%{upcoming_change}". Αυτή η αλλαγή έχει πλέον φτάσει στην κατάσταση "Σταθερή" και ενδέχεται σύντομα να καταργηθεί ή να γίνει μόνιμη. Επισκεφθείτε <a href="%{base_path}/admin/config/upcoming-changes">τη σελίδα επερχόμενων αλλαγών</a> για να δείτε λεπτομέρειες σχετικά με αυτήν την αλλαγή.'
@@ -2132,9 +2164,19 @@ el:
       other: "Ενημέρωση: Στέλνουμε το μέγιστο %{count} emails καθημερινά. Ελέγξτε την ιστοσελίδα για να δείτε αυτά που πιθανώς έχουν κρατηθεί. ΥΓ ευχαριστούμε που είστε τόσο δημοφιλής!"
     in_reply_to: "Απάντηση Σε"
     reply_by_email: "[Επισκέψου το νήμα](%{base_url}%{url}) ή απάντησε σε αυτό το email για να αποκριθείς."
+    reply_by_email_pm: "[Επισκεφθείτε το μήνυμα](%{base_url}%{url}) ή απαντήστε σε αυτό το email για να απαντήσετε σε %{participants}."
+    reply_by_email_button_only: "[Επισκεφθείτε το θέμα](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Επισκεφθείτε το μήνυμα](%{base_url}%{url})"
     only_reply_by_email: "Απαντήστε σε αυτό το email για να αποκριθείς."
+    only_reply_by_email_pm: "Απαντήστε σε αυτό το email για να απαντήσετε σε %{participants}."
+    only_reply_by_email_pm_button_only: "[Επισκεφθείτε το μήνυμα](%{base_url}%{url})"
     visit_link_to_respond: "[Επισκέψου το νήμα](%{base_url}%{url}) για να αποκριθείς."
+    visit_link_to_respond_pm: "[Επισκεφθείτε το μήνυμα](%{base_url}%{url}) για να απαντήσετε σε %{participants}."
+    visit_link_to_respond_button_only: "[Επισκεφθείτε το θέμα](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Επισκεφθείτε το μήνυμα](%{base_url}%{url})"
+    reply_above_line: "## Παρακαλούμε πληκτρολογήστε την απάντησή σας πάνω από αυτήν τη γραμμή. ##"
     posted_by: "Αναρτήθηκε από %{username} στις %{post_date}"
+    pm_participants: "Συμμετέχοντες: %{participants}"
     more_pm_participants:
       one: "%{participants} και %{count} ακόμα"
       other: "%{participants} και %{count} ακόμα"
@@ -2395,6 +2437,9 @@ el:
     account_silenced_forever:
       title: "Λογαριασμός σε Σίγαση"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
+    account_deleted:
+      title: "Λογαριασμός διαγράφηκε"
+      subject_template: "[%{email_prefix}] Ο λογαριασμός σας έχει διαγραφεί"
     account_exists:
       title: "Ο λογαριασμός υπάρχει ήδη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός υπάρχει ήδη"
@@ -2407,7 +2452,11 @@ el:
         Αν δεν προσπαθήσατε να δημιουργήσετε έναν λογαριασμό για το %{email} ή να αλλάξετε την διεύθυνση email, μην ανησυχείτε – μπορείτε με ασφάλεια να αγνοήσετε αυτό το μήνυμα.
 
         Αν έχετε απορίες, [επικοινωνήστε με τους συνεργάτες μας](%{base_url}/about).
+    account_second_factor_disabled:
+      title: "Έλεγχος Ταυτότητας Δύο Παραγόντων Απενεργοποιημένος"
+      subject_template: "[%{email_prefix}] Ο έλεγχος ταυτότητας δύο παραγόντων απενεργοποιήθηκε"
     digest:
+      why: "Μια σύντομη περίληψη του %{site_link} από %{since}"
       since_last_visit: "Από την τελευταία σου επίσκεψη"
       new_topics: "Νέα θέματα"
       unread_notifications: "Αδιάβαστες Ειδοποιήσεις"
@@ -2421,6 +2470,8 @@ el:
       unsubscribe: "Λάβατε αυτή την σύνοψη από την %{site_link} επειδή δεν σας είδαμε εδώ και μερικές μέρες. Αν δεν θέλετε να λαμβάνετε αυτή την σύνοψη, αλλάξτε τις %{email_preferences_link} ή %{unsubscribe_link} για διαγραφή από την λίστα."
       your_email_settings: "ρυθμίσεις email"
       click_here: "κάνε κλικ εδώ"
+      from: "%{site_name}"
+      preheader: "Μια σύντομη περίληψη από %{since}"
     forgot_password:
       title: "Ξέχασα τον κωδικό πρόσβασης"
       preview: "Επαναφέρετε τον κωδικό πρόσβασής σας."
@@ -2435,7 +2486,9 @@ el:
 
         %{base_url}/u/password-reset/%{email_token}
     email_login:
+      title: "Συνδεθείτε μέσω συνδέσμου"
       preview: "Συνδεθείτε μέσω συνδέσμου."
+      subject_template: "[%{email_prefix}] Συνδεθείτε μέσω συνδέσμου"
     set_password:
       title: "Όρισε κωδικό πρόσβασης"
       preview: "Ορίστε τον κωδικό πρόσβασης λογαριασμού."
@@ -2474,6 +2527,7 @@ el:
       title: "Επιβεβαίωση παλιάς διεύθυνσης email"
       subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
     confirm_old_email_add:
+      title: "Επιβεβαίωση παλιού email (Προσθήκη)"
       subject_template: "[%{email_prefix}] Επικυρώστε την νέα σας διεύθυνση email"
     notify_old_email:
       title: "Ειδοποίηση παλιάς διεύθυνσης email"
@@ -2490,6 +2544,9 @@ el:
         Η διεύθυνση email σου έχει αλλάξει σε:
 
         %{new_email}
+    notify_old_email_add:
+      title: "Ειδοποίηση παλαιού email (Προσθήκη)"
+      subject_template: "[%{email_prefix}] Προστέθηκε μια νέα διεύθυνση email"
     signup_after_approval:
       title: "Εγγραφή μετά από έγκριση "
       preview: "Νέος λογαριασμός εγκρίθηκε."
@@ -2507,10 +2564,16 @@ el:
         %{base_url}/u/activate-account/%{email_token}
 
         Αν για κάποιο λόγο δεν μπορείτε να κάνετε κλικ στον παραπάνω σύνδεσμο, παρακαλούμε αντιγράψτε ολόκληρη την διεύθυνση και επικολλήστε την στην γραμμή διευθύνσεων του περιηγητή σας.
+    activation_reminder:
+      title: "Υπενθύμιση ενεργοποίησης"
+      subject_template: "[%{email_prefix}] Υπενθύμιση για επιβεβαίωση του λογαριασμού σας"
     suspicious_login:
+      title: "Ειδοποίηση νέας σύνδεσης"
       preview: "Επαληθεύστε τη συσκευή σας."
+      subject_template: "[%{site_name}] Νέα σύνδεση από %{location}"
     post_approved:
       title: "Η ανάρτησή σας εγκρίθηκε"
+      subject_template: "[%{site_name}] Η ανάρτησή σας εγκρίθηκε"
   page_not_found:
     page_title: "Η σελίδα δεν βρέθηκε"
     title: "Ουπς! Αυτή η σελίδα δεν υπάρχει ή είναι ιδιωτική."

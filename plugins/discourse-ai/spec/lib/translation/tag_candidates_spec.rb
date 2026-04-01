@@ -7,45 +7,19 @@ describe DiscourseAi::Translation::TagCandidates do
       expect(DiscourseAi::Translation::TagCandidates.get.count).to eq(Tag.count)
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is enabled" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    it "includes tags in restricted tag groups" do
+      tag = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      TagGroupPermission.where(tag_group: tag_group).destroy_all
+      restricted_group = Fabricate(:group)
+      TagGroupPermission.create!(
+        tag_group: tag_group,
+        group_id: restricted_group.id,
+        permission_type: TagGroupPermission.permission_types[:full],
+      )
 
-      it "includes tags not in any tag group" do
-        tag = Fabricate(:tag)
-
-        tags = DiscourseAi::Translation::TagCandidates.get
-        expect(tags).to include(tag)
-      end
-
-      it "includes tags in tag groups visible to everyone" do
-        tag = Fabricate(:tag)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        TagGroupPermission.create!(
-          tag_group: tag_group,
-          group_id: Group::AUTO_GROUPS[:everyone],
-          permission_type: TagGroupPermission.permission_types[:full],
-        )
-
-        tags = DiscourseAi::Translation::TagCandidates.get
-        expect(tags).to include(tag)
-      end
-
-      it "excludes tags in tag groups not visible to everyone" do
-        tag = Fabricate(:tag)
-        tag_group = Fabricate(:tag_group, tags: [tag])
-        # remove default everyone permission if exists
-        TagGroupPermission.where(tag_group: tag_group).destroy_all
-        # add restricted permission
-        restricted_group = Fabricate(:group)
-        TagGroupPermission.create!(
-          tag_group: tag_group,
-          group_id: restricted_group.id,
-          permission_type: TagGroupPermission.permission_types[:full],
-        )
-
-        tags = DiscourseAi::Translation::TagCandidates.get
-        expect(tags).not_to include(tag)
-      end
+      tags = DiscourseAi::Translation::TagCandidates.get
+      expect(tags).to include(tag)
     end
   end
 

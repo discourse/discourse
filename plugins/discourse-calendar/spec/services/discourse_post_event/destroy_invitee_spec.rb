@@ -124,5 +124,31 @@ RSpec.describe(DiscoursePostEvent::DestroyInvitee) do
         expect { result }.to change { DiscoursePostEvent::Invitee.count }.by(-1)
       end
     end
+
+    context "when event creator destroys another user's invitee" do
+      fab!(:event_creator) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:creator_topic) { Fabricate(:topic, user: event_creator) }
+      fab!(:creator_post) { Fabricate(:post, user: event_creator, topic: creator_topic) }
+      fab!(:creator_event) { Fabricate(:event, post: creator_post) }
+      fab!(:creator_event_invitee) do
+        creator_event.create_invitees(
+          [{ user_id: invitee_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+        )
+        creator_event.invitees.find_by(user_id: invitee_user.id)
+      end
+
+      let(:params) { { post_id: creator_event.id, id: creator_event_invitee.id } }
+      let(:dependencies) { { guardian: event_creator.guardian } }
+
+      before do
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "destroys the invitee" do
+        expect { result }.to change { DiscoursePostEvent::Invitee.count }.by(-1)
+      end
+    end
   end
 end

@@ -17,21 +17,35 @@ module DiscourseAi
         topics =
           topics.where("topics.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
-        if SiteSetting.ai_translation_backfill_limit_to_public_content
-          # exclude all PMs
-          # and only include topics from public categories
-          topics =
-            topics
-              .where.not(archetype: Archetype.private_message)
-              .where(category_id: Category.where(read_restricted: false).select(:id))
-        else
-          # all regular topics, and group PMs
+        target_category_ids = SiteSetting.ai_translation_target_categories
+        pm_scope = SiteSetting.ai_translation_personal_messages
+
+        # Category filter: include target categories + PMs (PMs filtered in next step)
+        if target_category_ids.present?
+          category_ids = target_category_ids.split("|").map(&:to_i)
           topics =
             topics.where(
-              "topics.archetype != ? OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
-              Archetype.private_message,
+              "topics.category_id IN (:cats) OR topics.archetype = :pm",
+              cats: category_ids,
+              pm: Archetype.private_message,
             )
+        else
+          topics = topics.where(archetype: Archetype.private_message)
         end
+
+        # PM scope filter
+        case pm_scope
+        when "group"
+          topics =
+            topics.where(
+              "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
+              pm: Archetype.private_message,
+            )
+        when "none", nil
+          topics = topics.where.not(archetype: Archetype.private_message)
+        end
+
+        topics
       end
 
       def self.calculate_completion_per_locale(locale)

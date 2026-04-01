@@ -476,13 +476,15 @@ RSpec.describe "tasks/release" do
         {
           "number" => 1,
           "title" => "Security fix one",
-          "body" => "Description for fix one",
+          "body" =>
+            "Description for fix one\nhttps://github.com/discourse/discourse/security/advisories/GHSA-1111-2222-3333",
           "headRefName" => "security-fix-one",
         },
         {
           "number" => 2,
           "title" => "Security fix two",
-          "body" => "",
+          "body" =>
+            "https://github.com/discourse/discourse/security/advisories/GHSA-aaaa-bbbb-cccc",
           "headRefName" => "security-fix-two",
         },
       ].to_json
@@ -510,7 +512,7 @@ RSpec.describe "tasks/release" do
         capture: true,
       ).and_return(pr_list_json)
 
-      ENV["SECURITY_FIX_PR_NUMBERS"] = "1,2"
+      ENV["SECURITY_FIX_GHSA_IDS"] = "GHSA-1111-2222-3333,GHSA-aaaa-bbbb-cccc"
 
       Dir.chdir(origin_path) do
         git "checkout", "-b", "security-fix-one"
@@ -531,7 +533,7 @@ RSpec.describe "tasks/release" do
       Dir.chdir(local_path) { git "remote", "add", "privatemirror", origin_path }
     end
 
-    after { ENV.delete("SECURITY_FIX_PR_NUMBERS") }
+    after { ENV.delete("SECURITY_FIX_GHSA_IDS") }
 
     context "when accepting the version bump" do
       before { run_task }
@@ -582,13 +584,16 @@ RSpec.describe "tasks/release" do
           {
             "number" => 1,
             "title" => "Security fix for release branch",
-            "body" => "",
+            "body" =>
+              "https://github.com/discourse/discourse/security/advisories/GHSA-release-test-1234",
             "headRefName" => "security-fix-for-release-branch",
           },
         ].to_json
       end
 
       before do
+        ENV["SECURITY_FIX_GHSA_IDS"] = "GHSA-release-test-1234"
+
         Dir.chdir(origin_path) do
           git "checkout", "-b", base_branch
           File.write("lib/version.rb", fake_version_rb("2025.6.0"))
