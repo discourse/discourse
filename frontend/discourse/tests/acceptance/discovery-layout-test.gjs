@@ -15,8 +15,11 @@ acceptance("Discovery Layout", function () {
 
     assert.dom("#list-area").exists();
     assert.dom(".discovery-layout").doesNotExist();
-    assert.dom(".discovery-layout__sidebar").doesNotExist();
+    assert.dom(".discovery-layout__category-header").doesNotExist();
+    assert.dom(".discovery-layout__navigation").doesNotExist();
+    assert.dom(".discovery-layout__content").doesNotExist();
     assert.dom(".discovery-layout__list").doesNotExist();
+    assert.dom(".discovery-layout__sidebar").doesNotExist();
   });
 
   test("renders the discovery-layout wrapper with sidebar when blocks are registered", async function (assert) {
@@ -36,6 +39,10 @@ acceptance("Discovery Layout", function () {
     await visit("/latest");
 
     assert.dom(".discovery-layout").exists();
+    assert.dom(".discovery-layout__category-header").exists();
+    assert.dom(".discovery-layout__navigation").exists();
+    assert.dom(".discovery-layout__navigation .list-controls").exists();
+    assert.dom(".discovery-layout__content").exists();
     assert.dom(".discovery-layout__list #list-area").exists();
     assert.dom(".discovery-layout__sidebar").exists();
     assert
