@@ -146,6 +146,8 @@ class PostRevisor
             names += Tag.where(id: ids).pluck(:name) if ids.present?
             names
           end
+        elsif fields.has_key?(:tags)
+          []
         else
           tc.topic.tags.map(&:name)
         end

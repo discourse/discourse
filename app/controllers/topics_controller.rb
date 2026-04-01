@@ -477,6 +477,9 @@ class TopicsController < ApplicationController
             changes.delete(:tags)
           end
         end
+
+        # resolve to name strings before passing to PostRevisor
+        changes[:tags] = resolve_tag_names(topic) if changes.has_key?(:tags)
       elsif topic.tags.empty?
         changes.delete(:tags)
       end
@@ -1312,26 +1315,27 @@ class TopicsController < ApplicationController
   private
 
   def resolve_tag_names(topic)
-    if params[:tags].present?
-      incoming = params[:tags]
-      if incoming.first.is_a?(String)
-        Discourse.deprecate(
-          "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
-          since: "2026.01",
-          drop_from: "2026.07",
-        )
-        incoming.reject(&:empty?)
+    @resolved_tag_names ||=
+      if params[:tags].present?
+        incoming = params[:tags]
+        if incoming.first.is_a?(String)
+          Discourse.deprecate(
+            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+            since: "2026.01",
+            drop_from: "2026.07",
+          )
+          incoming.reject(&:empty?)
+        else
+          ids = incoming.filter_map { |t| t[:id]&.to_i }
+          names = incoming.filter_map { |t| t[:id].blank? && t[:name].presence }
+          names += Tag.where(id: ids).pluck(:name) if ids.present?
+          names
+        end
+      elsif params.has_key?(:tags)
+        []
       else
-        ids = incoming.filter_map { |t| t[:id]&.to_i }
-        names = incoming.filter_map { |t| t[:id].blank? && t[:name].presence }
-        names += Tag.where(id: ids).pluck(:name) if ids.present?
-        names
+        Tag.where(id: topic.tag_ids).pluck(:name)
       end
-    elsif params.has_key?(:tags)
-      []
-    else
-      Tag.where(id: topic.tag_ids).pluck(:name)
-    end
   end
 
   def allow_embed_mode
