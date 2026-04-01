@@ -921,19 +921,23 @@ describe DiscoursePostEvent::Event do
       expect(topic.image_upload_id).to eq(upload.id)
     end
 
-    it "clears post and topic image when event image is removed" do
+    it "does not clear post image_upload_id when event has no image but post has inline images" do
+      other_upload = Fabricate(:upload)
       PostRevisor.new(post).revise!(
         user,
-        raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.url}\"]\n[/event]",
+        raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.short_url})",
+      )
+      CookedPostProcessor.new(post).post_process
+      post.reload
+
+      PostRevisor.new(post).revise!(
+        user,
+        raw:
+          "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.short_url})\nupdated text",
       )
       post.reload
 
-      PostRevisor.new(post).revise!(user, raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
-      post.reload
-      topic.reload
-
-      expect(post.image_upload_id).to be_nil
-      expect(topic.image_upload_id).to be_nil
+      expect(post.image_upload_id).to eq(other_upload.id)
     end
   end
 end

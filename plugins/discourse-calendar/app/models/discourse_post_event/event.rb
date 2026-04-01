@@ -351,21 +351,18 @@ module DiscoursePostEvent
     end
 
     def sync_image_to_post_and_topic(generate_thumbnails: false)
-      if image_upload_id
-        post.update_column(:image_upload_id, image_upload_id)
-        if post.is_first_post?
-          post.topic.update_column(:image_upload_id, image_upload_id)
-          if generate_thumbnails
-            extra_sizes =
-              ThemeModifierHelper.new(
-                theme_ids: Theme.user_selectable.pluck(:id),
-              ).topic_thumbnail_sizes
-            post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
-          end
+      return unless image_upload_id
+
+      post.update_column(:image_upload_id, image_upload_id)
+      if post.is_first_post?
+        post.topic.update_column(:image_upload_id, image_upload_id)
+        if generate_thumbnails
+          extra_sizes =
+            ThemeModifierHelper.new(
+              theme_ids: Theme.user_selectable.pluck(:id),
+            ).topic_thumbnail_sizes
+          post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
         end
-      else
-        post.update_column(:image_upload_id, nil)
-        post.topic.update_column(:image_upload_id, nil) if post.is_first_post?
       end
     end
 

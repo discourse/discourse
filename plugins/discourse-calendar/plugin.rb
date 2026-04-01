@@ -251,11 +251,16 @@ after_initialize do
 
   on(:post_edited) do |post|
     event_before = post.event
+    had_image_before = event_before&.image_upload_id.present?
     DiscoursePostEvent::Event.update_from_raw(post)
     post.reload
 
     if SiteSetting.discourse_post_event_enabled
-      post.event&.sync_image_to_post_and_topic
+      if post.event&.image_upload_id
+        post.event.sync_image_to_post_and_topic
+      elsif had_image_before
+        post.trigger_post_process
+      end
       DiscoursePostEvent::Event.handle_post_event_webhooks(post, event_before)
     end
   end
