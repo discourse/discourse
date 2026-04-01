@@ -119,7 +119,6 @@ module DiscourseAi
           end
 
           # external modules from plugin registry
-          ExternalFeatureSetup.ensure_setup!
           external_features
             .group_by { |mod_name, _| mod_name }
             .each do |mod_name, entries|

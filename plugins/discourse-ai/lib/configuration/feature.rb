@@ -322,7 +322,6 @@ module DiscourseAi
           ].flatten
 
           # external features from plugin registry
-          DiscourseAi::Configuration::ExternalFeatureSetup.ensure_setup!
           DiscoursePluginRegistry.external_ai_features.each do |entry|
             reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[entry[:module_name]]
             next if reserved.nil?
