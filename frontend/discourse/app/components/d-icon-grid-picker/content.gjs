@@ -140,13 +140,15 @@ export default class DIconGridPickerContent extends Component {
    */
   @action
   onGridKeyDown(event) {
-    const target = event.target;
+    const target = /** @type {HTMLElement} */ (event.target);
     if (!target.classList.contains("d-icon-grid-picker__icon")) {
       return;
     }
 
     const wrapper = target.closest(".d-icon-grid-picker__grid-wrapper");
-    const allIcons = [...wrapper.querySelectorAll(".d-icon-grid-picker__icon")];
+    const allIcons = /** @type {HTMLElement[]} */ ([
+      ...wrapper.querySelectorAll(".d-icon-grid-picker__icon"),
+    ]);
     const idx = allIcons.indexOf(target);
 
     switch (event.key) {
@@ -211,15 +213,17 @@ export default class DIconGridPickerContent extends Component {
    */
   @action
   onKeyDown(event) {
+    const target = /** @type {HTMLElement} */ (event.target);
     if (
-      event.target.classList.contains("filter-input") &&
+      target.classList.contains("filter-input") &&
       event.key === "ArrowDown"
     ) {
       event.preventDefault();
-      event.target
-        .closest(".d-icon-grid-picker__content")
-        ?.querySelector(".d-icon-grid-picker__icon")
-        ?.focus();
+      /** @type {HTMLElement | null} */ (
+        target
+          .closest(".d-icon-grid-picker__content")
+          ?.querySelector(".d-icon-grid-picker__icon")
+      )?.focus();
       return;
     }
 
