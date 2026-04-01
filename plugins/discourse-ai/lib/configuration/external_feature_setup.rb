@@ -4,9 +4,6 @@ module DiscourseAi
   module Configuration
     class ExternalFeatureSetup
       def self.ensure_setup!
-        return if @setup_done
-        @setup_done = true
-
         raw_external_ai_features.each do |config|
           reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[config[:module_name]]
           next if reserved.nil?
@@ -31,9 +28,6 @@ module DiscourseAi
           setting_name = :"#{config[:module_name]}_#{config[:feature]}_agent"
           next if SiteSetting.respond_to?(setting_name)
 
-          if DiscoursePluginRegistry.site_setting_areas.exclude?(area)
-            DiscoursePluginRegistry.site_setting_areas << area
-          end
           if config[:enabled_by_setting].present? &&
                SiteSetting.respond_to?(config[:enabled_by_setting])
             SiteSetting.areas[config[:enabled_by_setting].to_sym] ||= area
