@@ -42,6 +42,9 @@ require_relative "lib/discourse_solved/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 
+  UserUpdater::OPTION_ATTR.push(:notify_on_solved)
+  add_to_serializer(:user_option, :notify_on_solved) { object.notify_on_solved }
+
   reloadable_patch do
     register_category_type(DiscourseSolved::Categories::Types::Support)
     ::Guardian.prepend(DiscourseSolved::GuardianExtensions)

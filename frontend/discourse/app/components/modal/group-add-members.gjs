@@ -11,7 +11,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import { and, not, or } from "discourse/truth-helpers";
+import { not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class GroupAddMembers extends Component {
@@ -20,7 +20,7 @@ export default class GroupAddMembers extends Component {
 
   @tracked loading = false;
   @tracked setOwner = false;
-  @tracked notifyUsers = false;
+  @tracked notifyUsers = true;
   @tracked usernamesAndEmails = [];
   @tracked flash;
 
@@ -44,9 +44,6 @@ export default class GroupAddMembers extends Component {
   setUsernamesAndEmails(usernamesAndEmails) {
     this.usernamesAndEmails = usernamesAndEmails;
     if (this.emails) {
-      if (!this.usernames) {
-        this.notifyUsers = false;
-      }
       this.setOwner = false;
     }
   }
@@ -135,11 +132,7 @@ export default class GroupAddMembers extends Component {
 
           <div class="input-group">
             <label>
-              <Input
-                @type="checkbox"
-                @checked={{this.notifyUsers}}
-                disabled={{and (not this.usernames) this.emails}}
-              />
+              <Input @type="checkbox" @checked={{this.notifyUsers}} />
               {{i18n "groups.add_members.notify_users"}}
             </label>
           </div>
