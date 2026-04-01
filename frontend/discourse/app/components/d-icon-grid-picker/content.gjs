@@ -132,6 +132,108 @@ export default class DIconGridPickerContent extends Component {
   }
 
   /**
+   * Handles arrow key navigation within the icon grid. Uses position-based
+   * matching (offsetTop/offsetLeft) for vertical movement so it works
+   * regardless of how many columns the grid renders.
+   *
+   * @param {KeyboardEvent} event
+   */
+  @action
+  onGridKeyDown(event) {
+    const target = event.target;
+    if (!target.classList.contains("d-icon-grid-picker__icon")) {
+      return;
+    }
+
+    const wrapper = target.closest(".d-icon-grid-picker__grid-wrapper");
+    const allIcons = [...wrapper.querySelectorAll(".d-icon-grid-picker__icon")];
+    const idx = allIcons.indexOf(target);
+
+    switch (event.key) {
+      case "ArrowRight": {
+        event.preventDefault();
+        const next = allIcons[idx + 1];
+        if (next) {
+          next.focus();
+        }
+        break;
+      }
+      case "ArrowLeft": {
+        event.preventDefault();
+        const prev = allIcons[idx - 1];
+        if (prev) {
+          prev.focus();
+        } else {
+          this.focusFilter(wrapper);
+        }
+        break;
+      }
+      case "ArrowDown": {
+        event.preventDefault();
+        event.stopPropagation();
+        const below = allIcons
+          .filter((el) => el.offsetTop > target.offsetTop)
+          .find((el) => el.offsetLeft === target.offsetLeft);
+        if (below) {
+          below.focus();
+        } else {
+          /* No exact column match (e.g. selected chip spans columns);
+             jump to first icon on the next row */
+          const nextRow = allIcons.find(
+            (el) => el.offsetTop > target.offsetTop
+          );
+          nextRow?.focus();
+        }
+        break;
+      }
+      case "ArrowUp": {
+        event.preventDefault();
+        event.stopPropagation();
+        const above = [...allIcons]
+          .reverse()
+          .filter((el) => el.offsetTop < target.offsetTop)
+          .find((el) => el.offsetLeft === target.offsetLeft);
+        if (above) {
+          above.focus();
+        } else {
+          this.focusFilter(wrapper);
+        }
+        break;
+      }
+    }
+  }
+
+  /**
+   * Unified keydown handler on the content root. Delegates to grid
+   * navigation or filter-to-grid focus depending on the event target.
+   *
+   * @param {KeyboardEvent} event
+   */
+  @action
+  onKeyDown(event) {
+    if (
+      event.target.classList.contains("filter-input") &&
+      event.key === "ArrowDown"
+    ) {
+      event.preventDefault();
+      event.target
+        .closest(".d-icon-grid-picker__content")
+        ?.querySelector(".d-icon-grid-picker__icon")
+        ?.focus();
+      return;
+    }
+
+    this.onGridKeyDown(event);
+  }
+
+  focusFilter(wrapper) {
+    wrapper
+      .closest(".d-icon-grid-picker__content")
+      ?.querySelector(".filter-input")
+      ?.focus();
+  }
+
+  /**
    * Fetches icons from the server, optionally filtered by a search term.
    * Used as the `@asyncData` callback for the `AsyncContent` loader.
    *
@@ -158,10 +260,17 @@ export default class DIconGridPickerContent extends Component {
   }
 
   <template>
-    <div class="d-icon-grid-picker__content" style={{@iconColorStyle}}>
+    {{! template-lint-disable no-invalid-interactive }}
+    <div
+      class="d-icon-grid-picker__content"
+      style={{@iconColorStyle}}
+      {{on "keydown" this.onKeyDown}}
+    >
       <div class="d-icon-grid-picker__filter-container">
         <FilterInput
           {{! @glint-expect-error: FilterInput lacks Element type declaration }}
+          aria-label={{i18n "d_icon_grid_picker.search_placeholder"}}
+          aria-controls="d-icon-grid-picker-listbox"
           placeholder={{i18n "d_icon_grid_picker.search_placeholder"}}
           @value={{this.filter}}
           @filterAction={{withEventValue this.onFilterInput}}
@@ -171,19 +280,31 @@ export default class DIconGridPickerContent extends Component {
         />
       </div>
 
-      <div class="d-icon-grid-picker__grid-wrapper">
+      <div
+        class="d-icon-grid-picker__grid-wrapper"
+        id="d-icon-grid-picker-listbox"
+        role="listbox"
+        aria-label={{i18n "d_icon_grid_picker.select_icon"}}
+      >
         {{#if this.hasFavorites}}
-          <div class="d-icon-grid-picker__favorites">
+          <div
+            class="d-icon-grid-picker__favorites"
+            role="group"
+            aria-label={{i18n "d_icon_grid_picker.favorites"}}
+          >
             {{#each this.displayFavorites as |favIcon|}}
-              {{! template-lint-disable no-invalid-interactive }}
+              {{! template-lint-disable require-context-role }}
               {{#if (eq favIcon @value)}}
-                <span
+                <button
+                  type="button"
+                  role="option"
+                  aria-label={{favIcon}}
+                  aria-selected="true"
                   class={{concatClass
                     "d-icon-grid-picker__icon --selected"
                     (if @showSelectedName "d-icon-grid-picker__selected-chip")
                   }}
                   data-icon-id={{favIcon}}
-                  role="button"
                   {{this.registerIconTooltip}}
                   {{this.snapToGrid}}
                   {{on "click" (fn @onSelect favIcon)}}
@@ -194,23 +315,26 @@ export default class DIconGridPickerContent extends Component {
                       class="d-icon-grid-picker__selected-name"
                     >{{favIcon}}</span>
                   {{/if}}
-                </span>
+                </button>
               {{else}}
-                <span
+                {{! template-lint-disable require-context-role }}
+                <button
+                  type="button"
+                  role="option"
+                  aria-label={{favIcon}}
                   class="d-icon-grid-picker__icon"
                   data-icon-id={{favIcon}}
-                  role="button"
                   {{this.registerIconTooltip}}
                   {{on "click" (fn @onSelect favIcon)}}
                 >
                   {{dIcon favIcon}}
-                </span>
+                </button>
               {{/if}}
             {{/each}}
           </div>
         {{/if}}
 
-        <div class="d-icon-grid-picker__grid">
+        <div class="d-icon-grid-picker__grid" role="presentation">
           <AsyncContent
             @asyncData={{this.fetchIcons}}
             @context={{this.filter}}
@@ -223,23 +347,26 @@ export default class DIconGridPickerContent extends Component {
             </:loading>
             <:content as |icons|>
               {{#each icons as |item|}}
-                {{! template-lint-disable no-invalid-interactive }}
-                <span
+                {{! template-lint-disable require-context-role }}
+                <button
+                  type="button"
+                  role="option"
+                  aria-label={{item.id}}
+                  aria-selected={{if (eq item.id @value) "true"}}
                   class={{concatClass
                     "d-icon-grid-picker__icon"
                     (if (eq item.id @value) "--selected")
                   }}
                   data-icon-id={{item.id}}
-                  role="button"
                   {{this.registerIconTooltip}}
                   {{on "click" (fn @onSelect item.id)}}
                 >
                   {{dIcon item.id}}
-                </span>
+                </button>
               {{/each}}
             </:content>
             <:empty>
-              <div class="d-icon-grid-picker__empty">
+              <div class="d-icon-grid-picker__empty" role="status">
                 {{i18n "d_icon_grid_picker.no_results"}}
               </div>
             </:empty>

@@ -11,6 +11,7 @@ import DIconGridPickerContent from "discourse/components/d-icon-grid-picker/cont
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
+import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -89,10 +90,10 @@ export default class DIconGridPicker extends Component {
   }
 
   get iconColorStyle() {
-    if (!this.args.iconColor) {
+    if (!this.args.iconColor || !isValidHex(this.args.iconColor)) {
       return null;
     }
-    return trustHTML(`--icon-color: ${this.args.iconColor}`);
+    return trustHTML(`--icon-color: #${normalizeHex(this.args.iconColor)}`);
   }
 
   /**
@@ -107,8 +108,7 @@ export default class DIconGridPicker extends Component {
   }
 
   /**
-   * Resets the filter when the menu is opened so the user always starts
-   * with a clean search state. Also forwards to the external `@onShow` if provided.
+   * Forwards to the external `@onShow` callback if provided.
    */
   @action
   onShow() {
@@ -164,7 +164,7 @@ export default class DIconGridPicker extends Component {
           {{/if}}
 
           {{#if this.triggerLabel}}
-            <span class="d-button-label">{{this.triggerLabel}}</span>
+            <span class="d-icon-grid-picker__label">{{this.triggerLabel}}</span>
           {{else}}
             &#8203;
           {{/if}}

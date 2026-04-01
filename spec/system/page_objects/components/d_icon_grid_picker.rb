@@ -40,13 +40,11 @@ module PageObjects
       end
 
       def has_clear_button?
-        scoped(".d-icon-grid-picker__clear", wait: false).present?
-      rescue Capybara::ElementNotFound
-        false
+        scoped_has_css?(".d-icon-grid-picker__clear")
       end
 
       def has_no_clear_button?
-        !has_clear_button?
+        scoped_has_no_css?(".d-icon-grid-picker__clear")
       end
 
       private
@@ -67,6 +65,28 @@ module PageObjects
           find("#{@scope} #{selector}")
         else
           find(selector)
+        end
+      end
+
+      def scoped_has_css?(selector, **opts)
+        case @scope
+        when Capybara::Node::Element
+          @scope.has_css?(selector, **opts)
+        when String
+          page.has_css?("#{@scope} #{selector}", **opts)
+        else
+          page.has_css?(selector, **opts)
+        end
+      end
+
+      def scoped_has_no_css?(selector, **opts)
+        case @scope
+        when Capybara::Node::Element
+          @scope.has_no_css?(selector, **opts)
+        when String
+          page.has_no_css?("#{@scope} #{selector}", **opts)
+        else
+          page.has_no_css?(selector, **opts)
         end
       end
     end

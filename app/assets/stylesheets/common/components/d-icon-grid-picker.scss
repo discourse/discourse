@@ -132,6 +132,10 @@
     height: var(--icon-grid-cell);
     cursor: pointer;
     color: var(--icon-color, var(--primary-high));
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
 
     &:hover,
     &:focus {
@@ -151,7 +155,16 @@
       display: grid;
       grid-template-columns: var(--icon-grid-cell) 1fr;
       align-items: center;
+      text-align: left;
       padding: 0;
+
+      // Nudge away from the overflow edge on hover/focus so the
+      // scaled border-radius isn't clipped by the grid-wrapper.
+      &:hover,
+      &:focus {
+        position: relative;
+        left: calc(var(--icon-grid-cell) * 0.125 + var(--icon-grid-gap) * 2);
+      }
 
       .d-icon {
         justify-self: center;

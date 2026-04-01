@@ -1,4 +1,4 @@
-import { click, render, waitFor } from "@ember/test-helpers";
+import { click, render, triggerKeyEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -283,7 +283,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     );
 
     assert
-      .dom(".d-icon-grid-picker-trigger .d-button-label")
+      .dom(".d-icon-grid-picker-trigger .d-icon-grid-picker__label")
       .exists("shows label when no value");
   });
 
@@ -295,7 +295,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     );
 
     assert
-      .dom(".d-icon-grid-picker-trigger .d-button-label")
+      .dom(".d-icon-grid-picker-trigger .d-icon-grid-picker__label")
       .hasText("Pick one");
   });
 
@@ -307,7 +307,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     );
 
     assert
-      .dom(".d-icon-grid-picker-trigger .d-button-label")
+      .dom(".d-icon-grid-picker-trigger .d-icon-grid-picker__label")
       .doesNotExist("label hidden when icon is selected");
   });
 
@@ -424,6 +424,122 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await waitFor(".d-icon-grid-picker__icon");
     await click(".d-icon-grid-picker-trigger");
     assert.true(closeCalled, "onClose was called");
+  });
+
+  test("grid wrapper has listbox role", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    assert
+      .dom(".d-icon-grid-picker__grid-wrapper")
+      .hasAttribute("role", "listbox");
+  });
+
+  test("icon buttons have option role and aria-selected on selected icon", async function (assert) {
+    await render(
+      <template><DIconGridPicker @value="gear" @onChange={{noop}} /></template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    assert
+      .dom('[data-icon-id="gear"]')
+      .hasAttribute("role", "option")
+      .hasAttribute("aria-selected", "true");
+
+    assert
+      .dom('[data-icon-id="pencil"]')
+      .hasAttribute("role", "option")
+      .doesNotHaveAttribute("aria-selected");
+  });
+
+  test("arrow keys navigate between icons", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    const firstIcon = document.querySelector(".d-icon-grid-picker__icon");
+    firstIcon.focus();
+
+    await triggerKeyEvent(firstIcon, "keydown", "ArrowRight");
+    assert
+      .dom(document.activeElement)
+      .hasAttribute("data-icon-id", "trash-can");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowLeft");
+    assert.dom(document.activeElement).hasAttribute("data-icon-id", "pencil");
+  });
+
+  test("ArrowDown from filter focuses first icon", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    const filterInput = document.querySelector(
+      ".d-icon-grid-picker__filter .filter-input"
+    );
+    filterInput.focus();
+
+    await triggerKeyEvent(filterInput, "keydown", "ArrowDown");
+    assert.true(
+      document.activeElement.classList.contains("d-icon-grid-picker__icon"),
+      "first icon is focused"
+    );
+  });
+
+  test("ArrowUp from first icon focuses filter", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+      </template>
+    );
+
+    await click(".d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+
+    const firstIcon = document.querySelector(".d-icon-grid-picker__icon");
+    firstIcon.focus();
+
+    await triggerKeyEvent(firstIcon, "keydown", "ArrowUp");
+    assert.true(
+      document.activeElement.classList.contains("filter-input"),
+      "filter input is focused"
+    );
+  });
+
+  test("rejects invalid @iconColor values", async function (assert) {
+    await render(
+      <template>
+        <DIconGridPicker
+          @value="pencil"
+          @onChange={{noop}}
+          @iconColor="red; background: url(evil)"
+        />
+      </template>
+    );
+
+    const wrapper = document.querySelector(".d-icon-grid-picker");
+    assert.false(
+      wrapper.style.cssText.includes("--icon-color"),
+      "does not set --icon-color for invalid value"
+    );
   });
 
   test("hides favorites row while filtering", async function (assert) {
