@@ -36,10 +36,6 @@
   .note-info {
     display: flex;
     justify-content: space-between;
-
-    .show-post {
-      margin-bottom: var(--space-4);
-    }
   }
 
   .post-date {
@@ -49,6 +45,10 @@
 
   .show-reviewable {
     margin-right: 0.5em;
+  }
+
+  .show-post {
+    margin-bottom: var(--space-4);
   }
 }
 
