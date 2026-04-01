@@ -785,7 +785,7 @@
   .admin-embedding-index__full-app-toggle-text {
     display: flex;
     flex-direction: column;
-    gap: 0.15em;
+    gap: var(--space-1);
   }
 
   .admin-embedding-index__full-app-toggle-label {
