@@ -59,7 +59,7 @@ Discourse::Application.configure do
 
     if defined?(Pitchfork) && ENV["UNICORN_WORKERS"].to_i != 1
       # BetterErrors doesn't work with multiple workers. Disable it to avoid confusion
-      # Rails.configuration.middleware.delete BetterErrors::Middleware
+      Rails.configuration.middleware.delete BetterErrors::Middleware
     end
   end
 
