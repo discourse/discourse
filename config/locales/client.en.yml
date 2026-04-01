@@ -397,6 +397,7 @@ en:
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"
       disable_dev_tools: "Disable dev tools"
+      toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
     s3:
       regions:
