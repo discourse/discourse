@@ -1,4 +1,3 @@
-import { DEBUG } from "@glimmer/env";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 
@@ -48,36 +47,7 @@ export default function identifySource(error) {
     }
   }
 
-  let plugin;
-
-  // Build patterns array dynamically to match plugin files in both development and production
-  // Order matters: check more specific patterns (_admin) before general ones
-  const patterns = [];
-
-  // legacy
-  if (DEBUG) {
-    patterns.push(
-      /assets\/plugins\/([\w-]+)_admin\.js/, // Admin UI Development (no fingerprinting)
-      /assets\/plugins\/([\w-]+)\.js/, // Development (no fingerprinting)
-      /assets\/plugins\/test\/([\w-]+)_tests\.js/ // Test files
-    );
-  }
-
-  // legacy
-  patterns.push(
-    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+_admin(?:\.(?:br|gz))?\.js/, // Admin UI Production (with fingerprints)
-    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.(?:br|gz))?\.js/ // Production (with fingerprints)
-  );
-
-  // new paths (ROLLUP_PLUGIN_COMPILER)
-  patterns.push(/assets\/(?:js|br|gz)\/plugins\/([\w-]+)_/);
-
-  for (const pattern of patterns) {
-    plugin = stack.match(pattern)?.[1];
-    if (plugin) {
-      break;
-    }
-  }
+  const plugin = stack.match(/assets\/(?:js|br|gz)\/plugins\/([\w-]+)_/)?.[1];
 
   if (plugin) {
     return {
