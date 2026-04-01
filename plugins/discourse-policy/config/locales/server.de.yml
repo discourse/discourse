@@ -16,6 +16,8 @@ de:
       group_not_found: "Gruppe für Richtlinie nicht gefunden"
       no_policy: "Keine Richtlinie für Beitrag vorhanden"
       staff_only: "Richtlinien dürfen nur auf Team-Beiträge angewendet werden"
+      policy_group_inaccessible: "Diese Richtlinie kann derzeit nicht akzeptiert werden. Bitte kontaktiere einen Website-Administrator."
+      no_policy_permission: "Du bist nicht berechtigt, die Richtlinien in diesem Beitrag zu ändern."
     error:
       no_permission: "Nicht autorisiert"
   reports:

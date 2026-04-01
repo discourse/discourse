@@ -18,16 +18,16 @@ pt:
           edit: "editar"
           cancel: "cancelar"
           user:
-            deleted: "(utilizador eliminado)"
+            deleted: "(usuário eliminado)"
           reviewables:
             actions:
               agree_and_suspend:
                 title: "Utilizador Suspenso"
               agree_and_silence:
-                title: "Silenciar Utilizador"
+                title: "Silenciar Usuário"
               disagree:
                 title: "Discordar"
       topic:
         sort_by: "Ordenar por"
         votes: "Votos"
-        activity: "Atividade"
+        activity: "Actividade"

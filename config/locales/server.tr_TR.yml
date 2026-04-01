@@ -1063,6 +1063,8 @@ tr_TR:
     connection_error: "Sunucuya bağlanırken bir sorun oluştu, sunucu adını ve bağlantı noktasını kontrol edip tekrar deneyin."
     timeout_error: "Sunucuya bağlantı zaman aşımına uğradı, sunucu adını ve bağlantı noktasını kontrol edin ve tekrar deneyin."
     unhandled_error: "E-posta ayarları test edilirken işlenmemiş hata. %{message}"
+    invalid_host: "Belirtilen sunucu, izin verilmeyen bir IP adresine yönlendiriliyor."
+    host_resolve_failed: "Belirtilen sunucu çözümlenemedi."
   webauthn:
     validation:
       invalid_type_error: "Sağlanan webauthn türü geçersizdi. Geçerli türler webauthn.get ve webauthn.create'tir."
@@ -2471,6 +2473,7 @@ tr_TR:
     show_preview_for_form_templates: "Form şablonları özelliği için ön izlemeyi etkinleştirin"
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
+    enable_new_checkbox_style: "FormKit onay kutuları için yeniden tasarlanan onay kutusu stilini etkinleştirin."
     impersonate_without_logout: "Yöneticilerin, yönetici hesaplarından çıkış yapmadan bir kullanıcıyı taklit etmelerine izin verin."
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
