@@ -23,6 +23,37 @@ module PageObjects
         self
       end
 
+      def click_full_app_mode_toggle
+        find(".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox").click
+        self
+      end
+
+      def has_full_app_mode_enabled?
+        find(
+          ".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox[aria-checked='true']",
+        ).present?
+      end
+
+      def has_full_app_mode_disabled?
+        find(
+          ".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox[aria-checked='false']",
+        ).present?
+      end
+
+      def has_snippet_containing?(text)
+        if page.has_css?(".admin-embedding-index__code.-collapsed")
+          find(".admin-embedding-index__code").click
+        end
+        find(".highlighted-code", text: text).present?
+      end
+
+      def has_no_snippet_containing?(text)
+        if page.has_css?(".admin-embedding-index__code.-collapsed")
+          find(".admin-embedding-index__code").click
+        end
+        page.has_no_css?(".highlighted-code", text: text)
+      end
+
       def click_delete
         open_embedding_host_menu
         find(".admin-embeddable-host-item__delete").click
