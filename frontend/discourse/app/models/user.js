@@ -34,6 +34,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -1508,7 +1509,7 @@ User.reopenClass({
     return result;
   },
 
-  createAccount(attrs) {
+  async createAccount(attrs) {
     let data = {
       name: attrs.accountName,
       email: attrs.accountEmail,
@@ -1522,6 +1523,16 @@ User.reopenClass({
 
     if (attrs.inviteCode) {
       data.invite_code = attrs.inviteCode;
+    }
+
+    const shouldCreate = await applyValueTransformer(
+      "before-create-account",
+      Promise.resolve(true), // plugins might want to make external API calls to validate the data before account creation, so we return a promise here
+      { data }
+    );
+
+    if (!shouldCreate) {
+      return Promise.reject();
     }
 
     return ajax(userPath(), {

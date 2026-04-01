@@ -35,7 +35,11 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-onboarding-start-posting-options",
   "admin-plugin-icon",
   "admin-reports-show-query-params",
+<<<<<<< HEAD
   "admin-theme-card-show-full-controls",
+=======
+  "before-create-account",
+>>>>>>> dcd535a695 (DEV: add  "before-create-account" value transformer)
   "bulk-select-in-nav-controls",
   "category-available-views",
   "category-default-colors",

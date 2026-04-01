@@ -21,13 +21,13 @@ export default class BaseCaptcha extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this.isCaptchaLoaded()) {
+    if (this.isCaptchaLoaded) {
       this.captchaApi.reset(this.widgetId);
     }
   }
 
   initializeCaptcha() {
-    if (this.isCaptchaLoaded()) {
+    if (this.isCaptchaLoaded) {
       next(() => {
         if (document.getElementById(this.containerId)) {
           this.renderCaptcha(this.siteKey);
@@ -38,12 +38,12 @@ export default class BaseCaptcha extends Component {
     }
   }
 
-  isCaptchaLoaded() {
+  get isCaptchaLoaded() {
     return typeof this.captchaApi !== "undefined";
   }
 
   renderCaptcha() {
-    if (!this.isCaptchaLoaded() || !this.siteKey) {
+    if (!this.isCaptchaLoaded || !this.siteKey) {
       this.configError = i18n(this.configErrorKey);
       return;
     }

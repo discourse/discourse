@@ -1,9 +1,5 @@
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { withPluginApi } from "discourse/lib/plugin-api";
-
-const PLUGIN_ID = "discourse-hCaptcha";
 
 function captchaSelector(siteSettings) {
   if (siteSettings.discourse_hcaptcha_enabled) {
@@ -19,41 +15,28 @@ function initializeHCaptcha(api, container) {
     return;
   }
 
-  api.modifyClassStatic("model:user", {
-    pluginId: PLUGIN_ID,
+  api.registerValueTransformer("before-create-account", async () => {
+    const captchaService = container.lookup("service:captcha-service");
+    captchaService.submitted = true;
 
-    createAccount() {
-      const captchaService = getOwnerWithFallback(this).lookup(
-        "service:captcha-service"
-      );
-      captchaService.submitted = true;
+    if (captchaService.invalid) {
+      return false;
+    }
 
-      if (captchaService.invalid) {
-        return Promise.reject();
-      }
+    const captchaRoute = captchaSelector(siteSettings);
 
-      const data = {
-        token: captchaService.token,
-      };
-
-      const captcha_route = captchaSelector(siteSettings);
-
-      const originalAccountCreation = this._super;
-      return ajax(`/captcha/${captcha_route}/create.json`, {
-        data,
+    try {
+      await ajax(`/captcha/${captchaRoute}/create.json`, {
+        data: { token: captchaService.token },
         type: "POST",
-      })
-        .then(() => {
-          return originalAccountCreation(...arguments);
-        })
-        .catch(() => {
-          captchaService.failed = true;
-          return Promise.reject();
-        })
-        .finally(() => {
-          captchaService.reset();
-        });
-    },
+      });
+      return true;
+    } catch {
+      captchaService.failed = true;
+      return false;
+    } finally {
+      captchaService.reset();
+    }
   });
 }
 
