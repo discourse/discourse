@@ -7504,7 +7504,6 @@ cs:
           import_web_tip: "Repozitář obsahující motiv"
           direct_install_tip: "Opravdu chcete nainstalovat <strong>%{name}</strong> z níže uvedeného repozitáře?"
           import_web_advanced: "Pokročilé…"
-          import_file_tip: "Soubor .tar.gz, .zip nebo .dcstyle.json obsahující motiv"
           is_private: "Motiv je v soukromém git úložišti"
           finish_install: "Dokončit instalaci motivu"
           last_attempt: "Proces instalace nebyl dokončen, poslední pokus:"

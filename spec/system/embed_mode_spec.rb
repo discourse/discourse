@@ -32,7 +32,7 @@ describe "Embed mode" do
     visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
     expect(page).to have_css("body.embed-mode")
-    expect(topic_page).to have_topic_title(topic.title)
+    expect(page).to have_css("#topic-title .fancy-title", text: topic.title, visible: :all)
     expect(page).to have_css("#post_1")
   end
 

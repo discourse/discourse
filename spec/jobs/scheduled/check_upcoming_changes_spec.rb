@@ -5,6 +5,8 @@ RSpec.describe Jobs::CheckUpcomingChanges do
     fab!(:admin)
 
     before do
+      # No upcoming change notifications are sent for new sites
+      UpcomingChanges.stubs(:should_notify_admins?).returns(true)
       SiteSetting.upcoming_change_verbose_logging = true
       SiteSetting.promote_upcoming_changes_on_status = :stable
     end

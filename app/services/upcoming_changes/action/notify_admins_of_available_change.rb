@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Intended to be called from UpcomingChanges::Action::TrackStatusChanges, and
-# UpcomingChanges::Action::TrackAddedChanges, not standalone.
+# Intended to be called from UpcomingChanges::Action::TrackNotifyStatusChanges, and
+# UpcomingChanges::Action::TrackNotifyAddedChanges, not standalone.
 #
 # Send a notification to all admins that the upcoming change is available for
 # them to opt-in to.

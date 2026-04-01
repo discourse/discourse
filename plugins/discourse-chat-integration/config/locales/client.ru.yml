@@ -14,8 +14,17 @@ ru:
     chat_integration:
       menu_title: "Интеграция с чатами"
       settings: "Настройки"
+      nav:
+        providers: "Провайдер"
+        providers_description: "Настройте интеграцию с провайдерами чата"
+      add_provider: "Добавить провайдера"
       more_providers: "Ещё"
+      empty_state:
+        title: "Подключите свою платформу для чата"
+        body: "Отправляйте уведомления из Discourse в чат вашей команды. Выберите поставщика, чтобы начать работу."
       channels_title: "Каналы"
+      no_channels: "Каналы пока не настроены."
+      add_first_channel: "Добавьте свой первый %{provider} канал"
       channels_with_errors: "Некоторые каналы этого провайдера не работали в последний раз, когда были отправлены сообщения. Нажмите на иконку(и), чтобы узнать больше."
       channel_exception: "При последней отправке сообщения в этот канал произошла неизвестная ошибка."
       group_mention_template: "Упоминания о: @ %{name}"
@@ -23,6 +32,8 @@ ru:
       choose_group: "(Выберите группу)"
       all_categories: "(Все категории)"
       all_tags: "(Все теги)"
+      create_rule: "Создать правило"
+      add_channel: "Добавить канал"
       delete_channel: "Удалить"
       test_channel: "Тест"
       edit_channel: "Изменить"
@@ -30,11 +41,14 @@ ru:
       test_modal:
         title: "Отправить тестовое сообщение"
         topic: "Тема"
+        send: "Отправить тестовое сообщение"
         close: "Закрыть"
         error: "При отправке сообщения произошла неизвестная ошибка. Для получения дополнительной информации проверьте журналы сайта."
         success: "Сообщение успешно отправлено"
       type:
         normal: Обычный
+        group_message: Групповое сообщение
+        group_mention: Упоминание группы
       filter:
         mute: 'Отключить'
         follow: 'Только первая публикация'
@@ -55,6 +69,9 @@ ru:
           ok: "Валидный"
           fail: "Неверный формат"
       edit_rule_modal:
+        edit_title: Редактировать правило
+        create_title: Создать правило
+        save: Сохранение правила
         cancel: Отмена
         provider: Поставщик
         type: Тип
@@ -75,7 +92,9 @@ ru:
           param:
             identifier:
               title: Канал
+              help: "Например, #канал или @имя пользователя"
           errors:
+            auth_error: "Предоставленный токен аутентификации недействителен."
             action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
             channel_not_found: "Указанный канал не существует в Slack."
         telegram:
@@ -98,6 +117,7 @@ ru:
               help: "Имя для описания канала. Оно не используется для подключения к Discord."
             webhook_url:
               title: URL вебхука
+              help: URL веб-хука, созданного в настройках вашего сервера Discord, должен иметь формат https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
         guilded:
           title: "Guilded"
           param:
@@ -112,6 +132,7 @@ ru:
           param:
             identifier:
               title: Канал
+              help: "Например, #канал или @имя пользователя"
           errors:
             channel_not_found: "Указанный канал не существует в Mattermost"
         matrix:
@@ -142,6 +163,7 @@ ru:
           param:
             identifier:
               title: Канал
+              help: "Например, #канал или @имя пользователя"
           errors:
             invalid_channel: "Этот канал не существует в Rocket Chat"
         gitter:
@@ -149,6 +171,7 @@ ru:
           param:
             name:
               title: "Название"
+              help: "Например, название комнаты в Gitter: gitterHQ/services"
             webhook_url:
               title: "URL вебхука"
               help: "URL, указанный при создании новой интеграции в комнате Gitter."

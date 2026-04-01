@@ -12,6 +12,11 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
         root: false,
       ).serializable_hash
     end
+    if suggested_answers.present?
+      hash["suggestedAnswer"] = suggested_answers.map do |post|
+        DiscourseSolved::AnswerSchemaSerializer.new(post, root: false).serializable_hash
+      end
+    end
     hash
   end
 
@@ -30,7 +35,7 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
   end
 
   def answerCount
-    accepted_answer.present? ? 1 : 0
+    (accepted_answer.present? ? 1 : 0) + suggested_answers.to_a.size
   end
 
   def datePublished
@@ -45,5 +50,9 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
 
   def accepted_answer
     options[:accepted_answer]
+  end
+
+  def suggested_answers
+    options[:suggested_answers]
   end
 end

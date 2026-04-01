@@ -3,14 +3,32 @@
 body.embed-mode {
   // Remove top padding since header is hidden
   #main-outlet {
-    padding-top: 1em;
+    padding-top: 0;
+  }
+
+  #main-outlet-wrapper {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
   }
 
   // Hide elements that don't make sense in embed context
   .signup-cta,
   .suggested-topics,
-  .more-topics__container {
-    display: none;
+  .more-topics__container,
+  #topic-title,
+  .topic-above-footer-buttons-outlet.presence,
+  .above-main-container-outlet,
+  .topic-footer-main-buttons__actions .toggle-admin-menu,
+  .topic-footer-main-buttons__actions .bookmark,
+  .topic-footer-main-buttons__actions .flag-topic,
+  .topic-footer-main-buttons__actions .assign,
+  .topic-notifications-button,
+  nav.post-controls .actions .show-more-actions,
+  .software-update-prompt,
+  .time-gap,
+  .topic-navigation {
+    display: none !important;
   }
 
   // Ensure content fills the width
@@ -27,6 +45,9 @@ body.embed-mode {
     border-radius: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
 
     .composer-action-title {
       display: none;
@@ -61,5 +82,23 @@ body.embed-mode {
       grid-area: unset;
       justify-self: unset;
     }
+  }
+
+  .topic-timer-info,
+  .post-stream .topic-post:nth-child(2) article .topic-body,
+  .post-stream .topic-post:nth-child(2) article .topic-avatar {
+    border-top: none;
+  }
+
+  .topic-area .posts-wrapper:has(.post-stream .topic-post + .topic-post) {
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  // Hide OP
+  // Use visibility hidden to prevent issues with jumpy behavior
+  .post-stream .topic-post.topic-owner {
+    opacity: 0;
+    height: 0;
+    visibility: hidden;
   }
 }

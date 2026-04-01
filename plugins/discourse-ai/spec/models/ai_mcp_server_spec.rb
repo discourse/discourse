@@ -65,6 +65,41 @@ RSpec.describe AiMcpServer do
     )
   end
 
+  it "requires advanced OAuth params to be JSON objects" do
+    server =
+      Fabricate.build(
+        :ai_mcp_server,
+        auth_type: "oauth",
+        oauth_authorization_params: "access_type=offline",
+        oauth_token_params: ["audience"],
+      )
+
+    expect(server).not_to be_valid
+    expect(server.errors[:oauth_authorization_params]).to include(
+      I18n.t("discourse_ai.mcp_servers.oauth_authorization_params_invalid"),
+    )
+    expect(server.errors[:oauth_token_params]).to include(
+      I18n.t("discourse_ai.mcp_servers.oauth_token_params_invalid"),
+    )
+  end
+
+  it "clears advanced OAuth options when auth_type is not oauth" do
+    server =
+      Fabricate.build(
+        :ai_mcp_server,
+        auth_type: "header_secret",
+        ai_secret: ai_secret,
+        oauth_authorization_params: "access_type=offline",
+        oauth_token_params: ["audience"],
+        oauth_require_refresh_token: true,
+      )
+
+    expect(server).to be_valid
+    expect(server.oauth_authorization_params).to eq({})
+    expect(server.oauth_token_params).to eq({})
+    expect(server.oauth_require_refresh_token).to eq(false)
+  end
+
   it "builds an OAuth bearer header from the stored access token" do
     server =
       Fabricate(
@@ -80,6 +115,19 @@ RSpec.describe AiMcpServer do
     expect(server.oauth_token.refresh_token).to eq("refresh")
   end
 
+  it "capitalizes a lowercase OAuth token type in the Authorization header" do
+    server =
+      Fabricate(
+        :ai_mcp_server,
+        auth_type: "oauth",
+        oauth_status: "connected",
+        oauth_token_type: "bearer",
+      )
+    server.oauth_token_store.write!(access_token: "oauth-access-token", refresh_token: "refresh")
+
+    expect(server.auth_header_value).to eq("Bearer oauth-access-token")
+  end
+
   it "uses the client metadata URL unless manual registration is selected" do
     server = Fabricate(:ai_mcp_server, auth_type: "oauth")
 
@@ -89,6 +137,33 @@ RSpec.describe AiMcpServer do
     server.oauth_client_id = "manual-client-id"
 
     expect(server.effective_oauth_client_id).to eq("manual-client-id")
+  end
+
+  it "prefers a dynamically registered client_id over the metadata URL" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    expect(server.reload.effective_oauth_client_id).to eq("dynamic-client-id")
+  end
+
+  it "clears dynamically registered client_id when OAuth credentials are cleared" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    server.clear_oauth_credentials!
+
+    expect(server.reload.oauth_client_id).to be_nil
+    expect(server.effective_oauth_client_id).to eq(server.oauth_client_metadata_url)
+  end
+
+  it "preserves dynamically registered client_id across normal saves" do
+    server = Fabricate(:ai_mcp_server, auth_type: "oauth")
+    server.store_dynamic_registration!(client_id: "dynamic-client-id")
+
+    server.reload
+    server.update!(description: "Updated description")
+
+    expect(server.reload.oauth_client_id).to eq("dynamic-client-id")
   end
 
   it "clears stored OAuth credentials when the OAuth configuration changes" do
@@ -105,6 +180,23 @@ RSpec.describe AiMcpServer do
 
     expect(server.reload.oauth_status).to eq("disconnected")
     expect(server.oauth_token).to be_blank
+    expect(server.oauth_token_store.access_token).to be_blank
+    expect(server.oauth_token_store.refresh_token).to be_blank
+  end
+
+  it "clears stored OAuth credentials when advanced OAuth options change" do
+    server =
+      Fabricate(
+        :ai_mcp_server,
+        auth_type: "oauth",
+        oauth_status: "connected",
+        oauth_token_type: "Bearer",
+      )
+    server.oauth_token_store.write!(access_token: "access-token", refresh_token: "refresh-token")
+
+    server.update!(oauth_authorization_params: { "access_type" => "offline" })
+
+    expect(server.reload.oauth_status).to eq("disconnected")
     expect(server.oauth_token_store.access_token).to be_blank
     expect(server.oauth_token_store.refresh_token).to be_blank
   end

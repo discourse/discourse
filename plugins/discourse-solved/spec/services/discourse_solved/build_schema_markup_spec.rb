@@ -52,10 +52,34 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
         expect(html).to include('"@type":"QAPage"')
         expect(html).to include('"answerCount":0')
         expect(html).not_to include('"acceptedAnswer"')
+        expect(html).not_to include('"suggestedAnswer"')
+      end
+
+      context "when the topic has replies" do
+        fab!(:reply) { Fabricate(:post, topic: topic) }
+
+        it "includes replies as suggested answers" do
+          html = result[:html]
+          expect(html).to include('"suggestedAnswer"')
+          expect(html).to include('"answerCount":1')
+          expect(html).not_to include('"acceptedAnswer"')
+        end
+      end
+
+      context "when the topic has hidden replies" do
+        fab!(:hidden_reply) { Fabricate(:post, topic: topic, hidden: true) }
+        fab!(:visible_reply) { Fabricate(:post, topic: topic) }
+
+        it "excludes hidden posts from suggested answers" do
+          html = result[:html]
+          expect(html).to include('"answerCount":1')
+          expect(html).to include(visible_reply.user.username)
+          expect(html).not_to include(hidden_reply.user.username)
+        end
       end
     end
 
-    context "when there is an accepted answer" do
+    context "when there is an accepted answer but no other answers" do
       fab!(:answer_user, :user)
       fab!(:answer_post) { Fabricate(:post, topic: topic, user: answer_user, like_count: 3) }
 
@@ -66,13 +90,37 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
 
       it { is_expected.to run_successfully }
 
-      it "builds QAPage markup with the accepted answer" do
+      it "builds QAPage markup with just the accepted answer" do
         html = result[:html]
         expect(html).to include('"@type":"QAPage"')
         expect(html).to include('"answerCount":1')
         expect(html).to include('"acceptedAnswer"')
         expect(html).to include('"@type":"Answer"')
         expect(html).to include(answer_user.username)
+        expect(html).not_to include('"suggestedAnswer"')
+      end
+    end
+
+    context "when there is an accepted answer and suggested answers" do
+      fab!(:answer_user, :user)
+      fab!(:answer_post) { Fabricate(:post, topic: topic, user: answer_user, like_count: 3) }
+      fab!(:suggested_user, :user)
+      fab!(:suggested_post) { Fabricate(:post, topic: topic, user: suggested_user, like_count: 1) }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic: topic, answer_post: answer_post)
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "builds QAPage markup with both accepted and suggested answers" do
+        html = result[:html]
+        expect(html).to include('"answerCount":2')
+        expect(html).to include('"acceptedAnswer"')
+        expect(html).to include('"suggestedAnswer"')
+        expect(html).to include(answer_user.username)
+        expect(html).to include(suggested_user.username)
       end
     end
   end

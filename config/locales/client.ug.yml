@@ -6832,7 +6832,6 @@ ug:
           import_web_tip: "ئۆرنەك نەشر خەزىنەسىنى ئۆز ئىچىگە ئالىدۇ"
           direct_install_tip: "تۆۋەندە تىزىپ كۆرسىتىلگەن خەزىنەدىن <strong>%{name}</strong> نى راستتىنلا ئورنىتامسىز؟"
           import_web_advanced: "ئالىي…"
-          import_file_tip: "ئۆرنەكنىڭ .tar.gz، .zip ياكى .dcstyle.json ھۆججىتىنى ئۆز ئىچىگە ئالىدۇ"
           is_private: "ئۆرنەك شەخسى git خەزىنەسىدە"
           finish_install: "ئۆرنەك ئورنىتىش تامام"
           last_attempt: "ئورنىتىش جەريانى تاماملانمىدى، ئاخىرقى سىنىغىنى:"

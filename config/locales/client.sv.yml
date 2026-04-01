@@ -5253,7 +5253,6 @@ sv:
           import_web_tip: "Lagringsplats som innehåller tema"
           direct_install_tip: "Är du säker på att du vill installera <strong>%{name}</strong> från lagringsplatsen nedan?"
           import_web_advanced: "Avancerat…"
-          import_file_tip: ".tar.gz-, .zip- eller .dcstyle.json-fil innehåller tema"
           is_private: "Temat är i en privat git-lagringsplats"
           finish_install: "Slutför temainstallationen"
           last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"

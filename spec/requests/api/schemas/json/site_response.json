@@ -537,6 +537,9 @@
                 "integer",
                 "null"
               ]
+            },
+            "only_theme_color_schemes": {
+              "type": "boolean"
             }
           },
           "required": [

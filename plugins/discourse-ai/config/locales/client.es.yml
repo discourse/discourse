@@ -497,6 +497,7 @@ es:
         oauth_statuses:
           connected: "Conectados"
         oauth_connect: "Conectar"
+        oauth_hide_details: "Ocultar detalles"
         enabled: "Activado"
         save: "Guardar"
         edit: "Editar"
