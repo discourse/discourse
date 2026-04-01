@@ -1,5 +1,19 @@
 // used when @modalForMobile={{true}} is set on the d-menu component
 .fk-d-menu-modal {
+  z-index: z("modal", "content");
+
+  &__grip {
+    position: absolute;
+    top: 2.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-medium);
+    height: 5px;
+    width: 15vw;
+    max-width: 100px;
+    border-radius: 10px;
+  }
+
   .d-modal__body {
     padding: 1em 0;
   }
