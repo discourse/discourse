@@ -36,6 +36,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
             },
           },
           name: "Awesome Event",
+          recurrence: "every_day",
           creator: { id: 1, username: "admin", name: "Admin" },
           status: "public",
           should_display_invitees: false,
@@ -264,5 +265,24 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     assert
       .dom("#category-events-calendar")
       .exists("still on the category page after clicking");
+  });
+
+  test("event popup shows recurrence info for recurring events", async function (assert) {
+    await visit("/c/bug/1");
+
+    const eventLink = document.querySelector(
+      ".fc-daygrid-event-harness a[href='/t/-/18449/1']"
+    );
+    await click(eventLink);
+
+    assert
+      .dom(".event-recurrence")
+      .exists("recurrence section is shown in the popup");
+    assert
+      .dom(".event-recurrence .d-icon-arrows-rotate")
+      .exists("recurrence section has the recurring icon");
+    assert
+      .dom(".event-recurrence")
+      .hasText("Every day", "recurrence section shows the correct label");
   });
 });

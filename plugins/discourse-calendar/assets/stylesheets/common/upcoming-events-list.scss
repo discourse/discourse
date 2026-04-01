@@ -54,6 +54,12 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     color: var(--primary);
+
+    .d-icon-arrows-rotate {
+      margin-right: 0.25em;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
   }
 
   &__event-time {
