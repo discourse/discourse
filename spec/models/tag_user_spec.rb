@@ -338,6 +338,66 @@ RSpec.describe TagUser do
         expect(topic.tags.length).to eq(2)
       end
 
+      it "does not override user's manual topic notification level changes when auto_track runs" do
+        tracked_tag = Fabricate(:tag)
+        other_tag = Fabricate(:tag)
+        post = create_post(tags: [tracked_tag.name])
+
+        TopicUser.change(user.id, post.topic_id, total_msecs_viewed: 1)
+        TagUser.change(user.id, tracked_tag.id, tracking)
+
+        tu = TopicUser.get(post.topic, user)
+        expect(tu.notification_level).to eq tracking
+
+        # user manually sets topic to regular
+        TopicUser.change(
+          user.id,
+          post.topic_id,
+          notification_level: TopicUser.notification_levels[:regular],
+        )
+        tu = TopicUser.get(post.topic, user)
+        expect(tu.notification_level).to eq regular
+        expect(tu.notifications_reason_id).to eq TopicUser.notification_reasons[:user_changed]
+
+        # changing another tag triggers auto_track/auto_watch for the user
+        TagUser.change(user.id, other_tag.id, watching)
+
+        tu = TopicUser.get(post.topic, user)
+        expect(tu.notification_level).to eq regular
+      end
+
+      it "does not override user's manual topic notification level changes when auto_watch runs" do
+        post = create_post(tags: [watched_tag.name])
+        other_tag = Fabricate(:tag)
+
+        TopicUser.change(user.id, post.topic_id, total_msecs_viewed: 1)
+        TagUser.create!(
+          user: user,
+          tag: watched_tag,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+        TagUser.auto_watch(user_id: user.id)
+
+        tu = TopicUser.get(post.topic, user)
+        expect(tu.notification_level).to eq watching
+
+        # user manually sets topic to tracking
+        TopicUser.change(
+          user.id,
+          post.topic_id,
+          notification_level: TopicUser.notification_levels[:tracking],
+        )
+        tu = TopicUser.get(post.topic, user)
+        expect(tu.notification_level).to eq tracking
+        expect(tu.notifications_reason_id).to eq TopicUser.notification_reasons[:user_changed]
+
+        # changing another tag triggers auto_track/auto_watch for the user
+        TagUser.change(user.id, other_tag.id, watching)
+
+        tu = TopicUser.get(post.topic, user)
+        expect(tu.notification_level).to eq tracking
+      end
+
       it "is destroyed when a user is deleted" do
         TagUser.create!(
           user: user,
