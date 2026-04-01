@@ -1,4 +1,4 @@
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { trackedObject } from "@ember/reactive/collections";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
@@ -94,7 +94,7 @@ class OneboxToolbarPluginView {
     };
 
     if (!this.#toolbar) {
-      this.#state = new TrackedObject(attrs);
+      this.#state = trackedObject(attrs);
 
       this.#toolbar = new OneboxToolbar({
         copyLink: () => this.#copyLink(),

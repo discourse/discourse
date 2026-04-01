@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Onebox Toolbar", type: :system do
+describe "Composer - ProseMirror - Onebox Toolbar" do
   include_context "with prosemirror editor"
 
   def body(title)
