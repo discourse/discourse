@@ -1347,6 +1347,10 @@ export default class Composer extends RestModel {
     return true;
   }
 
+  serializeDraftData() {
+    return this.serialize(_draft_serializer);
+  }
+
   saveDraft() {
     if (!this.canSaveDraft) {
       return Promise.reject();
@@ -1354,15 +1358,13 @@ export default class Composer extends RestModel {
 
     this.set("draftSaving", true);
 
-    const data = this.serialize(_draft_serializer);
-
     const draftSequence = this.draftSequence;
     this.set("draftSequence", this.draftSequence + 1);
 
     return Draft.save(
       this.draftKey,
       draftSequence,
-      data,
+      this.serializeDraftData(),
       this.messageBus.clientId,
       { forceSave: this.draftForceSave }
     )
