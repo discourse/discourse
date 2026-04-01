@@ -37,7 +37,7 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
       # this is somewhat sensitive, so we default it to staff
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
     elsif external_agent_ids.include?(id)
-      agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
+      agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
     elsif summarization_agents.include?(agent_class)
       # Copy group permissions from site settings.
       default_groups = [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:trust_level_1]]
