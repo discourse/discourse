@@ -24,7 +24,11 @@ task "assets:precompile:build" do
 end
 
 task "assets:precompile:build_plugins": "environment" do
-  Plugin::JsManager.new.compile!
+  if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
+    Plugin::JsManager.new.compile!
+  else
+    puts "Skipping plugin JS compilation, set ROLLUP_PLUGIN_COMPILER=1 to enable"
+  end
 end
 
 task "assets:precompile:before": %w[environment assets:precompile:build]
