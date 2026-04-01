@@ -622,6 +622,19 @@ after_initialize do
           url = event_node["data-url"]
 
           rows = +""
+
+          event = DiscoursePostEvent::Event.find_by(id: post.id)
+          if event&.image_upload_id
+            image_url = UrlHelper.absolute(event.image_upload.url)
+            rows << <<~HTML
+              <tr>
+                <td style="padding: 0;">
+                  <img src="#{image_url}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
+                </td>
+              </tr>
+            HTML
+          end
+
           rows << <<~HTML
             <tr>
               <td style="padding: 12px;">
