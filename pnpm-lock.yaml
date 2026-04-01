@@ -160,9 +160,6 @@ importers:
       discourse:
         specifier: workspace:0.0.0
         version: link:../discourse
-      discourse-plugins:
-        specifier: workspace:1.0.0
-        version: link:../discourse-plugins
       ember-cli-htmlbars:
         specifier: ^7.0.0
         version: 7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -506,9 +503,6 @@ importers:
       discourse-markdown-it:
         specifier: workspace:1.0.0
         version: link:../discourse-markdown-it
-      discourse-plugins:
-        specifier: workspace:1.0.0
-        version: link:../discourse-plugins
       ember-async-data:
         specifier: ^2.0.1
         version: 2.0.1(@babel/core@7.29.0)(@glint/template@1.7.7)
@@ -662,34 +656,6 @@ importers:
       xss:
         specifier: ^1.0.15
         version: 1.0.15
-
-  frontend/discourse-plugins:
-    dependencies:
-      '@babel/core':
-        specifier: ^7.28.5
-        version: 7.29.0(supports-color@8.1.1)
-      deprecation-silencer:
-        specifier: workspace:1.0.0
-        version: link:../deprecation-silencer
-      ember-cli-babel:
-        specifier: ^8.2.0
-        version: 8.3.1(@babel/core@7.29.0)
-      ember-cli-htmlbars:
-        specifier: ^7.0.0
-        version: 7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      ember-template-imports:
-        specifier: ^4.4.0
-        version: 4.4.0
-      ember-this-fallback:
-        specifier: ^0.4.0
-        version: 0.4.0(patch_hash=31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45)(ember-cli-htmlbars@7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-    devDependencies:
-      ember-cli:
-        specifier: ~6.11.0
-        version: 6.11.0(@types/node@25.5.0)(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
-      webpack:
-        specifier: 5.99.9
-        version: 5.99.9(@swc/core@1.15.21)(esbuild@0.27.4)
 
   frontend/discourse-types:
     devDependencies:
