@@ -36,6 +36,10 @@
   .note-info {
     display: flex;
     justify-content: space-between;
+
+    .btn {
+      margin-bottom: var(--space-4);
+    }
   }
 
   .post-date {

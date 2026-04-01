@@ -38,7 +38,7 @@ const UserNote = <template>
               @action={{fn @removeNote @note}}
               @icon="far-trash-can"
               @title="user_notes.remove"
-              class="btn-small btn-danger"
+              class="btn-default btn-small btn-danger"
             />
           {{/if}}
         </div>
