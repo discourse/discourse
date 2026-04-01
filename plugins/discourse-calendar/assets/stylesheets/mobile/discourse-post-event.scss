@@ -1,6 +1,5 @@
 .discourse-post-event {
   .discourse-post-event-widget {
-    display: flex;
     border-width: 1px;
   }
 
@@ -8,10 +7,6 @@
     .date {
       max-width: 75vw;
     }
-  }
-
-  .event-image {
-    justify-content: start;
   }
 
   .event-actions {
