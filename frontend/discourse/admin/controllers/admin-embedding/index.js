@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -11,11 +10,8 @@ export default class AdminEmbeddingIndexController extends Controller {
   @service siteSettings;
   @controller adminEmbedding;
 
-  @tracked fullAppMode = false;
-
-  constructor() {
-    super(...arguments);
-    this.fullAppMode = this.siteSettings.embed_full_app;
+  get fullAppMode() {
+    return this.siteSettings.embed_full_app;
   }
 
   get embedding() {
@@ -55,14 +51,13 @@ export default class AdminEmbeddingIndexController extends Controller {
 
   @action
   async toggleFullAppMode() {
-    const newValue = !this.fullAppMode;
-    this.fullAppMode = newValue;
+    const previousValue = this.siteSettings.embed_full_app;
+    this.siteSettings.embed_full_app = !previousValue;
 
     try {
-      await SiteSetting.update("embed_full_app", newValue);
-      this.siteSettings.embed_full_app = newValue;
+      await SiteSetting.update("embed_full_app", !previousValue);
     } catch (err) {
-      this.fullAppMode = !newValue;
+      this.siteSettings.embed_full_app = previousValue;
       popupAjaxError(err);
     }
   }
