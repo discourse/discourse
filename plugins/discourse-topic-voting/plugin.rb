@@ -78,16 +78,6 @@ after_initialize do
         )
     end
 
-    if options[:order] == "votes-trending"
-      sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
-      result =
-        result.joins(
-          "LEFT JOIN topic_voting_topic_vote_count ON topic_voting_topic_vote_count.topic_id = topics.id",
-        ).reorder(
-          "#{DiscourseTopicVoting::TRENDING_SCORE_SQL} #{sort_dir}, COALESCE(topic_voting_topic_vote_count.votes_count, 0) DESC, topics.bumped_at DESC",
-        )
-    end
-
     result
   end
 
@@ -143,14 +133,6 @@ after_initialize do
           name: "order:votes-asc",
           description: I18n.t("topic_voting.filter.description.order_topic_votes_asc"),
         },
-        {
-          name: "order:votes-trending",
-          description: I18n.t("topic_voting.filter.description.order_topic_votes_trending"),
-        },
-        {
-          name: "order:votes-trending-asc",
-          description: I18n.t("topic_voting.filter.description.order_topic_votes_trending_asc"),
-        },
       ],
     )
 
@@ -183,14 +165,8 @@ after_initialize do
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, max_votes: value)
   end
 
-  filter_order_votes = ->(scope, order_direction, _guardian) do
+  add_filter_custom_filter("order:votes") do |scope, order_direction, _guardian|
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_direction:)
-  end
-
-  add_filter_custom_filter("order:votes", &filter_order_votes)
-
-  add_filter_custom_filter("order:votes-trending") do |scope, order_direction, _guardian|
-    DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_trending: order_direction)
   end
 
   on(:topic_status_updated) do |topic, status, enabled|

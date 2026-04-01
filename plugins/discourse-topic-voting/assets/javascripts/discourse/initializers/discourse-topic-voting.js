@@ -50,7 +50,6 @@ export default {
         };
 
         addVotingNavItem("votes", "order=votes");
-        addVotingNavItem("votes_trending", "order=votes-trending");
         addVotingNavItem("my_votes", "state=my_votes", {
           requiresUser: true,
         });
