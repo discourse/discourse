@@ -50,7 +50,7 @@ end
 # This is handy if you want to bind a key to restarting pitchfork in dev
 
 if dev_mode
-  UNICORN_DEV_SUPERVISOR_PID = Process.pid
+  DEV_SUPERVISOR_PID = Process.pid
 
   restart = true
   while restart
