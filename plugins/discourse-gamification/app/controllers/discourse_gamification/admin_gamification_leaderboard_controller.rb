@@ -41,6 +41,9 @@ class DiscourseGamification::AdminGamificationLeaderboardController < Admin::Adm
     leaderboard = DiscourseGamification::GamificationLeaderboard.find(params[:id])
     raise Discourse::NotFound unless leaderboard
 
+    previous_score_overrides = leaderboard.score_overrides
+    previous_scorable_category_ids = leaderboard.scorable_category_ids
+
     leaderboard.update(
       name: params[:name],
       to_date: params[:to_date],
@@ -50,11 +53,20 @@ class DiscourseGamification::AdminGamificationLeaderboardController < Admin::Adm
       visible_to_groups_ids: params[:visible_to_groups_ids] || [],
       default_period: params[:default_period],
       period_filter_disabled: params[:period_filter_disabled] || false,
+      score_overrides: (params[:score_overrides].presence&.to_unsafe_h&.transform_values(&:to_i)),
+      scorable_category_ids: params[:scorable_category_ids].presence,
     )
 
     if leaderboard.save
-      # TODO(selase): Only refresh on specific attribute changes
-      Jobs.enqueue(Jobs::RefreshLeaderboardPositions, leaderboard_id: leaderboard.id)
+      scoring_changed =
+        leaderboard.score_overrides != previous_score_overrides ||
+          leaderboard.scorable_category_ids != previous_scorable_category_ids
+
+      if scoring_changed
+        Jobs.enqueue(Jobs::RecalculateLeaderboardScores, leaderboard_id: leaderboard.id)
+      else
+        Jobs.enqueue(Jobs::RefreshLeaderboardPositions, leaderboard_id: leaderboard.id)
+      end
 
       render json: success_json
     else

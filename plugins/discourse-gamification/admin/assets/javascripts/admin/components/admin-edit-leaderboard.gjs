@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
@@ -6,9 +7,36 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import Category from "discourse/models/category";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
 import PeriodInput from "discourse/plugins/discourse-gamification/discourse/components/period-input";
+
+const SCORABLE_KEYS = [
+  "like_given",
+  "like_received",
+  "post_created",
+  "topic_created",
+  "solution",
+  "day_visited",
+  "flag_created",
+  "post_read",
+  "time_read",
+  "user_invited",
+  "reaction_given",
+  "reaction_received",
+  "chat_message_created",
+  "chat_reaction_given",
+  "chat_reaction_received",
+];
+
+function categoriesFromIds(ids) {
+  if (!ids) {
+    return [];
+  }
+  return ids.map((id) => Category.findById(id)).filter(Boolean);
+}
 
 export default class AdminEditLeaderboard extends Component {
   @service site;
@@ -22,7 +50,9 @@ export default class AdminEditLeaderboard extends Component {
   }
 
   get formData() {
-    return {
+    const overrides = this.args.leaderboard.scoreOverrides || {};
+
+    const data = {
       name: this.args.leaderboard.name,
       from_date: this.args.leaderboard.fromDate,
       to_date: this.args.leaderboard.toDate,
@@ -31,16 +61,56 @@ export default class AdminEditLeaderboard extends Component {
       visible_to_groups_ids: this.args.leaderboard.visibleToGroupsIds,
       default_period: this.args.leaderboard.defaultPeriod,
       period_filter_disabled: this.args.leaderboard.periodFilterDisabled,
+      scorable_category_ids: this.args.leaderboard.scorableCategoryIds,
     };
+
+    for (const key of SCORABLE_KEYS) {
+      data[`score_override_${key}`] =
+        overrides[key] !== undefined ? String(overrides[key]) : "";
+    }
+
+    return data;
+  }
+
+  @action
+  onCategoryChange(set, categories) {
+    set(categories.map((c) => c.id));
   }
 
   @action
   async save(data) {
+    const scoreOverrides = {};
+    let hasOverrides = false;
+
+    for (const key of SCORABLE_KEYS) {
+      const val = data[`score_override_${key}`];
+      if (val !== "" && val !== null && val !== undefined) {
+        scoreOverrides[key] = parseInt(val, 10);
+        hasOverrides = true;
+      }
+    }
+
+    const payload = {
+      name: data.name,
+      from_date: data.from_date,
+      to_date: data.to_date,
+      included_groups_ids: data.included_groups_ids,
+      excluded_groups_ids: data.excluded_groups_ids,
+      visible_to_groups_ids: data.visible_to_groups_ids,
+      default_period: data.default_period,
+      period_filter_disabled: data.period_filter_disabled,
+      scorable_category_ids: data.scorable_category_ids,
+    };
+
+    if (hasOverrides) {
+      payload.score_overrides = scoreOverrides;
+    }
+
     try {
       await ajax(
         `/admin/plugins/gamification/leaderboard/${this.args.leaderboard.id}`,
         {
-          data,
+          data: payload,
           type: "PUT",
         }
       );
@@ -54,7 +124,6 @@ export default class AdminEditLeaderboard extends Component {
         "adminPlugins.show.discourse-gamification-leaderboards.index"
       );
 
-      // To refresh the list of leaderboards in the index.
       this.router.refresh();
     } catch (err) {
       popupAjaxError(err);
@@ -177,6 +246,165 @@ export default class AdminEditLeaderboard extends Component {
       >
         <field.Control @value={{field.value}} />
       </form.Field>
+
+      <form.Section
+        @title={{i18n "gamification.leaderboard.scoring_configuration"}}
+      >
+        <form.Field
+          @name="scorable_category_ids"
+          @title={{i18n "gamification.leaderboard.scorable_categories"}}
+          @description={{i18n
+            "gamification.leaderboard.scorable_categories_help"
+          }}
+          @type="custom"
+          as |field|
+        >
+          <field.Control>
+            <CategorySelector
+              @categories={{categoriesFromIds field.value}}
+              @onChange={{fn this.onCategoryChange field.set}}
+            />
+          </field.Control>
+        </form.Field>
+
+        <form.Field
+          @name="score_override_like_given"
+          @title={{i18n "gamification.leaderboard.weight.like_given"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_like_received"
+          @title={{i18n "gamification.leaderboard.weight.like_received"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_post_created"
+          @title={{i18n "gamification.leaderboard.weight.post_created"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_topic_created"
+          @title={{i18n "gamification.leaderboard.weight.topic_created"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_solution"
+          @title={{i18n "gamification.leaderboard.weight.solution"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_day_visited"
+          @title={{i18n "gamification.leaderboard.weight.day_visited"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_flag_created"
+          @title={{i18n "gamification.leaderboard.weight.flag_created"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_post_read"
+          @title={{i18n "gamification.leaderboard.weight.post_read"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_time_read"
+          @title={{i18n "gamification.leaderboard.weight.time_read"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_user_invited"
+          @title={{i18n "gamification.leaderboard.weight.user_invited"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_reaction_given"
+          @title={{i18n "gamification.leaderboard.weight.reaction_given"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_reaction_received"
+          @title={{i18n "gamification.leaderboard.weight.reaction_received"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_chat_message_created"
+          @title={{i18n "gamification.leaderboard.weight.chat_message_created"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_chat_reaction_given"
+          @title={{i18n "gamification.leaderboard.weight.chat_reaction_given"}}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+
+        <form.Field
+          @name="score_override_chat_reaction_received"
+          @title={{i18n
+            "gamification.leaderboard.weight.chat_reaction_received"
+          }}
+          @type="input-number"
+          as |field|
+        >
+          <field.Control min="0" step="1" />
+        </form.Field>
+      </form.Section>
+
       <form.Submit />
     </Form>
   </template>

@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 describe Jobs::GenerateLeaderboardPositions do
+  fab!(:user)
   fab!(:leaderboard, :gamification_leaderboard)
-  fab!(:score) { Fabricate(:gamification_score, user_id: leaderboard.created_by_id) }
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }
 
-  it "generates leaderboard positions" do
+  before { Fabricate(:topic, user: user) }
+
+  it "calculates scores and generates leaderboard positions" do
     expect { leaderboard_positions.scores }.to raise_error(
       DiscourseGamification::LeaderboardCachedView::NotReadyError,
     )
@@ -13,5 +15,6 @@ describe Jobs::GenerateLeaderboardPositions do
     described_class.new.execute(leaderboard_id: leaderboard.id)
 
     expect(leaderboard_positions.scores.length).to eq(1)
+    expect(leaderboard_positions.scores.first.total_score).to eq(5)
   end
 end

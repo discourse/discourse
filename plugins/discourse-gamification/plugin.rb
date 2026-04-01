@@ -39,6 +39,7 @@ after_initialize do
   require_relative "jobs/scheduled/update_scores_for_ten_days"
   require_relative "jobs/scheduled/update_scores_for_today"
   require_relative "jobs/regular/recalculate_scores"
+  require_relative "jobs/regular/recalculate_leaderboard_scores"
   require_relative "jobs/regular/generate_leaderboard_positions"
   require_relative "jobs/regular/refresh_leaderboard_positions"
   require_relative "jobs/regular/delete_leaderboard_positions"
@@ -113,6 +114,14 @@ after_initialize do
   end
 
   on(:merging_users) do |source_user, target_user|
-    DiscourseGamification::GamificationScore.merge_scores(source_user, target_user)
+    DiscourseGamification::GamificationLeaderboardScore.merge_scores(source_user, target_user)
+  end
+
+  # Backfill per-leaderboard scores on upgrade from the global scoring system
+  if DiscourseGamification::GamificationLeaderboard.exists? &&
+       !DiscourseGamification::GamificationLeaderboardScore.exists?
+    DiscourseGamification::GamificationLeaderboard.find_each do |lb|
+      Jobs.enqueue(Jobs::RecalculateLeaderboardScores, leaderboard_id: lb.id)
+    end
   end
 end
