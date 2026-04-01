@@ -164,7 +164,12 @@ if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
     system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
     File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
   end
-  system("bin/rake", "assets:precompile:build_plugins", exception: true)
+  system(
+    { "SKIP_DB_AND_REDIS" => "1" },
+    "bin/rake",
+    "assets:precompile:build_plugins",
+    exception: true,
+  )
 else
   if core_build_reusable && ENV["LOAD_PLUGINS"] == "0"
     log "Reusing existing core ember build. Plugins not loaded. All done."
