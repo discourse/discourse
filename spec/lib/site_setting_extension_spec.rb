@@ -1015,6 +1015,20 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe ".all_settings" do
+    describe "non-configurable plugin exclusion" do
+      it "includes plugin site settings when the plugin is configurable" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
+
+        expect(SiteSetting.all_settings.map { |s| s[:setting] }).to include(:plugin_setting)
+      end
+
+      it "excludes plugin site settings when the plugin is not configurable" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+        expect(SiteSetting.all_settings.map { |s| s[:setting] }).not_to include(:plugin_setting)
+      end
+    end
+
     describe "uploads settings" do
       it "should return the right values" do
         negative_upload_id = [(Upload.minimum(:id) || 0) - 1, -10].min
