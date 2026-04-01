@@ -3321,6 +3321,13 @@ en:
         remove: "Remove link"
         visit: "Open link in external tab"
         link_copied: "Link copied!"
+        show_preview: "Show preview"
+
+      onebox_toolbar:
+        copy: "Copy link"
+        visit: "Open link"
+        remove_preview: "Remove preview"
+        link_copied: "Link copied!"
 
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
