@@ -23,34 +23,36 @@ module PageObjects
         self
       end
 
+      def full_app_mode_toggle
+        PageObjects::Components::DToggleSwitch.new(
+          ".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox",
+        )
+      end
+
       def click_full_app_mode_toggle
-        find(".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox").click
+        full_app_mode_toggle.toggle
         self
       end
 
       def has_full_app_mode_enabled?
-        find(
-          ".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox[aria-checked='true']",
-        ).present?
+        full_app_mode_toggle.checked?
       end
 
       def has_full_app_mode_disabled?
-        find(
-          ".admin-embedding-index__full-app-toggle .d-toggle-switch__checkbox[aria-checked='false']",
-        ).present?
+        full_app_mode_toggle.unchecked?
       end
 
       def expand_snippet
-        find(".admin-embedding-index__code .admin-config-area-card__title").click
+        find(".admin-embedding-index__code .admin-config-area-card__toggle-button").click
         self
       end
 
       def has_snippet_containing?(text)
-        page.has_css?(".admin-embedding-index__code .highlighted-code", text: text)
+        page.has_css?(".admin-embedding-index__code code", text: text)
       end
 
       def has_no_snippet_containing?(text)
-        page.has_no_css?(".admin-embedding-index__code .highlighted-code", text: text)
+        page.has_no_css?(".admin-embedding-index__code code", text: text)
       end
 
       def click_delete
