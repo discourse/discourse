@@ -344,11 +344,10 @@ module DiscoursePostEvent
 
       return if upload.nil?
 
-      is_public = !upload.secure?
-      is_owner = upload.user_id == post.user_id
-      has_used = UserUpload.exists?(upload_id: upload.id, user_id: post.user_id)
-
-      upload if is_public || is_owner || has_used
+      if !upload.secure? || upload.user_id == post.user_id ||
+           UserUpload.exists?(upload_id: upload.id, user_id: post.user_id)
+        upload
+      end
     end
 
     def sync_image_to_post_and_topic(generate_thumbnails: false)
