@@ -267,95 +267,169 @@ describe "Request tracking" do
       before { SiteSetting.use_beacon_for_browser_page_views = true }
 
       it "tracks an anonymous visit correctly" do
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
+        all_events =
+          DiscourseEvent.track_events do
             visit "/"
-            CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
-              "page_view_anon_total" => 1,
-              "page_view_anon_browser_total" => 1,
-              "page_view_logged_in_total" => 0,
-              "page_view_crawler_total" => 0,
-            )
+            try_until_success do
+              CachedCounting.flush
+              expect(ApplicationRequest.stats).to include(
+                "page_view_anon_total" => 1,
+                "page_view_anon_browser_total" => 1,
+                "page_view_anon_browser_beacon_total" => 1,
+                "page_view_logged_in_total" => 0,
+                "page_view_crawler_total" => 0,
+              )
+            end
           end
 
-        event = events[0][:params].last
+        beacon_events = all_events.select { |e| e[:event_name] == :beacon_browser_pageview }
+        non_beacon_events = all_events.select { |e| e[:event_name] == :browser_pageview }
 
-        expect(event[:user_id]).to be_nil
-        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
-        expect(event[:ip_address]).to eq("::1")
-        expect(event[:referrer]).to be_blank
-        expect(event[:session_id]).to be_present
+        expect(beacon_events.size).to eq(1)
+        expect(non_beacon_events.size).to eq(1)
 
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
+        beacon_event = beacon_events[0][:params].last
+        non_beacon_event = non_beacon_events[0][:params].last
+
+        [beacon_event, non_beacon_event].each do |event|
+          expect(event[:user_id]).to be_nil
+          expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
+          expect(event[:ip_address]).to eq("::1")
+          expect(event[:referrer]).to be_blank
+          expect(event[:session_id]).to be_present
+        end
+
+        expect(beacon_event[:session_id]).to eq(non_beacon_event[:session_id])
+
+        all_events =
+          DiscourseEvent.track_events do
             find(".nav-item_categories a").click
 
             CachedCounting.flush
             expect(ApplicationRequest.stats).to include(
               "page_view_anon_total" => 2,
               "page_view_anon_browser_total" => 2,
+              "page_view_anon_browser_beacon_total" => 2,
               "page_view_logged_in_total" => 0,
               "page_view_crawler_total" => 0,
             )
           end
 
-        event_2 = events[0][:params].last
+        beacon_events_2 = all_events.select { |e| e[:event_name] == :beacon_browser_pageview }
+        non_beacon_events_2 = all_events.select { |e| e[:event_name] == :browser_pageview }
 
-        expect(event_2[:user_id]).to be_nil
-        expect(event_2[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
-        expect(event_2[:ip_address]).to eq("::1")
-        expect(event_2[:referrer]).to eq("#{Discourse.base_url_no_prefix}/latest")
-        expect(event_2[:session_id]).to eq(event[:session_id])
+        expect(beacon_events_2.size).to eq(1)
+        expect(non_beacon_events_2.size).to eq(1)
+
+        beacon_event_2 = beacon_events_2[0][:params].last
+        non_beacon_event_2 = non_beacon_events_2[0][:params].last
+
+        [beacon_event_2, non_beacon_event_2].each do |event|
+          expect(event[:user_id]).to be_nil
+          expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
+          expect(event[:ip_address]).to eq("::1")
+          expect(event[:referrer]).to eq("#{Discourse.base_url}/")
+          expect(event[:session_id]).to eq(beacon_event[:session_id])
+        end
       end
 
       it "tracks a logged-in session correctly" do
         user = Fabricate(:user)
         sign_in user
 
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
+        all_events =
+          DiscourseEvent.track_events do
             visit "/"
 
-            CachedCounting.flush
-            expect(ApplicationRequest.stats).to include(
-              "page_view_anon_total" => 0,
-              "page_view_anon_browser_total" => 0,
-              "page_view_logged_in_total" => 1,
-              "page_view_crawler_total" => 0,
-              "page_view_logged_in_browser_total" => 1,
-            )
+            try_until_success do
+              CachedCounting.flush
+              expect(ApplicationRequest.stats).to include(
+                "page_view_anon_total" => 0,
+                "page_view_anon_browser_total" => 0,
+                "page_view_logged_in_total" => 1,
+                "page_view_logged_in_browser_total" => 1,
+                "page_view_logged_in_browser_beacon_total" => 1,
+                "page_view_crawler_total" => 0,
+              )
+            end
           end
 
-        event = events[0][:params].last
+        beacon_events = all_events.select { |e| e[:event_name] == :beacon_browser_pageview }
+        non_beacon_events = all_events.select { |e| e[:event_name] == :browser_pageview }
 
-        expect(event[:user_id]).to eq(user.id)
-        expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
-        expect(event[:ip_address]).to eq("::1")
-        expect(event[:referrer]).to be_blank
-        expect(event[:session_id]).to be_present
-        expect(event[:topic_id]).to be_blank
+        expect(beacon_events.size).to eq(1)
+        expect(non_beacon_events.size).to eq(1)
 
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
+        beacon_event = beacon_events[0][:params].last
+        non_beacon_event = non_beacon_events[0][:params].last
+
+        [beacon_event, non_beacon_event].each do |event|
+          expect(event[:user_id]).to eq(user.id)
+          expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/")
+          expect(event[:ip_address]).to eq("::1")
+          expect(event[:referrer]).to be_blank
+          expect(event[:session_id]).to be_present
+          expect(event[:topic_id]).to be_blank
+        end
+
+        expect(beacon_event[:session_id]).to eq(non_beacon_event[:session_id])
+
+        all_events =
+          DiscourseEvent.track_events do
             find(".nav-item_categories a").click
             CachedCounting.flush
             expect(ApplicationRequest.stats).to include(
               "page_view_anon_total" => 0,
               "page_view_anon_browser_total" => 0,
               "page_view_logged_in_total" => 2,
-              "page_view_crawler_total" => 0,
               "page_view_logged_in_browser_total" => 2,
+              "page_view_logged_in_browser_beacon_total" => 2,
+              "page_view_crawler_total" => 0,
             )
           end
 
-        event_2 = events[0][:params].last
+        beacon_events_2 = all_events.select { |e| e[:event_name] == :beacon_browser_pageview }
+        non_beacon_events_2 = all_events.select { |e| e[:event_name] == :browser_pageview }
 
-        expect(event_2[:user_id]).to eq(user.id)
-        expect(event_2[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
-        expect(event_2[:ip_address]).to eq("::1")
-        expect(event_2[:referrer]).to eq("#{Discourse.base_url_no_prefix}/latest")
-        expect(event_2[:session_id]).to eq(event[:session_id])
+        expect(beacon_events_2.size).to eq(1)
+        expect(non_beacon_events_2.size).to eq(1)
+
+        beacon_event_2 = beacon_events_2[0][:params].last
+        non_beacon_event_2 = non_beacon_events_2[0][:params].last
+
+        [beacon_event_2, non_beacon_event_2].each do |event|
+          expect(event[:user_id]).to eq(user.id)
+          expect(event[:url]).to eq("#{Discourse.base_url_no_prefix}/categories")
+          expect(event[:ip_address]).to eq("::1")
+          expect(event[:referrer]).to eq("#{Discourse.base_url}/")
+          expect(event[:session_id]).to eq(beacon_event[:session_id])
+        end
+      end
+
+      it "tracks a crawler visit correctly" do
+        SiteSetting.crawler_user_agents += "|chrome"
+
+        all_events =
+          DiscourseEvent.track_events do
+            visit "/"
+
+            try_until_success do
+              CachedCounting.flush
+              expect(ApplicationRequest.stats).to include(
+                "page_view_anon_total" => 0,
+                "page_view_anon_browser_total" => 0,
+                "page_view_anon_browser_beacon_total" => 0,
+                "page_view_logged_in_total" => 0,
+                "page_view_crawler_total" => 1,
+              )
+            end
+          end
+
+        beacon_events = all_events.select { |e| e[:event_name] == :beacon_browser_pageview }
+        non_beacon_events = all_events.select { |e| e[:event_name] == :browser_pageview }
+
+        expect(beacon_events).to be_blank
+        expect(non_beacon_events).to be_blank
       end
     end
   end
@@ -507,8 +581,8 @@ describe "Request tracking" do
         it "tracks topic views correctly via beacon" do
           visit "/"
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
+          all_events =
+            DiscourseEvent.track_events do
               find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
               CachedCounting.flush
@@ -525,15 +599,30 @@ describe "Request tracking" do
               ).to eq(true)
             end
 
-          event = events.find { |e| e[:params].last[:topic_id] == topic.id }&.dig(:params)&.last
-          expect(event).to be_present
+          beacon_event =
+            all_events
+              .select { |e| e[:event_name] == :beacon_browser_pageview }
+              .find { |e| e[:params].last[:topic_id] == topic.id }
+              &.dig(:params)
+              &.last
+          non_beacon_event =
+            all_events
+              .select { |e| e[:event_name] == :browser_pageview }
+              .find { |e| e[:params].last[:topic_id] == topic.id }
+              &.dig(:params)
+              &.last
 
-          expect(event[:user_id]).to eq(current_user.id)
-          expect(event[:url]).to eq(topic.url)
-          expect(event[:ip_address]).to eq("::1")
-          expect(event[:referrer]).to eq("#{Discourse.base_url}/latest")
-          expect(event[:session_id]).to be_present
-          expect(event[:topic_id]).to eq(topic.id)
+          expect(beacon_event).to be_present
+          expect(non_beacon_event).to be_present
+
+          [beacon_event, non_beacon_event].each do |event|
+            expect(event[:user_id]).to eq(current_user.id)
+            expect(event[:url]).to eq(topic.url)
+            expect(event[:ip_address]).to eq("::1")
+            expect(event[:referrer]).to eq("#{Discourse.base_url}/")
+            expect(event[:session_id]).to be_present
+            expect(event[:topic_id]).to eq(topic.id)
+          end
         end
       end
 
@@ -541,8 +630,8 @@ describe "Request tracking" do
         it "tracks topic views correctly via beacon" do
           visit "/"
 
-          events =
-            DiscourseEvent.track_events(:browser_pageview) do
+          all_events =
+            DiscourseEvent.track_events do
               find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
               CachedCounting.flush
@@ -557,14 +646,29 @@ describe "Request tracking" do
               ).to eq(true)
             end
 
-          event = events.find { |e| e[:params].last[:topic_id] == topic.id }&.dig(:params)&.last
-          expect(event).to be_present
+          beacon_event =
+            all_events
+              .select { |e| e[:event_name] == :beacon_browser_pageview }
+              .find { |e| e[:params].last[:topic_id] == topic.id }
+              &.dig(:params)
+              &.last
+          non_beacon_event =
+            all_events
+              .select { |e| e[:event_name] == :browser_pageview }
+              .find { |e| e[:params].last[:topic_id] == topic.id }
+              &.dig(:params)
+              &.last
 
-          expect(event[:user_id]).to be_blank
-          expect(event[:url]).to eq(topic.url)
-          expect(event[:ip_address]).to eq("::1")
-          expect(event[:referrer]).to eq("#{Discourse.base_url}/latest")
-          expect(event[:session_id]).to be_present
+          expect(beacon_event).to be_present
+          expect(non_beacon_event).to be_present
+
+          [beacon_event, non_beacon_event].each do |event|
+            expect(event[:user_id]).to be_blank
+            expect(event[:url]).to eq(topic.url)
+            expect(event[:ip_address]).to eq("::1")
+            expect(event[:referrer]).to eq("#{Discourse.base_url}/")
+            expect(event[:session_id]).to be_present
+          end
         end
       end
     end

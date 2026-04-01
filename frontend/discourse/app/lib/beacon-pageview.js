@@ -7,16 +7,11 @@ export function hasPendingBeaconRequests() {
 }
 
 export function sendBeaconPageview({ sessionId, url, referrer, topicId }) {
-  const body = {};
-  if (sessionId) {
-    body.session_id = sessionId;
-  }
-  if (url) {
-    body.url = url;
-  }
-  if (referrer) {
-    body.referrer = referrer;
-  }
+  const body = {
+    session_id: sessionId,
+    url,
+    referrer,
+  };
   if (topicId) {
     body.topic_id = topicId;
   }

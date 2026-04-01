@@ -794,29 +794,12 @@ RSpec.describe Middleware::RequestTracker do
       expect(app_called).to eq(false)
     end
 
-    it "extracts beacon pageview data as BPV only" do
-      data =
-        Middleware::RequestTracker.get_data(
-          beacon_env(
-            {
-              url: "https://test.com/t/topic/123",
-              referrer: "https://test.com/",
-              session_id: "abc123",
-              topic_id: 123,
-            },
-          ),
-          ["204", {}],
-          0.1,
-        )
+    it "returns 204 for beacon requests in a subfolder setup" do
+      set_subfolder "/forum"
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, = middleware.call(beacon_env({}, { path: "/forum/srv/pv" }))
 
-      expect(data[:deferred_track_view]).to eq(true)
-      expect(data[:explicit_track_view]).to eq(false)
-      expect(data[:track_view]).to eq(false)
-      expect(data[:browser_page_view]).to eq(true)
-      expect(data[:topic_id]).to eq(123)
-      expect(data[:tracking_url]).to eq("https://test.com/t/topic/123")
-      expect(data[:tracking_referrer]).to eq("https://test.com/")
-      expect(data[:tracking_session_id]).to eq("abc123")
+      expect(status).to eq(204)
     end
 
     it "handles malformed JSON body gracefully" do
@@ -834,36 +817,49 @@ RSpec.describe Middleware::RequestTracker do
       expect(status).to eq(204)
     end
 
-    it "increments only BPV counters, not legacy PV counters" do
+    it "increments beacon-specific counters and fires beacon event with correct data" do
+      SiteSetting.trigger_browser_pageview_events = true
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
-      middleware.call(beacon_env({ url: "https://test.com/" }))
+
+      events =
+        DiscourseEvent.track_events(:beacon_browser_pageview) do
+          middleware.call(
+            beacon_env(
+              {
+                url: "https://test.com/t/topic/123",
+                referrer: "https://test.com/",
+                session_id: "abc123",
+                topic_id: 123,
+              },
+            ),
+          )
+        end
+
       CachedCounting.flush
 
-      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first.count).to eq(1)
       expect(ApplicationRequest.page_view_anon.first).to be_nil
+      expect(ApplicationRequest.page_view_anon_browser.first).to be_nil
+
+      event = events[0][:params].last
+      expect(event[:url]).to eq("https://test.com/t/topic/123")
+      expect(event[:referrer]).to eq("https://test.com/")
+      expect(event[:session_id]).to eq("abc123")
+      expect(event[:topic_id]).to eq(123)
+      expect(event[:user_agent]).to eq(
+        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
+      )
     end
 
-    it "reads user_agent from the HTTP header, not the JSON body" do
-      data =
-        Middleware::RequestTracker.get_data(
-          beacon_env({}, { "HTTP_USER_AGENT" => "Mozilla/5.0 TestAgent" }),
-          ["204", {}],
-          0.1,
-        )
+    it "increments legacy and BPV counters from non-beacon requests" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1"))
+      CachedCounting.flush
 
-      expect(data[:user_agent]).to eq("Mozilla/5.0 TestAgent")
-    end
+      expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
 
-    it "suppresses BPV counting on non-beacon requests" do
-      data =
-        Middleware::RequestTracker.get_data(
-          env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
-          ["200", {}],
-          0.1,
-        )
-
-      expect(data[:track_view]).to eq(true)
-      expect(data[:browser_page_view]).to eq(false)
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
     end
 
     context "when SiteSetting.use_beacon_for_browser_page_views is false" do
@@ -882,18 +878,6 @@ RSpec.describe Middleware::RequestTracker do
 
         expect(status).to eq(404)
         expect(app_called).to eq(true)
-      end
-
-      it "doesn't suppress BPV counting on regular requests" do
-        data =
-          Middleware::RequestTracker.get_data(
-            env("HTTP_DISCOURSE_TRACK_VIEW" => "1"),
-            ["200", {}],
-            0.1,
-          )
-
-        expect(data[:track_view]).to eq(true)
-        expect(data[:browser_page_view]).to eq(true)
       end
     end
   end

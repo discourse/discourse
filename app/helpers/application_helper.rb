@@ -419,14 +419,17 @@ module ApplicationHelper
     end
   end
 
-  def discourse_track_view_session_tag
+  def discourse_pageview_tracking_meta_tags
+    if !SiteSetting.trigger_browser_pageview_events &&
+         !SiteSetting.use_beacon_for_browser_page_views
+      return "".html_safe
+    end
+
     tags = +""
-    tags << <<~HTML if SiteSetting.trigger_browser_pageview_events
-      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
-    HTML
-    tags << <<~HTML if SiteSetting.use_beacon_for_browser_page_views
-        <meta name="discourse-beacon-pageview-enabled" content="true">
-      HTML
+    tags << tag.meta(name: "discourse-track-view-session-id", content: SecureRandom.base64(32))
+    if SiteSetting.use_beacon_for_browser_page_views
+      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
     tags.html_safe
   end
 
