@@ -49,10 +49,6 @@ function compatModulesFor(name) {
 }
 
 module.exports = function (defaults) {
-  if (process.env.SKIP_CORE_BUILD) {
-    return;
-  }
-
   const discourseRoot = path.resolve("../..");
   mkdirSync(path.join(discourseRoot, "app/assets/generated"), {
     recursive: true,
