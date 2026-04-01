@@ -50,7 +50,11 @@ export default <template>
                               (if
                                 (eq setting.type "enum")
                                 "select"
-                                (if (eq setting.type "list") "custom" "input")
+                                (if
+                                  (eq setting.type "category_list")
+                                  "custom"
+                                  (if (eq setting.type "list") "custom" "input")
+                                )
                               )
                             )
                           }}

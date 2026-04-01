@@ -7,7 +7,7 @@ require "open3"
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 PORT = ENV["UNICORN_PORT"] ||= "3000"
 HOSTNAME = ENV["DISCOURSE_HOSTNAME"] ||= "127.0.0.1"
-CUSTOM_ARGS = %w[--try --test --build --unicorn -u --forward-host]
+CUSTOM_ARGS = %w[--try --test --build --server --unicorn -u --forward-host]
 PROXY =
   if ARGV.include?("--try")
     "https://try.discourse.org"
@@ -44,7 +44,7 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   puts "ember-cli OPTIONS"
   puts "#{"--try".cyan} To proxy try.discourse.org"
   puts "#{"--test".cyan} To run the test suite"
-  puts "#{"--unicorn, -u".cyan} To run a unicorn server as well"
+  puts "#{"--server, -u".cyan} To run a server as well"
   puts "The rest of the arguments are passed to ember server per:", ""
   exec "pnpm ember #{command} --help"
 end
@@ -79,11 +79,11 @@ pnpm_env = {
 }
 pnpm_env["FORWARD_HOST"] = "true" if ARGV.include?("--forward-host")
 
-if ARGV.include?("-u") || ARGV.include?("--unicorn")
-  unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
+if ARGV.include?("-u") || ARGV.include?("--server") || ARGV.include?("--unicorn")
+  server_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
 
   if command == "server" && ENV["CODESPACE_NAME"]
-    unicorn_env.merge!(
+    server_env.merge!(
       {
         "DISCOURSE_PORT" => "443",
         "DISCOURSE_FORCE_HTTPS" => "1",
@@ -93,8 +93,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
     )
   end
 
-  server_name = ENV["RUN_PITCHFORK"] == "0" ? "unicorn" : "pitchfork"
-  unicorn_pid = spawn(unicorn_env, "#{__dir__}/#{server_name}")
+  server_pid = spawn(server_env, "#{__dir__}/pitchfork")
   ember_cli_pid = nil
   sigint_received = false
 
@@ -117,9 +116,9 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
     # additional TERM races with the server's hard shutdown and can cause it
     # to fall back to a slow graceful shutdown, making the process appear
     # stuck for up to 60 seconds.
-    if !sigint_received && process_running?(unicorn_pid)
-      puts "[bin/ember-cli] ember-cli process stopped. Terminating unicorn."
-      Process.kill("TERM", unicorn_pid)
+    if !sigint_received && process_running?(server_pid)
+      puts "[bin/ember-cli] ember-cli process stopped. Terminating server."
+      Process.kill("TERM", server_pid)
     end
   end
 
@@ -135,7 +134,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
     else
       puts "\n[bin/ember-cli] Forcing shutdown..."
       begin
-        Process.kill("KILL", unicorn_pid)
+        Process.kill("KILL", server_pid)
       rescue StandardError
         nil
       end
@@ -150,10 +149,10 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
     end
   end
 
-  Process.wait(unicorn_pid)
+  Process.wait(server_pid)
 
   if ember_cli_pid && process_running?(ember_cli_pid)
-    puts "[bin/ember-cli] unicorn process stopped. Terminating ember-cli."
+    puts "[bin/ember-cli] server process stopped. Terminating ember-cli."
     Process.kill("TERM", ember_cli_pid)
   end
 else

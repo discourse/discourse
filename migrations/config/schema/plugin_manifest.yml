@@ -57,6 +57,7 @@ plugins:
     columns: {}
   discourse-ai:
     tables:
+      - ai_agent_mcp_servers
       - ai_agents
       - ai_api_audit_logs
       - ai_api_request_stats
@@ -64,6 +65,8 @@ plugins:
       - ai_artifact_versions
       - ai_artifacts
       - ai_document_fragments_embeddings
+      - ai_mcp_oauth_tokens
+      - ai_mcp_servers
       - ai_moderation_settings
       - ai_posts_embeddings
       - ai_secrets
@@ -194,11 +197,11 @@ plugin_checksums:
   chat: a44b3089f09fe0cef90e270aa2b4bedb
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: c85508b1ece1b90b668d1a65a1d8af85
+  discourse-ai: '093aaf7828d3b833e4dfeae25d2cca02'
   discourse-assign: 65afd026c76ff19a8d4f0ed1d9c21aa1
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-calendar: 8ec0c0ab443991a508c337ee137c4bba
-  discourse-chat-integration: e39798f3f1a02b0c774f9d6c0595a2c7
+  discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: 3c8891eb000d2f91f1edf1a48c28a96e
   discourse-gamification: 864797c200fde3faf8508c500af6915d
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f

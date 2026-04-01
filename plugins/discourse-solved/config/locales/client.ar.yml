@@ -70,8 +70,6 @@ ar:
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."
       notification:
         title: "تم وضع علامة \"حل\" على منشورك"
-      category_type_support:
-        title: "الدعم"
     topic_statuses:
       solved:
         help: "هناك حل لهذا الموضوع"

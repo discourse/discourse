@@ -1150,6 +1150,7 @@ pt_BR:
     permissions_header: 'Isso permitirá que "%{application_name}":'
     redirect_warning: "A autorização redirecionará você para"
     instructions: 'Acabamos de gerar uma nova chave de API de usuário(a) para você usar com "%{application_name}", cole a seguinte chave em seu aplicativo:'
+    copied: "Copiou!"
     otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
     otp_confirmation:
       confirm_title: Continuar para %{site_name}

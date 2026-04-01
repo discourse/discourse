@@ -3192,7 +3192,8 @@ navigation:
 embedding:
   embed_full_app:
     default: false
-    hidden: true
+    client: true
+    area: "embedding"
   embed_by_username:
     default: ""
     type: username

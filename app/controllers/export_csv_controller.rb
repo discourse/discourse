@@ -7,7 +7,7 @@ class ExportCsvController < ApplicationController
   def export_entity
     entity = export_params[:entity]
     entity_id = params.dig(:args, :export_user_id)&.to_i if entity == "user_archive"
-    guardian.ensure_can_export_entity!(entity, entity_id)
+    guardian.ensure_can_export_entity!(entity, entity_id, export_params[:args])
     raise Discourse::InvalidParameters.new(:entity) unless entity.is_a?(String) && entity.size < 100
 
     (export_params[:args] || {}).each do |key, value|

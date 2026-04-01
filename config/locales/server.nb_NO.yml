@@ -607,6 +607,7 @@ nb_NO:
     deny: "Avbryt"
     read: "les"
     read_write: "les/skriv"
+    copied: "Kopiert!"
     otp_confirmation:
       confirm_title: Fortsett til %{site_name}
       logging_in_as: Logger inn som %{username}

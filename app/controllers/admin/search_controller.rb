@@ -6,28 +6,30 @@ class Admin::SearchController < Admin::AdminController
   def index
     respond_to do |format|
       format.json do
-        render_json_dump(
-          settings:
-            SiteSetting.all_settings(
-              filter_names: params[:filter_names],
-              filter_area: params[:filter_area],
-              filter_plugin: params[:plugin],
-              filter_categories: Array.wrap(params[:categories]),
-              include_locale_setting:
-                params[:filter_area].blank? || params[:filter_area] == "localization",
-              basic_attributes: true,
-            ),
-          themes_and_components:
-            serialize_data(Theme.include_relations.order(:name), BasicThemeSerializer),
-          reports: Reports::ListQuery.call(admin: current_user.admin?),
-          upcoming_changes:
-            UpcomingChanges::List.call(
-              guardian: current_user.guardian,
-              options: {
-                filter_statuses: %w[experimental alpha beta stable],
-              },
-            ).upcoming_changes,
-        )
+        Admin::Search::List.call(service_params) do |result|
+          on_success do |settings:, themes_and_components:, reports:, upcoming_changes:|
+            themes_and_components_json =
+              ActiveModel::ArraySerializer.new(
+                themes_and_components,
+                each_serializer: BasicThemeSerializer,
+                scope: guardian,
+              ).as_json
+
+            render_json_dump(
+              settings:,
+              themes_and_components: themes_and_components_json,
+              reports:,
+              upcoming_changes:,
+            )
+          end
+          on_failed_contract do |contract|
+            render(
+              json: failed_json.merge(errors: contract.errors.full_messages),
+              status: :bad_request,
+            )
+          end
+          on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+        end
       end
 
       format.html { render body: nil }

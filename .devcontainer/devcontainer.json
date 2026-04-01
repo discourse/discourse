@@ -5,7 +5,7 @@
   "workspaceFolder": "/workspace/discourse",
   "postStartCommand": "./.devcontainer/scripts/start.rb",
   "forwardPorts": [
-    9292, // bin/unicorn
+    9292, // bin/pitchfork
     3000, // bin/rails s
     4200, // ember-cli
     8025, // mailhog

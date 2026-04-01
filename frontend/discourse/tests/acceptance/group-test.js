@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import GroupFixtures from "discourse/tests/fixtures/group-fixtures";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -353,5 +353,52 @@ acceptance("Group - Authenticated", function (needs) {
       memberDropdown.rowByIndex(1).name(),
       i18n("groups.members.make_owner")
     );
+  });
+
+  test("Add members modal - notify users checkbox defaults to checked", async function (assert) {
+    await visit("/g/alternative-group");
+    await click(".group-members-add.btn");
+
+    assert
+      .dom(
+        ".group-add-members-modal .group-add-members input[type='checkbox']:not(#set-owner)"
+      )
+      .isChecked("notify users checkbox is checked by default");
+  });
+
+  test("Add members modal - notify users checkbox is not disabled when adding emails", async function (assert) {
+    await visit("/g/alternative-group");
+    await click(".group-members-add.btn");
+
+    const chooser = selectKit(".email-group-user-chooser");
+    await chooser.expand();
+    await paste(".filter-input", "test@example.com");
+
+    assert
+      .dom(
+        ".group-add-members-modal .group-add-members input[type='checkbox']:not(#set-owner)"
+      )
+      .isNotDisabled(
+        "notify users checkbox is not disabled when emails are entered"
+      );
+  });
+
+  test("Add members modal - set owner is disabled when emails are entered", async function (assert) {
+    await visit("/g/alternative-group");
+    await click(".group-members-add.btn");
+
+    await click("#set-owner");
+    assert.dom("#set-owner").isChecked("set owner is checked");
+
+    const chooser = selectKit(".email-group-user-chooser");
+    await chooser.expand();
+    await paste(".filter-input", "test@example.com");
+
+    assert
+      .dom("#set-owner")
+      .isDisabled("set owner is disabled when emails are entered");
+    assert
+      .dom("#set-owner")
+      .isNotChecked("set owner is unchecked when emails are entered");
   });
 });

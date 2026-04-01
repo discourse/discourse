@@ -1283,6 +1283,7 @@ sk:
     read: "čítať"
     read_write: "čítať/zapisovať"
     instructions: 'Práve sme pre vás vygenerovali nový kľúč API používateľa, ktorý môžete použiť s „%{application_name}“, vložte do svojej aplikácie nasledujúci kľúč:'
+    copied: "Skopírované!"
     otp_description: 'Chcete povoliť prístup na túto stránku "%{application_name}"?'
     otp_confirmation:
       confirm_title: Pokračujte na %{site_name}

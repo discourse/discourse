@@ -53,19 +53,48 @@
   }
 
   &__badge {
+    display: flex;
     font-size: var(--font-down-2);
-    padding: 0.15rem 0.3rem;
-    border-radius: 4px;
+    border-radius: var(--d-button-border-radius);
     color: var(--primary-very-high);
-    background: var(--tertiary-low);
+    background: var(--tertiary-very-low);
     letter-spacing: 0.25px;
-    align-items: center;
-    display: inline-flex;
-    gap: var(--space-1);
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 0 var(--space-1);
+    }
+
+    &-content {
+      padding: var(--space-half) var(--space-2);
+    }
 
     svg {
-      height: 0.75em;
+      font-size: var(--font-down-2);
       color: var(--primary-high);
+    }
+
+    &-info {
+      border-left: 1px solid var(--secondary);
+      border-radius: 0 var(--d-button-border-radius)
+        var(--d-button-border-radius) 0;
+      padding: var(--space-half) var(--space-1);
+    }
+
+    &:focus-visible,
+    &:hover {
+      .upcoming-change__badge-info {
+        background: var(--tertiary);
+
+        .d-icon {
+          color: var(--secondary);
+        }
+      }
+    }
+
+    &.--has-tooltip {
+      cursor: pointer;
     }
   }
 

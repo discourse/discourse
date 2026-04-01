@@ -1288,6 +1288,7 @@ he:
     permissions_header: 'ההרשאה הזאת תאפשר ל־„%{application_name}” לבצע:'
     redirect_warning: "האימות יפנה אותך אל"
     instructions: 'הרגע יצרנו מפתח משתמש API חדש עבורך לטובת שימוש עם „%{application_name}”, נא להדביק את המפתח הבא ליישום שלך:'
+    copied: "הועתק!"
     otp_description: 'לאפשר ל־„%{application_name}” לגשת לאתר הזה?'
     otp_confirmation:
       confirm_title: להמשיך אל %{site_name}

@@ -671,6 +671,7 @@ hy:
     read: "կարդացած"
     read_write: "կարդալ/գրել"
     instructions: 'Մենք հենց նոր գեներացրինք նոր օգտատիրոջ API key՝ "%{application_name}" -ի հետ պգտագործելու համար, խնդրում ենք տեղադրել հետևյալ key -ը Ձեր հավելվածում.'
+    copied: "Պատճենված է!"
     otp_confirmation:
       confirm_title: Շարունակել դեպի %{site_name}
       logging_in_as: Մուտք գործել որպես %{username}

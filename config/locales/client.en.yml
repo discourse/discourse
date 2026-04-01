@@ -6097,6 +6097,11 @@ en:
           beta: "Beta"
           stable: "Stable"
           permanent: "Permanent"
+        status_descriptions:
+          experimental: "This is in early development and may change significantly or be discontinued. May not be fully compatible with other features."
+          alpha: "This is being actively developed and refined. Functionality may change, and it may not be fully polished but it's stable enough to try."
+          beta: "This is nearing completion and available for early adoption. Minor changes are still possible."
+          stable: "This is complete and well supported. It will soon be available on all Discourse sites."
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -8996,6 +9001,8 @@ en:
         crawler_settings_saved: "Crawler settings saved"
         back: "Back to embedding"
         configuration_snippet: "Configuration snippet"
+        full_app_mode: "Full app mode"
+        full_app_mode_description: "Load the full Discourse application in the embed iframe, allowing users to reply, like, quote, and interact with topics directly"
         host_form:
           add_header: "Add host"
           edit_header: "Edit host"

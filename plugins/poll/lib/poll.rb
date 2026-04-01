@@ -188,6 +188,12 @@ class DiscoursePoll::Poll
         return
       end
 
+      # user must be able to see the topic
+      unless guardian.can_see_topic?(post.topic)
+        raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic") if raise_errors
+        return
+      end
+
       poll = Poll.find_by(post_id:, name: poll_name)
 
       if !poll

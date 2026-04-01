@@ -1133,6 +1133,7 @@ it:
     read: "lettura"
     read_write: "lettura/scrittura"
     instructions: 'Abbiamo appena generato una nuova chiave API utente da usare con "%{application_name}", incolla la seguente chiave nella tua applicazione:'
+    copied: "Copiato!"
     otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
     otp_confirmation:
       confirm_title: Procedi su %{site_name}.

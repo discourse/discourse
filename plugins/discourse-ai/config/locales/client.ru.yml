@@ -542,9 +542,12 @@ ru:
         token_usage: "Использование токенов"
         tool_count: "Количество инструментов"
         mcp_tools_modal:
+          select_all: "Выбрать все"
           clear_all: "Сбросить все"
         forced_tools: "Обязательные инструменты"
         allowed_groups: "Разрешенные группы"
+        title: "Агенты"
+        short_title: "Агенты"
         delete: "Удалить"
         temperature: "Температура"
         temperature_help: "Температура — параметр для LLM, его увеличение приводит к повышению креативности (оставьте пустым, чтобы использовать настройки модели по умолчанию, стандартные значения от 0.0 до 2.0)"
@@ -651,6 +654,7 @@ ru:
         embedding: "Встраивание"
         tool: "Инструмент"
       mcp_servers:
+        short_title: "Серверы MCP"
         name: "Название"
         description: "Описание"
         url: "URL-адрес"
@@ -873,6 +877,7 @@ ru:
         model_used: "Использованная модель:"
         accuracy: "Точность:"
         ai_tool_action:
+          agent: "Агент"
           tool: "Инструмент"
           parameters: "Параметры"
       embeddings:
@@ -940,6 +945,7 @@ ru:
         click_to_run_label: "Запустить артефакт"
       ai_bot:
         title: "AI-бот"
+        agent: "Агент"
         llm: "Модель"
         pm_warning: "Сообщения чат-бота с AI регулярно отслеживаются модераторами."
         cancel_streaming: "Прекратить отвечать"
@@ -1074,3 +1080,5 @@ ru:
           title: "Публикация с жалобой от AI"
         reviewable_ai_chat_message:
           title: "Сообщение в чате с жалобой от AI"
+        reviewable_ai_tool_action:
+          title: "Действие инструмента ИИ"

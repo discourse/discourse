@@ -233,7 +233,7 @@ module(
       assert.dom("div.result-info button:nth-child(3)").doesNotExist();
     });
 
-    test("doesn't render a chart button when data contains more than two columns", async function (assert) {
+    test("renders a chart button when data contains multiple numeric columns", async function (assert) {
       const content = {
         colrender: [],
         result_count: 2,
@@ -246,7 +246,64 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
+      assert
+        .dom("div.result-info button:nth-child(3) span")
+        .hasText(i18n("explorer.show_graph"));
+    });
+
+    test("doesn't render a chart button when all non-label columns are relation types", async function (assert) {
+      const content = {
+        colrender: { 1: "user", 2: "badge" },
+        relations: {
+          user: [{ id: 1, username: "user1" }],
+          badge: [{ id: 1, name: "badge1" }],
+        },
+        result_count: 1,
+        columns: ["topic_id", "user_id", "badge_id"],
+        rows: [[1, 1, 1]],
+      };
+
+      await render(<template><QueryResult @content={{content}} /></template>);
+
       assert.dom("div.result-info button:nth-child(3)").doesNotExist();
+    });
+
+    test("renders a chart for date-based data", async function (assert) {
+      const content = {
+        colrender: [],
+        result_count: 2,
+        columns: ["date", "count"],
+        rows: [
+          ["2024-01-01", 10],
+          ["2024-01-02", 20],
+        ],
+      };
+
+      await render(<template><QueryResult @content={{content}} /></template>);
+
+      assert
+        .dom("div.result-info button:nth-child(3) span")
+        .hasText(i18n("explorer.show_graph"));
+
+      await click("div.result-info button:nth-child(3)");
+      assert.dom("canvas").exists("renders a chart canvas");
+    });
+
+    test("renders a multi-series chart", async function (assert) {
+      const content = {
+        colrender: [],
+        result_count: 2,
+        columns: ["user_name", "like_count", "post_count"],
+        rows: [
+          ["user1", 10, 5],
+          ["user2", 20, 15],
+        ],
+      };
+
+      await render(<template><QueryResult @content={{content}} /></template>);
+
+      await click("div.result-info button:nth-child(3)");
+      assert.dom("canvas").exists("renders a chart canvas for multi-series");
     });
 
     test("handles no results", async function (assert) {

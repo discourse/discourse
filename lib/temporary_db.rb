@@ -8,11 +8,13 @@ class TemporaryDb
   PG_TEMP_PREFIX = "pg_schema_tmp"
   VERSIONS = 10..30 # arbitrary upper limit to avoid updating this code for a long time
   STARTUP_TIMEOUT_SECONDS = 60
+  DEFAULT_PG_SYSTEM_USER = "postgres"
 
-  def initialize
+  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER)
     @pg_temp_path = File.join(Dir.tmpdir, "#{PG_TEMP_PREFIX}_#{SecureRandom.hex(6)}")
     @pg_conf = "#{@pg_temp_path}/postgresql.conf"
     @pg_sock_path = "#{@pg_temp_path}/sockets"
+    @pg_system_user = pg_system_user
   end
 
   def port_available?(port)
@@ -40,6 +42,10 @@ class TemporaryDb
     # macOS Postgres.app
     bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
     return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+
+    # Fallback: check if pg_ctl is on PATH (e.g. Fedora system packages install to /usr/bin)
+    pg_ctl = `which pg_ctl 2>/dev/null`.strip
+    return @pg_bin_path = File.dirname(pg_ctl) if pg_ctl.present?
 
     raise "Cannot find pg_ctl. Install the PostgreSQL server package."
   end
@@ -82,7 +88,9 @@ class TemporaryDb
 
   def stop
     @started = false
-    `#{pg_ctl_path} -D '#{@pg_temp_path}' stop`
+    args = [pg_ctl_path, "-D", @pg_temp_path, "stop"]
+    args = ["sudo", "-u", @pg_system_user, *args] if running_as_root?
+    Open3.capture3(*args)
   ensure
     restore_discourse_pg_port
   end
@@ -154,6 +162,7 @@ class TemporaryDb
 
   def configure_ports
     FileUtils.mkdir(@pg_sock_path)
+    FileUtils.chown(@pg_system_user, nil, @pg_sock_path) if running_as_root?
     conf = File.read(@pg_conf)
     File.write(@pg_conf, conf + "\nport = #{pg_port}\nunix_socket_directories = '#{@pg_sock_path}'")
   end
@@ -202,6 +211,7 @@ class TemporaryDb
   end
 
   def run_command!(*args, error_prefix:)
+    args = ["sudo", "-u", @pg_system_user, *args] if running_as_root?
     stdout, stderr, status = Open3.capture3(*args)
     return if status.success?
 
@@ -211,6 +221,10 @@ class TemporaryDb
     raise "#{error_prefix}: #{details}"
   rescue Errno::ENOENT => e
     raise "#{error_prefix}: #{e.message}"
+  end
+
+  def running_as_root?
+    Process.uid == 0
   end
 
   def restore_discourse_pg_port

@@ -413,17 +413,18 @@ class GroupsController < ApplicationController
       )
     else
       notify = params[:notify_users]&.to_s == "true"
+
       uniq_users = users.uniq
       uniq_users.each { |user| add_user_to_group(group, user, notify) }
 
+      group_ids = [group.id]
+
+      skip_email = params[:skip_email].to_s == "true"
+      skip_email ||= params.key?(:notify_users) && !notify
+
       emails.each do |email|
         begin
-          Invite.generate(
-            current_user,
-            email: email,
-            group_ids: [group.id],
-            skip_email: params[:skip_email].to_s == "true",
-          )
+          Invite.generate(current_user, email:, group_ids:, skip_email:)
         rescue RateLimiter::LimitExceeded => e
           return(
             render_json_error(
@@ -729,12 +730,20 @@ class GroupsController < ApplicationController
     params.require(:password)
 
     group = Group.find(params[:group_id])
-    guardian.ensure_can_edit!(group)
+    guardian.ensure_can_admin_group!(group)
 
     RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
 
     settings = params.except(:name, :protocol)
     email_host = params[:host]
+
+    begin
+      FinalDestination::SSRFDetector.lookup_and_filter_ips(email_host)
+    rescue FinalDestination::SSRFDetector::DisallowedIpError
+      raise Discourse::InvalidParameters.new(I18n.t("email_settings.invalid_host"))
+    rescue FinalDestination::SSRFDetector::LookupFailedError
+      raise Discourse::InvalidParameters.new(I18n.t("email_settings.host_resolve_failed"))
+    end
 
     if params[:protocol] != "smtp"
       raise Discourse::InvalidParameters.new("Valid protocol to test is smtp")
@@ -800,7 +809,6 @@ class GroupsController < ApplicationController
 
     if !automatic
       attributes.push(
-        :title,
         :allow_membership_requests,
         :full_name,
         :public_exit,
@@ -823,6 +831,7 @@ class GroupsController < ApplicationController
         :email_username,
         :email_password,
         :email_from_alias,
+        :title,
         :primary_group,
         :name,
         :grant_trust_level,
