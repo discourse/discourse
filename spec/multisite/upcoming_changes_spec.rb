@@ -22,7 +22,6 @@ RSpec.describe "Multisite UpcomingChanges cache", type: :multisite do
         Discourse.cache.delete(UpcomingChanges.permanent_upcoming_changes_cache_key)
       end
     end
-    clear_mocked_upcoming_change_metadata
   end
 
   it "keeps current_statuses tied to each site's upcoming_change_events" do

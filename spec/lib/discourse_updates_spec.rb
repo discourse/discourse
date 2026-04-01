@@ -362,8 +362,6 @@ RSpec.describe DiscourseUpdates do
         )
       end
 
-      after { clear_mocked_upcoming_change_metadata }
-
       it "marks the injected item as seen" do
         freeze_time
         expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
@@ -410,8 +408,6 @@ RSpec.describe DiscourseUpdates do
         },
       )
     end
-
-    after { clear_mocked_upcoming_change_metadata }
 
     context "when there are no permanent upcoming changes" do
       before { mock_merge_uc_metadata(:beta) }

@@ -303,8 +303,6 @@ RSpec.describe Admin::DashboardController do
           )
         end
 
-        after { clear_mocked_upcoming_change_metadata }
-
         it "includes the permanent upcoming change in the whats-new payload" do
           freeze_time do
             get "/admin/whats-new.json"

@@ -342,7 +342,9 @@ module Helpers
   end
 
   def mock_upcoming_change_metadata(metadata)
-    @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
+    # Without ||= here nested blocks would further mutate the instance var so
+    # resetting in clear_mocked_upcoming_change_metadata would not work.
+    @original_upcoming_changes_metadata ||= SiteSetting.upcoming_change_metadata.dup
 
     # We do this because upcoming changes are ephemeral in site settings,
     # so we cannot rely on them for specs. Instead we can fake some metadata
@@ -354,7 +356,7 @@ module Helpers
   end
 
   def clear_mocked_upcoming_change_metadata
-    return if @original_upcoming_changes_metadata.blank?
+    return if @original_upcoming_changes_metadata.nil?
 
     SiteSetting.instance_variable_set(
       :@upcoming_change_metadata,
