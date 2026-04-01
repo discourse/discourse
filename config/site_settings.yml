@@ -4260,10 +4260,6 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
-  experimental_tag_settings_page:
-    default: false
-    client: true
-    area: "experimental"
   enable_form_templates:
     client: true
     default: false

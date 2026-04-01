@@ -924,9 +924,6 @@ acceptance("Tag separator customization", function (needs) {
 
 acceptance("Tag settings page", function (needs) {
   needs.user();
-  needs.settings({
-    experimental_tag_settings_page: true,
-  });
   needs.pretender((server, helper) => {
     server.get("/tag/100/notifications.json", () =>
       helper.response({
@@ -1095,86 +1092,5 @@ acceptance("Tag settings page", function (needs) {
     assert
       .dom(".form-kit__field[data-name='synonyms'] .formatted-selection")
       .hasText("test-synonym", "shows existing synonym");
-  });
-});
-
-acceptance("Tag settings page - disabled", function (needs) {
-  needs.user();
-  needs.settings({
-    experimental_tag_settings_page: false,
-  });
-  needs.pretender((server, helper) => {
-    server.get("/tag/100/notifications.json", () =>
-      helper.response({
-        tag_notification: {
-          id: 100,
-          name: "test-tag",
-          notification_level: 1,
-        },
-      })
-    );
-
-    server.get("/tag/100/l/latest.json", () =>
-      helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          tags: [
-            {
-              id: 100,
-              name: "test-tag",
-              slug: "test-tag",
-              topic_count: 5,
-            },
-          ],
-          topics: [],
-        },
-      })
-    );
-
-    server.get("/tag/100/info.json", () =>
-      helper.response({
-        tag_info: {
-          id: 100,
-          name: "test-tag",
-          slug: "test-tag",
-          description: "test description",
-          topic_count: 5,
-          staff: false,
-          synonyms: [],
-          tag_group_names: [],
-          category_ids: [],
-        },
-        categories: [],
-      })
-    );
-  });
-
-  test("shows pencil icon for inline editing when setting disabled", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
-
-    await visit("/tag/test-tag/100");
-    await click("#show-tag-info");
-
-    assert
-      .dom(".tag-info .tag-name-wrapper .edit-tag")
-      .exists("edit icon exists");
-    assert
-      .dom(".tag-info .tag-name-wrapper .edit-tag .d-icon-pencil")
-      .exists("shows pencil icon for inline editing");
-  });
-
-  test("shows edit synonyms button when setting disabled", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
-
-    await visit("/tag/test-tag/100");
-    await click("#show-tag-info");
-
-    assert.dom("#edit-synonyms").exists("edit synonyms button exists");
   });
 });
