@@ -1133,6 +1133,7 @@ fr:
     read: "lecture"
     read_write: "lecture/écriture"
     instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
+    copied: "Copié !"
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:
       confirm_title: Continuer vers %{site_name}

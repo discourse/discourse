@@ -1063,6 +1063,8 @@ tr_TR:
     connection_error: "Sunucuya bağlanırken bir sorun oluştu, sunucu adını ve bağlantı noktasını kontrol edip tekrar deneyin."
     timeout_error: "Sunucuya bağlantı zaman aşımına uğradı, sunucu adını ve bağlantı noktasını kontrol edin ve tekrar deneyin."
     unhandled_error: "E-posta ayarları test edilirken işlenmemiş hata. %{message}"
+    invalid_host: "Belirtilen sunucu, izin verilmeyen bir IP adresine yönlendiriliyor."
+    host_resolve_failed: "Belirtilen sunucu çözümlenemedi."
   webauthn:
     validation:
       invalid_type_error: "Sağlanan webauthn türü geçersizdi. Geçerli türler webauthn.get ve webauthn.create'tir."
@@ -1159,6 +1161,8 @@ tr_TR:
     permissions_header: 'Bu, "%{application_name}"in şunları yapmasına olanak tanıyacaktır:'
     redirect_warning: "Yetkilendirme sizi şu adrese yönlendirecektir:"
     instructions: '"%{application_name}" ile kullanmanız için yeni bir kullanıcı API anahtarı oluşturduk, lütfen aşağıdaki anahtarı uygulamanıza yapıştırın:'
+    copy_key: "Anahtarı Kopyala"
+    copied: "Kopyalandı!"
     otp_description: '"%{application_name}" uygulamasının bu siteye erişmesine izin vermek ister misiniz?'
     otp_confirmation:
       confirm_title: '%{site_name} adresine devam edin'

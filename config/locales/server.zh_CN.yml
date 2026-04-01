@@ -987,6 +987,8 @@ zh_CN:
     connection_error: "与服务器连接时出现问题，请检查服务器名称和端口并重试。"
     timeout_error: "连接服务器时超时，请检查服务器名称和端口后并重试。"
     unhandled_error: "测试电子邮件设置时出现未处理的错误。%{message}"
+    invalid_host: "提供的主机解析到了一个被禁止的 IP 地址。"
+    host_resolve_failed: "无法解析提供的主机。"
   webauthn:
     validation:
       invalid_type_error: "提供的 webauthn 类型无效。有效类型为 webauthn.get 和 webauthn.create。"
@@ -1083,6 +1085,8 @@ zh_CN:
     permissions_header: '这将允许“%{application_name}”：'
     redirect_warning: "授权会将您重定向到"
     instructions: '我们刚刚生成了一个新的用户 API 密钥供您与“%{application_name}”搭配使用，请将以下密钥粘贴到您的应用程序中：'
+    copy_key: "复制密钥"
+    copied: "已复制！"
     otp_description: '要允许“%{application_name}”访问此网站吗？'
     otp_confirmation:
       confirm_title: 继续访问 %{site_name}

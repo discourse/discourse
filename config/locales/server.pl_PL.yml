@@ -1215,6 +1215,8 @@ pl_PL:
     connection_error: "Wystąpił problem z połączeniem z serwerem, sprawdź nazwę i port serwera i spróbuj ponownie."
     timeout_error: "Przekroczono limit czasu połączenia z serwerem, sprawdź nazwę i port serwera i spróbuj ponownie."
     unhandled_error: "Nieobsługiwany błąd podczas testowania ustawień poczty e-mail. %{message}"
+    invalid_host: "Podany host wskazuje na niedozwolony adres IP."
+    host_resolve_failed: "Nie można rozwiązać podanego hosta."
   webauthn:
     validation:
       invalid_type_error: "Podany typ webauthn był nieprawidłowy. Prawidłowe typy to webauthn.get i webauthn.create."
@@ -1311,6 +1313,8 @@ pl_PL:
     permissions_header: 'Pozwoli to "%{application_name}" na:'
     redirect_warning: "Autoryzacja przekieruje Cię do"
     instructions: 'Wygenerowaliśmy nowy klucz API użytkownika do korzystania z "%{application_name}", skopiuj następujący klucz do swoje aplikacji:'
+    copy_key: "Skopiuj klucz"
+    copied: "Skopiowano!"
     otp_description: 'Czy zezwalasz "%{application_name}" na dostęp do tej strony?'
     otp_confirmation:
       confirm_title: Przejdź do %{site_name}

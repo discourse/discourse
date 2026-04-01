@@ -800,6 +800,7 @@ el:
     permissions_header: 'Αυτό θα επιτρέπει στο "%{application_name}" να:'
     redirect_warning: "Η εξουσιοδότηση θα σας ανακατευθύνει σε"
     instructions: 'Μόλις δημιουργήσαμε ένα νέο κλειδί API χρήστη για να το χρησιμοποιήσετε με το "%{application_name}", παρακαλούμε επικολλήστε το ακόλουθο κλειδί στην εφαρμογή σας:'
+    copied: "Αντιγράφηκε!"
     otp_description: 'Θα θέλατε να επιτρέψετε στο "%{application_name}" να έχει πρόσβαση σε αυτόν τον ιστότοπο;'
     otp_confirmation:
       confirm_title: Συνέχεια σε %{site_name}

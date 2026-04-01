@@ -1303,6 +1303,7 @@ ru:
     permissions_header: 'Это позволит "%{application_name}:'
     redirect_warning: "При авторизации вы будете перенаправлены на"
     instructions: 'Мы сгенерировали новый API-ключ пользователя для приложения «%{application_name}». Вставьте этот ключ в приложение:'
+    copied: "Скопировано!"
     otp_description: 'Разрешить приложению «%{application_name}» доступ к этому сайту?'
     otp_confirmation:
       confirm_title: Перейти на сайт %{site_name}

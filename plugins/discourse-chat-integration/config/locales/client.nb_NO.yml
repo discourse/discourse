@@ -14,11 +14,7 @@ nb_NO:
     chat_integration:
       menu_title: "Sludreintegreringer"
       settings: "Innstillinger"
-      more_providers: "Mer"
       channels_with_errors: "Noen kanaler for denne tilbyderen mislyktes sist meldinger ble sendt. Klikk på feil-ikon(ene) for å lære mer."
-      choose_group: "(Velg en gruppe)"
-      all_categories: "(Alle kategorier)"
-      all_tags: "(Alle stikkord)"
       delete_channel: "Slett"
       test_channel: "Test"
       edit_channel: "Rediger"

@@ -14,12 +14,8 @@ fa_IR:
     chat_integration:
       menu_title: "یکپارچگی گفتگو"
       settings: "تنظیم"
-      more_providers: "بیشتر"
       group_mention_template: "اشاره شده: @%{name}"
       group_message_template: "پیغام‌ها به: @%{name}"
-      choose_group: "(یک گروه را انتخاب کنید)"
-      all_categories: "(تمام دسته‌بندی‌ها)"
-      all_tags: "(همه برچسب‌ها)"
       delete_channel: "حذف"
       test_channel: "آزمایش کردن"
       edit_channel: "ویرایش"

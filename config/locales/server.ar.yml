@@ -1454,6 +1454,7 @@ ar:
     permissions_header: 'سيسمح هذا لـ "%{application_name}" بما يلي:'
     redirect_warning: "سيؤدي التفويض إلى إعادة توجيهك إلى"
     instructions: 'لقد أنشأنا للتو مفتاح API جديد للمستخدم لتستخدمه مع "%{application_name}"، يُرجى لصق المفتاح التالي في تطبيقك:'
+    copied: "تم النسخ!"
     otp_description: 'هل ترغب في السماح للتطبيق "%{application_name}" بالوصول إلى هذا الموقع؟'
     otp_confirmation:
       confirm_title: المتابعة إلى %{site_name}

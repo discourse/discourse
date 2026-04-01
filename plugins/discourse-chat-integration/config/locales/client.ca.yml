@@ -14,13 +14,9 @@ ca:
     chat_integration:
       menu_title: "Integracions de xat"
       settings: "Configuració"
-      more_providers: "Més"
       channels_with_errors: "Alguns canals d'aquest proveïdor van fallar l'última vegada que es van enviar missatges. Feu clic en la icona o icones d'error per a obtenir més informació."
       group_mention_template: "Mencions de: @ %{name}"
       group_message_template: "Missatges a: @ %{name}"
-      choose_group: "(Trieu un grup)"
-      all_categories: "(Totes les categories)"
-      all_tags: "(Totes les etiquetes)"
       delete_channel: "Suprimeix"
       test_channel: "Test"
       edit_channel: "Edita"
