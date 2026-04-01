@@ -330,6 +330,19 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
             )
           expect(notification.post_number).to eq(post.post_number)
         end
+
+        context "when a watching user has opted out of solved notifications" do
+          before { watching_user.user_option.update!(notify_on_solved: false) }
+
+          it "does not notify the watching user" do
+            expect { result }.not_to change {
+              Notification.where(
+                notification_type: Notification.types[:custom],
+                user: watching_user,
+              ).count
+            }
+          end
+        end
       end
 
       context "when an accepted_solution webhook is active" do

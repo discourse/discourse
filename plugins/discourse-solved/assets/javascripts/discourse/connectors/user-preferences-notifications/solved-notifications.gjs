@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
+import { i18n } from "discourse-i18n";
 
 export default class SolvedNotifications extends Component {
   static shouldRender(_args, { siteSettings, site }) {
@@ -20,6 +21,7 @@ export default class SolvedNotifications extends Component {
 
   <template>
     <div class="control-group solved-notifications">
+      <label class="control-label">{{i18n "solved.title"}}</label>
       <PreferenceCheckbox
         @labelKey="solved.notify_on_solved"
         @checked={{@outletArgs.model.user_option.notify_on_solved}}

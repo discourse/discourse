@@ -130,6 +130,8 @@ class DiscourseSolved::AcceptAnswer
       .where(topic:)
       .where("notification_level >= ?", TopicUser.notification_levels[:tracking])
       .where.not(user_id: already_notified_ids)
+      .joins(user: :user_option)
+      .where(user_options: { notify_on_solved: true })
       .pluck(:user_id)
   end
 
