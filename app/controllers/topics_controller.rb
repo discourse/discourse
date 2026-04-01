@@ -1328,7 +1328,7 @@ class TopicsController < ApplicationController
         else
           ids = incoming.filter_map { |t| t[:id]&.to_i }
           names = incoming.filter_map { |t| t[:id].blank? && t[:name].presence }
-          names += Tag.where(id: ids).pluck(:name) if ids.present?
+          names += Tag.visible(guardian).where(id: ids).pluck(:name) if ids.present?
           names
         end
       elsif params.has_key?(:tags)

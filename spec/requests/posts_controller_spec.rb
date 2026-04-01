@@ -1728,7 +1728,7 @@ RSpec.describe PostsController do
           sign_in(japanese_user)
         end
 
-        it "resolves localized tags by ID when sent as tag objects" do
+        it "creates a topic with localized tags" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -1740,7 +1740,7 @@ RSpec.describe PostsController do
           expect(Post.last.topic.tags).to contain_exactly(localized_tag)
         end
 
-        it "resolves tags by original name when sent as strings (backward compat)" do
+        it "creates a topic with tags sent as strings" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",

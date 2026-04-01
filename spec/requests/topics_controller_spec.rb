@@ -2620,6 +2620,20 @@ RSpec.describe TopicsController do
             expect(result["errors"][0]).not_to include(tag3.name)
           end
 
+          it "does not resolve hidden tags sent by ID" do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag3.name])
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json",
+                params: {
+                  tags: [{ id: tag2.id, name: tag2.name }, { id: tag3.id, name: "anything" }],
+                  category_id: restricted_category.id,
+                }
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.map(&:name)).not_to include(tag3.name)
+          end
+
           it "will clean tag params" do
             restricted_category.allowed_tags = [tag2.name]
 
@@ -2641,7 +2655,7 @@ RSpec.describe TopicsController do
               user.update!(locale: "ja")
             end
 
-            it "resolves tags by ID when sent as objects with category change" do
+            it "can change category with localized tags" do
               restricted_category.allowed_tags = [tag1.name]
 
               put "/t/#{topic.slug}/#{topic.id}.json",
@@ -2653,7 +2667,7 @@ RSpec.describe TopicsController do
               expect(response.status).to eq(200)
             end
 
-            it "resolves tags by name when sent as strings with category change (backward compat)" do
+            it "can change category when tags are sent as strings" do
               restricted_category.allowed_tags = [tag1.name]
 
               put "/t/#{topic.slug}/#{topic.id}.json",
@@ -2663,6 +2677,19 @@ RSpec.describe TopicsController do
                   }
 
               expect(response.status).to eq(200)
+            end
+
+            it "can edit tags with localized tag names" do
+              tag2 = Fabricate(:tag, name: "planning", locale: "en")
+              Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "計画")
+
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag1.id, name: "タグ1" }, { id: tag2.id, name: "計画" }],
+                  }
+
+              expect(response.status).to eq(200)
+              expect(topic.reload.tags).to contain_exactly(tag1, tag2)
             end
           end
         end

@@ -143,7 +143,7 @@ class PostRevisor
           else
             ids = input.filter_map { |t| t[:id]&.to_i }
             names = input.filter_map { |t| t[:id].blank? && t[:name].presence }
-            names += Tag.where(id: ids).pluck(:name) if ids.present?
+            names += Tag.visible(tc.guardian).where(id: ids).pluck(:name) if ids.present?
             names
           end
         elsif fields.has_key?(:tags)

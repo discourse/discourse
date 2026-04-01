@@ -119,7 +119,7 @@ describe PostRevisor do
       expect(post.reload.topic.category_id).to eq(new_category.id)
     end
 
-    it "allows category change when tags are sent as objects with IDs" do
+    it "allows category change with localized tags" do
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
 
