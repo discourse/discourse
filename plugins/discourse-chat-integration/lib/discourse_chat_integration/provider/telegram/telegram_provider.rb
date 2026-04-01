@@ -11,6 +11,7 @@ module DiscourseChatIntegration
         { key: "name", regex: '^\S+' },
         { key: "chat_id", regex: '^(-?[0-9]+|@\S+)$', unique: true },
       ]
+      ADDITIONAL_SITE_SETTINGS_REQUIRED = true
 
       def self.setup_webhook
         newSecret = SecureRandom.hex

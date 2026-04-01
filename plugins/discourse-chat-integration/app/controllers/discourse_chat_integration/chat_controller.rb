@@ -29,11 +29,11 @@ class DiscourseChatIntegration::ChatController < ApplicationController
         {
           name: provider_klass::PROVIDER_NAME,
           id: provider_klass::PROVIDER_NAME,
-          setup_form_settings:
-            if provider_klass.respond_to?(:setup_form_settings)
-              provider_klass.setup_form_settings
+          additional_site_settings_required:
+            if defined?(provider_klass::ADDITIONAL_SITE_SETTINGS_REQUIRED)
+              provider_klass::ADDITIONAL_SITE_SETTINGS_REQUIRED
             else
-              nil
+              false
             end,
         }
       end

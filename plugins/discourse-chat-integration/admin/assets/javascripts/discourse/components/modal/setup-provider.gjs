@@ -7,18 +7,34 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import SlackProviderSetupForm from "../provider-setup-form/slack";
+import TelegramProviderSetupForm from "../provider-setup-form/telegram";
 
 export default class SetupProvider extends Component {
   @service toasts;
 
-  get providerName() {
-    return i18n(
-      `chat_integration.provider.${this.args.model.provider.name}.title`
-    );
+  get formComponent() {
+    switch (this.args.model.provider.name) {
+      case "slack":
+        return SlackProviderSetupForm;
+      case "telegram":
+        return TelegramProviderSetupForm;
+      default:
+        return null;
+    }
+  }
+
+  get additionalInstructions() {
+    switch (this.args.model.provider.name) {
+      case "slack":
+        return i18n("chat_integration.setup_provider_modal.slack.instructions");
+      default:
+        return "";
+    }
   }
 
   @action
-  async save() {
+  async save(data) {
     try {
       await ajax("/admin/plugins/discourse-chat-integration/setup-provider", {
         type: "POST",
@@ -26,12 +42,13 @@ export default class SetupProvider extends Component {
           provider: {
             name: this.args.model.provider.name,
           },
+          provider_site_settings: data,
         },
       });
       this.toasts.success({
         data: {
           message: i18n("chat_integration.setup_provider_modal.success", {
-            provider: this.providerName,
+            provider: this.args.model.provider.title,
           }),
         },
         duration: "short",
@@ -55,31 +72,15 @@ export default class SetupProvider extends Component {
       class="chat-integration-modal"
     >
       <:body>
-        <p>{{i18n
+        <p>
+          {{i18n
             "chat_integration.setup_provider_modal.setup_instructions"
-            provider=this.providerName
+            provider=@model.provider.title
+            additionalInstructions=this.additionalInstructions
           }}
-
-          {{#if @model.provider.setup_form_settings}}
-            {{i18n
-              "chat_integration.setup_provider_modal.setup_instructions_additional_details"
-              provider=this.providerName
-            }}
-          {{/if}}
         </p>
         <Form @onSubmit={{this.save}} as |form|>
-          <form.Object @name="provider_site_settings" as |providerSiteSettings|>
-            {{#each @model.provider.setup_form_settings as |detail|}}
-              <providerSiteSettings.Field
-                @type="text"
-                @name={{detail.name}}
-                @title={{detail.title}}
-                @description={{detail.description}}
-              >
-                <providerSiteSettings.Control />
-              </providerSiteSettings.Field>
-            {{/each}}
-          </form.Object>
+          <this.formComponent @form={{form}} />
 
           <form.Actions>
             <form.Submit

@@ -8,12 +8,15 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import NavItem from "discourse/components/nav-item";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import SetupProvider from "../../../components/modal/setup-provider";
 
 export default class DiscourseChatIntegrationProviders extends Component {
   @service router;
   @service modal;
+  @service dialog;
+  @service toasts;
 
   isProviderActive = (providerName) => {
     return this.currentProvider === providerName;
@@ -32,6 +35,9 @@ export default class DiscourseChatIntegrationProviders extends Component {
     return (this.args.controller.model.available_providers || []).map(
       (provider) => {
         provider.settingsFilter = `chat_integration_${provider.name}`;
+        provider.title = i18n(
+          `chat_integration.provider.${provider.name}.title`
+        );
         return provider;
       }
     );
@@ -52,19 +58,63 @@ export default class DiscourseChatIntegrationProviders extends Component {
 
   @action
   async configureProvider(provider) {
+    const disabledProvider = this.disabledProviders.find(
+      (p) => p.name === provider.name
+    );
+
+    if (provider.additional_site_settings_required) {
+      this.openProviderSetupModal(disabledProvider);
+    } else {
+      this.dialog.confirm({
+        message: i18n("chat_integration.confirm_setup_provider", {
+          provider: disabledProvider.title,
+        }),
+        didConfirm: async () => {
+          await ajax(
+            "/admin/plugins/discourse-chat-integration/setup-provider",
+            {
+              type: "POST",
+              data: {
+                provider: {
+                  name: disabledProvider.name,
+                },
+              },
+            }
+          );
+          this.toasts.success({
+            data: {
+              message: i18n("chat_integration.setup_provider_modal.success", {
+                provider: disabledProvider.title,
+              }),
+            },
+            duration: "short",
+          });
+          this.navigateToProvider(disabledProvider);
+        },
+      });
+    }
+  }
+
+  @action
+  async openProviderSetupModal(provider) {
     const closeData = await this.modal.show(SetupProvider, {
       model: {
-        provider: this.disabledProviders.find((p) => p.name === provider.name),
+        provider,
       },
     });
 
     if (closeData?.setupCompleted) {
-      await this.router.refresh();
-      this.router.transitionTo(
-        "adminPlugins.show.discourse-chat-integration-providers.show",
-        provider.name
-      );
+      await this.navigateToProvider(provider);
     }
+  }
+
+  @action
+  async navigateToProvider(provider) {
+    await this.router.refresh();
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-chat-integration-providers.show",
+      provider.name
+    );
   }
 
   <template>

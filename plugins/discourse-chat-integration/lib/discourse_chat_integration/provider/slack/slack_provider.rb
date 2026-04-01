@@ -15,16 +15,13 @@ module DiscourseChatIntegration::Provider::SlackProvider
   PROVIDER_ENABLED_SETTING = :chat_integration_slack_enabled
   CHANNEL_IDENTIFIER_KEY = "identifier"
   CHANNEL_PARAMETERS = [{ key: "identifier", regex: '^[@#]?\S*$', unique: true }]
+  ADDITIONAL_SITE_SETTINGS_REQUIRED = true
 
   require_dependency "topic"
   ::Topic.register_custom_field_type(
     DiscourseChatIntegration::Provider::SlackProvider::THREAD_LEGACY,
     :string,
   )
-
-  def self.setup_form_settings
-    { either: %i[chat_integration_slack_outbound_webhook_url chat_integration_slack_access_token] }
-  end
 
   def self.excerpt(post, max_length = SiteSetting.chat_integration_slack_excerpt_length)
     doc =
