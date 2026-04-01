@@ -1744,18 +1744,41 @@ RSpec.describe GroupsController do
           end
         end
 
-        it "sends emails with invitations when `skip_emails` param isn't present" do
+        it "sends invite emails when notify_users is true" do
+          expect_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json",
+                params: {
+                  emails: "something@gmail.com",
+                  notify_users: true,
+                }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it "does not send invite emails when notify_users is false" do
+          expect_not_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json",
+                params: {
+                  emails: "something@gmail.com",
+                  notify_users: false,
+                }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it "sends invite emails when neither notify_users nor skip_email is provided" do
           expect_enqueued_with(job: :invite_email) do
             put "/groups/#{group.id}/members.json", params: { emails: "something@gmail.com" }
             expect(response.status).to eq(200)
           end
         end
 
-        it "sends emails with invitations when `skip_emails` is present" do
+        it "does not send invite emails when skip_email is true" do
           expect_not_enqueued_with(job: :invite_email) do
-            put "/groups/#{group.id}/members.json?skip_email=true",
+            put "/groups/#{group.id}/members.json",
                 params: {
                   emails: "something@gmail.com",
+                  skip_email: true,
                 }
             expect(response.status).to eq(200)
           end

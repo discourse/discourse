@@ -75,6 +75,7 @@ class DiscourseSolved::AcceptAnswer
 
   def should_notify_post_author(post:, guardian:)
     return if guardian.user.id == post.user_id || !User.exists?(post.user_id)
+    return if !UserOption.exists?(user_id: post.user_id, notify_on_solved: true)
     screener = UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: post.user_id)
     !screener.ignoring_or_muting_actor?(post.user_id)
   end
@@ -97,6 +98,7 @@ class DiscourseSolved::AcceptAnswer
   def should_notify_topic_owner(topic:, guardian:)
     return if !topic.category&.notify_on_staff_accept_solved?
     return if guardian.user.id == topic.user_id || !User.exists?(topic.user_id)
+    return if !UserOption.exists?(user_id: topic.user_id, notify_on_solved: true)
     screener =
       UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: topic.user_id)
     !screener.ignoring_or_muting_actor?(topic.user_id)
@@ -128,6 +130,8 @@ class DiscourseSolved::AcceptAnswer
       .where(topic:)
       .where("notification_level >= ?", TopicUser.notification_levels[:tracking])
       .where.not(user_id: already_notified_ids)
+      .joins(user: :user_option)
+      .where(user_options: { notify_on_solved: true })
       .pluck(:user_id)
   end
 

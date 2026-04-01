@@ -154,6 +154,20 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_revise_and_reject_post(performed_by, args)
+    has_contact_user = SiteSetting.site_contact_username.present?
+    is_new_topic = self.topic.blank?
+
+    edit_instructions_key =
+      if is_new_topic && has_contact_user
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_topic"
+      elsif is_new_topic
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_topic_no_reply"
+      elsif has_contact_user
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_post"
+      else
+        "system_messages.reviewable_queued_post_revise_and_reject_edit_post_no_reply"
+      end
+
     pm_translation_args = {
       topic_title: self.topic&.title || self.payload["title"],
       topic_url: self.topic&.url,
@@ -161,11 +175,14 @@ class ReviewableQueuedPost < Reviewable
       feedback: args[:revise_feedback],
       original_post: self.payload["raw"],
       site_name: SiteSetting.title,
+      edit_instructions:
+        I18n.t(edit_instructions_key, locale: self.target_created_by.effective_locale),
     }
+
     SystemMessage.create(
       self.target_created_by,
       (
-        if self.topic.blank?
+        if is_new_topic
           :reviewable_queued_post_revise_and_reject_new_topic
         else
           :reviewable_queued_post_revise_and_reject
