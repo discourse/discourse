@@ -413,17 +413,18 @@ class GroupsController < ApplicationController
       )
     else
       notify = params[:notify_users]&.to_s == "true"
+
       uniq_users = users.uniq
       uniq_users.each { |user| add_user_to_group(group, user, notify) }
 
+      group_ids = [group.id]
+
+      skip_email = params[:skip_email].to_s == "true"
+      skip_email ||= params.key?(:notify_users) && !notify
+
       emails.each do |email|
         begin
-          Invite.generate(
-            current_user,
-            email: email,
-            group_ids: [group.id],
-            skip_email: params[:skip_email].to_s == "true",
-          )
+          Invite.generate(current_user, email:, group_ids:, skip_email:)
         rescue RateLimiter::LimitExceeded => e
           return(
             render_json_error(
