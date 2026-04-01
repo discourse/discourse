@@ -67,7 +67,7 @@ RSpec.describe Discourse do
     end
   end
 
-  describe ".apply_worker_db_variables_overrides" do
+  describe ".after_unicorn_worker_fork" do
     around do |example|
       original_env = ENV.to_hash
       original_config = ActiveRecord::Base.configurations
@@ -95,6 +95,8 @@ RSpec.describe Discourse do
     it "applies worker-specific database variable overrides in a production environment" do
       test_database_config = Rails.application.config.database_configuration["test"]
 
+      # In the production environment, `DISCOURSE_` ENV variables are written to the `discourse.conf` file so we need
+      # to simulate that here in the test environment.
       temp_discourse_conf = Tempfile.new("discourse.conf")
       temp_discourse_conf.write <<~TEXT
       db_name = #{test_database_config["database"]}
@@ -108,7 +110,7 @@ RSpec.describe Discourse do
       GlobalSetting.configure!(path: temp_discourse_conf.path, use_blank_provider: false)
       GlobalSetting.load_defaults
 
-      Discourse.apply_worker_db_variables_overrides
+      Discourse.after_unicorn_worker_fork
 
       expect(
         ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
