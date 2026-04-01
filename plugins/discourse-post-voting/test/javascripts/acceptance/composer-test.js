@@ -18,10 +18,10 @@ acceptance("Discourse Post Voting - composer", function (needs) {
 
   needs.pretender((server, helper) => {
     server.post("/posts", (request) => {
+      const data = parsePostData(request.requestBody);
       if (
-        parsePostData(request.requestBody).create_as_post_voting === "true" ||
-        parsePostData(request.requestBody).only_post_voting_in_this_category ===
-          "true"
+        String(data.create_as_post_voting) === "true" ||
+        String(data.only_post_voting_in_this_category) === "true"
       ) {
         createAsPostVotingSetInRequest = true;
       }
