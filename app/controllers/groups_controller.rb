@@ -808,7 +808,6 @@ class GroupsController < ApplicationController
 
     if !automatic
       attributes.push(
-        :title,
         :allow_membership_requests,
         :full_name,
         :public_exit,
@@ -831,6 +830,7 @@ class GroupsController < ApplicationController
         :email_username,
         :email_password,
         :email_from_alias,
+        :title,
         :primary_group,
         :name,
         :grant_trust_level,

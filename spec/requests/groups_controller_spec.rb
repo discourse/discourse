@@ -1038,7 +1038,7 @@ RSpec.describe GroupsController do
                 },
                 update_existing_users: false,
               }
-        end.to change { GroupHistory.count }.by(13)
+        end.to change { GroupHistory.count }.by(12)
 
         expect(response.status).to eq(200)
 
@@ -1059,12 +1059,49 @@ RSpec.describe GroupsController do
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
         expect(group.automatic_membership_email_domains).to eq(nil)
-        expect(group.title).to eq("haha")
+        expect(group.title).to eq(nil)
         expect(group.primary_group).to eq(false)
         expect(group.incoming_email).to eq(nil)
         expect(group.grant_trust_level).to eq(0)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
+      end
+
+      it "should not clear group title when owner updates other settings" do
+        group.update!(title: "Original Title")
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                flair_bg_color: "FFF",
+                flair_color: "BBB",
+                flair_icon: "fa-circle-half-stroke",
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.title).to eq("Original Title")
+        expect(group.flair_bg_color).to eq("FFF")
+      end
+
+      it "should not allow group owner to modify the group title" do
+        group.update!(title: "Original Title")
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                title: "Hacked Title",
+                flair_bg_color: "FFF",
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.title).to eq("Original Title")
+        expect(group.flair_bg_color).to eq("FFF")
       end
 
       it "should not be allowed to update automatic groups" do
@@ -1090,6 +1127,7 @@ RSpec.describe GroupsController do
                 incoming_email: "test@mail.org",
                 primary_group: true,
                 automatic_membership_email_domains: "test.org",
+                title: "Admin Title",
                 grant_trust_level: 2,
                 visibility_level: 1,
                 members_visibility_level: 3,
@@ -1106,6 +1144,7 @@ RSpec.describe GroupsController do
         expect(group.name).to eq("testing")
         expect(group.incoming_email).to eq("test@mail.org")
         expect(group.primary_group).to eq(true)
+        expect(group.title).to eq("Admin Title")
         expect(group.visibility_level).to eq(1)
         expect(group.members_visibility_level).to eq(3)
         expect(group.automatic_membership_email_domains).to eq("test.org")
