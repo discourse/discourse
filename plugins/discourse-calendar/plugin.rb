@@ -623,7 +623,7 @@ after_initialize do
 
           rows = +""
 
-          event = DiscoursePostEvent::Event.find_by(id: post.id)
+          event = DiscoursePostEvent::Event.includes(:image_upload).find_by(id: post.id)
           if event&.image_upload_id
             image_url = UrlHelper.absolute(event.image_upload.url)
             rows << <<~HTML
