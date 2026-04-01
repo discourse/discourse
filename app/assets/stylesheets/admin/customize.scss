@@ -778,7 +778,7 @@
   .admin-embedding-index__full-app-toggle {
     display: flex;
     align-items: flex-start;
-    gap: 0.75em;
+    gap: var(--space-3);
     margin-bottom: 1em;
   }
 
