@@ -3192,6 +3192,7 @@ navigation:
 embedding:
   embed_full_app:
     default: false
+    client: true
   embed_by_username:
     default: ""
     type: username

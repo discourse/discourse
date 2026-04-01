@@ -14,6 +14,7 @@ export default <template>
     <div class="admin-embedding-index__full-app-toggle">
       <DToggleSwitch
         @state={{@controller.fullAppMode}}
+        aria-label={{i18n "admin.embedding.full_app_mode"}}
         {{on "click" @controller.toggleFullAppMode}}
       />
       <div class="admin-embedding-index__full-app-toggle-text">
