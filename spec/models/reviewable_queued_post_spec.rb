@@ -162,10 +162,13 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             topic_url: reviewable.topic.url,
             reason: args[:revise_reason],
             feedback: args[:revise_feedback],
-            original_post: reviewable.payload["raw"],
+            original_post: reviewable.payload["raw"].lines.map { |line| "> #{line}" }.join,
             site_name: SiteSetting.title,
             edit_instructions:
-              I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_post"),
+              I18n.t(
+                "system_messages.reviewable_queued_post_revise_and_reject_edit_post",
+                base_url: Discourse.base_url,
+              ),
           }
           expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
           expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
@@ -176,6 +179,18 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             ).chomp,
           )
           expect(topic.first_post.raw).to include("reply to this message")
+        end
+
+        it "creates a draft for the user with the original post content" do
+          args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
+          reviewable.perform(moderator, :revise_and_reject_post, args)
+
+          draft_key = "#{Draft::EXISTING_TOPIC}#{reviewable.topic_id}"
+          draft = Draft.find_by(user_id: reviewable.target_created_by.id, draft_key: draft_key)
+          expect(draft).to be_present
+          draft_data = JSON.parse(draft.data)
+          expect(draft_data["reply"]).to eq(reviewable.payload["raw"])
+          expect(draft_data["action"]).to eq("reply")
         end
 
         it "supports sending a custom revise reason" do
@@ -232,10 +247,13 @@ RSpec.describe ReviewableQueuedPost, type: :model do
               topic_url: nil,
               reason: args[:revise_reason],
               feedback: args[:revise_feedback],
-              original_post: reviewable.payload["raw"],
+              original_post: reviewable.payload["raw"].lines.map { |line| "> #{line}" }.join,
               site_name: SiteSetting.title,
               edit_instructions:
-                I18n.t("system_messages.reviewable_queued_post_revise_and_reject_edit_topic"),
+                I18n.t(
+                  "system_messages.reviewable_queued_post_revise_and_reject_edit_topic",
+                  base_url: Discourse.base_url,
+                ),
             }
             expect(topic.first_post.raw.chomp).to eq(
               I18n.t(
@@ -243,6 +261,19 @@ RSpec.describe ReviewableQueuedPost, type: :model do
                 translation_params,
               ).chomp,
             )
+          end
+
+          it "creates a draft for the user with the original topic content" do
+            args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
+            reviewable.perform(moderator, :revise_and_reject_post, args)
+
+            draft =
+              Draft.find_by(user_id: reviewable.target_created_by.id, draft_key: Draft::NEW_TOPIC)
+            expect(draft).to be_present
+            draft_data = JSON.parse(draft.data)
+            expect(draft_data["reply"]).to eq(reviewable.payload["raw"])
+            expect(draft_data["action"]).to eq("createTopic")
+            expect(draft_data["title"]).to eq(reviewable.payload["title"])
           end
         end
       end

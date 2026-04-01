@@ -3445,10 +3445,10 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
-    reviewable_queued_post_revise_and_reject_edit_post: "You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
-    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "You can edit your original post below and re-submit to make the suggested changes."
-    reviewable_queued_post_revise_and_reject_edit_topic: "You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
-    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "You can edit your topic's original post below and re-submit to make the suggested changes."
+    reviewable_queued_post_revise_and_reject_edit_post: "A draft has been saved with your original content. You can find it in your [drafts](%{base_url}/my/activity/drafts), make the suggested changes, and resubmit, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "A draft has been saved with your original content. You can find it in your [drafts](%{base_url}/my/activity/drafts), make the suggested changes, and resubmit."
+    reviewable_queued_post_revise_and_reject_edit_topic: "A draft has been saved with your original content. You can find it in your [drafts](%{base_url}/my/activity/drafts), make the suggested changes, and resubmit, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "A draft has been saved with your original content. You can find it in your [drafts](%{base_url}/my/activity/drafts), make the suggested changes, and resubmit."
     reviewable_queued_post_revise_and_reject:
       title: "Feedback on your post"
       subject_template: "Feedback on your post in %{topic_title}"
@@ -3463,11 +3463,7 @@ en:
 
         %{edit_instructions}
 
-        --------
-
         %{original_post}
-
-        --------
 
         Thanks,
         %{site_name} Moderators
@@ -3486,11 +3482,7 @@ en:
 
         %{edit_instructions}
 
-        --------
-
         %{original_post}
-
-        --------
 
         Thanks,
         %{site_name} Moderators

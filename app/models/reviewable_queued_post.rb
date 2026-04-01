@@ -168,15 +168,21 @@ class ReviewableQueuedPost < Reviewable
         "system_messages.reviewable_queued_post_revise_and_reject_edit_post_no_reply"
       end
 
+    create_revise_and_reject_draft(is_new_topic)
+
     pm_translation_args = {
       topic_title: self.topic&.title || self.payload["title"],
       topic_url: self.topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
-      original_post: self.payload["raw"],
+      original_post: self.payload["raw"].lines.map { |line| "> #{line}" }.join,
       site_name: SiteSetting.title,
       edit_instructions:
-        I18n.t(edit_instructions_key, locale: self.target_created_by.effective_locale),
+        I18n.t(
+          edit_instructions_key,
+          base_url: Discourse.base_url,
+          locale: self.target_created_by.effective_locale,
+        ),
     }
 
     SystemMessage.create(
@@ -213,6 +219,23 @@ class ReviewableQueuedPost < Reviewable
   end
 
   private
+
+  def create_revise_and_reject_draft(is_new_topic)
+    draft_data = { reply: self.payload["raw"] }
+
+    if is_new_topic
+      draft_key = Draft::NEW_TOPIC
+      draft_data[:action] = "createTopic"
+      draft_data[:title] = self.payload["title"]
+      draft_data[:categoryId] = self.category_id
+      draft_data[:tags] = self.payload["tags"] if self.payload["tags"].present?
+    else
+      draft_key = "#{Draft::EXISTING_TOPIC}#{self.topic_id}"
+      draft_data[:action] = "reply"
+    end
+
+    Draft.set(self.target_created_by, draft_key, 0, draft_data.to_json, nil, force_save: true)
+  end
 
   def delete_opts
     {
