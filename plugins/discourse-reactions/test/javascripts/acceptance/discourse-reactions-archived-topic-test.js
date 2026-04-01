@@ -1,9 +1,10 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
-acceptance(`Discourse Reactions - Archived topic`, function (needs) {
+acceptance("Discourse Reactions - Archived topic", function (needs) {
   needs.user();
 
   needs.settings({
@@ -15,7 +16,7 @@ acceptance(`Discourse Reactions - Archived topic`, function (needs) {
 
   needs.pretender((server, helper) => {
     const topicPath = "/t/374.json";
-    const topicData = structuredClone(ReactionsTopics[topicPath]);
+    const topicData = cloneJSON(ReactionsTopics[topicPath]);
 
     // Make topic archived
     topicData.archived = true;
