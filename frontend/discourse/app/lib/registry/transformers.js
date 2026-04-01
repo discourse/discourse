@@ -40,6 +40,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-plugin-icon",
   "admin-reports-show-query-params",
   "admin-theme-card-show-full-controls",
+  "before-create-account",
   "bulk-select-in-nav-controls",
   "can-create-topic-button",
   "category-available-views",
