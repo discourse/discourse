@@ -251,19 +251,12 @@ after_initialize do
 
   on(:post_edited) do |post|
     event_before = post.event
-    had_event_before = event_before.present?
     DiscoursePostEvent::Event.update_from_raw(post)
     post.reload
 
     if SiteSetting.discourse_post_event_enabled
-      if post.event && had_event_before
-        WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
-      elsif post.event && !had_event_before
-        WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
-      elsif !post.event && had_event_before
-        payload = WebHook.build_calendar_event_payload(event_before)
-        WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
-      end
+      post.event&.sync_image_to_post_and_topic
+      DiscoursePostEvent::Event.handle_post_event_webhooks(post, event_before)
     end
   end
 
@@ -428,18 +421,8 @@ after_initialize do
     CalendarEvent.update(post)
 
     if SiteSetting.discourse_post_event_enabled
-      event = post.event
-      if event&.image_upload_id
-        post.update_column(:image_upload_id, event.image_upload_id)
-        if post.is_first_post?
-          post.topic.update_column(:image_upload_id, event.image_upload_id)
-          extra_sizes =
-            ThemeModifierHelper.new(
-              theme_ids: Theme.user_selectable.pluck(:id),
-            ).topic_thumbnail_sizes
-          post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
-        end
-      end
+      event = DiscoursePostEvent::Event.find_by(id: post.id)
+      event&.sync_image_to_post_and_topic(generate_thumbnails: true) if event&.image_upload_id
     end
   end
 

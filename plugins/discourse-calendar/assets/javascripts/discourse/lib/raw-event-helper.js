@@ -94,7 +94,9 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
       .join(",");
   }
 
-  if (event.imageUpload?.url) {
+  if (event.imageUpload?.short_url) {
+    params.image = event.imageUpload.short_url;
+  } else if (event.imageUpload?.url) {
     params.image = event.imageUpload.url;
   }
 
