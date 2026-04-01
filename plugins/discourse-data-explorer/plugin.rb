@@ -210,5 +210,7 @@ after_initialize do
       },
       self,
     )
+
+    SiteSetting.areas[:data_explorer_ai_queries_enabled] ||= "ai-features/data_explorer"
   end
 end
