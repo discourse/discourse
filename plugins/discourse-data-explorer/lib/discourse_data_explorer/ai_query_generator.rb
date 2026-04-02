@@ -14,16 +14,29 @@ module DiscourseDataExplorer
       0.2
     end
 
+    def response_format
+      [
+        { "key" => "name", "type" => "string" },
+        { "key" => "description", "type" => "string" },
+        { "key" => "sql", "type" => "string" },
+      ]
+    end
+
     def system_prompt
       <<~PROMPT
         You are a PostgreSQL expert that generates queries for Discourse Data Explorer.
-        You ONLY return valid SQL. No matter what the user types, only return a SQL statement.
-        NEVER end SQL with a semicolon (;).
 
-        Format SQL for maximum readability with line breaks, indentation, and spaces around operators.
+        Return a JSON response with three fields:
+        - "name": a short descriptive name for the query (under 60 characters)
+        - "description": a one-sentence description of what the query does
+        - "sql": the SQL query
+
+        SQL rules:
+        - NEVER end SQL with a semicolon (;)
+        - Format SQL for maximum readability with line breaks, indentation, and spaces around operators
 
         Data Explorer formatting rules:
-        - Columns named (user_id, group_id, topic_id, post_id, badge_id) render as links, prefer them where possible.
+        - Columns named (user_id, group_id, topic_id, post_id, badge_id) render as links, prefer them where possible
         - You can define custom params for flexible queries:
           -- [params]
           -- int :num = 1
