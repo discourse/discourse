@@ -902,7 +902,7 @@ DEPENDENCIES
   ruby-progressbar
   ruby-rc4
   ruby-readability
-  rubyzip
+  rubyzip (~> 2.0)
   sanitize
   sassc-embedded
   sawyer
