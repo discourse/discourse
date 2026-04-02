@@ -12,12 +12,10 @@ $show-interested: inherit;
   .event__section {
     padding: 0.5em 0.75rem;
 
-    &:first-child {
-      border-top: 1px solid var(--primary-low);
-    }
-
     p {
       margin: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     > .d-icon {
@@ -33,18 +31,16 @@ $show-interested: inherit;
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 0;
-    padding: 0;
-    padding-bottom: 50%;
-    border-top: none;
+    padding: 1px;
+    aspect-ratio: 16 / 9;
+    box-sizing: border-box;
 
     img {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-top-left-radius: var(--d-border-radius);
+      border-top-right-radius: var(--d-border-radius);
     }
   }
 
