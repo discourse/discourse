@@ -12,18 +12,9 @@ module PageObjects
         self
       end
 
-      def select_bundled_action(reviewable, value, bundle_index: nil)
+      def select_bundled_action(reviewable, value)
         within(reviewable_by_id(reviewable.id)) do
-          if bundle_index
-            dropdown =
-              PageObjects::Components::SelectKit.new(
-                "#{REVIEWABLE_ACTION_DROPDOWN}:nth-of-type(#{bundle_index})",
-              )
-            dropdown.expand
-            dropdown.select_row_by_name(value)
-          else
-            reviewable_action_dropdown.select_row_by_value(value)
-          end
+          reviewable_action_dropdown.select_row_by_value(value)
         end
       end
 

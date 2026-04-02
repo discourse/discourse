@@ -29,7 +29,6 @@
 
 # Plugins except for the bundled ones
 /plugins/*
-!/plugins/discourse-boosts
 !/plugins/discourse-details
 !/plugins/discourse-local-dates
 !/plugins/discourse-narrative-bot

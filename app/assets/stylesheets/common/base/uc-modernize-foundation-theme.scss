@@ -66,10 +66,7 @@
       .profile-tab-btn,
       .back-button,
       .composer-actions-btn,
-      .language-switcher-trigger,
-      .discourse-boosts__emoji-btn,
-      .btn.discourse-boosts__submit,
-      .btn.discourse-boosts__cancel
+      .language-switcher-trigger
     ) {
       padding-block: 0;
       height: var(--button-height);
@@ -82,10 +79,7 @@
       .user-menu-tab,
       .user-menu-tab-active,
       .composer-actions-btn,
-      .dropdown-select-box-header,
-      .discourse-boosts__emoji-btn,
-      .btn.discourse-boosts__submit,
-      .btn.discourse-boosts__cancel
+      .dropdown-select-box-header
     ) {
       width: var(--button-height);
     }

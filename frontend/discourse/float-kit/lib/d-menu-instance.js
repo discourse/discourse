@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { getOwner, setOwner } from "@ember/owner";
-import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { MENU } from "discourse/float-kit/lib/constants";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
@@ -66,8 +65,6 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async close(options = { focusTrigger: true }) {
-    this.openedByDelayedHover = false;
-
     if (getOwner(this).isDestroying) {
       return;
     }
@@ -106,13 +103,6 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async onClick(event) {
-    cancel(this.delayedHoverTimeout);
-
-    if (this.openedByDelayedHover) {
-      this.openedByDelayedHover = false;
-      return;
-    }
-
     if (this.expanded && this.untriggers.includes("click")) {
       return await this.onUntrigger(event);
     }

@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { setOwner } from "@ember/owner";
-import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TOOLTIP } from "discourse/float-kit/lib/constants";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
@@ -65,7 +64,6 @@ export default class DTooltipInstance extends FloatKitInstance {
 
   @action
   async close() {
-    this.openedByDelayedHover = false;
     await this.tooltip.close(this);
 
     await super.close(...arguments);
@@ -86,13 +84,6 @@ export default class DTooltipInstance extends FloatKitInstance {
 
   @action
   async onClick(event) {
-    cancel(this.delayedHoverTimeout);
-
-    if (this.openedByDelayedHover) {
-      this.openedByDelayedHover = false;
-      return;
-    }
-
     if (this.expanded && this.untriggers.includes("click")) {
       return await this.onUntrigger(event);
     }

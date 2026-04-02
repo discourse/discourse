@@ -36,7 +36,6 @@ export default class EmojiPicker extends Component {
       @onShow={{@onShow}}
       @onClose={{@onClose}}
       @inline={{@inline}}
-      @disabled={{@disabled}}
     >
       <:trigger>
         {{#if @emoji}}
