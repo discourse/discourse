@@ -6,7 +6,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import processNode from "../lib/process-node";
 
 export default class NestedRoute extends Route {
-  @service nestedViewCache;
+  @service routeViewCache;
   @service screenTrack;
   @service siteSettings;
   @service store;
@@ -25,12 +25,12 @@ export default class NestedRoute extends Route {
     const sort =
       params.sort || this.siteSettings.nested_replies_default_sort || "top";
 
-    const cacheKey = this.nestedViewCache.buildKey(topic_id, {
+    const cacheKey = this.routeViewCache.buildKey("nested", topic_id, {
       ...params,
       sort,
     });
-    if (this.nestedViewCache.consumeTraversal()) {
-      const cached = this.nestedViewCache.get(cacheKey);
+    if (this.routeViewCache.consumeTraversal()) {
+      const cached = this.routeViewCache.get(cacheKey);
       if (cached) {
         this._restoringFromCache = cached;
         return cached.modelData;
@@ -116,13 +116,17 @@ export default class NestedRoute extends Route {
       return;
     }
 
-    const cacheKey = this.nestedViewCache.buildKey(controller.topic.id, {
-      sort: controller.sort,
-      post_number: controller.postNumber,
-      context: controller.contextNoAncestors ? 0 : undefined,
-    });
+    const cacheKey = this.routeViewCache.buildKey(
+      "nested",
+      controller.topic.id,
+      {
+        sort: controller.sort,
+        post_number: controller.postNumber,
+        context: controller.contextNoAncestors ? 0 : undefined,
+      }
+    );
 
-    this.nestedViewCache.save(cacheKey, {
+    this.routeViewCache.save(cacheKey, {
       modelData: {
         topic: controller.topic,
         opPost: controller.opPost,
