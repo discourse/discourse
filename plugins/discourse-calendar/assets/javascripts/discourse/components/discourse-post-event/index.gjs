@@ -11,7 +11,6 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
 import ChatChannel from "./chat-channel";
 import Creator from "./creator";
 import Dates from "./dates";
@@ -102,15 +101,6 @@ export default class DiscoursePostEvent extends Component {
 
   get expiredAndRecurring() {
     return this.event.isExpired && this.event.recurrence;
-  }
-
-  get recurrenceLabel() {
-    if (!this.event?.recurrence) {
-      return null;
-    }
-    return i18n(
-      `discourse_post_event.builder_modal.recurrence.${this.event.recurrence}`
-    );
   }
 
   @bind
@@ -211,10 +201,6 @@ export default class DiscoursePostEvent extends Component {
                     event=event
                     expiredAndRecurring=this.expiredAndRecurring
                   )
-                  Recurrence=(component
-                    InfoSection icon="arrows-rotate" class="event-recurrence"
-                  )
-                  recurrenceLabel=this.recurrenceLabel
                   Invitees=(component Invitees event=event)
                   Status=(component Status event=event)
                   ChatChannel=(component ChatChannel event=event)
@@ -224,11 +210,6 @@ export default class DiscoursePostEvent extends Component {
                   @event={{event}}
                   @expiredAndRecurring={{this.expiredAndRecurring}}
                 />
-                {{#if event.recurrence}}
-                  <InfoSection @icon="arrows-rotate" class="event-recurrence">
-                    {{this.recurrenceLabel}}
-                  </InfoSection>
-                {{/if}}
                 <Location @location={{event.location}} />
                 <Url @url={{event.url}} />
                 <ChatChannel @event={{event}} />
