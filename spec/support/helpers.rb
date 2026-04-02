@@ -365,16 +365,25 @@ module Helpers
   end
 
   def mock_upcoming_change_default_overrides(overrides)
-    @original_upcoming_change_default_overrides =
-      SiteSetting.defaults.upcoming_change_default_overrides.transform_values(&:dup)
-    merged = @original_upcoming_change_default_overrides.merge(overrides)
-    SiteSetting.defaults.assign_upcoming_change_default_overrides_for_test!(merged)
+    # Without ||= here nested blocks would further mutate the instance var so
+    # resetting in clear_mocked_upcoming_change_metadata would not work.
+    @original_upcoming_change_default_overrides ||=
+      SiteSetting.upcoming_change_default_overrides.dup
+
+    # We do this because upcoming changes are ephemeral in site settings,
+    # so we cannot rely on them for specs. Instead we can fake some metadata
+    # for an existing stable setting.
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
+      @original_upcoming_change_default_overrides.merge(overrides),
+    )
   end
 
   def clear_mocked_upcoming_change_default_overrides
-    return if @original_upcoming_change_default_overrides.blank?
+    return if @original_upcoming_change_default_overrides.nil?
 
-    SiteSetting.defaults.assign_upcoming_change_default_overrides_for_test!(
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
       @original_upcoming_change_default_overrides,
     )
   end

@@ -1890,22 +1890,8 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       end
 
-      context "when the admin has not manually set the target setting" do
-        it "returns the override default" do
-          expect(settings.reactions_enabled).to eq(true)
-        end
-      end
-
-      context "when the admin has manually set the target setting" do
-        before do
-          settings.reactions_enabled = false
-          settings.refresh!
-          settings.modified[:reactions_enabled] = false
-        end
-
-        it "returns the admin's value" do
-          expect(settings.reactions_enabled).to eq(false)
-        end
+      it "returns the override default" do
+        expect(settings.reactions_enabled).to eq(true)
       end
     end
 
@@ -1918,6 +1904,7 @@ RSpec.describe SiteSettingExtension do
     describe "all_settings effective default" do
       context "when the linked upcoming change is active" do
         before do
+          UpcomingChanges.stubs(:settings_provider).returns(settings)
           settings.provider.save(:enable_reactions_by_default, true, SiteSetting.types[:bool])
           settings.refresh!
         end

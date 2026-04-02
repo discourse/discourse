@@ -165,6 +165,20 @@ module SiteSettingExtension
     @upcoming_change_metadata ||= {}
   end
 
+  # Has a pointer from a site setting name to the upcoming change name
+  # and overriden default value. Looks like this in site_settings.yml:
+  #
+  # setting_name:
+  #   upcoming_change_default_override:
+  #     upcoming_change: upcoming_change_name
+  #     new_default: new_default_value
+  #
+  # The upcoming change name is used to determine if the override is active.
+  # The new default value is used to override the default value for the site setting.
+  def upcoming_change_default_overrides
+    @upcoming_change_default_overrides ||= {}
+  end
+
   def hidden_settings_provider
     @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
   end
@@ -533,35 +547,6 @@ module SiteSettingExtension
     "theme_site_settings_json_#{theme_id}__#{Discourse.git_version}"
   end
 
-  # Gets all of the site setting values from the provider (DbProvider (most
-  # common), TestProvider, LocalProcessProvider etc.) and returns a hash of
-  # setting names to values based on the type of the setting.
-  #
-  # @return [Hash] a hash of setting names to values based on the type of the setting
-  #
-  # @example
-  #   {
-  #     enable_mobile_theme: true,
-  #     topics_per_period_in_top_page: 50,
-  #     title: "My awesome forum"
-  #   }
-  def fetch_setting_hash_from_provider
-    Hash[
-      *(
-        provider
-          .all
-          .map do |setting|
-            [
-              setting.name.to_sym,
-              type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
-            ]
-          end
-          .to_a
-          .flatten
-      )
-    ]
-  end
-
   # Merges the provider values of site settings (whether it be from the DB or wherever)
   # and theme site settings with the default values of those settings, also taking into
   # account shadowed site settings and upcoming change behaviour.
@@ -579,43 +564,8 @@ module SiteSettingExtension
 
         refresh_site_setting_group_ids!
 
-        # Upcoming change overrides are taken into account inside the DefaultsProvider,
-        # we load these overrides originally in the setting() method here in
-        # SiteSettingExtension, but are only activated above based on whether the
-        # upcoming change is enabled.
-        defaults_view = defaults.all(new_current_hash[:default_locale])
-
-        defaults.upcoming_change_default_overrides.each do |setting_name, override|
-          upcoming_change_status = UpcomingChanges.change_status(override[:upcoming_change])
-          promote_upcoming_changes_on_status =
-            (
-              new_modified[:promote_upcoming_changes_on_status] ||
-                defaults_view[:promote_upcoming_changes_on_status]
-            ).to_sym
-
-          # This follows the same logic as UpcomingChanges.enabled?, which cannot be
-          # used here since it would cause an infinite loop or mutex error because it
-          # looks at SiteSetting.current
-          upcoming_change_enabled =
-            if new_modified.key?(override[:upcoming_change]) && upcoming_change_status != :permanent
-              new_modified[override[:upcoming_change]]
-            elsif UpcomingChanges.meets_or_exceeds_status?(
-                  override[:upcoming_change],
-                  promote_upcoming_changes_on_status,
-                ) || upcoming_change_status == :permanent
-              true
-            else
-              defaults_view[override[:upcoming_change]]
-            end
-
-          if upcoming_change_enabled
-            defaults.activate_upcoming_change_override(override[:upcoming_change])
-          else
-            defaults.deactivate_upcoming_change_override(override[:upcoming_change])
-          end
-        end
-
-        defaults_view = defaults.all(new_current_hash[:default_locale])
+        defaults_view =
+          defaults.all(new_current_hash[:default_locale], include_upcoming_changes_overrides: false)
 
         # If the "modified" value is the same as the setting default,
         # this doesn't really count and is more of a quirk on how we
@@ -638,6 +588,17 @@ module SiteSettingExtension
         modified.clear
         modified.merge!(new_modified)
         uploads.clear
+
+        upcoming_change_default_overrides.each do |setting_name, override|
+          if UpcomingChanges.enabled?(override[:upcoming_change])
+            defaults.activate_upcoming_change_override(override[:upcoming_change])
+            current[setting_name] = override[:new_default] if !setting_modified_from_default?(
+              setting_name,
+            )
+          else
+            defaults.deactivate_upcoming_change_override(override[:upcoming_change])
+          end
+        end
       end
 
       refresh_theme_site_settings! if refresh_theme_site_settings
@@ -647,6 +608,14 @@ module SiteSettingExtension
           ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
       )
     end
+  end
+
+  # Whether an admin or something else has changed the site setting from its
+  # default value, writing a new value to the database.
+  #
+  # Note that if the DB value is the same as the default value, this will return false.
+  def setting_modified_from_default?(setting_name)
+    modified.key?(setting_name)
   end
 
   def refresh_site_setting_group_ids!
@@ -792,6 +761,14 @@ module SiteSettingExtension
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
     modified[name] = current[name]
+
+    if UpcomingChanges.exists?(name)
+      if current[name]
+        defaults.activate_upcoming_change_override(name)
+      else
+        defaults.deactivate_upcoming_change_override(name)
+      end
+    end
 
     return if current[name] == old_val
 
@@ -1190,6 +1167,34 @@ module SiteSettingExtension
 
   private
 
+  # Gets all of the site setting values from the provider (DbProvider (most
+  # common), TestProvider, LocalProcessProvider etc.) and returns a hash of
+  # setting names to values based on the type of the setting.
+  #
+  # @return [Hash] a hash of setting names to values based on the type of the setting
+  #
+  # @example
+  #   {
+  #     enable_mobile_theme: true,
+  #     topics_per_period_in_top_page: 50,
+  #     title: "My awesome forum"
+  #   }
+  def fetch_setting_hash_from_provider
+    Hash[
+      *(
+        provider
+          .all
+          .map do |setting|
+            [
+              setting.name.to_sym,
+              type_supervisor.to_rb_value(setting.name, setting.value, setting.data_type),
+            ]
+          end
+          .flatten
+      )
+    ]
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
 
@@ -1216,9 +1221,10 @@ module SiteSettingExtension
       )
 
       if opts[:upcoming_change]
-        upcoming_change_metadata[name] = opts[:upcoming_change]
-        impact_type, impact_role = upcoming_change_metadata[name][:impact].split(",")
+        upcoming_change_metadata[name] ||= {}
+        impact_type, impact_role = opts[:upcoming_change][:impact].split(",")
         upcoming_change_metadata[name].merge!(
+          **opts[:upcoming_change].except(:impact),
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
@@ -1227,11 +1233,10 @@ module SiteSettingExtension
 
       upcoming_change_default_override = opts[:upcoming_change_default_override]
       if upcoming_change_default_override.present?
-        defaults.load_upcoming_change_override(
-          upcoming_change_default_override[:upcoming_change].to_sym,
-          name,
-          upcoming_change_default_override[:new_default],
-        )
+        upcoming_change_default_overrides[name] = {
+          upcoming_change: upcoming_change_default_override[:upcoming_change],
+          new_default: upcoming_change_default_override[:new_default],
+        }
       end
 
       categories[name] = opts[:category] || :uncategorized

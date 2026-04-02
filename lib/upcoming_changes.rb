@@ -24,7 +24,7 @@ module UpcomingChanges
       )
   end
 
-  # NOTE (martin): Mostly used for testing, to allow stubbing the SiteSetting provider,
+  # Mostly used for testing, to allow stubbing the SiteSetting provider,
   # like for SiteSettingExtension spec. This is not ideal, but the SiteSettingExtension spec
   # is extremely gnarly.
   def self.settings_provider
@@ -115,6 +115,8 @@ module UpcomingChanges
   # @param change_setting_name [Symbol] The name of the upcoming change
   # @return [Boolean]
   def self.enabled?(change_setting_name)
+    change_setting_name = change_setting_name.to_sym
+
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
     # is false.
@@ -377,7 +379,6 @@ module UpcomingChanges
   # This is done via upcoming_change_default_override in site_settings.yml.
   def self.find_related_default_override_for_change(change_setting_name)
     settings_provider
-      .defaults
       .upcoming_change_default_overrides
       .find { |_, override| override[:upcoming_change] == change_setting_name }
       &.first
