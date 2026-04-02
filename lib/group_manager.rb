@@ -77,6 +77,7 @@ class GroupManager
         WHERE gu.user_id = u.id AND
         gu.group_id = :group_id
       )
+      ON CONFLICT (group_id, user_id) DO NOTHING
       RETURNING user_id
       SQL
 

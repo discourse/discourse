@@ -794,10 +794,6 @@ class GroupsController < ApplicationController
     if notify && added_user_ids.present?
       Jobs.enqueue(:notify_users_added_to_group, user_ids: added_user_ids, group_id: group.id)
     end
-  rescue ActiveRecord::RecordNotUnique
-    # Under concurrency, we might attempt to insert two records quickly and hit a DB
-    # constraint. In this case we can safely ignore the error and act as if the user
-    # was added to the group.
   end
 
   def group_params(automatic: false)
