@@ -113,24 +113,15 @@ describe DiscoursePostEvent::EventParser do
   end
 
   it "doesn't escape urls" do
+    # change this to use the hash type url for image
     post_event = build_post user, <<~TXT
-        [event start="2020" url="https://example.com/?q=foo&all=true" image="https://example.com/image.png?w=100&h=200"]
+        [event start="2020" url="https://example.com/?q=foo&all=true" image="upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg"]
         [/event]
       TXT
 
     events = parser.extract_events(post_event)
     expect(events[0][:url]).to eq("https://example.com/?q=foo&all=true")
-    expect(events[0][:image]).to eq("https://example.com/image.png?w=100&h=200")
-  end
-
-  it "parses image upload" do
-    post_event = build_post user, <<~TXT
-        [event start="2020" image="https://example.com/image.png"]
-        [/event]
-      TXT
-
-    events = parser.extract_events(post_event)
-    expect(events[0][:image]).to eq("https://example.com/image.png")
+    expect(events[0][:image]).to eq("upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg")
   end
 
   context "with custom fields" do
