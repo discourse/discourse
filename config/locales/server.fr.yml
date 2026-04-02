@@ -2978,47 +2978,9 @@ fr:
     reviewable_queued_post_revise_and_reject:
       title: "Commentaires sur votre message"
       subject_template: "Commentaires sur votre message dans %{topic_title}"
-      text_body_template: |
-        Bonjour %{username},
-
-        Nous avons examiné votre message dans [%{topic_title}] (%{topic_url}) et avons quelques commentaires à vous faire.
-
-        Motif : %{reason}
-
-        Commentaire : %{feedback}
-
-        Vous pouvez modifier votre message d'origine ci-dessous et le soumettre à nouveau pour apporter les modifications suggérées, ou répondre à ce message si vous avez des questions.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Merci,
-        Modérateurs %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Commentaires sur votre sujet"
       subject_template: 'Commentaires sur le nouveau sujet intitulé « %{topic_title} »'
-      text_body_template: |
-        Bonjour %{username},
-
-        Nous avons examiné votre nouveau sujet intitulé « %{topic_title} » et avons quelques commentaires à vous faire.
-
-        Motif : %{reason}
-
-        Commentaires : %{feedback}
-
-        Vous pouvez modifier le message original de votre sujet ci-dessous et le soumettre à nouveau pour apporter les modifications suggérées, ou répondre à ce message si vous avez des questions.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Merci,
-        Modérateurs %{site_name}
     post_hidden_again:
       title: "Message masqué à nouveau"
       subject_template: "Message masqué suite à des signalements de la communauté, responsables avertis"

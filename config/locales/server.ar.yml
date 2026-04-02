@@ -3497,47 +3497,9 @@ ar:
     reviewable_queued_post_revise_and_reject:
       title: "الملاحظات على منشورك"
       subject_template: "الملاحظات على منشورك في %{topic_title}"
-      text_body_template: |
-        مرحبًا %{username}،
-
-        لقد راجعنا منشورك في [%{topic_title}](%{topic_url}) ولدينا بعض الملاحظات لك.
-
-        السبب: %{reason}
-
-        الملاحظات: %{feedback}
-
-        يمكنك تعديل منشورك الأصلي أدناه وإعادة إرساله لإجراء التغييرات المقترحة، أو الرد على هذه الرسالة إذا كانت لديك أي أسئلة.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        شكرًا،
-        مشرفو %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "الملاحظات على موضوعك"
       subject_template: 'الملاحظات على موضوع جديد بعنوان "%{topic_title}"'
-      text_body_template: |
-        مرحبًا %{username}،
-
-        لقد راجعنا موضوعك الجديد بعنوان "%{topic_title}" ولدينا بعض الملاحظات لك.
-
-        السبب: %{reason}
-
-        الملاحظات: %{feedback}
-
-        يمكنك تعديل المنشور الأصلي في موضوعك أدناه وإعادة إرساله لإجراء التغييرات المقترحة، أو الرد على هذه الرسالة إذا كانت لديك أي أسئلة.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        شكرًا،
-        مشرفو %{site_name}
     post_hidden_again:
       title: "تم إخفاء المنشور مرة أخرى"
       preview: "تم إخفاء المنشور مرة أخرى بواسطة أعضاء المجتمع."
