@@ -113,7 +113,6 @@ describe DiscoursePostEvent::EventParser do
   end
 
   it "doesn't escape urls" do
-    # change this to use the hash type url for image
     post_event = build_post user, <<~TXT
         [event start="2020" url="https://example.com/?q=foo&all=true" image="upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg"]
         [/event]
