@@ -8542,6 +8542,8 @@ tr_TR:
         crawler_settings_saved: "Gezgin ayarları kaydedildi"
         back: "Yerleştirmeye geri dön"
         configuration_snippet: "Yapılandırma parçacığı"
+        full_app_mode: "Tam uygulama modu"
+        full_app_mode_description: "Discourse uygulamasının tamamını gömülü iframe'e yükleyin; böylece kullanıcılar doğrudan yanıt verebilir, beğenebilir, alıntı yapabilir ve konularla etkileşime girebilir"
         host_form:
           add_header: "Sunucu ekle"
           edit_header: "Sunucuyu düzenle"

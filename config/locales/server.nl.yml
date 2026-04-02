@@ -2962,47 +2962,9 @@ nl:
     reviewable_queued_post_revise_and_reject:
       title: "Feedback op je bericht"
       subject_template: "Feedback op je bericht in %{topic_title}"
-      text_body_template: |
-        Hallo %{username},
-
-        We hebben je bericht in [%{topic_title}](%{topic_url}) beoordeeld en hebben wat feedback voor je.
-
-        Reden: %{reason}
-
-        Feedback: %{feedback}
-
-        Je kunt je oorspronkelijke bericht hieronder bewerken en opnieuw indienen om de voorgestelde wijzigingen aan te brengen, of dit bericht beantwoorden als je nog vragen hebt.
-
-        --------
-
-        %{original_post}
-
-
-
-        Bedankt,
-        De moderators van %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback op je topic"
       subject_template: 'Feedback op nieuw topic met de titel "%{topic_title}"'
-      text_body_template: |
-        Hallo %{username},
-
-        We hebben je nieuwe topic met de titel "%{topic_title}" beoordeeld en hebben wat feedback voor je.
-
-        Reden: %{reason}
-
-        Feedback: %{feedback}
-
-        Je kunt het oorspronkelijke bericht van je topic hieronder bewerken en opnieuw indienen om de voorgestelde wijzigingen aan te brengen, of dit bericht beantwoorden als je nog vragen hebt.
-
-        --------
-
-        %{original_post}
-
-
-
-        Bedankt,
-        De moderators van %{site_name}
     post_hidden_again:
       title: "Bericht opnieuw verborgen"
       subject_template: "Bericht verborgen door communitymarkeringen, medewerkers geïnformeerd"

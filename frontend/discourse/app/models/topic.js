@@ -16,6 +16,7 @@ import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
 import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import {
@@ -108,9 +109,8 @@ export default class Topic extends RestModel {
 
     const data = { ...props };
 
-    // SHOULD NOT normalize tags to names - backend expects string array
     if (Array.isArray(data.tags)) {
-      data.tags = data.tags.map((t) => (typeof t === "string" ? t : t.name));
+      data.tags = serializeTags(data.tags);
     }
 
     if (opts.fastEdit) {

@@ -416,6 +416,7 @@ pl_PL:
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
       toggle_mobile_view: "Przełącz widok mobilny"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
+      toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -9199,6 +9200,8 @@ pl_PL:
         crawler_settings_saved: "Ustawienia robota zostały zapisane"
         back: "Powrót do osadzania"
         configuration_snippet: "Fragment konfiguracji"
+        full_app_mode: "Pełny tryb aplikacji"
+        full_app_mode_description: "Załaduj pełną aplikację Discourse w osadzonej ramce iframe, umożliwiając użytkownikom odpowiadanie, polubienie, cytowanie i bezpośrednią interakcję z tematami"
         host_form:
           add_header: "Dodaj host"
           edit_header: "Edytuj hosta"

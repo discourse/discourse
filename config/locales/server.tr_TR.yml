@@ -2313,6 +2313,7 @@ tr_TR:
     embed_support_markdown: "Yerleştirilmiş gönderiler için Markdown biçimlendirmesini destekleyin."
     allowed_embed_selectors: "Yerleştirmelerde izin verilen CSS ögelerinin virgülle ayrılmış bir listesi."
     allowed_href_schemes: "Bağlantılarda http ve https'ye ek olarak izin verilen şemalar."
+    embed_full_app: "Gömülü yorumlar için tam uygulama modunu etkinleştirin. Bu özellik etkinleştirildiğinde, gömülü yorumlar Discourse uygulamasının tamamını bir iframe içinde yükler ve kullanıcıların konularla doğrudan etkileşime girmesine olanak tanır"
     embed_post_limit: "Yerleştirilecek maksimum gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hâlâ incelenmemiş öge varsa moderatörlere mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
@@ -3117,19 +3118,23 @@ tr_TR:
         Ancak, gönderi topluluk tarafından ikinci kez gizlenirse personel tarafından ele alınana kadar gizli kalır.
 
         Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
+    reviewable_queued_post_revise_and_reject_edit_post: "Önerilen değişiklikleri yapmak için aşağıdaki orijinal gönderinizi düzenleyip yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Aşağıda ilk gönderinizi düzenleyebilir ve önerilen değişiklikleri yaparak yeniden gönderebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_topic: "Aşağıda konunuzun ilk mesajını düzenleyip önerilen değişiklikleri yaparak yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "Aşağıda konunuzun ilk gönderisini düzenleyebilir ve önerilen değişiklikleri yaparak yeniden gönderebilirsiniz."
     reviewable_queued_post_revise_and_reject:
       title: "Gönderinizle ilgili geri bildirim"
       subject_template: "%{topic_title} başlığındaki gönderinizle ilgili geri bildirim"
       text_body_template: |
         Merhaba %{username},
 
-        [%{topic_title}](%{topic_url}) başlığındaki gönderinizi inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+        [%{topic_title}](%{topic_url}) başlıklı gönderinizi inceledik ve size bazı geri bildirimlerimiz var.
 
-        Sebep: %{reason}
+        Neden: %{reason}
 
         Geri bildirim: %{feedback}
 
-        Aşağıdaki orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+        %{edit_instructions}
 
         --------
 
@@ -3145,13 +3150,13 @@ tr_TR:
       text_body_template: |
         Merhaba %{username},
 
-        "%{topic_title}" başlıklı yeni konunuzu inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+        "%{topic_title}" başlıklı yeni konunuzu inceledik ve size bazı geri bildirimlerimiz var.
 
-        Sebep: %{reason}
+        Neden: %{reason}
 
         Geri bildirim: %{feedback}
 
-        Aşağıdan orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+        %{edit_instructions}
 
         --------
 

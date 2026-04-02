@@ -26,6 +26,16 @@ RSpec.describe Patreon::Api do
       Discourse.expects(:warn_exception).once
       described_class.campaign_data
     end
+
+    it "does not double the base URL when uri is already absolute" do
+      absolute_url =
+        "https://api.patreon.com/api/oauth2/api/campaigns/123/pledges?page%5Bcount%5D=100&sort=created"
+      stub_url(200, absolute_url)
+
+      result = described_class.get(absolute_url)
+      expect(result).to eq({})
+      expect(WebMock).to have_requested(:get, absolute_url)
+    end
   end
 
   context "with API v2" do

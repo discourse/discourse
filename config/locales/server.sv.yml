@@ -2466,47 +2466,9 @@ sv:
     reviewable_queued_post_revise_and_reject:
       title: "Feedback om ditt inlägg"
       subject_template: "Feedback på ditt inlägg i %{topic_title}"
-      text_body_template: |
-        Hej %{username},
-
-        Vi har granskat ditt inlägg i [%{topic_title}](%{topic_url}) och har lite feedback till dig.
-
-        Anledning: %{reason}
-
-        Feedback: %{feedback}
-
-        Du kan redigera ditt ursprungliga inlägg nedan och skicka in det igen för att göra de föreslagna ändringarna, eller svara på det här meddelandet om du har några frågor.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Tack,
-        %{site_name} Moderatorer
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback om ditt ämne"
       subject_template: 'Feedback om nytt ämne med titeln "%{topic_title}"'
-      text_body_template: |
-        Hej %{username},
-
-        Vi har granskat ditt nya ämne med titeln "%{topic_title}" och har lite feedback till dig.
-
-        Anledning: %{reason}
-
-        Feedback: %{feedback}
-
-        Du kan redigera ditt ämnes ursprungliga inlägg nedan och skicka in igen för att göra de föreslagna ändringarna, eller svara på det här meddelandet om du har några frågor.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Tack,
-        %{site_name} Moderatorer
     post_hidden_again:
       title: "Inlägget dolt igen"
       subject_template: "Inlägget döljdes på grund av att det flaggats av forumets medlemmar, personal har aviserats"

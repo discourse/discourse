@@ -25,7 +25,13 @@ module Patreon
 
       limiter_day.performed! unless limiter_day.can_perform?
 
-      full_url = "#{base_url}#{uri}"
+      if uri.start_with?("http")
+        full_url = uri
+        base_url = nil
+      else
+        full_url = "#{base_url}#{uri}"
+      end
+
       Rails.logger.warn("Patreon API request: GET #{full_url}") if SiteSetting.patreon_verbose_log
 
       response =
@@ -35,7 +41,7 @@ module Patreon
             "Authorization" => "Bearer #{SiteSetting.patreon_creator_access_token}",
             "User-Agent" => "Discourse Patreon Plugin/#{Discourse::VERSION::STRING}",
           },
-        ).get(uri)
+        ).get(full_url)
 
       limiter_hr.performed!
       limiter_day.performed!

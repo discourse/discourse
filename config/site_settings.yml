@@ -3192,7 +3192,8 @@ navigation:
 embedding:
   embed_full_app:
     default: false
-    hidden: true
+    client: true
+    area: "embedding"
   embed_by_username:
     default: ""
     type: username
@@ -3777,7 +3778,7 @@ uncategorized:
     hidden: true
     area: "interface"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/395100"
 
@@ -4260,10 +4261,6 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
-  experimental_tag_settings_page:
-    default: false
-    client: true
-    area: "experimental"
   enable_form_templates:
     client: true
     default: false

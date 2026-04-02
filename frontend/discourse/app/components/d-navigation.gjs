@@ -33,10 +33,6 @@ export default class DNavigation extends Component {
 
   @setting("fixed_category_positions") fixedCategoryPositions;
 
-  get canEditTags() {
-    return this.currentUser?.canEditTags;
-  }
-
   get createTopicLabel() {
     const defaultKey = "topic.create";
 
@@ -124,14 +120,6 @@ export default class DNavigation extends Component {
     return this.category?.can_edit;
   }
 
-  @computed("additionalTags", "category", "tag.name")
-  get showToggleInfo() {
-    if (this.siteSettings.experimental_tag_settings_page) {
-      return this.currentUser;
-    }
-    return !this.additionalTags && !this.category && this.tag?.name !== "none";
-  }
-
   @computed(
     "filterType",
     "category",
@@ -195,11 +183,6 @@ export default class DNavigation extends Component {
   @action
   clickCreateTopicButton() {
     this.createTopic();
-  }
-
-  @action
-  clickTagInfo() {
-    this.toggleInfo();
   }
 
   <template>
@@ -277,23 +260,9 @@ export default class DNavigation extends Component {
       {{/if}}
 
       {{#if this.tag}}
-        {{#if this.showToggleInfo}}
-          {{#if this.siteSettings.experimental_tag_settings_page}}
-            <TagInfoButton
-              @tag={{this.tag}}
-              @currentUser={{this.currentUser}}
-            />
-          {{else}}
-            <DButton
-              @icon={{if this.canEditTags "wrench" "circle-info"}}
-              @ariaLabel={{if this.canEditTags "tagging.edit" "tagging.info"}}
-              @title={{if this.canEditTags "tagging.edit" "tagging.info"}}
-              @action={{this.clickTagInfo}}
-              id="show-tag-info"
-              class="btn-default"
-            />
-          {{/if}}
-        {{/if}}
+        {{#unless this.additionalTags}}
+          <TagInfoButton @tag={{this.tag}} @currentUser={{this.currentUser}} />
+        {{/unless}}
       {{/if}}
 
       <PluginOutlet

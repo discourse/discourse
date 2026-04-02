@@ -550,6 +550,66 @@ describe "Content Localization" do
         mini_tag_chooser.search("戦")
         expect(mini_tag_chooser).to have_option_name("戦略")
       end
+
+      it "can create a topic with a localized tag" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        sign_in(admin)
+        admin.update!(locale: "ja")
+        visit("/new-topic")
+        expect(composer).to be_opened
+
+        composer.fill_title("テストトピック with localized tags")
+        composer.fill_content("このトピックにはローカライズされたタグが含まれています")
+
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("戦")
+        mini_tag_chooser.select_row_by_name("戦略")
+
+        composer.create
+
+        topic = Topic.where("title LIKE ?", "%テストトピック%").last
+        expect(topic).to be_present
+        expect(topic.tags).to include(tag)
+      end
+
+      it "can change category and tags on an existing topic with localized tags" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        tag2 = Fabricate(:tag, name: "planning", locale: "en")
+        Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "計画")
+        new_category = Fabricate(:category)
+        topic_page = PageObjects::Pages::Topic.new
+        edit_dialog = PageObjects::Components::Dialog.new
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        # Topic already has the "strategy" tag via topic_tag fab
+        sign_in(admin)
+        admin.update!(locale: "ja")
+        visit(topic.url)
+
+        topic_page.click_topic_edit_title
+        edit_dialog.click_yes # edit original
+
+        # Change category
+        category_chooser =
+          PageObjects::Components::SelectKit.new(".edit-category__wrapper .category-chooser")
+        category_chooser.expand
+        category_chooser.select_row_by_value(new_category.id)
+
+        # Add another localized tag
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("plan")
+        mini_tag_chooser.select_row_by_name("計画")
+
+        topic_page.click_topic_title_submit_edit
+
+        expect(topic_page).to have_no_css("#topic-title .submit-edit")
+        topic.reload
+        expect(topic.category).to eq(new_category)
+        expect(topic.tags).to include(tag, tag2)
+      end
     end
   end
 

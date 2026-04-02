@@ -250,8 +250,15 @@ namespace :release do
         ReleaseUtils.git "merge", "--squash", "privatemirror/#{pr["headRefName"]}"
 
         commit_message = "#{pr["title"]}\n\n#{pr["body"]}".strip
+        author =
+          ReleaseUtils.git(
+            "log",
+            "-1",
+            "--format=%an <%ae>",
+            "privatemirror/#{pr["headRefName"]}",
+          ).strip
 
-        ReleaseUtils.git "commit", "-m", commit_message
+        ReleaseUtils.git "commit", "-m", commit_message, "--author", author
       end
 
       if base == "main" &&
