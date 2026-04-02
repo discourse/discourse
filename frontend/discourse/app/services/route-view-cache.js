@@ -3,7 +3,7 @@ import Service from "@ember/service";
 const MAX_ENTRIES = 15;
 const TTL_MS = 10 * 60 * 1000; // 10 minutes
 
-export default class NestedViewCacheService extends Service {
+export default class RouteViewCacheService extends Service {
   #cache = new Map();
   #lastNavigationType = null;
   #popstateTime = null;
@@ -107,8 +107,8 @@ export default class NestedViewCacheService extends Service {
     }
   }
 
-  buildKey(topicId, params) {
-    const parts = [topicId];
+  buildKey(prefix, id, params = {}) {
+    const parts = [`${prefix}:${id}`];
     if (params.sort) {
       parts.push(`s=${params.sort}`);
     }
@@ -117,6 +117,9 @@ export default class NestedViewCacheService extends Service {
     }
     if (params.context != null) {
       parts.push(`c=${params.context}`);
+    }
+    if (params.filter) {
+      parts.push(`f=${params.filter}`);
     }
     return parts.join(":");
   }

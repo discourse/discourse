@@ -2,7 +2,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 
-module("Unit | Service | nested-view-cache", function (hooks) {
+module("Unit | Service | route-view-cache", function (hooks) {
   setupTest(hooks);
 
   let clock;
@@ -12,7 +12,7 @@ module("Unit | Service | nested-view-cache", function (hooks) {
   });
 
   function getService(context) {
-    return context.owner.lookup("service:nested-view-cache");
+    return context.owner.lookup("service:route-view-cache");
   }
 
   test("save and get basic entry", function (assert) {
@@ -99,32 +99,59 @@ module("Unit | Service | nested-view-cache", function (hooks) {
     }
   });
 
-  test("buildKey with topic ID only", function (assert) {
+  test("buildKey with prefix and topic ID only", function (assert) {
     const cache = getService(this);
-    assert.strictEqual(cache.buildKey(42, {}), "42");
+    assert.strictEqual(cache.buildKey("nested", 42, {}), "nested:42");
   });
 
   test("buildKey with sort param", function (assert) {
     const cache = getService(this);
-    assert.strictEqual(cache.buildKey(42, { sort: "new" }), "42:s=new");
+    assert.strictEqual(
+      cache.buildKey("nested", 42, { sort: "new" }),
+      "nested:42:s=new"
+    );
   });
 
   test("buildKey with post_number param", function (assert) {
     const cache = getService(this);
-    assert.strictEqual(cache.buildKey(42, { post_number: 5 }), "42:p=5");
+    assert.strictEqual(
+      cache.buildKey("nested", 42, { post_number: 5 }),
+      "nested:42:p=5"
+    );
   });
 
   test("buildKey with all params", function (assert) {
     const cache = getService(this);
     assert.strictEqual(
-      cache.buildKey(42, { sort: "top", post_number: 5, context: 0 }),
-      "42:s=top:p=5:c=0"
+      cache.buildKey("nested", 42, {
+        sort: "top",
+        post_number: 5,
+        context: 0,
+      }),
+      "nested:42:s=top:p=5:c=0"
     );
   });
 
   test("buildKey includes context=0 (falsy but not null)", function (assert) {
     const cache = getService(this);
-    assert.strictEqual(cache.buildKey(42, { context: 0 }), "42:c=0");
+    assert.strictEqual(
+      cache.buildKey("nested", 42, { context: 0 }),
+      "nested:42:c=0"
+    );
+  });
+
+  test("buildKey with filter param", function (assert) {
+    const cache = getService(this);
+    assert.strictEqual(
+      cache.buildKey("topic", 42, { filter: "summary" }),
+      "topic:42:f=summary"
+    );
+  });
+
+  test("buildKey uses different prefixes for different routes", function (assert) {
+    const cache = getService(this);
+    assert.strictEqual(cache.buildKey("topic", 42), "topic:42");
+    assert.strictEqual(cache.buildKey("nested", 42), "nested:42");
   });
 
   test("consumeTraversal returns true when useNextTransition was called", function (assert) {

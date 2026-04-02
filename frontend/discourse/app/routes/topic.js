@@ -27,6 +27,7 @@ const SCROLL_DELAY = 500;
 
 export default class TopicRoute extends DiscourseRoute {
   @service composer;
+  @service routeViewCache;
   @service screenTrack;
   @service currentUser;
   @service modal;
@@ -374,6 +375,17 @@ export default class TopicRoute extends DiscourseRoute {
 
     const queryParams = transition.to.queryParams;
 
+    // On back/forward navigation, restore from cache if available
+    if (this.routeViewCache.consumeTraversal()) {
+      const cacheKey = this.routeViewCache.buildKey("topic", params.id);
+      const cached = this.routeViewCache.get(cacheKey);
+      if (cached) {
+        this._restoringFromCache = cached;
+        return this.setupParams(cached.topic, queryParams);
+      }
+    }
+    this._restoringFromCache = null;
+
     let topic = this.modelFor("topic");
     if (topic && topic.get("id") === parseInt(params.id, 10)) {
       this.setupParams(topic, queryParams);
@@ -394,6 +406,9 @@ export default class TopicRoute extends DiscourseRoute {
 
     const topicController = this.controllerFor("topic");
     const postStream = topicController.get("model.postStream");
+
+    // Save to cache before cleanup so back/forward can restore
+    this._saveToCache(topicController);
 
     postStream.cancelFilter();
 
@@ -428,5 +443,43 @@ export default class TopicRoute extends DiscourseRoute {
     schedule("afterRender", () =>
       this.appEvents.trigger("header:update-topic", model)
     );
+  }
+
+  _saveToCache(controller) {
+    const topic = controller.model;
+    if (!topic?.id || !topic.postStream?.loaded) {
+      return;
+    }
+
+    const cacheKey = this.routeViewCache.buildKey("topic", topic.id);
+    this.routeViewCache.save(cacheKey, {
+      topic,
+      currentPost: topic.get("currentPost"),
+      enteredIndex: controller.enteredIndex,
+      userLastReadPostNumber: controller.userLastReadPostNumber,
+      highestPostNumber: controller.highestPostNumber,
+      scrollAnchor: this._findScrollAnchor(),
+    });
+  }
+
+  _findScrollAnchor() {
+    const articles = document.querySelectorAll(
+      ".topic-post article[data-post-id]"
+    );
+    let best = null;
+    let bestDistance = Infinity;
+
+    for (const el of articles) {
+      const rect = el.getBoundingClientRect();
+      const distance = Math.abs(rect.top);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = {
+          postNumber: Number(el.dataset.postNumber),
+          offsetFromTop: rect.top,
+        };
+      }
+    }
+    return best;
   }
 }
