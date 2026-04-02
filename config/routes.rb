@@ -505,6 +505,8 @@ Discourse::Application.routes.draw do
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+      resources :problem_checks, only: %i[index], constraints: AdminConstraint.new
+      get "problem-checks" => "site_settings#index", :constraints => AdminConstraint.new
 
       delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace

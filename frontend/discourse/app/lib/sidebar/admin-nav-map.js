@@ -514,6 +514,13 @@ export const ADMIN_NAV_MAP = [
         ],
       },
       {
+        name: "admin_problem_checks",
+        route: "admin.problemChecks",
+        label: "admin.config.problem_checks.title",
+        description: "admin.config.problem_checks.header_description",
+        icon: "heart",
+      },
+      {
         name: "admin_api_keys",
         route: "adminApiKeys",
         icon: "key",
