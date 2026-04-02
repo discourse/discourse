@@ -372,7 +372,7 @@ module SiteSettingExtension
           # change settings use their resolved value (promotion status, admin override, etc.).
           is_hidden =
             !type_supervisor.dependencies[setting_name].all? do |dependency|
-              public_send(dependency)
+              respond_to?(dependency) && public_send(dependency)
             end
         end
 
