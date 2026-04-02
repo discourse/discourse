@@ -18,7 +18,6 @@ class DiscourseSolved::UnacceptAnswer
       transaction do
         step :revoke_solved_credit
         step :remove_accepted_answer_notification
-        step :remove_topic_solved_notifications
         step :unmark_as_solved
       end
     end
@@ -58,13 +57,6 @@ class DiscourseSolved::UnacceptAnswer
       user: post.user,
       post_number: post.post_number,
     )&.destroy!
-  end
-
-  def remove_topic_solved_notifications(post:, topic:)
-    Notification
-      .where(topic:, notification_type: Notification.types[:custom], post_number: post.post_number)
-      .where("data::jsonb @> ?", { message: "solved.topic_solved_notification" }.to_json)
-      .destroy_all
   end
 
   def unmark_as_solved(topic:)

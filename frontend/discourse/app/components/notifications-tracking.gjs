@@ -10,7 +10,6 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 function constructKey(prefix, level, suffix, key) {
@@ -85,15 +84,11 @@ export default class NotificationsTracking extends Component {
 
   @action
   description(level) {
-    return applyValueTransformer(
-      "notifications-tracking-description",
-      constructKey(
-        this.args.prefix,
-        level.key,
-        this.args.suffix,
-        "description"
-      ),
-      { topic: this.args.topic, level, prefix: this.args.prefix }
+    return constructKey(
+      this.args.prefix,
+      level.key,
+      this.args.suffix,
+      "description"
     );
   }
 
