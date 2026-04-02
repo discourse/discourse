@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -124,11 +125,19 @@ export default class NestedContextView extends Component {
 
       <div class="nested-view__controls">
         <NestedSortSelector @current={{@sort}} @onChange={{@changeSort}} />
-        {{#if this.currentUser.can_toggle_nested_mode}}
-          <a href={{this.flatViewUrl}} class="nested-view__flat-link">{{i18n
-              "nested_replies.view_as_flat"
-            }}</a>
-        {{/if}}
+        <div class="nested-view__controls-right">
+          <a
+            href
+            class="nested-view__activity-link"
+            role="button"
+            {{on "click" @showActivityLog}}
+          >{{i18n "nested_replies.activity_log.link"}}</a>
+          {{#if this.currentUser.can_toggle_nested_mode}}
+            <a href={{this.flatViewUrl}} class="nested-view__flat-link">{{i18n
+                "nested_replies.view_as_flat"
+              }}</a>
+          {{/if}}
+        </div>
       </div>
 
       <div class="nested-context-view__banner">
