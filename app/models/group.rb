@@ -868,8 +868,8 @@ class Group < ActiveRecord::Base
         :group_id,
         u.id,
         :notification_level,
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
+        :now,
+        :now
       FROM users AS u
       WHERE u.id IN (:user_ids)
       AND NOT EXISTS (
@@ -886,6 +886,7 @@ class Group < ActiveRecord::Base
           group_id: self.id,
           user_ids: user_ids,
           notification_level: self.default_notification_level,
+          now: Time.zone.now,
         )
 
       return [] if added_user_ids.blank?
