@@ -79,7 +79,7 @@ class GroupActionLogger
     return if target_user_ids.blank?
 
     now = Time.now
-    GroupHistory.insert_all(
+    GroupHistory.insert_all!(
       target_user_ids.map do |user_id|
         {
           group_id: @group.id,
