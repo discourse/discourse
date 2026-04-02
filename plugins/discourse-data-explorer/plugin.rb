@@ -9,6 +9,8 @@
 
 enabled_site_setting :data_explorer_enabled
 
+register_site_setting_area("ai-features/data_explorer") if defined?(DiscourseAi)
+
 register_asset "stylesheets/explorer.scss"
 
 register_svg_icon "angle-down"
@@ -204,7 +206,9 @@ after_initialize do
     DiscoursePluginRegistry.register_external_ai_feature(
       {
         module_name: :data_explorer,
+        module_id: Zlib.crc32("data_explorer") % 100_000 + 1000,
         feature: :query_generation,
+        agent_id: -(Zlib.crc32("data_explorer_query_generation") % 1_000_000 + 1_000_000),
         klass: DiscourseDataExplorer::AiQueryGenerator,
         enabled_by_setting: "data_explorer_ai_queries_enabled",
       },
@@ -212,5 +216,10 @@ after_initialize do
     )
 
     SiteSetting.areas[:data_explorer_ai_queries_enabled] ||= "ai-features/data_explorer"
+    SiteSetting.areas[:data_explorer_query_generation_agent] ||= "ai-features/data_explorer"
+
+    # unhide AI settings now that discourse-ai is available
+    SiteSetting.hidden_settings_provider.remove_hidden(:data_explorer_ai_queries_enabled)
+    SiteSetting.hidden_settings_provider.remove_hidden(:data_explorer_query_generation_agent)
   end
 end

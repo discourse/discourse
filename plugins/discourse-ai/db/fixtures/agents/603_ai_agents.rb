@@ -10,10 +10,11 @@ return if ai_agents_is_view
 
 summarization_agents = [DiscourseAi::Agents::Summarizer, DiscourseAi::Agents::ShortSummarizer]
 external_agent_ids =
-  DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS
-    .values
-    .flat_map { |config| config.fetch(:features).values }
-    .pluck(:agent_id)
+  if DiscoursePluginRegistry.respond_to?(:_raw_external_ai_features)
+    DiscoursePluginRegistry._raw_external_ai_features.pluck(:value).map { |v| v[:agent_id] }.compact
+  else
+    []
+  end
 
 def from_setting(setting_name)
   DB

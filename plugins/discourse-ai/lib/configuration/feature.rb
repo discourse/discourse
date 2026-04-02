@@ -323,15 +323,11 @@ module DiscourseAi
 
           # external features from plugin registry
           DiscoursePluginRegistry.external_ai_features.each do |entry|
-            reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[entry[:module_name]]
-            next if reserved.nil?
-            next if reserved.dig(:features, entry[:feature]).nil?
-
             setting_name = "#{entry[:module_name]}_#{entry[:feature]}_agent"
             base << new(
               entry[:feature].to_s,
               setting_name,
-              reserved[:module_id],
+              entry[:module_id],
               entry[:module_name].to_s,
               enabled_by_setting: entry[:enabled_by_setting],
             )
