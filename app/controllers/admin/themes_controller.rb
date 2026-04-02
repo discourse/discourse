@@ -409,11 +409,11 @@ class Admin::ThemesController < Admin::AdminController
         remote_theme.commits_behind = nil
         remote_theme.save!
 
-        remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+        remote_theme.update_from_remote
 
         log_theme_change(nil, theme.reload)
         render json: serialize_data(theme, ThemeSerializer), status: :ok
-      rescue RemoteTheme::ImportError => e
+      rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid => e
         remote_theme.update!(
           remote_url: original_url,
           branch: original_branch,
