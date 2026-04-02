@@ -109,3 +109,17 @@
   color: var(--primary-medium);
   font-weight: normal;
 }
+
+.topic-voting-menu__watch-toggle {
+  .d-icon-toggle-on {
+    color: var(--tertiary);
+  }
+
+  .discourse-no-touch & {
+    .btn:hover {
+      .d-icon-toggle-on {
+        color: var(--tertiary);
+      }
+    }
+  }
+}

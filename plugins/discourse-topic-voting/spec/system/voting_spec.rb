@@ -96,6 +96,25 @@ RSpec.describe "Topic voting" do
     end
   end
 
+  context "when toggling watch from the vote menu" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "sets the topic to watching" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      topic_page.vote
+      expect(topic_page).to have_watch_toggle_off
+
+      topic_page.click_watch_toggle
+      expect(topic_page).to have_watch_toggle_on
+      expect(TopicUser.find_by(user: admin, topic: voting_topic1).notification_level).to eq(
+        TopicUser.notification_levels[:watching],
+      )
+    end
+  end
+
   context "when viewing a closed voting topic without having voted" do
     before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
 
