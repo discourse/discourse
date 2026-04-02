@@ -761,7 +761,7 @@ class Group < ActiveRecord::Base
 
     desired.each do |id|
       if group = find_by(id: id)
-        GroupManager.new(group).add([user_id], automatic: true)
+        GroupUserManager.new(group).add([user_id], automatic: true)
       else
         name = AUTO_GROUP_IDS[trust_level]
         refresh_automatic_group!(name)
@@ -816,7 +816,7 @@ class Group < ActiveRecord::Base
 
   def add(user, notify: false, automatic: false)
     return false if user.nil?
-    added_ids = GroupManager.new(self).add([user.id], automatic:)
+    added_ids = GroupUserManager.new(self).add([user.id], automatic:)
     send_membership_notification(user) if notify && !added_ids.empty?
 
     self
@@ -824,7 +824,7 @@ class Group < ActiveRecord::Base
 
   def remove(user)
     return false if user.nil?
-    GroupManager.new(self).remove([user.id]).present?
+    GroupUserManager.new(self).remove([user.id]).present?
   end
 
   def trigger_user_added_event(user, automatic)
@@ -839,7 +839,7 @@ class Group < ActiveRecord::Base
     if group_user = self.group_users.find_by(user: user)
       group_user.update!(owner: true) if !group_user.owner
     else
-      GroupManager.new(self).add([user.id])
+      GroupUserManager.new(self).add([user.id])
       self.group_users.where(user: user).update_all(owner: true)
     end
   end
@@ -854,11 +854,11 @@ class Group < ActiveRecord::Base
   end
 
   def bulk_add(user_ids, automatic: false)
-    GroupManager.new(self).add(user_ids, automatic:)
+    GroupUserManager.new(self).add(user_ids, automatic:)
   end
 
   def bulk_remove(user_ids)
-    GroupManager.new(self).remove(user_ids)
+    GroupUserManager.new(self).remove(user_ids)
   end
 
   def recalculate_user_count

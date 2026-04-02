@@ -572,7 +572,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
-    removed_user_ids = GroupManager.new(group).remove(users.map(&:id))
+    removed_user_ids = GroupUserManager.new(group).remove(users.map(&:id))
     GroupActionLogger.new(current_user, group).bulk_log_remove_users_from_group(removed_user_ids)
 
     removed_usernames = []
@@ -789,7 +789,7 @@ class GroupsController < ApplicationController
 
   def add_users_to_group(group, users, notify = false)
     user_ids = users.map(&:id)
-    added_user_ids = GroupManager.new(group).add(user_ids)
+    added_user_ids = GroupUserManager.new(group).add(user_ids)
     GroupActionLogger.new(current_user, group).bulk_log_add_users_to_group(added_user_ids)
     if notify && added_user_ids.present?
       Jobs.enqueue(:notify_users_added_to_group, user_ids: added_user_ids, group_id: group.id)
