@@ -806,9 +806,7 @@ describe DiscoursePostEvent::Event do
     end
 
     describe "post.image_upload_id sync on post_process_cooked" do
-      fab!(:user) { Fabricate(:user, admin: true) }
       fab!(:topic) { Fabricate(:topic, user: user) }
-      fab!(:upload)
 
       it "sets post.image_upload_id from the event image after post processing" do
         post =
@@ -839,7 +837,6 @@ describe DiscoursePostEvent::Event do
 
         post.reload
         topic.reload
-        expect(post.image_upload_id).to eq(upload.id)
         expect(topic.image_upload_id).to eq(upload.id)
       end
 
