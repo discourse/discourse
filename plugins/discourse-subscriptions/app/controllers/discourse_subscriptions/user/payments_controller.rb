@@ -7,7 +7,6 @@ module DiscourseSubscriptions
 
       requires_plugin PLUGIN_NAME
 
-      before_action :set_api_key
       requires_login
 
       def index
@@ -21,10 +20,11 @@ module DiscourseSubscriptions
           if customer_ids.present? && product_ids.present?
             customer_ids.each do |customer_id|
               # lots of matching because the Stripe API doesn't make it easy to match products => payments except from invoices
-              all_invoices = ::Stripe::Invoice.list(customer: customer_id)
+              all_invoices = ::Stripe::Invoice.list({ customer: customer_id }, stripe_request_opts)
               invoices_with_products = parse_invoices(all_invoices, product_ids)
               invoice_ids = invoices_with_products.map { |invoice| invoice[:id] }
-              payments = ::Stripe::PaymentIntent.list(customer: customer_id)
+              payments =
+                ::Stripe::PaymentIntent.list({ customer: customer_id }, stripe_request_opts)
               payments_from_invoices =
                 payments[:data].select { |payment| invoice_ids.include?(payment[:invoice]) }
 
@@ -89,9 +89,8 @@ module DiscourseSubscriptions
             # Fetch charges in batches of 100, using pagination with starting_after
             charges =
               ::Stripe::Charge.list(
-                limit: 100,
-                starting_after: starting_after,
-                expand: ["data.payment_intent"],
+                { limit: 100, starting_after: starting_after, expand: ["data.payment_intent"] },
+                stripe_request_opts,
               )
 
             charges[:data].each do |charge|

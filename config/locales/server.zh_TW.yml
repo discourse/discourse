@@ -654,6 +654,7 @@ zh_TW:
     read: "閲讀"
     read_write: "讀/寫"
     instructions: '系統熱騰騰產生了新的使用者API鑰匙給您使用，請將以下API鑰匙貼到您的應用程式裡。'
+    copied: "已複製!"
     otp_description: '你要允許進入%{application_name}這個網站嗎？'
     otp_confirmation:
       confirm_title: 繼續連接至 %{site_name}

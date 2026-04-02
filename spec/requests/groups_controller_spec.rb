@@ -1038,7 +1038,7 @@ RSpec.describe GroupsController do
                 },
                 update_existing_users: false,
               }
-        end.to change { GroupHistory.count }.by(13)
+        end.to change { GroupHistory.count }.by(12)
 
         expect(response.status).to eq(200)
 
@@ -1059,12 +1059,49 @@ RSpec.describe GroupsController do
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
         expect(group.automatic_membership_email_domains).to eq(nil)
-        expect(group.title).to eq("haha")
+        expect(group.title).to eq(nil)
         expect(group.primary_group).to eq(false)
         expect(group.incoming_email).to eq(nil)
         expect(group.grant_trust_level).to eq(0)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
+      end
+
+      it "should not clear group title when owner updates other settings" do
+        group.update!(title: "Original Title")
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                flair_bg_color: "FFF",
+                flair_color: "BBB",
+                flair_icon: "fa-circle-half-stroke",
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.title).to eq("Original Title")
+        expect(group.flair_bg_color).to eq("FFF")
+      end
+
+      it "should not allow group owner to modify the group title" do
+        group.update!(title: "Original Title")
+
+        put "/groups/#{group.id}.json",
+            params: {
+              group: {
+                title: "Hacked Title",
+                flair_bg_color: "FFF",
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.title).to eq("Original Title")
+        expect(group.flair_bg_color).to eq("FFF")
       end
 
       it "should not be allowed to update automatic groups" do
@@ -1090,6 +1127,7 @@ RSpec.describe GroupsController do
                 incoming_email: "test@mail.org",
                 primary_group: true,
                 automatic_membership_email_domains: "test.org",
+                title: "Admin Title",
                 grant_trust_level: 2,
                 visibility_level: 1,
                 members_visibility_level: 3,
@@ -1106,6 +1144,7 @@ RSpec.describe GroupsController do
         expect(group.name).to eq("testing")
         expect(group.incoming_email).to eq("test@mail.org")
         expect(group.primary_group).to eq(true)
+        expect(group.title).to eq("Admin Title")
         expect(group.visibility_level).to eq(1)
         expect(group.members_visibility_level).to eq(3)
         expect(group.automatic_membership_email_domains).to eq("test.org")
@@ -1744,18 +1783,41 @@ RSpec.describe GroupsController do
           end
         end
 
-        it "sends emails with invitations when `skip_emails` param isn't present" do
+        it "sends invite emails when notify_users is true" do
+          expect_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json",
+                params: {
+                  emails: "something@gmail.com",
+                  notify_users: true,
+                }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it "does not send invite emails when notify_users is false" do
+          expect_not_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json",
+                params: {
+                  emails: "something@gmail.com",
+                  notify_users: false,
+                }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it "sends invite emails when neither notify_users nor skip_email is provided" do
           expect_enqueued_with(job: :invite_email) do
             put "/groups/#{group.id}/members.json", params: { emails: "something@gmail.com" }
             expect(response.status).to eq(200)
           end
         end
 
-        it "sends emails with invitations when `skip_emails` is present" do
+        it "does not send invite emails when skip_email is true" do
           expect_not_enqueued_with(job: :invite_email) do
-            put "/groups/#{group.id}/members.json?skip_email=true",
+            put "/groups/#{group.id}/members.json",
                 params: {
                   emails: "something@gmail.com",
+                  skip_email: true,
                 }
             expect(response.status).to eq(200)
           end
@@ -2863,10 +2925,7 @@ RSpec.describe GroupsController do
       }
     end
 
-    before do
-      sign_in(user)
-      group.group_users.where(user: user).last.update(owner: user)
-    end
+    before { sign_in(admin) }
 
     context "when validating smtp" do
       let(:protocol) { "smtp" }
@@ -2895,6 +2954,74 @@ RSpec.describe GroupsController do
       end
     end
 
+    context "when user is a non-staff group owner" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl_mode) { Group.smtp_ssl_modes[:starttls] }
+      let(:ssl) { nil }
+      let(:host) { "smtp.somemailsite.com" }
+      let(:port) { 587 }
+
+      before do
+        sign_in(user)
+        group.group_users.where(user: user).last.update(owner: true)
+      end
+
+      it "does not allow testing email settings" do
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when the host resolves to a private IP address" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl_mode) { Group.smtp_ssl_modes[:starttls] }
+      let(:ssl) { nil }
+      let(:host) { "127.0.0.1" }
+      let(:port) { 587 }
+
+      before do
+        FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).raises(
+          FinalDestination::SSRFDetector::DisallowedIpError,
+        )
+      end
+
+      it "rejects the request" do
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to include(
+          I18n.t("email_settings.invalid_host"),
+        )
+      end
+    end
+
+    context "when the host cannot be resolved" do
+      let(:protocol) { "smtp" }
+      let(:username) { "test@gmail.com" }
+      let(:password) { "password" }
+      let(:ssl_mode) { Group.smtp_ssl_modes[:starttls] }
+      let(:ssl) { nil }
+      let(:host) { "nonexistent.internal.host" }
+      let(:port) { 587 }
+
+      before do
+        FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).raises(
+          FinalDestination::SSRFDetector::LookupFailedError,
+        )
+      end
+
+      it "rejects the request" do
+        post "/groups/#{group.id}/test_email_settings.json", params: params
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to include(
+          I18n.t("email_settings.host_resolve_failed"),
+        )
+      end
+    end
+
     describe "global param validation and rate limit" do
       let(:protocol) { "smtp" }
       let(:host) { "smtp.gmail.com" }
@@ -2913,8 +3040,8 @@ RSpec.describe GroupsController do
         end
       end
 
-      context "when user does not have access to the group" do
-        before { group.group_users.destroy_all }
+      context "when user is a regular user without staff access" do
+        before { sign_in(user) }
         it "errors if the user does not have access to the group" do
           post "/groups/#{group.id}/test_email_settings.json", params: params
 
@@ -2923,8 +3050,9 @@ RSpec.describe GroupsController do
       end
 
       context "when rate limited" do
-        it "rate limits anon searches per user" do
+        it "rate limits per user" do
           RateLimiter.enable
+          RateLimiter.any_instance.stubs(:rate_unlimited?).returns(false)
 
           5.times { post "/groups/#{group.id}/test_email_settings.json", params: params }
           post "/groups/#{group.id}/test_email_settings.json", params: params

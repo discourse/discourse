@@ -836,6 +836,7 @@ hr:
     read: "pročitano"
     read_write: "čitati/pisati"
     instructions: 'Upravo smo generirali novi korisnički API ključ za korištenje s "%{application_name}", zalijepite sljedeći ključ u svoju aplikaciju:'
+    copied: "Kopirano!"
     otp_description: 'Želite li dopustiti "%{application_name}" pristup ovoj stranici?'
     otp_confirmation:
       confirm_title: Nastavite na %{site_name}

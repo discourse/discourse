@@ -1070,6 +1070,7 @@ ja:
     permissions_header: 'これにより、「%{application_name}」で次を行えます:'
     redirect_warning: "承認すると次の場所にリダイレクトされます:"
     instructions: '"%{application_name}" で使用できる新しいユーザー API キーを生成しました。次のキーをアプリケーションに貼り付けてください。'
+    copied: "コピーしました！"
     otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
     otp_confirmation:
       confirm_title: '%{site_name} に進む'

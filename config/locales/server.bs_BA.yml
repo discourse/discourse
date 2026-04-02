@@ -386,6 +386,7 @@ bs_BA:
   user_api_key:
     deny: "Odustani"
     read: "čitaj"
+    copied: "Kopirano!"
     otp_confirmation:
       confirm_title: Nastavi ka %{site_name}
       logging_in_as: Prijavite se kao %{username}

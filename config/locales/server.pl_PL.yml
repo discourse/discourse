@@ -1215,6 +1215,8 @@ pl_PL:
     connection_error: "Wystąpił problem z połączeniem z serwerem, sprawdź nazwę i port serwera i spróbuj ponownie."
     timeout_error: "Przekroczono limit czasu połączenia z serwerem, sprawdź nazwę i port serwera i spróbuj ponownie."
     unhandled_error: "Nieobsługiwany błąd podczas testowania ustawień poczty e-mail. %{message}"
+    invalid_host: "Podany host wskazuje na niedozwolony adres IP."
+    host_resolve_failed: "Nie można rozwiązać podanego hosta."
   webauthn:
     validation:
       invalid_type_error: "Podany typ webauthn był nieprawidłowy. Prawidłowe typy to webauthn.get i webauthn.create."
@@ -1311,6 +1313,8 @@ pl_PL:
     permissions_header: 'Pozwoli to "%{application_name}" na:'
     redirect_warning: "Autoryzacja przekieruje Cię do"
     instructions: 'Wygenerowaliśmy nowy klucz API użytkownika do korzystania z "%{application_name}", skopiuj następujący klucz do swoje aplikacji:'
+    copy_key: "Skopiuj klucz"
+    copied: "Skopiowano!"
     otp_description: 'Czy zezwalasz "%{application_name}" na dostęp do tej strony?'
     otp_confirmation:
       confirm_title: Przejdź do %{site_name}
@@ -2609,6 +2613,7 @@ pl_PL:
     show_bottom_topic_map: "Wyświetla mapę tematu u dołu tematu, gdy ma on 10 lub więcej odpowiedzi."
     show_topic_map_in_topics_without_replies: "Wyświetla mapę tematu, nawet jeśli temat nie ma odpowiedzi."
     enable_site_owner_onboarding: "Pokazuje nowym administratorom panel na stronie głównej, który ułatwia im rozpoczęcie pracy. Włącz to ustawienie ponownie, aby ponownie zobaczyć kroki wdrażania."
+    site_owner_onboarding_max_days: "Maksymalna liczba dni po utworzeniu witryny, w ciągu których ma zostać wyświetlony baner powitalny."
     enable_welcome_banner: "Wyświetlaj baner na głównych stronach z listą tematów, aby powitać członków i umożliwić im przeszukiwanie zawartości witryny."
     welcome_banner_image: "Ustaw obraz, który będzie wyświetlany w tle baneru powitalnego."
     welcome_banner_location: "Określa, w którym miejscu strony pojawi się baner powitalny."
@@ -2624,6 +2629,7 @@ pl_PL:
     show_preview_for_form_templates: "Włącz podgląd funkcji szablonów formularzy"
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     enable_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
+    enable_new_checkbox_style: "Włącz nowy styl pól wyboru dla pól wyboru FormKit."
     impersonate_without_logout: "Zezwól administratorom na podszywanie się pod innego użytkownika bez konieczności wylogowywania się z konta administratora."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."

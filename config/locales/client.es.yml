@@ -6826,7 +6826,6 @@ es:
           import_web_tip: "Repositorio que contiene el tema"
           direct_install_tip: "¿Seguro que quieres instalar <strong>%{name}</strong> del repositorio listado abajo?"
           import_web_advanced: "Avanzado…"
-          import_file_tip: "archivo .tar.gz, .zip o .dcstyle.json que contiene un tema"
           is_private: "El tema está en un repositorio privado de git"
           finish_install: "Terminar la instalación del tema"
           last_attempt: "La instalación no ha terminado, último intento:"

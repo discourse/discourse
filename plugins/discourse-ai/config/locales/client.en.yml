@@ -688,6 +688,7 @@ en:
       tools:
         back: "Back to tools"
         short_title: "Tools"
+        keywords: "mcp|mcp server|model context protocol"
         script_tools: "Script tools"
         export: "Export"
         import: "Import"
@@ -782,6 +783,17 @@ en:
         oauth_client_id: "OAuth client ID"
         oauth_client_secret: "OAuth client secret"
         oauth_scopes: "OAuth scopes"
+        oauth_authorization_params: "OAuth authorization params"
+        oauth_authorization_params_help: "Optional JSON object merged into the authorization request. Use null to remove a default parameter."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "OAuth token params"
+        oauth_token_params_help: "Optional JSON object merged into token requests. Use null to remove a default parameter."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Require refresh token"
+        oauth_require_refresh_token_help: "Fail the OAuth connection if the provider does not return a refresh token."
+        oauth_json_object_required: "%{field} must be a JSON object."
+        oauth_show_advanced_options: "Show advanced options"
+        oauth_hide_advanced_options: "Hide advanced options"
         oauth_connection: "OAuth connection"
         oauth_status: "OAuth status"
         oauth_statuses:
@@ -801,6 +813,8 @@ en:
         oauth_revocation_endpoint: "Revocation endpoint"
         oauth_issuer: "Issuer"
         oauth_last_error: "Last OAuth error"
+        oauth_show_details: "Show details"
+        oauth_hide_details: "Hide details"
         timeout_seconds: "Request timeout (seconds)"
         timeout_seconds_tooltip: "How long Discourse waits for the MCP server before the request fails. Keep 30 unless the server is consistently slow."
         enabled: "Enabled"
@@ -947,6 +961,7 @@ en:
           cost_measure: "$/1M tokens"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -965,6 +980,7 @@ en:
         provider_fields:
           access_key_id: "AWS Bedrock access key ID"
           role_arn: "AWS Bedrock Role ARN"
+          inference_profile_arn: "AWS Bedrock application inference profile ARN"
           region: "AWS Bedrock region"
           organization: "Optional OpenAI organization ID"
           disable_system_prompt: "Disable system message in prompts"

@@ -14,12 +14,7 @@ vi:
     chat_integration:
       menu_title: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
       settings: "Cài đặt"
-      more_providers: "Thêm"
-      channels_title: "Các kênh"
       channels_with_errors: "Một vài channels từ dịch vụ chat này đã thất bại trong lần gửi tin nhắn cuối cùng. Nhấn chuột vào biểu tượng lỗi để xem thêm."
-      choose_group: "(Chọn một nhóm)"
-      all_categories: "(Tất cả chuyên mục)"
-      all_tags: "(Tất cả thẻ)"
       delete_channel: "Xóa"
       edit_channel: "Sửa"
       test_modal:

@@ -471,14 +471,49 @@ RSpec.describe "tasks/release" do
     let(:origin_main_commits) do
       Dir.chdir(origin_path) { git("log", "--pretty=%s", base_branch).lines.map(&:strip) }
     end
-    let(:security_fixes) { "origin/security-fix-one,origin/security-fix-two" }
+    let(:pr_list_json) do
+      [
+        {
+          "number" => 1,
+          "title" => "Security fix one",
+          "body" =>
+            "Description for fix one\nhttps://github.com/discourse/discourse/security/advisories/GHSA-1111-2222-3333",
+          "headRefName" => "security-fix-one",
+        },
+        {
+          "number" => 2,
+          "title" => "Security fix two",
+          "body" =>
+            "https://github.com/discourse/discourse/security/advisories/GHSA-aaaa-bbbb-cccc",
+          "headRefName" => "security-fix-two",
+        },
+      ].to_json
+    end
 
     def origin_file(path)
       Dir.chdir(origin_path) { git("show", "#{base_branch}:#{path}") }
     end
 
     before do
-      ENV["SECURITY_FIX_REFS"] = security_fixes
+      allow(ReleaseUtils).to receive(:gh).and_call_original
+      allow(ReleaseUtils).to receive(:gh).with(
+        "pr",
+        "list",
+        "--repo",
+        "discourse/discourse-private-mirror",
+        "--base",
+        base_branch,
+        "--state",
+        "open",
+        "--json",
+        "number,title,body,headRefName",
+        "--limit",
+        "100",
+        capture: true,
+      ).and_return(pr_list_json)
+
+      ENV["SECURITY_FIX_GHSA_IDS"] = "GHSA-1111-2222-3333,GHSA-aaaa-bbbb-cccc"
+
       Dir.chdir(origin_path) do
         git "checkout", "-b", "security-fix-one"
         File.write("firstfile.txt", "contents")
@@ -493,20 +528,22 @@ RSpec.describe "tasks/release" do
         git "add", "somefile.txt"
         git "commit", "-m", "security fix two"
       end
+
+      # Add privatemirror as alias for origin so fetch works
+      Dir.chdir(local_path) { git "remote", "add", "privatemirror", origin_path }
     end
 
-    after { ENV.delete("SECURITY_FIX_REFS") }
+    after { ENV.delete("SECURITY_FIX_GHSA_IDS") }
 
     context "when accepting the version bump" do
       before { run_task }
 
-      it "cherry-picks all security fix commits in order" do
+      it "squash-merges security fix PRs in order" do
         expect(origin_main_commits).to eq(
           [
             "DEV: Bump development branch to v2025.12.0-latest.1",
-            "security fix two",
-            "security fix one, commit two",
-            "security fix one, commit one",
+            "Security fix two",
+            "Security fix one",
             "Initial commit",
           ],
         )
@@ -529,14 +566,9 @@ RSpec.describe "tasks/release" do
         run_task
       end
 
-      it "cherry-picks security fix commits without a version bump" do
+      it "squash-merges security fix PRs without a version bump" do
         expect(origin_main_commits).to eq(
-          [
-            "security fix two",
-            "security fix one, commit two",
-            "security fix one, commit one",
-            "Initial commit",
-          ],
+          ["Security fix two", "Security fix one", "Initial commit"],
         )
       end
 
@@ -547,9 +579,21 @@ RSpec.describe "tasks/release" do
 
     context "when targeting a release branch" do
       let(:base_branch) { "release/2025.6" }
-      let(:security_fixes) { "origin/security-fix-for-release-branch" }
+      let(:pr_list_json) do
+        [
+          {
+            "number" => 1,
+            "title" => "Security fix for release branch",
+            "body" =>
+              "https://github.com/discourse/discourse/security/advisories/GHSA-release-test-1234",
+            "headRefName" => "security-fix-for-release-branch",
+          },
+        ].to_json
+      end
 
       before do
+        ENV["SECURITY_FIX_GHSA_IDS"] = "GHSA-release-test-1234"
+
         Dir.chdir(origin_path) do
           git "checkout", "-b", base_branch
           File.write("lib/version.rb", fake_version_rb("2025.6.0"))
@@ -572,15 +616,155 @@ RSpec.describe "tasks/release" do
         expect(origin_file("lib/version.rb")).to include('STRING = "2025.6.1"')
       end
 
-      it "cherry-picks security fixes and adds version bump commit" do
+      it "squash-merges security fixes and adds version bump commit" do
         run_task
         expect(origin_main_commits.first(3)).to eq(
           [
             "DEV: Bump release branch to v2025.6.1",
-            "security fix for release branch",
+            "Security fix for release branch",
             "Initial release branch commit",
           ],
         )
+      end
+    end
+  end
+
+  describe "release:update_security_advisories" do
+    subject(:run_task) do
+      Dir.chdir(local_path) do
+        capture_stdout { invoke_rake_task("release:update_security_advisories") }
+      end
+    end
+
+    let(:draft_advisories) do
+      [
+        { "ghsa_id" => "GHSA-1234-5678-9abc", "state" => "draft", "summary" => "Security issue 1" },
+        { "ghsa_id" => "GHSA-abcd-efgh-ijkl", "state" => "draft", "summary" => "Security issue 2" },
+      ]
+    end
+
+    let(:gh_api_response) { JSON.generate([draft_advisories]) }
+    let(:updated_advisories) { [] }
+
+    before do
+      allow(ReleaseUtils).to receive(:gh) do |*args, **kwargs|
+        if args[0..3] ==
+             %w[api repos/discourse/discourse/security-advisories?state=draft --paginate --slurp]
+          gh_api_response
+        elsif args[0] == "api" && args[1].match?(%r{security-advisories/GHSA-}) &&
+              args[2] == "--method"
+          updated_advisories << JSON.parse(kwargs[:input])
+          "{}"
+        else
+          true
+        end
+      end
+
+      Dir.chdir(origin_path) do
+        git "checkout", "-b", "release/2025.5"
+        File.write("lib/version.rb", fake_version_rb("2025.5.2"))
+        git "add", "lib/version.rb"
+        git "commit", "-m", "version 2025.5.2"
+
+        git "checkout", "-b", "release/2025.6"
+        File.write("lib/version.rb", fake_version_rb("2025.6.0"))
+        git "add", "lib/version.rb"
+        git "commit", "-m", "version 2025.6.0"
+
+        git "checkout", "main"
+      end
+
+      update_versions_json(
+        {
+          "2025.5" => {
+            "released" => true,
+            "supported" => true,
+          },
+          "2025.6" => {
+            "released" => true,
+            "supported" => true,
+          },
+          "2025.12" => {
+            "released" => false,
+            "supported" => true,
+          },
+        },
+      )
+    end
+
+    context "when choosing intermediate release for latest" do
+      before do
+        prompt = instance_double(TTY::Prompt)
+        allow(TTY::Prompt).to receive(:new).and_return(prompt)
+        allow(prompt).to receive(:select).and_return(:intermediate)
+      end
+
+      it "updates advisories with correct patched versions" do
+        run_task
+
+        expect(updated_advisories.size).to eq(2)
+
+        vulnerabilities = updated_advisories.first["vulnerabilities"]
+        expect(vulnerabilities.size).to eq(3)
+
+        expect(vulnerabilities[0]).to include(
+          "vulnerable_version_range" => ">= 0",
+          "patched_versions" => "2025.5.3",
+        )
+        expect(vulnerabilities[1]).to include(
+          "vulnerable_version_range" => ">= 2025.6.0-latest",
+          "patched_versions" => "2025.6.1",
+        )
+        expect(vulnerabilities[2]).to include(
+          "vulnerable_version_range" => ">= 2025.12.0-latest",
+          "patched_versions" => "2025.12.0-latest.1",
+        )
+      end
+    end
+
+    context "when choosing monthly release for latest" do
+      before do
+        prompt = instance_double(TTY::Prompt)
+        allow(TTY::Prompt).to receive(:new).and_return(prompt)
+        allow(prompt).to receive(:select).and_return(:monthly)
+      end
+
+      it "uses the current patch version for latest" do
+        run_task
+
+        vulnerabilities = updated_advisories.first["vulnerabilities"]
+        expect(vulnerabilities[2]).to include(
+          "vulnerable_version_range" => ">= 2025.12.0-latest",
+          "patched_versions" => "2025.12.0",
+        )
+      end
+    end
+
+    context "when there are no draft advisories" do
+      let(:gh_api_response) { JSON.generate([[]]) }
+
+      it "outputs a message and does nothing" do
+        output = run_task
+        expect(output).to include("No draft advisories to update")
+        expect(updated_advisories).to be_empty
+      end
+    end
+
+    context "when advisories have DRAFT summary prefix" do
+      let(:draft_advisories) do
+        [
+          {
+            "ghsa_id" => "GHSA-1234-5678-9abc",
+            "state" => "draft",
+            "summary" => "DRAFT - placeholder",
+          },
+        ]
+      end
+
+      it "skips advisories with DRAFT summary prefix" do
+        output = run_task
+        expect(output).to include("No draft advisories to update")
+        expect(updated_advisories).to be_empty
       end
     end
   end

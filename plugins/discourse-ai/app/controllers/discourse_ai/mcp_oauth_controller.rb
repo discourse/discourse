@@ -5,6 +5,7 @@ module DiscourseAi
     requires_plugin PLUGIN_NAME
     skip_before_action :check_xhr, only: :client_metadata
     skip_before_action :preload_json, only: :client_metadata
+    skip_before_action :redirect_to_login_if_required, only: :client_metadata
 
     def client_metadata
       render json: {

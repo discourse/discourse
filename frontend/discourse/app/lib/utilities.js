@@ -272,13 +272,6 @@ export function determinePostReplaceSelection({
   }
 }
 
-export function isAppleDevice() {
-  // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
-  // This will apply hack on all iDevices
-  let caps = capabilities;
-  return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
-}
-
 export function safariHacksDisabled() {
   deprecated(
     "`safariHacksDisabled()` is deprecated, it now always returns `false`",

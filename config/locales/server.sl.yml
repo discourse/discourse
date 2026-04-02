@@ -557,6 +557,7 @@ sl:
   user_api_key:
     deny: "Prekliči"
     read: "prebrano"
+    copied: "Kopirano!"
     otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
     otp_confirmation:
       confirm_title: Nadaljujte na %{site_name}

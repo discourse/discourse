@@ -14,13 +14,9 @@ gl:
     chat_integration:
       menu_title: "Integracións de chat"
       settings: "Configuración"
-      more_providers: "Máis"
       channels_with_errors: "Algunhas das canles deste fornecedor fallaron a última vez que se enviaron mensaxes. Prema na icona(s) de erro para saber máis."
       group_mention_template: "Mencións de: @%{name}"
       group_message_template: "Mensaxes a: @%{name}"
-      choose_group: "(Escolla un grupo)"
-      all_categories: "(Todas as categorías)"
-      all_tags: "(Todas as etiquetas)"
       delete_channel: "Eliminar"
       test_channel: "Proba"
       edit_channel: "Editar"

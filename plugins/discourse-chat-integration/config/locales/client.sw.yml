@@ -14,13 +14,9 @@ sw:
     chat_integration:
       menu_title: "Uwezo wa kuwasiliana"
       settings: "Mipangilio"
-      more_providers: "Zaidi"
       channels_with_errors: "Baadha ya chaneli za huyu mtumiaji zilishindwa mara ya mwisho zilipotumiwa ujumbe. Bonyeza ikoni za njano kupata taarifa zaidi za (ma)kosa."
       group_mention_template: "@%{name} Ametajwa:"
       group_message_template: "Ujumbe kwenda kwa: @%{name}"
-      choose_group: "(Chagua kikundi)"
-      all_categories: "(Vikundi Vyote)"
-      all_tags: "(Lebo)"
       delete_channel: "Futa"
       test_channel: "Majaribio"
       edit_channel: "Hariri"

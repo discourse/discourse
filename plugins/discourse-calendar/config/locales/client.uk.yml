@@ -12,12 +12,6 @@ uk:
         categories:
           discourse_post_event: "Подія Discourse"
           discourse_calendar: "Календар та події"
-      web_hooks:
-        calendar_event:
-          group_name: "Календар подій"
-          calendar_event_created: "Створено подію календаря"
-          calendar_event_updated: "Подію календаря оновлено"
-          calendar_event_destroyed: "Подію календаря знищено"
   js:
     notifications:
       titles:
@@ -34,11 +28,6 @@ uk:
               label: ID теми
     discourse_calendar:
       invite_user_notification: "%{username} запросили Вас на: %{description}"
-      preferences:
-        all_events: "Discourse Календар - Усі події"
-        all_events_description: "Усі події форуму"
-        my_events: "Discourse Календар - Мої події"
-        my_events_description: "Події, на які ви збираєтеся або які вас цікавлять"
       on_holiday: "У відпустці"
       disable_holiday: "Вимкнути"
       enable_holiday: "Увімкнути"
@@ -475,9 +464,6 @@ uk:
         timezone:
           label: Часовий пояс
           remove_timezone: Без часового поясу (UTC)
-        all_day:
-          label: "Подія на цілий день"
-          description: "Подія на цілий день не матиме конкретного часу, лише дату. Подія триватиме від початку до кінця дня."
         reminders:
           label: "Нагадування"
           types:

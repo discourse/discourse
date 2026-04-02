@@ -1141,6 +1141,7 @@ es:
     permissions_header: 'Esto permitirá a "%{application_name}" hacer lo siguiente:'
     redirect_warning: "Si lo autorizas, se te redireccionará a"
     instructions: 'Acabamos de generar una nueva clave API de usuario para que uses con «%{application_name}». Pega la siguiente clave en tu aplicación:'
+    copied: "¡Copiado!"
     otp_description: '¿Te gustaría permitir a «%{application_name}» acceder a este sitio?'
     otp_confirmation:
       confirm_title: Continuar a %{site_name}

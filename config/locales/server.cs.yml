@@ -1293,6 +1293,7 @@ cs:
     permissions_header: 'Toto povolí přístup „%{application_name}“:'
     redirect_warning: "Ověření vás přesměruje na"
     instructions: 'Právě jsme pro vás vygenerovali nový uživatelský klíč API, který můžete použít s „%{application_name}“, do své aplikace vložte prosím následující klíč:'
+    copied: "Zkopírováno!"
     otp_description: 'Chcete povolit přístup k tomuto webu uživateli „%{application_name}“?'
     otp_confirmation:
       confirm_title: Pokračovat na %{site_name}

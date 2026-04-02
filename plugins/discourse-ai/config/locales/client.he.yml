@@ -566,6 +566,7 @@ he:
         oauth_statuses:
           connected: "מחובר"
         oauth_connect: "התחברות"
+        oauth_hide_details: "הסתרת פרטים"
         enabled: "פעיל"
         save: "שמירה"
         edit: "עריכה"

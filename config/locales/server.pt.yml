@@ -699,6 +699,7 @@ pt:
     deny: "Cancelar"
     read: "ler"
     read_write: "ler/escrever"
+    copied: "Copiado!"
     otp_confirmation:
       confirm_title: Continuar para %{site_name}
       logging_in_as: Fazendo login como %{username}

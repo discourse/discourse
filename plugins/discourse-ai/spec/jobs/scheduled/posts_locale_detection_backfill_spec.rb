@@ -16,6 +16,7 @@ describe Jobs::PostsLocaleDetectionBackfill do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
+    SiteSetting.ai_translation_target_categories = post.topic.category_id.to_s
   end
 
   it "does nothing when translator is disabled" do
@@ -45,8 +46,8 @@ describe Jobs::PostsLocaleDetectionBackfill do
   end
 
   it "detects most recently updated posts first" do
-    post_2 = Fabricate(:post, locale: nil)
-    post_3 = Fabricate(:post, locale: nil)
+    post_2 = Fabricate(:post, locale: nil, topic: post.topic)
+    post_3 = Fabricate(:post, locale: nil, topic: post.topic)
 
     post.update!(updated_at: 3.days.ago)
     post_2.update!(updated_at: 2.days.ago)
@@ -100,10 +101,13 @@ describe Jobs::PostsLocaleDetectionBackfill do
     job.execute({})
   end
 
-  describe "with public content limitation" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_cat_topic) { Fabricate(:topic, category: private_category) }
-    fab!(:private_cat_post) { Fabricate(:post, topic: private_cat_topic, locale: nil) }
+  describe "with target categories" do
+    fab!(:target_category, :category)
+    fab!(:non_target_category, :category)
+    fab!(:target_topic) { Fabricate(:topic, category: target_category) }
+    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category) }
+    fab!(:target_post) { Fabricate(:post, topic: target_topic, locale: nil) }
+    fab!(:non_target_post) { Fabricate(:post, topic: non_target_topic, locale: nil) }
 
     fab!(:group)
     fab!(:group_pm_topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
@@ -112,13 +116,16 @@ describe Jobs::PostsLocaleDetectionBackfill do
     fab!(:pm_topic, :private_message_topic)
     fab!(:pm_post) { Fabricate(:post, topic: pm_topic, locale: nil) }
 
-    before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    before do
+      SiteSetting.ai_translation_target_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
 
-    it "only processes posts from public categories" do
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post).once
+    it "only processes posts from target categories" do
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(target_post).once
       DiscourseAi::Translation::PostLocaleDetector
         .expects(:detect_locale)
-        .with(private_cat_post)
+        .with(non_target_post)
         .never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
@@ -126,14 +133,14 @@ describe Jobs::PostsLocaleDetectionBackfill do
       job.execute({})
     end
 
-    it "processes all public content and group PMs and private categories when setting is disabled" do
-      SiteSetting.ai_translation_backfill_limit_to_public_content = false
+    it "processes target posts and group PMs when pm_translation_scope is group" do
+      SiteSetting.ai_translation_personal_messages = "group"
 
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(post).once
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(target_post).once
       DiscourseAi::Translation::PostLocaleDetector
         .expects(:detect_locale)
-        .with(private_cat_post)
-        .once
+        .with(non_target_post)
+        .never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).once
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(pm_post).never
 

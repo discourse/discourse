@@ -14,13 +14,9 @@ hr:
     chat_integration:
       menu_title: "Chat integracije"
       settings: "Postavke"
-      more_providers: "Više"
       channels_with_errors: "Neki kanali za tog davatelja usluga nisu uspjeli zadnji put kada su poruke poslane. Kliknite ikon(u) pogreške da biste saznali više."
       group_mention_template: "Spominjanje: @%{name}"
       group_message_template: "Poruke na: @%{name}"
-      choose_group: "(Odaberite grupu)"
-      all_categories: "(Sve kategorije)"
-      all_tags: "(Sve oznake)"
       delete_channel: "Izbriši"
       test_channel: "Test"
       edit_channel: "Uredi"

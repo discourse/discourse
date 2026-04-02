@@ -43,6 +43,7 @@ Rails.autoloaders.each do |autoloader|
     "json" => "JSON",
     "ssrf_detector" => "SSRFDetector",
     "http" => "HTTP",
+    "oauth_client_registration" => "OAuthClientRegistration",
     "oauth_discovery" => "OAuthDiscovery",
     "oauth_flow" => "OAuthFlow",
     "oauth_token_store" => "OAuthTokenStore",
@@ -57,6 +58,5 @@ Rails.autoloaders.main.ignore(
   "lib/freedom_patches",
   "lib/i18n/backend",
   "lib/release_utils",
-  "lib/unicorn_logstash_patch.rb",
   "lib/pitchfork_logstash_patch.rb",
 )

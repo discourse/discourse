@@ -8,27 +8,7 @@ module DiscourseAi
       # all tags that are eligible for translation based on site settings,
       # including those without locale detected yet.
       def self.get
-        tags = Tag.all
-        if SiteSetting.ai_translation_backfill_limit_to_public_content
-          tags = filter_to_public_tags(tags)
-        end
-        tags
-      end
-
-      def self.filter_to_public_tags(tags)
-        # tags visible to everyone are:
-        # 1. not in any tag group, OR
-        # 2. in a tag group that grants permission to EVERYONE
-        everyone_group_id = Group::AUTO_GROUPS[:everyone]
-        tags.where(<<~SQL, everyone_group_id)
-          tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)
-          OR tags.id IN (
-            SELECT tgm.tag_id
-            FROM tag_group_memberships tgm
-            INNER JOIN tag_group_permissions tgp ON tgp.tag_group_id = tgm.tag_group_id
-            WHERE tgp.group_id = ?
-          )
-        SQL
+        Tag.all
       end
 
       def self.calculate_completion_per_locale(locale)

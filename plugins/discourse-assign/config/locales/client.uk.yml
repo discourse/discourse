@@ -138,22 +138,6 @@ uk:
           unassigned: "не призначені"
         assigned:
           label: "Призначено для"
-    topics:
-      bulk:
-        unassign: "Скасувати призначення тем"
-        assign: "Призначити теми"
-        assign_description: "Призначити вибрані теми наступному користувачеві:"
-        unassign_description: "Ви хочете скасувати призначення вибраних тем?"
-        confirm_assign_topics:
-          one: "Призначити тему %{count}"
-          few: "Призначити %{count} теми"
-          many: "Призначити %{count} тем"
-          other: "Призначити %{count} тем"
-        confirm_unassign_topics:
-          one: "Скасувати призначення %{count} тем"
-          few: "Скасувати призначення %{count} теми"
-          many: "Скасувати призначення %{count} тем"
-          other: "Скасувати призначення %{count} тем"
     discourse_automation:
       scriptables:
         random_assign:

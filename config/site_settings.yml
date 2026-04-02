@@ -2719,7 +2719,7 @@ security:
     list_type: compact
   crawler_check_bypass_agents:
     hidden: true
-    default: "cubot"
+    default: "cubot|MetaIAB"
   cors_origins:
     default: ""
     type: list
@@ -3201,7 +3201,8 @@ navigation:
 embedding:
   embed_full_app:
     default: false
-    hidden: true
+    client: true
+    area: "embedding"
   embed_by_username:
     default: ""
     type: username
@@ -3786,7 +3787,7 @@ uncategorized:
     hidden: true
     area: "interface"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/395100"
 
@@ -4252,6 +4253,14 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
+  enable_new_checkbox_style:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4327,7 +4336,3 @@ experimental:
   experimental_topic_category_change_notification:
     default: false
     hidden: true
-  enable_upcoming_changes:
-    default: true
-    hidden: true
-    client: true

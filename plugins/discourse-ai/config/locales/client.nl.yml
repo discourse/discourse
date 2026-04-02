@@ -492,6 +492,7 @@ nl:
         oauth_statuses:
           connected: "Verbonden"
         oauth_connect: "Verbinden"
+        oauth_hide_details: "Details verbergen"
         enabled: "Ingeschakeld"
         save: "Opslaan"
         edit: "Bewerken"

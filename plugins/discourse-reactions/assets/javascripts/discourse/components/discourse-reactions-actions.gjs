@@ -18,7 +18,7 @@ import curryComponent from "ember-curry-component";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and, eq, not } from "discourse/truth-helpers";
@@ -56,8 +56,8 @@ function moveReactionAnimation(
   endPosition,
   complete
 ) {
-  if (isTesting()) {
-    return;
+  if (isTesting() || isRailsTesting()) {
+    return run(complete);
   }
 
   const fakeReaction = buildFakeReaction(reactionId);
@@ -95,7 +95,7 @@ function dropReaction(list, reactionId, complete) {
 }
 
 function scaleReactionAnimation(mainReaction, start, end, complete) {
-  if (isTesting()) {
+  if (isTesting() || isRailsTesting()) {
     return run(this, complete);
   }
 
@@ -292,9 +292,9 @@ export default class DiscourseReactionsActions extends Component {
     }
 
     if (
-      !this.data.current_user_reaction ||
-      (this.data.current_user_reaction.can_undo &&
-        this.data.likeAction?.canToggle)
+      this.data.likeAction?.canToggle &&
+      (!this.data.current_user_reaction ||
+        this.data.current_user_reaction.can_undo)
     ) {
       if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
         navigator.vibrate(VIBRATE_DURATION);
@@ -493,7 +493,7 @@ export default class DiscourseReactionsActions extends Component {
     const current_user_reaction = this.data.current_user_reaction;
 
     if (
-      this.data.likeAction &&
+      !this.data.likeAction ||
       !(this.data.likeAction.canToggle || this.data.likeAction.can_undo)
     ) {
       return;
@@ -732,12 +732,7 @@ export default class DiscourseReactionsActions extends Component {
       return i18n("errors.desc.network");
     }
 
-    if (
-      xhr.status === 429 &&
-      xhr.responseJSON &&
-      xhr.responseJSON.errors &&
-      xhr.responseJSON.errors[0]
-    ) {
+    if (xhr.responseJSON?.errors?.[0]) {
       return xhr.responseJSON.errors[0];
     } else if (xhr.status === 403) {
       return i18n("discourse_reactions.reaction.forbidden");

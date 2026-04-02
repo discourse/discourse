@@ -631,6 +631,7 @@ pt_BR:
           oauth: "OAuth"
         secret: "Credencial"
         oauth_connect: "Conectar"
+        oauth_hide_details: "Ocultar detalhes"
         enabled: "Ativados"
         save: "Salvar"
         edit: "Editar"

@@ -158,6 +158,7 @@ ug:
         oauth_statuses:
           connected: "باغلاندى"
         oauth_connect: "ئۇلا"
+        oauth_hide_details: "تەپسىلاتنى يوشۇر"
         enabled: "قوزغىتىلدى"
         save: "ساقلا"
         edit: "تەھرىر"

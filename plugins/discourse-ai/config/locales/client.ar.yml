@@ -669,6 +669,7 @@ ar:
         oauth_statuses:
           connected: "متصل"
         oauth_connect: "ربط"
+        oauth_hide_details: "إخفاء التفاصيل"
         enabled: "مفعَّلة"
         save: "حفظ"
         edit: "تعديل"
