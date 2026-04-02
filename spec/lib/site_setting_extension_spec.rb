@@ -155,6 +155,33 @@ RSpec.describe SiteSettingExtension do
         %Q|{"default_locale":"#{SiteSetting.default_locale}","upload_type":"a_new_url","string_type":"changed"}|,
       )
     end
+
+    context "when the provider value equals the YAML default" do
+      it "does not mark a normal setting as modified from default" do
+        settings.setting(:hello, 1)
+        settings.provider.save(:hello, 1, SiteSetting.types[:integer])
+        settings.refresh!
+
+        expect(settings.setting_modified_from_default?(:hello)).to eq(false)
+      end
+
+      it "still marks an upcoming change setting as modified from default so admins can opt out" do
+        settings.setting(
+          :upcoming_change_opt_out_flag,
+          false,
+          upcoming_change: {
+            status: :experimental,
+            impact: "feature,staff",
+          },
+        )
+        UpcomingChanges.stubs(:settings_provider).returns(settings)
+
+        settings.provider.save(:upcoming_change_opt_out_flag, false, SiteSetting.types[:bool])
+        settings.refresh!
+
+        expect(settings.setting_modified_from_default?(:upcoming_change_opt_out_flag)).to eq(true)
+      end
+    end
   end
 
   describe "DiscourseEvent" do

@@ -123,7 +123,7 @@ module UpcomingChanges
     #
     # If the change is permanent though, the admin has no choice
     # in the matter.
-    if settings_provider.modified.key?(change_setting_name) &&
+    if settings_provider.setting_modified_from_default?(change_setting_name) &&
          UpcomingChanges.change_status(change_setting_name) != :permanent
       settings_provider.current[change_setting_name]
 

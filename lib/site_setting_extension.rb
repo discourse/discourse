@@ -571,7 +571,17 @@ module SiteSettingExtension
         # this doesn't really count and is more of a quirk on how we
         # store site settings. In this case, we should not consider this
         # setting to be modified.
-        new_modified.reject! { |name, val| val.to_s == defaults_view[name].to_s }
+        #
+        # The only exception is for upcoming changes, which have automatic
+        # promotion systems, and admins need to be able to manually opt out
+        # even if the default itself isn't changing.
+        new_modified.reject! do |name, val|
+          if UpcomingChanges.exists?(name)
+            false
+          else
+            val.to_s == defaults_view[name].to_s
+          end
+        end
 
         # Merge in the default values for the current locale, since these are
         # precomputed and cached.  This ensures that locale-specific and default
