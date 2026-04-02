@@ -127,24 +127,24 @@ module DiscourseAi
             .external_ai_features
             .group_by { |e| e[:module_name] }
             .each do |mod_name, entries|
-              first = entries.first
               module_id = external_module_id(mod_name)
+              features =
+                entries.map do |e|
+                  setting_name = "#{mod_name}_#{e[:feature]}_agent"
+                  DiscourseAi::Configuration::Feature.new(
+                    e[:feature].to_s,
+                    setting_name,
+                    module_id,
+                    mod_name.to_s,
+                    enabled_by_setting: e[:enabled_by_setting],
+                  )
+                end
               base_modules << new(
                 module_id,
                 mod_name,
-                enabled_by_setting: first[:enabled_by_setting],
-                features:
-                  entries.map do |e|
-                    setting_name = "#{mod_name}_#{e[:feature]}_agent"
-                    DiscourseAi::Configuration::Feature.new(
-                      e[:feature].to_s,
-                      setting_name,
-                      module_id,
-                      mod_name.to_s,
-                      enabled_by_setting: e[:enabled_by_setting],
-                    )
-                  end,
-                visible: first.fetch(:visible, true),
+                features:,
+                extra_check: -> { features.any?(&:enabled?) },
+                visible: entries.any? { |e| e.fetch(:visible, true) },
               )
             end
 

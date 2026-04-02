@@ -51,5 +51,49 @@ describe DiscourseAi::Configuration::Module do
       expected_id = described_class.external_module_id(:test_plugin)
       expect(test_mod.id).to eq(expected_id)
     end
+
+    context "with multiple features gated by different settings" do
+      before do
+        DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
+          entry[:value][:module_name] == :test_plugin
+        end
+
+        DiscoursePluginRegistry.register_external_ai_feature(
+          {
+            module_name: :test_plugin,
+            feature: :feature_a,
+            agent_klass: FakeExternalAgent,
+            enabled_by_setting: "data_explorer_enabled",
+          },
+          fake_plugin,
+        )
+
+        DiscoursePluginRegistry.register_external_ai_feature(
+          {
+            module_name: :test_plugin,
+            feature: :feature_b,
+            agent_klass: FakeExternalAgent,
+            enabled_by_setting: "data_explorer_ai_queries_enabled",
+          },
+          fake_plugin,
+        )
+      end
+
+      it "is enabled when at least one feature is enabled" do
+        SiteSetting.data_explorer_enabled = true
+        SiteSetting.data_explorer_ai_queries_enabled = false
+
+        test_mod = described_class.all.find { |m| m.name == :test_plugin }
+        expect(test_mod).to be_enabled
+      end
+
+      it "is disabled when all features are disabled" do
+        SiteSetting.data_explorer_enabled = false
+        SiteSetting.data_explorer_ai_queries_enabled = false
+
+        test_mod = described_class.all.find { |m| m.name == :test_plugin }
+        expect(test_mod).not_to be_enabled
+      end
+    end
   end
 end
