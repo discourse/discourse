@@ -8,6 +8,7 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import DMenu from "discourse/float-kit/components/d-menu";
+import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import TopicBookmarkManager from "discourse/lib/topic-bookmark-manager";
@@ -149,6 +150,21 @@ export default class TopicBookmarksMenu extends Component {
   async onJumpToPost(bookmark) {
     await this.dMenu.close();
     DiscourseURL.routeTo(this.topic.urlForPostNumber(bookmark.post_number));
+  }
+
+  @action
+  async onBookmarkTopic() {
+    await this.dMenu.close();
+
+    try {
+      await this.topicBookmarkManager.create();
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("bookmarks.bookmarked_success") },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
@@ -304,6 +320,7 @@ export default class TopicBookmarksMenu extends Component {
         @label={{this.buttonLabel}}
         @icon={{this.buttonIcon}}
         @onRegisterApi={{this.onRegisterApi}}
+        @modalForMobile={{true}}
         @arrow={{false}}
       >
         <:content>
@@ -311,18 +328,35 @@ export default class TopicBookmarksMenu extends Component {
             {{! Post bookmark jump links }}
             {{#each this.postBookmarks as |bookmark|}}
               <dropdown.item
-                class="bookmark-menu__row -jump"
+                class={{concatClass
+                  "bookmark-menu__row --jump"
+                  (if bookmark.name "--has-name")
+                }}
                 data-menu-option-id="jump"
               >
                 <DButton
                   @icon="bookmark"
-                  @translatedLabel={{i18n
+                  @translatedAriaLabel={{i18n
                     "bookmarks.jump_to_post"
                     post_number=bookmark.post_number
                   }}
                   @action={{fn this.onJumpToPost bookmark}}
                   class="bookmark-menu__row-btn btn-transparent"
-                />
+                >
+                  <span class="bookmark-menu__row-texts">
+                    <span class="bookmark-menu__row-label">
+                      {{i18n
+                        "bookmarks.jump_to_post"
+                        post_number=bookmark.post_number
+                      }}
+                    </span>
+                    {{#if bookmark.name}}
+                      <span class="bookmark-menu__row-description">
+                        {{bookmark.name}}
+                      </span>
+                    {{/if}}
+                  </span>
+                </DButton>
               </dropdown.item>
             {{/each}}
 
@@ -350,6 +384,18 @@ export default class TopicBookmarksMenu extends Component {
                   class="bookmark-menu__row-btn --danger"
                 />
               </dropdown.item>
+              <dropdown.divider />
+              <dropdown.item
+                class="bookmark-menu__row --bookmark-topic"
+                data-menu-option-id="bookmark-topic"
+              >
+                <DButton
+                  @icon="bookmark"
+                  @label="bookmarks.bookmark_topic"
+                  @action={{this.onBookmarkTopic}}
+                  class="bookmark-menu__row-btn btn-transparent"
+                />
+              </dropdown.item>
             {{else if this.isMultipleBookmarks}}
               {{! Multiple bookmarks: topic bookmark actions + delete all }}
               {{#if this.topicBookmark}}
@@ -374,6 +420,19 @@ export default class TopicBookmarksMenu extends Component {
                     @label="bookmarks.delete_topic_bookmark"
                     @action={{this.onRemoveTopicBookmark}}
                     class="bookmark-menu__row-btn --danger"
+                  />
+                </dropdown.item>
+              {{else}}
+                <dropdown.divider />
+                <dropdown.item
+                  class="bookmark-menu__row --bookmark-topic"
+                  data-menu-option-id="bookmark-topic"
+                >
+                  <DButton
+                    @icon="bookmark"
+                    @label="bookmarks.bookmark_topic"
+                    @action={{this.onBookmarkTopic}}
+                    class="bookmark-menu__row-btn btn-transparent"
                   />
                 </dropdown.item>
               {{/if}}

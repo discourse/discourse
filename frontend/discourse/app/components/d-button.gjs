@@ -264,6 +264,8 @@ export default class DButton extends Component {
             &hellip;
           {{~/if~}}
         </span>
+      {{~else if (has-block)~}}
+        {{! Block content provides the label, no spacer needed }}
       {{~else if (or @icon @isLoading)~}}
         <span aria-hidden="true">
           &#8203;

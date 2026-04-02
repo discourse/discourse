@@ -635,6 +635,7 @@ en:
       topic_bookmark: "Topic"
       post_bookmark: "Post #%{post_number}"
       jump_to_post: "Jump to #%{post_number}"
+      bookmark_topic: "Bookmark topic"
       edit_topic_bookmark: "Edit topic bookmark"
       delete_topic_bookmark: "Delete topic bookmark"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
