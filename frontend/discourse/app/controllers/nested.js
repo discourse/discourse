@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import NestedActivityLog from "discourse/components/modal/nested-activity-log";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -18,6 +19,7 @@ export default class NestedController extends Controller {
   @service dialog;
   @service currentUser;
   @service messageBus;
+  @service modal;
   @service nestedViewCache;
   @service router;
 
@@ -273,6 +275,14 @@ export default class NestedController extends Controller {
   @action
   showFlags(post) {
     this._topicRoute.showFlags(post);
+  }
+
+  @action
+  showActivityLog(event) {
+    event?.preventDefault();
+    this.modal.show(NestedActivityLog, {
+      model: { topic: this.topic },
+    });
   }
 
   // editingTopic is @tracked locally because the topic controller's

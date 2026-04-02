@@ -183,6 +183,47 @@ class NestedTopicsController < ApplicationController
     render json: { pinned_post_ids: pinned_ids }
   end
 
+  # GET /n/:slug/:topic_id/activity
+  def activity
+    post_types = [Post.types[:small_action]]
+    post_types << Post.types[:whisper] if guardian.user&.whisperer?
+
+    posts =
+      @topic
+        .posts
+        .where(post_type: post_types)
+        .where.not(action_code: [nil, ""])
+        .includes(:user)
+        .order(:created_at)
+
+    creator = @topic.user
+    actions = [
+      {
+        action_code: "topic_created",
+        created_at: @topic.created_at,
+        username: creator&.username,
+        avatar_template: creator&.avatar_template,
+      },
+    ]
+
+    actions.concat(
+      posts.map do |post|
+        {
+          id: post.id,
+          action_code: post.action_code,
+          action_code_who: post.custom_fields["action_code_who"],
+          action_code_path: post.custom_fields["action_code_path"],
+          created_at: post.created_at,
+          username: post.user&.username,
+          avatar_template: post.user&.avatar_template,
+          cooked: post.cooked,
+        }
+      end,
+    )
+
+    render json: { small_actions: actions }
+  end
+
   # PUT /n/:slug/:topic_id/toggle
   def toggle
     guardian.ensure_can_edit!(@topic)
