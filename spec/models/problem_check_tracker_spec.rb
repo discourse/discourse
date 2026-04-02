@@ -159,6 +159,7 @@ RSpec.describe ProblemCheckTracker do
         :problem_check_tracker,
         identifier: "twitter_login",
         target: "foo",
+        ignored_at:,
         **original_attributes,
       )
     end
@@ -175,6 +176,7 @@ RSpec.describe ProblemCheckTracker do
 
     let(:blips) { 0 }
     let(:updated_attributes) { { blips: 1 } }
+    let(:ignored_at) { nil }
 
     it do
       freeze_time
@@ -187,10 +189,24 @@ RSpec.describe ProblemCheckTracker do
     context "when the maximum number of blips have been surpassed" do
       let(:blips) { 1 }
 
-      it "sounds the alarm" do
-        expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
-          AdminNotice.problem.count
-        }.by(1)
+      context "when the check isn't being ignored" do
+        let(:ignored_at) { nil }
+
+        it "sounds the alarm" do
+          expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
+            AdminNotice.problem.count
+          }.by(1)
+        end
+      end
+
+      context "when the check is being ignored" do
+        let(:ignored_at) { 1.day.ago }
+
+        it "does not sound the alarm" do
+          expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
+            AdminNotice.problem.count
+          }
+        end
       end
     end
 

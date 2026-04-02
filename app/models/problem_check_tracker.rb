@@ -75,7 +75,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def sound_the_alarm?
-    failing? && blips > check.max_blips
+    watched? && failing? && blips > check.max_blips
   end
 
   def sound_the_alarm
