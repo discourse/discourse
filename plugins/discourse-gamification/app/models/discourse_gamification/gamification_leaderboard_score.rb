@@ -96,8 +96,8 @@ end
 #  id             :bigint           not null, primary key
 #  date           :date             not null
 #  score          :integer          default(0), not null
-#  leaderboard_id :integer          not null
-#  user_id        :integer          not null
+#  leaderboard_id :bigint           not null
+#  user_id        :bigint           not null
 #
 # Indexes
 #

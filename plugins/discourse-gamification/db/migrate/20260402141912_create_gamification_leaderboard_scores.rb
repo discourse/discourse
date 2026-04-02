@@ -3,8 +3,8 @@
 class CreateGamificationLeaderboardScores < ActiveRecord::Migration[7.2]
   def up
     create_table :gamification_leaderboard_scores do |t|
-      t.integer :leaderboard_id, null: false
-      t.integer :user_id, null: false
+      t.bigint :leaderboard_id, null: false
+      t.bigint :user_id, null: false
       t.date :date, null: false
       t.integer :score, null: false, default: 0
     end
