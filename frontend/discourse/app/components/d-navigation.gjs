@@ -120,11 +120,6 @@ export default class DNavigation extends Component {
     return this.category?.can_edit;
   }
 
-  @computed("additionalTags", "category", "tag.name")
-  get showToggleInfo() {
-    return this.currentUser;
-  }
-
   @computed(
     "filterType",
     "category",
@@ -265,9 +260,9 @@ export default class DNavigation extends Component {
       {{/if}}
 
       {{#if this.tag}}
-        {{#if this.showToggleInfo}}
+        {{#unless this.additionalTags}}
           <TagInfoButton @tag={{this.tag}} @currentUser={{this.currentUser}} />
-        {{/if}}
+        {{/unless}}
       {{/if}}
 
       <PluginOutlet
