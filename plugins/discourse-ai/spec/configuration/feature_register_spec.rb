@@ -12,13 +12,7 @@ describe DiscourseAi::Configuration::Feature do
     end
 
     it "finds registered features by agent_id" do
-      agent_id =
-        DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS.dig(
-          :data_explorer,
-          :features,
-          :query_generation,
-          :agent_id,
-        )
+      agent_id = -(Zlib.crc32("data_explorer_query_generation") % 1_000_000 + 1_000_000)
       found = described_class.find_features_using(agent_id: agent_id)
       expect(found.map(&:name)).to include("query_generation")
     end

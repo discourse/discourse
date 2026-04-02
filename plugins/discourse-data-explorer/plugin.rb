@@ -9,6 +9,8 @@
 
 enabled_site_setting :data_explorer_enabled
 
+register_site_setting_area("ai-features/data_explorer") if defined?(DiscourseAi)
+
 register_asset "stylesheets/explorer.scss"
 
 register_svg_icon "angle-down"
@@ -212,5 +214,6 @@ after_initialize do
     )
 
     SiteSetting.areas[:data_explorer_ai_queries_enabled] ||= "ai-features/data_explorer"
+    SiteSetting.areas[:data_explorer_query_generation_agent] ||= "ai-features/data_explorer"
   end
 end

@@ -42,6 +42,10 @@ module DiscourseAi
       AUTOMATION_TRIAGE_ID = 11
 
       class << self
+        def external_module_id(module_name)
+          Zlib.crc32(module_name.to_s) % 100_000 + 1000
+        end
+
         def all
           base_modules = [
             new(
@@ -119,40 +123,32 @@ module DiscourseAi
           end
 
           # external modules from plugin registry
-          external_features
-            .group_by { |mod_name, _| mod_name }
+          DiscoursePluginRegistry
+            .external_ai_features
+            .group_by { |e| e[:module_name] }
             .each do |mod_name, entries|
-              reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[mod_name]
-              first_entry = entries.first[1]
+              first = entries.first
+              module_id = external_module_id(mod_name)
               base_modules << new(
-                reserved[:module_id],
+                module_id,
                 mod_name,
-                enabled_by_setting: first_entry[:enabled_by_setting],
-                features: entries.map { |_, e| build_external_feature(e, reserved) },
-                visible: first_entry.fetch(:visible, true),
+                enabled_by_setting: first[:enabled_by_setting],
+                features:
+                  entries.map do |e|
+                    setting_name = "#{mod_name}_#{e[:feature]}_agent"
+                    DiscourseAi::Configuration::Feature.new(
+                      e[:feature].to_s,
+                      setting_name,
+                      module_id,
+                      mod_name.to_s,
+                      enabled_by_setting: e[:enabled_by_setting],
+                    )
+                  end,
+                visible: first.fetch(:visible, true),
               )
             end
 
           base_modules
-        end
-
-        def external_features
-          DiscoursePluginRegistry.external_ai_features.filter_map do |entry|
-            reserved = DiscourseAi::Agents::Agent::RESERVED_EXTERNAL_IDS[entry[:module_name]]
-            next if reserved.nil? || reserved.dig(:features, entry[:feature]).nil?
-            [entry[:module_name], entry]
-          end
-        end
-
-        def build_external_feature(entry, reserved)
-          setting_name = "#{entry[:module_name]}_#{entry[:feature]}_agent"
-          DiscourseAi::Configuration::Feature.new(
-            entry[:feature].to_s,
-            setting_name,
-            reserved[:module_id],
-            entry[:module_name].to_s,
-            enabled_by_setting: entry[:enabled_by_setting],
-          )
         end
 
         def has_scripts?(script_names)

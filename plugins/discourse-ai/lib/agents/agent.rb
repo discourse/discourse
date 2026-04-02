@@ -3,22 +3,6 @@
 module DiscourseAi
   module Agents
     class Agent
-      # reserved IDs for external plugins
-      # add your plugin here to avoid collisions
-      #
-      # agent IDs: discourse-ai system agents use -1 to -1000, external plugins use -1001 and below
-      # module IDs: discourse-ai built-in modules use 1 to 1000, external plugins use 1001 and above
-      RESERVED_EXTERNAL_IDS = {
-        data_explorer: {
-          module_id: 1001,
-          features: {
-            query_generation: {
-              agent_id: -1001,
-            },
-          },
-        },
-      }
-
       class << self
         def default_enabled
           true
@@ -166,6 +150,10 @@ module DiscourseAi
           tools
         end
 
+        def external_agent_id(module_name, feature)
+          -(Zlib.crc32("#{module_name}_#{feature}") % 1_000_000 + 1_000_000)
+        end
+
         private
 
         def sync_external_registry!
@@ -178,16 +166,10 @@ module DiscourseAi
           external_tools_by_name = {}
 
           configs.each do |config|
-            reserved = RESERVED_EXTERNAL_IDS[config[:module_name]]
-            next if reserved.nil?
-
-            feature_config = reserved.dig(:features, config[:feature])
-            next if feature_config.nil?
-
-            agent_id = feature_config[:agent_id]
             klass = config[:klass]
             next if klass.nil?
 
+            agent_id = external_agent_id(config[:module_name], config[:feature])
             external_agents[klass] = agent_id
 
             klass.new.tools.each do |tool_klass|
