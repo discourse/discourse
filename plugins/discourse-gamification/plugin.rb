@@ -117,11 +117,16 @@ after_initialize do
     DiscourseGamification::GamificationLeaderboardScore.merge_scores(source_user, target_user)
   end
 
-  # Backfill per-leaderboard scores on upgrade from the global scoring system
-  if DiscourseGamification::GamificationLeaderboard.exists? &&
-       !DiscourseGamification::GamificationLeaderboardScore.exists?
-    DiscourseGamification::GamificationLeaderboard.find_each do |lb|
-      Jobs.enqueue(Jobs::RecalculateLeaderboardScores, leaderboard_id: lb.id)
+  # Backfill per-leaderboard scores on upgrade from the global scoring system.
+  # Wrapped in a rescue in case the migration hasn't run yet.
+  begin
+    if DiscourseGamification::GamificationLeaderboard.exists? &&
+         !DiscourseGamification::GamificationLeaderboardScore.exists?
+      DiscourseGamification::GamificationLeaderboard.find_each do |lb|
+        Jobs.enqueue(Jobs::RecalculateLeaderboardScores, leaderboard_id: lb.id)
+      end
     end
+  rescue ActiveRecord::StatementInvalid
+    # Table doesn't exist yet — migration hasn't run. Skip backfill.
   end
 end
