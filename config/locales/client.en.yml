@@ -611,7 +611,8 @@ en:
     bookmarked:
       title: "Bookmark"
       edit_bookmark: "Edit Bookmark"
-      clear_bookmarks: "Clear Bookmarks"
+      edit_bookmarks: "Edit bookmarks"
+      clear_bookmarks: "Clear all bookmarks"
       help:
         bookmark: "Click to bookmark this topic"
         edit_bookmark: "Click to edit the bookmark on a post in this topic"
@@ -631,6 +632,11 @@ en:
       clear_reminder: "Clear reminder"
       edit: "Edit bookmark"
       not_bookmarked: "bookmark this post"
+      topic_bookmark: "Topic"
+      post_bookmark: "Post #%{post_number}"
+      jump_to_post: "Jump to #%{post_number}"
+      edit_topic_bookmark: "Edit topic bookmark"
+      delete_topic_bookmark: "Delete topic bookmark"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"

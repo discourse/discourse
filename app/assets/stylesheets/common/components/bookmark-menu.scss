@@ -23,3 +23,29 @@
     }
   }
 }
+
+.topic-bookmarks-menu-content {
+  max-height: 60vh;
+  overflow-y: auto;
+
+  .bookmark-menu__section-title {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    gap: var(--d-sidebar-section-link-prefix-margin-right);
+    padding-inline: var(--d-sidebar-row-horizontal-padding);
+    padding-block: 0.35em;
+
+    .d-icon {
+      width: var(--d-sidebar-section-link-prefix-width);
+    }
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
