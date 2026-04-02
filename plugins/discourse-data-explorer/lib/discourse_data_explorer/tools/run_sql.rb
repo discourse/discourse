@@ -28,45 +28,19 @@ module DiscourseDataExplorer
 
       def invoke
         sql = parameters[:sql].to_s.strip
-
         return error_response("SQL query is empty") if sql.blank?
 
-        return error_response("semicolons are not allowed in Data Explorer queries") if sql =~ /;/
+        query = DiscourseDataExplorer::Query.new(name: "AI tool query", sql: sql)
+        result = DiscourseDataExplorer::DataExplorer.run_query(query, {}, limit: MAX_ROWS + 1)
 
-        result = nil
-        err = nil
+        return error_response(result[:error].message) if result[:error]
 
-        begin
-          ActiveRecord::Base.connection.transaction do
-            DB.exec("SET TRANSACTION READ ONLY")
-            DB.exec("SET LOCAL statement_timeout = 10000")
-
-            wrapped_sql = <<~SQL
-              WITH query AS (
-              #{sql}
-              ) SELECT * FROM query
-              LIMIT #{MAX_ROWS + 1}
-            SQL
-
-            result = ActiveRecord::Base.connection.raw_connection.async_exec(wrapped_sql)
-            result.check
-
-            raise ActiveRecord::Rollback
-          end
-        rescue ActiveRecord::Rollback
-          # expected
-        rescue => e
-          err = e
-        end
-
-        return error_response(err.message) if err
-
-        columns = result.fields
-        rows = result.values
+        pg_result = result[:pg_result]
+        columns = pg_result.fields
+        rows = pg_result.values
         total_rows = rows.length
         rows = rows.first(MAX_ROWS)
 
-        # truncate long cell values
         rows =
           rows.map do |row|
             row.map do |cell|

@@ -79,4 +79,22 @@ RSpec.describe "Admin AI features configuration" do
     expect(field.component).to have_content("Test LLM Alpha")
     expect(field.component).to have_content("Test LLM Beta")
   end
+
+  context "with external AI features" do
+    it "shows the data explorer module when the plugin is enabled" do
+      SiteSetting.data_explorer_enabled = true
+      SiteSetting.data_explorer_ai_queries_enabled = true
+
+      ai_features_page.visit
+      expect(page).to have_content("Data Explorer")
+      expect(page).to have_content("Query Generation")
+    end
+
+    it "hides the data explorer module when the plugin is disabled" do
+      SiteSetting.data_explorer_enabled = false
+
+      ai_features_page.visit
+      expect(page).to have_no_content("Data Explorer")
+    end
+  end
 end

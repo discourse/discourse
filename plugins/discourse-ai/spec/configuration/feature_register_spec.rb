@@ -1,20 +1,57 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Configuration::Feature do
-  before { SiteSetting.data_explorer_enabled = true }
+  fab!(:fake_plugin) do
+    plugin = Plugin::Instance.new
+    plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+    plugin
+  end
+
+  let(:fake_agent_class) do
+    Class.new(DiscourseAi::Agents::Agent) do
+      def tools
+        []
+      end
+
+      def temperature
+        0.2
+      end
+
+      def system_prompt
+        "You are a test agent."
+      end
+    end
+  end
+
+  before do
+    DiscoursePluginRegistry.register_external_ai_feature(
+      {
+        module_name: :test_plugin,
+        feature: :test_feature,
+        klass: fake_agent_class,
+        enabled_by_setting: nil,
+      },
+      fake_plugin,
+    )
+  end
+
+  after do
+    DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
+      entry[:value][:module_name] == :test_plugin
+    end
+  end
 
   describe ".all with filtered registry" do
-    it "includes features from registered external AI features" do
+    it "includes features from the external AI features registry" do
       all_features = described_class.all
-      de_feature = all_features.find { |f| f.name == "query_generation" }
-
-      expect(de_feature).to be_present
+      test_feature = all_features.find { |f| f.name == "test_feature" }
+      expect(test_feature).to be_present
     end
 
-    it "finds registered features by agent_id" do
-      agent_id = -(Zlib.crc32("data_explorer_query_generation") % 1_000_000 + 1_000_000)
-      found = described_class.find_features_using(agent_id: agent_id)
-      expect(found.map(&:name)).to include("query_generation")
+    it "assigns the correct agent setting name" do
+      all_features = described_class.all
+      test_feature = all_features.find { |f| f.name == "test_feature" }
+      expect(test_feature.agent_setting).to eq("test_plugin_test_feature_agent")
     end
   end
 end
