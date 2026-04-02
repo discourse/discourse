@@ -11,7 +11,7 @@ acceptance("client-error-handler service", function (needs) {
 
   test("displays route-loading errors caused by themes", async function (assert) {
     const fakeError = new Error("Something bad happened");
-    fakeError.stack = "assets/js/plugins/fake-plugin_main-faw0x1gl.digested.js";
+    fakeError.stack = "assets/js/plugins/fake-plugin_main-faw0a1gl.digested.js";
 
     const topicRoute = getOwner(this).lookup("route:topic");
     Sinon.stub(topicRoute, "model").throws(fakeError);
