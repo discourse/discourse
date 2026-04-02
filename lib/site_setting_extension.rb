@@ -592,9 +592,9 @@ module SiteSettingExtension
         upcoming_change_default_overrides.each do |setting_name, override|
           if UpcomingChanges.enabled?(override[:upcoming_change])
             defaults.activate_upcoming_change_override(override[:upcoming_change])
-            current[setting_name] = override[:new_default] if !setting_modified_from_default?(
-              setting_name,
-            )
+            if !setting_modified_from_default?(setting_name)
+              current[setting_name] = override[:new_default]
+            end
           else
             defaults.deactivate_upcoming_change_override(override[:upcoming_change])
           end
@@ -763,10 +763,27 @@ module SiteSettingExtension
     modified[name] = current[name]
 
     if UpcomingChanges.exists?(name)
+      # If the upcoming change is enabled
       if current[name]
         defaults.activate_upcoming_change_override(name)
       else
         defaults.deactivate_upcoming_change_override(name)
+      end
+
+      # Similar to what we do in refresh!, but we are being more reactive here.
+      # If the admin enables/disables an upcoming change we need to make sure
+      # the overridden default is used, otherwise we fall back to the old default,
+      # but only if the admin hasn't modified the target setting thesmelves.
+      upcoming_change_default_overrides.each do |setting_name, override|
+        next if override[:upcoming_change] != name.to_sym
+        next if setting_modified_from_default?(setting_name)
+
+        # If the upcoming change is enabled
+        if current[name]
+          current[setting_name] = override[:new_default]
+        else
+          current[setting_name] = defaults.get(name, default_locale)
+        end
       end
     end
 

@@ -1901,6 +1901,26 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
+    context "when the linked upcoming change is enabled via add_override!" do
+      it "immediately applies the override default without needing refresh!" do
+        settings.add_override!(:enable_reactions_by_default, true)
+        expect(settings.reactions_enabled).to eq(true)
+      end
+
+      it "immediately reverts the override default when disabled" do
+        settings.add_override!(:enable_reactions_by_default, true)
+        expect(settings.reactions_enabled).to eq(true)
+        settings.add_override!(:enable_reactions_by_default, false)
+        expect(settings.reactions_enabled).to eq(false)
+      end
+
+      it "does not override a manually set target setting value" do
+        settings.add_override!(:reactions_enabled, false)
+        settings.add_override!(:enable_reactions_by_default, true)
+        expect(settings.reactions_enabled).to eq(false)
+      end
+    end
+
     describe "all_settings effective default" do
       context "when the linked upcoming change is active" do
         before do
