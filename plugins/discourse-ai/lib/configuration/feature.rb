@@ -397,19 +397,18 @@ module DiscourseAi
       attr_reader :name, :agent_setting, :module_id, :module_name
 
       def enabled?
-        @enabled_by_setting.blank? || SiteSetting.get(@enabled_by_setting)
+        return true if @enabled_by_setting.blank?
+        return false unless SiteSetting.respond_to?(@enabled_by_setting)
+        SiteSetting.get(@enabled_by_setting)
       end
 
       def agent_ids
         if @agent_ids_lookup
           @agent_ids_lookup.call
         else
+          return [] unless SiteSetting.respond_to?(agent_setting)
           id = SiteSetting.get(agent_setting).to_i
-          if id != 0
-            [id]
-          else
-            []
-          end
+          id != 0 ? [id] : []
         end
       end
     end

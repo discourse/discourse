@@ -151,10 +151,7 @@ module DiscourseAi
         end
 
         def external_agent_id(agent_klass)
-          -(
-            Digest::SHA1.hexdigest(Module.instance_method(:name).bind_call(agent_klass)).to_i(16) %
-              1_000_000 + 1_000_000
-          )
+          -(Digest::SHA1.hexdigest(agent_klass.to_s).to_i(16) % 1_000_000 + 1_000_000)
         end
 
         private
