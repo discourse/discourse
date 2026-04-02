@@ -60,7 +60,8 @@ class StaticController < ApplicationController
       return redirect_to path("/")
     end
 
-    if SiteSetting.login_required? && current_user.nil? && %w[faq guidelines].include?(params[:id])
+    if SiteSetting.login_required? && current_user.nil? &&
+         %w[faq guidelines rules conduct].include?(params[:id])
       return redirect_to path("/login")
     end
 
