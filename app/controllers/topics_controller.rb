@@ -418,13 +418,13 @@ class TopicsController < ApplicationController
         end
 
         if category
-          topic_tags = resolve_tag_names(topic)
+          topic_tag_names = resolve_tag_names(topic)
 
-          if topic_tags.present?
+          if topic_tag_names.present?
             allowed_tags =
               DiscourseTagging.filter_allowed_tags(guardian, category: category).map(&:name)
 
-            invalid_tags = topic_tags - allowed_tags
+            invalid_tags = topic_tag_names - allowed_tags
 
             # Do not raise an error on a topic's hidden tags when not modifying tags
             if !params.has_key?(:tags)
@@ -1334,7 +1334,7 @@ class TopicsController < ApplicationController
       elsif params.has_key?(:tags)
         []
       else
-        Tag.where(id: topic.tag_ids).pluck(:name)
+        topic.tags.pluck(:name)
       end
   end
 

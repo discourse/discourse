@@ -13,6 +13,7 @@ import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -1147,18 +1148,7 @@ export default class Composer extends RestModel {
       let val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
         if (f === "tags" && Array.isArray(val)) {
-          // Send tag objects with IDs so the backend can resolve
-          // original names, avoiding issues with localized tag names
-          val = val.map((t) => {
-            if (typeof t === "string") {
-              return { name: t };
-            }
-            const numId = Number(t.id);
-            if (Number.isInteger(numId) && numId > 0) {
-              return { id: numId, name: t.name };
-            }
-            return { name: t.name };
-          });
+          val = serializeTags(val);
         }
         set(dest, f, val);
       }
