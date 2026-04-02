@@ -15,7 +15,7 @@ describe "bin/qunit" do
       status: status.exitstatus,
       args: parsed_args,
       env: parsed_env,
-      launched_unicorn: out.include?("[dry-run] skipping unicorn startup"),
+      launched_server: out.include?("[dry-run] skipping server startup"),
     )
   end
 
@@ -28,7 +28,7 @@ describe "bin/qunit" do
   it "runs all core tests by default" do
     result = run
     expect(result.status).to eq(0)
-    expect(result.launched_unicorn).to eq(false)
+    expect(result.launched_server).to eq(false)
 
     expect(result.args).to match(
       [
@@ -53,7 +53,7 @@ describe "bin/qunit" do
   it "allows running specific file" do
     result = run(core_test_file)
     expect(result.status).to eq(0)
-    expect(result.launched_unicorn).to eq(false)
+    expect(result.launched_server).to eq(false)
 
     expect(result.args).to match(
       [
@@ -80,7 +80,7 @@ describe "bin/qunit" do
   it "allows running all plugin tests" do
     result = run("--target", "plugins")
     expect(result.status).to eq(0)
-    expect(result.launched_unicorn).to eq(false)
+    expect(result.launched_server).to eq(false)
 
     expect(result.args).to match(
       [
@@ -104,7 +104,7 @@ describe "bin/qunit" do
   it "allows running tests for multiple plugins" do
     result = run("--target", "chat,discourse-local-dates")
     expect(result.status).to eq(0)
-    expect(result.launched_unicorn).to eq(false)
+    expect(result.launched_server).to eq(false)
 
     expect(result.args).to match(
       [
@@ -128,7 +128,7 @@ describe "bin/qunit" do
   it "allows running specific plugin test file" do
     result = run(chat_test_file)
     expect(result.status).to eq(0)
-    expect(result.launched_unicorn).to eq(false)
+    expect(result.launched_server).to eq(false)
 
     expect(result.args).to match(
       [
@@ -163,9 +163,9 @@ describe "bin/qunit" do
     )
   end
 
-  it "launches unicorn when using --standalone" do
+  it "launches server when using --standalone" do
     result = run("--standalone")
     expect(result.status).to eq(0)
-    expect(result.launched_unicorn).to eq(true)
+    expect(result.launched_server).to eq(true)
   end
 end

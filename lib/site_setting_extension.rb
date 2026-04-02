@@ -338,12 +338,12 @@ module SiteSettingExtension
     filter_area: nil
   )
     locale_setting_hash = {
-      setting: "default_locale",
-      humanized_name: humanized_names("default_locale"),
+      setting: :default_locale,
+      humanized_name: humanized_names(:default_locale),
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
       category: "required",
       primary_area: "localization",
-      description: description("default_locale"),
+      description: description(:default_locale),
       type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,
       value: self.default_locale,

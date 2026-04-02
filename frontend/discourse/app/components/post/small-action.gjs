@@ -13,6 +13,7 @@ import { autoUpdatingRelativeAge, relativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
+import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import PostA11yHeading from "./a11y-heading";
 
@@ -109,12 +110,11 @@ export default class PostSmallAction extends Component {
 
     let who = "";
     if (this.who) {
+      const escapedWho = escapeExpression(this.who);
       if (this.isGroupAction) {
-        who = `<a class="mention-group" href="/g/${this.who}">@${this.who}</a>`;
+        who = `<a class="mention-group" href="/g/${encodeURIComponent(this.who)}">@${escapedWho}</a>`;
       } else {
-        who = `<a class="mention" href="${userPath(this.who)}">@${
-          this.who
-        }</a>`;
+        who = `<a class="mention" href="${userPath(this.who)}">@${escapedWho}</a>`;
       }
     }
 

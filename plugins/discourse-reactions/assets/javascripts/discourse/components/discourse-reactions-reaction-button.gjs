@@ -38,11 +38,15 @@ export default class ReactionsReactionButton extends Component {
     this.args.cancelCollapse();
 
     const likeAction = this.args.post.likeAction;
+    if (!likeAction?.canToggle) {
+      return;
+    }
+
     const currentUserReaction = this.args.post.current_user_reaction;
     if (
       currentUserReaction &&
       !currentUserReaction.can_undo &&
-      (!likeAction || isBlank(likeAction.can_undo))
+      isBlank(likeAction.can_undo)
     ) {
       return;
     }

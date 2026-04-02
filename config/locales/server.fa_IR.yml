@@ -1033,6 +1033,7 @@ fa_IR:
     read: "خواندن"
     read_write: "خواندن/نوشتن"
     instructions: 'ما به تازگی یک کلید API کاربر جدید برای استفاده شما با "%{application_name}" ایجاد کردیم. لطفاً کلید زیر را در برنامه خود جایگذاری کنید:'
+    copied: "کپی شد!"
     otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
     otp_confirmation:
       confirm_title: ورود به %{site_name}

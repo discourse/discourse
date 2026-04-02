@@ -65,6 +65,7 @@ module DiscourseAi
             ((:start_date IS NULL OR p.created_at > :start_date) AND (:end_date IS NULL OR p.created_at < :end_date))
             AND p.deleted_at IS NULL
             AND t.deleted_at IS NULL
+            AND (t.category_id IS NULL OR t.category_id IN (:allowed_category_ids))
           ORDER BY p.created_at DESC
           LIMIT :limit OFFSET :offset
         SQL
@@ -74,6 +75,7 @@ module DiscourseAi
             threshold: threshold,
             limit: limit + 1,
             offset: offset,
+            allowed_category_ids: guardian.allowed_category_ids,
           )
 
         has_more = posts.length > limit

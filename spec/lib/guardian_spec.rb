@@ -2518,6 +2518,14 @@ RSpec.describe Guardian do
       expect(moderator_guardian.can_export_entity?("screened_ip")).to be_truthy
     end
 
+    it "only allows admins to export admin-only reports" do
+      expect(user_guardian.can_export_entity?("report", nil, { name: "top_uploads" })).to be_falsey
+      expect(
+        moderator_guardian.can_export_entity?("report", nil, { name: "top_uploads" }),
+      ).to be_falsey
+      expect(admin_guardian.can_export_entity?("report", nil, { name: "top_uploads" })).to be_truthy
+    end
+
     it "does not allow anonymous to export" do
       expect(anonymous_guardian.can_export_entity?("user_archive")).to be_falsey
     end

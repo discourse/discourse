@@ -58,8 +58,6 @@ pt_BR:
         description: "Destaque a resposta e ajude as outras pessoas ao usar o botão de solução abaixo para responder corretamente."
       notification:
         title: "sua postagem foi marcada como uma solução"
-      category_type_support:
-        title: "Apoio"
     topic_statuses:
       solved:
         help: "Este tópico tem uma solução"

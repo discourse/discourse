@@ -55,6 +55,12 @@
   opacity: 0.3;
 }
 
+.fc-recurring-event .fc-event-title .d-icon {
+  margin-right: 0.25em;
+  font-size: var(--font-down-2);
+  opacity: 0.8;
+}
+
 .fc-dayGridMonth-view {
   .fc-event-time {
     overflow: visible !important;

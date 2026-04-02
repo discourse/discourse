@@ -1154,6 +1154,7 @@ hu:
     permissions_header: 'Ez lehetővé teszi a(z) "%{application_name}" számára a következőket:'
     redirect_warning: "Az engedélyezés átirányít a következőre:"
     instructions: 'Létrehoztunk egy új felhasználói API-kulcsot, amelyet a "%{application_name} applikációhoz használhat, kérjük, illessze be a következő kulcsot az alkalmazásába:'
+    copied: "Másolva!"
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
       confirm_title: Tovább a(z) %{site_name} oldalra

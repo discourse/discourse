@@ -14,6 +14,7 @@ describe Jobs::LocalizeTopics do
     SiteSetting.content_localization_supported_locales = locales.join("|")
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.ai_translation_backfill_max_age_days = 100
+    SiteSetting.ai_translation_target_categories = topic.category_id.to_s
   end
 
   it "does nothing when translator is disabled" do
@@ -111,7 +112,7 @@ describe Jobs::LocalizeTopics do
     end
 
     it "scenario 2: returns topic with locale 'es' if localizations for en/ja/de do not exist" do
-      topic = Fabricate(:topic, locale: "es")
+      topic = Fabricate(:topic, locale: "es", category: self.topic.category)
 
       DiscourseAi::Translation::TopicLocalizer
         .expects(:localize)
@@ -142,7 +143,7 @@ describe Jobs::LocalizeTopics do
     end
 
     it "scenario 3: returns topic with locale 'en' if ja/de localization does not exist" do
-      topic = Fabricate(:topic, locale: "en")
+      topic = Fabricate(:topic, locale: "en", category: self.topic.category)
 
       DiscourseAi::Translation::TopicLocalizer
         .expects(:localize)
@@ -166,7 +167,7 @@ describe Jobs::LocalizeTopics do
     end
 
     it "scenario 4: skips topic with locale 'en' if all localizations exist" do
-      topic = Fabricate(:topic, locale: "en")
+      topic = Fabricate(:topic, locale: "en", category: self.topic.category)
       Fabricate(:topic_localization, topic: topic, locale: "ja")
       Fabricate(:topic_localization, topic: topic, locale: "de")
 
@@ -176,7 +177,7 @@ describe Jobs::LocalizeTopics do
     end
 
     it "scenario 5: skips topic that already have localizations in similar language variant" do
-      topic = Fabricate(:topic, locale: "en")
+      topic = Fabricate(:topic, locale: "en", category: self.topic.category)
       Fabricate(:topic_localization, topic: topic, locale: "ja_JP")
       Fabricate(:topic_localization, topic: topic, locale: "de_DE")
 
@@ -186,10 +187,11 @@ describe Jobs::LocalizeTopics do
     end
   end
 
-  describe "with public content limitation" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_topic) { Fabricate(:topic, category: private_category, locale: "es") }
-    fab!(:public_topic) { Fabricate(:topic, locale: "es") }
+  describe "with target categories" do
+    fab!(:target_category, :category)
+    fab!(:non_target_category, :category)
+    fab!(:target_topic) { Fabricate(:topic, category: target_category, locale: "es") }
+    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category, locale: "es") }
 
     fab!(:personal_pm_topic) { Fabricate(:private_message_topic, locale: "es") }
 
@@ -200,16 +202,17 @@ describe Jobs::LocalizeTopics do
     before do
       SiteSetting.default_locale = "ja"
       SiteSetting.content_localization_supported_locales = "ja"
+      SiteSetting.ai_translation_target_categories = target_category.id.to_s
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is true" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    context "when pm_translation_scope is none" do
+      before { SiteSetting.ai_translation_personal_messages = "none" }
 
-      it "only processes topics from public categories" do
+      it "only processes topics from target categories" do
         DiscourseAi::Translation::TopicLocalizer
           .expects(:localize)
           .with(
-            public_topic,
+            target_topic,
             "ja",
             has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
           )
@@ -217,7 +220,7 @@ describe Jobs::LocalizeTopics do
 
         DiscourseAi::Translation::TopicLocalizer
           .expects(:localize)
-          .with(private_topic, any_parameters)
+          .with(non_target_topic, any_parameters)
           .never
 
         DiscourseAi::Translation::TopicLocalizer
@@ -234,23 +237,14 @@ describe Jobs::LocalizeTopics do
       end
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is false" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = false }
+    context "when pm_translation_scope is group" do
+      before { SiteSetting.ai_translation_personal_messages = "group" }
 
-      it "processes public topics, private topics and group PMs but not personal PMs" do
+      it "processes target topics and group PMs but not personal PMs" do
         DiscourseAi::Translation::TopicLocalizer
           .expects(:localize)
           .with(
-            public_topic,
-            "ja",
-            has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
-          )
-          .once
-
-        DiscourseAi::Translation::TopicLocalizer
-          .expects(:localize)
-          .with(
-            private_topic,
+            target_topic,
             "ja",
             has_entries(topic_title_llm_model: anything, post_raw_llm_model: anything),
           )
@@ -267,6 +261,11 @@ describe Jobs::LocalizeTopics do
 
         DiscourseAi::Translation::TopicLocalizer
           .expects(:localize)
+          .with(non_target_topic, any_parameters)
+          .never
+
+        DiscourseAi::Translation::TopicLocalizer
+          .expects(:localize)
           .with(personal_pm_topic, any_parameters)
           .never
 
@@ -276,8 +275,12 @@ describe Jobs::LocalizeTopics do
   end
 
   describe "with max age limit" do
-    fab!(:old_topic) { Fabricate(:topic, locale: "es", created_at: 10.days.ago) }
-    fab!(:new_topic) { Fabricate(:topic, locale: "es", created_at: 2.days.ago) }
+    fab!(:old_topic) do
+      Fabricate(:topic, locale: "es", created_at: 10.days.ago, category: topic.category)
+    end
+    fab!(:new_topic) do
+      Fabricate(:topic, locale: "es", created_at: 2.days.ago, category: topic.category)
+    end
 
     before { SiteSetting.ai_translation_backfill_max_age_days = 5 }
 

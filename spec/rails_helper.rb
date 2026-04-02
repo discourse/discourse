@@ -425,16 +425,15 @@ RSpec.configure do |config|
         (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
-    module IgnoreUnicornCapturedErrors
+    module IgnoreServerCapturedErrors
       def raise_server_error!
         super
       rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
-        # Ignore these exceptions - caused by client. Handled by unicorn in dev/prod
-        # https://github.com/defunkt/unicorn/blob/d947cb91cf/lib/unicorn/http_server.rb#L570-L573
+        # Ignore these exceptions - caused by client. Handled by the app server in dev/prod
       end
     end
 
-    Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
+    Capybara::Session.class_eval { prepend IgnoreServerCapturedErrors }
 
     module CapybaraTimeoutExtension
       class CapybaraTimedOut < StandardError

@@ -14,13 +14,9 @@ hy:
     chat_integration:
       menu_title: "Զրույցի ինտեգրումներ"
       settings: "Կարգավորումներ"
-      more_providers: "Ավելին"
       channels_with_errors: "Այս մատակարարի որոշ ալիքներ ձախողվել են վերջին անգամ հաղորդագրությունները ուղարկելիս: Սեղմեք սխալի պատկերակ(ներ)ին՝ ավելին իմանալու համար:"
       group_mention_template: "Նշումներ՝ @%{name}"
       group_message_template: "Հաղորդագրություն դեպի՝ @%{name}"
-      choose_group: "(Ընտրեք խումբ)"
-      all_categories: "(Բոլոր կատեգորիաները)"
-      all_tags: "(Բոլոր թեգերը)"
       delete_channel: "Ջնջել"
       test_channel: "Փորձարկել"
       edit_channel: "Խմբագրել"

@@ -6277,6 +6277,11 @@ pl_PL:
           beta: "Beta"
           stable: "Stabilna"
           permanent: "Stała"
+        status_descriptions:
+          experimental: "Funkcja jest na wczesnym etapie rozwoju i może ulec znacznym zmianom lub zostać wycofana. Może nie być w pełni kompatybilna z innymi funkcjami."
+          alpha: "Jest on aktywnie rozwijany i udoskonalany. Funkcjonalność może ulec zmianie i może nie być w pełni dopracowany, ale jest wystarczająco stabilny, aby go wypróbować."
+          beta: "Rozwiązanie jest już prawie ukończone i dostępne do szybkiego wdrożenia. Możliwe są jednak drobne zmiany."
+          stable: "To jest kompletne i dobrze obsługiwane. Wkrótce będzie dostępne na wszystkich stronach Discourse."
         impact_roles:
           admins: "Administratorzy"
           moderators: "Moderatorzy"

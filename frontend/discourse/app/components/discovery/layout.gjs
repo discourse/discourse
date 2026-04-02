@@ -1,92 +1,146 @@
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 
-const Layout = <template>
-  <DiscourseBanner />
-  {{#if @model.category}}
-    <CategoryReadOnlyBanner
-      @category={{@model.category}}
-      @readOnly={{@createTopicDisabled}}
-    />
+/* Renders its content inside a <div> with the given class when @when is true,
+   or renders the content directly when false. */
+const ConditionalWrap = <template>
+  {{#if @when}}
+    <div class={{@class}}>{{yield}}</div>
+  {{else}}
+    {{yield}}
   {{/if}}
+</template>;
 
-  <PluginOutlet
-    @name="discovery-list-controls-above"
-    @connectorTagName="div"
-    @outletArgs={{lazyHash
-      category=@model.category
-      tag=@model.tag
-      toggleTagInfo=@toggleTagInfo
-    }}
-  />
+export default class Layout extends Component {
+  @service blocks;
 
-  <div class="list-controls">
-    <PluginOutlet
-      @name="discovery-navigation-bar-above"
-      @connectorTagName="div"
-      @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-    />
-    <div class="container">
-      {{yield to="navigation"}}
-    </div>
-  </div>
+  get hasSidebarLayout() {
+    return this.blocks.hasLayout("sidebar-discovery");
+  }
 
-  <PluginOutlet
-    @name="discovery-above"
-    @connectorTagName="div"
-    @outletArgs={{lazyHash
-      category=@model.category
-      tag=@model.tag
-      model=@model
-    }}
-  />
+  <template>
+    <ConditionalWrap @when={{this.hasSidebarLayout}} @class="discovery-layout">
+      <DiscourseBanner />
 
-  <div class={{concatClass "container list-container" @listClass}}>
-    <div class="row full-width">
-      <div id="header-list-area">
-        {{yield to="header"}}
+      <ConditionalWrap
+        @when={{this.hasSidebarLayout}}
+        @class="discovery-layout__category-header"
+      >
+        {{#if @model.category}}
+          <CategoryReadOnlyBanner
+            @category={{@model.category}}
+            @readOnly={{@createTopicDisabled}}
+          />
+        {{/if}}
+      </ConditionalWrap>
+
+      <ConditionalWrap
+        @when={{this.hasSidebarLayout}}
+        @class="discovery-layout__navigation"
+      >
         <PluginOutlet
-          @name="header-list-container-bottom"
-          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+          @name="discovery-list-controls-above"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash
+            category=@model.category
+            tag=@model.tag
+            toggleTagInfo=@toggleTagInfo
+          }}
         />
-      </div>
-    </div>
-    <div class="row full-width">
+        <div class="list-controls">
+          <PluginOutlet
+            @name="discovery-navigation-bar-above"
+            @connectorTagName="div"
+            @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+          />
+          <div class="container">
+            {{yield to="navigation"}}
+          </div>
+        </div>
+      </ConditionalWrap>
 
-      <PluginOutlet
-        @name="before-list-area"
-        @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-      />
-
-      <div id="list-area">
+      <ConditionalWrap
+        @when={{this.hasSidebarLayout}}
+        @class="discovery-layout__content"
+      >
         <PluginOutlet
-          @name="discovery-list-area"
+          @name="discovery-above"
+          @connectorTagName="div"
           @outletArgs={{lazyHash
             category=@model.category
             tag=@model.tag
             model=@model
           }}
-          @defaultGlimmer={{true}}
+        />
+
+        <ConditionalWrap
+          @when={{this.hasSidebarLayout}}
+          @class="discovery-layout__list"
         >
-          <PluginOutlet
-            @name="discovery-list-container-top"
-            @connectorTagName="span"
-            @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-          />
-          {{yield to="list"}}
-        </PluginOutlet>
-      </div>
-    </div>
-  </div>
+          <div class={{concatClass "container list-container" @listClass}}>
+            <div class="row full-width">
+              <div id="header-list-area">
+                {{yield to="header"}}
+                <PluginOutlet
+                  @name="header-list-container-bottom"
+                  @outletArgs={{lazyHash
+                    category=@model.category
+                    tag=@model.tag
+                  }}
+                />
+              </div>
+            </div>
+            <div class="row full-width">
+              <PluginOutlet
+                @name="before-list-area"
+                @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+              />
+              <div id="list-area">
+                <PluginOutlet
+                  @name="discovery-list-area"
+                  @outletArgs={{lazyHash
+                    category=@model.category
+                    tag=@model.tag
+                    model=@model
+                  }}
+                  @defaultGlimmer={{true}}
+                >
+                  <PluginOutlet
+                    @name="discovery-list-container-top"
+                    @connectorTagName="span"
+                    @outletArgs={{lazyHash
+                      category=@model.category
+                      tag=@model.tag
+                    }}
+                  />
+                  {{yield to="list"}}
+                </PluginOutlet>
+              </div>
+            </div>
+          </div>
+        </ConditionalWrap>
 
-  <PluginOutlet
-    @name="discovery-below"
-    @connectorTagName="div"
-    @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-  />
-</template>;
+        {{#if this.hasSidebarLayout}}
+          <div class="discovery-layout__sidebar">
+            <BlockOutlet
+              @name="sidebar-discovery"
+              @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+            />
+          </div>
+        {{/if}}
 
-export default Layout;
+        <PluginOutlet
+          @name="discovery-below"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+        />
+      </ConditionalWrap>
+    </ConditionalWrap>
+  </template>
+}

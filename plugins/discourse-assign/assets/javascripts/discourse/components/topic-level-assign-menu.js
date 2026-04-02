@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { trustHTML } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { iconHTML } from "discourse/lib/icon-library";
+import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 
@@ -147,7 +148,7 @@ function unassignFromTopicButton(topic, prioritize_full_name_in_ux) {
     ? avatarHtml(topic.assigned_to_user, "small")
     : iconHTML("user-xmark");
   const label = i18n("discourse_assign.topic_level_menu.unassign_from_topic", {
-    username,
+    username: escapeExpression(username),
   });
 
   return {
@@ -179,14 +180,15 @@ function unassignFromPostButton(postId, assignment) {
     icon = iconHTML("group-times");
   }
 
+  const escapedAssignee = escapeExpression(assignee);
   const label = i18n("discourse_assign.topic_level_menu.unassign_from_post", {
-    assignee,
+    assignee: escapedAssignee,
     post_number: assignment.post_number,
   });
   const dataName = i18n(
     "discourse_assign.topic_level_menu.unassign_from_post_help",
     {
-      assignee,
+      assignee: escapedAssignee,
       post_number: assignment.post_number,
     }
   );

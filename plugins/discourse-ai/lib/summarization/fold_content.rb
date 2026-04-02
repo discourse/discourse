@@ -46,10 +46,7 @@ module DiscourseAi
           if summary
             @existing_summary = summary
 
-            if summary.original_content_sha != latest_sha ||
-                 content_to_summarize.any? { |cts| cts[:last_version_at] > summary.updated_at }
-              summary.mark_as_outdated
-            end
+            summary.mark_as_outdated if outdated_summary?(summary)
           end
         end
         @existing_summary
@@ -110,6 +107,18 @@ module DiscourseAi
 
       def latest_sha
         @latest_sha ||= AiSummary.build_sha(content_to_summarize.map { |c| c[:id] }.join)
+      end
+
+      def outdated_summary?(summary)
+        if (fingerprint = strategy.summary_fingerprint)
+          return true if summary.original_content_sha != fingerprint[:original_content_sha]
+          return true if fingerprint[:latest_version_at]&.> summary.updated_at
+
+          return false
+        end
+
+        summary.original_content_sha != latest_sha ||
+          content_to_summarize.any? { |cts| cts[:last_version_at] > summary.updated_at }
       end
 
       # @param items { Array<Hash> } - Content to summarize. Structure will be: { poster: who wrote the content, id: a way to order content, text: content }
