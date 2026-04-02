@@ -150,8 +150,11 @@ module DiscourseAi
           tools
         end
 
-        def external_agent_id(module_name, feature)
-          -(Zlib.crc32("#{module_name}_#{feature}") % 1_000_000 + 1_000_000)
+        def external_agent_id(agent_klass)
+          -(
+            Digest::SHA1.hexdigest(Module.instance_method(:name).bind_call(agent_klass)).to_i(16) %
+              1_000_000 + 1_000_000
+          )
         end
 
         private
@@ -168,9 +171,10 @@ module DiscourseAi
           configs.each do |config|
             agent_klass = config[:agent_klass]
             next if agent_klass.nil?
+            next if external_agents.key?(agent_klass)
+            next if builtin_system_agents.key?(agent_klass)
 
-            agent_id = external_agent_id(config[:module_name], config[:feature])
-            external_agents[agent_klass] = agent_id
+            external_agents[agent_klass] = config[:agent_id]
 
             agent_klass.new.tools.each do |tool_klass|
               tool_name = tool_klass.to_s.split("::").last
@@ -188,7 +192,12 @@ module DiscourseAi
         def external_feature_configs
           return [] if !DiscoursePluginRegistry.respond_to?(:_raw_external_ai_features)
 
-          DiscoursePluginRegistry._raw_external_ai_features.pluck(:value)
+          DiscoursePluginRegistry
+            ._raw_external_ai_features
+            .pluck(:value)
+            .each do |config|
+              config[:agent_id] ||= external_agent_id(config[:agent_klass]) if config[:agent_klass]
+            end
         end
 
         def builtin_system_agents

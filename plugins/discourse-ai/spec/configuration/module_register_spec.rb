@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+unless defined?(FakeExternalAgent)
+  class FakeExternalAgent < DiscourseAi::Agents::Agent
+    def tools
+      []
+    end
+
+    def system_prompt
+      "Test agent"
+    end
+  end
+end
+
 describe DiscourseAi::Configuration::Module do
   fab!(:fake_plugin) do
     plugin = Plugin::Instance.new
@@ -7,28 +19,12 @@ describe DiscourseAi::Configuration::Module do
     plugin
   end
 
-  let(:fake_agent_class) do
-    Class.new(DiscourseAi::Agents::Agent) do
-      def tools
-        []
-      end
-
-      def temperature
-        0.2
-      end
-
-      def system_prompt
-        "You are a test agent."
-      end
-    end
-  end
-
   before do
     DiscoursePluginRegistry.register_external_ai_feature(
       {
         module_name: :test_plugin,
         feature: :test_feature,
-        agent_klass: fake_agent_class,
+        agent_klass: FakeExternalAgent,
         enabled_by_setting: nil,
       },
       fake_plugin,

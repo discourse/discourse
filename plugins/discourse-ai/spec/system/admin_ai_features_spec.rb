@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+unless defined?(FakeExternalAgent)
+  class FakeExternalAgent < DiscourseAi::Agents::Agent
+    def tools
+      []
+    end
+
+    def system_prompt
+      "Test agent"
+    end
+  end
+end
+
 RSpec.describe "Admin AI features configuration" do
   fab!(:admin)
   fab!(:llm_model)
@@ -81,20 +93,34 @@ RSpec.describe "Admin AI features configuration" do
   end
 
   context "with external AI features" do
-    it "shows the data explorer module when the plugin is enabled" do
-      SiteSetting.data_explorer_enabled = true
-      SiteSetting.data_explorer_ai_queries_enabled = true
-
-      ai_features_page.visit
-      expect(page).to have_content("Data Explorer")
-      expect(page).to have_content("Query Generation")
+    let(:fake_plugin) do
+      plugin = Plugin::Instance.new
+      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin
     end
 
-    it "hides the data explorer module when the plugin is disabled" do
-      SiteSetting.data_explorer_enabled = false
+    before do
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: :test_external,
+          feature: :test_feature,
+          agent_klass: FakeExternalAgent,
+          enabled_by_setting: nil,
+        },
+        fake_plugin,
+      )
+    end
 
+    after do
+      DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
+        entry[:value][:module_name] == :test_external
+      end
+    end
+
+    it "shows external modules from the registry" do
       ai_features_page.visit
-      expect(page).to have_no_content("Data Explorer")
+      expect(page).to have_content("test_external")
+      expect(page).to have_content("test_feature")
     end
   end
 end

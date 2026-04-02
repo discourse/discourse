@@ -1,5 +1,15 @@
 #frozen_string_literal: true
 
+class FakeExternalAgent < DiscourseAi::Agents::Agent
+  def tools
+    []
+  end
+
+  def system_prompt
+    "Test agent"
+  end
+end
+
 class TestAgent < DiscourseAi::Agents::Agent
   def tools
     [
@@ -282,6 +292,84 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Discover,
         DiscourseAi::Agents::GithubHelper,
       )
+    end
+  end
+
+  describe ".sync_external_registry!" do
+    fab!(:fake_plugin) do
+      plugin = Plugin::Instance.new
+      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
+        entry[:value][:module_name] == :test_module
+      end
+      described_class.instance_variable_set(:@external_registry_signature, nil)
+      described_class.instance_variable_set(:@system_agents, nil)
+      described_class.instance_variable_set(:@system_agents_by_id, nil)
+    end
+
+    it "registers one agent when two features share the same agent_klass" do
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: :test_module,
+          feature: :feature_one,
+          agent_klass: FakeExternalAgent,
+          enabled_by_setting: nil,
+        },
+        fake_plugin,
+      )
+
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: :test_module,
+          feature: :feature_two,
+          agent_klass: FakeExternalAgent,
+          enabled_by_setting: nil,
+        },
+        fake_plugin,
+      )
+
+      agents = described_class.system_agents
+      matching = agents.select { |klass, _| klass == FakeExternalAgent }
+      expect(matching.size).to eq(1)
+
+      expected_id = described_class.external_agent_id(FakeExternalAgent)
+      expect(matching.values.first).to eq(expected_id)
+
+      agents.each do |klass, id|
+        AiAgent.find_or_create_by!(id: id) do |agent|
+          agent.name = "test-#{id}"
+          agent.description = "test"
+          agent.system_prompt = "test"
+          agent.system = true
+          agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
+        end
+      end
+
+      expect(AiAgent.where(id: expected_id).count).to eq(1)
+    end
+
+    it "does not overwrite a builtin agent when registered as an external agent_klass" do
+      builtin_id = described_class.system_agents[DiscourseAi::Agents::SqlHelper]
+
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: :test_module,
+          feature: :sql_feature,
+          agent_klass: DiscourseAi::Agents::SqlHelper,
+          enabled_by_setting: nil,
+        },
+        fake_plugin,
+      )
+
+      agents = described_class.system_agents
+      expect(agents[DiscourseAi::Agents::SqlHelper]).to eq(builtin_id)
+
+      external_id = described_class.external_agent_id(DiscourseAi::Agents::SqlHelper)
+      expect(AiAgent.where(id: external_id).count).to eq(0)
     end
   end
 

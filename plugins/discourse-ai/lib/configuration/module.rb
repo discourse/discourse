@@ -43,7 +43,7 @@ module DiscourseAi
 
       class << self
         def external_module_id(module_name)
-          Zlib.crc32(module_name.to_s) % 100_000 + 1000
+          Digest::SHA1.hexdigest(module_name.to_s).to_i(16) % 100_000 + 1000
         end
 
         def all
