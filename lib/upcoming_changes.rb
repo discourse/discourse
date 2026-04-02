@@ -380,7 +380,7 @@ module UpcomingChanges
   def self.find_related_default_override_for_change(change_setting_name)
     settings_provider
       .upcoming_change_default_overrides
-      .find { |_, override| override[:upcoming_change] == change_setting_name }
+      .find { |_, override| override[:upcoming_change] == change_setting_name.to_sym }
       &.first
   end
 end

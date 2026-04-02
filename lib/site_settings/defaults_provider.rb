@@ -28,11 +28,11 @@ class SiteSettings::DefaultsProvider
   end
 
   def activate_upcoming_change_override(upcoming_change_setting)
-    @active_upcoming_change_overrides.add(upcoming_change_setting)
+    @active_upcoming_change_overrides.add(upcoming_change_setting.to_sym)
   end
 
   def deactivate_upcoming_change_override(upcoming_change_setting)
-    @active_upcoming_change_overrides.delete(upcoming_change_setting)
+    @active_upcoming_change_overrides.delete(upcoming_change_setting.to_sym)
   end
 
   def db_all

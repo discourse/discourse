@@ -1234,7 +1234,7 @@ module SiteSettingExtension
       upcoming_change_default_override = opts[:upcoming_change_default_override]
       if upcoming_change_default_override.present?
         upcoming_change_default_overrides[name] = {
-          upcoming_change: upcoming_change_default_override[:upcoming_change],
+          upcoming_change: upcoming_change_default_override[:upcoming_change].to_sym,
           new_default: upcoming_change_default_override[:new_default],
         }
       end

@@ -151,4 +151,87 @@ RSpec.describe SiteSettings::DefaultsProvider do
       DiscoursePluginRegistry.reset!
     end
   end
+
+  describe "upcoming change default overrides" do
+    before do
+      settings.setting(:enable_upload_debug_mode, false)
+      settings.instance_variable_set(
+        :@upcoming_change_default_overrides,
+        {
+          enable_upload_debug_mode: {
+            new_default: true,
+            upcoming_change: :enable_upload_debug_mode_new_default,
+          },
+        },
+      )
+    end
+
+    describe ".all" do
+      context "when the upcoming change override is active" do
+        before do
+          settings.defaults.activate_upcoming_change_override(:enable_upload_debug_mode_new_default)
+        end
+
+        it "uses upcoming change default overrides by default" do
+          expect(settings.defaults.all[:enable_upload_debug_mode]).to eq(true)
+        end
+
+        context "when include_upcoming_changes_overrides is fasle" do
+          it "does not use upcoming change default overrides" do
+            expect(
+              settings.defaults.all(include_upcoming_changes_overrides: false)[
+                :enable_upload_debug_mode
+              ],
+            ).to eq(false)
+          end
+        end
+      end
+
+      context "when the upcoming change override is not active" do
+        before do
+          settings.defaults.deactivate_upcoming_change_override(
+            :enable_upload_debug_mode_new_default,
+          )
+        end
+
+        it "does not use upcoming change default overrides" do
+          expect(
+            settings.defaults.all(include_upcoming_changes_overrides: false)[
+              :enable_upload_debug_mode
+            ],
+          ).to eq(false)
+        end
+      end
+    end
+
+    describe ".upcoming_change_override_metadata" do
+      before do
+        settings.defaults.activate_upcoming_change_override(:enable_upload_debug_mode_new_default)
+      end
+
+      it "returns the upcoming change override metadata" do
+        expect(
+          settings.defaults.upcoming_change_override_metadata(:enable_upload_debug_mode),
+        ).to eq(
+          old_default: "false",
+          new_default: "true",
+          change_setting_name: :enable_upload_debug_mode_new_default,
+        )
+      end
+
+      context "when the upcoming change override is not active" do
+        before do
+          settings.defaults.deactivate_upcoming_change_override(
+            :enable_upload_debug_mode_new_default,
+          )
+        end
+
+        it "returns nil" do
+          expect(
+            settings.defaults.upcoming_change_override_metadata(:enable_upload_debug_mode),
+          ).to be_nil
+        end
+      end
+    end
+  end
 end
