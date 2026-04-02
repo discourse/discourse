@@ -8,10 +8,10 @@ class SiteSetting::Action::SimpleEmailSubjectToggled
   params { attribute :setting_enabled, :boolean }
 
   step :update_email_subject
-  only_if(:setting_enabled) { step :copy_translation_overrides }
+  only_if(:has_setting_enabled) { step :copy_translation_overrides }
   step :request_refresh
 
-  def setting_enabled?(params:)
+  def has_setting_enabled(params:)
     params.setting_enabled
   end
 
