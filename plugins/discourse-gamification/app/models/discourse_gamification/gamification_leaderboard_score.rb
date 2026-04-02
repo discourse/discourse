@@ -62,7 +62,9 @@ module DiscourseGamification
     end
 
     def self.calculate_all(since_date: Date.today)
-      GamificationLeaderboard.find_each { |lb| calculate_scores(lb, since_date:) }
+      GamificationLeaderboard
+        .where("to_date IS NULL OR to_date >= ?", since_date)
+        .find_each { |lb| calculate_scores(lb, since_date:) }
     end
 
     def self.merge_scores(source_user, target_user)
