@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GroupManager
+class GroupUserManager
   def initialize(group)
     @group = group
   end

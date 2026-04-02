@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe GroupManager do
+RSpec.describe GroupUserManager do
   fab!(:group)
   fab!(:user)
   fab!(:user2, :user)
 
-  subject(:manager) { GroupManager.new(group) }
+  subject(:manager) { GroupUserManager.new(group) }
 
   describe "#add" do
     it "adds users to group and returns added user IDs" do
