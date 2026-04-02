@@ -626,19 +626,18 @@ after_initialize do
           location = event_node["data-location"]
           url = event_node["data-url"]
 
+          event = DiscoursePostEvent::Event.includes(:image_upload).find_by(id: post.id)
+          image_url = UrlHelper.absolute(event.image_upload.url) if event&.image_upload_id
+
           rows = +""
 
-          event = DiscoursePostEvent::Event.includes(:image_upload).find_by(id: post.id)
-          if event&.image_upload_id
-            image_url = UrlHelper.absolute(event.image_upload.url)
-            rows << <<~HTML
-              <tr>
-                <td style="padding: 0;">
-                  <img src="#{CGI.escape_html(image_url)}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
-                </td>
-              </tr>
-            HTML
-          end
+          rows << <<~HTML if image_url.present?
+            <tr>
+              <td style="padding: 0;">
+                <img src="#{CGI.escape_html(image_url)}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
+              </td>
+            </tr>
+          HTML
 
           rows << <<~HTML
             <tr>
