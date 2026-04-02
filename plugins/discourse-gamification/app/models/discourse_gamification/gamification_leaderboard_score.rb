@@ -31,18 +31,25 @@ module DiscourseGamification
         leaderboard_id: leaderboard.id,
       )
 
-      return if queries.blank?
+      score_event_query = <<~SQL
+        SELECT user_id, date, SUM(points) AS points
+        FROM gamification_score_events
+        WHERE date >= :since
+        GROUP BY 1, 2
+      SQL
+
+      source_queries =
+        if queries.present?
+          "#{queries} UNION ALL #{score_event_query}"
+        else
+          score_event_query
+        end
 
       DB.exec(<<~SQL, since: since_date, leaderboard_id: leaderboard.id)
         INSERT INTO gamification_leaderboard_scores (leaderboard_id, user_id, date, score)
         SELECT :leaderboard_id, user_id, date, SUM(points) AS score
         FROM (
-          #{queries}
-          UNION ALL
-          SELECT user_id, date, SUM(points) AS points
-          FROM gamification_score_events
-          WHERE date >= :since
-          GROUP BY 1, 2
+          #{source_queries}
         ) AS source
         JOIN users AS u ON u.id = source.user_id
         WHERE user_id IS NOT NULL

@@ -21,12 +21,12 @@ class CreateGamificationLeaderboardScores < ActiveRecord::Migration[7.2]
     # for every existing leaderboard. All leaderboards used global settings
     # before this migration, so they all get identical copies.
     if table_exists?(:gamification_scores) && table_exists?(:gamification_leaderboards)
-      execute <<~SQL
-        INSERT INTO gamification_leaderboard_scores (leaderboard_id, user_id, date, score)
-        SELECT lb.id, gs.user_id, gs.date, gs.score
-        FROM gamification_scores gs
-        CROSS JOIN gamification_leaderboards lb
-      SQL
+      leaderboard_ids = DB.query_single("SELECT id FROM gamification_leaderboards")
+      leaderboard_ids.each { |lb_id| execute <<~SQL }
+          INSERT INTO gamification_leaderboard_scores (leaderboard_id, user_id, date, score)
+          SELECT #{lb_id}, gs.user_id, gs.date, gs.score
+          FROM gamification_scores gs
+        SQL
     end
   end
 
