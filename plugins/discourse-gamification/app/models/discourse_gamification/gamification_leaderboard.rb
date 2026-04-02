@@ -92,18 +92,20 @@ end
 # Table name: gamification_leaderboards
 #
 #  id                     :bigint           not null, primary key
-#  name                   :string           not null
+#  default_period         :integer          default(0)
+#  excluded_groups_ids    :integer          default([]), not null, is an Array
 #  from_date              :date
+#  included_groups_ids    :integer          default([]), not null, is an Array
+#  name                   :string           not null
+#  period_filter_disabled :boolean          default(FALSE), not null
+#  scorable_category_ids  :integer          is an Array
+#  score_overrides        :jsonb
 #  to_date                :date
-#  for_category_id        :integer
-#  created_by_id          :integer          not null
+#  visible_to_groups_ids  :integer          default([]), not null, is an Array
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  visible_to_groups_ids  :integer          default([]), not null, is an Array
-#  included_groups_ids    :integer          default([]), not null, is an Array
-#  excluded_groups_ids    :integer          default([]), not null, is an Array
-#  default_period         :integer          default(0)
-#  period_filter_disabled :boolean          default(FALSE), not null
+#  created_by_id          :integer          not null
+#  for_category_id        :integer
 #
 # Indexes
 #

@@ -79,3 +79,19 @@ module DiscourseGamification
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: gamification_leaderboard_scores
+#
+#  id             :bigint           not null, primary key
+#  date           :date             not null
+#  score          :integer          default(0), not null
+#  leaderboard_id :integer          not null
+#  user_id        :integer          not null
+#
+# Indexes
+#
+#  idx_leaderboard_scores_lb_date       (leaderboard_id,date)
+#  idx_leaderboard_scores_lb_user_date  (leaderboard_id,user_id,date) UNIQUE
+#
