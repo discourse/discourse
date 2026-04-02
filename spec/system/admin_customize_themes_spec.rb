@@ -315,10 +315,10 @@ describe "Admin Customize Themes" do
       find("button", text: I18n.t("admin_js.admin.customize.theme.change_source.button")).click
 
       expect(page).to have_css(".admin-change-theme-source-modal")
-      expect(find(".admin-change-theme-source-modal .repo input").value).to eq(
+      expect(find(".admin-change-theme-source-modal input.repo-url").value).to eq(
         "https://github.com/discourse/example-theme.git",
       )
-      expect(find(".admin-change-theme-source-modal .branch input").value).to eq("main")
+      expect(find(".admin-change-theme-source-modal input.branch").value).to eq("main")
     end
 
     it "does not show the change source button for local themes" do
