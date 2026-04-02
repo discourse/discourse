@@ -77,23 +77,41 @@ module("Unit | Lib | raw-event-helper", function () {
     );
   });
 
-  test("buildParams includes image when imageUpload is set", function (assert) {
+  test("buildParams image handling", function (assert) {
     const startsAt = "2024-06-15T10:00:00Z";
-    const event = {
-      imageUpload: { url: "/uploads/default/original/1X/abc123.png" },
-    };
     const siteSettings = { discourse_post_event_allowed_custom_fields: "" };
 
-    const params = buildParams(startsAt, null, event, siteSettings);
-    assert.strictEqual(params.image, "/uploads/default/original/1X/abc123.png");
-  });
+    assert.strictEqual(
+      buildParams(
+        startsAt,
+        null,
+        {
+          imageUpload: {
+            short_url: "upload://abc123.png",
+            url: "/uploads/default/original/1X/abc123.png",
+          },
+        },
+        siteSettings
+      ).image,
+      "upload://abc123.png",
+      "prefers short_url when available"
+    );
 
-  test("buildParams omits image when imageUpload is not set", function (assert) {
-    const startsAt = "2024-06-15T10:00:00Z";
-    const event = {};
-    const siteSettings = { discourse_post_event_allowed_custom_fields: "" };
+    assert.strictEqual(
+      buildParams(
+        startsAt,
+        null,
+        { imageUpload: { url: "/uploads/default/original/1X/abc123.png" } },
+        siteSettings
+      ).image,
+      "/uploads/default/original/1X/abc123.png",
+      "falls back to url when short_url is not set"
+    );
 
-    const params = buildParams(startsAt, null, event, siteSettings);
-    assert.strictEqual(params.image, undefined);
+    assert.strictEqual(
+      buildParams(startsAt, null, {}, siteSettings).image,
+      undefined,
+      "omits image when imageUpload is not set"
+    );
   });
 });
