@@ -197,6 +197,15 @@ class BulkImport::Base
     @last_imported_post_id = imported_post_ids.select { |id| id < PRIVATE_OFFSET }.max || -1
     @last_imported_private_post_id =
       imported_post_ids.select { |id| id > PRIVATE_OFFSET }.max || (PRIVATE_OFFSET - 1)
+
+    if defined?(BulkImport::Generic::MERGE_IMPORT) && BulkImport::Generic::MERGE_IMPORT
+      puts "MERGE_IMPORT mode: clearing imported ID maps to avoid cross-source collisions"
+      @groups = {}
+      @users = {}
+      @categories = {}
+      @topics = {}
+      @posts = {}
+    end
   end
 
   def last_id(klass)
@@ -2193,7 +2202,8 @@ class BulkImport::Base
     id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
-      { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
+      value = @import_prefix ? "#{@import_prefix}:#{imported_id}" : imported_id
+      { record_id: send(id_mapping_method_name, imported_id), value: value }
     end
     true
   rescue => e
