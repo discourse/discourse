@@ -1119,7 +1119,7 @@ export default class Composer extends RestModel {
     }
 
     const rollback = throwAjaxError((error) => {
-      post.setProperties("cooked", oldCooked);
+      post.setProperties({ cooked: oldCooked });
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
