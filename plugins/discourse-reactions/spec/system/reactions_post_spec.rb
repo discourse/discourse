@@ -18,6 +18,25 @@ describe "Reactions | Post reactions" do
     sign_in(current_user)
   end
 
+  context "when topic is archived" do
+    fab!(:unliked_post) { Fabricate(:post, topic:) }
+
+    before { topic.update!(archived: true) }
+
+    it "does not allow reacting to a post with no likes" do
+      visit unliked_post.url
+
+      selector = "#post_#{unliked_post.post_number}"
+
+      expect(page).to have_no_css("#{selector} .discourse-reactions-actions.can-toggle-reaction")
+
+      find("#{selector} .discourse-reactions-reaction-button").click
+
+      expect(page).to have_no_css(".dialog-body")
+      expect(DiscourseReactions::ReactionUser.where(user: current_user).count).to eq(0)
+    end
+  end
+
   context "when user has reacted but like_count is 0 and undo window passed" do
     fab!(:reaction) { Fabricate(:reaction, post: post_2) }
     fab!(:reaction_user) { Fabricate(:reaction_user, reaction:, user: current_user, post: post_2) }

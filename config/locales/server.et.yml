@@ -511,6 +511,7 @@ et:
     deny: "Loobu"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
+    copied: "Kopeeritud!"
     otp_confirmation:
       confirm_title: Edasi saidile %{site_name}
     scopes:

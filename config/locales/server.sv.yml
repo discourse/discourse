@@ -965,6 +965,7 @@ sv:
     read: "läs"
     read_write: "läs/skriv"
     instructions: 'Vi genererade precis en ny API-nyckel som du kan använda med "%{application_name}". Klistra in följande nyckel i din applikation:'
+    copied: "Kopierad!"
     otp_description: 'Vill du tillåta att "%{application_name}" får tillträde till din sida?'
     otp_confirmation:
       confirm_title: Fortsätt till %{site_name}

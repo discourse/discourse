@@ -1133,6 +1133,7 @@ fi:
     read: "luku"
     read_write: "luku/kirjoitus"
     instructions: 'Loimme juuri uuden käyttäjä-API-avaimen, jota voit käyttää sovelluksessa "%{application_name}". Liitä tämä avainkoodi sovellukseesi:'
+    copied: "Kopioitiin!"
     otp_description: 'Haluatko sallia sovellukselle "%{application_name}" pääsyn sivustolle?'
     otp_confirmation:
       confirm_title: Jatka sivustolle %{site_name}

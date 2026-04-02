@@ -1156,6 +1156,8 @@ de:
     permissions_header: 'Dies erlaubt „%{application_name}“:'
     redirect_warning: "Bei der Autorisierung wirst du weitergeleitet zu"
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
+    copy_key: "Schlüssel kopieren"
+    copied: "Kopiert!"
     otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
     otp_confirmation:
       confirm_title: Weiter zu %{site_name}

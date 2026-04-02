@@ -1,6 +1,8 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
+/** @type {import("discourse/blocks/block-outlet.gjs")} */
+import { _hasLayout } from "discourse/blocks/block-outlet";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { evaluateConditions } from "discourse/lib/blocks/-internals/matching/condition-evaluator";
@@ -96,6 +98,27 @@ export default class Blocks extends Service {
    */
   listOutlets() {
     return getAllOutlets();
+  }
+
+  /**
+   * Checks if a layout has been registered for a given block outlet.
+   *
+   * A layout is registered when a plugin or theme calls `api.renderBlocks()`
+   * for an outlet. This method allows checking layout presence outside of
+   * `BlockOutlet` templates.
+   *
+   * @param {string} outletName - The outlet identifier to check.
+   * @returns {boolean} True if a layout is registered for this outlet.
+   *
+   * @example
+   * ```javascript
+   * if (this.blocks.hasLayout("homepage-blocks")) {
+   *   // Outlet has blocks registered
+   * }
+   * ```
+   */
+  hasLayout(outletName) {
+    return _hasLayout(outletName);
   }
 
   /*

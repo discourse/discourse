@@ -1133,6 +1133,7 @@ nl:
     read: "lezen"
     read_write: "lezen/schrijven"
     instructions: 'We hebben zojuist een nieuwe API-gebruikerssleutel voor je gegenereerd voor gebruik met ''%{application_name}''. Plak de volgende link in je toepassing:'
+    copied: "Gekopieerd!"
     otp_description: 'Wil je ''%{application_name}'' toegang tot deze website geven?'
     otp_confirmation:
       confirm_title: Doorgaan naar %{site_name}

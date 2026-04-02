@@ -484,6 +484,7 @@ bg:
   user_api_key:
     deny: "Отмени"
     read: "четене"
+    copied: "Копирано!"
     otp_confirmation:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{username}

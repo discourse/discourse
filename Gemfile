@@ -20,7 +20,7 @@ gem "propshaft"
 gem "json"
 
 # this will eventually be added to rails,
-# allows us to precompile all our templates in the unicorn master
+# allows us to precompile all our templates in the app server master
 gem "actionview_precompiler", require: false
 
 gem "discourse-seed-fu"
@@ -105,7 +105,7 @@ gem "mini_racer"
 
 gem "highline", require: false
 
-# When unicorn is not used anymore, we can use Rack 3
+# TODO: upgrade to Rack 3 now that Unicorn has been removed
 gem "rack", "< 3"
 
 gem "rack-protection" # security
@@ -194,8 +194,11 @@ gem "htmlentities", require: false
 
 gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
-gem "unicorn", require: false, platform: :ruby
 gem "pitchfork", require: false
+
+# Used by discourse-prometheus to collect socket queue stats.
+# Was previously a transitive dependency of the unicorn gem.
+gem "raindrops", require: false, platform: :ruby
 
 gem "rbtrace", require: false, platform: :mri
 

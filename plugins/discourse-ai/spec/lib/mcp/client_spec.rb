@@ -81,6 +81,83 @@ RSpec.describe DiscourseAi::Mcp::Client do
       expect(result).to eq("content" => [{ "type" => "text", "text" => "Hello from MCP" }])
     end
 
+    it "returns tool execution errors from the response body even on non-2xx statuses" do
+      stub_request(:post, server.url).to_return(
+        status: 404,
+        body: {
+          jsonrpc: "2.0",
+          result: {
+            content: [{ type: "text", text: "Not found: Project google.com:chops-prod" }],
+            isError: true,
+          },
+        }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      result = described_class.new(server).call_tool("lookup", { id: 1 })
+
+      expect(result).to eq(
+        "content" => [{ "type" => "text", "text" => "Not found: Project google.com:chops-prod" }],
+        "isError" => true,
+      )
+    end
+
+    it "still raises on transport failures without a tool result" do
+      stub_request(:post, server.url).to_return(
+        status: 500,
+        body: "",
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      expect { described_class.new(server).call_tool("lookup", {}) }.to raise_error(
+        described_class::Error,
+        I18n.t("discourse_ai.mcp_servers.errors.request_failed", status: 500),
+      )
+    end
+
+    it "preserves allow_result_error when retrying after an OAuth refresh" do
+      server.update!(auth_type: "oauth", ai_secret_id: nil, oauth_status: "connected")
+      server.oauth_token_store.write!(
+        access_token: "expired-access-token",
+        refresh_token: "refresh-token",
+      )
+
+      server.stubs(:auth_header_value).returns(
+        "Bearer expired-access-token",
+        "Bearer fresh-access-token",
+        "Bearer fresh-access-token",
+      )
+      DiscourseAi::Mcp::OAuthFlow.expects(:refresh!).with(server).once
+
+      stub_request(:post, server.url).to_return(
+        { status: 401, body: "", headers: { "Content-Type" => "application/json" } },
+        {
+          status: 404,
+          body: {
+            jsonrpc: "2.0",
+            result: {
+              content: [{ type: "text", text: "Not found: Project google.com:chops-prod" }],
+              isError: true,
+            },
+          }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        },
+      )
+
+      result = described_class.new(server).call_tool("lookup", { id: 1 })
+
+      expect(result).to eq(
+        "content" => [{ "type" => "text", "text" => "Not found: Project google.com:chops-prod" }],
+        "isError" => true,
+      )
+    end
+
     it "raises when a session expires" do
       stub_request(:post, server.url).to_return(
         status: 404,

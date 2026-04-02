@@ -14,13 +14,9 @@ ro:
     chat_integration:
       menu_title: "Integrări pentru discuții"
       settings: "Setări"
-      more_providers: "Mai multe"
       channels_with_errors: "Unele canale pentru acest furnizor au eșuat când au fost trimise mesaje ultima dată. Dă clic pe pictogramele de eroare pentru a afla mai multe."
       group_mention_template: "Mențiuni despre: @%{name}"
       group_message_template: "Mesaje către: @%{name}"
-      choose_group: "(Alege un grup)"
-      all_categories: "(Toate categoriile)"
-      all_tags: "(Toate etichetele)"
       delete_channel: "Șterge"
       test_channel: "Test"
       edit_channel: "Editează"

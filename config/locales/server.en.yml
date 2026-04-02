@@ -1155,6 +1155,8 @@ en:
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
+    invalid_host: "The provided host resolves to a disallowed IP address."
+    host_resolve_failed: "The provided host could not be resolved."
   webauthn:
     validation:
       invalid_type_error: "The webauthn type provided was invalid. Valid types are webauthn.get and webauthn.create."
@@ -1261,6 +1263,8 @@ en:
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
+    copy_key: "Copy Key"
+    copied: "Copied!"
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
       confirm_title: Continue to %{site_name}
@@ -2551,6 +2555,7 @@ en:
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
+    embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
@@ -3439,6 +3444,10 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    reviewable_queued_post_revise_and_reject_edit_post: "You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "You can edit your original post below and re-submit to make the suggested changes."
+    reviewable_queued_post_revise_and_reject_edit_topic: "You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "You can edit your topic's original post below and re-submit to make the suggested changes."
     reviewable_queued_post_revise_and_reject:
       title: "Feedback on your post"
       subject_template: "Feedback on your post in %{topic_title}"
@@ -3451,7 +3460,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -3474,7 +3483,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 

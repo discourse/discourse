@@ -12,12 +12,6 @@ ru:
         categories:
           discourse_post_event: "Мероприятие Discourse"
           discourse_calendar: "Календарь и события"
-      web_hooks:
-        calendar_event:
-          group_name: "Событие календаря"
-          calendar_event_created: "Событие в календаре создано."
-          calendar_event_updated: "Событие в календаре обновлено."
-          calendar_event_destroyed: "Событие в календаре уничтожено"
   js:
     notifications:
       titles:
@@ -34,11 +28,6 @@ ru:
               label: ID темы
     discourse_calendar:
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
-      preferences:
-        all_events: "Discourse Календарь - Все события"
-        all_events_description: "Все события форума"
-        my_events: "Discourse Календарь — Мои события"
-        my_events_description: "Мероприятия, которые вы собираетесь посетить или которыми вы интересуетесь."
       on_holiday: "Выходные"
       disable_holiday: "Отключить"
       enable_holiday: "Включить"
@@ -475,9 +464,6 @@ ru:
         timezone:
           label: Часовой пояс
           remove_timezone: Без часового пояса (UTC)
-        all_day:
-          label: "Мероприятие на весь день"
-          description: "Мероприятие, рассчитанное на весь день, не будет иметь определенного расписания, только дату. Мероприятие будет проходить с начала дня до конца дня."
         reminders:
           label: "Напоминания"
           types:

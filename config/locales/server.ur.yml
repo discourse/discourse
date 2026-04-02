@@ -923,6 +923,7 @@ ur:
     read: "رِیڈ"
     read_write: "رِیڈ/رائیٹ"
     instructions: '"%{application_name}" کے ساتھ استعمال کیلئے ہم نے آپ کیلئے ایک نئی صارف API کِی بنائی ہے، براہ مہربانی اپنی ایپلیکیشن میں مندرجہ ذیل کِی پیسٹ کریں:'
+    copied: "کاپی کر لیا!"
     otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
     otp_confirmation:
       confirm_title: '%{site_name} پر جاری رکھیں'

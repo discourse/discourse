@@ -5704,6 +5704,11 @@ tr_TR:
           beta: "Beta"
           stable: "Stabil"
           permanent: "Kalıcı"
+        status_descriptions:
+          experimental: "Bu özellik henüz geliştirme aşamasındadır ve önemli ölçüde değişebilir veya kaldırılabilir. Diğer özelliklerle tam olarak uyumlu olmayabilir."
+          alpha: "Bu özellik aktif olarak geliştirilmekte ve iyileştirilmektedir. İşlevsellikte değişiklikler olabilir ve henüz tam anlamıyla tamamlanmış olmayabilir, ancak denemek için yeterince kararlıdır."
+          beta: "Bu çalışma tamamlanmak üzere olup, erken aşamada kullanıma sunulmuştur. Küçük değişiklikler hala yapılabilir."
+          stable: "Bu özellik eksiksiz ve sağlam bir şekilde desteklenmektedir. Yakında tüm Discourse sitelerinde kullanıma sunulacaktır."
         impact_roles:
           admins: "Yöneticiler"
           moderators: "Moderatörler"

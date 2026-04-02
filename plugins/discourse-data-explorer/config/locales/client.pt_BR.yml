@@ -86,12 +86,6 @@ pt_BR:
           invalid_time: "%{time} é um horário inválido"
     group:
       reports: "Relatórios"
-    admin:
-      api:
-        scopes:
-          descriptions:
-            data_explorer:
-              run_queries: "Execute consultas do Explorador de Dados. Restrinja a chave de API a um conjunto de consultas ao especificar suas IDs."
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

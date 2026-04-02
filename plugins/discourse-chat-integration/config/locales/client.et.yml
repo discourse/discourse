@@ -14,11 +14,6 @@ et:
     chat_integration:
       menu_title: "Jututoa integratsioonid"
       settings: "Seaded"
-      more_providers: "Veel"
-      channels_title: "Kanalid"
-      choose_group: "(Vali grupp)"
-      all_categories: "(Kõik kategooriad)"
-      all_tags: "(Kõik sildid)"
       delete_channel: "Kustuta"
       test_channel: "Proovi"
       edit_channel: "Muuda"
