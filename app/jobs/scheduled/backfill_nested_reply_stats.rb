@@ -1,46 +1,40 @@
 # frozen_string_literal: true
 
 module Jobs
-  class BackfillNestedReplyStats < ::Jobs::Base
+  class BackfillNestedReplyStats < ::Jobs::Scheduled
+    every 5.minutes
+
     cluster_concurrency 1
 
-    BATCH_SIZE = 500
-
-    def execute(args)
+    def execute(_ = nil)
       return unless SiteSetting.nested_replies_enabled
 
-      # Process topics in batches by ID range to avoid loading all topic IDs into memory.
-      # Each job execution processes one batch of topics and re-enqueues itself for the next.
-      min_topic_id = args[:from_topic_id].to_i
-
-      topic_ids = DB.query_single(<<~SQL, min_id: min_topic_id, batch_size: BATCH_SIZE)
-          SELECT id FROM topics
-          WHERE id >= :min_id
-            AND deleted_at IS NULL
-            AND archetype = 'regular'
-          ORDER BY id
+      topic_ids =
+        DB.query_single(<<~SQL, batch_size: SiteSetting.nested_replies_backfill_batch_size)
+          SELECT t.id FROM topics t
+          INNER JOIN nested_topics nt ON nt.topic_id = t.id
+          LEFT JOIN nested_view_post_stats s ON s.post_id = (
+            SELECT p.id FROM posts p
+            WHERE p.topic_id = t.id AND p.post_number = 1 AND p.deleted_at IS NULL
+            LIMIT 1
+          )
+          WHERE t.deleted_at IS NULL
+            AND t.archetype = 'regular'
+            AND s.post_id IS NULL
+          ORDER BY t.id DESC
           LIMIT :batch_size
         SQL
 
       return if topic_ids.empty?
 
       topic_ids.each { |topic_id| backfill_topic(topic_id) }
-
-      next_id = topic_ids.last + 1
-      Jobs.enqueue(:backfill_nested_reply_stats, from_topic_id: next_id)
     end
 
     private
 
     def backfill_topic(topic_id)
-      # Single SQL statement computes both direct_reply_count and total_descendant_count
-      # for all posts in a topic, then upserts into nested_view_post_stats.
-      #
-      # The recursive CTE walks the reply tree bottom-up to compute total_descendant_count.
-      # direct_reply_count is a simple GROUP BY on reply_to_post_number.
       DB.exec(<<~SQL, topic_id: topic_id)
         WITH RECURSIVE
-        -- Count direct (non-deleted) replies per parent
         direct_counts AS (
           SELECT reply_to_post_number AS parent_number, post_type,
                  COUNT(*) AS cnt
@@ -58,7 +52,6 @@ module Jobs
           FROM direct_counts
           GROUP BY parent_number
         ),
-        -- Build a simple parent->child edge list for descendant counting
         edges AS (
           SELECT id, post_number, reply_to_post_number, post_type
           FROM posts
@@ -67,8 +60,6 @@ module Jobs
             AND reply_to_post_number IS NOT NULL
             AND post_number > 1
         ),
-        -- Walk from each post upward, accumulating descendant counts
-        -- Each post contributes 1 to every ancestor's total_descendant_count
         ancestor_walk AS (
           SELECT e.reply_to_post_number AS ancestor_number,
                  1 AS descendant_count,
@@ -91,7 +82,6 @@ module Jobs
           FROM ancestor_walk
           GROUP BY ancestor_number
         ),
-        -- Join with actual post IDs
         combined AS (
           SELECT p.id AS post_id,
                  COALESCE(d.direct_reply_count, 0) AS direct_reply_count,

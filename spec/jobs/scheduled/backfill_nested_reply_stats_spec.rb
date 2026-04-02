@@ -3,18 +3,19 @@
 RSpec.describe Jobs::BackfillNestedReplyStats do
   fab!(:topic)
   fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
+  fab!(:nested_topic) { NestedTopic.create!(topic: topic) }
 
   before { SiteSetting.nested_replies_enabled = true }
 
-  def execute(args = {})
-    described_class.new.execute(args)
+  def execute
+    described_class.new.execute(nil)
   end
 
   it "does nothing when feature is disabled" do
     SiteSetting.nested_replies_enabled = false
     Fabricate(:post, topic: topic, reply_to_post_number: 1)
 
-    execute(from_topic_id: 0)
+    execute
 
     expect(NestedViewPostStat.count).to eq(0)
   end
@@ -24,7 +25,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     3.times { Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number) }
 
     NestedViewPostStat.delete_all
-    execute(from_topic_id: 0)
+    execute
 
     stat = NestedViewPostStat.find_by(post_id: parent.id)
     expect(stat.direct_reply_count).to eq(3)
@@ -36,7 +37,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     Fabricate(:post, topic: topic, reply_to_post_number: child.post_number)
 
     NestedViewPostStat.delete_all
-    execute(from_topic_id: 0)
+    execute
 
     stat = NestedViewPostStat.find_by(post_id: root.id)
     expect(stat.direct_reply_count).to eq(1)
@@ -54,7 +55,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     )
 
     NestedViewPostStat.delete_all
-    execute(from_topic_id: 0)
+    execute
 
     stat = NestedViewPostStat.find_by(post_id: parent.id)
     expect(stat.direct_reply_count).to eq(2)
@@ -74,7 +75,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     )
 
     NestedViewPostStat.delete_all
-    execute(from_topic_id: 0)
+    execute
 
     stat = NestedViewPostStat.find_by(post_id: parent.id)
     expect(stat.direct_reply_count).to eq(1)
@@ -93,7 +94,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
       whisper_total_descendant_count: 50,
     )
 
-    execute(from_topic_id: 0)
+    execute
 
     stat = NestedViewPostStat.find_by(post_id: parent.id)
     expect(stat.direct_reply_count).to eq(999)
@@ -109,15 +110,16 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     NestedViewPostStat.delete_all
     NestedViewPostStat.create!(post_id: parent.id, direct_reply_count: 1, total_descendant_count: 1)
 
-    execute(from_topic_id: 0)
+    execute
 
     stat = NestedViewPostStat.find_by(post_id: parent.id)
     expect(stat.direct_reply_count).to eq(3)
     expect(stat.total_descendant_count).to eq(3)
   end
 
-  it "processes multiple topics across batches" do
+  it "processes multiple topics" do
     other_topic = Fabricate(:topic)
+    NestedTopic.create!(topic: other_topic)
     other_op = Fabricate(:post, topic: other_topic, post_number: 1)
     Fabricate(:post, topic: other_topic, reply_to_post_number: 1)
 
@@ -125,23 +127,31 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
 
     NestedViewPostStat.delete_all
-    execute(from_topic_id: 0)
+    execute
 
     expect(NestedViewPostStat.find_by(post_id: other_op.id).direct_reply_count).to eq(1)
     expect(NestedViewPostStat.find_by(post_id: parent.id).direct_reply_count).to eq(1)
   end
 
-  it "re-enqueues itself for the next batch" do
+  it "skips topics without a nested_topic record" do
+    non_nested_topic = Fabricate(:topic)
+    non_nested_op = Fabricate(:post, topic: non_nested_topic, post_number: 1)
+    Fabricate(:post, topic: non_nested_topic, reply_to_post_number: 1)
+
     NestedViewPostStat.delete_all
-    expect_enqueued_with(job: :backfill_nested_reply_stats) { execute(from_topic_id: 0) }
+    execute
+
+    expect(NestedViewPostStat.find_by(post_id: non_nested_op.id)).to be_nil
   end
 
-  it "does not re-enqueue when no topics remain" do
-    NestedViewPostStat.delete_all
-    very_high_id = Topic.maximum(:id).to_i + 1_000_000
+  it "only picks up topics with missing stats" do
+    Fabricate(:post, topic: topic, reply_to_post_number: 1)
 
-    expect_not_enqueued_with(job: :backfill_nested_reply_stats) do
-      execute(from_topic_id: very_high_id)
-    end
+    execute
+    initial_updated_at = NestedViewPostStat.find_by(post_id: op.id).updated_at
+
+    freeze_time 1.hour.from_now
+    execute
+    expect(NestedViewPostStat.find_by(post_id: op.id).updated_at).to eq_time(initial_updated_at)
   end
 end
