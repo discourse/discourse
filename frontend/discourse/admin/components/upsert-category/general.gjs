@@ -536,7 +536,6 @@ export default class UpsertCategoryGeneral extends Component {
                       @onChange={{field.set}}
                       @allowClear={{true}}
                       @iconColor={{concat "#" @transientData.color}}
-                      @btnClass="btn-icon"
                     />
                   </field.Control>
                 </@form.Field>

@@ -457,7 +457,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     assert
       .dom('[data-icon-id="pencil"]')
       .hasAttribute("role", "option")
-      .doesNotHaveAttribute("aria-selected");
+      .hasAttribute("aria-selected", "false");
   });
 
   test("arrow keys navigate between icons", async function (assert) {

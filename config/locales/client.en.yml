@@ -3058,10 +3058,16 @@ en:
       dark_tone: Dark skin tone
       default: Custom emojis
 
+    filter_input:
+      clear: "Clear filter"
+
     d_icon_grid_picker:
       select_icon: "Select icon"
       search_placeholder: "Search icons..."
       no_results: "No icons found"
+      results_count:
+        one: "%{count} icon found"
+        other: "%{count} icons found"
       favorites: "Favorites"
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"

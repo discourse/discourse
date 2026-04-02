@@ -153,6 +153,7 @@ export default class DIconGridPicker extends Component {
         @groupIdentifier="d-icon-grid-picker"
         @modalForMobile={{this.modalForMobile}}
         @maxWidth={{490}}
+        @autofocus={{true}}
         @onShow={{this.onShow}}
         @onRegisterApi={{this.onRegisterMenu}}
         @onClose={{@onClose}}

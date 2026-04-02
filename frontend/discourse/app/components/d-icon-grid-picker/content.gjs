@@ -35,6 +35,7 @@ export default class DIconGridPickerContent extends Component {
   @service tooltip;
 
   @tracked filter = "";
+  @tracked resultCount = null;
 
   /**
    * Modifier that measures the natural content width of the selected-chip element
@@ -237,6 +238,15 @@ export default class DIconGridPickerContent extends Component {
       ?.focus();
   }
 
+  get resultAnnouncement() {
+    if (this.resultCount === null) {
+      return "";
+    }
+    return i18n("d_icon_grid_picker.results_count", {
+      count: this.resultCount,
+    });
+  }
+
   /**
    * Fetches icons from the server, optionally filtered by a search term.
    * Used as the `@asyncData` callback for the `AsyncContent` loader.
@@ -249,7 +259,9 @@ export default class DIconGridPickerContent extends Component {
     const onlyAvailable = this.args.onlyAvailable ?? true;
 
     if (!filter && unfilteredIconCache.has(onlyAvailable)) {
-      return unfilteredIconCache.get(onlyAvailable);
+      const cached = unfilteredIconCache.get(onlyAvailable);
+      this.resultCount = cached.length;
+      return cached;
     }
 
     const icons = await ajax("/svg-sprite/picker-search", {
@@ -260,6 +272,7 @@ export default class DIconGridPickerContent extends Component {
       unfilteredIconCache.set(onlyAvailable, icons);
     }
 
+    this.resultCount = icons.length;
     return icons;
   }
 
@@ -326,6 +339,7 @@ export default class DIconGridPickerContent extends Component {
                   type="button"
                   role="option"
                   aria-label={{favIcon}}
+                  aria-selected="false"
                   class="d-icon-grid-picker__icon"
                   data-icon-id={{favIcon}}
                   {{this.registerIconTooltip}}
@@ -356,7 +370,7 @@ export default class DIconGridPickerContent extends Component {
                   type="button"
                   role="option"
                   aria-label={{item.id}}
-                  aria-selected={{if (eq item.id @value) "true"}}
+                  aria-selected={{if (eq item.id @value) "true" "false"}}
                   class={{concatClass
                     "d-icon-grid-picker__icon"
                     (if (eq item.id @value) "--selected")
@@ -376,6 +390,9 @@ export default class DIconGridPickerContent extends Component {
             </:empty>
           </AsyncContent>
         </div>
+      </div>
+      <div class="sr-only" aria-live="polite" role="status">
+        {{this.resultAnnouncement}}
       </div>
     </div>
   </template>
