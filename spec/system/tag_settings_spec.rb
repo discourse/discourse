@@ -47,7 +47,7 @@ describe "Tag Settings" do
       sign_in(user)
       tags_page.visit_tag(tag_1)
 
-      expect(tags_page).to have_tag_info_btn
+      expect(tags_page).to have_no_tag_info_btn
       visit("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
       expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}")
     end

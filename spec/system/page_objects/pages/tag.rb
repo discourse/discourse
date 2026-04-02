@@ -16,6 +16,10 @@ module PageObjects
         has_css?("#show-tag-info")
       end
 
+      def has_no_tag_info_btn?
+        has_no_css?("#show-tag-info")
+      end
+
       def has_no_tag?(name)
         has_no_css?(".tag-box", text: name)
       end
