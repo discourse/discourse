@@ -28,7 +28,7 @@ describe DiscourseAi::Configuration::Module do
       {
         module_name: :test_plugin,
         feature: :test_feature,
-        klass: fake_agent_class,
+        agent_klass: fake_agent_class,
         enabled_by_setting: nil,
       },
       fake_plugin,

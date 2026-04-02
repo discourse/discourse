@@ -166,13 +166,13 @@ module DiscourseAi
           external_tools_by_name = {}
 
           configs.each do |config|
-            klass = config[:klass]
-            next if klass.nil?
+            agent_klass = config[:agent_klass]
+            next if agent_klass.nil?
 
             agent_id = external_agent_id(config[:module_name], config[:feature])
-            external_agents[klass] = agent_id
+            external_agents[agent_klass] = agent_id
 
-            klass.new.tools.each do |tool_klass|
+            agent_klass.new.tools.each do |tool_klass|
               tool_name = tool_klass.to_s.split("::").last
               next if "DiscourseAi::Agents::Tools::#{tool_name}".safe_constantize
               external_tools_by_name[tool_name] ||= tool_klass

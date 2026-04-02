@@ -207,7 +207,7 @@ after_initialize do
       {
         module_name: :data_explorer,
         feature: :query_generation,
-        klass: DiscourseDataExplorer::AiQueryGenerator,
+        agent_klass: DiscourseDataExplorer::AiQueryGenerator,
         enabled_by_setting: "data_explorer_ai_queries_enabled",
       },
       self,
