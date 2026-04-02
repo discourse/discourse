@@ -20,6 +20,19 @@ export default {
 
       const siteSettings = api.container.lookup("service:site-settings");
       if (siteSettings.topic_voting_enabled) {
+        api.registerValueTransformer(
+          "navigation-items",
+          ({ value, context }) => {
+            if (context.category?.can_vote) {
+              const hotItem = value.find((item) => item.name === "hot");
+              if (hotItem) {
+                hotItem.title = i18n("topic_voting.hot_nav_help");
+              }
+            }
+            return value;
+          }
+        );
+
         const pageSearchController = api.container.lookup(
           "controller:full-page-search"
         );

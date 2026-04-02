@@ -125,6 +125,27 @@ RSpec.describe "Topic voting" do
     end
   end
 
+  context "when viewing navigation tooltips" do
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "shows custom tooltips in voting categories" do
+      category_page.visit(voting_category)
+
+      hot_item = find("#navigation-bar .nav-item_hot")
+      votes_item = find("#navigation-bar .nav-item_votes")
+
+      expect(hot_item["title"]).to eq(I18n.t("js.topic_voting.hot_nav_help"))
+      expect(votes_item["title"]).to eq(I18n.t("js.filters.votes.help"))
+    end
+
+    it "shows default Hot tooltip in non-voting categories" do
+      category_page.visit(category1)
+
+      hot_item = find("#navigation-bar .nav-item_hot")
+      expect(hot_item["title"]).to eq(I18n.t("js.filters.hot.help"))
+    end
+  end
+
   context "when vote limits are disabled" do
     fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
     fab!(:voting_post2) { Fabricate(:post, topic: voting_topic2) }
