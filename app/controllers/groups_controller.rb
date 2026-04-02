@@ -789,9 +789,11 @@ class GroupsController < ApplicationController
 
   def add_users_to_group(group, users, notify = false)
     user_ids = users.map(&:id)
-    GroupManager.new(group).add(user_ids)
-    GroupActionLogger.new(current_user, group).bulk_log_add_users_to_group(user_ids)
-    Jobs.enqueue(:notify_users_added_to_group, user_ids:, group_id: group.id) if notify
+    added_user_ids = GroupManager.new(group).add(user_ids)
+    GroupActionLogger.new(current_user, group).bulk_log_add_users_to_group(added_user_ids)
+    if notify && added_user_ids.present?
+      Jobs.enqueue(:notify_users_added_to_group, user_ids: added_user_ids, group_id: group.id)
+    end
   rescue ActiveRecord::RecordNotUnique
     # Under concurrency, we might attempt to insert two records quickly and hit a DB
     # constraint. In this case we can safely ignore the error and act as if the user
