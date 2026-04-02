@@ -19,6 +19,10 @@ module DiscourseDataExplorer
         }
       end
 
+      def self.custom?
+        true
+      end
+
       def self.name
         "validate_sql"
       end

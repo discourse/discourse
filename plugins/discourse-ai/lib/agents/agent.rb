@@ -58,6 +58,11 @@ module DiscourseAi
           @external_tools_by_name[name]
         end
 
+        def external_tools
+          sync_external_registry!
+          @external_tools_by_name.values
+        end
+
         def all(user:)
           # listing tools has to be dynamic cause site settings may change
           AiAgent.all_agents.filter do |agent|

@@ -6,6 +6,10 @@ module FakeExternalPlugin
       { name: "fake_external_tool", description: "A fake tool", parameters: [] }
     end
 
+    def self.custom?
+      true
+    end
+
     def self.name
       "fake_external_tool"
     end
@@ -364,6 +368,14 @@ RSpec.describe DiscourseAi::Agents::Agent do
       expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
         FakeExternalPlugin::FakeExternalTool,
       )
+    end
+
+    it "includes external tools in the agent's available_tools" do
+      register_fake_feature
+
+      instance = FakeExternalAgent.new
+      tool_names = instance.available_tools.map { |t| t.signature[:name] }
+      expect(tool_names).to include("fake_external_tool")
     end
 
     it "produces one agent entry when two features share the same agent_klass" do

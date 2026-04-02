@@ -22,6 +22,10 @@ module DiscourseDataExplorer
         }
       end
 
+      def self.custom?
+        true
+      end
+
       def self.name
         "run_sql"
       end
