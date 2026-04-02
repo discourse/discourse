@@ -2,7 +2,7 @@
 
 RSpec.describe "Assign | Group assigned" do
   fab!(:admin)
-  fab!(:group)
+  fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
