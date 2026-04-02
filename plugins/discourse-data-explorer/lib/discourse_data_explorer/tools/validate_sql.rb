@@ -28,21 +28,10 @@ module DiscourseDataExplorer
 
         return error_response("SQL query is empty") if sql.blank?
 
-        return error_response("semicolons are not allowed in Data Explorer queries") if sql =~ /;/
+        query = DiscourseDataExplorer::Query.new(name: "AI tool validation", sql: sql)
+        result = DiscourseDataExplorer::DataExplorer.run_query(query, {}, limit: 0)
 
-        # strip DE-style params (:param_name) and replace with NULL for EXPLAIN
-        explain_sql = sql.gsub(/(?<=\s|,|\():[a-zA-Z_]\w*/, "NULL")
-
-        begin
-          ActiveRecord::Base.connection.transaction do
-            DB.exec("SET TRANSACTION READ ONLY")
-            DB.exec("SET LOCAL statement_timeout = 5000")
-            DB.exec("EXPLAIN #{explain_sql}")
-            raise ActiveRecord::Rollback
-          end
-        rescue => e
-          return error_response(e.message)
-        end
+        return error_response(result[:error].message) if result[:error]
 
         { status: "valid" }
       end
