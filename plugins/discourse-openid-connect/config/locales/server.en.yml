@@ -15,6 +15,7 @@ en:
     openid_connect_authorize_parameters: "URL parameters which will be included in the redirect from /auth/oidc to the IDP's authorize endpoint"
     openid_connect_overrides_email: "On every login, override the user's email using the openid-connect value. Works the same as the `auth_overrides_email` setting, but is specific to OpenID Connect logins."
     openid_connect_claims: "Explicitly define the claims for use with providers that don't pass data back based on scopes. (JSON)"
+    openid_connect_groups_claim: "The name of the claim in the OIDC token that contains the user's groups as an array of strings. Leave blank to disable group syncing."
     openid_connect_match_by_email: "Use email address to match OpenID Connect authentications to existing Discourse user accounts."
     openid_connect_use_pkce: "Enable Proof Key for Code Exchange (PKCE) for OpenID Connect authentication."
   login:
