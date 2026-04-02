@@ -19,7 +19,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :featured_link_root_domain,
              :allowed_user_count,
              :participant_groups,
-             :is_hot
+             :is_hot,
+             :topic_hot_score
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -145,6 +146,14 @@ class TopicListItemSerializer < ListableTopicSerializer
     plugin_enabled = DiscoursePluginRegistry.apply_modifier(:serialize_topic_is_hot, false)
 
     theme_enabled || plugin_enabled
+  end
+
+  def topic_hot_score
+    object.topic_hot_score&.score
+  end
+
+  def include_topic_hot_score?
+    SiteSetting.include_topic_hot_score
   end
 
   private

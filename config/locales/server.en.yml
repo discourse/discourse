@@ -1763,6 +1763,7 @@ en:
     min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Allows users to associate a feature link with their topics. When turned on, topics can have a highlighted link attached, which is publicly visible and can be edited if the user has sufficient permissions. The feature link can enhance a topic's comprehensibility by providing related additional content."
+    include_topic_hot_score: "Include the numeric topic hot score in topic list API responses. Useful for external consumers that need the actual score value."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
     min_topic_views_for_delete_confirm: "Minimum amount of views a topic must have for a confirmation popup to appear when it gets deleted"
     min_topic_title_length: "Minimum allowed topic title length in characters"

@@ -4270,6 +4270,8 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
+  include_topic_hot_score:
+    default: false
   impersonate_without_logout:
     default: false
     hidden: true

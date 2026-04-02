@@ -365,4 +365,37 @@ RSpec.describe TopicListItemSerializer do
       end
     end
   end
+
+  describe "#topic_hot_score" do
+    fab!(:scored_topic, :topic)
+
+    context "when include_topic_hot_score is disabled" do
+      it "does not include the attribute" do
+        serialized =
+          TopicListItemSerializer.new(scored_topic, scope: Guardian.new, root: false).as_json
+
+        expect(serialized).not_to have_key(:topic_hot_score)
+      end
+    end
+
+    context "when include_topic_hot_score is enabled" do
+      before { SiteSetting.include_topic_hot_score = true }
+
+      it "returns the score when topic has a hot score" do
+        TopicHotScore.create!(topic: scored_topic, score: 3.14)
+
+        serialized =
+          TopicListItemSerializer.new(scored_topic, scope: Guardian.new, root: false).as_json
+
+        expect(serialized[:topic_hot_score]).to eq(3.14)
+      end
+
+      it "returns nil when topic has no hot score" do
+        serialized =
+          TopicListItemSerializer.new(scored_topic, scope: Guardian.new, root: false).as_json
+
+        expect(serialized[:topic_hot_score]).to be_nil
+      end
+    end
+  end
 end

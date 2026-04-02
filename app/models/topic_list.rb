@@ -146,6 +146,7 @@ class TopicList
     topic_preloader_associations << :localizations if SiteSetting.content_localization_enabled
 
     topic_preloader_associations << :first_post
+    topic_preloader_associations << :topic_hot_score if SiteSetting.include_topic_hot_score
 
     DiscoursePluginRegistry.topic_preloader_associations.each do |a|
       fields = a[:fields]
