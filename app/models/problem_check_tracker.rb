@@ -7,6 +7,8 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
+  scope :ignored, -> { where("ignored_at IS NULL") }
+  scope :watched, -> { where("ignored_at IS NOT NULL") }
 
   before_destroy :silence_the_alarm
 
@@ -24,6 +26,14 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   def passing?
     last_success_at == last_run_at
+  end
+
+  def ignored?
+    ignored_at.present?
+  end
+
+  def watched?
+    !ignored?
   end
 
   def problem!(next_run_at: nil, details: {})

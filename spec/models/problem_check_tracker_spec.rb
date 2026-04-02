@@ -121,6 +121,38 @@ RSpec.describe ProblemCheckTracker do
     end
   end
 
+  describe "#ignored?" do
+    let(:problem_tracker) { described_class.new(ignored_at:) }
+
+    context "when the ignored timestamp is set" do
+      let(:ignored_at) { 1.day.ago }
+
+      it { expect(problem_tracker).to be_ignored }
+    end
+
+    context "when the ignored timestamp is not set" do
+      let(:ignored_at) { nil }
+
+      it { expect(problem_tracker).not_to be_ignored }
+    end
+  end
+
+  describe "#watched?" do
+    let(:problem_tracker) { described_class.new(ignored_at:) }
+
+    context "when the ignored timestamp is set" do
+      let(:ignored_at) { 1.day.ago }
+
+      it { expect(problem_tracker).not_to be_watched }
+    end
+
+    context "when the ignored timestamp is not set" do
+      let(:ignored_at) { nil }
+
+      it { expect(problem_tracker).to be_watched }
+    end
+  end
+
   describe "#problem!" do
     let(:problem_tracker) do
       Fabricate(
