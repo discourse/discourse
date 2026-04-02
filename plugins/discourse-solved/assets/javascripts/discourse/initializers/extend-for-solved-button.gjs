@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -8,12 +7,10 @@ import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
 import setAcceptedSolution from "../lib/set-accepted-solution";
 
-function topicHasSolvedEnabled(topic) {
+function topicHasSolvedEnabled(topic, siteSettings) {
   if (!topic) {
     return false;
   }
-
-  const siteSettings = helperContext().siteSettings;
 
   if (siteSettings.allow_solved_on_all_topics) {
     return true;
@@ -46,7 +43,11 @@ function customizeNotificationDescriptions(api) {
   api.registerValueTransformer(
     "notifications-tracking-description",
     ({ value, context: { topic, level, prefix } }) => {
-      if (prefix !== "topic.notifications" || !topicHasSolvedEnabled(topic)) {
+      const siteSettings = api.container.lookup("service:site-settings");
+      if (
+        prefix !== "topic.notifications" ||
+        !topicHasSolvedEnabled(topic, siteSettings)
+      ) {
         return value;
       }
 
