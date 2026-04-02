@@ -2966,47 +2966,9 @@ fi:
     reviewable_queued_post_revise_and_reject:
       title: "Palaute viestistäsi"
       subject_template: "Palaute viestiisi ketjussa %{topic_title}"
-      text_body_template: |
-        Hei %{username},
-
-        Olemme tarkastaneet viestisi ketjussa [%{topic_title}](%{topic_url}) ja meillä on siihen liittyvää palautetta.
-
-        Syy: %{reason}
-
-        Palaute: %{feedback}
-
-        Voit muokata alkuperäistä viestiäsi alla ja lähettää sen uudelleen ehdotetuilla muutoksilla tai vastata tähän viestiin, jos sinulla on kysyttävää.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Terveisin,
-        %{site_name} Ylläpito
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Palaute ketjustasi"
       subject_template: 'Palaute uudesta ketjusta "%{topic_title}"'
-      text_body_template: |
-        Hei %{username},
-
-        Olemme tarkastaneet uuden ketjusi "%{topic_title}" ja meillä on siihen liittyvää palautetta.
-
-        Syy: %{reason}
-
-        Palaute: %{feedback}
-
-        Voit muokata ketjusi alkuperäistä viestiäsi alla ja lähettää sen uudelleen ehdotetuilla muutoksilla tai vastata tähän viestiin, jos sinulla on kysyttävää.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Terveisin,
-        %{site_name} Ylläpito
     post_hidden_again:
       title: "Viesti piilotettiin jälleen"
       subject_template: "Yhteisön merkinnät piilottivat viestin, henkilökunnalle ilmoitettiin"

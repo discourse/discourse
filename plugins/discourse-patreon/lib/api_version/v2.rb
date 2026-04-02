@@ -67,22 +67,25 @@ module Patreon
 
       def self.pull_pledges!(campaign_data)
         campaign_ids = campaign_data[:campaign_ids]
-        members_data = []
+        is_first_page = true
 
         campaign_ids.each do |campaign_id|
           cursor = nil
           loop do
             response = Patreon::Api.get(members_data_url(campaign_id, cursor))
-            break if response.blank? || response["data"].blank?
 
-            members_data << response
+            if response.blank? || response["data"].blank?
+              Patreon::Pledge.save!([], false, adapter: self) if is_first_page
+              break
+            end
+
+            Patreon::Pledge.save!([response], !is_first_page, adapter: self)
+            is_first_page = false
 
             cursor = response.dig("meta", "pagination", "cursors", "next")
             break if cursor.blank?
           end
         end
-
-        Patreon::Pledge.save!(members_data, adapter: self)
       end
 
       def self.extract(member_data)

@@ -15,8 +15,6 @@ el:
       reactions_title: "Αντιδράσεις"
       state_panel:
         more_users: "και %{count} ακόμα..."
-      reaction:
-        forbidden: "Αυτή η αντίδραση δημιουργήθηκε πολύ καιρό πριν. Δεν μπορεί πια να τροποποιηθεί ή να αφαιρεθεί."
       picker:
         react_with: "Αντέδρασε σε αυτή την ανάρτηση με: %{reaction}"
         cant_remove_reaction: "Δεν μπορείς πια να αφαιρέσεις την αντίδραση σου"

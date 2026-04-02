@@ -1714,6 +1714,45 @@ RSpec.describe PostsController do
         expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
+      context "with content localization enabled" do
+        fab!(:japanese_user) { Fabricate(:user, locale: "ja", refresh_auto_groups: true) }
+        fab!(:localized_tag) { Fabricate(:tag, name: "strategy", locale: "en") }
+        fab!(:tag_localization) do
+          Fabricate(:tag_localization, tag: localized_tag, locale: "ja", name: "戦略")
+        end
+
+        before do
+          SiteSetting.tagging_enabled = true
+          SiteSetting.content_localization_enabled = true
+          SiteSetting.content_localization_supported_locales = "en|ja"
+          sign_in(japanese_user)
+        end
+
+        it "creates a topic with localized tags" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: [{ id: localized_tag.id, name: "戦略" }],
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags).to contain_exactly(localized_tag)
+        end
+
+        it "creates a topic with tags sent as strings" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: ["strategy"],
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags).to contain_exactly(localized_tag)
+        end
+      end
+
       it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {

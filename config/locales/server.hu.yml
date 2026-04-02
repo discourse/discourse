@@ -3090,47 +3090,9 @@ hu:
     reviewable_queued_post_revise_and_reject:
       title: "Visszajelzés a bejegyzéséről"
       subject_template: "Visszajelzés a bejegyzéséről itt: %{topic_title}"
-      text_body_template: |
-        Üdv %{username},
-
-        Áttekintettük bejegyzését a [%{topic_title}] (%{topic_url}) oldalon, és van néhány visszajelzés az Ön számára.
-
-        Ok: %{reason}
-
-        Visszajelzés: %{feedback}
-
-        Az alábbiakban szerkesztheti eredeti bejegyzését, és újra elküldheti a javasolt változtatások végrehajtásához, vagy válaszolhat erre az üzenetre, ha bármilyen kérdése van.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Köszönöm,
-        %{site_name} Moderátorok
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Visszajelzés a témájáról"
       subject_template: 'Visszajelzés a "%{topic_title}" című új témához'
-      text_body_template: |
-        Üdv %{username},
-
-        Áttekintettük az új témáját: "%{topic_title}", és van néhány visszajelzésünk az Ön számára.
-
-        Indoklás: %{reason}
-
-        Visszajelzés: %{feedback}
-
-        A téma eredeti hozzászólását alább szerkesztheti és küldheti el újra, hogy elvégezze a javasolt változtatásokat, vagy válaszoljon erre az üzenetre, ha bármilyen kérdése van.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Köszönettel,
-        %{site_name} Moderátorok
     post_hidden_again:
       title: "Bejegyzés újra elrejtve"
       preview: "A bejegyzést ismét elrejtették a közösség tagjai."

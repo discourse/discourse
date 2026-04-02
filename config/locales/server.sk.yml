@@ -3162,49 +3162,9 @@ sk:
     reviewable_queued_post_revise_and_reject:
       title: "Spätná väzba na váš príspevok"
       subject_template: "Spätná väzba na váš príspevok v %{topic_title}"
-      text_body_template: |
-        ### Preklad
-
-        **Ahoj %{username},**
-
-        Preskúmali sme váš príspevok v [%{topic_title}](%{topic_url}) a máme pre vás niekoľko pripomienok.
-
-        Dôvod: %{reason}
-
-        Spätná väzba: %{feedback}
-
-        Môžete upraviť svoj pôvodný príspevok nižšie a znovu ho odoslať so zmenami, alebo odpovedzte na túto správu, ak máte nejaké otázky.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Ďakujeme,
-        Moderátori %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Spätná väzba k vašej téme"
       subject_template: 'Spätná väzba k novej téme s názvom "%{topic_title}"'
-      text_body_template: |
-        Ahoj %{username},
-
-        Preskúmali sme tvoju novú tému s názvom "%{topic_title}" a máme pre teba niekoľko pripomienok.
-
-        Dôvod: %{reason}
-
-        Spätná väzba: %{feedback}
-
-        Môžeš upraviť pôvodný príspevok svojej témy nižšie a znovu ho odoslať so zmenami, ktoré navrhujeme, alebo odpovedať na túto správu, ak máš nejaké otázky.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Ďakujeme,
-        Moderátori %{site_name}
     post_hidden_again:
       title: "Príspevok je opäť skrytý"
       subject_template: "Príspevok skrytý kvôli označeniam komunity, personál bol informovaný"

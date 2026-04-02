@@ -3026,47 +3026,9 @@ zh_CN:
     reviewable_queued_post_revise_and_reject:
       title: "对您的帖子的反馈"
       subject_template: "对您在 %{topic_title} 下发表的帖子的反馈"
-      text_body_template: |
-        %{username}，您好！
-
-        我们审核了您在 [%{topic_title}](%{topic_url}) 下发表的帖子，并有一些反馈供您查阅。
-
-        原因：%{reason}
-
-        反馈：%{feedback}
-
-        您可以在下方编辑原帖，然后重新提交，进行建议的修改。如果您有任何问题，也可以回复此消息。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        谢谢！
-        %{site_name} 版主
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "对您的话题的反馈"
       subject_template: '对标题为“%{topic_title}”的新话题的反馈'
-      text_body_template: |
-        %{username}，您好！
-
-        我们审核了您标题为“%{topic_title}”的新话题，并有一些反馈供您查阅。
-
-        原因：%{reason}
-
-        反馈：%{feedback}
-
-        您可以在下方编辑话题的原帖，然后重新提交，进行建议的修改。如果您有任何问题，也可以回复此消息。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        谢谢！
-        %{site_name} 版主
     post_hidden_again:
       title: "帖子被再次隐藏"
       preview: "由于社区成员的再次举报，帖子已被隐藏。"

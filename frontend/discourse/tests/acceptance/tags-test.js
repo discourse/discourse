@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -7,7 +7,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("Tags", function (needs) {
@@ -368,72 +367,6 @@ acceptance("Tag info", function (needs) {
       })
     );
 
-    server.get("/tag/13/notifications.json", () =>
-      helper.response({
-        tag_notification: {
-          id: 13,
-          name: "happy-monkey",
-          notification_level: 1,
-        },
-      })
-    );
-
-    server.get("/tag/13/l/latest.json", () =>
-      helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          tags: [
-            {
-              id: 13,
-              name: "happy-monkey",
-              slug: "happy-monkey",
-              topic_count: 1,
-            },
-          ],
-          topics: [],
-        },
-      })
-    );
-
-    server.get("/tag/14/notifications.json", () =>
-      helper.response({
-        tag_notification: {
-          id: 14,
-          name: "happy-monkey2",
-          notification_level: 1,
-        },
-      })
-    );
-
-    server.get("/tag/14/l/latest.json", () =>
-      helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          tags: [
-            {
-              id: 14,
-              name: "happy-monkey2",
-              slug: "happy-monkey2",
-              topic_count: 1,
-            },
-          ],
-          topics: [],
-        },
-      })
-    );
-
     [
       "/tags/c/faq/4/planters/12/l/latest.json",
       "/tags/c/feature/2/planters/12/l/latest.json",
@@ -522,146 +455,6 @@ acceptance("Tag info", function (needs) {
         ],
       });
     });
-    server.put("/tag/13.json", (request) => {
-      const data = helper.parsePostData(request.requestBody);
-      // ID stays the same when renaming - use 13 (original tag ID)
-      return helper.response({
-        tag: { id: 13, name: data.tag.name, slug: data.tag.name },
-      });
-    });
-
-    server.get("/tag/13/info.json", () => {
-      return helper.response({
-        tag_info: {
-          id: 13,
-          name: "happy-monkey",
-          slug: "happy-monkey",
-          description: "happy monkey description",
-          topic_count: 1,
-          staff: false,
-          synonyms: [],
-          tag_group_names: [],
-          category_ids: [],
-        },
-        categories: [],
-      });
-    });
-
-    server.get("/tag/13/l/latest.json", () =>
-      helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          topics: [],
-          tags: [{ id: 13, name: "happy-monkey", slug: "happy-monkey" }],
-        },
-      })
-    );
-
-    server.delete("/tag/12/synonyms/22.json", () =>
-      helper.response({ success: true })
-    );
-
-    server.get("/tags/filter/search", () =>
-      helper.response({
-        results: [
-          { id: "monkey", name: "monkey", count: 1 },
-          { id: "not-monkey", name: "not-monkey", count: 1 },
-          { id: "happy-monkey", name: "happy-monkey", count: 1 },
-        ],
-      })
-    );
-  });
-
-  test("tag info can show synonyms", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: false });
-
-    await visit("/tag/planters/12");
-    assert.dom("#show-tag-info").exists();
-
-    await click("#show-tag-info");
-    assert.dom(".tag-info .tag-name").exists("show tag");
-    assert
-      .dom(".tag-info .tag-associations")
-      .includesText("Gardening", "show tag group names");
-    assert
-      .dom(".tag-info .synonyms-list .tag-box")
-      .exists({ count: 2 }, "shows the synonyms");
-    assert.dom(".tag-info .badge-category").exists("show the category");
-    assert.dom("#rename-tag").doesNotExist("can't rename tag");
-    assert.dom("#edit-synonyms").doesNotExist("can't edit synonyms");
-    assert.dom("#delete-tag").doesNotExist("can't delete tag");
-  });
-
-  test("tag info hides only current tag in synonyms dropdown", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
-
-    await visit("/tag/happy-monkey/13");
-    assert.dom("#show-tag-info").exists();
-
-    await click("#show-tag-info");
-    assert.dom(".tag-info .tag-name").exists("show tag");
-
-    await click("#edit-synonyms");
-
-    const addSynonymsDropdown = selectKit("#add-synonyms");
-    await addSynonymsDropdown.expand();
-
-    assert.deepEqual(
-      Array.from(addSynonymsDropdown.rows()).map((r) => {
-        return r.dataset.value;
-      }),
-      ["monkey", "not-monkey"]
-    );
-  });
-
-  test("edit tag is showing input for name and description", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
-
-    await visit("/tag/happy-monkey/13");
-    assert.dom("#show-tag-info").exists();
-
-    await click("#show-tag-info");
-    assert.dom(".tag-info .tag-name").exists("show tag");
-
-    await click(".edit-tag");
-    assert
-      .dom("#edit-name")
-      .hasValue("happy-monkey", "displays original tag name");
-    assert
-      .dom("#edit-description")
-      .hasValue(
-        "happy monkey description",
-        "displays original tag description"
-      );
-
-    await fillIn("#edit-description", "new description");
-    await click(".submit-edit");
-    assert.strictEqual(
-      currentURL(),
-      "/tag/happy-monkey/13",
-      "doesn't change URL"
-    );
-
-    await click(".edit-tag");
-    await fillIn("#edit-name", "happy-monkey2");
-    await click(".submit-edit");
-    assert.strictEqual(
-      currentURL(),
-      "/tag/happy-monkey2/13",
-      "changes URL to new tag path"
-    );
-  });
-
-  test("tag info hides when tag filter removed", async function (assert) {
-    await visit("/tag/happy-monkey/13");
-
-    await click("#show-tag-info");
-    assert.dom(".tag-info .tag-name").exists();
-
-    await visit("/latest");
-
-    assert.dom(".tag-info").doesNotExist("tag info is not shown on homepage");
   });
 
   test("can filter tags page by category", async function (assert) {
@@ -729,31 +522,6 @@ acceptance("Tag info", function (needs) {
 
     await click(".nav-item_hot a[href]");
     assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/12/l/hot");
-  });
-
-  test("admin can manage tags", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
-
-    await visit("/tag/planters/12");
-    assert.dom("#show-tag-info").exists();
-
-    await click("#show-tag-info");
-    assert.dom(".edit-tag").exists("can rename tag");
-    assert.dom("#edit-synonyms").exists("can edit synonyms");
-    assert.dom("#delete-tag").exists("can delete tag");
-
-    await click("#edit-synonyms");
-    assert
-      .dom(".unlink-synonym")
-      .isVisible({ count: 2 }, "unlink UI is visible");
-    assert
-      .dom(".delete-synonym")
-      .isVisible({ count: 2 }, "delete UI is visible");
-
-    await click(".unlink-synonym:nth-of-type(1)");
-    assert
-      .dom(".tag-info .synonyms-list .tag-box")
-      .exists({ count: 1 }, "removed a synonym");
   });
 
   test("composer will not set tags if user cannot create them", async function (assert) {
@@ -924,9 +692,6 @@ acceptance("Tag separator customization", function (needs) {
 
 acceptance("Tag settings page", function (needs) {
   needs.user();
-  needs.settings({
-    experimental_tag_settings_page: true,
-  });
   needs.pretender((server, helper) => {
     server.get("/tag/100/notifications.json", () =>
       helper.response({
@@ -1095,86 +860,5 @@ acceptance("Tag settings page", function (needs) {
     assert
       .dom(".form-kit__field[data-name='synonyms'] .formatted-selection")
       .hasText("test-synonym", "shows existing synonym");
-  });
-});
-
-acceptance("Tag settings page - disabled", function (needs) {
-  needs.user();
-  needs.settings({
-    experimental_tag_settings_page: false,
-  });
-  needs.pretender((server, helper) => {
-    server.get("/tag/100/notifications.json", () =>
-      helper.response({
-        tag_notification: {
-          id: 100,
-          name: "test-tag",
-          notification_level: 1,
-        },
-      })
-    );
-
-    server.get("/tag/100/l/latest.json", () =>
-      helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          tags: [
-            {
-              id: 100,
-              name: "test-tag",
-              slug: "test-tag",
-              topic_count: 5,
-            },
-          ],
-          topics: [],
-        },
-      })
-    );
-
-    server.get("/tag/100/info.json", () =>
-      helper.response({
-        tag_info: {
-          id: 100,
-          name: "test-tag",
-          slug: "test-tag",
-          description: "test description",
-          topic_count: 5,
-          staff: false,
-          synonyms: [],
-          tag_group_names: [],
-          category_ids: [],
-        },
-        categories: [],
-      })
-    );
-  });
-
-  test("shows pencil icon for inline editing when setting disabled", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
-
-    await visit("/tag/test-tag/100");
-    await click("#show-tag-info");
-
-    assert
-      .dom(".tag-info .tag-name-wrapper .edit-tag")
-      .exists("edit icon exists");
-    assert
-      .dom(".tag-info .tag-name-wrapper .edit-tag .d-icon-pencil")
-      .exists("shows pencil icon for inline editing");
-  });
-
-  test("shows edit synonyms button when setting disabled", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
-
-    await visit("/tag/test-tag/100");
-    await click("#show-tag-info");
-
-    assert.dom("#edit-synonyms").exists("edit synonyms button exists");
   });
 });

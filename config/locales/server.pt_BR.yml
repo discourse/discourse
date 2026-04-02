@@ -3084,47 +3084,9 @@ pt_BR:
     reviewable_queued_post_revise_and_reject:
       title: "Comentários sobre sua postagem"
       subject_template: "Comentários sobre sua postagem em %{topic_title}"
-      text_body_template: |
-        Olá, %{username},
-
-        Revisamos sua postagem em [%{topic_title}](%{topic_url}) e temos um comentário para você.
-
-        Motivo: %{reason}
-
-        Comentário: %{feedback}
-
-        Você pode editar sua postagem original abaixo e enviá-la novamente para fazer as alterações sugeridas, ou responder a esta mensagem se tiver alguma dúvida.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Atenciosamente,
-        Moderadores do %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Comentários sobre seu tópico"
       subject_template: 'Comentário sobre o novo tópico chamado "%{topic_title}"'
-      text_body_template: |
-        Olá, %{username},
-
-        Revisamos seu novo tópico chamado "%{topic_title}" e temos um comentário para você.
-
-        Motivo: %{reason}
-
-        Comentário: %{feedback}
-
-        Você pode editar a postagem original do seu tópico abaixo e enviá-la novamente para fazer as alterações sugeridas, ou responder a esta mensagem se tiver alguma dúvida.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Atenciosamente,
-        Moderadores do %{site_name}
     post_hidden_again:
       title: "Postagem oculta novamente"
       preview: "Postagem ocultada novamente pelos membros da comunidade."
