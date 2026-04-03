@@ -6392,6 +6392,10 @@ en:
           passing: "Passing"
           failing: "Failing"
           last_run_at: "Last run"
+          ignore: "Ignore"
+          watch: "Watch"
+          more_options:
+            title: "More options"
         reports:
           title: "Reports"
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."

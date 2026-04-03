@@ -509,7 +509,7 @@ Discourse::Application.routes.draw do
         put "ignore" => "problem_checks#ignore"
         put "watch" => "problem_checks#watch"
       end
-      get "problem-checks" => "site_settings#index", :constraints => AdminConstraint.new
+      get "problem-checks" => "problem_checks#index", :constraints => AdminConstraint.new
 
       delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace

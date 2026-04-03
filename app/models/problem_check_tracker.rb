@@ -40,12 +40,14 @@ class ProblemCheckTracker < ActiveRecord::Base
     return if ignored?
 
     touch(:ignored_at)
+    silence_the_alarm
   end
 
   def watch!
     return if watched?
 
     update(ignored_at: nil)
+    sound_the_alarm if sound_the_alarm?
   end
 
   def problem!(next_run_at: nil, details: {})
