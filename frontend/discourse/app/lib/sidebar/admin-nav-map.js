@@ -515,7 +515,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_problem_checks",
-        route: "admin.problemChecks",
+        route: "adminProblemChecks",
         label: "admin.config.problem_checks.title",
         description: "admin.config.problem_checks.header_description",
         icon: "heart",

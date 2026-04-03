@@ -156,10 +156,13 @@ export default function () {
       }
     );
 
-    this.route("admin.problemChecks", {
-      path: "/problem-checks",
-      resetNamespace: true,
-    });
+    this.route(
+      "adminProblemChecks",
+      { path: "/problem-checks", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
+      }
+    );
 
     this.route(
       "adminReports",
