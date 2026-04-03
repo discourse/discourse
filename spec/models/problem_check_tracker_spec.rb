@@ -153,6 +153,52 @@ RSpec.describe ProblemCheckTracker do
     end
   end
 
+  describe "#ignore!" do
+    let(:problem_tracker) { Fabricate(:problem_check_tracker, ignored_at:) }
+
+    context "when not currently ignored" do
+      let(:ignored_at) { nil }
+
+      it "sets the ignore timestamp" do
+        freeze_time
+
+        expect { problem_tracker.ignore! }.to change { problem_tracker.ignored_at }.from(nil).to(
+          Time.current,
+        )
+      end
+    end
+
+    context "when already ignored" do
+      let(:ignored_at) { 1.day.ago }
+
+      it "does not touch the ignore timestamp" do
+        expect { problem_tracker.ignore! }.not_to change { problem_tracker.ignored_at }
+      end
+    end
+  end
+
+  describe "#watch!" do
+    let(:problem_tracker) { Fabricate(:problem_check_tracker, ignored_at:) }
+
+    context "when not currently ignored" do
+      let(:ignored_at) { nil }
+
+      it "does not touch the ignore timestamp" do
+        expect { problem_tracker.watch! }.not_to change { problem_tracker.ignored_at }
+      end
+    end
+
+    context "when currently ignored" do
+      let(:ignored_at) { 1.day.ago }
+
+      it "clears the ignore timestamp" do
+        expect { problem_tracker.watch! }.to change { problem_tracker.ignored_at }.from(
+          ignored_at,
+        ).to(nil)
+      end
+    end
+  end
+
   describe "#problem!" do
     let(:problem_tracker) do
       Fabricate(

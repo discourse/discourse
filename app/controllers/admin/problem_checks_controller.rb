@@ -5,4 +5,20 @@ class Admin::ProblemChecksController < Admin::AdminController
     trackers = ProblemCheckTracker.all.order(:identifier, :target)
     render_serialized(trackers, ProblemCheckTrackerSerializer)
   end
+
+  def ignore
+    tracker = ProblemCheckTracker.find(params[:tracker_id])
+
+    tracker.ignore!
+
+    render json: success_json
+  end
+
+  def watch
+    tracker = ProblemCheckTracker.find(params[:tracker_id])
+
+    tracker.watch!
+
+    render json: success_json
+  end
 end

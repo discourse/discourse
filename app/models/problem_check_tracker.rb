@@ -36,6 +36,18 @@ class ProblemCheckTracker < ActiveRecord::Base
     !ignored?
   end
 
+  def ignore!
+    return if ignored?
+
+    touch(:ignored_at)
+  end
+
+  def watch!
+    return if watched?
+
+    update(ignored_at: nil)
+  end
+
   def problem!(next_run_at: nil, details: {})
     now = Time.current
 
