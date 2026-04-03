@@ -36,7 +36,8 @@ describe "Upcoming Events" do
     let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
 
     it "shows clamped description with expand toggle", time: Time.utc(2025, 9, 10, 12, 0) do
-      long_description = "This is a long event description. " * 20
+      long_description =
+        "Join us for a <b>great</b> event :tada: with **bold text** and more details! " * 10
       create_post(
         user: admin,
         category: Fabricate(:category),
@@ -51,6 +52,9 @@ describe "Upcoming Events" do
       find("a", text: "Event with long description").click
 
       expect(post_event_page).to have_description_clamped
+      expect(post_event_page).to have_description(
+        "Join us for a great event with bold text and more details!",
+      )
       expect(post_event_page).to have_description_toggle
 
       post_event_page.click_description_toggle
