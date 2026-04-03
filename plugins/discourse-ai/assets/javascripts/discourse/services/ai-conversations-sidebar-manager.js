@@ -26,7 +26,6 @@ export default class AiConversationsSidebarManager extends Service {
   @tracked topics = [];
   @tracked sections = trackedArray();
   @tracked isLoading = true;
-  @tracked lastKnownAppURL = null;
 
   api = null;
   isFetching = false;
@@ -103,7 +102,6 @@ export default class AiConversationsSidebarManager extends Service {
   forceCustomSidebar() {
     document.body.classList.add("has-ai-conversations-sidebar");
     if (!this.sidebarState.isForcingSidebar) {
-      this._captureLastKnownAppURL();
       this.appEvents.trigger("discourse-ai:force-conversations-sidebar");
     }
 
@@ -183,13 +181,12 @@ export default class AiConversationsSidebarManager extends Service {
     this._removeScrollListener();
   }
 
-  _captureLastKnownAppURL() {
+  get lastKnownAppURL() {
     const lastForumUrl = this.routeHistory.history.find((url) => {
       return !url.startsWith("/discourse-ai");
     });
 
-    this.lastKnownAppURL =
-      lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
+    return lastForumUrl || this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
   async fetchMessages() {

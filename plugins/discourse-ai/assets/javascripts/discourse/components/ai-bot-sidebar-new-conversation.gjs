@@ -3,13 +3,11 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import BackToForum from "discourse/components/sidebar/back-to-forum";
-import getURL from "discourse/lib/get-url";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
 
 const TEXTAREA_ID = "ai-bot-conversations-input";
 
 export default class AiBotSidebarNewConversation extends Component {
-  @service aiConversationsSidebarManager;
   @service appEvents;
   @service router;
   @service sidebarState;
@@ -21,10 +19,6 @@ export default class AiBotSidebarNewConversation extends Component {
 
   get shouldShowBackLink() {
     return !this.siteSettings.ai_bot_add_to_header;
-  }
-
-  get backToForumHref() {
-    return getURL(this.aiConversationsSidebarManager.lastKnownAppURL || "/");
   }
 
   @action
@@ -48,7 +42,7 @@ export default class AiBotSidebarNewConversation extends Component {
   <template>
     {{#if this.shouldRender}}
       {{#if this.shouldShowBackLink}}
-        <BackToForum @href={{this.backToForumHref}} />
+        <BackToForum />
       {{/if}}
       <div class="ai-new-question-button__wrapper">
         <DButton
