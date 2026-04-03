@@ -5,7 +5,6 @@ module Jobs
     sidekiq_options retry: false
 
     CHANNEL_PREFIX = "/discourse-data-explorer/queries/ai-generation"
-    REDIS_PREFIX = "data_explorer_ai_generating"
 
     def execute(args)
       @query_id = args[:query_id]
@@ -22,7 +21,13 @@ module Jobs
       agent_record = AiAgent.find_by(id: agent_id)
       if agent_record.nil?
         cleanup_redis
-        return publish_error(query, user, "AI agent not configured")
+        return(
+          publish_error(
+            query,
+            user,
+            I18n.t("discourse_data_explorer.ai.error_agent_not_configured"),
+          )
+        )
       end
 
       agent_klass = agent_record.class_instance
@@ -35,12 +40,22 @@ module Jobs
           feature_name: "data_explorer_query_generation",
         )
 
-      result = bot.reply(context) { |partial, _, type| }
-      parsed = parse_response(result)
+      structured_output = nil
+      result = +""
+      bot.reply(context) do |partial, _, type|
+        if type == :structured_output
+          structured_output = partial
+        elsif type.blank? && partial.is_a?(String)
+          result << partial
+        end
+      end
+      parsed = parse_structured_response(structured_output, result)
 
       if parsed[:sql].blank?
         cleanup_redis
-        return publish_error(query, user, "AI did not return valid SQL")
+        return(
+          publish_error(query, user, I18n.t("discourse_data_explorer.ai.error_no_sql_returned"))
+        )
       end
 
       query.update!(
@@ -59,22 +74,22 @@ module Jobs
     private
 
     def cleanup_redis
-      Discourse.redis.del("#{REDIS_PREFIX}:#{@query_id}") if @query_id
+      Discourse.redis.del(DiscourseDataExplorer::AiQueryEnqueuer.redis_key(@query_id)) if @query_id
     end
 
-    def parse_response(result)
-      text =
-        result
-          .select { |segment| segment.is_a?(Array) && segment[0].is_a?(String) }
-          .last
-          &.first
-          .to_s
-          .strip
-
-      JSON.parse(text).symbolize_keys
+    def parse_structured_response(structured_output, text)
+      if structured_output
+        {
+          sql: structured_output.read_buffered_property(:sql),
+          name: structured_output.read_buffered_property(:name),
+          description: structured_output.read_buffered_property(:description),
+        }
+      else
+        parsed = JSON.parse(text.strip).symbolize_keys
+        parsed.slice(:sql, :name, :description)
+      end
     rescue JSON::ParserError
-      # fallback if the agent didn't return valid JSON
-      { sql: text, name: nil, description: nil }
+      { sql: text.strip, name: nil, description: nil }
     end
 
     def publish_complete(query, user)
@@ -82,7 +97,7 @@ module Jobs
         "#{CHANNEL_PREFIX}/#{query.id}",
         { status: "complete", sql: query.sql, name: query.name, description: query.description },
         user_ids: [user.id],
-        max_backlog_age: 120,
+        max_backlog_age: DiscourseDataExplorer::AiQueryEnqueuer::REDIS_TTL,
       )
     end
 
@@ -93,7 +108,7 @@ module Jobs
         "#{CHANNEL_PREFIX}/#{query.id}",
         { status: "error", error: message },
         user_ids: [user.id],
-        max_backlog_age: 120,
+        max_backlog_age: DiscourseDataExplorer::AiQueryEnqueuer::REDIS_TTL,
       )
     end
   end
