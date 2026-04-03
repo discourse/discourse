@@ -3026,7 +3026,7 @@ en:
         categories_admin_dropdown:
           title: "Manage categories"
         tag_category_admin_dropdown:
-          title: "Manage"
+          title: "Category and tag settings"
           edit_category: "Edit category"
           edit_category_description: "Adjust settings for %{badge}"
           edit_tag: "Edit tag"
