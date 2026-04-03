@@ -4,7 +4,6 @@ import { LinkTo } from "@ember/routing";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DPageSubheader from "discourse/components/d-page-subheader";
-import Form from "discourse/components/form";
 import LoadMore from "discourse/components/load-more";
 import PickFilesButton from "discourse/components/pick-files-button";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
@@ -22,7 +21,7 @@ export default <template>
       <DPageSubheader @titleLabel={{i18n "explorer.queries"}}>
         <:actions as |actions|>
           <actions.Primary
-            @action={{@controller.displayCreate}}
+            @route="adminPlugins.show.explorer.new"
             @icon="plus"
             @label="explorer.create"
           />
@@ -48,36 +47,6 @@ export default <template>
         @loading={{@controller.searchLoading}}
       >
         <:aboveFilters>
-          {{#if @controller.showCreate}}
-            <div class="query-create">
-              <Form
-                @data={{@controller.createFormData}}
-                @onSubmit={{@controller.create}}
-                as |form|
-              >
-                <form.Field
-                  @name="name"
-                  @title={{i18n "explorer.create_placeholder"}}
-                  @validation="required"
-                  @format="large"
-                  @type="input"
-                  as |field|
-                >
-                  <field.Control />
-                </form.Field>
-                <form.Actions>
-                  <form.Submit @label="explorer.create" @icon="plus" />
-                  <form.Button
-                    @action={{@controller.hideCreate}}
-                    class="btn-default"
-                  >
-                    {{i18n "cancel"}}
-                  </form.Button>
-                </form.Actions>
-              </Form>
-            </div>
-          {{/if}}
-
           {{#if @controller.othersDirty}}
             <div class="warning">
               {{icon "triangle-exclamation"}}

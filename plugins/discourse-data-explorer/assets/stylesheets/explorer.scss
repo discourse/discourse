@@ -336,21 +336,11 @@ table.group-reports {
 }
 
 .disscourse-data-explorer-query-list,
-.query-create,
 .query-edit,
 .query-results,
 .query-params,
 .https-warning {
   margin: 10px 0;
-}
-
-.query-create {
-  display: flex;
-
-  input {
-    margin-right: 0.5em;
-    margin-bottom: 0;
-  }
 }
 
 .query-results {

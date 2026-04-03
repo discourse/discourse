@@ -77,6 +77,6 @@ export default class Query extends RestModel {
       // Importing
       return this.updateProperties();
     }
-    return this.getProperties("name");
+    return this.getProperties("name", "description");
   }
 }

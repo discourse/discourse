@@ -65,6 +65,30 @@ module PageObjects
           text: text,
         )
       end
+
+      def visit_new_query
+        page.visit("/admin/plugins/discourse-data-explorer/queries/new")
+        self
+      end
+
+      def fill_new_query_name(text)
+        page.find(".query-new [data-name='name'] input").fill_in(with: text)
+        self
+      end
+
+      def fill_new_query_description(text)
+        page.find(".query-new [data-name='description'] textarea").fill_in(with: text)
+        self
+      end
+
+      def submit_new_query
+        page.find(".query-new .btn-primary").click
+        self
+      end
+
+      def has_query_description?(text)
+        page.has_css?(".query-edit .desc", text: text)
+      end
     end
   end
 end
