@@ -506,8 +506,8 @@ Discourse::Application.routes.draw do
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
       resources :problem_checks, only: %i[index], constraints: AdminConstraint.new do
-        get "ignore/:tracker_id" => "problem_checks#ignore"
-        get "watch/:tracker_id" => "problem_checks#watch"
+        put "ignore" => "problem_checks#ignore"
+        put "watch" => "problem_checks#watch"
       end
       get "problem-checks" => "site_settings#index", :constraints => AdminConstraint.new
 

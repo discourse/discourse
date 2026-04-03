@@ -32,8 +32,66 @@ RSpec.describe Admin::ProblemChecksController do
     context "when not logged in as admin" do
       before { sign_in(user) }
 
-      it "denies access" do
+      it "returns a not found error" do
         get "/admin/problem_checks.json"
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "#ignore" do
+    context "when tracker exists" do
+      before { sign_in(admin) }
+
+      it "returns a not found error" do
+        put "/admin/problem_checks/#{problem_check_tracker.id}/ignore.json"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when tracker does not exist" do
+      before { sign_in(admin) }
+
+      it "returns a not found error" do
+        put "/admin/problem_checks/1337/ignore.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when not logged in as admin" do
+      before { sign_in(user) }
+
+      it "returns a not found error" do
+        put "/admin/problem_checks/#{problem_check_tracker.id}/ignore.json"
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "#watch" do
+    context "when tracker exists" do
+      before { sign_in(admin) }
+
+      it "returns a not found error" do
+        put "/admin/problem_checks/#{problem_check_tracker.id}/watch.json"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when tracker does not exist" do
+      before { sign_in(admin) }
+
+      it "returns a not found error" do
+        put "/admin/problem_checks/1337/watch.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when not logged in as admin" do
+      before { sign_in(user) }
+
+      it "returns a not found error" do
+        put "/admin/problem_checks/#{problem_check_tracker.id}/watch.json"
         expect(response.status).to eq(404)
       end
     end

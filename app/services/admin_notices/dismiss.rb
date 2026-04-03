@@ -15,7 +15,7 @@ class AdminNotices::Dismiss
 
   transaction do
     step :destroy
-    step :reset_problem_check
+    step :ignore_problem_check
   end
 
   private
@@ -34,10 +34,10 @@ class AdminNotices::Dismiss
     admin_notice.destroy!
   end
 
-  def reset_problem_check(admin_notice:)
+  def ignore_problem_check(admin_notice:)
     return if admin_notice.blank?
 
     target = admin_notice.details&.dig("target") || ProblemCheck::NO_TARGET
-    ProblemCheckTracker.find_by(identifier: admin_notice.identifier, target:)&.reset
+    ProblemCheckTracker.find_by(identifier: admin_notice.identifier, target:)&.ignore!
   end
 end

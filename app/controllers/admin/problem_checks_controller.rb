@@ -7,7 +7,7 @@ class Admin::ProblemChecksController < Admin::AdminController
   end
 
   def ignore
-    tracker = ProblemCheckTracker.find(params[:tracker_id])
+    tracker = ProblemCheckTracker.find(params[:problem_check_id])
 
     tracker.ignore!
 
@@ -15,7 +15,7 @@ class Admin::ProblemChecksController < Admin::AdminController
   end
 
   def watch
-    tracker = ProblemCheckTracker.find(params[:tracker_id])
+    tracker = ProblemCheckTracker.find(params[:problem_check_id])
 
     tracker.watch!
 
