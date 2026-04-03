@@ -2494,7 +2494,6 @@ de:
     fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
     floating_dismiss_topics_on_mobile: "Zeigt auf dem Handy über der Themenliste eine schwebende „Verwerfen …“-Schaltfläche, um den Zugriff zu erleichtern und Platz im oberen Bereich der Themenliste freizugeben"
     rename_faq_to_guidelines: "Diese Änderung benennt die FAQ-Seite in „Richtlinien“ um. Die FAQ-Seite ist weiterhin unter /faq erreichbar. Die Einstellung „faq url“ funktioniert wie bisher."
-    experimental_tag_settings_page: "Aktiviere eine eigene Einstellungsseite für Schlagwörter unter /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Ermöglicht eine vereinfachte Kategorienerstellung mit weniger Optionen und einer übersichtlicheren Oberfläche."
     enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung „Splash Screen Image“ hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
     modernize_foundation_theme: "Diese Änderung führt Design-Änderungen am Foundation-Theme in Discourse ein."

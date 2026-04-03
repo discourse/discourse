@@ -6,6 +6,10 @@
 
 ja:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "データエクスプローラー"
     errors:
       explorer:
         no_semicolons: "クエリからセミコロンを削除します。"
@@ -72,6 +76,12 @@ ja:
           no_such_group: "そのようなグループはありません"
     group:
       reports: "レポート"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "データエクスプローラーのクエリを実行します。クエリ ID を指定して、API キーを一連のクエリに制限します。"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

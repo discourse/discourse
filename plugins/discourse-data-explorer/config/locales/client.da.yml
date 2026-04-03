@@ -6,6 +6,10 @@
 
 da:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Udforsker"
     errors:
       explorer:
         no_semicolons: "Fjern semikoloner fra forespørgslen."

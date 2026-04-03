@@ -360,6 +360,7 @@ tr_TR:
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
       toggle_mobile_view: "Mobil görünümü aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
+      toggle_upcoming_changes_debug: "Yaklaşan değişikliklerin hata ayıklama modunu aç/kapat"
     s3:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"
@@ -7189,6 +7190,16 @@ tr_TR:
           update_success: "%{theme} Güncelleme tamamlandı"
           up_to_date: "Tema güncel, son kontrol:"
           has_overwritten_history: "Geçerli tema sürümü artık mevcut değil çünkü Git geçmişi zorla gönderilerek üzerine yazıldı."
+          change_source:
+            button: "Kaynağı değiştir"
+            title: "Tema Kaynağını Değiştir"
+            repository_url: "Depo URL'si"
+            branch: "Dal (isteğe bağlı)"
+            updating: "Tema kaynağı güncelleniyor…"
+            update: "Kaynağı güncelle"
+            has_existing_key: "Bu temada önceden yapılandırılmış bir SSH anahtarı bulunmaktadır."
+            generate_new_key: "Yeni SSH anahtarı oluştur"
+            keep_existing_key: "Mevcut SSH anahtarını koru"
           add: "Ekle"
           theme_settings: "Özel tema ayarları"
           theme_site_settings: "Temanın geçersiz kılabileceği ayarlar"
