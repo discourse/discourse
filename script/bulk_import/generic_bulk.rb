@@ -735,7 +735,7 @@ class BulkImport::Generic < BulkImport::Base
       SELECT v.*
         FROM user_field_values v
              JOIN users u ON v.user_id = u.id
-       WHERE u.anonymized = FALSE
+       WHERE u.anonymized IS NULL OR u.anonymized = FALSE
     SQL
 
     existing_user_fields =
