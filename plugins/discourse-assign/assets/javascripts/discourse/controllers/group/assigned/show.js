@@ -24,9 +24,9 @@ export default class GroupAssignedShow extends UserTopicsList {
 
   @alias("currentUser.staff") canBulkSelect;
 
-  @computed("model.topics.length", "search")
-  get doesntHaveAssignments() {
-    return !this.search && !this.model?.topics?.length;
+  @computed("search", "model.topics.length")
+  get hasAssignments() {
+    return this.search || !!this.model?.topics?.length;
   }
 
   _setSearchTerm(searchTerm) {

@@ -8,12 +8,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  {{#if @controller.doesntHaveAssignments}}
-    <EmptyState
-      @title={{i18n "discourse_assign.group_no_assignments_title"}}
-      @body={{i18n "discourse_assign.group_no_assignments_body"}}
-    />
-  {{else}}
+  {{#if @controller.hasAssignments}}
     <div class="topic-search-div">
       <div class="inline-form full-width">
         <Input
@@ -56,5 +51,10 @@ export default <template>
 
       <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
     </LoadMore>
+  {{else}}
+    <EmptyState
+      @title={{i18n "discourse_assign.group_no_assignments_title"}}
+      @body={{i18n "discourse_assign.group_no_assignments_body"}}
+    />
   {{/if}}
 </template>
