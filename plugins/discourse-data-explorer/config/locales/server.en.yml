@@ -26,6 +26,9 @@ en:
       recurring_data_explorer_result_topic:
         title: Schedule a post in a topic with Data Explorer results
         description: Get scheduled reports posted to a specific topic
+  discourse_data_explorer:
+    ai:
+      generating_name: "Generating..."
   data_explorer:
     report_generator:
       private_message:

@@ -22,6 +22,16 @@ en:
       create: "Create"
       create_placeholder: "Query name..."
       description_placeholder: "Enter a description here"
+      ai:
+        or_divider: "OR"
+        description_title: "Generate with AI"
+        description_hint: "Describe what you want in plain language. We'll generate the SQL, name, and description for you."
+        description_placeholder: "e.g. Show me signups across time"
+        generate: "Generate"
+        generating_name: "Generating..."
+        generating: "Generating query with AI..."
+        generation_timeout: "AI query generation timed out. You can write the SQL manually."
+        generation_error: "Something went wrong generating the query."
       import:
         label: "Import"
         unparseable_json: "Unparseable JSON file."
