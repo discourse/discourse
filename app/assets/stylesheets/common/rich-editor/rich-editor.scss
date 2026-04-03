@@ -52,20 +52,85 @@
   }
 
   img[data-placeholder="true"] {
+    max-width: 500px;
+    height: auto;
+    border-radius: 6px;
+    filter: blur(1px);
+    opacity: 0.5;
+  }
+
+  .upload-placeholder-image__overlay {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.15em 0.45em;
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    vertical-align: bottom;
+    margin-left: -4.5em;
+    margin-right: 0.4em;
+    margin-bottom: 0.4em;
+    position: relative;
+
+    .upload-placeholder__progress {
+      font-size: inherit;
+      color: inherit;
+    }
+
+    .upload-placeholder__cancel {
+      cursor: pointer;
+      opacity: 0.7;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  .upload-placeholder-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.15em 0.4em;
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    color: var(--primary-high);
     animation: placeholder 1.5s infinite;
 
-    @keyframes placeholder {
-      0% {
-        opacity: 0.6;
-      }
+    .d-icon {
+      fill: currentcolor;
+    }
 
-      50% {
-        opacity: 0.4;
-      }
+    .upload-placeholder__progress {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
+  }
 
-      100% {
-        opacity: 0.6;
-      }
+  .upload-placeholder__cancel {
+    cursor: pointer;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+      color: var(--danger);
+    }
+  }
+
+  @keyframes placeholder {
+    0% {
+      opacity: 0.6;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+
+    100% {
+      opacity: 0.6;
     }
   }
 
