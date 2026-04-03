@@ -121,12 +121,25 @@ export default class DNavigation extends Component {
     return this.category?.can_edit;
   }
 
+  @computed("tag", "tag.name", "additionalTags", "currentUser.canEditTags")
   get showTagEdit() {
-    return this.tag && !this.additionalTags && this.currentUser?.canEditTags;
+    return (
+      this.tag &&
+      this.tag.name !== "none" &&
+      !this.additionalTags &&
+      this.currentUser?.canEditTags
+    );
   }
 
+  @computed(
+    "category.can_edit",
+    "tag",
+    "tag.name",
+    "additionalTags",
+    "currentUser.canEditTags"
+  )
   get showCombinedAdminDropdown() {
-    return this.showCategoryEdit && this.showTagEdit;
+    return this.category?.can_edit && this.showTagEdit;
   }
 
   @computed(
@@ -293,13 +306,8 @@ export default class DNavigation extends Component {
           />
         {{/if}}
 
-        {{#if this.tag}}
-          {{#unless this.additionalTags}}
-            <TagInfoButton
-              @tag={{this.tag}}
-              @currentUser={{this.currentUser}}
-            />
-          {{/unless}}
+        {{#if this.showTagEdit}}
+          <TagInfoButton @tag={{this.tag}} @currentUser={{this.currentUser}} />
         {{/if}}
       {{/if}}
 
