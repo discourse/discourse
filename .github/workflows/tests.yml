@@ -315,7 +315,23 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake 'plugin:qunit[*]'
+        env:
+          CHROME_CRASH_DUMPS_DIR: /tmp/chrome-crashes
+        run: |
+          mkdir -p /tmp/chrome-crashes
+          bin/rake 'plugin:qunit[*]'
+
+      - name: Analyze Chrome crash dumps
+        if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        run: |
+          echo "=== Chrome crash dumps ==="
+          find /tmp/chrome-crashes -type f 2>/dev/null
+          for dump in /tmp/chrome-crashes/*.dmp; do
+            [ -f "$dump" ] || continue
+            echo "--- $dump ($(stat -c%s "$dump") bytes) ---"
+            # Print raw header for crash thread info
+            strings "$dump" | grep -iE 'crash|thread|signal|exception|rip|module' | head -30
+          done
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
