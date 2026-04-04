@@ -254,7 +254,7 @@ module.exports = {
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
-      "--no-sparkplug",
+      "--jitless",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },
