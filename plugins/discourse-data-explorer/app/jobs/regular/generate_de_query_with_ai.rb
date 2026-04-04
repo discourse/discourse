@@ -14,13 +14,12 @@ module Jobs
 
       query = DiscourseDataExplorer::Query.find_by(id: @query_id)
       user = User.find_by(id: args[:user_id])
-      return cleanup_redis if query.nil? || user.nil?
+      return if query.nil? || user.nil?
 
       agent_id =
         DiscourseAi::Agents::Agent.external_agent_id(DiscourseDataExplorer::AiQueryGenerator)
       agent_record = AiAgent.find_by(id: agent_id)
       if agent_record.nil?
-        cleanup_redis
         return(
           publish_error(
             query,
@@ -52,7 +51,6 @@ module Jobs
       parsed = parse_structured_response(structured_output, result)
 
       if parsed[:sql].blank?
-        cleanup_redis
         return(
           publish_error(query, user, I18n.t("discourse_data_explorer.ai.error_no_sql_returned"))
         )
@@ -64,11 +62,11 @@ module Jobs
         description: parsed[:description].presence || args[:ai_description],
       )
 
-      cleanup_redis
       publish_complete(query, user)
     rescue => e
-      cleanup_redis
       publish_error(query, user, e.message) if query && user
+    ensure
+      cleanup_redis
     end
 
     private
