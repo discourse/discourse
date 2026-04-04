@@ -346,24 +346,41 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        env:
+          CHROME_CRASH_DUMPS_DIR: ${{ github.workspace }}/tmp/chrome-crashes
         run: |
-          # Start memory monitor in background
-          (while true; do
-            echo "$(date '+%H:%M:%S') $(free -h | grep Mem | awk '{print "Mem: used=" $3 " free=" $4 " available=" $7}')"
-            if [ -f /proc/meminfo ]; then
-              echo "  MemAvailable: $(grep MemAvailable /proc/meminfo)"
-            fi
-            # Log Chrome process memory if any are running
-            ps aux | grep '[c]hrome' | awk '{sum += $6} END {if (sum > 0) printf "  Chrome RSS total: %.0f MB\n", sum/1024}' || true
-            sleep 5
-          done) &
-          MEMMON_PID=$!
-
+          mkdir -p "$CHROME_CRASH_DUMPS_DIR"
+          ulimit -c unlimited
+          echo "${{ github.workspace }}/tmp/core.%e.%p" | sudo tee /proc/sys/kernel/core_pattern || true
           bin/rake 'plugin:qunit[*]'
-          TEST_EXIT=$?
 
-          kill $MEMMON_PID 2>/dev/null || true
-          exit $TEST_EXIT
+      - name: Chrome crash diagnostics
+        if: failure() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        run: |
+          echo "=== dmesg (last 50 lines) ==="
+          dmesg --time-format iso 2>/dev/null | tail -50 || dmesg | tail -50 || echo "dmesg not available"
+          echo ""
+          echo "=== Chrome crash dumps ==="
+          find tmp/chrome-crashes -type f 2>/dev/null | head -20 || echo "No crash dumps found"
+          echo ""
+          echo "=== Core dumps ==="
+          find tmp/ -name 'core.*' -type f 2>/dev/null | head -10 || echo "No core dumps found"
+          for core in tmp/core.*; do
+            [ -f "$core" ] || continue
+            echo "--- Core dump: $core ---"
+            file "$core"
+            # Try to extract the signal from the core dump
+            gdb -batch -ex "info signal" -ex "bt" -core "$core" 2>/dev/null | head -30 || echo "gdb not available"
+          done
+
+      - name: Upload crash artifacts
+        uses: actions/upload-artifact@v7
+        if: failure() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        with:
+          name: chrome-crash-artifacts
+          path: |
+            tmp/chrome-crashes/
+            tmp/core.*
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'

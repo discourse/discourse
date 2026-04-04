@@ -26,6 +26,9 @@ patchedDependencies:
   licensee@11.1.1:
     hash: 566956dc682db703e899e5b01c65b129e434ad9f0848f5b9f62c3c28afd086e9
     path: patches/licensee@11.1.1.patch
+  testem@3.19.0:
+    hash: 5982592e8f01a0158fe5abc8cf13b7fe5ce25b3b5e7d9cacd5a06a173ea1a673
+    path: patches/testem@3.19.0.patch
 
 importers:
 
@@ -604,7 +607,7 @@ importers:
         version: 5.46.1
       testem:
         specifier: ^3.19.0
-        version: 3.19.0(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
+        version: 3.19.0(patch_hash=5982592e8f01a0158fe5abc8cf13b7fe5ce25b3b5e7d9cacd5a06a173ea1a673)(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -14125,7 +14128,7 @@ snapshots:
       sort-package-json: 3.6.1
       symlink-or-copy: 1.3.1
       temp: 0.9.4
-      testem: 3.19.0(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
+      testem: 3.19.0(patch_hash=5982592e8f01a0158fe5abc8cf13b7fe5ce25b3b5e7d9cacd5a06a173ea1a673)(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
       tiny-lr: 2.0.0
       tree-sync: 2.1.0
       walk-sync: 4.0.1
@@ -18935,7 +18938,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  testem@3.19.0(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8):
+  testem@3.19.0(patch_hash=5982592e8f01a0158fe5abc8cf13b7fe5ce25b3b5e7d9cacd5a06a173ea1a673)(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8):
     dependencies:
       '@xmldom/xmldom': 0.8.12
       backbone: 1.6.1
