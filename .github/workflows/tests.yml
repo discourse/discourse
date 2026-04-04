@@ -324,6 +324,13 @@ jobs:
           echo "=== CPU info ==="
           nproc && cat /proc/cpuinfo | grep "model name" | head -1
 
+      - name: Upload core build chunks
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        uses: actions/upload-artifact@v7
+        with:
+          name: core-build-chunks
+          path: frontend/discourse/dist/assets/chunk.*.js
+
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
