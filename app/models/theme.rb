@@ -250,6 +250,7 @@ class Theme < ActiveRecord::Base
         GlobalSetting.s3_endpoint,
         GlobalSetting.s3_bucket,
         Discourse.current_hostname,
+        ENV["ROLLUP_PLUGIN_COMPILER"],
       ]
       Digest::SHA1.hexdigest(dependencies.join)
     end

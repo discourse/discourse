@@ -7,6 +7,7 @@ import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin"
 import { precompile } from "ember-source/ember-template-compiler/index.js";
 import EmberThisFallback from "ember-this-fallback";
 import { memfs } from "memfs";
+import transformActionSyntax from "discourse-plugins/transform-action-syntax";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
@@ -19,7 +20,6 @@ import discourseHbs from "./rollup-plugins/discourse-hbs";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
-import transformActionSyntax from "./transform-action-syntax";
 
 let lastRollupResult;
 let lastRollupError;
