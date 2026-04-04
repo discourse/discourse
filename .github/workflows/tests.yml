@@ -300,6 +300,30 @@ jobs:
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
         run: script/assemble_ember_build.rb
 
+      - name: Ember Build Diagnostics
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        run: |
+          echo "=== Core build chunk hashes ==="
+          find frontend/discourse/dist/assets -name '*.js' -type f | sort | xargs md5sum
+          echo ""
+          echo "=== Core build chunk sizes ==="
+          du -sh frontend/discourse/dist/assets/*.js | sort -rh | head -20
+          echo ""
+          echo "=== Total core build size ==="
+          du -sh frontend/discourse/dist/assets/
+          echo ""
+          echo "=== Plugin build sizes ==="
+          du -sh app/assets/generated/*/js/ 2>/dev/null | sort -rh | head -20
+          echo ""
+          echo "=== Total plugin build size ==="
+          du -sh app/assets/generated/
+          echo ""
+          echo "=== System memory ==="
+          free -h
+          echo ""
+          echo "=== CPU info ==="
+          nproc && cat /proc/cpuinfo | grep "model name" | head -1
+
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
@@ -316,7 +340,24 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake 'plugin:qunit[*]'
+        run: |
+          # Start memory monitor in background
+          (while true; do
+            echo "$(date '+%H:%M:%S') $(free -h | grep Mem | awk '{print "Mem: used=" $3 " free=" $4 " available=" $7}')"
+            if [ -f /proc/meminfo ]; then
+              echo "  MemAvailable: $(grep MemAvailable /proc/meminfo)"
+            fi
+            # Log Chrome process memory if any are running
+            ps aux | grep '[c]hrome' | awk '{sum += $6} END {if (sum > 0) printf "  Chrome RSS total: %.0f MB\n", sum/1024}' || true
+            sleep 5
+          done) &
+          MEMMON_PID=$!
+
+          bin/rake 'plugin:qunit[*]'
+          TEST_EXIT=$?
+
+          kill $MEMMON_PID 2>/dev/null || true
+          exit $TEST_EXIT
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
