@@ -18,7 +18,7 @@ patchedDependencies:
     hash: 85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926
     path: patches/ember-source@6.10.1.patch
   ember-this-fallback@0.4.0:
-    hash: 31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45
+    hash: b17fe3f7b1df16da27401ca32c58ecc604d5e18b04469be3cae539f61635c9fc
     path: patches/ember-this-fallback@0.4.0.patch
   http-proxy@1.18.1:
     hash: 3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73
@@ -168,7 +168,7 @@ importers:
         version: 6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45)(ember-cli-htmlbars@7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
+        version: 0.4.0(patch_hash=b17fe3f7b1df16da27401ca32c58ecc604d5e18b04469be3cae539f61635c9fc)(ember-cli-htmlbars@7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
       fastestsmallesttextencoderdecoder:
         specifier: ^1.0.22
         version: 1.0.22
@@ -560,6 +560,9 @@ importers:
       ember-test-selectors:
         specifier: ^7.1.0
         version: 7.1.0
+      ember-this-fallback:
+        specifier: ^0.4.0
+        version: 0.4.0(patch_hash=b17fe3f7b1df16da27401ca32c58ecc604d5e18b04469be3cae539f61635c9fc)(ember-cli-htmlbars@7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5))
       html-entities:
         specifier: ^2.6.0
         version: 2.6.0
@@ -14396,7 +14399,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=31c150a292037db2b05d9030a75069bb0a9518a4a7e0969b9b4e14d957134e45)(ember-cli-htmlbars@7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)):
+  ember-this-fallback@0.4.0(patch_hash=b17fe3f7b1df16da27401ca32c58ecc604d5e18b04469be3cae539f61635c9fc)(ember-cli-htmlbars@7.0.0(@babel/core@7.29.0)(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)))(ember-source@6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.4.1

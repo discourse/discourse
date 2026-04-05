@@ -135,6 +135,18 @@ index b856edc0327902bbae4eb9875ed9034a50d2b3a2..afb059ac4925711ba1b70079f4f45c4c
 -    return lines.join('\n\t');
 -}
  function noop() { }
+diff --git a/lib/options.js b/lib/options.js
+index 6278752412a92c2f6538c5cbac3f668dd85e82c7..9cd179759179f7cd5184b29e99680f5c8f53607e 100644
+--- a/lib/options.js
++++ b/lib/options.js
+@@ -8,6 +8,6 @@ const EmberThisFallbackOptions = zod_1.z
+ })
+     .default({});
+ function getOptions({ options }) {
+-    return EmberThisFallbackOptions.parse(options['ember-this-fallback']);
++    return EmberThisFallbackOptions.parse(options?.['ember-this-fallback']);
+ }
+ exports.getOptions = getOptions;
 diff --git a/lib/this-fallback-plugin.js b/lib/this-fallback-plugin.js
 index be4a78543644b3810520773aa7b996a2f631888d..9b144de8f22935dd6440a0db6b52a52535064212 100644
 --- a/lib/this-fallback-plugin.js
