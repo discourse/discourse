@@ -116,6 +116,7 @@ end
 #  blips           :integer          default(0), not null
 #  details         :json
 #  identifier      :string           not null
+#  ignored_at      :datetime
 #  last_problem_at :datetime
 #  last_run_at     :datetime
 #  last_success_at :datetime

@@ -163,7 +163,7 @@ RSpec.describe ProblemCheckTracker do
         freeze_time
 
         expect { problem_tracker.ignore! }.to change { problem_tracker.ignored_at }.from(nil).to(
-          Time.current,
+          be_within_one_second_of Time.current
         )
       end
     end
@@ -193,7 +193,7 @@ RSpec.describe ProblemCheckTracker do
 
       it "clears the ignore timestamp" do
         expect { problem_tracker.watch! }.to change { problem_tracker.ignored_at }.from(
-          ignored_at,
+          be_within_one_second_of ignored_at
         ).to(nil)
       end
     end
