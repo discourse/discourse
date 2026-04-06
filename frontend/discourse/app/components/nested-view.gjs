@@ -6,7 +6,9 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMap from "discourse/components/topic-map";
+import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { gt, includes } from "discourse/truth-helpers";
@@ -64,6 +66,12 @@ export default class NestedView extends Component {
         @topicCategoryChanged={{@topicCategoryChanged}}
         @topicTagsChanged={{@topicTagsChanged}}
         @startEditingTopic={{@startEditingTopic}}
+      />
+
+      <PluginOutlet
+        @name="topic-above-post-stream"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash model=@topic}}
       />
 
       <NestedOp
@@ -142,6 +150,30 @@ export default class NestedView extends Component {
         @action={{@loadMoreRoots}}
         @enabled={{@hasMoreRoots}}
         @isLoading={{@loadingMore}}
+      />
+
+      <PluginOutlet
+        @name="topic-above-footer-buttons"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash model=@topic}}
+      />
+
+      <PluginOutlet
+        @name="topic-area-bottom"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash model=@topic}}
+      />
+
+      <PluginOutlet
+        @name="topic-above-suggested"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash model=@topic}}
+      />
+
+      <PluginOutlet
+        @name="topic-navigation-bottom"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash model=@topic}}
       />
 
       <NestedFloatingActions

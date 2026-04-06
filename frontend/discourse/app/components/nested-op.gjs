@@ -4,10 +4,13 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import ShareTopicModal from "discourse/components/modal/share-topic";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
+import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -91,40 +94,67 @@ export default class NestedOp extends Component {
   <template>
     {{#if @post}}
       <div class="nested-view__op">
-        <article
-          class="nested-view__op-article boxed"
-          data-post-id={{@post.id}}
-          data-post-number={{@post.post_number}}
-          {{@registerPost @post}}
-        >
-          <div class="nested-view__op-row">
-            <PostAvatar @post={{@post}} />
-            <div class="nested-view__op-body">
-              <PostMetaData
-                @post={{@post}}
-                @editPost={{fn @editPost @post}}
-                @showHistory={{fn @showHistory @post}}
-              />
-              <div class="nested-view__op-content">
-                <PostCookedHtml @post={{@post}} />
-              </div>
-              {{#if @showPostMenu}}
-                <section class="nested-view__op-menu post-menu-area clearfix">
-                  <PostMenu
-                    @post={{@post}}
-                    @canCreatePost={{this.canCreatePost}}
-                    @copyLink={{this.copyLink}}
-                    @replyToPost={{@replyToPost}}
-                    @editPost={{fn @editPost @post}}
-                    @share={{this.share}}
-                    @toggleLike={{this.toggleLike}}
-                    @showLogin={{this.showLogin}}
-                  />
-                </section>
-              {{/if}}
-            </div>
-          </div>
-        </article>
+        {{#let (lazyHash post=@post) as |postOutletArgs|}}
+          <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
+            <article
+              class="nested-view__op-article boxed"
+              data-post-id={{@post.id}}
+              data-post-number={{@post.post_number}}
+              {{@registerPost @post}}
+            >
+              <PluginOutlet
+                @name="post-article-content"
+                @outletArgs={{postOutletArgs}}
+              >
+                <div class="nested-view__op-row">
+                  <PostAvatar @post={{@post}} />
+                  <div class="nested-view__op-body">
+                    <PluginOutlet
+                      @name="post-metadata"
+                      @outletArgs={{postOutletArgs}}
+                    >
+                      <PostMetaData
+                        @post={{@post}}
+                        @editPost={{fn @editPost @post}}
+                        @showHistory={{fn @showHistory @post}}
+                      />
+                    </PluginOutlet>
+                    <div class="nested-view__op-content">
+                      <PluginOutlet
+                        @name="post-content-cooked-html"
+                        @outletArgs={{postOutletArgs}}
+                      >
+                        <PostCookedHtml @post={{@post}} />
+                      </PluginOutlet>
+                    </div>
+                    {{#if @showPostMenu}}
+                      <section
+                        class="nested-view__op-menu post-menu-area clearfix"
+                      >
+                        <PostMenu
+                          @post={{@post}}
+                          @canCreatePost={{this.canCreatePost}}
+                          @copyLink={{this.copyLink}}
+                          @replyToPost={{@replyToPost}}
+                          @editPost={{fn @editPost @post}}
+                          @share={{this.share}}
+                          @toggleLike={{this.toggleLike}}
+                          @showLogin={{this.showLogin}}
+                        />
+                      </section>
+                    {{/if}}
+                    <PluginOutlet
+                      @name="post-links"
+                      @outletArgs={{postOutletArgs}}
+                    >
+                      <PostLinks @post={{@post}} />
+                    </PluginOutlet>
+                  </div>
+                </div>
+              </PluginOutlet>
+            </article>
+          </PluginOutlet>
+        {{/let}}
       </div>
     {{/if}}
   </template>

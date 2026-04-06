@@ -1,9 +1,11 @@
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicCategory from "discourse/components/topic-category";
 import TopicMetadata from "discourse/components/topic-metadata";
 import TopicTitleEditor from "discourse/components/topic-title-editor";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 <template>
   <div class="nested-view__header">
@@ -44,5 +46,10 @@ import icon from "discourse/helpers/d-icon";
       </h1>
       <TopicCategory @topic={{@topic}} class="topic-category" />
     {{/if}}
+    <PluginOutlet
+      @name="topic-title"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash model=@topic}}
+    />
   </div>
 </template>

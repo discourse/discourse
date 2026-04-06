@@ -7,12 +7,15 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import ShareTopicModal from "discourse/components/modal/share-topic";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
+import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
@@ -367,63 +370,91 @@ export default class NestedPost extends Component {
                 }}</span>
             </div>
           {{else}}
-            <article
-              class="nested-post__article boxed"
-              data-post-id={{@post.id}}
-              data-post-number={{@post.post_number}}
-              {{@registerPost @post trackOnly=true}}
-            >
-              <div class="nested-post__header">
-                {{#if this.isMobile}}
-                  <PostAvatar @post={{@post}} @size="small" />
-                {{/if}}
-                <PostMetaData
-                  @post={{@post}}
-                  @editPost={{@editPost}}
-                  @showHistory={{fn @showHistory @post}}
-                />
-                {{#if this.isOP}}
-                  <span class="nested-post__op-badge">{{i18n
-                      "nested_replies.op_badge"
-                    }}</span>
-                {{/if}}
-                {{#if @isPinned}}
-                  <span class="nested-post__pinned-badge">{{i18n
-                      "nested_replies.pinned_reply"
-                    }}</span>
-                {{/if}}
-              </div>
-              <div class="nested-post__content">
-                <PostCookedHtml @post={{@post}} />
-              </div>
-              <section class="nested-post__menu post-menu-area clearfix">
-                <PostMenu
-                  @post={{@post}}
-                  @canCreatePost={{this.canCreatePost}}
-                  @copyLink={{this.copyLink}}
-                  @deletePost={{fn @deletePost @post}}
-                  @editPost={{fn @editPost @post}}
-                  @recoverPost={{fn @recoverPost @post}}
-                  @replyToPost={{fn @replyToPost @post @depth}}
-                  @share={{this.share}}
-                  @showFlags={{fn @showFlags @post}}
-                  @toggleLike={{this.toggleLike}}
-                  @toggleReplies={{unless this.atMaxDepth this.toggleExpanded}}
-                  @repliesShown={{if this.atMaxDepth true this.expanded}}
-                  @showLogin={{this.showLogin}}
-                />
-              </section>
-              {{#if this.showContinueThread}}
-                <div class="nested-post__controls">
-                  <a
-                    href={{this.contextUrl}}
-                    class="nested-post__continue-link"
+            {{#let (lazyHash post=@post) as |postOutletArgs|}}
+              <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
+                <article
+                  class="nested-post__article boxed"
+                  data-post-id={{@post.id}}
+                  data-post-number={{@post.post_number}}
+                  {{@registerPost @post trackOnly=true}}
+                >
+                  <PluginOutlet
+                    @name="post-article-content"
+                    @outletArgs={{postOutletArgs}}
                   >
-                    {{i18n "nested_replies.continue_thread"}}
-                  </a>
-                </div>
-              {{/if}}
-            </article>
+                    <div class="nested-post__header">
+                      {{#if this.isMobile}}
+                        <PostAvatar @post={{@post}} @size="small" />
+                      {{/if}}
+                      <PluginOutlet
+                        @name="post-metadata"
+                        @outletArgs={{postOutletArgs}}
+                      >
+                        <PostMetaData
+                          @post={{@post}}
+                          @editPost={{@editPost}}
+                          @showHistory={{fn @showHistory @post}}
+                        />
+                      </PluginOutlet>
+                      {{#if this.isOP}}
+                        <span class="nested-post__op-badge">{{i18n
+                            "nested_replies.op_badge"
+                          }}</span>
+                      {{/if}}
+                      {{#if @isPinned}}
+                        <span class="nested-post__pinned-badge">{{i18n
+                            "nested_replies.pinned_reply"
+                          }}</span>
+                      {{/if}}
+                    </div>
+                    <div class="nested-post__content">
+                      <PluginOutlet
+                        @name="post-content-cooked-html"
+                        @outletArgs={{postOutletArgs}}
+                      >
+                        <PostCookedHtml @post={{@post}} />
+                      </PluginOutlet>
+                    </div>
+                    <section class="nested-post__menu post-menu-area clearfix">
+                      <PostMenu
+                        @post={{@post}}
+                        @canCreatePost={{this.canCreatePost}}
+                        @copyLink={{this.copyLink}}
+                        @deletePost={{fn @deletePost @post}}
+                        @editPost={{fn @editPost @post}}
+                        @recoverPost={{fn @recoverPost @post}}
+                        @replyToPost={{fn @replyToPost @post @depth}}
+                        @share={{this.share}}
+                        @showFlags={{fn @showFlags @post}}
+                        @toggleLike={{this.toggleLike}}
+                        @toggleReplies={{unless
+                          this.atMaxDepth
+                          this.toggleExpanded
+                        }}
+                        @repliesShown={{if this.atMaxDepth true this.expanded}}
+                        @showLogin={{this.showLogin}}
+                      />
+                    </section>
+                    <PluginOutlet
+                      @name="post-links"
+                      @outletArgs={{postOutletArgs}}
+                    >
+                      <PostLinks @post={{@post}} />
+                    </PluginOutlet>
+                  </PluginOutlet>
+                  {{#if this.showContinueThread}}
+                    <div class="nested-post__controls">
+                      <a
+                        href={{this.contextUrl}}
+                        class="nested-post__continue-link"
+                      >
+                        {{i18n "nested_replies.continue_thread"}}
+                      </a>
+                    </div>
+                  {{/if}}
+                </article>
+              </PluginOutlet>
+            {{/let}}
           {{/if}}
 
           {{#if (and this.expanded (not this.collapsed) (not this.atMaxDepth))}}
