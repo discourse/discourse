@@ -763,6 +763,6 @@ class ProsemirrorPlaceholderHandler {
       }
     }
 
-    this.view.dispatch(tr.setMeta("addToHistory", false));
+    this.view.dispatch(tr);
   }
 }

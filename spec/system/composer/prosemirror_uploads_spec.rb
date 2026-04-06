@@ -15,6 +15,21 @@ describe "Composer - ProseMirror - Uploads" do
       expect(rich).to have_no_css("img[src*='transparent.png']")
     end
 
+    it "produces correct markdown after upload completes" do
+      open_composer
+
+      file_path = file_from_fixtures("logo.png", "images").path
+      attach_file("file-uploader", file_path, make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(rich).to have_css(".composer-image-node img")
+
+      composer.toggle_rich_editor
+      expect(composer.composer_input.value).not_to include("blob:")
+      expect(composer.composer_input.value).not_to include("Uploading:")
+      expect(composer.composer_input.value).to match(%r{!\[.*\]\(upload://})
+    end
+
     it "uploads multiple images at once" do
       open_composer
 

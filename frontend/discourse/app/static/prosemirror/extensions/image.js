@@ -66,6 +66,7 @@ const extension = {
               originalSrc,
               extras,
               scale: dom.getAttribute("data-scale"),
+              placeholder: dom.dataset.placeholder || null,
             };
           },
         },
