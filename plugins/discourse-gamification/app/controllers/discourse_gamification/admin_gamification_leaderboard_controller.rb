@@ -5,7 +5,7 @@ class DiscourseGamification::AdminGamificationLeaderboardController < Admin::Adm
 
   def index
     render_serialized(
-      { leaderboards: DiscourseGamification::GamificationLeaderboard.all },
+      { leaderboards: DiscourseGamification::GamificationLeaderboard.order(updated_at: :desc) },
       AdminGamificationIndexSerializer,
       root: false,
     )

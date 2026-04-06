@@ -91,9 +91,9 @@ after_initialize do
           .all
           .map { |group| BasicGroupSerializer.new(group, root: false, scope: self.scope).as_json },
       gamification_leaderboards:
-        DiscourseGamification::GamificationLeaderboard.all.map do |leaderboard|
-          LeaderboardSerializer.new(leaderboard, root: false).as_json
-        end,
+        DiscourseGamification::GamificationLeaderboard
+          .order(updated_at: :desc)
+          .map { |leaderboard| LeaderboardSerializer.new(leaderboard, root: false).as_json },
     }
   end
 
