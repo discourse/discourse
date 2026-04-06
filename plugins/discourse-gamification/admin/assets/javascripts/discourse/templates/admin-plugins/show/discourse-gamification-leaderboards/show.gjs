@@ -2,9 +2,6 @@ import AdminEditLeaderboard from "discourse/plugins/discourse-gamification/admin
 
 export default <template>
   <div class="admin-detail">
-    <AdminEditLeaderboard
-      @leaderboard={{@model.leaderboard}}
-      @scoreDefaults={{@model.scoreDefaults}}
-    />
+    <AdminEditLeaderboard @leaderboard={{@model}} />
   </div>
 </template>

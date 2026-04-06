@@ -49,33 +49,6 @@ export default class AdminEditLeaderboard extends Component {
     );
   }
 
-  get defaults() {
-    return this.args.scoreDefaults || {};
-  }
-
-  get defaultCategoriesDescription() {
-    const categoryIds = this.defaults.scorable_categories;
-    if (!categoryIds) {
-      return i18n("gamification.leaderboard.scorable_categories_all");
-    }
-
-    const names = categoryIds
-      .split("|")
-      .map((id) => Category.findById(parseInt(id, 10)))
-      .filter(Boolean)
-      .map((c) => c.name);
-
-    return names.length
-      ? i18n("gamification.leaderboard.scorable_categories_default", {
-          categories: names.join(", "),
-        })
-      : i18n("gamification.leaderboard.scorable_categories_all");
-  }
-
-  defaultWeight(key) {
-    return String(this.defaults[key] ?? "");
-  }
-
   get formData() {
     const overrides = this.args.leaderboard.scoreOverrides || {};
 
@@ -311,11 +284,6 @@ export default class AdminEditLeaderboard extends Component {
                 @categories={{categoriesFromIds field.value}}
                 @onChange={{fn this.onCategoryChange field.set}}
               />
-              {{#unless field.value}}
-                <span
-                  class="leaderboard-scoring-details__default-hint"
-                >{{this.defaultCategoriesDescription}}</span>
-              {{/unless}}
             </field.Control>
           </form.Field>
         </form.Section>
@@ -332,11 +300,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.like_given}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
             <row.Col @size={{6}}>
@@ -346,11 +310,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.like_received}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
           </form.Row>
@@ -363,11 +323,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.post_created}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
             <row.Col @size={{6}}>
@@ -377,11 +333,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.topic_created}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
           </form.Row>
@@ -394,11 +346,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.solution}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
             <row.Col @size={{6}}>
@@ -408,11 +356,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.flag_created}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
           </form.Row>
@@ -425,11 +369,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.day_visited}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
             <row.Col @size={{6}}>
@@ -439,11 +379,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.user_invited}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
           </form.Row>
@@ -456,11 +392,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.post_read}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
             <row.Col @size={{6}}>
@@ -470,11 +402,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.time_read}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
           </form.Row>
@@ -487,11 +415,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.reaction_given}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
             <row.Col @size={{6}}>
@@ -503,11 +427,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.reaction_received}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
           </form.Row>
@@ -522,11 +442,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.chat_message_created}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
             <row.Col @size={{6}}>
@@ -538,11 +454,7 @@ export default class AdminEditLeaderboard extends Component {
                 @type="input-number"
                 as |field|
               >
-                <field.Control
-                  min="0"
-                  step="1"
-                  placeholder={{this.defaults.chat_reaction_given}}
-                />
+                <field.Control min="0" step="1" />
               </form.Field>
             </row.Col>
           </form.Row>
@@ -555,11 +467,7 @@ export default class AdminEditLeaderboard extends Component {
             @type="input-number"
             as |field|
           >
-            <field.Control
-              min="0"
-              step="1"
-              placeholder={{this.defaults.chat_reaction_received}}
-            />
+            <field.Control min="0" step="1" />
           </form.Field>
         </form.Section>
       </details>

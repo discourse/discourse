@@ -94,24 +94,6 @@ after_initialize do
         DiscourseGamification::GamificationLeaderboard
           .order(updated_at: :desc)
           .map { |leaderboard| LeaderboardSerializer.new(leaderboard, root: false).as_json },
-      gamification_score_defaults: {
-        scorable_categories: SiteSetting.scorable_categories,
-        like_given: SiteSetting.like_given_score_value,
-        like_received: SiteSetting.like_received_score_value,
-        post_created: SiteSetting.post_created_score_value,
-        topic_created: SiteSetting.topic_created_score_value,
-        solution: SiteSetting.solution_score_value,
-        day_visited: SiteSetting.day_visited_score_value,
-        flag_created: SiteSetting.flag_created_score_value,
-        post_read: SiteSetting.post_read_score_value,
-        time_read: SiteSetting.time_read_score_value,
-        user_invited: SiteSetting.user_invited_score_value,
-        reaction_given: SiteSetting.reaction_given_score_value,
-        reaction_received: SiteSetting.reaction_received_score_value,
-        chat_message_created: SiteSetting.chat_message_created_score_value,
-        chat_reaction_given: SiteSetting.chat_reaction_given_score_value,
-        chat_reaction_received: SiteSetting.chat_reaction_received_score_value,
-      },
     }
   end
 
