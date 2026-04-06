@@ -60,6 +60,7 @@ export default class UploadPlaceholderNodeView extends Component {
     <span
       class="upload-placeholder__cancel"
       title={{i18n "cancel"}}
+      aria-label={{i18n "cancel"}}
       role="button"
       contenteditable="false"
       {{on "click" this.cancel}}
