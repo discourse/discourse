@@ -182,6 +182,15 @@ export default class AdminEditLeaderboard extends Component {
         </form.Row>
 
         <form.Field
+          @name="period_filter_disabled"
+          @title={{i18n "gamification.leaderboard.period_filter_disabled"}}
+          @type="toggle"
+          as |field|
+        >
+          <field.Control />
+        </form.Field>
+
+        <form.Field
           @name="default_period"
           @title={{i18n "gamification.leaderboard.default_period"}}
           @type="custom"
@@ -190,15 +199,6 @@ export default class AdminEditLeaderboard extends Component {
           <field.Control>
             <PeriodInput @value={{field.value}} @onChange={{field.set}} />
           </field.Control>
-        </form.Field>
-
-        <form.Field
-          @name="period_filter_disabled"
-          @title={{i18n "gamification.leaderboard.period_filter_disabled"}}
-          @type="toggle"
-          as |field|
-        >
-          <field.Control />
         </form.Field>
       </form.Section>
 
