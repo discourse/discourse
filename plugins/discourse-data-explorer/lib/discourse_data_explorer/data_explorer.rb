@@ -272,6 +272,10 @@ module DiscourseDataExplorer
           results.each do |hash|
             full_col_name = "#{hash["table_name"]}.#{hash["column_name"]}"
 
+            if deprecated = Discourse.deprecated_columns.find { |c| c == full_col_name }
+              hash["is_deprecated"] = true
+              hash["deprecation_message"] = deprecated.message
+            end
             if hash["is_nullable"] == "YES"
               hash["is_nullable"] = true
             else

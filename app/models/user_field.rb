@@ -7,7 +7,7 @@ class UserField < ActiveRecord::Base
 
   FLAG_ATTRIBUTES = %w[editable show_on_profile show_on_signup show_on_user_card searchable].freeze
 
-  deprecate_column :required, drop_from: "3.3"
+  deprecate_column :required, drop_from: "3.3", message: "See UserField.requirement"
   self.ignored_columns += %i[field_type]
 
   validates :description, presence: true

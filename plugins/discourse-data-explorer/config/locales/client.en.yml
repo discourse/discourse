@@ -70,6 +70,7 @@ en:
         title: "Database Schema"
         filter: "Search..."
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
+        deprecated: "Deprecated"
       types:
         bool:
           yes: "Yes"
