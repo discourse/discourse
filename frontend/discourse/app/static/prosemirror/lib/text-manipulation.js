@@ -626,6 +626,12 @@ class ProsemirrorPlaceholderHandler {
     this.convertFromMarkdown = convertFromMarkdown;
   }
 
+  #revokeBlobUrl(node) {
+    if (node.attrs.src?.startsWith("blob:")) {
+      URL.revokeObjectURL(node.attrs.src);
+    }
+  }
+
   #findPlaceholder(fileId) {
     let result = null;
     this.view.state.doc.descendants((node, pos) => {
@@ -680,23 +686,13 @@ class ProsemirrorPlaceholderHandler {
 
   progressComplete() {}
 
-  uploadProgress(file, percentage) {
-    this.view.dom
-      .querySelectorAll(
-        `[data-upload-id="${file.id}"] .upload-placeholder__progress`
-      )
-      .forEach((el) => {
-        el.textContent = `${percentage}%`;
-      });
-  }
-
   cancelAll() {
     const toDelete = [];
     this.view.state.doc.descendants((node, pos) => {
-      if (
-        (node.type === this.schema.nodes.image && node.attrs.placeholder) ||
-        node.type === this.schema.nodes.upload_placeholder
-      ) {
+      if (node.type === this.schema.nodes.image && node.attrs.placeholder) {
+        this.#revokeBlobUrl(node);
+        toDelete.push({ pos, size: node.nodeSize });
+      } else if (node.type === this.schema.nodes.upload_placeholder) {
         toDelete.push({ pos, size: node.nodeSize });
       }
     });
@@ -713,6 +709,7 @@ class ProsemirrorPlaceholderHandler {
   cancel(file) {
     const found = this.#findPlaceholder(file.id);
     if (found) {
+      this.#revokeBlobUrl(found.node);
       this.view.dispatch(
         this.view.state.tr
           .delete(found.pos, found.pos + found.node.nodeSize)
@@ -732,28 +729,33 @@ class ProsemirrorPlaceholderHandler {
     // keeping compatibility with plugins that change the upload markdown
     const doc = this.convertFromMarkdown(markdown);
     const tr = this.view.state.tr;
+    const replacement = doc.content.firstChild.content;
 
-    tr.replaceWith(
-      found.pos,
-      found.pos + found.node.nodeSize,
-      doc.content.firstChild.content
-    );
+    if (found.node.type === this.schema.nodes.image) {
+      this.#revokeBlobUrl(found.node);
+    }
+
+    tr.replaceWith(found.pos, found.pos + found.node.nodeSize, replacement);
 
     // resolve transparent.png placeholders using the upload URL cache,
     // which was populated before success() was called
     if (found.node.type === this.schema.nodes.image) {
-      tr.doc.nodesBetween(found.pos, tr.doc.content.size, (node, pos) => {
-        if (
-          node.type.name === "image" &&
-          node.attrs.originalSrc &&
-          node.attrs.src?.includes("transparent.png")
-        ) {
-          const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
-          if (cached?.url) {
-            tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
+      tr.doc.nodesBetween(
+        found.pos,
+        found.pos + replacement.size,
+        (node, pos) => {
+          if (
+            node.type.name === "image" &&
+            node.attrs.originalSrc &&
+            node.attrs.src?.includes("transparent.png")
+          ) {
+            const cached = lookupCachedUploadUrl(node.attrs.originalSrc);
+            if (cached?.url) {
+              tr.setNodeMarkup(pos, null, { ...node.attrs, src: cached.url });
+            }
           }
         }
-      });
+      );
     }
 
     if (wasSelected) {

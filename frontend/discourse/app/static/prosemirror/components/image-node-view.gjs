@@ -97,6 +97,8 @@ export default class ImageNodeView extends Component {
   @tracked menuInstance;
   @tracked altMenuInstance;
   @tracked imageLoaded = false;
+  @tracked uploadProgress = 0;
+  #progressEvent;
 
   constructor() {
     super(...arguments);
@@ -105,6 +107,8 @@ export default class ImageNodeView extends Component {
       const fileId = this.args.node.attrs.title;
       this.args.dom.classList.add(PLACEHOLDER_CLASS);
       this.args.dom.dataset.uploadId = fileId;
+      this.#progressEvent = `composer:upload-progress:${fileId}`;
+      this.appEvents.on(this.#progressEvent, this, this.onUploadProgress);
     }
 
     this.args.onSetup?.(this);
@@ -112,6 +116,9 @@ export default class ImageNodeView extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this.#progressEvent) {
+      this.appEvents.off(this.#progressEvent, this, this.onUploadProgress);
+    }
     this.closeMenus();
   }
 
@@ -585,6 +592,10 @@ export default class ImageNodeView extends Component {
     view.dispatch(tr);
   }
 
+  onUploadProgress(percentage) {
+    this.uploadProgress = percentage;
+  }
+
   @action
   cancelUpload(event) {
     event.preventDefault();
@@ -636,7 +647,9 @@ export default class ImageNodeView extends Component {
     />
     {{#if this.isPlaceholder}}
       <span class="upload-placeholder-image__overlay">
-        <span class="upload-placeholder__progress">0%</span>
+        <span
+          class="upload-placeholder__progress"
+        >{{this.uploadProgress}}%</span>
         <span
           class="upload-placeholder__cancel"
           title={{i18n "cancel"}}

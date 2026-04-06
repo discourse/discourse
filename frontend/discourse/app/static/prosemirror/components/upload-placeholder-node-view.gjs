@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,13 +9,27 @@ import { i18n } from "discourse-i18n";
 export default class UploadPlaceholderNodeView extends Component {
   @service("app-events") appEvents;
 
+  @tracked progress = 0;
+  #progressEvent;
+
   constructor() {
     super(...arguments);
     this.args.dom?.classList.add("upload-placeholder-file");
     if (this.args.dom) {
       this.args.dom.dataset.uploadId = this.args.node.attrs.fileId;
     }
+    this.#progressEvent = `composer:upload-progress:${this.args.node.attrs.fileId}`;
+    this.appEvents.on(this.#progressEvent, this, this.onProgress);
     this.args.onSetup?.(this);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off(this.#progressEvent, this, this.onProgress);
+  }
+
+  onProgress(percentage) {
+    this.progress = percentage;
   }
 
   selectNode() {
@@ -41,7 +56,7 @@ export default class UploadPlaceholderNodeView extends Component {
   <template>
     {{icon "file"}}
     {{this.filename}}
-    <span class="upload-placeholder__progress">0%</span>
+    <span class="upload-placeholder__progress">{{this.progress}}%</span>
     <span
       class="upload-placeholder__cancel"
       title={{i18n "cancel"}}
