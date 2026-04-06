@@ -8,8 +8,9 @@ module PageObjects
         self
       end
 
-      def visit_admin_query(query_id, query_string: nil)
+      def visit_admin_query(query_id, query_string: nil, params: nil)
         path = "/admin/plugins/discourse-data-explorer/queries/#{query_id}"
+        query_string = "params=#{CGI.escape(params.to_json)}" if params.present?
         path += "?#{query_string}" if query_string.present?
         page.visit(path)
         self
@@ -64,6 +65,30 @@ module PageObjects
           ".query-results .query-result-row:nth-of-type(#{row_index}) .query-result-cell:nth-of-type(#{col_index})",
           text: text,
         )
+      end
+
+      def visit_new_query
+        page.visit("/admin/plugins/discourse-data-explorer/queries/new")
+        self
+      end
+
+      def fill_new_query_name(text)
+        page.find(".query-new [data-name='name'] input").fill_in(with: text)
+        self
+      end
+
+      def fill_new_query_description(text)
+        page.find(".query-new [data-name='description'] textarea").fill_in(with: text)
+        self
+      end
+
+      def submit_new_query
+        page.find(".query-new .btn-primary").click
+        self
+      end
+
+      def has_query_description?(text)
+        page.has_css?(".query-edit .desc", text: text)
       end
     end
   end

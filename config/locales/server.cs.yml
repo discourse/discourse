@@ -2838,47 +2838,9 @@ cs:
     reviewable_queued_post_revise_and_reject:
       title: "Zpětná vazba na váš příspěvek"
       subject_template: "Zpětná vazba na váš příspěvek v %{topic_title}"
-      text_body_template: |
-        Ahoj %{username},
-
-        Váš příspěvek v [%{topic_title}](%{topic_url}) jsme zkontrolovali a máme pro vás nějakou zpětnou vazbu.
-
-        Důvod: %{reason}
-
-        Zpětná vazba: %{feedback}
-
-        Níže můžete upravit a znovu odeslat svůj původní příspěvek, abyste provedli navrhované změny. Pokud máte nějaké dotazy, odpovězte na tuto zprávu.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Díky,
-        Moderátoři %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Zpětná vazba na vaše téma"
       subject_template: 'Zpětná vazba k novému tématu s názvem "%{topic_title}"'
-      text_body_template: |
-        Ahoj %{username},
-
-        Zkontrolovali jsme vaše nové téma s názvem „%{topic_title}“ a máme pro vás zpětnou vazbu.
-
-        Důvod: %{reason}
-
-        Zpětná vazba: %{feedback}
-
-        Níže můžete upravit a znovu odeslat původní příspěvek svého tématu, abyste provedli navrhované změny. Pokud máte nějaké dotazy, odpovězte na tuto zprávu.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Díky,
-        %{site_name} Moderátoři
     post_hidden_again:
       title: "Příspěvek byl opět skryt"
       subject_template: "Příspěvek skryt nahlášeními komunity, redakce byla upozorněna"

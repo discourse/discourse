@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .select-kit {
   @include unselectable;
   border: none;
@@ -210,6 +212,10 @@
     justify-content: flex-start;
     padding: 0.5em;
 
+    @include viewport.until(sm) {
+      padding-block: 0.75em;
+    }
+
     &.disabled {
       pointer-events: none;
       opacity: 0.4;
@@ -311,6 +317,10 @@
       width: 100%;
       box-sizing: border-box;
       min-height: 30px;
+
+      @include viewport.until(sm) {
+        font-size: var(--font-0);
+      }
     }
 
     &.is-hidden {

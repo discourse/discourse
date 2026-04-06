@@ -1794,47 +1794,9 @@ hr:
     reviewable_queued_post_revise_and_reject:
       title: "Povratne informacije o vašoj objavi"
       subject_template: "Povratne informacije o vašoj objavi u %{topic_title}"
-      text_body_template: |
-        Pozdrav %{username},
-
-        Pregledali smo vašu objavu u [%{topic_title}](%{topic_url}) i imamo povratne informacije za vas.
-
-        Razlog: %{reason}
-
-        Povratne informacije: %{feedback}
-
-        Možete urediti svoju izvornu objavu u nastavku i ponovno je poslati kako biste unijeli predložene promjene ili odgovoriti na ovu poruku ako imate bilo kakvih pitanja.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Hvala,
-        %{site_name} Moderatori
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Povratne informacije o vašoj temi"
       subject_template: 'Povratne informacije o novoj temi pod nazivom "%{topic_title}"'
-      text_body_template: |
-        Pozdrav %{username},
-
-        Pregledali smo vašu novu temu pod naslovom "%{topic_title}" i imamo povratne informacije za vas.
-
-        Razlog: %{reason}
-
-        Povratne informacije: %{feedback}
-
-        Možete urediti izvornu objavu svoje teme u nastavku i ponovno je poslati kako biste unijeli predložene promjene ili odgovoriti na ovu poruku ako imate bilo kakvih pitanja.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Hvala,
-        %{site_name} Moderatori
     post_hidden_again:
       title: "Objava je opet skrivena"
       subject_template: "Objava skrivena zbog prijava članova zajednice, osoblje obaviješteno"

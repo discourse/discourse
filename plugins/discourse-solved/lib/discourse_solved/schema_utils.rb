@@ -19,31 +19,54 @@ module DiscourseSolved
       when "never"
         false
       when "answered only"
-        topic.solved&.answer_post_id.present?
+        accepted_answer_visible?(topic)
       else
         true
       end
     end
 
+    def self.qa_page_schema?(topic)
+      if topic.instance_variable_defined?(:@qa_page_schema)
+        return topic.instance_variable_get(:@qa_page_schema)
+      end
+      topic.instance_variable_set(
+        :@qa_page_schema,
+        schema_markup_enabled?(topic) && has_eligible_answers?(topic),
+      )
+    end
+
     def self.container_schema(topic)
-      return nil if !schema_markup_enabled?(topic)
+      return nil unless qa_page_schema?(topic)
       { itemscope: true, itemtype: "https://schema.org/QAPage" }
     end
 
     def self.main_entity_schema(topic)
-      return nil if !schema_markup_enabled?(topic)
+      return nil unless qa_page_schema?(topic)
       { itemprop: "mainEntity", itemscope: true, itemtype: "https://schema.org/Question" }
     end
 
     def self.post_schema(post, topic)
-      return nil if !schema_markup_enabled?(topic)
+      return nil unless qa_page_schema?(topic)
       return {} if post.is_first_post?
       return { itemscope: true } if post.post_type == Post.types[:small_action]
-      if topic.solved&.answer_post_id == post.id
+      if accepted_answer_visible?(topic) && topic.solved.answer_post_id == post.id
         { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
       else
         { itemprop: "suggestedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
       end
+    end
+
+    private_class_method def self.accepted_answer_visible?(topic)
+      post = topic.solved&.answer_post
+      post.present? && Guardian.new.can_see_post?(post)
+    end
+
+    private_class_method def self.has_eligible_answers?(topic)
+      topic
+        .posts
+        .where.not(post_number: 1)
+        .where(post_type: Post.types[:regular], hidden: false)
+        .exists?
     end
   end
 end

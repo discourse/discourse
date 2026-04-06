@@ -6,6 +6,10 @@
 
 ko:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "데이터 탐색기"
     errors:
       explorer:
         no_semicolons: "쿼리에서 세미콜론을 제거하십시오."

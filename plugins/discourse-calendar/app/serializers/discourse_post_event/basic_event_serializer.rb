@@ -70,11 +70,11 @@ module DiscoursePostEvent
         return nil
       end
 
+      timezone_time = object.starts_at&.in_time_zone(object.timezone)
+
       if object.show_local_time
-        timezone_time = object.original_starts_at&.in_time_zone(object.timezone)
         timezone_time&.strftime("%Y-%m-%dT%H:%M:%S")
       else
-        timezone_time = object.starts_at&.in_time_zone(object.timezone)
         timezone_time&.iso8601(3)
       end
     end
@@ -88,9 +88,7 @@ module DiscoursePostEvent
       end
 
       if object.show_local_time
-        ends_at =
-          object.original_ends_at ||
-            (object.original_starts_at && object.original_starts_at + 1.hour)
+        ends_at = object.ends_at || (object.starts_at && object.starts_at + 1.hour)
         timezone_ends_at = ends_at&.in_time_zone(object.timezone)
         timezone_ends_at&.strftime("%Y-%m-%dT%H:%M:%S")
       else

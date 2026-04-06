@@ -60,7 +60,13 @@ module Patreon
 
       def self.pull_pledges!(campaign_data)
         uris = campaign_data[:pledge_uris].dup
-        pledges_data = []
+
+        if uris.blank?
+          Patreon::Pledge.save!([], false, adapter: self)
+          return
+        end
+
+        is_first_page = true
 
         uris.each do |uri|
           pledge_data = Patreon::Api.get(uri)
@@ -70,10 +76,11 @@ module Patreon
             uris << next_page_uri if next_page_uri.present?
           end
 
-          pledges_data << pledge_data if pledge_data.present?
+          if pledge_data.present?
+            Patreon::Pledge.save!([pledge_data], !is_first_page, adapter: self)
+            is_first_page = false
+          end
         end
-
-        Patreon::Pledge.save!(pledges_data, adapter: self)
       end
 
       def self.extract(pledge_data)
@@ -84,7 +91,9 @@ module Patreon
 
           pledge_data["data"].each do |entry|
             if entry["type"] == "pledge"
-              patron_id = entry["relationships"]["patron"]["data"]["id"]
+              patron_id = entry.dig("relationships", "patron", "data", "id")
+              next if patron_id.nil?
+
               attrs = entry["attributes"]
 
               unless entry["relationships"]["reward"]["data"].nil?
@@ -93,7 +102,9 @@ module Patreon
               pledges[patron_id] = attrs["amount_cents"]
               declines[patron_id] = attrs["declined_since"] if attrs["declined_since"].present?
             elsif entry["type"] == "member"
-              patron_id = entry["relationships"]["user"]["data"]["id"]
+              patron_id = entry.dig("relationships", "user", "data", "id")
+              next if patron_id.nil?
+
               attrs = entry["attributes"]
 
               currently_entitled_tiers = entry["relationships"]["currently_entitled_tiers"] || {}
@@ -120,12 +131,14 @@ module Patreon
         rel = entry["relationships"]
 
         if entry["type"] == "pledge"
-          patron_id = rel["patron"]["data"]["id"]
-          reward_id = rel["reward"]["data"]["id"] if rel["reward"]["data"].present?
+          patron_id = rel.dig("patron", "data", "id")
+          return if patron_id.nil?
 
+          reward_id = rel.dig("reward", "data", "id")
           reward_users[reward_id].reject! { |i| i == patron_id } if reward_id.present?
         elsif entry["type"] == "member"
-          patron_id = rel["user"]["data"]["id"]
+          patron_id = rel.dig("user", "data", "id")
+          return if patron_id.nil?
 
           (rel.dig("currently_entitled_tiers", "data") || []).each do |tier|
             (reward_users[tier["id"]] || []).reject! { |i| i == patron_id }
@@ -138,7 +151,7 @@ module Patreon
       def self.get_patreon_id(data)
         entry = data["data"]
         key = entry["type"] == "member" ? "user" : "patron"
-        entry["relationships"][key]["data"]["id"]
+        entry.dig("relationships", key, "data", "id")
       end
 
       def self.webhook_triggers

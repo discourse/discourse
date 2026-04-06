@@ -417,16 +417,17 @@ class TopicsController < ApplicationController
           return render_json_error(I18n.t("category.errors.not_found"))
         end
 
-        if category &&
-             topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
-          if topic_tags.present?
+        if category
+          topic_tag_names = resolve_tag_names(topic)
+
+          if topic_tag_names.present?
             allowed_tags =
               DiscourseTagging.filter_allowed_tags(guardian, category: category).map(&:name)
 
-            invalid_tags = topic_tags - allowed_tags
+            invalid_tags = topic_tag_names - allowed_tags
 
             # Do not raise an error on a topic's hidden tags when not modifying tags
-            if params[:tags].blank?
+            if !params.has_key?(:tags)
               invalid_tags.each do |tag_name|
                 if DiscourseTagging.hidden_tag_names.include?(tag_name)
                   invalid_tags.delete(tag_name)
@@ -476,6 +477,9 @@ class TopicsController < ApplicationController
             changes.delete(:tags)
           end
         end
+
+        # resolve to name strings before passing to PostRevisor
+        changes[:tags] = resolve_tag_names(topic) if changes.has_key?(:tags)
       elsif topic.tags.empty?
         changes.delete(:tags)
       end
@@ -1309,6 +1313,30 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def resolve_tag_names(topic)
+    @resolved_tag_names ||=
+      if params[:tags].present?
+        incoming = params[:tags]
+        if incoming.first.is_a?(String)
+          Discourse.deprecate(
+            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+            since: "2026.01",
+            drop_from: "2026.07",
+          )
+          incoming.reject(&:empty?)
+        else
+          ids = incoming.filter_map { |t| t[:id]&.to_i }
+          names = incoming.filter_map { |t| t[:id].blank? && t[:name].presence }
+          names += Tag.visible(guardian).where(id: ids).pluck(:name) if ids.present?
+          names
+        end
+      elsif params.has_key?(:tags)
+        []
+      else
+        topic.tags.pluck(:name)
+      end
+  end
 
   def allow_embed_mode
     return if params[:embed_mode].blank?
