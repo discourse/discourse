@@ -137,11 +137,18 @@
     padding: 0;
     font: inherit;
 
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 0.15s ease;
+    }
+
     &:hover,
     &:focus {
       background: var(--primary-very-low);
       border-radius: var(--d-border-radius);
-      transform: scale(1.25);
+
+      @media (prefers-reduced-motion: no-preference) {
+        transform: scale(1.25);
+      }
     }
 
     &.--selected {
@@ -158,16 +165,26 @@
       text-align: left;
       padding: 0;
 
-      // Nudge away from the overflow edge on hover/focus so the
-      // scaled border-radius isn't clipped by the grid-wrapper.
+      // The chip spans multiple columns, so transform: scale() on the
+      // whole element would overlap neighbouring cells without triggering
+      // a grid reflow. Scale only the inner icon instead.
       &:hover,
       &:focus {
-        position: relative;
-        left: calc(var(--icon-grid-cell) * 0.125 + var(--icon-grid-gap) * 2);
+        transform: none;
+
+        @media (prefers-reduced-motion: no-preference) {
+          .d-icon {
+            transform: scale(1.25);
+          }
+        }
       }
 
       .d-icon {
         justify-self: center;
+
+        @media (prefers-reduced-motion: no-preference) {
+          transition: transform 0.15s ease;
+        }
       }
     }
 
@@ -193,7 +210,7 @@
 }
 
 // Mobile overrides
-@media screen and (max-width: 767px) {
+@media screen and (width <= 767px) {
   .fk-d-menu-modal.d-icon-grid-picker-content {
     .d-modal__body {
       padding: 0;
