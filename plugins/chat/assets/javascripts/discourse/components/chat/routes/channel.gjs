@@ -10,7 +10,9 @@ export default class ChatRoutesChannel extends Component {
   @service site;
   @service siteSettings;
   @service chat;
+  @service chatChannelsManager;
   @service chatHistory;
+  @service chatTrackingStateManager;
 
   @tracked isFiltering = false;
 
@@ -34,11 +36,56 @@ export default class ChatRoutesChannel extends Component {
     }
   }
 
+  get otherChannelsUrgentCount() {
+    const channel = this.args.channel;
+    const currentUrgent = channel.isDirectMessageChannel
+      ? channel.tracking.unreadCount +
+        channel.tracking.mentionCount +
+        channel.tracking.watchedThreadsUnreadCount
+      : channel.tracking.mentionCount +
+        channel.tracking.watchedThreadsUnreadCount;
+    return Math.max(
+      0,
+      this.chatTrackingStateManager.allChannelUrgentCount - currentUrgent
+    );
+  }
+
+  get otherChannelsMentionCount() {
+    return Math.max(
+      0,
+      this.chatTrackingStateManager.allChannelMentionCount -
+        this.args.channel.tracking.mentionCount
+    );
+  }
+
+  get otherChannelsUnreadCount() {
+    if (this.args.channel.isDirectMessageChannel) {
+      return this.chatTrackingStateManager.publicChannelUnreadCount;
+    }
+    return Math.max(
+      0,
+      this.chatTrackingStateManager.publicChannelUnreadCount -
+        this.args.channel.tracking.unreadCount
+    );
+  }
+
+  get otherChannelsHasUnreadThreads() {
+    return this.chatChannelsManager.allChannels.some(
+      (c) => c.id !== this.args.channel.id && c.unreadThreadsCount > 0
+    );
+  }
+
   <template>
     <div class="c-routes --channel">
       <Navbar as |navbar|>
         {{#if this.site.mobileView}}
-          <navbar.BackButton @route={{this.getChannelsRoute}} />
+          <navbar.BackButton
+            @route={{this.getChannelsRoute}}
+            @urgentCount={{this.otherChannelsUrgentCount}}
+            @unreadCount={{this.otherChannelsUnreadCount}}
+            @mentionCount={{this.otherChannelsMentionCount}}
+            @hasUnreadThreads={{this.otherChannelsHasUnreadThreads}}
+          />
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
         <navbar.Actions as |a|>
