@@ -22,6 +22,7 @@ export default class DiscourseGamificationLeaderboards extends DiscourseRoute {
       groups: gamificationPlugin.extras.gamification_groups,
       recalculate_scores_remaining:
         gamificationPlugin.extras.gamification_recalculate_scores_remaining,
+      scoreDefaults: gamificationPlugin.extras.gamification_score_defaults,
     });
   }
 }

@@ -55,6 +55,13 @@
   .form-kit__section + .form-kit__section {
     margin-top: 1.5em;
   }
+
+  &__default-hint {
+    display: block;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-top: 0.25em;
+  }
 }
 
 .new-leaderboard-container {

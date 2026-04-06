@@ -3,7 +3,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import GamificationLeaderboard from "discourse/plugins/discourse-gamification/discourse/models/gamification-leaderboard";
 
 export default class DiscourseGamificationLeaderboardShow extends DiscourseRoute {
-  model(params) {
+  async model(params) {
     const leaderboardsData = this.modelFor(
       "adminPlugins.show.discourse-gamification-leaderboards"
     );
@@ -12,12 +12,17 @@ export default class DiscourseGamificationLeaderboardShow extends DiscourseRoute
     const leaderboard = leaderboardsData.leaderboards.find(
       (item) => item.id === id
     );
-    if (leaderboard) {
-      return leaderboard;
-    }
+    const resolved = leaderboard
+      ? leaderboard
+      : await ajax(
+          `/admin/plugins/discourse-gamification/leaderboards/${id}`
+        ).then((response) =>
+          GamificationLeaderboard.create(response.leaderboard)
+        );
 
-    return ajax(
-      `/admin/plugins/discourse-gamification/leaderboards/${id}`
-    ).then((response) => GamificationLeaderboard.create(response.leaderboard));
+    return {
+      leaderboard: resolved,
+      scoreDefaults: leaderboardsData.scoreDefaults,
+    };
   }
 }
