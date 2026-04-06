@@ -23,7 +23,9 @@ export default class CookText extends Component {
   loadCookedText() {
     waitForPromise(
       cook(this.args.rawText).then((cooked) => {
-        this.cooked = cooked;
+        if (!this.isDestroying && !this.isDestroyed) {
+          this.cooked = cooked;
+        }
       })
     );
   }

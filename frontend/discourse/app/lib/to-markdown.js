@@ -1,3 +1,4 @@
+import deprecated from "discourse/lib/deprecated";
 import {
   areDefaultExtensionsRegistered,
   getExtensions,
@@ -14,9 +15,12 @@ async function ensureDefaultExtensions() {
 
 // Deprecated no-ops - kept for backward compatibility
 function deprecationWarning(name) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    `${name} is deprecated. Use api.registerRichEditorExtension() instead.`
+  deprecated(
+    `${name} is deprecated. Use api.registerRichEditorExtension() instead.`,
+    {
+      id: `discourse.to-markdown.${name}`,
+      since: "v2026.4",
+    }
   );
 }
 
