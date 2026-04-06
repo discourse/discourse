@@ -86,9 +86,9 @@ export default class TopicBookmarksMenu extends Component {
   }
 
   get buttonIcon() {
-    if (this.allBookmarks.some((b) => b.reminder_at)) {
+    if (this.topicBookmark?.reminder_at) {
       return WITH_REMINDER_ICON;
-    } else if (this.allBookmarks.length > 0) {
+    } else if (this.topicBookmark) {
       return NO_REMINDER_ICON;
     } else {
       return NOT_BOOKMARKED;
