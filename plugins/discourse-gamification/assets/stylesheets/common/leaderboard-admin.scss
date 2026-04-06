@@ -51,6 +51,10 @@
     color: var(--primary-medium);
     margin: 0 0 1em;
   }
+
+  .form-kit__section + .form-kit__section {
+    margin-top: 1.5em;
+  }
 }
 
 .new-leaderboard-container {
