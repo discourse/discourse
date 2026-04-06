@@ -35,7 +35,7 @@ export default class PluginsExplorerController extends Controller {
 
   addCreatedRecord(record) {
     this.model.content.push(record);
-    this.router.transitionTo("adminPlugins.show.explorer.details", record.id);
+    this.router.transitionTo("adminPlugins.show.explorer.edit", record.id);
   }
 
   async _importQuery(file) {

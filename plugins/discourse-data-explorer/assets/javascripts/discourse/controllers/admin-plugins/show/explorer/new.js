@@ -42,7 +42,7 @@ export default class AdminPluginsExplorerNew extends Controller {
         data: { message: i18n("explorer.query_created") },
       });
       this.router.transitionTo(
-        "adminPlugins.show.explorer.details",
+        "adminPlugins.show.explorer.edit",
         result.target.id
       );
     } catch (error) {

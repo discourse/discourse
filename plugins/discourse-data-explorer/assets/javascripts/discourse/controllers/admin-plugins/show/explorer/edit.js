@@ -19,7 +19,6 @@ const AI_GENERATION_TIMEOUT_MS = 60000;
 export default class PluginsExplorerController extends Controller {
   @service modal;
   @service appEvents;
-  @service router;
   @service messageBus;
   @service siteSettings;
   @service toasts;
@@ -236,11 +235,6 @@ export default class PluginsExplorerController extends Controller {
   @action
   download() {
     window.open(this.model.downloadUrl, "_blank");
-  }
-
-  @action
-  goHome() {
-    this.router.transitionTo("adminPlugins.show.explorer");
   }
 
   @action
