@@ -511,6 +511,24 @@ RSpec.describe TagsController do
       expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
     end
 
+    it "handles numeric tag names via legacy /tag/:tag_name route" do
+      numeric_tag = Fabricate(:tag, name: "6309")
+      Fabricate(:topic, tags: [numeric_tag])
+
+      get "/tag/6309"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("ActionView::Template::Error")
+    end
+
+    it "handles numeric tag names via legacy /tag/:tag_name route with filters" do
+      numeric_tag = Fabricate(:tag, name: "6309")
+      Fabricate(:topic, tags: [numeric_tag])
+
+      get "/tag/6309/l/latest"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("ActionView::Template::Error")
+    end
+
     context "with a category in the path" do
       fab!(:topic_in_category) { Fabricate(:topic, tags: [tag], category: category) }
 

@@ -130,10 +130,10 @@
   <%= t(:crawler_content_hidden) %>
 <%- end %> <!-- include_crawler_content? -->
 
-<% if @rss %>
+<% if @rss_link %>
   <% content_for :head do %>
     <%= auto_discovery_link_tag(:rss, "#{Discourse.base_url}/posts.rss", title: I18n.t("rss_description.posts")) %>
-    <%= auto_discovery_link_tag(:rss, { action: "#{@rss}_feed", params: @params || {} }, title: I18n.t("rss_description.#{@rss_description}")) %>
+    <%= auto_discovery_link_tag(:rss, @rss_link, title: I18n.t("rss_description.#{@rss_description}")) %>
   <% end %>
 <% end %>
 
