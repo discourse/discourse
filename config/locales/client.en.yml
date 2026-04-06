@@ -610,7 +610,7 @@ en:
 
     bookmarked:
       title: "Bookmark"
-      edit_bookmark: "Edit Bookmark"
+      edit_bookmark: "Edit bookmark"
       edit_bookmarks: "Edit bookmarks"
       delete_bookmarks: "Delete all bookmarks"
       help:
