@@ -32,6 +32,7 @@ export default class PluginsExplorerController extends Controller {
   @tracked results = this.model.results;
   @tracked dirty = false;
   @tracked aiGenerating = false;
+  @tracked isCachedResult = false;
 
   queryParams = ["params"];
   explain = false;
@@ -50,6 +51,13 @@ export default class PluginsExplorerController extends Controller {
 
   get parsedParams() {
     return this.params ? JSON.parse(this.params) : null;
+  }
+
+  get cachedAt() {
+    if (this.isCachedResult && this.results?.cached_at) {
+      return this.results.cached_at;
+    }
+    return null;
   }
 
   get editDisabled() {
@@ -342,6 +350,7 @@ export default class PluginsExplorerController extends Controller {
     )
       .then((result) => {
         this.results = result;
+        this.isCachedResult = false;
         if (!result.success) {
           this.showResults = false;
           return;

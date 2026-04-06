@@ -91,6 +91,16 @@ en:
       show_graph: "Graph"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in %{value} ms."
+      cached_just_now: "Showing cached results from just now."
+      cached_minutes_ago:
+        one: "Showing cached results from %{count} minute ago."
+        other: "Showing cached results from %{count} minutes ago."
+      cached_hours_ago:
+        one: "Showing cached results from %{count} hour ago."
+        other: "Showing cached results from %{count} hours ago."
+      cached_days_ago:
+        one: "Showing cached results from %{count} day ago."
+        other: "Showing cached results from %{count} days ago."
       result_count:
         one: "%{count} result."
         other: "%{count} results."

@@ -273,6 +273,7 @@ export default class QueriesEdit extends Component {
           @showResults={{@controller.showResults}}
           @query={{@controller.model}}
           @content={{@controller.results}}
+          @cachedAt={{@controller.cachedAt}}
         />
       {{/if}}
     </div>

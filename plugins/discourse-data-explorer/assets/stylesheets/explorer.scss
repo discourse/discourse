@@ -548,6 +548,13 @@ table.group-reports {
   float: right;
 }
 
+.cached-result-notice {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  clear: both;
+  float: right;
+}
+
 .result-explain {
   padding-top: 1em;
   margin-bottom: 0;
