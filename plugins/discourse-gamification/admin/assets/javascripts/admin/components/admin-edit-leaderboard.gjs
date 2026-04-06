@@ -195,11 +195,10 @@ export default class AdminEditLeaderboard extends Component {
         <form.Field
           @name="period_filter_disabled"
           @title={{i18n "gamification.leaderboard.period_filter_disabled"}}
-          @showTitle={{false}}
-          @type="checkbox"
+          @type="toggle"
           as |field|
         >
-          <field.Control @value={{field.value}} />
+          <field.Control />
         </form.Field>
       </form.Section>
 
