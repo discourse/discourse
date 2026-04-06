@@ -1,7 +1,7 @@
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { humanizeList } from "discourse/lib/text";
-import { isAppleDevice } from "discourse/lib/utilities";
+import { capabilities } from "discourse/services/capabilities";
 import I18n, { i18n } from "discourse-i18n";
 
 function isGUID(value) {
@@ -31,16 +31,6 @@ export const dialog = {
     dg.alert(msg);
   },
 };
-
-export function markdownNameFromFileName(fileName) {
-  let name = fileName.slice(0, fileName.lastIndexOf("."));
-
-  if (isAppleDevice() && isGUID(name)) {
-    name = i18n("upload_selector.default_image_alt_text");
-  }
-
-  return name.replace(/\[|\]|\|/g, "");
-}
 
 export function validateUploadedFiles(files, opts) {
   if (!files || files.length === 0) {
@@ -285,6 +275,16 @@ export function allowsAttachments(staff, siteSettings) {
 
 export function uploadIcon(staff, siteSettings) {
   return allowsAttachments(staff, siteSettings) ? "upload" : "far-image";
+}
+
+function markdownNameFromFileName(fileName) {
+  let name = fileName.slice(0, fileName.lastIndexOf("."));
+
+  if (capabilities.isIOS && isGUID(name)) {
+    name = i18n("upload_selector.default_image_alt_text");
+  }
+
+  return name.replace(/\[|\]|\|/g, "");
 }
 
 function imageMarkdown(upload) {

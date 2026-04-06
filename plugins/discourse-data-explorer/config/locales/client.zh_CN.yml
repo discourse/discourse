@@ -6,6 +6,10 @@
 
 zh_CN:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "数据资源管理器"
     errors:
       explorer:
         no_semicolons: "从查询中移除分号。"
@@ -88,7 +92,7 @@ zh_CN:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "运行数据资源管理器查询。通过指定查询 ID 将 API 密钥限制为一组查询。"
     discourse_automation:
       scriptables:

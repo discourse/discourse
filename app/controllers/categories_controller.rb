@@ -137,7 +137,10 @@ class CategoriesController < ApplicationController
           Categories::TypeRegistry.counts
         end
 
-    render json: { types: Categories::TypeRegistry.list, counts: counts_by_type }
+    render json: {
+             types: Categories::TypeRegistry.list(only_visible: true),
+             counts: counts_by_type,
+           }
   end
 
   def show
@@ -594,6 +597,7 @@ class CategoriesController < ApplicationController
         end
 
         if SiteSetting.content_localization_enabled?
+          conditional_param_keys << :locale
           conditional_param_keys << { category_localizations: %i[id locale name description] }
         end
 
@@ -622,6 +626,7 @@ class CategoriesController < ApplicationController
           :slug,
           :allow_badges,
           :topic_template,
+          :topic_title_placeholder,
           :description,
           :sort_order,
           :sort_ascending,

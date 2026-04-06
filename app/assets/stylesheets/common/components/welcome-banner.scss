@@ -1,6 +1,16 @@
 @use "lib/viewport";
 @import "common/foundation/mixins";
 
+:root {
+  --d-welcome-banner-text-alignment: center;
+  --d-welcome-banner-header-size: var(--font-up-6);
+  --d-welcome-banner-padding-top: var(--space-6);
+  --d-welcome-banner-padding-right: 0;
+  --d-welcome-banner-padding-bottom: var(--space-12);
+  --d-welcome-banner-padding-left: 0;
+  --d-welcome-banner-title-margin-bottom: var(--space-4);
+}
+
 .display-welcome-banner {
   #main-outlet {
     padding-top: 0;
@@ -23,11 +33,14 @@
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    padding: var(--space-6) 0 3em;
+    padding: var(--d-welcome-banner-padding-top)
+      var(--d-welcome-banner-padding-right)
+      var(--d-welcome-banner-padding-bottom);
 
     .--with-bg-img & {
+      --d-welcome-banner-padding-right: var(--space-4);
+      --d-welcome-banner-padding-left: var(--space-4);
       border-radius: var(--d-border-radius);
-      padding-inline: var(--space-4);
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -35,13 +48,13 @@
     }
 
     @include viewport.until(md) {
-      padding: var(--space-4) 8px var(--space-5);
+      --d-welcome-banner-padding-top: var(--space-4);
+      --d-welcome-banner-padding-right: 8px;
+      --d-welcome-banner-padding-bottom: var(--space-5);
       margin-top: var(--space-2);
     }
 
     @include viewport.until(sm) {
-      display: block;
-      padding: var(--space-2);
       margin-top: 0;
     }
 
@@ -153,19 +166,28 @@
   }
 
   .search-menu-panel {
-    // hacky but best guestimate we can do: full height of the viewport minus the header, minus the welcome banner spacing,  minus font-size:6 title
-    max-height: calc(100vh - var(--header-offset) - -3em - 4em);
+    // hacky but best guestimate we can do
+    // 4em is roughly the input height
+    --d-welcome-banner-height: calc(
+      var(--font-up-6) + var(--d-welcome-banner-padding-top) +
+        var(--d-welcome-banner-padding-bottom) +
+        var(--d-welcome-banner-title-margin-bottom) + 4em
+    );
+    max-height: calc(
+      100vh - var(--header-offset) - var(--d-welcome-banner-height)
+    );
   }
 }
 
 .welcome-banner__title {
   font-size: var(--font-up-6);
-  line-height: $line-height-medium;
-  font-weight: bold;
-  margin-bottom: var(--space-2);
+  line-height: var(--line-height-medium);
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  margin-bottom: var(--d-welcome-banner-title-margin-bottom);
+  text-align: var(--d-welcome-banner-text-alignment);
   margin-inline: auto;
   max-width: 70ch;
-  text-align: center;
 
   @include viewport.until(md) {
     font-size: var(--font-up-4);

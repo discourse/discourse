@@ -1,4 +1,8 @@
 en:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Read calendar events feed"
+
   reports:
     currently_away:
       title: Users currently away

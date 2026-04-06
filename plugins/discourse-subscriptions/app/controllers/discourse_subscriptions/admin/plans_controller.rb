@@ -7,11 +7,9 @@ module DiscourseSubscriptions
 
       requires_plugin PLUGIN_NAME
 
-      before_action :set_api_key
-
       def index
         begin
-          plans = ::Stripe::Price.list(product_params)
+          plans = ::Stripe::Price.list(product_params, stripe_request_opts)
 
           render_json_dump plans.data
         rescue ::Stripe::InvalidRequestError => e
@@ -35,7 +33,7 @@ module DiscourseSubscriptions
 
           price_object[:recurring] = { interval: params[:interval] } if params[:type] == "recurring"
 
-          plan = ::Stripe::Price.create(price_object)
+          plan = ::Stripe::Price.create(price_object, stripe_request_opts)
 
           render_json_dump plan
         rescue ::Stripe::InvalidRequestError => e
@@ -45,7 +43,7 @@ module DiscourseSubscriptions
 
       def show
         begin
-          plan = ::Stripe::Price.retrieve(params[:id])
+          plan = ::Stripe::Price.retrieve(params[:id], stripe_request_opts)
 
           if plan[:metadata] && plan[:metadata][:trial_period_days]
             trial_days = plan[:metadata][:trial_period_days]
@@ -74,12 +72,15 @@ module DiscourseSubscriptions
           plan =
             ::Stripe::Price.update(
               params[:id],
-              nickname: params[:nickname],
-              active: params[:active],
-              metadata: {
-                group_name: params[:metadata][:group_name],
-                trial_period_days: params[:trial_period_days],
+              {
+                nickname: params[:nickname],
+                active: params[:active],
+                metadata: {
+                  group_name: params[:metadata][:group_name],
+                  trial_period_days: params[:trial_period_days],
+                },
               },
+              stripe_request_opts,
             )
 
           render_json_dump plan

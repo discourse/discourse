@@ -84,6 +84,12 @@ el:
       assign:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Έγκριση"
+        reject:
+          title: "Απόρριψη"
     ai_staff_action_logger:
       updated: "ενημερώθηκε"
       removed: "αφαιρέθηκε"

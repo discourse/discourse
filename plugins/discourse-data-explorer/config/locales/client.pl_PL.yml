@@ -6,6 +6,10 @@
 
 pl_PL:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Eksplorator danych"
     errors:
       explorer:
         no_semicolons: "Usuń średniki z zapytania."
@@ -94,7 +98,7 @@ pl_PL:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Uruchamiaj zapytania eksploratora danych. Ogranicz klucz API do zestawu zapytań, określając identyfikatory zapytań."
     discourse_automation:
       scriptables:

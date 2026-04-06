@@ -681,7 +681,11 @@ module ApplicationHelper
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    return user_scheme_id if user_scheme_id
+    if user_scheme_id
+      return user_scheme_id unless theme_limits_color_schemes?
+      return user_scheme_id if ColorScheme.exists?(id: user_scheme_id, theme_id: theme_id)
+    end
+
     return if theme_id.blank?
 
     @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
@@ -694,8 +698,23 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
-    user_dark_scheme_id ||
-      (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
+    if user_dark_scheme_id
+      return user_dark_scheme_id unless theme_limits_color_schemes?
+      return user_dark_scheme_id if ColorScheme.exists?(id: user_dark_scheme_id, theme_id: theme_id)
+    end
+
+    theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+    dark_id = theme&.dark_color_scheme_id
+    return dark_id if dark_id.present?
+    return theme&.color_scheme_id if theme_limits_color_schemes?
+    -1
+  end
+
+  def theme_limits_color_schemes?
+    return @theme_limits_color_schemes if defined?(@theme_limits_color_schemes)
+    @theme_limits_color_schemes =
+      theme_id.present? &&
+        ThemeModifierSet.exists?(theme_id: theme_id, only_theme_color_schemes: true)
   end
 
   def current_homepage
@@ -705,6 +724,38 @@ module ApplicationHelper
   def build_plugin_html(name, **kwargs)
     return "" unless allow_plugins?
     DiscoursePluginRegistry.build_html(name, controller, **kwargs) || ""
+  end
+
+  def crawler_topic_container_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_container_schema,
+        { itemscope: true, itemtype: "http://schema.org/DiscussionForumPosting" },
+        topic,
+      ),
+    )
+  end
+
+  def crawler_topic_main_entity_schema(topic)
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_main_entity_schema, {}, topic),
+    ).presence
+  end
+
+  def crawler_post_schema(post, topic)
+    default = {
+      itemprop: "comment",
+      itemscope: true,
+      itemtype: "http://schema.org/Comment",
+    } unless post.is_first_post?
+    tag.attributes(
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_crawler_post_schema,
+        default || {},
+        post,
+        topic,
+      ),
+    )
   end
 
   # If there is plugin HTML return that, otherwise yield to the template

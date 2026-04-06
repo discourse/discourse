@@ -11,6 +11,7 @@ import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import DiscourseTopic from "discourse/components/discourse-topic";
+import EmbedTopicFooter from "discourse/components/embed-topic-footer";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostStream from "discourse/components/post-stream";
@@ -626,6 +627,7 @@ export default <template>
           @name="topic-below-suggested"
           @outletArgs={{lazyHash model=@controller.model}}
         />
+        <EmbedTopicFooter @topic={{@controller.model}} />
       {{/if}}
     {{else}}
       <div class="container">

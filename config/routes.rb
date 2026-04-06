@@ -256,6 +256,7 @@ Discourse::Application.routes.draw do
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
           put "site-setting" => "themes#update_theme_site_setting"
+          put "source" => "themes#update_source"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
         end
 
@@ -824,6 +825,10 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/preferences/apps" => "users#preferences",
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      get "#{root_path}/:username/preferences/calendar-subscriptions" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -1859,6 +1864,10 @@ Discourse::Application.routes.draw do
 
     get "/user-api-key-client" => "user_api_key_clients#show"
     post "/user-api-key-client" => "user_api_key_clients#create"
+
+    get "/calendar-subscriptions" => "calendar_subscriptions#show"
+    post "/calendar-subscriptions" => "calendar_subscriptions#create"
+    delete "/calendar-subscriptions" => "calendar_subscriptions#destroy"
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"

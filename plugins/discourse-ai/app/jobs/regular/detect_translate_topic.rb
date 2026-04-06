@@ -24,13 +24,19 @@ module Jobs
 
       if force
         # no restrictions
-      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
-        return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
-      else
-        if topic.archetype == Archetype.private_message &&
-             !TopicAllowedGroup.exists?(topic_id: topic.id)
+      elsif topic.archetype == Archetype.private_message
+        case SiteSetting.ai_translation_personal_messages
+        when "all"
+          # allow
+        when "group"
+          return unless TopicAllowedGroup.exists?(topic_id: topic.id)
+        else
           return
         end
+      else
+        target_category_ids = SiteSetting.ai_translation_target_categories
+        return if target_category_ids.blank?
+        return if target_category_ids.split("|").map(&:to_i).exclude?(topic.category_id)
       end
 
       if (detected_locale = topic.locale).blank?

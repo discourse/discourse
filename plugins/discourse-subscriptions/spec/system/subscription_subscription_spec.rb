@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Subscription products", type: :system do
+describe "Subscription products" do
   fab!(:admin)
   fab!(:user)
   fab!(:product) { Fabricate(:product, external_id: "prod_OiK") }

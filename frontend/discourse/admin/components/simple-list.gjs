@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -16,7 +16,7 @@ export default class SimpleList extends Component {
 
   @cached
   get collection() {
-    return new TrackedArray(
+    return trackedArray(
       this.args.values
         ?.split(this.args.inputDelimiter || "\n")
         .filter(Boolean) || []

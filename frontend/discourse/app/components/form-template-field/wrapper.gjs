@@ -4,7 +4,7 @@ import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import Yaml from "js-yaml";
+import { waitForPromise } from "@ember/test-waiters";
 import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
 import ComposerField from "./composer";
@@ -65,8 +65,11 @@ export default class FormTemplateFieldWrapper extends Component {
     });
   }
 
-  _loadTemplate(templateContent) {
+  async _loadTemplate(templateContent) {
     try {
+      const promise = import("js-yaml");
+      waitForPromise(promise);
+      const Yaml = (await promise).default;
       this.parsedTemplate = Yaml.load(templateContent);
       this.args.onSelectFormTemplate?.(this.parsedTemplate);
     } catch (e) {

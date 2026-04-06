@@ -6,6 +6,10 @@
 
 sv:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Datautforskaren"
     errors:
       explorer:
         no_semicolons: "Ta bort semikolon från sökningen."
@@ -70,5 +74,5 @@ sv:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Kör frågor för datautforskaren. Begränsa API-nyckeln till en viss uppsättning frågor genom att specificera fråge-ID:n."

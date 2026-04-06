@@ -138,10 +138,6 @@ de:
           unassigned: "sind nicht zugeordnet"
         assigned:
           label: "Zugeordnet zu"
-    topics:
-      bulk:
-        unassign: "Zuordnung von Themen aufheben"
-        assign: "Themen zuordnen"
     discourse_automation:
       scriptables:
         random_assign:

@@ -8,7 +8,6 @@ sr:
   js:
     chat_integration:
       settings: "Podešavanje"
-      all_categories: "(sve kategorije)"
       delete_channel: "Obriši"
       edit_channel: "Izmeni"
       test_modal:

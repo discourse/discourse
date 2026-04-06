@@ -47,10 +47,10 @@ ru:
     chat_integration_rocketchat_webhook_url: "URL для вебхука интеграции с Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Размер сообщения в Rocket Chat"
     chat_integration_gitter_enabled: "Включить провайдера для чат-интеграции с Gitter"
-    chat_integration_flowdock_enabled: "Включить провайдера для чат-интеграции с Flowdock"
-    chat_integration_flowdock_excerpt_length: "Размер сообщения в Flowdock"
     chat_integration_groupme_enabled: "Включить провайдера для чат-интеграции с Groupme"
     chat_integration_groupme_excerpt_length: "Размер сообщения в Groupme"
+    chat_integration_groupme_bot_ids: "*Обязательно* Идентификаторы ботов, разделенные запятой, если их несколько."
+    chat_integration_groupme_instance_names: " *обязательно* Название чата GroupMe, разделенное запятыми, если их несколько (в том же порядке, что и идентификаторы ботов)."
     chat_integration_teams_enabled: "Включить интеграцию с Microsoft Teams"
     chat_integration_teams_excerpt_length: "Размер сообщения в Microsoft Team"
     chat_integration_powerautomate_enabled: "Включить интеграцию с Microsoft Power Automate"
@@ -59,9 +59,6 @@ ru:
     chat_integration_webex_excerpt_length: "Размер сообщения в Webex Teams"
     chat_integration_google_enabled: "Включить провайдера для чат-интеграции c Google Chat"
     chat_integration_google_excerpt_length: "Размер сообщения в Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "В некоторых каналах интеграции чата обнаружены ошибки. Перейдите в <a href='%{base_path}/admin/plugins/chat-integration'>раздел интеграции чата</a>, чтобы узнать подробности."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -91,8 +88,10 @@ ru:
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
+          error: "Извините, при создании правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
+          error: "Извините, при удалении этого правила произошла ошибка. Для получения списка правил выполните команду `/discourse status`."
         not_found:
           tag: "Тег *%{name}* не найден."
           category: "Раздел *%{name}* не найден. Доступные разделы: *%{list}*"
@@ -154,8 +153,10 @@ ru:
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
+          error: "Извините, при создании правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
+          error: "Извините, при удалении этого правила произошла ошибка. Выполните команду <code>/status</code> для получения списка правил."
         not_found:
           tag: "Тег <b>%{name}</b> не найден."
           category: "Раздел <b>%{name}</b> не найден. Доступные разделы: <b>%{list}</b>"
@@ -186,8 +187,10 @@ ru:
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
+          error: "Извините, при создании правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
+          error: "Извините, при удалении этого правила произошла ошибка. Для получения списка правил выполните команду `/discourse status`."
         not_found:
           tag: "Тег *%{name}* не найден."
           category: "Раздел *%{name}* не найден. Доступные разделы: *%{list}*"
@@ -217,8 +220,6 @@ ru:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "отправлено"
       google:
         new_post: "Новое сообщение на %{site_title}"
         new_topic: "Новая тема на %{site_title}"

@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import BulkUserDeleteConfirmation from "discourse/admin/components/bulk-user-delete-confirmation";
 import AdminUser from "discourse/admin/models/admin-user";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
@@ -35,7 +35,7 @@ export default class AdminUsersListShowController extends Controller {
   @computedI18n("search_hint") searchHint;
 
   _page = 1;
-  _results = new TrackedArray();
+  _results = trackedArray();
   _canLoadMore = true;
 
   get users() {

@@ -432,7 +432,7 @@ pt_BR:
         name_placeholder: "Evento"
         end_date_placeholder: "Definir data final"
         location_placeholder: "Adicionar local ou URL"
-        max_attendees_placeholder: "Máx. de participantes"
+        max_attendees_placeholder: "Definir o máximo de participantes"
         description_placeholder: "Adicionar descrição do evento"
       builder_modal:
         custom_fields:

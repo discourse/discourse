@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Core features", type: :system do
+RSpec.describe "Core features" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
 

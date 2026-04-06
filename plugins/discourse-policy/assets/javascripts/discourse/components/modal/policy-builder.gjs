@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action, set } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { isBlank, isPresent } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
@@ -15,7 +15,7 @@ export default class PolicyBuilder extends Component {
   @tracked isSaving = false;
   @tracked flash;
   policy =
-    this.args.model.policy || new TrackedObject({ reminder: null, version: 1 });
+    this.args.model.policy || trackedObject({ reminder: null, version: 1 });
 
   @action
   insertPolicy() {

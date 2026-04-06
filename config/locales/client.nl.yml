@@ -423,7 +423,6 @@ nl:
       start_posting:
         title: "Begin met posten"
         description: "Geef mensen iets om samen over te praten"
-        action: "Ideeën voor ijsbrekers"
         back: "Terug"
         icebreakers:
           fun_facts:
@@ -1698,6 +1697,10 @@ nl:
         interface: "Interface"
         apps: "Apps"
         navigation_menu: "Navigatiemenu"
+        calendar_subscriptions: "Kalender"
+      calendar_subscriptions:
+        copied: "Gekopieerd!"
+        add_to_google: "Google-agenda"
       change_password:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail verzenden)"
@@ -1785,22 +1788,22 @@ nl:
           edit_description: "Naam fysieke beveiligingssleutel"
           name_required_error: "Je moet een naam voor je beveiligingssleutel opgeven."
       passkeys:
-        rename_passkey: "Passkey hernoemen"
-        add_passkey: "Passkey toevoegen"
-        confirm_delete_passkey: "Weet je zeker dat je deze passkey wilt verwijderen?"
-        passkey_successfully_created: "Gelukt! Je nieuwe passkey is gemaakt."
-        rename_passkey_instructions: "Kies een passkeynaam die je gemakkelijk kunt herkennen, bijvoorbeeld de naam van je wachtwoordmanager."
+        rename_passkey: "Toegangssleutel hernoemen"
+        add_passkey: "Toegangssleutel toevoegen"
+        confirm_delete_passkey: "Weet je zeker dat je deze toegangssleutel wilt verwijderen?"
+        passkey_successfully_created: "Gelukt! Je nieuwe toegangssleutel is gemaakt."
+        rename_passkey_instructions: "Kies een toegangssleutelnaam die je gemakkelijk kunt herkennen, bijvoorbeeld de naam van je wachtwoordmanager."
         name:
-          default: "Hoofdpasskey"
+          default: "Hoofdtoegangssleutel"
         save: "Opslaan"
-        title: "Passkeys"
-        short_description: "Passkeys zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijv. touch, faceID) of via een apparaatpincode/-wachtwoord."
+        title: "Toegangssleutels"
+        short_description: "Toegangssleutels zijn wachtwoordvervangers die je identiteit biometrisch valideren (bijv. touch, faceID) of via een apparaatpincode/-wachtwoord."
         added_date: "%{date} toegevoegd"
         last_used_date: "Laatst gebruikt %{date}"
         never_used: "Nooit gebruikt"
-        not_allowed_error: "Er is een time-out opgetreden in het passkeyregistratieproces, het proces is geannuleerd of het is niet toegestaan."
-        already_added_error: "Je hebt deze passkey al geregistreerd. Je hoeft deze niet opnieuw te registreren."
-        confirm_button: "of een passkey gebruiken"
+        not_allowed_error: "Er is een time-out opgetreden in het toegangssleutelregistratieproces, het proces is geannuleerd of het is niet toegestaan."
+        already_added_error: "Je hebt deze toegangssleutel al geregistreerd. Je hoeft deze niet opnieuw te registreren."
+        confirm_button: "of een toegangssleutel gebruiken"
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -2136,7 +2139,7 @@ nl:
       confirm_access:
         title: "Toegang bevestigen"
         incorrect_password: "Het ingevoerde wachtwoord is onjuist."
-        incorrect_passkey: "Die passkey is onjuist."
+        incorrect_passkey: "Die toegangssleutel is onjuist."
         logged_in_as: "Je bent aangemeld als: "
         forgot_password: "Wachtwoord vergeten?"
         password_reset_email_sent: "E-mail voor wachtwoordherstel verzonden."
@@ -2576,7 +2579,7 @@ nl:
         title: "Aanmelden met LinkedIn"
         sr_title: "Aanmelden met LinkedIn"
       passkey:
-        name: "Aanmelden met een passkey"
+        name: "Aanmelden met een toegangssleutel"
       second_factor_toggle:
         totp: "Authenticator-app gebruiken"
         backup_code: "Back-upcode gebruiken"
@@ -2604,7 +2607,7 @@ nl:
       google_classic: "Google Classic (verouderd, verplaatst naar Noto Emoji)"
       facebook_messenger: "Facebook Messenger (verouderd, verplaatst naar Standard)"
       openmoji: OpenMoji
-      standard: Standard
+      standard: Standaard
       fluentui: Fluent Emoji
       noto: Noto Emoji
       twemoji: Twemoji
@@ -3242,11 +3245,8 @@ nl:
         confirm: "Bevestigen"
         select_all: "Alles selecteren"
         clear_all: "Alles wissen"
-        unlist_topics: "Topics onzichtbaar maken"
-        relist_topics: "Topics opnieuw weergeven"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
-        delete: "Topics verwijderen"
         delete_topics_count:
           one: "Topic verwijderen"
           other: "Topics verwijderen"
@@ -3282,29 +3282,20 @@ nl:
           other: "Nieuwe negeren (%{count})"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
-        change_category: "Categorie instellen..."
-        close_topics: "Topics sluiten"
-        archive_topics: "Topics archiveren"
         move_messages_to_inbox: "Verplaatsen naar inbox"
         archive_messages: "Verplaatsen naar archief"
-        notification_level: "Meldingen…"
         change_notification_level: "Meldingsniveau wijzigen"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
-        selected:
-          one: "Je hebt <b>%{count}</b> topic geselecteerd."
-          other: "Je hebt <b>%{count}</b> topics geselecteerd."
         selected_sole_category:
           one: "Je hebt <b>%{count}</b> topic geselecteerd uit de categorie:"
           other: "Je hebt <b>%{count}</b> topics geselecteerd uit de categorie:"
         selected_count:
           one: "%{count} geselecteerd"
           other: "%{count} geselecteerd"
-        change_tags: "Tags vervangen"
         append_tags: "Tags toevoegen"
         choose_new_tags: "Kies nieuwe tags voor deze topics:"
-        choose_append_tags: "Kies nieuwe tags om toe te voegen voor deze topics:"
+        choose_append_tags: "Tags toevoegen"
         changed_tags: "De tags van deze topics zijn gewijzigd."
-        remove_tags: "Alle tags verwijderen"
         confirm_remove_tags:
           one: "Alle tags worden verwijderd van dit topic. Weet je het zeker?"
           other: "Alle tags worden verwijderd van %{count} topics. Weet je het zeker?"
@@ -3339,7 +3330,6 @@ nl:
         name: "Sluiten"
       close_topics:
         name: "Sluiten"
-        note: "Opmerking"
         optional: (optioneel)
       archive_topics:
         name: "Archiveren"
@@ -3353,24 +3343,18 @@ nl:
         name: "Opnieuw zichtbaar maken"
       remove_tags:
         name: "Tags verwijderen"
-      append_tags:
-        name: "Tags toevoegen"
       replace_tags:
         name: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
       update_category:
         name: "Categorie bijwerken"
-        description: "Kies de nieuwe categorie voor de geselecteerde topics"
       reset_bump_dates:
         name: "Omhoogplaatsingsdatums resetten"
-        description: "Reset de omhoogplaatsingsdatum van het topic naar de datum van het laatst gemaakte bericht, wat de volgorde in de topicslijst beïnvloedt"
       defer:
         name: "Markeren als ongelezen"
-        description: "Markeer topics als ongelezen"
       update_notifications:
         name: "Meldingen bijwerken"
-        description: "Wijzig het meldingsniveau naar Kijken, Volgen, Normaal of Gedempt"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -4175,6 +4159,8 @@ nl:
       list: "Categorieën weergeven"
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
+      description_expand: "Meer weergeven"
+      description_collapse: "Minder weergeven"
       already_used: "Deze kleur is al in gebruik door een andere categorie"
       color_palette: "Kleurenpalet"
       security: "Beveiliging"
@@ -5257,8 +5243,6 @@ nl:
         back: "Terug naar alle rapporten"
         group_traffic: "Verkeer"
         group_members: "Leden"
-        group_moderation: "Moderatie"
-        group_security: "Beveiliging"
         group_other: "Overig"
       config_sections:
         account:
@@ -6309,7 +6293,7 @@ nl:
             back: "Terug naar onderdelen"
             install: "Installeren"
             name: "Naam"
-            used_on: "Gebruikt op"
+            used_on: "Gebruikt in"
             enabled: "Ingeschakeld?"
             by_author: "Van %{name}"
             learn_more: "Meer informatie"
@@ -6625,7 +6609,6 @@ nl:
           import_web_tip: "Repository die thema bevat"
           direct_install_tip: "Weet je zeker dat je <strong>%{name}</strong> uit de onderstaande repository wilt installeren?"
           import_web_advanced: "Geavanceerd…"
-          import_file_tip: ".tar.gz-, .zip- of .dcstyle.json-bestand dat thema bevat"
           is_private: "Thema bevindt zich in een privé-git-repository"
           finish_install: "Thema-installatie voltooien"
           last_attempt: "Installatieproces is niet voltooid, laatste poging:"
@@ -7270,7 +7253,7 @@ nl:
         edit_category:
           select_template: "Selecteer formuliersjablonen"
         errors:
-          multiple_tags_not_allowed: 'Je kunt geen verdere tags selecteren uit de "%{tag_name}". Gebruik een formuliersjabloon om problemen te voorkomen.'
+          multiple_tags_not_allowed: 'Je kunt geen verdere tags selecteren uit de "%{tag_name}". Gebruik het formuliersjabloon om problemen te voorkomen.'
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."

@@ -145,6 +145,7 @@ module TestSetup
     NotificationEmailer.disable
     SiteIconManager.disable
     WordWatcher.disable_cache
+    UpcomingChanges.clear_caches!
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
 
@@ -424,16 +425,15 @@ RSpec.configure do |config|
         (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
-    module IgnoreUnicornCapturedErrors
+    module IgnoreServerCapturedErrors
       def raise_server_error!
         super
       rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
-        # Ignore these exceptions - caused by client. Handled by unicorn in dev/prod
-        # https://github.com/defunkt/unicorn/blob/d947cb91cf/lib/unicorn/http_server.rb#L570-L573
+        # Ignore these exceptions - caused by client. Handled by the app server in dev/prod
       end
     end
 
-    Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
+    Capybara::Session.class_eval { prepend IgnoreServerCapturedErrors }
 
     module CapybaraTimeoutExtension
       class CapybaraTimedOut < StandardError
@@ -489,23 +489,25 @@ RSpec.configure do |config|
 
         if example_file_path
           expanded_example_file_path = Pathname.new(example_file_path).expand_path
-          is_within_rails_root = expanded_example_file_path.to_s.start_with?(Rails.root.to_s)
+          match =
+            example_file_path.to_s.match(
+              %r{^#{Regexp.escape(Rails.root.to_s)}/(plugins|themes|spec)/([^/]+)/},
+            )
 
-          if is_within_rails_root
-            extension_match = example_file_path.match(%r{/(plugins|themes)/([^/]+)/})
+          if match
             should_set_raise_on_deprecation =
-              if extension_match
-                type_dir, extension_name = extension_match.captures
+              begin
+                type_dir, extension_name = match.captures
 
-                if type_dir == "plugins"
+                case type_dir
+                when "spec"
+                  true
+                when "plugins"
                   Discourse.preinstalled_plugins.any? { |p| p.directory_name == extension_name }
-                else
+                when "themes"
                   # Preinstalled themes don't have a .git directory
                   !Rails.root.join(type_dir, extension_name, ".git").exist?
                 end
-              else
-                # Not a plugin or theme spec
-                true
               end
 
             ENV["EMBER_RAISE_ON_DEPRECATION"] = "1" if should_set_raise_on_deprecation

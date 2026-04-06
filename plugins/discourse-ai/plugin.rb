@@ -69,6 +69,13 @@ Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: DiscourseA
 
 require_relative "lib/engine"
 require_relative "lib/configuration/module"
+require_relative "lib/mcp/oauth_token_store"
+require_relative "lib/mcp/oauth_discovery"
+require_relative "lib/mcp/oauth_client_registration"
+require_relative "lib/mcp/oauth_flow"
+
+# Other plugins can register features through this register.
+DiscoursePluginRegistry.define_filtered_register(:external_ai_features)
 
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
@@ -107,6 +114,7 @@ after_initialize do
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
+  register_reviewable_type ReviewableAiToolAction
 
   on(:reviewable_transitioned_to) do |new_status, reviewable|
     ModelAccuracy.adjust_model_accuracy(new_status, reviewable)
@@ -133,13 +141,10 @@ after_initialize do
     end
   end
 
-  add_api_key_scope(
-    :discourse_ai,
-    { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } },
-  )
+  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
 
   add_api_key_scope(
-    :discourse_ai,
+    :ai,
     {
       manage_artifacts: {
         actions: %w[

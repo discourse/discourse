@@ -8,3 +8,9 @@ ru:
   site_settings:
     discourse_math_enabled: "Включить плагин Discourse Math (добавит специальную обработку в блоки $ и $$)"
     discourse_math_provider: "Математический провайдер по умолчанию"
+    discourse_math_enable_latex_delimiters: "Включите разделители в стиле LaTeX: \\(...\\) для встроенных математических выражений и \\[...\\] для блочных математических выражений."
+    discourse_math_mathjax_output: "Формат вывода MathJax (только для MathJax)"
+    discourse_math_enable_menu: "Включить контекстное меню (только для MathJax)"
+    discourse_math_enable_accessibility: "Включить функции специальных возможностей (MathJax только с меню)"
+    discourse_math_zoom_on_click: "Увеличение масштаба до 175% при нажатии Alt+клик (MathJax только с меню)"
+    discourse_math_enable_asciimath: "Включить ASCII-теги (добавит специальную обработку к входным данным, разделенным символом %; поддерживается только с MathJax)"

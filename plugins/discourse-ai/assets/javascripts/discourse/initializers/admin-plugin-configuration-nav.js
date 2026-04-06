@@ -48,6 +48,7 @@ export default {
           label: "discourse_ai.tools.short_title",
           route: "adminPlugins.show.discourse-ai-tools",
           description: "discourse_ai.tools.subheader_description",
+          keywords: "discourse_ai.tools.keywords",
         },
         {
           label: "discourse_ai.spam.short_title",

@@ -112,16 +112,16 @@ function registerTopicFooterButtons(api) {
 
       if (user) {
         return trustHTML(
-          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${
+          `<span class="unassign-label"><span class="text">${label}&nbsp;</span><span class="username">${escapeExpression(
             user.username
-          }</span></span>&nbsp;${renderAvatar(user, {
+          )}</span></span>&nbsp;${renderAvatar(user, {
             imageSize: "small",
             ignoreTitle: true,
           })}`
         );
       } else if (group) {
         return trustHTML(
-          `<span class="unassign-label">${label}</span> @${group.name}`
+          `<span class="unassign-label">${label}</span> @${escapeExpression(group.name)}`
         );
       }
     },
@@ -418,7 +418,7 @@ function initialize(api) {
 
       return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
         note
-      )}">${name}</span></${tagName}>`;
+      )}">${escapeExpression(name)}</span></${tagName}>`;
     };
 
     // is there's one assignment just return the tag
@@ -704,6 +704,8 @@ export default {
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
+        description: "topics.bulk.assign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
         action({ setComponent }) {
           setComponent(BulkActionsAssignUser);
         },
@@ -715,6 +717,8 @@ export default {
         label: "topics.bulk.unassign",
         icon: "user-xmark",
         class: "btn-default unassign-topics",
+        description: "topics.bulk.unassign_description",
+        confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },

@@ -49,6 +49,7 @@ module Migrations
     loader.inflector.inflect(
       {
         "cli" => "CLI",
+        "dsl" => "DSL",
         "id" => "ID",
         "discourse_db" => "DiscourseDB",
         "intermediate_db" => "IntermediateDB",
@@ -57,8 +58,8 @@ module Migrations
       },
     )
 
-    loader.push_dir(File.join(root_path, "lib"), namespace: ::Migrations)
-    loader.push_dir(File.join(root_path, "lib", "common"), namespace: ::Migrations)
+    loader.push_dir(File.join(root_path, "lib"), namespace: Migrations)
+    loader.push_dir(File.join(root_path, "lib", "common"), namespace: Migrations)
 
     # All subdirectories of a converter should have the same namespace.
     # Unfortunately `loader.collapse` doesn't work recursively.
@@ -73,13 +74,13 @@ module Migrations
     importer_base_steps_path = File.join(importer_steps_path, "base")
 
     # All subdirectories of the importer should share the same namespace, except for steps.
-    zeitwerk_collapse(loader, ::Migrations::Importer, importer_path) do |subdirectory|
+    zeitwerk_collapse(loader, Migrations::Importer, importer_path) do |subdirectory|
       !subdirectory.start_with?(importer_steps_path)
     end
 
     # Ensure all importer step classes share a single namespace across nested subdirectories,
     # but skip `base` directories so abstract/base classes can remain in their own namespace.
-    zeitwerk_collapse(loader, ::Migrations::Importer::Steps, importer_steps_path) do |subdirectory|
+    zeitwerk_collapse(loader, Migrations::Importer::Steps, importer_steps_path) do |subdirectory|
       !subdirectory.start_with?(importer_base_steps_path)
     end
 

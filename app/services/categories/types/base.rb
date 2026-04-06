@@ -195,6 +195,15 @@ module Categories
           true
         end
 
+        # One level above available? to allow for more granular control over visibility.
+        # For example, a category type may not be visible at all if a plugin isn't installed
+        # or if a certain site setting is not enabled, whereas available? is more
+        # for gating access on other conditions, and will still show the category type
+        # in the UI.
+        def visible?
+          true
+        end
+
         # Also used as an extension point to add additional keys/values to
         # the metadata hash returned by +metadata+, mostly for Discourse hosting.
         def additional_metadata

@@ -81,6 +81,10 @@
   }
 }
 
+.topic-list.--d-topic-cards .topic-list-body .topic-list-item {
+  cursor: pointer;
+}
+
 .topic-list.--d-topic-cards
   .topic-list-body
   .topic-list-item:not(.--high-context) {
@@ -95,7 +99,6 @@
     ". category activity activity .";
   gap: var(--space-3);
   border-radius: var(--d-border-radius);
-  cursor: pointer;
 
   &.--has-replies {
     grid-template-areas:

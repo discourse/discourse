@@ -137,8 +137,16 @@ en:
           label: "Assigned to"
     topics:
       bulk:
-        unassign: "Unassign Topics"
-        assign: "Assign Topics"
+        unassign: "Unassign topics"
+        assign: "Assign topics"
+        assign_description: "Assign the selected topics to the following user:"
+        unassign_description: "Do you want to unassign the selected topics?"
+        confirm_assign_topics:
+          one: "Assign %{count} topic"
+          other: "Assign %{count} topics"
+        confirm_unassign_topics:
+          one: "Unassign %{count} topic"
+          other: "Unassign %{count} topics"
     discourse_automation:
       scriptables:
         random_assign:

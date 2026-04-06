@@ -42,6 +42,11 @@ RSpec.describe Categories::TypeRegistry do
 
       expect(discussion).to include(icon: "memo", available: true)
     end
+
+    it "returns only visible types when only_visible is true" do
+      Categories::Types::Discussion.stubs(:visible?).returns(false)
+      expect(described_class.list(only_visible: true)).to be_empty
+    end
   end
 
   describe ".counts" do
@@ -55,10 +60,10 @@ RSpec.describe Categories::TypeRegistry do
       expect(queries.size).to eq(1)
     end
 
-    it "returns empty hash when no types are registered" do
+    it "returns only the core discussion type in the hash when no other types are registered" do
       original_types = described_class.all.dup
       described_class.reset!
-      expect(described_class.counts).to eq({})
+      expect(described_class.counts).to eq({ discussion: 0 })
     ensure
       original_types&.each_value { |klass| described_class.register(klass) }
     end

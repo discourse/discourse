@@ -44,6 +44,35 @@ describe DiscourseTopicVoting::VotesController do
     expect(user.reload.vote_count).to eq(0)
   end
 
+  context "when vote limits are disabled" do
+    before do
+      SiteSetting.topic_voting_enable_vote_limits = false
+      SiteSetting.public_send("topic_voting_tl#{user.trust_level}_vote_limit=", 0)
+    end
+
+    it "allows voting and returns nil for limit fields" do
+      post "/voting/vote.json", params: { topic_id: topic.id }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["can_vote"]).to eq(true)
+      expect(json["vote_limit"]).to be_nil
+      expect(json["votes_left"]).to be_nil
+      expect(json["alert"]).to eq(false)
+    end
+
+    it "returns nil for limit fields on unvote" do
+      DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+
+      post "/voting/unvote.json", params: { topic_id: topic.id }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["vote_limit"]).to be_nil
+      expect(json["votes_left"]).to be_nil
+    end
+  end
+
   it "triggers a topic_upvote webhook when voting" do
     Fabricate(:topic_voting_web_hook)
     post "/voting/vote.json", params: { topic_id: topic.id }

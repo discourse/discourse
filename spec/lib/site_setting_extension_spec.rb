@@ -757,6 +757,22 @@ RSpec.describe SiteSettingExtension do
         end
       end
 
+      context "when the depends_on setting does not exist" do
+        before do
+          settings.setting(
+            :orphan_setting,
+            nil,
+            depends_on: [:nonexistent_setting],
+            depends_behavior: :hidden,
+          )
+          settings.refresh!
+        end
+
+        it "is not present in all_settings" do
+          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).to be_blank
+        end
+      end
+
       context "when the setting is also explicitly hidden" do
         before do
           settings.setting(:enable_cool_thing, true)
@@ -1015,6 +1031,20 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe ".all_settings" do
+    describe "non-configurable plugin exclusion" do
+      it "includes plugin site settings when the plugin is configurable" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
+
+        expect(SiteSetting.all_settings.map { |s| s[:setting] }).to include(:plugin_setting)
+      end
+
+      it "excludes plugin site settings when the plugin is not configurable" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+        expect(SiteSetting.all_settings.map { |s| s[:setting] }).not_to include(:plugin_setting)
+      end
+    end
+
     describe "uploads settings" do
       it "should return the right values" do
         negative_upload_id = [(Upload.minimum(:id) || 0) - 1, -10].min

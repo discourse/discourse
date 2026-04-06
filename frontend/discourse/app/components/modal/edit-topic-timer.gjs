@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
@@ -29,11 +29,11 @@ export default class EditTopicTimer extends Component {
     super(...arguments);
 
     if (this.args.model.topic?.topic_timer) {
-      this.topicTimer = new TrackedObject(this.args.model.topic?.topic_timer);
+      this.topicTimer = trackedObject(this.args.model.topic?.topic_timer);
     } else {
       // TODO: next() is a hack, to-be-removed
       next(() => {
-        this.topicTimer = new TrackedObject(this.createDefaultTimer());
+        this.topicTimer = trackedObject(this.createDefaultTimer());
       });
     }
   }
@@ -231,6 +231,9 @@ export default class EditTopicTimer extends Component {
     let statusType = this.topicTimer.status_type;
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
+    }
+    if (statusType === DELETE_AFTER_LAST_POST_STATUS_TYPE) {
+      statusType = DELETE_STATUS_TYPE;
     }
     await this._setTimer(null, null, statusType);
     // timer has been removed and we are removing `execute_at`

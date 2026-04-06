@@ -165,6 +165,21 @@ RSpec.describe TopicEmbed do
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
+      it "falls back to the url when the title is blank" do
+        blank_title_url = "http://eviltrout.com/blank-title"
+        imported_post = TopicEmbed.import(user, blank_title_url, "", contents)
+
+        expect(imported_post.topic.title).to eq(blank_title_url)
+      end
+
+      it "preserves an existing title when a later import has a blank title" do
+        imported_post = TopicEmbed.import(user, url, title, contents)
+
+        TopicEmbed.import(user, url, "", "<p>updated content</p>")
+
+        expect(imported_post.topic.reload.title).to eq(title)
+      end
+
       shared_examples "topic is unlisted" do
         it "unlists the topic until someone replies" do
           Jobs.run_immediately!

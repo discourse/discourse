@@ -14,14 +14,72 @@ General guidance on CSS customization can be found in [the Designer's Guide](htt
 
 ## Adding, removing and rearranging columns
 
-Discourse default topic list on Desktop is rendered as a table. The [JS plugin API](https://meta.discourse.org/t/41281) can be used to customize the set of columns by adding, removing, replacing or reordering them. This surgical modification of columns means that your theme or plugin is making the smallest possible change, so that core changes are unlikely to conflict with it in future.
+On desktop, the topic list is rendered as a table. On mobile, each topic row uses a separate single-cell layout, so `topic-list-columns` only affects the desktop table.
 
-The topic-list columns are represented by a 'DAG API' object, accessible via the `topic-list-columns` [Value Transformer](https://meta.discourse.org/t/349954). Each column is represented by a plain JS object with two keys:
+The [Plugin API](12-pluginapi.md) can be used to customize the desktop columns via the `topic-list-columns` [Value Transformer](23-transformers.md). This is the most surgical way to add, remove, replace, or reorder columns without taking ownership of the full row markup.
 
-- `header`: An Ember Component to be rendered as the header cell for this column
-- `item`: An Ember Component to be rendered as the item cell for this column
+`topic-list-columns` is a **mutable** transformer. Core builds a `DAG` of columns, passes that mutable object through registered transformers, and resolves it afterwards. In practice, that means you should mutate the `columns` object directly.
 
-A list of arguments passed to header cells can be found [here](https://github.com/discourse/discourse/blob/b76c5406bd/app/assets/javascripts/discourse/app/components/topic-list/header.gjs#L6C5-L29C14), and a list of arguments passed to item cells can be found [here](https://github.com/discourse/discourse/blob/b76c5406bdd4a9277a0bfc85c54b92a78f6ce48a/app/assets/javascripts/discourse/app/components/topic-list/item.gjs#L384C11-L395C20). Core's default columns can be found [here](https://github.com/discourse/discourse/blob/b76c5406bdd4a9277a0bfc85c54b92a78f6ce48a/app/assets/javascripts/discourse/app/components/topic-list/list.gjs#L44-L88).
+The transformer callback currently receives:
+
+- `context.listContext`
+- `context.category`
+- `context.filter`
+
+Current core column keys are:
+
+- `bulk-select` when bulk select is enabled
+- `topic`
+- `posters` when poster avatars are enabled
+- `replies`
+- `likes` or `op-likes` depending on the current sort order
+- `views`
+- `activity`
+
+Each column value can define:
+
+- `header`: the component rendered in the table header for that column
+- `item`: the component rendered in each desktop row for that column
+
+The `DAG` instance supports these methods:
+
+- `add(key, value, position?)`
+- `delete(key)`
+- `replace(key, value, position?)`
+- `reposition(key, position)`
+
+When you call `replace()`, core preserves the existing `header` or `item` if your replacement only provides one of them.
+
+Header cell components currently receive these arguments:
+
+| Argument             | Description                                           |
+| -------------------- | ----------------------------------------------------- |
+| `@sortable`          | Whether the column should behave as a sortable header |
+| `@activeOrder`       | The currently active sort order                       |
+| `@changeSort`        | Callback used to change sorting                       |
+| `@ascending`         | Whether the active sort is ascending                  |
+| `@category`          | The current category, when available                  |
+| `@name`              | The translation key or label used by the header       |
+| `@bulkSelectEnabled` | Whether bulk select mode is active                    |
+| `@showBulkToggle`    | Whether the bulk-select toggle button should be shown |
+| `@canBulkSelect`     | Whether bulk select is available                      |
+| `@canDoBulkActions`  | Whether bulk actions are currently available          |
+| `@bulkSelectHelper`  | The bulk-select helper object                         |
+
+Item cell components currently receive these arguments:
+
+| Argument               | Description                                |
+| ---------------------- | ------------------------------------------ |
+| `@topic`               | The current topic                          |
+| `@bulkSelectEnabled`   | Whether bulk select mode is active         |
+| `@onBulkSelectToggle`  | Callback used by the bulk-select checkbox  |
+| `@isSelected`          | Whether the topic is currently selected    |
+| `@showTopicPostBadges` | Whether unread/new badges should be shown  |
+| `@hideCategory`        | Whether category markup should be hidden   |
+| `@tagsForUser`         | The current tag visibility context         |
+| `@expandPinned`        | Whether the pinned excerpt should be shown |
+
+Current source for this API lives in `frontend/discourse/app/components/topic-list/list.gjs`, `frontend/discourse/app/components/topic-list/header.gjs`, and `frontend/discourse/app/components/topic-list/item.gjs`.
 
 This example adds, removes and repositions columns in the desktop topic list:
 
@@ -33,58 +91,104 @@ import { apiInitializer } from "discourse/lib/api";
 const StaffHeaderCell = <template>
   <th>Staff?</th>
 </template>;
+
 const StaffItemCell = <template>
   <td>{{if @topic.creator.staff "✅"}}</td>
 </template>;
 
-export default apiInitializer("1.34", (api) => {
-  const discoveryService = api.container.lookup("service:discovery");
+export default apiInitializer((api) => {
+  api.registerValueTransformer(
+    "topic-list-columns",
+    ({ value: columns, context }) => {
+      // Remove the core column which shows poster avatars:
+      columns.delete("posters");
 
-  api.registerValueTransformer("topic-list-columns", ({ value: columns }) => {
-    // Remove the core column which shows poster avatars:
-    columns.delete("posters");
+      // Swap the "replies" and "views" columns:
+      columns.reposition("views", { before: "replies" });
 
-    // Swap the "replies" and "views" columns:
-    columns.reposition("views", { before: "replies" });
-
-    // Lean on external autotracked state to make decisions:
-    if (discoveryService.category?.slug === "announcements") {
-      // Add a custom column:
-      columns.add("created-by-staff", {
-        header: StaffHeaderCell,
-        item: StaffItemCell,
-      });
+      if (context.category?.slug === "announcements") {
+        columns.add(
+          "created-by-staff",
+          {
+            header: StaffHeaderCell,
+            item: StaffItemCell,
+          },
+          { before: "activity" }
+        );
+      }
     }
-
-    return columns;
-  });
+  );
 });
 ```
 
 ## Introducing content via Plugin Outlets
 
-Plugin outlets can be used to inject content into existing cells on desktop, or to inject content into the mobile view. These can be identified and used in the same way as any other part of Discourse. Check out [the Plugin Outlet documentation](https://meta.discourse.org/t/using-plugin-outlet-connectors-from-a-theme-or-plugin/32727).
+Prefer [Plugin Outlets](13-plugin-outlet-connectors.md) when you want to inject content without taking ownership of the whole row structure.
+
+Some of the most useful topic-list outlets are:
+
+| Outlet                                                                                               | Purpose                                   | Outlet args                                                                                                                               |
+| ---------------------------------------------------------------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `before-topic-list-body` / `after-topic-list-body`                                                   | Add markup before or after the table body | `topics`, `selected`, `bulkSelectEnabled`, `lastVisitedTopic`, `discoveryList`, `hideCategory`                                            |
+| `after-topic-list-item`                                                                              | Insert an extra `<tr>` after each row     | `topic`, `index`                                                                                                                          |
+| `topic-list-item`                                                                                    | Wrap or replace the entire row            | `topic`, `bulkSelectEnabled`, `onBulkSelectToggle`, `isSelected`, `hideCategory`, `tagsForUser`, `showTopicPostBadges`, `navigateToTopic` |
+| `topic-list-topic-cell-link-top-line`                                                                | Extend the desktop title/status line      | `topic`, `tagsForUser`                                                                                                                    |
+| `topic-list-topic-cell-link-bottom-line`                                                             | Extend the desktop category/tag/meta line | `topic`, `tagsForUser`                                                                                                                    |
+| `topic-list-item-mobile-avatar` / `topic-list-item-mobile-bumped-at`                                 | Mobile-only customizations                | `topic`                                                                                                                                   |
+| `topic-list-before-reply-count` / `topic-list-before-view-count` / `topic-list-before-relative-date` | Add content near the count/date cells     | `topic`                                                                                                                                   |
+| `topic-list-heading-bottom`                                                                          | Add content inside sortable header cells  | `name`, `bulkSelectEnabled`                                                                                                               |
+
+There are more outlets throughout `frontend/discourse/app/components/topic-list/`, especially in `item/topic-cell.gjs`, `item/replies-cell.gjs`, `item/views-cell.gjs`, and `item/activity-cell.gjs`.
 
 ## Replacing the entire topic-list-item
 
-If you want to completely replace the core topic-list-item implementation, then you can use the `topic-list-item` Wrapper Plugin Outlet. This should only be done when your design differs so much from core that you don't want it to be affected by future core changes, and you don't need it to be compatible with other themes / plugins.
+If you want to completely replace the core row implementation, use the `topic-list-item` wrapper outlet. This should only be done when your design differs so much from core that you do not want future core changes to affect it, and you do not need compatibility with other themes or plugins.
+
+Core intentionally does **not** pass `@columns` into this wrapper outlet. A full row replacement means taking ownership of the row structure yourself.
 
 If using this strategy, you should take extra care to ensure that your code is well tested, and you should make sure that your theme/plugin users are aware of the caveats.
 
 ## Other tweaks via Transformers and Theme Modifiers
 
-A number of [Value Transformers](https://meta.discourse.org/t/349954) allow making surgical tweaks to core's topic-list implementation. The most common ones are:
+A number of [Transformers](23-transformers.md) allow small, targeted changes to the topic-list implementation:
 
-- **`topic-list-class`** (context: `{ topics }`) - an array of classes to be applied to the topic list `<table>` element
+- **`topic-list-columns`** (mutable context: `{ listContext, category, filter }`) - mutate the desktop column DAG
+- **`topic-list-class`** (context: `{ topics, listContext }`) - return classes to add to the topic list `<table>`
+- **`topic-list-item-class`** (context: `{ topic, index, listContext }`) - return classes to add to each topic row
+- **`topic-list-item-style`** (context: `{ topic, index, listContext }`) - return an array of `htmlSafe` CSS declarations to be joined into the row's inline `style`
+- **`topic-list-item-expand-pinned`** (context: `{ topic, mobileView }`) - control whether the topic excerpt is displayed
+- **`topic-list-item-mobile-layout`** (context: `{ topic, listContext }`) - choose whether a row uses the mobile layout
+- **`topic-list-header-sortable-column`** - override whether header cells are sortable, for example based on the current category
 
-- **`topic-list-item-class`** (context: `{ topic, index }`) - an array of classes to be applied to the topic-list-item's `<tr>` element
+There is also a **behavior transformer** for row clicks:
 
-- **`topic-list-item-expand-pinned`** (context: `{ topic, mobileView }`) - a boolean which determines whether the topic excerpt should be displayed. (see also: `serialize_topic_excerpts` Theme Modifier)
+- **`topic-list-item-click`** (context: `{ event, topic, listContext, navigateToTopic }`) - wrap or override the default click behavior. Register this with `api.registerBehaviorTransformer(...)`, not `api.registerValueTransformer(...)`.
 
-- **`topic-list-item-mobile-layout`** (context: `{ topic }`) - a boolean which determines whether to use the mobile topic-list layout. Transforming this value can allow the desktop view to be used everywhere, which may be useful if you'd like to build a fully 'responsive' styling for the topic list.
+For example, `topic-list-item-style` must return `htmlSafe` strings:
 
-Some [Theme Modifiers](https://meta.discourse.org/t/150605) are also relevant to the topic list. For example:
+```gjs
+// .../discourse/api-initializers/topic-list-style.gjs
 
-- **`serialize_topic_excerpts`** (boolean) (default false) - always include excerpts when serializing topic lists
+import { htmlSafe } from "@ember/template";
+import { apiInitializer } from "discourse/lib/api";
 
-- **`topic thumbnails`** (array of dimensions) - request additional resolutions in the topic thumbnail set
+export default apiInitializer((api) => {
+  api.registerValueTransformer(
+    "topic-list-item-style",
+    ({ value, context }) => {
+      if (context.topic.pinned) {
+        value.push(htmlSafe("outline: 2px solid var(--primary-low);"));
+      }
+
+      return value;
+    }
+  );
+});
+```
+
+Some [Theme Modifiers](../05-themes-components/21-theme-modifiers.md) are also relevant to the topic list because they change which data is serialized:
+
+- **`serialize_topic_excerpts`** (`boolean`, default `false`) - always include excerpts when serializing topic lists
+- **`topic_thumbnail_sizes`** (`array`) - request additional resolutions in the topic thumbnail set
+- **`serialize_topic_op_likes_data`** (`boolean`) - include first-post like data such as `op_like_count`, `op_can_like`, `op_liked`, and `first_post_id`
+- **`serialize_topic_is_hot`** (`boolean`) - include `is_hot` on topic list items

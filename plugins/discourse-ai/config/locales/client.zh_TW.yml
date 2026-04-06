@@ -39,7 +39,6 @@ zh_TW:
       llm_selector:
         none: "無"
       features:
-        back: "上一步"
         disabled: "(停用)"
         groups: "群組:"
         no_agent: "未設定"
@@ -84,7 +83,6 @@ zh_TW:
           last_day: "過去 24 小時"
           custom: "自訂..."
       ai_agent:
-        back: "上一步"
         name: "名稱"
         edit: "編輯"
         export: "匯出"
@@ -93,6 +91,8 @@ zh_TW:
         user: 使用者
         save: "儲存"
         enabled: "啟用?"
+        mcp_tools_modal:
+          clear_all: "清除全部"
         delete: "刪除"
         response_format:
           open_modal: "編輯"
@@ -105,7 +105,6 @@ zh_TW:
           title: "上傳檔案"
           uploading: "上傳中..."
       tools:
-        back: "上一步"
         export: "匯出"
         import: "匯入"
         name: "名稱"
@@ -124,16 +123,25 @@ zh_TW:
         short_title: "憑證"
         name: "名稱"
         secret: "價值"
-        back: "上一步"
         save: "儲存"
         edit: "編輯"
         delete: "刪除"
         embedding: "嵌入"
+      mcp_servers:
+        name: "名稱"
+        description: "描述"
+        url: "網址"
+        oauth_connect: "連結"
+        enabled: "啟用"
+        save: "儲存"
+        edit: "編輯"
+        delete: "刪除"
+        tools_modal:
+          required: "必要設定"
       llms:
         display_name: "名稱"
         save: "儲存"
         edit: "編輯"
-        back: "上一步"
         delete: 刪除
         quotas:
           group: "群組"
@@ -174,7 +182,6 @@ zh_TW:
         image_caption:
           save_caption: "儲存"
       embeddings:
-        back: "上一步"
         save: "儲存"
         delete: "刪除"
         edit: "編輯"

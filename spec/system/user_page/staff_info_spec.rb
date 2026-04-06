@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing user staff info as an admin", type: :system do
+describe "Viewing user staff info as an admin" do
   fab!(:user)
   fab!(:admin)
   let(:user_page) { PageObjects::Pages::User.new }
@@ -36,6 +36,27 @@ describe "Viewing user staff info as an admin", type: :system do
 
       expect(filters["target_user"]).to eq(user.username)
       expect(filters["action_name"]).to eq("silence_user")
+    end
+  end
+
+  context "for flags given" do
+    fab!(:flagged_post) { Fabricate(:post, user: admin) }
+
+    before do
+      Group.refresh_automatic_groups!
+      PostActionCreator.create(user, flagged_post, :inappropriate)
+    end
+
+    it "shows count and links to review queue filtered by flagger" do
+      user_page.visit(user)
+
+      expect(user_page).to have_staff_counter_flags_given(count: 1)
+
+      user_page.click_staff_info_flags_given_link
+
+      expect(page).to have_current_path(%r{/review})
+      expect(page).to have_current_path(/flagged_by=#{user.username}/)
+      expect(page).to have_current_path(/status=approved/)
     end
   end
 

@@ -89,5 +89,70 @@ describe DiscoursePostEvent::EventSerializer do
         expect(json[:event][:duration]).to eq("01:00:00")
       end
     end
+
+    context "when event is recurring with show_local_time" do
+      fab!(:post_recurring) { Fabricate(:post, topic:) }
+      fab!(:recurring_event) do
+        Fabricate(
+          :event,
+          post: post_recurring,
+          original_starts_at: 2.weeks.ago.change(hour: 14, min: 0, sec: 0),
+          original_ends_at: 2.weeks.ago.change(hour: 15, min: 0, sec: 0),
+          recurrence: "every_week",
+          timezone: "UTC",
+          show_local_time: true,
+        )
+      end
+
+      before { recurring_event.set_next_date }
+
+      it "serializes starts_at using the next occurrence" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(
+            recurring_event.reload,
+            scope: Guardian.new,
+          ).as_json
+        starts_at = Time.parse(json[:event][:starts_at])
+        expect(starts_at).to be > Time.current
+      end
+
+      it "serializes ends_at using the next occurrence" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(
+            recurring_event.reload,
+            scope: Guardian.new,
+          ).as_json
+        ends_at = Time.parse(json[:event][:ends_at])
+        expect(ends_at).to be > Time.current
+      end
+    end
+
+    context "when event is all-day" do
+      fab!(:post_all_day) { Fabricate(:post, topic: topic) }
+      fab!(:all_day_event) do
+        Fabricate(
+          :event,
+          post: post_all_day,
+          original_starts_at: "2026-03-12 00:00:00 UTC",
+          original_ends_at: "2026-03-14 00:00:00 UTC",
+          all_day: true,
+        )
+      end
+
+      it "serializes starts_at as date-only string" do
+        json = DiscoursePostEvent::EventSerializer.new(all_day_event, scope: Guardian.new).as_json
+        expect(json[:event][:starts_at]).to eq("2026-03-12")
+      end
+
+      it "serializes ends_at as date-only string" do
+        json = DiscoursePostEvent::EventSerializer.new(all_day_event, scope: Guardian.new).as_json
+        expect(json[:event][:ends_at]).to eq("2026-03-14")
+      end
+
+      it "serializes all_day as true" do
+        json = DiscoursePostEvent::EventSerializer.new(all_day_event, scope: Guardian.new).as_json
+        expect(json[:event][:all_day]).to eq(true)
+      end
+    end
   end
 end

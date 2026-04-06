@@ -34,6 +34,7 @@ export default class ScrollDirection extends Service {
 
   willDestroy() {
     window.removeEventListener("scroll", this.onScroll);
+    this.router.off("routeWillChange", this.routeWillChange);
     this.router.off("routeDidChange", this.routeDidChange);
   }
 

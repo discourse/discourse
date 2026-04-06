@@ -34,40 +34,43 @@ export default class TagSettingsLocalizations extends Component {
       <@form.Collection @name="localizations" as |collection index|>
         <collection.Field
           @name="tag_id"
+          @type="input-hidden"
           @title="tag_id"
           @showTitle={{false}}
           @disabled={{true}}
           as |field|
         >
-          <field.Input @value={{@tagId}} @type="hidden" />
+          <field.Control @value={{@tagId}} />
         </collection.Field>
 
         <@form.Row as |row|>
           <row.Col @size={{2}}>
             <collection.Field
               @name="locale"
+              @type="select"
               @title={{i18n "tagging.localization.locale"}}
               @validation="required"
               as |field|
             >
-              <field.Select as |select|>
+              <field.Control as |select|>
                 {{#each this.selectableLocales as |locale|}}
                   <select.Option
                     @value={{locale.value}}
                   >{{locale.name}}</select.Option>
                 {{/each}}
-              </field.Select>
+              </field.Control>
             </collection.Field>
           </row.Col>
 
           <row.Col @size={{3}}>
             <collection.Field
               @name="name"
+              @type="input"
               @title={{i18n "tagging.localization.name"}}
               @validation="required|length:1,50"
               as |field|
             >
-              <field.Input
+              <field.Control
                 placeholder={{i18n "tagging.settings.name_placeholder"}}
                 @maxlength="50"
               />
@@ -77,11 +80,12 @@ export default class TagSettingsLocalizations extends Component {
           <row.Col @size={{6}}>
             <collection.Field
               @name="description"
+              @type="textarea"
               @title={{i18n "tagging.localization.description"}}
               @validation="length:0,1000"
               as |field|
             >
-              <field.Textarea @height={{80}} />
+              <field.Control @height={{80}} />
             </collection.Field>
           </row.Col>
 

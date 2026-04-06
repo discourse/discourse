@@ -94,6 +94,15 @@ export default <template>
         <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
       </DNavigationItem>
 
+      <DNavigationItem
+        @route="preferences.calendar-subscriptions"
+        @ariaCurrentContext="subNav"
+        class="user-nav__preferences-calendar-subscriptions"
+      >
+        {{icon "calendar-days"}}
+        <span>{{i18n "user.preferences_nav.calendar_subscriptions"}}</span>
+      </DNavigationItem>
+
       <PluginOutlet
         @name="user-preferences-nav-under-interface"
         @connectorTagName="div"

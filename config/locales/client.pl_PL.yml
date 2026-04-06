@@ -416,6 +416,7 @@ pl_PL:
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
       toggle_mobile_view: "Przełącz widok mobilny"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
+      toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -514,7 +515,6 @@ pl_PL:
       pm_title: "Sugerowane wiadomości"
     admin_onboarding_banner:
       launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
-      skipped: "Lista kontrolna dotycząca wdrażania administratora została pominięta. Jeśli chcesz ją ponownie włączyć, poszukaj opcji „włącz wdrażanie właściciela witryny” w ustawieniach witryny."
       congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
       invite_collaborators:
         title: "Zaproś współpracowników"
@@ -523,13 +523,12 @@ pl_PL:
       start_posting:
         title: "Rozpocznij publikowanie"
         description: "Daj ludziom temat do wspólnej rozmowy"
-        action: "Pomysły na przełamanie lodów"
+        action: "Zobacz pomysły"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
         predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
         use_predefined: "Przeglądaj szablony"
-        start_with_this: "Zacznij od tego"
         back: "Wstecz"
         icebreakers:
           fun_facts:
@@ -761,6 +760,7 @@ pl_PL:
       storage_access_prompt: "Masz już konto %{site_name} ? Zezwól na dostęp do swojej sesji, aby móc komentować jako Ty."
       allow_access: "Zezwól na dostęp"
       continue_as_guest: "Kontynuuj jako gość"
+      be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -1288,6 +1288,7 @@ pl_PL:
       add_members:
         title: "Dodaj użytkowników do %{group_name}"
         description: "Wpisz listę użytkowników, których chcesz zaprosić do grupy, lub wklej listę oddzieloną przecinkami:"
+        description_usernames_only: "Wprowadź listę nazw użytkowników, których chcesz dodać do grupy, lub wklej listę rozdzieloną przecinkami:"
         usernames_placeholder: "nazwy użytkowników"
         usernames_or_emails_placeholder: "nazwy użytkowników lub e-maile"
         notify_users: "Powiadom użytkowników"
@@ -2015,6 +2016,23 @@ pl_PL:
         apps: "Aplikacje"
         navigation_menu: "Menu nawigacyjne"
         upcoming_changes: "Nadchodzące zmiany"
+        calendar_subscriptions: "Kalendarz"
+      calendar_subscriptions:
+        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić."
+        generate: "Generuj adresy URL subskrypcji"
+        regenerate: "Wygeneruj ponownie adresy URL"
+        regenerate_confirm: "Spowoduje to unieważnienie istniejących adresów URL subskrypcji kalendarza. Wszystkie aplikacje kalendarza korzystające ze starych adresów URL przestaną otrzymywać aktualizacje. Kontynuować?"
+        revoke: "Cofnij subskrypcję"
+        revoke_confirm: "Spowoduje to anulowanie adresów URL subskrypcji kalendarza. Wszystkie aplikacje kalendarza, które z nich korzystają, przestaną otrzymywać aktualizacje. Kontynuować?"
+        urls_warning: "Adresy URL subskrypcji są gotowe! Kliknij poniższe przyciski, aby połączyć je z aplikacją kalendarza. Uwaga: te adresy URL są wyświetlane tylko raz."
+        bookmarks: "Przypomnienia zakładkowe"
+        bookmarks_description: "Twoje zakładki z datami przypomnień"
+        copy: "Kopiuj adres URL"
+        copied: "Skopiowane!"
+        add_to_google: "Kalendarz Google"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Kalendarz Apple"
+        active_subscription: "Masz aktywną subskrypcję kalendarza."
       change_password:
         success: "(e-mail wysłany)"
         in_progress: "(e-mail wysyłany)"
@@ -3284,6 +3302,7 @@ pl_PL:
       collapse: "Zminimalizuj panel kompozytora"
       open: "Otwórz panel kompozytora"
       abandon: "Zamknij kompozytor i odrzuć szkic"
+      edit_reason: "Dodaj powód edycji"
       enter_fullscreen: "Przejdź do pełnoekranowego kompozytora"
       exit_fullscreen: "Wyjdź z trybu pełnoekranowego kompozytora"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
@@ -3751,8 +3770,8 @@ pl_PL:
         confirm: "Potwierdź"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
-        unlist_topics: "Zastrzeż tematy"
-        relist_topics: "Odśwież listę tematów"
+        unlist_topics: "Usuń tematy z listy"
+        relist_topics: "Zamieść ponownie tematy"
         reset_bump_dates: "Zresetuj datę podbicia"
         defer: "Oznacz jako nieprzeczytany"
         delete: "Usuń tematy"
@@ -3810,19 +3829,14 @@ pl_PL:
           other: "Oddalenie nowe (%{count})"
         toggle: "włącz grupowe zaznaczanie tematów"
         actions: "Operacje grupowe"
-        change_category: "Ustaw kategorię…"
+        change_category: "Aktualizuj kategorię"
         close_topics: "Zamknij tematy"
         archive_topics: "Zarchiwizuj tematy"
         move_messages_to_inbox: "Przenieś do skrzynki odbiorczej"
         archive_messages: "Przenieś do archiwum"
-        notification_level: "Powiadomienia…"
+        notification_level: "Aktualizuj powiadomienia"
         change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
-        selected:
-          one: "Zaznaczono <b>%{count}</b> temat."
-          few: "Zaznaczono <b>%{count}</b> tematy."
-          many: "Zaznaczono <b>%{count}</b> tematów."
-          other: "Zaznaczono <b>%{count}</b> tematów."
         selected_sole_category:
           one: "Wybrano <b>%{count}</b> temat z kategorii:"
           few: "Wybrano <b>%{count}</b> tematy z kategorii:"
@@ -3836,20 +3850,60 @@ pl_PL:
         change_tags: "Zmień tagi"
         append_tags: "Dodaj tagi"
         choose_new_tags: "Wybierz nowe tagi dla tych tematów:"
-        choose_append_tags: "Wybierz nowe tagi dla tych tematów:"
+        choose_append_tags: "Dodaj tagi"
         changed_tags: "Tagi tych tematów były zmieniane."
-        remove_tags: "Usuń wszystkie tagi"
+        remove_tags: "Usuń tagi"
         confirm_remove_tags:
           one: "Wszystkie tagi zostaną usunięte z tego tematu. Jesteś pewny?"
           few: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
           many: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
           other: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
+        confirm_update_topics:
+          one: "Zaktualizuj %{count} temat"
+          few: "Zaktualizuj %{count} tematy"
+          many: "Zaktualizuj %{count} tematów"
+          other: "Zaktualizuj %{count} tematów"
+        confirm_close_topics:
+          one: "Zamknij %{count} temat"
+          few: "Zamknij %{count} tematy"
+          many: "Zamknij %{count} tematów"
+          other: "Zamknij %{count} tematów"
+        confirm_archive_topics:
+          one: "Zarchiwizuj %{count} temat"
+          few: "Zarchiwizuj %{count} tematy"
+          many: "Zarchiwizuj %{count} tematów"
+          other: "Zarchiwizuj %{count} tematów"
+        confirm_unlist_topics:
+          one: "Usuń z listy %{count} temat"
+          few: "Usuń z listy %{count} tematy"
+          many: "Usuń z listy %{count} tematów"
+          other: "Usuń z listy %{count} tematów"
+        confirm_relist_topics:
+          one: "Zamieść ponownie %{count} temat"
+          few: "Zamieść ponownie %{count} tematy"
+          many: "Zamieść ponownie %{count} tematów"
+          other: "Zamieść ponownie %{count} tematów"
+        confirm_archive_messages:
+          one: "Zarchiwizuj %{count} wiadomość"
+          few: "Zarchiwizuj %{count} wiadomości"
+          many: "Zarchiwizuj %{count} wiadomości"
+          other: "Zarchiwizuj %{count} wiadomości"
+        confirm_move_to_inbox:
+          one: "Przenieś %{count} wiadomość do skrzynki odbiorczej"
+          few: "Przenieś %{count} wiadomości do skrzynki odbiorczej"
+          many: "Przenieś %{count} wiadomości do skrzynki odbiorczej"
+          other: "Przenieś %{count} wiadomości do skrzynki odbiorczej"
+        confirm_delete_topics:
+          one: "Usuń %{count} temat"
+          few: "Usuń %{count} tematy"
+          many: "Usuń %{count} tematów"
+          other: "Usuń %{count} tematów"
         progress:
           one: "Postęp: <strong>%{count}</strong> temat"
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
-        notify: "Powiadom użytkowników o tej zmianie."
+        notify: "Powiadom użytkowników o tej zmianie"
         performing: "Wykonywanie operacji zbiorczych, proszę czekać…"
         completed: "Operacje masowe zakończone pomyślnie!"
         completed_count:
@@ -3895,38 +3949,44 @@ pl_PL:
         name: "Odrzuć"
       close_topics:
         name: "Zamknij"
-        note: "Uwaga"
+        description: "Zamknięte tematy uniemożliwiają nowe odpowiedzi. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Dowiedz się więcej</a>"
+        note: "Dodaj notatkę do tych tematów"
         optional: (opcjonalne)
       archive_topics:
         name: "Archiwum"
+        description: "Zarchiwizowane tematy są ukryte w wynikach wyszukiwania i na liście najnowszych tematów. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Dowiedz się więcej</a>"
       archive_messages:
         name: "Przenieś do archiwum"
       move_messages_to_inbox:
         name: "Przenieś do skrzynki odbiorczej"
       unlist_topics:
         name: "Zastrzeż"
+        description: "Tematy niewymienione na liście są ukryte, ale nadal można uzyskać do nich dostęp za pomocą bezpośredniego linku. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Dowiedz się więcej</a>"
       relist_topics:
         name: "Dodaj do listy"
       remove_tags:
         name: "Usuń tagi"
+        description: "Usuń wszystkie tagi z wybranych tematów."
       append_tags:
         name: "Dodaj tagi"
+        description: "Dodaj następujące tagi do wybranych tematów:"
       replace_tags:
         name: "Zmień tagi"
+        description: "Zastąp wszystkie istniejące tagi w wybranych tematach następującymi:"
       delete_topics:
         name: "Usuń"
+        description: "Trwale usuń wybrane tematy. Tej czynności nie można cofnąć."
       update_category:
         name: "Aktualizuj kategorię"
-        description: "Wybierz nową kategorię dla wybranych tematów"
+        description: "Przenieś wszystkie wybrane tematy do następującej kategorii:"
       reset_bump_dates:
         name: "Zresetuj datę odświeżenia"
-        description: "Ustaw datę odświeżenia tematu na datę utworzenia ostatniego posta. Wpływa to na kolejność tematów na liście."
+        description: "Czy chcesz zaktualizować daty publikacji postów do daty ostatniego utworzenia? Może to wpłynąć na ich kolejność na liście tematów."
       defer:
         name: "Oznacz jako nieprzeczytane"
-        description: "Oznacz tematy jako nieprzeczytane"
       update_notifications:
         name: "Aktualizuj powiadomienia"
-        description: "Zmień poziom powiadomień na obserwowanie, śledzone, normalne lub wyciszone"
+        description: "Zaktualizuj swój osobisty poziom powiadomień dla wybranych tematów, aby:"
     topic:
       filter_to:
         one: "%{count} post w temacie"
@@ -4124,6 +4184,11 @@ pl_PL:
         few: "Ostatni wpis w tym temacie został zamieszczony %{count} godziny temu, więc zostanie on natychmiastowo zamknięty."
         many: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
         other: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
+      auto_delete_immediate:
+        one: "Ostatni wpis tematu jest już od %{count} godziny, więc temat zostanie natychmiast usunięty."
+        few: "Ostatni wpis tematu jest już od %{count} godzin, więc temat zostanie natychmiast usunięty."
+        many: "Ostatni wpis tematu jest już od %{count} godzin, więc temat zostanie natychmiast usunięty."
+        other: "Ostatni wpis tematu jest już od %{count} godzin, więc temat zostanie natychmiast usunięty."
       timeline:
         back: "Wstecz"
         back_description: "Wróć do ostatniego nieprzeczytanego wpisu"
@@ -4799,9 +4864,13 @@ pl_PL:
       advanced: "Zaawansowane"
       show_advanced: "Ustawienia zaawansowane"
       topic_template: "Szablon"
+      topic_title_placeholder: "Symbol zastępczy tytułu tematu kategorii"
+      topic_title_placeholder_placeholder: "[opcjonalnie] niestandardowy symbol zastępczy tytułu tematu dla tej kategorii"
       tags: "Tagi"
       localizations: "Języki"
       localization:
+        language: "Język kategorii"
+        language_description: "Podstawowy język nazwy i opisu tej kategorii."
         locale: "Ustawienia regionalne"
         name: "Nazwa"
         description: "Opis"
@@ -4886,6 +4955,9 @@ pl_PL:
       list: "Wymień kategorie"
       no_description: "Proszę dodaj opis do tej kategorii."
       change_in_category_topic: "Edytuj opis"
+      description_updated: "Opis zaktualizowano"
+      description_expand: "Pokaż więcej"
+      description_collapse: "Pokaż mniej"
       already_used: "Ten kolor jest używany przez inną kategorię"
       color_palette: "Paleta kolorów"
       security: "Bezpieczeństwo"
@@ -6146,8 +6218,7 @@ pl_PL:
         group_traffic: "Ruch"
         group_members: "Członkowie"
         group_content: "Treść i zdrowie"
-        group_moderation: "Moderacja"
-        group_security: "Bezpieczeństwo"
+        group_moderation_and_security: "Moderacja i bezpieczeństwo"
         group_other: "Inne"
         legacy_warning: "To jest starszy raport. Wkrótce zostanie wycofany. Jeśli potrzebujesz pomocy w znalezieniu zamiennika, skontaktuj się z pomocą techniczną."
       config_sections:
@@ -6207,6 +6278,11 @@ pl_PL:
           beta: "Beta"
           stable: "Stabilna"
           permanent: "Stała"
+        status_descriptions:
+          experimental: "Funkcja jest na wczesnym etapie rozwoju i może ulec znacznym zmianom lub zostać wycofana. Może nie być w pełni kompatybilna z innymi funkcjami."
+          alpha: "Jest on aktywnie rozwijany i udoskonalany. Funkcjonalność może ulec zmianie i może nie być w pełni dopracowany, ale jest wystarczająco stabilny, aby go wypróbować."
+          beta: "Rozwiązanie jest już prawie ukończone i dostępne do szybkiego wdrożenia. Możliwe są jednak drobne zmiany."
+          stable: "To jest kompletne i dobrze obsługiwane. Wkrótce będzie dostępne na wszystkich stronach Discourse."
         impact_roles:
           admins: "Administratorzy"
           moderators: "Moderatorzy"
@@ -7615,6 +7691,7 @@ pl_PL:
           dark_color_scheme: "Ciemna paleta kolorów"
           default_light_scheme: "Jasny (domyślnie)"
           color_scheme_select: "Wybierz kolory, które mają być użyte w zależności od motywu."
+          only_theme_color_schemes: "Ten motyw ogranicza palety kolorów, które mogą być używane."
           dark_color_scheme_select: "Wybierz kolory, które mają być używane w trybie ciemnym."
           edit_colors: "Edytuj kolory"
           custom_sections: "Spersonalizowane sekcje:"
@@ -7679,7 +7756,7 @@ pl_PL:
           import_web_tip: "Repozytorium zawierające motyw"
           direct_install_tip: "Czy na pewno chcesz zainstalować <strong>%{name}</strong> z repozytorium wymienionego poniżej?"
           import_web_advanced: "Zaawansowane…"
-          import_file_tip: "plik .tar.gz, .zip, lub .dcstyle.json zawierający motyw"
+          import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
@@ -7716,6 +7793,16 @@ pl_PL:
           update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
+          change_source:
+            button: "Zmień źródło"
+            title: "Zmień źródło motywu"
+            repository_url: "Adres URL repozytorium"
+            branch: "Gałąź (opcjonalnie)"
+            updating: "Aktualizowanie źródła motywu…"
+            update: "Aktualizuj źródło"
+            has_existing_key: "W tym motywie skonfigurowano istniejący klucz SSH."
+            generate_new_key: "Wygeneruj nowy klucz SSH"
+            keep_existing_key: "Zachowaj istniejący klucz SSH"
           add: "Dodaj"
           theme_settings: "Ustawienia motywu niestandardowego"
           theme_site_settings: "Ustawienia, które motyw może zastąpić"
@@ -9123,6 +9210,8 @@ pl_PL:
         crawler_settings_saved: "Ustawienia robota zostały zapisane"
         back: "Powrót do osadzania"
         configuration_snippet: "Fragment konfiguracji"
+        full_app_mode: "Pełny tryb aplikacji"
+        full_app_mode_description: "Załaduj pełną aplikację Discourse w osadzonej ramce iframe, umożliwiając użytkownikom odpowiadanie, polubienie, cytowanie i bezpośrednią interakcję z tematami"
         host_form:
           add_header: "Dodaj host"
           edit_header: "Edytuj hosta"

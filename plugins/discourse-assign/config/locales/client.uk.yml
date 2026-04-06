@@ -138,10 +138,6 @@ uk:
           unassigned: "не призначені"
         assigned:
           label: "Призначено для"
-    topics:
-      bulk:
-        unassign: "Скасувати призначення тем"
-        assign: "Призначити теми"
     discourse_automation:
       scriptables:
         random_assign:

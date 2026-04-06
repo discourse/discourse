@@ -69,6 +69,12 @@ vi:
       assign:
         errors:
           not_found: "Không tìm thấy chủ đề."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Duyệt"
+        reject:
+          title: "Từ chối"
     ai_staff_action_logger:
       updated: "đã cập nhật"
       removed: "đã xóa"

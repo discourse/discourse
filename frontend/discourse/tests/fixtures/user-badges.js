@@ -1,4 +1,4 @@
-export default {
+const userBadgesFixtures = {
   "/user_badges": {
     badges: [
       {
@@ -68,3 +68,5 @@ export default {
     ],
   },
 };
+
+export default userBadgesFixtures;

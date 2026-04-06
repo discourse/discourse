@@ -593,7 +593,7 @@ shared_examples "social authentication scenarios" do
   end
 end
 
-describe "Social authentication", type: :system do
+describe "Social authentication" do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
   context "when desktop" do

@@ -102,6 +102,10 @@ input[type="color"]:focus,
   border-radius: 0;
 }
 
+.upcoming-change__badge-info {
+  padding-right: var(--space-2);
+}
+
 // compatibility with the top contributors sidebar theme component
 // https://meta.discourse.org/t/top-contributors-sidebar/215110
 .list-container

@@ -94,6 +94,13 @@ lt:
       assign:
         errors:
           not_found: "Tema nerasta."
+    reviewables:
+      ai_tool_action:
+        title: "DI įrankio veiksmas"
+        approve:
+          title: "Patvirtinti"
+        reject:
+          title: "Atmesti"
     sentiment:
       reports:
         post_emotion:

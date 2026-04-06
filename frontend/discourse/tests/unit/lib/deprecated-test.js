@@ -85,7 +85,6 @@ module("Unit | Utility | deprecated", function (hooks) {
   test("works with all other metadata", async function (assert) {
     deprecated("My message", {
       id: "discourse.my_deprecation_id",
-      dropFrom: "v100",
       since: "v1",
       url: "https://example.com",
     });
@@ -97,7 +96,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     assert.deepEqual(
       this.warnStub.args[0],
       [
-        "DEPRECATION NOTICE: My message [deprecated since Discourse v1] [removal in Discourse v100] [deprecation id: discourse.my_deprecation_id] [info: https://example.com]",
+        "DEPRECATION NOTICE: My message [deprecated since Discourse v1] [deprecation id: discourse.my_deprecation_id] [info: https://example.com]",
       ],
       "console.warn is called with the correct arguments"
     );

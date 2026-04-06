@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message notifications - with sidebar", type: :system do
+RSpec.describe "Message notifications - with sidebar" do
   fab!(:current_user, :user)
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }

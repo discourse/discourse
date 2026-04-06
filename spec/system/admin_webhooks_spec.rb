@@ -1,6 +1,6 @@
 #frozen_string_literal: true
 
-describe "Admin Webhooks Page", type: :system do
+describe "Admin Webhooks Page" do
   fab!(:admin)
   fab!(:tag)
 

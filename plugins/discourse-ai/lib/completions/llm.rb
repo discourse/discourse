@@ -25,6 +25,7 @@ module DiscourseAi
         def provider_names
           providers = %w[
             aws_bedrock
+            aws_bedrock_converse
             anthropic
             vllm
             hugging_face

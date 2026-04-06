@@ -13,6 +13,7 @@ import BlockDebugButton from "./block-debug/button";
 import MobileViewButton from "./mobile-view/button";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button";
 import SafeModeButton from "./safe-mode/button";
+import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
 import VerboseLocalizationButton from "./verbose-localization/button";
 
 export default class Toolbar extends Component {
@@ -81,6 +82,7 @@ export default class Toolbar extends Component {
       </button>
       <PluginOutletDebugButton />
       <BlockDebugButton />
+      <UpcomingChangesDebugButton />
       <SafeModeButton />
       <VerboseLocalizationButton />
       {{#unless this.siteSettings.viewport_based_mobile_mode}}

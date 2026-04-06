@@ -38,6 +38,10 @@ module PageObjects
         page.has_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
       end
 
+      def has_no_topic_checkbox?(topic)
+        page.has_no_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
+      end
+
       def has_closed_status?(topic)
         page.has_css?("#{topic_list_item_closed(topic)}")
       end
@@ -131,7 +135,7 @@ module PageObjects
       private
 
       def topic_list_item_closed(topic)
-        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg[class*='d-icon-topic.closed']"
+        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg[class*='d-icon-lock']"
       end
 
       def topic_list_item_unread_badge(topic)

@@ -2,9 +2,9 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import WatchedWord from "discourse/admin/models/watched-word";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -68,7 +68,7 @@ export default class AdminWatchedWordsController extends Controller {
         EmberObject.create({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
-          words: new TrackedArray(wordRecords),
+          words: trackedArray(wordRecords),
         })
       );
     });

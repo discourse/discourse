@@ -37,7 +37,6 @@ bs_BA:
       llm_selector:
         none: "Ništa"
       features:
-        back: "Prethodno"
         disabled: "(neomogućen)"
         groups: "Grupa:"
         no_groups: "Ništa"
@@ -81,7 +80,6 @@ bs_BA:
         username: "Nadimak"
         total: "Suma"
       ai_agent:
-        back: "Prethodno"
         name: "Ime"
         edit: "Izmijeni"
         export: "Izvoz"
@@ -102,7 +100,6 @@ bs_BA:
           title: "Uploads"
           uploading: "Učitavanje..."
       tools:
-        back: "Prethodno"
         export: "Izvoz"
         name: "Ime"
         description: "Opis"
@@ -116,16 +113,25 @@ bs_BA:
         short_title: "Identifikacija"
         name: "Ime"
         secret: "Value"
-        back: "Prethodno"
         save: "Sačuvaj"
         edit: "Izmijeni"
         delete: "Delete"
         embedding: "Embedding"
+      mcp_servers:
+        name: "Ime"
+        description: "Opis"
+        url: "URL"
+        oauth_connect: "Poveži"
+        enabled: "Omogućen"
+        save: "Sačuvaj"
+        edit: "Izmijeni"
+        delete: "Delete"
+        tools_modal:
+          required: "Required"
       llms:
         display_name: "Ime"
         save: "Sačuvaj"
         edit: "Izmijeni"
-        back: "Prethodno"
         delete: Delete
         quotas:
           group: "Grupa"
@@ -153,7 +159,6 @@ bs_BA:
         image_caption:
           save_caption: "Sačuvaj"
       embeddings:
-        back: "Prethodno"
         save: "Sačuvaj"
         delete: "Delete"
         edit: "Izmijeni"

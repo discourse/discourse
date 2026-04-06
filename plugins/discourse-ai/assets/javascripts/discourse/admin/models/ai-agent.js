@@ -26,17 +26,19 @@ const CREATE_ATTRIBUTES = [
   "rag_chunk_overlap_tokens",
   "rag_conversation_chunks",
   "rag_llm_model_id",
-  "question_consolidator_llm_id",
   "show_thinking",
   "forced_tool_count",
   "allow_personal_messages",
   "allow_topic_mentions",
   "allow_chat_channel_mentions",
   "allow_chat_direct_messages",
+  "mcp_server_ids",
+  "mcp_server_tool_names",
   "execution_mode",
   "max_turn_tokens",
 
   "compression_threshold",
+  "require_approval",
   "response_format",
   "examples",
 ];
@@ -60,16 +62,18 @@ const SYSTEM_ATTRIBUTES = [
   "rag_chunk_overlap_tokens",
   "rag_conversation_chunks",
   "rag_llm_model_id",
-  "question_consolidator_llm_id",
   "show_thinking",
   "allow_personal_messages",
   "allow_topic_mentions",
   "allow_chat_channel_mentions",
   "allow_chat_direct_messages",
+  "mcp_server_ids",
+  "mcp_server_tool_names",
   "execution_mode",
   "max_turn_tokens",
 
   "compression_threshold",
+  "require_approval",
 ];
 
 export default class AiAgent extends RestModel {
@@ -160,6 +164,8 @@ export default class AiAgent extends RestModel {
   toPOJO() {
     const attrs = this.getProperties(CREATE_ATTRIBUTES);
     this.populateTools(attrs);
+    attrs.mcp_server_ids = attrs.mcp_server_ids || [];
+    attrs.mcp_server_tool_names = attrs.mcp_server_tool_names || {};
     attrs.forced_tool_count = this.forced_tool_count || -1;
     attrs.response_format = attrs.response_format || [];
     attrs.examples = attrs.examples || [];

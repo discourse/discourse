@@ -84,7 +84,6 @@ export default class SectionLink extends Component {
       deprecated("SectionLink's @class arg has been renamed to @linkClass", {
         id: "discourse.section-link-class-arg",
         since: "3.2.0.beta4",
-        dropFrom: "3.3.0.beta1",
       });
       classNames.push(this.args.class);
     }

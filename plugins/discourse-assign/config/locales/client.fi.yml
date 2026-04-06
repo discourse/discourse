@@ -136,10 +136,6 @@ fi:
           unassigned: "ovat osoittamattomia"
         assigned:
           label: "Osoitettu käyttäjälle"
-    topics:
-      bulk:
-        unassign: "Peru ketjujen osoitus"
-        assign: "Osoita ketjut"
     discourse_automation:
       scriptables:
         random_assign:

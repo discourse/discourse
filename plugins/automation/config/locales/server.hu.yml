@@ -8,12 +8,23 @@ hu:
   site_settings:
     discourse_automation_enabled: "discourse-automation plugin engedélyezése"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(üres)"
     models:
+      automations:
+        validations:
+          script_blank: "A szkript nem lehet üres"
+          trigger_blank: "Az eseményindító mező nem lehet üres"
+          script_missing_required_fields: "A szkriptből hiányoznak a kötelező mezők: %{fields}"
+          trigger_missing_required_fields: "A triggerben nincsenek kötelező mezők: %{fields}"
       fields:
         required_field: '"%{name}" mezőt a "%{target}:%{target_name}" oldalon kell kitölteni.'
         invalid_field: A mező `%{component}` összetevője nem használható `%{target}:%{target_name}` esetén.
         invalid_metadata: '`%{field}` adatai érvénytelenek, vagy a `%{component}` komponens ismeretlen.'
     triggerables:
+      post_flag_created:
+        title: Bejegyzésjelző létrehozva
+        description: Automatizálást indít el, amikor egy bejegyzést megjelölnek
       errors:
         custom_fields_or_user_profile_required: "„custom_fields” vagy „user_profile” közül legalább egyet meg kell adni."
       user_badge_granted:
@@ -61,6 +72,10 @@ hu:
         description: Amikor egy téma címkéit megváltoztatják, az automatizálás aktiválódik
       topic:
         title: Téma
+        description: A társított szkript csak a megadott témában lesz használva, ez hasznos például az érvényesítést végző szkripteknél.
+      topic_closed:
+        title: Téma lezárva
+        description: Elindít egy szkriptet, amikor egy téma lezárásra kerül.
       after_post_cook:
         title: Bejegyzés elkészítése után
         description: Amikor egy bejegyzés tartalma elkészül, az automatizálás aktiválódik
@@ -68,6 +83,24 @@ hu:
         title: Felhasználói frissítés után
         description: Amikor a felhasználó frissít bármilyen információt, az automatizálás aktiválódik
     scriptables:
+      email_on_flagged_post:
+        title: E-mail a megjelölt bejegyzésről
+        description: Egyéni e-mail küldése, valahányszor egy bejegyzéshez jelölést hoznak létre
+        subject: "Megjelölt bejegyzés: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Egy bejegyzést megjelöltek.
+
+          Téma: {{topic_title}} ({{topic_url}})
+          Bejegyzés: {{post_url}} (#{{post_number}})
+          Megjelölés típusa: {{flag_type}}
+          Megjelölt felhasználó: {{flagged_username}}
+          Megjelölte: {{flagger_username}}
+          Kategória: {{category}}
+          Címkék: {{tags}}
+
+          --------
+          Bejegyzés részlet:
+          {{post_excerpt}}
       post:
         title: Bejegyzés létrehozása
         description: Hozzon létre bejegyzést egy megadott témában
@@ -98,6 +131,10 @@ hu:
         title: Ajándékcsere
         description: Lehetővé teszi egy csoport felhasználóinak névtelen párosítását, hogy ajándékot küldjenek egymásnak.
         doc: Ajándékcsere szükséges egy létező csoporthoz legalább 3 felhasználóval. A kiválasztott időpontban a csoport minden felhasználója egy ajándékozóval és egy ajándékozottal párosul.
+      remove_upload_markup_from_deleted_posts:
+        title: Feltöltési jelölések eltávolítása a törölt bejegyzésekből
+        description: Rendszerfelhasználóként jár el, és egy új változatot hoz létre a törölt bejegyzésekhez, amelyben a feltöltési jelölőkód eltávolításra kerül. A „feltöltések tisztítása” feladattal együtt ez a törölt bejegyzésekben lévő feltöltések végleges törlését eredményezi. Csak óvatosan használja!
+        edit_reason: Az automatizálás eltávolította a feltöltési jelölést a törölt bejegyzésből
       send_pms:
         title: PÜ-k küldése
         description: Lehetővé teszi PÜ-ek küldését (esetleg késleltetve).
@@ -153,3 +190,4 @@ hu:
         description: "Véletlenszerűen rendeljen témákat egy csoporthoz"
       set_topic_timer:
         title: "Téma időzítőjének beállítása"
+        description: "Témaidőzítő beállítása egy témához"

@@ -47,8 +47,6 @@ fi:
     chat_integration_rocketchat_webhook_url: "Rocket Chat -integraation webhookin URL-osoite"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat -viestin otteen pituus"
     chat_integration_gitter_enabled: "Ota Gitterin chat-integraatiopalveluntarjoaja käyttöön"
-    chat_integration_flowdock_enabled: "Ota Flowdockin chat-integraatiopalveluntarjoaja käyttöön"
-    chat_integration_flowdock_excerpt_length: "Flowdock-viestin otteen pituus"
     chat_integration_groupme_enabled: "Ota Groupmen chat-integraatiopalveluntarjoaja käyttöön"
     chat_integration_groupme_excerpt_length: "Groupme-viestin otteen pituus"
     chat_integration_teams_enabled: "Ota Microsoft Teamsin chat-integraatiopalveluntarjoaja käyttöön"
@@ -59,9 +57,6 @@ fi:
     chat_integration_webex_excerpt_length: "Webex Team -viestin otteen pituus"
     chat_integration_google_enabled: "Ota Google Chatin chat-integraatiopalveluntarjoaja käyttöön"
     chat_integration_google_excerpt_length: "Google Chat -viestin otteen pituus"
-  dashboard:
-    problem:
-      channel_errors: "Joissakin chat-integraatokanavissa on virheitä. Lisätietoja saat <a href='%{base_path}/admin/plugins/chat-integration'>chatin integrointiosiossa</a>."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -217,8 +212,6 @@ fi:
           ~~~quote
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "lähetti viestin"
       google:
         new_post: "Uusi viesti sivustolla %{site_title}"
         new_topic: "Uusi ketju sivustolla %{site_title}"

@@ -45,5 +45,11 @@ bg:
       assign:
         errors:
           not_found: "Темата не е намерена."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Одобри"
+        reject:
+          title: "Отхвърли"
     ai_staff_action_logger:
       removed: "премахнато"

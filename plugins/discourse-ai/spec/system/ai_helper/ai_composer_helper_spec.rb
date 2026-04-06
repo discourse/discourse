@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Composer helper", type: :system do
+RSpec.describe "AI Composer helper" do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:non_member_group, :group)
   fab!(:embedding_definition)

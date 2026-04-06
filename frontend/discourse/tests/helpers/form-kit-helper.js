@@ -23,6 +23,7 @@ class Field {
    */
   get inputElement() {
     switch (this.controlType) {
+      case "input":
       case "input-text":
       case "input-number":
       case "password":
@@ -48,6 +49,7 @@ class Field {
       case "input-number":
         return parseInt(this.inputElement.value, 10);
       // String-based controls fall through to return raw value
+      case "input":
       case "input-text":
       case "password":
       case "code":

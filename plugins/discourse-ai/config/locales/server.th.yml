@@ -13,5 +13,11 @@ th:
       tool_summary:
         search: "ค้นหา"
         time: "เวลา"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "อนุมัติ"
+        reject:
+          title: "ละทิ้ง"
     ai_staff_action_logger:
       updated: "อัปเดตแล้ว"

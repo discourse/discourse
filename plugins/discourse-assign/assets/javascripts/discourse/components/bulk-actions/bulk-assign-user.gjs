@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AssignUserForm from "discourse/plugins/discourse-assign/discourse/components/assign-user-form";
 
 export default class BulkActionsAssignUser extends Component {
-  model = new TrackedObject({});
+  model = trackedObject({});
 
   formApi = {
     submit() {},

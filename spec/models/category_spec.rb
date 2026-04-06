@@ -87,6 +87,14 @@ RSpec.describe Category do
         ).count,
       ).to eq(0)
     end
+
+    it "destroys category_posting_review_groups when category is destroyed" do
+      category = Fabricate(:category, category_setting_attributes: { require_topic_approval: true })
+
+      expect { category.destroy! }.to change { category.category_posting_review_groups.count }.by(
+        -1,
+      )
+    end
   end
 
   describe "slug" do
@@ -406,6 +414,36 @@ RSpec.describe Category do
       expect(c.description_text).to be_nil
       c.description = "&lt;hello <a>foo/bar</a>."
       expect(c.description_text).to eq("&lt;hello foo/bar.")
+    end
+  end
+
+  describe "description sanitization" do
+    fab!(:admin)
+
+    it "sanitizes description to prevent XSS on create" do
+      category =
+        Category.create!(
+          name: "XSS Test Category",
+          user: admin,
+          description:
+            "This has <script>alert('xss')</script> and <img src=x onerror=alert('xss')>",
+        )
+
+      expect(category.description).not_to include("<script>")
+      expect(category.description).not_to include("&lt;script&gt;")
+      expect(category.description).to include("&lt;img")
+    end
+
+    it "sanitizes description to prevent XSS on update" do
+      category = Fabricate(:category_with_definition, user: admin)
+      category.update(
+        description: "This has <script>alert('xss')</script> and <img src=x onerror=alert('xss')>",
+      )
+
+      category.reload
+      expect(category.description).not_to include("<script>")
+      expect(category.description).not_to include("&lt;script&gt;")
+      expect(category.description).to include("&lt;img")
     end
   end
 
@@ -900,24 +938,6 @@ RSpec.describe Category do
         expect(category.valid?).to eq(false)
         expect(category.errors.full_messages.join).not_to match(/<b>/)
       end
-    end
-  end
-
-  describe "require topic/post approval" do
-    fab!(:category, :category_with_definition)
-
-    it "delegates methods to category settings" do
-      expect(category).to delegate_method(:require_reply_approval).to(:category_setting)
-      expect(category).to delegate_method(:require_reply_approval=).with_arguments(true).to(
-        :category_setting,
-      )
-      expect(category).to delegate_method(:require_reply_approval?).to(:category_setting)
-
-      expect(category).to delegate_method(:require_topic_approval).to(:category_setting)
-      expect(category).to delegate_method(:require_topic_approval=).with_arguments(true).to(
-        :category_setting,
-      )
-      expect(category).to delegate_method(:require_topic_approval?).to(:category_setting)
     end
   end
 

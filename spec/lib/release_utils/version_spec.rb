@@ -372,4 +372,42 @@ RSpec.describe ReleaseUtils::Version do
       it { is_expected.to eq("2025.10.0-latest.3") }
     end
   end
+
+  describe "#release_version" do
+    subject(:release_version) { described_class.new(version_string).release_version }
+
+    context "with a development version" do
+      let(:version_string) { "2025.10.0-latest" }
+
+      it { is_expected.to eq("2025.10.0") }
+    end
+
+    context "with a development version with revision" do
+      let(:version_string) { "2025.10.0-latest.2" }
+
+      it { is_expected.to eq("2025.10.0") }
+    end
+
+    context "with a release version" do
+      let(:version_string) { "2025.10.1" }
+
+      it { is_expected.to eq("2025.10.1") }
+    end
+  end
+
+  describe "#next_patch" do
+    subject(:next_version) { described_class.new(version_string).next_patch }
+
+    context "with a release version" do
+      let(:version_string) { "2025.10.0" }
+
+      it { is_expected.to eq("2025.10.1") }
+    end
+
+    context "with an existing patch" do
+      let(:version_string) { "2025.10.3" }
+
+      it { is_expected.to eq("2025.10.4") }
+    end
+  end
 end

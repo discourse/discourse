@@ -32,7 +32,7 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  async lookup(moduleName) {
+  lookup(moduleName) {
     return require(moduleName);
   },
 };
@@ -51,6 +51,11 @@ async function loadThemeFromModulePreload(link) {
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
       String(error)
     );
+
+    if (DEBUG && (isRailsTesting() || isTesting())) {
+      throw new Error(error);
+    }
+
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
 }

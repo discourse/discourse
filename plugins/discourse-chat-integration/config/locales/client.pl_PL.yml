@@ -14,16 +14,10 @@ pl_PL:
     chat_integration:
       menu_title: "Integracje czatu"
       settings: "Ustawień"
-      no_providers: "Musisz włączyć niektórych dostawców w ustawieniach wtyczki"
       channels_with_errors: "Niektóre kanały dla tego dostawcy nie powiodły się, gdy zostały wysłane ostatnie wiadomości. Kliknij ikonę błędu, aby dowiedzieć się więcej."
       channel_exception: "Podczas ostatniego wysyłania wiadomości do tego kanału wystąpił nieznany błąd."
       group_mention_template: "Wzmianki o: @%{name}"
       group_message_template: "Wiadomości do: @%{name}"
-      choose_group: "(wybierz grupę)"
-      all_categories: "(wszystkie kategorie)"
-      all_tags: "(wszystkie tagi)"
-      create_rule: "Utwórz regułę"
-      create_channel: "Utwórz kanał"
       delete_channel: "Usuń"
       test_channel: "Sprawdź"
       edit_channel: "Edytuj"
@@ -31,14 +25,11 @@ pl_PL:
       test_modal:
         title: "Wyślij wiadomość testową"
         topic: "Temat"
-        send: "Wyślij wiadomość testową"
         close: "Zamknij"
         error: "Podczas wysyłania wiadomości wystąpił nieznany błąd. Sprawdź dzienniki witryny, aby uzyskać więcej informacji."
         success: "Wiadomość wysłana poprawnie"
       type:
         normal: Normalny
-        group_message: Wiadomość grupowa
-        group_mention: Wzmianka grupy
       filter:
         mute: 'Wycisz'
         follow: 'Tylko pierwszy post'
@@ -59,8 +50,6 @@ pl_PL:
           ok: "Poprawny"
           fail: "Niepoprawny format"
       edit_rule_modal:
-        title: Edytuj regułę
-        save: Zapisz regułę
         cancel: Anuluj
         provider: Dostawca
         type: Typ
@@ -81,7 +70,6 @@ pl_PL:
           param:
             identifier:
               title: Kanał
-              help: "np. #kanał, @użytkownik."
           errors:
             action_prohibited: "Bot nie ma uprawnień do publikowania na tym kanale"
             channel_not_found: "Podany kanał nie istnieje w Slacku"
@@ -105,7 +93,6 @@ pl_PL:
               help: "Nazwa opisująca kanał. Nie służy do połączenia z Discord."
             webhook_url:
               title: URL webhooka
-              help: URL webhooka stworzony w ustawienia serwera Discorda.
         guilded:
           title: "Guilded"
           param:
@@ -120,7 +107,6 @@ pl_PL:
           param:
             identifier:
               title: Kanał
-              help: "np. #kanał, @użytkownik."
           errors:
             channel_not_found: "Określony kanał nie istnieje w Mattermost"
         matrix:
@@ -151,7 +137,6 @@ pl_PL:
           param:
             identifier:
               title: Kanał
-              help: "np. #kanał, @użytkownik."
           errors:
             invalid_channel: "Ten kanał nie istnieje na Rocket Chat"
         gitter:
@@ -159,16 +144,9 @@ pl_PL:
           param:
             name:
               title: "Nazwa"
-              help: "Nazwa pokoju Glitter, np. gitterHQ/services."
             webhook_url:
               title: "URL webhooka"
               help: "Adres URL podany podczas tworzenia nowej integracji w pokoju Gitter."
-        flowdock:
-          title: "Flowdock"
-          param:
-            flow_token:
-              title: "Token Flow"
-              help: "Token Flow nadany w trakcie tworzenia źródła flowu, w którym zamierzasz wysyłać wiadomości."
         groupme:
           title: "GroupMe"
           param:

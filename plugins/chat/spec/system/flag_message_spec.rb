@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Flag message", type: :system do
+RSpec.describe "Flag message" do
   fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }

@@ -9,16 +9,54 @@ describe "Simplified Category Creation" do
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.enable_simplified_category_creation = true
     sign_in(admin)
   end
 
+  describe "Selecting category type when setting up a new category" do
+    it "automatically skips category type selection when only one type (discussion) is available" do
+      visit("/new-category/setup")
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_current_path("/new-category/general")
+    end
+
+    context "when multiple types are available" do
+      class MockCategoryType < ::Categories::Types::Base
+        type_id :mock_type
+
+        class << self
+          def category_matches?(category)
+            true
+          end
+
+          def find_matches
+            Category.none
+          end
+        end
+      end
+
+      before { Categories::TypeRegistry.register(MockCategoryType) }
+      after { Categories::TypeRegistry.reset! }
+
+      it "shows the category type selection cards" do
+        visit("/new-category/setup")
+
+        expect(category_type_card).to have_type_card("mock_type")
+        expect(category_type_card).to have_type_card("discussion")
+
+        category_type_card.find_type_card("discussion").click
+        expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+        expect(page).to have_current_path("/new-category/general")
+      end
+    end
+  end
+
   describe "General Tab" do
     it "creates a basic category with name and color" do
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
       form.field("color").fill_in("FF5733")
@@ -84,7 +122,6 @@ describe "Simplified Category Creation" do
 
     it "shows error when icon is missing" do
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Test Category")
 
@@ -111,7 +148,6 @@ describe "Simplified Category Creation" do
       group2 = Fabricate(:group)
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       form.field("name").fill_in("Permission Test")
       form.choose_conditional("group_restricted")
@@ -142,7 +178,6 @@ describe "Simplified Category Creation" do
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
@@ -156,7 +191,6 @@ describe "Simplified Category Creation" do
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
 
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
@@ -164,6 +198,55 @@ describe "Simplified Category Creation" do
 
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       expect(group_chooser).to have_selected_name(group.name)
+    end
+
+    it "collapses long descriptions with a show more toggle" do
+      category_with_definition = Fabricate(:category_with_definition)
+      long_description = (["This is a long paragraph of text."] * 20).join(" ")
+      post = category_with_definition.topic.first_post
+      post.update!(cooked: "<p>#{long_description}</p>")
+      category_with_definition.update!(description: "<p>#{long_description}</p>")
+
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+      expect(page).to have_css(".toggle-description")
+
+      find(".toggle-description").click
+
+      expect(page).to have_no_css(".description-content.--collapsed")
+      expect(page).to have_css(".description-content.--overflowing")
+
+      find(".toggle-description").click
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+    end
+
+    it "does not show expand toggle for short descriptions" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content")
+      expect(page).to have_no_css(".toggle-description")
+      expect(page).to have_no_css(".description-content.--overflowing")
+    end
+
+    it "opens the composer to edit the category description and updates it after save" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      composer = PageObjects::Components::Composer.new
+
+      find(".edit-category-description").click
+      expect(composer).to be_opened
+
+      composer.fill_content("Updated category description")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(page).to have_css(".edit-category-description-container .readonly-field")
+      expect(page).to have_content("Updated category description")
+      expect(toasts).to have_success(I18n.t("js.category.description_updated"))
     end
   end
 
@@ -188,7 +271,6 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".group-chooser")
 
       category_page.visit_new_category
-      category_type_card.find_type_card("discussion").click
       expect(page).to have_no_css(".group-chooser")
     end
 

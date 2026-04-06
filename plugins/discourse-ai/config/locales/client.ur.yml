@@ -10,7 +10,7 @@ ur:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "اے آئی تلاش کی اجازت دیتا ہے"
       site_settings:
         categories:
@@ -62,7 +62,6 @@ ur:
       llm_selector:
         none: "کوئی نہیں"
       features:
-        back: "واپس"
         disabled: "(غیر فعال)"
         groups: "گروپس:"
         no_agent: "سیٹ نہیں"
@@ -124,7 +123,6 @@ ur:
           last_month: "گزشتہ ماہ"
           custom: "ترمیم..."
       ai_agent:
-        back: "واپس"
         name: "نام"
         edit: "ترمیم کریں"
         export: "برآمد"
@@ -133,6 +131,9 @@ ur:
         user: رکن
         save: "محفوظ کریں"
         enabled: "فعال؟"
+        mcp_tools_modal:
+          select_all: "سبھی منتخب کریں"
+          clear_all: "سبھی ہٹا دیں"
         delete: "حذف کریں"
         response_format:
           open_modal: "ترمیم کریں"
@@ -146,7 +147,6 @@ ur:
           title: "اَپ لوڈز"
           uploading: "اَپ لوڈ کیا جا رہا ہے..."
       tools:
-        back: "واپس"
         export: "برآمد"
         import: "درآمد"
         import_error_conflict: "ٹول پہلے سے موجود ہے، کیا آپ اسے اپ ڈیٹ کرنا چاہیں گے؟"
@@ -164,17 +164,30 @@ ur:
         short_title: "شہادت"
         name: "نام"
         secret: "وَیلِیو"
-        back: "واپس"
         save: "محفوظ"
         edit: "ترمیم کریں"
         delete: "مٹائیں"
         embedding: "اَیمبَیڈ کرنا"
+      mcp_servers:
+        name: "نام"
+        description: "تفصیل"
+        url: "URL"
+        auth_types:
+          oauth: "اوآتھ"
+        oauth_statuses:
+          connected: "کنَیکٹ شدہ"
+        oauth_connect: "کنَیکٹ"
+        enabled: "فعال شدہ"
+        save: "محفوظ کریں"
+        edit: "ترمیم کریں"
+        delete: "حذف کریں"
+        tools_modal:
+          required: "درکار"
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
-        back: "واپس"
         delete: مٹائیں
         quotas:
           group: "گروپ"
@@ -215,7 +228,6 @@ ur:
         image_caption:
           save_caption: "محفوظ کریں"
       embeddings:
-        back: "واپس"
         save: "محفوظ کریں"
         delete: "مٹائیں"
         edit: "ترمیم کریں"

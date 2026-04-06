@@ -6,7 +6,7 @@ const SYDNEY = "Australia/Sydney";
 
 function buildDateHelper(params = {}) {
   return new DateWithZoneHelper({
-    year: params.year || 2020,
+    year: params.year || 2022,
     day: params.day || 22,
     month: params.month || 2,
     hour: params.hour || 10,
@@ -25,7 +25,7 @@ module("lib:date-with-zone-helper", function () {
       minute: 36,
       timezone: PARIS,
     });
-    assert.strictEqual(date.format(), "2020-03-15T15:36:00.000+01:00");
+    assert.strictEqual(date.format(), "2022-03-15T15:36:00.000+01:00");
   });
 
   test("#unitRepetitionsBetweenDates", function (assert) {
@@ -41,7 +41,7 @@ module("lib:date-with-zone-helper", function () {
     assert.strictEqual(
       date.unitRepetitionsBetweenDates(
         "1.hour",
-        moment.tz("2020-02-15 15:36", SYDNEY)
+        moment.tz("2022-02-15 15:36", SYDNEY)
       ),
       10,
       "it correctly finds difference between timezones"
@@ -57,7 +57,7 @@ module("lib:date-with-zone-helper", function () {
     assert.strictEqual(
       date.unitRepetitionsBetweenDates(
         "1.minute",
-        moment.tz("2020-02-15 15:36", PARIS)
+        moment.tz("2022-02-15 15:36", PARIS)
       ),
       0,
       "it correctly finds no difference"
@@ -73,7 +73,7 @@ module("lib:date-with-zone-helper", function () {
     assert.strictEqual(
       date.unitRepetitionsBetweenDates(
         "1.minute",
-        moment.tz("2020-02-15 15:37", PARIS)
+        moment.tz("2022-02-15 15:37", PARIS)
       ),
       1,
       "it correctly finds no difference"
@@ -89,7 +89,7 @@ module("lib:date-with-zone-helper", function () {
     assert.strictEqual(
       date.unitRepetitionsBetweenDates(
         "2.minutes",
-        moment.tz("2020-02-15 15:41", PARIS)
+        moment.tz("2022-02-15 15:41", PARIS)
       ),
       6,
       "it correctly finds difference with a multiplicator"
@@ -113,7 +113,7 @@ module("lib:date-with-zone-helper", function () {
     assert.false(futureLocalDate.isDST());
     assert.strictEqual(
       futureLocalDate.format(),
-      "2020-11-19T15:36:00.000+01:00",
+      "2022-11-19T15:36:00.000+01:00",
       "it correctly adds from a !isDST date to a !isDST date"
     );
 
@@ -129,7 +129,7 @@ module("lib:date-with-zone-helper", function () {
     assert.true(futureLocalDate.isDST());
     assert.strictEqual(
       futureLocalDate.format(),
-      "2021-04-25T15:36:00.000+02:00",
+      "2023-04-25T15:36:00.000+02:00",
       "it correctly adds from a isDST date to a isDST date"
     );
 
@@ -145,7 +145,7 @@ module("lib:date-with-zone-helper", function () {
     assert.true(futureLocalDate.isDST());
     assert.strictEqual(
       futureLocalDate.format(),
-      "2020-04-01T15:36:00.000+02:00",
+      "2022-04-01T15:36:00.000+02:00",
       "it correctly adds from a !isDST date to a isDST date"
     );
 
@@ -162,7 +162,7 @@ module("lib:date-with-zone-helper", function () {
     assert.false(futureLocalDate.isDST());
     assert.strictEqual(
       futureLocalDate.format(),
-      "2020-12-01T15:36:00.000+01:00",
+      "2022-12-01T15:36:00.000+01:00",
       "it correctly adds from a isDST date to a !isDST date"
     );
   });

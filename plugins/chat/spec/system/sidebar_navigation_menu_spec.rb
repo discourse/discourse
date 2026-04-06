@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Sidebar navigation menu", type: :system do
+RSpec.describe "Sidebar navigation menu" do
   let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 

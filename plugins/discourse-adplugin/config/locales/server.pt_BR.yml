@@ -7,10 +7,10 @@
 pt_BR:
   reports:
     ad_plugin_house_ads_performance:
-      title: Impressões de anúncios internos de Adplugin
+      title: Impressões de anúncios internos Adplugin
       description: "Relatório de impressões de anúncios internos"
     ad_plugin_ad_impressions:
-      title: Impressões de anúncios de Adplugin
+      title: Impressões de anúncios Adplugin
       description: "Relatório de impressões de anúncios"
     ad_plugin_impressions_by_user:
       title: Impressões de AdPlugins por usuário

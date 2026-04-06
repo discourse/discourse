@@ -67,15 +67,16 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
         @name="aboutPageExtraGroups"
         @title={{i18n "admin.config_areas.about.extra_groups.groups"}}
         @format="large"
+        @type="custom"
         as |field|
       >
-        <field.Custom>
+        <field.Control>
           <GroupChooser
             @content={{this.site.groups}}
             @value={{field.value}}
             @onChange={{field.set}}
           />
-        </field.Custom>
+        </field.Control>
       </form.Field>
 
       <form.Field
@@ -86,9 +87,10 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
         }}
         @validation="required"
         @format="large"
+        @type="input-number"
         as |field|
       >
-        <field.Input @type="number" />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -96,24 +98,26 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
         @title={{i18n "admin.config_areas.about.extra_groups.order"}}
         @validation="required"
         @format="large"
+        @type="select"
         as |field|
       >
-        <field.Select as |select|>
+        <field.Control as |select|>
           {{#each this.orderings as |ordering|}}
             <select.Option @value={{ordering}}>
               {{ordering}}
             </select.Option>
           {{/each}}
-        </field.Select>
+        </field.Control>
       </form.Field>
 
       <form.Field
         @name="aboutPageExtraGroupsShowDescription"
         @title={{i18n "admin.config_areas.about.extra_groups.show_description"}}
         @format="large"
+        @type="checkbox"
         as |field|
       >
-        <field.Checkbox />
+        <field.Control />
       </form.Field>
 
       <form.Submit

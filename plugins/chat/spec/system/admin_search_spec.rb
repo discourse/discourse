@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Search Plugin Pages", type: :system do
+describe "Admin Search Plugin Pages" do
   fab!(:current_user, :admin)
   let(:search_modal) { PageObjects::Modals::AdminSearch.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }

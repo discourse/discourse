@@ -47,6 +47,12 @@ ca:
       assign:
         errors:
           not_found: "Tema no trobat."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprova"
+        reject:
+          title: "Rebutja"
     sentiment:
       reports:
         post_emotion:

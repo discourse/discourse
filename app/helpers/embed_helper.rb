@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module EmbedHelper
+  def embed_post_date_title(dt)
+    dt.strftime I18n.t("datetime_formats.formats.long")
+  end
+
   def embed_post_date(dt)
     current = Time.now
 

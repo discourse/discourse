@@ -1,4 +1,4 @@
-export default {
+const draftsFixtures = {
   "/drafts.json": {
     drafts: [
       {
@@ -17,7 +17,6 @@ export default {
         title: null,
         category_id: 3,
         archetype: null,
-        truncated: true,
       },
       {
         excerpt:
@@ -72,3 +71,5 @@ export default {
     draft_sequence: 42,
   },
 };
+
+export default draftsFixtures;

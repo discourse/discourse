@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Settings", type: :system do
+describe "Edit Category Settings" do
   fab!(:admin)
   fab!(:category)
 

@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import Service from "@ember/service";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import { isSkinTonableEmoji } from "pretty-text/emoji";
 import KeyValueStore from "discourse/lib/key-value-store";
 
@@ -16,7 +16,7 @@ export default class EmojiStore extends Service {
 
   store = new KeyValueStore(STORE_NAMESPACE);
 
-  contexts = new TrackedObject();
+  contexts = trackedObject();
 
   @tracked _diversity;
 
@@ -31,7 +31,7 @@ export default class EmojiStore extends Service {
 
   trackEmojiForContext(emoji, context) {
     const recentEmojis = this.#addEmojiToContext(emoji, context);
-    this.contexts[context] = new TrackedArray(recentEmojis);
+    this.contexts[context] = trackedArray(recentEmojis);
     this.#persistRecentEmojisForContext(recentEmojis, context);
     return recentEmojis;
   }

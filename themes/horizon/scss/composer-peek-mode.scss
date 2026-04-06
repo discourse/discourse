@@ -34,7 +34,6 @@
           top: var(--header-offset);
           bottom: var(--main-grid-gap);
           left: unset;
-          height: unset;
           max-width: 36.5vw;
         }
 
@@ -58,6 +57,12 @@
 
         .sidebar-wrapper .sidebar-container {
           height: unset;
+        }
+
+        &:not(.keyboard-visible) {
+          #reply-control:not(.fullscreen).hide-preview {
+            height: unset;
+          }
         }
       }
     }

@@ -1,5 +1,10 @@
 @use "lib/viewport";
 
+:root {
+  --category-boxes-min-width: 15em;
+  --category-boxes-max-width: 1fr;
+}
+
 .category-list {
   table-layout: fixed;
 
@@ -147,7 +152,10 @@
 }
 
 .category-boxes {
-  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(var(--category-boxes-min-width), var(--category-boxes-max-width))
+  );
 
   .category-box {
     > a {

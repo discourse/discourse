@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
@@ -16,8 +16,8 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   @cached
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
-      change.upcoming_change = new TrackedObject(change.upcoming_change);
-      return new TrackedObject(change);
+      change.upcoming_change = trackedObject(change.upcoming_change);
+      return trackedObject(change);
     });
   }
 

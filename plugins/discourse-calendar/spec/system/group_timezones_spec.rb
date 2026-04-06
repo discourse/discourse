@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Group timezones feature", type: :system do
+describe "Group timezones feature" do
   fab!(:group) { Fabricate(:group, name: "test-group") }
 
   fab!(:users) do

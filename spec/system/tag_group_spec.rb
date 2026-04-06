@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag Groups", type: :system do
+describe "Tag Groups" do
   fab!(:admin)
   fab!(:tag1) { Fabricate(:tag, name: "cats") }
   fab!(:tag2) { Fabricate(:tag, name: "bats") }

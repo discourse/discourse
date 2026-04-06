@@ -67,9 +67,10 @@ export default class AdminCreateLeaderboard extends Component {
             @showTitle={{false}}
             class="new-leaderboard__name"
             @validation="required"
+            @type="input"
             as |field|
           >
-            <field.Input
+            <field.Control
               placeholder={{i18n "gamification.leaderboard.name_placeholder"}}
             />
           </form.Field>

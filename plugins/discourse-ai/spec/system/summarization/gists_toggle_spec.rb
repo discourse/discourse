@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Gists Toggle Functionality", type: :system do
+describe "Gists Toggle Functionality" do
   fab!(:admin)
   fab!(:group)
   fab!(:topic_with_gist, :topic)
@@ -111,7 +111,7 @@ describe "Gists Toggle Functionality", type: :system do
   end
 end
 
-describe "Gists Toggle Functionality - Mobile", type: :system, mobile: true do
+describe "Gists Toggle Functionality - Mobile", mobile: true do
   fab!(:admin)
   fab!(:group)
   fab!(:topic_with_gist, :topic)

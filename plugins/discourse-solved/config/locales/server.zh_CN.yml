@@ -6,18 +6,6 @@
 
 zh_CN:
   accepted_answer: "已被接受的回答"
-  category_types:
-    support:
-      name: "支持"
-      title: "支持"
-      description: "成员可以在这里提问并将回复标记为解决方案。"
-  discourse_solved:
-    category_type:
-      allow_accepted_answers:
-        label: "允许话题所有者和管理人员将回复标记为解决方案"
-      solved_topics_auto_close_hours:
-        label: "自动关闭已解决的主题（小时）"
-        description: "帖子标记为已解决后，经过指定时间后自动关闭。设置为 0 可禁用此功能。"
   site_settings:
     solved_enabled: "启用“已解决”插件，允许用户为话题选择解决方案"
     allow_solved_on_all_topics: "允许用户选择所有话题的解决方案（未选中时，可以按类别或标签启用解决方案）"

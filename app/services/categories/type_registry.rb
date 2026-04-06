@@ -31,8 +31,8 @@ module Categories
         types
       end
 
-      def list
-        types.values.map(&:metadata)
+      def list(only_visible: false)
+        types.values.select { |type| only_visible ? type.visible? : true }.map(&:metadata)
       end
 
       def valid?(id)
@@ -42,6 +42,10 @@ module Categories
       def reset!
         @types = nil
         @owners = nil
+
+        # Always need to re-register the core Discussion type, the system doesn't work
+        # without it.
+        self.register(Categories::Types::Discussion)
       end
 
       # Returns all the category type counts in a hash with the type

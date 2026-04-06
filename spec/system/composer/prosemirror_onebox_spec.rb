@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Oneboxing", type: :system do
+describe "Composer - ProseMirror - Oneboxing" do
   include_context "with prosemirror editor"
 
   before do

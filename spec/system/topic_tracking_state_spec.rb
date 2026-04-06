@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic tracking state", type: :system do
+describe "Topic tracking state" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:tag)
   fab!(:other_tag, :tag)

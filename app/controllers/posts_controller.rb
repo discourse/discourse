@@ -63,6 +63,7 @@ class PostsController < ApplicationController
       posts =
         Post
           .private_posts
+          .where(post_type: Topic.visible_post_types(current_user))
           .order(id: :desc)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
@@ -262,9 +263,13 @@ class PostsController < ApplicationController
 
     if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
       if guardian.can_update_bumped_at?
-        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
-          params[:bypass_bump].presence || params.dig(:post, :bypass_bump),
-        )
+        bypass_bump_value =
+          if params.key?(:bypass_bump)
+            params[:bypass_bump]
+          else
+            params.dig(:post, :bypass_bump)
+          end
+        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(bypass_bump_value)
       end
     end
 
@@ -719,7 +724,7 @@ class PostsController < ApplicationController
 
   def deleted_posts
     params.permit(:offset, :limit)
-    guardian.ensure_can_see_deleted_posts!
+    guardian.ensure_can_see_deleted_posts_for_user!
 
     user = fetch_user_from_params
     offset = [params[:offset].to_i, 0].max
@@ -978,7 +983,11 @@ class PostsController < ApplicationController
     end
 
     PostRevisor.tracked_topic_fields.each_key do |f|
-      params.permit(f => [])
+      if f == :tags
+        params.permit(tags: %i[id name])
+      else
+        params.permit(f => [])
+      end
       result[f] = params[f] if params.has_key?(f)
     end
 
@@ -1045,7 +1054,14 @@ class PostsController < ApplicationController
   end
 
   def display_post(post)
-    post.revert_to(params[:version].to_i) if params[:version].present?
+    if params[:version].present?
+      version = params[:version].to_i
+      post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
+      if post_revision
+        guardian.ensure_can_see!(post_revision)
+        post.revert_to(version)
+      end
+    end
     render_post_json(post)
   end
 

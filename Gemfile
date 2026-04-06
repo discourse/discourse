@@ -20,7 +20,7 @@ gem "propshaft"
 gem "json"
 
 # this will eventually be added to rails,
-# allows us to precompile all our templates in the unicorn master
+# allows us to precompile all our templates in the app server master
 gem "actionview_precompiler", require: false
 
 gem "discourse-seed-fu"
@@ -64,6 +64,7 @@ gem "fastimage"
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
 gem "aws-sdk-mediaconvert", require: false
+gem "aws-sdk-bedrockruntime", require: false
 gem "excon"
 gem "unf", require: false
 
@@ -97,14 +98,14 @@ gem "rake"
 gem "thor", require: false
 gem "diffy", require: false
 gem "rinku"
-gem "sidekiq"
+gem "sidekiq", ">= 7.3.10" # ensuring it won't get downgraded to accomodate a connection_pool upgrade
 gem "mini_scheduler"
 
 gem "mini_racer"
 
 gem "highline", require: false
 
-# When unicorn is not used anymore, we can use Rack 3
+# TODO: upgrade to Rack 3 now that Unicorn has been removed
 gem "rack", "< 3"
 
 gem "rack-protection" # security
@@ -127,6 +128,7 @@ group :test do
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
   gem "capybara-playwright-driver"
+  gem "puma", require: false
 end
 
 group :test, :development do
@@ -192,9 +194,11 @@ gem "htmlentities", require: false
 
 gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
-gem "unicorn", require: false, platform: :ruby
-gem "puma", require: false
 gem "pitchfork", require: false
+
+# Used by discourse-prometheus to collect socket queue stats.
+# Was previously a transitive dependency of the unicorn gem.
+gem "raindrops", require: false, platform: :ruby
 
 gem "rbtrace", require: false, platform: :mri
 
@@ -220,7 +224,8 @@ gem "rotp", require: false
 
 gem "rqrcode"
 
-gem "rubyzip", require: false
+# can't upgrade to 3.x due to d-token-gate
+gem "rubyzip", "~> 2.0", require: false
 
 gem "sshkey", require: false
 

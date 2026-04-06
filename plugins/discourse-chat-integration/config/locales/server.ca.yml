@@ -44,8 +44,6 @@ ca:
     chat_integration_rocketchat_webhook_url: "L'URL per al webhook d'integració de Rocket Chat"
     chat_integration_rocketchat_excerpt_length: "Longitud de l'extracte de publicació de Rocket Chat"
     chat_integration_gitter_enabled: "Habilita el proveïdor d'integració de xat de Gitter"
-    chat_integration_flowdock_enabled: "Habiliteu el proveïdor de la integració de xat de Flowdock"
-    chat_integration_flowdock_excerpt_length: "Longitud de l'extracte de publicació de Flowdock"
   chat_integration:
     all_categories: "(totes les categories)"
     deleted_category: "(categoria suprimida)"
@@ -162,5 +160,3 @@ ca:
           ~~~citació
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "publicat"

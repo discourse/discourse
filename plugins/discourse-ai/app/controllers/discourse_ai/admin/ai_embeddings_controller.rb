@@ -142,7 +142,7 @@ module DiscourseAi
             params.dig(:ai_embedding, :provider_params)&.slice(*extra_field_names.keys)
 
           if received_prov_params.present?
-            permitted[:provider_params] = received_prov_params.permit!
+            permitted[:provider_params] = received_prov_params.permit(*extra_field_names.keys)
           end
         end
 

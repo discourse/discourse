@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { optionalRequire } from "discourse/lib/utilities";
 import User from "discourse/models/user";
@@ -29,6 +29,7 @@ export default class DiscoursePostEventEvent {
   @tracked categoryId;
   @tracked startsAt;
   @tracked endsAt;
+  @tracked allDay;
   @tracked duration;
   @tracked rawInvitees;
   @tracked location;
@@ -66,6 +67,7 @@ export default class DiscoursePostEventEvent {
     this.categoryId = args.category_id;
     this.startsAt = args.starts_at;
     this.endsAt = args.ends_at;
+    this.allDay = args.all_day || false;
     this.duration = args.duration;
     this.rawInvitees = args.raw_invitees;
     this.sampleInvitees = args.sample_invitees || [];
@@ -113,7 +115,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set sampleInvitees(invitees = []) {
-    this._sampleInvitees = new TrackedArray(
+    this._sampleInvitees = trackedArray(
       invitees.map((i) => DiscoursePostEventInvitee.create(i))
     );
   }
@@ -131,7 +133,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set reminders(reminders = []) {
-    this._reminders = new TrackedArray(reminders);
+    this._reminders = trackedArray(reminders);
   }
 
   get creator() {
@@ -154,6 +156,7 @@ export default class DiscoursePostEventEvent {
     this.name = event.name;
     this.startsAt = event.startsAt;
     this.endsAt = event.endsAt;
+    this.allDay = event.allDay;
     this.duration = event.duration;
     this.location = event.location;
     this.url = event.url;

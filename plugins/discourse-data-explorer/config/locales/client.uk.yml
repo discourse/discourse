@@ -6,6 +6,10 @@
 
 uk:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Explorer"
     errors:
       explorer:
         no_semicolons: "Вилучіть крапки з комою з запиту."
@@ -94,7 +98,7 @@ uk:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Запустіть запити Data Explorer. Обмежте ключ API набором запитів, вказавши ідентифікатори запитів."
     discourse_automation:
       scriptables:

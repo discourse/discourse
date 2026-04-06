@@ -2656,6 +2656,29 @@ RSpec.describe PostAlerter do
       expect(email.subject).to eq("[Discourse] [PM] #{topic.title}")
     end
 
+    it "excludes users with email_messages_level set to never from group SMTP emails" do
+      NotificationEmailer.enable
+
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+
+      # Get one of the topic allowed users and set their email preference to never
+      topic_allowed_user = topic.topic_allowed_users.first
+      topic_allowed_user.user.user_option.update!(
+        email_messages_level: UserOption.email_level_types[:never],
+      )
+
+      post = Fabricate(:post, topic: topic.reload)
+
+      PostAlerter.new.after_save_post(post, true)
+
+      # The group SMTP email should not include the user who has email disabled
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to eq([group.email_username])
+      expect(email.to).not_to include(topic_allowed_user.user.email)
+      expect(email.cc).not_to include(topic_allowed_user.user.email)
+    end
+
     it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do
       NotificationEmailer.enable
 

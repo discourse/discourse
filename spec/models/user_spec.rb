@@ -7,6 +7,12 @@ RSpec.describe User do
 
   it_behaves_like "it has custom fields"
 
+  describe "#reload" do
+    it "accepts options like ActiveRecord's reload" do
+      expect { user.reload(lock: true) }.not_to raise_error
+    end
+  end
+
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
   end
@@ -627,6 +633,18 @@ RSpec.describe User do
       expect(Reviewable.where(created_by: user).count).to eq(0)
 
       posts.each { |p| expect(Topic.find_by(id: p.topic_id)).to be_nil if p.is_first_post? }
+    end
+
+    it "deletes reviewables that have notes" do
+      reviewable = Fabricate(:reviewable_queued_post, created_by: user)
+      Fabricate(:reviewable_note, reviewable: reviewable)
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(Post.where(id: post_ids)).to be_empty
+      expect(Reviewable.where(created_by: user).count).to eq(0)
+      expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
     end
 
     it "does not allow non moderators to delete all posts" do
@@ -2048,6 +2066,8 @@ RSpec.describe User do
     end
 
     it "get attributes from the group" do
+      Jobs.run_immediately!
+
       user =
         Fabricate.build(
           :user,

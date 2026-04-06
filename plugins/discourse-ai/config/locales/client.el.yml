@@ -10,7 +10,7 @@ el:
       api:
         scopes:
           descriptions:
-            discourse_ai:
+            ai:
               search: "Επιτρέπει την αναζήτηση AI"
       site_settings:
         categories:
@@ -95,7 +95,6 @@ el:
       llm_selector:
         none: "Κανένα"
       features:
-        back: "Πίσω"
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
         disabled: "(απενεργοποιημένο)"
         groups: "Ομάδες:"
@@ -158,7 +157,6 @@ el:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
       ai_agent:
-        back: "Πίσω"
         name: "Όνομα"
         edit: "Επεξεργασία"
         export: "Εξαγωγή"
@@ -171,8 +169,11 @@ el:
         allow_topic_mentions: "Να επιτρέπονται επισημάνσεις θεμάτων"
         save: "Αποθήκευση"
         enabled: "Ενεργοποιημένο;"
+        mcp_tools_modal:
+          select_all: "Επιλογή όλων"
+          clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         response_format:
           open_modal: "Επεξεργασία"
           modal:
@@ -184,7 +185,6 @@ el:
           title: "Μεταφορτώσεις"
           uploading: "Επιφόρτωση..."
       tools:
-        back: "Πίσω"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
@@ -197,24 +197,38 @@ el:
         credential_not_set: "(δεν έχει οριστεί)"
         edit: "Επεξεργασία"
         test: "Δοκιμή"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
       secrets:
         short_title: "Διαπιστευτήρια"
         name: "Όνομα"
         secret: "Τιμή"
-        back: "Πίσω"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
+      mcp_servers:
+        name: "Όνομα"
+        description: "Περιγραφή"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Συνδεδεμένος"
+        oauth_connect: "Συνδεθείτε"
+        oauth_hide_details: "Απόκρυψη λεπτομερειών"
+        enabled: "Ενεργοποιημένα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Διαγραφή"
+        tools_modal:
+          required: "Απαιτείται"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
         attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        back: "Πίσω"
-        delete: Σβήσιμο
+        delete: Διαγραφή
         quotas:
           group: "Ομάδα"
           max_usages: "Μέγιστες χρήσεις"
@@ -254,9 +268,8 @@ el:
         image_caption:
           save_caption: "Αποθήκευση"
       embeddings:
-        back: "Πίσω"
         save: "Αποθήκευση"
-        delete: "Σβήσιμο"
+        delete: "Διαγραφή"
         edit: "Επεξεργασία"
         tests:
           success: "Επιτυχία!"
@@ -265,6 +278,7 @@ el:
           google: "Google"
           fake: "Προσαρμοσμένο"
       ai_bot:
+        title: "AI bot"
         llm: "Μοντέλο"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"

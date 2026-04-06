@@ -54,6 +54,8 @@ module DiscourseChatIntegration::Provider::TelegramProvider
       render json: data
     end
 
+    private
+
     def process_command(message)
       return unless message["text"] # No command to be processed
 

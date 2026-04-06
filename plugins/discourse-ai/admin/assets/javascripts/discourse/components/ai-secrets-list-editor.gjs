@@ -73,6 +73,26 @@ export default class AiSecretsListEditor extends Component {
                                 {{usage.name}}
                               </LinkTo>
                               ({{i18n "discourse_ai.secrets.embedding"}})
+                            {{else if (eq usage.type "mcp_server")}}
+                              <LinkTo
+                                @route="adminPlugins.show.discourse-ai-tools.mcp-server-edit"
+                                @model={{usage.id}}
+                              >
+                                {{usage.name}}
+                              </LinkTo>
+                              ({{i18n "discourse_ai.secrets.mcp_server"}})
+                            {{else if
+                              (eq usage.type "mcp_server_oauth_client_secret")
+                            }}
+                              <LinkTo
+                                @route="adminPlugins.show.discourse-ai-tools.mcp-server-edit"
+                                @model={{usage.id}}
+                              >
+                                {{usage.name}}
+                              </LinkTo>
+                              ({{i18n
+                                "discourse_ai.secrets.mcp_server_oauth_client_secret"
+                              }})
                             {{else if (eq usage.type "tool")}}
                               <LinkTo
                                 @route="adminPlugins.show.discourse-ai-tools.edit"

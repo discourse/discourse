@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Summarize a channel since your last visit", type: :system do
+RSpec.describe "Summarize a channel since your last visit" do
   fab!(:current_user, :user)
   fab!(:group)
   fab!(:channel, :chat_channel)

@@ -42,5 +42,11 @@ sq:
       assign:
         errors:
           not_found: "Tema nuk u gjet."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Aprovo"
+        reject:
+          title: "Refuzo"
     ai_staff_action_logger:
       removed: "u hoq"

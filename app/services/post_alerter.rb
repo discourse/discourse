@@ -891,9 +891,12 @@ class PostAlerter
       post
         .topic
         .topic_allowed_users
-        .includes(:user)
+        .includes(user: :user_option)
         .order(:created_at)
-        .reject { |tau| not_allowed?(tau.user, post) }
+        .reject do |tau|
+          not_allowed?(tau.user, post) ||
+            tau.user.user_option.email_messages_level == UserOption.email_level_types[:never]
+        end
     return emails_to_skip_send if topic_allowed_users_by_age.empty?
 
     # This should usually be the OP of the topic, unless they are the one

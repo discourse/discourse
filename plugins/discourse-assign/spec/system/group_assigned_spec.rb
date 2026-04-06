@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Assign | Group assigned", type: :system do
+RSpec.describe "Assign | Group assigned" do
   fab!(:admin)
   fab!(:group)
   fab!(:topic)

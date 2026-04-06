@@ -32,16 +32,6 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
       return helper.response({
         queries: [
           {
-            id: -5,
-            name: "Top 100 Active Topics",
-            description:
-              "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-            username: "system",
-            group_ids: [],
-            last_run_at: "2021-02-08T15:37:49.188Z",
-            user_id: -1,
-          },
-          {
             id: -6,
             name: "Top 100 Likers",
             description:
@@ -51,7 +41,18 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
             last_run_at: "2021-02-11T08:29:59.337Z",
             user_id: -1,
           },
+          {
+            id: -5,
+            name: "Top 100 Active Topics",
+            description:
+              "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
+            username: "system",
+            group_ids: [],
+            last_run_at: "2021-02-08T15:37:49.188Z",
+            user_id: -1,
+          },
         ],
+        total_rows_queries: 2,
       });
     });
   });

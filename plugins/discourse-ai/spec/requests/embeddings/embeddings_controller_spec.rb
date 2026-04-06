@@ -44,7 +44,7 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
 
     def create_api_key(user)
       key = ApiKey.create!(user: user)
-      ApiKeyScope.create!(resource: "discourse_ai", action: "search", api_key_id: key.id)
+      ApiKeyScope.create!(resource: "ai", action: "search", api_key_id: key.id)
       key
     end
 

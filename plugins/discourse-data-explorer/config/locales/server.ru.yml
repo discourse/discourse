@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 ru:
+  site_settings:
+    data_explorer_enabled: "Включить обозреватель данных"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -18,4 +20,26 @@ ru:
     report_generator:
       private_message:
         title: "Запланированный отчет по запросу «%{query_name}»"
+        body: |
+          Привет, %{recipient_name}, ваш отчет в Data Explorer готов.
+
+          Название запроса:
+          %{query_name}
+
+          Вот результаты:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Просмотреть запрос в Data Explorer</a>
+
+          Отчет создан в %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Запланированный отчет для %{query_name}
+
+          Вот результаты:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>Просмотреть запрос в обозревателе данных</a>
+
+          Отчет создан в %{created_at} (%{timezone})
       upload_appendix: "Приложение: [%{filename}|вложение](%{short_url})"

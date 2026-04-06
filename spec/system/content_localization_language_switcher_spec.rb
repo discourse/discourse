@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Content localization language switcher", type: :system do
+describe "Content localization language switcher" do
   SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
   TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
 

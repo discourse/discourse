@@ -1154,6 +1154,7 @@ hu:
     permissions_header: 'Ez lehetővé teszi a(z) "%{application_name}" számára a következőket:'
     redirect_warning: "Az engedélyezés átirányít a következőre:"
     instructions: 'Létrehoztunk egy új felhasználói API-kulcsot, amelyet a "%{application_name} applikációhoz használhat, kérjük, illessze be a következő kulcsot az alkalmazásába:'
+    copied: "Másolva!"
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
       confirm_title: Tovább a(z) %{site_name} oldalra
@@ -2485,7 +2486,6 @@ hu:
     fake_upcoming_change: "Ez egy hamis, közelgő változás tesztelési célokra. Nem kell lefordítani ezt a karakterláncot."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
     rename_faq_to_guidelines: "Ez a módosítás a GYIK-oldalt „Irányelvek” névre nevezi át. A GYIK-oldal továbbra is elérhető marad a /faq útvonalon, a „faq url” beállítás pedig a megszokott módon működik tovább."
-    experimental_tag_settings_page: "Dedikált beállítási oldal engedélyezése a címkékhez a /tag/:slug/:id/edit útvonalon."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
     enable_custom_splash_screen: "Lehetővé teszi a betöltési kezdőképernyő testreszabását saját SVG-képpel. Töltsön fel egy képet a „kezdőképernyő képe” beállítással. Figyelmeztetés: Ez negatívan befolyásolhatja az LCP-pontszámokat és a Google indexelését."
     modernize_foundation_theme: "Ez a módosítás dizájnbeli változtatásokat vezet be a Discourse Foundation témájába."
@@ -3035,35 +3035,9 @@ hu:
   new_version_mailer:
     title: "Új levelező verzió"
     subject_template: "[%{email_prefix}] Új Discourse verzió, frissítés elérhető"
-    text_body_template: |
-      Hurrá, elérhető a [Discourse](https://www.discourse.org) új verziója!
-
-      A te verziód: %{installed_version}
-      Új verzió: **%{new_version}**
-
-      - Frissíts egyszerűen **[egykattintásos böngészőfrissítés](%{base_url}/admin/update)**
-
-      - Nézd meg az újdonságokat a [kiadási jegyzetekben](https://meta.discourse.org/tag/release-notes) vagy tekintsd meg a [nyers GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Látogass el a [meta.discourse.org](https://meta.discourse.org) oldalra a Discourse híreiért, megvitatásáért és támogatásáért.
   new_version_mailer_with_notes:
     title: "Új verzió levelező megjegyzésekkel"
     subject_template: "[%{email_prefix}] frissítés elérhető"
-    text_body_template: |
-      Hurrá, elérhető a [Discourse](https://www.discourse.org) új verziója!
-
-      A te verziód: %{installed_version}
-      Új verzió: **%{new_version}**
-
-      - Frissíts egyszerűen **[egykattintásos böngészőfrissítés](%{base_url}/admin/update)**
-
-      - Nézd meg az újdonságokat a [kiadási jegyzetekben](https://meta.discourse.org/tag/release-notes) vagy tekintsd meg a [nyers GitHub changelog](https://github.com/discourse/discourse/commits/main)
-
-      - Látogass el a [meta.discourse.org](https://meta.discourse.org) oldalra a Discourse híreiért, megvitatásáért és támogatásáért.
-
-      ### Kiadási jegyzet
-
-      %{notes}
   flag_reasons:
     off_topic: "Bejegyzését **nem témába vágóként** jelentették: a közösség úgy érzi, hogy a cím és az első bejegyzés alapján nem felel meg a témának."
     inappropriate: "Bejegyzését **nem megfelelő**ként jelölték meg: a közösség sértőnek, sértőnek, gyűlöletkeltőnek vagy [közösségi irányelveinknek] (%{base_path}/guidelines) megsértésének érzi."
@@ -3115,47 +3089,9 @@ hu:
     reviewable_queued_post_revise_and_reject:
       title: "Visszajelzés a bejegyzéséről"
       subject_template: "Visszajelzés a bejegyzéséről itt: %{topic_title}"
-      text_body_template: |
-        Üdv %{username},
-
-        Áttekintettük bejegyzését a [%{topic_title}] (%{topic_url}) oldalon, és van néhány visszajelzés az Ön számára.
-
-        Ok: %{reason}
-
-        Visszajelzés: %{feedback}
-
-        Az alábbiakban szerkesztheti eredeti bejegyzését, és újra elküldheti a javasolt változtatások végrehajtásához, vagy válaszolhat erre az üzenetre, ha bármilyen kérdése van.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Köszönöm,
-        %{site_name} Moderátorok
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Visszajelzés a témájáról"
       subject_template: 'Visszajelzés a "%{topic_title}" című új témához'
-      text_body_template: |
-        Üdv %{username},
-
-        Áttekintettük az új témáját: "%{topic_title}", és van néhány visszajelzésünk az Ön számára.
-
-        Indoklás: %{reason}
-
-        Visszajelzés: %{feedback}
-
-        A téma eredeti hozzászólását alább szerkesztheti és küldheti el újra, hogy elvégezze a javasolt változtatásokat, vagy válaszoljon erre az üzenetre, ha bármilyen kérdése van.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Köszönettel,
-        %{site_name} Moderátorok
     post_hidden_again:
       title: "Bejegyzés újra elrejtve"
       preview: "A bejegyzést ismét elrejtették a közösség tagjai."

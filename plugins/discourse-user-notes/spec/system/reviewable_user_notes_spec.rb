@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Reviewable User Notes", type: :system do
+RSpec.describe "Reviewable User Notes" do
   fab!(:admin)
   fab!(:user)
   fab!(:reviewable_flagged_post)

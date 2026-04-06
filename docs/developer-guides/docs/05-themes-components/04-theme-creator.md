@@ -13,7 +13,6 @@ This topic will walk you through how to use the [Theme CLI](https://meta.discour
 3. Install the Theme CLI via the [instructions here](https://meta.discourse.org/t/discourse-theme-cli-console-app-to-help-you-build-themes/82950)
 
 4. Create a new theme on Theme Creator by:
-
    - Visiting [https://discourse.theme-creator.io/my/themes](https://discourse.theme-creator.io/my/themes)
    - Clicking <kbd> Install</kbd>, and selecting the "Create New" option.
    - Giving your theme a unique name (you can ignore the color scheme for now).
@@ -25,7 +24,6 @@ This topic will walk you through how to use the [Theme CLI](https://meta.discour
 ![image|379x500, 50%](/assets/theme-creator-1.png) ![image|591x500, 50%](/assets/theme-creator-2.png)
 
 6. Go back to your command line and type `discourse_theme download example-folder`, where example-folder is where your theme will be stored locally. Follow the prompts.
-
    - Enter `https://discourse.theme-creator.io` as the **root URL** of your Discourse site.
 
    - Enter your **API key** from the previous step when prompted.

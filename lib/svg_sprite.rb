@@ -71,6 +71,7 @@ module SvgSprite
         cloud-arrow-down
         cloud-arrow-up
         code
+        code-branch
         comment
         compress
         copy
@@ -124,6 +125,7 @@ module SvgSprite
         fab-instagram
         fab-linkedin-in
         fab-linux
+        fab-microsoft
         fab-markdown
         fab-threads
         fab-threads-square

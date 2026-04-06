@@ -6,6 +6,10 @@
 
 he:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "דפדפן נתונים"
     errors:
       explorer:
         no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
@@ -82,7 +86,7 @@ he:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "הרצת שאילתות של סייר נתונים. ניתן להגביל את מפתח ה־API לסדרה של שאילתות על ידי ציון מזהה שאילתה."
     discourse_automation:
       scriptables:

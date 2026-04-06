@@ -1,3 +1,4 @@
+import { waitForPromise } from "@ember/test-waiters";
 import AllowLister from "pretty-text/allow-lister";
 import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
@@ -7,7 +8,7 @@ import { helperContext } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 
 async function withEngine(name, ...args) {
-  const engine = await import("discourse/static/markdown-it");
+  const engine = await waitForPromise(import("discourse/static/markdown-it"));
   return engine[name](...args);
 }
 
@@ -19,7 +20,6 @@ export async function cook(text, options) {
 export function cookAsync(text, options) {
   deprecated("cookAsync() is deprecated, call cook() instead", {
     since: "3.2.0.beta2",
-    dropFrom: "3.2.0.beta5",
     id: "discourse.text.cook-async",
   });
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer peek", type: :system do
+describe "Composer peek" do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic, :topic_with_op)
 

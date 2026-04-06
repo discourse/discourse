@@ -321,7 +321,26 @@ acceptance(`Topic featured links`, function (needs) {
     await click(".topic-admin-visible .btn");
 
     await click(".toggle-admin-menu");
-    assert.dom(".topic-admin-pin").exists("should show the multi select menu");
+    assert.dom(".topic-admin-pin").exists("should show the pin menu item");
+  });
+
+  test("Bannering unlisted topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-visible .btn");
+
+    await click(".toggle-admin-menu");
+    assert
+      .dom(".topic-admin-pin")
+      .exists(
+        "should show the pin menu item for unlisted topics with can_banner_topic"
+      );
+
+    await click(".topic-admin-pin .btn");
+    assert
+      .dom(".make-banner")
+      .exists("should show the banner button for unlisted topics");
   });
 
   test("selecting posts", async function (assert) {
@@ -481,6 +500,11 @@ acceptance(`Topic pinning/unpinning as a staff member`, function (needs) {
 
 acceptance(`Topic pinning/unpinning as a group moderator`, function (needs) {
   needs.user({ moderator: false, admin: false, trust_level: 1 });
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/2480/1.json"]);
+    delete topicResponse.details.can_banner_topic;
+    server.get("/t/2480.json", () => helper.response(topicResponse));
+  });
 
   test("Group category moderator pinning topic", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");

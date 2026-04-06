@@ -193,7 +193,12 @@ class UploadsController < ApplicationController
     # if the upload is still secure, that means the ACL is probably still
     # private, so we don't want to go to the CDN url just yet otherwise we
     # will get a 403. if the upload is not secure we assume the ACL is public
-    signed_secure_url = Discourse.store.signed_url_for_path(path_with_ext)
+    signed_secure_url =
+      Discourse.store.signed_url_for_path(
+        path_with_ext,
+        filename: upload.original_filename,
+        include_content_disposition: true,
+      )
     redirect_to upload.secure? ? signed_secure_url : Discourse.store.cdn_url(upload.url),
                 allow_other_host: true
   end
@@ -219,6 +224,8 @@ class UploadsController < ApplicationController
                   path_with_ext,
                   expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
                   force_download: force_download?,
+                  filename: upload.original_filename,
+                  include_content_disposition: true,
                 ),
                 allow_other_host: true
   end

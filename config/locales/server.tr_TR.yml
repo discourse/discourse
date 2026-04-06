@@ -596,6 +596,7 @@ tr_TR:
         one: "Tek seferde en fazla %{count} kullanıcı eklenebilir"
         other: "Tek seferde en fazla %{count} kullanıcı eklenebilir"
       usernames_or_emails_required: "Kullanıcı adları veya e-postalar mevcut olmalıdır"
+      cannot_add_emails: "Bu gruba üye eklemek için yalnızca kullanıcı adları kullanılabilir. Eposta ile davet etmek için Davet et düğmesini kullanın."
       counting_too_many_email_domains:
         one: "Aynı anda en fazla %{count} e-posta alan adı sayılabilir"
         other: "Aynı anda en fazla %{count} e-posta alan adı sayılabilir"
@@ -1062,6 +1063,8 @@ tr_TR:
     connection_error: "Sunucuya bağlanırken bir sorun oluştu, sunucu adını ve bağlantı noktasını kontrol edip tekrar deneyin."
     timeout_error: "Sunucuya bağlantı zaman aşımına uğradı, sunucu adını ve bağlantı noktasını kontrol edin ve tekrar deneyin."
     unhandled_error: "E-posta ayarları test edilirken işlenmemiş hata. %{message}"
+    invalid_host: "Belirtilen sunucu, izin verilmeyen bir IP adresine yönlendiriliyor."
+    host_resolve_failed: "Belirtilen sunucu çözümlenemedi."
   webauthn:
     validation:
       invalid_type_error: "Sağlanan webauthn türü geçersizdi. Geçerli türler webauthn.get ve webauthn.create'tir."
@@ -1146,6 +1149,8 @@ tr_TR:
       weekly: "haftalık"
       every_month: "her ay"
       every_six_months: "altı ayda bir"
+  calendar_subscriptions:
+    application_name: "Takvim Abonelikleri"
   user_api_key:
     title: '"%{application_name}" için yetkilendirme'
     authorize: "Yetkilendir"
@@ -1156,6 +1161,8 @@ tr_TR:
     permissions_header: 'Bu, "%{application_name}"in şunları yapmasına olanak tanıyacaktır:'
     redirect_warning: "Yetkilendirme sizi şu adrese yönlendirecektir:"
     instructions: '"%{application_name}" ile kullanmanız için yeni bir kullanıcı API anahtarı oluşturduk, lütfen aşağıdaki anahtarı uygulamanıza yapıştırın:'
+    copy_key: "Anahtarı Kopyala"
+    copied: "Kopyalandı!"
     otp_description: '"%{application_name}" uygulamasının bu siteye erişmesine izin vermek ister misiniz?'
     otp_confirmation:
       confirm_title: '%{site_name} adresine devam edin'
@@ -2306,6 +2313,7 @@ tr_TR:
     embed_support_markdown: "Yerleştirilmiş gönderiler için Markdown biçimlendirmesini destekleyin."
     allowed_embed_selectors: "Yerleştirmelerde izin verilen CSS ögelerinin virgülle ayrılmış bir listesi."
     allowed_href_schemes: "Bağlantılarda http ve https'ye ek olarak izin verilen şemalar."
+    embed_full_app: "Gömülü yorumlar için tam uygulama modunu etkinleştirin. Bu özellik etkinleştirildiğinde, gömülü yorumlar Discourse uygulamasının tamamını bir iframe içinde yükler ve kullanıcıların konularla doğrudan etkileşime girmesine olanak tanır"
     embed_post_limit: "Yerleştirilecek maksimum gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hâlâ incelenmemiş öge varsa moderatörlere mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
@@ -2452,6 +2460,7 @@ tr_TR:
     show_bottom_topic_map: "Konuya 10 veya daha fazla yanıt geldiğinde konu haritasını konunun altında gösterir."
     show_topic_map_in_topics_without_replies: "Konuya yanıt gelmese bile konu haritasını gösterir."
     enable_site_owner_onboarding: "Yeni yöneticilere başlangıçta yardımcı olmak için ana sayfada bir panel gösterir. Bu ayarı yeniden etkinleştirerek başlangıç adımlarını tekrar görebilirsiniz."
+    site_owner_onboarding_max_days: "Site oluşturulduktan sonra karşılama banner'ının gösterilebileceği maksimum gün sayısı."
     enable_welcome_banner: "Üyeleri karşılamak ve site içeriğinde arama yapmalarına olanak sağlamak için ana konu listenizin sayfalarında bir başlık gösterin"
     welcome_banner_image: "Hoş geldiniz banner'ının arka planında gösterilecek bir görüntü ayarlayın."
     welcome_banner_location: "Hoş geldiniz banner'ının sayfada nerede görüneceğini belirler."
@@ -2467,6 +2476,7 @@ tr_TR:
     show_preview_for_form_templates: "Form şablonları özelliği için ön izlemeyi etkinleştirin"
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
+    enable_new_checkbox_style: "FormKit onay kutuları için yeniden tasarlanan onay kutusu stilini etkinleştirin."
     impersonate_without_logout: "Yöneticilerin, yönetici hesaplarından çıkış yapmadan bir kullanıcıyı taklit etmelerine izin verin."
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
@@ -2492,7 +2502,6 @@ tr_TR:
     fake_upcoming_change: "Bu, test amaçlı sahte bir değişikliktir. Bu dizeyi çevirmenize gerek yoktur."
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     rename_faq_to_guidelines: "Bu değişiklikle SSS sayfası, Kılavuzlar olarak yeniden adlandırılmıştır. SSS sayfası hala /faq adresinde erişilebilir olacaktır. ‘faq url’ ayarı eskisi gibi çalışmaya devam edecektir."
-    experimental_tag_settings_page: "/tag/:slug/:id/edit adresinde etiketler için özel bir ayarlar sayfası etkinleştirin."
     enable_simplified_category_creation: "Daha az seçenek ve daha temiz bir arayüz ile basitleştirilmiş kategori oluşturma akışını etkinleştirir."
     enable_custom_splash_screen: "Yükleme açılış ekranını kendi SVG görüntünüzle özelleştirmenize olanak tanır. ‘Açılış ekranı görüntüsü’ ayarı üzerinden bir görüntü yükleyin. Uyarı: Bu, LCP puanlarını ve Google indekslemesini olumsuz etkileyebilir."
     modernize_foundation_theme: "Bu değişiklik, Discourse'daki Foundation temasına tasarım değişiklikleri getiriyor."
@@ -2615,6 +2624,8 @@ tr_TR:
       exclude_tag_group: "Belirli bir etiket grubundan etiketli konuları hariç tutun"
       activity_before: "Belirli bir tarihten önceki son aktiviteye sahip konuları gösterin (YYYY-AA-GG veya günler önce)"
       activity_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) son aktiviteye sahip konuları gösterin"
+      bookmarked_before: "Belirli bir tarihten önce (YYYY-AA-GG veya gün önce) yer imlerine eklenen konuları göster"
+      bookmarked_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya gün önce) yer imlerine eklenen konuları göster"
       created_before: "Belirli bir tarihten önce (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_by: "Belirli bir kullanıcı veya grup tarafından oluşturulan konuları göster"
@@ -3030,30 +3041,30 @@ tr_TR:
     title: "Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] Yeni Discourse sürümü, güncelleme mevcut"
     text_body_template: |
-      Yaşasın, [Discourse]'un (https://www.discourse.org) yeni bir sürümü çıktı!
+      Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
-      Sizin sürümünüz: %{installed_version}
+      Mevcut sürümünüz: %{installed_version}
       Yeni sürüm: **%{new_version}**
 
-      - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** kullanarak güncelleyin
+      - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarından] (https://meta.discourse.org/tag/release-notes) yeniliklere bakın veya [ham GitHub değişiklik günlüğünü](https://github.com/discourse/discourse/commits/main) görüntüleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
 
-      - Discourse ile ilgili haberler, tartışmalar ve Discourse'a destek için [meta.discourse.org] (https://meta.discourse.org) adresini ziyaret edin
+      - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
   new_version_mailer_with_notes:
     title: "Notlarla Yeni Sürüm Posta Göndericisi"
     subject_template: "[%{email_prefix}] güncelleme mevcut"
     text_body_template: |
-      Yaşasın, [Discourse]'un (https://www.discourse.org) yeni sürümü çıktı!
+      Yaşasın, [Discourse](https://www.discourse.org) için yeni bir sürüm çıktı!
 
-      Sizin sürümünüz: %{installed_version}
+      Mevcut sürümünüz: %{installed_version}
       Yeni sürüm: **%{new_version}**
 
-      - Kolay **[tek tıklamayla tarayıcı güncellemesini](%{base_url}/admin/update)** kullanarak güncelleyin
+      - Kolay **[tek tıklamayla tarayıcı güncellemesi](%{base_url}/admin/update)** özelliğimizi kullanarak güncelleyin
 
-      - [Sürüm notlarından] (https://meta.discourse.org/tag/release-notes) yenilikleri görün veya [ham GitHub değişiklik günlüğünü](https://github.com/discourse/discourse/commits/main) görüntüleyin
+      - [Sürüm notlarında](https://releases.discourse.org/changelog/%{new_version}) yenilikleri inceleyin
 
-      - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org] (https://meta.discourse.org) adresini ziyaret edin
+      - Discourse ile ilgili haberler, tartışmalar ve destek için [meta.discourse.org](https://meta.discourse.org) adresini ziyaret edin
 
       ### Sürüm notları
 
@@ -3106,19 +3117,23 @@ tr_TR:
         Ancak, gönderi topluluk tarafından ikinci kez gizlenirse personel tarafından ele alınana kadar gizli kalır.
 
         Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
+    reviewable_queued_post_revise_and_reject_edit_post: "Önerilen değişiklikleri yapmak için aşağıdaki orijinal gönderinizi düzenleyip yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Aşağıda ilk gönderinizi düzenleyebilir ve önerilen değişiklikleri yaparak yeniden gönderebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_topic: "Aşağıda konunuzun ilk mesajını düzenleyip önerilen değişiklikleri yaparak yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "Aşağıda konunuzun ilk gönderisini düzenleyebilir ve önerilen değişiklikleri yaparak yeniden gönderebilirsiniz."
     reviewable_queued_post_revise_and_reject:
       title: "Gönderinizle ilgili geri bildirim"
       subject_template: "%{topic_title} başlığındaki gönderinizle ilgili geri bildirim"
       text_body_template: |
         Merhaba %{username},
 
-        [%{topic_title}](%{topic_url}) başlığındaki gönderinizi inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+        [%{topic_title}](%{topic_url}) başlıklı gönderinizi inceledik ve size bazı geri bildirimlerimiz var.
 
-        Sebep: %{reason}
+        Neden: %{reason}
 
         Geri bildirim: %{feedback}
 
-        Aşağıdaki orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+        %{edit_instructions}
 
         --------
 
@@ -3134,13 +3149,13 @@ tr_TR:
       text_body_template: |
         Merhaba %{username},
 
-        "%{topic_title}" başlıklı yeni konunuzu inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+        "%{topic_title}" başlıklı yeni konunuzu inceledik ve size bazı geri bildirimlerimiz var.
 
-        Sebep: %{reason}
+        Neden: %{reason}
 
         Geri bildirim: %{feedback}
 
-        Aşağıdan orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+        %{edit_instructions}
 
         --------
 

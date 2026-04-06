@@ -6,18 +6,6 @@
 
 pl_PL:
   accepted_answer: "Zaakceptowana odpowiedź"
-  category_types:
-    support:
-      name: "Wsparcie"
-      title: "wsparcie"
-      description: "Miejsce, w którym członkowie mogą zadawać pytania i oznaczać odpowiedzi jako rozwiązania."
-  discourse_solved:
-    category_type:
-      allow_accepted_answers:
-        label: "Pozwól użytkownikom na akceptowanie rozwiązań"
-      solved_topics_auto_close_hours:
-        label: "Automatycznie zamknij rozwiązane tematy (godziny)"
-        description: "Automatycznie zamykaj temat po tylu godzinach od oznaczenia go jako rozwiązany. Ustaw 0, aby wyłączyć."
   site_settings:
     solved_enabled: "Aktywuj wtyczkę solved, zezwól użytkownikom wybierać rozwiązania w tematach"
     allow_solved_on_all_topics: "Zezwalaj użytkownikom na wybieranie rozwiązań dotyczących wszystkich tematów (jeśli to pole nie jest zaznaczone, rozwiązania można włączać dla poszczególnych kategorii lub tagów)"

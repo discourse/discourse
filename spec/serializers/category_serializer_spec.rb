@@ -198,4 +198,44 @@ RSpec.describe CategorySerializer do
       expect(json[:description]).to eq("Original Description")
     end
   end
+
+  describe "#require_topic_approval" do
+    it "returns false when topic approval is not required" do
+      category.require_topic_approval = false
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_topic_approval]).to eq(false)
+    end
+
+    it "returns true when topic approval is required" do
+      category.require_topic_approval = true
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_topic_approval]).to eq(true)
+    end
+  end
+
+  describe "#require_reply_approval" do
+    it "returns false when reply approval is not required" do
+      category.require_reply_approval = false
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_reply_approval]).to eq(false)
+    end
+
+    it "returns true when reply approval is required" do
+      category.require_reply_approval = true
+      category.save!
+
+      json = described_class.new(category, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:category_setting][:require_reply_approval]).to eq(true)
+    end
+  end
 end

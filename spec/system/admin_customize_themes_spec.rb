@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Themes", type: :system do
+describe "Admin Customize Themes" do
   fab!(:color_scheme) do
     Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
   end
@@ -287,6 +287,43 @@ describe "Admin Customize Themes", type: :system do
       expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
         "#{theme.name}, Foundation, Horizon",
       )
+    end
+  end
+
+  describe "changing theme source" do
+    fab!(:git_theme) do
+      theme = Fabricate(:theme, name: "Git Theme")
+      theme.remote_theme =
+        RemoteTheme.create!(
+          remote_url: "https://github.com/discourse/example-theme.git",
+          branch: "main",
+          local_version: "abc123",
+          remote_version: "abc123",
+          commits_behind: 0,
+        )
+      theme.save!
+      theme
+    end
+
+    it "shows the change source button for git themes" do
+      theme_page.visit(git_theme)
+      expect(page).to have_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
+    end
+
+    it "opens the change source modal with pre-filled values" do
+      theme_page.visit(git_theme)
+      find("button", text: I18n.t("admin_js.admin.customize.theme.change_source.button")).click
+
+      expect(page).to have_css(".admin-change-theme-source-modal")
+      expect(find(".admin-change-theme-source-modal input.repo-url").value).to eq(
+        "https://github.com/discourse/example-theme.git",
+      )
+      expect(find(".admin-change-theme-source-modal input.branch").value).to eq("main")
+    end
+
+    it "does not show the change source button for local themes" do
+      theme_page.visit(theme)
+      expect(page).to have_no_button(I18n.t("admin_js.admin.customize.theme.change_source.button"))
     end
   end
 

@@ -790,7 +790,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   end
 
   def parse_timestamp(timestamp)
-    Time.zone.at(@tz.utc_to_local(timestamp))
+    Time.zone.at(@tz.utc_to_local(Time.at(timestamp)))
   end
 
   def mysql_query(sql)

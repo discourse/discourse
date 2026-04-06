@@ -8,7 +8,7 @@ pt_BR:
   reports:
     currently_away:
       title: Usuários ausentes no momento
-      description: "Usuários que estão atualmente de férias afastados, os quais podem ser filtrados por grupo."
+      description: "Usuários que estão atualmente de férias ou afastados, os quais podem ser filtrados por grupo."
       labels:
         username: Nome de usuário(a)
   discourse_automation:

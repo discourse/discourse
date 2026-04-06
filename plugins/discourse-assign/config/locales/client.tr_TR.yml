@@ -138,10 +138,6 @@ tr_TR:
           unassigned: "atanmamış"
         assigned:
           label: "Şuraya atandı:"
-    topics:
-      bulk:
-        unassign: "Konuların atamalarını kaldır"
-        assign: "Konuları ata"
     discourse_automation:
       scriptables:
         random_assign:

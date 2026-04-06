@@ -13,5 +13,11 @@ lv:
       tool_summary:
         search: "Meklēt"
         time: "Laiks"
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Apstiprināt"
+        reject:
+          title: "Noraidīt"
     ai_staff_action_logger:
       removed: "noņemts"

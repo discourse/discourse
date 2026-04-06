@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
-import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 
@@ -18,7 +17,6 @@ const LEGACY_OPTS = new Set([
 
 @disableImplicitInjections
 export default class ModalService extends Service {
-  @service dialog;
   @service site;
   @service capabilities;
 
@@ -44,22 +42,7 @@ export default class ModalService extends Service {
    * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
    */
   async show(modal, opts) {
-    if (typeof modal === "string") {
-      this.dialog.alert(
-        `Error: the '${modal}' modal needs updating to work with the latest version of Discourse. See https://meta.discourse.org/t/268057.`
-      );
-      deprecated(
-        `Defining modals using a controller is no longer supported. Use the component-based API instead. (modal: ${modal})`,
-        {
-          id: "discourse.modal-controllers",
-          since: "3.1",
-          dropFrom: "3.2",
-          url: "https://meta.discourse.org/t/268057",
-          raiseError: true,
-        }
-      );
-      return;
-    }
+    const trigger = document.activeElement;
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
@@ -72,7 +55,7 @@ export default class ModalService extends Service {
 
     this.opts = opts ??= {};
     this.activeModal = { component: modal, opts, resolveShowPromise };
-    this.triggerElement = document.activeElement;
+    this.triggerElement = trigger;
 
     const unsupportedOpts = Object.keys(opts).filter((key) =>
       LEGACY_OPTS.has(key)
@@ -92,9 +75,9 @@ export default class ModalService extends Service {
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};
-    if (this.triggerElement) {
+    if (this.triggerElement?.isConnected) {
       this.triggerElement.focus();
-      this.triggerElement = null;
     }
+    this.triggerElement = null;
   }
 }

@@ -35,6 +35,10 @@ module DiscourseAi
           "delete_topic"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           topic = Topic.with_deleted.find_by(id: parameters[:topic_id])
           if !topic

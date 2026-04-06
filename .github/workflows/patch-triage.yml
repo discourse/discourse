@@ -1,0 +1,159 @@
+# Patch Triage
+#
+# Runs on every non-draft pull request. Fetches the PR diff and sends it to
+# the patch-triage VM for analysis. Results are posted back as a GitHub Check
+# Run — staff can click "Details" to see the full review in patch-triage
+# (login required).
+#
+# Also notifies the VM when a PR is closed (merged or not) so patch-triage
+# can auto-resolve the associated record.
+
+name: Patch Triage
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, closed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to re-scan"
+        required: true
+        type: string
+
+permissions:
+  statuses: write
+  pull-requests: read
+
+jobs:
+  pr-closed:
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify patch-triage of PR close
+        env:
+          GITHUB_SCAN_SECRET: ${{ secrets.SCAN_SECRET }}
+          VM_SCAN_URL: ${{ secrets.VM_SCAN_URL }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          MERGED: ${{ github.event.pull_request.merged }}
+        shell: ruby {0}
+        run: |
+          require "json"
+          require "openssl"
+          require "net/http"
+
+          vm_url = ENV["VM_SCAN_URL"].to_s
+          secret = ENV["GITHUB_SCAN_SECRET"].to_s
+
+          if vm_url.empty? || secret.empty?
+            puts "Security scan not configured — skipping"
+            exit 0
+          end
+
+          payload = JSON.generate(
+            pr_number: ENV["PR_NUMBER"],
+            repo:      ENV["REPO"],
+            merged:    ENV["MERGED"] == "true",
+          )
+
+          sig = "sha256=" + OpenSSL::HMAC.hexdigest("SHA256", secret, payload)
+
+          uri = URI("#{vm_url}/pr-closed")
+          req = Net::HTTP::Post.new(uri)
+          req["Content-Type"]      = "application/json"
+          req["X-Scan-Signature"]  = sig
+          req.body = payload
+
+          res = Net::HTTP.start(uri.host, uri.port) { |h| h.request(req) }
+          abort "VM returned #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)
+
+  security-scan:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.action != 'closed' && !github.event.pull_request.draft) }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Resolve PR metadata
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_PR_NUMBER: ${{ github.event.inputs.pr_number }}
+          EVENT_PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: ruby {0}
+        run: |
+          require "json"
+          require "securerandom"
+
+          pr_number =
+            if ENV["GITHUB_EVENT_NAME"] == "workflow_dispatch"
+              ENV["INPUT_PR_NUMBER"]
+            else
+              ENV["EVENT_PR_NUMBER"]
+            end
+
+          pr = JSON.parse(
+            `gh pr view #{pr_number} --repo #{ENV["GITHUB_REPOSITORY"]} --json title,author,headRefOid,baseRefName`
+          )
+
+          d = SecureRandom.hex(8)
+          File.open(ENV["GITHUB_OUTPUT"], "a") do |f|
+            f.puts "number=#{pr_number}"
+            f.puts "title<<#{d}"; f.puts pr["title"]; f.puts d
+            f.puts "author<<#{d}"; f.puts pr.dig("author", "login"); f.puts d
+            f.puts "sha=#{pr["headRefOid"]}"
+            f.puts "base_branch=#{pr["baseRefName"]}"
+          end
+
+      - name: Fetch PR diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr diff ${{ steps.pr.outputs.number }} \
+            --repo ${{ github.repository }} > pr.diff
+
+          echo "Diff size: $(wc -c < pr.diff) bytes"
+
+      - name: Send to security scan
+        env:
+          GITHUB_SCAN_SECRET: ${{ secrets.SCAN_SECRET }}
+          VM_SCAN_URL: ${{ secrets.VM_SCAN_URL }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PR_TITLE: ${{ steps.pr.outputs.title }}
+          PR_AUTHOR: ${{ steps.pr.outputs.author }}
+          PR_SHA: ${{ steps.pr.outputs.sha }}
+          BASE_BRANCH: ${{ steps.pr.outputs.base_branch }}
+          REPO: ${{ github.repository }}
+        shell: ruby {0}
+        run: |
+          require "json"
+          require "openssl"
+          require "net/http"
+
+          vm_url = ENV["VM_SCAN_URL"].to_s
+          secret = ENV["GITHUB_SCAN_SECRET"].to_s
+
+          if vm_url.empty? || secret.empty?
+            puts "Security scan not configured — skipping"
+            exit 0
+          end
+
+          payload = JSON.generate(
+            pr_number:   ENV["PR_NUMBER"],
+            title:       ENV["PR_TITLE"],
+            diff:        File.read("pr.diff"),
+            author:      ENV["PR_AUTHOR"],
+            repo:        ENV["REPO"],
+            sha:         ENV["PR_SHA"],
+            base_branch: ENV["BASE_BRANCH"],
+          )
+
+          sig = "sha256=" + OpenSSL::HMAC.hexdigest("SHA256", secret, payload)
+
+          uri = URI("#{vm_url}/scan-pr")
+          req = Net::HTTP::Post.new(uri)
+          req["Content-Type"]     = "application/json"
+          req["X-Scan-Signature"] = sig
+          req.body = payload
+
+          res = Net::HTTP.start(uri.host, uri.port) { |h| h.request(req) }
+          abort "VM returned #{res.code}: #{res.body}" unless res.is_a?(Net::HTTPSuccess)

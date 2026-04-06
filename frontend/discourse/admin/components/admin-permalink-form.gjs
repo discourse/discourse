@@ -136,18 +136,20 @@ export default class AdminFlagsForm extends Component {
                 @title={{i18n "admin.permalink.form.url"}}
                 @validation="required"
                 @format="large"
+                @type="input"
                 as |field|
               >
-                <field.Input />
+                <field.Control />
               </form.Field>
 
               <form.Field
                 @name="permalinkType"
                 @title={{i18n "admin.permalink.form.permalink_type"}}
                 @validation="required"
+                @type="select"
                 as |field|
               >
-                <field.Select as |select|>
+                <field.Control as |select|>
                   <select.Option @value="topic">{{i18n
                       "admin.permalink.topic_title"
                     }}</select.Option>
@@ -166,7 +168,7 @@ export default class AdminFlagsForm extends Component {
                   <select.Option @value="user">{{i18n
                       "admin.permalink.user_title"
                     }}</select.Option>
-                </field.Select>
+                </field.Control>
               </form.Field>
               {{#if (eq transientData.permalinkType "topic")}}
                 <form.Field
@@ -174,9 +176,10 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.topic_id"}}
                   @format="small"
                   @validation="required"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "post")}}
@@ -185,9 +188,10 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.post_id"}}
                   @format="small"
                   @validation="required"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "category")}}
@@ -196,9 +200,10 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.category_id"}}
                   @format="small"
                   @validation="required"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "tag")}}
@@ -207,9 +212,10 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.tag_name"}}
                   @format="small"
                   @validation="required"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "external_url")}}
@@ -218,9 +224,10 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.external_url"}}
                   @format="large"
                   @validation="required"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
               {{/if}}
               {{#if (eq transientData.permalinkType "user")}}
@@ -229,9 +236,10 @@ export default class AdminFlagsForm extends Component {
                   @title={{i18n "admin.permalink.user_id"}}
                   @format="small"
                   @validation="required"
+                  @type="input"
                   as |field|
                 >
-                  <field.Input />
+                  <field.Control />
                 </form.Field>
               {{/if}}
 

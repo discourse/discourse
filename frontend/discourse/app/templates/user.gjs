@@ -52,13 +52,21 @@ export default <template>
             <div class="staff-counters">
               {{#if @controller.model.number_of_flags_given}}
                 <div>
-                  {{trustHTML
-                    (i18n
-                      "user.staff_counters.flags_given"
-                      className="helpful-flags"
-                      count=@controller.model.number_of_flags_given
-                    )
-                  }}
+                  <LinkTo
+                    @route="review"
+                    @query={{hash
+                      flagged_by=@controller.model.username
+                      status="approved"
+                    }}
+                  >
+                    {{trustHTML
+                      (i18n
+                        "user.staff_counters.flags_given"
+                        className="helpful-flags"
+                        count=@controller.model.number_of_flags_given
+                      )
+                    }}
+                  </LinkTo>
                 </div>
               {{/if}}
               {{#if @controller.model.number_of_flags}}

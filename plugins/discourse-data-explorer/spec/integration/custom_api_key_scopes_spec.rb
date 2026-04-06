@@ -13,18 +13,14 @@ describe "API keys scoped to query#run" do
 
   let(:all_queries_api_key) do
     key = ApiKey.create!
-    ApiKeyScope.create!(
-      resource: "discourse_data_explorer",
-      action: "run_queries",
-      api_key_id: key.id,
-    )
+    ApiKeyScope.create!(resource: "data_explorer", action: "run_queries", api_key_id: key.id)
     key
   end
 
   let(:single_query_api_key) do
     key = ApiKey.create!
     ApiKeyScope.create!(
-      resource: "discourse_data_explorer",
+      resource: "data_explorer",
       action: "run_queries",
       api_key_id: key.id,
       allowed_parameters: {

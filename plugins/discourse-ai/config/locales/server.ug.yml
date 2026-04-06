@@ -113,6 +113,12 @@ ug:
       assign:
         errors:
           not_found: "تېما تېپىلمىدى."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "تەستىقلا"
+        reject:
+          title: "رەت قىل"
     summarization:
       chat:
         no_targets: "تاللىغان مەزگىلدىكى ئۇچۇر يوق."

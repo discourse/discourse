@@ -284,7 +284,7 @@ module Chat
     def delete_source_threads
       @source_thread_ids.each do |thread_id|
         thread = Chat::Thread.find_by(id: thread_id)
-        thread.destroy if thread.present?
+        thread.presence&.destroy
       end
     end
 

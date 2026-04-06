@@ -35,6 +35,12 @@
         "slug": {
           "type": "string"
         },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "topic_count": {
           "type": "integer"
         },
@@ -84,6 +90,12 @@
           "type": "boolean"
         },
         "topic_template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "topic_title_placeholder": {
           "type": [
             "string",
             "null"
@@ -342,6 +354,7 @@
         "notification_level",
         "can_edit",
         "topic_template",
+        "topic_title_placeholder",
         "has_children",
         "subcategory_count",
         "sort_order",

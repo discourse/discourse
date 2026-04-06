@@ -167,6 +167,7 @@ class Notification < ActiveRecord::Base
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
         circles_activity: 900, # Used by https://github.com/discourse/discourse-circles
+        boost: 43, # Used by https://github.com/discourse/discourse-boosts
       )
   end
 
@@ -279,7 +280,7 @@ class Notification < ActiveRecord::Base
   end
 
   def url
-    topic.relative_url(post_number) if topic.present?
+    topic.presence&.relative_url(post_number)
   end
 
   def post

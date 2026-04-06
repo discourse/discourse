@@ -47,6 +47,10 @@ module DiscourseAi
           "edit_tags"
         end
 
+        def self.requires_approval?
+          true
+        end
+
         def invoke
           if !SiteSetting.tagging_enabled
             return error_response(I18n.t("discourse_ai.ai_bot.edit_tags.errors.tagging_disabled"))

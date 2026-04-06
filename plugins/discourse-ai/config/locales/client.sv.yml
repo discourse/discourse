@@ -39,7 +39,6 @@ sv:
       llm_selector:
         none: "Ingen"
       features:
-        back: "Tillbaka"
         disabled: "(inaktiverad)"
         groups: "Grupper:"
         no_agent: "Inte inställd"
@@ -92,7 +91,6 @@ sv:
           last_day: "Senaste 24 timmarna"
           custom: "Anpassad..."
       ai_agent:
-        back: "Tillbaka"
         name: "Namn"
         edit: "Redigera"
         export: "Exportera"
@@ -114,7 +112,6 @@ sv:
           title: "Uppladdningar"
           uploading: "Laddar upp..."
       tools:
-        back: "Tillbaka"
         export: "Exportera"
         import: "Importera"
         name: "Namn"
@@ -131,17 +128,30 @@ sv:
         short_title: "Kontouppgifter"
         name: "Namn"
         secret: "Värde"
-        back: "Tillbaka"
         save: "Spara"
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      mcp_servers:
+        name: "Namn"
+        description: "Beskrivning"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Kopplad"
+        oauth_connect: "Koppla"
+        enabled: "Aktiverad"
+        save: "Spara"
+        edit: "Redigera"
+        delete: "Ta bort"
+        tools_modal:
+          required: "Krävs"
       llms:
         display_name: "Namn"
         provider: "Leverantör"
         save: "Spara"
         edit: "Redigera"
-        back: "Tillbaka"
         delete: Ta bort
         quotas:
           group: "Grupp"
@@ -181,7 +191,6 @@ sv:
         image_caption:
           save_caption: "Spara"
       embeddings:
-        back: "Tillbaka"
         save: "Spara"
         delete: "Ta bort"
         edit: "Redigera"

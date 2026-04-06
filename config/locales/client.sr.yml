@@ -1327,6 +1327,8 @@ sr:
         tracking: "Praćeno"
         categories: "Kategorije"
         users: "Korisnici"
+      calendar_subscriptions:
+        copied: "Kopirano!"
       change_password:
         success: "(email je poslat)"
         in_progress: "(email se šalje)"
@@ -1861,7 +1863,6 @@ sr:
       new_messages_marker: "poslednja poseta"
       bulk:
         select_all: "Izaberi sve"
-        delete: "Obriši Teme"
         delete_topics_count:
           one: "Obriši temu"
           few: "Obriši Teme"
@@ -1870,13 +1871,7 @@ sr:
         dismiss_new: "Odbaci Novo"
         toggle: "uključi/isključi grupni odabir tema"
         actions: "Grupne aktivnosti"
-        close_topics: "Zatvori Teme"
-        archive_topics: "Arhiviraj teme"
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
-        selected:
-          one: "Odabrali ste <b>%{count}</b> temu."
-          few: "Odabrali ste <b>%{count}</b> tema."
-          other: "Odabrali ste <b>%{count}</b> tema."
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} tema"
@@ -2189,6 +2184,8 @@ sr:
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
+      description_expand: "Pokaži više"
+      description_collapse: "Pokaži manje"
       already_used: "Ova boja se koristi u drugoj kategoriji."
       security: "Sigurnost"
       permissions:
@@ -2612,7 +2609,6 @@ sr:
           never: "nikada"
       reports:
         group_members: "Članovi"
-        group_security: "Sigurnost"
         group_other: "Ostalo"
       config_sections:
         community:

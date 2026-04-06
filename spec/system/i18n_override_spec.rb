@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "I18n translation overrides", type: :system do
+describe "I18n translation overrides" do
   describe "module-scope i18n() lookups" do
     fab!(:theme) { Fabricate(:theme, name: "Test Theme") }
     fab!(:translation_override) do

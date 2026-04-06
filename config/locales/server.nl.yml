@@ -1133,6 +1133,7 @@ nl:
     read: "lezen"
     read_write: "lezen/schrijven"
     instructions: 'We hebben zojuist een nieuwe API-gebruikerssleutel voor je gegenereerd voor gebruik met ''%{application_name}''. Plak de volgende link in je toepassing:'
+    copied: "Gekopieerd!"
     otp_description: 'Wil je ''%{application_name}'' toegang tot deze website geven?'
     otp_confirmation:
       confirm_title: Doorgaan naar %{site_name}
@@ -2661,7 +2662,7 @@ nl:
     not_approved: "Je account is nog niet goedgekeurd. Je ontvangt een melding via e-mail zodra je je kunt aanmelden."
     incorrect_username_email_or_password: "Onjuiste gebruikersnaam, e-mailadres of wachtwoord"
     incorrect_password: "Onjuist wachtwoord"
-    incorrect_password_or_passkey: "Onjuist wachtwoord of onjuiste passkey"
+    incorrect_password_or_passkey: "Onjuist wachtwoord of onjuiste toegangssleutel"
     wait_approval: "Bedankt voor het registreren. We laten het je weten wanneer je account is goedgekeurd."
     active: "Je account is geactiveerd en gereed voor gebruik."
     activate_email: "<p>Je bent er bijna! We hebben een activerings-e-mail naar <b>%{email}</b> gestuurd. Volg de instructies in de e-mail om je account te activeren.</p><p>Als deze niet aankomt, controleer dan je spammap.</p>"
@@ -2782,7 +2783,7 @@ nl:
       one: "De gebruiker %{username} heeft %{count} bericht in een openbaar topic of persoonlijk bericht, dus deze kan niet worden verwijderd."
       other: "De gebruiker %{username} heeft %{count} berichten in openbare topics of persoonlijke berichten, dus deze kan niet worden verwijderd."
     cannot_bulk_delete: "Een of meerdere gebruikers kunnen niet worden verwijderd omdat ze beheerder zijn, te veel berichten hebben of een heel oud bericht hebben."
-    cannot_remove_all_auth: "Je moet minimaal één gekoppeld account, een passkey of een wachtwoord hebben ingesteld."
+    cannot_remove_all_auth: "Je moet minimaal één gekoppeld account, een toegangssleutel of een wachtwoord hebben ingesteld."
   unsubscribe_mailer:
     title: "Mailer Uitschrijven"
     subject_template: "Bevestig dat je geen e-mailupdates van %{site_title} meer wilt ontvangen"
@@ -2910,35 +2911,9 @@ nl:
   new_version_mailer:
     title: "Nieuwe versie mailer"
     subject_template: "[%{email_prefix}] Nieuwe Discourse-versie, update beschikbaar"
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Update via onze eenvoudige **[browserupdate in één klik](%{base_url}/admin/update)**
-
-      - Lees wat er nieuw is in de [releaseopmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/main)
-
-      - Ga naar [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
   new_version_mailer_with_notes:
     title: "Nieuwe versie Mailer met aantekeningen"
     subject_template: "[%{email_prefix}] update beschikbaar"
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Update via onze eenvoudige **[browserupdate in één klik](%{base_url}/admin/update)**
-
-      - Lees wat er nieuw is in de [release-opmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/main)
-
-      - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
-
-      ### Release-opmerkingen
-
-      %{notes}
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Je bericht is gemarkeerd als **ongepast**: de community vindt het bericht beledigend, grof, hatelijk gedrag of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."
@@ -2987,47 +2962,9 @@ nl:
     reviewable_queued_post_revise_and_reject:
       title: "Feedback op je bericht"
       subject_template: "Feedback op je bericht in %{topic_title}"
-      text_body_template: |
-        Hallo %{username},
-
-        We hebben je bericht in [%{topic_title}](%{topic_url}) beoordeeld en hebben wat feedback voor je.
-
-        Reden: %{reason}
-
-        Feedback: %{feedback}
-
-        Je kunt je oorspronkelijke bericht hieronder bewerken en opnieuw indienen om de voorgestelde wijzigingen aan te brengen, of dit bericht beantwoorden als je nog vragen hebt.
-
-        --------
-
-        %{original_post}
-
-
-
-        Bedankt,
-        De moderators van %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback op je topic"
       subject_template: 'Feedback op nieuw topic met de titel "%{topic_title}"'
-      text_body_template: |
-        Hallo %{username},
-
-        We hebben je nieuwe topic met de titel "%{topic_title}" beoordeeld en hebben wat feedback voor je.
-
-        Reden: %{reason}
-
-        Feedback: %{feedback}
-
-        Je kunt het oorspronkelijke bericht van je topic hieronder bewerken en opnieuw indienen om de voorgestelde wijzigingen aan te brengen, of dit bericht beantwoorden als je nog vragen hebt.
-
-        --------
-
-        %{original_post}
-
-
-
-        Bedankt,
-        De moderators van %{site_name}
     post_hidden_again:
       title: "Bericht opnieuw verborgen"
       subject_template: "Bericht verborgen door communitymarkeringen, medewerkers geïnformeerd"

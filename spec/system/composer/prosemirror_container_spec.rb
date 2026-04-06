@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Container", type: :system do
+describe "Composer - ProseMirror - Container" do
   include_context "with prosemirror editor"
 
   it "hides the Composer container's preview button" do

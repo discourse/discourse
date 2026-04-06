@@ -21,6 +21,13 @@
 
 body.has-full-page-chat {
   background-color: var(--background-color);
+
+  #main-outlet-wrapper {
+    @media screen and (width < 87rem) {
+      // ideal width just slightly larger than our xl viewport variable
+      padding-inline: 0;
+    }
+  }
 }
 
 .chat-drawer-container {

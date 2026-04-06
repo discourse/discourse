@@ -50,6 +50,12 @@ sv:
       assign:
         errors:
           not_found: "Ämnet hittades inte."
+    reviewables:
+      ai_tool_action:
+        approve:
+          title: "Godkänn"
+        reject:
+          title: "Avvisa"
     summarization:
       chat:
         no_targets: "Det fanns inga meddelanden under den valda perioden."

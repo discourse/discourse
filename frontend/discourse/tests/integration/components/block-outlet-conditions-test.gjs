@@ -589,6 +589,28 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     assert.dom(".deeply-visible-child").exists();
   });
 
+  test("does not render outlet container when all blocks are hidden by conditions", async function (assert) {
+    @block("all-hidden-block")
+    class AllHiddenBlock extends Component {
+      <template>
+        <div class="all-hidden">Hidden</div>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("sidebar-blocks", [
+        { block: AllHiddenBlock, conditions: { type: "always-false" } },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+    assert.dom(".all-hidden").doesNotExist();
+    assert.dom(".sidebar-blocks").doesNotExist();
+    assert.dom(".sidebar-blocks__container").doesNotExist();
+    assert.dom(".sidebar-blocks__layout").doesNotExist();
+  });
+
   test("container with own failing condition does not render even with visible children", async function (assert) {
     @block("child-would-be-visible")
     class ChildWouldBeVisible extends Component {

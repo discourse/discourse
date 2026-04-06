@@ -574,23 +574,6 @@ RSpec.describe CategoriesController do
           expect(category.topic.first_post.raw).to include("[link](https://example.com)")
         end
 
-        it "sanitizes description to prevent XSS" do
-          post "/categories.json",
-               params: {
-                 name: "XSS Test Category",
-                 description:
-                   "This has <script>alert('xss')</script> and <img src=x onerror=alert('xss')>",
-               }
-
-          expect(response.status).to eq(200)
-          cat_json = response.parsed_body["category"]
-
-          category = Category.find(cat_json["id"])
-          expect(category.description).not_to include("<script>")
-          expect(category.description).not_to include("&lt;script&gt;")
-          expect(category.description).to include("&lt;img")
-        end
-
         describe "when category_type is provided" do
           before { SiteSetting.enable_simplified_category_creation = true }
 
@@ -934,6 +917,7 @@ RSpec.describe CategoriesController do
                 allow_global_tags: "true",
                 required_tag_groups: [{ name: tag_group.name, min_count: 2 }],
                 form_template_ids: [form_template_1.id, form_template_2.id],
+                topic_title_placeholder: "test topic title placeholder",
               }
 
           expect(response.status).to eq(200)
@@ -956,6 +940,20 @@ RSpec.describe CategoriesController do
           expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
           expect(category.category_required_tag_groups.first.min_count).to eq(2)
           expect(category.form_template_ids).to eq([form_template_1.id, form_template_2.id])
+          expect(category.topic_title_placeholder).to eq("test topic title placeholder")
+        end
+
+        it "updates description and revises category topic OP to stay in sync" do
+          cat = Fabricate(:category_with_definition, user: admin)
+          raw_description = "New **markdown** description here"
+
+          put "/categories/#{cat.id}.json", params: { description: raw_description }
+
+          expect(response.status).to eq(200)
+          cat.reload
+          expect(cat.description).to include("<strong>markdown</strong>")
+          expect(cat.topic.first_post.raw).to eq(raw_description)
+          expect(cat.topic.first_post.cooked).to include("<strong>markdown</strong>")
         end
 
         it "logs the changes correctly" do
@@ -1232,6 +1230,22 @@ RSpec.describe CategoriesController do
             expect(response.status).to eq(200)
             expect(SiteSetting.max_category_nesting).to eq(3)
           end
+        end
+
+        it "updates locale when content_localization_enabled" do
+          SiteSetting.content_localization_enabled = true
+
+          put "/categories/#{category.id}.json", params: { locale: "ja" }
+          expect(response.status).to eq(200)
+          expect(category.reload.locale).to eq("ja")
+        end
+
+        it "does not update locale when content_localization_enabled is false" do
+          SiteSetting.content_localization_enabled = false
+
+          put "/categories/#{category.id}.json", params: { locale: "ja" }
+          expect(response.status).to eq(200)
+          expect(category.reload.locale).to be_nil
         end
       end
     end

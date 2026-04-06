@@ -73,6 +73,7 @@ module ::DiscoursePostEvent
   # Topic where op has a post event custom field
   TOPIC_POST_EVENT_STARTS_AT = "TopicEventStartsAt"
   TOPIC_POST_EVENT_ENDS_AT = "TopicEventEndsAt"
+  TOPIC_POST_EVENT_ALL_DAY = "TopicEventAllDay"
 end
 
 require_relative "lib/discourse_calendar/engine"
@@ -143,6 +144,35 @@ after_initialize do
 
   ::ActionController::Base.prepend_view_path File.expand_path("../app/views", __FILE__)
 
+  add_api_parameter_route(
+    methods: :get,
+    actions: "discourse_post_event/events#index",
+    formats: :ics,
+  )
+
+  add_user_api_key_scope :events_calendar,
+                         methods: :get,
+                         actions: "discourse_post_event/events#index",
+                         formats: :ics
+
+  register_calendar_subscription_feed(
+    name: "all_events",
+    scope: "discourse-calendar:events_calendar",
+    description_key: "discourse_calendar.preferences.all_events_description",
+    url: ->(base_url, _user, key) do
+      "#{base_url}/discourse-post-event/events.ics?user_api_key=#{key}"
+    end,
+  )
+
+  register_calendar_subscription_feed(
+    name: "my_events",
+    scope: "discourse-calendar:events_calendar",
+    description_key: "discourse_calendar.preferences.my_events_description",
+    url: ->(base_url, user, key) do
+      "#{base_url}/discourse-post-event/events.ics?attending_user=#{user.username_lower}&include_interested=true&user_api_key=#{key}"
+    end,
+  )
+
   reloadable_patch do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
@@ -167,7 +197,7 @@ after_initialize do
   end
 
   add_to_class(:guardian, :can_act_on_invitee?) do |invitee|
-    user && (user.staff? || user.id == invitee.user_id)
+    user && (user.id == invitee.user_id || can_act_on_discourse_post_event?(invitee.event))
   end
 
   add_to_class(:guardian, :can_create_discourse_post_event?) do
@@ -309,6 +339,35 @@ after_initialize do
         SiteSetting.display_post_event_date_on_topic_title && object.event_ends_at
     end,
   ) { object.event_ends_at }
+
+  add_preloaded_topic_list_custom_field DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY
+
+  add_to_serializer(
+    :topic_view,
+    :event_all_day,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title && object.topic.event_all_day
+    end,
+  ) { object.topic.event_all_day }
+
+  add_to_class(:topic, :event_all_day) do
+    return @event_all_day if defined?(@event_all_day)
+    @event_all_day =
+      begin
+        value = custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ALL_DAY].to_s
+        ActiveModel::Type::Boolean.new.cast(value)
+      end
+  end
+
+  add_to_serializer(
+    :topic_list_item,
+    :event_all_day,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title && object.event_all_day
+    end,
+  ) { object.event_all_day }
 
   add_to_serializer(
     :topic_view,

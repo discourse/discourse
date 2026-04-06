@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat composer draft", type: :system do
+RSpec.describe "Chat composer draft" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) do

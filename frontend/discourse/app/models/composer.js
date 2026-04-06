@@ -13,6 +13,7 @@ import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
+import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -448,6 +449,11 @@ export default class Composer extends RestModel {
     return this.canEditTopicFeaturedLink
       ? "composer.title_or_link_placeholder"
       : "composer.title_placeholder";
+  }
+
+  @computed("category.topic_title_placeholder")
+  get categoryTitlePlaceholder() {
+    return this.category?.topic_title_placeholder || null;
   }
 
   @computed("action", "post", "topic", "topic.title")
@@ -1113,7 +1119,7 @@ export default class Composer extends RestModel {
     }
 
     const rollback = throwAjaxError((error) => {
-      post.setProperties("cooked", oldCooked);
+      post.setProperties({ cooked: oldCooked });
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
         this.set("editConflict", true);
@@ -1142,10 +1148,7 @@ export default class Composer extends RestModel {
       let val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
         if (f === "tags" && Array.isArray(val)) {
-          // extract tag names from objects for backend compatibility
-          if (val.some((t) => typeof t === "object" && t !== null)) {
-            val = val.map((t) => (typeof t === "object" ? t.name : t));
-          }
+          val = serializeTags(val);
         }
         set(dest, f, val);
       }

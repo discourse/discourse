@@ -19,10 +19,8 @@ module Chat
     def mentioned_users
       object
         .user_mentions
-        .includes(user: :user_option)
-        .limit(SiteSetting.max_mentions_per_chat_message)
-        .map(&:user)
-        .compact
+        .first(SiteSetting.max_mentions_per_chat_message)
+        .filter_map(&:user)
         .sort_by(&:id)
         .map { |user| BasicUserSerializer.new(user, root: false, include_status: true) }
         .as_json

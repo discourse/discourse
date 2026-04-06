@@ -148,7 +148,7 @@ export default {
             classes.push("--high-context");
           }
 
-          if (context.topic.replyCount > 1) {
+          if (context.topic.replyCount) {
             classes.push("--has-replies");
           }
 
@@ -182,7 +182,11 @@ export default {
             return next();
           }
 
-          if (event.target.closest("a, button, input")) {
+          if (
+            (event.target.closest("a, button, input") &&
+              !event.target.closest(".topic-excerpt")) ||
+            event.target.closest(".topic-excerpt-more")
+          ) {
             return next();
           }
 
@@ -193,7 +197,12 @@ export default {
             .closest("tr")
             .querySelector("a.raw-topic-link");
 
-          // Redispatch the click on the topic link, so that all key-handing is sorted
+          if (event.button === 1) {
+            // click events with button=1 can't naturally trigger browser navigation
+            window.open(topicLink.href, "_blank", "noopener,noreferrer");
+            return;
+          }
+
           topicLink.dispatchEvent(
             new MouseEvent("click", {
               ctrlKey: event.ctrlKey,

@@ -611,4 +611,73 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
     end
   end
+
+  describe "#invoke_tool with require_approval" do
+    fab!(:topic)
+
+    it "creates a reviewable instead of executing when require_approval is true" do
+      toggle_enabled_bots(bots: [fake])
+      Group.refresh_automatic_groups!
+
+      AiAgent.create!(
+        name: "ApprovalAgent",
+        system_prompt: "test",
+        description: "test",
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        require_approval: true,
+      )
+
+      agent_class = DiscourseAi::Agents::Agent.find_by(user: admin, name: "ApprovalAgent")
+      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
+      bot = described_class.as(test_bot_user, agent: agent_class.new)
+
+      tool =
+        DiscourseAi::Agents::Tools::CloseTopic.new(
+          { topic_id: topic.id, closed: true, reason: "Off-topic" },
+          bot_user: test_bot_user,
+          llm: bot.llm,
+        )
+
+      context = DiscourseAi::Agents::BotContext.new(messages: [])
+
+      result = bot.send(:invoke_tool, tool, context) { |*args| }
+
+      expect(result[:status]).to eq("pending_approval")
+      expect(topic.reload.closed).to eq(false)
+      expect(AiToolAction.last.tool_name).to eq("close_topic")
+      expect(ReviewableAiToolAction.count).to eq(1)
+    end
+
+    it "executes immediately when require_approval is false" do
+      toggle_enabled_bots(bots: [fake])
+      Group.refresh_automatic_groups!
+
+      AiAgent.create!(
+        name: "NoApprovalAgent",
+        system_prompt: "test",
+        description: "test",
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        require_approval: false,
+      )
+
+      agent_class = DiscourseAi::Agents::Agent.find_by(user: admin, name: "NoApprovalAgent")
+      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
+      bot = described_class.as(test_bot_user, agent: agent_class.new)
+
+      tool =
+        DiscourseAi::Agents::Tools::CloseTopic.new(
+          { topic_id: topic.id, closed: true, reason: "Off-topic" },
+          bot_user: test_bot_user,
+          llm: bot.llm,
+        )
+
+      context = DiscourseAi::Agents::BotContext.new(messages: [])
+
+      result = bot.send(:invoke_tool, tool, context) { |*args| }
+
+      expect(result[:status]).to eq("success")
+      expect(topic.reload.closed).to eq(true)
+      expect(ReviewableAiToolAction.count).to eq(0)
+    end
+  end
 end

@@ -397,6 +397,7 @@ en:
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"
       disable_dev_tools: "Disable dev tools"
+      toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
     s3:
       regions:
@@ -492,7 +493,6 @@ en:
 
     admin_onboarding_banner:
       launch_in_easy_steps: "Launch in %{step_count} easy steps"
-      skipped: "The admin onboarding checklist has now been skipped. If you would like to re-enable it, look for `enable site owner onboarding` in the site settings."
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       invite_collaborators:
         title: "Invite Collaborators"
@@ -501,13 +501,12 @@ en:
       start_posting:
         title: "Start Posting"
         description: "Give people something to talk about together"
-        action: "Icebreaker ideas"
+        action: "See ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Browse templates"
-        start_with_this: "Start with this"
         back: "Back"
         icebreakers:
           fun_facts:
@@ -713,6 +712,7 @@ en:
       storage_access_prompt: "Already have a %{site_name} account? Allow access to your session to comment as yourself."
       allow_access: "Allow Access"
       continue_as_guest: "Continue as Guest"
+      be_first_to_reply: "Be the first to reply!"
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -1228,6 +1228,7 @@ en:
       add_members:
         title: "Add Users to %{group_name}"
         description: "Enter a list of users you want to invite to the group or paste in a comma separated list:"
+        description_usernames_only: "Enter a list of usernames you want to add to the group or paste in a comma separated list:"
         usernames_placeholder: "usernames"
         usernames_or_emails_placeholder: "usernames or emails"
         notify_users: "Notify users"
@@ -1925,6 +1926,24 @@ en:
         apps: "Apps"
         navigation_menu: "Navigation menu"
         upcoming_changes: "Upcoming changes"
+        calendar_subscriptions: "Calendar"
+
+      calendar_subscriptions:
+        description: "Generate subscription URLs to sync with your favorite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs."
+        generate: "Generate Subscription URLs"
+        regenerate: "Regenerate URLs"
+        regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"
+        revoke: "Revoke Subscription"
+        revoke_confirm: "This will revoke your calendar subscription URLs. Any calendar apps using them will stop receiving updates. Continue?"
+        urls_warning: "The subscription URLs are ready! Click the buttons below to link them to your calendar app. Note: these URLs are shown only once."
+        bookmarks: "Bookmark Reminders"
+        bookmarks_description: "Your bookmarks with reminder dates"
+        copy: "Copy URL"
+        copied: "Copied!"
+        add_to_google: "Google Calendar"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Apple Calendar"
+        active_subscription: "You have an active calendar subscription."
 
       change_password:
         success: "(email sent)"
@@ -3006,6 +3025,12 @@ en:
         filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        tag_category_admin_dropdown:
+          title: "Category and tag settings"
+          edit_category: "Edit category"
+          edit_category_description: "Adjust settings for %{badge}"
+          edit_tag: "Edit tag"
+          edit_tag_description: "Adjust settings for %{badge}"
         bulk_select_topics_dropdown:
           title: "Bulk Actions"
         bulk_select_bookmarks_dropdown:
@@ -3214,6 +3239,7 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
+      edit_reason: "Add your reason for editing"
       enter_fullscreen: "Enter fullscreen composer"
       exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
@@ -3658,11 +3684,11 @@ en:
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
-        unlist_topics: "Unlist Topics"
-        relist_topics: "Relist Topics"
+        unlist_topics: "Unlist topics"
+        relist_topics: "Relist topics"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
-        delete: "Delete Topics"
+        delete: "Delete topics"
         delete_topics_count:
           one: "Delete Topic"
           other: "Delete Topics"
@@ -3701,36 +3727,57 @@ en:
           other: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Set Category…"
-        close_topics: "Close Topics"
-        archive_topics: "Archive Topics"
+        change_category: "Update category"
+        close_topics: "Close topics"
+        archive_topics: "Archive topics"
         move_messages_to_inbox: "Move to Inbox"
         archive_messages: "Move to Archive"
-        notification_level: "Notifications…"
+        notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected:
-          one: "You have selected <b>%{count}</b> topic."
-          other: "You have selected <b>%{count}</b> topics."
         selected_sole_category:
           one: "You have selected <b>%{count}</b> topic from category:"
           other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
-        change_tags: "Replace Tags"
-        append_tags: "Append Tags"
+        change_tags: "Replace tags"
+        append_tags: "Add tags"
         choose_new_tags: "Choose new tags for these topics:"
-        choose_append_tags: "Choose new tags to append for these topics:"
+        choose_append_tags: "Add tags"
         changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove All Tags"
+        remove_tags: "Remove tags"
         confirm_remove_tags:
           one: "All tags will be removed from this topic. Are you sure?"
           other: "All tags will be removed from %{count} topics. Are you sure?"
+        confirm_update_topics:
+          one: "Update %{count} topic"
+          other: "Update %{count} topics"
+        confirm_close_topics:
+          one: "Close %{count} topic"
+          other: "Close %{count} topics"
+        confirm_archive_topics:
+          one: "Archive %{count} topic"
+          other: "Archive %{count} topics"
+        confirm_unlist_topics:
+          one: "Unlist %{count} topic"
+          other: "Unlist %{count} topics"
+        confirm_relist_topics:
+          one: "Relist %{count} topic"
+          other: "Relist %{count} topics"
+        confirm_archive_messages:
+          one: "Archive %{count} message"
+          other: "Archive %{count} messages"
+        confirm_move_to_inbox:
+          one: "Move %{count} message to inbox"
+          other: "Move %{count} messages to inbox"
+        confirm_delete_topics:
+          one: "Delete %{count} topic"
+          other: "Delete %{count} topics"
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
-        notify: "Notify users of this change."
+        notify: "Notify users of this change"
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
         completed_count:
@@ -3770,38 +3817,44 @@ en:
         name: "Dismiss"
       close_topics:
         name: "Close"
-        note: "Note"
+        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Learn more</a>"
+        note: "Add a note to these topics"
         optional: (optional)
       archive_topics:
         name: "Archive"
+        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Learn more</a>"
       archive_messages:
         name: "Move to Archive"
       move_messages_to_inbox:
         name: "Move to Inbox"
       unlist_topics:
         name: "Unlist"
+        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
       remove_tags:
         name: "Remove Tags"
+        description: "Remove all tags from the selected topics."
       append_tags:
-        name: "Append Tags"
+        name: "Add Tags"
+        description: "Add the following tags to the selected topics:"
       replace_tags:
         name: "Replace Tags"
+        description: "Replace all existing tags on the selected topics with the following:"
       delete_topics:
         name: "Delete"
+        description: "Permanently delete the selected topics. This action cannot be undone."
       update_category:
         name: "Update Category"
-        description: "Choose the new category for the selected topics"
+        description: "Move all selected topics to the following category:"
       reset_bump_dates:
         name: "Reset Bump Dates"
-        description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
+        description: "Do you want to update the bump dates to the last created post date? This may impact their ordering in the topic list."
       defer:
         name: "Mark Unread"
-        description: "Mark topics as unread"
       update_notifications:
         name: "Update Notifications"
-        description: "Change notification level to Watching, Tracking, Normal, or Muted"
+        description: "Update your personal notification level for the selected topics to:"
 
     topic:
       filter_to:
@@ -3989,6 +4042,9 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
+      auto_delete_immediate:
+        one: "The last post in the topic is already %{count} hour old, so the topic will be deleted immediately."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be deleted immediately."
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
@@ -4646,9 +4702,13 @@ en:
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
+      topic_title_placeholder: "Category topic title placeholder"
+      topic_title_placeholder_placeholder: "[optional] custom topic title placeholder for this category"
       tags: "Tags"
       localizations: "Localizations"
       localization:
+        language: "Category language"
+        language_description: "The primary language of this category's name and description."
         locale: "Locale"
         name: "Name"
         description: "Description"
@@ -4733,6 +4793,9 @@ en:
       list: "List categories"
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
+      description_updated: "Description updated"
+      description_expand: "Show more"
+      description_collapse: "Show less"
       already_used: "This color has been used by another category"
       color_palette: "Color palette"
       security: "Security"
@@ -5972,8 +6035,7 @@ en:
         group_traffic: "Traffic"
         group_members: "Members"
         group_content: "Content & Health"
-        group_moderation: "Moderation"
-        group_security: "Security"
+        group_moderation_and_security: "Moderation & Security"
         group_other: "Other"
         legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
@@ -6033,6 +6095,11 @@ en:
           beta: "Beta"
           stable: "Stable"
           permanent: "Permanent"
+        status_descriptions:
+          experimental: "This is in early development and may change significantly or be discontinued. May not be fully compatible with other features."
+          alpha: "This is being actively developed and refined. Functionality may change, and it may not be fully polished but it's stable enough to try."
+          beta: "This is nearing completion and available for early adoption. Minor changes are still possible."
+          stable: "This is complete and well supported. It will soon be available on all Discourse sites."
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -7439,6 +7506,7 @@ en:
           dark_color_scheme: "Dark Color Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme."
+          only_theme_color_schemes: "This theme limits which color palettes can be used."
           dark_color_scheme_select: "Select colors to be used by theme in dark mode."
           edit_colors: "Edit colors"
           custom_sections: "Custom sections:"
@@ -7499,7 +7567,7 @@ en:
           import_web_tip: "Repository containing theme"
           direct_install_tip: "Are you sure you want to install <strong>%{name}</strong> from the repository listed below?"
           import_web_advanced: "Advanced…"
-          import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
+          import_file_tip: ".tar.gz or .zip file containing theme"
           is_private: "Theme is in a private git repository"
           finish_install: "Finish Theme Installation"
           last_attempt: "Installation process did not finish, last attempted:"
@@ -7536,6 +7604,16 @@ en:
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
+          change_source:
+            button: "Change source"
+            title: "Change Theme Source"
+            repository_url: "Repository URL"
+            branch: "Branch (optional)"
+            updating: "Updating theme source…"
+            update: "Update Source"
+            has_existing_key: "This theme has an existing SSH key configured."
+            generate_new_key: "Generate new SSH key"
+            keep_existing_key: "Keep existing SSH key"
           add: "Add"
           theme_settings: "Custom theme settings"
           theme_site_settings: "Settings the theme can override"
@@ -8931,6 +9009,8 @@ en:
         crawler_settings_saved: "Crawler settings saved"
         back: "Back to embedding"
         configuration_snippet: "Configuration snippet"
+        full_app_mode: "Full app mode"
+        full_app_mode_description: "Load the full Discourse application in the embed iframe, allowing users to reply, like, quote, and interact with topics directly"
         host_form:
           add_header: "Add host"
           edit_header: "Edit host"

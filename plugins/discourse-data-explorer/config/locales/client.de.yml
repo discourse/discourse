@@ -6,6 +6,10 @@
 
 de:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Daten-Explorer"
     errors:
       explorer:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."
@@ -90,7 +94,7 @@ de:
       api:
         scopes:
           descriptions:
-            discourse_data_explorer:
+            data_explorer:
               run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
     discourse_automation:
       scriptables:

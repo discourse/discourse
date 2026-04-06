@@ -1509,6 +1509,8 @@ ro:
         interface: "Interfață"
         apps: "Aplicații"
         navigation_menu: "Meniu de navigare"
+      calendar_subscriptions:
+        copied: "Copiat!"
       change_password:
         success: "(e-mail trimis)"
         in_progress: "(se trimite e-mail)"
@@ -2524,10 +2526,7 @@ ro:
       bulk:
         select_all: "Selectează tot"
         clear_all: "Deselectează tot"
-        unlist_topics: "Elimină subiecte din listă"
-        relist_topics: "Relistează subiecte"
         defer: "Marchează ca necitite"
-        delete: "Șterge subiecte"
         delete_topics_count:
           one: "Șterge subiect"
           few: "Șterge subiecte"
@@ -2540,24 +2539,15 @@ ro:
         dismiss_new: "Anulează cele noi"
         toggle: "activează selecția multiplă a subiectelor"
         actions: "Acțiuni multiple"
-        close_topics: "Închide subiectele"
-        archive_topics: "Arhivează subiecte"
         move_messages_to_inbox: "Mută în „Primite”"
         choose_new_category: "Alege o nouă categorie pentru acest subiect"
-        selected:
-          one: "Ai selectat <b>un</b> subiect."
-          few: "Ai selectat <b>%{count}</b> subiecte."
-          other: "Ai selectat <b>%{count}</b> de subiecte."
         selected_sole_category:
           one: "Ai selectat <b>%{count}</b> subiect din categoria:"
           few: "Ai selectat <b>%{count}</b> subiecte din categoria:"
           other: "Ai selectat <b>%{count}</b> de subiecte din categoria:"
-        change_tags: "Înlocuiește etichete"
-        append_tags: "Adaugă etichete"
         choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
-        choose_append_tags: "Alege etichete noi pentru aceste subiecte:"
         changed_tags: "Etichetele pentru aceste subiecte au fost schimbate."
-        notify: "Notifică utilizatorii despre această modificare."
+        notify: "Notifică utilizatorii despre această modificare"
         performing: "Se efectuează operațiuni în masă, te rugăm să aștepți…"
         completed: "Operațiunile în masă s-au finalizat cu succes!"
         error_topic_count:
@@ -2582,7 +2572,6 @@ ro:
         name: "Respinge"
       close_topics:
         name: "Închide sondajul"
-        note: "Notă"
         optional: (opțional)
       archive_topics:
         name: "Arhivă"
@@ -2590,15 +2579,12 @@ ro:
         name: "Mută în Primite"
       remove_tags:
         name: "Înlătură etichete"
-      append_tags:
-        name: "Adaugă etichete"
       replace_tags:
         name: "Înlocuiește etichete"
       delete_topics:
         name: "Șterge"
       defer:
         name: "Marchează ca necitite"
-        description: "Marchează subiecte ca necitite"
       update_notifications:
         name: "Actualizează notificări"
     topic:
@@ -3190,6 +3176,8 @@ ro:
       delete_confirm: "Sigur dorești să ștergi această categorie?"
       delete_error: "A apărut o eroare la ștergerea acestei categorii."
       no_description: "Adaugă o descriere acestei categorii."
+      description_expand: "Arată mai multe"
+      description_collapse: "Arată mai puține"
       already_used: "Această culoare este folosită la o altă categorie"
       color_palette: "Paletă de culori"
       security: "Securitate"
@@ -3899,8 +3887,6 @@ ro:
         sidebar_title: "Rapoarte"
         group_traffic: "Trafic"
         group_members: "Membri"
-        group_moderation: "Moderare"
-        group_security: "Securitate"
         group_other: "Altele"
       config_sections:
         account:
@@ -4205,6 +4191,7 @@ ro:
           header_description: "Funcția de chei API îți permite să integrezi în siguranță Discourse cu sisteme externe și să automatizezi acțiunile. Administratorii pot crea chei cu scopuri specifice pentru a controla accesul la resurse și la datele sensibile. Scopurile limitează funcționalitatea, asigurând securitate sporită."
         webhooks:
           title: "Cârlige web"
+          keywords: "eveniment|conținut|url"
         embedding:
           title: "Înglobare"
       theme_site_settings:

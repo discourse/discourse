@@ -59,11 +59,15 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
 
-      it "shows all available queries in alphabetical order" do
+      it "shows all available queries sorted by name when requested" do
         DiscourseDataExplorer::Query.destroy_all
         make_query("SELECT 1 as value", name: "B")
         make_query("SELECT 1 as value", name: "A")
-        get "/admin/plugins/discourse-data-explorer/queries.json"
+        get "/admin/plugins/discourse-data-explorer/queries.json",
+            params: {
+              order: "name",
+              ascending: "true",
+            }
         expect(response.status).to eq(200)
         expect(response_json["queries"].length).to eq(
           DiscourseDataExplorer::Queries.default.count + 2,

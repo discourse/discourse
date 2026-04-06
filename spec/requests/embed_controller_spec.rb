@@ -219,6 +219,23 @@ RSpec.describe EmbedController do
         expect(response).to redirect_to("#{topic.url}?embed_mode=true")
       end
 
+      it "redirects blank-slug topics to a slugless URL" do
+        topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
+        topic_embed.topic.update_columns(title: "", slug: nil)
+        topic_embed.topic.reload
+
+        get "/embed/comments",
+            params: {
+              embed_url: embed_url,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => embed_url,
+            }
+
+        expect(response).to redirect_to("#{topic_embed.topic.url}?embed_mode=true")
+      end
+
       it "does not redirect when embed_full_app is disabled" do
         SiteSetting.embed_full_app = false
         topic_embed = Fabricate(:topic_embed, embed_url: embed_url)

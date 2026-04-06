@@ -47,6 +47,10 @@ export default class VoteBox extends Component {
     return content;
   }
 
+  get limitsEnabled() {
+    return this.currentUser?.vote_limit != null;
+  }
+
   get showVotedMenu() {
     return this.hasVoted && !this.hasSeenSuccessMenu;
   }
@@ -137,10 +141,14 @@ export default class VoteBox extends Component {
             </dropdown.item>
             <dropdown.item class="topic-voting-menu__votes-left">
               <DButton
-                @translatedLabel={{i18n
-                  "topic_voting.see_votes"
-                  count=this.currentUser.votes_left
-                  max=this.currentUser.vote_limit
+                @translatedLabel={{if
+                  this.limitsEnabled
+                  (i18n
+                    "topic_voting.see_votes"
+                    count=this.currentUser.votes_left
+                    max=this.currentUser.vote_limit
+                  )
+                  (i18n "topic_voting.see_all_votes")
                 }}
                 @href="/my/activity/votes"
                 @icon="check-to-slot"
@@ -168,18 +176,20 @@ export default class VoteBox extends Component {
               />
             </dropdown.item>
           {{else}}
-            <dropdown.item class="topic-voting-menu__row">
-              <DButton
-                @translatedLabel={{i18n
-                  "topic_voting.see_votes"
-                  count=this.currentUser.votes_left
-                  max=this.currentUser.vote_limit
-                }}
-                @href="/my/activity/votes"
-                @icon="check-to-slot"
-                class="btn-transparent see-votes topic-voting-menu__row-btn"
-              />
-            </dropdown.item>
+            {{#if this.limitsEnabled}}
+              <dropdown.item class="topic-voting-menu__row">
+                <DButton
+                  @translatedLabel={{i18n
+                    "topic_voting.see_votes"
+                    count=this.currentUser.votes_left
+                    max=this.currentUser.vote_limit
+                  }}
+                  @href="/my/activity/votes"
+                  @icon="check-to-slot"
+                  class="btn-transparent see-votes topic-voting-menu__row-btn"
+                />
+              </dropdown.item>
+            {{/if}}
             {{#if this.topic.user_voted}}
               <dropdown.item class="topic-voting-menu__row">
                 <DButton

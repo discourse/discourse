@@ -7,6 +7,7 @@
 ru:
   discourse_subscriptions:
     customer_not_found: Клиент не найден
+    subscription_not_found: Подписка не найдена
     card:
       declined: Карта отклонена
       invalid: Карта недействительна

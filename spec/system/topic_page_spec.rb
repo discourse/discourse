@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic page", type: :system do
+describe "Topic page" do
   fab!(:topic)
   fab!(:admin)
 

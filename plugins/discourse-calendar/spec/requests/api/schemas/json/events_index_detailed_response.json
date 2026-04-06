@@ -66,6 +66,9 @@
             "type": "string",
             "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
           },
+          "all_day": {
+            "type": "boolean"
+          },
           "can_act_on_discourse_post_event": {
             "type": [
               "boolean",

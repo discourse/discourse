@@ -1,4 +1,4 @@
-export default {
+const groupsFixtures = {
   "/groups.json": {
     groups: [
       {
@@ -78,3 +78,5 @@ export default {
     load_more_groups: "/groups?page=1",
   },
 };
+
+export default groupsFixtures;

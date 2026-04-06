@@ -33,6 +33,7 @@ after_initialize do
   require_relative "lib/extensions/user_notifications_extension"
   require_relative "lib/extensions/user_option_extension"
   require_relative "lib/policy_mailer"
+  require_relative "lib/post_validator"
 
   Discourse::Application.routes.append { mount DiscoursePolicy::Engine, at: "/policy" }
 
@@ -57,6 +58,15 @@ after_initialize do
   register_email_unsubscriber("policy_email", EmailControllerHelper::PolicyEmailUnsubscriber)
 
   TopicView.default_post_custom_fields << DiscoursePolicy::HAS_POLICY
+
+  validate(:post, :validate_policy) do
+    return unless self.raw_changed?
+
+    validator = DiscoursePolicy::PostValidator.new(self)
+    return unless validator.validate_post
+
+    true
+  end
 
   on(:post_process_cooked) do |doc, post|
     has_group = false
@@ -130,7 +140,9 @@ after_initialize do
             if post_policy.add_users_to_group.present?
               previously_accepted_users = post_policy.accepted_policy_users
 
-              Group.find_by(id: post_policy.add_users_to_group)&.remove(previously_accepted_users)
+              Group.find_by(id: post_policy.add_users_to_group)&.bulk_remove(
+                previously_accepted_users.pluck(:user_id),
+              )
             end
           end
         end
@@ -143,7 +155,11 @@ after_initialize do
         post_policy.private = policy["data-private"] == "true"
 
         if policy["data-add-users-to-group"].present?
-          post_policy.add_users_to_group = Group.find_by_name(policy["data-add-users-to-group"])&.id
+          add_to_group = Group.find_by_name(policy["data-add-users-to-group"])
+          post_policy.add_users_to_group =
+            if add_to_group && Guardian.new(post.user).can_edit_group?(add_to_group)
+              add_to_group.id
+            end
         end
 
         if has_group

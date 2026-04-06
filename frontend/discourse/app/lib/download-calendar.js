@@ -52,7 +52,10 @@ export function downloadGoogle(title, dates, options = {}) {
     );
 
     if (options.rrule) {
-      link.searchParams.append("recur", `RRULE:${options.rrule}`);
+      const rrule = _parseRRule(options.rrule);
+      if (rrule && _hasFreq(rrule)) {
+        link.searchParams.append("recur", `RRULE:${rrule}`);
+      }
     }
 
     if (options.location) {

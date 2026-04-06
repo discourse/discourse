@@ -41,10 +41,10 @@ pt_BR:
             visited_no_posts_others: "%{username} visitou e ficou só olhando em %{date}, mas não fez nenhuma postagem."
             visited_with_posts:
               one: "Você fez %{count} postagem em %{date}."
-              other: "Você fez %{count} postgens em %{date}."
+              other: "Você fez %{count} postagens em %{date}."
             visited_with_posts_others:
               one: "%{username} fez %{count} postagem em %{date}."
-              other: "%{username} fez %{count} postgens em %{date}."
+              other: "%{username} fez %{count} postagens em %{date}."
             no_activity: "Você não estava presente em %{date}."
             no_activity_others: "%{username} não estava presente em %{date}."
         top_words:
@@ -130,8 +130,8 @@ pt_BR:
           reply_1: "kkkk incrível B-)"
           message_2_MF: |
             Você teve { dm_count, plural,
-                one {<strong>#</strong> conversa por DM}
-              other {<strong>#</strong> conversas por DM}
+                one {<strong>#</strong> conversa por mensagem direta}
+              other {<strong>#</strong> conversas por mensagem direta}
             } com { channel_count, plural,
                 one {<strong>#</strong> pessoa ou grupo}
               other {<strong>#</strong> diferentes pessoas ou grupos}
@@ -139,7 +139,7 @@ pt_BR:
           reply_2: "ShOo0ow :D"
           message_3:
             one: "As pessoas amaram suas mensagens! Você recebeu <strong>%{count}</strong> reação ❤️"
-            other: "As pessoas adoraram suas mensagens! Você recebeu <strong>%{count}</strong> reações ❤️"
+            other: "As pessoas amaram suas mensagens! Você recebeu <strong>%{count}</strong> reações ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "O tamanho médio de suas mensagens foi de <strong>%{length}</strong> caracteres"
           message_5: "Seus canais favoritos:"

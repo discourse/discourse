@@ -1,0 +1,32 @@
+---
+detectors:
+  IrresponsibleModule:
+    enabled: false
+  FeatureEnvy:
+    enabled: false
+  UtilityFunction:
+    enabled: false
+  BooleanParameter:
+    enabled: false
+  UncommunicativeVariableName:
+    enabled: false
+  MissingSafeMethod:
+    enabled: false
+  InstanceVariableAssumption:
+    enabled: false
+  NilCheck:
+    enabled: false
+
+  TooManyStatements:
+    max_statements: 20
+  TooManyInstanceVariables:
+    max_instance_variables: 10
+  TooManyMethods:
+    max_methods: 30
+  LongParameterList:
+    max_params: 4
+  NestedIterators:
+    max_allowed_nesting: 2
+
+  DuplicateMethodCall:
+    max_calls: 3

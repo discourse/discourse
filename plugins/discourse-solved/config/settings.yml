@@ -58,4 +58,12 @@ discourse_solved:
     type: tag_list
     default: ""
     client: true
+  enable_support_category_type_setup:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/398338"
 

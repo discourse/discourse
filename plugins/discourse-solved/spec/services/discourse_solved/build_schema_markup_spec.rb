@@ -9,11 +9,11 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:user)
-    fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:post) { Fabricate(:post, topic: topic, user: user, like_count: 1) }
+    fab!(:topic) { Fabricate(:topic, user:) }
+    fab!(:post) { Fabricate(:post, topic:, user:, like_count: 1) }
     let(:guardian) { Guardian.new(user) }
     let(:params) { { topic_id: topic.id } }
-    let(:dependencies) { { guardian: guardian } }
+    let(:dependencies) { { guardian: } }
 
     before { SiteSetting.allow_solved_on_all_topics = true }
 
@@ -41,38 +41,123 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
       it { is_expected.to fail_a_policy(:schema_markup_enabled) }
     end
 
-    context "when setting is 'always' and there is no accepted answer" do
+    context "when setting is 'always' and topic has no answers" do
       before { SiteSetting.solved_add_schema_markup = "always" }
 
-      it { is_expected.to run_successfully }
+      it { is_expected.to fail_a_policy(:has_answers) }
 
-      it "builds QAPage markup without an answer" do
-        html = result[:html]
-        expect(html).to include("application/ld+json")
-        expect(html).to include('"@type":"QAPage"')
-        expect(html).to include('"answerCount":0')
-        expect(html).not_to include('"acceptedAnswer"')
+      context "when the only reply is a small action post" do
+        fab!(:small_action) { Fabricate(:post, topic:, post_type: Post.types[:small_action]) }
+
+        it { is_expected.to fail_a_policy(:has_answers) }
+      end
+
+      context "when the only reply is hidden" do
+        fab!(:hidden_reply) { Fabricate(:post, topic:, hidden: true) }
+
+        it { is_expected.to fail_a_policy(:has_answers) }
       end
     end
 
-    context "when there is an accepted answer" do
+    context "when setting is 'always' and there is no accepted answer" do
+      before { SiteSetting.solved_add_schema_markup = "always" }
+
+      context "when the topic has replies" do
+        fab!(:reply) { Fabricate(:post, topic:) }
+
+        it "includes replies as suggested answers" do
+          html = result[:html]
+          expect(html).to include('"suggestedAnswer"')
+          expect(html).to include('"answerCount":1')
+          expect(html).not_to include('"acceptedAnswer"')
+        end
+      end
+
+      context "when the topic has hidden replies" do
+        fab!(:hidden_reply) { Fabricate(:post, topic:, hidden: true) }
+        fab!(:visible_reply) { Fabricate(:post, topic:) }
+
+        it "excludes hidden posts from suggested answers" do
+          html = result[:html]
+          expect(html).to include('"answerCount":1')
+          expect(html).to include(visible_reply.user.username)
+          expect(html).not_to include(hidden_reply.user.username)
+        end
+      end
+    end
+
+    context "when there is an accepted answer but no other answers" do
       fab!(:answer_user, :user)
-      fab!(:answer_post) { Fabricate(:post, topic: topic, user: answer_user, like_count: 3) }
+      fab!(:answer_post) { Fabricate(:post, topic:, user: answer_user, like_count: 3) }
 
       before do
         SiteSetting.solved_add_schema_markup = "always"
-        Fabricate(:solved_topic, topic: topic, answer_post: answer_post)
+        Fabricate(:solved_topic, topic:, answer_post:)
       end
 
       it { is_expected.to run_successfully }
 
-      it "builds QAPage markup with the accepted answer" do
+      it "builds QAPage markup with just the accepted answer" do
         html = result[:html]
         expect(html).to include('"@type":"QAPage"')
         expect(html).to include('"answerCount":1')
         expect(html).to include('"acceptedAnswer"')
         expect(html).to include('"@type":"Answer"')
         expect(html).to include(answer_user.username)
+        expect(html).not_to include('"suggestedAnswer"')
+      end
+    end
+
+    context "when the accepted answer is hidden but there are other visible replies" do
+      fab!(:answer_user, :user)
+      fab!(:answer_post) { Fabricate(:post, topic:, user: answer_user, like_count: 3) }
+      fab!(:visible_reply) { Fabricate(:post, topic:) }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic:, answer_post:)
+        answer_post.update!(hidden: true)
+      end
+
+      it "excludes the hidden accepted answer but includes suggested answers" do
+        html = result[:html]
+        expect(html).not_to include('"acceptedAnswer"')
+        expect(html).to include('"suggestedAnswer"')
+      end
+    end
+
+    context "when the accepted answer is hidden and there are no other replies" do
+      fab!(:answer_post) { Fabricate(:post, topic:) }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic:, answer_post:)
+        answer_post.update!(hidden: true)
+      end
+
+      it { is_expected.to fail_a_policy(:has_answers) }
+    end
+
+    context "when there is an accepted answer and suggested answers" do
+      fab!(:answer_user, :user)
+      fab!(:answer_post) { Fabricate(:post, topic:, user: answer_user, like_count: 3) }
+      fab!(:suggested_user, :user)
+      fab!(:suggested_post) { Fabricate(:post, topic:, user: suggested_user, like_count: 1) }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic:, answer_post:)
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "builds QAPage markup with both accepted and suggested answers" do
+        html = result[:html]
+        expect(html).to include('"answerCount":2')
+        expect(html).to include('"acceptedAnswer"')
+        expect(html).to include('"suggestedAnswer"')
+        expect(html).to include(answer_user.username)
+        expect(html).to include(suggested_user.username)
       end
     end
   end

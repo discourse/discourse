@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing reviewable post voting comment", type: :system do
+describe "Viewing reviewable post voting comment" do
   fab!(:admin)
   fab!(:group)
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }

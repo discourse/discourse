@@ -66,12 +66,12 @@ module DiscourseAi
         topics.each do |topic|
           if params.type == "gist"
             summarizer = DiscourseAi::Summarization.topic_gist(topic)
-            summarizer.delete_cached_summaries! if summarizer.present?
+            (summarizer.presence&.delete_cached_summaries!)
 
             Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, force_regenerate: true)
           else
             summarizer = DiscourseAi::Summarization.topic_summary(topic)
-            summarizer.delete_cached_summaries! if summarizer.present?
+            (summarizer.presence&.delete_cached_summaries!)
 
             Jobs.enqueue(
               :stream_topic_ai_summary,

@@ -1,19 +1,26 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import categoryBadge from "discourse/helpers/category-badge";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -22,8 +29,17 @@ import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryGeneral extends Component {
+  @service appEvents;
   @service site;
   @service siteSettings;
+  @service toasts;
+  @service composer;
+  @service store;
+
+  @tracked loadingDescription = false;
+  @tracked descriptionHtml = null;
+  @tracked descriptionExpanded = false;
+  @tracked descriptionOverflows = false;
 
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
@@ -34,6 +50,96 @@ export default class UpsertCategoryGeneral extends Component {
   );
 
   #previousPermissions = null;
+
+  @action
+  registerDescriptionListener() {
+    this.appEvents.on("composer:edited-post", this, this._refreshDescription);
+  }
+
+  @action
+  unregisterDescriptionListener() {
+    this.appEvents.off("composer:edited-post", this, this._refreshDescription);
+  }
+
+  @action
+  checkDescriptionOverflow(element) {
+    if (!this.descriptionExpanded) {
+      this.descriptionOverflows = element.scrollHeight > element.clientHeight;
+    }
+  }
+
+  @action
+  toggleDescriptionExpanded() {
+    this.descriptionExpanded = !this.descriptionExpanded;
+  }
+
+  async _refreshDescription() {
+    const category = this.args.category;
+    if (!category?.id) {
+      return;
+    }
+
+    const result = await Category.reloadById(category.id);
+    if (result?.category?.description) {
+      category.set("description", result.category.description);
+      this.descriptionHtml = result.category.description;
+
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n("category.description_updated"),
+        },
+      });
+    }
+  }
+
+  get showDescription() {
+    const category = this.args.category;
+    return (
+      !category.isUncategorizedCategory && category.id && category.topic_url
+    );
+  }
+
+  get categoryDescription() {
+    const description = this.descriptionHtml ?? this.args.category.description;
+    if (description) {
+      return trustHTML(description);
+    }
+
+    return trustHTML(i18n("category.no_description"));
+  }
+
+  @action
+  async editCategoryDescription() {
+    this.loadingDescription = true;
+
+    try {
+      const topicData = await ajax(`${this.args.category.topic_url}.json`);
+      const firstPost = topicData.post_stream?.posts?.[0];
+      if (!firstPost) {
+        return;
+      }
+
+      this.composer.close();
+
+      const post = this.store.createRecord("post", firstPost);
+      const topic = this.store.createRecord("topic", topicData);
+      post.set("topic", topic);
+
+      await this.composer.open({
+        post,
+        topic,
+        action: Composer.EDIT,
+        draftKey: topicData.draft_key || `topic_${topicData.id}`,
+        draftSequence: topicData.draft_sequence ?? 0,
+        skipJumpOnSave: true,
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingDescription = false;
+    }
+  }
 
   // This needs to be dynamic because the name of the everyone group can be changed by admins
   get #everyoneFullPermission() {
@@ -358,9 +464,10 @@ export default class UpsertCategoryGeneral extends Component {
           @title={{i18n "category.name"}}
           @format="max"
           @validation="required"
+          @type="input"
           as |field|
         >
-          <field.Input
+          <field.Control
             placeholder={{i18n "category.name_placeholder"}}
             @maxlength="50"
             class="category-name"
@@ -375,9 +482,10 @@ export default class UpsertCategoryGeneral extends Component {
         @format="max"
         @validation="required"
         @onSet={{this.onBackgroundColorSet}}
+        @type="color"
         as |field|
       >
-        <field.Color
+        <field.Control
           @colors={{this.backgroundColors}}
           @usedColors={{this.usedBackgroundColors}}
           @collapseSwatches={{true}}
@@ -390,9 +498,10 @@ export default class UpsertCategoryGeneral extends Component {
         @name="style_type"
         @title={{i18n "category.style"}}
         @format="max"
+        @type="custom"
         as |styleField|
       >
-        <styleField.Custom>
+        <styleField.Control>
           <@form.ConditionalContent
             @activeName={{or styleField.value @category.styleType "square"}}
             @onChange={{this.onStyleTypeChange}}
@@ -418,9 +527,10 @@ export default class UpsertCategoryGeneral extends Component {
                   @showTitle={{false}}
                   @format="max"
                   @validate={{this.validateIcon}}
+                  @type="custom"
                   as |field|
                 >
-                  <field.Custom>
+                  <field.Control>
                     <IconPicker
                       @value={{readonly field.value}}
                       @onlyAvailable={{true}}
@@ -437,7 +547,7 @@ export default class UpsertCategoryGeneral extends Component {
                         (concat "--icon-color: #" @transientData.color ";")
                       }}
                     />
-                  </field.Custom>
+                  </field.Control>
                 </@form.Field>
               </Content>
 
@@ -448,9 +558,10 @@ export default class UpsertCategoryGeneral extends Component {
                   @showTitle={{false}}
                   @format="max"
                   @validate={{this.validateEmoji}}
+                  @type="custom"
                   as |field|
                 >
-                  <field.Custom>
+                  <field.Control>
                     <EmojiPicker
                       @emoji={{field.value}}
                       @didSelectEmoji={{field.set}}
@@ -461,7 +572,7 @@ export default class UpsertCategoryGeneral extends Component {
                         (i18n "category.select_emoji")
                       }}
                     />
-                  </field.Custom>
+                  </field.Control>
                 </@form.Field>
               </Content>
 
@@ -474,8 +585,66 @@ export default class UpsertCategoryGeneral extends Component {
               </Content>
             </cc.Contents>
           </@form.ConditionalContent>
-        </styleField.Custom>
+        </styleField.Control>
       </@form.Field>
+
+      {{#if this.showDescription}}
+        <div
+          {{didInsert this.registerDescriptionListener}}
+          {{willDestroy this.unregisterDescriptionListener}}
+        >
+          <@form.Container
+            @title={{i18n "category.description"}}
+            class="edit-category-description-container"
+          >
+            <div
+              class={{concatClass
+                "description-content"
+                (unless this.descriptionExpanded "--collapsed")
+                (if this.descriptionOverflows "--overflowing")
+              }}
+              {{didInsert this.checkDescriptionOverflow}}
+              {{didUpdate
+                this.checkDescriptionOverflow
+                this.categoryDescription
+              }}
+            >
+              <DecoratedHtml
+                @html={{this.categoryDescription}}
+                @className="readonly-field"
+              />
+            </div>
+
+            <div class="description-actions">
+              {{#if @category.topic_url}}
+                <@form.Button
+                  @action={{this.editCategoryDescription}}
+                  @icon="pencil"
+                  @label="edit"
+                  @isLoading={{this.loadingDescription}}
+                  class="btn-default btn-small edit-category-description"
+                />
+              {{/if}}
+              {{#if this.descriptionOverflows}}
+                <@form.Button
+                  @action={{this.toggleDescriptionExpanded}}
+                  @label={{if
+                    this.descriptionExpanded
+                    "category.description_collapse"
+                    "category.description_expand"
+                  }}
+                  @icon={{if
+                    this.descriptionExpanded
+                    "chevron-up"
+                    "chevron-down"
+                  }}
+                  class="btn-flat btn-small toggle-description"
+                />
+              {{/if}}
+            </div>
+          </@form.Container>
+        </div>
+      {{/if}}
 
       {{#unless @category.isUncategorizedCategory}}
         <@form.Field
@@ -483,9 +652,10 @@ export default class UpsertCategoryGeneral extends Component {
           @title={{i18n "category.subcategory_of"}}
           @format="max"
           @onSet={{this.onParentCategorySet}}
+          @type="custom"
           as |field|
         >
-          <field.Custom>
+          <field.Control>
             <CategoryChooser
               @value={{@transientData.parent_category_id}}
               @onChange={{field.set}}
@@ -501,7 +671,7 @@ export default class UpsertCategoryGeneral extends Component {
                 displayCategoryDescription=false
               }}
             />
-          </field.Custom>
+          </field.Control>
         </@form.Field>
       {{/unless}}
 

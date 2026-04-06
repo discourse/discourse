@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Update last read", type: :system do
+RSpec.describe "Update last read" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:messages) { Fabricate.times(15, :chat_message, chat_channel: channel_1) }

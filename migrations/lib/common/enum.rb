@@ -6,7 +6,7 @@ module Migrations
   #
   # @example
   #   module MyEnum
-  #     extend ::Migrations::Enum
+  #     extend Migrations::Enum
   #
   #     FIRST = 0
   #     SECOND = 1

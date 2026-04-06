@@ -81,6 +81,7 @@ export default class DiscourseBanner extends Component {
                 @action={{this.dismiss}}
                 @icon="xmark"
                 @title="banner.close"
+                @ariaLabel="banner.close"
                 class="btn-transparent close"
               />
             </div>

@@ -106,9 +106,10 @@ export default class AiSecretEditorForm extends Component {
         @title={{i18n "discourse_ai.secrets.name"}}
         @validation="required|length:1,100"
         @format="large"
+        @type="input"
         as |field|
       >
-        <field.Input />
+        <field.Control />
       </form.Field>
 
       <form.Field
@@ -116,9 +117,10 @@ export default class AiSecretEditorForm extends Component {
         @title={{i18n "discourse_ai.secrets.secret"}}
         @validation="required"
         @format="large"
+        @type="password"
         as |field|
       >
-        <field.Password autocomplete="off" />
+        <field.Control autocomplete="off" />
       </form.Field>
 
       <form.Actions>
@@ -132,6 +134,16 @@ export default class AiSecretEditorForm extends Component {
                 {{~#if (eq usage.type "embedding")~}}
                   <LinkTo
                     @route="adminPlugins.show.discourse-ai-embeddings.edit"
+                    @model={{usage.id}}
+                  >{{usage.name}}</LinkTo>
+                {{~else if (eq usage.type "tool")~}}
+                  <LinkTo
+                    @route="adminPlugins.show.discourse-ai-tools.edit"
+                    @model={{usage.id}}
+                  >{{usage.name}}</LinkTo>
+                {{~else if (eq usage.type "mcp_server")~}}
+                  <LinkTo
+                    @route="adminPlugins.show.discourse-ai-tools.mcp-server-edit"
                     @model={{usage.id}}
                   >{{usage.name}}</LinkTo>
                 {{~else~}}

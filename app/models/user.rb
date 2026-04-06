@@ -636,7 +636,7 @@ class User < ActiveRecord::Base
     User.email_hash(email)
   end
 
-  def reload
+  def reload(options = nil)
     @unread_notifications = nil
     @all_unread_notifications_count = nil
     @unread_total_notifications = nil
@@ -1315,6 +1315,8 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
+    reviewable_ids = Reviewable.where(created_by_id: id).select(:id)
+    ReviewableNote.where(reviewable_id: reviewable_ids).delete_all
     Reviewable.where(created_by_id: id).delete_all
 
     posts

@@ -16,7 +16,7 @@ de:
     chat_auto_silence_duration: "Anzahl der Minuten, für die Benutzer stummgeschaltet werden, wenn sie das Limit für die Erstellung von Chat-Nachrichten überschreiten. Auf „0“ setzen, um die automatische Stummschaltung zu deaktivieren."
     chat_allowed_messages_for_trust_level_0: "Anzahl der Nachrichten, die Benutzer mit Vertrauensstufe 0 in 30 Sekunden senden dürfen. Auf „0“ setzen, um das Limit zu deaktivieren."
     chat_allowed_messages_for_other_trust_levels: "Anzahl der Nachrichten, die Benutzer mit den Vertrauensstufen 1–4 in 30 Sekunden senden dürfen. Auf „0“ setzen, um das Limit zu deaktivieren."
-    chat_silence_user_sensitivity: "Die Wahrscheinlichkeit, dass ein im Chat markierter Benutzer automatisch stummgeschaltet wird."
+    chat_silence_user_sensitivity: "Die Wahrscheinlichkeit, dass ein im Chat gemeldeter Benutzer automatisch stummgeschaltet wird."
     chat_auto_silence_from_flags_duration: "Anzahl der Minuten, für die Benutzer stummgeschaltet werden, wenn sie aufgrund markierter Chat-Nachrichten automatisch stummgeschaltet werden."
     chat_duplicate_message_sensitivity: "Die Wahrscheinlichkeit, dass eine doppelte Nachricht desselben Absenders innerhalb eines kurzen Zeitraums blockiert wird. Dezimalzahl zwischen 0 und 1,0, wobei 1,0 die höchste Einstellung ist (Nachrichten werden häufiger in kürzerer Zeit blockiert). Auf `0` setzen, um doppelte Nachrichten zuzulassen."
     chat_minimum_message_length: "Mindestanzahl von Zeichen für eine Chat-Nachricht."

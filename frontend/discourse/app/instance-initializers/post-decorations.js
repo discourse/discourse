@@ -183,6 +183,12 @@ export default {
 
       function generatePopups(tables, post) {
         tables.forEach((table, index) => {
+          if (
+            table.parentNode.querySelector(".fullscreen-table-wrapper__buttons")
+          ) {
+            return;
+          }
+
           const buttonWrapper = document.createElement("div");
           buttonWrapper.classList.add("fullscreen-table-wrapper__buttons");
 
