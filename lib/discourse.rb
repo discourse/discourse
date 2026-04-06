@@ -11,6 +11,7 @@ module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
   LOCALE_PARAM = "tl"
+  DEPRECATED_COLUMNS = []
 
   class Utils
     URI_REGEXP = URI.regexp(%w[http https])
@@ -180,6 +181,10 @@ module Discourse
         stdout
       end
     end
+  end
+
+  def self.deprecated_columns
+    DEPRECATED_COLUMNS
   end
 
   def self.job_exception_stats
