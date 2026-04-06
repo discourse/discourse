@@ -44,12 +44,19 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
   }
 
   setupController(controller, model, transition) {
+    controller.teardownAiGeneration();
     controller.setProperties({
       ...model,
       results: null,
       showResults: false,
       dirty: false,
+      aiGenerating: false,
       shouldAutoRun: !!transition.to.queryParams.run,
     });
+    controller.setupAiGeneration();
+  }
+
+  resetController(controller) {
+    controller.teardownAiGeneration();
   }
 }

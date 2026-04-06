@@ -416,6 +416,7 @@ pl_PL:
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
       toggle_mobile_view: "Przełącz widok mobilny"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
+      toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -7792,6 +7793,16 @@ pl_PL:
           update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
+          change_source:
+            button: "Zmień źródło"
+            title: "Zmień źródło motywu"
+            repository_url: "Adres URL repozytorium"
+            branch: "Gałąź (opcjonalnie)"
+            updating: "Aktualizowanie źródła motywu…"
+            update: "Aktualizuj źródło"
+            has_existing_key: "W tym motywie skonfigurowano istniejący klucz SSH."
+            generate_new_key: "Wygeneruj nowy klucz SSH"
+            keep_existing_key: "Zachowaj istniejący klucz SSH"
           add: "Dodaj"
           theme_settings: "Ustawienia motywu niestandardowego"
           theme_site_settings: "Ustawienia, które motyw może zastąpić"
@@ -9199,6 +9210,8 @@ pl_PL:
         crawler_settings_saved: "Ustawienia robota zostały zapisane"
         back: "Powrót do osadzania"
         configuration_snippet: "Fragment konfiguracji"
+        full_app_mode: "Pełny tryb aplikacji"
+        full_app_mode_description: "Załaduj pełną aplikację Discourse w osadzonej ramce iframe, umożliwiając użytkownikom odpowiadanie, polubienie, cytowanie i bezpośrednią interakcję z tematami"
         host_form:
           add_header: "Dodaj host"
           edit_header: "Edytuj hosta"

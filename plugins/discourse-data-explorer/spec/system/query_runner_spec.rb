@@ -25,7 +25,7 @@ RSpec.describe "Data explorer query runner" do
       find(".query-run .btn-primary").click
       expect(page).to have_css(".query-results .result-header")
 
-      find(".query-edit .previous").click
+      find(".back-button").click
       first("a[href='/admin/plugins/discourse-data-explorer/queries/#{query_b.id}']").click
       expect(page).to have_no_css(".query-results .result-header")
     end
@@ -86,49 +86,6 @@ RSpec.describe "Data explorer query runner" do
       visit("/admin/plugins/explorer")
 
       expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries")
-    end
-  end
-
-  context "with a group_list param" do
-    fab!(:q2) do
-      Fabricate(
-        :query,
-        name: "My query with group_list",
-        description: "Test group_list query",
-        sql:
-          "-- [params]\n-- group_list :groups\n\nSELECT g.id,g.name FROM groups g WHERE g.name IN(:groups) ORDER BY g.name ASC",
-        user: admin,
-      )
-    end
-
-    it "supports setting a group_list param" do
-      query_runner.visit_admin_query(
-        q2.id,
-        query_string: "params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
-      ).run_query
-
-      expect(query_runner).to have_result_header
-      expect(query_runner).to have_result_cell_at(1, 2, text: "admins")
-      expect(query_runner).to have_result_cell_at(2, 2, text: "trust_level_1")
-    end
-  end
-
-  context "with a current_user_id param" do
-    fab!(:query) { Fabricate(:query, name: "My current user query", sql: <<~SQL, user: admin) }
-          -- [params]
-          -- current_user_id :me
-          SELECT id, username FROM users WHERE id = :me
-        SQL
-
-    it "auto-injects the current user's id without showing an input field" do
-      query_runner.visit_admin_query(query.id)
-
-      expect(query_runner).to have_no_params
-      query_runner.run_query
-
-      expect(query_runner).to have_result_header
-      expect(query_runner).to have_result_row_count(1)
-      expect(query_runner).to have_result_cell(admin.username)
     end
   end
 end

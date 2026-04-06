@@ -757,6 +757,22 @@ RSpec.describe SiteSettingExtension do
         end
       end
 
+      context "when the depends_on setting does not exist" do
+        before do
+          settings.setting(
+            :orphan_setting,
+            nil,
+            depends_on: [:nonexistent_setting],
+            depends_behavior: :hidden,
+          )
+          settings.refresh!
+        end
+
+        it "is not present in all_settings" do
+          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).to be_blank
+        end
+      end
+
       context "when the setting is also explicitly hidden" do
         before do
           settings.setting(:enable_cool_thing, true)

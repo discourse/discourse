@@ -2979,47 +2979,9 @@ es:
     reviewable_queued_post_revise_and_reject:
       title: "Comentarios sobre tu publicación"
       subject_template: "Comentarios sobre tu publicación en %{topic_title}"
-      text_body_template: |
-        Hola %{username}:
-
-        Hemos revisado tu publicación en [%{topic_title}](%{topic_url}) y tenemos algunos comentarios para ti.
-
-        Motivo: %{reason}
-
-        Opinión: %{feedback}
-
-        Puedes editar tu publicación original a continuación y volver a enviarlo para realizar los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Gracias,
-        Moderadores de %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Comentarios sobre tu tema"
       subject_template: 'Comentarios sobre el nuevo tema titulado «%{topic_title}»'
-      text_body_template: |
-        Hola %{username}:
-
-        Hemos revisado tu nuevo tema titulado «%{topic_title}» y tenemos algunos comentarios para ti.
-
-        Motivo: %{reason}
-
-        Comentarios: %{feedback}
-
-        Puedes editar la publicación original de tu tema y volver a enviarlo para realizar los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Gracias,
-        Moderadores de %{site_name}
     post_hidden_again:
       title: "Publicación ocultada de nuevo"
       subject_template: "Publicación ocultada debido a denuncias de la comunidad, se ha informado al personal"

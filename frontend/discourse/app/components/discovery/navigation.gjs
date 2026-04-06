@@ -149,7 +149,6 @@ export default class DiscoveryNavigation extends Component {
         @canBulkSelect={{@canBulkSelect}}
         @bulkSelectHelper={{@bulkSelectHelper}}
         @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
-        @toggleInfo={{@toggleTagInfo}}
         @tagNotification={{@tagNotification}}
         @model={{@model}}
         @showDismissRead={{@showDismissRead}}

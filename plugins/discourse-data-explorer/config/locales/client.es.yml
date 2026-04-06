@@ -6,6 +6,10 @@
 
 es:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Explorador de datos"
     errors:
       explorer:
         no_semicolons: "Eliminar los punto y coma de la consulta."
@@ -74,6 +78,12 @@ es:
           no_such_group: "No existe dicho grupo"
     group:
       reports: "Informes"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Ejecuta consultas del Explorador de Datos. Restringe la clave API a un conjunto de consultas especificando los ID de las mismas."
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

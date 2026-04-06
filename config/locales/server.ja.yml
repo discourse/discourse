@@ -2943,47 +2943,9 @@ ja:
     reviewable_queued_post_revise_and_reject:
       title: "あなたの投稿に対するフィードバック"
       subject_template: "%{topic_title} のあなたの投稿に対するフィードバック"
-      text_body_template: |
-        %{username} さん、こんにちは。
-
-        [%{topic_title}](%{topic_url}) のあなたの投稿をレビューした結果、以下のフィードバックがあります。
-
-        理由: %{reason}
-
-        フィードバック: %{feedback}
-
-        提案された変更を適用するには、以下で元の投稿を編集して再送信するか、ご質問がある場合はこのメッセージに返信してください。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        よろしくお願いします。
-        %{site_name} モデレーター
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "あなたのトピックに対するフィードバック"
       subject_template: '"%{topic_title}" という新しいトピックに対するフィードバック'
-      text_body_template: |
-        %{username} さん、こんにちは。
-
-        "%{topic_title}" という新しいトピックをレビューした結果、以下のフィードバックがあります。
-
-        理由: %{reason}
-
-        フィードバック: %{feedback}
-
-        提案された変更を適用するには、以下でトピックの元の投稿を編集するか、ご質問がある場合はこのメッセージに返信してください。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        よろしくお願いします。
-        %{site_name} モデレーター
     post_hidden_again:
       title: "再度非表示"
       preview: "コミュニティーメンバーによって投稿は再度非表示になりました。"

@@ -6,6 +6,10 @@
 
 ca:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Explorador de dades"
     errors:
       explorer:
         no_semicolons: "Elimina els punts i coma de la consulta."

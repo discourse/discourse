@@ -6,6 +6,10 @@
 
 sl:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Raziskovalec podatkov"
     errors:
       explorer:
         no_semicolons: "Odstranite podpičja iz poizvedbe."

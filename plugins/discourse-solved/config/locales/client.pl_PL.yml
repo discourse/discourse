@@ -15,11 +15,15 @@ pl_PL:
       alt:
         solved:
           accepted_notification: "zaakceptowano"
+          topic_solved_notification: "rozwiązano"
     solutions: "Rozwiązania"
     solved:
       title: "Rozwiązany"
+      notify_on_solved: "Powiadom, gdy temat, który śledzę lub obserwuję, zostanie rozwiązany. Dotyczy tylko tematów w kategoriach, które pozwalają na rozwiązania."
       allow_accepted_answers: "Pozwól użytkownikom na akceptowanie rozwiązań"
       solved_topics_auto_close_hours: "Zamknij temat automatycznie po (n) godzinach od ostatniej odpowiedzi, gdy temat został oznaczony jako rozwiązany."
+      notify_on_staff_accept_solved: "Powiadom twórcę tematu, gdy personel oznaczy rozwiązanie"
+      empty_box_on_unsolved: "Wyświetl puste pole wyboru obok nierozwiązanych tematów na liście tematów"
       accept_answer: "Zaznacz, jeśli ta odpowiedź rozwiązuje Twój problem"
       accepted_description: "To zaakceptowane rozwiązanie tego tematu."
       has_no_accepted_answer: "Ten temat nie ma rozwiązania"
@@ -62,8 +66,20 @@ pl_PL:
       no_answer:
         title: Czy odpowiedź na twoje pytanie została udzielona?
         description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "twój post został oznaczony jako rozwiązanie"
+        topic_solved_title: "Temat rozwiązany"
+      topic_notifications:
+        tracking:
+          description: "Otrzymasz powiadomienie, gdy ktoś wspomni Twoje @name, odpowie Ci lub gdy temat zostanie rozwiązany. W tym temacie będzie wyświetlana liczba nowych odpowiedzi."
+        watching:
+          description: "Otrzymasz powiadomienie o każdej nowej odpowiedzi w tym temacie i o jego rozwiązaniu. Liczba nowych odpowiedzi w tym temacie będzie wyświetlana."
+      category_type_support:
+        title: "Wsparcie"
+        not_support_type: "Uwaga! Wyłączono możliwość oznaczania wpisów jako rozwiązań w tej kategorii. Aby ją ponownie włączyć, znajdziesz odpowiednie ustawienia na karcie Ustawienia."
+        remove_support_type: "Usuń typ wsparcia"
+        confirm_remove_support_type: "Czy na pewno chcesz usunąć możliwość oznaczania wpisów jako rozwiązań w tej kategorii? Możesz ją później ponownie włączyć na karcie Ustawienia."
     topic_statuses:
       solved:
         help: "Ten temat ma rozwiązanie"

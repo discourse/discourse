@@ -41,18 +41,10 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
       return helper.response({
         query: {
           id: -15,
-          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS\n(SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,\n                                                    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)\nSELECT t.id AS topic_id,\n    t.category_id,\n    COUNT(p.id) AS reply_count\nFROM topics t\nJOIN posts p ON t.id = p.topic_id\nJOIN query_period qp ON p.created_at >= qp.period_start\nAND p.created_at <= qp.period_end\nWHERE t.archetype = 'regular'\nAND t.user_id > 0\nGROUP BY t.id\nORDER BY COUNT(p.id) DESC, t.score DESC\nLIMIT 100\n",
+          sql: "SELECT 1",
           name: "foo",
-          description:
-            "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          param_info: [
-            {
-              identifier: "months_ago",
-              type: "int",
-              default: "1",
-              nullable: false,
-            },
-          ],
+          description: "a test query",
+          param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [],
@@ -67,18 +59,10 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
       return helper.response({
         query: {
           id: -15,
-          sql: "-- [params]\n-- int :months_ago = 1\n\nWITH query_period AS\n(SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,\n                                                    date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)\nSELECT t.id AS topic_id,\n    t.category_id,\n    COUNT(p.id) AS reply_count\nFROM topics t\nJOIN posts p ON t.id = p.topic_id\nJOIN query_period qp ON p.created_at >= qp.period_start\nAND p.created_at <= qp.period_end\nWHERE t.archetype = 'regular'\nAND t.user_id > 0\nGROUP BY t.id\nORDER BY COUNT(p.id) DESC, t.score DESC\nLIMIT 100\n",
+          sql: "SELECT 1",
           name: "foo",
-          description:
-            "based on the number of replies, it accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
-          param_info: [
-            {
-              identifier: "months_ago",
-              type: "int",
-              default: "1",
-              nullable: false,
-            },
-          ],
+          description: "a test query",
+          param_info: [],
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [],
@@ -90,12 +74,21 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     });
   });
 
-  test("creates a new query", async function (assert) {
+  test("navigates to new query page and creates a query", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     await click(".d-page-subheader .btn-primary");
-    await fillIn(".query-create input", "foo");
-    await click(".query-create button");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/new"
+    );
+
+    await fillIn(".query-new [data-name='name'] input", "foo");
+    await fillIn(
+      ".query-new [data-name='description'] textarea",
+      "a test query"
+    );
+    await click(".query-new .btn-primary");
 
     assert.strictEqual(
       currentURL(),
