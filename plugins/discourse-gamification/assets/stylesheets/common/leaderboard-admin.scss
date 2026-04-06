@@ -46,6 +46,11 @@
     cursor: pointer;
     padding: 0.5em 0;
   }
+
+  &__description {
+    color: var(--primary-medium);
+    margin: 0 0 1em;
+  }
 }
 
 .new-leaderboard-container {

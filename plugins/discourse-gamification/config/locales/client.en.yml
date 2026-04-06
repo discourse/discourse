@@ -27,6 +27,11 @@ en:
         cta: "Make your first leaderboard"
         none: "No leaderboards created yet."
         confirm_destroy: "Are you sure you want to delete this leaderboard?"
+        section:
+          time_period: "Time period"
+          time_period_description: "Control the date range and default period for this leaderboard."
+          groups: "Groups"
+          groups_description: "Control which users are included in and can view this leaderboard."
         date:
           range: "From / To Date Range"
           from: "From date"
@@ -42,6 +47,7 @@ en:
         default_period_help: "Set the default time period to display for this leaderboard."
         period_filter_disabled: "Disable time period filter"
         scoring_configuration: "Scoring configuration"
+        scoring_configuration_description: "Override the global scoring rules for this leaderboard. Leave fields empty to use the global defaults."
         scorable_categories: "Scorable categories"
         scorable_categories_help: "Categories to include in scoring. Leave empty to use the global setting."
         score_overrides: "Score weights"
