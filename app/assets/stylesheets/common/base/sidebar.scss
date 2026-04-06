@@ -42,7 +42,7 @@
   --d-sidebar-highlight-color: var(--token-color-text-default);
   --d-sidebar-highlight-prefix-background: var(--token-color-surface-pressed);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-link-color);
-  --d-sidebar-highlight-suffix-color: var(--d-sidebar-link-color);
+  --d-sidebar-highlight-suffix-color: var(--d-sidebar-suffix-color);
   --d-sidebar-highlight-hover-background: var(--token-color-surface-pressed);
 
   // example: hovering a button within a highlighted section
@@ -53,7 +53,7 @@
   --d-sidebar-active-color: var(--token-color-text-default);
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--token-color-surface-hovered);
-  --d-sidebar-active-suffix-color: var(--token-color-text-default);
+  --d-sidebar-active-suffix-color: var(--d-sidebar-suffix-color);
   --d-sidebar-active-font-weight: var(
     --token-font-weight-semibold
   ); // example: active section link
