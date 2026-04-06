@@ -14,6 +14,8 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input";
 
+const PLACEHOLDER_CLASS = "upload-placeholder-image";
+
 const MIN_SCALE = 50;
 const MAX_SCALE = 100;
 const SCALE_STEP = 25;
@@ -87,6 +89,7 @@ class ImageToolbar extends ToolbarBase {
 }
 
 export default class ImageNodeView extends Component {
+  @service("app-events") appEvents;
   @service menu;
   @service siteSettings;
 
@@ -98,12 +101,22 @@ export default class ImageNodeView extends Component {
   constructor() {
     super(...arguments);
 
+    if (this.isPlaceholder) {
+      const fileId = this.args.node.attrs.title;
+      this.args.dom.classList.add(PLACEHOLDER_CLASS);
+      this.args.dom.dataset.uploadId = fileId;
+    }
+
     this.args.onSetup?.(this);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.closeMenus();
+  }
+
+  get isPlaceholder() {
+    return !!this.args.node.attrs.placeholder;
   }
 
   stopEvent(event) {
@@ -272,14 +285,18 @@ export default class ImageNodeView extends Component {
   selectNode() {
     this.image.classList.add("ProseMirror-selectednode");
 
-    this.showToolbar();
-    this.showAltText();
+    if (!this.isPlaceholder) {
+      this.showToolbar();
+      this.showAltText();
+    }
   }
 
   deselectNode() {
     this.image.classList.remove("ProseMirror-selectednode");
 
-    this.closeMenus();
+    if (!this.isPlaceholder) {
+      this.closeMenus();
+    }
   }
 
   closeMenus() {
@@ -569,6 +586,15 @@ export default class ImageNodeView extends Component {
   }
 
   @action
+  cancelUpload(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.appEvents.trigger("composer:cancel-upload", {
+      fileId: this.args.node.attrs.title,
+    });
+  }
+
+  @action
   updateImageLoaded() {
     this.imageLoaded = true;
   }
@@ -600,6 +626,7 @@ export default class ImageNodeView extends Component {
       height={{@node.attrs.height}}
       data-orig-src={{@node.attrs.originalSrc}}
       data-scale={{@node.attrs.scale}}
+      data-placeholder={{@node.attrs.placeholder}}
       data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
       style={{this.imageStyle}}
       role="button"
@@ -607,6 +634,18 @@ export default class ImageNodeView extends Component {
       {{on "load" this.updateImageLoaded}}
       {{on "click" this.handleImageClick}}
     />
+    {{#if this.isPlaceholder}}
+      <span class="upload-placeholder-image__overlay">
+        <span class="upload-placeholder__progress">0%</span>
+        <span
+          class="upload-placeholder__cancel"
+          title={{i18n "cancel"}}
+          role="button"
+          contenteditable="false"
+          {{on "click" this.cancelUpload}}
+        >&times;</span>
+      </span>
+    {{/if}}
   </template>
 }
 

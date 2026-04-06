@@ -17,10 +17,6 @@ import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import {
-  clearAllImageUploadProgress,
-  updateImageUploadProgress,
-} from "../extensions/upload-placeholder";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /**
@@ -685,7 +681,6 @@ class ProsemirrorPlaceholderHandler {
   progressComplete() {}
 
   uploadProgress(file, percentage) {
-    updateImageUploadProgress(file.id, percentage);
     this.view.dom
       .querySelectorAll(
         `[data-upload-id="${file.id}"] .upload-placeholder__progress`
@@ -696,7 +691,6 @@ class ProsemirrorPlaceholderHandler {
   }
 
   cancelAll() {
-    clearAllImageUploadProgress();
     const toDelete = [];
     this.view.state.doc.descendants((node, pos) => {
       if (
@@ -717,7 +711,6 @@ class ProsemirrorPlaceholderHandler {
   }
 
   cancel(file) {
-    updateImageUploadProgress(file.id, null);
     const found = this.#findPlaceholder(file.id);
     if (found) {
       this.view.dispatch(
@@ -729,7 +722,6 @@ class ProsemirrorPlaceholderHandler {
   }
 
   success(file, markdown) {
-    updateImageUploadProgress(file.id, null);
     const found = this.#findPlaceholder(file.id);
     if (!found) {
       return;

@@ -51,15 +51,25 @@
     font-size: var(--font-up-1-rem);
   }
 
-  img[data-placeholder="true"] {
-    max-width: 500px;
-    height: auto;
-    border-radius: 6px;
-    filter: blur(1px);
-    opacity: 0.5;
+  .upload-placeholder-image {
+    position: relative;
+    display: inline-block;
+    vertical-align: bottom;
+
+    img {
+      max-width: 500px;
+      height: auto;
+      border-radius: 6px;
+      filter: blur(1px);
+      opacity: 0.5;
+      display: block;
+    }
   }
 
   .upload-placeholder-image__overlay {
+    position: absolute;
+    bottom: 0.4em;
+    right: 0.4em;
     display: inline-flex;
     align-items: center;
     gap: 0.3em;
@@ -69,11 +79,6 @@
     border-radius: 4px;
     color: var(--primary-high);
     font-size: var(--font-down-1);
-    vertical-align: bottom;
-    margin-left: -4.5em;
-    margin-right: 0.4em;
-    margin-bottom: 0.4em;
-    position: relative;
 
     .upload-placeholder__progress {
       font-size: inherit;

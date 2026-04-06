@@ -1,19 +1,4 @@
-import { i18n } from "discourse-i18n";
 import UploadPlaceholderNodeView from "../components/upload-placeholder-node-view";
-
-const imageUploadProgress = new Map();
-
-export function updateImageUploadProgress(fileId, percentage) {
-  if (percentage === null) {
-    imageUploadProgress.delete(fileId);
-  } else {
-    imageUploadProgress.set(fileId, percentage);
-  }
-}
-
-export function clearAllImageUploadProgress() {
-  imageUploadProgress.clear();
-}
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -52,11 +37,7 @@ const extension = {
     upload_placeholder() {},
   },
 
-  plugins({
-    pmState: { Plugin, PluginKey },
-    pmView: { Decoration, DecorationSet },
-    getContext,
-  }) {
+  plugins({ pmState: { Plugin, PluginKey }, getContext }) {
     function collectPlaceholderIds(doc) {
       const ids = new Set();
       doc.descendants((node) => {
@@ -120,53 +101,6 @@ const extension = {
           }
           return tr.setMeta("addToHistory", false);
         }
-      },
-
-      props: {
-        decorations(state) {
-          const decos = [];
-
-          state.doc.descendants((node, pos) => {
-            if (node.type.name === "image" && node.attrs.placeholder) {
-              const fileId = node.attrs.title;
-
-              const overlay = document.createElement("span");
-              overlay.className = "upload-placeholder-image__overlay";
-              overlay.dataset.uploadId = fileId;
-
-              const progress = document.createElement("span");
-              progress.className = "upload-placeholder__progress";
-              progress.textContent = `${imageUploadProgress.get(fileId) ?? 0}%`;
-              overlay.appendChild(progress);
-
-              const cancel = document.createElement("span");
-              cancel.className = "upload-placeholder__cancel";
-              cancel.textContent = "\u00D7";
-              cancel.title = i18n("cancel");
-              cancel.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                getContext().appEvents.trigger("composer:cancel-upload", {
-                  fileId,
-                });
-              });
-              overlay.appendChild(cancel);
-
-              decos.push(
-                Decoration.widget(pos + node.nodeSize, overlay, {
-                  key: `img-overlay-${fileId}`,
-                  side: -1,
-                })
-              );
-            }
-          });
-
-          if (decos.length === 0) {
-            return DecorationSet.empty;
-          }
-
-          return DecorationSet.create(state.doc, decos);
-        },
       },
     });
   },
