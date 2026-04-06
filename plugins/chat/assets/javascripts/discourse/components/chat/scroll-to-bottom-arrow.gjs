@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -6,7 +7,12 @@ import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ScrollToBottomArrow extends Component {
+  @service site;
+
   get newMessageCount() {
+    if (!this.site.mobileView) {
+      return 0;
+    }
     const channel = this.args.channel;
     if (!channel) {
       return 0;
