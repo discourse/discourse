@@ -306,12 +306,8 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       .exists({ count: 2 }, "the table with query results was rendered");
 
     assert
-      .dom("div.result-info button:nth-child(3) span")
-      .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
-
-    await click("div.result-info button:nth-child(3)");
-
-    assert.dom("canvas").exists("the chart was rendered");
+      .dom(".result-chart canvas")
+      .exists("the chart was rendered alongside the table");
   });
 
   test("runs query and is able to download the results", async function (assert) {
@@ -360,7 +356,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         }
       });
 
-    await click("div.result-info button:nth-child(1)");
+    await click("div.result-actions button:nth-child(1)");
 
     await finishedForm;
 

@@ -277,7 +277,7 @@ export default class QueriesDetails extends Component {
         @results={{@controller.results}}
         @showResults={{@controller.showResults}}
         @query={{@controller.model}}
-        @content={{@controller.results}}
+        @cachedAt={{@controller.cachedAt}}
       />
     {{/if}}
   </template>

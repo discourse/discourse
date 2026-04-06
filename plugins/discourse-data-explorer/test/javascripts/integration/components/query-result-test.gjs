@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -23,18 +23,14 @@ module(
       await render(<template><QueryResult @content={{content}} /></template>);
 
       assert
-        .dom("div.result-info button:nth-child(1) span")
+        .dom("div.result-actions button:nth-child(1) span")
         .hasText(i18n("explorer.download_json"), "renders the JSON button");
 
       assert
-        .dom("div.result-info button:nth-child(2) span")
+        .dom("div.result-actions button:nth-child(2) span")
         .hasText(i18n("explorer.download_csv"), "renders the CSV button");
 
-      assert
-        .dom("div.result-info button:nth-child(3) span")
-        .hasText(i18n("explorer.show_graph"), "renders the chart button");
-
-      assert.dom("div.result-about").exists("renders a query summary");
+      assert.dom(".result-info .result-meta").exists("renders a query summary");
 
       assert.dom("table thead tr th:nth-child(1)").hasText("user_name");
       assert.dom("table thead tr th:nth-child(2)").hasText("like_count");
@@ -142,7 +138,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("navigation between a table and a chart works", async function (assert) {
+    test("renders both chart and table when data is chartable", async function (assert) {
       const content = {
         colrender: [],
         result_count: 2,
@@ -155,32 +151,11 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert
-        .dom("div.result-info button:nth-child(3) span")
-        .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
-      assert.dom("table").exists("the table was rendered");
-
-      await click("div.result-info button:nth-child(3)");
-
-      assert
-        .dom("div.result-info button:nth-child(3) span")
-        .hasText(
-          i18n("explorer.show_table"),
-          "the chart button was changed to the table button"
-        );
       assert.dom("canvas").exists("the chart was rendered");
-
-      await click("div.result-info button:nth-child(3)");
-      assert
-        .dom("div.result-info button:nth-child(3) span")
-        .hasText(
-          i18n("explorer.show_graph"),
-          "the table button was changed to the chart button"
-        );
       assert.dom("table").exists("the table was rendered");
     });
 
-    test("renders a chart button when data has two columns and numbers in the second column", async function (assert) {
+    test("renders a chart when data has two columns and numbers in the second column", async function (assert) {
       const content = {
         colrender: [],
         result_count: 2,
@@ -193,12 +168,10 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert
-        .dom("div.result-info button:nth-child(3) span")
-        .hasText(i18n("explorer.show_graph"));
+      assert.dom(".result-chart canvas").exists("renders a chart");
     });
 
-    test("doesn't render a chart button when data contains identifiers in the second column", async function (assert) {
+    test("doesn't render a chart when data contains identifiers in the second column", async function (assert) {
       const content = {
         colrender: { 1: "user" },
         relations: {
@@ -217,10 +190,10 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert.dom("div.result-info button:nth-child(3)").doesNotExist();
+      assert.dom(".result-chart").doesNotExist();
     });
 
-    test("doesn't render a chart button when data contains one column", async function (assert) {
+    test("doesn't render a chart when data contains one column", async function (assert) {
       const content = {
         colrender: [],
         result_count: 2,
@@ -230,10 +203,10 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert.dom("div.result-info button:nth-child(3)").doesNotExist();
+      assert.dom(".result-chart").doesNotExist();
     });
 
-    test("renders a chart button when data contains multiple numeric columns", async function (assert) {
+    test("renders a chart when data contains multiple numeric columns", async function (assert) {
       const content = {
         colrender: [],
         result_count: 2,
@@ -246,12 +219,10 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert
-        .dom("div.result-info button:nth-child(3) span")
-        .hasText(i18n("explorer.show_graph"));
+      assert.dom(".result-chart canvas").exists("renders a chart");
     });
 
-    test("doesn't render a chart button when all non-label columns are relation types", async function (assert) {
+    test("doesn't render a chart when all non-label columns are relation types", async function (assert) {
       const content = {
         colrender: { 1: "user", 2: "badge" },
         relations: {
@@ -265,7 +236,7 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert.dom("div.result-info button:nth-child(3)").doesNotExist();
+      assert.dom(".result-chart").doesNotExist();
     });
 
     test("renders a chart for date-based data", async function (assert) {
@@ -281,12 +252,8 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert
-        .dom("div.result-info button:nth-child(3) span")
-        .hasText(i18n("explorer.show_graph"));
-
-      await click("div.result-info button:nth-child(3)");
-      assert.dom("canvas").exists("renders a chart canvas");
+      assert.dom(".result-chart canvas").exists("renders a chart canvas");
+      assert.dom("table").exists("renders the table alongside the chart");
     });
 
     test("renders a multi-series chart", async function (assert) {
@@ -302,8 +269,9 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      await click("div.result-info button:nth-child(3)");
-      assert.dom("canvas").exists("renders a chart canvas for multi-series");
+      assert
+        .dom(".result-chart canvas")
+        .exists("renders a chart canvas for multi-series");
     });
 
     test("handles no results", async function (assert) {

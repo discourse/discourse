@@ -87,8 +87,6 @@ en:
       recover: "Undelete query"
       download_json: "JSON"
       download_csv: "CSV"
-      show_table: "Table"
-      show_graph: "Graph"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in %{value} ms."
       result_count:
@@ -105,6 +103,16 @@ en:
       query_time: "Last run"
       query_user: "Created by"
       column: "Column %{number}"
+      cached_just_now: "Showing cached results from just now."
+      cached_minutes_ago:
+        one: "Showing cached results from %{count} minute ago."
+        other: "Showing cached results from %{count} minutes ago."
+      cached_hours_ago:
+        one: "Showing cached results from %{count} hour ago."
+        other: "Showing cached results from %{count} hours ago."
+      cached_days_ago:
+        one: "Showing cached results from %{count} day ago."
+        other: "Showing cached results from %{count} days ago."
       explain_label: "Include query plan?"
       save_params: "Set defaults"
       reset_params: "Reset"

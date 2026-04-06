@@ -103,7 +103,16 @@ module DiscourseDataExplorer
       end
 
       return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
-      render_serialized @query, QueryDetailsSerializer, root: "query"
+
+      json = serialize_data(@query, QueryDetailsSerializer, root: "query")
+
+      cached = ResultCache.get(@query)
+      if cached
+        json["query"]["cached_result"] = cached["result"]
+        json["query"]["cached_at"] = cached["cached_at"]
+      end
+
+      render_json_dump(json)
     end
 
     def groups
@@ -173,6 +182,9 @@ module DiscourseDataExplorer
     end
 
     def update
+      incoming_sql = params.dig(:query, :sql)
+      sql_changed = incoming_sql.present? && incoming_sql.strip != @query.sql.strip
+
       ActiveRecord::Base.transaction do
         @query.update!(
           params.require(:query).permit(:name, :sql, :description).merge(hidden: false),
@@ -182,6 +194,8 @@ module DiscourseDataExplorer
         QueryGroup.where.not(group_id: group_ids).where(query_id: @query.id).delete_all
         group_ids&.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
       end
+
+      ResultCache.invalidate(@query) if sql_changed
 
       render_serialized @query, QueryDetailsSerializer, root: "query"
     rescue ValidationError => e
@@ -265,14 +279,20 @@ module DiscourseDataExplorer
               :download
             ]
 
-            render json:
-                     ResultFormatConverter.convert(
-                       :json,
-                       result,
-                       query_params:,
-                       download: params[:download],
-                       explain: params[:explain] == "true",
-                     )
+            result_json =
+              ResultFormatConverter.convert(
+                :json,
+                result,
+                query_params:,
+                download: params[:download],
+                explain: params[:explain] == "true",
+              )
+
+            unless params[:download]
+              result_json[:cached] = ResultCache.set(query, query_params, result_json)
+            end
+
+            render json: result_json
           end
           format.csv do
             response.headers["Content-Disposition"] = "#{content_disposition}.csv"

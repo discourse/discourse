@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -44,8 +43,6 @@ const VIEW_COMPONENTS = {
 
 export default class QueryResult extends Component {
   @service site;
-
-  @tracked chartDisplayed = false;
 
   get colRender() {
     return this.args.content.colrender || {};
@@ -271,16 +268,6 @@ export default class QueryResult extends Component {
     this._downloadResult("csv");
   }
 
-  @action
-  showChart() {
-    this.chartDisplayed = true;
-  }
-
-  @action
-  hideChart() {
-    this.chartDisplayed = false;
-  }
-
   _download_url() {
     return this.args.group
       ? `/g/${this.args.group.name}/reports/`
@@ -337,94 +324,78 @@ export default class QueryResult extends Component {
     <article>
       <header class="result-header">
         <div class="result-info">
+          <span class="result-meta">
+            {{this.resultCount}}
+            {{this.duration}}
+          </span>
+        </div>
+
+        <div class="result-actions">
           <DButton
             @action={{this.downloadResultJson}}
             @icon="download"
             @label="explorer.download_json"
+            class="btn-flat btn-small"
           />
 
           <DButton
             @action={{this.downloadResultCsv}}
             @icon="download"
             @label="explorer.download_csv"
+            class="btn-flat btn-small"
           />
-
-          {{#if this.canShowChart}}
-            {{#if this.chartDisplayed}}
-              <DButton
-                @action={{this.hideChart}}
-                @icon="table"
-                @label="explorer.show_table"
-              />
-            {{else}}
-              <DButton
-                @action={{this.showChart}}
-                @icon="chart-bar"
-                @label="explorer.show_graph"
-              />
-            {{/if}}
-          {{/if}}
         </div>
-
-        <div class="result-about">
-          {{this.resultCount}}
-          {{this.duration}}
-        </div>
-
-        <br />
-
-        {{~#if this.explainText}}
-          <pre class="result-explain">
-        <code>
-              {{~this.explainText}}
-            </code>
-      </pre>
-        {{~/if}}
-
-        <br />
       </header>
 
-      <section>
-        {{#if this.chartDisplayed}}
+      {{~#if this.explainText}}
+        <pre class="result-explain">
+          <code>{{~this.explainText}}</code>
+        </pre>
+      {{~/if}}
+
+      {{#if this.canShowChart}}
+        <section class="result-chart">
           <DataExplorerChart
             @labels={{this.chartLabels}}
             @datasets={{this.chartDatasets}}
             @chartType={{this.chartType}}
             @stacked={{this.isStacked}}
           />
-        {{else}}
-          <table class="query-results-table">
-            <thead>
-              <tr class="headers">
-                {{#each this.columnNames as |col|}}
-                  <th>{{col}}</th>
-                {{/each}}
-              </tr>
-            </thead>
-            <tbody>
-              {{#each this.rows as |row|}}
-                <QueryRowContent
-                  @row={{row}}
-                  @columnComponents={{this.columnComponents}}
-                  @lookupUser={{this.lookupUser}}
-                  @lookupBadge={{this.lookupBadge}}
-                  @lookupPost={{this.lookupPost}}
-                  @lookupTopic={{this.lookupTopic}}
-                  @lookupTagGroup={{this.lookupTagGroup}}
-                  @lookupGroup={{this.lookupGroup}}
-                  @lookupCategory={{this.lookupCategory}}
-                  @transformedPostTable={{this.transformedPostTable}}
-                  @transformedBadgeTable={{this.transformedBadgeTable}}
-                  @transformedUserTable={{this.transformedUserTable}}
-                  @transformedTagGroupTable={{this.transformedTagGroupTable}}
-                  @transformedGroupTable={{this.transformedGroupTable}}
-                  @transformedTopicTable={{this.transformedTopicTable}}
-                  @site={{this.site}}
-                />
+        </section>
+      {{/if}}
+
+      <section class="result-table-container">
+        <table class="query-results-table">
+          <thead>
+            <tr class="headers">
+              {{#each this.columnNames as |col|}}
+                <th>{{col}}</th>
               {{/each}}
-            </tbody>
-          </table>
-        {{/if}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each this.rows as |row|}}
+              <QueryRowContent
+                @row={{row}}
+                @columnComponents={{this.columnComponents}}
+                @lookupUser={{this.lookupUser}}
+                @lookupBadge={{this.lookupBadge}}
+                @lookupPost={{this.lookupPost}}
+                @lookupTopic={{this.lookupTopic}}
+                @lookupTagGroup={{this.lookupTagGroup}}
+                @lookupGroup={{this.lookupGroup}}
+                @lookupCategory={{this.lookupCategory}}
+                @transformedPostTable={{this.transformedPostTable}}
+                @transformedBadgeTable={{this.transformedBadgeTable}}
+                @transformedUserTable={{this.transformedUserTable}}
+                @transformedTagGroupTable={{this.transformedTagGroupTable}}
+                @transformedGroupTable={{this.transformedGroupTable}}
+                @transformedTopicTable={{this.transformedTopicTable}}
+                @site={{this.site}}
+              />
+            {{/each}}
+          </tbody>
+        </table>
       </section>
     </article>
   </template>

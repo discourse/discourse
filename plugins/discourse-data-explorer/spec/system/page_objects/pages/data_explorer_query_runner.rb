@@ -89,6 +89,26 @@ module PageObjects
       def has_query_description?(text)
         page.has_css?(".query-edit .desc", text: text)
       end
+
+      def has_cached_result_notice?
+        page.has_css?(".cached-result-notice")
+      end
+
+      def has_no_cached_result_notice?
+        page.has_no_css?(".cached-result-notice")
+      end
+
+      def has_chart?
+        page.has_css?(".result-chart")
+      end
+
+      def has_no_chart?
+        page.has_no_css?(".result-chart")
+      end
+
+      def has_result_table?
+        page.has_css?(".result-table-container")
+      end
     end
   end
 end

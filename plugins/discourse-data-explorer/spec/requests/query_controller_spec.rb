@@ -537,6 +537,159 @@ describe DiscourseDataExplorer::QueryController do
         end
       end
     end
+
+    describe "result caching" do
+      def run_query(id, params = {})
+        params = Hash[params.map { |a| [a[0], a[1].to_s] }]
+        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
+             params: {
+               params: params.to_json,
+             }
+      end
+
+      after do
+        keys = Discourse.redis.scan_each(match: "data_explorer:result:*").to_a
+        Discourse.redis.del(*keys) if keys.present?
+      end
+
+      it "caches results in Redis after a successful run" do
+        query = make_query("SELECT 23 as my_value")
+        run_query query.id
+
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::ResultCache.get(query)
+        expect(cached).to be_present
+        expect(cached["result"]["rows"]).to eq([[23]])
+        expect(cached["cached_at"]).to be_present
+      end
+
+      it "does not cache failed query results" do
+        query = make_query("SELECT * FROM nonexistent_table_xyz")
+        run_query query.id
+
+        expect(response.status).to eq(422)
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_nil
+      end
+
+      it "returns cached results in show response" do
+        query = make_query("SELECT 42 as cached_value")
+        run_query query.id
+        expect(response.status).to eq(200)
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_present
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[42]])
+        expect(response_json["query"]["cached_at"]).to be_present
+      end
+
+      it "returns no cached results when cache is empty" do
+        query = make_query("SELECT 1 as value")
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_nil
+        expect(response_json["query"]["cached_at"]).to be_nil
+      end
+
+      it "invalidates cache when SQL is updated" do
+        query = make_query("SELECT 1 as old_value")
+        run_query query.id
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_present
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: query.name,
+                sql: "SELECT 2 as new_value",
+                group_ids: [],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_nil
+      end
+
+      it "does not invalidate cache when SQL differs only by whitespace" do
+        query = make_query("SELECT 1 as value")
+        run_query query.id
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_present
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: query.name,
+                sql: "SELECT 1 as value\n",
+                group_ids: [],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_present
+      end
+
+      it "does not invalidate cache when only name changes" do
+        query = make_query("SELECT 1 as value")
+        run_query query.id
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_present
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: "New name",
+                sql: query.sql,
+                group_ids: [],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_present
+      end
+
+      it "caches separately for different params" do
+        query = make_query <<~SQL
+          -- [params]
+          -- int :num = 1
+          SELECT :num as my_value
+        SQL
+
+        run_query query.id, num: 10
+        run_query query.id, num: 20
+
+        cached_10 = DiscourseDataExplorer::ResultCache.get(query, { "num" => "10" })
+        cached_20 = DiscourseDataExplorer::ResultCache.get(query, { "num" => "20" })
+
+        expect(cached_10["result"]["rows"]).to eq([[10]])
+        expect(cached_20["result"]["rows"]).to eq([[20]])
+      end
+
+      it "returns cached results in show response for parameterized queries" do
+        query = make_query <<~SQL
+          -- [params]
+          -- int :num = 1
+          SELECT :num as my_value
+        SQL
+
+        run_query query.id, num: 42
+        expect(response.status).to eq(200)
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_present
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[42]])
+      end
+
+      it "does not cache results exceeding the size limit" do
+        large_rows = (1..200).map { |i| "SELECT '#{("x" * 1024)}' as val_#{i}" }.join(" UNION ALL ")
+        query = make_query(large_rows)
+        run_query query.id
+
+        expect(response.status).to eq(200)
+        expect(response_json["cached"]).to eq(false)
+        expect(DiscourseDataExplorer::ResultCache.get(query)).to be_nil
+      end
+    end
   end
 
   describe "Non-Admin" do
