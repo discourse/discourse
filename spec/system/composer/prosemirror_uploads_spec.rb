@@ -61,7 +61,7 @@ describe "Composer - ProseMirror - Uploads" do
       cdp.with_slow_upload do
         attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
         expect(composer).to have_in_progress_uploads
-        expect(rich).to have_css("img[data-placeholder='true']")
+        expect(rich).to have_css(".upload-placeholder-image")
         expect(rich).to have_css(".upload-placeholder-file")
       end
     end
@@ -78,7 +78,7 @@ describe "Composer - ProseMirror - Uploads" do
         find("#cancel-file-upload").click
 
         expect(composer).to have_no_in_progress_uploads
-        expect(rich).to have_no_css("img[data-placeholder='true']")
+        expect(rich).to have_no_css(".upload-placeholder-image")
       end
     end
 
@@ -122,7 +122,7 @@ describe "Composer - ProseMirror - Uploads" do
 
         find(".upload-placeholder-image__overlay .upload-placeholder__cancel").click
 
-        expect(rich).to have_no_css("img[data-placeholder='true']")
+        expect(rich).to have_no_css(".upload-placeholder-image")
       end
     end
   end
