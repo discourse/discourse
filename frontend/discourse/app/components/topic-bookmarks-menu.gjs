@@ -443,7 +443,7 @@ export default class TopicBookmarksMenu extends Component {
               >
                 <DButton
                   @icon="trash-can"
-                  @label="bookmarked.clear_bookmarks"
+                  @label="bookmarked.delete_bookmarks"
                   @action={{this.onClearAllBookmarks}}
                   class="bookmark-menu__row-btn --danger"
                 />
