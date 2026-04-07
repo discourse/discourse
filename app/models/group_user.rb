@@ -8,7 +8,6 @@ class GroupUser < ActiveRecord::Base
   after_destroy :grant_other_available_title
   after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
-  after_commit :increase_group_user_count, on: [:create]
   after_commit :decrease_group_user_count, on: [:destroy]
 
   after_commit :sync_via_manager, on: %i[create destroy]
@@ -165,10 +164,6 @@ class GroupUser < ActiveRecord::Base
 
     TagUser.auto_watch(user_ids: user_ids)
     TagUser.auto_track(user_ids: user_ids)
-  end
-
-  def increase_group_user_count
-    Group.increment_counter(:user_count, self.group_id)
   end
 
   def decrease_group_user_count

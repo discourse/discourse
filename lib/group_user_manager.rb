@@ -60,6 +60,7 @@ class GroupUserManager
     grant_trust_level(added_user_ids)
     GroupUser.bulk_set_category_notifications(@group, added_user_ids)
     GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
+    increase_group_user_count(added_user_ids)
   end
 
   def sync_removal_side_effects(removed_user_ids)
@@ -112,7 +113,7 @@ class GroupUserManager
 
       update_title(added_user_ids)
 
-      Group.update_counters(@group.id, user_count: added_user_ids.size)
+      increase_group_user_count(added_user_ids)
     end
 
     added_user_ids
@@ -248,5 +249,9 @@ class GroupUserManager
         trust_level: @group.grant_trust_level,
       )
     end
+  end
+
+  def increase_group_user_count(added_user_ids)
+    Group.update_counters(@group.id, user_count: added_user_ids.size)
   end
 end
