@@ -94,9 +94,9 @@ RSpec.describe UpcomingChanges::List do
           before do
             mock_upcoming_change_default_overrides(
               {
-                suggested_topics_unread_max_days_old: {
+                suggested_topics_max_days_old: {
                   upcoming_change: :enable_upload_debug_mode,
-                  new_default: 180,
+                  new_default: 1000,
                 },
               },
             )
@@ -107,7 +107,7 @@ RSpec.describe UpcomingChanges::List do
           it "includes the related setting name" do
             results = result.upcoming_changes
             mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
-            expect(mock_setting[:related]).to eq(:suggested_topics_unread_max_days_old)
+            expect(mock_setting[:related]).to eq(:suggested_topics_max_days_old)
           end
         end
 

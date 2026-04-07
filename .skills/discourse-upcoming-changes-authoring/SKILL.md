@@ -94,7 +94,7 @@ A setting declares a default override with the `upcoming_change_default_override
 
 ```yaml
 # The upcoming change setting (the "trigger")
-enable_reactions_by_default:
+increase_suggested_topics_max_days_old_default:
   default: false
   type: bool
   upcoming_change:
@@ -102,15 +102,15 @@ enable_reactions_by_default:
     impact: "site_setting_default,all_members"
 
 # The setting whose default changes (the "target")
-reactions_enabled:
-  default: false
-  type: bool
+suggested_topics_max_days_old:
+  default: 365
+  type: integer
   upcoming_change_default_override:
-    upcoming_change: enable_reactions_by_default
-    new_default: true
+    upcoming_change: increase_suggested_topics_max_days_old_default
+    new_default: 1000
 ```
 
-When `enable_reactions_by_default` is enabled (either manually by admin or via auto-promotion), the default value of `reactions_enabled` changes from `false` to `true`. The `impact` field on the trigger setting should include `site_setting_default` as its `impact_type`.
+When `increase_suggested_topics_max_days_old_default` is enabled (either manually by admin or via auto-promotion), the default value of `suggested_topics_max_days_old` changes from `365` to `1000`. The `impact` field on the trigger setting should include `site_setting_default` as its `impact_type`.
 
 #### How It Works
 
@@ -228,30 +228,30 @@ Use `mock_upcoming_change_default_overrides` to set up override metadata in test
 ```ruby
 mock_upcoming_change_default_overrides(
   {
-    reactions_enabled: {
-      upcoming_change: :enable_reactions_by_default,
-      new_default: true,
+    suggested_topics_max_days_old: {
+      upcoming_change: :increase_suggested_topics_max_days_old_default,
+      new_default: 1000,
     },
   },
 )
 
 # Enable the trigger setting and refresh to activate the override
-SiteSetting.enable_reactions_by_default = true
+SiteSetting.increase_suggested_topics_max_days_old_default = true
 SiteSetting.refresh!
 
-# Now SiteSetting.reactions_enabled returns true (the overridden default)
+# Now SiteSetting.suggested_topics_max_days_old returns 1000 (the overridden default)
 ```
 
 To test that the override does NOT apply when the admin has customized the target setting:
 
 ```ruby
 # Admin sets a custom value before the override activates
-SiteSetting.reactions_enabled = false
-SiteSetting.enable_reactions_by_default = true
+SiteSetting.suggested_topics_max_days_old = 730
+SiteSetting.increase_suggested_topics_max_days_old_default = true
 SiteSetting.refresh!
 
 # Override is not applied — admin's explicit choice is preserved
-expect(SiteSetting.reactions_enabled).to eq(false)
+expect(SiteSetting.suggested_topics_max_days_old).to eq(730)
 ```
 
 ### Cache Clearing in Tests

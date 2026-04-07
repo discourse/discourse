@@ -828,6 +828,8 @@ RSpec.describe SiteSettingExtension do
       settings.refresh!
     end
 
+    after { DiscoursePluginRegistry.reset! }
+
     it "is in the `hidden_settings` collection" do
       expect(settings.hidden_settings.include?(:superman_identity)).to eq(true)
     end
@@ -1976,9 +1978,9 @@ RSpec.describe SiteSettingExtension do
       end
 
       it "does not override a manually set target setting value" do
-        settings.add_override!(:suggested_topics_max_days_old, 1000)
+        settings.add_override!(:suggested_topics_max_days_old, 730)
         settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
-        expect(settings.suggested_topics_max_days_old).to eq(1000)
+        expect(settings.suggested_topics_max_days_old).to eq(730)
       end
     end
 
@@ -1986,25 +1988,29 @@ RSpec.describe SiteSettingExtension do
       context "when the linked upcoming change is active" do
         before do
           UpcomingChanges.stubs(:settings_provider).returns(settings)
-          settings.provider.save(:enable_reactions_by_default, true, SiteSetting.types[:bool])
+          settings.provider.save(
+            :increase_suggested_topics_max_days_old_default,
+            true,
+            SiteSetting.types[:bool],
+          )
           settings.refresh!
         end
 
         it "shows the override default in all_settings" do
-          setting = settings.all_settings.find { |s| s[:setting] == :reactions_enabled }
-          expect(setting[:default]).to eq("true")
+          setting = settings.all_settings.find { |s| s[:setting] == :suggested_topics_max_days_old }
+          expect(setting[:default]).to eq("1000")
         end
 
         it "does not show the setting as overridden when value matches effective default" do
-          setting = settings.all_settings.find { |s| s[:setting] == :reactions_enabled }
+          setting = settings.all_settings.find { |s| s[:setting] == :suggested_topics_max_days_old }
           expect(setting[:value]).to eq(setting[:default])
         end
       end
 
       context "when the linked upcoming change is not active" do
         it "shows the original YAML default in all_settings" do
-          setting = settings.all_settings.find { |s| s[:setting] == :reactions_enabled }
-          expect(setting[:default]).to eq("false")
+          setting = settings.all_settings.find { |s| s[:setting] == :suggested_topics_max_days_old }
+          expect(setting[:default]).to eq("365")
         end
       end
     end

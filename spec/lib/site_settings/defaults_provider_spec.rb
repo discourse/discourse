@@ -154,13 +154,13 @@ RSpec.describe SiteSettings::DefaultsProvider do
 
   describe "upcoming change default overrides" do
     before do
-      settings.setting(:enable_upload_debug_mode, false)
+      settings.setting(:suggested_topics_max_days_old, 365)
       settings.instance_variable_set(
         :@upcoming_change_default_overrides,
         {
-          enable_upload_debug_mode: {
-            new_default: true,
-            upcoming_change: :enable_upload_debug_mode_new_default,
+          suggested_topics_max_days_old: {
+            new_default: 1000,
+            upcoming_change: :increase_suggested_topics_max_days_old_default,
           },
         },
       )
@@ -169,20 +169,22 @@ RSpec.describe SiteSettings::DefaultsProvider do
     describe ".all" do
       context "when the upcoming change override is active" do
         before do
-          settings.defaults.activate_upcoming_change_override(:enable_upload_debug_mode_new_default)
+          settings.defaults.activate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
         end
 
         it "uses upcoming change default overrides by default" do
-          expect(settings.defaults.all[:enable_upload_debug_mode]).to eq(true)
+          expect(settings.defaults.all[:suggested_topics_max_days_old]).to eq(1000)
         end
 
-        context "when include_upcoming_changes_overrides is fasle" do
+        context "when include_upcoming_changes_overrides is false" do
           it "does not use upcoming change default overrides" do
             expect(
               settings.defaults.all(include_upcoming_changes_overrides: false)[
-                :enable_upload_debug_mode
+                :suggested_topics_max_days_old
               ],
-            ).to eq(false)
+            ).to eq(365)
           end
         end
       end
@@ -190,41 +192,43 @@ RSpec.describe SiteSettings::DefaultsProvider do
       context "when the upcoming change override is not active" do
         before do
           settings.defaults.deactivate_upcoming_change_override(
-            :enable_upload_debug_mode_new_default,
+            :increase_suggested_topics_max_days_old_default,
           )
         end
 
         it "does not use upcoming change default overrides" do
-          expect(settings.defaults.all[:enable_upload_debug_mode]).to eq(false)
+          expect(settings.defaults.all[:suggested_topics_max_days_old]).to eq(365)
         end
       end
     end
 
     describe ".upcoming_change_override_metadata" do
       before do
-        settings.defaults.activate_upcoming_change_override(:enable_upload_debug_mode_new_default)
+        settings.defaults.activate_upcoming_change_override(
+          :increase_suggested_topics_max_days_old_default,
+        )
       end
 
       it "returns the upcoming change override metadata" do
         expect(
-          settings.defaults.upcoming_change_override_metadata(:enable_upload_debug_mode),
+          settings.defaults.upcoming_change_override_metadata(:suggested_topics_max_days_old),
         ).to eq(
-          old_default: "false",
-          new_default: "true",
-          change_setting_name: :enable_upload_debug_mode_new_default,
+          old_default: "365",
+          new_default: "1000",
+          change_setting_name: :increase_suggested_topics_max_days_old_default,
         )
       end
 
       context "when the upcoming change override is not active" do
         before do
           settings.defaults.deactivate_upcoming_change_override(
-            :enable_upload_debug_mode_new_default,
+            :increase_suggested_topics_max_days_old_default,
           )
         end
 
         it "returns nil" do
           expect(
-            settings.defaults.upcoming_change_override_metadata(:enable_upload_debug_mode),
+            settings.defaults.upcoming_change_override_metadata(:suggested_topics_max_days_old),
           ).to be_nil
         end
       end

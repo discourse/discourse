@@ -322,9 +322,9 @@ describe "Admin upcoming changes" do
       )
       mock_upcoming_change_default_overrides(
         {
-          suggested_topics_unread_max_days_old: {
+          suggested_topics_max_days_old: {
             upcoming_change: :enable_upload_debug_mode,
-            new_default: 180,
+            new_default: 1000,
           },
         },
       )
@@ -338,11 +338,11 @@ describe "Admin upcoming changes" do
     end
 
     it "shows information about the default override in the site settings UI" do
-      settings_page.visit("suggested_topics_unread_max_days_old")
+      settings_page.visit("suggested_topics_max_days_old")
       expect(settings_page).to have_upcoming_change_default_warning(
-        :suggested_topics_unread_max_days_old,
-        old_default: 90,
-        new_default: 180,
+        :suggested_topics_max_days_old,
+        old_default: 365,
+        new_default: 1000,
       )
     end
   end
