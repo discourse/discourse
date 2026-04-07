@@ -54,7 +54,7 @@ class GroupUserManager
   # :increase_group_user_count
   def sync_add_side_effects(added_user_ids)
     update_title(added_user_ids)
-    set_primary_group(added_user_ids)
+    set_primary_group(added_user_ids) if @group.primary_group?
     grant_trust_level(added_user_ids)
     GroupUser.bulk_set_category_notifications(@group, added_user_ids)
     GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
