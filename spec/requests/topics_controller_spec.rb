@@ -2933,6 +2933,18 @@ RSpec.describe TopicsController do
       expect(response.body).to have_tag(:body, with: { class: "crawler" })
     end
 
+    it "does not redirect private messages to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      pm = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: pm, user: user)
+
+      sign_in(user)
+      get "/t/#{pm.slug}/#{pm.id}"
+
+      expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 

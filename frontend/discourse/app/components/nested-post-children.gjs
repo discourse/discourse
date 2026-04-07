@@ -209,7 +209,7 @@ export default class NestedPostChildren extends Component {
   <template>
     <div class="nested-post-children">
       <ConditionalLoadingSpinner @condition={{this.loading}}>
-        {{#each this.childNodes as |node|}}
+        {{#each this.childNodes key="post.id" as |node|}}
           <NestedPost
             @post={{node.post}}
             @children={{node.children}}

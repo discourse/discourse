@@ -392,7 +392,7 @@ export default class NestedPost extends Component {
                       >
                         <PostMetaData
                           @post={{@post}}
-                          @editPost={{@editPost}}
+                          @editPost={{fn @editPost @post}}
                           @showHistory={{fn @showHistory @post}}
                         />
                       </PluginOutlet>

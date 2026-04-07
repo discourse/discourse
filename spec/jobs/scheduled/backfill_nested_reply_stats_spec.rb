@@ -64,7 +64,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(stat.whisper_total_descendant_count).to eq(1)
   end
 
-  it "skips deleted posts" do
+  it "includes soft-deleted posts in stats" do
     parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
     Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
     Fabricate(
@@ -78,7 +78,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     execute
 
     stat = NestedViewPostStat.find_by(post_id: parent.id)
-    expect(stat.direct_reply_count).to eq(1)
+    expect(stat.direct_reply_count).to eq(2)
   end
 
   it "preserves higher live-incremented stats over backfill-computed values" do

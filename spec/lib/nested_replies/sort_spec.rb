@@ -17,20 +17,20 @@ RSpec.describe NestedReplies::Sort do
   describe ".sort_in_memory" do
     let(:posts) do
       [
-        Struct.new(:like_count, :post_number, :created_at).new(5, 3, 2.days.ago),
-        Struct.new(:like_count, :post_number, :created_at).new(10, 2, 1.day.ago),
-        Struct.new(:like_count, :post_number, :created_at).new(1, 4, 3.days.ago),
+        Struct.new(:like_count, :post_number, :created_at).new(5, 2, 3.days.ago),
+        Struct.new(:like_count, :post_number, :created_at).new(1, 3, 1.day.ago),
+        Struct.new(:like_count, :post_number, :created_at).new(10, 4, 2.days.ago),
       ]
     end
 
     it "sorts by top (like_count desc, post_number asc tiebreaker)" do
       sorted = described_class.sort_in_memory(posts, "top")
-      expect(sorted.map(&:post_number)).to eq([2, 3, 4])
+      expect(sorted.map(&:post_number)).to eq([4, 2, 3])
     end
 
     it "sorts by new (created_at desc)" do
       sorted = described_class.sort_in_memory(posts, "new")
-      expect(sorted.map(&:post_number)).to eq([2, 3, 4])
+      expect(sorted.map(&:post_number)).to eq([3, 4, 2])
     end
 
     it "sorts by old (post_number asc)" do

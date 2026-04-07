@@ -115,7 +115,7 @@ export default class NestedView extends Component {
       {{/if}}
 
       <div class="nested-view__roots">
-        {{#each @rootNodes as |node|}}
+        {{#each @rootNodes key="post.id" as |node|}}
           <NestedPost
             @post={{node.post}}
             @children={{node.children}}

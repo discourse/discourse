@@ -345,6 +345,6 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_is_nested_view?
-    SiteSetting.nested_replies_enabled
+    SiteSetting.nested_replies_enabled && !object.topic.private_message?
   end
 end

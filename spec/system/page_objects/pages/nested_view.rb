@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class NestedView < PageObjects::Pages::Base
-      SORT_LABELS = { "top" => "Top", "new" => "New", "old" => "Old" }.freeze
-
       def visit_nested(topic)
         page.visit("/n/#{topic.slug}/#{topic.id}")
         self
@@ -160,7 +158,10 @@ module PageObjects
       end
 
       def has_sort_active?(sort)
-        has_css?(".nested-sort-selector__option--active", text: SORT_LABELS[sort])
+        has_css?(
+          ".nested-sort-selector__option--active",
+          text: I18n.t("js.nested_replies.sort.#{sort}"),
+        )
       end
 
       def has_op_post?
@@ -336,7 +337,7 @@ module PageObjects
       end
 
       def click_sort(sort)
-        find(".nested-sort-selector__option", text: SORT_LABELS[sort]).click
+        find(".nested-sort-selector__option", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
       end
 

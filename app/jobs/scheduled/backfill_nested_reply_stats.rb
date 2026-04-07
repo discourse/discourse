@@ -40,7 +40,6 @@ module Jobs
                  COUNT(*) AS cnt
           FROM posts
           WHERE topic_id = :topic_id
-            AND deleted_at IS NULL
             AND reply_to_post_number IS NOT NULL
             AND post_number > 1
           GROUP BY reply_to_post_number, post_type
@@ -56,7 +55,6 @@ module Jobs
           SELECT id, post_number, reply_to_post_number, post_type
           FROM posts
           WHERE topic_id = :topic_id
-            AND deleted_at IS NULL
             AND reply_to_post_number IS NOT NULL
             AND post_number > 1
         ),
@@ -92,7 +90,6 @@ module Jobs
           LEFT JOIN direct_agg d ON d.parent_number = p.post_number
           LEFT JOIN descendant_agg t ON t.ancestor_number = p.post_number
           WHERE p.topic_id = :topic_id
-            AND p.deleted_at IS NULL
             AND (d.parent_number IS NOT NULL OR t.ancestor_number IS NOT NULL)
         )
         INSERT INTO nested_view_post_stats

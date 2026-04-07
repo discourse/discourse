@@ -62,6 +62,21 @@ RSpec.describe NestedReplies do
 
       expect(post.topic.reload.nested_topic).to be_nil
     end
+
+    it "does not set the nested field for private messages" do
+      SiteSetting.nested_replies_default = true
+
+      post =
+        PostCreator.create!(
+          user,
+          title: "Test private message topic",
+          raw: "This is a private message that should not get nested",
+          archetype: Archetype.private_message,
+          target_usernames: [Fabricate(:user).username],
+        )
+
+      expect(post.topic.reload.nested_topic).to be_nil
+    end
   end
 
   describe "serialization" do
@@ -90,6 +105,26 @@ RSpec.describe NestedReplies do
       json = TopicViewSerializer.new(topic_view, scope: Guardian.new(user), root: false).as_json
 
       expect(json[:is_nested_view]).to eq(false)
+    end
+
+    context "when topic is a private message" do
+      fab!(:pm) { Fabricate(:private_message_topic, user: user) }
+      fab!(:pm_op) { Fabricate(:post, topic: pm, user: user, post_number: 1) }
+
+      before { NestedTopic.create!(topic: pm) }
+
+      it "does not include is_nested_view on TopicViewSerializer" do
+        topic_view = TopicView.new(pm.id, user)
+        json = TopicViewSerializer.new(topic_view, scope: Guardian.new(user), root: false).as_json
+
+        expect(json).not_to have_key(:is_nested_view)
+      end
+
+      it "does not include is_nested_view on TopicListItemSerializer" do
+        json = TopicListItemSerializer.new(pm, scope: Guardian.new(user), root: false).as_json
+
+        expect(json).not_to have_key(:is_nested_view)
+      end
     end
 
     context "when nested_replies_default is enabled" do

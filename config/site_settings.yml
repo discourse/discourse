@@ -960,7 +960,6 @@ users:
     min: 8
     max: 500
     requires_confirmation: "simple"
-    nested_replies: "Nested replies"
   min_admin_password_length:
     client: true
     default: 15
@@ -1807,6 +1806,9 @@ nested_replies:
     default: false
     client: true
     area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
   nested_replies_default_sort:
     default: "top"
     client: true
@@ -1816,6 +1818,9 @@ nested_replies:
       - new
       - old
     area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
   nested_replies_max_depth:
     default: 10
     client: true
@@ -1823,10 +1828,16 @@ nested_replies:
     min: 1
     max: 10
     area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
   nested_replies_cap_nesting_depth:
     default: false
     client: true
     area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
@@ -1840,6 +1851,9 @@ nested_replies:
     allow_any: false
     refresh: true
     area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
 
 email:
   email_time_window_mins:

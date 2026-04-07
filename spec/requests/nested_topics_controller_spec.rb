@@ -45,6 +45,28 @@ RSpec.describe NestedTopicsController, type: :request do
       get "/n/#{private_topic.slug}/#{private_topic.id}"
       expect(response.status).to eq(403)
     end
+
+    it "redirects private messages to flat view" do
+      pm = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: pm, user: user, post_number: 1)
+
+      sign_in(user)
+      get "/n/#{pm.slug}/#{pm.id}"
+
+      expect(response).to redirect_to("/t/#{pm.slug}/#{pm.id}")
+      expect(response.status).to eq(302)
+    end
+
+    it "redirects private messages to flat view with post number" do
+      pm = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: pm, user: user, post_number: 1)
+
+      sign_in(user)
+      get "/n/#{pm.slug}/#{pm.id}/5"
+
+      expect(response).to redirect_to("/t/#{pm.slug}/#{pm.id}/5")
+      expect(response.status).to eq(302)
+    end
   end
 
   describe "GET show" do
@@ -53,6 +75,16 @@ RSpec.describe NestedTopicsController, type: :request do
       sign_in(user)
       get show_url(topic)
       expect(response.status).to eq(404)
+    end
+
+    it "redirects private messages to flat view" do
+      pm = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: pm, user: user, post_number: 1)
+
+      sign_in(user)
+      get show_url(pm)
+
+      expect(response).to redirect_to("/t/#{pm.slug}/#{pm.id}")
     end
 
     it "returns 403 for anonymous users on private topics" do
@@ -475,6 +507,16 @@ RSpec.describe NestedTopicsController, type: :request do
 
         json = response.parsed_body
         expect(json["pinned_post_ids"]).to contain_exactly(root_post.id, second_root.id)
+      end
+
+      it "rejects pinning when 10 posts are already pinned" do
+        posts = 10.times.map { Fabricate(:post, topic: topic, reply_to_post_number: nil) }
+        topic.nested_topic.update!(pinned_post_ids: posts.map(&:id))
+
+        extra = Fabricate(:post, topic: topic, reply_to_post_number: nil)
+        sign_in(admin)
+        put pin_url(topic), params: { post_id: extra.id }
+        expect(response.status).to eq(400)
       end
 
       it "lazily creates a NestedTopic record when nested_replies_default is on" do

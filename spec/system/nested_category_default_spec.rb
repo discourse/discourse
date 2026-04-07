@@ -15,6 +15,7 @@ RSpec.describe "Nested view category default" do
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
   let(:category_page) { PageObjects::Pages::Category.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before do
     SiteSetting.nested_replies_enabled = true
@@ -58,10 +59,7 @@ RSpec.describe "Nested view category default" do
 
         category_page.visit_settings(unchecked_category)
 
-        find(
-          ".form-kit__control-checkbox-label",
-          text: I18n.t("js.nested_replies.category_settings.default_nested_view"),
-        ).click
+        form.field("category_setting.nested_replies_default").toggle
         category_page.save_settings
 
         unchecked_category.reload
@@ -71,12 +69,7 @@ RSpec.describe "Nested view category default" do
       it "shows checkbox as checked when category has nested default enabled" do
         category_page.visit_settings(nested_category)
 
-        checkbox =
-          find(
-            ".form-kit__control-checkbox-label",
-            text: I18n.t("js.nested_replies.category_settings.default_nested_view"),
-          ).find(".form-kit__control-checkbox")
-        expect(checkbox).to be_checked
+        expect(form.field("category_setting.nested_replies_default")).to be_checked
       end
     end
   end

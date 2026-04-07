@@ -5,6 +5,7 @@ class NestedTopicsController < ApplicationController
 
   before_action :ensure_nested_replies_enabled
   before_action :find_topic
+  before_action :ensure_not_pm
 
   # GET /n/:slug/:topic_id (HTML + JSON)
   # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)
@@ -157,46 +158,26 @@ class NestedTopicsController < ApplicationController
 
   # PUT /n/:slug/:topic_id/pin
   def pin
-    guardian.ensure_can_edit!(@topic)
-    raise Discourse::InvalidAccess unless guardian.is_staff?
-
-    post_id = params[:post_id].presence&.to_i
-    raise Discourse::NotFound if post_id.nil?
-
-    post = @topic.posts.find_by(id: post_id)
-    raise Discourse::NotFound unless post
-    if post.reply_to_post_number.present? && post.reply_to_post_number != 1
-      raise Discourse::InvalidParameters.new(:post_id)
+    NestedTopic::TogglePin.call(service_params.deep_merge(params: { topic_id: @topic.id })) do
+      on_success { |nested_topic:| render json: { pinned_post_ids: nested_topic.pinned_post_ids } }
+      on_failed_contract { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_failed_policy(:staff_can_edit) { raise Discourse::InvalidAccess }
+      on_failed_policy(:post_is_root) { raise Discourse::InvalidParameters.new(:post_id) }
+      on_failed_policy(:within_pin_limit) { raise Discourse::InvalidParameters.new(:post_id) }
+      on_failure { raise Discourse::InvalidParameters }
     end
-
-    nested_topic = @topic.nested_topic || NestedTopic.find_or_create_by!(topic: @topic)
-    pinned_ids = nested_topic.pinned_post_ids || []
-
-    if pinned_ids.include?(post_id)
-      pinned_ids = pinned_ids - [post_id]
-    else
-      pinned_ids = pinned_ids + [post_id]
-    end
-
-    nested_topic.update!(pinned_post_ids: pinned_ids)
-
-    render json: { pinned_post_ids: pinned_ids }
   end
 
   # PUT /n/:slug/:topic_id/toggle
   def toggle
-    guardian.ensure_can_edit!(@topic)
-    raise Discourse::InvalidAccess unless guardian.is_staff?
-
-    enabled = params[:enabled].to_s == "true"
-
-    if enabled
-      NestedTopic.find_or_create_by!(topic: @topic) unless @topic.nested_topic
-    else
-      @topic.nested_topic&.destroy!
+    NestedTopic::Toggle.call(service_params.deep_merge(params: { topic_id: @topic.id })) do
+      on_success { |params:| render json: { is_nested_view: params.enabled } }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_policy(:staff_can_edit) { raise Discourse::InvalidAccess }
+      on_failure { raise Discourse::InvalidParameters }
     end
-
-    render json: { is_nested_view: enabled }
   end
 
   private
@@ -332,6 +313,15 @@ class NestedTopicsController < ApplicationController
 
   def ensure_nested_replies_enabled
     raise Discourse::NotFound unless SiteSetting.nested_replies_enabled
+  end
+
+  def ensure_not_pm
+    if @topic.private_message?
+      url = "/t/#{@topic.slug}/#{@topic.id}"
+      post_number = params[:post_number].to_i
+      url << "/#{post_number}" if post_number > 0
+      redirect_to url, status: :found
+    end
   end
 
   def find_topic

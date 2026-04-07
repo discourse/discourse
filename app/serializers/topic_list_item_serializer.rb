@@ -153,7 +153,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_is_nested_view?
-    SiteSetting.nested_replies_enabled
+    SiteSetting.nested_replies_enabled && !object.private_message?
   end
 
   private

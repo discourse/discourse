@@ -38,8 +38,9 @@ RSpec.describe "Nested view cloaking" do
 
       expect(nested_view).to have_cloaked_root
 
-      first_root = all(".nested-view__roots > .nested-post").first
-      expect(first_root[:class]).not_to include("nested-post--cloaked")
+      expect(page).to have_no_css(
+        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+      )
     end
 
     it "uncloaks roots when scrolling to them" do
@@ -55,8 +56,9 @@ RSpec.describe "Nested view cloaking" do
 
       send_keys(:home)
 
-      first_root = find(".nested-view__roots > .nested-post:first-child")
-      expect(first_root[:class]).not_to include("nested-post--cloaked")
+      expect(page).to have_no_css(
+        ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
+      )
     end
 
     it "hides children content when root is cloaked" do

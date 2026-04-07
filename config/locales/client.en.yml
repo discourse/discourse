@@ -3850,8 +3850,8 @@ en:
         description: "Update your personal notification level for the selected topics to:"
 
     nested_replies:
-      nested_view: "Nested View"
-      flat_view: "Flat View"
+      nested_view: "Nested view"
+      flat_view: "Flat view"
       view_as_nested: "View as nested"
       view_as_flat: "View as flat"
       sort:
