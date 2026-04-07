@@ -4270,6 +4270,7 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/278631"
   impersonate_without_logout:
     default: false
+    client: true
     hidden: true
     upcoming_change:
       status: "stable"
