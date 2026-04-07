@@ -779,7 +779,7 @@ RSpec.describe Middleware::RequestTracker do
       )
     end
 
-    it "returns 204 and does not call the app" do
+    it "calls the app but returns 204" do
       app_called = false
       middleware =
         Middleware::RequestTracker.new(
@@ -791,7 +791,7 @@ RSpec.describe Middleware::RequestTracker do
       status, = middleware.call(beacon_env({}))
 
       expect(status).to eq(204)
-      expect(app_called).to eq(false)
+      expect(app_called).to eq(true)
     end
 
     it "returns 204 for beacon requests in a subfolder setup" do
