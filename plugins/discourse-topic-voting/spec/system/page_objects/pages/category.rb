@@ -12,7 +12,11 @@ module TopicVotingCategory
   end
 
   def select_topic(topic)
-    find("tr[data-topic-id=\"#{topic.id}\"] a.list-vote-count.vote-count-0").click
+    if SiteSetting.topic_voting_show_vote_in_topic_list
+      find("tr[data-topic-id=\"#{topic.id}\"] a.raw-link").click
+    else
+      find("tr[data-topic-id=\"#{topic.id}\"] a.list-vote-count.vote-count-0").click
+    end
   end
 end
 

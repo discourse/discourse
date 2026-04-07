@@ -23,6 +23,7 @@ RSpec.describe "Topic voting" do
 
   before do
     SiteSetting.topic_voting_enabled = true
+    SiteSetting.topic_voting_show_vote_in_topic_list = true
     sign_in(admin)
   end
 
@@ -41,7 +42,8 @@ RSpec.describe "Topic voting" do
     # make a vote
     category_page.visit(category1)
     expect(category_page).to have_css(category_page.votes)
-    expect(category_page).to have_css(category_page.topic_with_vote_count(0), count: 2)
+
+    expect(page).to have_css(".list-voting", count: 2)
     category_page.select_topic(topic1)
 
     expect(topic_page.vote_count).to have_text("0")
@@ -55,7 +57,7 @@ RSpec.describe "Topic voting" do
     topic_page.click_my_votes
     expect(user_page.active_user_primary_navigation).to have_text("Activity")
     expect(user_page.active_user_secondary_navigation).to have_text("Votes")
-    expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]", text: "1 vote")
+    expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]")
     find(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"] a.raw-link").click
 
     # unvoting
@@ -76,10 +78,10 @@ RSpec.describe "Topic voting" do
       Fabricate(:post, topic: voting_topic1, raw: "Check out #{voting_topic2.url}")
 
       visit("/t/#{voting_topic3.slug}/#{voting_topic3.id}")
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.voting_closed_title"))
+      expect(page).to have_css("button.vote-button[disabled]")
 
       find("a[href='#{voting_topic1.url}']").click
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+      expect(page).to have_no_css("button.vote-button[disabled]")
 
       topic_page.vote
       expect(topic_page.vote_popup).to have_text(
@@ -87,7 +89,7 @@ RSpec.describe "Topic voting" do
       )
 
       find("a[href='#{voting_topic2.url}']").click
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+      expect(page).to have_no_css("button.vote-button[disabled]")
 
       topic_page.vote
       expect(topic_page.vote_popup).to have_text(
@@ -104,7 +106,7 @@ RSpec.describe "Topic voting" do
       Fabricate(:post, topic: voting_topic1)
 
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
-      topic_page.vote
+      expect(page).to have_css("button.vote-button[disabled]")
       expect(topic_page).to have_no_remove_vote_button
     end
   end
@@ -139,15 +141,12 @@ RSpec.describe "Topic voting" do
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
 
       topic_page.vote
-      expect(topic_page).to have_see_all_votes_link
-      expect(topic_page).to have_no_votes_left_text
       expect(topic_page.vote_count).to have_text("1")
+      expect(topic_page).to have_voted
 
       visit("/t/#{voting_topic2.slug}/#{voting_topic2.id}")
 
       topic_page.vote
-      expect(topic_page).to have_see_all_votes_link
-      expect(topic_page).to have_no_votes_left_text
       expect(topic_page.vote_count).to have_text("1")
     end
 
@@ -156,6 +155,7 @@ RSpec.describe "Topic voting" do
       voting_topic1.update_vote_count
 
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+      expect(topic_page.vote_count).to have_text("1")
 
       topic_page.remove_vote
       expect(topic_page.vote_count).to have_text("0")

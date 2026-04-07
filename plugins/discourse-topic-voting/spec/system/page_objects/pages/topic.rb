@@ -16,7 +16,7 @@ module TopicVotingTopic
   end
 
   def vote_popup
-    find(".topic-voting-menu__votes-left")
+    find(".see-votes")
   end
 
   def vote
@@ -25,17 +25,21 @@ module TopicVotingTopic
   end
 
   def remove_vote
-    vote
-    find("button.remove-vote").click
+    if SiteSetting.topic_voting_enable_vote_limits
+      vote
+      find("button.remove-vote").click
+    else
+      find("button.vote-button").click
+    end
     self
   end
 
   def click_my_votes
-    find(".topic-voting-menu__votes-left").click
+    find(".see-votes").click
   end
 
   def has_vote_button_label?(text)
-    has_css?("button.vote-button", text: text)
+    has_css?("button.vote-button[aria-label='#{text}']")
   end
 
   def has_no_remove_vote_button?
@@ -48,6 +52,14 @@ module TopicVotingTopic
 
   def has_no_votes_left_text?
     has_no_css?(".see-votes", text: %r{\d+/\d+})
+  end
+
+  def has_voted?
+    has_css?("button.vote-button.btn-success")
+  end
+
+  def has_not_voted?
+    has_css?("button.vote-button.btn-default") && has_no_css?("button.vote-button.btn-success")
   end
 end
 

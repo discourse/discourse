@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
@@ -10,11 +9,7 @@ import VoteButton from "./vote-button";
 import VoteCount from "./vote-count";
 
 export default class VoteBox extends Component {
-  @service siteSettings;
   @service currentUser;
-
-  @tracked votesAlert;
-  @tracked allowClick = true;
 
   @action
   addVote() {
@@ -31,8 +26,6 @@ export default class VoteBox extends Component {
         this.currentUser.votes_exceeded = !result.can_vote;
         this.currentUser.vote_limit = result.vote_limit;
         this.currentUser.votes_left = result.votes_left;
-        this.votesAlert = result.alert;
-        this.allowClick = true;
       })
       .catch(popupAjaxError);
   }
@@ -53,33 +46,19 @@ export default class VoteBox extends Component {
         this.currentUser.votes_exceeded = !result.can_vote;
         this.currentUser.vote_limit = result.vote_limit;
         this.currentUser.votes_left = result.votes_left;
-        this.allowClick = true;
       })
       .catch(popupAjaxError);
   }
 
-  @action
-  closeVotesAlert() {
-    this.votesAlert = null;
-  }
-
   <template>
-    <div
-      class={{concatClass
-        "voting-wrapper"
-        (if this.siteSettings.topic_voting_show_who_voted "show-pointer")
-      }}
-    >
-      <VoteCount @topic={{@topic}} @showLogin={{routeAction "showLogin"}} />
+    <div class={{concatClass "voting-wrapper" (if @topic.closed "--closed")}}>
       <VoteButton
         @topic={{@topic}}
-        @allowClick={{this.allowClick}}
-        @showVoteOptions={{this.showVoteOptions}}
         @addVote={{this.addVote}}
         @showLogin={{routeAction "showLogin"}}
         @removeVote={{this.removeVote}}
       />
-
+      <VoteCount @topic={{@topic}} />
     </div>
   </template>
 }

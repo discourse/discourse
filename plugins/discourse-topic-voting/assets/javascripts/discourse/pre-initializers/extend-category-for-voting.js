@@ -18,9 +18,15 @@ function initialize(api) {
     }
   });
   api.addTrackedPostProperties("can_vote");
+  const router = api.container.lookup("service:router");
+  const siteSettings = api.container.lookup("service:site-settings");
   api.addTagsHtmlCallback(
     (topic) => {
-      if (!topic.can_vote) {
+      if (
+        !topic.can_vote ||
+        router.currentRouteName?.startsWith("topic.") ||
+        siteSettings.topic_voting_show_vote_in_topic_list
+      ) {
         return;
       }
 
