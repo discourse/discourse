@@ -308,7 +308,10 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     assert.dom("canvas").exists("the chart was rendered");
     assert
       .dom("div.query-results section > :first-child")
-      .matchesSelector("canvas", "the chart is shown above the table");
+      .matchesSelector(
+        ".query-results-chart",
+        "the chart is shown above the table"
+      );
   });
 
   test("runs query and is able to download the results", async function (assert) {
@@ -357,7 +360,9 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         }
       });
 
-    await click("div.result-info button:nth-child(1)");
+    await click(
+      ".query-run-actions__right .query-result-download-buttons button:nth-child(1)"
+    );
 
     await finishedForm;
 
