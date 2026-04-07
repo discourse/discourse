@@ -636,14 +636,21 @@ export default class WorkflowCanvas extends Component {
                 opacity={{if entry.isPseudo "0.6" ""}}
                 d={{entry.pathD}}
               />
-              <polygon
+              <path
                 class="workflow-connection__arrow"
-                points="-4 -6, 8 0, -4 6"
+                d="M -9 -5 L 0 0 L -9 5 Z"
                 fill={{if
                   entry.isPseudo
                   "var(--tertiary)"
                   "var(--primary-low-mid)"
                 }}
+                stroke={{if
+                  entry.isPseudo
+                  "var(--tertiary)"
+                  "var(--primary-low-mid)"
+                }}
+                stroke-width="2"
+                stroke-linejoin="round"
                 transform={{entry.arrowTransform}}
               />
               {{#unless entry.isPseudo}}
