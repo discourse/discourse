@@ -278,6 +278,7 @@ jobs:
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: |
+          crashed=""
           for plugin in plugins/*/; do
             plugin_name=$(basename "$plugin")
             test_files=$(find "$plugin/test" -name "*-test.*" -o -name "*_test.*" 2>/dev/null)
@@ -286,19 +287,23 @@ jobs:
               continue
             fi
             echo "--- Testing $plugin_name"
-            output=$(bin/rake "plugin:qunit[$plugin_name]" 2>&1) || {
-              rc=$?
-              echo "$output"
-              if echo "$output" | grep -q "Browser exited unexpectedly"; then
-                echo "--- CHROME CRASH in $plugin_name (exit $rc)"
-                exit 1
-              fi
+            set +e
+            bin/rake "plugin:qunit[$plugin_name]" 2>&1 | tee /tmp/qunit-output.log
+            rc=${PIPESTATUS[0]}
+            set -e
+            if [ $rc -eq 0 ]; then
+              echo "--- PASSED $plugin_name"
+            elif grep -q "Browser exited unexpectedly" /tmp/qunit-output.log; then
+              echo "--- CHROME CRASH in $plugin_name (exit $rc)"
+              crashed="$crashed $plugin_name"
+            else
               echo "--- FAILED $plugin_name (exit $rc, non-crash)"
-              continue
-            }
-            echo "$output" | tail -5
-            echo "--- PASSED $plugin_name"
+            fi
           done
+          if [ -n "$crashed" ]; then
+            echo "Crashed plugins:$crashed"
+            exit 1
+          fi
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
