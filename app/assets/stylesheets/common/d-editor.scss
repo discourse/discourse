@@ -351,30 +351,50 @@
   }
 
   &.--left {
+    /*! rtl:ignore */
     left: 0;
 
     &::after {
       content: "";
       position: absolute;
+
+      /*! rtl:ignore */
       left: 100%;
       height: 100%;
       width: var(--fade-width);
+
+      /*! rtl:ignore */
       background: linear-gradient(to right, var(--fade-color), transparent);
       pointer-events: none;
+    }
+
+    // Undo automatic icon flip since button stays in physical position
+    .rtl & .d-icon {
+      transform: scaleX(1);
     }
   }
 
   &.--right {
+    /*! rtl:ignore */
     right: 0;
 
     &::before {
       content: "";
       position: absolute;
+
+      /*! rtl:ignore */
       right: 100%;
       height: 100%;
       width: var(--fade-width);
+
+      /*! rtl:ignore */
       background: linear-gradient(to left, var(--fade-color), transparent);
       pointer-events: none;
+    }
+
+    // Undo automatic icon flip since button stays in physical position
+    .rtl & .d-icon {
+      transform: scaleX(1);
     }
   }
 }
