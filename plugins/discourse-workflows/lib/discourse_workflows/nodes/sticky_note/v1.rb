@@ -49,8 +49,8 @@ module DiscourseWorkflows
           }
         end
 
-        def execute(_exec_ctx)
-          raise "Sticky notes are not executable"
+        def execute(exec_ctx)
+          [exec_ctx.input_items]
         end
       end
     end
