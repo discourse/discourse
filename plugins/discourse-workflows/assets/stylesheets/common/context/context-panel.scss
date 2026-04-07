@@ -20,20 +20,19 @@
     margin: 0 0 var(--space-1);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--primary-medium);
     font-family: monospace;
+    color: var(--primary-800);
   }
 
   &__hint-text {
     margin: 0;
     font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    color: var(--primary-800);
   }
 
   &__hint-close {
     margin-left: auto;
     flex-shrink: 0;
-    color: var(--primary-medium);
     padding: 0;
   }
 
@@ -54,8 +53,8 @@
     margin: 0 0 var(--space-2);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--primary-medium);
     font-family: monospace;
+    color: var(--primary-800);
   }
 
   &__empty {
