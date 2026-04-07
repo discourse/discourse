@@ -281,9 +281,6 @@ importers:
       '@jsquash/jxl':
         specifier: github:xfalcox/jSquash#claude/combined-new-codecs&path:packages/jxl
         version: https://codeload.github.com/xfalcox/jSquash/tar.gz/25759a9be4171554c3f8209bb09078516e67cf45#path:packages/jxl
-      '@jsquash/png':
-        specifier: ^3.0.0
-        version: 3.1.1
       '@jsquash/resize':
         specifier: ^2.1.0
         version: 2.1.1
@@ -2602,9 +2599,6 @@ packages:
   '@jsquash/jxl@https://codeload.github.com/xfalcox/jSquash/tar.gz/25759a9be4171554c3f8209bb09078516e67cf45#path:packages/jxl':
     resolution: {path: packages/jxl, tarball: https://codeload.github.com/xfalcox/jSquash/tar.gz/25759a9be4171554c3f8209bb09078516e67cf45}
     version: 1.3.0
-
-  '@jsquash/png@3.1.1':
-    resolution: {integrity: sha512-C10pc+0H6j0h8fENOfnGOvkXCmvpSQTDGlfGd0sHphZhPSGTyLjIrHba0FaZZdsKqA/wlmhYicUHb92vfZphaw==}
 
   '@jsquash/resize@2.1.1':
     resolution: {integrity: sha512-0R5UL1ZLHUT+carjVikcE1QfA+kfNQ2YamYyGVRmhfh4zttU5EY3bQBGxPIPtY2xIAw1P4Kgyxm2xrceRw1r2w==}
@@ -11388,8 +11382,6 @@ snapshots:
   '@jsquash/jxl@https://codeload.github.com/xfalcox/jSquash/tar.gz/25759a9be4171554c3f8209bb09078516e67cf45#path:packages/jxl':
     dependencies:
       wasm-feature-detect: 1.8.0
-
-  '@jsquash/png@3.1.1': {}
 
   '@jsquash/resize@2.1.1': {}
 

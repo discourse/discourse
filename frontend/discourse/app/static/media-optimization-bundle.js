@@ -2,9 +2,11 @@ import { decodeAnimated as decodeGifAnimated } from "@jsquash/gif";
 import { decode as decodeHeic } from "@jsquash/heic";
 import { encode as encodeJpeg } from "@jsquash/jpeg";
 import { decode as decodeJxl } from "@jsquash/jxl";
-import { encode as encodePng } from "@jsquash/png";
 import resize from "@jsquash/resize";
-import { encodeAnimated as encodeWebpAnimated } from "@jsquash/webp";
+import {
+  encode as encodeWebp,
+  encodeAnimated as encodeWebpAnimated,
+} from "@jsquash/webp";
 
 function resizeWithAspect(
   input_width,
@@ -201,14 +203,16 @@ globalThis.convert = async function (
 
   if (transparent) {
     logIfDebug(
-      `Image ${fileName} has transparency, encoding as optimized PNG instead of JPEG`
+      `Image ${fileName} has transparency, encoding as WEBP instead of JPEG`
     );
-    const result = await encodePng(resized);
+    const result = await encodeWebp(resized, {
+      quality: settings.encode_quality,
+    });
     const finalSize = result.byteLength;
     logIfDebug(
-      `Converted ${fileName} from ${originalFileSize} bytes to ${finalSize} bytes PNG (OxiPNG)`
+      `Converted ${fileName} from ${originalFileSize} bytes to ${finalSize} bytes WEBP`
     );
-    return { data: result, outputType: "image/png" };
+    return { data: result, outputType: "image/webp" };
   }
 
   const result = await encodeJpeg(resized, buildMozJpegOptions(settings));

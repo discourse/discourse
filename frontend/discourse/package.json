@@ -41,7 +41,6 @@
     "@jsquash/heic": "github:xfalcox/jSquash#claude/combined-new-codecs&path:packages/heic",
     "@jsquash/jpeg": "github:xfalcox/jSquash#claude/combined-new-codecs&path:packages/jpeg",
     "@jsquash/jxl": "github:xfalcox/jSquash#claude/combined-new-codecs&path:packages/jxl",
-    "@jsquash/png": "^3.0.0",
     "@jsquash/resize": "^2.1.0",
     "@jsquash/webp": "github:xfalcox/jSquash#claude/combined-new-codecs&path:packages/webp",
     "ace-builds": "^1.43.6",
