@@ -1,0 +1,12 @@
+en:
+  discourse_workflows:
+    errors:
+      approval_timed_out: "Approval timed out"
+      schedule_rules_required: "At least one schedule rule is required."
+      invalid_schedule_rule: "One or more schedule rules are invalid."
+      not_enabled: "The discourse-workflows plugin is not enabled."
+      storage_limit_exceeded: "Data table storage limit exceeded."
+      create_post:
+        topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
+  site_settings:
+    discourse_workflows_enabled: "Enable the discourse-workflows plugin."

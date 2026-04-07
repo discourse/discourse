@@ -63,7 +63,7 @@ export default class FKCollection extends Component {
   <template>
     {{#if this.collectionData.length}}
       {{#let (element this.tagName) as |Wrapper|}}
-        <Wrapper class="form-kit__collection">
+        <Wrapper class="form-kit__collection" ...attributes>
           {{#each this.collectionData key="identifier" as |data index|}}
             {{yield
               (hash

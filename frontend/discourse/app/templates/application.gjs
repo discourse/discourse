@@ -46,147 +46,155 @@ export default <template>
 
     <DDocument />
     <PageLoadingSlider />
-    <PluginOutlet
-      @name="above-site-header"
-      @connectorTagName="div"
-      @outletArgs={{lazyHash
-        currentPath=@controller.router._router.currentPath
-      }}
-    />
 
-    {{#if @controller.showSiteHeader}}
-      <GlimmerSiteHeader
-        @canSignUp={{@controller.canSignUp}}
-        @showCreateAccount={{routeAction "showCreateAccount"}}
-        @showLogin={{routeAction "showLogin"}}
-        @sidebarEnabled={{@controller.sidebarEnabled}}
-        @showSidebar={{@controller.showSidebar}}
-        @toggleSidebar={{@controller.toggleSidebar}}
+    <PluginOutlet @name="full-page">
+      <PluginOutlet
+        @name="above-site-header"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash
+          currentPath=@controller.router._router.currentPath
+        }}
       />
-    {{/if}}
 
-    <SoftwareUpdatePrompt />
-
-    {{#if @controller.siteSettings.enable_offline_indicator}}
-      <OfflineIndicator />
-    {{/if}}
-
-    {{#if
-      (eq @controller.siteSettings.welcome_banner_location "below_site_header")
-    }}
-      <WelcomeBanner />
-    {{/if}}
-
-    <PluginOutlet
-      @name="below-site-header"
-      @connectorTagName="div"
-      @outletArgs={{lazyHash
-        currentPath=@controller.router._router.currentPath
-      }}
-    />
-
-    {{#unless @controller.isCurrentAdminRoute}}
-      <BlockOutlet @name="hero-blocks" />
-    {{/unless}}
-
-    <div id="main-outlet-wrapper" class="wrap" role="main">
-      {{#if @controller.sidebarEnabled}}
-        <SidebarWrapper
+      {{#if @controller.showSiteHeader}}
+        <GlimmerSiteHeader
+          @canSignUp={{@controller.canSignUp}}
+          @showCreateAccount={{routeAction "showCreateAccount"}}
+          @showLogin={{routeAction "showLogin"}}
+          @sidebarEnabled={{@controller.sidebarEnabled}}
           @showSidebar={{@controller.showSidebar}}
           @toggleSidebar={{@controller.toggleSidebar}}
         />
       {{/if}}
 
-      <LoadingSliderFallbackSpinner />
+      <SoftwareUpdatePrompt />
 
-      <PluginOutlet @name="before-main-outlet" />
+      {{#if @controller.siteSettings.enable_offline_indicator}}
+        <OfflineIndicator />
+      {{/if}}
 
-      <div id="main-outlet">
-        {{#unless @controller.shouldHideScrollableContentAbove}}
-          <PluginOutlet @name="above-main-container" @connectorTagName="div" />
-          {{#unless @controller.isCurrentAdminRoute}}
-            <BlockOutlet @name="main-outlet-blocks" />
+      {{#if
+        (eq
+          @controller.siteSettings.welcome_banner_location "below_site_header"
+        )
+      }}
+        <WelcomeBanner />
+      {{/if}}
+
+      <PluginOutlet
+        @name="below-site-header"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash
+          currentPath=@controller.router._router.currentPath
+        }}
+      />
+
+      {{#unless @controller.isCurrentAdminRoute}}
+        <BlockOutlet @name="hero-blocks" />
+      {{/unless}}
+
+      <div id="main-outlet-wrapper" class="wrap" role="main">
+        {{#if @controller.sidebarEnabled}}
+          <SidebarWrapper
+            @showSidebar={{@controller.showSidebar}}
+            @toggleSidebar={{@controller.toggleSidebar}}
+          />
+        {{/if}}
+
+        <LoadingSliderFallbackSpinner />
+
+        <PluginOutlet @name="before-main-outlet" />
+
+        <div id="main-outlet">
+          {{#unless @controller.shouldHideScrollableContentAbove}}
+            <PluginOutlet
+              @name="above-main-container"
+              @connectorTagName="div"
+            />
+            {{#unless @controller.isCurrentAdminRoute}}
+              <BlockOutlet @name="main-outlet-blocks" />
+            {{/unless}}
+
+            {{#if @controller.siteSettings.enable_site_owner_onboarding}}
+              <AdminOnboardingBanner />
+            {{/if}}
+
+            {{#if
+              (eq
+                @controller.siteSettings.welcome_banner_location
+                "above_topic_content"
+              )
+            }}
+              <WelcomeBanner />
+            {{/if}}
+
+            <div class="container" id="main-container">
+              {{#if @controller.showTop}}
+                <CustomHtml @name="top" />
+              {{/if}}
+              <NotificationConsentBanner />
+              <PwaInstallBanner />
+              <GlobalNotice />
+              <PluginOutlet
+                @name="top-notices"
+                @connectorTagName="div"
+                @outletArgs={{lazyHash
+                  currentPath=@controller.router._router.currentPath
+                }}
+              />
+            </div>
           {{/unless}}
 
-          {{#if @controller.siteSettings.enable_site_owner_onboarding}}
-            <AdminOnboardingBanner />
-          {{/if}}
+          {{outlet}}
 
-          {{#if
-            (eq
-              @controller.siteSettings.welcome_banner_location
-              "above_topic_content"
-            )
-          }}
-            <WelcomeBanner />
-          {{/if}}
-
-          <div class="container" id="main-container">
-            {{#if @controller.showTop}}
-              <CustomHtml @name="top" />
-            {{/if}}
-            <NotificationConsentBanner />
-            <PwaInstallBanner />
-            <GlobalNotice />
+          {{#unless @controller.shouldHideScrollableContentBelow}}
             <PluginOutlet
-              @name="top-notices"
-              @connectorTagName="div"
-              @outletArgs={{lazyHash
-                currentPath=@controller.router._router.currentPath
-              }}
+              @name="main-outlet-bottom"
+              @outletArgs={{lazyHash showFooter=@controller.showFooter}}
             />
-          </div>
-        {{/unless}}
+          {{/unless}}
+          <CardContainer />
+        </div>
 
-        {{outlet}}
+        <PluginOutlet @name="after-main-outlet" />
 
-        {{#unless @controller.shouldHideScrollableContentBelow}}
-          <PluginOutlet
-            @name="main-outlet-bottom"
-            @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-          />
-        {{/unless}}
-        <CardContainer />
+        {{#if @controller.showPoweredBy}}
+          <PoweredByDiscourse />
+        {{/if}}
       </div>
 
-      <PluginOutlet @name="after-main-outlet" />
-
-      {{#if @controller.showPoweredBy}}
-        <PoweredByDiscourse />
-      {{/if}}
-    </div>
-
-    <PluginOutlet
-      @name="above-footer"
-      @connectorTagName="div"
-      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-    />
-    {{#if @controller.showFooter}}
-      <CustomHtml
-        @name="footer"
-        @triggerAppEvent={{true}}
-        class="custom-footer-content"
+      <PluginOutlet
+        @name="above-footer"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
       />
-    {{/if}}
-    <PluginOutlet
-      @name="below-footer"
-      @connectorTagName="div"
-      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-    />
+      {{#if @controller.showFooter}}
+        <CustomHtml
+          @name="footer"
+          @triggerAppEvent={{true}}
+          class="custom-footer-content"
+        />
+      {{/if}}
+      <PluginOutlet
+        @name="below-footer"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+      />
 
-    <ModalContainer />
-    <DialogHolder />
-    <TopicEntrance />
-    <ComposerContainer />
-    <RenderGlimmerContainer />
+      {{#if @controller.showFooterNav}}
+        <PluginOutlet @name="footer-nav">
+          <FooterNav />
+        </PluginOutlet>
+      {{/if}}
 
-    {{#if @controller.showFooterNav}}
-      <PluginOutlet @name="footer-nav">
-        <FooterNav />
-      </PluginOutlet>
-    {{/if}}
+    </PluginOutlet>
   </DiscourseRoot>
 
+  <ModalContainer />
+  <DialogHolder />
+  <TopicEntrance />
+  <ComposerContainer />
+  <RenderGlimmerContainer />
   <DMenus />
   <DTooltips />
   <DToasts />

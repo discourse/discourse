@@ -1,0 +1,53 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  module Nodes
+    module FetchTopic
+      class V1 < NodeType
+        def self.identifier
+          "action:fetch_topic"
+        end
+
+        def self.icon
+          "download"
+        end
+
+        def self.color_key
+          "light-blue"
+        end
+
+        def self.palette_group_id
+          "discourse_actions"
+        end
+
+        def self.configuration_schema
+          { topic_id: { type: :string, required: true } }
+        end
+
+        def self.output_schema
+          { topic: Schemas::Topic.fields }
+        end
+
+        def execute(exec_ctx)
+          items =
+            exec_ctx.input_items.map do |item|
+              exec_ctx.with_item(item) do
+                config = exec_ctx.resolve_config(@configuration)
+                result = process(config)
+                Item.new(result).to_h
+              end
+            end
+          ItemContract.validate_items!(items, source: self.class.identifier)
+          [items]
+        end
+
+        private
+
+        def process(config)
+          topic = Topic.find(config["topic_id"])
+          { topic: Schemas::Topic.resolve(topic) }
+        end
+      end
+    end
+  end
+end

@@ -52,6 +52,7 @@ export default class AdminPluginConfigPage extends Component {
           }}
             <NavItem
               @route={{navLink.route}}
+              @currentWhen={{navLink.currentWhen}}
               @i18nLabel={{this.linkText navLink}}
               title={{this.linkText navLink}}
               class="admin-plugin-config-page__top-nav-item"

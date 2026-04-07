@@ -1,0 +1,86 @@
+# frozen_string_literal: true
+
+RSpec.describe "Workflow: post created -> topic tags" do
+  fab!(:admin)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:topic_owner) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:first_post) { create_post(user: topic_owner, raw: "First post") }
+  fab!(:topic) { first_post.topic }
+  fab!(:tag) { Fabricate(:tag, name: "responded") }
+
+  before do
+    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.tagging_enabled = true
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+
+    Fabricate(
+      :discourse_workflows_workflow,
+      created_by: admin,
+      enabled: true,
+      name: "Tag topics with new replies",
+      nodes: [
+        {
+          "id" => "trigger-1",
+          "type" => "trigger:post_created",
+          "type_version" => "1.0",
+          "name" => "Post Created",
+          "position" => {
+            "x" => 0,
+            "y" => 0,
+          },
+          "position_index" => 0,
+          "configuration" => {
+          },
+        },
+        {
+          "id" => "action-1",
+          "type" => "action:topic_tags",
+          "type_version" => "1.0",
+          "name" => "Topic Tags",
+          "position" => {
+            "x" => 200,
+            "y" => 0,
+          },
+          "position_index" => 1,
+          "configuration" => {
+            "operation" => "add",
+            "topic_id" => "={{ trigger.topic.id }}",
+            "tag_names" => tag.name,
+          },
+        },
+      ],
+      connections: [
+        {
+          "source_node_id" => "trigger-1",
+          "target_node_id" => "action-1",
+          "source_output" => "main",
+        },
+      ],
+    )
+  end
+
+  it "tags a topic when a reply is created" do
+    reply =
+      PostCreator.create!(
+        user,
+        topic_id: topic.id,
+        raw: "This is a reply",
+        reply_to_post_number: topic.first_post.post_number,
+      )
+
+    job_data = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
+    expect(job_data).to be_present
+
+    trigger_data = job_data["args"].first["trigger_data"]
+    expect(trigger_data["post"]).to include("id" => reply.id, "is_first_post" => false)
+    expect(trigger_data["topic"]).to include("id" => topic.id)
+
+    Jobs::DiscourseWorkflows::ExecuteWorkflow.new.execute(job_data["args"].first.symbolize_keys)
+
+    expect(topic.reload.tags.map(&:name)).to include("responded")
+
+    execution = DiscourseWorkflows::Execution.last
+    expect(execution.status).to eq("success")
+  end
+end

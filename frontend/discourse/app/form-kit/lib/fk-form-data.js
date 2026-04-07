@@ -2,10 +2,12 @@
  * A Changeset class that manages data and tracks changes.
  */
 import { tracked } from "@glimmer/tracking";
+import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { applyPatches, enablePatches, produce } from "immer";
+import { applyPatches, enablePatches, produce, setAutoFreeze } from "immer";
 
 enablePatches();
+setAutoFreeze(false);
 
 export default class FKFormData {
   /**
@@ -13,12 +15,6 @@ export default class FKFormData {
    * @type {any}
    */
   @tracked data;
-
-  /**
-   * The draft data, stores the changes made to original data, without mutating original data.
-   * @type {any}
-   */
-  @tracked draftData;
 
   /**
    * The errors associated with the changeset.
@@ -39,13 +35,21 @@ export default class FKFormData {
   @tracked inversePatches = [];
 
   /**
+   * The draft data yielded as transientData.
+   * Uses trackedObject for per-property invalidation so that changing
+   * one field does not re-render consumers of unrelated fields.
+   * @type {any}
+   */
+  draftData;
+
+  /**
    * Creates an instance of Changeset.
    * @param {any} data - The initial data.
    */
   constructor(data) {
     try {
       this.data = produce(data, () => {});
-      this.draftData = produce(data, () => {});
+      this.draftData = trackedObject({ ...this.data });
     } catch (e) {
       if (e.message.includes("[Immer]")) {
         throw new Error("[FormKit]: the @data property expects a POJO.");
@@ -112,14 +116,8 @@ export default class FKFormData {
    * @return {Promise<void>} A promise that resolves after the rollback is complete.
    */
   async rollback() {
-    while (this.inversePatches.length > 0) {
-      const patch = this.inversePatches[this.inversePatches.length - 1];
-      this.draftData = applyPatches(this.draftData, [patch]);
-      this.inversePatches = this.inversePatches.slice(0, -1);
-    }
-
+    this.#applyPatches(this.inversePatches);
     this.resetPatches();
-
     await new Promise((resolve) => next(resolve));
   }
 
@@ -169,7 +167,7 @@ export default class FKFormData {
   get(name) {
     const parts = name.split(".");
     let target = this.draftData[parts.shift()];
-    while (parts.length) {
+    while (parts.length && target != null) {
       target = target[parts.shift()];
     }
     return target;
@@ -181,20 +179,63 @@ export default class FKFormData {
    * @param {any} value - The value to set.
    */
   set(name, value) {
-    this.draftData = produce(
-      this.draftData,
-      (target) => {
+    const newPatches = [];
+    const newInversePatches = [];
+
+    produce(
+      { ...this.draftData },
+      (draft) => {
         const parts = name.split(".");
+        let target = draft;
         while (parts.length > 1) {
           target = target[parts.shift()];
         }
         target[parts[0]] = value;
       },
       (patches, inversePatches) => {
-        this.patches = [...this.patches, ...patches];
-        this.inversePatches = [...this.inversePatches, ...inversePatches];
+        newPatches.push(...patches);
+        newInversePatches.push(...inversePatches);
       }
     );
+
+    this.patches = [...this.patches, ...newPatches];
+    this.inversePatches = [...this.inversePatches, ...newInversePatches];
+    this.#applyPatches(newPatches);
+  }
+
+  #applyPatches(patches) {
+    for (const patch of patches) {
+      const path = [...patch.path];
+      const lastKey = path.pop();
+      let target = this.draftData;
+
+      // Structural changes (arrays/objects) at nested paths need new
+      // references at every level so Glimmer's {{#each}} detects them.
+      // Primitive changes are applied in-place to avoid re-renders.
+      const cloneIntermediates =
+        path.length > 0 &&
+        (patch.op === "remove" ||
+          (typeof patch.value === "object" && patch.value !== null));
+
+      for (const key of path) {
+        if (cloneIntermediates) {
+          target[key] = Array.isArray(target[key])
+            ? [...target[key]]
+            : { ...target[key] };
+        }
+        target = target[key];
+      }
+
+      if (patch.op === "remove") {
+        if (Array.isArray(target)) {
+          target.splice(lastKey, 1);
+        } else {
+          delete target[lastKey];
+        }
+      } else {
+        target[lastKey] = patch.value;
+      }
+    }
   }
 
   /**
