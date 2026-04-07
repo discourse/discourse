@@ -16,7 +16,7 @@ if defined?(DiscourseWorkflows)
           "pink"
         end
 
-        def self.palette_group_id
+        def self.group
           "ai"
         end
 

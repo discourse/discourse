@@ -54,12 +54,12 @@ module DiscourseWorkflows
       "#{DEFAULT_I18N_PREFIX}.node_descriptions.#{identifier}"
     end
 
-    def palette_group_id
-      default_palette_group_id
+    def group
+      default_group
     end
 
     def palette_group
-      palette_group_definition.merge(id: palette_group_id)
+      palette_group_definition.merge(id: group)
     end
 
     def property_i18n_prefix
@@ -117,10 +117,10 @@ module DiscourseWorkflows
     private
 
     def palette_group_definition
-      PALETTE_GROUPS.fetch(palette_group_id)
+      PALETTE_GROUPS.fetch(group)
     end
 
-    def default_palette_group_id
+    def default_group
       case kind
       when "trigger"
         "triggers"

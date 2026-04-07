@@ -16,7 +16,7 @@ module DiscourseWorkflows
           "grey"
         end
 
-        def self.palette_group_id
+        def self.group
           "discourse_triggers"
         end
 

@@ -16,7 +16,7 @@ module DiscourseWorkflows
           "deep-orange"
         end
 
-        def self.palette_group_id
+        def self.group
           "discourse_triggers"
         end
 

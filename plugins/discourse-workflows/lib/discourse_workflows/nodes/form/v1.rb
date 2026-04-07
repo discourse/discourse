@@ -16,7 +16,7 @@ module DiscourseWorkflows
           "blue"
         end
 
-        def self.palette_group_id
+        def self.group
           "human_review"
         end
 
