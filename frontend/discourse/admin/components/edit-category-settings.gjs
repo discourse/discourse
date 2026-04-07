@@ -682,7 +682,12 @@ export default class EditCategorySettings extends buildCategoryPanel(
     <section>
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{lazyHash category=this.category form=this.form}}
+        @outletArgs={{lazyHash
+          category=this.category
+          form=this.form
+          transientData=this.transientData
+          registerValidator=this.registerValidator
+        }}
       />
     </section>
   </template>
