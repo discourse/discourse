@@ -1,0 +1,40 @@
+.workflows-url-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  box-sizing: border-box;
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  cursor: pointer;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--primary-low-mid);
+  }
+
+  code {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    background: none;
+    padding: 0;
+  }
+
+  .d-icon {
+    flex-shrink: 0;
+    color: var(--primary-medium);
+  }
+
+  &.--copied {
+    border-color: var(--success);
+
+    .d-icon {
+      color: var(--success);
+    }
+  }
+}

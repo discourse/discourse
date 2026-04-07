@@ -96,7 +96,7 @@ Review the service against these structural rules. List every violation found.
 - Steps are simple with one concern each
 - Step names describe domain behavior, not code (`revoke_previous_accepted_answer` not `destroy_old_record`). ALWAYS use Discourse core domain vocabulary. Ask "why is this happening?" not "what ActiveRecord method am I calling?"
 - Descriptive param names: `post_id` not `id`, `channel_id` not `target`
-- `context[:]` is a code smell. Verify a `model`, `options`, or step keyword argument cannot achieve the same result. Refactoring should almost always let you use a model instead.
+- `context[:]` is a code smell. Verify a `model`, `options`, or step keyword argument cannot achieve the same result. Refactoring should almost always let you use a model instead. A model doesn't have to be an actual AR model, it can just be holding a value.
 - `transaction` wraps ONLY DB writes that must succeed or fail together. Side effects (webhooks, events, MessageBus) live outside.
 - `lock` wraps ONLY steps vulnerable to concurrent modification. Side effects are idempotent and MUST live outside the lock.
 - No `return if`/`return unless` at the top of step methods — use `only_if` wrappers. Guard clauses in `only_if` predicate methods use bare `return` (not `return false`).

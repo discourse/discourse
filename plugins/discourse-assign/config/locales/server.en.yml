@@ -94,6 +94,11 @@ en:
   discourse_push_notifications:
     popup:
       assigned: "@%{username} assigned you"
+  discourse_assign:
+    discourse_workflows:
+      assign_topic:
+        error: "Failed to assign topic: %{reason}"
+        assignee_not_found: "Could not find user or group: %{assignee}"
   activerecord:
     errors:
       models:

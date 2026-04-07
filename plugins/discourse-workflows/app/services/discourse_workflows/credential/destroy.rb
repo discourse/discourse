@@ -1,0 +1,50 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  class Credential::Destroy
+    include Service::Base
+
+    params do
+      attribute :credential_id, :integer
+      validates :credential_id, presence: true
+    end
+
+    model :credential
+    policy :can_manage_workflows
+    model :referencing_workflows, optional: true
+    policy :credential_not_in_use
+
+    step :remove_credential
+
+    step :log
+
+    private
+
+    def fetch_credential(params:)
+      DiscourseWorkflows::Credential.find_by(id: params.credential_id)
+    end
+
+    def can_manage_workflows(guardian:)
+      guardian.is_admin?
+    end
+
+    def fetch_referencing_workflows(credential:)
+      DiscourseWorkflows::Workflow.referencing_credential(credential.id).to_a
+    end
+
+    def credential_not_in_use(referencing_workflows:)
+      referencing_workflows.blank?
+    end
+
+    def remove_credential(credential:)
+      credential.destroy!
+    end
+
+    def log(credential:, guardian:)
+      StaffActionLogger.new(guardian.user).log_custom(
+        "discourse_workflows_credential_destroyed",
+        subject: credential.name,
+      )
+    end
+  end
+end

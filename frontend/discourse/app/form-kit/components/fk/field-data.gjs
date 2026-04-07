@@ -67,8 +67,25 @@ export default class FKFieldData extends Component {
   @action
   async set(value) {
     if (this.args.onSet) {
+      const originalSet = this.args.set;
+      const formData = this.args.data;
       await this.args.onSet(value, {
-        set: this.args.set,
+        set: async (name, val, opts) => {
+          await originalSet(name, val, opts);
+          // setAutoFreeze(false) means nested primitive changes don't
+          // trigger tracked writes. Force reactivity so the field
+          // reflects programmatic changes from @onSet callbacks.
+          const key = name.split(".")[0];
+          if (name.includes(".")) {
+            const current = formData.draftData[key];
+            formData.draftData[key] =
+              typeof current === "object" && current !== null
+                ? Array.isArray(current)
+                  ? [...current]
+                  : { ...current }
+                : current;
+          }
+        },
         name: this.name,
         parentName: this.args.parentName,
         index: this.args.collectionIndex,

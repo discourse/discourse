@@ -1,0 +1,134 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  module Nodes
+    module Group
+      class V1 < NodeType
+        OPERATIONS = %w[add remove get].freeze
+
+        def self.identifier
+          "action:group"
+        end
+
+        def self.icon
+          "user-plus"
+        end
+
+        def self.color_key
+          "indigo"
+        end
+
+        def self.palette_group_id
+          "discourse_actions"
+        end
+
+        def self.configuration_schema
+          {
+            operation: {
+              type: :options,
+              required: true,
+              options: OPERATIONS,
+              default: "add",
+              ui: {
+                expression: true,
+              },
+            },
+            username: {
+              type: :string,
+              required: true,
+              visible_if: {
+                operation: %w[add remove],
+              },
+              ui: {
+                control: :user,
+              },
+            },
+            group_id: {
+              type: :integer,
+              required: true,
+              ui: {
+                control: :combo_box,
+                options_source: "groups",
+                value_property: "id",
+                name_property: "name",
+                filterable: true,
+                none: "discourse_workflows.group.group_id_placeholder",
+              },
+            },
+          }
+        end
+
+        def self.metadata
+          {
+            groups:
+              ::Group
+                .where(automatic: false)
+                .order(:name)
+                .pluck(:id, :name)
+                .map { |id, name| { id:, name: } },
+          }
+        end
+
+        def self.output_schema
+          {
+            group: Schemas::Group.fields,
+            user: {
+              type: :object,
+              fields: Schemas::User.fields,
+              visible_if: {
+                operation: %w[add remove],
+              },
+            },
+          }
+        end
+
+        def execute(exec_ctx)
+          run_as_user = exec_ctx.run_as_user
+          items =
+            exec_ctx.input_items.map do |item|
+              exec_ctx.with_item(item) do
+                config = exec_ctx.resolve_config(@configuration)
+                result = process(run_as_user, config)
+                Item.new(result).to_h
+              end
+            end
+          ItemContract.validate_items!(items, source: self.class.identifier)
+          [items]
+        end
+
+        private
+
+        def process(run_as_user, config)
+          group = ::Group.find(config["group_id"])
+          group_data = Schemas::Group.resolve(group)
+
+          return { group: group_data } if config["operation"] == "get"
+
+          Guardian.new(run_as_user).ensure_can_edit_group!(group)
+
+          user = User.find_by!(username: config["username"])
+
+          logger = GroupActionLogger.new(run_as_user, group)
+
+          case config["operation"]
+          when "remove"
+            group.remove(user)
+            logger.log_remove_user_from_group(user)
+          else
+            group.add(user)
+            logger.log_add_user_to_group(user)
+          end
+
+          {
+            group: group_data,
+            user: Schemas::User.resolve(user),
+            user_id: user.id,
+            username: user.username,
+            group_id: group.id,
+            group_name: group.name,
+          }
+        end
+      end
+    end
+  end
+end

@@ -833,3 +833,12 @@ en:
       panels:
         chat:
           label: "Chat"
+
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Send chat message"
+      node_descriptions:
+        "action:send_chat_message": "Send a message to a chat channel"
+      send_chat_message:
+        channel_id: "Channel ID"
+        message: "Message"

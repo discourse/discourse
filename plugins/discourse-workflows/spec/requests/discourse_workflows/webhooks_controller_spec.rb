@@ -1,0 +1,485 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseWorkflows::WebhooksController do
+  fab!(:admin)
+
+  fab!(:workflow) do
+    Fabricate(
+      :discourse_workflows_workflow,
+      created_by: admin,
+      enabled: true,
+      nodes: [
+        {
+          "id" => "webhook-1",
+          "type" => "trigger:webhook",
+          "type_version" => "1.0",
+          "name" => "Webhook",
+          "position" => {
+            "x" => 0,
+            "y" => 0,
+          },
+          "position_index" => 0,
+          "configuration" => {
+            "path" => "my-hook",
+            "http_method" => "POST",
+          },
+        },
+      ],
+      connections: [],
+    )
+  end
+
+  before { SiteSetting.discourse_workflows_enabled = true }
+
+  describe "POST /workflows/webhooks/:path" do
+    it "enqueues workflow execution for matching webhook" do
+      post "/workflows/webhooks/my-hook.json",
+           params: { foo: "bar" }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to be(true)
+
+      job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
+      expect(job["args"][0]["trigger_node_id"]).to eq("webhook-1")
+
+      trigger_data = job["args"][0]["trigger_data"]
+      expect(trigger_data).to include(
+        "body" => {
+          "foo" => "bar",
+        },
+        "query" => be_a(Hash),
+        "headers" => include("content-type" => "application/json"),
+      )
+    end
+
+    it "returns 404 when no matching webhook exists" do
+      post "/workflows/webhooks/unknown-path.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when HTTP method does not match" do
+      get "/workflows/webhooks/my-hook.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when workflow is disabled" do
+      workflow.update!(enabled: false)
+      post "/workflows/webhooks/my-hook.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when plugin is disabled" do
+      SiteSetting.discourse_workflows_enabled = false
+      post "/workflows/webhooks/my-hook.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "works without authentication" do
+      post "/workflows/webhooks/my-hook.json",
+           params: { data: "test" }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response.status).to eq(200)
+    end
+
+    it "passes query parameters in trigger data" do
+      post "/workflows/webhooks/my-hook.json?source=github&ref=main",
+           params: {}.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response.status).to eq(200)
+
+      trigger_data = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"][0]["trigger_data"]
+      expect(trigger_data["query"]).to include("source" => "github", "ref" => "main")
+    end
+
+    it "handles different HTTP methods" do
+      workflow.update!(
+        nodes:
+          workflow.parsed_nodes.map do |n|
+            if n["id"] == "webhook-1"
+              n.merge("configuration" => { "path" => "my-hook", "http_method" => "PUT" })
+            else
+              n
+            end
+          end,
+      )
+
+      put "/workflows/webhooks/my-hook.json",
+          params: { updated: true }.to_json,
+          headers: {
+            "CONTENT_TYPE" => "application/json",
+          }
+
+      expect(response.status).to eq(200)
+    end
+
+    it "rate limits webhook requests" do
+      RateLimiter.enable
+
+      stub_const(DiscourseWorkflows::WebhooksController, "WEBHOOK_RATE_LIMIT", 1) do
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+        expect(response.status).to eq(200)
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+        expect(response.status).to eq(429)
+      end
+    ensure
+      RateLimiter.disable
+    end
+
+    it "returns 400 for malformed JSON body" do
+      post "/workflows/webhooks/my-hook.json",
+           headers: {
+             "RAW_POST_DATA" => "not valid json{",
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "handles non-JSON content type" do
+      post "/workflows/webhooks/my-hook.json", params: { data: "test" }
+
+      expect(response.status).to eq(200)
+
+      trigger_data = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"][0]["trigger_data"]
+      expect(trigger_data["body"]).to eq({ "data" => "test" })
+    end
+
+    describe "synchronous response modes" do
+      it "redirects when respond_to_webhook node produces a redirect" do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes.map do |n|
+              if n["id"] == "webhook-1"
+                n.merge(
+                  "configuration" => {
+                    "path" => "my-hook",
+                    "http_method" => "POST",
+                    "response_mode" => "respond_to_webhook",
+                  },
+                )
+              else
+                n
+              end
+            end +
+              [
+                {
+                  "id" => "respond-1",
+                  "type" => "action:respond_to_webhook",
+                  "type_version" => "1.0",
+                  "name" => "Respond",
+                  "position" => {
+                    "x" => 200,
+                    "y" => 0,
+                  },
+                  "position_index" => 1,
+                  "configuration" => {
+                    "response_type" => "redirect",
+                    "redirect_url" => "https://example.com/thanks",
+                  },
+                },
+              ],
+          connections: [
+            {
+              "source_node_id" => "webhook-1",
+              "target_node_id" => "respond-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(302)
+        expect(response.headers["Location"]).to eq("https://example.com/thanks")
+      end
+
+      it "returns JSON when respond_to_webhook node produces JSON" do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes.map do |n|
+              if n["id"] == "webhook-1"
+                n.merge(
+                  "configuration" => {
+                    "path" => "my-hook",
+                    "http_method" => "POST",
+                    "response_mode" => "respond_to_webhook",
+                  },
+                )
+              else
+                n
+              end
+            end +
+              [
+                {
+                  "id" => "respond-1",
+                  "type" => "action:respond_to_webhook",
+                  "type_version" => "1.0",
+                  "name" => "Respond",
+                  "position" => {
+                    "x" => 200,
+                    "y" => 0,
+                  },
+                  "position_index" => 1,
+                  "configuration" => {
+                    "response_type" => "json",
+                    "status_code" => "201",
+                    "response_body" => '{"created": true}',
+                  },
+                },
+              ],
+          connections: [
+            {
+              "source_node_id" => "webhook-1",
+              "target_node_id" => "respond-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(201)
+        expect(response.parsed_body).to eq("created" => true)
+      end
+
+      it "returns text when respond_to_webhook node produces text" do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes.map do |n|
+              if n["id"] == "webhook-1"
+                n.merge(
+                  "configuration" => {
+                    "path" => "my-hook",
+                    "http_method" => "POST",
+                    "response_mode" => "respond_to_webhook",
+                  },
+                )
+              else
+                n
+              end
+            end +
+              [
+                {
+                  "id" => "respond-1",
+                  "type" => "action:respond_to_webhook",
+                  "type_version" => "1.0",
+                  "name" => "Respond",
+                  "position" => {
+                    "x" => 200,
+                    "y" => 0,
+                  },
+                  "position_index" => 1,
+                  "configuration" => {
+                    "response_type" => "text",
+                    "status_code" => "200",
+                    "response_body" => "OK thanks",
+                  },
+                },
+              ],
+          connections: [
+            {
+              "source_node_id" => "webhook-1",
+              "target_node_id" => "respond-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to eq("OK thanks")
+      end
+
+      it "returns no data response" do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes.map do |n|
+              if n["id"] == "webhook-1"
+                n.merge(
+                  "configuration" => {
+                    "path" => "my-hook",
+                    "http_method" => "POST",
+                    "response_mode" => "respond_to_webhook",
+                  },
+                )
+              else
+                n
+              end
+            end +
+              [
+                {
+                  "id" => "respond-1",
+                  "type" => "action:respond_to_webhook",
+                  "type_version" => "1.0",
+                  "name" => "Respond",
+                  "position" => {
+                    "x" => 200,
+                    "y" => 0,
+                  },
+                  "position_index" => 1,
+                  "configuration" => {
+                    "response_type" => "no_data",
+                    "status_code" => "204",
+                  },
+                },
+              ],
+          connections: [
+            {
+              "source_node_id" => "webhook-1",
+              "target_node_id" => "respond-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(204)
+      end
+
+      it "returns last node output as JSON when mode is when_last_node_finishes" do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes.map do |n|
+              if n["id"] == "webhook-1"
+                n.merge(
+                  "configuration" => {
+                    "path" => "my-hook",
+                    "http_method" => "POST",
+                    "response_mode" => "when_last_node_finishes",
+                    "response_code" => "200",
+                  },
+                )
+              else
+                n
+              end
+            end +
+              [
+                {
+                  "id" => "set-fields-1",
+                  "type" => "action:set_fields",
+                  "type_version" => "1.0",
+                  "name" => "SetFields",
+                  "position" => {
+                    "x" => 200,
+                    "y" => 0,
+                  },
+                  "position_index" => 1,
+                  "configuration" => {
+                    "mode" => "json",
+                    "json" => '{"result": "done"}',
+                  },
+                },
+              ],
+          connections: [
+            {
+              "source_node_id" => "webhook-1",
+              "target_node_id" => "set-fields-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+        post "/workflows/webhooks/my-hook.json",
+             params: {}.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to be_a(Hash)
+      end
+    end
+
+    context "with basic auth webhook" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "basic_auth",
+          data:
+            DiscourseWorkflows::CredentialEncryptor.encrypt(
+              { "user" => "hook_user", "password" => "hook_pass" },
+            ),
+        )
+      end
+
+      before do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes.map do |n|
+              if n["id"] == "webhook-1"
+                n.merge(
+                  "configuration" => {
+                    "path" => "my-hook",
+                    "http_method" => "POST",
+                    "response_mode" => "immediately",
+                    "authentication" => "basic_auth",
+                    "credential_id" => credential.id,
+                  },
+                )
+              else
+                n
+              end
+            end,
+        )
+      end
+
+      it "returns 401 with WWW-Authenticate when no auth header" do
+        post "/workflows/webhooks/my-hook.json",
+             params: { data: "test" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(401)
+        expect(response.headers["WWW-Authenticate"]).to eq('Basic realm="Webhook"')
+      end
+
+      it "returns 200 with valid credentials" do
+        post "/workflows/webhooks/my-hook.json",
+             params: { data: "test" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_AUTHORIZATION" => "Basic #{Base64.strict_encode64("hook_user:hook_pass")}",
+             }
+
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+end

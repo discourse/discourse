@@ -1,0 +1,74 @@
+# frozen_string_literal: true
+
+RSpec.describe SiteSerializer do
+  fab!(:admin)
+  let(:guardian) { Guardian.new(admin) }
+
+  before { SiteSetting.discourse_workflows_enabled = true }
+
+  describe "#topic_admin_button_workflows" do
+    fab!(:workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        enabled: true,
+        nodes: [
+          {
+            "id" => "trigger-1",
+            "type" => "trigger:topic_admin_button",
+            "type_version" => "1.0",
+            "name" => "Topic Admin Button",
+            "position" => {
+              "x" => 0,
+              "y" => 0,
+            },
+            "position_index" => 0,
+            "configuration" => {
+              "label" => "Run workflow",
+              "icon" => "bolt",
+            },
+          },
+        ],
+        connections: [],
+      )
+    end
+
+    it "includes enabled topic admin button workflows" do
+      data = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(data[:topic_admin_button_workflows]).to contain_exactly(
+        {
+          trigger_node_id: "trigger-1",
+          workflow_id: workflow.id,
+          label: "Run workflow",
+          icon: "bolt",
+        },
+      )
+    end
+
+    it "keeps the icon empty when none is configured" do
+      workflow.update!(
+        nodes:
+          workflow.parsed_nodes.map do |n|
+            if n["id"] == "trigger-1"
+              n.merge("configuration" => { "label" => "Run workflow" })
+            else
+              n
+            end
+          end,
+      )
+
+      data = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(data[:topic_admin_button_workflows].first[:icon]).to be_nil
+    end
+
+    it "excludes disabled workflows" do
+      workflow.update!(enabled: false)
+
+      data = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(data[:topic_admin_button_workflows]).to be_empty
+    end
+  end
+end

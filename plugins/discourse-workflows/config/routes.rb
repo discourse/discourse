@@ -1,0 +1,89 @@
+# frozen_string_literal: true
+
+DiscourseWorkflows::Engine.routes.draw do
+  scope "/admin/plugins/discourse-workflows",
+        as: "admin_discourse_workflows",
+        constraints: AdminConstraint.new do
+    scope format: false do
+      get "/" => "admin#index"
+      get "/variables" => "admin#index"
+      get "/executions" => "admin#index"
+      get "/templates" => "admin#index"
+      get "/data-tables" => "admin#index"
+      get "/data-tables/:id" => "admin#index", :constraints => { id: /\d+/ }
+      get "/credentials" => "admin#index"
+      get "/workflows/new" => "admin#index"
+      get "/workflows/:id" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/executions" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/executions/:execution_id" => "admin#index",
+          :constraints => {
+            id: /\d+/,
+            execution_id: /\d+/,
+          }
+      get "/workflows/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
+    end
+
+    scope format: :json do
+      get "/workflows" => "workflows#index"
+      post "/workflows" => "workflows#create"
+      get "/workflows/:id" => "workflows#show"
+      put "/workflows/:id" => "workflows#update"
+      delete "/workflows/:id" => "workflows#destroy"
+      get "/node-types" => "node_types#index"
+      get "/templates" => "templates#index"
+      get "/templates/:id" => "templates#show"
+      post "/executions" => "executions#create"
+      get "/executions" => "executions#index"
+      get "/workflows/:workflow_id/executions" => "workflow_executions#index"
+      delete "/executions" => "executions#destroy"
+      get "/executions/:id" => "executions#show"
+      get "/stats" => "stats#index"
+      get "/stats/:workflow_id" => "stats#show"
+      get "/variables" => "variables#index"
+      post "/variables" => "variables#create"
+      put "/variables/:id" => "variables#update"
+      delete "/variables/:id" => "variables#destroy"
+      get "/credentials" => "credentials#index"
+      post "/credentials" => "credentials#create"
+      put "/credentials/:id" => "credentials#update"
+      delete "/credentials/:id" => "credentials#destroy"
+      get "/data-tables" => "data_tables#index"
+      post "/data-tables" => "data_tables#create"
+      get "/data-tables/:id" => "data_tables#show", :constraints => { id: /\d+/ }
+      put "/data-tables/:id" => "data_tables#update"
+      delete "/data-tables/:id" => "data_tables#destroy"
+      post "/data-tables/:data_table_id/columns" => "data_tables#create_column"
+      patch "/data-tables/:data_table_id/columns/:column_name/rename" => "data_tables#rename_column"
+      delete "/data-tables/:data_table_id/columns/:column_name" => "data_tables#destroy_column"
+      get "/data-tables/:data_table_id/rows" => "data_table_rows#index"
+      post "/data-tables/:data_table_id/rows" => "data_table_rows#create"
+      put "/data-tables/:data_table_id/rows" => "data_table_rows#update_bulk"
+      put "/data-tables/:data_table_id/rows/:id" => "data_table_rows#update"
+      delete "/data-tables/:data_table_id/rows/:id" => "data_table_rows#destroy"
+      delete "/data-tables/:data_table_id/rows" => "data_table_rows#destroy_bulk"
+      post "/data-tables/:data_table_id/rows/batch-destroy" => "data_table_rows#destroy_batch"
+    end
+  end
+
+  scope "/discourse-workflows", defaults: { format: :json } do
+    post "/trigger-topic-admin-button" => "topic_admin_button#create"
+  end
+
+  scope "/workflows", defaults: { format: :json } do
+    match "/webhooks/*path" => "webhooks#receive", :via => :all
+  end
+
+  scope "/workflows/form", defaults: { format: :json } do
+    get "/:uuid" => "forms#show",
+        :constraints => {
+          uuid: /[0-9a-f-]{36}/,
+        },
+        :defaults => {
+          format: :html,
+        }
+    post "/:uuid" => "forms#create", :constraints => { uuid: /[0-9a-f-]{36}/ }
+    put "/:uuid" => "forms#update", :constraints => { uuid: /[0-9a-f-]{36}/ }
+  end
+end
+
+Discourse::Application.routes.draw { mount ::DiscourseWorkflows::Engine, at: "/" }

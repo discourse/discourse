@@ -1,0 +1,157 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
+  fab!(:user)
+
+  before { SiteSetting.discourse_workflows_enabled = true }
+
+  def build_handler(workflow, state, error_depth: 0, execution_mode: :normal)
+    described_class.new(workflow, state, error_depth: error_depth, execution_mode: execution_mode)
+  end
+
+  def build_state_double(run_data: {}, last_failed_step: nil)
+    instance_double(
+      DiscourseWorkflows::Executor::ExecutionState,
+      run_data: run_data,
+      last_failed_step: last_failed_step,
+    )
+  end
+
+  def build_error_workflow
+    Fabricate(
+      :discourse_workflows_workflow,
+      created_by: user,
+      enabled: true,
+      nodes: [
+        {
+          "id" => "error-trigger-1",
+          "type" => "trigger:error",
+          "type_version" => "1.0",
+          "name" => "Error Trigger",
+          "position" => {
+            "x" => 0,
+            "y" => 0,
+          },
+          "position_index" => 0,
+          "configuration" => {
+          },
+        },
+      ],
+      connections: [],
+    )
+  end
+
+  describe "#trigger_error_workflow" do
+    it "enqueues an error workflow execution" do
+      error_wf = build_error_workflow
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      state = build_state_double
+      handler = build_handler(workflow, state)
+
+      handler.trigger_error_workflow(StandardError.new("boom"))
+
+      job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
+      expect(job).to be_present
+      expect(job["args"].first["workflow_id"]).to eq(error_wf.id)
+      expect(job["args"].first["execution_mode"]).to eq("error_mode")
+      expect(job["args"].first["error_depth"]).to eq(1)
+    end
+
+    it "does not trigger when error_depth >= MAX_ERROR_DEPTH" do
+      error_wf = build_error_workflow
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      state = build_state_double
+      handler = build_handler(workflow, state, error_depth: 3)
+
+      handler.trigger_error_workflow(StandardError.new("boom"))
+
+      expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+    end
+
+    it "does not trigger in error_mode execution" do
+      error_wf = build_error_workflow
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      state = build_state_double
+      handler = build_handler(workflow, state, execution_mode: :error_mode)
+
+      handler.trigger_error_workflow(StandardError.new("boom"))
+
+      expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+    end
+
+    it "does not trigger when no error workflow is configured" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      state = build_state_double
+      handler = build_handler(workflow, state)
+
+      handler.trigger_error_workflow(StandardError.new("boom"))
+
+      expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+    end
+
+    it "does not trigger when error workflow is disabled" do
+      error_wf = build_error_workflow
+      error_wf.update!(enabled: false)
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      state = build_state_double
+      handler = build_handler(workflow, state)
+
+      handler.trigger_error_workflow(StandardError.new("boom"))
+
+      expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+    end
+
+    it "does not trigger when error workflow has no error trigger node" do
+      error_wf =
+        Fabricate(
+          :discourse_workflows_workflow,
+          created_by: user,
+          enabled: true,
+          nodes: [],
+          connections: [],
+        )
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      state = build_state_double
+      handler = build_handler(workflow, state)
+
+      handler.trigger_error_workflow(StandardError.new("boom"))
+
+      expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
+    end
+
+    it "includes error data with failed node name" do
+      error_wf = build_error_workflow
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      failed_step = { "node_id" => "1", "node_name" => "My Node", "status" => "error" }
+      state = build_state_double(last_failed_step: failed_step)
+      handler = build_handler(workflow, state)
+
+      handler.trigger_error_workflow(StandardError.new("something broke"))
+
+      trigger_data =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
+      expect(trigger_data["error_message"]).to eq("something broke")
+      expect(trigger_data["failed_node_name"]).to eq("My Node")
+    end
+
+    it "truncates long error messages" do
+      error_wf = build_error_workflow
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
+      workflow.update!(error_workflow_id: error_wf.id)
+      state = build_state_double
+      handler = build_handler(workflow, state)
+
+      handler.trigger_error_workflow(StandardError.new("x" * 2000))
+
+      trigger_data =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
+      expect(trigger_data["error_message"].length).to be <= 1003
+    end
+  end
+end
