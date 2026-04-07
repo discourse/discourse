@@ -8,10 +8,6 @@ sl:
   js:
     chat_integration:
       settings: "Nastavitve"
-      more_providers: "Več"
-      choose_group: "(Izberi grupo)"
-      all_categories: "(Vse kategorije)"
-      all_tags: "(Vse oznake)"
       delete_channel: "Izbriši"
       edit_channel: "Uredi"
       test_modal:

@@ -14,9 +14,6 @@ lt:
     chat_integration:
       menu_title: "Pokalbių integracijos"
       settings: "Nustatymai"
-      more_providers: "Daugiau"
-      channels_title: "Kanalai"
-      all_categories: "(Visos kategorijos)"
       delete_channel: "Pašalinti"
       test_channel: "Bandymas"
       edit_channel: "Redaguoti"

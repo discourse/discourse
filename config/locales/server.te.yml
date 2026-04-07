@@ -628,6 +628,7 @@ te:
     deny: "రద్దుచేయండి"
     read: "చదివిన"
     read_write: "చదవండి/వ్రాయండి"
+    copied: "కాపీ చేయబడింది!"
     otp_confirmation:
       confirm_title: '%{site_name} కు కొనసాగండి'
       logging_in_as: '%{username} గా లాగిన్ అవుతోంది'

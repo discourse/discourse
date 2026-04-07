@@ -6,6 +6,10 @@
 
 hu:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Adatfelfedező"
     errors:
       explorer:
         no_semicolons: "Pontosvesszők eltávolítása a lekérdezésből."

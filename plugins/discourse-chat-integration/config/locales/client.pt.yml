@@ -14,13 +14,8 @@ pt:
     chat_integration:
       menu_title: "Integrações de conversação"
       settings: "Configurações"
-      more_providers: "Mais"
-      channels_title: "Canais"
       group_mention_template: "Menções de: @%{name}"
       group_message_template: "Mensagens para: @%{name}"
-      choose_group: "(Escolher um grupo)"
-      all_categories: "(Todas as categorias)"
-      all_tags: "(Todas as etiquetas)"
       delete_channel: "Eliminar"
       test_channel: "Testar"
       edit_channel: "Editar"

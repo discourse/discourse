@@ -6,6 +6,10 @@
 
 uk:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Data Explorer"
     errors:
       explorer:
         no_semicolons: "Вилучіть крапки з комою з запиту."

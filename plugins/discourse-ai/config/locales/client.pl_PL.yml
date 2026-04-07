@@ -790,6 +790,17 @@ pl_PL:
         oauth_client_id: "Identyfikator klienta OAuth"
         oauth_client_secret: "Tajny klucz klienta OAuth"
         oauth_scopes: "Zakresy OAuth"
+        oauth_authorization_params: "Parametry autoryzacji OAuth"
+        oauth_authorization_params_help: "Opcjonalny obiekt JSON scalony z żądaniem autoryzacji. Użyj wartości null, aby usunąć domyślny parametr."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "Parametry tokena OAuth"
+        oauth_token_params_help: "Opcjonalny obiekt JSON scalony z żądaniami tokenów. Użyj wartości null, aby usunąć domyślny parametr."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Wymagaj odświeżenia tokena"
+        oauth_require_refresh_token_help: "Połączenie OAuth nie zostanie nawiązane, jeśli dostawca nie zwróci tokena odświeżania."
+        oauth_json_object_required: "%{field} musi być obiektem JSON."
+        oauth_show_advanced_options: "Pokaż opcje zaawansowane"
+        oauth_hide_advanced_options: "Ukryj opcje zaawansowane"
         oauth_connection: "Połączenie OAuth"
         oauth_status: "Status OAuth"
         oauth_statuses:

@@ -6,6 +6,10 @@
 
 fi:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Dataselain"
     errors:
       explorer:
         no_semicolons: "Poista puolipisteet kyselystä."

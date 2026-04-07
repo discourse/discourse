@@ -45,20 +45,16 @@ RSpec.describe "Param input" do
     SELECT 1
   SQL
 
-  fab!(:current_user, :admin)
+  fab!(:admin)
   fab!(:all_params_query) do
-    Fabricate(
-      :query,
-      name: "All params query",
-      description: "",
-      sql: ALL_PARAMS_SQL,
-      user: current_user,
-    )
+    Fabricate(:query, name: "All params query", description: "", sql: ALL_PARAMS_SQL, user: admin)
   end
+
+  let(:query_runner) { PageObjects::Pages::DataExplorerQueryRunner.new }
 
   before do
     SiteSetting.data_explorer_enabled = true
-    sign_in(current_user)
+    sign_in(admin)
   end
 
   it "correctly displays parameter input boxes" do
@@ -79,6 +75,78 @@ RSpec.describe "Param input" do
           )
         end
       end
+  end
+
+  context "with a group_list param" do
+    fab!(:q2) do
+      Fabricate(
+        :query,
+        name: "My query with group_list",
+        description: "Test group_list query",
+        sql:
+          "-- [params]\n-- group_list :groups\n\nSELECT g.id,g.name FROM groups g WHERE g.name IN(:groups) ORDER BY g.name ASC",
+        user: admin,
+      )
+    end
+
+    it "supports setting a group_list param" do
+      query_runner.visit_admin_query(q2.id, params: { groups: "admins,trust_level_1" }).run_query
+
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_cell_at(1, 2, text: "admins")
+      expect(query_runner).to have_result_cell_at(2, 2, text: "trust_level_1")
+    end
+  end
+
+  context "with a current_user_id param" do
+    fab!(:query) { Fabricate(:query, name: "My current user query", sql: <<~SQL, user: admin) }
+      -- [params]
+      -- current_user_id :me
+      SELECT id, username FROM users WHERE id = :me
+    SQL
+
+    it "auto-injects the current user's id without showing an input field" do
+      query_runner.visit_admin_query(query.id)
+
+      expect(query_runner).to have_no_params
+      query_runner.run_query
+
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_row_count(1)
+      expect(query_runner).to have_result_cell(admin.username)
+    end
+  end
+
+  context "with a sql query with default params" do
+    fab!(:query_with_defaults) do
+      Fabricate(
+        :query,
+        name: "Query with defaults",
+        sql:
+          "-- [params]\n-- int :limit = 10\n-- string :name = hello world\n\nSELECT :name AS name LIMIT :limit",
+        user: admin,
+      )
+    end
+
+    it "sets up the input fields with the default params" do
+      query_runner.visit_admin_query(query_with_defaults.id)
+
+      expect(page).to have_field("limit", with: "10")
+      expect(page).to have_field("name", with: "hello world")
+    end
+
+    it "overrides sql params when URL params are provided" do
+      query_runner.visit_admin_query(
+        query_with_defaults.id,
+        params: {
+          limit: "25",
+          name: "override",
+        },
+      )
+
+      expect(page).to have_field("limit", with: "25")
+      expect(page).to have_field("name", with: "override")
+    end
   end
 end
 

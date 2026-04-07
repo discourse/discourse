@@ -19,8 +19,6 @@ zh_CN:
         hide_users: "显示较少用户"
         reaction_group:
           other: "%{reaction}: %{count} 名用户"
-      reaction:
-        forbidden: "该回应是很久以前创建的。它不能再被修改或移除。"
       picker:
         react_with: "使用以下方式回应此帖子：%{reaction}"
         cant_remove_reaction: "您无法再移除您自己的回应了"

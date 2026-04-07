@@ -8,10 +8,6 @@ ug:
   js:
     chat_integration:
       settings: "تەڭشەك"
-      more_providers: "تېخىمۇ كۆپ"
-      channels_title: "قانال"
-      all_categories: "(ھەممە سەھىپە)"
-      all_tags: "(ھەممە بەلگە)"
       delete_channel: "ئۆچۈر"
       test_channel: "سىنا"
       edit_channel: "تەھرىر"

@@ -8,8 +8,6 @@ sq:
   js:
     chat_integration:
       settings: "Rregullimet"
-      more_providers: "Më shumë"
-      all_categories: "(Të gjitha kategoritë)"
       delete_channel: "Fshij"
       edit_channel: "Redaktoni"
       test_modal:

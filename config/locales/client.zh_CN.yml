@@ -5400,6 +5400,11 @@ zh_CN:
           beta: "Beta"
           stable: "稳定"
           permanent: "永久"
+        status_descriptions:
+          experimental: "此功能尚处于早期开发阶段，可能会发生重大变化或被终止。可能与其他功能不完全兼容。"
+          alpha: "此功能正在积极开发和完善中。功能可能会有所更改，也可能尚未完全完善，但目前足够稳定，可以尝试使用。"
+          beta: "该项目已接近完成，可供提前体验。仍有可能进行一些细微的修改。"
+          stable: "这项功能已经完成并得到充分支持。不久后，它将在所有 Discourse 网站上推出。"
         impact_roles:
           admins: "管理员"
           moderators: "版主"

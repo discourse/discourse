@@ -15,8 +15,6 @@ ar:
       reactions_title: "التفاعلات"
       state_panel:
         more_users: "و%{count} أخرى..."
-      reaction:
-        forbidden: "تم إنشاء هذا التفاعل منذ فترة طويلة جدًا، ولم يعُد من الممكن تعديله أو حذفه."
       picker:
         react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
         cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"

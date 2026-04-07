@@ -743,6 +743,17 @@ zh_CN:
         oauth_client_id: "OAuth客户端ID"
         oauth_client_secret: "OAuth 客户端密钥"
         oauth_scopes: "OAuth 范围"
+        oauth_authorization_params: "OAuth授权参数"
+        oauth_authorization_params_help: "可选的 JSON 对象，已合并到授权请求中。使用 null 可移除默认参数。"
+        oauth_authorization_params_placeholder: '{"access_type": "offline"}。'
+        oauth_token_params: "OAuth令牌参数"
+        oauth_token_params_help: "可选的 JSON 对象，会合并到令牌请求中。使用 null 可移除默认参数。"
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "需要刷新令牌"
+        oauth_require_refresh_token_help: "如果提供商未返回刷新令牌，则 OAuth 连接失败。"
+        oauth_json_object_required: "%{field} 必须是一个 JSON 对象。"
+        oauth_show_advanced_options: "显示高级选项"
+        oauth_hide_advanced_options: "隐藏高级选项"
         oauth_connection: "OAuth 连接"
         oauth_status: "OAuth 状态"
         oauth_statuses:

@@ -220,6 +220,12 @@
                 "boolean",
                 "null"
               ]
+            },
+            "topic_posting_review_mode": {
+              "type": "string"
+            },
+            "reply_posting_review_mode": {
+              "type": "string"
             }
           }
         },
@@ -308,6 +314,18 @@
         "search_priority": {
           "type": "integer"
         },
+        "topic_posting_review_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "reply_posting_review_group_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
         "uploaded_logo": {
           "type": [
             "string",
@@ -385,6 +403,8 @@
         "allow_badges",
         "topic_featured_link_allowed",
         "search_priority",
+        "topic_posting_review_group_ids",
+        "reply_posting_review_group_ids",
         "uploaded_logo",
         "uploaded_logo_dark",
         "uploaded_background",

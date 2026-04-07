@@ -6,6 +6,10 @@
 
 tr_TR:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Veri Gezgini"
     errors:
       explorer:
         no_semicolons: "Noktalı virgülleri sorgudan kaldırın."

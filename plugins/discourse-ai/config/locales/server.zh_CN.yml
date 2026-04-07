@@ -134,7 +134,8 @@ zh_CN:
     ai_discord_search_agent: "用于 Discord 搜索的代理。"
     ai_discord_allowed_guilds: "允许机器人搜索的 Discord 公会（服务器）"
     ai_translation_enabled: "启用 AI 翻译功能"
-    ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
+    ai_translation_target_categories: "仅翻译所选类别中的内容。子类别必须单独添加。留空则禁用类别中主题的翻译。"
+    ai_translation_personal_messages: "控制哪些私人消息需要翻译。“无”表示禁用私人消息翻译。“群组”仅翻译群组私人消息。“全部”翻译所有私人消息。"
     ai_translation_include_bot_content: "启用后，机器人（用户 ID 小于 0）编写的内容也将发送进行翻译。"
     ai_translation_max_post_length: "要翻译的帖子的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
@@ -294,6 +295,34 @@ zh_CN:
         unknown_error: "无法解析请求的凭据。"
     mcp_servers:
       secret_not_found: "所选凭据不存在。"
+      invalid_url_not_https: "必须是有效的 HTTPS URL"
+      invalid_url_not_reachable: "必须解析为可公开访问的地址"
+      oauth_client_id_required: "手动注册客户端需要 OAuth 客户端 ID。"
+      errors:
+        invalid_response: "MCP服务器返回了无效响应。"
+        request_failed: "MCP 服务器请求失败，状态码为 %{status}。"
+        session_expired: "MCP 会话已过期。"
+        timeout: "MCP服务器请求超时。"
+        oauth_authorization_required: "使用此 MCP 服务器前需要进行 OAuth 授权。请从管理界面将其连接到 %{issuer}。"
+        oauth_discovery_failed: "无法找到此 MCP 服务器的 OAuth 授权详细信息。"
+        oauth_discovery_failed_with_status: "OAuth 发现失败，状态为 %{status}。"
+        oauth_not_configured: "此 MCP 服务器未配置 OAuth。"
+        oauth_refresh_token_missing: "OAuth 刷新令牌缺失。请重新连接此 MCP 服务器。"
+        oauth_save_before_connect: "在测试 OAuth 连接之前，请保存 MCP 服务器。"
+        oauth_state_invalid: "OAuth授权状态无效或已过期。请重新建立连接。"
+        oauth_token_exchange_failed: "OAuth令牌交换失败，状态码为 %{status}。"
+        oauth_https_required: "OAuth 要求您的网站通过 HTTPS 提供服务。"
+        oauth_callback_failed: "OAuth 连接失败： %{message}"
+        oauth_refresh_token_required: "OAuth授权服务器未返回刷新令牌。请调整高级OAuth选项并重新连接此MCP服务器。"
+        oauth_client_metadata_public_https_required: "客户端元数据文档注册需要提供公共 HTTPS 站点 URL。当前客户端元数据 URL： %{url}"
+        oauth_registration_endpoint_missing: "OAuth授权服务器不公开注册端点。"
+        oauth_manual_client_registration_required: "OAuth 授权服务器 %{issuer} 不支持动态客户端注册。请将此 MCP 服务器切换为手动客户端凭据模式，并提供已注册的 OAuth 客户端 ID。"
+        oauth_client_secret_required: "OAuth 授权服务器 %{issuer} 需要令牌端点客户端身份验证 (%{methods})。请使用客户端密钥手动配置客户端凭据。"
+        oauth_token_endpoint_auth_method_unsupported: "OAuth 授权服务器 %{issuer} 仅通告不支持的令牌端点客户端身份验证方法 (%{methods})。此 MCP 服务器目前支持 none、client_secret_basic 和 client_secret_post。"
+        oauth_client_registration_failed: "动态客户端注册失败，状态为 %{status}。"
+        oauth_client_registration_failed_no_id: "动态客户端注册成功，但未返回 client_id。"
+      oauth_authorization_params_invalid: "OAuth授权参数必须是JSON对象。"
+      oauth_token_params_invalid: "OAuth令牌参数必须是JSON对象。"
     ai_helper:
       errors:
         completion_request_failed: "尝试提供建议时出错。请重试。"
@@ -527,6 +556,8 @@ zh_CN:
         set_slow_mode: "设置慢速模式"
         move_posts: "移动帖子"
         grant_badge: "授予徽章"
+        list_reviewables: "列出审核队列"
+        perform_reviewable_action: "审核队列操作"
         assign: "指定话题"
         mark_as_solved: "标记为已解决"
         search: "搜索"
@@ -570,6 +601,8 @@ zh_CN:
         set_slow_mode: "启用或禁用主题的慢速模式"
         move_posts: "将帖子移动到新主题或现有主题。"
         grant_badge: "向用户授予徽章。"
+        list_reviewables: "列出待审核队列项目，可选择筛选"
+        perform_reviewable_action: "对审核队列项目执行操作"
         assign: "将话题指定给用户或组，或取消指定给用户或组"
         mark_as_solved: "将帖子标记为已接受的解决方案或取消标记。"
         search: "搜索论坛上的所有公开话题"
@@ -612,6 +645,8 @@ zh_CN:
         set_slow_mode: "在主题 %{topic_id} 上设置慢速模式(%{slow_mode_seconds}s)"
         move_posts: "将帖子 %{post_ids} 从主题 %{topic_id} 中移出"
         grant_badge: "向 %{username} 授予徽章 “%{badge_name}”"
+        list_reviewables: "列出审核队列项目（类型： %{type}）"
+        perform_reviewable_action: "对可审核的 %{reviewable_id} 执行 %{action}"
         assign: "分配主题 %{topic_id} （已分配： %{assigned}）"
         mark_as_solved: "将帖子 %{post_id} 标记为已解决（已解决： %{solved}）"
         read: "正在阅读：<a href='%{url}'>%{title}</a>"
@@ -745,6 +780,23 @@ zh_CN:
           no_reason: "将帖子标记为已解决或取消标记需要给出理由。"
           action_failed: "更新解决状态失败。"
         success: "已解决状态更新成功。"
+      list_reviewables:
+        errors:
+          not_allowed: "您无权查看审核队列"
+          invalid_type: "无效的可审核类型"
+          invalid_status: "状态无效。必须是以下之一：待处理、已批准、已拒绝、已忽略、已删除、已审核、全部。"
+        empty: "未找到符合给定筛选条件的审核队列项目"
+        found:
+          other: "找到 %{count} 项审核队列项目"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "您无权访问审核队列"
+          not_found: "未找到审核队列项目"
+          no_reason: "对审核队列项执行操作需要提供理由。"
+          invalid_action: "无效操作“%{action}”。可用操作： %{available}"
+          conflict: "此审核队列条目已被他人更新。请重试。"
+          action_failed: "执行操作失败"
+        success: "已成功对审核队列项 %{reviewable_id} 执行“%{action}”操作。"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"
@@ -858,3 +910,5 @@ zh_CN:
       agent_already_exists: 名称为 %{name} 的代理已存在。
       custom_tool_exists:
         other: "名称为“%{names}”的自定义工具已存在。"
+      mcp_server_missing: "以下 MCP 服务器未在此站点上配置： %{names}。"
+      mcp_server_tools_not_found: "本站没有来自 MCP 服务器 %{name} 的匹配工具。"

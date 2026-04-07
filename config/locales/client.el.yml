@@ -7726,6 +7726,8 @@ el:
             confirm: "Ναι, ενημέρωση πολιτικής κωδικού πρόσβασης"
           min_admin_password_length:
             confirm: "Ναι, ενημέρωση πολιτικής κωδικού πρόσβασης"
+          password_unique_characters:
+            confirm: "Ναι, ενημέρωση πολιτικής κωδικού πρόσβασης"
           block_common_passwords:
             confirm: "Ναι, ενημέρωση πολιτικής κωδικού πρόσβασης"
         job_status:

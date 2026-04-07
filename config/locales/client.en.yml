@@ -397,6 +397,7 @@ en:
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"
       disable_dev_tools: "Disable dev tools"
+      toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
     s3:
       regions:
@@ -3024,6 +3025,12 @@ en:
         filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        tag_category_admin_dropdown:
+          title: "Category and tag settings"
+          edit_category: "Edit category"
+          edit_category_description: "Adjust settings for %{badge}"
+          edit_tag: "Edit tag"
+          edit_tag_description: "Adjust settings for %{badge}"
         bulk_select_topics_dropdown:
           title: "Bulk Actions"
         bulk_select_bookmarks_dropdown:
@@ -4750,6 +4757,7 @@ en:
       validations:
         emoji_required: "Select an emoji."
         icon_required: "Select an icon."
+        groups_required: "Select at least one group for this approval mode."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4834,6 +4842,14 @@ en:
       review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
+      require_topic_approval_for: "Require moderator approval of new topics for..."
+      require_reply_approval_for: "Require moderator approval of new replies for..."
+      posting_review_modes:
+        no_one: "No one"
+        everyone: "Everyone"
+        everyone_except: "Everyone except selected groups"
+        no_one_except: "No one except selected groups"
+      posting_review_groups_placeholder: "Select groups..."
       this_year: "this year"
       position: "Position on the categories page:"
       default_position: "Default position"
@@ -7597,6 +7613,16 @@ en:
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
+          change_source:
+            button: "Change source"
+            title: "Change Theme Source"
+            repository_url: "Repository URL"
+            branch: "Branch (optional)"
+            updating: "Updating theme source…"
+            update: "Update Source"
+            has_existing_key: "This theme has an existing SSH key configured."
+            generate_new_key: "Generate new SSH key"
+            keep_existing_key: "Keep existing SSH key"
           add: "Add"
           theme_settings: "Custom theme settings"
           theme_site_settings: "Settings the theme can override"
@@ -8992,6 +9018,8 @@ en:
         crawler_settings_saved: "Crawler settings saved"
         back: "Back to embedding"
         configuration_snippet: "Configuration snippet"
+        full_app_mode: "Full app mode"
+        full_app_mode_description: "Load the full Discourse application in the embed iframe, allowing users to reply, like, quote, and interact with topics directly"
         host_form:
           add_header: "Add host"
           edit_header: "Edit host"
