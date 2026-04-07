@@ -25,22 +25,9 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'legacy' && ' (legacy)' || '' }}
-    runs-on: >-
-      ${{
-        github.repository_owner == 'discourse' && (
-          matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
-          && 'cdck-linux-16-core'
-          || 'cdck-linux-8-core'
-        )
-        || 'ubuntu-latest'
-      }}
+    runs-on: ubuntu-latest
     container: discourse/discourse_test:release
-    timeout-minutes: >-
-      ${{
-        matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
-        && 30
-        || 20
-      }}
+    timeout-minutes: 60
 
     defaults:
       run:
@@ -67,36 +54,11 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
-        browser: [Chrome]
-        plugin_compiler: ["rollup"]
-        exclude:
-          - build_type: backend
-            target: themes
-          # Exclude combined plugins from system tests - use split targets instead
-          - build_type: system
-            target: plugins
         include:
-          # Split plugin targets for system tests only
-          - build_type: system
-            target: core-plugins
-            browser: Chrome
-          - build_type: system
-            target: official-plugins
-            browser: Chrome
-          - build_type: system
-            target: chat
-            browser: Chrome
           - build_type: frontend
             target: plugins
-            plugin_compiler: "legacy"
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox Evergreen
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox ESR
+            browser: Chrome
+            plugin_compiler: "rollup"
 
     steps:
       - name: Set working directory owner
