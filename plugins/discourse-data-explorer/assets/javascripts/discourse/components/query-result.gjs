@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
+import moment from "moment";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
@@ -165,22 +166,9 @@ export default class QueryResult extends Component {
     if (!this.args.cachedAt) {
       return null;
     }
-    const minutes = Math.floor(
-      (Date.now() - new Date(this.args.cachedAt).getTime()) / 60000
-    );
-    if (minutes < 1) {
-      return i18n("explorer.cached_just_now");
-    } else if (minutes < 60) {
-      return i18n("explorer.cached_minutes_ago", { count: minutes });
-    } else if (minutes < 1440) {
-      return i18n("explorer.cached_hours_ago", {
-        count: Math.floor(minutes / 60),
-      });
-    } else {
-      return i18n("explorer.cached_days_ago", {
-        count: Math.floor(minutes / 1440),
-      });
-    }
+    return i18n("explorer.cached_result_notice", {
+      relative_time: moment(this.args.cachedAt).fromNow(),
+    });
   }
 
   get parameterAry() {

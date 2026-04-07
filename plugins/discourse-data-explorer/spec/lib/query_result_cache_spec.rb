@@ -51,6 +51,22 @@ describe DiscourseDataExplorer::QueryResultCache do
       expect(ttl).to be > 0
       expect(ttl).to be <= described_class::CACHE_TTL
     end
+
+    it "does not add new cache entries once the per-query limit is reached" do
+      (described_class::MAX_CACHE_ENTRIES + 1).times do |i|
+        described_class.write(query.id, { "value" => i.to_s }, result_json)
+      end
+
+      oldest_key = described_class.cache_key(query.id, { "value" => "0" })
+      overflow_key =
+        described_class.cache_key(query.id, { "value" => described_class::MAX_CACHE_ENTRIES.to_s })
+
+      expect(Discourse.redis.get(oldest_key)).to be_present
+      expect(Discourse.redis.get(overflow_key)).to be_nil
+      expect(Discourse.redis.zcard(described_class.cache_index_key(query.id))).to eq(
+        described_class::MAX_CACHE_ENTRIES,
+      )
+    end
   end
 
   describe ".cache_key" do

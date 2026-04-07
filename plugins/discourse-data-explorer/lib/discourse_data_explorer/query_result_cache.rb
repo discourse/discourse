@@ -4,6 +4,7 @@ module DiscourseDataExplorer
   class QueryResultCache
     CACHE_TTL = 24.hours.to_i
     MAX_CACHE_SIZE = 100.kilobytes
+    MAX_CACHE_ENTRIES = 50
 
     def self.cache_key(query_id, params_hash)
       h = params_hash || {}
@@ -26,13 +27,34 @@ module DiscourseDataExplorer
       return false if serialized.bytesize > MAX_CACHE_SIZE
 
       key = cache_key(query_id, params_hash)
+      index_key = cache_index_key(query_id)
+      now = Time.now.to_f
+      return false if limit_reached?(index_key, key)
+
       Discourse.redis.setex(key, CACHE_TTL, serialized)
+      Discourse.redis.multi do |redis|
+        redis.zadd(index_key, now, key)
+        redis.expire(index_key, CACHE_TTL)
+      end
       true
     end
 
     def self.invalidate(query_id)
       keys = Discourse.redis.scan_each(match: "data_explorer:result:#{query_id}:*").to_a
       Discourse.redis.del(*keys) if keys.present?
+      Discourse.redis.del(cache_index_key(query_id))
     end
+
+    def self.cache_index_key(query_id)
+      "data_explorer:result:#{query_id}:keys"
+    end
+
+    def self.limit_reached?(index_key, key)
+      return false if Discourse.redis.zscore(index_key, key)
+
+      Discourse.redis.zcard(index_key) >= MAX_CACHE_ENTRIES
+    end
+
+    private_class_method :limit_reached?
   end
 end
