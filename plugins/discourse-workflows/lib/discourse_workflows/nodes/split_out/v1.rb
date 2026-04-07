@@ -16,7 +16,7 @@ module DiscourseWorkflows
           "yellow"
         end
 
-        def self.palette_group_id
+        def self.group
           "flow"
         end
 

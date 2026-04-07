@@ -16,7 +16,7 @@ module DiscourseWorkflows
           "light-green"
         end
 
-        def self.palette_group_id
+        def self.group
           "discourse_actions"
         end
 
