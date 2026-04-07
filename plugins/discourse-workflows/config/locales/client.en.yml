@@ -60,7 +60,7 @@ en:
           settings: "Settings"
         input_context: "Input"
         drag_drop_hint_title: "Tip"
-        drag_drop_hint: "Toggle a field to dynamic mode, then drag and drop a property from this panel into the field."
+        drag_drop_hint: "Drag and drop a property from this panel into a field."
         output_context: "Output"
         no_input_context: "No input available."
         environment: "Environment"
