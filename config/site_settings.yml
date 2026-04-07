@@ -3250,7 +3250,8 @@ navigation:
 embedding:
   embed_full_app:
     default: false
-    hidden: true
+    client: true
+    area: "embedding"
   embed_by_username:
     default: ""
     type: username
@@ -3835,7 +3836,7 @@ uncategorized:
     hidden: true
     area: "interface"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/395100"
 
@@ -4298,7 +4299,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
   enable_new_checkbox_style:
@@ -4313,30 +4314,23 @@ experimental:
     default: false
     hidden: true
     client: true
-    area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "beta"
+      status: "stable"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
-  experimental_tag_settings_page:
-    default: false
-    client: true
-    area: "experimental"
   enable_form_templates:
     client: true
     default: false
     hidden: true
-    area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
   impersonate_without_logout:
     default: false
     hidden: true
-    area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:

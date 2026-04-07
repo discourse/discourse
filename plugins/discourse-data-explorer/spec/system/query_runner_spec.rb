@@ -25,7 +25,7 @@ RSpec.describe "Data explorer query runner" do
       find(".query-run .btn-primary").click
       expect(page).to have_css(".query-results .result-header")
 
-      find(".query-edit .previous").click
+      find(".back-button").click
       first("a[href='/admin/plugins/discourse-data-explorer/queries/#{query_b.id}']").click
       expect(page).to have_no_css(".query-results .result-header")
     end
@@ -89,46 +89,73 @@ RSpec.describe "Data explorer query runner" do
     end
   end
 
-  context "with a group_list param" do
-    fab!(:q2) do
-      Fabricate(
-        :query,
-        name: "My query with group_list",
-        description: "Test group_list query",
-        sql:
-          "-- [params]\n-- group_list :groups\n\nSELECT g.id,g.name FROM groups g WHERE g.name IN(:groups) ORDER BY g.name ASC",
-        user: admin,
-      )
+  describe "caching results with query params" do
+    fab!(:user_jan) { Fabricate(:user, created_at: Time.parse("2025-01-15")) }
+    fab!(:user_feb) { Fabricate(:user, created_at: Time.parse("2025-02-15")) }
+    fab!(:user_mar) { Fabricate(:user, created_at: Time.parse("2025-03-15")) }
+    fab!(:user_apr) { Fabricate(:user, created_at: Time.parse("2025-04-15")) }
+
+    fab!(:query) { Fabricate(:query, name: "Monthly signups", sql: <<~SQL, user: admin) }
+      -- [params]
+      -- date :start_date = 2025-01-01
+      -- date :end_date = 2025-04-30
+      SELECT
+        date_trunc('month', u.created_at)::date AS month,
+        COUNT(*) AS signups
+      FROM users u
+      WHERE u.created_at >= :start_date::date
+        AND u.created_at < :end_date::date
+      GROUP BY month
+      ORDER BY month
+    SQL
+
+    let(:query_runner) { PageObjects::Pages::DataExplorerQueryRunner.new }
+
+    before do
+      DiscourseDataExplorer::QueryRunner.invalidate(query.id)
+      SiteSetting.data_explorer_enabled = true
+      sign_in admin
     end
 
-    it "supports setting a group_list param" do
-      query_runner.visit_admin_query(
-        q2.id,
-        query_string: "params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
-      ).run_query
-
-      expect(query_runner).to have_result_header
-      expect(query_runner).to have_result_cell_at(1, 2, text: "admins")
-      expect(query_runner).to have_result_cell_at(2, 2, text: "trust_level_1")
-    end
-  end
-
-  context "with a current_user_id param" do
-    fab!(:query) { Fabricate(:query, name: "My current user query", sql: <<~SQL, user: admin) }
-          -- [params]
-          -- current_user_id :me
-          SELECT id, username FROM users WHERE id = :me
-        SQL
-
-    it "auto-injects the current user's id without showing an input field" do
+    it "caches results and shows them on reload" do
       query_runner.visit_admin_query(query.id)
+      expect(query_runner).to have_no_result_header
 
-      expect(query_runner).to have_no_params
       query_runner.run_query
 
       expect(query_runner).to have_result_header
-      expect(query_runner).to have_result_row_count(1)
-      expect(query_runner).to have_result_cell(admin.username)
+      expect(query_runner).to have_no_cached_result_notice
+      expect(query_runner).to have_result_row_count(4)
+
+      query_runner.visit_admin_query(
+        query.id,
+        params: {
+          start_date: "2025-01-01",
+          end_date: "2025-03-31",
+        },
+      )
+      expect(query_runner).to have_no_result_header
+
+      query_runner.run_query
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_row_count(3)
+      expect(query_runner).to have_no_cached_result_notice
+
+      query_runner.visit_admin_query(query.id)
+
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_row_count(4)
+      expect(query_runner).to have_cached_result_notice
+    end
+
+    it "forces fresh execution with ?run=1 even when cache exists" do
+      query_runner.visit_admin_query(query.id)
+      query_runner.run_query
+      expect(query_runner).to have_result_header
+
+      query_runner.visit_admin_query(query.id, query_string: "run=true")
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_no_cached_result_notice
     end
   end
 end

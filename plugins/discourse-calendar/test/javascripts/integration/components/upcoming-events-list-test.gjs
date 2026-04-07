@@ -543,6 +543,58 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       .hasText("Awesome Event", "displays the event name");
   });
 
+  test("shows recurring icon for recurring events", async function (assert) {
+    pretender.get("/discourse-post-event/events", () => {
+      return response({
+        events: [
+          {
+            id: 67509,
+            starts_at: tomorrowAllDay,
+            ends_at: null,
+            timezone: "UTC",
+            post: {
+              id: 67509,
+              post_number: 1,
+              url: "/t/recurring-event/18459/1",
+              topic: { id: 18459, title: "Recurring event" },
+            },
+            name: "Weekly Standup",
+            category_id: 1,
+            recurrence: "every_week",
+          },
+          {
+            id: 67510,
+            starts_at: laterThisMonth,
+            ends_at: null,
+            timezone: "UTC",
+            post: {
+              id: 67510,
+              post_number: 1,
+              url: "/t/one-off-event/18460/1",
+              topic: { id: 18460, title: "One off event" },
+            },
+            name: "One Off Event",
+            category_id: 1,
+          },
+        ],
+      });
+    });
+
+    await render(<template><UpcomingEventsList /></template>);
+    this.appEvents.trigger("page:changed", { url: "/" });
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    const events = queryAll(".upcoming-events-list__event-name");
+
+    assert
+      .dom(events[0].querySelector(".d-icon-arrows-rotate"))
+      .exists("recurring event shows the arrows-rotate icon");
+
+    assert
+      .dom(events[1].querySelector(".d-icon-arrows-rotate"))
+      .doesNotExist("non-recurring event does not show the icon");
+  });
+
   test("with all-day multi-day event shows correct date range", async function (assert) {
     pretender.get("/discourse-post-event/events", () => {
       return response({

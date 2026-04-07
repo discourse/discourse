@@ -15,8 +15,6 @@ ro:
       reactions_title: "Reacții"
       state_panel:
         more_users: "și încă %{count}..."
-      reaction:
-        forbidden: "Acea reacție a fost creată cu prea mult timp în urmă. Nu mai poate fi modificată sau eliminată."
       picker:
         react_with: "Reacționează la această postare cu: %{reaction}"
         cant_remove_reaction: "Nu-ți mai poți elimina reacția."

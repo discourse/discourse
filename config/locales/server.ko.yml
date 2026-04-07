@@ -817,6 +817,7 @@ ko:
     read: "읽기"
     read_write: "읽기/쓰기"
     instructions: '"%{application_name}" 애플리케이션과 함께 사용할 새 사용자 API 키를 생성했습니다. 다음 키를 애플리케이션에 붙여 넣으세요.'
+    copied: "복사되었습니다!"
     otp_description: '"%{application_name}"에서 이 사이트에 액세스하도록 허용할까요?'
     otp_confirmation:
       confirm_title: '%{site_name}에서 계속하기'

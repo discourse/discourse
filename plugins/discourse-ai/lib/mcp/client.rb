@@ -67,6 +67,7 @@ module DiscourseAi
             },
             session_id: session_id,
             accept_sse: true,
+            allow_result_error: true,
           )
 
         extract_result!(response.payload)
@@ -90,6 +91,7 @@ module DiscourseAi
         session_id: nil,
         accept_sse: false,
         notification: false,
+        allow_result_error: false,
         allow_oauth_retry: true
       )
         uri = validate_uri!
@@ -101,7 +103,12 @@ module DiscourseAi
         headers = default_headers(session_id: session_id)
         response, raw_body = perform_request(uri, payload, headers)
 
-        handle_response(response, raw_body, session_id: session_id)
+        handle_response(
+          response,
+          raw_body,
+          session_id: session_id,
+          allow_result_error: allow_result_error,
+        )
       rescue UnauthorizedError => e
         if server.oauth? && allow_oauth_retry && server.oauth_token_store.refresh_token.present?
           DiscourseAi::Mcp::OAuthFlow.refresh!(server)
@@ -113,6 +120,7 @@ module DiscourseAi
               session_id: session_id,
               accept_sse: accept_sse,
               notification: notification,
+              allow_result_error: allow_result_error,
               allow_oauth_retry: false,
             )
           )
@@ -165,7 +173,7 @@ module DiscourseAi
         [response, raw_body]
       end
 
-      def handle_response(response, raw_body, session_id:)
+      def handle_response(response, raw_body, session_id:, allow_result_error:)
         status = response.code.to_i
 
         if status == 404 && session_id.present?
@@ -187,18 +195,17 @@ module DiscourseAi
           end
 
         if status < 200 || status >= 300
+          if allow_result_error && tool_result_error?(body)
+            return build_response(response, body, status)
+          end
+
           message = body.is_a?(Hash) ? body.dig("error", "message") : nil
           raise Error,
                 message.presence ||
                   I18n.t("discourse_ai.mcp_servers.errors.request_failed", status: status)
         end
 
-        Response.new(
-          payload: body,
-          session_id: response[MCP_SESSION_ID_HEADER],
-          status: status,
-          headers: response.to_hash,
-        )
+        build_response(response, body, status)
       end
 
       def parse_json_body(body)
@@ -249,6 +256,19 @@ module DiscourseAi
         end
 
         payload["result"] || {}
+      end
+
+      def build_response(response, body, status)
+        Response.new(
+          payload: body,
+          session_id: response[MCP_SESSION_ID_HEADER],
+          status: status,
+          headers: response.to_hash,
+        )
+      end
+
+      def tool_result_error?(body)
+        body.is_a?(Hash) && body.dig("result", "isError") == true
       end
 
       def validate_uri!

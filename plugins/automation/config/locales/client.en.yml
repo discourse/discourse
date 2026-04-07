@@ -209,9 +209,9 @@ en:
               description: "Optional, limit triggering to only posts with these features"
           created: Created
           edited: Edited
-          topics: All Topics
-          personal_messages: Personal Messages
-          public_topics: Public Topics (exclude all secure categories)
+          topics: Topics (all categories)
+          personal_messages: Personal messages only
+          public_topics: Topics (public categories only)
           with_images: Images
           with_links: Links
           with_code: Code

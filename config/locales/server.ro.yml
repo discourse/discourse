@@ -647,6 +647,7 @@ ro:
     deny: "Anulează"
     read: "citire"
     read_write: "citire/scriere"
+    copied: "Copiat!"
     otp_confirmation:
       confirm_title: Continuă la %{site_name}
       logging_in_as: Autentificare ca %{username}

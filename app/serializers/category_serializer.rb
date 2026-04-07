@@ -9,6 +9,8 @@ class CategorySerializer < SiteCategorySerializer
                :require_reply_approval,
                :require_topic_approval,
                :nested_replies_default
+               :topic_posting_review_mode,
+               :reply_posting_review_mode
   end
 
   class CategoryLocalizationSerializer < ApplicationSerializer
@@ -35,6 +37,8 @@ class CategorySerializer < SiteCategorySerializer
              :topic_featured_link_allowed,
              :search_priority,
              :moderating_group_ids,
+             :topic_posting_review_group_ids,
+             :reply_posting_review_group_ids,
              :default_slow_mode_seconds,
              :style_type,
              :emoji,

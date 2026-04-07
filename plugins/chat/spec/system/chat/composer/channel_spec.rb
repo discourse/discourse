@@ -152,7 +152,7 @@ RSpec.describe "Chat | composer | channel" do
     it "does not show emoji autocomplete menu after whitespace" do
       chat_page.visit_channel(channel_1)
 
-      channel_page.composer.input.send_keys(":id ")
+      channel_page.composer.input.send_keys(":zznotemoji ")
 
       expect(page).to have_no_css(".autocomplete.ac-emoji")
     end

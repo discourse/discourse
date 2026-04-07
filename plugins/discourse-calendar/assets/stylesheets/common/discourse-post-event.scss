@@ -365,6 +365,7 @@ $show-interested: inherit;
   .event-location,
   .event-url,
   .event-dates,
+  .event-recurrence,
   .event-chat-channel,
   .event-invitees-avatars-container {
     display: grid;
@@ -381,6 +382,20 @@ $show-interested: inherit;
 
     .chat-channel-link {
       @include ellipsis;
+    }
+  }
+
+  .event-recurrence {
+    color: var(--primary-medium);
+    padding-top: 0;
+
+    > .d-icon {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+    }
+
+    > :not(.d-icon) {
+      font-size: var(--font-down-1);
     }
   }
 

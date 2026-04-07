@@ -15,6 +15,7 @@ uk:
       alt:
         solved:
           accepted_notification: "схвалено"
+          topic_solved_notification: "вирішено"
     solutions: "Рішення"
     solved:
       title: "Вирішено"
@@ -64,6 +65,7 @@ uk:
       no_answer:
         title: Чи було отримано відповідь на ваше запитання?
         description: "Виділіть відповідь та допоможіть іншим, використовуючи кнопку рішення під правильною відповіддю."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "ваше повідомлення було позначено як рішення"
       category_type_support:

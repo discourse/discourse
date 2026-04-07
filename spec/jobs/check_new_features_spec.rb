@@ -96,8 +96,6 @@ RSpec.describe Jobs::CheckNewFeatures do
       stub_new_features_endpoint(feature1)
     end
 
-    after { clear_mocked_upcoming_change_metadata }
-
     it "notifies admins and bumps last_viewed_feature_date from the status_changed time" do
       Notification.destroy_all
 
@@ -170,8 +168,6 @@ RSpec.describe Jobs::CheckNewFeatures do
       )
       stub_new_features_endpoint(feature_stale)
     end
-
-    after { clear_mocked_upcoming_change_metadata }
 
     it "seeds last_viewed to the UC when the fetch adds nothing newer, without notifying" do
       Notification.destroy_all

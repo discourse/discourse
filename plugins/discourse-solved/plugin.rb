@@ -42,6 +42,9 @@ require_relative "lib/discourse_solved/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 
+  UserUpdater::OPTION_ATTR.push(:notify_on_solved)
+  add_to_serializer(:user_option, :notify_on_solved) { object.notify_on_solved }
+
   reloadable_patch do
     register_category_type(DiscourseSolved::Categories::Types::Support)
     ::Guardian.prepend(DiscourseSolved::GuardianExtensions)
@@ -87,6 +90,11 @@ after_initialize do
 
   register_modifier(:topic_crawler_post_schema) do |schema, post, topic|
     DiscourseSolved::SchemaUtils.post_schema(post, topic) || schema
+  end
+
+  register_html_builder("server:topic-main-entity-meta-crawler") do |controller|
+    topic_view = controller.instance_variable_get(:@topic_view)
+    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic)
   end
 
   register_html_builder("server:before-head-close-crawler") do |controller|

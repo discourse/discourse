@@ -15,6 +15,7 @@ zh_CN:
       alt:
         solved:
           accepted_notification: "已被接受"
+          topic_solved_notification: "已解决"
     solutions: "解决方案"
     solved:
       title: "已解决"
@@ -55,6 +56,7 @@ zh_CN:
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "您的帖子已被标记为解决方案"
       category_type_support:

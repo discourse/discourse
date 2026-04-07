@@ -6,6 +6,10 @@
 
 et:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Andmete eksportija"
     explorer:
       default_query: "Vaikimisi"
       or: "või"

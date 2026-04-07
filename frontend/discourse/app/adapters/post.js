@@ -15,10 +15,12 @@ export default class PostAdapter extends RestAdapter {
     // the server to return the full JSON envelope ({post, action, success})
     // instead of the bare post object (legacy API compat).
     args.nested_post = true;
-    return ajax(this.pathFor(store, type), { type: "POST", data: args }).then(
-      function (json) {
-        return new Result(json[typeField], json);
-      }
-    );
+    return ajax(this.pathFor(store, type), {
+      type: "POST",
+      data: JSON.stringify(args),
+      contentType: "application/json",
+    }).then(function (json) {
+      return new Result(json[typeField], json);
+    });
   }
 }

@@ -6,6 +6,10 @@
 
 pl_PL:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Eksplorator danych"
     errors:
       explorer:
         no_semicolons: "Usuń średniki z zapytania."

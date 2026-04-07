@@ -6,6 +6,10 @@
 
 ru:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Проводник данных"
     errors:
       explorer:
         no_semicolons: "Удалите точку с запятой из запроса."

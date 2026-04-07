@@ -184,7 +184,9 @@ describe "Custom sidebar sections" do
     sidebar.click_add_link_button
 
     is_focused =
-      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+      page.evaluate_script(
+        "document.activeElement.classList.contains('d-icon-grid-picker-trigger')",
+      )
 
     expect(is_focused).to be true
   end

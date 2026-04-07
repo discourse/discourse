@@ -274,9 +274,28 @@ table.group-reports {
 .query-run {
   margin-top: 25px;
 
+  .query-run-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    flex-wrap: wrap;
+    margin-top: 1em;
+  }
+
+  .query-run-actions__left,
+  .query-run-actions__right {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+
   .query-plan {
-    display: inline-block;
-    margin-left: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-left: 0.25em;
   }
 }
 
@@ -344,20 +363,70 @@ table.group-reports {
   margin: 10px 0;
 }
 
-.query-create {
+.query-new__or-divider {
   display: flex;
+  align-items: center;
+  gap: 1em;
+  width: var(--form-kit-large-input);
+  margin: 1.5em 0;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 
-  input {
-    margin-right: 0.5em;
-    margin-bottom: 0;
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--primary-low-mid);
   }
 }
 
+.query-new__ai-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  font-weight: 700;
+}
+
+.query-ai-generating {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1em;
+  margin-bottom: 0.75em;
+  background: var(--tertiary-very-low);
+  border: 1px solid var(--tertiary-low);
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-1);
+  color: var(--tertiary);
+}
+
 .query-results {
+  .query-result-download-buttons {
+    display: inline-flex;
+    gap: 0.5em;
+
+    .btn {
+      margin: 0;
+    }
+  }
+
+  .result-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75em 1.25em;
+    flex-wrap: wrap;
+  }
+
   section {
     width: 100%;
-    overflow: auto;
-    max-height: 1000px;
+  }
+
+  .query-results-chart {
+    width: min(100%, 840px);
+    margin: 0 auto 1rem;
   }
 
   table {
@@ -377,6 +446,11 @@ table.group-reports {
       background: var(--primary-low);
       z-index: z("base");
     }
+  }
+
+  .query-results-table-wrapper {
+    overflow: auto;
+    max-height: 1000px;
   }
 }
 
@@ -515,6 +589,13 @@ table.group-reports {
 
 .result-about {
   color: var(--primary-high);
+  float: right;
+}
+
+.cached-result-notice {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  clear: both;
   float: right;
 }
 

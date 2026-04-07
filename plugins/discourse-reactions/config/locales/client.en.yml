@@ -15,7 +15,7 @@ en:
           one: "%{reaction}: %{count} user"
           other: "%{reaction}: %{count} users"
       reaction:
-        forbidden: "That reaction was created too long ago. It can no longer be modified or removed."
+        forbidden: "You are not allowed to react or change your reaction to this post."
       picker:
         react_with: "React to this post with: %{reaction}"
         cant_remove_reaction: "You can no longer remove your reaction"

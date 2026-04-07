@@ -1063,6 +1063,8 @@ tr_TR:
     connection_error: "Sunucuya bağlanırken bir sorun oluştu, sunucu adını ve bağlantı noktasını kontrol edip tekrar deneyin."
     timeout_error: "Sunucuya bağlantı zaman aşımına uğradı, sunucu adını ve bağlantı noktasını kontrol edin ve tekrar deneyin."
     unhandled_error: "E-posta ayarları test edilirken işlenmemiş hata. %{message}"
+    invalid_host: "Belirtilen sunucu, izin verilmeyen bir IP adresine yönlendiriliyor."
+    host_resolve_failed: "Belirtilen sunucu çözümlenemedi."
   webauthn:
     validation:
       invalid_type_error: "Sağlanan webauthn türü geçersizdi. Geçerli türler webauthn.get ve webauthn.create'tir."
@@ -1159,6 +1161,8 @@ tr_TR:
     permissions_header: 'Bu, "%{application_name}"in şunları yapmasına olanak tanıyacaktır:'
     redirect_warning: "Yetkilendirme sizi şu adrese yönlendirecektir:"
     instructions: '"%{application_name}" ile kullanmanız için yeni bir kullanıcı API anahtarı oluşturduk, lütfen aşağıdaki anahtarı uygulamanıza yapıştırın:'
+    copy_key: "Anahtarı Kopyala"
+    copied: "Kopyalandı!"
     otp_description: '"%{application_name}" uygulamasının bu siteye erişmesine izin vermek ister misiniz?'
     otp_confirmation:
       confirm_title: '%{site_name} adresine devam edin'
@@ -2309,6 +2313,7 @@ tr_TR:
     embed_support_markdown: "Yerleştirilmiş gönderiler için Markdown biçimlendirmesini destekleyin."
     allowed_embed_selectors: "Yerleştirmelerde izin verilen CSS ögelerinin virgülle ayrılmış bir listesi."
     allowed_href_schemes: "Bağlantılarda http ve https'ye ek olarak izin verilen şemalar."
+    embed_full_app: "Gömülü yorumlar için tam uygulama modunu etkinleştirin. Bu özellik etkinleştirildiğinde, gömülü yorumlar Discourse uygulamasının tamamını bir iframe içinde yükler ve kullanıcıların konularla doğrudan etkileşime girmesine olanak tanır"
     embed_post_limit: "Yerleştirilecek maksimum gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hâlâ incelenmemiş öge varsa moderatörlere mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
@@ -2471,6 +2476,7 @@ tr_TR:
     show_preview_for_form_templates: "Form şablonları özelliği için ön izlemeyi etkinleştirin"
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
+    enable_new_checkbox_style: "FormKit onay kutuları için yeniden tasarlanan onay kutusu stilini etkinleştirin."
     impersonate_without_logout: "Yöneticilerin, yönetici hesaplarından çıkış yapmadan bir kullanıcıyı taklit etmelerine izin verin."
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
@@ -2496,7 +2502,6 @@ tr_TR:
     fake_upcoming_change: "Bu, test amaçlı sahte bir değişikliktir. Bu dizeyi çevirmenize gerek yoktur."
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     rename_faq_to_guidelines: "Bu değişiklikle SSS sayfası, Kılavuzlar olarak yeniden adlandırılmıştır. SSS sayfası hala /faq adresinde erişilebilir olacaktır. ‘faq url’ ayarı eskisi gibi çalışmaya devam edecektir."
-    experimental_tag_settings_page: "/tag/:slug/:id/edit adresinde etiketler için özel bir ayarlar sayfası etkinleştirin."
     enable_simplified_category_creation: "Daha az seçenek ve daha temiz bir arayüz ile basitleştirilmiş kategori oluşturma akışını etkinleştirir."
     enable_custom_splash_screen: "Yükleme açılış ekranını kendi SVG görüntünüzle özelleştirmenize olanak tanır. ‘Açılış ekranı görüntüsü’ ayarı üzerinden bir görüntü yükleyin. Uyarı: Bu, LCP puanlarını ve Google indekslemesini olumsuz etkileyebilir."
     modernize_foundation_theme: "Bu değişiklik, Discourse'daki Foundation temasına tasarım değişiklikleri getiriyor."
@@ -3112,19 +3117,23 @@ tr_TR:
         Ancak, gönderi topluluk tarafından ikinci kez gizlenirse personel tarafından ele alınana kadar gizli kalır.
 
         Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
+    reviewable_queued_post_revise_and_reject_edit_post: "Önerilen değişiklikleri yapmak için aşağıdaki orijinal gönderinizi düzenleyip yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Aşağıda ilk gönderinizi düzenleyebilir ve önerilen değişiklikleri yaparak yeniden gönderebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_topic: "Aşağıda konunuzun ilk mesajını düzenleyip önerilen değişiklikleri yaparak yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "Aşağıda konunuzun ilk gönderisini düzenleyebilir ve önerilen değişiklikleri yaparak yeniden gönderebilirsiniz."
     reviewable_queued_post_revise_and_reject:
       title: "Gönderinizle ilgili geri bildirim"
       subject_template: "%{topic_title} başlığındaki gönderinizle ilgili geri bildirim"
       text_body_template: |
         Merhaba %{username},
 
-        [%{topic_title}](%{topic_url}) başlığındaki gönderinizi inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+        [%{topic_title}](%{topic_url}) başlıklı gönderinizi inceledik ve size bazı geri bildirimlerimiz var.
 
-        Sebep: %{reason}
+        Neden: %{reason}
 
         Geri bildirim: %{feedback}
 
-        Aşağıdaki orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+        %{edit_instructions}
 
         --------
 
@@ -3140,13 +3149,13 @@ tr_TR:
       text_body_template: |
         Merhaba %{username},
 
-        "%{topic_title}" başlıklı yeni konunuzu inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+        "%{topic_title}" başlıklı yeni konunuzu inceledik ve size bazı geri bildirimlerimiz var.
 
-        Sebep: %{reason}
+        Neden: %{reason}
 
         Geri bildirim: %{feedback}
 
-        Aşağıdan orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+        %{edit_instructions}
 
         --------
 

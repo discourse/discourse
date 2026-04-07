@@ -1,17 +1,14 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
-import DButton from "discourse/components/d-button";
-import { ajax } from "discourse/lib/ajax";
-import getURL from "discourse/lib/get-url";
+import moment from "moment";
+import icon from "discourse/helpers/d-icon";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
 import I18n, { i18n } from "discourse-i18n";
-import { QUERY_RESULT_MAX_LIMIT } from "discourse/plugins/discourse-data-explorer/discourse/lib/constants";
-import DataExplorerBarChart from "./data-explorer-bar-chart";
+import { isNumericColumn, looksLikeDate } from "../lib/chart-helpers";
+import DataExplorerChart from "./data-explorer-chart";
+import QueryResultDownloadButtons from "./query-result-download-buttons";
 import QueryRowContent from "./query-row-content";
 import BadgeViewComponent from "./result-types/badge";
 import CategoryViewComponent from "./result-types/category";
@@ -44,8 +41,6 @@ const VIEW_COMPONENTS = {
 export default class QueryResult extends Component {
   @service site;
 
-  @tracked chartDisplayed = false;
-
   get colRender() {
     return this.args.content.colrender || {};
   }
@@ -58,16 +53,57 @@ export default class QueryResult extends Component {
     return this.args.content.columns;
   }
 
-  get params() {
-    return this.args.content.params;
-  }
-
   get explainText() {
     return this.args.content.explain;
   }
 
-  get chartDatasetName() {
-    return this.columnNames[1];
+  get showDownloads() {
+    return this.args.showDownloads !== false;
+  }
+
+  get numericColumnIndices() {
+    if (!this.rows?.length || !this.columns?.length) {
+      return [];
+    }
+    const indices = [];
+    for (let i = 1; i < this.columns.length; i++) {
+      if (this.colRender[i]) {
+        continue;
+      }
+      if (
+        typeof this.rows[0][i] === "number" ||
+        isNumericColumn(this.rows, i)
+      ) {
+        indices.push(i);
+      }
+    }
+    return indices;
+  }
+
+  get isMultiSeries() {
+    return this.numericColumnIndices.length > 1;
+  }
+
+  get hasDates() {
+    return this.rows?.length > 0 && looksLikeDate(String(this.rows[0][0]));
+  }
+
+  get chartType() {
+    if (this.isMultiSeries) {
+      return "bar";
+    }
+    return this.hasDates ? "line" : "bar";
+  }
+
+  get isStacked() {
+    return this.isMultiSeries && this.hasDates;
+  }
+
+  get chartDatasets() {
+    return this.numericColumnIndices.map((colIdx) => ({
+      label: this.columnNames[colIdx],
+      values: this.rows.map((r) => Number(r[colIdx])),
+    }));
   }
 
   get columnNames() {
@@ -99,11 +135,6 @@ export default class QueryResult extends Component {
     });
   }
 
-  get chartValues() {
-    // return an array with the second value of this.row
-    return this.rows.map((item) => item[1]);
-  }
-
   get colCount() {
     return this.columns.length;
   }
@@ -120,6 +151,15 @@ export default class QueryResult extends Component {
   get duration() {
     return i18n("explorer.run_time", {
       value: I18n.toNumber(this.args.content.duration, { precision: 1 }),
+    });
+  }
+
+  get cachedResultNotice() {
+    if (!this.args.cachedAt) {
+      return null;
+    }
+    return i18n("explorer.cached_result_notice", {
+      relative_time: moment(this.args.cachedAt).fromNow(),
     });
   }
 
@@ -157,14 +197,24 @@ export default class QueryResult extends Component {
     return transformedRelTable(this.site.groups);
   }
 
-  get canShowChart() {
-    const hasTwoColumns = this.colCount === 2;
-    const secondColumnContainsNumber =
-      this.resultCount[0] > 0 && typeof this.rows[0][1] === "number";
-    const secondColumnContainsId = this.colRender[1];
+  get hasTextColumns() {
+    if (!this.rows?.length || !this.columns?.length) {
+      return false;
+    }
+    const numericSet = new Set(this.numericColumnIndices);
+    for (let i = 1; i < this.columns.length; i++) {
+      if (!this.colRender[i] && !numericSet.has(i)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
+  get canShowChart() {
     return (
-      hasTwoColumns && secondColumnContainsNumber && !secondColumnContainsId
+      this.rows?.length > 0 &&
+      this.numericColumnIndices.length > 0 &&
+      !this.hasTextColumns
     );
   }
 
@@ -231,114 +281,30 @@ export default class QueryResult extends Component {
     }
   }
 
-  @action
-  downloadResultJson() {
-    this._downloadResult("json");
-  }
-
-  @action
-  downloadResultCsv() {
-    this._downloadResult("csv");
-  }
-
-  @action
-  showChart() {
-    this.chartDisplayed = true;
-  }
-
-  @action
-  hideChart() {
-    this.chartDisplayed = false;
-  }
-
-  _download_url() {
-    return this.args.group
-      ? `/g/${this.args.group.name}/reports/`
-      : "/admin/plugins/discourse-data-explorer/queries/";
-  }
-
-  _downloadResult(format) {
-    // Create a frame to submit the form in (?)
-    // to avoid leaving an about:blank behind
-    let windowName = randomIdShort();
-    const newWindowContents =
-      "<style>body{font-size:36px;display:flex;justify-content:center;align-items:center;}</style><body>Click anywhere to close this window once the download finishes.<script>window.onclick=function(){window.close()};</script>";
-
-    window.open("data:text/html;base64," + btoa(newWindowContents), windowName);
-
-    let form = document.createElement("form");
-    form.setAttribute("id", "query-download-result");
-    form.setAttribute("method", "post");
-    form.setAttribute(
-      "action",
-      getURL(
-        this._download_url() +
-          this.args.query.id +
-          "/run." +
-          format +
-          "?download=1"
-      )
-    );
-    form.setAttribute("target", windowName);
-    form.setAttribute("style", "display:none;");
-
-    function addInput(name, value) {
-      let field;
-      field = document.createElement("input");
-      field.setAttribute("name", name);
-      field.setAttribute("value", value);
-      form.appendChild(field);
-    }
-
-    addInput("params", JSON.stringify(this.params));
-    addInput("explain", this.explainText);
-    addInput("limit", String(QUERY_RESULT_MAX_LIMIT));
-
-    ajax("/session/csrf.json").then((csrf) => {
-      addInput("authenticity_token", csrf.csrf);
-
-      document.body.appendChild(form);
-      form.submit();
-      schedule("afterRender", () => document.body.removeChild(form));
-    });
-  }
-
   <template>
     <article>
       <header class="result-header">
         <div class="result-info">
-          <DButton
-            @action={{this.downloadResultJson}}
-            @icon="download"
-            @label="explorer.download_json"
-          />
-
-          <DButton
-            @action={{this.downloadResultCsv}}
-            @icon="download"
-            @label="explorer.download_csv"
-          />
-
-          {{#if this.canShowChart}}
-            {{#if this.chartDisplayed}}
-              <DButton
-                @action={{this.hideChart}}
-                @icon="table"
-                @label="explorer.show_table"
-              />
-            {{else}}
-              <DButton
-                @action={{this.showChart}}
-                @icon="chart-bar"
-                @label="explorer.show_graph"
-              />
-            {{/if}}
+          {{#if this.showDownloads}}
+            <QueryResultDownloadButtons
+              @query={{@query}}
+              @content={{@content}}
+              @group={{@group}}
+            />
           {{/if}}
         </div>
 
-        <div class="result-about">
-          {{this.resultCount}}
-          {{this.duration}}
+        <div class="result-meta">
+          <div class="result-about">
+            {{this.resultCount}}
+            {{this.duration}}
+          </div>
+          {{#if this.cachedResultNotice}}
+            <div class="cached-result-notice">
+              {{icon "clock-rotate-left"}}
+              {{this.cachedResultNotice}}
+            </div>
+          {{/if}}
         </div>
 
         <br />
@@ -355,13 +321,18 @@ export default class QueryResult extends Component {
       </header>
 
       <section>
-        {{#if this.chartDisplayed}}
-          <DataExplorerBarChart
-            @labels={{this.chartLabels}}
-            @values={{this.chartValues}}
-            @datasetName={{this.chartDatasetName}}
-          />
-        {{else}}
+        {{#if this.canShowChart}}
+          <div class="query-results-chart">
+            <DataExplorerChart
+              @labels={{this.chartLabels}}
+              @datasets={{this.chartDatasets}}
+              @chartType={{this.chartType}}
+              @stacked={{this.isStacked}}
+            />
+          </div>
+        {{/if}}
+
+        <div class="query-results-table-wrapper">
           <table class="query-results-table">
             <thead>
               <tr class="headers">
@@ -393,18 +364,10 @@ export default class QueryResult extends Component {
               {{/each}}
             </tbody>
           </table>
-        {{/if}}
+        </div>
       </section>
     </article>
   </template>
-}
-
-function randomIdShort() {
-  return "xxxxxxxx".replace(/[xy]/g, () => {
-    /*eslint-disable*/
-    return ((Math.random() * 16) | 0).toString(16);
-    /*eslint-enable*/
-  });
 }
 
 function transformedRelTable(table, modelClass) {

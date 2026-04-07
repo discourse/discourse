@@ -642,6 +642,8 @@ class CategoriesController < ApplicationController
           :allow_global_tags,
           :read_only_banner,
           :default_list_filter,
+          { topic_posting_review_group_ids: [] },
+          { reply_posting_review_group_ids: [] },
           *conditional_param_keys,
         ]
 
@@ -658,6 +660,8 @@ class CategoriesController < ApplicationController
               require_reply_approval
               require_topic_approval
               nested_replies_default
+              topic_posting_review_mode
+              reply_posting_review_mode
             ],
             custom_fields: {
             },

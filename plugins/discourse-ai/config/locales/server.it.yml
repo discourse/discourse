@@ -89,7 +89,6 @@ it:
     ai_discord_app_public_key: "La chiave pubblica dell'applicazione Discord a cui vuoi collegare la ricerca Discord"
     ai_discord_search_mode: "Seleziona la modalità di ricerca da utilizzare per la ricerca su Discord"
     ai_discord_allowed_guilds: "Gilde (server) Discord in cui il bot è autorizzato a cercare"
-    ai_translation_backfill_limit_to_public_content: "Se abilitata, verranno tradotti solo i contenuti nelle categorie pubbliche. Se disabilitata, verranno inviati all'assistente di traduzione anche gli MP di gruppo e le categorie private."
     ai_translation_backfill_max_age_days: "L'età massima dei messaggi e degli argomenti da tradurre. Messaggi e argomenti più vecchi dell'età impostata non verranno tradotti. 0 disabilita la traduzione dei messaggi già pubblicati, ma non disabilita quella di nuovi messaggi."
   reviewables:
     reasons:

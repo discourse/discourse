@@ -397,6 +397,7 @@ en:
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"
       disable_dev_tools: "Disable dev tools"
+      toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
     s3:
       regions:
@@ -609,8 +610,10 @@ en:
 
     bookmarked:
       title: "Bookmark"
-      edit_bookmark: "Edit Bookmark"
-      clear_bookmarks: "Clear Bookmarks"
+      edit_bookmark:
+        one: "Edit bookmark"
+        other: "Edit bookmarks"
+      delete_bookmarks: "Delete all bookmarks"
       help:
         bookmark: "Click to bookmark this topic"
         edit_bookmark: "Click to edit the bookmark on a post in this topic"
@@ -630,12 +633,18 @@ en:
       clear_reminder: "Clear reminder"
       edit: "Edit bookmark"
       not_bookmarked: "bookmark this post"
+      topic_bookmark: "Topic"
+      post_bookmark: "Post #%{post_number}"
+      jump_to_post: "Jump to #%{post_number}"
+      bookmark_topic: "Bookmark topic"
+      edit_topic_bookmark: "Edit topic bookmark"
+      delete_topic_bookmark: "Delete topic bookmark"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
-      confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
+      confirm_clear: "Are you sure you want to delete all your bookmarks from this topic?"
       save: "Save"
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
@@ -1712,6 +1721,7 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
+      show_original_content: "Show original content instead of translated content. Can also be toggled within topics."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -3024,6 +3034,12 @@ en:
         filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        tag_category_admin_dropdown:
+          title: "Category and tag settings"
+          edit_category: "Edit category"
+          edit_category_description: "Adjust settings for %{badge}"
+          edit_tag: "Edit tag"
+          edit_tag_description: "Adjust settings for %{badge}"
         bulk_select_topics_dropdown:
           title: "Bulk Actions"
         bulk_select_bookmarks_dropdown:
@@ -3057,6 +3073,20 @@ en:
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
       default: Custom emojis
+
+    filter_input:
+      clear: "Clear filter"
+
+    d_icon_grid_picker:
+      select_icon: "Select icon"
+      search_placeholder: "Search icons..."
+      no_results: "No icons found"
+      results_count:
+        one: "%{count} icon found"
+        other: "%{count} icons found"
+      favorites: "Favorites"
+      selected_icon: "Selected icon: %{iconName}"
+      clear: "Clear icon"
 
     shared_drafts:
       title: "Shared Drafts"
@@ -4788,6 +4818,7 @@ en:
       validations:
         emoji_required: "Select an emoji."
         icon_required: "Select an icon."
+        groups_required: "Select at least one group for this approval mode."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4800,6 +4831,7 @@ en:
       icon: "Icon"
       emoji: "Emoji"
       select_emoji: "Select emoji"
+      select_icon: "Select icon"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -4872,6 +4904,14 @@ en:
       review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
+      require_topic_approval_for: "Require moderator approval of new topics for..."
+      require_reply_approval_for: "Require moderator approval of new replies for..."
+      posting_review_modes:
+        no_one: "No one"
+        everyone: "Everyone"
+        everyone_except: "Everyone except selected groups"
+        no_one_except: "No one except selected groups"
+      posting_review_groups_placeholder: "Select groups..."
       this_year: "this year"
       position: "Position on the categories page:"
       default_position: "Default position"
@@ -7635,6 +7675,16 @@ en:
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
+          change_source:
+            button: "Change source"
+            title: "Change Theme Source"
+            repository_url: "Repository URL"
+            branch: "Branch (optional)"
+            updating: "Updating theme source…"
+            update: "Update Source"
+            has_existing_key: "This theme has an existing SSH key configured."
+            generate_new_key: "Generate new SSH key"
+            keep_existing_key: "Keep existing SSH key"
           add: "Add"
           theme_settings: "Custom theme settings"
           theme_site_settings: "Settings the theme can override"
@@ -9031,6 +9081,8 @@ en:
         crawler_settings_saved: "Crawler settings saved"
         back: "Back to embedding"
         configuration_snippet: "Configuration snippet"
+        full_app_mode: "Full app mode"
+        full_app_mode_description: "Load the full Discourse application in the embed iframe, allowing users to reply, like, quote, and interact with topics directly"
         host_form:
           add_header: "Add host"
           edit_header: "Edit host"

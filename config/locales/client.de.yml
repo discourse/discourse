@@ -5681,6 +5681,8 @@ de:
           beta: "Beta"
           stable: "Stabil"
           permanent: "Dauerhaft"
+        status_descriptions:
+          experimental: "Diese Funktion befindet sich in einer frühen Entwicklungsphase und kann noch erheblich verändert oder eingestellt werden. Möglicherweise ist sie nicht vollständig mit anderen Funktionen kompatibel."
         impact_roles:
           admins: "Administratoren"
           moderators: "Moderatoren"

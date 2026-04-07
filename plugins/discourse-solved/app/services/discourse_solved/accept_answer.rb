@@ -20,6 +20,11 @@ class DiscourseSolved::AcceptAnswer
       model :solved, :mark_as_solved
       only_if(:should_notify_post_author) { step :notify_post_author }
       only_if(:should_notify_topic_owner) { step :notify_topic_owner }
+      model :topic_user_ids, optional: true
+      only_if(:has_topic_users?) do
+        model :screener
+        step :notify_tracking_and_watching_users
+      end
     end
   end
 
@@ -70,6 +75,7 @@ class DiscourseSolved::AcceptAnswer
 
   def should_notify_post_author(post:, guardian:)
     return if guardian.user.id == post.user_id || !User.exists?(post.user_id)
+    return if !UserOption.exists?(user_id: post.user_id, notify_on_solved: true)
     screener = UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: post.user_id)
     !screener.ignoring_or_muting_actor?(post.user_id)
   end
@@ -92,6 +98,7 @@ class DiscourseSolved::AcceptAnswer
   def should_notify_topic_owner(topic:, guardian:)
     return if !topic.category&.notify_on_staff_accept_solved?
     return if guardian.user.id == topic.user_id || !User.exists?(topic.user_id)
+    return if !UserOption.exists?(user_id: topic.user_id, notify_on_solved: true)
     screener =
       UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: topic.user_id)
     !screener.ignoring_or_muting_actor?(topic.user_id)
@@ -110,6 +117,50 @@ class DiscourseSolved::AcceptAnswer
         title: "solved.notification.title",
       }.to_json,
     )
+  end
+
+  def has_topic_users?(topic_user_ids:)
+    topic_user_ids.present?
+  end
+
+  def fetch_topic_user_ids(post:, topic:, guardian:)
+    already_notified_ids = [guardian.user.id, post.user_id, topic.user_id]
+
+    TopicUser
+      .where(topic:)
+      .where("notification_level >= ?", TopicUser.notification_levels[:tracking])
+      .where.not(user_id: already_notified_ids)
+      .joins(user: :user_option)
+      .where(user_options: { notify_on_solved: true })
+      .pluck(:user_id)
+  end
+
+  def fetch_screener(guardian:, topic_user_ids:)
+    UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: topic_user_ids)
+  end
+
+  def notify_tracking_and_watching_users(post:, topic:, guardian:, topic_user_ids:, screener:)
+    notification_data = {
+      message: "solved.topic_solved_notification",
+      display_username: guardian.user.username,
+      topic_title: topic.title,
+      title: "solved.notification.topic_solved_title",
+    }.to_json
+
+    records =
+      topic_user_ids.filter_map do |user_id|
+        next if screener.ignoring_or_muting_actor?(user_id)
+
+        {
+          notification_type: Notification.types[:custom],
+          user_id: user_id,
+          topic_id: topic.id,
+          post_number: post.post_number,
+          data: notification_data,
+        }
+      end
+
+    Notification::Action::BulkCreate.call(records:)
   end
 
   def topic_will_auto_close(solved:)

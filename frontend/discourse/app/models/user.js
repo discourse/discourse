@@ -140,6 +140,7 @@ let userOptionFields = [
   "notification_level_when_replying",
   "notify_on_linked_posts",
   "seen_popups",
+  "show_original_content",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
   "skip_new_user_tips",

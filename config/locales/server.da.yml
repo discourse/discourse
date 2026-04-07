@@ -856,6 +856,7 @@ da:
     read: "læst"
     read_write: "læse/skrive"
     instructions: 'Vi har netop genereret en ny bruger-API-nøgle, som du kan bruge med "%{application_name}", indsæt venligst følgende nøgle i din applikation:'
+    copied: "Kopieret!"
     otp_description: 'Vil du tillade at "%{application_name}" får adgang til dette websted?'
     otp_confirmation:
       confirm_title: Fortsæt til %{site_name}
