@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 
 export default class VoteBox extends Component {
   @service currentUser;
+  @service router;
 
   @tracked hasVoted = false;
   @tracked hasSeenSuccessMenu = false;
@@ -81,7 +82,7 @@ export default class VoteBox extends Component {
 
     applyBehaviorTransformer("topic-vote-button-click", () => {
       if (!this.currentUser) {
-        return this.args.showLogin();
+        return this.router.transitionTo("login");
       }
 
       if (this.currentUser.vote_limit === 0) {

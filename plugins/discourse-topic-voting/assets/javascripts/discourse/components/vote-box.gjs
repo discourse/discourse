@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import VoteButton from "./vote-button";
@@ -55,7 +54,6 @@ export default class VoteBox extends Component {
       <VoteButton
         @topic={{@topic}}
         @addVote={{this.addVote}}
-        @showLogin={{routeAction "showLogin"}}
         @removeVote={{this.removeVote}}
       />
       <VoteCount @topic={{@topic}} />
