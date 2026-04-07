@@ -99,6 +99,22 @@ describe "Content Localization" do
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
     end
 
+    it "persists 'Show Original' preference for logged-in users across page loads" do
+      sign_in(japanese_user)
+
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
+
+      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+      # preference persists after full page reload
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+      expect(japanese_user.reload.user_option.show_original_content).to eq(true)
+    end
+
     it "allows users to set their post's locale when posting" do
       sign_in(japanese_user)
 
