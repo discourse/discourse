@@ -3,7 +3,7 @@
 module DiscourseWorkflows
   class Workflow < ActiveRecord::Base
     self.table_name = "discourse_workflows_workflows"
-    self.ignored_columns = ["sticky_notes"]
+    self.ignored_columns = %w[sticky_notes allowed_group_ids]
 
     TRIGGER_NODE_CACHE = DistributedCache.new("discourse_workflows_triggers")
 
