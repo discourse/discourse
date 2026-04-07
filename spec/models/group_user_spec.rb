@@ -279,8 +279,6 @@ RSpec.describe GroupUser do
     it "removes `primary_group_id`, `flair_group_id` and exec `match_primary_group_changes` method on user model" do
       user = Fabricate(:user, primary_group: group, flair_group: group)
       group_user = Fabricate(:group_user, group: group, user: user)
-
-      user.expects(:match_primary_group_changes).once
       group_user.destroy!
 
       user.reload

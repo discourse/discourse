@@ -5,7 +5,7 @@ class GroupUser < ActiveRecord::Base
   belongs_to :user
 
   before_create :set_notification_level
-  after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
+  after_destroy :recalculate_trust_level
 
   after_commit :decrease_group_user_count, on: [:destroy]
 
@@ -79,16 +79,6 @@ class GroupUser < ActiveRecord::Base
 
   def set_notification_level
     self.notification_level = group&.default_notification_level || 3
-  end
-
-  def remove_primary_and_flair_group
-    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to update
-
-    updates = {}
-    updates[:primary_group_id] = nil if user.primary_group_id == group_id
-    updates[:flair_group_id] = nil if user.flair_group_id == group_id
-
-    user.update(updates) if updates.present?
   end
 
   def recalculate_trust_level

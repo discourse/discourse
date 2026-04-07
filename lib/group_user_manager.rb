@@ -69,6 +69,7 @@ class GroupUserManager
   # :decrease_group_user_count
   def sync_removal_side_effects(removed_user_ids)
     grant_other_available_title(removed_user_ids)
+    remove_primary_and_flair_group(removed_user_ids)
   end
 
   private
@@ -128,11 +129,7 @@ class GroupUserManager
     Group.transaction do
       @group.group_users.where(user_id: removed_user_ids).delete_all
 
-      User.where(primary_group_id: @group.id, id: removed_user_ids).update_all(
-        primary_group_id: nil,
-      )
-      User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
-
+      remove_primary_and_flair_group(removed_user_ids)
       grant_other_available_title(removed_user_ids)
 
       Group.update_counters(@group.id, user_count: -removed_user_ids.size)
@@ -262,5 +259,10 @@ class GroupUserManager
         .where(id: removed_user_ids, title: @group.title)
         .find_each { |user| user.update_column(:title, user.next_best_title) }
     end
+  end
+
+  def remove_primary_and_flair_group(removed_user_ids)
+    User.where(primary_group_id: @group.id, id: removed_user_ids).update_all(primary_group_id: nil)
+    User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
   end
 end
