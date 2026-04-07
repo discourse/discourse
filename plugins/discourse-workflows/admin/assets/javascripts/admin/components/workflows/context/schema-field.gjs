@@ -44,6 +44,12 @@ export default class SchemaField extends Component {
       JSON.stringify({ id: this.fieldId, key: field.key, type: field.type })
     );
     event.dataTransfer.effectAllowed = "copy";
+    document.documentElement.dataset.draggingVariable = "true";
+  }
+
+  @action
+  handleDragEnd() {
+    delete document.documentElement.dataset.draggingVariable;
   }
 
   <template>
@@ -71,6 +77,7 @@ export default class SchemaField extends Component {
             "true"
           }}
           {{on "dragstart" this.handleDragStart}}
+          {{on "dragend" this.handleDragEnd}}
         >
           <span class="workflows-schema-field__key-icon">
             {{icon (this.typeIcon @field.type)}}

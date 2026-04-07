@@ -127,6 +127,21 @@
     }
   }
 
+  &__control-wrapper[data-supports-expression] {
+    border-radius: var(--d-border-radius);
+
+    html[data-dragging-variable] & {
+      outline: 2px dashed var(--tertiary);
+      outline-offset: 2px;
+    }
+
+    &.--drag-over {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+      background: color-mix(in srgb, var(--tertiary) 5%, transparent);
+    }
+  }
+
   &__collection-row {
     display: flex;
     align-items: start;
