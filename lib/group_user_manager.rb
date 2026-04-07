@@ -2,7 +2,9 @@
 
 # This class exists to improve the performance of Group add/remove
 # members by using bulk SQL calls. Also unifies the bulk and solo paths
-# so that we do not have multiple implementations to maintain
+# so that we do not have multiple implementations to maintain.
+# It was also moved to this manager to make it obvious that updates should
+# be made here instead of on GroupUser
 class GroupUserManager
   def initialize(group)
     @group = group
@@ -70,6 +72,7 @@ class GroupUserManager
     grant_other_available_title(removed_user_ids)
     remove_primary_and_flair_group(removed_user_ids)
     recalculate_trust_level(removed_user_ids)
+    decrease_group_user_count(removed_user_ids)
   end
 
   private
@@ -132,7 +135,7 @@ class GroupUserManager
       remove_primary_and_flair_group(removed_user_ids)
       grant_other_available_title(removed_user_ids)
 
-      Group.update_counters(@group.id, user_count: -removed_user_ids.size)
+      decrease_group_user_count(removed_user_ids)
     end
   end
 
@@ -232,6 +235,10 @@ class GroupUserManager
 
   def increase_group_user_count(added_user_ids)
     Group.update_counters(@group.id, user_count: added_user_ids.size)
+  end
+
+  def decrease_group_user_count(removed_user_ids)
+    Group.update_counters(@group.id, user_count: -removed_user_ids.size)
   end
 
   def grant_other_available_title(removed_user_ids)
