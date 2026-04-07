@@ -322,15 +322,17 @@ export default class Field extends Component {
         @metadata={{this.metadata}}
       />
     {{else if (eq this.control "data_table_columns")}}
-      <@form.Section @title={{this.fieldTitle}}>
-        <DataTableColumns
-          @form={{@form}}
-          @formApi={{@formApi}}
-          @fieldName={{@fieldName}}
-          @configuration={{@configuration}}
-          @metadata={{this.metadata}}
-        />
-      </@form.Section>
+      {{#if @configuration.data_table_id}}
+        <@form.Section @title={{this.fieldTitle}}>
+          <DataTableColumns
+            @form={{@form}}
+            @formApi={{@formApi}}
+            @fieldName={{@fieldName}}
+            @configuration={{@configuration}}
+            @metadata={{this.metadata}}
+          />
+        </@form.Section>
+      {{/if}}
     {{else if (eq this.fieldType "custom")}}
       <@form.Field
         @name={{@fieldName}}
