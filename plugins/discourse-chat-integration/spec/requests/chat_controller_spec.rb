@@ -15,17 +15,6 @@ RSpec.describe "Chat Controller", type: :request do
 
   before do
     SiteSetting.chat_integration_enabled = true
-    SiteSetting.load_settings(
-      File.join(
-        Rails.root,
-        "plugins",
-        "discourse-chat-integration",
-        "spec",
-        "support",
-        "dummy_provider_site_setting.yml",
-      ),
-      plugin: "discourse-chat-integration",
-    )
     SiteSetting.dummy_provider_enabled = true
   end
 

@@ -4,7 +4,7 @@ RSpec.shared_context "with dummy provider" do
   before(:each) do
     module DiscourseChatIntegration::Provider::DummyProvider
       PROVIDER_NAME = "dummy"
-      # Fake site settings come from the spec/support/dummy_provider_site_setting.yml file
+      # Fake site settings come from the spec/support/dummy_plugin_site_settings.yml file
       PROVIDER_ENABLED_SETTING = :dummy_provider_enabled
       POPULARITY_SCORE = 5
       CHANNEL_PARAMETERS = []
@@ -41,7 +41,7 @@ RSpec.shared_context "with validated dummy provider" do
   before(:each) do
     module DiscourseChatIntegration::Provider::Dummy2Provider
       PROVIDER_NAME = "dummy2"
-      # Fake site settings come from the spec/support/dummy_provider_site_setting.yml file
+      # Fake site settings come from the spec/support/dummy_plugin_site_settings.yml file
       PROVIDER_ENABLED_SETTING = :other_dummy_provider_enabled
       CHANNEL_IDENTIFIER_KEY = "val"
       POPULARITY_SCORE = 5
