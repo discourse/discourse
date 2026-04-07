@@ -410,6 +410,25 @@ acceptance(
       assert.deepEqual(payload.permissions, { moderators: 1 });
     });
 
+    test("retains permissions when removing the parent from an existing sub-category", async function (assert) {
+      await visit("/c/restricted-group/edit/general");
+
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(3);
+      const clearButton = categoryChooser.clearButton();
+      assert.true(Boolean(clearButton), "shows the clear button");
+      await click(clearButton);
+
+      await click(".admin-changes-banner .btn-primary");
+
+      const payload = JSON.parse(
+        pretender.handledRequests[pretender.handledRequests.length - 1]
+          .requestBody
+      );
+      assert.deepEqual(payload.permissions, { moderators: 1 });
+    });
+
     test("retains partial permissions (everyone=readonly + staff=full) when changing to a fully public parent", async function (assert) {
       await visit("/c/partial-group/edit/general");
 
