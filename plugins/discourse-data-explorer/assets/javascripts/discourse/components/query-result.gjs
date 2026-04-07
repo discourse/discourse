@@ -197,8 +197,25 @@ export default class QueryResult extends Component {
     return transformedRelTable(this.site.groups);
   }
 
+  get hasTextColumns() {
+    if (!this.rows?.length || !this.columns?.length) {
+      return false;
+    }
+    const numericSet = new Set(this.numericColumnIndices);
+    for (let i = 1; i < this.columns.length; i++) {
+      if (!this.colRender[i] && !numericSet.has(i)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   get canShowChart() {
-    return this.rows?.length > 0 && this.numericColumnIndices.length > 0;
+    return (
+      this.rows?.length > 0 &&
+      this.numericColumnIndices.length > 0 &&
+      !this.hasTextColumns
+    );
   }
 
   get chartLabels() {

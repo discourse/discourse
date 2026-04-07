@@ -283,6 +283,22 @@ module(
       assert.dom("canvas").exists("renders a chart canvas for multi-series");
     });
 
+    test("doesn't render a chart when there are text columns alongside numeric columns", async function (assert) {
+      const content = {
+        colrender: [],
+        result_count: 2,
+        columns: ["name", "value", "description"],
+        rows: [
+          ["item1", 10, "some text"],
+          ["item2", 20, "other text"],
+        ],
+      };
+
+      await render(<template><QueryResult @content={{content}} /></template>);
+
+      assert.dom("canvas").doesNotExist();
+    });
+
     test("handles no results", async function (assert) {
       const content = {
         colrender: [],
