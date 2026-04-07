@@ -26,5 +26,30 @@ describe "User preferences | Navigation menu" do
         expect(user_preferences_page).to have_account_link_visible
       end
     end
+
+    context "when RTL locale" do
+      before { SiteSetting.default_locale = "he" }
+
+      it "should scroll the horizontal navigation menu in the correct direction" do
+        resize_window(width: 650) do
+          sign_in(user)
+
+          user_preferences_page.visit(user)
+
+          expect(user_preferences_page).to have_account_link_visible
+          expect(user_preferences_page).to have_interface_link_not_visible
+
+          user_preferences_page.click_secondary_navigation_menu_scroll_right
+
+          expect(user_preferences_page).to have_interface_link_visible
+          expect(user_preferences_page).to have_account_link_not_visible
+
+          user_preferences_page.click_secondary_navigation_menu_scroll_left
+
+          expect(user_preferences_page).to have_account_link_visible
+          expect(user_preferences_page).to have_interface_link_not_visible
+        end
+      end
+    end
   end
 end

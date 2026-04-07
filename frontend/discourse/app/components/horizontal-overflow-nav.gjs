@@ -7,6 +7,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
+import { measureScrollBounds } from "discourse/lib/scroll-utils";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import onResize from "discourse/modifiers/on-resize";
 
 export default class HorizontalOverflowNav extends Component {
@@ -14,12 +16,19 @@ export default class HorizontalOverflowNav extends Component {
   @tracked hideRightScroll = false;
   @tracked hideLeftScroll = true;
   scrollInterval;
+  #minScrollLeft = 0;
+  #maxScrollLeft = 0;
 
   @bind
   setup(element) {
+    this.#updateScrollBounds(element);
     this.scrollToActive(element);
+    this.watchScroll(element);
 
-    const observer = new MutationObserver(() => this.watchScroll(element));
+    const observer = new MutationObserver(() => {
+      this.#updateScrollBounds(element);
+      this.watchScroll(element);
+    });
     observer.observe(element, { childList: true });
     registerDestructor(this, () => observer.disconnect());
   }
@@ -38,8 +47,8 @@ export default class HorizontalOverflowNav extends Component {
   @bind
   onResize(entries) {
     const element = entries[0].target;
+    this.#updateScrollBounds(element);
     this.watchScroll(element);
-    this.hasScroll = element.scrollWidth > element.offsetWidth;
   }
 
   @bind
@@ -52,26 +61,37 @@ export default class HorizontalOverflowNav extends Component {
     this.watchScroll(event.target);
   }
 
+  #updateScrollBounds(element) {
+    const { min, max } = measureScrollBounds(element);
+    this.#minScrollLeft = min;
+    this.#maxScrollLeft = max;
+  }
+
   watchScroll(element) {
-    const { scrollWidth, scrollLeft, offsetWidth } = element;
+    this.hasScroll = element.scrollWidth > element.offsetWidth;
 
-    // Check if the content overflows
-    this.hasScroll = scrollWidth > offsetWidth;
-
-    // Ensure the right arrow disappears only when fully scrolled
-    if (scrollWidth - scrollLeft - offsetWidth <= 2) {
+    if (!this.hasScroll) {
+      this.hideLeftScroll = true;
       this.hideRightScroll = true;
       clearInterval(this.scrollInterval);
-    } else {
-      this.hideRightScroll = false;
+      return;
     }
 
-    // Ensure the left arrow disappears only when fully scrolled to the start
-    if (scrollLeft <= 2) {
-      this.hideLeftScroll = true;
-      clearInterval(this.scrollInterval);
+    const atMin = element.scrollLeft - this.#minScrollLeft <= 2;
+    const atMax = this.#maxScrollLeft - element.scrollLeft <= 2;
+
+    if (isDocumentRTL()) {
+      // rtlcss swaps the physical positions of left/right buttons,
+      // so we swap which condition controls which button
+      this.hideLeftScroll = atMax;
+      this.hideRightScroll = atMin;
     } else {
-      this.hideLeftScroll = false;
+      this.hideLeftScroll = atMin;
+      this.hideRightScroll = atMax;
+    }
+
+    if (atMin || atMax) {
+      clearInterval(this.scrollInterval);
     }
   }
 
@@ -117,18 +137,24 @@ export default class HorizontalOverflowNav extends Component {
       return;
     }
 
-    let scrollSpeed = 175;
+    const scrollSpeed = 175;
+    let scrollDirection = 1;
     let siblingTarget = event.target.previousElementSibling;
 
     if (event.target.dataset.direction === "left") {
-      scrollSpeed = scrollSpeed * -1;
+      scrollDirection = -1;
       siblingTarget = event.target.nextElementSibling;
     }
 
-    siblingTarget.scrollLeft += scrollSpeed;
+    if (isDocumentRTL()) {
+      scrollDirection *= -1;
+    }
+
+    const delta = scrollSpeed * scrollDirection;
+    siblingTarget.scrollLeft += delta;
 
     this.scrollInterval = setInterval(function () {
-      siblingTarget.scrollLeft += scrollSpeed;
+      siblingTarget.scrollLeft += delta;
     }, 50);
   }
 
