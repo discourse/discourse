@@ -8,7 +8,6 @@ class GroupUser < ActiveRecord::Base
   after_destroy :grant_other_available_title
   after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
-  after_save :grant_trust_level
   after_save :set_category_notifications
   after_save :set_tag_notifications
 
@@ -101,12 +100,6 @@ class GroupUser < ActiveRecord::Base
     if group.title.present? && group.title == user.title
       user.update_attribute(:title, user.next_best_title)
     end
-  end
-
-  def grant_trust_level
-    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
-
-    TrustLevelGranter.grant(group.grant_trust_level, user)
   end
 
   def recalculate_trust_level

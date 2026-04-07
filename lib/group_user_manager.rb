@@ -11,13 +11,7 @@ class GroupUserManager
     added_user_ids = bulk_add_transaction(user_ids)
     return [] if added_user_ids.blank?
 
-    if @group.grant_trust_level.present? && !@group.grant_trust_level.zero?
-      Jobs.enqueue(
-        :bulk_grant_trust_level,
-        user_ids: added_user_ids,
-        trust_level: @group.grant_trust_level,
-      )
-    end
+    grant_trust_level(added_user_ids)
 
     GroupUser.bulk_set_category_notifications(@group, added_user_ids)
     GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
@@ -63,6 +57,7 @@ class GroupUserManager
   def sync_add_side_effects(added_user_ids)
     update_title(added_user_ids)
     set_primary_group(added_user_ids)
+    grant_trust_level(added_user_ids)
   end
 
   def sync_removal_side_effects(removed_user_ids)
@@ -236,5 +231,20 @@ class GroupUserManager
       SQL
 
     User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
+  end
+
+  def grant_trust_level(added_user_ids)
+    return if @group.grant_trust_level.nil? || @group.grant_trust_level.zero?
+
+    if added_user_ids.size == 1
+      user = User.find(added_user_ids.first)
+      TrustLevelGranter.grant(@group.grant_trust_level, user)
+    else
+      Jobs.enqueue(
+        :bulk_grant_trust_level,
+        user_ids: added_user_ids,
+        trust_level: @group.grant_trust_level,
+      )
+    end
   end
 end
