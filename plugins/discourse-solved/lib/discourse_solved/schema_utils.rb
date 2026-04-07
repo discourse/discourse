@@ -31,7 +31,7 @@ module DiscourseSolved
       end
       topic.instance_variable_set(
         :@qa_page_schema,
-        schema_markup_enabled?(topic) && has_eligible_answers?(topic),
+        schema_markup_enabled?(topic) && eligible_answers(topic).exists?,
       )
     end
 
@@ -58,9 +58,8 @@ module DiscourseSolved
 
     def self.main_entity_meta(topic)
       return unless qa_page_schema?(topic)
-      answer_count = eligible_answers(topic).count
       "<meta itemprop='name' content='#{ERB::Util.html_escape(topic.title)}'>" \
-        "<meta itemprop='answerCount' content='#{answer_count}'>"
+        "<meta itemprop='answerCount' content='#{eligible_answers(topic).count}'>"
     end
 
     private_class_method def self.accepted_answer_visible?(topic)
@@ -70,10 +69,6 @@ module DiscourseSolved
 
     private_class_method def self.eligible_answers(topic)
       topic.posts.where.not(post_number: 1).where(post_type: Post.types[:regular], hidden: false)
-    end
-
-    private_class_method def self.has_eligible_answers?(topic)
-      eligible_answers(topic).exists?
     end
   end
 end
