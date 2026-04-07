@@ -16,21 +16,21 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   get urgentCount() {
     return (
       this.args.urgentCount ??
-      this.chatTrackingStateManager.allChannelUrgentCount
+      this.chatTrackingStateManager.allChannelUrgentCount()
     );
   }
 
   get mentionCount() {
     return (
       this.args.mentionCount ??
-      this.chatTrackingStateManager.allChannelMentionCount
+      this.chatTrackingStateManager.allChannelMentionCount()
     );
   }
 
   get unreadCount() {
     return (
       this.args.unreadCount ??
-      this.chatTrackingStateManager.publicChannelUnreadCount
+      this.chatTrackingStateManager.publicChannelUnreadCount()
     );
   }
 
@@ -38,7 +38,7 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
     return (
       this.unreadCount > 0 ||
       (this.args.hasUnreadThreads ??
-        this.chatTrackingStateManager.hasUnreadThreads)
+        this.chatTrackingStateManager.hasUnreadThreads())
     );
   }
 

@@ -10,7 +10,6 @@ export default class ChatRoutesChannel extends Component {
   @service site;
   @service siteSettings;
   @service chat;
-  @service chatChannelsManager;
   @service chatHistory;
   @service chatTrackingStateManager;
 
@@ -37,42 +36,27 @@ export default class ChatRoutesChannel extends Component {
   }
 
   get otherChannelsUrgentCount() {
-    const channel = this.args.channel;
-    const currentUrgent = channel.isDirectMessageChannel
-      ? channel.tracking.unreadCount +
-        channel.tracking.mentionCount +
-        channel.tracking.watchedThreadsUnreadCount
-      : channel.tracking.mentionCount +
-        channel.tracking.watchedThreadsUnreadCount;
-    return Math.max(
-      0,
-      this.chatTrackingStateManager.allChannelUrgentCount - currentUrgent
-    );
+    return this.chatTrackingStateManager.allChannelUrgentCount({
+      exclude: this.args.channel,
+    });
   }
 
   get otherChannelsMentionCount() {
-    return Math.max(
-      0,
-      this.chatTrackingStateManager.allChannelMentionCount -
-        this.args.channel.tracking.mentionCount
-    );
+    return this.chatTrackingStateManager.allChannelMentionCount({
+      exclude: this.args.channel,
+    });
   }
 
   get otherChannelsUnreadCount() {
-    if (this.args.channel.isDirectMessageChannel) {
-      return this.chatTrackingStateManager.publicChannelUnreadCount;
-    }
-    return Math.max(
-      0,
-      this.chatTrackingStateManager.publicChannelUnreadCount -
-        this.args.channel.tracking.unreadCount
-    );
+    return this.chatTrackingStateManager.publicChannelUnreadCount({
+      exclude: this.args.channel,
+    });
   }
 
   get otherChannelsHasUnreadThreads() {
-    return this.chatChannelsManager.allChannels.some(
-      (c) => c.id !== this.args.channel.id && c.unreadThreadsCount > 0
-    );
+    return this.chatTrackingStateManager.hasUnreadThreads({
+      exclude: this.args.channel,
+    });
   }
 
   <template>
