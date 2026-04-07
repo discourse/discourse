@@ -53,6 +53,10 @@
     }
   }
 
+  &__node-icon {
+    color: var(--node-icon-color, var(--primary-medium));
+  }
+
   &__name-input {
     outline: none !important;
     box-shadow: none !important;
