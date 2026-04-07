@@ -46,6 +46,35 @@ module NestedReplies
       NestedReplies::Sort.apply(scope, sort)
     end
 
+    def promote_pinned_roots(roots, pinned_post_ids)
+      return roots if pinned_post_ids.blank?
+
+      pinned_in_page = []
+      pinned_missing_ids = []
+
+      pinned_post_ids.each do |pid|
+        idx = roots.index { |p| p.id == pid }
+        if idx
+          pinned_in_page << roots.delete_at(idx) if roots[idx].deleted_at.nil?
+        else
+          pinned_missing_ids << pid
+        end
+      end
+
+      if pinned_missing_ids.present?
+        fetched =
+          load_posts_for_tree(apply_visibility(topic.posts.where(id: pinned_missing_ids))).index_by(
+            &:id
+          )
+        pinned_missing_ids.each do |pid|
+          post = fetched[pid]
+          pinned_in_page << post if post && post.deleted_at.nil?
+        end
+      end
+
+      pinned_in_page + roots
+    end
+
     def load_posts_for_tree(scope)
       scope = scope.includes(*POST_INCLUDES)
       scope = scope.includes(:localizations) if SiteSetting.content_localization_enabled
