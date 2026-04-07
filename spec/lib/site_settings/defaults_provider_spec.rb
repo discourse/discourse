@@ -195,11 +195,7 @@ RSpec.describe SiteSettings::DefaultsProvider do
         end
 
         it "does not use upcoming change default overrides" do
-          expect(
-            settings.defaults.all(include_upcoming_changes_overrides: false)[
-              :enable_upload_debug_mode
-            ],
-          ).to eq(false)
+          expect(settings.defaults.all[:enable_upload_debug_mode]).to eq(false)
         end
       end
     end

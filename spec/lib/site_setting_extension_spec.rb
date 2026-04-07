@@ -1922,7 +1922,7 @@ RSpec.describe SiteSettingExtension do
   describe "upcoming_change_default_override" do
     before do
       settings.setting(
-        :enable_reactions_by_default,
+        :increase_suggested_topics_max_days_old_default,
         false,
         upcoming_change: {
           status: :experimental,
@@ -1930,11 +1930,11 @@ RSpec.describe SiteSettingExtension do
         },
       )
       settings.setting(
-        :reactions_enabled,
-        false,
+        :suggested_topics_max_days_old,
+        365,
         upcoming_change_default_override: {
-          upcoming_change: "enable_reactions_by_default",
-          new_default: true,
+          upcoming_change: "increase_suggested_topics_max_days_old_default",
+          new_default: 1000,
         },
       )
       settings.setting(:promote_upcoming_changes_on_status, "stable")
@@ -1943,38 +1943,42 @@ RSpec.describe SiteSettingExtension do
 
     context "when the linked upcoming change is active" do
       before do
-        settings.provider.save(:enable_reactions_by_default, true, SiteSetting.types[:bool])
+        settings.provider.save(
+          :increase_suggested_topics_max_days_old_default,
+          true,
+          SiteSetting.types[:bool],
+        )
         settings.refresh!
       end
 
       it "returns the override default" do
-        expect(settings.reactions_enabled).to eq(true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
       end
     end
 
     context "when the linked upcoming change is not active" do
       it "returns the YAML default" do
-        expect(settings.reactions_enabled).to eq(false)
+        expect(settings.suggested_topics_max_days_old).to eq(365)
       end
     end
 
     context "when the linked upcoming change is enabled via add_override!" do
       it "immediately applies the override default without needing refresh!" do
-        settings.add_override!(:enable_reactions_by_default, true)
-        expect(settings.reactions_enabled).to eq(true)
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
       end
 
       it "immediately reverts the override default when disabled" do
-        settings.add_override!(:enable_reactions_by_default, true)
-        expect(settings.reactions_enabled).to eq(true)
-        settings.add_override!(:enable_reactions_by_default, false)
-        expect(settings.reactions_enabled).to eq(false)
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, false)
+        expect(settings.suggested_topics_max_days_old).to eq(365)
       end
 
       it "does not override a manually set target setting value" do
-        settings.add_override!(:reactions_enabled, false)
-        settings.add_override!(:enable_reactions_by_default, true)
-        expect(settings.reactions_enabled).to eq(false)
+        settings.add_override!(:suggested_topics_max_days_old, 1000)
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
       end
     end
 
