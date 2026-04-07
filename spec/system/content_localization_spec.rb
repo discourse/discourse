@@ -115,6 +115,26 @@ describe "Content Localization" do
       expect(japanese_user.reload.user_option.show_original_content).to eq(true)
     end
 
+    it "persists 'Show Original' preference from user preferences interface" do
+      sign_in(japanese_user)
+
+      visit("/u/#{japanese_user.username}/preferences/interface")
+      page.find(".pref-show-original-content input[type='checkbox']").click
+      page.find(".save-changes").click
+
+      I18n.with_locale(:ja) { expect(page).to have_content(I18n.t("js.saved")) }
+
+      expect(japanese_user.reload.user_option.show_original_content).to eq(true)
+
+      # preference persists after page reload
+      visit("/u/#{japanese_user.username}/preferences/interface")
+      expect(page).to have_css(".pref-show-original-content input[type='checkbox']:checked")
+
+      # and reflects on topic view
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+    end
+
     it "allows users to set their post's locale when posting" do
       sign_in(japanese_user)
 

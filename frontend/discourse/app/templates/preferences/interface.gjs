@@ -143,6 +143,14 @@ export default <template>
       <label for="locale-selector" class="control-label">{{i18n
           "user.locale.title"
         }}</label>
+      {{#if @controller.siteSettings.content_localization_enabled}}
+        <PreferenceCheckbox
+          @labelKey="user.show_original_content"
+          @checked={{@controller.model.user_option.show_original_content}}
+          data-setting-name="user-show-original-content"
+          class="pref-show-original-content"
+        />
+      {{/if}}
       <div class="controls">
         <ComboBox
           @id="locale-selector"
@@ -222,14 +230,6 @@ export default <template>
       data-setting-name="user-enable-markdown-monospace-font"
       class="pref-enable-markdown-monospace-font"
     />
-    {{#if @controller.siteSettings.content_localization_enabled}}
-      <PreferenceCheckbox
-        @labelKey="user.show_original_content"
-        @checked={{@controller.model.user_option.show_original_content}}
-        data-setting-name="user-show-original-content"
-        class="pref-show-original-content"
-      />
-    {{/if}}
     <div
       class="controls controls-dropdown pref-page-title"
       data-setting-name="user-page-title"
