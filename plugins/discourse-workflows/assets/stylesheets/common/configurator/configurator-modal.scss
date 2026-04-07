@@ -4,7 +4,7 @@
 
 .workflows-configurator-modal {
   .d-modal__container {
-    max-width: 95vw;
+    max-width: 1300px;
     width: 95vw;
     max-height: 95vh;
     height: 95vh;
@@ -73,7 +73,7 @@
 
   &__columns {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 1.5fr 1fr;
     grid-template-rows: 1fr;
     flex: 1;
     min-height: 0;
