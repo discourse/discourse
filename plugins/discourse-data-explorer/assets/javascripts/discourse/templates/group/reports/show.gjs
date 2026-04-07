@@ -4,6 +4,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import ParamInputForm from "../../../components/param-input-form";
 import QueryResult from "../../../components/query-result";
+import QueryResultDownloadButtons from "../../../components/query-result-download-buttons";
 
 export default <template>
   <section class="user-content">
@@ -19,22 +20,39 @@ export default <template>
         />
       {{/if}}
 
-      <DButton
-        {{didInsert @controller.runOnLoad}}
-        @action={{@controller.run}}
-        @icon="play"
-        @label="explorer.run"
-        @type="submit"
-        class="btn-primary query-run__submit"
-      />
+      <div class="query-run-actions">
+        <div class="query-run-actions__left">
+          <DButton
+            {{didInsert @controller.runOnLoad}}
+            @action={{@controller.run}}
+            @icon="play"
+            @label="explorer.run"
+            @type="submit"
+            class="btn-primary query-run__submit"
+          />
 
-      <DButton
-        @action={{@controller.toggleBookmark}}
-        @translatedLabel={{@controller.bookmarkLabel}}
-        @icon={{@controller.bookmarkIcon}}
-        class={{@controller.bookmarkClassName}}
-      />
+          <DButton
+            @action={{@controller.toggleBookmark}}
+            @translatedLabel={{@controller.bookmarkLabel}}
+            @icon={{@controller.bookmarkIcon}}
+            class={{@controller.bookmarkClassName}}
+          />
+        </div>
+
+        {{#if @controller.showResults}}
+          <div class="query-run-actions__right">
+            <QueryResultDownloadButtons
+              @query={{@controller.model}}
+              @content={{@controller.results}}
+              @group={{@controller.group}}
+              class="query-result-download-buttons--inline"
+            />
+          </div>
+        {{/if}}
+      </div>
     </form>
+
+    <hr />
 
     <ConditionalLoadingSpinner @condition={{@controller.loading}} />
 
@@ -45,6 +63,7 @@ export default <template>
             @query={{@controller.model}}
             @content={{@controller.results}}
             @group={{@controller.group}}
+            @showDownloads={{false}}
           />
         {{else}}
           {{#each @controller.results.errors as |err|}}

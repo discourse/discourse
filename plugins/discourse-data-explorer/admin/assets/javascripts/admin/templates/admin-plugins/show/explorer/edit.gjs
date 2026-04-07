@@ -16,6 +16,7 @@ import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
 import ParamInputForm from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
+import QueryResultDownloadButtons from "discourse/plugins/discourse-data-explorer/discourse/components/query-result-download-buttons";
 import QueryResultsWrapper from "discourse/plugins/discourse-data-explorer/discourse/components/query-results-wrapper";
 
 export default class QueriesEdit extends Component {
@@ -152,71 +153,6 @@ export default class QueriesEdit extends Component {
                 "explorer.default_query_notice"
               }}</div>
           {{/if}}
-
-          <div class="pull-left left-buttons">
-            {{#if @controller.editingQuery}}
-              <DButton
-                class="btn-save-query"
-                @action={{@controller.save}}
-                @label="explorer.save"
-                @disabled={{@controller.saveDisabled}}
-              />
-            {{else}}
-              {{#unless @controller.editDisabled}}
-                <DButton
-                  class="btn-edit-query"
-                  @action={{@controller.editQuery}}
-                  @label="explorer.edit"
-                  @icon="pencil"
-                />
-              {{/unless}}
-            {{/if}}
-
-            <DButton
-              @action={{@controller.download}}
-              @label="explorer.export"
-              @disabled={{@controller.runDisabled}}
-              @icon="download"
-            />
-
-            {{#if @controller.editingQuery}}
-              <DButton
-                @action={{@controller.showHelpModal}}
-                @label="explorer.help.label"
-                @icon="circle-question"
-              />
-            {{/if}}
-          </div>
-
-          <div class="pull-right right-buttons">
-            {{#if @controller.model.destroyed}}
-              <DButton
-                @action={{@controller.recover}}
-                @icon="arrow-rotate-left"
-                @label="explorer.recover"
-              />
-            {{else}}
-              {{#if @controller.editingQuery}}
-                <DButton
-                  @action={{@controller.discard}}
-                  @icon="arrow-rotate-left"
-                  @label="explorer.undo"
-                  @disabled={{@controller.saveDisabled}}
-                />
-              {{/if}}
-
-              {{#if this.showDestroyQuery}}
-                <DButton
-                  @action={{@controller.destroyQuery}}
-                  @icon="trash-can"
-                  @label="explorer.delete"
-                  @disabled={{@controller.aiGenerating}}
-                  class="btn-danger"
-                />
-              {{/if}}
-            {{/if}}
-          </div>
-          <div class="clear"></div>
         </div>
 
         <form class="query-run" {{on "submit" @controller.run}}>
@@ -228,41 +164,115 @@ export default class QueriesEdit extends Component {
             />
           {{/if}}
 
-          {{#if @controller.runDisabled}}
-            {{#if @controller.saveDisabled}}
-              <DButton
-                @label="explorer.run"
-                @disabled="true"
-                class="btn-primary query-run__submit"
-              />
-            {{else}}
-              <DButton
-                @action={{@controller.saveAndRun}}
-                @icon="play"
-                @label="explorer.saverun"
-                class="btn-primary query-run__save-and-run"
-              />
-            {{/if}}
-          {{else}}
-            <DButton
-              {{didInsert @controller.runOnLoad}}
-              @action={{@controller.run}}
-              @icon="play"
-              @label="explorer.run"
-              @disabled={{@controller.runDisabled}}
-              @type="submit"
-              class="btn-primary query-run__submit"
-            />
-          {{/if}}
+          <div class="query-run-actions">
+            <div class="query-run-actions__left">
+              {{#if @controller.runDisabled}}
+                {{#if @controller.saveDisabled}}
+                  <DButton
+                    @label="explorer.run"
+                    @disabled="true"
+                    class="btn-primary query-run__submit"
+                  />
+                {{else}}
+                  <DButton
+                    @action={{@controller.saveAndRun}}
+                    @icon="play"
+                    @label="explorer.saverun"
+                    class="btn-primary query-run__save-and-run"
+                  />
+                {{/if}}
+              {{else}}
+                <DButton
+                  {{didInsert @controller.runOnLoad}}
+                  @action={{@controller.run}}
+                  @icon="play"
+                  @label="explorer.run"
+                  @disabled={{@controller.runDisabled}}
+                  @type="submit"
+                  class="btn-primary query-run__submit"
+                />
+              {{/if}}
 
-          <label class="query-plan">
-            <Input
-              @type="checkbox"
-              @checked={{@controller.explain}}
-              name="explain"
-            />
-            {{i18n "explorer.explain_label"}}
-          </label>
+              {{#if @controller.editingQuery}}
+                <DButton
+                  class="btn-save-query"
+                  @action={{@controller.save}}
+                  @label="explorer.save"
+                  @disabled={{@controller.saveDisabled}}
+                />
+              {{else}}
+                {{#unless @controller.editDisabled}}
+                  <DButton
+                    class="btn-edit-query"
+                    @action={{@controller.editQuery}}
+                    @label="explorer.edit"
+                    @icon="pencil"
+                  />
+                {{/unless}}
+              {{/if}}
+
+              {{#if @controller.editingQuery}}
+                <DButton
+                  @action={{@controller.showHelpModal}}
+                  @label="explorer.help.label"
+                  @icon="circle-question"
+                />
+              {{/if}}
+
+              <label class="query-plan">
+                <Input
+                  @type="checkbox"
+                  @checked={{@controller.explain}}
+                  name="explain"
+                />
+                {{i18n "explorer.explain_label"}}
+              </label>
+            </div>
+
+            <div class="query-run-actions__right">
+              {{#if @controller.model.destroyed}}
+                <DButton
+                  @action={{@controller.recover}}
+                  @icon="arrow-rotate-left"
+                  @label="explorer.recover"
+                />
+              {{else}}
+                {{#if @controller.editingQuery}}
+                  <DButton
+                    @action={{@controller.discard}}
+                    @icon="arrow-rotate-left"
+                    @label="explorer.undo"
+                    @disabled={{@controller.saveDisabled}}
+                  />
+                {{/if}}
+
+                <DButton
+                  @action={{@controller.download}}
+                  @label="explorer.export"
+                  @disabled={{@controller.runDisabled}}
+                  @icon="download"
+                />
+
+                {{#if @controller.showResults}}
+                  <QueryResultDownloadButtons
+                    @query={{@controller.model}}
+                    @content={{@controller.results}}
+                    class="query-result-download-buttons--inline"
+                  />
+                {{/if}}
+
+                {{#if this.showDestroyQuery}}
+                  <DButton
+                    @action={{@controller.destroyQuery}}
+                    @icon="trash-can"
+                    @label="explorer.delete"
+                    @disabled={{@controller.aiGenerating}}
+                    class="btn-danger"
+                  />
+                {{/if}}
+              {{/if}}
+            </div>
+          </div>
         </form>
         <hr />
 
@@ -274,6 +284,7 @@ export default class QueriesEdit extends Component {
           @query={{@controller.model}}
           @content={{@controller.results}}
           @cachedAt={{@controller.cachedAt}}
+          @showDownloads={{false}}
         />
       {{/if}}
     </div>

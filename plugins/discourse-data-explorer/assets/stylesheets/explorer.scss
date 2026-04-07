@@ -274,9 +274,28 @@ table.group-reports {
 .query-run {
   margin-top: 25px;
 
+  .query-run-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    flex-wrap: wrap;
+    margin-top: 1em;
+  }
+
+  .query-run-actions__left,
+  .query-run-actions__right {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+
   .query-plan {
-    display: inline-block;
-    margin-left: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-left: 0.25em;
   }
 }
 
@@ -384,10 +403,30 @@ table.group-reports {
 }
 
 .query-results {
+  .query-result-download-buttons {
+    display: inline-flex;
+    gap: 0.5em;
+
+    .btn {
+      margin: 0;
+    }
+  }
+
+  .result-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75em 1.25em;
+    flex-wrap: wrap;
+  }
+
   section {
     width: 100%;
-    overflow: auto;
-    max-height: 1000px;
+  }
+
+  .query-results-chart {
+    width: min(100%, 840px);
+    margin: 0 auto 1rem;
   }
 
   table {
@@ -407,6 +446,11 @@ table.group-reports {
       background: var(--primary-low);
       z-index: z("base");
     }
+  }
+
+  .query-results-table-wrapper {
+    overflow: auto;
+    max-height: 1000px;
   }
 }
 
