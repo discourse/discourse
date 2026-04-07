@@ -5,7 +5,6 @@
 }
 
 .workflows-schema-field {
-  font-size: var(--font-down-1);
   font-family: monospace;
 
   &__row {
@@ -41,8 +40,8 @@
   }
 
   &__key {
-    color: var(--primary-high);
     flex: 1;
+    color: var(--primary-800);
   }
 
   .workflows-schema-field-list.--nested {
