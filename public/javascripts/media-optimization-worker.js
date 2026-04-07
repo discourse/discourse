@@ -1,3 +1,37 @@
+// Webpack's JSONP chunk loading creates <script> tags to load dynamic
+// chunks. In a Web Worker, DOM APIs don't exist, so we mock document
+// to intercept script loading and use importScripts() instead.
+// We use Object.defineProperty because some browsers define `document`
+// as a non-writable property on WorkerGlobalScope.
+Object.defineProperty(globalThis, "document", {
+  value: {
+    baseURI: self.location.href,
+    getElementsByTagName: () => [],
+    createElement: () => ({
+      setAttribute: () => {},
+      parentNode: null,
+    }),
+    head: {
+      appendChild: (script) => {
+        if (script.src) {
+          try {
+            importScripts(script.src);
+            if (script.onload) {
+              script.onload({ type: "load", target: script });
+            }
+          } catch (e) {
+            if (script.onerror) {
+              script.onerror(e);
+            }
+          }
+        }
+      },
+    },
+  },
+  writable: true,
+  configurable: true,
+});
+
 onmessage = async function (e) {
   switch (e.data.type) {
     case "compress":
@@ -102,7 +136,6 @@ onmessage = async function (e) {
       break;
     case "install":
       try {
-        globalThis.document = {}; // webpack expects this to exist
         await loadLibs(e.data.settings);
         postMessage({ type: "installed" });
       } catch (error) {

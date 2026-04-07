@@ -2,7 +2,7 @@ import { decodeAnimated as decodeGifAnimated } from "@jsquash/gif";
 import { decode as decodeHeic } from "@jsquash/heic";
 import { encode as encodeJpeg } from "@jsquash/jpeg";
 import { decode as decodeJxl } from "@jsquash/jxl";
-import { encode as encodePng } from "@jsquash/oxipng";
+import { encode as encodePng } from "@jsquash/png";
 import resize from "@jsquash/resize";
 import { encodeAnimated as encodeWebpAnimated } from "@jsquash/webp";
 
@@ -203,7 +203,7 @@ globalThis.convert = async function (
     logIfDebug(
       `Image ${fileName} has transparency, encoding as optimized PNG instead of JPEG`
     );
-    const result = await encodePng(resized, { level: 2 });
+    const result = await encodePng(resized);
     const finalSize = result.byteLength;
     logIfDebug(
       `Converted ${fileName} from ${originalFileSize} bytes to ${finalSize} bytes PNG (OxiPNG)`
