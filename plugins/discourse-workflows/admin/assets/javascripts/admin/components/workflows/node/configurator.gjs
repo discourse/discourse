@@ -13,7 +13,12 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import { nodeTypeIcon, nodeTypeStyle } from "../../../lib/workflows/node-types";
+import {
+  nodeTypeDescription,
+  nodeTypeIcon,
+  nodeTypeLabel,
+  nodeTypeStyle,
+} from "../../../lib/workflows/node-types";
 import {
   findNodeType,
   getConfigurationSchema,
@@ -95,6 +100,14 @@ export default class NodeConfigurator extends Component {
         type: { number: "number", boolean: "boolean" }[column.type] ?? "string",
       }));
     }
+  }
+
+  get nodeTypeDefaultName() {
+    return nodeTypeLabel(this.resolvedNodeType);
+  }
+
+  get nodeDescription() {
+    return nodeTypeDescription(this.resolvedNodeType);
   }
 
   get configurationSchema() {
@@ -305,6 +318,23 @@ export default class NodeConfigurator extends Component {
                     />
                   </form.Field>
                 </Form>
+                {{#if this.nodeDescription}}
+                  <div class="workflows-configurator-modal__node">
+                    <span class="workflows-configurator-modal__node-title">
+                      {{#if (nodeTypeIcon this.resolvedNodeType)}}
+                        <span
+                          class="workflows-configurator-modal__node-icon"
+                          style={{nodeTypeStyle this.resolvedNodeType}}
+                        >
+                          {{icon (nodeTypeIcon this.resolvedNodeType)}}
+                        </span>
+                      {{/if}}{{this.nodeTypeDefaultName}}
+                    </span>
+                    <p class="workflows-configurator-modal__node-description">
+                      {{this.nodeDescription}}
+                    </p>
+                  </div>
+                {{/if}}
               {{/if}}
             </div>
 

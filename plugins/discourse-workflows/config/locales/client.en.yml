@@ -53,8 +53,8 @@ en:
         title: "Configure"
         save: "Done"
         no_configuration: "This node has no configurable options."
-        description: "Description"
-        description_placeholder: "Describe what this step does..."
+        description: "Note"
+        description_placeholder: "Add a note about this step..."
         tabs:
           parameters: "Parameters"
           settings: "Settings"
