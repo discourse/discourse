@@ -10,8 +10,10 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { nodeTypeIcon, nodeTypeStyle } from "../../../lib/workflows/node-types";
 import {
   findNodeType,
   getConfigurationSchema,
@@ -55,6 +57,10 @@ export default class NodeConfigurator extends Component {
 
   get isLoading() {
     return this.nodeTypes === null;
+  }
+
+  get resolvedNodeType() {
+    return findNodeType(this.nodeTypes, this.args.model.node.type);
   }
 
   async #loadTypes() {
@@ -180,6 +186,14 @@ export default class NodeConfigurator extends Component {
     >
       <:body>
         <div class="workflows-configurator-modal__header" {{this.focusModal}}>
+          {{#if (nodeTypeIcon this.resolvedNodeType)}}
+            <span
+              class="workflows-configurator-modal__node-icon"
+              style={{nodeTypeStyle this.resolvedNodeType}}
+            >
+              {{icon (nodeTypeIcon this.resolvedNodeType)}}
+            </span>
+          {{/if}}
           {{#if this.isEditingName}}
             <input
               type="text"
