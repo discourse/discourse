@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# This class exists to improve the performance of Group add/remove
+# members by using bulk SQL calls. Also unifies the bulk and solo paths
+# so that we do not have multiple implementations to maintain
 class GroupUserManager
   def initialize(group)
     @group = group
@@ -31,16 +34,12 @@ class GroupUserManager
     group_users_to_remove = @group.group_users.where(user_id: user_ids)
     return [] if group_users_to_remove.empty?
 
-    removed_user_ids = group_users_to_remove.pluck(:user_id)
-
     webhook_payloads = build_user_removed_webhook_payloads(group_users_to_remove)
 
+    removed_user_ids = group_users_to_remove.pluck(:user_id)
     bulk_remove_transaction(removed_user_ids)
 
-    if @group.grant_trust_level.present? && !@group.grant_trust_level.zero?
-      Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
-    end
-
+    recalculate_trust_level(removed_user_ids)
     bulk_publish_category_updates(removed_user_ids)
 
     User.where(id: removed_user_ids).find_each { |user| @group.trigger_user_removed_event(user) }
@@ -70,6 +69,7 @@ class GroupUserManager
   def sync_removal_side_effects(removed_user_ids)
     grant_other_available_title(removed_user_ids)
     remove_primary_and_flair_group(removed_user_ids)
+    recalculate_trust_level(removed_user_ids)
   end
 
   private
@@ -264,5 +264,16 @@ class GroupUserManager
   def remove_primary_and_flair_group(removed_user_ids)
     User.where(primary_group_id: @group.id, id: removed_user_ids).update_all(primary_group_id: nil)
     User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
+  end
+
+  def recalculate_trust_level(removed_user_ids)
+    return if @group.grant_trust_level.nil? || @group.grant_trust_level.zero?
+
+    if removed_user_ids.size == 1
+      user = User.find(removed_user_ids.first)
+      Promotion.recalculate(user, use_previous_trust_level: true)
+    else
+      Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
+    end
   end
 end

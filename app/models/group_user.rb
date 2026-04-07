@@ -5,7 +5,6 @@ class GroupUser < ActiveRecord::Base
   belongs_to :user
 
   before_create :set_notification_level
-  after_destroy :recalculate_trust_level
 
   after_commit :decrease_group_user_count, on: [:destroy]
 
@@ -79,13 +78,6 @@ class GroupUser < ActiveRecord::Base
 
   def set_notification_level
     self.notification_level = group&.default_notification_level || 3
-  end
-
-  def recalculate_trust_level
-    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
-    return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
-
-    Promotion.recalculate(user, use_previous_trust_level: true)
   end
 
   def set_category_notifications
