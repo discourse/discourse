@@ -63,7 +63,12 @@ class GroupUserManager
     increase_group_user_count(added_user_ids)
   end
 
+  # Original side effects:
+  # :grant_other_available_title
+  # :remove_primary_and_flair_group, :recalculate_trust_level
+  # :decrease_group_user_count
   def sync_removal_side_effects(removed_user_ids)
+    grant_other_available_title(removed_user_ids)
   end
 
   private
@@ -128,30 +133,7 @@ class GroupUserManager
       )
       User.where(flair_group_id: @group.id, id: removed_user_ids).update_all(flair_group_id: nil)
 
-      if @group.title.present?
-        DB.exec(<<~SQL, user_ids: removed_user_ids, title: @group.title)
-            UPDATE users u
-            SET title = NULL
-            WHERE u.id IN (:user_ids)
-              AND u.title = :title
-              AND NOT EXISTS (
-                SELECT 1 FROM group_users gu
-                JOIN groups g ON g.id = gu.group_id
-                WHERE gu.user_id = u.id
-                  AND g.title IS NOT NULL AND g.title <> ''
-              )
-              AND NOT EXISTS (
-                SELECT 1 FROM user_badges ub
-                JOIN badges b ON b.id = ub.badge_id
-                WHERE ub.user_id = u.id
-                  AND b.allow_title = true
-              )
-          SQL
-
-        User
-          .where(id: removed_user_ids, title: @group.title)
-          .find_each { |user| user.update_column(:title, user.next_best_title) }
-      end
+      grant_other_available_title(removed_user_ids)
 
       Group.update_counters(@group.id, user_count: -removed_user_ids.size)
     end
@@ -253,5 +235,32 @@ class GroupUserManager
 
   def increase_group_user_count(added_user_ids)
     Group.update_counters(@group.id, user_count: added_user_ids.size)
+  end
+
+  def grant_other_available_title(removed_user_ids)
+    if @group.title.present?
+      DB.exec(<<~SQL, user_ids: removed_user_ids, title: @group.title)
+          UPDATE users u
+          SET title = NULL
+          WHERE u.id IN (:user_ids)
+            AND u.title = :title
+            AND NOT EXISTS (
+              SELECT 1 FROM group_users gu
+              JOIN groups g ON g.id = gu.group_id
+              WHERE gu.user_id = u.id
+                AND g.title IS NOT NULL AND g.title <> ''
+            )
+            AND NOT EXISTS (
+              SELECT 1 FROM user_badges ub
+              JOIN badges b ON b.id = ub.badge_id
+              WHERE ub.user_id = u.id
+                AND b.allow_title = true
+            )
+        SQL
+
+      User
+        .where(id: removed_user_ids, title: @group.title)
+        .find_each { |user| user.update_column(:title, user.next_best_title) }
+    end
   end
 end

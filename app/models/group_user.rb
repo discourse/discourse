@@ -5,7 +5,6 @@ class GroupUser < ActiveRecord::Base
   belongs_to :user
 
   before_create :set_notification_level
-  after_destroy :grant_other_available_title
   after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
   after_commit :decrease_group_user_count, on: [:destroy]
@@ -90,12 +89,6 @@ class GroupUser < ActiveRecord::Base
     updates[:flair_group_id] = nil if user.flair_group_id == group_id
 
     user.update(updates) if updates.present?
-  end
-
-  def grant_other_available_title
-    if group.title.present? && group.title == user.title
-      user.update_attribute(:title, user.next_best_title)
-    end
   end
 
   def recalculate_trust_level
