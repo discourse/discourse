@@ -281,7 +281,7 @@ jobs:
           crashed=""
           for plugin in plugins/*/; do
             plugin_name=$(basename "$plugin")
-            test_files=$(find "$plugin/test" -name "*-test.*" -o -name "*_test.*" 2>/dev/null)
+            test_files=$(find "$plugin/test" -name "*-test.*" -o -name "*_test.*" 2>/dev/null || true)
             if [ -z "$test_files" ]; then
               echo "--- Skipping $plugin_name (no test files)"
               continue
