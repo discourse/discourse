@@ -17,15 +17,13 @@ class GroupUserManager
     return [] if added_user_ids.blank?
 
     grant_trust_level(added_user_ids)
-
     GroupUser.bulk_set_category_notifications(@group, added_user_ids)
     GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
+    bulk_publish_category_updates(added_user_ids)
 
     User
       .where(id: added_user_ids)
       .find_each { |user| @group.trigger_user_added_event(user, automatic) }
-
-    bulk_publish_category_updates(added_user_ids)
 
     added_user_ids
   end
@@ -51,7 +49,6 @@ class GroupUserManager
   end
 
   # Original side effects:
-  # :set_notification_level
   # :update_title, :set_primary_group, :grant_trust_level
   # :set_category_notifications, :set_tag_notifications
   # :increase_group_user_count
