@@ -56,13 +56,9 @@ module DiscourseSolved
       end
     end
 
-    def self.main_entity_meta(crawler_posts, topic)
+    def self.main_entity_meta(topic)
       return unless qa_page_schema?(topic)
-      answer_count =
-        crawler_posts.count do |post|
-          post.user.present? && !post.hidden && post.cooked.present? && !post.cooked.strip.empty? &&
-            !post.is_first_post? && post.post_type == Post.types[:regular]
-        end
+      answer_count = eligible_answers(topic).count
       "<meta itemprop='name' content='#{ERB::Util.html_escape(topic.title)}'>" \
         "<meta itemprop='answerCount' content='#{answer_count}'>"
     end
@@ -72,12 +68,12 @@ module DiscourseSolved
       post.present? && Guardian.new.can_see_post?(post)
     end
 
+    private_class_method def self.eligible_answers(topic)
+      topic.posts.where.not(post_number: 1).where(post_type: Post.types[:regular], hidden: false)
+    end
+
     private_class_method def self.has_eligible_answers?(topic)
-      topic
-        .posts
-        .where.not(post_number: 1)
-        .where(post_type: Post.types[:regular], hidden: false)
-        .exists?
+      eligible_answers(topic).exists?
     end
   end
 end
