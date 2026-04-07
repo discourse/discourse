@@ -450,7 +450,6 @@ de:
       pm_title: "Vorgeschlagene Nachrichten"
     admin_onboarding_banner:
       launch_in_easy_steps: "Starte in %{step_count} einfachen Schritten"
-      skipped: "Die Checkliste für das Onboarding von Administratoren wurde übersprungen. Um sie wieder zu aktivieren, suche in den Website-Einstellungen nach „enable site owner onboarding“."
       congrats_onboarding_complete: "Herzlichen Glückwunsch zum Abschluss des Onboarding-Prozesses!"
       invite_collaborators:
         title: "Mitwirkende einladen"
@@ -459,7 +458,7 @@ de:
       start_posting:
         title: "Beginne mit dem Erstellen von Beiträgen"
         description: "Gib den Leuten etwas, worüber sie gemeinsam reden können"
-        action: "Fragen zum Einstieg"
+        action: "Ideen ansehen"
         choose_option: "Wie möchtest du anfangen?"
         predefined_topics: "Vorlagen für Fragen zum Einstieg"
         predefined_topics_subtitle: "Gib neuen Mitgliedern etwas, worüber sie reden können. Wähle eine Vorlage zum Bearbeiten und gestalte sie nach deinen Vorstellungen."
@@ -662,6 +661,7 @@ de:
       storage_access_prompt: "Hast du bereits ein Konto bei %{site_name}? Erlaube den Zugriff auf deine Sitzung, um als angemeldeter Benutzer zu kommentieren."
       allow_access: "Zugriff erlauben"
       continue_as_guest: "Als Gast fortfahren"
+      be_first_to_reply: "Schreib die erste Antwort!"
     topic_count_all:
       one: "Zeige %{count} neues Thema"
       other: "Zeige %{count} neue Themen"
@@ -788,7 +788,7 @@ de:
       view_all: "Alle anzeigen"
       grouped_by_topic: "Gruppiert nach Thema"
       none: "Es sind keine Elemente zur Überprüfung vorhanden."
-      view_pending: "zeige verbleibende"
+      view_pending: "zeige Ausstehende"
       topic_has_pending:
         one: "Dieses Thema hat <b>%{count}</b> Beitrag, der auf Genehmigung wartet."
         other: "Dieses Thema hat <b>%{count}</b> Beiträge, die auf Genehmigung warten."
@@ -1027,8 +1027,8 @@ de:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
         pending_posts:
-          one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
-          other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
+          one: "Du hast <strong>%{count}</strong> ausstehenden Beitrag."
+          other: "Du hast <strong>%{count}</strong> ausstehende Beiträge."
         ok: "OK"
       example_username: "Benutzername"
       reject_reason:
@@ -1813,7 +1813,6 @@ de:
         upcoming_changes: "Bevorstehende Änderungen"
         calendar_subscriptions: "Kalender"
       calendar_subscriptions:
-        description: "Generiere Abonnement-URLs für die Synchronisierung mit deiner bevorzugten Kalender-App (Google Calendar, Apple Calendar, Outlook, etc.). Bei diesen URLs handelt es sich um private Links zu Kalenderereignissen für dein Konto (Lesezeichen-Erinnerungen, Kalenderereignisse, etc.). Du kannst die generierten Abonnement-URLs jederzeit widerrufen oder erneuern. "
         generate: "Abonnement-URLs generieren"
         regenerate: "URLs neu generieren"
         regenerate_confirm: "Dadurch werden deine bestehenden Kalender-Abonnement-URLs ungültig. Alle Kalender-Apps, die die alten URLs verwenden, werden keine Updates mehr erhalten. Fortfahren?"
@@ -4363,6 +4362,8 @@ de:
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
       localization:
+        language: "Sprache der Kategorie"
+        language_description: "Die Hauptsprache für den Namen und die Beschreibung dieser Kategorie."
         locale: "Sprachvariante"
         name: "Name"
         description: "Beschreibung"
@@ -5680,6 +5681,8 @@ de:
           beta: "Beta"
           stable: "Stabil"
           permanent: "Dauerhaft"
+        status_descriptions:
+          experimental: "Diese Funktion befindet sich in einer frühen Entwicklungsphase und kann noch erheblich verändert oder eingestellt werden. Möglicherweise ist sie nicht vollständig mit anderen Funktionen kompatibel."
         impact_roles:
           admins: "Administratoren"
           moderators: "Moderatoren"
@@ -7062,6 +7065,7 @@ de:
           dark_color_scheme: "Dunkle Farbpalette"
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme."
+          only_theme_color_schemes: "Dieses Theme schränkt die verwendbaren Farbpaletten ein."
           dark_color_scheme_select: "Wähle Farben im dunklen Modus für dieses Theme."
           edit_colors: "Farben bearbeiten"
           custom_sections: "Benutzerdefinierte Abschnitte:"
@@ -7122,7 +7126,7 @@ de:
           import_web_tip: "Repository mit dem Theme"
           direct_install_tip: "Möchtest du wirklich <strong>%{name}</strong> aus dem unten aufgeführten Repository installieren?"
           import_web_advanced: "Erweitert …"
-          import_file_tip: ".tar.gz-, .zip- oder .dcstyle.json-Datei, die ein Theme enthält"
+          import_file_tip: ".tar.gz- oder .zip-Datei, die das Theme enthält"
           is_private: "Theme ist in einem privaten Git-Repository"
           finish_install: "Theme-Installation beenden"
           last_attempt: "Der Installationsvorgang wurde nicht abgeschlossen, letzter Versuch:"

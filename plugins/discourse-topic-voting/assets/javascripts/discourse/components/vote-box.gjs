@@ -29,6 +29,7 @@ export default class VoteBox extends Component {
         topic.vote_count = result.vote_count;
         topic.user_voted = true;
         this.currentUser.votes_exceeded = !result.can_vote;
+        this.currentUser.vote_limit = result.vote_limit;
         this.currentUser.votes_left = result.votes_left;
         this.votesAlert = result.alert;
         this.allowClick = true;
@@ -50,6 +51,7 @@ export default class VoteBox extends Component {
         topic.vote_count = result.vote_count;
         topic.user_voted = false;
         this.currentUser.votes_exceeded = !result.can_vote;
+        this.currentUser.vote_limit = result.vote_limit;
         this.currentUser.votes_left = result.votes_left;
         this.allowClick = true;
       })

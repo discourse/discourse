@@ -131,6 +131,9 @@ ur:
         user: رکن
         save: "محفوظ کریں"
         enabled: "فعال؟"
+        mcp_tools_modal:
+          select_all: "سبھی منتخب کریں"
+          clear_all: "سبھی ہٹا دیں"
         delete: "حذف کریں"
         response_format:
           open_modal: "ترمیم کریں"
@@ -165,6 +168,21 @@ ur:
         edit: "ترمیم کریں"
         delete: "مٹائیں"
         embedding: "اَیمبَیڈ کرنا"
+      mcp_servers:
+        name: "نام"
+        description: "تفصیل"
+        url: "URL"
+        auth_types:
+          oauth: "اوآتھ"
+        oauth_statuses:
+          connected: "کنَیکٹ شدہ"
+        oauth_connect: "کنَیکٹ"
+        enabled: "فعال شدہ"
+        save: "محفوظ کریں"
+        edit: "ترمیم کریں"
+        delete: "حذف کریں"
+        tools_modal:
+          required: "درکار"
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"

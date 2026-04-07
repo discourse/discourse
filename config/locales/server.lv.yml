@@ -231,6 +231,7 @@ lv:
   user_api_key:
     deny: "Atcelt"
     read: "izlasīts"
+    copied: "Nokopēts!"
     otp_confirmation:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{username}

@@ -69,6 +69,13 @@ Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: DiscourseA
 
 require_relative "lib/engine"
 require_relative "lib/configuration/module"
+require_relative "lib/mcp/oauth_token_store"
+require_relative "lib/mcp/oauth_discovery"
+require_relative "lib/mcp/oauth_client_registration"
+require_relative "lib/mcp/oauth_flow"
+
+# Other plugins can register features through this register.
+DiscoursePluginRegistry.define_filtered_register(:external_ai_features)
 
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")

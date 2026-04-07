@@ -22,8 +22,6 @@ ru:
           few: "%{reaction}: %{count} пользователей"
           many: "%{reaction}: %{count} пользователей"
           other: "%{reaction}: %{count} пользователи"
-      reaction:
-        forbidden: "Эту реакцию нельзя изменить или удалить - она была создана очень давно."
       picker:
         react_with: "Отреагировать на это сообщение: %{reaction}"
         cant_remove_reaction: "Вы больше не можете удалить свою реакцию"

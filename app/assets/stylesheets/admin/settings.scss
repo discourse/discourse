@@ -3,6 +3,12 @@
   .setting {
     padding-bottom: 20px;
 
+    &.icon {
+      .setting-value .multi-select .formatted-selection {
+        display: none;
+      }
+    }
+
     .setting-label {
       float: left;
       width: 17.6576%;

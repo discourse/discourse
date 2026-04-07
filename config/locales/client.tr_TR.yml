@@ -360,6 +360,7 @@ tr_TR:
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
       toggle_mobile_view: "Mobil görünümü aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
+      toggle_upcoming_changes_debug: "Yaklaşan değişikliklerin hata ayıklama modunu aç/kapat"
     s3:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"
@@ -450,7 +451,6 @@ tr_TR:
       pm_title: "Önerilen Mesajlar"
     admin_onboarding_banner:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
-      skipped: "Yönetici oryantasyon kontrol listesi artık atlanmıştır. Yeniden etkinleştirmek isterseniz, site ayarlarında “site sahibi oryantasyonunu etkinleştir” seçeneğini arayın."
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
@@ -459,7 +459,7 @@ tr_TR:
       start_posting:
         title: "Paylaşmaya Başla"
         description: "İnsanlara birlikte konuşacakları bir konu verin"
-        action: "Buz kırıcı fikirler"
+        action: "Fikirleri gör"
         choose_option: "Nasıl başlamak istersiniz?"
         predefined_topics: "Buz kırıcı şablonlar"
         predefined_topics_subtitle: "Yeni üyelere konuşacak bir konu verin, düzenlemek için bir şablon seçin ve kendinize ait hale getirin."
@@ -662,6 +662,7 @@ tr_TR:
       storage_access_prompt: "Zaten %{site_name} hesabınız mı var? Oturumunuza erişim izni vererek kendi adınıza yorum yapabilirsiniz."
       allow_access: "Erişime İzin Ver"
       continue_as_guest: "Misafir olarak devam et"
+      be_first_to_reply: "İlk yanıtı siz verin!"
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -1141,6 +1142,7 @@ tr_TR:
       add_members:
         title: "%{group_name} grubuna Kullanıcı ekleyin"
         description: "Gruba davet etmek istediğiniz kullanıcıları birer birer veya virgülle ayrılmış bir liste olarak yapıştırarak girin :"
+        description_usernames_only: "Gruba davet etmek istediğiniz kullanıcıları birer birer veya virgülle ayrılmış bir liste olarak yapıştırarak girin :"
         usernames_placeholder: "kullanıcı adları"
         usernames_or_emails_placeholder: "kullanıcı adı veya e-posta"
         notify_users: "Kullanıcıları bilgilendir"
@@ -1813,7 +1815,7 @@ tr_TR:
         upcoming_changes: "Yaklaşan değişiklikler"
         calendar_subscriptions: "Takvim"
       calendar_subscriptions:
-        description: "Favori takvim uygulamanızla (Google Takvim, Apple Takvim, Outlook vb.) senkronize etmek için abonelik URL'leri oluşturun. Bu URL'ler, hesabınızdaki takvim etkinliklerine (hatırlatıcılar, takvim etkinlikleri vb.) yönlendiren özel bağlantılardır. Oluşturulan abonelik URL'lerini istediğiniz zaman iptal edebilir veya yenileyebilirsiniz. "
+        description: "Favori takvim uygulamanızla (Google Takvim, Apple Takvim, Outlook vb.) senkronize etmek için abonelik URL'leri oluşturun. Bu URL'ler, hesabınızdaki takvim etkinliklerine (hatırlatıcılar, takvim etkinlikleri vb.) yönlendiren özel bağlantılardır. Oluşturulan abonelik URL'lerini istediğiniz zaman iptal edebilir veya yenileyebilirsiniz."
         generate: "Abonelik URL'leri Oluştur"
         regenerate: "URL'leri Yeniden Oluştur"
         regenerate_confirm: "Bu işlem, mevcut takvim abonelik URL'lerinizi geçersiz kılacaktır. Eski URL'leri kullanan tüm takvim uygulamaları güncellemeleri almayı durduracaktır. Devam etmek istiyor musunuz?"
@@ -4384,6 +4386,8 @@ tr_TR:
       tags: "Etiketler"
       localizations: "Yerelleştirmeler"
       localization:
+        language: "Kategori dili"
+        language_description: "Bu kategorinin adının ve açıklamasının ana dili."
         locale: "Yerel Ayar"
         name: "Ad"
         description: "Açıklama"
@@ -5701,6 +5705,11 @@ tr_TR:
           beta: "Beta"
           stable: "Stabil"
           permanent: "Kalıcı"
+        status_descriptions:
+          experimental: "Bu özellik henüz geliştirme aşamasındadır ve önemli ölçüde değişebilir veya kaldırılabilir. Diğer özelliklerle tam olarak uyumlu olmayabilir."
+          alpha: "Bu özellik aktif olarak geliştirilmekte ve iyileştirilmektedir. İşlevsellikte değişiklikler olabilir ve henüz tam anlamıyla tamamlanmış olmayabilir, ancak denemek için yeterince kararlıdır."
+          beta: "Bu çalışma tamamlanmak üzere olup, erken aşamada kullanıma sunulmuştur. Küçük değişiklikler hala yapılabilir."
+          stable: "Bu özellik eksiksiz ve sağlam bir şekilde desteklenmektedir. Yakında tüm Discourse sitelerinde kullanıma sunulacaktır."
         impact_roles:
           admins: "Yöneticiler"
           moderators: "Moderatörler"
@@ -7083,6 +7092,7 @@ tr_TR:
           dark_color_scheme: "Koyu Renk Paleti"
           default_light_scheme: "Açık (varsayılan)"
           color_scheme_select: "Tema tarafından kullanılacak renkleri seçin."
+          only_theme_color_schemes: "Bu tema, hangi renk paletlerinin kullanılabileceğini sınırlar."
           dark_color_scheme_select: "Koyu modda tema tarafından kullanılacak renkleri seçin."
           edit_colors: "Renkleri düzenle"
           custom_sections: "Özel bölümler:"
@@ -7143,7 +7153,7 @@ tr_TR:
           import_web_tip: "Tema içeren depo"
           direct_install_tip: "Aşağıda listelenen depodan şunu yüklemek istediğinizden emin misiniz: <strong>%{name}</strong>?"
           import_web_advanced: "Gelişmiş…"
-          import_file_tip: "Tema içeren .tar.gz, .zip veya .dcstyle.json dosyası"
+          import_file_tip: "Temayı içeren .tar.gz veya .zip dosyası"
           is_private: "Tema özel bir git deposunda"
           finish_install: "Tema Yüklemesini Bitir"
           last_attempt: "Yükleme işlemi bitmedi, son deneme zamanı:"
@@ -7180,6 +7190,16 @@ tr_TR:
           update_success: "%{theme} Güncelleme tamamlandı"
           up_to_date: "Tema güncel, son kontrol:"
           has_overwritten_history: "Geçerli tema sürümü artık mevcut değil çünkü Git geçmişi zorla gönderilerek üzerine yazıldı."
+          change_source:
+            button: "Kaynağı değiştir"
+            title: "Tema Kaynağını Değiştir"
+            repository_url: "Depo URL'si"
+            branch: "Dal (isteğe bağlı)"
+            updating: "Tema kaynağı güncelleniyor…"
+            update: "Kaynağı güncelle"
+            has_existing_key: "Bu temada önceden yapılandırılmış bir SSH anahtarı bulunmaktadır."
+            generate_new_key: "Yeni SSH anahtarı oluştur"
+            keep_existing_key: "Mevcut SSH anahtarını koru"
           add: "Ekle"
           theme_settings: "Özel tema ayarları"
           theme_site_settings: "Temanın geçersiz kılabileceği ayarlar"
@@ -8533,6 +8553,8 @@ tr_TR:
         crawler_settings_saved: "Gezgin ayarları kaydedildi"
         back: "Yerleştirmeye geri dön"
         configuration_snippet: "Yapılandırma parçacığı"
+        full_app_mode: "Tam uygulama modu"
+        full_app_mode_description: "Discourse uygulamasının tamamını gömülü iframe'e yükleyin; böylece kullanıcılar doğrudan yanıt verebilir, beğenebilir, alıntı yapabilir ve konularla etkileşime girebilir"
         host_form:
           add_header: "Sunucu ekle"
           edit_header: "Sunucuyu düzenle"

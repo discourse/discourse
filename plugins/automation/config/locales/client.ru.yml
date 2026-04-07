@@ -5,13 +5,6 @@
 # https://translate.discourse.org/
 
 ru:
-  admin_js:
-    admin:
-      api:
-        scopes:
-          descriptions:
-            automation:
-              trigger_automation: "Запустите автоматизацию через API"
   js:
     admin:
       logs:

@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+unless defined?(FakeExternalAgent)
+  class FakeExternalAgent < DiscourseAi::Agents::Agent
+    def tools
+      []
+    end
+
+    def system_prompt
+      "Test agent"
+    end
+  end
+end
+
 RSpec.describe "Admin AI features configuration" do
   fab!(:admin)
   fab!(:llm_model)
@@ -21,15 +33,17 @@ RSpec.describe "Admin AI features configuration" do
   end
 
   it "lists all agent backed AI features separated by configured/unconfigured" do
+    all_modules = DiscourseAi::Configuration::Module.all
+    configured_count = all_modules.count(&:enabled?)
+
     ai_features_page.visit
     ai_features_page.toggle_configured
 
-    expect(ai_features_page).to have_listed_modules(1)
+    expect(ai_features_page).to have_listed_modules(configured_count)
 
     ai_features_page.toggle_unconfigured
 
-    # this changes as we add more AI features
-    expect(ai_features_page).to have_listed_modules(8)
+    expect(ai_features_page).to have_listed_modules(all_modules.size - configured_count)
   end
 
   it "lists the agent used for the corresponding AI feature" do
@@ -76,5 +90,37 @@ RSpec.describe "Admin AI features configuration" do
     field = form.field("ai_bot_enabled_llms")
     expect(field.component).to have_content("Test LLM Alpha")
     expect(field.component).to have_content("Test LLM Beta")
+  end
+
+  context "with external AI features" do
+    let(:fake_plugin) do
+      plugin = Plugin::Instance.new
+      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin
+    end
+
+    before do
+      DiscoursePluginRegistry.register_external_ai_feature(
+        {
+          module_name: :test_external,
+          feature: :test_feature,
+          agent_klass: FakeExternalAgent,
+          enabled_by_setting: nil,
+        },
+        fake_plugin,
+      )
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
+        entry[:value][:module_name] == :test_external
+      end
+    end
+
+    it "shows external modules from the registry" do
+      ai_features_page.visit
+      expect(page).to have_content("test_external")
+      expect(page).to have_content("test_feature")
+    end
   end
 end

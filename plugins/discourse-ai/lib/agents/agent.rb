@@ -20,10 +20,6 @@ module DiscourseAi
           1_048_576
         end
 
-        def question_consolidator_llm_id
-          nil
-        end
-
         def execution_mode
           "default"
         end
@@ -49,46 +45,22 @@ module DiscourseAi
         end
 
         def system_agents
-          @system_agents ||= {
-            General => -1,
-            SqlHelper => -2,
-            Artist => -3,
-            SettingsExplorer => -4,
-            Researcher => -5,
-            Creative => -6,
-            DiscourseHelper => -8,
-            GithubHelper => -9,
-            WebArtifactCreator => -10,
-            Summarizer => -11,
-            ShortSummarizer => -12,
-            Designer => -13,
-            ForumResearcher => -14,
-            ConceptFinder => -15,
-            ConceptMatcher => -16,
-            ConceptDeduplicator => -17,
-            CustomPrompt => -18,
-            SmartDates => -19,
-            MarkdownTableGenerator => -20,
-            PostIllustrator => -21,
-            Proofreader => -22,
-            TitlesGenerator => -23,
-            Tutor => -24,
-            Translator => -25,
-            ImageCaptioner => -26,
-            LocaleDetector => -27,
-            PostRawTranslator => -28,
-            TopicTitleTranslator => -29,
-            ShortTextTranslator => -30,
-            SpamDetector => -31,
-            ContentCreator => -32,
-            ReportRunner => -33,
-            Discover => -34,
-            ChatThreadTitler => -35,
-          }
+          sync_external_registry!
+          @system_agents ||= builtin_system_agents
         end
 
         def system_agents_by_id
           @system_agents_by_id ||= system_agents.invert
+        end
+
+        def external_tool_by_name(name)
+          sync_external_registry!
+          @external_tools_by_name[name]
+        end
+
+        def external_tools
+          sync_external_registry!
+          @external_tools_by_name.values
         end
 
         def all(user:)
@@ -137,6 +109,8 @@ module DiscourseAi
             Tools::SetSlowMode,
             Tools::MovePosts,
             Tools::GrantBadge,
+            Tools::ListReviewables,
+            Tools::PerformReviewableAction,
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
@@ -179,6 +153,92 @@ module DiscourseAi
           tools << Tools::MarkAsSolved if defined?(::DiscourseSolved)
 
           tools
+        end
+
+        def external_agent_id(agent_klass)
+          -(Digest::SHA1.hexdigest(agent_klass.to_s).to_i(16) % 1_000_000 + 1_000_000)
+        end
+
+        private
+
+        def sync_external_registry!
+          configs = external_feature_configs
+          signature = configs.hash
+          return if @external_registry_signature == signature
+
+          @external_registry_signature = signature
+          external_agents = {}
+          external_tools_by_name = {}
+
+          configs.each do |config|
+            agent_klass = config[:agent_klass]
+            next if agent_klass.nil?
+            next if external_agents.key?(agent_klass)
+            next if builtin_system_agents.key?(agent_klass)
+
+            external_agents[agent_klass] = config[:agent_id]
+
+            agent_klass.new.tools.each do |tool_klass|
+              tool_name = tool_klass.to_s.split("::").last
+              next if "DiscourseAi::Agents::Tools::#{tool_name}".safe_constantize
+              external_tools_by_name[tool_name] ||= tool_klass
+            end
+          end
+
+          new_system_agents = builtin_system_agents.merge(external_agents)
+          @system_agents_by_id = nil if @system_agents != new_system_agents
+          @system_agents = new_system_agents
+          @external_tools_by_name = external_tools_by_name
+        end
+
+        def external_feature_configs
+          return [] if !DiscoursePluginRegistry.respond_to?(:_raw_external_ai_features)
+
+          DiscoursePluginRegistry
+            ._raw_external_ai_features
+            .pluck(:value)
+            .each do |config|
+              config[:agent_id] ||= external_agent_id(config[:agent_klass]) if config[:agent_klass]
+            end
+        end
+
+        def builtin_system_agents
+          @builtin_system_agents ||= {
+            General => -1,
+            SqlHelper => -2,
+            Artist => -3,
+            SettingsExplorer => -4,
+            Researcher => -5,
+            Creative => -6,
+            DiscourseHelper => -8,
+            GithubHelper => -9,
+            WebArtifactCreator => -10,
+            Summarizer => -11,
+            ShortSummarizer => -12,
+            Designer => -13,
+            ForumResearcher => -14,
+            ConceptFinder => -15,
+            ConceptMatcher => -16,
+            ConceptDeduplicator => -17,
+            CustomPrompt => -18,
+            SmartDates => -19,
+            MarkdownTableGenerator => -20,
+            PostIllustrator => -21,
+            Proofreader => -22,
+            TitlesGenerator => -23,
+            Tutor => -24,
+            Translator => -25,
+            ImageCaptioner => -26,
+            LocaleDetector => -27,
+            PostRawTranslator => -28,
+            TopicTitleTranslator => -29,
+            ShortTextTranslator => -30,
+            SpamDetector => -31,
+            ContentCreator => -32,
+            ReportRunner => -33,
+            Discover => -34,
+            ChatThreadTitler => -35,
+          }.freeze
         end
       end
 
@@ -229,9 +289,21 @@ module DiscourseAi
           .all_available_tools
           .filter { |tool| tools.include?(tool) }
           .concat(tools.filter(&:custom?))
+          .tap do |available_tools|
+            next if !rag_tool_available?
+            if available_tools.any? { |tool|
+                 tool.signature[:name] == Tools::SearchUploadedDocuments.name
+               }
+              next
+            end
+
+            available_tools << Tools::SearchUploadedDocuments
+          end
+          .uniq
       end
 
       def craft_prompt(context, llm: nil)
+        available_tools = self.available_tools
         system_insts = replace_placeholders(system_prompt, context)
 
         prompt_insts = <<~TEXT.strip
@@ -239,27 +311,10 @@ module DiscourseAi
           #{available_tools.map(&:custom_system_message).compact_blank.join("\n")}
           TEXT
 
-        question_consolidator_llm = llm
-        if self.class.question_consolidator_llm_id.present?
-          question_consolidator_llm ||=
-            DiscourseAi::Completions::Llm.proxy(
-              LlmModel.find_by(id: self.class.question_consolidator_llm_id),
-            )
-        end
-
         if context.custom_instructions.present?
           prompt_insts << "\n"
           prompt_insts << context.custom_instructions
         end
-
-        fragments_guidance =
-          rag_fragments_prompt(
-            context.messages,
-            llm: question_consolidator_llm,
-            user: context.user,
-          )&.strip
-
-        prompt_insts << fragments_guidance if fragments_guidance.present?
 
         post_system_examples = []
 
@@ -325,31 +380,12 @@ module DiscourseAi
         tool_klass = available_tools.find { |c| c.signature.dig(:name) == function_name }
         return nil if tool_klass.nil?
 
-        arguments = {}
-        tool_klass.signature[:parameters].to_a.each do |param|
-          name = param[:name]
-          value = tool_call.parameters[name.to_sym]
-
-          if param[:type] == "array" && value
-            value =
-              begin
-                JSON.parse(value)
-              rescue JSON::ParserError
-                [value.to_s]
-              end
-          elsif param[:type] == "string" && value
-            value = strip_quotes(value).to_s
-          elsif param[:type] == "integer" && value
-            value = strip_quotes(value).to_i
+        arguments =
+          if tool_klass.signature[:json_schema]
+            tool_call.parameters
+          else
+            coerce_tool_arguments(tool_klass.signature[:parameters].to_a, tool_call)
           end
-
-          if param[:enum] && value && !param[:enum].include?(value)
-            # invalid enum value
-            value = nil
-          end
-
-          arguments[name.to_sym] = value if value
-        end
 
         tool_instance =
           existing_tools.find { |t| t.name == function_name && t.tool_call_id == function_id }
@@ -369,8 +405,42 @@ module DiscourseAi
             llm: llm,
             context: context,
             provider_data: tool_call.provider_data,
+            agent: self,
           )
         end
+      end
+
+      def rag_tool_available?
+        return false if !DiscourseAi::Embeddings.enabled?
+        return false if id.blank?
+
+        UploadReference.where(target_id: id, target_type: "AiAgent").exists?
+      end
+
+      def coerce_tool_arguments(param_defs, tool_call)
+        arguments = {}
+        param_defs.each do |param|
+          name = param[:name]
+          value = tool_call.parameters[name.to_sym]
+
+          if param[:type] == "array" && value
+            value =
+              begin
+                JSON.parse(value)
+              rescue JSON::ParserError
+                [value.to_s]
+              end
+          elsif param[:type] == "string" && value
+            value = strip_quotes(value).to_s
+          elsif param[:type] == "integer" && value
+            value = strip_quotes(value).to_i
+          end
+
+          value = nil if param[:enum] && value && !param[:enum].include?(value)
+
+          arguments[name.to_sym] = value if value
+        end
+        arguments
       end
 
       def strip_quotes(value)
@@ -385,104 +455,6 @@ module DiscourseAi
         else
           value
         end
-      end
-
-      def rag_fragments_prompt(conversation_context, llm:, user:)
-        upload_refs = UploadReference.where(target_id: id, target_type: "AiAgent").pluck(:upload_id)
-
-        return nil if !DiscourseAi::Embeddings.enabled?
-        return nil if conversation_context.blank? || upload_refs.blank?
-
-        latest_interactions =
-          conversation_context.select { |ctx| %i[model user].include?(ctx[:type]) }.last(10)
-
-        return nil if latest_interactions.empty?
-
-        # first response
-        if latest_interactions.length == 1
-          consolidated_question = DiscourseAi::Completions::Prompt.text_only(latest_interactions[0])
-        else
-          consolidated_question =
-            DiscourseAi::Agents::QuestionConsolidator.consolidate_question(
-              llm,
-              latest_interactions,
-              user,
-            )
-        end
-
-        return nil if !consolidated_question
-
-        vector = DiscourseAi::Embeddings::Vector.instance
-        reranker = DiscourseAi::Inference::HuggingFaceTextEmbeddings
-
-        interactions_vector = vector.vector_from(consolidated_question)
-
-        rag_conversation_chunks = self.class.rag_conversation_chunks
-        search_limit =
-          if reranker.reranker_configured?
-            rag_conversation_chunks * 5
-          else
-            rag_conversation_chunks
-          end
-
-        schema = DiscourseAi::Embeddings::Schema.for(RagDocumentFragment)
-
-        candidate_fragment_ids =
-          schema
-            .asymmetric_similarity_search(
-              interactions_vector,
-              limit: search_limit,
-              offset: 0,
-            ) { |builder| builder.join(<<~SQL, target_id: id, target_type: "AiAgent") }
-                  rag_document_fragments ON
-                  rag_document_fragments.id = rag_document_fragment_id AND
-                  rag_document_fragments.target_id = :target_id AND
-                  rag_document_fragments.target_type = :target_type
-                SQL
-            .map(&:rag_document_fragment_id)
-
-        fragments =
-          RagDocumentFragment.where(upload_id: upload_refs, id: candidate_fragment_ids).pluck(
-            :fragment,
-            :metadata,
-          )
-
-        if reranker.reranker_configured?
-          guidance = fragments.map { |fragment, _metadata| fragment }
-          ranks =
-            DiscourseAi::Inference::HuggingFaceTextEmbeddings
-              .rerank(conversation_context.last[:content], guidance)
-              .to_a
-              .take(rag_conversation_chunks)
-              .map { it[:index] }
-
-          if ranks.empty?
-            fragments = fragments.take(rag_conversation_chunks)
-          else
-            fragments = ranks.map { |idx| fragments[idx] }
-          end
-        end
-
-        <<~TEXT
-          <guidance>
-          The following texts will give you additional guidance for your response.
-          We included them because we believe they are relevant to this conversation topic.
-
-          Texts:
-
-          #{
-          fragments
-            .map do |fragment, metadata|
-              if metadata.present?
-                ["# #{metadata}", fragment].join("\n")
-              else
-                fragment
-              end
-            end
-            .join("\n")
-        }
-          </guidance>
-          TEXT
       end
     end
   end

@@ -22,8 +22,6 @@ uk:
           few: "%{reaction}: %{count} користувачі"
           many: "%{reaction}: %{count} користувачів"
           other: "%{reaction}: %{count} користувачів"
-      reaction:
-        forbidden: "Ця реакція виникла надто давно. Її вже не можна змінити або усунути."
       picker:
         react_with: "Відреагувати на цей пост: %{reaction}"
         cant_remove_reaction: "Ви більше не можете видалити вашу реакцію"

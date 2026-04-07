@@ -8,6 +8,7 @@ import {
   readOnly,
 } from "@ember/object/computed";
 import { service } from "@ember/service";
+import ChangeThemeSourceModal from "discourse/admin/components/modal/change-theme-source";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -87,6 +88,31 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       descriptions.push(resultString);
     });
     return descriptions;
+  }
+
+  @computed("colorSchemes.[]", "model.only_theme_color_schemes", "model.id")
+  get filteredColorSchemes() {
+    if (!this.model?.only_theme_color_schemes) {
+      return this.colorSchemes;
+    }
+    const themeSchemes = this.colorSchemes?.filter(
+      (scheme) => scheme.theme_id === this.model.id
+    );
+    return themeSchemes?.length > 0 ? themeSchemes : this.colorSchemes;
+  }
+
+  @computed("filteredColorSchemes.[]", "model.only_theme_color_schemes")
+  get showColorSchemePickers() {
+    if (!this.model?.only_theme_color_schemes) {
+      return true;
+    }
+    const schemes = this.filteredColorSchemes;
+    if (!schemes) {
+      return true;
+    }
+    const lightCount = schemes.filter((s) => !s.is_dark).length;
+    const darkCount = schemes.filter((s) => s.is_dark).length;
+    return lightCount > 1 || darkCount > 1;
   }
 
   @computed("colorSchemeId", "model.color_scheme_id")
@@ -287,6 +313,18 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       .finally(() => {
         this.set("updatingRemote", false);
       });
+  }
+
+  @action
+  changeSource() {
+    this.modal.show(ChangeThemeSourceModal, {
+      model: {
+        theme: this.model,
+        onSuccess: () => {
+          this.send("routeRefreshModel");
+        },
+      },
+    });
   }
 
   @action

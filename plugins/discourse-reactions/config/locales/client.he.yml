@@ -15,8 +15,6 @@ he:
       reactions_title: "תחושות"
       state_panel:
         more_users: "ו־%{count} נוספות..."
-      reaction:
-        forbidden: "תחושה זו נוצרה לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותה."
       picker:
         react_with: "להוסיף תחושה לפוסט הזה: %{reaction}"
         cant_remove_reaction: "כבר אין לך אפשרות להסיר את התחושה שלך"

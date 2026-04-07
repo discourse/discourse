@@ -983,7 +983,11 @@ class PostsController < ApplicationController
     end
 
     PostRevisor.tracked_topic_fields.each_key do |f|
-      params.permit(f => [])
+      if f == :tags
+        params.permit(tags: %i[id name])
+      else
+        params.permit(f => [])
+      end
       result[f] = params[f] if params.has_key?(f)
     end
 

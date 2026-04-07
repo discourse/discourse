@@ -77,7 +77,7 @@ Ok, on to more advanced topics:
 
 Take a look at this file in the Discourse repo:
 
-https://github.com/discourse/discourse/blob/master/app/assets/stylesheets/common/foundation/variables.scss
+https://github.com/discourse/discourse/blob/main/app/assets/stylesheets/common/foundation/variables.scss
 
 This is where most of the variables are defined. Just like colors, these variables are magically available for you to use in theme stylesheets.
 

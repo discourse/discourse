@@ -300,6 +300,7 @@ export default class AdminUserFieldsForm extends Component {
           @label="admin.user_fields.save"
         />
         <form.Button
+          class="btn-default"
           @action={{this.cancel}}
           @label="admin.user_fields.cancel"
         />

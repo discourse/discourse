@@ -93,6 +93,61 @@ RSpec.describe GroupActionLogger do
     end
   end
 
+  describe "#bulk_log_add_users_to_group" do
+    fab!(:user2, :user)
+
+    it "creates a record for each user" do
+      expect { logger.bulk_log_add_users_to_group([user.id, user2.id]) }.to change {
+        GroupHistory.where(action: GroupHistory.actions[:add_user_to_group]).count
+      }.by(2)
+
+      records =
+        GroupHistory.where(action: GroupHistory.actions[:add_user_to_group], group: group).last(2)
+
+      expect(records.map(&:acting_user)).to all(eq(group_owner))
+      expect(records.map(&:target_user)).to contain_exactly(user, user2)
+    end
+
+    it "does nothing when target_users is empty" do
+      expect { logger.bulk_log_add_users_to_group([]) }.not_to change { GroupHistory.count }
+    end
+
+    it "forwards the subject when present" do
+      logger.bulk_log_add_users_to_group([user.id], "added_users")
+
+      expect(GroupHistory.last.subject).to eq("added_users")
+    end
+  end
+
+  describe "#bulk_log_remove_users_from_group" do
+    fab!(:user2, :user)
+
+    it "creates a record for each user" do
+      expect { logger.bulk_log_remove_users_from_group([user.id, user2.id]) }.to change {
+        GroupHistory.where(action: GroupHistory.actions[:remove_user_from_group]).count
+      }.by(2)
+
+      records =
+        GroupHistory.where(
+          action: GroupHistory.actions[:remove_user_from_group],
+          group: group,
+        ).last(2)
+
+      expect(records.map(&:acting_user)).to all(eq(group_owner))
+      expect(records.map(&:target_user)).to contain_exactly(user, user2)
+    end
+
+    it "does nothing when target_users is empty" do
+      expect { logger.bulk_log_remove_users_from_group([]) }.not_to change { GroupHistory.count }
+    end
+
+    it "forwards the subject when present" do
+      logger.bulk_log_remove_users_from_group([user.id], "remove_users")
+
+      expect(GroupHistory.last.subject).to eq("remove_users")
+    end
+  end
+
   describe "#log_group_creation" do
     subject(:log_creation) { logger.log_group_creation }
 

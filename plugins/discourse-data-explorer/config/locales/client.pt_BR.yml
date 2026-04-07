@@ -6,6 +6,10 @@
 
 pt_BR:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Explorador de Dados"
     errors:
       explorer:
         no_semicolons: "Remover os pontos e vírgulas da consulta."

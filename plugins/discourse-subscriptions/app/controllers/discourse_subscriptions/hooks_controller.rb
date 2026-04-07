@@ -9,7 +9,6 @@ module DiscourseSubscriptions
 
     layout false
 
-    before_action :set_api_key
     skip_before_action :check_xhr
     skip_before_action :redirect_to_login_if_required
     skip_before_action :verify_authenticity_token, only: [:create]
@@ -42,7 +41,7 @@ module DiscourseSubscriptions
         return render_json_error "email not found" if !email
 
         if checkout_session[:customer].nil?
-          customer = ::Stripe::Customer.create({ email: email })
+          customer = ::Stripe::Customer.create({ email: email }, stripe_request_opts)
           customer_id = customer[:id]
         else
           customer_id = checkout_session[:customer]
@@ -65,7 +64,11 @@ module DiscourseSubscriptions
         end
 
         line_items =
-          ::Stripe::Checkout::Session.list_line_items(checkout_session[:id], { limit: 1 })
+          ::Stripe::Checkout::Session.list_line_items(
+            checkout_session[:id],
+            { limit: 1 },
+            stripe_request_opts,
+          )
         item = line_items[:data].first
 
         group = plan_group(item[:price])
@@ -87,6 +90,7 @@ module DiscourseSubscriptions
           ::Stripe::Subscription.update(
             subscription,
             { metadata: { user_id: user.id, username: user.username } },
+            stripe_request_opts,
           )
         end
       when "customer.subscription.created"

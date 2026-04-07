@@ -57,8 +57,8 @@ Discourse::Application.configure do
   if defined?(BetterErrors)
     BetterErrors::Middleware.allow_ip! ENV["TRUSTED_IP"] if ENV["TRUSTED_IP"]
 
-    if (defined?(Unicorn) || defined?(Pitchfork)) && ENV["UNICORN_WORKERS"].to_i != 1
-      # BetterErrors doesn't work with multiple unicorn workers. Disable it to avoid confusion
+    if defined?(Pitchfork) && ENV["UNICORN_WORKERS"].to_i != 1
+      # BetterErrors doesn't work with multiple workers. Disable it to avoid confusion
       Rails.configuration.middleware.delete BetterErrors::Middleware
     end
   end
@@ -80,8 +80,7 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:downcase).map(&:strip)
   end
 
-  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" &&
-       (defined?(Rails::Server) || defined?(Unicorn) || defined?(Pitchfork))
+  if ENV["DISCOURSE_SKIP_CSS_WATCHER"] != "1" && (defined?(Rails::Server) || defined?(Pitchfork))
     require "stylesheet/watcher"
     STDERR.puts "Starting CSS change watcher"
     @watcher = Stylesheet::Watcher.watch

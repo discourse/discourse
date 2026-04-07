@@ -450,6 +450,9 @@ RSpec.describe TagsController do
       get "/tag/test"
       expect(response.status).to eq(404)
 
+      get "/tag/#{tag.id}.json"
+      expect(response.status).to eq(404)
+
       sign_in(admin)
 
       get "/tag/#{tag.slug}/#{tag.id}"
@@ -609,6 +612,9 @@ RSpec.describe TagsController do
       _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"
       expect(response.status).to eq(404)
+
+      get "/tag/#{tag.id}/info.json"
+      expect(response.status).to eq(404)
     end
 
     it "staff-only tags can be retrieved for staff user" do
@@ -683,6 +689,20 @@ RSpec.describe TagsController do
           expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
         end
       end
+    end
+  end
+
+  describe "#tag_feed" do
+    fab!(:tag) { Fabricate(:tag, name: "test") }
+
+    it "returns 404 if tag is staff-only" do
+      _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+      get "/tag/test.rss"
+      expect(response.status).to eq(404)
+
+      get "/tag/#{tag.slug}/#{tag.id}.rss"
+      expect(response.status).to eq(404)
     end
   end
 
@@ -976,13 +996,13 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    it "returns 403 when tag is hidden and user is not in permitted group" do
+    it "returns 404 when tag is hidden and user is not in permitted group" do
       SiteSetting.edit_tags_allowed_groups = "1|2|3|13"
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
       sign_in(regular_user)
       put "/tag/#{tag.name}.json", params: { tag: { description: "New description" } }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "returns 404 for non-existing tags" do
@@ -1771,12 +1791,12 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
     end
 
-    it "returns 403 when tag is hidden and user is not in permitted group" do
+    it "returns 404 when tag is hidden and user is not in permitted group" do
       SiteSetting.edit_tags_allowed_groups = "1|2|13"
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
       sign_in(regular_user)
       post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "synonym1" }] }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "succeeds when tag is hidden and user is admin" do

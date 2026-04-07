@@ -49,7 +49,7 @@ export default class Filter extends Component {
             <DButton
               @action={{this.clearFilter}}
               @icon="xmark"
-              class="sidebar-filter__clear"
+              class="sidebar-filter__clear btn-transparent"
             />
           {{/if}}
         </div>

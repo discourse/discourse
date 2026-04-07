@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+Rails.application.config.after_initialize { UpcomingChanges.clear_caches! }
+
 #
 # Similar to 014-track-setting-changes.rb, we can react to upcoming changes
 # being enabled/or disabled here for more complicated scenarios, where

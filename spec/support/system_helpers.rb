@@ -152,6 +152,8 @@ module SystemHelpers
   end
 
   def select_text_range(selector, start = 0, offset = 5)
+    expect(page).to have_selector(selector)
+
     js = <<-JS
       const node = document.querySelector(arguments[0]).childNodes[0];
       const selection = window.getSelection();

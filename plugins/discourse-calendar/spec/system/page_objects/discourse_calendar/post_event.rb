@@ -50,6 +50,12 @@ module PageObjects
           self
         end
 
+        def add_to_calendar
+          open_more_menu
+          find(".add-to-calendar .btn").click
+          self
+        end
+
         def edit
           open_more_menu
           find(".edit-event").click

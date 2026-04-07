@@ -397,6 +397,7 @@ en:
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"
       disable_dev_tools: "Disable dev tools"
+      toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
 
     s3:
       regions:
@@ -492,7 +493,6 @@ en:
 
     admin_onboarding_banner:
       launch_in_easy_steps: "Launch in %{step_count} easy steps"
-      skipped: "The admin onboarding checklist has now been skipped. If you would like to re-enable it, look for `enable site owner onboarding` in the site settings."
       congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       invite_collaborators:
         title: "Invite Collaborators"
@@ -501,7 +501,7 @@ en:
       start_posting:
         title: "Start Posting"
         description: "Give people something to talk about together"
-        action: "Icebreaker ideas"
+        action: "See ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Icebreaker templates"
         predefined_topics_subtitle: "Give new members something to talk about, pick a template to edit and make your own."
@@ -712,6 +712,7 @@ en:
       storage_access_prompt: "Already have a %{site_name} account? Allow access to your session to comment as yourself."
       allow_access: "Allow Access"
       continue_as_guest: "Continue as Guest"
+      be_first_to_reply: "Be the first to reply!"
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -1227,6 +1228,7 @@ en:
       add_members:
         title: "Add Users to %{group_name}"
         description: "Enter a list of users you want to invite to the group or paste in a comma separated list:"
+        description_usernames_only: "Enter a list of usernames you want to add to the group or paste in a comma separated list:"
         usernames_placeholder: "usernames"
         usernames_or_emails_placeholder: "usernames or emails"
         notify_users: "Notify users"
@@ -1927,7 +1929,7 @@ en:
         calendar_subscriptions: "Calendar"
 
       calendar_subscriptions:
-        description: "Generate subscription URLs to sync with your favourite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs. "
+        description: "Generate subscription URLs to sync with your favorite calendar app (Google Calendar, Apple Calendar, Outlook, etc.). These URLs are private links to calendar events for your account (bookmark reminders, calendar events, etc). You can always revoke or renew the generated subscription URLs."
         generate: "Generate Subscription URLs"
         regenerate: "Regenerate URLs"
         regenerate_confirm: "This will invalidate your existing calendar subscription URLs. Any calendar apps using the old URLs will stop receiving updates. Continue?"
@@ -3023,6 +3025,12 @@ en:
         filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        tag_category_admin_dropdown:
+          title: "Category and tag settings"
+          edit_category: "Edit category"
+          edit_category_description: "Adjust settings for %{badge}"
+          edit_tag: "Edit tag"
+          edit_tag_description: "Adjust settings for %{badge}"
         bulk_select_topics_dropdown:
           title: "Bulk Actions"
         bulk_select_bookmarks_dropdown:
@@ -4699,6 +4707,8 @@ en:
       tags: "Tags"
       localizations: "Localizations"
       localization:
+        language: "Category language"
+        language_description: "The primary language of this category's name and description."
         locale: "Locale"
         name: "Name"
         description: "Description"
@@ -4747,6 +4757,7 @@ en:
       validations:
         emoji_required: "Select an emoji."
         icon_required: "Select an icon."
+        groups_required: "Select at least one group for this approval mode."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4831,6 +4842,14 @@ en:
       review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
+      require_topic_approval_for: "Require moderator approval of new topics for..."
+      require_reply_approval_for: "Require moderator approval of new replies for..."
+      posting_review_modes:
+        no_one: "No one"
+        everyone: "Everyone"
+        everyone_except: "Everyone except selected groups"
+        no_one_except: "No one except selected groups"
+      posting_review_groups_placeholder: "Select groups..."
       this_year: "this year"
       position: "Position on the categories page:"
       default_position: "Default position"
@@ -6085,6 +6104,11 @@ en:
           beta: "Beta"
           stable: "Stable"
           permanent: "Permanent"
+        status_descriptions:
+          experimental: "This is in early development and may change significantly or be discontinued. May not be fully compatible with other features."
+          alpha: "This is being actively developed and refined. Functionality may change, and it may not be fully polished but it's stable enough to try."
+          beta: "This is nearing completion and available for early adoption. Minor changes are still possible."
+          stable: "This is complete and well supported. It will soon be available on all Discourse sites."
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -7491,6 +7515,7 @@ en:
           dark_color_scheme: "Dark Color Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme."
+          only_theme_color_schemes: "This theme limits which color palettes can be used."
           dark_color_scheme_select: "Select colors to be used by theme in dark mode."
           edit_colors: "Edit colors"
           custom_sections: "Custom sections:"
@@ -7551,7 +7576,7 @@ en:
           import_web_tip: "Repository containing theme"
           direct_install_tip: "Are you sure you want to install <strong>%{name}</strong> from the repository listed below?"
           import_web_advanced: "Advanced…"
-          import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
+          import_file_tip: ".tar.gz or .zip file containing theme"
           is_private: "Theme is in a private git repository"
           finish_install: "Finish Theme Installation"
           last_attempt: "Installation process did not finish, last attempted:"
@@ -7588,6 +7613,16 @@ en:
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
+          change_source:
+            button: "Change source"
+            title: "Change Theme Source"
+            repository_url: "Repository URL"
+            branch: "Branch (optional)"
+            updating: "Updating theme source…"
+            update: "Update Source"
+            has_existing_key: "This theme has an existing SSH key configured."
+            generate_new_key: "Generate new SSH key"
+            keep_existing_key: "Keep existing SSH key"
           add: "Add"
           theme_settings: "Custom theme settings"
           theme_site_settings: "Settings the theme can override"
@@ -8983,6 +9018,8 @@ en:
         crawler_settings_saved: "Crawler settings saved"
         back: "Back to embedding"
         configuration_snippet: "Configuration snippet"
+        full_app_mode: "Full app mode"
+        full_app_mode_description: "Load the full Discourse application in the embed iframe, allowing users to reply, like, quote, and interact with topics directly"
         host_form:
           add_header: "Add host"
           edit_header: "Edit host"

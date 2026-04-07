@@ -569,22 +569,22 @@ export default class AiEmbeddingEditor extends Component {
         {{/if}}
 
         <form.Actions class="ai-embedding-editor__action_panel">
+          <form.Submit
+            @label="discourse_ai.embeddings.save"
+            class="btn-primary ai-embedding-editor__save"
+          />
           <form.Button
             @action={{fn this.test data}}
             @disabled={{this.testRunning}}
             @label="discourse_ai.embeddings.tests.title"
-            class="ai-embedding-editor__test"
-          />
-
-          <form.Submit
-            @label="discourse_ai.embeddings.save"
-            class="btn-primary ai-embedding-editor__save"
+            class="btn-default ai-embedding-editor__test"
           />
 
           {{#unless data.isNew}}
             <form.Button
               @action={{this.delete}}
               @label="discourse_ai.embeddings.delete"
+              @icon="trash-can"
               class="btn-danger ai-embedding-editor__delete"
             />
           {{/unless}}

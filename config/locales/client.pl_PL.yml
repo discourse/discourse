@@ -416,6 +416,7 @@ pl_PL:
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
       toggle_mobile_view: "Przełącz widok mobilny"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
+      toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -514,7 +515,6 @@ pl_PL:
       pm_title: "Sugerowane wiadomości"
     admin_onboarding_banner:
       launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
-      skipped: "Lista kontrolna dotycząca wdrażania administratora została pominięta. Jeśli chcesz ją ponownie włączyć, poszukaj opcji „włącz wdrażanie właściciela witryny” w ustawieniach witryny."
       congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
       invite_collaborators:
         title: "Zaproś współpracowników"
@@ -523,7 +523,7 @@ pl_PL:
       start_posting:
         title: "Rozpocznij publikowanie"
         description: "Daj ludziom temat do wspólnej rozmowy"
-        action: "Pomysły na przełamanie lodów"
+        action: "Zobacz pomysły"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
@@ -760,6 +760,7 @@ pl_PL:
       storage_access_prompt: "Masz już konto %{site_name} ? Zezwól na dostęp do swojej sesji, aby móc komentować jako Ty."
       allow_access: "Zezwól na dostęp"
       continue_as_guest: "Kontynuuj jako gość"
+      be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -1287,6 +1288,7 @@ pl_PL:
       add_members:
         title: "Dodaj użytkowników do %{group_name}"
         description: "Wpisz listę użytkowników, których chcesz zaprosić do grupy, lub wklej listę oddzieloną przecinkami:"
+        description_usernames_only: "Wprowadź listę nazw użytkowników, których chcesz dodać do grupy, lub wklej listę rozdzieloną przecinkami:"
         usernames_placeholder: "nazwy użytkowników"
         usernames_or_emails_placeholder: "nazwy użytkowników lub e-maile"
         notify_users: "Powiadom użytkowników"
@@ -2016,7 +2018,7 @@ pl_PL:
         upcoming_changes: "Nadchodzące zmiany"
         calendar_subscriptions: "Kalendarz"
       calendar_subscriptions:
-        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić. "
+        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić."
         generate: "Generuj adresy URL subskrypcji"
         regenerate: "Wygeneruj ponownie adresy URL"
         regenerate_confirm: "Spowoduje to unieważnienie istniejących adresów URL subskrypcji kalendarza. Wszystkie aplikacje kalendarza korzystające ze starych adresów URL przestaną otrzymywać aktualizacje. Kontynuować?"
@@ -4867,6 +4869,8 @@ pl_PL:
       tags: "Tagi"
       localizations: "Języki"
       localization:
+        language: "Język kategorii"
+        language_description: "Podstawowy język nazwy i opisu tej kategorii."
         locale: "Ustawienia regionalne"
         name: "Nazwa"
         description: "Opis"
@@ -6274,6 +6278,11 @@ pl_PL:
           beta: "Beta"
           stable: "Stabilna"
           permanent: "Stała"
+        status_descriptions:
+          experimental: "Funkcja jest na wczesnym etapie rozwoju i może ulec znacznym zmianom lub zostać wycofana. Może nie być w pełni kompatybilna z innymi funkcjami."
+          alpha: "Jest on aktywnie rozwijany i udoskonalany. Funkcjonalność może ulec zmianie i może nie być w pełni dopracowany, ale jest wystarczająco stabilny, aby go wypróbować."
+          beta: "Rozwiązanie jest już prawie ukończone i dostępne do szybkiego wdrożenia. Możliwe są jednak drobne zmiany."
+          stable: "To jest kompletne i dobrze obsługiwane. Wkrótce będzie dostępne na wszystkich stronach Discourse."
         impact_roles:
           admins: "Administratorzy"
           moderators: "Moderatorzy"
@@ -7682,6 +7691,7 @@ pl_PL:
           dark_color_scheme: "Ciemna paleta kolorów"
           default_light_scheme: "Jasny (domyślnie)"
           color_scheme_select: "Wybierz kolory, które mają być użyte w zależności od motywu."
+          only_theme_color_schemes: "Ten motyw ogranicza palety kolorów, które mogą być używane."
           dark_color_scheme_select: "Wybierz kolory, które mają być używane w trybie ciemnym."
           edit_colors: "Edytuj kolory"
           custom_sections: "Spersonalizowane sekcje:"
@@ -7746,7 +7756,7 @@ pl_PL:
           import_web_tip: "Repozytorium zawierające motyw"
           direct_install_tip: "Czy na pewno chcesz zainstalować <strong>%{name}</strong> z repozytorium wymienionego poniżej?"
           import_web_advanced: "Zaawansowane…"
-          import_file_tip: "plik .tar.gz, .zip, lub .dcstyle.json zawierający motyw"
+          import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
@@ -7783,6 +7793,16 @@ pl_PL:
           update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
+          change_source:
+            button: "Zmień źródło"
+            title: "Zmień źródło motywu"
+            repository_url: "Adres URL repozytorium"
+            branch: "Gałąź (opcjonalnie)"
+            updating: "Aktualizowanie źródła motywu…"
+            update: "Aktualizuj źródło"
+            has_existing_key: "W tym motywie skonfigurowano istniejący klucz SSH."
+            generate_new_key: "Wygeneruj nowy klucz SSH"
+            keep_existing_key: "Zachowaj istniejący klucz SSH"
           add: "Dodaj"
           theme_settings: "Ustawienia motywu niestandardowego"
           theme_site_settings: "Ustawienia, które motyw może zastąpić"
@@ -9190,6 +9210,8 @@ pl_PL:
         crawler_settings_saved: "Ustawienia robota zostały zapisane"
         back: "Powrót do osadzania"
         configuration_snippet: "Fragment konfiguracji"
+        full_app_mode: "Pełny tryb aplikacji"
+        full_app_mode_description: "Załaduj pełną aplikację Discourse w osadzonej ramce iframe, umożliwiając użytkownikom odpowiadanie, polubienie, cytowanie i bezpośrednią interakcję z tematami"
         host_form:
           add_header: "Dodaj host"
           edit_header: "Edytuj hosta"

@@ -1070,6 +1070,7 @@ ja:
     permissions_header: 'これにより、「%{application_name}」で次を行えます:'
     redirect_warning: "承認すると次の場所にリダイレクトされます:"
     instructions: '"%{application_name}" で使用できる新しいユーザー API キーを生成しました。次のキーをアプリケーションに貼り付けてください。'
+    copied: "コピーしました！"
     otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
     otp_confirmation:
       confirm_title: '%{site_name} に進む'
@@ -2942,47 +2943,9 @@ ja:
     reviewable_queued_post_revise_and_reject:
       title: "あなたの投稿に対するフィードバック"
       subject_template: "%{topic_title} のあなたの投稿に対するフィードバック"
-      text_body_template: |
-        %{username} さん、こんにちは。
-
-        [%{topic_title}](%{topic_url}) のあなたの投稿をレビューした結果、以下のフィードバックがあります。
-
-        理由: %{reason}
-
-        フィードバック: %{feedback}
-
-        提案された変更を適用するには、以下で元の投稿を編集して再送信するか、ご質問がある場合はこのメッセージに返信してください。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        よろしくお願いします。
-        %{site_name} モデレーター
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "あなたのトピックに対するフィードバック"
       subject_template: '"%{topic_title}" という新しいトピックに対するフィードバック'
-      text_body_template: |
-        %{username} さん、こんにちは。
-
-        "%{topic_title}" という新しいトピックをレビューした結果、以下のフィードバックがあります。
-
-        理由: %{reason}
-
-        フィードバック: %{feedback}
-
-        提案された変更を適用するには、以下でトピックの元の投稿を編集するか、ご質問がある場合はこのメッセージに返信してください。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        よろしくお願いします。
-        %{site_name} モデレーター
     post_hidden_again:
       title: "再度非表示"
       preview: "コミュニティーメンバーによって投稿は再度非表示になりました。"
@@ -3998,7 +3961,7 @@ ja:
       title: "古いメールを確認してください"
       subject_template: "[%{email_prefix}] 現在のメールアドレスを確認してください"
       text_body_template: |
-        メールアドレスを変更する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、当たらhしいメールアドレスを確認してください。
+        メールアドレスを変更する前に、あなたが現在のメールアカウントを管理していることを確認する必要があります。このステップを完了したら、新しいメールアドレスを確認してください。
 
         次のリンクをクリックして、%{site_name} の現在のメールアドレスを確認してください。
 

@@ -1,4 +1,5 @@
 @use "sass:math";
+@use "lib/viewport";
 
 .fk-d-menu[data-identifier="usercard"] {
   max-width: calc(100vw - 2em);
@@ -7,6 +8,12 @@
   .fk-d-menu__inner-content {
     min-width: 0;
     overflow: visible;
+  }
+
+  @include viewport.until(sm) {
+    &[data-content] {
+      z-index: z("max");
+    }
   }
 }
 
@@ -58,6 +65,12 @@
   box-shadow: unset !important;
   z-index: unset !important;
 
+  @include viewport.until(sm) {
+    box-sizing: border-box;
+    max-width: 95vw;
+    max-height: 85vh; // 2.5vh margin-top and margin-bottom. 10vh top
+  }
+
   .card-content {
     padding: 10px;
     background: rgb(var(--secondary-rgb), 0.85);
@@ -85,8 +98,17 @@
 
   // avatar - names - controls
   .first-row {
+    @include viewport.until(sm) {
+      flex-wrap: wrap;
+    }
+
     .names {
       padding-left: 1.25em;
+
+      @include viewport.until(sm) {
+        box-sizing: border-box;
+        flex: 1 1 0;
+      }
 
       .user-profile-link {
         display: flex;
@@ -114,6 +136,31 @@
       list-style-type: none;
       margin: 0;
 
+      @include viewport.until(sm) {
+        width: 100%; // always wraps to next line
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1em;
+        gap: 0.5em;
+
+        li {
+          flex: 1 0 45%;
+          min-width: 8em;
+
+          &:empty {
+            display: none;
+          }
+
+          button {
+            margin: 0;
+
+            .d-button-label {
+              @include ellipsis;
+            }
+          }
+        }
+      }
+
       button {
         width: 100%;
       }
@@ -127,16 +174,28 @@
   .names__primary {
     @include ellipsis;
     line-height: var(--line-height-medium);
-    font-size: var(--font-up-5);
+    font-size: var(--font-up-3);
     font-weight: bold;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-5);
+    }
 
     .d-icon {
       color: var(--primary);
+
+      @include viewport.until(sm) {
+        font-size: var(--font-down-2);
+      }
     }
   }
 
   .names__secondary {
     font-size: var(--font-up-1);
+
+    @include viewport.until(sm) {
+      font-size: var(--font-0);
+    }
   }
 
   .metadata {
@@ -190,6 +249,10 @@
       margin-top: var(--avatar-margin);
       max-height: var(--avatar-width);
       position: relative;
+
+      @include viewport.until(sm) {
+        flex: 0 0 auto;
+      }
 
       .own-avatar-pencil {
         opacity: 0;
@@ -330,6 +393,19 @@
     margin: 0;
     text-align: left;
 
+    @include viewport.until(sm) {
+      max-height: 40vh;
+      overflow-y: auto;
+
+      .public-user-field {
+        @include line-clamp(3);
+      }
+    }
+
+    @media screen and (height <= 550px) {
+      max-height: 12vh;
+    }
+
     .user-field-value-list-item:not(:last-of-type) {
       &::after {
         // create comma separated list
@@ -345,12 +421,28 @@
     flex-wrap: wrap;
     gap: var(--space-1);
 
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
     .user-badge {
       @include ellipsis;
       background: var(--primary-very-low);
       border: 1px solid var(--content-border-color);
       color: var(--primary);
       border-radius: var(--d-border-radius);
+
+      @include viewport.until(sm) {
+        display: flex;
+        margin: 0;
+        width: 100%;
+
+        .badge-display-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
 
     .user-card-badge-link {
@@ -361,6 +453,16 @@
     .more-user-badges {
       vertical-align: top;
       display: inline-block;
+
+      @include viewport.until(sm) {
+        display: flex;
+        box-sizing: border-box;
+
+        a {
+          width: 100%;
+          display: flex;
+        }
+      }
     }
 
     .more-user-badges a {
@@ -371,6 +473,10 @@
   .user-status {
     display: flex;
     align-items: center;
+
+    @include viewport.until(sm) {
+      font-size: var(--font-down-1);
+    }
 
     img.emoji {
       margin-right: 0.3em;
@@ -439,6 +545,36 @@
         max-height: 60px;
         overflow: hidden;
       }
+    }
+  }
+}
+
+@include viewport.until(sm) {
+  .card-cloak {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: z("mobile-composer") + 1; // 1101
+    height: 100vh;
+    width: 100vw;
+    background-color: #000;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s,
+      visibility 0s 0.3s;
+
+    &.--visible {
+      pointer-events: all;
+      opacity: 0.6;
+      visibility: visible;
+      transition:
+        opacity 0.3s,
+        visibility 0s;
+    }
+
+    @media (prefers-reduced-motion) {
+      transition-duration: 0s;
     }
   }
 }

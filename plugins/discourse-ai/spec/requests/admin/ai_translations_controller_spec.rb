@@ -11,21 +11,31 @@ describe DiscourseAi::Admin::AiTranslationsController do
 
   describe "#show" do
     context "when logged in as admin" do
+      fab!(:target_category, :category)
+
       before do
         sign_in(admin)
         SiteSetting.discourse_ai_enabled = true
         SiteSetting.ai_translation_enabled = true
         SiteSetting.content_localization_supported_locales = "en|fr|es"
+        SiteSetting.ai_translation_target_categories = target_category.id.to_s
       end
 
       it "returns translation progress data" do
         SiteSetting.ai_translation_backfill_max_age_days = 30
-        SiteSetting.ai_translation_backfill_limit_to_public_content = false
+        SiteSetting.ai_translation_personal_messages = "group"
         SiteSetting.ai_translation_backfill_hourly_rate = 100
 
-        english_posts = Fabricate.times(14, :post, locale: "en")
-        french_post = Fabricate(:post, locale: "fr")
-        Fabricate.times(4, :post)
+        english_posts =
+          Fabricate.times(
+            14,
+            :post,
+            locale: "en",
+            topic: Fabricate(:topic, category: target_category),
+          )
+        french_post =
+          Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: target_category))
+        Fabricate.times(4, :post, topic: Fabricate(:topic, category: target_category))
 
         PostLocalization.create!(
           post: french_post,
@@ -60,12 +70,30 @@ describe DiscourseAi::Admin::AiTranslationsController do
 
       it "shows only posts requiring translation for all locales (consistent behavior)" do
         SiteSetting.ai_translation_backfill_max_age_days = 30
-        SiteSetting.ai_translation_backfill_limit_to_public_content = false
+        SiteSetting.ai_translation_personal_messages = "group"
         SiteSetting.default_locale = "en"
 
-        english_posts = Fabricate.times(100, :post, locale: "en")
-        french_posts = Fabricate.times(10, :post, locale: "fr")
-        spanish_posts = Fabricate.times(5, :post, locale: "es")
+        english_posts =
+          Fabricate.times(
+            100,
+            :post,
+            locale: "en",
+            topic: Fabricate(:topic, category: target_category),
+          )
+        french_posts =
+          Fabricate.times(
+            10,
+            :post,
+            locale: "fr",
+            topic: Fabricate(:topic, category: target_category),
+          )
+        spanish_posts =
+          Fabricate.times(
+            5,
+            :post,
+            locale: "es",
+            topic: Fabricate(:topic, category: target_category),
+          )
 
         french_posts
           .take(8)

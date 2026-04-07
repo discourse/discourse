@@ -35,6 +35,14 @@ const SERVER_SIDE_ONLY = [
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
+  /^\/safe-mode/,
+  /^\/dev-mode/,
+  /^\/theme-qunit/,
+  /^\/llms\.txt$/,
+  /^\/robots\.txt$/,
+  /^\/offline\.html$/,
+  /^\/manifest\.webmanifest$/,
+  /^\/opensearch\.xml$/,
 ];
 
 // The amount of height (in pixels) that we factor in when jumpEnd is called so
@@ -308,12 +316,16 @@ class DiscourseURL extends EmberObject {
     rewrites.push({ regexp, replacement, opts: opts || {} });
   }
 
-  redirectAbsolute(url) {
+  redirectAbsolute(url, { replace = false } = {}) {
     // Redirects will kill a test runner
     if (isTesting()) {
       return true;
     }
-    window.location = url;
+    if (replace) {
+      window.location.replace(url);
+    } else {
+      window.location = url;
+    }
     return true;
   }
 

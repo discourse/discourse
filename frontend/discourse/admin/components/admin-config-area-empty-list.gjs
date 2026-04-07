@@ -14,8 +14,10 @@ export default class AdminConfigAreaEmptyList extends Component {
   }
 
   <template>
-    <div class="admin-config-area-empty-list">
-      {{trustHTML this.emptyLabel}}
+    <div class="admin-config-area-empty-list" ...attributes>
+      <span class="admin-config-area-empty-list__title">{{trustHTML
+          this.emptyLabel
+        }}</span>
 
       {{#if @ctaLabel}}
         <DButton

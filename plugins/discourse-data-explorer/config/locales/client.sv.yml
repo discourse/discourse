@@ -6,6 +6,10 @@
 
 sv:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Datautforskaren"
     errors:
       explorer:
         no_semicolons: "Ta bort semikolon från sökningen."

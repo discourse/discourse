@@ -129,7 +129,9 @@ module Jobs
     def attempt_download(src, user_id)
       # secure-uploads endpoint prevents anonymous downloads, so we
       # need the presigned S3 URL here
-      src = Upload.signed_url_from_secure_uploads_url(src) if Upload.secure_uploads_url?(src)
+      if Upload.secure_uploads_url?(src)
+        src = Upload.signed_url_from_secure_uploads_url(src, include_content_disposition: false)
+      end
 
       hotlinked = download(src)
       raise ImageBrokenError if !hotlinked

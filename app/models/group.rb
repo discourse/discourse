@@ -32,6 +32,7 @@ class Group < ActiveRecord::Base
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
+  has_many :category_posting_review_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
   has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
@@ -819,41 +820,15 @@ class Group < ActiveRecord::Base
 
   def add(user, notify: false, automatic: false)
     return false if user.nil?
-    return self if group_users.exists?(user_id: user.id)
-
-    self.users.push(user)
-    send_membership_notification(user) if notify
-    publish_category_updates(user)
-    trigger_user_added_event(user, automatic)
+    added_ids = GroupManager.new(self).add([user.id], automatic:)
+    send_membership_notification(user) if notify && !added_ids.empty?
 
     self
   end
 
   def remove(user)
     return false if user.nil?
-    group_user = self.group_users.find_by(user: user)
-    return false if group_user.blank?
-
-    group_user.destroy
-    publish_category_updates(user)
-    trigger_user_removed_event(user)
-    enqueue_user_removed_from_group_webhook_events(group_user)
-
-    true
-  end
-
-  def enqueue_user_removed_from_group_webhook_events(group_user)
-    return if !WebHook.active_web_hooks(:group_user)
-
-    payload = WebHook.generate_payload(:group_user, group_user, WebHookGroupUserSerializer)
-
-    WebHook.enqueue_hooks(
-      :group_user,
-      :user_removed_from_group,
-      id: group_user.id,
-      payload: payload,
-      group_ids: [self.id],
-    )
+    GroupManager.new(self).remove([user.id]).present?
   end
 
   def trigger_user_added_event(user, automatic)
@@ -881,60 +856,12 @@ class Group < ActiveRecord::Base
     ).first
   end
 
-  def bulk_add(user_ids)
-    return if user_ids.blank?
-
-    Group.transaction do
-      sql = <<~SQL
-      INSERT INTO group_users
-        (group_id, user_id, created_at, updated_at)
-      SELECT
-        #{self.id},
-        u.id,
-        CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP
-      FROM users AS u
-      WHERE u.id IN (:user_ids)
-      AND NOT EXISTS (
-        SELECT 1 FROM group_users AS gu
-        WHERE gu.user_id = u.id AND
-        gu.group_id = :group_id
-      )
-      SQL
-
-      DB.exec(sql, group_id: self.id, user_ids: user_ids)
-
-      user_attributes = {}
-
-      user_attributes[:primary_group_id] = self.id if self.primary_group?
-
-      user_attributes[:title] = self.title if self.title.present?
-
-      User.where(id: user_ids).update_all(user_attributes) if user_attributes.present?
-
-      # update group user count
-      recalculate_user_count
-    end
-
-    if self.grant_trust_level.present?
-      Jobs.enqueue(:bulk_grant_trust_level, user_ids: user_ids, trust_level: self.grant_trust_level)
-    end
-
-    self
+  def bulk_add(user_ids, automatic: false)
+    GroupManager.new(self).add(user_ids, automatic:)
   end
 
   def bulk_remove(user_ids)
-    Group.transaction do
-      group_users_to_be_destroyed = group_users.includes(:user).where(user_id: user_ids).destroy_all
-      group_users_to_be_destroyed.each do |group_user|
-        trigger_user_removed_event(group_user.user)
-        enqueue_user_removed_from_group_webhook_events(group_user)
-      end
-    end
-
-    recalculate_user_count
-
-    true
+    GroupManager.new(self).remove(user_ids)
   end
 
   def recalculate_user_count
@@ -1242,26 +1169,6 @@ class Group < ActiveRecord::Base
       user_id: user.id,
       data: { group_id: id, group_name: name }.to_json,
     )
-  end
-
-  def publish_category_updates(user)
-    if categories.count < PUBLISH_CATEGORIES_LIMIT
-      guardian = Guardian.new(user)
-      group_categories = categories.map { |c| Category.set_permission!(guardian, c) }
-      updated_categories = group_categories.select(&:permission)
-      removed_category_ids = group_categories.reject(&:permission).map(&:id)
-
-      MessageBus.publish(
-        "/categories",
-        {
-          categories: ActiveModel::ArraySerializer.new(updated_categories).as_json,
-          deleted_categories: removed_category_ids,
-        },
-        user_ids: [user.id],
-      )
-    else
-      Discourse.request_refresh!(user_ids: [user.id])
-    end
   end
 
   def validate_grant_trust_level

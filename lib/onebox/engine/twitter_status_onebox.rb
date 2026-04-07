@@ -15,8 +15,29 @@ module Onebox
         path.match?(%r{^/.+?/status(es)?/\d+(/(video|photo)/\d?)?(/?\?.*)?/?$})
       end
 
-      def to_html
-        raw.present? ? super : ""
+      def to_html(ignore_errors = false)
+        return "" if raw.blank?
+
+        unless ignore_errors
+          verified_data
+          return "" if errors.present?
+        end
+
+        super()
+      end
+
+      def verified_data
+        @verified_data ||=
+          begin
+            result = data
+            %i[title tweet].each do |tag|
+              if result[tag].blank?
+                errors[tag] ||= []
+                errors[tag] << "is blank"
+              end
+            end
+            result
+          end
       end
 
       private

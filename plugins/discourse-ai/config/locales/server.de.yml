@@ -127,12 +127,10 @@ de:
     ai_discord_search_mode: "Wähle den Suchmodus für die Discord-Suche aus"
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
-    ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
-    ai_translation_max_tokens_multiplier: "Multiplikator, um die maximale Anzahl der Token festzulegen, die für die Übersetzung verwendet werden sollen. Standardmäßig wird die maximale Anzahl der Token auf etwa das Zwei- bis Fünffache der Anzahl der Zeichen im Beitrag gesetzt. Dieser Multiplikator kann angepasst werden, um Denk- oder Argumentationsmodelle zu berücksichtigen, die mehr Token benötigen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
     ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:
@@ -287,6 +285,13 @@ de:
         missing_required_aliases: "Für folgende Aliase fehlen erforderliche Verknüpfungen zu Anmeldedaten: %{aliases}."
         secret_not_found: "Der Alias „%{alias}“ ist mit nicht vorhandenen Anmeldedaten verknüpft."
         unknown_error: "Die angeforderte Anmeldedaten konnten nicht ermittelt werden."
+    mcp_servers:
+      secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
+      errors:
+        oauth_callback_failed: "OAuth-Verbindung fehlgeschlagen: %{message}"
+        oauth_registration_endpoint_missing: "Der OAuth-Autorisierungsserver bietet keinen Registrierungsendpunkt an."
+        oauth_client_registration_failed: "Die dynamische Client-Registrierung ist mit dem Status „%{status}“ fehlgeschlagen."
+        oauth_client_registration_failed_no_id: "Die dynamische Client-Registrierung war erfolgreich, aber es wurde keine „client_id“ zurückgegeben."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."

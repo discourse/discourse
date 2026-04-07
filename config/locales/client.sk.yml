@@ -6969,7 +6969,6 @@ sk:
           import_web_tip: "Repozitár obsahujúci tému"
           direct_install_tip: "Naozaj chcete nainštalovať <strong>%{name}</strong> z úložiska uvedeného nižšie?"
           import_web_advanced: "Pokročilé…"
-          import_file_tip: ".tar.gz, .zip alebo .dcstyle.json súbor obsahujúci tému"
           is_private: "Téma je v súkromnom repozitári git"
           finish_install: "Dokončiť inštaláciu témy"
           last_attempt: "Proces inštalácie sa nedokončil, posledný pokus:"

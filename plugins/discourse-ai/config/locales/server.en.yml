@@ -141,12 +141,12 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
-    ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
+    ai_translation_target_categories: "Only content in the selected categories will be translated. Subcategories must be added separately. Leave empty to disable translation of topics in categories."
+    ai_translation_personal_messages: "Controls which personal messages are translated. 'none' disables PM translation. 'group' translates only group PMs. 'all' translates all PMs."
     ai_translation_include_bot_content: "When enabled, content written by bots (user IDs below 0) will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
     ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
-    ai_translation_max_tokens_multiplier: "Multiplier to determine the maximum number of tokens to use for translation. By default, we set the max tokens to approximately two to five times the number of characters in the post. This multiplier can be adjusted to allow for thinking or reasoning models which will use more tokens."
     ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
     ai_audit_logs_purge_after_days: "Delete AI API audit logs older than this many days. Defaults to about 6 months. Set to 0 to keep indefinitely."
 
@@ -305,6 +305,37 @@ en:
         missing_required_aliases: "Missing required credential bindings for aliases: %{aliases}."
         secret_not_found: "Credential alias `%{alias}` is bound to a missing credential."
         unknown_error: "Unable to resolve the requested credential."
+
+    mcp_servers:
+      secret_not_found: "The selected credential does not exist."
+      invalid_url_not_https: "must be a valid HTTPS URL"
+      invalid_url_not_reachable: "must resolve to a publicly accessible address"
+      oauth_client_id_required: "OAuth client ID is required for manual client registration."
+      errors:
+        invalid_response: "The MCP server returned an invalid response."
+        request_failed: "The MCP server request failed with status %{status}."
+        session_expired: "The MCP session expired."
+        timeout: "The MCP server request timed out."
+        oauth_authorization_required: "OAuth authorization is required before this MCP server can be used. Connect it to %{issuer} from the admin UI."
+        oauth_discovery_failed: "Unable to discover OAuth authorization details for this MCP server."
+        oauth_discovery_failed_with_status: "OAuth discovery failed with status %{status}."
+        oauth_not_configured: "OAuth is not configured for this MCP server."
+        oauth_refresh_token_missing: "The OAuth refresh token is missing. Reconnect this MCP server."
+        oauth_save_before_connect: "Save the MCP server before testing the OAuth connection."
+        oauth_state_invalid: "The OAuth authorization state is invalid or has expired. Start the connection again."
+        oauth_token_exchange_failed: "The OAuth token exchange failed with status %{status}."
+        oauth_https_required: "OAuth requires your site to be served over HTTPS."
+        oauth_callback_failed: "OAuth connection failed: %{message}"
+        oauth_refresh_token_required: "The OAuth authorization server did not return a refresh token. Adjust the advanced OAuth options and reconnect this MCP server."
+        oauth_client_metadata_public_https_required: "Client metadata document registration requires a public HTTPS site URL. Current client metadata URL: %{url}"
+        oauth_registration_endpoint_missing: "The OAuth authorization server does not advertise a registration endpoint."
+        oauth_manual_client_registration_required: "The OAuth authorization server %{issuer} does not advertise dynamic client registration. Switch this MCP server to Manual client credentials and provide a registered OAuth client ID."
+        oauth_client_secret_required: "The OAuth authorization server %{issuer} requires token endpoint client authentication (%{methods}). Configure manual client credentials with a client secret."
+        oauth_token_endpoint_auth_method_unsupported: "The OAuth authorization server %{issuer} only advertises unsupported token endpoint client authentication methods (%{methods}). This MCP server currently supports none, client_secret_basic, and client_secret_post."
+        oauth_client_registration_failed: "Dynamic client registration failed with status %{status}."
+        oauth_client_registration_failed_no_id: "Dynamic client registration succeeded but no client_id was returned."
+      oauth_authorization_params_invalid: "OAuth authorization params must be a JSON object."
+      oauth_token_params_invalid: "OAuth token params must be a JSON object."
 
     ai_helper:
       errors:
@@ -520,6 +551,7 @@ en:
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
       tool_summary:
         read_artifact: "Read a web artifact"
+        search_uploaded_documents: "Search uploaded documents"
         update_artifact: "Update a web artifact"
         create_artifact: "Create web artifact"
         web_browser: "Browse Web"
@@ -541,6 +573,8 @@ en:
         set_slow_mode: "Set slow mode"
         move_posts: "Move posts"
         grant_badge: "Grant badge"
+        list_reviewables: "List review queue"
+        perform_reviewable_action: "Review queue action"
         assign: "Assign topic"
         mark_as_solved: "Mark as solved"
         search: "Search"
@@ -562,6 +596,7 @@ en:
         researcher_dry_run: "Preparing research"
       tool_help:
         read_artifact: "Read a web artifact using the AI Bot"
+        search_uploaded_documents: "Search documents uploaded to this agent"
         update_artifact: "Update a web artifact using the AI Bot"
         create_artifact: "Create a web artifact using the AI Bot"
         web_browser: "Browse web page using the AI Bot"
@@ -583,6 +618,8 @@ en:
         set_slow_mode: "Enable or disable slow mode on a topic"
         move_posts: "Move posts to a new or existing topic"
         grant_badge: "Grant a badge to a user"
+        list_reviewables: "List pending review queue items with optional filtering"
+        perform_reviewable_action: "Perform an action on a review queue item"
         assign: "Assign or unassign a topic to a user or group"
         mark_as_solved: "Mark or unmark a post as the accepted solution"
         search: "Search all public topics on the forum"
@@ -603,6 +640,9 @@ en:
         researcher: "Research forum information using the AI Bot"
       tool_description:
         read_artifact: "Read a web artifact using the AI Bot"
+        search_uploaded_documents:
+          one: "Found %{count} uploaded document excerpt for '%{query}'"
+          other: "Found %{count} uploaded document excerpts for '%{query}'"
         update_artifact: "Updated a web artifact using the AI Bot"
         create_artifact: "Created a web artifact: %{name} - %{specification}"
         web_browser: "Reading <a href='%{url}'>%{url}</a>"
@@ -623,6 +663,8 @@ en:
         set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
         move_posts: "Moving posts %{post_ids} from topic %{topic_id}"
         grant_badge: "Granting badge '%{badge_name}' to %{username}"
+        list_reviewables: "Listing review queue items (type: %{type})"
+        perform_reviewable_action: "Performing %{action} on reviewable %{reviewable_id}"
         assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
         mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
@@ -779,6 +821,26 @@ en:
           action_failed: "Failed to update the solved status."
         success: "Solved status updated successfully."
 
+      list_reviewables:
+        errors:
+          not_allowed: "You are not allowed to view the review queue"
+          invalid_type: "Invalid reviewable type"
+          invalid_status: "Invalid status. Must be one of: pending, approved, rejected, ignored, deleted, reviewed, all."
+        empty: "No review queue items found matching the given filters"
+        found:
+          one: "Found %{count} review queue item"
+          other: "Found %{count} review queue items"
+
+      perform_reviewable_action:
+        errors:
+          not_allowed: "You are not allowed to access the review queue"
+          not_found: "Review queue item not found"
+          no_reason: "A reason is required to perform an action on a review queue item"
+          invalid_action: "Invalid action '%{action}'. Available actions: %{available}"
+          conflict: "This review queue item was updated by someone else. Please try again"
+          action_failed: "Failed to perform the action"
+        success: "Successfully performed '%{action}' on review queue item %{reviewable_id}"
+
     reviewables:
       ai_tool_action:
         title: "AI Tool Action"
@@ -908,3 +970,5 @@ en:
       custom_tool_exists:
         one: "Custom tool with the name %{names} already exists."
         other: "Custom tools with the names %{names} already exist."
+      mcp_server_missing: "The following MCP servers are not configured on this site: %{names}."
+      mcp_server_tools_not_found: "No matching tools from MCP server %{name} are available on this site."

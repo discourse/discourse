@@ -141,7 +141,7 @@ after_initialize do
 
   add_to_serializer(:current_user, :votes_exceeded) { object.reached_voting_limit? }
   add_to_serializer(:current_user, :votes_count) { object.vote_count }
-  add_to_serializer(:current_user, :votes_left) { [object.vote_limit - object.vote_count, 0].max }
+  add_to_serializer(:current_user, :votes_left) { object.votes_left }
   add_to_serializer(:current_user, :vote_limit) { object.vote_limit }
 
   topic_votes_value_from = ->(values) do

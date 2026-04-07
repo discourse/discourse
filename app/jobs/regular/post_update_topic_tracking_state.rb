@@ -19,7 +19,7 @@ module Jobs
           TopicTrackingState.publish_muted(post.topic)
           TopicTrackingState.publish_unread(post)
         end
-        TopicTrackingState.publish_latest(post.topic, post.whisper?)
+        TopicTrackingState.publish_latest(post.topic) unless post.whisper?
       end
     end
   end

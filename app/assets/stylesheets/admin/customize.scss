@@ -775,6 +775,28 @@
 }
 
 .admin-embedding {
+  .admin-embedding-index__full-app-toggle {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .admin-embedding-index__full-app-toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .admin-embedding-index__full-app-toggle-label {
+    font-weight: 700;
+  }
+
+  .admin-embedding-index__full-app-toggle-description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
   .admin-embeddable-host-item__delete {
     &:hover {
       svg.d-icon {

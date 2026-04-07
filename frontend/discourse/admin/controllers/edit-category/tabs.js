@@ -25,6 +25,7 @@ const LEGACY_FORMKIT_FIELDS = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "email_in",
   "email_in_enabled",
@@ -46,6 +47,7 @@ const SIMPLIFIED_FIELD_LIST = [
   "style_type",
   "emoji",
   "icon",
+  "locale",
   "localizations",
   "position",
   "num_featured_topics",
@@ -56,6 +58,8 @@ const SIMPLIFIED_FIELD_LIST = [
   "all_topics_wiki",
   "allow_unlimited_owner_edits_on_first_post",
   "moderating_group_ids",
+  "topic_posting_review_group_ids",
+  "reply_posting_review_group_ids",
   "auto_close_hours",
   "auto_close_based_on_last_post",
   "default_view",
@@ -115,6 +119,13 @@ export default class EditCategoryTabsController extends Controller {
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
+  /**
+   * Callbacks registered by tab components that are invoked when the form
+   * is reset, allowing child components to clean up their own state.
+   * @type {Function[]}
+   */
+  afterResetCallbacks = [];
+
   @action
   initFormData() {
     const enableSimplifiedCategoryCreation =
@@ -125,6 +136,10 @@ export default class EditCategoryTabsController extends Controller {
         ? SIMPLIFIED_FIELD_LIST
         : LEGACY_FORMKIT_FIELDS)
     );
+
+    if (this.siteSettings.content_localization_enabled && !data.locale) {
+      data.locale = this.siteSettings.default_locale;
+    }
 
     if (enableSimplifiedCategoryCreation) {
       if (!this.model.styleType) {
@@ -213,10 +228,25 @@ export default class EditCategoryTabsController extends Controller {
     this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
   }
 
+  /**
+   * Runs all registered validators, then performs built-in validation for
+   * required fields (name, emoji, icon) when submitting from a non-general tab.
+   * Both `addError` and `removeError` are passed to validators so they can
+   * manage errors bidirectionally.
+   *
+   * @param {Object} data - The current form draft data.
+   * @param {Object} helpers
+   * @param {Function} helpers.addError - Adds a validation error for a field.
+   * @param {Function} helpers.removeError - Removes a validation error for a field.
+   */
   @action
-  validateForm(data, { addError }) {
+  validateForm(data, { addError, removeError }) {
     if (!this.siteSettings.enable_simplified_category_creation) {
       return;
+    }
+
+    for (const validator of this.validators) {
+      validator(data, { addError, removeError });
     }
 
     if (this.selectedTab === "general") {
@@ -257,6 +287,27 @@ export default class EditCategoryTabsController extends Controller {
   @action
   registerValidator(validator) {
     this.validators.push(validator);
+  }
+
+  /**
+   * Registers a callback that will be invoked when the form is reset.
+   * Tab components use this to synchronize their internal state (e.g.,
+   * clearing local selections) when the user resets the form.
+   *
+   * @param {Function} callback - The function to call on form reset.
+   */
+  @action
+  registerAfterReset(callback) {
+    this.afterResetCallbacks.push(callback);
+  }
+
+  /**
+   * Called by FormKit's `@onReset` hook. Invokes all registered
+   * after-reset callbacks so tab components can react to the reset.
+   */
+  @action
+  onFormReset() {
+    this.afterResetCallbacks.forEach((callback) => callback());
   }
 
   @action

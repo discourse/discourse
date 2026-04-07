@@ -907,7 +907,7 @@ RSpec.describe FileStore::S3Store do
   end
 
   describe ".url_for" do
-    it "returns signed URL with content disposition when requesting to download image" do
+    it "returns signed URL with attachment content disposition when force_download is true" do
       s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
       s3_bucket
         .expects(:object)
@@ -923,17 +923,123 @@ RSpec.describe FileStore::S3Store do
 
       expect(store.url_for(upload, force_download: true)).not_to eq(upload.url)
     end
+
+    it "returns signed URL with inline content disposition for secure image" do
+      upload.update!(secure: true)
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket
+        .expects(:object)
+        .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png}))
+        .returns(s3_object)
+      opts = {
+        expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
+        response_content_disposition:
+          ActionDispatch::Http::ContentDisposition.format(
+            disposition: "inline",
+            filename: upload.original_filename,
+          ),
+      }
+      s3_object.expects(:presigned_url).with(:get, opts)
+      expect(store.url_for(upload)).not_to eq(upload.url)
+    end
+
+    it "returns signed URL with attachment content disposition for non-inline-safe secure upload" do
+      SiteSetting.authorized_extensions = "jpg|jpeg|png|gif|html"
+      upload = Fabricate(:upload, original_filename: "file.html", extension: "html", secure: true)
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket
+        .expects(:object)
+        .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.html}))
+        .returns(s3_object)
+      opts = {
+        expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
+        response_content_disposition:
+          ActionDispatch::Http::ContentDisposition.format(
+            disposition: "attachment",
+            filename: "file.html",
+          ),
+      }
+      s3_object.expects(:presigned_url).with(:get, opts)
+      expect(store.url_for(upload)).not_to eq(upload.url)
+    end
   end
 
   describe ".signed_url_for_path" do
-    it "returns signed URL for a given path" do
+    it "returns signed URL with inline content disposition for a given path" do
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket.expects(:object).with("special/optimized/file.png").returns(s3_object)
+      opts = {
+        expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
+        response_content_disposition:
+          ActionDispatch::Http::ContentDisposition.format(
+            disposition: "inline",
+            filename: "file.png",
+          ),
+      }
+      s3_object
+        .expects(:presigned_url)
+        .with(:get, opts)
+        .returns("https://s3.example.com/special/optimized/file.png?signed=true")
+      expect(
+        store.signed_url_for_path("special/optimized/file.png", include_content_disposition: true),
+      ).to eq("https://s3.example.com/special/optimized/file.png?signed=true")
+    end
+
+    it "returns signed URL with attachment content disposition for non-inline-safe path" do
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket.expects(:object).with("special/optimized/file.html").returns(s3_object)
+      opts = {
+        expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
+        response_content_disposition:
+          ActionDispatch::Http::ContentDisposition.format(
+            disposition: "attachment",
+            filename: "file.html",
+          ),
+      }
+      s3_object
+        .expects(:presigned_url)
+        .with(:get, opts)
+        .returns("https://s3.example.com/special/optimized/file.html?signed=true")
+      expect(
+        store.signed_url_for_path("special/optimized/file.html", include_content_disposition: true),
+      ).to eq("https://s3.example.com/special/optimized/file.html?signed=true")
+    end
+
+    it "returns signed URL with attachment content disposition when force_download is true" do
+      s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+      s3_bucket.expects(:object).with("special/optimized/file.png").returns(s3_object)
+      opts = {
+        expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds,
+        response_content_disposition:
+          ActionDispatch::Http::ContentDisposition.format(
+            disposition: "attachment",
+            filename: "file.png",
+          ),
+      }
+      s3_object
+        .expects(:presigned_url)
+        .with(:get, opts)
+        .returns("https://s3.example.com/special/optimized/file.png?signed=true")
+      expect(
+        store.signed_url_for_path(
+          "special/optimized/file.png",
+          force_download: true,
+          include_content_disposition: true,
+        ),
+      ).to eq("https://s3.example.com/special/optimized/file.png?signed=true")
+    end
+
+    it "returns signed URL without content disposition when include_content_disposition is false" do
       s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
       s3_bucket.expects(:object).with("special/optimized/file.png").returns(s3_object)
       opts = { expires_in: SiteSetting.s3_presigned_get_url_expires_after_seconds }
-
-      s3_object.expects(:presigned_url).with(:get, opts)
-
-      expect(store.signed_url_for_path("special/optimized/file.png")).not_to eq(upload.url)
+      s3_object
+        .expects(:presigned_url)
+        .with(:get, opts)
+        .returns("https://s3.example.com/special/optimized/file.png?signed=true")
+      expect(
+        store.signed_url_for_path("special/optimized/file.png", include_content_disposition: false),
+      ).to eq("https://s3.example.com/special/optimized/file.png?signed=true")
     end
 
     it "does not prefix the s3_bucket_folder_path onto temporary upload prefixed keys" do
@@ -942,12 +1048,19 @@ RSpec.describe FileStore::S3Store do
         URI.parse(
           store.signed_url_for_path(
             "#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz",
+            include_content_disposition: true,
           ),
         )
       expect(uri.path).to eq(
         "/#{FileStore::BaseStore::TEMPORARY_UPLOAD_PREFIX}folder_path/uploads/default/blah/def.xyz",
       )
-      uri = URI.parse(store.signed_url_for_path("uploads/default/blah/def.xyz"))
+      uri =
+        URI.parse(
+          store.signed_url_for_path(
+            "uploads/default/blah/def.xyz",
+            include_content_disposition: true,
+          ),
+        )
       expect(uri.path).to eq("/folder_path/uploads/default/blah/def.xyz")
     end
   end

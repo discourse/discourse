@@ -74,6 +74,7 @@ export default <template>
       @onSubmit={{@controller.saveCategory}}
       @validate={{@controller.validateForm}}
       @onRegisterApi={{@controller.onRegisterFormApi}}
+      @onReset={{@controller.onFormReset}}
       as |form transientData|
     >
       <form.Section
@@ -91,6 +92,7 @@ export default <template>
               @selectedTab={{@controller.selectedTab}}
               @category={{@controller.model}}
               @registerValidator={{@controller.registerValidator}}
+              @registerAfterReset={{@controller.registerAfterReset}}
               @transientData={{transientData}}
               @form={{form}}
               @setSelectedTab={{@controller.setSelectedTab}}
@@ -109,6 +111,7 @@ export default <template>
                 @selectedTab={{@controller.selectedTab}}
                 @category={{@controller.model}}
                 @registerValidator={{@controller.registerValidator}}
+                @registerAfterReset={{@controller.registerAfterReset}}
                 @transientData={{transientData}}
                 @form={{form}}
               />

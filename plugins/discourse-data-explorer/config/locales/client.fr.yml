@@ -6,6 +6,10 @@
 
 fr:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Explorateur de données"
     errors:
       explorer:
         no_semicolons: "Supprimez les points-virgules de la requête."

@@ -6,6 +6,10 @@
 
 zh_CN:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "数据资源管理器"
     errors:
       explorer:
         no_semicolons: "从查询中移除分号。"

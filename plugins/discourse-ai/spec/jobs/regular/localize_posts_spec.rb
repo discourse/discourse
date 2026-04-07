@@ -14,6 +14,7 @@ describe Jobs::LocalizePosts do
     SiteSetting.content_localization_supported_locales = locales.join("|")
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.ai_translation_backfill_max_age_days = 100
+    SiteSetting.ai_translation_target_categories = post.topic.category_id.to_s
   end
 
   it "does nothing when translator is disabled" do
@@ -101,7 +102,7 @@ describe Jobs::LocalizePosts do
     end
 
     it "scenario 2: localizes post with locale 'es' when localizations for en/ja/de do not exist" do
-      post = Fabricate(:post, locale: "es")
+      post = Fabricate(:post, locale: "es", topic: self.post.topic)
 
       DiscourseAi::Translation::PostLocalizer
         .expects(:localize)
@@ -120,7 +121,7 @@ describe Jobs::LocalizePosts do
     end
 
     it "scenario 3: localizes post with locale 'en' when ja/de localization do not exist" do
-      post = Fabricate(:post, locale: "en")
+      post = Fabricate(:post, locale: "en", topic: self.post.topic)
 
       DiscourseAi::Translation::PostLocalizer
         .expects(:localize)
@@ -136,7 +137,7 @@ describe Jobs::LocalizePosts do
     end
 
     it "scenario 4: skips post with locale 'en' if all localizations exist" do
-      post = Fabricate(:post, locale: "en")
+      post = Fabricate(:post, locale: "en", topic: self.post.topic)
       Fabricate(:post_localization, post: post, locale: "ja")
       Fabricate(:post_localization, post: post, locale: "de")
 
@@ -146,7 +147,7 @@ describe Jobs::LocalizePosts do
     end
 
     it "scenario 5: skips posts that already have localizations in similar language variant" do
-      post = Fabricate(:post, locale: "en")
+      post = Fabricate(:post, locale: "en", topic: self.post.topic)
       Fabricate(:post_localization, post: post, locale: "ja_JP")
       Fabricate(:post_localization, post: post, locale: "de_DE")
 
@@ -156,7 +157,7 @@ describe Jobs::LocalizePosts do
     end
 
     it "scenario 6: skips posts with variant 'en_GB' when localizations for ja/de exist" do
-      post = Fabricate(:post, locale: "en_GB")
+      post = Fabricate(:post, locale: "en_GB", topic: self.post.topic)
       Fabricate(:post_localization, post: post, locale: "ja_JP")
       Fabricate(:post_localization, post: post, locale: "de_DE")
 
@@ -188,12 +189,13 @@ describe Jobs::LocalizePosts do
     end
   end
 
-  describe "with public content limitation" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-    fab!(:private_post) { Fabricate(:post, topic: private_topic, locale: "es") }
-
-    fab!(:public_post) { Fabricate(:post, locale: "es") }
+  describe "with target categories" do
+    fab!(:target_category, :category)
+    fab!(:non_target_category, :category)
+    fab!(:target_topic) { Fabricate(:topic, category: target_category) }
+    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category) }
+    fab!(:target_post) { Fabricate(:post, topic: target_topic, locale: "es") }
+    fab!(:non_target_post) { Fabricate(:post, topic: non_target_topic, locale: "es") }
 
     fab!(:personal_pm_topic, :private_message_topic)
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic, locale: "es") }
@@ -205,20 +207,21 @@ describe Jobs::LocalizePosts do
     before do
       SiteSetting.default_locale = "ja"
       SiteSetting.content_localization_supported_locales = "ja"
+      SiteSetting.ai_translation_target_categories = target_category.id.to_s
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is true" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    context "when pm_translation_scope is none" do
+      before { SiteSetting.ai_translation_personal_messages = "none" }
 
-      it "only processes posts from public categories" do
+      it "only processes posts from target categories" do
         DiscourseAi::Translation::PostLocalizer
           .expects(:localize)
-          .with(public_post, "ja", has_entries(llm_model: anything))
+          .with(target_post, "ja", has_entries(llm_model: anything))
           .once
 
         DiscourseAi::Translation::PostLocalizer
           .expects(:localize)
-          .with(private_post, any_parameters)
+          .with(non_target_post, any_parameters)
           .never
 
         DiscourseAi::Translation::PostLocalizer
@@ -234,18 +237,18 @@ describe Jobs::LocalizePosts do
       end
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is false" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = false }
+    context "when pm_translation_scope is group" do
+      before { SiteSetting.ai_translation_personal_messages = "group" }
 
-      it "processes public posts and group PMs but not personal PMs" do
+      it "processes target posts and group PMs but not personal PMs" do
         DiscourseAi::Translation::PostLocalizer
           .expects(:localize)
-          .with(public_post, "ja", has_entries(llm_model: anything))
+          .with(target_post, "ja", has_entries(llm_model: anything))
           .once
         DiscourseAi::Translation::PostLocalizer
           .expects(:localize)
-          .with(private_post, "ja", has_entries(llm_model: anything))
-          .once
+          .with(non_target_post, any_parameters)
+          .never
 
         DiscourseAi::Translation::PostLocalizer
           .expects(:localize)
@@ -305,8 +308,8 @@ describe Jobs::LocalizePosts do
 
   describe "LlmModel caching" do
     it "caches the LlmModel and reuses it for all posts in a batch" do
-      post_1 = Fabricate(:post, locale: "es")
-      post_2 = Fabricate(:post, locale: "es")
+      post_1 = Fabricate(:post, locale: "es", topic: post.topic)
+      post_2 = Fabricate(:post, locale: "es", topic: post.topic)
       SiteSetting.content_localization_supported_locales = "ja"
 
       # Track how many times LlmModel.find_by is called

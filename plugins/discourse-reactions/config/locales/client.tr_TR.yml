@@ -21,7 +21,7 @@ tr_TR:
           one: "%{reaction}: %{count} kullanıcı"
           other: "%{reaction}: %{count} kullanıcı"
       reaction:
-        forbidden: "Bu tepki çok uzun zaman önce oluşturuldu. Artık değiştirilemez veya kaldırılamaz."
+        forbidden: "Bu gönderiye yanıt veremez veya verdiğiniz yanıtı değiştiremezsiniz."
       picker:
         react_with: "Bu gönderiye şununla tepki verin: %{reaction}"
         cant_remove_reaction: "Artık tepkinizi kaldıramazsınız"

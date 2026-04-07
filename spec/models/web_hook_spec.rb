@@ -664,7 +664,7 @@ RSpec.describe WebHook do
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
       expect(payload["notification_level"]).to eq(group.default_notification_level)
-      expect(Time.zone.parse(payload["created_at"]).to_f).to be_within(0.001).of(now.to_f)
+      expect(Time.zone.parse(payload["created_at"])).to be_within_one_second_of(now)
     end
 
     it "should enqueue the right hooks for group user deletion" do

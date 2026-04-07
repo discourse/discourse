@@ -1266,6 +1266,14 @@ RSpec.describe Topic do
             expect(topic.allowed_groups.include?(admins)).to eq(false)
           end
 
+          it "sets has_messages to true on the invited group" do
+            group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone], has_messages: false)
+
+            topic.invite_group(topic.user, group)
+
+            expect(group.reload.has_messages).to eq(true)
+          end
+
           def set_state!(group, user, state)
             group
               .group_users
@@ -2458,6 +2466,14 @@ RSpec.describe Topic do
         )
 
         expect(Topic.for_digest(user, 1.year.ago)).to eq([])
+      end
+
+      it "doesn't return topics from ignored users" do
+        ignored_user = Fabricate(:user)
+        Fabricate(:topic, user: ignored_user, created_at: 1.minute.ago)
+        Fabricate(:ignored_user, user:, ignored_user:, expiring_at: 2.months.from_now)
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
       it "does return watched topics from muted categories" do

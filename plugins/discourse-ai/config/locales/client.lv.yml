@@ -118,6 +118,16 @@ lv:
         edit: "Labot"
         delete: "Dzēst"
         embedding: "Ieguldīšana"
+      mcp_servers:
+        name: "Vārds"
+        description: "Apraksts"
+        url: "URL"
+        enabled: "Ieslēgts"
+        save: "Saglabāt"
+        edit: "Labot"
+        delete: "Dzēst"
+        tools_modal:
+          required: "Nepieciešams"
       llms:
         display_name: "Vārds"
         save: "Saglabāt"

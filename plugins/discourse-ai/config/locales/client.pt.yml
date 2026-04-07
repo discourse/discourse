@@ -176,6 +176,9 @@ pt:
         user: Utilizador
         save: "Guardar"
         enabled: "Ativado?"
+        mcp_tools_modal:
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
         response_format:
@@ -214,6 +217,17 @@ pt:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporação"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrição"
+        url: "URL"
+        oauth_connect: "Associar"
+        enabled: "Ativado"
+        save: "Guardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        tools_modal:
+          required: "Necessário"
       llms:
         display_name: "Nome"
         provider: "Provedor"

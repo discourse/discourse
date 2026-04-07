@@ -321,31 +321,9 @@ const workflows = [
     handler: "log",
     matchId: /^discourse\.native-array-extensions\..+$/,
   },
-  // widget-related code should fail on all CI tests, including plugins and custom themes
-  {
-    handler: "throw",
-    matchId: "discourse.widgets-decommissioned",
-    env: "test",
-  },
-
   // CRITICAL DEPRECATIONS that should trigger admin warnings,
   // To keep warnings meaningful and prevent overflowing users with them,
   // we should only add values here after fixing core and official plugins
-  { handler: "notify-admin", matchId: "discourse.add-flag-property" },
-  { handler: "notify-admin", matchId: "discourse.add-header-panel" },
-  { handler: "notify-admin", matchId: "discourse.bootbox" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.childCategories" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.firstCategory" },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategories",
-  },
-  {
-    handler: "notify-admin",
-    matchId: "discourse.breadcrumbs.parentCategoriesSorted",
-  },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.parentCategory" },
-  { handler: "notify-admin", matchId: "discourse.breadcrumbs.secondCategory" },
   {
     handler: "notify-admin",
     matchId: "discourse.category-hashtags.categoryHashtagTriggerRule",
@@ -368,14 +346,12 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.global.site-settings" },
   { handler: "notify-admin", matchId: "discourse.global.site" },
   { handler: "notify-admin", matchId: "discourse.global.user" },
-  { handler: "notify-admin", matchId: "discourse.header-widget-overrides" },
   {
     handler: "notify-admin",
     matchId: "discourse.icon-renderer-translatedtitle",
   },
   { handler: "notify-admin", matchId: "discourse.jquery-cookie" },
   { handler: "notify-admin", matchId: "discourse.markdown-it.whitelist" },
-  { handler: "notify-admin", matchId: "discourse.modal-controllers" },
   { handler: "notify-admin", matchId: "discourse.models-store" },
   {
     handler: "notify-admin",
@@ -391,10 +367,6 @@ const workflows = [
   },
   {
     handler: "notify-admin",
-    matchId: "discourse.post-stream-widget-overrides",
-  },
-  {
-    handler: "notify-admin",
     matchId: "discourse.post-stream.trigger-new-post",
   },
   { handler: "notify-admin", matchId: "discourse.pretty-text.registerOption" },
@@ -402,12 +374,8 @@ const workflows = [
   { handler: "notify-admin", matchId: "discourse.qunit.global-exists" },
   { handler: "notify-admin", matchId: "discourse.resolver-resolutions" },
   { handler: "notify-admin", matchId: "discourse.safari-hacks-disabled" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-discourse-plugin" },
-  { handler: "notify-admin", matchId: "discourse.script-tag-hbs" },
   { handler: "notify-admin", matchId: "discourse.user.resolved-timezone" },
   { handler: "notify-admin", matchId: "discourse.user.userOptions" },
-  { handler: "notify-admin", matchId: "discourse.widgets-decommissioned" },
-  { handler: "notify-admin", matchId: "discourse.widgets-end-of-life" },
   { handler: "notify-admin", matchId: "template-action" }, // removed in Ember 6.0, but we have a polyfill
 
   // used in system specs

@@ -8,6 +8,10 @@ export default class BackToForum extends Component {
   @service routeHistory;
 
   get href() {
+    if (this.args.href) {
+      return this.args.href;
+    }
+
     const lastForumUrl = this.routeHistory.history.find((url) => {
       return !url.startsWith("/admin") && !url.startsWith("/chat");
     });

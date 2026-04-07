@@ -23,21 +23,15 @@ module DiscourseTopicVoting
 
       voted = false
 
-      unless current_user.reached_voting_limit?
+      if current_user.can_vote?
         DiscourseTopicVoting::Vote.find_or_create_by(user: current_user, topic_id: topic_id)
 
         topic.update_vote_count
         voted = true
       end
 
-      obj = {
-        can_vote: !current_user.reached_voting_limit?,
-        vote_limit: current_user.vote_limit,
-        vote_count: topic.topic_vote_count&.votes_count&.to_i,
-        who_voted: who_voted(topic),
-        alert: current_user.alert_low_votes?,
-        votes_left: [(current_user.vote_limit - current_user.vote_count), 0].max,
-      }
+      obj = voting_response(topic)
+      obj[:alert] = current_user.alert_low_votes?
 
       if WebHook.active_web_hooks(:topic_upvote).exists?
         payload = {
@@ -62,13 +56,7 @@ module DiscourseTopicVoting
 
       topic.update_vote_count
 
-      obj = {
-        can_vote: !current_user.reached_voting_limit?,
-        vote_limit: current_user.vote_limit,
-        vote_count: topic.topic_vote_count&.votes_count&.to_i,
-        who_voted: who_voted(topic),
-        votes_left: [(current_user.vote_limit - current_user.vote_count), 0].max,
-      }
+      obj = voting_response(topic)
 
       if WebHook.active_web_hooks(:topic_unvote).exists?
         payload = {
@@ -84,6 +72,16 @@ module DiscourseTopicVoting
     end
 
     protected
+
+    def voting_response(topic)
+      {
+        can_vote: current_user.can_vote?,
+        vote_limit: current_user.vote_limit,
+        vote_count: topic.vote_count,
+        who_voted: who_voted(topic),
+        votes_left: current_user.votes_left,
+      }
+    end
 
     def who_voted(topic)
       return nil unless SiteSetting.topic_voting_show_who_voted

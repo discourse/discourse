@@ -6,12 +6,16 @@
 
 ru:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Проводник данных"
     errors:
       explorer:
         no_semicolons: "Удалите точку с запятой из запроса."
         dirty: "Вы должны сохранить запрос перед его выполнением."
     explorer:
-      default_query: "Домашнюю страницу"
+      default_query: "По умолчанию"
       default_query_notice: "Это запрос по умолчанию, SQL-код нельзя редактировать. Чтобы отредактировать SQL-код, создайте новый запрос."
       queries: "Запросы"
       query_created: "Запрос создан!"

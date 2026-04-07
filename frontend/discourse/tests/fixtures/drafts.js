@@ -17,7 +17,6 @@ const draftsFixtures = {
         title: null,
         category_id: 3,
         archetype: null,
-        truncated: true,
       },
       {
         excerpt:

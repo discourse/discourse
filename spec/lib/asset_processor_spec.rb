@@ -487,4 +487,18 @@ RSpec.describe AssetProcessor do
     expect(result["admin.js"]["name"]).to eq("admin")
     expect(result["admin.js"]["isEntry"]).to eq(true)
   end
+
+  it "errors on missing relative imports" do
+    mod_1 = <<~JS.chomp
+      import SomeModule from "../some-module";
+      console.log(SomeModule);
+    JS
+
+    expect do
+      AssetProcessor.new.rollup(
+        { "discourse/components/my-component.gjs" => mod_1 },
+        { pluginName: "my-plugin" },
+      )
+    end.to raise_error(AssetProcessor::TranspileError)
+  end
 end

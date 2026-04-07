@@ -230,6 +230,11 @@ class FinalDestination
       return
     end
 
+    if @stop_at_blocked_pages && blocked_domain?(@uri)
+      @status = :blocked_page
+      return
+    end
+
     @ignored.each do |ignored|
       if @uri&.hostname == ignored[:hostname] &&
            @uri.path.start_with?(ignored[:path].presence || "/")

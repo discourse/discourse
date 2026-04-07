@@ -6,6 +6,10 @@
 
 de:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Daten-Explorer"
     errors:
       explorer:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."

@@ -123,6 +123,17 @@ nb_NO:
         edit: "Rediger"
         delete: "Slett"
         embedding: "Innbygging"
+      mcp_servers:
+        name: "Navn"
+        description: "Beskrivelse"
+        url: "URL"
+        oauth_connect: "Koble til"
+        enabled: "Aktivert"
+        save: "Lagre"
+        edit: "Rediger"
+        delete: "Slett"
+        tools_modal:
+          required: "Påkrevd"
       llms:
         display_name: "Navn"
         provider: "Tilbyder"

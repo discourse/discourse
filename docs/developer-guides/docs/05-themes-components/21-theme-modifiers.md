@@ -10,7 +10,7 @@ Introducing: theme modifiers :partying_face:
 
 They are specified using the `modifiers` key in your theme's `about.json` file.
 
-For a 100% up-to-date list of modifiers, check the database schema at the bottom of [`theme_modifier_set.rb`](https://github.com/discourse/discourse/blob/master/app/models/theme_modifier_set.rb), but here's a quick summary of what we have so far:
+For a 100% up-to-date list of modifiers, check the database schema at the bottom of [`theme_modifier_set.rb`](https://github.com/discourse/discourse/blob/main/app/models/theme_modifier_set.rb), but here's a quick summary of what we have so far:
 
 - `serialize_topic_excerpts` **boolean** (default false) - always include excerpts when serializing topic lists
 
