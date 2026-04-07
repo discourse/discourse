@@ -7,7 +7,6 @@ class GroupUser < ActiveRecord::Base
   before_create :set_notification_level
   after_destroy :grant_other_available_title
   after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
-  after_save :update_title
 
   after_save :set_primary_group
 
@@ -17,6 +16,7 @@ class GroupUser < ActiveRecord::Base
 
   after_commit :increase_group_user_count, on: [:create]
   after_commit :decrease_group_user_count, on: [:destroy]
+
   after_commit :sync_via_manager, on: %i[create destroy]
 
   def self.notification_levels
@@ -106,18 +106,6 @@ class GroupUser < ActiveRecord::Base
   def grant_other_available_title
     if group.title.present? && group.title == user.title
       user.update_attribute(:title, user.next_best_title)
-    end
-  end
-
-  def update_title
-    if group.title.present?
-      DB.exec(
-        "
-        UPDATE users SET title = :title
-        WHERE (title IS NULL OR title = '') AND id = :id",
-        id: user_id,
-        title: group.title,
-      )
     end
   end
 

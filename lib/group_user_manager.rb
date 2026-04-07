@@ -55,7 +55,13 @@ class GroupUserManager
     removed_user_ids
   end
 
+  # Original side effects:
+  # :set_notification_level
+  # :update_title, :set_primary_group, :grant_trust_level
+  # :set_category_notifications, :set_tag_notifications
+  # :increase_group_user_count
   def sync_add_side_effects(added_user_ids)
+    update_title(added_user_ids)
   end
 
   def sync_removal_side_effects(removed_user_ids)
@@ -118,9 +124,7 @@ class GroupUserManager
         User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
       end
 
-      if @group.title.present?
-        User.where(id: added_user_ids, title: [nil, ""]).update_all(title: @group.title)
-      end
+      update_title(added_user_ids)
 
       Group.update_counters(@group.id, user_count: added_user_ids.size)
     end
@@ -220,6 +224,12 @@ class GroupUserManager
         payload: webhook_payload[:payload],
         group_ids: [@group.id],
       )
+    end
+  end
+
+  def update_title(added_user_ids)
+    if @group.title.present?
+      User.where(id: added_user_ids, title: [nil, ""]).update_all(title: @group.title)
     end
   end
 end
