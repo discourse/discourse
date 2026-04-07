@@ -221,5 +221,46 @@ RSpec.describe "Message notifications - mobile", mobile: true do
         end
       end
     end
+
+    context "when viewing a channel" do
+      fab!(:channel_1, :category_channel)
+      fab!(:channel_2, :category_channel)
+      fab!(:user_1, :user)
+
+      before do
+        channel_1.add(current_user)
+        channel_1.add(user_1)
+        channel_2.add(current_user)
+        channel_2.add(user_1)
+
+        Jobs.run_immediately!
+      end
+
+      it "shows back button urgent indicator for mentions in other channels" do
+        chat_page.visit_channel(channel_1)
+
+        create_message(channel_2, user: user_1, message: "hey @#{current_user.username}")
+
+        expect(page).to have_css(".c-navbar__back-button .chat-channel-unread-indicator.-urgent")
+      end
+
+      it "shows back button unread indicator for messages in other channels" do
+        chat_page.visit_channel(channel_1)
+
+        create_message(channel_2, user: user_1)
+
+        expect(page).to have_css(
+          ".c-navbar__back-button .chat-channel-unread-indicator:not(.-urgent)",
+        )
+      end
+
+      it "does not show back button indicator for current channel unreads" do
+        create_message(channel_1, user: user_1, message: "hey @#{current_user.username}")
+
+        chat_page.visit_channel(channel_1)
+
+        expect(page).to have_no_css(".c-navbar__back-button .chat-channel-unread-indicator")
+      end
+    end
   end
 end
