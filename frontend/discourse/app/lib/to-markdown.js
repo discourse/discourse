@@ -87,6 +87,6 @@ export default async function toMarkdown(html) {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error("toMarkdown failed:", e);
-    throw e;
+    return "";
   }
 }
