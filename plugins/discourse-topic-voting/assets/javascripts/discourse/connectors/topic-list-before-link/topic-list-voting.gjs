@@ -1,18 +1,17 @@
+import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import routeAction from "discourse/helpers/route-action";
 import VoteBox from "../../components/vote-box";
 
-const siteSettings = service();
+export default class TopicListVoting extends Component {
+  @service siteSettings;
 
-<template>
-  {{#if siteSettings.topic_voting_show_vote_in_topic_list}}
-    {{#if @outletArgs.topic.can_vote}}
-      <div class="voting list-voting">
-        <VoteBox
-          @topic={{@outletArgs.topic}}
-          @showLogin={{routeAction "showLogin"}}
-        />
-      </div>
+  <template>
+    {{#if this.siteSettings.topic_voting_show_vote_in_topic_list}}
+      {{#if @outletArgs.topic.can_vote}}
+        <div class="voting list-voting">
+          <VoteBox @topic={{@outletArgs.topic}} />
+        </div>
+      {{/if}}
     {{/if}}
-  {{/if}}
-</template>
+  </template>
+}

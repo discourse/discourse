@@ -18,10 +18,11 @@ function initialize(api) {
     }
   });
   api.addTrackedPostProperties("can_vote");
-  const router = api.container.lookup("service:router");
-  const siteSettings = api.container.lookup("service:site-settings");
   api.addTagsHtmlCallback(
     (topic) => {
+      const router = api.container.lookup("service:router");
+      const siteSettings = api.container.lookup("service:site-settings");
+
       if (
         !topic.can_vote ||
         router.currentRouteName?.startsWith("topic.") ||

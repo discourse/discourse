@@ -1,4 +1,3 @@
-import routeAction from "discourse/helpers/route-action";
 import VoteBox from "../../components/vote-box";
 
 <template>
@@ -6,10 +5,7 @@ import VoteBox from "../../components/vote-box";
     {{#if @outletArgs.model.postStream.loaded}}
       {{#if @outletArgs.model.postStream.firstPostPresent}}
         <div class="voting title-voting">
-          <VoteBox
-            @topic={{@outletArgs.model}}
-            @showLogin={{routeAction "showLogin"}}
-          />
+          <VoteBox @topic={{@outletArgs.model}} />
         </div>
       {{/if}}
     {{/if}}
