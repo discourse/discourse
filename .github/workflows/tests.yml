@@ -277,7 +277,20 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake 'plugin:qunit[*]'
+        run: |
+          for plugin in plugins/*/; do
+            plugin_name=$(basename "$plugin")
+            if [ ! -d "$plugin/test" ]; then
+              echo "--- Skipping $plugin_name (no test directory)"
+              continue
+            fi
+            echo "--- Testing $plugin_name"
+            if ! bin/rake "plugin:qunit[$plugin_name]"; then
+              echo "--- CRASH OR FAILURE in $plugin_name (exit $?)"
+              exit 1
+            fi
+            echo "--- PASSED $plugin_name"
+          done
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
