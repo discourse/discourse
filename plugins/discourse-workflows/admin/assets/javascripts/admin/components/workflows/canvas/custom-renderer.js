@@ -226,16 +226,19 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
       this._measurePath.setAttribute("d", pathD);
       const len = this._measurePath.getTotalLength();
 
-      const t = 0.85;
-      const pos = this._measurePath.getPointAtLength(len * t);
-      const near = this._measurePath.getPointAtLength(len * t + 1);
+      const socketRadius = 6;
+      const arrowLen = 10;
+      const tip = this._measurePath.getPointAtLength(len - socketRadius);
+      const base = this._measurePath.getPointAtLength(
+        len - socketRadius - arrowLen
+      );
       const angle =
-        Math.atan2(near.y - pos.y, near.x - pos.x) * (180 / Math.PI);
+        Math.atan2(tip.y - base.y, tip.x - base.x) * (180 / Math.PI);
 
       const mid = this._measurePath.getPointAtLength(len / 2);
 
       return {
-        arrowTransform: `translate(${pos.x}, ${pos.y}) rotate(${angle})`,
+        arrowTransform: `translate(${tip.x}, ${tip.y}) rotate(${angle})`,
         toolbarX: mid.x - 24,
         toolbarY: mid.y - 11,
       };
