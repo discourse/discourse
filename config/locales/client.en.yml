@@ -610,8 +610,9 @@ en:
 
     bookmarked:
       title: "Bookmark"
-      edit_bookmark: "Edit bookmark"
-      edit_bookmarks: "Edit bookmarks"
+      edit_bookmark:
+        one: "Edit bookmark"
+        other: "Edit bookmarks"
       delete_bookmarks: "Delete all bookmarks"
       help:
         bookmark: "Click to bookmark this topic"

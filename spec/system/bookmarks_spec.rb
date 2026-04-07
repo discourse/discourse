@@ -166,7 +166,7 @@ describe "Bookmarking posts and topics" do
       topic_page.visit_topic(topic)
 
       expect(bookmark_menu).to have_topic_bookmark_button_label(
-        I18n.t("js.bookmarked.edit_bookmarks"),
+        I18n.t("js.bookmarked.edit_bookmark", count: 2),
       )
 
       bookmark_menu.click_topic_bookmark_button

@@ -76,10 +76,10 @@ export default class TopicBookmarksMenu extends Component {
       return;
     }
 
-    if (this.allBookmarks.length > 1) {
-      return i18n("bookmarked.edit_bookmarks");
-    } else if (this.allBookmarks.length === 1) {
-      return i18n("bookmarked.edit_bookmark");
+    if (this.allBookmarks.length >= 1) {
+      return i18n("bookmarked.edit_bookmark", {
+        count: this.allBookmarks.length,
+      });
     } else {
       return i18n("bookmarked.title");
     }
@@ -104,14 +104,16 @@ export default class TopicBookmarksMenu extends Component {
       const bm = this.allBookmarks[0];
       if (bm.reminder_at) {
         return i18n("bookmarks.created_with_reminder_generic", {
-          date: new BookmarkFormData(bm).formattedReminder(this._timezone),
+          date: new BookmarkFormData(bm).formattedReminder(this.#timezone),
           name: bm.name || "",
         });
       }
       return i18n("bookmarks.created_generic", { name: bm.name || "" });
     }
 
-    return i18n("bookmarked.edit_bookmarks");
+    return i18n("bookmarked.edit_bookmarks", {
+      count: this.allBookmarks.length,
+    });
   }
 
   get buttonClasses() {
@@ -135,10 +137,6 @@ export default class TopicBookmarksMenu extends Component {
     }
 
     return classes.join(" ");
-  }
-
-  get _timezone() {
-    return this.currentUser?.user_option?.timezone || moment.tz.guess();
   }
 
   @action
@@ -178,7 +176,7 @@ export default class TopicBookmarksMenu extends Component {
         model: {
           bookmark: formData,
           afterSave: (savedData) => {
-            this._syncBookmark(savedData.saveData);
+            this.#syncBookmark(savedData.saveData);
             this.topic.set("bookmarked", true);
             this.topic.incrementProperty("bookmarksWereChanged");
             this.topic.appEvents?.trigger(
@@ -207,7 +205,7 @@ export default class TopicBookmarksMenu extends Component {
         model: {
           bookmark: formData,
           afterSave: (savedData) => {
-            this._syncBookmark(savedData.saveData);
+            this.#syncBookmark(savedData.saveData);
             this.topic.set("bookmarked", true);
             this.topic.incrementProperty("bookmarksWereChanged");
 
@@ -219,7 +217,7 @@ export default class TopicBookmarksMenu extends Component {
             }
           },
           afterDelete: (response, bookmarkId) => {
-            this._removeBookmark(bookmark, bookmarkId, response);
+            this.#removeBookmark(bookmark, bookmarkId, response);
           },
         },
       });
@@ -232,7 +230,7 @@ export default class TopicBookmarksMenu extends Component {
   async onRemoveBookmark(bookmark) {
     try {
       const response = await this.bookmarkApi.delete(bookmark.id);
-      this._removeBookmark(bookmark, bookmark.id, response);
+      this.#removeBookmark(bookmark, bookmark.id, response);
       this.toasts.success({
         duration: "short",
         data: {
@@ -288,17 +286,19 @@ export default class TopicBookmarksMenu extends Component {
     });
   }
 
-  _syncBookmark(data) {
+  #syncBookmark(data) {
     const existing = this.topic.bookmarks.find((b) => b.id === data.id);
     if (existing) {
-      existing.reminder_at = data.reminder_at;
-      existing.name = data.name;
-      existing.auto_delete_preference = data.auto_delete_preference;
+      existing.setProperties({
+        reminder_at: data.reminder_at,
+        name: data.name,
+        auto_delete_preference: data.auto_delete_preference,
+      });
     }
     this.topic.incrementProperty("bookmarksWereChanged");
   }
 
-  _removeBookmark(bookmark, bookmarkId, response) {
+  #removeBookmark(bookmark, bookmarkId, response) {
     if (bookmark.bookmarkable_type === "Post") {
       const post = this.topic.postStream?.findLoadedPost(
         bookmark.bookmarkable_id
@@ -308,6 +308,10 @@ export default class TopicBookmarksMenu extends Component {
       }
     }
     this.topic.removeBookmark(bookmarkId);
+  }
+
+  get #timezone() {
+    return this.currentUser?.user_option?.timezone || moment.tz.guess();
   }
 
   <template>
@@ -401,15 +405,28 @@ export default class TopicBookmarksMenu extends Component {
               {{#if this.topicBookmark}}
                 <dropdown.divider />
                 <dropdown.item
-                  class="bookmark-menu__row -edit"
+                  class={{concatClass
+                    "bookmark-menu__row -edit"
+                    (if this.topicBookmark.name "--has-name")
+                  }}
                   data-menu-option-id="edit-topic-bookmark"
                 >
                   <DButton
                     @icon="pencil"
-                    @label="bookmarks.edit_topic_bookmark"
                     @action={{this.onEditTopicBookmark}}
                     class="bookmark-menu__row-btn btn-transparent"
-                  />
+                  >
+                    <span class="bookmark-menu__row-texts">
+                      <span class="bookmark-menu__row-label">
+                        {{i18n "bookmarks.edit_topic_bookmark"}}
+                      </span>
+                      {{#if this.topicBookmark.name}}
+                        <span class="bookmark-menu__row-description">
+                          {{this.topicBookmark.name}}
+                        </span>
+                      {{/if}}
+                    </span>
+                  </DButton>
                 </dropdown.item>
                 <dropdown.item
                   class="bookmark-menu__row --remove"
@@ -417,8 +434,8 @@ export default class TopicBookmarksMenu extends Component {
                 >
                   <DButton
                     @icon="trash-can"
-                    @label="bookmarks.delete_topic_bookmark"
                     @action={{this.onRemoveTopicBookmark}}
+                    @label="bookmarks.delete_topic_bookmark"
                     class="bookmark-menu__row-btn --danger"
                   />
                 </dropdown.item>

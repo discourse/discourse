@@ -30,7 +30,7 @@ export default <template>
 
       <DButton
         @action={{@controller.toggleBookmark}}
-        @label={{@controller.bookmarkLabel}}
+        @translatedLabel={{@controller.bookmarkLabel}}
         @icon={{@controller.bookmarkIcon}}
         class={{@controller.bookmarkClassName}}
       />
