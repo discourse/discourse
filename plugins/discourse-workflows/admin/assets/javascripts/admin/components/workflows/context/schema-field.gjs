@@ -56,8 +56,8 @@ export default class SchemaField extends Component {
     <li
       class={{concatClass
         "workflows-schema-field"
-        (if this.hasChildren "--has-children")
-        (if this.collapsed "--collapsed")
+        (if this.hasChildren "has-children")
+        (if this.collapsed "is-collapsed")
       }}
     >
       <div
@@ -89,7 +89,7 @@ export default class SchemaField extends Component {
       </div>
 
       {{#if (and this.hasChildren (not this.collapsed))}}
-        <ul class="workflows-schema-field-list --nested">
+        <ul class="workflows-schema-field-list is-nested">
           {{#each @field.children as |child|}}
             <SchemaField
               @field={{child}}

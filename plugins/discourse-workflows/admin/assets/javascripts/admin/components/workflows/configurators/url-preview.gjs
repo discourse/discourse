@@ -59,7 +59,7 @@ export default class UrlPreview extends Component {
       <div
         class={{concatClass
           "workflows-url-preview"
-          (if this.copied "--copied")
+          (if this.copied "is-copied")
         }}
         title={{i18n "discourse_workflows.webhook.click_to_copy"}}
         {{on "click" this.copy}}

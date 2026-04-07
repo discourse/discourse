@@ -758,7 +758,7 @@ export default class WorkflowCanvas extends Component {
       <label
         class={{concatClass
           "workflows-canvas__status"
-          (if this.workflowEnabled "--published" "--draft")
+          (if this.workflowEnabled "is-published" "is-draft")
         }}
       >
         {{i18n "discourse_workflows.enabled"}}

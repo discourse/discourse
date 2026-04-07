@@ -139,11 +139,11 @@ export default class WorkflowsIndex extends Component {
         </td>
         <td class="workflows-index__status">
           {{#if workflow.enabled}}
-            <span class="workflows-index__badge --enabled">
+            <span class="workflows-index__badge is-enabled">
               {{i18n "discourse_workflows.enabled"}}
             </span>
           {{else}}
-            <span class="workflows-index__badge --disabled">
+            <span class="workflows-index__badge is-disabled">
               {{i18n "discourse_workflows.disabled"}}
             </span>
           {{/if}}

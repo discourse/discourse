@@ -19,7 +19,7 @@
       color: var(--primary);
     }
 
-    &.--active {
+    &.is-active {
       color: var(--tertiary);
       border-bottom-color: var(--tertiary);
     }
@@ -82,11 +82,11 @@
       border-radius: 50%;
     }
 
-    &.--enabled::before {
+    &.is-enabled::before {
       background: var(--success);
     }
 
-    &.--disabled::before {
+    &.is-disabled::before {
       background: var(--highlight);
     }
   }

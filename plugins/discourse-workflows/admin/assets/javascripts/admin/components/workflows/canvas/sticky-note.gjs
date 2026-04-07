@@ -187,7 +187,10 @@ export default class StickyNote extends Component {
   <template>
     {{! template-lint-disable no-pointer-down-event-binding no-invalid-interactive }}
     <div
-      class={{concatClass "workflow-sticky-note" (if @isSelected "--selected")}}
+      class={{concatClass
+        "workflow-sticky-note"
+        (if @isSelected "is-selected")
+      }}
       style={{this.style}}
       {{on "pointerdown" this.handlePointerDown}}
       {{on "dblclick" this.startEditing}}
@@ -209,7 +212,7 @@ export default class StickyNote extends Component {
                   type="button"
                   class={{concatClass
                     "workflow-sticky-note__color-swatch"
-                    (if (eq @note.color colorOpt.name) "--active")
+                    (if (eq @note.color colorOpt.name) "is-active")
                   }}
                   style={{swatchStyle colorOpt.bg}}
                   title={{colorOpt.name}}

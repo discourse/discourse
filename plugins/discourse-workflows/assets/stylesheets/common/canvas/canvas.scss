@@ -138,11 +138,11 @@
     // stylelint-disable-next-line declaration-no-important
     font-weight: normal !important;
 
-    &.--published {
+    &.is-published {
       color: var(--success);
     }
 
-    &.--draft {
+    &.is-draft {
       color: var(--primary-400);
     }
   }
@@ -256,7 +256,7 @@
     border-color: var(--primary-medium);
   }
 
-  &.--selected &__icon-block {
+  &.is-selected &__icon-block {
     border-color: var(--tertiary);
     box-shadow: 0 0 0 1px var(--tertiary);
   }
@@ -340,7 +340,7 @@
     gap: var(--space-1);
   }
 
-  &.--branching &__outputs {
+  &.is-branching &__outputs {
     top: calc(50% - (var(--socket-size) + 4px));
     gap: var(--space-2);
   }
@@ -424,7 +424,7 @@
     pointer-events: stroke;
     cursor: pointer;
 
-    &:hover ~ .workflow-connection__visible:not(.--selected) {
+    &:hover ~ .workflow-connection__visible:not(.is-selected) {
       stroke: var(--primary-medium);
       stroke-width: 2;
     }
@@ -435,7 +435,7 @@
     opacity: 0;
     transition: opacity 0.15s;
 
-    &.--visible {
+    &.is-visible {
       pointer-events: all;
       opacity: 1;
 

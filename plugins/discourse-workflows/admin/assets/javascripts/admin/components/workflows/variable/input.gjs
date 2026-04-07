@@ -203,7 +203,7 @@ export default class VariableInput extends Component {
     <div
       class={{concatClass
         "workflows-variable-input"
-        (if this.isDragOver "--drag-over")
+        (if this.isDragOver "is-drag-over")
       }}
       contenteditable="true"
       role="textbox"

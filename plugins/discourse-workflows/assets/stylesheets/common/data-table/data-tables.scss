@@ -1,12 +1,14 @@
-.workflows-data-tables-manager__name-link {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: var(--tertiary);
+.workflows-data-tables-manager {
+  &__name-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--tertiary);
 
-  &:hover {
-    text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -173,7 +175,7 @@
     outline: none !important;
     padding: var(--space-2) var(--space-3);
 
-    &.--null {
+    &.is-null {
       color: var(--primary-low-mid);
       font-style: italic;
     }

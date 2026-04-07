@@ -126,7 +126,7 @@ export default class CellEditor extends Component {
           type="button"
           class={{concatClass
             "workflows-data-table-viewer__cell-value"
-            (if this.isPlaceholder "--null")
+            (if this.isPlaceholder "is-null")
           }}
           {{on "click" this.startEditing}}
         >{{this.displayValue}}</button>
