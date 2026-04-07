@@ -13,6 +13,17 @@ export default class SchemaField extends Component {
     return this.args.field.children?.length > 0;
   }
 
+  typeIcon(type) {
+    let icons = {
+      string: "discourse-text",
+      object: "cube",
+      boolean: "far-square-check",
+      integer: "hashtag",
+      array: "layer-group",
+    };
+    return icons[type];
+  }
+
   @action
   toggleChildren(event) {
     event.preventDefault();
@@ -42,11 +53,6 @@ export default class SchemaField extends Component {
         (if this.hasChildren "--has-children")
         (if this.collapsed "--collapsed")
       }}
-      draggable={{if
-        (and @draggable this.fieldId (not this.hasChildren))
-        "true"
-      }}
-      {{on "dragstart" this.handleDragStart}}
     >
       <div
         class="workflows-schema-field__row"
@@ -57,9 +63,21 @@ export default class SchemaField extends Component {
             {{icon (if this.collapsed "angle-right" "angle-down")}}
           </span>
         {{/if}}
-        <span class="workflows-schema-field__key">{{@field.key}}</span>
-        <span class="workflows-schema-field__type" data-type={{@field.type}}>
-          {{@field.type}}
+
+        <span
+          class="workflows-schema-field__key"
+          draggable={{if
+            (and @draggable this.fieldId (not this.hasChildren))
+            "true"
+          }}
+          {{on "dragstart" this.handleDragStart}}
+        >
+          <span class="workflows-schema-field__key-icon">
+            {{icon (this.typeIcon @field.type)}}
+          </span>
+          <span class="workflows-schema-field__key-title">
+            {{@field.key}}
+          </span>
         </span>
       </div>
 
