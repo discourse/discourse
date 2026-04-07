@@ -23,6 +23,10 @@ module PageObjects
         has_css?("#topic-footer-buttons .bookmark-menu__trigger", text: text)
       end
 
+      def has_topic_bookmark_button_title?(title)
+        has_css?("#topic-footer-buttons .bookmark-menu__trigger[title='#{title}']")
+      end
+
       def topic_bookmarks_menu_open?
         has_css?(".topic-bookmarks-menu-content")
       end

@@ -111,7 +111,7 @@ export default class TopicBookmarksMenu extends Component {
       return i18n("bookmarks.created_generic", { name: bm.name || "" });
     }
 
-    return i18n("bookmarked.edit_bookmarks", {
+    return i18n("bookmarked.edit_bookmark", {
       count: this.allBookmarks.length,
     });
   }

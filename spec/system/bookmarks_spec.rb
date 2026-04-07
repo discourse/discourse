@@ -151,7 +151,7 @@ describe "Bookmarking posts and topics" do
       topic_page.visit_topic(topic)
 
       expect(bookmark_menu).to have_topic_bookmark_button_label(
-        I18n.t("js.bookmarked.edit_bookmark"),
+        I18n.t("js.bookmarked.edit_bookmark", count: 1),
       )
 
       bookmark_menu.click_topic_bookmark_button
@@ -160,12 +160,15 @@ describe "Bookmarking posts and topics" do
       expect(page).to have_css(".topic-bookmarks-menu-content [data-menu-option-id='delete']")
     end
 
-    it "shows plural label and grouped menu for multiple bookmarks" do
+    it "shows plural label, correct tooltip, and grouped menu for multiple bookmarks" do
       Fabricate(:bookmark, bookmarkable: topic, user: current_user)
       Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
       topic_page.visit_topic(topic)
 
       expect(bookmark_menu).to have_topic_bookmark_button_label(
+        I18n.t("js.bookmarked.edit_bookmark", count: 2),
+      )
+      expect(bookmark_menu).to have_topic_bookmark_button_title(
         I18n.t("js.bookmarked.edit_bookmark", count: 2),
       )
 
@@ -206,7 +209,7 @@ describe "Bookmarking posts and topics" do
       expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
 
       expect(bookmark_menu).to have_topic_bookmark_button_label(
-        I18n.t("js.bookmarked.edit_bookmark"),
+        I18n.t("js.bookmarked.edit_bookmark", count: 1),
       )
     end
   end
