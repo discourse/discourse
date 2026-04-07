@@ -36,8 +36,9 @@ module PageObjects
         paths = []
         Zip::File.open(file) do |zip_file|
           zip_file.each do |f|
-            f.extract(f.name, destination_directory: Downloads::FOLDER)
-            paths << File.join(Downloads::FOLDER, f.name)
+            path = File.join(Downloads::FOLDER, f.name)
+            zip_file.extract(f, path)
+            paths << path
           end
         end
 

@@ -144,15 +144,6 @@ describe ContentLocalization do
       expect(ContentLocalization.show_translated_category?(category, scope)).to be true
     end
 
-    it "returns false when category locale does not match user locale but cookie set to show original" do
-      SiteSetting.content_localization_enabled = true
-      category.update!(locale: "ja")
-      I18n.locale = "de"
-      scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
-
-      expect(ContentLocalization.show_translated_category?(category, scope)).to be false
-    end
-
     it "returns false when category locale is nil" do
       SiteSetting.content_localization_enabled = true
       category.update!(locale: nil)
@@ -199,12 +190,6 @@ describe ContentLocalization do
       it "returns false when tag is in user locale" do
         tag.update!(locale: I18n.locale)
         scope = create_scope
-
-        expect(ContentLocalization.show_translated_tag?(tag, scope)).to be false
-      end
-
-      it "returns false when show_original? is true" do
-        scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
 
         expect(ContentLocalization.show_translated_tag?(tag, scope)).to be false
       end

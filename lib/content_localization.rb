@@ -33,7 +33,7 @@ class ContentLocalization
   # @return [Boolean]
   def self.show_translated_category?(category, scope)
     SiteSetting.content_localization_enabled && category.locale.present? &&
-      !category.in_user_locale? && !show_original?(scope)
+      !category.in_user_locale?
   end
 
   # This method returns true when we should try to show the translated tag.
@@ -41,7 +41,6 @@ class ContentLocalization
   # @param scope [Object] The serializer scope from which the method is called
   # @return [Boolean]
   def self.show_translated_tag?(tag, scope)
-    SiteSetting.content_localization_enabled && tag.locale.present? && !tag.in_user_locale? &&
-      !show_original?(scope)
+    SiteSetting.content_localization_enabled && tag.locale.present? && !tag.in_user_locale?
   end
 end

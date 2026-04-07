@@ -6,6 +6,10 @@
 
 tr_TR:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Veri Gezgini"
     errors:
       explorer:
         no_semicolons: "Noktalı virgülleri sorgudan kaldırın."
@@ -86,6 +90,12 @@ tr_TR:
           invalid_time: "%{time} geçersiz bir zamandır"
     group:
       reports: "Raporlar"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            data_explorer:
+              run_queries: "Veri Gezgini sorgularını çalıştırın. Sorgu kimliklerini belirterek API anahtarını bir sorgu kümesiyle sınırlandırın."
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

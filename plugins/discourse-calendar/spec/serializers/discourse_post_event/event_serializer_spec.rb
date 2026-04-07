@@ -90,6 +90,43 @@ describe DiscoursePostEvent::EventSerializer do
       end
     end
 
+    context "when event is recurring with show_local_time" do
+      fab!(:post_recurring) { Fabricate(:post, topic:) }
+      fab!(:recurring_event) do
+        Fabricate(
+          :event,
+          post: post_recurring,
+          original_starts_at: 2.weeks.ago.change(hour: 14, min: 0, sec: 0),
+          original_ends_at: 2.weeks.ago.change(hour: 15, min: 0, sec: 0),
+          recurrence: "every_week",
+          timezone: "UTC",
+          show_local_time: true,
+        )
+      end
+
+      before { recurring_event.set_next_date }
+
+      it "serializes starts_at using the next occurrence" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(
+            recurring_event.reload,
+            scope: Guardian.new,
+          ).as_json
+        starts_at = Time.parse(json[:event][:starts_at])
+        expect(starts_at).to be > Time.current
+      end
+
+      it "serializes ends_at using the next occurrence" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(
+            recurring_event.reload,
+            scope: Guardian.new,
+          ).as_json
+        ends_at = Time.parse(json[:event][:ends_at])
+        expect(ends_at).to be > Time.current
+      end
+    end
+
     context "when event is all-day" do
       fab!(:post_all_day) { Fabricate(:post, topic: topic) }
       fab!(:all_day_event) do

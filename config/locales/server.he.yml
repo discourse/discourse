@@ -3222,47 +3222,9 @@ he:
     reviewable_queued_post_revise_and_reject:
       title: "משוב על הפוסט שלך"
       subject_template: "משוב על הפוסט שלך תחת %{topic_title}"
-      text_body_template: |
-        שלום %{username},
-
-        בדקנו את הפוסט שלך תחת [%{topic_title}](%{topic_url}) ויש לנו משוב בשבילך.
-
-        סיבה: %{reason}
-
-        משוב: %{feedback}
-
-        אפשר לערוך את הפוסט המקורי שלך להלן ולהגיש אותו מחדש כדי לערוך את השינויים המוצעים או להגיב להודעה הזאת אם יש לך שאלות.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        תודה,
-        מפקחי %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "משוב על הנושא שלך"
       subject_template: 'משוב על נושא חדש שכותרתו „%{topic_title}”'
-      text_body_template: |
-        שלום %{username},
-
-        בדקנו את הנושא החדש שלך עם הכותרת „%{topic_title}’ ויש לנו משוב עבורך.
-
-        סיבה: %{reason}
-
-        משוב: %{feedback}
-
-        אפשר לערוך את הפוסט המקורי של הנושא שלך להלן ולהגיש אותו מחדש כדי לערוך את השינויים המוצעים או להגיב להודעה זו אם יש לך שאלות.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        תודה,
-        מפקחי %{site_name}
     post_hidden_again:
       title: "הפוסט הוסתר שוב"
       subject_template: "הפוסט הוסתר עקב סימוני דגל מהקהילה, הסגל קיבל הודעה"

@@ -375,7 +375,7 @@ module SiteSettingExtension
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
-        plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
+        plugins[setting_name] && !Discourse.plugins_by_name[plugins[setting_name]].configurable?
       end
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
@@ -386,7 +386,7 @@ module SiteSettingExtension
           # change settings use their resolved value (promotion status, admin override, etc.).
           is_hidden =
             !type_supervisor.dependencies[setting_name].all? do |dependency|
-              public_send(dependency)
+              respond_to?(dependency) && public_send(dependency)
             end
         end
 
