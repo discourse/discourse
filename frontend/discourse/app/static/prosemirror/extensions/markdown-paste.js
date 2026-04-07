@@ -3,20 +3,10 @@ const extension = {
   plugins({
     pmState: { Plugin },
     pmModel: { Fragment, Slice },
-    utils: { convertFromMarkdown },
+    utils: { convertFromMarkdown, splitNonEmptyLines, buildListNode },
   }) {
-    function splitNonEmptyLines(text) {
-      return text.split(/\r?\n/).filter((line) => line.trim().length > 0);
-    }
-
     function buildListSlice(schema, listType, lines) {
-      const listItems = lines.map((line) =>
-        schema.nodes.list_item.create(null, [
-          schema.nodes.paragraph.create(null, schema.text(line)),
-        ])
-      );
-      const listNode = schema.nodes[listType].create(null, listItems);
-
+      const listNode = buildListNode(schema, listType, lines);
       return Slice.maxOpen(Fragment.from(listNode));
     }
 

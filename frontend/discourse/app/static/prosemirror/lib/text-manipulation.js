@@ -17,23 +17,6 @@ import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
-function splitNonEmptyLines(text) {
-  return text.split(/\r?\n/).filter((line) => line.trim().length > 0);
-}
-
-function buildListNode(schema, listType, lines) {
-  const listItems = lines.map((line) =>
-    schema.nodes.list_item.create(null, [
-      schema.nodes.paragraph.create(
-        null,
-        line.length > 0 ? schema.text(line) : undefined
-      ),
-    ])
-  );
-
-  return listType.create(null, listItems);
-}
-
 function isPlainTextFragment(fragment, schema) {
   return fragment.content.every((node) => {
     if (node.isText) {
@@ -75,6 +58,8 @@ export default class ProsemirrorTextManipulation {
   state = trackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
+  splitNonEmptyLines;
+  buildListNode;
 
   constructor(
     owner,
@@ -83,6 +68,8 @@ export default class ProsemirrorTextManipulation {
       view,
       convertFromMarkdown,
       convertToMarkdown,
+      splitNonEmptyLines,
+      buildListNode,
       commands,
       customState,
     }
@@ -92,6 +79,8 @@ export default class ProsemirrorTextManipulation {
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.splitNonEmptyLines = splitNonEmptyLines;
+    this.buildListNode = buildListNode;
     this.commands = commands;
     this.customState = customState;
 
@@ -257,13 +246,13 @@ export default class ProsemirrorTextManipulation {
         "\n",
         "\n"
       );
-      const lines = splitNonEmptyLines(selectedText);
+      const lines = this.splitNonEmptyLines(selectedText);
 
       if (lines.length <= 1) {
         return false;
       }
 
-      const listNode = buildListNode(this.schema, targetType, lines);
+      const listNode = this.buildListNode(this.schema, targetType, lines);
 
       this.view.dispatch(
         state.tr.replaceSelectionWith(listNode).scrollIntoView()
