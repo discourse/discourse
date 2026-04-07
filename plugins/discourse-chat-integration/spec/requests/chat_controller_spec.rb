@@ -13,7 +13,21 @@ RSpec.describe "Chat Controller", type: :request do
   include_context "with dummy provider"
   include_context "with validated dummy provider"
 
-  before { SiteSetting.chat_integration_enabled = true }
+  before do
+    SiteSetting.chat_integration_enabled = true
+    SiteSetting.load_settings(
+      File.join(
+        Rails.root,
+        "plugins",
+        "discourse-chat-integration",
+        "spec",
+        "support",
+        "dummy_provider_site_setting.yml",
+      ),
+      plugin: "discourse-chat-integration",
+    )
+    SiteSetting.dummy_provider_enabled = true
+  end
 
   shared_examples "admin constraints" do |action, route|
     context "when user is not signed in" do
@@ -47,9 +61,10 @@ RSpec.describe "Chat Controller", type: :request do
 
         json = response.parsed_body
 
-        expect(json["providers"].size).to eq(2)
+        expect(json["enabled_providers"].size).to eq(1)
+        expect(json["available_providers"].size).to be > 0
 
-        expect(json["providers"].find { |h| h["name"] == "dummy" }).to eq(
+        expect(json["enabled_providers"].find { |h| h["name"] == "dummy" }).to eq(
           "name" => "dummy",
           "id" => "dummy",
           "channel_parameters" => [],
@@ -67,8 +82,7 @@ RSpec.describe "Chat Controller", type: :request do
       before { sign_in(admin) }
 
       it "enables the provider site setting" do
-        SiteSetting.chat_integration_enabled = false
-
+        SiteSetting.dummy_provider_enabled = false
         post "/admin/plugins/discourse-chat-integration/setup-provider",
              params: {
                provider: {
@@ -76,21 +90,23 @@ RSpec.describe "Chat Controller", type: :request do
                },
              },
              as: :json
-
         expect(response.status).to eq(200)
-        expect(SiteSetting.chat_integration_enabled).to eq(true)
+
+        expect(SiteSetting.dummy_provider_enabled).to eq(true)
       end
 
-      it "returns an error for unknown provider" do
-        post "/admin/plugins/discourse-chat-integration/setup-provider",
-             params: {
-               provider: {
-                 name: "nonexistent_provider",
+      context "when the provider is unknown" do
+        it "returns an error" do
+          post "/admin/plugins/discourse-chat-integration/setup-provider",
+               params: {
+                 provider: {
+                   name: "nonexistent_provider",
+                 },
                },
-             },
-             as: :json
+               as: :json
 
-        expect(response.status).to eq(422)
+          expect(response.status).to eq(422)
+        end
       end
     end
   end
