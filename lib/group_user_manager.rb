@@ -55,6 +55,12 @@ class GroupUserManager
     removed_user_ids
   end
 
+  def sync_add_side_effects(added_user_ids)
+  end
+
+  def sync_removal_side_effects(removed_user_ids)
+  end
+
   private
 
   def bulk_add_transaction(user_ids)

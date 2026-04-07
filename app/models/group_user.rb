@@ -17,6 +17,7 @@ class GroupUser < ActiveRecord::Base
 
   after_commit :increase_group_user_count, on: [:create]
   after_commit :decrease_group_user_count, on: [:destroy]
+  after_commit :sync_via_manager, on: %i[create destroy]
 
   def self.notification_levels
     NotificationLevels.all
@@ -200,6 +201,14 @@ class GroupUser < ActiveRecord::Base
 
   def decrease_group_user_count
     Group.decrement_counter(:user_count, self.group_id)
+  end
+
+  def sync_via_manager
+    if previously_new_record?
+      GroupUserManager.new(group).sync_add_side_effects([user_id])
+    else
+      GroupUserManager.new(group).sync_removal_side_effects([user_id])
+    end
   end
 
   def self.semantically_higher_notification_level_sql(new_col, existing_col)
