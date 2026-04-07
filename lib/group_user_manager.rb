@@ -58,6 +58,8 @@ class GroupUserManager
     update_title(added_user_ids)
     set_primary_group(added_user_ids)
     grant_trust_level(added_user_ids)
+    GroupUser.bulk_set_category_notifications(@group, added_user_ids)
+    GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
   end
 
   def sync_removal_side_effects(removed_user_ids)

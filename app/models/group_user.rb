@@ -8,9 +8,6 @@ class GroupUser < ActiveRecord::Base
   after_destroy :grant_other_available_title
   after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
-  after_save :set_category_notifications
-  after_save :set_tag_notifications
-
   after_commit :increase_group_user_count, on: [:create]
   after_commit :decrease_group_user_count, on: [:destroy]
 
