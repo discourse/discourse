@@ -62,6 +62,7 @@ class GroupUserManager
   # :increase_group_user_count
   def sync_add_side_effects(added_user_ids)
     update_title(added_user_ids)
+    set_primary_group(added_user_ids)
   end
 
   def sync_removal_side_effects(removed_user_ids)
@@ -109,19 +110,7 @@ class GroupUserManager
           .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
           .update_all(flair_group_id: @group.id)
 
-        DB.exec(<<~SQL, user_ids: added_user_ids, new_title: @group.title)
-            UPDATE users u
-            SET title = :new_title
-            WHERE u.id IN (:user_ids)
-              AND u.primary_group_id IS NOT NULL
-              AND EXISTS (
-                SELECT 1 FROM groups g
-                WHERE g.id = u.primary_group_id
-                  AND g.title = u.title
-              )
-          SQL
-
-        User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
+        set_primary_group(added_user_ids)
       end
 
       update_title(added_user_ids)
@@ -231,5 +220,21 @@ class GroupUserManager
     if @group.title.present?
       User.where(id: added_user_ids, title: [nil, ""]).update_all(title: @group.title)
     end
+  end
+
+  def set_primary_group(added_user_ids)
+    DB.exec(<<~SQL, user_ids: added_user_ids, new_title: @group.title)
+        UPDATE users u
+        SET title = :new_title
+        WHERE u.id IN (:user_ids)
+          AND u.primary_group_id IS NOT NULL
+          AND EXISTS (
+            SELECT 1 FROM groups g
+            WHERE g.id = u.primary_group_id
+              AND g.title = u.title
+          )
+      SQL
+
+    User.where(id: added_user_ids).update_all(primary_group_id: @group.id)
   end
 end

@@ -8,8 +8,6 @@ class GroupUser < ActiveRecord::Base
   after_destroy :grant_other_available_title
   after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
-  after_save :set_primary_group
-
   after_save :grant_trust_level
   after_save :set_category_notifications
   after_save :set_tag_notifications
@@ -87,10 +85,6 @@ class GroupUser < ActiveRecord::Base
 
   def set_notification_level
     self.notification_level = group&.default_notification_level || 3
-  end
-
-  def set_primary_group
-    user.update!(primary_group: group) if group.primary_group
   end
 
   def remove_primary_and_flair_group
