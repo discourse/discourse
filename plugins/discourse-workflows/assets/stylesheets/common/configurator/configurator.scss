@@ -135,10 +135,9 @@
       outline-offset: 2px;
     }
 
-    &.--drag-over {
-      outline: 2px solid var(--tertiary);
-      outline-offset: 2px;
-      background: color-mix(in srgb, var(--tertiary) 5%, transparent);
+    &.--drag-over input {
+      border-color: var(--tertiary) !important;
+      background: var(--tertiary-50);
     }
   }
 
