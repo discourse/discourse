@@ -7333,10 +7333,13 @@ RSpec.describe UsersController do
       sign_in(user1)
       get "/u/#{user1.username}/bookmarks.ics"
       expect(response.status).to eq(200)
+      calendar_name =
+        I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
       expect(response.body).to eq(<<~ICS)
         BEGIN:VCALENDAR
         VERSION:2.0
         PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}
         BEGIN:VEVENT
         UID:bookmark_reminder_##{bookmark1.id}@#{Discourse.current_hostname}
         DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}

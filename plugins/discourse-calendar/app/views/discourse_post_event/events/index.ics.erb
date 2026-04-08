@@ -1,6 +1,7 @@
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Discourse//<%= Discourse.current_hostname %>//<%= Discourse.full_version %>//EN
+X-WR-CALNAME:<%= IcalEncoder.encode(@calendar_name) %>
 <%- @ics_events.each do |entry| -%>
 <%- event = entry[:event] -%>
 <%- starts_at = entry[:starts_at] -%>

@@ -1253,6 +1253,7 @@ en:
 
   calendar_subscriptions:
     application_name: "Calendar Subscriptions"
+    bookmarks_feed_name: "%{site_title} - Bookmark reminders"
 
   user_api_key:
     title: 'Authorize "%{application_name}"'

@@ -75,8 +75,14 @@ module DiscoursePostEvent
         )
 
         body = response.body
+        calendar_name =
+          I18n.t(
+            "discourse_calendar.calendar_subscriptions.all_events_feed_name",
+            site_title: SiteSetting.title,
+          )
         expect(body).to include("BEGIN:VCALENDAR")
         expect(body).to include("END:VCALENDAR")
+        expect(body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
         expect(body).to include("BEGIN:VEVENT")
         expect(body).to include("END:VEVENT")
         expect(body).to include("SUMMARY:Test Event 1")
@@ -242,6 +248,12 @@ module DiscoursePostEvent
               params: events_params.merge(user_api_key: user_api_key.key)
 
           expect(response.status).to eq(200)
+          calendar_name =
+            I18n.t(
+              "discourse_calendar.calendar_subscriptions.my_events_feed_name",
+              site_title: SiteSetting.title,
+            )
+          expect(response.body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
           expect(response.body).to include("SUMMARY:Going Event")
           expect(response.body).to include("SUMMARY:Interested Event")
         end
