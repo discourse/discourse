@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class NodeTypeSchemaBuilder
+  class NodeTypeSerializer
     def initialize(identifier:, latest_class:, latest_version:, available_versions:)
       @identifier = identifier
       @latest_class = latest_class

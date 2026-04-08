@@ -19,7 +19,7 @@ module DiscourseWorkflows
         seen.add(identifier)
         next unless klass.palette_visible?
 
-        NodeTypeSchemaBuilder.new(
+        NodeTypeSerializer.new(
           identifier: identifier,
           latest_class:
             Registry.find_node_type(identifier, version: Registry.latest_version(identifier)),
