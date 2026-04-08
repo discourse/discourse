@@ -1984,6 +1984,35 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
+    context "when the linked upcoming change is reset via remove_override!" do
+      it "immediately reverts the override default" do
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+
+        settings.remove_override!(:increase_suggested_topics_max_days_old_default)
+
+        expect(settings.increase_suggested_topics_max_days_old_default).to eq(false)
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+        expect(
+          settings.defaults.upcoming_change_override_metadata(:suggested_topics_max_days_old),
+        ).to be_nil
+      end
+
+      it "reapplies the override default when a manual opt out is removed after auto-promotion" do
+        settings.add_override!(:promote_upcoming_changes_on_status, "experimental")
+        settings.refresh!
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+
+        settings.add_override!(:increase_suggested_topics_max_days_old_default, false)
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+
+        settings.remove_override!(:increase_suggested_topics_max_days_old_default)
+
+        expect(settings.increase_suggested_topics_max_days_old_default).to eq(true)
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+      end
+    end
+
     describe "all_settings effective default" do
       context "when the linked upcoming change is active" do
         before do
