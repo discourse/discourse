@@ -452,6 +452,16 @@ table.group-reports {
     overflow: auto;
     max-height: 1000px;
   }
+
+  .query-results-modes {
+    display: inline-flex;
+    gap: 0.35em;
+    margin: 0.75em 0;
+
+    .btn {
+      margin: 0;
+    }
+  }
 }
 
 .discourse-data-explorer-query-list {
