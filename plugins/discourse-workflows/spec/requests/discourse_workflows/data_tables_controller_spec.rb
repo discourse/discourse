@@ -271,6 +271,8 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
         )
       end
 
+      before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
+
       it "returns 422 with referencing workflow details" do
         delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}.json"
 

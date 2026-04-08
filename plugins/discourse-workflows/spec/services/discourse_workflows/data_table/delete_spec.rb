@@ -54,6 +54,8 @@ RSpec.describe DiscourseWorkflows::DataTable::Delete do
         )
       end
 
+      before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
+
       it { is_expected.to fail_a_policy(:data_table_not_in_use) }
     end
 

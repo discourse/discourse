@@ -24,7 +24,12 @@ module DiscourseWorkflows
     end
 
     def data_table_not_in_use(data_table:)
-      referencing = DiscourseWorkflows::Workflow.referencing_data_table(data_table.id)
+      workflow_ids =
+        DiscourseWorkflows::WorkflowDependency.workflows_referencing(
+          "data_table_id",
+          data_table.id,
+        ).pluck(:workflow_id)
+      referencing = DiscourseWorkflows::Workflow.where(id: workflow_ids)
       context[:referencing_workflows] = referencing
       referencing.blank?
     end
