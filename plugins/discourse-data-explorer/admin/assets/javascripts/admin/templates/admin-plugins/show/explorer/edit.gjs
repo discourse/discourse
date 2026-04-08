@@ -3,6 +3,7 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -12,6 +13,7 @@ import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
 import draggable from "discourse/modifiers/draggable";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -20,6 +22,8 @@ import QueryResultDownloadButtons from "discourse/plugins/discourse-data-explore
 import QueryResultsWrapper from "discourse/plugins/discourse-data-explorer/discourse/components/query-results-wrapper";
 
 export default class QueriesEdit extends Component {
+  @service dataExplorerMode;
+
   get showDestroyQuery() {
     return this.args.controller.model?.id > -1;
   }
@@ -62,13 +66,17 @@ export default class QueriesEdit extends Component {
               <h1 class="query-name-display">
                 <span>{{@controller.model.name}}</span>
               </h1>
-              {{#unless @controller.editDisabled}}
+              {{#if
+                (and
+                  this.dataExplorerMode.isFull (not @controller.editDisabled)
+                )
+              }}
                 <DButton
                   @action={{@controller.editName}}
                   @icon="pencil"
                   class="edit-query-name btn-transparent"
                 />
-              {{/unless}}
+              {{/if}}
             </div>
 
             <div class="desc">
@@ -76,7 +84,9 @@ export default class QueriesEdit extends Component {
             </div>
           {{/if}}
 
-          {{#unless @controller.model.destroyed}}
+          {{#if
+            (and this.dataExplorerMode.isFull (not @controller.model.destroyed))
+          }}
             <div class="groups">
               <span class="label">{{i18n "explorer.allow_groups"}}</span>
               <span>
@@ -88,7 +98,7 @@ export default class QueriesEdit extends Component {
                 />
               </span>
             </div>
-          {{/unless}}
+          {{/if}}
 
           <div class="clear"></div>
 
@@ -167,18 +177,22 @@ export default class QueriesEdit extends Component {
           <div class="query-run-actions">
             <div class="query-run-actions__left">
               {{#if @controller.runDisabled}}
-                {{#if @controller.saveDisabled}}
-                  <DButton
-                    @label="explorer.run"
-                    @disabled="true"
-                    class="btn-primary query-run__submit"
-                  />
-                {{else}}
+                {{#if
+                  (and
+                    this.dataExplorerMode.isFull (not @controller.saveDisabled)
+                  )
+                }}
                   <DButton
                     @action={{@controller.saveAndRun}}
                     @icon="play"
                     @label="explorer.saverun"
                     class="btn-primary query-run__save-and-run"
+                  />
+                {{else}}
+                  <DButton
+                    @label="explorer.run"
+                    @disabled="true"
+                    class="btn-primary query-run__submit"
                   />
                 {{/if}}
               {{else}}
@@ -193,22 +207,24 @@ export default class QueriesEdit extends Component {
                 />
               {{/if}}
 
-              {{#if @controller.editingQuery}}
-                <DButton
-                  class="btn-save-query"
-                  @action={{@controller.save}}
-                  @label="explorer.save"
-                  @disabled={{@controller.saveDisabled}}
-                />
-              {{else}}
-                {{#unless @controller.editDisabled}}
+              {{#if this.dataExplorerMode.isFull}}
+                {{#if @controller.editingQuery}}
                   <DButton
-                    class="btn-edit-query"
-                    @action={{@controller.editQuery}}
-                    @label="explorer.edit"
-                    @icon="pencil"
+                    class="btn-save-query"
+                    @action={{@controller.save}}
+                    @label="explorer.save"
+                    @disabled={{@controller.saveDisabled}}
                   />
-                {{/unless}}
+                {{else}}
+                  {{#unless @controller.editDisabled}}
+                    <DButton
+                      class="btn-edit-query"
+                      @action={{@controller.editQuery}}
+                      @label="explorer.edit"
+                      @icon="pencil"
+                    />
+                  {{/unless}}
+                {{/if}}
               {{/if}}
 
               {{#if @controller.editingQuery}}
@@ -231,11 +247,13 @@ export default class QueriesEdit extends Component {
 
             <div class="query-run-actions__right">
               {{#if @controller.model.destroyed}}
-                <DButton
-                  @action={{@controller.recover}}
-                  @icon="arrow-rotate-left"
-                  @label="explorer.recover"
-                />
+                {{#if this.dataExplorerMode.isFull}}
+                  <DButton
+                    @action={{@controller.recover}}
+                    @icon="arrow-rotate-left"
+                    @label="explorer.recover"
+                  />
+                {{/if}}
               {{else}}
                 {{#if @controller.editingQuery}}
                   <DButton
@@ -261,7 +279,7 @@ export default class QueriesEdit extends Component {
                   />
                 {{/if}}
 
-                {{#if this.showDestroyQuery}}
+                {{#if (and this.dataExplorerMode.isFull this.showDestroyQuery)}}
                   <DButton
                     @action={{@controller.destroyQuery}}
                     @icon="trash-can"

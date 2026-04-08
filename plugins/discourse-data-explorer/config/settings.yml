@@ -15,6 +15,14 @@ plugins:
     depends_on:
       - discourse_ai_enabled
     depends_behavior: hidden
+  data_explorer_mode:
+    default: "full"
+    client: true
+    type: enum
+    choices:
+      - disabled
+      - full
+    hidden: true
   data_explorer_query_result_limit:
     default: 1000
     hidden: true

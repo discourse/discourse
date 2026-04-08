@@ -7,10 +7,24 @@ module DiscourseDataExplorer
     before_action :set_group, only: %i[group_reports_index group_reports_show group_reports_run]
     before_action :set_query, only: %i[group_reports_show group_reports_run show update public_run]
     before_action :ensure_admin
+    before_action :check_mode_access
 
     skip_before_action :check_xhr, only: %i[show group_reports_run run public_run]
     skip_before_action :ensure_admin,
                        only: %i[group_reports_index group_reports_show group_reports_run public_run]
+
+    ACTION_CAPABILITIES = {
+      index: :can_view_query_list,
+      show: :can_view_query_details,
+      create: :can_create_queries,
+      update: :can_modify_queries,
+      destroy: :can_modify_queries,
+      run: :can_run_queries,
+      schema: :can_view_query_details,
+      groups: :can_view_query_details,
+      group_reports_run: :can_run_queries,
+      public_run: :can_run_queries,
+    }.freeze
 
     INDEX_LIMIT = 50
 
@@ -339,6 +353,11 @@ module DiscourseDataExplorer
     def set_query
       @query = Query.find(params[:id])
       raise Discourse::NotFound unless @query
+    end
+
+    def check_mode_access
+      capability = ACTION_CAPABILITIES[action_name.to_sym]
+      Mode.check_access!(capability) if capability
     end
   end
 end
