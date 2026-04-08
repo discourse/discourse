@@ -25,7 +25,7 @@ theme/
 
 require_relative "page_objects/components/sidebar"
 
-RSpec.describe "Filter sidebar", system: true do
+RSpec.describe "Filter sidebar" do
   let!(:theme) { upload_theme }
   # For components: let!(:theme) { upload_theme_component }
 

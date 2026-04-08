@@ -48,7 +48,7 @@ Avoid generic names like `feature_spec.rb` or `my_feature_spec.rb`.
 ```rb
 # frozen_string_literal: true
 
-RSpec.describe "Filter sidebar", system: true do
+RSpec.describe "Filter sidebar" do
   fab!(:user)
   fab!(:category)
 
@@ -69,7 +69,7 @@ RSpec.describe "Filter sidebar", system: true do
 end
 ```
 
-**Required:** The `system: true` metadata on the describe block.
+The `type: :system` metadata is inferred automatically from the file's location under `spec/system/`, so no explicit `system: true` is needed on the describe block.
 
 **Key patterns:**
 - Instantiate page objects with `let`

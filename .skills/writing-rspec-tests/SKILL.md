@@ -68,9 +68,6 @@ bin/rspec spec/models/topic_spec.rb
 
 # Run specific line
 bin/rspec spec/models/topic_spec.rb:15
-
-# Run with visible browser (system tests)
-SELENIUM_HEADLESS=0 bin/rspec spec/system/my_spec.rb
 ```
 
 ## Specialized Test Types
