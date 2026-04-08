@@ -5,8 +5,6 @@ module DiscourseWorkflows
     self.table_name = "discourse_workflows_workflows"
     self.ignored_columns = %w[sticky_notes allowed_group_ids]
 
-    TRIGGER_NODE_CACHE = DistributedCache.new("discourse_workflows_triggers")
-
     has_many :executions,
              class_name: "DiscourseWorkflows::Execution",
              foreign_key: "workflow_id",
@@ -31,8 +29,6 @@ module DiscourseWorkflows
     validates :name, presence: true, length: { maximum: 100 }
     validate :error_workflow_must_exist
 
-    after_commit :clear_trigger_node_cache
-
     scope :enabled, -> { where(enabled: true) }
     scope :filter_by_name,
           ->(name) do
@@ -43,20 +39,6 @@ module DiscourseWorkflows
             where(
               "discourse_workflows_workflows.nodes @> ?",
               [{ "type" => "trigger:#{type}" }].to_json,
-            )
-          end
-    scope :referencing_credential,
-          ->(credential_id) do
-            where(
-              "nodes IS NOT NULL AND EXISTS (SELECT 1 FROM jsonb_array_elements(nodes) AS node WHERE node->'configuration'->>'credential_id' = ?)",
-              credential_id.to_s,
-            )
-          end
-    scope :referencing_data_table,
-          ->(data_table_id) do
-            where(
-              "nodes IS NOT NULL AND EXISTS (SELECT 1 FROM jsonb_array_elements(nodes) AS node WHERE node->'configuration'->>'data_table_id' = ?)",
-              data_table_id.to_s,
             )
           end
 
@@ -72,17 +54,6 @@ module DiscourseWorkflows
       enabled
         .where("nodes @> ?", [{ "type" => type }].to_json)
         .flat_map { |workflow| workflow.nodes_of_type(type).map { |node| [workflow, node] } }
-    end
-
-    def self.cached_enabled_trigger_entries(type)
-      TRIGGER_NODE_CACHE[type] ||= enabled
-        .where("nodes @> ?", [{ "type" => type }].to_json)
-        .pluck(:id, :nodes)
-        .flat_map do |workflow_id, nodes|
-          Array(nodes)
-            .select { |n| n["type"] == type }
-            .map { |n| { workflow_id: workflow_id, node_id: n["id"] } }
-        end
     end
 
     def self.enabled_trigger_nodes(trigger_type)
@@ -168,10 +139,6 @@ module DiscourseWorkflows
     end
 
     private
-
-    def clear_trigger_node_cache
-      TRIGGER_NODE_CACHE.clear
-    end
 
     def error_workflow_must_exist
       return if error_workflow_id.nil?
