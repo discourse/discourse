@@ -143,7 +143,8 @@ describe "Request tracking" do
 
       events =
         DiscourseEvent.track_events(:browser_pageview) do
-          visit "/foobar"
+          # Suppress expected RoutingError from nonexistent path
+          Rails.logger.silence { visit "/foobar" }
 
           try_until_success do
             CachedCounting.flush
@@ -205,7 +206,7 @@ describe "Request tracking" do
     it "tracks bootstrapped error pages correctly" do
       SiteSetting.bootstrap_error_pages = true
 
-      visit "/foobar"
+      Rails.logger.silence { visit "/foobar" }
 
       try_until_success do
         CachedCounting.flush

@@ -40,9 +40,12 @@ describe "Content security policy" do
     get "/nonexistent"
     expect(response.headers["Content-Security-Policy"]).to include("'strict-dynamic'")
 
-    visit "/nonexistent"
-    expect(page).not_to have_css("body.no-ember")
-    expect(page).to have_css("#site-logo")
+    # Suppress expected RoutingError from nonexistent path
+    Rails.logger.silence do
+      visit "/nonexistent"
+      expect(page).not_to have_css("body.no-ember")
+      expect(page).to have_css("#site-logo")
+    end
   end
 
   it "can boot logster in strict_dynamic mode" do

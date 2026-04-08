@@ -64,9 +64,12 @@ RSpec.describe "Visit channel" do
 
       context "when channel is not found" do
         it "shows an error" do
-          visit("/chat/c/-/999")
+          # Suppress expected RecordNotFound from a non-existent channel
+          Rails.logger.silence do
+            visit("/chat/c/-/999")
 
-          expect(page).to have_content("Not Found") # this is not a translated key
+            expect(page).to have_content("Not Found") # this is not a translated key
+          end
         end
       end
 

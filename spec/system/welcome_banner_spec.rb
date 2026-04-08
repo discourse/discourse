@@ -273,7 +273,7 @@ describe "Welcome banner" do
         visit "/filter?q=tag%3Ain-progress"
         expect(banner).to be_visible
 
-        visit "/upcoming-events?view=month"
+        visit "/about"
         expect(banner).to be_hidden
       end
 
@@ -288,7 +288,7 @@ describe "Welcome banner" do
             expect(banner).to be_visible
           end
 
-        visit "/my/posts"
+        visit "/about"
         expect(banner).to be_hidden
       end
 
