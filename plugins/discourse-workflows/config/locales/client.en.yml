@@ -306,6 +306,9 @@ en:
         response_mode_when_last_node_finishes: "When Last Node Finishes"
         response_mode_respond_to_webhook: "Using 'Respond to Webhook' Node"
         response_code: "Response Code"
+        limit_wait_time: "Limit wait time"
+        timeout_amount: "Timeout after"
+        timeout_unit: "Timeout unit"
       loop_over_items:
         batch_size: "Batch Size"
         batch_size_description: "Number of items to process per iteration."

@@ -67,6 +67,31 @@ module DiscourseWorkflows
               },
             },
             **webhook_fields,
+            limit_wait_time: {
+              type: :boolean,
+              default: false,
+              visible_if: {
+                resume: "webhook",
+              },
+            },
+            timeout_amount: {
+              type: :number,
+              required: false,
+              visible_if: {
+                resume: "webhook",
+                limit_wait_time: true,
+              },
+            },
+            timeout_unit: {
+              type: :options,
+              required: false,
+              default: "hours",
+              options: WAIT_UNITS,
+              visible_if: {
+                resume: "webhook",
+                limit_wait_time: true,
+              },
+            },
           }
         end
 
@@ -74,15 +99,32 @@ module DiscourseWorkflows
           resume_mode = @configuration.fetch("resume")
 
           if resume_mode == "webhook"
+            timeout_amount = nil
+            timeout_unit = "hours"
+
+            if @configuration["limit_wait_time"]
+              timeout_amount = @configuration["timeout_amount"].presence&.to_i
+              timeout_unit = @configuration["timeout_unit"].presence || "hours"
+              if WAIT_UNITS.exclude?(timeout_unit)
+                raise ArgumentError, "Invalid timeout unit: #{timeout_unit}"
+              end
+              if timeout_amount && timeout_amount <= 0
+                raise ArgumentError, "Timeout amount must be greater than 0"
+              end
+            end
+
             raise WaitForWebhook.new(
                     http_method: @configuration.fetch("http_method") { "GET" },
                     response_mode: @configuration.fetch("response_mode") { "immediately" },
                     response_code: @configuration.fetch("response_code") { "200" },
+                    timeout_amount: timeout_amount,
+                    timeout_unit: timeout_unit,
                   )
           else
             amount = @configuration.fetch("wait_amount") { 1 }.to_i
             unit = @configuration.fetch("wait_unit") { "hours" }
 
+            raise ArgumentError, "Wait amount must be greater than 0" if amount <= 0
             raise ArgumentError, "Invalid wait unit: #{unit}" if WAIT_UNITS.exclude?(unit)
 
             duration_seconds = [amount.public_send(unit).to_i, MAX_WAIT_DURATION_SECONDS].min
