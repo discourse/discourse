@@ -467,6 +467,7 @@ de:
           remove_timezone: Keine Zeitzone (UTC)
         all_day:
           label: "Ganztägiges Ereignis"
+          description: "Ein ganztägiges Ereignis hat keine festen Uhrzeiten, sondern nur ein Datum. Das Ereignis dauert vom Beginn bis zum Ende des Tages."
         reminders:
           label: "Erinnerungen"
           types:
