@@ -23,6 +23,84 @@ module DiscourseChatIntegration::Provider::SlackProvider
     :string,
   )
 
+  def self.setup(current_user, provider_site_settings = {})
+    token = provider_site_settings[:chat_integration_slack_access_token].to_s.strip
+    webhook_url = provider_site_settings[:chat_integration_slack_outbound_webhook_url].to_s.strip
+
+    if token.blank? && webhook_url.blank?
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key:
+                                                            "chat_integration.provider.slack.errors.at_least_one_required",
+                                                        }
+    end
+
+    verify_slack_access_token!(token) if token.present?
+
+    # Incoming webhooks have no auth.test equivalent; validate URL shape only (no live POST to avoid posting to the channel).
+    if webhook_url.present? && !valid_slack_incoming_webhook_url?(webhook_url)
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key:
+                                                            "chat_integration.provider.slack.errors.invalid_webhook_url",
+                                                        }
+    end
+
+    if token.present?
+      SiteSetting.set_and_log(:chat_integration_slack_access_token, token, current_user)
+    end
+    if webhook_url.present?
+      SiteSetting.set_and_log(
+        :chat_integration_slack_outbound_webhook_url,
+        webhook_url,
+        current_user,
+      )
+    end
+    SiteSetting.set_and_log(PROVIDER_ENABLED_SETTING, true, current_user)
+  end
+
+  def self.verify_slack_access_token!(token)
+    http = slack_api_http
+    req = Net::HTTP::Post.new(URI("https://slack.com/api/auth.test"))
+    req.set_form_data(token: token)
+    response = http.request(req)
+
+    unless response.kind_of?(Net::HTTPSuccess)
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key:
+                                                            "chat_integration.provider.slack.errors.auth_error",
+                                                          response_code: response.code,
+                                                          response_body: response.body,
+                                                        }
+    end
+
+    json =
+      begin
+        JSON.parse(response.body)
+      rescue JSON::ParserError
+        raise DiscourseChatIntegration::ProviderError.new info: {
+                                                            error_key:
+                                                              "chat_integration.provider.slack.errors.auth_error",
+                                                            response_body: response.body,
+                                                          }
+      end
+
+    unless json["ok"] == true
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key:
+                                                            "chat_integration.provider.slack.errors.auth_error",
+                                                          response_body: json,
+                                                        }
+    end
+  end
+
+  def self.valid_slack_incoming_webhook_url?(url)
+    uri = URI.parse(url)
+    return false unless uri.is_a?(URI::HTTPS) && uri.host == "hooks.slack.com"
+
+    uri.path.start_with?("/services/") || uri.path.start_with?("/workflows/")
+  rescue URI::InvalidURIError
+    false
+  end
+
   def self.excerpt(post, max_length = SiteSetting.chat_integration_slack_excerpt_length)
     doc =
       Nokogiri::HTML5.fragment(

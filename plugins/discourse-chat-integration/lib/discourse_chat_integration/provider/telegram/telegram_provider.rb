@@ -13,21 +13,44 @@ module DiscourseChatIntegration
       ]
       ADDITIONAL_SITE_SETTINGS_REQUIRED = true
 
-      def self.setup_webhook
-        newSecret = SecureRandom.hex
-        SiteSetting.chat_integration_telegram_secret = newSecret
+      def self.setup(current_user, provider_site_settings = {})
+        access_token = provider_site_settings[:chat_integration_telegram_access_token].to_s.strip
 
-        message = { url: Discourse.base_url + "/chat-integration/telegram/command/" + newSecret }
+        if access_token.blank?
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key:
+                                                                "chat_integration.provider.telegram.errors.access_token_required",
+                                                            }
+        end
 
-        response = self.do_api_request("setWebhook", message)
+        new_secret = SecureRandom.hex
+        setup_webhook(access_token, new_secret)
+
+        SiteSetting.set_and_log(:chat_integration_telegram_access_token, access_token, current_user)
+        SiteSetting.set_and_log(:chat_integration_telegram_secret, new_secret, current_user)
+        SiteSetting.set_and_log(PROVIDER_ENABLED_SETTING, true, current_user)
+      end
+
+      def self.setup_webhook(access_token, new_secret)
+        webhook_message = {
+          url: "#{Discourse.base_url}/chat-integration/telegram/command/#{new_secret}",
+        }
+
+        response =
+          begin
+            self.do_api_request("setWebhook", webhook_message, access_token: access_token)
+          rescue JSON::ParserError => e
+            Rails.logger.error("Failed to parse telegram setWebhook response: #{e.message}")
+            { "ok" => false, "description" => e.message }
+          end
 
         if response["ok"] != true
-          # If setting up webhook failed, disable provider
-          SiteSetting.chat_integration_telegram_enabled = false
-          Rails.logger.error(
-            "Failed to setup telegram webhook. Message data= " + message.to_json + " response=" +
-              response.to_json,
-          )
+          Rails.logger.error("Failed to setup telegram webhook. response=#{response.to_json}")
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key:
+                                                                "chat_integration.provider.telegram.errors.webhook_setup_failed",
+                                                              response_body: response,
+                                                            }
         end
       end
 
@@ -35,21 +58,19 @@ module DiscourseChatIntegration
         self.do_api_request("sendMessage", message)
       end
 
-      def self.do_api_request(methodName, message)
+      def self.do_api_request(method_name, message, access_token: nil)
         http = FinalDestination::HTTP.new("api.telegram.org", 443)
         http.use_ssl = true
 
-        access_token = SiteSetting.chat_integration_telegram_access_token
+        token = access_token.presence || SiteSetting.chat_integration_telegram_access_token
 
-        uri = URI("https://api.telegram.org/bot#{access_token}/#{methodName}")
+        uri = URI("https://api.telegram.org/bot#{token}/#{method_name}")
 
         req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
         req.body = message.to_json
         response = http.request(req)
 
-        responseData = JSON.parse(response.body)
-
-        responseData
+        JSON.parse(response.body)
       end
 
       def self.message_text(post)

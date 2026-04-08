@@ -113,6 +113,8 @@ en:
               title: Channel
               help: "For example #channel or @username"
           errors:
+            at_least_one_required: "Enter an access token or outbound webhook URL."
+            invalid_webhook_url: "The outbound webhook URL must be a valid https://hooks.slack.com/services/... link."
             auth_error: "The provided authentication token is invalid"
             action_prohibited: "The bot does not have permission to post to that channel"
             channel_not_found: "The specified channel does not exist on Slack"
@@ -130,6 +132,8 @@ en:
               title: Chat ID
               help: A number given to you by the bot, or a broadcast channel identifier in the form @channelname
           errors:
+            access_token_required: "A bot access token is required."
+            webhook_setup_failed: "Could not register the webhook with Telegram. Check the token and try again."
             channel_not_found: "The specified channel does not exist on Telegram"
             forbidden: "The bot does not have permission to post to this channel"
 

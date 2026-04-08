@@ -97,6 +97,118 @@ RSpec.describe "Chat Controller", type: :request do
           expect(response.status).to eq(422)
         end
       end
+
+      context "when setting up slack" do
+        before do
+          SiteSetting.chat_integration_slack_enabled = false
+          SiteSetting.chat_integration_slack_access_token = ""
+        end
+
+        it "returns success and enables slack when the token is valid" do
+          stub_request(:post, "https://slack.com/api/auth.test").to_return(
+            body: { ok: true }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          post "/admin/plugins/discourse-chat-integration/setup-provider",
+               params: {
+                 provider: {
+                   name: "slack",
+                 },
+                 provider_site_settings: {
+                   chat_integration_slack_access_token: "xoxb-from-request",
+                 },
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(SiteSetting.chat_integration_slack_enabled).to eq(true)
+          expect(SiteSetting.chat_integration_slack_access_token).to eq("xoxb-from-request")
+        end
+
+        it "returns error_key when slack rejects the token" do
+          stub_request(:post, "https://slack.com/api/auth.test").to_return(
+            body: { ok: false, error: "invalid_auth" }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          post "/admin/plugins/discourse-chat-integration/setup-provider",
+               params: {
+                 provider: {
+                   name: "slack",
+                 },
+                 provider_site_settings: {
+                   chat_integration_slack_access_token: "bad",
+                 },
+               },
+               as: :json
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["error_key"]).to eq(
+            "chat_integration.provider.slack.errors.auth_error",
+          )
+        end
+      end
+
+      context "when setting up telegram" do
+        before do
+          SiteSetting.chat_integration_telegram_enabled = false
+          SiteSetting.chat_integration_telegram_access_token = ""
+        end
+
+        it "returns success when setWebhook succeeds" do
+          stub_request(:post, %r{https://api\.telegram\.org/botreqtok/setWebhook}).to_return(
+            body: { ok: true }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          post "/admin/plugins/discourse-chat-integration/setup-provider",
+               params: {
+                 provider: {
+                   name: "telegram",
+                 },
+                 provider_site_settings: {
+                   chat_integration_telegram_access_token: "reqtok",
+                 },
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(SiteSetting.chat_integration_telegram_enabled).to eq(true)
+          expect(SiteSetting.chat_integration_telegram_access_token).to eq("reqtok")
+        end
+
+        it "returns error_key when setWebhook fails" do
+          stub_request(:post, %r{https://api\.telegram\.org/botbadtok/setWebhook}).to_return(
+            body: { ok: false }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          post "/admin/plugins/discourse-chat-integration/setup-provider",
+               params: {
+                 provider: {
+                   name: "telegram",
+                 },
+                 provider_site_settings: {
+                   chat_integration_telegram_access_token: "badtok",
+                 },
+               },
+               as: :json
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["error_key"]).to eq(
+            "chat_integration.provider.telegram.errors.webhook_setup_failed",
+          )
+        end
+      end
     end
   end
 

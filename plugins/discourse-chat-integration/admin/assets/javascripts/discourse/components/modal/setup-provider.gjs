@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -6,13 +7,15 @@ import { isEmpty } from "@ember/utils";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import SlackProviderSetupForm from "../provider-setup-form/slack";
 import TelegramProviderSetupForm from "../provider-setup-form/telegram";
 
 export default class SetupProvider extends Component {
   @service toasts;
+
+  @tracked formKitApi = null;
 
   get formComponent() {
     switch (this.args.model.provider.name) {
@@ -41,6 +44,53 @@ export default class SetupProvider extends Component {
     } else {
       return;
     }
+  }
+
+  get primaryFieldName() {
+    switch (this.args.model.provider.name) {
+      case "slack":
+        return "chat_integration_slack_access_token";
+      case "telegram":
+        return "chat_integration_telegram_access_token";
+      default:
+        return null;
+    }
+  }
+
+  get primaryFieldTitleKey() {
+    switch (this.args.model.provider.name) {
+      case "slack":
+        return "chat_integration.setup_provider_modal.slack.access_token.title";
+      case "telegram":
+        return "chat_integration.setup_provider_modal.telegram.access_token.title";
+      default:
+        return null;
+    }
+  }
+
+  fieldAndTitleForErrorKey(errorKey) {
+    if (this.args.model.provider.name === "slack") {
+      if (
+        errorKey ===
+        "chat_integration.provider.slack.errors.invalid_webhook_url"
+      ) {
+        return {
+          field: "chat_integration_slack_outbound_webhook_url",
+          titleKey:
+            "chat_integration.setup_provider_modal.slack.outbound_webhook_url.title",
+        };
+      }
+    }
+
+    return {
+      field: this.primaryFieldName,
+      titleKey: this.primaryFieldTitleKey,
+    };
+  }
+
+  @action
+  registerFormApi(api) {
+    this.formKitApi = api;
   }
 
   validateSlackForm(data, addError, removeError) {
@@ -85,6 +135,23 @@ export default class SetupProvider extends Component {
       });
       this.args.closeModal({ setupCompleted: true });
     } catch (error) {
+      const errorInfo = extractErrorInfo(error, undefined, {
+        skipConsoleError: true,
+      });
+
+      if (errorInfo.status === 422 && errorInfo.errorKey && this.formKitApi) {
+        const { field, titleKey } = this.fieldAndTitleForErrorKey(
+          errorInfo.errorKey
+        );
+        if (field && titleKey) {
+          this.formKitApi.addError(field, {
+            title: i18n(titleKey),
+            message: errorInfo.message,
+          });
+          return;
+        }
+      }
+
       popupAjaxError(error);
     }
   }
@@ -109,7 +176,12 @@ export default class SetupProvider extends Component {
             additionalInstructions=this.additionalInstructions
           }}
         </p>
-        <Form @onSubmit={{this.save}} @validate={{this.validateForm}} as |form|>
+        <Form
+          @onSubmit={{this.save}}
+          @validate={{this.validateForm}}
+          @onRegisterApi={{this.registerFormApi}}
+          as |form|
+        >
           <this.formComponent @form={{form}} />
 
           <form.Actions>

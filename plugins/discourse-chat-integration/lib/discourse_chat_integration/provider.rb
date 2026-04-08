@@ -48,10 +48,10 @@ module DiscourseChatIntegration
       end
     end
 
-    def self.setup(provider_klass, current_user)
+    def self.setup(provider_klass, current_user, provider_site_settings)
       if provider_klass.singleton_class.method_defined?(:setup) ||
            provider_klass.singleton_class.private_method_defined?(:setup)
-        provider_klass.setup(current_user)
+        provider_klass.setup(current_user, provider_site_settings)
       else
         SiteSetting.set_and_log(provider_klass::PROVIDER_ENABLED_SETTING, true, current_user)
       end

@@ -3,6 +3,11 @@
 class DiscourseChatIntegration::ChatController < ApplicationController
   requires_plugin DiscourseChatIntegration::PLUGIN_NAME
 
+  SETUP_PROVIDER_SITE_SETTING_KEYS = {
+    "slack" => %i[chat_integration_slack_access_token chat_integration_slack_outbound_webhook_url],
+    "telegram" => %i[chat_integration_telegram_access_token],
+  }.freeze
+
   def respond
     render
   end
@@ -42,18 +47,27 @@ class DiscourseChatIntegration::ChatController < ApplicationController
   end
 
   def setup_provider
-    begin
-      hash = params.require(:provider).permit(:name)
-      name = hash[:name].to_s.strip
-      raise Discourse::InvalidParameters.new("provider not found") if name.blank?
+    hash = params.require(:provider).permit(:name)
+    name = hash[:name].to_s.strip
+    raise Discourse::InvalidParameters.new("provider not found") if name.blank?
 
-      provider_klass = DiscourseChatIntegration::Provider.get_by_name(name)
-      raise Discourse::InvalidParameters.new("provider not found") if provider_klass.nil?
+    provider_klass = DiscourseChatIntegration::Provider.get_by_name(name)
+    raise Discourse::InvalidParameters.new("provider not found") if provider_klass.nil?
 
-      DiscourseChatIntegration::Provider.setup(provider_klass, current_user)
-      render json: success_json
-    rescue Discourse::InvalidParameters => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
+    permitted_site_settings = permitted_provider_site_settings(name)
+
+    DiscourseChatIntegration::Provider.setup(provider_klass, current_user, permitted_site_settings)
+    render json: success_json
+  rescue Discourse::InvalidParameters => e
+    render json: { errors: [e.message] }, status: :unprocessable_entity
+  rescue DiscourseChatIntegration::ProviderError => e
+    if e.info[:error_key].present?
+      Rails.logger.error("Chat integration setup failed error_key=#{e.info[:error_key]}")
+    end
+    if e.info.key?(:error_key) && e.info[:error_key].present?
+      render json: { error_key: e.info[:error_key] }, status: :unprocessable_entity
+    else
+      render json: { errors: [e.message.presence || "error"] }, status: :unprocessable_entity
     end
   end
 
@@ -186,5 +200,15 @@ class DiscourseChatIntegration::ChatController < ApplicationController
     rule.destroy!
 
     render json: success_json
+  end
+
+  private
+
+  def permitted_provider_site_settings(provider_name)
+    keys = SETUP_PROVIDER_SITE_SETTING_KEYS[provider_name]
+    return {} unless keys
+    return {} if params[:provider_site_settings].blank?
+
+    params[:provider_site_settings].permit(*keys).to_h.with_indifferent_access
   end
 end
