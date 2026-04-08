@@ -2,6 +2,10 @@ body.composer-open .chat-drawer-outlet-container {
   bottom: 11px; // prevent height of grippie from obscuring ...is typing indicator
 }
 
+.chat-drawer-outlet-container.beside-composer {
+  padding-bottom: 0;
+}
+
 .chat-drawer-resizer {
   position: absolute;
   top: -5px;
