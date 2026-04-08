@@ -129,6 +129,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
     end
 
     context "when triggering new workflows" do
+      before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
+
       context "when path does not match any webhook node" do
         let(:params) { super().merge(path: "unknown") }
 
@@ -203,6 +205,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
                 end
               end,
           )
+          DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
         end
 
         context "when request has valid basic auth" do
@@ -317,6 +320,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
                 end
               end,
           )
+          DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+          DiscourseWorkflows::WorkflowDependencyIndexer.call(unprotected_workflow)
         end
 
         context "when request has no auth" do
@@ -365,6 +370,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
                 end
               end,
           )
+          DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
         end
 
         it { is_expected.to run_successfully }
