@@ -35,7 +35,7 @@ export default class CanvasContextMenu extends Component {
     const nodeEl = event.target.closest(".workflow-rete-node");
     if (nodeEl) {
       const clientId = nodeEl.dataset.clientId;
-      if (clientId && !this.args.rete.getSelectedIds().has(clientId)) {
+      if (clientId && !this.args.rete.getSelectedIds().nodeIds.has(clientId)) {
         this.args.rete.selectableNodes.select(clientId, false);
       }
       this.contextMenu = {
