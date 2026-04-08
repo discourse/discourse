@@ -60,6 +60,8 @@ RSpec.describe DiscourseWorkflows::Credential::Destroy do
         )
       end
 
+      before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
+
       it { is_expected.to fail_a_policy(:credential_not_in_use) }
 
       it "exposes referencing workflows" do
