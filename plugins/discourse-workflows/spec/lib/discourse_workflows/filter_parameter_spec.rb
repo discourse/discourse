@@ -68,64 +68,64 @@ RSpec.describe DiscourseWorkflows::FilterParameter do
       end
     end
 
-    context "with number type" do
+    context "with integer type" do
       it "equals" do
-        expect(described_class.evaluate_type("number", 42, 42, "equals", {})).to be(true)
-        expect(described_class.evaluate_type("number", 42, 43, "equals", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 42, 42, "equals", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 42, 43, "equals", {})).to be(false)
       end
 
       it "notEquals" do
-        expect(described_class.evaluate_type("number", 42, 43, "notEquals", {})).to be(true)
-        expect(described_class.evaluate_type("number", 42, 42, "notEquals", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 42, 43, "notEquals", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 42, 42, "notEquals", {})).to be(false)
       end
 
       it "gt" do
-        expect(described_class.evaluate_type("number", 42, 10, "gt", {})).to be(true)
-        expect(described_class.evaluate_type("number", 5, 10, "gt", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 42, 10, "gt", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 5, 10, "gt", {})).to be(false)
       end
 
       it "lt" do
-        expect(described_class.evaluate_type("number", 10, 20, "lt", {})).to be(true)
-        expect(described_class.evaluate_type("number", 20, 10, "lt", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 10, 20, "lt", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 20, 10, "lt", {})).to be(false)
       end
 
       it "gte" do
-        expect(described_class.evaluate_type("number", 10, 10, "gte", {})).to be(true)
-        expect(described_class.evaluate_type("number", 11, 10, "gte", {})).to be(true)
-        expect(described_class.evaluate_type("number", 9, 10, "gte", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 10, 10, "gte", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 11, 10, "gte", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 9, 10, "gte", {})).to be(false)
       end
 
       it "lte" do
-        expect(described_class.evaluate_type("number", 10, 10, "lte", {})).to be(true)
-        expect(described_class.evaluate_type("number", 9, 10, "lte", {})).to be(true)
-        expect(described_class.evaluate_type("number", 11, 10, "lte", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 10, 10, "lte", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 9, 10, "lte", {})).to be(true)
+        expect(described_class.evaluate_type("integer", 11, 10, "lte", {})).to be(false)
       end
 
       it "returns false for unknown operations" do
-        expect(described_class.evaluate_type("number", 1, 2, "unknown", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 1, 2, "unknown", {})).to be(false)
       end
 
       it "handles string numeric values" do
-        expect(described_class.evaluate_type("number", "42", "42", "equals", {})).to be(true)
-        expect(described_class.evaluate_type("number", "10.5", "5", "gt", {})).to be(true)
+        expect(described_class.evaluate_type("integer", "42", "42", "equals", {})).to be(true)
+        expect(described_class.evaluate_type("integer", "10.5", "5", "gt", {})).to be(true)
       end
 
       it "returns false when left value is not numeric" do
-        expect(described_class.evaluate_type("number", "hello", 42, "equals", {})).to be(false)
-        expect(described_class.evaluate_type("number", "hello", 42, "gt", {})).to be(false)
+        expect(described_class.evaluate_type("integer", "hello", 42, "equals", {})).to be(false)
+        expect(described_class.evaluate_type("integer", "hello", 42, "gt", {})).to be(false)
       end
 
       it "returns false when right value is not numeric" do
-        expect(described_class.evaluate_type("number", 42, "hello", "equals", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 42, "hello", "equals", {})).to be(false)
       end
 
       it "returns false when both values are not numeric" do
-        expect(described_class.evaluate_type("number", "foo", "bar", "equals", {})).to be(false)
+        expect(described_class.evaluate_type("integer", "foo", "bar", "equals", {})).to be(false)
       end
 
       it "returns false for nil values" do
-        expect(described_class.evaluate_type("number", nil, 42, "equals", {})).to be(false)
-        expect(described_class.evaluate_type("number", 42, nil, "equals", {})).to be(false)
+        expect(described_class.evaluate_type("integer", nil, 42, "equals", {})).to be(false)
+        expect(described_class.evaluate_type("integer", 42, nil, "equals", {})).to be(false)
       end
     end
 

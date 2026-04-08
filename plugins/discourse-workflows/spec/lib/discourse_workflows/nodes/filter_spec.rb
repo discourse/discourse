@@ -45,7 +45,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
                 "leftValue" => "={{ $json.category_id }}",
                 "rightValue" => "5",
                 "operator" => {
-                  "type" => "number",
+                  "type" => "integer",
                   "operation" => "equals",
                 },
               },
@@ -70,7 +70,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
                 "leftValue" => "={{ $json.category_id }}",
                 "rightValue" => "5",
                 "operator" => {
-                  "type" => "number",
+                  "type" => "integer",
                   "operation" => "equals",
                 },
               },

@@ -35,11 +35,11 @@ module DiscourseWorkflows
               required: false,
             },
             height: {
-              type: :number,
+              type: :integer,
               required: false,
             },
             width: {
-              type: :number,
+              type: :integer,
               required: false,
             },
             color: {

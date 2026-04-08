@@ -186,7 +186,7 @@ export function fieldSupportsExpression(schema = {}) {
     return Boolean(schema.expression);
   }
 
-  return ["string", "integer", "number", "icon"].includes(fieldType(schema));
+  return ["string", "integer", "icon"].includes(fieldType(schema));
 }
 
 export function fieldShowDescription(schema = {}) {
@@ -206,7 +206,7 @@ export function fieldInputType(schema = {}) {
   if (ui.control === "password") {
     return "password";
   }
-  return ["integer", "number"].includes(fieldType(schema)) ? "number" : "text";
+  return fieldType(schema) === "integer" ? "number" : "text";
 }
 
 export function fieldValue(schema = {}, value) {

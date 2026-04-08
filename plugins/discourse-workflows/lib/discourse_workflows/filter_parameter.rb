@@ -35,7 +35,7 @@ module DiscourseWorkflows
       case type
       when "string"
         evaluate_string(left, right, operation, options)
-      when "number", "integer"
+      when "integer"
         evaluate_number(left, right, operation)
       when "boolean"
         evaluate_boolean(left, right, operation)

@@ -18,7 +18,7 @@ export default class SchemaField extends Component {
       string: "discourse-text",
       object: "cube",
       boolean: "far-square-check",
-      number: "hashtag",
+      integer: "hashtag",
       array: "layer-group",
     };
     return icons[type];

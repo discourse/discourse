@@ -30,7 +30,7 @@ function fieldsFromConfig(configArray) {
 }
 
 const FORM_FIELD_TYPE_MAP = {
-  number: "number",
+  number: "integer",
   checkbox: "boolean",
 };
 

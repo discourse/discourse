@@ -30,7 +30,6 @@ const OPERATORS_BY_TYPE = {
     "empty",
     "notEmpty",
   ],
-  number: ["equals", "notEquals", "gt", "lt", "gte", "lte"],
   integer: ["equals", "notEquals", "gt", "lt", "gte", "lte"],
   boolean: ["true", "false", "equals", "notEquals"],
   array: ["contains", "notContains", "empty", "notEmpty"],

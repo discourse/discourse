@@ -44,7 +44,7 @@ module DiscourseWorkflows
               options: %w[time_interval webhook],
             },
             wait_amount: {
-              type: :number,
+              type: :integer,
               required: true,
               default: 1,
               visible_if: {
@@ -75,7 +75,7 @@ module DiscourseWorkflows
               },
             },
             timeout_amount: {
-              type: :number,
+              type: :integer,
               required: false,
               visible_if: {
                 resume: "webhook",

@@ -5,7 +5,7 @@ import ConditionBuilder from "./condition-builder";
 function columnTypeToFieldType(columnType) {
   switch (columnType) {
     case "number":
-      return "number";
+      return "integer";
     case "boolean":
       return "boolean";
     default:
