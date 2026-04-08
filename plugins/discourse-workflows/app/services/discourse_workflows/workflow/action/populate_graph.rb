@@ -62,6 +62,7 @@ module DiscourseWorkflows
       end
 
       workflow.update!(**attributes)
+      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
     end
 
     def validate_nodes
