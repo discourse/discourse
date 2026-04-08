@@ -12,10 +12,11 @@ class DiscourseGamification::AdminGamificationLeaderboardController < Admin::Adm
   end
 
   def show
-    render json:
-             AdminLeaderboardSerializer.new(
-               DiscourseGamification::GamificationLeaderboard.find(params[:id]),
-             )
+    leaderboard = DiscourseGamification::GamificationLeaderboard.find(params[:id])
+
+    render_json_dump(
+      { leaderboard: serialize_data(leaderboard, AdminLeaderboardSerializer, root: false) },
+    )
   end
 
   def create

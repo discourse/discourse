@@ -63,7 +63,7 @@ RSpec.describe DiscourseGamification::AdminGamificationLeaderboardController do
       get "/admin/plugins/discourse-gamification/leaderboards/#{leaderboard.id}.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["admin_leaderboard"]).to include(
+      expect(response.parsed_body["leaderboard"]).to include(
         "score_overrides" => {
           "like_received" => 10,
         },
