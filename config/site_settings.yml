@@ -234,6 +234,9 @@ basic:
     min: 0
     max: 36500
     area: "posts_and_topics"
+    upcoming_change_default_override:
+      upcoming_change: "enable_suggested_topics_max_days_old_new_default"
+      new_default: 180
   suggested_topics_max_days_old:
     default: 365
     min: 7
@@ -4320,3 +4323,10 @@ experimental:
   experimental_topic_category_change_notification:
     default: false
     hidden: true
+  enable_suggested_topics_max_days_old_new_default:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "site_setting_default,all_members"
