@@ -110,8 +110,8 @@ after_initialize do
   add_to_serializer :site,
                     :topic_admin_button_workflows,
                     include_condition: -> { scope.is_staff? } do
-    DiscourseWorkflows::Workflow
-      .enabled_nodes_of_type("trigger:topic_admin_button")
+    DiscourseWorkflows::WorkflowDependency
+      .enabled_workflows_with_node_type("trigger:topic_admin_button")
       .map do |workflow, node|
         {
           trigger_node_id: node["id"],

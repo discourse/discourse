@@ -25,8 +25,8 @@ module DiscourseWorkflows
     end
 
     def fetch_workflow(params:)
-      DiscourseWorkflows::Workflow
-        .enabled_nodes_of_type("trigger:topic_admin_button")
+      DiscourseWorkflows::WorkflowDependency
+        .enabled_workflows_with_node_type("trigger:topic_admin_button")
         .find { |_, node| node["id"] == params.trigger_node_id }
         &.first
     end
