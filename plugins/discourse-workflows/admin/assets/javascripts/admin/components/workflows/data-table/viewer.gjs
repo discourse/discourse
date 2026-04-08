@@ -35,7 +35,6 @@ const indeterminate = modifier((element, [value]) => {
 export default class DataTableViewer extends Component {
   @service modal;
   @service dialog;
-  @service router;
 
   @tracked rows = null;
   @tracked dataTable = null;
@@ -182,13 +181,6 @@ export default class DataTableViewer extends Component {
   }
 
   @action
-  goBack() {
-    this.router.transitionTo(
-      "adminPlugins.show.discourse-workflows-data-tables"
-    );
-  }
-
-  @action
   async saveCell(row, columnName, value) {
     try {
       const result = await ajax(`${this.apiBasePath}/rows/${row.id}.json`, {
@@ -305,12 +297,6 @@ export default class DataTableViewer extends Component {
   <template>
     <div class="workflows-data-table-viewer">
       <div class="workflows-data-table-viewer__header">
-        <DButton
-          @action={{this.goBack}}
-          @icon="chevron-left"
-          @label="discourse_workflows.data_tables.back"
-          class="btn-flat"
-        />
         {{#if this.editingName}}
           <input
             type="text"
