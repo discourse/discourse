@@ -4,6 +4,15 @@ module DiscourseWorkflows
   class NodeType
     extend NodeTypeDescriptor
 
+    def self.inherited(subclass)
+      super
+      DiscourseWorkflows::NodeType.registered_nodes << subclass
+    end
+
+    def self.registered_nodes
+      @registered_nodes ||= []
+    end
+
     def self.identifier
       raise NotImplementedError
     end

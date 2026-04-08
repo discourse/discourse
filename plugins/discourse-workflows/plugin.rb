@@ -52,44 +52,10 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_nodes)
 DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential_types)
 
 after_initialize do
-  %w[
-    TopicClosed
-    PostCreated
-    TopicCreated
-    TopicCategoryChanged
-    TopicTagChanged
-    StaleTopic
-    Webhook
-    Manual
-    Schedule
-    FormTrigger
-    TopicAdminButton
-    Error
-    TopicTags
-    Code
-    FetchTopic
-    ListTopics
-    CreatePost
-    CreateTopic
-    SetFields
-    SplitOut
-    Sort
-    HttpRequest
-    Limit
-    Log
-    DataTable
-    ChatApproval
-    Badge
-    Group
-    Form
-    RespondToWebhook
-    If
-    Filter
-    LoopOverItems
-    Wait
-    StickyNote
-  ].each do |name|
-    node_class = DiscourseWorkflows::Nodes.const_get(name)::V1
+  nodes_dir = File.join(File.dirname(__FILE__), "lib/discourse_workflows/nodes")
+  Dir.glob(File.join(nodes_dir, "**/*.rb")).each { |f| Rails.autoloaders.main.load_file(f) }
+
+  DiscourseWorkflows::NodeType.registered_nodes.each do |node_class|
     DiscoursePluginRegistry.register_discourse_workflows_node(node_class, self)
 
     next unless node_class.respond_to?(:event_name) && node_class.event_name
