@@ -968,4 +968,144 @@ describe DiscourseDataExplorer::QueryController do
       expect(response.parsed_body["rows"]).to eq([[42]])
     end
   end
+
+  describe "Admin" do
+    fab!(:admin)
+
+    before do
+      sign_in(admin)
+      SiteSetting.data_explorer_enabled = true
+    end
+
+    describe "#run_draft" do
+      it "runs valid SQL and returns results" do
+        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
+             params: {
+               sql: "SELECT 42 AS answer",
+             }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["success"]).to eq(true)
+        expect(json["columns"]).to eq(["answer"])
+        expect(json["rows"]).to eq([[42]])
+      end
+
+      it "rejects SQL with semicolons" do
+        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
+             params: {
+               sql: "SELECT 1; DROP TABLE users",
+             }
+        expect(response.status).to eq(422)
+      end
+
+      it "returns error for invalid SQL" do
+        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
+             params: {
+               sql: "SELEKT invalid_syntax",
+             }
+        expect(response.status).to eq(422)
+      end
+
+      it "requires sql parameter" do
+        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json"
+        expect(response.status).to eq(400)
+      end
+
+      it "requires admin access" do
+        sign_in(Fabricate(:user))
+        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
+             params: {
+               sql: "SELECT 1",
+             }
+        expect(response.status).to eq(403)
+      end
+    end
+
+    describe "#generate_with_ai" do
+      before { SiteSetting.data_explorer_ai_queries_enabled = true }
+
+      it "returns 404 when AI queries are disabled" do
+        SiteSetting.data_explorer_ai_queries_enabled = false
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "show me users",
+               generation_id: SecureRandom.uuid,
+             }
+        expect(response.status).to eq(404)
+      end
+
+      it "requires ai_description parameter" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               generation_id: SecureRandom.uuid,
+             }
+        expect(response.status).to eq(400)
+      end
+
+      it "requires generation_id parameter" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "show me users",
+             }
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects ai_description over 2000 characters" do
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "a" * 2001,
+               generation_id: SecureRandom.uuid,
+             }
+        expect(response.status).to eq(400)
+      end
+
+      it "enqueues a generation job and returns generation_id" do
+        generation_id = SecureRandom.uuid
+
+        expect_enqueued_with(
+          job: :generate_de_query_with_ai,
+          args: {
+            generation_id: generation_id,
+            user_id: admin.id,
+            ai_description: "show me users",
+            existing_sql: nil,
+          },
+        ) do
+          post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+               params: {
+                 ai_description: "show me users",
+                 generation_id: generation_id,
+               }
+        end
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["generation_id"]).to eq(generation_id)
+        expect(json["status"]).to eq("generating")
+      end
+
+      it "passes existing_sql when provided" do
+        generation_id = SecureRandom.uuid
+
+        expect_enqueued_with(
+          job: :generate_de_query_with_ai,
+          args: {
+            generation_id: generation_id,
+            user_id: admin.id,
+            ai_description: "refine this query",
+            existing_sql: "SELECT 1",
+          },
+        ) do
+          post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+               params: {
+                 ai_description: "refine this query",
+                 generation_id: generation_id,
+                 existing_sql: "SELECT 1",
+               }
+        end
+
+        expect(response.status).to eq(200)
+      end
+    end
+  end
 end

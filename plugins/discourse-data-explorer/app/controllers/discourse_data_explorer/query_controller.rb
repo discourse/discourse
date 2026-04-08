@@ -162,22 +162,59 @@ module DiscourseDataExplorer
     end
 
     def create
-      permitted = %i[name description sql]
-      permitted << :ai_description if AiQueryEnqueuer.enabled?
-
-      query_params = params.require(:query).permit(*permitted)
-      ai_description = query_params.delete(:ai_description)&.strip
+      query_params = params.require(:query).permit(:name, :description, :sql)
       group_ids = params.require(:query)[:group_ids]
 
       query =
-        QueryCreator.create(
-          query_params: query_params,
-          ai_description: ai_description,
-          group_ids: group_ids,
-          user: current_user,
-        )
+        QueryCreator.create(query_params: query_params, group_ids: group_ids, user: current_user)
 
       render_serialized query, QueryDetailsSerializer, root: "query"
+    end
+
+    def generate_with_ai
+      raise Discourse::NotFound unless AiQueryEnqueuer.enabled?
+
+      ai_description = params.require(:ai_description).strip
+      if ai_description.length > 2000
+        raise Discourse::InvalidParameters.new("ai_description is too long (max 2000 characters)")
+      end
+
+      generation_id = params.require(:generation_id)
+      existing_sql = params[:existing_sql]&.strip.presence
+
+      AiQueryEnqueuer.enqueue(
+        generation_id: generation_id,
+        user: current_user,
+        ai_description: ai_description,
+        existing_sql: existing_sql,
+      )
+
+      render json: { generation_id: generation_id, status: "generating" }
+    end
+
+    def run_draft
+      rate_limit_query_runs!
+      check_xhr
+
+      sql = params.require(:sql)
+      query = Query.new(sql: sql)
+
+      limit =
+        fetch_limit_from_params(
+          default: SiteSetting.data_explorer_query_result_limit,
+          max: QUERY_RESULT_MAX_LIMIT,
+        )
+
+      query_params = QueryRunner.parse_params(params[:params])
+      result = DataExplorer.run_query(query, query_params, current_user: current_user, limit: limit)
+
+      if result[:error]
+        render json: format_query_error(result[:error]), status: :unprocessable_entity
+      else
+        render json: ResultFormatConverter.convert(:json, result, query_params: query_params)
+      end
+    rescue MultiJson::ParseError
+      render_invalid_json_params
     end
 
     def update

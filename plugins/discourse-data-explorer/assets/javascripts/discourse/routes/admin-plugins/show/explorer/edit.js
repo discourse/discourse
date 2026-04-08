@@ -54,8 +54,6 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
   }
 
   setupController(controller, model, transition) {
-    controller.teardownAiGeneration();
-
     const cachedResult = model.model.cached_result;
     const shouldAutoRun = !!transition.to.queryParams.run;
     const showCachedResult = !!cachedResult && !shouldAutoRun;
@@ -66,13 +64,7 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
       showResults: showCachedResult,
       isCachedResult: showCachedResult,
       dirty: false,
-      aiGenerating: false,
       shouldAutoRun,
     });
-    controller.setupAiGeneration();
-  }
-
-  resetController(controller) {
-    controller.teardownAiGeneration();
   }
 }

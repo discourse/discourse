@@ -19,7 +19,6 @@ en:
         run_sql: "Ran SQL query"
   discourse_data_explorer:
     ai:
-      generating_name: "Generating..."
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."
   discourse_automation:
