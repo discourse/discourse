@@ -19,7 +19,7 @@
       color: var(--primary);
     }
 
-    &.--active {
+    &.is-active {
       color: var(--tertiary);
       border-bottom-color: var(--tertiary);
     }
@@ -65,16 +65,14 @@
 }
 
 .workflows-configurator-form {
-  .topic-query-filter__icon,
-  .topic-query-filter__clear-btn {
-    display: none;
-  }
-}
-
-.workflows-configurator-form {
   align-items: stretch;
 
-  &.--hidden {
+  &.is-hidden {
+    display: none;
+  }
+
+  .topic-query-filter__icon,
+  .topic-query-filter__clear-btn {
     display: none;
   }
 
@@ -135,7 +133,7 @@
       outline-offset: 2px;
     }
 
-    &.--drag-over input {
+    &.is-drag-over input {
       border-color: var(--tertiary) !important;
       background: var(--tertiary-50);
     }

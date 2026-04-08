@@ -154,15 +154,21 @@ module DiscourseDataExplorer
     end
 
     def create
-      query =
-        Query.create!(
-          params
-            .require(:query)
-            .permit(:name, :description, :sql)
-            .merge(user_id: current_user.id, last_run_at: Time.now),
-        )
+      permitted = %i[name description sql]
+      permitted << :ai_description if AiQueryEnqueuer.enabled?
+
+      query_params = params.require(:query).permit(*permitted)
+      ai_description = query_params.delete(:ai_description)&.strip
       group_ids = params.require(:query)[:group_ids]
-      group_ids&.each { |group_id| query.query_groups.find_or_create_by!(group_id: group_id) }
+
+      query =
+        QueryCreator.create(
+          query_params: query_params,
+          ai_description: ai_description,
+          group_ids: group_ids,
+          user: current_user,
+        )
+
       render_serialized query, QueryDetailsSerializer, root: "query"
     end
 

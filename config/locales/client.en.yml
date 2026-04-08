@@ -3025,6 +3025,12 @@ en:
         filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        tag_category_admin_dropdown:
+          title: "Category and tag settings"
+          edit_category: "Edit category"
+          edit_category_description: "Adjust settings for %{badge}"
+          edit_tag: "Edit tag"
+          edit_tag_description: "Adjust settings for %{badge}"
         bulk_select_topics_dropdown:
           title: "Bulk Actions"
         bulk_select_bookmarks_dropdown:

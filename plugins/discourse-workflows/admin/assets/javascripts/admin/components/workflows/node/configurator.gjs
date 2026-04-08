@@ -249,7 +249,7 @@ export default class NodeConfigurator extends Component {
                   type="button"
                   class={{concatClass
                     "workflows-configurator__tab"
-                    (if (eq this.activeTab "parameters") "--active")
+                    (if (eq this.activeTab "parameters") "is-active")
                   }}
                   {{on "click" (fn this.switchTab "parameters")}}
                 >{{i18n
@@ -259,7 +259,7 @@ export default class NodeConfigurator extends Component {
                   type="button"
                   class={{concatClass
                     "workflows-configurator__tab"
-                    (if (eq this.activeTab "settings") "--active")
+                    (if (eq this.activeTab "settings") "is-active")
                   }}
                   {{on "click" (fn this.switchTab "settings")}}
                 >{{i18n
@@ -273,7 +273,7 @@ export default class NodeConfigurator extends Component {
                   @onRegisterApi={{this.registerParametersApi}}
                   @validateOn="change"
                   class="workflows-configurator-form
-                    {{unless (eq this.activeTab 'parameters') '--hidden'}}"
+                    {{unless (eq this.activeTab 'parameters') 'is-hidden'}}"
                   as |form transientData|
                 >
                   <PropertyEngineConfigurator

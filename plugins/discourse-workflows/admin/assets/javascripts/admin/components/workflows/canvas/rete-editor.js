@@ -220,7 +220,7 @@ export class ReteEditorBridge {
             context.data.position
           );
           if (!this._wasDragging) {
-            this._container.classList.add("--dragging");
+            this._container.classList.add("is-dragging");
           }
           this._wasDragging = true;
         // falls through to emit transform
@@ -251,7 +251,7 @@ export class ReteEditorBridge {
         case "pointerup":
           if (this._wasDragging) {
             this._wasDragging = false;
-            this._container.classList.remove("--dragging");
+            this._container.classList.remove("is-dragging");
             this._callbacks.onNodeDragEnd?.();
           }
           break;

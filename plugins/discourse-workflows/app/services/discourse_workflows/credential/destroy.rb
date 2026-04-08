@@ -29,7 +29,12 @@ module DiscourseWorkflows
     end
 
     def fetch_referencing_workflows(credential:)
-      DiscourseWorkflows::Workflow.referencing_credential(credential.id).to_a
+      workflow_ids =
+        DiscourseWorkflows::WorkflowDependency.workflows_referencing(
+          "credential_id",
+          credential.id,
+        ).pluck(:workflow_id)
+      DiscourseWorkflows::Workflow.where(id: workflow_ids).to_a
     end
 
     def credential_not_in_use(referencing_workflows:)

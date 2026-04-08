@@ -10,7 +10,7 @@
   pointer-events: none;
   transition: opacity 0.15s;
 
-  &.--visible {
+  &.is-visible {
     opacity: 1;
     pointer-events: auto;
   }
@@ -23,7 +23,7 @@
     margin: 0 auto;
   }
 
-  .workflows-canvas__rete-container.--dragging & {
+  .workflows-canvas__rete-container.is-dragging & {
     opacity: 0;
     pointer-events: none;
   }
@@ -59,7 +59,7 @@
       }
     }
 
-    &.--disabled {
+    &.is-disabled {
       opacity: 0.4;
       cursor: not-allowed;
 

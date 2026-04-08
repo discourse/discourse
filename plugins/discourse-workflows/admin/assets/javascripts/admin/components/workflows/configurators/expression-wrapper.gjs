@@ -67,7 +67,7 @@ export default class ExpressionWrapper extends Component {
     <div
       class={{concatClass
         "workflows-property-engine__control-wrapper"
-        (if this.isDragOver "--drag-over")
+        (if this.isDragOver "is-drag-over")
       }}
       data-supports-expression={{if @supportsExpression "true"}}
       {{on "dragover" this.handleDragOver}}

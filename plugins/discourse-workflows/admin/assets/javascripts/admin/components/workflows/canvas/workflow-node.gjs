@@ -99,9 +99,9 @@ export default class WorkflowNode extends Component {
     <div
       class={{concatClass
         "workflow-rete-node"
-        (if this.isTrigger "--trigger")
-        (if this.isBranching "--branching")
-        (if @node.selected "--selected")
+        (if this.isTrigger "is-trigger")
+        (if this.isBranching "is-branching")
+        (if @node.selected "is-selected")
       }}
       data-client-id={{this.data.clientId}}
     >
@@ -130,7 +130,7 @@ export default class WorkflowNode extends Component {
               <button
                 type="button"
                 class="workflow-canvas-toolbar__btn --success
-                  {{unless @workflowEnabled '--disabled'}}"
+                  {{unless @workflowEnabled 'is-disabled'}}"
                 disabled={{unless @workflowEnabled true}}
                 {{on "pointerdown" this.stopPropagation}}
                 {{on "click" this.handleManualTrigger}}

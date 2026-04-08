@@ -2,6 +2,10 @@
   list-style: none;
   margin: 0;
   padding: 0;
+
+  &.is-nested {
+    padding-left: var(--space-9);
+  }
 }
 
 .workflows-schema-field {
@@ -13,14 +17,10 @@
     padding: 0.35em 0;
   }
 
-  &.--has-children > .workflows-schema-field__row {
+  &.has-children > &__row {
     &:hover .workflows-schema-field__key {
       color: var(--primary);
     }
-  }
-
-  .workflows-schema-field__row-key [draggable="true"] {
-    cursor: grab;
   }
 
   &__toggle {
@@ -37,26 +37,22 @@
     display: flex;
     align-items: center;
     cursor: grab;
-  }
 
-  &__key:hover {
-    background-color: var(--primary-100);
-    border-color: var(--primary-300);
-    color: var(--primary);
-  }
+    &:hover {
+      background-color: var(--primary-100);
+      border-color: var(--primary-300);
+      color: var(--primary);
 
-  &__key:hover .workflows-schema-field__key-icon {
-    border-color: var(--primary-300);
+      .workflows-schema-field__key-icon {
+        border-color: var(--primary-300);
+      }
+    }
   }
 
   &__key-icon {
     border-right: 1px solid var(--primary-200);
     padding-right: var(--space-1);
     font-size: var(--font-down-1);
-  }
-
-  .workflows-schema-field-list.--nested {
-    padding-left: var(--space-9);
   }
 
   &__type {

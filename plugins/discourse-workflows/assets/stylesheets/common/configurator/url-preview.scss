@@ -30,7 +30,7 @@
     color: var(--primary-medium);
   }
 
-  &.--copied {
+  &.is-copied {
     border-color: var(--success);
 
     .d-icon {

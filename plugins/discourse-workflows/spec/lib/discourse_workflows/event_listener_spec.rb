@@ -34,6 +34,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
         ],
         connections: [],
       )
+    DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
 
     topic.update_status("closed", true, admin)
 
@@ -46,27 +47,29 @@ RSpec.describe DiscourseWorkflows::EventListener do
   it "does not enqueue when plugin is disabled" do
     SiteSetting.discourse_workflows_enabled = false
 
-    Fabricate(
-      :discourse_workflows_workflow,
-      created_by: user,
-      enabled: true,
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:topic_closed",
-          "type_version" => "1.0",
-          "name" => "Topic Closed",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: user,
+        enabled: true,
+        nodes: [
+          {
+            "id" => "trigger-1",
+            "type" => "trigger:topic_closed",
+            "type_version" => "1.0",
+            "name" => "Topic Closed",
+            "position" => {
+              "x" => 0,
+              "y" => 0,
+            },
+            "position_index" => 0,
+            "configuration" => {
+            },
           },
-          "position_index" => 0,
-          "configuration" => {
-          },
-        },
-      ],
-      connections: [],
-    )
+        ],
+        connections: [],
+      )
+    DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
 
     topic.update_status("closed", true, admin)
 

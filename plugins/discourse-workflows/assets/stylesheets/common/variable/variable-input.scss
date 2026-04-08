@@ -21,7 +21,7 @@
     box-shadow: 0 0 0 1px var(--tertiary);
   }
 
-  &.--drag-over {
+  &.is-drag-over {
     border-color: var(--tertiary);
     background: color-mix(in srgb, var(--tertiary) 5%, var(--secondary));
   }

@@ -21,12 +21,12 @@ const hoverVisibility = modifier(function (element, _, named) {
 
   function show() {
     cancel(timer);
-    el.classList.add("--visible");
+    el.classList.add("is-visible");
   }
 
   function scheduleHide() {
     cancel(timer);
-    timer = later(() => el.classList.remove("--visible"), delay);
+    timer = later(() => el.classList.remove("is-visible"), delay);
   }
 
   target?.addEventListener("mouseenter", show);

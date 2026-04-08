@@ -40,7 +40,10 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerTopicAdminButton do
     let(:params) { { trigger_node_id: "trigger-1", topic_id: topic.id } }
     let(:dependencies) { { guardian: Guardian.new(admin) } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
+    before do
+      SiteSetting.discourse_workflows_enabled = true
+      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+    end
 
     context "when contract is invalid" do
       let(:params) { { trigger_node_id: nil, topic_id: nil } }

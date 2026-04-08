@@ -129,7 +129,7 @@ export default <template>
                         <td class="d-table__cell --overview">
                           <LinkTo
                             class="d-table__overview-link"
-                            @route="adminPlugins.show.explorer.details"
+                            @route="adminPlugins.show.explorer.edit"
                             @model={{query.id}}
                           >
                             <div
@@ -198,7 +198,7 @@ export default <template>
                           <div class="d-table__cell-actions">
                             <LinkTo
                               {{on "click" @controller.scrollTop}}
-                              @route="adminPlugins.show.explorer.details"
+                              @route="adminPlugins.show.explorer.edit"
                               @model={{query.id}}
                               class="btn btn-default btn-small"
                             >

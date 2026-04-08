@@ -1662,6 +1662,8 @@ RSpec.describe GroupsController do
       end
 
       it "notifies users when the param is present" do
+        Jobs.run_immediately!
+
         expect {
           put "/groups/#{group.id}/members.json",
               params: {

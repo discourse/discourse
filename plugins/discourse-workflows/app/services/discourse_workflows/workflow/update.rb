@@ -36,6 +36,7 @@ module DiscourseWorkflows
     transaction do
       step :update_workflow
       only_if(:graph_data_provided) { step :populate_graph }
+      only_if(:error_workflow_changed_without_graph) { step :reindex_dependencies }
     end
 
     step :clear_site_cache
@@ -71,6 +72,14 @@ module DiscourseWorkflows
 
     def workflow_enabled(workflow:)
       workflow.enabled?
+    end
+
+    def error_workflow_changed_without_graph(workflow:, params:)
+      !graph_data_provided(params:) && workflow.saved_change_to_error_workflow_id?
+    end
+
+    def reindex_dependencies(workflow:)
+      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
     end
 
     def start_seconds_schedules(workflow:)

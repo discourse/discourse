@@ -12,7 +12,7 @@ module DiscourseWorkflows
     private
 
     def fetch_schedule_triggers
-      DiscourseWorkflows::Workflow.enabled_trigger_nodes("schedule")
+      DiscourseWorkflows::WorkflowDependency.enabled_workflows_with_node_type("trigger:schedule")
     end
 
     def fire_due_triggers(schedule_triggers:)

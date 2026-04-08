@@ -121,18 +121,24 @@ module DiscourseWorkflows
     end
 
     def find_webhook_nodes(params:)
-      resolver = DiscourseWorkflows::ExpressionResolver.new({})
-      begin
-        DiscourseWorkflows::Workflow
-          .enabled_nodes_of_type("trigger:webhook")
-          .select do |_workflow, node|
-            config = node["configuration"] || {}
-            config["http_method"] == params.http_method &&
-              resolver.resolve(config["path"]) == params.path
-          end
-      ensure
-        resolver.dispose
-      end
+      workflow_ids =
+        DiscourseWorkflows::WorkflowDependency.where(
+          dependency_type: "webhook_path",
+          dependency_key: params.path,
+        ).pluck(:workflow_id)
+
+      DiscourseWorkflows::Workflow
+        .enabled
+        .where(id: workflow_ids)
+        .flat_map do |workflow|
+          workflow
+            .nodes_of_type("trigger:webhook")
+            .select do |node|
+              config = node["configuration"] || {}
+              config["path"] == params.path && config["http_method"] == params.http_method
+            end
+            .map { |node| [workflow, node] }
+        end
     end
 
     def filter_authenticated_nodes(webhook_nodes:, params:)

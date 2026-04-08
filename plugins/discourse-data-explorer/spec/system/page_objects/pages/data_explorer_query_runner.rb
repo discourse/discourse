@@ -8,8 +8,9 @@ module PageObjects
         self
       end
 
-      def visit_admin_query(query_id, query_string: nil)
+      def visit_admin_query(query_id, query_string: nil, params: nil)
         path = "/admin/plugins/discourse-data-explorer/queries/#{query_id}"
+        query_string = "params=#{CGI.escape(params.to_json)}" if params.present?
         path += "?#{query_string}" if query_string.present?
         page.visit(path)
         self

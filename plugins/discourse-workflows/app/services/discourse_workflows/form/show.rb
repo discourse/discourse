@@ -52,8 +52,8 @@ module DiscourseWorkflows
     end
 
     def fetch_workflow_by_uuid(params:)
-      DiscourseWorkflows::Workflow
-        .enabled_nodes_of_type("trigger:form")
+      DiscourseWorkflows::WorkflowDependency
+        .enabled_workflows_with_node_type("trigger:form")
         .each do |workflow, node|
           config = node["configuration"] || {}
           return workflow if config["uuid"] == params.uuid

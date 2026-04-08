@@ -3,6 +3,7 @@
 Fabricator(:discourse_workflows_workflow, class_name: "DiscourseWorkflows::Workflow") do
   name { sequence(:name) { |n| "Workflow #{n}" } }
   created_by { Fabricate(:user) }
+  after_create { |workflow| DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
 end
 
 Fabricator(:discourse_workflows_execution, class_name: "DiscourseWorkflows::Execution") do
