@@ -17,7 +17,7 @@ class NestedTopic::TogglePin
   policy :post_is_root
   model :nested_topic, :find_or_create_nested_topic
   policy :within_pin_limit
-  step :toggle_pin
+  transaction { step :toggle_pin }
 
   private
 

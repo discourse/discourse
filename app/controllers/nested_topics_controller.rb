@@ -4,8 +4,9 @@ class NestedTopicsController < ApplicationController
   skip_before_action :check_xhr, only: %i[show context]
 
   before_action :ensure_nested_replies_enabled
-  before_action :find_topic
-  before_action :ensure_not_pm
+  before_action :find_topic_with_topic_view, only: %i[show children context]
+  before_action :find_topic, only: %i[pin toggle]
+  before_action :ensure_not_pm, only: %i[show children context]
 
   # GET /n/:slug/:topic_id (HTML + JSON)
   # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)
@@ -85,6 +86,7 @@ class NestedTopicsController < ApplicationController
   def toggle
     NestedTopic::Toggle.call(service_params.deep_merge(params: { topic_id: @topic.id })) do
       on_success { |params:| render json: { is_nested_view: params.enabled } }
+      on_failed_contract { raise Discourse::InvalidParameters }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:staff_can_edit) { raise Discourse::InvalidAccess }
       on_failure { raise Discourse::InvalidParameters }
@@ -144,11 +146,16 @@ class NestedTopicsController < ApplicationController
     end
   end
 
-  def find_topic
+  def find_topic_with_topic_view
     topic_id = params[:topic_id].to_i
     @topic_view =
       TopicView.new(topic_id, current_user, skip_custom_fields: true, skip_post_loading: true)
     @topic = @topic_view.topic
+  end
+
+  def find_topic
+    @topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless @topic
   end
 
   def validated_sort

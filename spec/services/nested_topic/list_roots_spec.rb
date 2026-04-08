@@ -78,10 +78,7 @@ RSpec.describe NestedTopic::ListRoots do
       fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
       fab!(:pinned_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
 
-      before do
-        nested = NestedTopic.create!(topic: topic)
-        nested.update!(pinned_post_ids: [pinned_post.id])
-      end
+      before { Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [pinned_post.id]) }
 
       it { is_expected.to run_successfully }
 
@@ -102,10 +99,7 @@ RSpec.describe NestedTopic::ListRoots do
 
       fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1) }
 
-      before do
-        nested = NestedTopic.create!(topic: topic)
-        nested.update!(pinned_post_ids: [root_post.id])
-      end
+      before { Fabricate(:nested_topic, topic: topic).update!(pinned_post_ids: [root_post.id]) }
 
       it { is_expected.to run_successfully }
 

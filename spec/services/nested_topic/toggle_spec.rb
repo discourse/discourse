@@ -43,7 +43,7 @@ RSpec.describe NestedTopic::Toggle do
       end
 
       context "when nested topic already exists" do
-        before { NestedTopic.create!(topic: topic) }
+        before { Fabricate(:nested_topic, topic: topic) }
 
         it { is_expected.to run_successfully }
 
@@ -56,7 +56,7 @@ RSpec.describe NestedTopic::Toggle do
     context "when disabling nested view" do
       let(:enabled) { false }
 
-      before { NestedTopic.create!(topic: topic) }
+      before { Fabricate(:nested_topic, topic: topic) }
 
       it { is_expected.to run_successfully }
 

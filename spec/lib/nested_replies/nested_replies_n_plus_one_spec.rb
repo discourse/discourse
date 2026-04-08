@@ -1,24 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Nested replies N+1 elimination", type: :request do
+  include NestedRepliesHelpers
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
-
-  def build_chain(depth:, topic:)
-    posts = [op]
-    depth.times do |i|
-      reply_to = posts.last.post_number
-      reply_to = nil if reply_to == 1
-      posts << Fabricate(
-        :post,
-        topic: topic,
-        user: Fabricate(:user),
-        reply_to_post_number: reply_to,
-      )
-    end
-    posts[1..]
-  end
 
   before { SiteSetting.nested_replies_enabled = true }
 
@@ -29,7 +16,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "preserves reply_to_post_number even at max depth" do
-      chain = build_chain(depth: 4, topic: topic)
+      chain = create_reply_chain(depth: 4)
       deep_reply =
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain.last.post_number)
       expect(deep_reply.reply_to_post_number).to eq(chain.last.post_number)
@@ -37,7 +24,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
     it "preserves reply_to_post_number under max depth" do
       SiteSetting.nested_replies_max_depth = 10
-      chain = build_chain(depth: 3, topic: topic)
+      chain = create_reply_chain(depth: 3)
       reply =
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain.last.post_number)
       expect(reply.reply_to_post_number).to eq(chain.last.post_number)
@@ -46,7 +33,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
   describe "after_create stats increment" do
     it "uses constant queries regardless of chain depth" do
-      chain_3 = build_chain(depth: 3, topic: topic)
+      chain_3 = create_reply_chain(depth: 3)
       queries_3 =
         track_sql_queries do
           Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain_3.last.post_number)
@@ -54,7 +41,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
       topic2 = Fabricate(:topic, user: user)
       Fabricate(:post, topic: topic2, user: user, post_number: 1)
-      chain_10 = build_chain(depth: 10, topic: topic2)
+      chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
       queries_10 =
         track_sql_queries do
           Fabricate(
@@ -71,7 +58,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "increments direct_reply_count on parent only and total_descendant_count on all ancestors" do
-      chain = build_chain(depth: 3, topic: topic)
+      chain = create_reply_chain(depth: 3)
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain.last.post_number)
 
       chain.each(&:reload)
@@ -89,7 +76,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "tracks whisper counts separately from regular counts" do
-      chain = build_chain(depth: 2, topic: topic)
+      chain = create_reply_chain(depth: 2)
       Fabricate(
         :post,
         topic: topic,
@@ -106,7 +93,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "does not increment whisper counts for regular posts" do
-      chain = build_chain(depth: 2, topic: topic)
+      chain = create_reply_chain(depth: 2)
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain.last.post_number)
 
       parent_stat = NestedViewPostStat.find_by(post_id: chain.last.id)
@@ -117,7 +104,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "increments whisper counts on all ancestors" do
-      chain = build_chain(depth: 3, topic: topic)
+      chain = create_reply_chain(depth: 3)
       Fabricate(
         :post,
         topic: topic,
@@ -136,14 +123,14 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
   describe "after_destroy stats decrement" do
     it "uses constant queries regardless of chain depth" do
-      chain_3 = build_chain(depth: 3, topic: topic)
+      chain_3 = create_reply_chain(depth: 3)
       leaf_3 =
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain_3.last.post_number)
       queries_3 = track_sql_queries { leaf_3.destroy! }
 
       topic2 = Fabricate(:topic, user: user)
       Fabricate(:post, topic: topic2, user: user, post_number: 1)
-      chain_10 = build_chain(depth: 10, topic: topic2)
+      chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
       leaf_10 =
         Fabricate(:post, topic: topic2, user: user, reply_to_post_number: chain_10.last.post_number)
       queries_10 = track_sql_queries { leaf_10.destroy! }
@@ -154,7 +141,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "clamps stats at zero" do
-      chain = build_chain(depth: 2, topic: topic)
+      chain = create_reply_chain(depth: 2)
       leaf =
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain.last.post_number)
       leaf.destroy!
@@ -168,7 +155,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "cleans up the destroyed post's own stat row" do
-      chain = build_chain(depth: 2, topic: topic)
+      chain = create_reply_chain(depth: 2)
       leaf =
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain.last.post_number)
       leaf_id = leaf.id
@@ -177,7 +164,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "decrements whisper counts when a whisper is destroyed" do
-      chain = build_chain(depth: 2, topic: topic)
+      chain = create_reply_chain(depth: 2)
       whisper =
         Fabricate(
           :post,
@@ -201,7 +188,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "does not decrement whisper counts when a regular post is destroyed" do
-      chain = build_chain(depth: 2, topic: topic)
+      chain = create_reply_chain(depth: 2)
       Fabricate(
         :post,
         topic: topic,
@@ -230,7 +217,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "uses constant queries regardless of ancestor depth" do
-      chain_3 = build_chain(depth: 3, topic: topic)
+      chain_3 = create_reply_chain(depth: 3)
 
       sign_in(admin)
 
@@ -242,7 +229,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
       topic2 = Fabricate(:topic, user: user)
       Fabricate(:post, topic: topic2, user: user, post_number: 1)
-      chain_10 = build_chain(depth: 10, topic: topic2)
+      chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
 
       # Warm up
       get context_url(topic2, chain_10.last.post_number)
@@ -256,7 +243,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "returns the correct ancestor chain" do
-      chain = build_chain(depth: 5, topic: topic)
+      chain = create_reply_chain(depth: 5)
       sign_in(admin)
 
       get context_url(topic, chain.last.post_number)
@@ -269,7 +256,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "respects context_depth parameter" do
-      chain = build_chain(depth: 5, topic: topic)
+      chain = create_reply_chain(depth: 5)
       sign_in(admin)
 
       get context_url(topic, chain.last.post_number, context_depth: 2)
@@ -280,7 +267,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "preserves deleted ancestors as placeholders to keep chains intact" do
-      chain = build_chain(depth: 4, topic: topic)
+      chain = create_reply_chain(depth: 4)
       chain[1].update!(deleted_at: Time.current)
 
       regular_user = Fabricate(:user)
@@ -305,12 +292,35 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "handles reply to deleted parent gracefully" do
-      chain = build_chain(depth: 2, topic: topic)
+      chain = create_reply_chain(depth: 2)
       chain.last.update!(deleted_at: Time.current)
 
       expect {
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: chain.last.post_number)
       }.not_to raise_error
+    end
+
+    it "increments living ancestors above a deleted intermediary" do
+      chain = create_reply_chain(depth: 3)
+      grandparent = chain[0]
+      parent = chain[1]
+      child = chain[2]
+
+      grandparent_before =
+        NestedViewPostStat.find_by(post_id: grandparent.id).total_descendant_count
+      parent_before = NestedViewPostStat.find_by(post_id: parent.id).total_descendant_count
+
+      parent.update!(deleted_at: Time.current)
+
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: child.post_number)
+
+      expect(NestedViewPostStat.find_by(post_id: child.id).total_descendant_count).to eq(1)
+      expect(NestedViewPostStat.find_by(post_id: parent.id).total_descendant_count).to eq(
+        parent_before,
+      )
+      expect(NestedViewPostStat.find_by(post_id: grandparent.id).total_descendant_count).to eq(
+        grandparent_before + 1,
+      )
     end
   end
 end

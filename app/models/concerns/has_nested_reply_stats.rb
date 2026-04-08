@@ -14,14 +14,17 @@ module HasNestedReplyStats
     return unless SiteSetting.nested_replies_enabled
     return if reply_to_post_number.blank?
 
-    # Only increment living ancestors — deleted ancestors are shown as
-    # placeholders and their stats aren't visible to anyone.
+    # Walk through deleted ancestors so we can reach living ancestors
+    # above them, but only increment stats for the living ones.
+    # Deleted ancestors are placeholders whose stats aren't visible.
     ancestors =
-      NestedReplies.walk_ancestors(
-        topic_id: topic_id,
-        start_post_number: reply_to_post_number,
-        exclude_deleted: true,
-      )
+      NestedReplies
+        .walk_ancestors(
+          topic_id: topic_id,
+          start_post_number: reply_to_post_number,
+          exclude_deleted: false,
+        )
+        .select { |a| a.deleted_at.nil? }
 
     return if ancestors.empty?
 

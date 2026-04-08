@@ -17,13 +17,13 @@ module NestedReplies
 
     DB.query(<<~SQL, topic_id: topic_id, start: start_post_number, limit: limit)
       WITH RECURSIVE ancestors AS (
-        SELECT id, post_number, reply_to_post_number, 1 AS depth
+        SELECT id, post_number, reply_to_post_number, deleted_at, 1 AS depth
         FROM posts
         WHERE topic_id = :topic_id
           AND post_number = :start
           #{deleted_seed}
         UNION ALL
-        SELECT p.id, p.post_number, p.reply_to_post_number, a.depth + 1
+        SELECT p.id, p.post_number, p.reply_to_post_number, p.deleted_at, a.depth + 1
         FROM posts p
         JOIN ancestors a ON p.post_number = a.reply_to_post_number
         WHERE p.topic_id = :topic_id
@@ -32,7 +32,7 @@ module NestedReplies
           #{op_stop}
           AND a.depth < :limit
       )
-      SELECT id, post_number, reply_to_post_number, depth FROM ancestors
+      SELECT id, post_number, reply_to_post_number, depth, deleted_at FROM ancestors
     SQL
   end
 end

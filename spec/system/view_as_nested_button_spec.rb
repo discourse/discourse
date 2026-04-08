@@ -19,7 +19,7 @@ RSpec.describe "View as nested button" do
   before do
     SiteSetting.nested_replies_enabled = true
     nested_category.category_setting.update!(nested_replies_default: true)
-    NestedTopic.create!(topic: nested_topic)
+    Fabricate(:nested_topic, topic: nested_topic)
   end
 
   it "does not show the link on a normal topic" do
@@ -45,7 +45,7 @@ RSpec.describe "View as nested button" do
 
   it "shows the link when topic has a nested_topic record" do
     sign_in(admin)
-    NestedTopic.create!(topic: topic)
+    Fabricate(:nested_topic, topic: topic)
 
     page.visit("/t/#{topic.slug}/#{topic.id}?flat=1")
 

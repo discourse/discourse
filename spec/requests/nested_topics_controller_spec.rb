@@ -319,10 +319,10 @@ RSpec.describe NestedTopicsController, type: :request do
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
       end
 
-      before { @nested_topic_record = NestedTopic.create!(topic: topic) }
+      fab!(:nested_topic_record) { Fabricate(:nested_topic, topic: topic) }
 
       def pin_posts(*posts)
-        @nested_topic_record.update!(pinned_post_ids: posts.map(&:id))
+        nested_topic_record.update!(pinned_post_ids: posts.map(&:id))
       end
 
       it "places pinned replies first regardless of sort" do
@@ -373,7 +373,7 @@ RSpec.describe NestedTopicsController, type: :request do
       end
 
       it "ignores a pinned post_id that does not exist" do
-        @nested_topic_record.update!(pinned_post_ids: [99_999])
+        nested_topic_record.update!(pinned_post_ids: [99_999])
         sign_in(user)
 
         get show_url(topic, sort: "top")
@@ -413,7 +413,7 @@ RSpec.describe NestedTopicsController, type: :request do
     describe "PUT pin" do
       fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
 
-      before { NestedTopic.create!(topic: topic) }
+      before { Fabricate(:nested_topic, topic: topic) }
 
       def pin_url(topic)
         "/n/#{topic.slug}/#{topic.id}/pin.json"
@@ -1028,7 +1028,7 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     it "allows staff to disable nested view" do
-      NestedTopic.create!(topic: topic)
+      Fabricate(:nested_topic, topic: topic)
 
       sign_in(admin)
       put toggle_url(topic), params: { enabled: false }

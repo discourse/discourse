@@ -384,10 +384,6 @@ module PageObjects
         self
       end
 
-      def root_post_count
-        all(".nested-view__roots > .nested-post").count
-      end
-
       # ── Cloaking ─────────────────────────────────────────────────
 
       def has_cloaked_root?
@@ -405,12 +401,6 @@ module PageObjects
       def has_uncloaked_root_for?(post)
         has_no_css?(".nested-post--cloaked [data-post-number='#{post.post_number}']") &&
           has_css?("[data-post-number='#{post.post_number}']")
-      end
-
-      # ── Post counting ─────────────────────────────────────────────
-
-      def posts_at_depth(depth)
-        all(".nested-post.--depth-#{depth} .nested-post__article")
       end
 
       private

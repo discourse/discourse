@@ -83,7 +83,7 @@ RSpec.describe NestedReplies do
     fab!(:topic) { Fabricate(:topic, user: user, category: nested_category) }
     fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
-    before { NestedTopic.create!(topic: topic) }
+    before { Fabricate(:nested_topic, topic: topic) }
 
     it "includes is_nested_view on TopicListItemSerializer" do
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
@@ -111,7 +111,7 @@ RSpec.describe NestedReplies do
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
       fab!(:pm_op) { Fabricate(:post, topic: pm, user: user, post_number: 1) }
 
-      before { NestedTopic.create!(topic: pm) }
+      before { Fabricate(:nested_topic, topic: pm) }
 
       it "does not include is_nested_view on TopicViewSerializer" do
         topic_view = TopicView.new(pm.id, user)

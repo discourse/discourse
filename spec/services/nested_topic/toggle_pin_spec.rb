@@ -48,8 +48,9 @@ RSpec.describe NestedTopic::TogglePin do
 
     context "when pin limit is reached" do
       before do
-        nested = NestedTopic.create!(topic: topic)
-        nested.update!(pinned_post_ids: Array.new(NestedTopic::MAX_PINNED_POSTS) { |i| i + 1000 })
+        Fabricate(:nested_topic, topic: topic).update!(
+          pinned_post_ids: Array.new(NestedTopic::MAX_PINNED_POSTS) { |i| i + 1000 },
+        )
       end
 
       it { is_expected.to fail_a_policy(:within_pin_limit) }
@@ -65,7 +66,7 @@ RSpec.describe NestedTopic::TogglePin do
       end
 
       context "when post is already pinned" do
-        before { NestedTopic.create!(topic: topic, pinned_post_ids: [post.id]) }
+        before { Fabricate(:nested_topic, topic: topic, pinned_post_ids: [post.id]) }
 
         it { is_expected.to run_successfully }
 
@@ -84,8 +85,9 @@ RSpec.describe NestedTopic::TogglePin do
 
       context "when pin limit is reached but post is already pinned" do
         before do
-          nested = NestedTopic.create!(topic: topic)
-          nested.update!(pinned_post_ids: [post.id] + Array.new(9) { |i| i + 1000 })
+          Fabricate(:nested_topic, topic: topic).update!(
+            pinned_post_ids: [post.id] + Array.new(9) { |i| i + 1000 },
+          )
         end
 
         it { is_expected.to run_successfully }

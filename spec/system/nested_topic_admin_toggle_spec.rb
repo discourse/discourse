@@ -32,7 +32,7 @@ RSpec.describe "Nested replies topic admin toggle" do
   end
 
   it "disables nested replies from the nested view and routes to flat" do
-    NestedTopic.create!(topic: topic)
+    Fabricate(:nested_topic, topic: topic)
 
     nested_view.visit_nested(topic)
     nested_view.open_admin_menu

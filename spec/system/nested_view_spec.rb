@@ -235,7 +235,7 @@ RSpec.describe "Nested view" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "A reply") }
 
     it "direct URL loads correctly" do
-      page.visit("/n/#{topic.slug}/#{topic.id}")
+      nested_view.visit_nested(topic)
 
       expect(nested_view).to have_nested_view
       expect(nested_view).to have_root_post(root_reply)
@@ -245,7 +245,7 @@ RSpec.describe "Nested view" do
     it "direct URL with post_number loads context view" do
       chain = create_reply_chain(depth: 3)
 
-      page.visit("/n/#{topic.slug}/#{topic.id}/#{chain[1].post_number}")
+      nested_view.visit_nested_context(topic, post_number: chain[1].post_number)
 
       expect(nested_view).to have_context_view
       expect(nested_view).to have_post(chain[1])
@@ -287,7 +287,7 @@ RSpec.describe "Nested view" do
     it "returns 404 when plugin is disabled" do
       SiteSetting.nested_replies_enabled = false
 
-      page.visit("/n/#{topic.slug}/#{topic.id}")
+      nested_view.visit_nested(topic)
 
       expect(page).to have_css(".page-not-found")
     end

@@ -62,9 +62,8 @@ class TopicView
   )
 
   # Generic store for plugins to stash per-post preloaded data (keyed by post_id)
-  # on the TopicView rather than on Post objects. Data stored here survives @posts
-  # replacement by other on_preload hooks. Cleared automatically when the post
-  # collection changes via reset_post_collection.
+  # on the TopicView rather than on Post objects. Cleared automatically when the
+  # post collection changes via reset_post_collection.
   def preloaded_post_data(namespace)
     @preloaded_post_data_store&.dig(namespace)
   end

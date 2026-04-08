@@ -20,7 +20,7 @@ RSpec.describe "Nested view category default" do
   before do
     SiteSetting.nested_replies_enabled = true
     nested_category.category_setting.update!(nested_replies_default: true)
-    NestedTopic.create!(topic: topic)
+    Fabricate(:nested_topic, topic: topic)
   end
 
   describe "category settings UI" do
@@ -32,8 +32,11 @@ RSpec.describe "Nested view category default" do
       category_page.visit_settings(unchecked_category)
 
       expect(page).to have_css(".enable-nested-replies-default")
-      checkbox = find(".enable-nested-replies-default input[type='checkbox']")
-      expect(checkbox).not_to be_checked
+      expect(page).to have_no_checked_field(
+        class: "enable-nested-replies-default",
+        type: "checkbox",
+        visible: :all,
+      )
 
       find(".enable-nested-replies-default label.checkbox-label").click
       category_page.save_settings
@@ -47,8 +50,11 @@ RSpec.describe "Nested view category default" do
     it "shows checkbox as checked when category has nested default enabled" do
       category_page.visit_settings(nested_category)
 
-      checkbox = find(".enable-nested-replies-default input[type='checkbox']")
-      expect(checkbox).to be_checked
+      expect(page).to have_checked_field(
+        class: "enable-nested-replies-default",
+        type: "checkbox",
+        visible: :all,
+      )
     end
 
     context "with simplified category creation" do

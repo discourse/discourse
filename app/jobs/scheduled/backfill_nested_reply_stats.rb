@@ -33,7 +33,7 @@ module Jobs
     private
 
     def backfill_topic(topic_id)
-      DB.exec(<<~SQL, topic_id: topic_id)
+      DB.exec(<<~SQL, topic_id: topic_id, whisper_type: Post.types[:whisper])
         WITH RECURSIVE
         direct_counts AS (
           SELECT reply_to_post_number AS parent_number, post_type,
@@ -47,7 +47,7 @@ module Jobs
         direct_agg AS (
           SELECT parent_number,
                  SUM(cnt) AS direct_reply_count,
-                 SUM(CASE WHEN post_type = 4 THEN cnt ELSE 0 END) AS whisper_direct_reply_count
+                 SUM(CASE WHEN post_type = :whisper_type THEN cnt ELSE 0 END) AS whisper_direct_reply_count
           FROM direct_counts
           GROUP BY parent_number
         ),
@@ -61,7 +61,7 @@ module Jobs
         ancestor_walk AS (
           SELECT e.reply_to_post_number AS ancestor_number,
                  1 AS descendant_count,
-                 CASE WHEN e.post_type = 4 THEN 1 ELSE 0 END AS whisper_descendant_count,
+                 CASE WHEN e.post_type = :whisper_type THEN 1 ELSE 0 END AS whisper_descendant_count,
                  1 AS depth
           FROM edges e
           UNION ALL

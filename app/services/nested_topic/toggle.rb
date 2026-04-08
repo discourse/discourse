@@ -12,8 +12,11 @@ class NestedTopic::Toggle
 
   model :topic
   policy :staff_can_edit
-  only_if(:enabling) { step :enable_nested_view }
-  only_if(:disabling) { step :disable_nested_view }
+
+  transaction do
+    only_if(:enabling) { step :enable_nested_view }
+    only_if(:disabling) { step :disable_nested_view }
+  end
 
   private
 

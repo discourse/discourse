@@ -3,7 +3,7 @@
 RSpec.describe Jobs::BackfillNestedReplyStats do
   fab!(:topic)
   fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
-  fab!(:nested_topic) { NestedTopic.create!(topic: topic) }
+  fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
 
   before { SiteSetting.nested_replies_enabled = true }
 
@@ -119,7 +119,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
 
   it "processes multiple topics" do
     other_topic = Fabricate(:topic)
-    NestedTopic.create!(topic: other_topic)
+    Fabricate(:nested_topic, topic: other_topic)
     other_op = Fabricate(:post, topic: other_topic, post_number: 1)
     Fabricate(:post, topic: other_topic, reply_to_post_number: 1)
 

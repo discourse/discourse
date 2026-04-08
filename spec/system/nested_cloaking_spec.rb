@@ -65,9 +65,12 @@ RSpec.describe "Nested view cloaking" do
       nested_view.visit_nested(topic)
       expect(nested_view).to have_nested_view
 
-      cloaked = find(".nested-view__roots > .nested-post--cloaked", match: :first)
-      expect(cloaked).to have_no_css(".nested-post__article")
-      expect(cloaked).to have_no_css(".nested-post-children")
+      expect(page).to have_no_css(
+        ".nested-view__roots > .nested-post--cloaked .nested-post__article",
+      )
+      expect(page).to have_no_css(
+        ".nested-view__roots > .nested-post--cloaked .nested-post-children",
+      )
     end
   end
 end
