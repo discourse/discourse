@@ -31,10 +31,8 @@ RSpec.describe "Nested view category default" do
 
       category_page.visit_settings(unchecked_category)
 
-      expect(page).to have_css(".enable-nested-replies-default")
-      expect(page).to have_no_checked_field(
-        class: "enable-nested-replies-default",
-        type: "checkbox",
+      expect(page).to have_css(
+        ".enable-nested-replies-default input[type='checkbox']:not(:checked)",
         visible: :all,
       )
 
@@ -50,9 +48,8 @@ RSpec.describe "Nested view category default" do
     it "shows checkbox as checked when category has nested default enabled" do
       category_page.visit_settings(nested_category)
 
-      expect(page).to have_checked_field(
-        class: "enable-nested-replies-default",
-        type: "checkbox",
+      expect(page).to have_css(
+        ".enable-nested-replies-default input[type='checkbox']:checked",
         visible: :all,
       )
     end
