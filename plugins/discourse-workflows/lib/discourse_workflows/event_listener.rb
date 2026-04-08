@@ -5,8 +5,8 @@ module DiscourseWorkflows
     def self.handle(trigger_class, *args)
       return unless SiteSetting.discourse_workflows_enabled
 
-      DiscourseWorkflows::Workflow
-        .cached_enabled_trigger_entries(trigger_class.identifier)
+      DiscourseWorkflows::WorkflowDependency
+        .enabled_trigger_entries(trigger_class.identifier)
         .each do |entry|
           trigger = trigger_class.new(*args)
           next unless trigger.valid?

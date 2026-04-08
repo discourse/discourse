@@ -22,5 +22,15 @@ module DiscourseWorkflows
     def self.workflows_referencing(type, key)
       where(dependency_type: type, dependency_key: key.to_s).select(:workflow_id)
     end
+
+    def self.enabled_trigger_entries(trigger_type)
+      joins(
+        "INNER JOIN discourse_workflows_workflows ON discourse_workflows_workflows.id = discourse_workflows_workflow_dependencies.workflow_id",
+      )
+        .where(dependency_type: "node_type", dependency_key: trigger_type)
+        .where("discourse_workflows_workflows.enabled = true")
+        .pluck(:workflow_id, :node_id)
+        .map { |workflow_id, node_id| { workflow_id: workflow_id, node_id: node_id } }
+    end
   end
 end
