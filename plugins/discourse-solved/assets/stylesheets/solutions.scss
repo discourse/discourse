@@ -209,13 +209,12 @@ aside.quote.accepted-answer {
   > blockquote {
     position: relative;
     border: 0;
-    border-left: 0;
-    background-color: var(--secondary);
+    background: var(--primary-50);
     padding: var(--space-3);
-    margin: var(--space-1);
     max-height: clamp(1px, 20vh, 20em);
     overflow: hidden;
     border-radius: var(--d-border-radius);
+    margin: 0;
 
     * {
       font-size: var(--font-down-1-rem) !important;
@@ -237,7 +236,7 @@ aside.quote.accepted-answer {
       left: 0;
       right: 0;
       height: 3em;
-      background: linear-gradient(transparent, var(--secondary));
+      background: linear-gradient(transparent, var(--primary-50));
       pointer-events: none;
     }
   }
