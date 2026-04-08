@@ -170,27 +170,30 @@ export default class ChatDrawer extends Component {
     const composerIsClosed = composer.classList.contains("closed");
     const minRightMargin = 15;
 
-    let composerRight = minRightMargin;
-    let besideComposer = false;
-
-    if (!composerIsClosed) {
-      const isRTL = document.documentElement.classList.contains("rtl");
-      const spaceToEnd = isRTL
-        ? composer.offsetLeft
-        : document.documentElement.clientWidth -
-          composer.offsetLeft -
-          composer.offsetWidth;
-      const drawerWidth = this.chatDrawerSize.size.width || 400;
-
-      if (spaceToEnd >= drawerWidth) {
-        besideComposer = true;
-      } else {
-        composerRight = Math.max(minRightMargin, spaceToEnd);
-      }
+    if (composerIsClosed) {
+      drawerContainer.style.setProperty(
+        "--composer-right",
+        minRightMargin + "px"
+      );
+      drawerContainer.classList.remove("above-composer");
+      return;
     }
 
-    drawerContainer.style.setProperty("--composer-right", composerRight + "px");
-    drawerContainer.classList.toggle("beside-composer", besideComposer);
+    const isRTL = document.documentElement.classList.contains("rtl");
+    const spaceToEnd = isRTL
+      ? composer.offsetLeft
+      : document.documentElement.clientWidth -
+        composer.offsetLeft -
+        composer.offsetWidth;
+    const drawerWidth = this.chatDrawerSize.size.width || 400;
+    const aboveComposer = spaceToEnd < drawerWidth;
+
+    drawerContainer.style.setProperty(
+      "--composer-right",
+      (aboveComposer ? Math.max(minRightMargin, spaceToEnd) : minRightMargin) +
+        "px"
+    );
+    drawerContainer.classList.toggle("above-composer", aboveComposer);
   }
 
   @action
