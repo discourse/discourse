@@ -32,7 +32,7 @@ def upcoming_change_setting_label(setting)
 end
 
 def valid_upcoming_change_impact_types
-  %w[feature other]
+  %w[feature other site_setting_default]
 end
 
 def valid_upcoming_change_impact_roles
