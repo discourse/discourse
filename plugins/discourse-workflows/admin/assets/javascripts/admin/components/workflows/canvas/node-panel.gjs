@@ -164,6 +164,17 @@ export default class NodePanel extends Component {
   }
 
   @action
+  handleSearchKeyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const firstNodeType = this.args.nodeTypes?.[0];
+      if (this.isSearching && firstNodeType) {
+        this.handleNodeItemClick(firstNodeType);
+      }
+    }
+  }
+
+  @action
   handleKeyDown(event) {
     if (event.key === "Escape") {
       event.stopPropagation();
@@ -220,6 +231,7 @@ export default class NodePanel extends Component {
           class="workflows-node-panel__search-input"
           {{autoFocus}}
           {{on "input" this.handleSearchInput}}
+          {{on "keydown" this.handleSearchKeyDown}}
         />
       </div>
 
