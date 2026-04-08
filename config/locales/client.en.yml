@@ -3840,19 +3840,19 @@ en:
         name: "Dismiss"
       close_topics:
         name: "Close"
-        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Learn more</a>"
+        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
         note: "Add a note to these topics"
         optional: (optional)
       archive_topics:
         name: "Archive"
-        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Learn more</a>"
+        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       archive_messages:
         name: "Move to Archive"
       move_messages_to_inbox:
         name: "Move to Inbox"
       unlist_topics:
         name: "Unlist"
-        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Learn more</a>"
+        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
       remove_tags:
