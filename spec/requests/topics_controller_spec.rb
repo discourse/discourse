@@ -4460,6 +4460,8 @@ RSpec.describe TopicsController do
     end
 
     describe "when logged in" do
+      fab!(:topic_2, :topic)
+
       before { sign_in(user) }
       let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
@@ -4799,6 +4801,43 @@ RSpec.describe TopicsController do
         )
         put "/topics/bulk.json", params: { topic_ids: [1], operation: operation }
         expect(response.parsed_body["errors"]).to eq(nil)
+      end
+
+      it "can pin multiple topics with pinned_until" do
+        sign_in(moderator)
+        pinned_until = 3.days.from_now.beginning_of_minute.iso8601
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id, topic_2.id],
+              operation: {
+                type: "pin",
+                pinned_globally: false,
+                pinned_until: pinned_until,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(topic.id, topic_2.id)
+        expect(topic.reload.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+        expect(topic_2.reload.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+      end
+
+      it "can unpin multiple topics" do
+        sign_in(moderator)
+        topic.update_pinned(true, true)
+        topic_2.update_pinned(true, false)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id, topic_2.id],
+              operation: {
+                type: "unpin",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(topic.id, topic_2.id)
       end
 
       it "respects the tracked parameter" do
@@ -5490,20 +5529,37 @@ RSpec.describe TopicsController do
   end
 
   describe "#feature_stats" do
-    it "works" do
-      get "/topics/feature_stats.json", params: { category_id: 1 }
+    fab!(:category_for_stats, :category)
+    fab!(:pinned_in_category_topic) do
+      Fabricate(:topic, category: category_for_stats, pinned_at: 1.hour.ago, pinned_globally: false)
+    end
+    fab!(:globally_pinned_topic) { Fabricate(:topic, pinned_at: 1.hour.ago, pinned_globally: true) }
+    fab!(:banner_topic) { Fabricate(:topic, archetype: Archetype.banner) }
+
+    it "returns category and global pin counts when category_id is provided" do
+      get "/topics/feature_stats.json", params: { category_id: category_for_stats.id }
 
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["pinned_in_category_count"]).to eq(0)
-      expect(json["pinned_globally_count"]).to eq(0)
-      expect(json["banner_count"]).to eq(0)
+      expect(json["pinned_in_category_count"]).to eq(1)
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
+    end
+
+    it "returns only global pin and banner counts when category_id is omitted" do
+      get "/topics/feature_stats.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json).not_to have_key("pinned_in_category_count")
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
     end
 
     it "allows unlisted banner topic" do
-      Fabricate(:topic, category_id: 1, archetype: Archetype.banner, visible: false)
+      banner_topic.update!(visible: false)
 
-      get "/topics/feature_stats.json", params: { category_id: 1 }
+      get "/topics/feature_stats.json", params: { category_id: category_for_stats.id }
       json = response.parsed_body
       expect(json["banner_count"]).to eq(1)
     end
@@ -5523,8 +5579,8 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["pinned_in_category_count"]).to eq(0)
-      expect(json["pinned_globally_count"]).to eq(0)
-      expect(json["banner_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
     end
   end
 
