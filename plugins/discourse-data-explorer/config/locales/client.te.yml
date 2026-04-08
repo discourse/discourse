@@ -10,6 +10,8 @@ te:
       default_query: "అప్రమేయ"
       or: "లేదా"
       create: "సృష్టించండి"
+      ai:
+        generate: "ఉత్పత్తించు"
       help:
         label: "సహాయం"
       types:

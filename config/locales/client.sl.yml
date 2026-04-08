@@ -349,8 +349,6 @@ sl:
           all_time: "ves čas"
     bookmarked:
       title: "Zaznamek"
-      edit_bookmark: "Uredi zaznamek"
-      clear_bookmarks: "Odstrani zaznamke"
       help:
         unbookmark: "odstrani vse zaznamke v tej temi"
     bookmarks:
@@ -358,12 +356,12 @@ sl:
       create: "Ustvari zaznamek"
       edit: "Uredi zaznamek"
       not_bookmarked: "zaznamuj prispevek"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Odstrani opomnik in ohrani zaznamek"
       created_with_reminder: "To objavo ste zaznamovali z opomnikom %{date}. %{name}"
       created_with_reminder_generic: "To ste dodali med zaznamke z opomnikom %{date}. %{name}"
       delete: "Odstrani zaznamek"
       confirm_delete: "Ali ste prepričani, da želite odstraniti ta zaznamek? Opomnik bo prav tako odstranjen."
-      confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
       save: "Shrani"
       no_timezone: 'Časovnega pasu še niste izbrali. Opomnikov ne boste mogli nastavljati dokler ga ne določite <a href="%{basePath}/my/preferences/profile">v svojem profilu</a>.'
       invalid_custom_datetime: "Datum in čas, ki ste ju navedli, sta neveljavna. Poskusite znova."
@@ -3030,6 +3028,8 @@ sl:
       review_group_name: "ime skupine"
       require_topic_approval: "Zahtevaj moderatorjevo potrditev vseh novih tem"
       require_reply_approval: "Zahteva odobritev moderatorja za vse nove odgovore"
+      posting_review_modes:
+        everyone: "Vsi"
       this_year: "to leto"
       position: "Položaj na strani kategorij:"
       minimum_required_tags: "Najmanjše število oznak zahtevanih na temi:"

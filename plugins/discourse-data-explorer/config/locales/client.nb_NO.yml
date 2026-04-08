@@ -21,6 +21,8 @@ nb_NO:
       title: "Datautforsker"
       create: "Opprett"
       create_placeholder: "Spørringsnavn…"
+      ai:
+        generate: "Generer API-nøkkel"
       import:
         label: "Importer"
       help:

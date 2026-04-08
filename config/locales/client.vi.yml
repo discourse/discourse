@@ -460,8 +460,6 @@ vi:
           other: "Ra mắt %{count} năm trước"
     bookmarked:
       title: "Đánh dấu"
-      edit_bookmark: "Chỉnh sửa đánh dấu"
-      clear_bookmarks: "Xóa đánh dấu"
       help:
         bookmark: "Nhấn để đánh dấu chủ đề này"
         edit_bookmark: "Nhấn để chỉnh sửa đánh dấu trên một tút trong chủ đề này"
@@ -480,12 +478,12 @@ vi:
       clear_reminder: "Xóa lời nhắc"
       edit: "Chỉnh sửa đánh dấu"
       not_bookmarked: "Đánh dấu tút này"
+      topic_bookmark: "Chủ đề"
       remove_reminder_keep_bookmark: "Xóa lời nhắc và giữ lại đánh dấu"
       created_with_reminder: "Bạn đã đánh dấu tút này với lời nhắc %{date}. %{name}"
       created_with_reminder_generic: "Bạn đã đánh dấu mục này với lời nhắc %{date}. %{name}"
       delete: "Xóa đánh dấu"
       confirm_delete: "Bạn có chắc muốn xóa đánh dấu này? Lời nhắc cũng sẽ bị xóa."
-      confirm_clear: "Bạn có chắc muốn xóa tất cả đánh dấu trong chủ đề này?"
       save: "Lưu"
       no_timezone: 'Bạn chưa đặt múi giờ. Bạn sẽ không thể đặt lời nhắc. Thiết lập một <a href="%{basePath}/my/preferences/profile">trong hồ sơ của bạn</a> .'
       invalid_custom_datetime: "Ngày và giờ bạn cung cấp không hợp lệ, vui lòng thử lại."
@@ -2611,6 +2609,8 @@ vi:
       medium_dark_tone: Màu da tối trung bình
       dark_tone: Màu da tối
       default: Biểu tượng cảm xúc tùy chỉnh
+    filter_input:
+      clear: "Xóa bộ lọc"
     shared_drafts:
       title: "Thư nháp được Chia sẻ"
       notice: "Chủ đề này chỉ hiển thị với những người có thể xuất bản các bản nháp được chia sẻ."
@@ -4102,6 +4102,10 @@ vi:
       review_group_name: "Nhóm tên"
       require_topic_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các chủ đề mới"
       require_reply_approval: "Yêu cầu người kiểm duyệt phê duyệt tất cả các câu trả lời mới"
+      posting_review_modes:
+        no_one: "Không ai"
+        everyone: "Mọi người"
+      posting_review_groups_placeholder: "Chọn nhóm..."
       this_year: "năm nay"
       position: "Vị trí trên trang chuyên mục:"
       default_position: "Vị trí mặc định"

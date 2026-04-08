@@ -141,6 +141,7 @@ tr_TR:
     ai_translation_max_post_length: "Çevrilecek bir gönderinin maksimum karakter sayısı. Bu uzunluktan daha uzun gönderiler çevrilmeyecektir."
     ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."
     ai_translation_backfill_hourly_rate: "Doldurma işlemleri sırasında saat başına çevrilecek gönderi ve konu sayısı. Mevcut içeriklerin çevirilerinin otomatik olarak doldurulmasını devre dışı bırakmak için 0 olarak ayarlayın."
+    ai_translation_backfill_parallel_jobs: "Her dolgu döngüsü başına çalıştırılacak paralel gönderi konumlandırma işlerinin sayısı. Daha yüksek değerler iş hacmini artırır ancak daha fazla kaynak tüketir."
     ai_usage_rollup_after_days: "Günlük toplamlara aktarılmadan önce istek başına AI kullanım istatistiklerinin saklanacağı gün sayısı. Toplamları devre dışı bırakmak için 0 olarak ayarlayın."
     ai_audit_logs_purge_after_days: "Bu kadar gün öncesine ait AI API denetim günlüklerini sil. Varsayılan değer yaklaşık 6 aydır. Süresiz olarak saklamak için 0 olarak ayarlayın."
   reviewables:

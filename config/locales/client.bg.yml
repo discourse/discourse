@@ -313,8 +313,6 @@ bg:
           today: "днес"
     bookmarked:
       title: "Отметка"
-      edit_bookmark: "Редактиране на отметка"
-      clear_bookmarks: "Изчисти отметките"
       help:
         bookmark: "Кликнете, за да добавите тази тема в отметки"
         edit_bookmark: "Кликнете, за да редактирате отметката на публикация в тази тема"
@@ -327,12 +325,12 @@ bg:
       create: "Създайте отметка"
       edit: "Редактиране на отметката"
       not_bookmarked: "добавете тази публикация в Отметки"
+      topic_bookmark: "Тема"
       remove_reminder_keep_bookmark: "Премахнете напомнянето и запазете отметката"
       created_with_reminder: "Отбелязахте тази публикация с напомняне %{date}. %{name}"
       created_with_reminder_generic: "Записахте това в отметките с напомняне %{date}. %{name}"
       delete: "Изтрийте отметката"
       confirm_delete: "Наистина ли искате да изтриете тази отметка? Напомнянето, свързано с нея, също ще бъде отменено."
-      confirm_clear: "Наистина ли искате да премахните всичките отметки от тази тема?"
       save: "Запази"
       no_timezone: 'Не може да получавате напомняния, защото не сте настроили своята часова зона. Може да го направите <a href="%{basePath}/my/preferences/profile">във Вашия профил</a>.'
       invalid_custom_datetime: "Въведените дата и час не са валидни. Опитайте отново."
@@ -2950,6 +2948,8 @@ bg:
       subcategory_list_style: "Стил на списъка с подкатегориите:"
       allow_badges_label: "Разрешете използването на значки в тази категория. "
       review_group_name: "име на групата"
+      posting_review_modes:
+        everyone: "Всички"
       this_year: "тази година "
       minimum_required_tags: "Минимален брой етикети на тема"
       none_subcategory_text: "Без"

@@ -22,6 +22,8 @@ uk:
           few: "%{reaction}: %{count} користувачі"
           many: "%{reaction}: %{count} користувачів"
           other: "%{reaction}: %{count} користувачів"
+      reaction:
+        forbidden: "Ви не маєте права реагувати або змінювати свою реакцію на цей пост."
       picker:
         react_with: "Відреагувати на цей пост: %{reaction}"
         cant_remove_reaction: "Ви більше не можете видалити вашу реакцію"

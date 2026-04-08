@@ -10,6 +10,8 @@ tr_TR:
       features:
         data_explorer:
           name: "Veri Gezgini"
+          description: "Data Explorer için yapay zeka destekli sorgu oluşturma"
+          query_generation: "Sorgu Oluşturma"
     errors:
       explorer:
         no_semicolons: "Noktalı virgülleri sorgudan kaldırın."
@@ -26,6 +28,16 @@ tr_TR:
       create: "Oluştur"
       create_placeholder: "Sorgu adı ..."
       description_placeholder: "Buraya bir açıklama girin"
+      ai:
+        or_divider: "VEYA"
+        description_title: "AI ile oluştur"
+        description_hint: "Ne istediğinizi basit bir dille açıklayın. SQL sorgusunu, adı ve açıklamayı sizin için biz oluşturacağız."
+        description_placeholder: "Örneğin: Zaman içindeki kayıtları göster"
+        generate: "Oluştur"
+        generating_name: "Oluşturuluyor..."
+        generating: "AI ile sorgu oluşturuluyor..."
+        generation_timeout: "AI sorgu oluşturma işlemi zaman aşımına uğradı. SQL sorgusunu manuel olarak yazabilirsiniz."
+        generation_error: "Sorgu oluşturulurken bir hata oluştu."
       import:
         label: "İçe Aktar"
         unparseable_json: "Ayrıştırılamayan JSON dosyası."
@@ -62,6 +74,7 @@ tr_TR:
       show_graph: "Grafik"
       others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
       run_time: "Sorgu %{value} ms'de tamamlandı."
+      cached_result_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
       result_count:
         one: "%{count} sonuç."
         other: "%{count} sonuç."

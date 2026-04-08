@@ -22,6 +22,8 @@ ur:
       create: "بنائیں"
       create_placeholder: "ڈیٹا کمانڈ کا نام..."
       description_placeholder: "یہاں تفصیل درج کریں"
+      ai:
+        generate: "تخلیق کریں"
       import:
         label: "درآمد"
       help:

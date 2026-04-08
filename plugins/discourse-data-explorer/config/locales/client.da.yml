@@ -23,6 +23,8 @@ da:
       create: "Opret"
       create_placeholder: "Navn på forespørgsel..."
       description_placeholder: "Indtast en beskrivelse her"
+      ai:
+        generate: "Generér"
       import:
         label: "Importer"
       help:
