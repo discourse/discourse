@@ -8,6 +8,7 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import NavItem from "discourse/components/nav-item";
 import DMenu from "discourse/float-kit/components/d-menu";
+import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import SetupProvider from "../../../components/modal/setup-provider";
@@ -158,7 +159,11 @@ export default class DiscourseChatIntegrationProviders extends Component {
                           )
                         }}
                         @action={{fn this.configureProvider provider}}
-                        class="btn-transparent"
+                        class={{concatClass
+                          "btn-transparent"
+                          "chat-integration-add-provider-button"
+                          (concat "--" provider.name)
+                        }}
                       />
                     </dropdown.item>
                   {{/each}}
@@ -183,7 +188,11 @@ export default class DiscourseChatIntegrationProviders extends Component {
                     (concat "chat_integration.provider." provider.name ".title")
                   }}
                   @action={{fn this.configureProvider provider}}
-                  class="btn-default"
+                  class={{concatClass
+                    "btn-default"
+                    "chat-integration-popular-provider-setup"
+                    (concat "--" provider.name)
+                  }}
                 />
               {{/each}}
               {{#if this.otherProviders.length}}
@@ -191,7 +200,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
                   @identifier="chat-integration-more-providers"
                   @icon="ellipsis"
                   @label={{i18n "chat_integration.more_providers"}}
-                  class="btn-default"
+                  class="btn-default chat-integration-more-providers-setup"
                 >
                   <:content>
                     <DropdownMenu as |dropdown|>
@@ -206,7 +215,11 @@ export default class DiscourseChatIntegrationProviders extends Component {
                               )
                             }}
                             @action={{fn this.configureProvider provider}}
-                            class="btn-transparent"
+                            class={{concatClass
+                              "btn-transparent"
+                              "chat-integration-more-providers-setup"
+                              (concat "--" provider.name)
+                            }}
                           />
                         </dropdown.item>
                       {{/each}}

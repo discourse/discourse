@@ -188,7 +188,7 @@ export default class SetupProvider extends Component {
             <form.Submit
               @label="chat_integration.setup_provider_modal.confirm_setup"
               class="btn-primary"
-              id="save-rule"
+              id="save-provider"
             />
             <form.Button
               @label="cancel"
