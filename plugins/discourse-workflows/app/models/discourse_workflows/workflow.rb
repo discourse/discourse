@@ -50,16 +50,6 @@ module DiscourseWorkflows
       scope
     end
 
-    def self.enabled_nodes_of_type(type)
-      enabled
-        .where("nodes @> ?", [{ "type" => type }].to_json)
-        .flat_map { |workflow| workflow.nodes_of_type(type).map { |node| [workflow, node] } }
-    end
-
-    def self.enabled_trigger_nodes(trigger_type)
-      enabled_nodes_of_type("trigger:#{trigger_type}")
-    end
-
     def nodes_of_type(type)
       parsed_nodes.select { |n| n["type"] == type }
     end

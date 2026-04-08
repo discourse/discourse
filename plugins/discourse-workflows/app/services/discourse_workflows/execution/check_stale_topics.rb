@@ -13,7 +13,7 @@ module DiscourseWorkflows
     private
 
     def fetch_stale_trigger_nodes
-      DiscourseWorkflows::Workflow.enabled_trigger_nodes("stale_topic")
+      DiscourseWorkflows::WorkflowDependency.enabled_workflows_with_node_type("trigger:stale_topic")
     end
 
     def process_stale_trigger_nodes(stale_trigger_nodes:)
