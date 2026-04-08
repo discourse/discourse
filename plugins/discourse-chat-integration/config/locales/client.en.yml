@@ -22,6 +22,7 @@ en:
         success: "Provider %{provider} setup successfully"
         slack:
           instructions: "Either access token or outbound webhook URL is required."
+          at_least_one_required: "Enter an access token or outbound webhook URL."
           access_token:
             title: "Access token"
             description: "The Slack bot OAuth access token"

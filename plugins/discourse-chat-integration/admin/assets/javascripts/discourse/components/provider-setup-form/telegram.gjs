@@ -11,6 +11,7 @@ const TelegramProviderSetupForm = <template>
     }}
     @validation="required"
     @type="password"
+    @format="full"
     as |field|
   >
     <field.Control data-1p-ignore />

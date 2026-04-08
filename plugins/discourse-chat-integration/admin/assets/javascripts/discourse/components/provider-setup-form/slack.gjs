@@ -10,6 +10,7 @@ const SlackProviderSetupForm = <template>
       "chat_integration.setup_provider_modal.slack.access_token.description"
     }}
     @type="password"
+    @format="full"
     as |field|
   >
     <field.Control data-1p-ignore />
@@ -24,6 +25,7 @@ const SlackProviderSetupForm = <template>
       "chat_integration.setup_provider_modal.slack.outbound_webhook_url.description"
     }}
     @type="input"
+    @format="full"
     as |field|
   >
     <field.Control data-1p-ignore />

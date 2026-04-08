@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
@@ -30,6 +31,35 @@ export default class SetupProvider extends Component {
         return i18n("chat_integration.setup_provider_modal.slack.instructions");
       default:
         return "";
+    }
+  }
+
+  @action
+  validateForm(data, { addError, removeError }) {
+    if (this.args.model.provider.name === "slack") {
+      this.validateSlackForm(data, addError, removeError);
+    } else {
+      return;
+    }
+  }
+
+  validateSlackForm(data, addError, removeError) {
+    const token = data.chat_integration_slack_access_token;
+    const url = data.chat_integration_slack_outbound_webhook_url;
+
+    const tokenField = "chat_integration_slack_access_token";
+
+    if (isEmpty(token) && isEmpty(url)) {
+      addError(tokenField, {
+        title: i18n(
+          "chat_integration.setup_provider_modal.slack.access_token.title"
+        ),
+        message: i18n(
+          "chat_integration.setup_provider_modal.slack.at_least_one_required"
+        ),
+      });
+    } else {
+      removeError(tokenField);
     }
   }
 
@@ -69,17 +99,17 @@ export default class SetupProvider extends Component {
       }}
       @closeModal={{@closeModal}}
       id="chat-integration-setup-provider-modal"
-      class="chat-integration-modal"
+      class="chat-integration-setup-provider-modal"
     >
       <:body>
-        <p>
+        <p class="chat-integration-setup-provider-modal__instructions">
           {{i18n
             "chat_integration.setup_provider_modal.setup_instructions"
             provider=@model.provider.title
             additionalInstructions=this.additionalInstructions
           }}
         </p>
-        <Form @onSubmit={{this.save}} as |form|>
+        <Form @onSubmit={{this.save}} @validate={{this.validateForm}} as |form|>
           <this.formComponent @form={{form}} />
 
           <form.Actions>
