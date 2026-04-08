@@ -7383,6 +7383,18 @@ RSpec.describe UsersController do
       expect(body).to include("bookmark_reminder_##{bookmark3.id}")
     end
 
+    it "does not HTML-encode special characters in .ics feed" do
+      bookmark1.update!(name: "Tom & Jerry", reminder_at: 1.day.from_now)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+
+      expect(response.status).to eq(200)
+      body = response.body
+      expect(body).not_to include("&amp;")
+      expect(body).to include("SUMMARY:Tom & Jerry")
+    end
+
     it "does not show another user's bookmarks" do
       sign_in(Fabricate(:user))
       get "/u/#{bookmark3.user.username}/bookmarks.json"

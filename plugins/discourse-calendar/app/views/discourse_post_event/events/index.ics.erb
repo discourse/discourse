@@ -15,7 +15,7 @@ SUMMARY:<%= IcalEncoder.encode(event.name.presence || event.post.topic.title) %>
 <%- if event.location.present? -%>LOCATION:<%= IcalEncoder.encode(event.location) %>
 <%- end -%>
 DESCRIPTION:<%= IcalEncoder.encode([(event.description.presence || event.post.excerpt), event.post.full_url].compact.join("\n")) %>
-URL:<%= event.url.presence || event.post.topic.url(event.post.post_number) %>
+URL:<%= IcalEncoder.encode(event.url.presence || event.post.topic.url(event.post.post_number)) %>
 END:VEVENT
 <%- end -%>
 END:VCALENDAR
