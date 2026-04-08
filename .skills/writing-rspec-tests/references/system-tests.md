@@ -2,6 +2,38 @@
 
 Discourse uses Rails system tests with RSpec and Capybara. Tests run both server and client code together.
 
+## Assert What Users See, Not Database State
+
+System tests simulate real user interactions. **Assert on visible UI state, not database records.** If a user can't see it on the page, don't check it in the database.
+
+```rb
+# Good - asserts what the user sees
+expect(topic_page).to have_post(text: "Hello world")
+expect(toasts).to have_success("Topic created")
+
+# Bad - checks database state the user can't see
+expect(Topic.last.title).to eq("Hello world")
+expect(Post.count).to eq(1)
+```
+
+Only reach into the database when no UI signal exists for the behavior being tested, which should be rare. If you find yourself needing database assertions, consider whether the feature is missing user-visible feedback.
+
+**Verify persistence by refreshing the page.** After a save action, refresh (or revisit) the current page and assert the saved state is still visible. This is what a real user would do to confirm their changes persisted.
+
+```rb
+# Good - refreshes and verifies saved state
+admin_settings_page.save
+expect(toasts).to have_success("Settings saved")
+
+page.refresh
+
+expect(admin_settings_page).to have_setting_value("site_name", "My Forum")
+
+# Bad - only checks before refresh, or checks the database
+admin_settings_page.save
+expect(SiteSetting.site_name).to eq("My Forum")
+```
+
 ## File Naming
 
 Use `action_scenario_spec.rb` pattern - describe what the test does:
@@ -60,6 +92,19 @@ it "preserves the tag filter in the URL when switching categories"
 it "updates the model count after deletion"
 it "sets the correct query param on filter change"
 ```
+
+## Freezing Time
+
+For time-sensitive system tests, use the `time:` metadata key instead of calling `freeze_time` manually. This freezes **both** the Ruby server time and the Playwright browser clock simultaneously:
+
+```rb
+it "shows the post timestamp correctly", time: Time.zone.parse("2024-01-15 10:00:00") do
+  visit(topic_path(topic))
+  expect(post_component).to have_timestamp("Jan 15")
+end
+```
+
+**Why this matters:** In system tests, JavaScript also needs to see the frozen time (e.g. for relative timestamps like "5 minutes ago"). The `time:` metadata calls both `freeze_time` and `pw_page.clock.set_fixed_time` under the hood. Using plain `freeze_time` only freezes the Ruby side, leaving the browser clock running normally.
 
 ## Common Helpers
 
@@ -174,3 +219,37 @@ end
    ```
 
 The first pattern is preferred because it keeps selectors out of test files and makes the relationship explicit.
+
+## S3 Upload System Tests
+
+System specs involving S3 uploads use MinIO (a local S3-compatible server). The test infrastructure automatically downloads and runs MinIO with an isolated data store during specs.
+
+**Writing S3 system specs:** Call `setup_or_skip_s3_system_test` as the very first line in each `it` block. This configures the S3 environment and skips the test if S3 specs aren't enabled:
+
+```rb
+it "uploads a file to S3" do
+  setup_or_skip_s3_system_test
+
+  # your test code here
+end
+```
+
+**Running S3 system specs:** S3-related specs are skipped by default. Enable them with the `RUN_S3_SYSTEM_SPECS` environment variable:
+
+```sh
+RUN_S3_SYSTEM_SPECS=1 bin/rspec spec/system/s3_uploads_spec.rb
+```
+
+**Local setup required:** MinIO must be reachable at specific hostnames. Add entries to `/etc/hosts`:
+
+```sh
+# Linux
+echo "127.0.0.1 minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+
+# macOS — also needs IPv6 entries
+echo "127.0.0.1 minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+echo "::1 minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+echo "fe80::1%lo0 minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+```
+
+To use a custom MinIO hostname, set `MINIO_RUNNER_MINIO_DOMAIN`.

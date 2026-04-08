@@ -15,12 +15,19 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Prefer readability over DRYness** — tests are documentation. Some duplication is fine. Avoid deep `shared_examples`/`let` chains that hurt readability.
 - **Test edge cases** — nil inputs, empty collections, boundary values, permission failures — not just happy paths.
 - **Keep tests independent** — no test should depend on another test's execution or shared mutable state.
+- **Verify placement in parent context** — before adding a new test, always read the surrounding `describe`/`context` block to confirm the test belongs there. Check that the parent context's description, `let`/`fab!` setup, and `before` hooks match the scenario being tested. A misplaced test inherits the wrong setup and produces misleading results.
 - **Arrange-Act-Assert** — clear separation of setup, action, and verification in each test.
 - **Don't test framework behavior** — don't test that Rails validations work; test your business logic.
 - **Avoid redundant multi-layer testing** — if a model spec tests a validation, the controller spec doesn't need to re-verify that same validation logic.
 - **No single-letter block variables** — use descriptive names like `|vote|`, `|option|`, not `|v|`, `|o|`.
 - **Assert collections in a single assertion** — use `contain_exactly` or `eq` instead of multiple `include`/`not_to include` checks.
 - **Optimise for human readability** — minimise context overload when reading an example. Avoid too many indirections.
+- **Limit nesting to 2 levels** — avoid more than 2 levels of `describe`/`context` nesting. Instead of deeply nested contexts, put the full scenario description in the `it` block itself. Flat tests are easier to read and maintain.
+- **Avoid double negatives in descriptions** — write test descriptions that state the positive condition. For example, prefer `"returns true when topic_approval_type is approval or pre_approval"` over `"returns true when topic_approval_type is not none"`. Be specific about the values being tested.
+
+## Style Guide Reference
+
+Before writing any RSpec code, read [references/rspec-style-guide.md](references/rspec-style-guide.md) and apply those conventions alongside the Discourse-specific patterns below.
 
 ## Test Data with Fabricators
 
