@@ -17,23 +17,23 @@ import { getAbsoluteURL } from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import CanvasContextMenu from "./canvas-context-menu";
 import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io";
+import { setupCanvasKeyboard } from "./canvas-keyboard";
+import {
+  buildStickyNoteTranslateHandler,
+  computeStickyNoteRects,
+} from "./canvas-sticky-notes";
 import ConnectionToolbar from "./connection-toolbar";
 import Controls from "./controls";
 import { createReteEditor } from "./rete-editor";
 import StickyNoteComponent from "./sticky-note";
 import WorkflowNode from "./workflow-node";
 
-const PAUSED_SHORTCUTS = ["-", "="];
 const SVG_STYLE = trustHTML(
   "overflow:visible;position:absolute;pointer-events:none;width:9999px;height:9999px"
 );
 const SVG_STYLE_Z0 = trustHTML(
   "overflow:visible;position:absolute;pointer-events:none;width:9999px;height:9999px;z-index:0"
 );
-
-function isInputElement(target) {
-  return target.tagName === "INPUT" || target.tagName === "TEXTAREA";
-}
 
 export default class WorkflowCanvas extends Component {
   @service keyboardShortcuts;
@@ -48,48 +48,6 @@ export default class WorkflowCanvas extends Component {
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
-  #keyActions = {
-    "meta::z": (e) => {
-      e.preventDefault();
-      this.args.onUndo?.();
-    },
-    "meta:shift:z": (e) => {
-      e.preventDefault();
-      this.args.onRedo?.();
-    },
-    "meta::y": (e) => {
-      e.preventDefault();
-      this.args.onRedo?.();
-    },
-    "meta::c": () => this.#copy(),
-    "meta::v": () => this.#paste(),
-    "::delete": () => this.deleteSelected(),
-    "::backspace": () => this.deleteSelected(),
-    "::escape": () => {
-      this._contextMenuApi?.close();
-      this.rete?.selector.unselectAll();
-      this._selectionVersion++;
-    },
-    "::+": () => this.zoomIn(),
-    "::=": () => this.zoomIn(),
-    "::-": () => this.zoomOut(),
-  };
-  #codeActions = {
-    "::Digit1": () => this.fitToView(),
-    "::Digit2": () => this.autoLayout(),
-  };
-  #handleDocumentKeyDown = (event) => {
-    if (isInputElement(event.target)) {
-      return;
-    }
-    const meta = event.metaKey || event.ctrlKey ? "meta" : "";
-    const shift = event.shiftKey ? "shift" : "";
-    const key = event.key.toLowerCase();
-    const handler =
-      this.#keyActions[`${meta}:${shift}:${key}`] ??
-      this.#codeActions[`${meta}:${shift}:${event.code}`];
-    handler?.(event);
-  };
   @tracked _workflowEnabled = null;
 
   @tracked _selectionVersion = 0;
@@ -101,12 +59,7 @@ export default class WorkflowCanvas extends Component {
   willDestroy() {
     super.willDestroy();
     this.rete?.destroy();
-    document.removeEventListener("keydown", this.#handleDocumentKeyDown);
-    try {
-      this.keyboardShortcuts?.unpause(PAUSED_SHORTCUTS);
-    } catch {
-      // keyboard shortcuts may not be fully initialized
-    }
+    this._keyboard?.teardown();
   }
 
   get workflowEnabled() {
@@ -149,8 +102,22 @@ export default class WorkflowCanvas extends Component {
 
   @action
   async setupCanvas(element) {
-    this.keyboardShortcuts.pause(PAUSED_SHORTCUTS);
-    document.addEventListener("keydown", this.#handleDocumentKeyDown);
+    this._keyboard = setupCanvasKeyboard(this.keyboardShortcuts, {
+      onUndo: () => this.args.onUndo?.(),
+      onRedo: () => this.args.onRedo?.(),
+      onCopy: () => this.#copy(),
+      onPaste: () => this.#paste(),
+      onDelete: () => this.deleteSelected(),
+      onEscape: () => {
+        this._contextMenuApi?.close();
+        this.rete?.selector.unselectAll();
+        this._selectionVersion++;
+      },
+      onZoomIn: () => this.zoomIn(),
+      onZoomOut: () => this.zoomOut(),
+      onFitToView: () => this.fitToView(),
+      onAutoLayout: () => this.autoLayout(),
+    });
 
     this.canvasElement = element;
 
@@ -248,7 +215,7 @@ export default class WorkflowCanvas extends Component {
 
     if (this._isFirstSync || this.rete.nodeCount !== prevNodeCount) {
       this._isFirstSync = false;
-      await this.rete.fitToView(this.#stickyNoteRects);
+      await this.rete.fitToView(computeStickyNoteRects(this.args.stickyNotes));
     }
   }
 
@@ -332,17 +299,10 @@ export default class WorkflowCanvas extends Component {
   @action
   async selectStickyNote(clientId) {
     await this.rete?.selectStickyNote(clientId, {
-      onStickyNoteTranslate: (id, dx, dy) => {
-        const note = (this.args.stickyNotes || []).find(
-          (n) => n.clientId === id
-        );
-        if (note) {
-          this.args.onStickyNoteMove?.(id, {
-            x: note.position.x + dx,
-            y: note.position.y + dy,
-          });
-        }
-      },
+      onStickyNoteTranslate: buildStickyNoteTranslateHandler(
+        this.args.stickyNotes,
+        this.args.onStickyNoteMove
+      ),
       onStickyNoteUnselect: () => {
         this._selectionVersion++;
       },
@@ -443,21 +403,12 @@ export default class WorkflowCanvas extends Component {
     await this.#applyZoom(-this.#ZOOM_STEP);
   }
 
-  get #stickyNoteRects() {
-    return (this.args.stickyNotes || []).map((n) => ({
-      x: n.position.x,
-      y: n.position.y,
-      width: n.size.width,
-      height: n.size.height,
-    }));
-  }
-
   @action
   async fitToView() {
     if (!this.rete) {
       return;
     }
-    await this.rete.fitToView(this.#stickyNoteRects);
+    await this.rete.fitToView(computeStickyNoteRects(this.args.stickyNotes));
   }
 
   @action
@@ -467,7 +418,7 @@ export default class WorkflowCanvas extends Component {
     }
     const positions = await this.rete.autoArrange();
     this.args.onAutoLayout?.(positions);
-    await this.rete.fitToView(this.#stickyNoteRects);
+    await this.rete.fitToView(computeStickyNoteRects(this.args.stickyNotes));
   }
 
   @action
