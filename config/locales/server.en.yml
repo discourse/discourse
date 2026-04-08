@@ -2254,6 +2254,7 @@ en:
     here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    animated_topic_thumbnails: "Use the original animated image as the topic thumbnail instead of generating a static thumbnail."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."

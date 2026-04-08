@@ -2193,6 +2193,8 @@ files:
     type: list
     regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
   create_thumbnails: true
+  animated_topic_thumbnails:
+    default: false
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours:
     default: 48
