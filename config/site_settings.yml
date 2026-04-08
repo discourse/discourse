@@ -24,9 +24,12 @@
 #                         is changed.
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
+#                          - upcoming_change: The site setting of the upcoming change to control this
+#                          - new_default: The new default value when the upcoming change is enabled
 # upcoming_change       - Additional metadata with the following options to show in the /admin/config/upcoming-changes page:
 #                          - status: experimental | alpha | beta | stable
-#                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
+#                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
 #                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
 #                            to only "Everyone" and "No One", removing group-based options.
