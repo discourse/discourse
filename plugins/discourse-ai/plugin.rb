@@ -123,7 +123,10 @@ after_initialize do
     end
   end
 
-  require_relative "spec/support/embeddings_generation_stubs" if Rails.env.test?
+  if Rails.env.test?
+    require_relative "spec/support/embeddings_generation_stubs"
+    require_relative "spec/support/fake_external_agent"
+  end
 
   reloadable_patch do |plugin|
     Guardian.prepend DiscourseAi::GuardianExtensions
