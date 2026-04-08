@@ -305,13 +305,13 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
       .dom("div.query-results table tbody tr")
       .exists({ count: 2 }, "the table with query results was rendered");
 
-    assert
-      .dom("div.result-info button:nth-child(3) span")
-      .hasText(i18n("explorer.show_graph"), "the chart button was rendered");
-
-    await click("div.result-info button:nth-child(3)");
-
     assert.dom("canvas").exists("the chart was rendered");
+    assert
+      .dom("div.query-results section > :first-child")
+      .matchesSelector(
+        ".query-results-chart",
+        "the chart is shown above the table"
+      );
   });
 
   test("runs query and is able to download the results", async function (assert) {
@@ -360,7 +360,9 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
         }
       });
 
-    await click("div.result-info button:nth-child(1)");
+    await click(
+      ".query-run-actions__right .query-result-download-buttons button:nth-child(1)"
+    );
 
     await finishedForm;
 

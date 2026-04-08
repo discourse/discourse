@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseLater from "discourse/lib/later";
-import IconPicker from "discourse/select-kit/components/icon-picker";
 import { i18n } from "discourse-i18n";
 
 export default class SectionFormLink extends Component {
@@ -101,19 +101,12 @@ export default class SectionFormLink extends Component {
       {{/if}}
 
       <div class="input-group" role="cell">
-        <IconPicker
-          @name="icon"
+        <DIconGridPicker
           @value={{@link.icon}}
-          @options={{hash
-            maximum=1
-            caretDownIcon="angle-down"
-            caretUpIcon="angle-up"
-            icons=@link.icon
-          }}
-          @onlyAvailable={{true}}
           @onChange={{fn (mut @link.icon)}}
+          @showCaret={{true}}
+          @btnClass={{@link.iconCssClass}}
           aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
-          class={{@link.iconCssClass}}
         />
 
         {{#if @link.invalidIconMessage}}

@@ -1073,6 +1073,11 @@
   .pref-second-factor {
     margin-top: 0.5em;
   }
+
+  .pref-show-original-content {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
 }
 
 .user-upcoming-changes-table {

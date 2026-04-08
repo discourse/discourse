@@ -145,6 +145,75 @@ describe "Bookmarking posts and topics" do
     end
   end
 
+  describe "topic footer bookmark button with post bookmarks" do
+    it "shows jump/edit/delete for a single post bookmark" do
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      expect(bookmark_menu).to have_topic_bookmark_button_label(
+        I18n.t("js.bookmarked.edit_bookmark", count: 1),
+      )
+
+      bookmark_menu.click_topic_bookmark_button
+      expect(bookmark_menu).to have_jump_to_post_option(post_2.post_number)
+      expect(page).to have_css(".topic-bookmarks-menu-content [data-menu-option-id='edit']")
+      expect(page).to have_css(".topic-bookmarks-menu-content [data-menu-option-id='delete']")
+    end
+
+    it "shows plural label, correct tooltip, and grouped menu for multiple bookmarks" do
+      Fabricate(:bookmark, bookmarkable: topic, user: current_user)
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      expect(bookmark_menu).to have_topic_bookmark_button_label(
+        I18n.t("js.bookmarked.edit_bookmark", count: 2),
+      )
+      expect(bookmark_menu).to have_topic_bookmark_button_title(
+        I18n.t("js.bookmarked.edit_bookmark", count: 2),
+      )
+
+      bookmark_menu.click_topic_bookmark_button
+      expect(bookmark_menu).to have_jump_to_post_option(post_2.post_number)
+      expect(bookmark_menu).to have_edit_topic_bookmark_option
+      expect(bookmark_menu).to have_delete_topic_bookmark_option
+      expect(bookmark_menu).to have_clear_all_option
+    end
+
+    it "navigates to the bookmarked post when clicking jump" do
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      bookmark_menu.click_topic_bookmark_button
+      bookmark_menu.click_jump_to_post(post_2.post_number)
+
+      expect(page).to have_current_path(%r{/t/.*#{topic.id}/#{post_2.post_number}})
+    end
+
+    it "deletes a single post bookmark from the footer menu" do
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+
+      bookmark_menu.click_topic_bookmark_button
+      bookmark_menu.click_menu_option("delete")
+
+      expect(topic_page).to have_no_bookmarks(topic)
+      expect(Bookmark.where(user: current_user, bookmarkable: post_2)).not_to exist
+    end
+
+    it "live updates footer button when bookmarking a post" do
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_no_bookmarks(topic)
+
+      topic_page.expand_post_actions(post)
+      topic_page.click_post_action_button(post, :bookmark)
+      expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
+
+      expect(bookmark_menu).to have_topic_bookmark_button_label(
+        I18n.t("js.bookmarked.edit_bookmark", count: 1),
+      )
+    end
+  end
+
   describe "editing existing bookmarks" do
     fab!(:bookmark) do
       Fabricate(

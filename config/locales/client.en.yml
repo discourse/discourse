@@ -610,8 +610,10 @@ en:
 
     bookmarked:
       title: "Bookmark"
-      edit_bookmark: "Edit Bookmark"
-      clear_bookmarks: "Clear Bookmarks"
+      edit_bookmark:
+        one: "Edit bookmark"
+        other: "Edit bookmarks"
+      delete_bookmarks: "Delete all bookmarks"
       help:
         bookmark: "Click to bookmark this topic"
         edit_bookmark: "Click to edit the bookmark on a post in this topic"
@@ -631,12 +633,18 @@ en:
       clear_reminder: "Clear reminder"
       edit: "Edit bookmark"
       not_bookmarked: "bookmark this post"
+      topic_bookmark: "Topic"
+      post_bookmark: "Post #%{post_number}"
+      jump_to_post: "Jump to #%{post_number}"
+      bookmark_topic: "Bookmark topic"
+      edit_topic_bookmark: "Edit topic bookmark"
+      delete_topic_bookmark: "Delete topic bookmark"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
       created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       created_with_reminder_generic: "You've bookmarked this with a reminder %{date}. %{name}"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
-      confirm_clear: "Are you sure you want to clear all your bookmarks from this topic?"
+      confirm_clear: "Are you sure you want to delete all your bookmarks from this topic?"
       save: "Save"
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
@@ -1713,6 +1721,7 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
+      show_original_content: "Show original content instead of translated content. Can also be toggled within topics."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -3064,6 +3073,20 @@ en:
       medium_dark_tone: Medium dark skin tone
       dark_tone: Dark skin tone
       default: Custom emojis
+
+    filter_input:
+      clear: "Clear filter"
+
+    d_icon_grid_picker:
+      select_icon: "Select icon"
+      search_placeholder: "Search icons..."
+      no_results: "No icons found"
+      results_count:
+        one: "%{count} icon found"
+        other: "%{count} icons found"
+      favorites: "Favorites"
+      selected_icon: "Selected icon: %{iconName}"
+      clear: "Clear icon"
 
     shared_drafts:
       title: "Shared Drafts"
@@ -4770,6 +4793,7 @@ en:
       icon: "Icon"
       emoji: "Emoji"
       select_emoji: "Select emoji"
+      select_icon: "Select icon"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:

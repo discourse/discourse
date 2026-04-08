@@ -8,6 +8,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
@@ -24,7 +25,6 @@ import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import IconPicker from "discourse/select-kit/components/icon-picker";
 import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -531,21 +531,11 @@ export default class UpsertCategoryGeneral extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <IconPicker
-                      @value={{readonly field.value}}
-                      @onlyAvailable={{true}}
-                      @options={{hash
-                        maximum=1
-                        disabled=field.disabled
-                        caretDownIcon="angle-down"
-                        caretUpIcon="angle-up"
-                        icons=field.value
-                      }}
+                    <DIconGridPicker
+                      @value={{field.value}}
                       @onChange={{field.set}}
-                      class="form-kit__control-icon"
-                      style={{trustHTML
-                        (concat "--icon-color: #" @transientData.color ";")
-                      }}
+                      @allowClear={{true}}
+                      @iconColor={{concat "#" @transientData.color}}
                     />
                   </field.Control>
                 </@form.Field>

@@ -90,6 +90,22 @@ module PageObjects
       def has_query_description?(text)
         page.has_css?(".query-edit .desc", text: text)
       end
+
+      def has_no_result_header?
+        page.has_no_css?(".query-results .result-header")
+      end
+
+      def has_cached_result_notice?
+        page.has_css?(".cached-result-notice")
+      end
+
+      def has_no_cached_result_notice?
+        page.has_no_css?(".cached-result-notice")
+      end
+
+      def has_chart?
+        page.has_css?(".query-results .chart-canvas-container")
+      end
     end
   end
 end
