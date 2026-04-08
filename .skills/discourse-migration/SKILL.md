@@ -23,11 +23,31 @@ bin/rails g migration CreateWidgets                                          # d
 bin/rails g post_migration DropOldColumns                                    # db/post_migrate/
 bin/rails g plugin_migration CreatePluginTable --plugin-name=my-plugin       # plugins/<name>/db/migrate/
 bin/rails g plugin_post_migration DropOldPluginCols --plugin-name=my-plugin  # plugins/<name>/db/post_migrate/
+bin/rails g site_setting_rename_migration old_name new_name                  # site setting rename
 ```
 
 Use `ActiveRecord::Migration[8.0]` (current version). Always include `# frozen_string_literal: true`.
 
 Use `change` for reversible ops, `up`/`down` for irreversible. Use `raise ActiveRecord::IrreversibleMigration` in `down`. Use `up_only { ... }` for data ops inside an otherwise reversible `change`.
+
+## Avoiding application code in migrations
+
+Never call application code (models, `SiteSetting`, etc.) in migrations. These references break when code changes months or years later — settings get removed, methods get renamed, or semantics shift silently.
+
+```ruby
+# BAD — relies on application code that may not exist when migration runs later
+if SiteSetting.some_setting
+  add_column ...
+end
+
+# GOOD — query the database directly
+result = DB.query_single("SELECT value FROM site_settings WHERE name = 'some_setting'")
+if result.first == "t"
+  add_column ...
+end
+```
+
+`execute` is the default for all migration SQL. Only use `DB.exec`/`DB.query` when you need parameterized queries (`:param` syntax) or return values.
 
 ## Safely removing columns
 
@@ -78,6 +98,14 @@ end
 **Step 4** — Remove `ignored_columns` entry after post-deploy migration is promoted.
 
 For deprecation warnings before removal: `include HasDeprecatedColumns` then `deprecate_column :col, drop_from: "3.5"` (see `app/models/concerns/has_deprecated_columns.rb`).
+
+## Safely renaming columns
+
+Renaming is a multi-step process similar to column removal:
+
+1. **Pre-deploy migration:** Mark the old column readonly with `Migration::ColumnDropper.mark_readonly`, add the new column, create a trigger to mirror writes from old to new on inserts/updates, and backfill existing data from old column to new.
+2. **Code change (same PR):** Update all application code to read/write the new column. Add `self.ignored_columns += %i[old_column]` to the model.
+3. **Post-deploy migration:** Drop the old column using `Migration::ColumnDropper.execute_drop`. In most cases, delay this until the rename has been confirmed safe with no data loss.
 
 ## Safely removing tables
 
@@ -185,8 +213,6 @@ end
 
 Use `ON CONFLICT` for idempotent inserts. Use parameterized queries (`:param` syntax via `DB.exec`) — not string interpolation.
 
-`execute` is the default for all migration SQL. Only use `DB.exec`/`DB.query` when you need parameterized queries (`:param` syntax) or return values.
-
 ## Conditional logic
 
 Use `Migration::Helpers` (`lib/migration/helpers.rb`) for install-vs-upgrade behavior:
@@ -199,9 +225,11 @@ end
 
 Use `column_exists?`, `table_exists?`, `index_exists?` for idempotency guards.
 
-## NOT NULL constraints
+## NOT NULL constraints and NULLable columns
 
-Always clean data first: `DELETE` invalid rows or `UPDATE` nulls to a default, then `change_column_null`.
+Avoid NULLable columns whenever possible — every NULL field is a potential `nil` error. Prefer adding a default (e.g., `false` for booleans, `""` for strings, `0` for counts). Limit NULLs to truly optional fields (optional description, optional URL).
+
+When adding a NOT NULL constraint to an existing column, always clean data first: `DELETE` invalid rows or `UPDATE` nulls to a default, then `change_column_null`.
 
 ## Bigint conversions
 
@@ -210,6 +238,45 @@ For large tables (e.g. `notifications.id`), use four migrations:
 2. Batch-copy existing rows (`disable_ddl_transaction!`, ~10k batches)
 3. Swap columns (rename old/new, fix PK/sequences, mark old readonly)
 4. Post-deploy: `execute_drop` the old column
+
+## Testing migrations
+
+When a migration includes data changes with potential for data loss or inaccuracy, write an RSpec test. Migration files aren't auto-loaded, so require them explicitly:
+
+```ruby
+# frozen_string_literal: true
+
+require Rails.root.join("db/migrate/20240101000000_backfill_widget_status.rb")
+
+RSpec.describe BackfillWidgetStatus do
+  before do
+    @original_verbose = ActiveRecord::Migration.verbose
+    ActiveRecord::Migration.verbose = false
+  end
+
+  after { ActiveRecord::Migration.verbose = @original_verbose }
+
+  it "backfills status from legacy column" do
+    # Set up test data with fabricators or DB.exec
+
+    described_class.new.up
+
+    # Assert expected state
+  end
+end
+```
+
+The same pattern works for plugin migrations — just adjust the `require` path (e.g., `plugins/chat/db/migrate/...`).
+
+## Running annotations
+
+After any migration that alters table schema (add/remove/rename columns, create tables), run:
+
+```bash
+bin/annotate --models
+```
+
+This updates the schema comments at the top of model files to reflect the current database schema.
 
 ## Review checklist
 
@@ -223,4 +290,6 @@ For large tables (e.g. `notifications.id`), use four migrations:
 8. Idempotent: `IF EXISTS`, `ON CONFLICT`, `column_exists?`, etc.
 9. Rollback: `down` method or `raise ActiveRecord::IrreversibleMigration`
 10. No foreign keys unless strong justification
-11. `execute` for SQL; `DB.exec`/`DB.query` only when param binding or return values needed
+11. No application code (models, `SiteSetting`) — query DB directly
+12. `execute` for SQL; `DB.exec`/`DB.query` only when param binding or return values needed
+13. Run `bin/annotate --models` after schema-altering migrations
