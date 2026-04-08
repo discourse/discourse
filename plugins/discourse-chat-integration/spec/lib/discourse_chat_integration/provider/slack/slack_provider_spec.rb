@@ -386,7 +386,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
           },
         )
 
-      described_class.setup(admin, { "chat_integration_slack_access_token" => "xoxb-test-token" })
+      described_class.setup(admin, { chat_integration_slack_access_token: "xoxb-test-token" })
 
       expect(stub).to have_been_requested.once
       expect(SiteSetting.chat_integration_slack_access_token).to eq("xoxb-test-token")
@@ -402,7 +402,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       )
 
       expect {
-        described_class.setup(admin, { "chat_integration_slack_access_token" => "bad" })
+        described_class.setup(admin, { chat_integration_slack_access_token: "bad" })
       }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
         expect(e.info[:error_key]).to eq("chat_integration.provider.slack.errors.auth_error")
       end
@@ -411,7 +411,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     it "persists webhook URL and enables provider when only webhook is provided" do
       url = "https://hooks.slack.com/services/T00000000/B00000000/xxxxxxxxxxxxxxxxxxxxxxxx"
 
-      described_class.setup(admin, { "chat_integration_slack_outbound_webhook_url" => url })
+      described_class.setup(admin, { chat_integration_slack_outbound_webhook_url: url })
 
       expect(SiteSetting.chat_integration_slack_outbound_webhook_url).to eq(url)
       expect(SiteSetting.chat_integration_slack_enabled).to eq(true)
@@ -421,7 +421,7 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       expect {
         described_class.setup(
           admin,
-          { "chat_integration_slack_outbound_webhook_url" => "https://example.com/hook" },
+          { chat_integration_slack_outbound_webhook_url: "https://example.com/hook" },
         )
       }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
         expect(e.info[:error_key]).to eq(
@@ -443,8 +443,8 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       described_class.setup(
         admin,
         {
-          "chat_integration_slack_access_token" => "xoxb-both",
-          "chat_integration_slack_outbound_webhook_url" => hook,
+          chat_integration_slack_access_token: "xoxb-both",
+          chat_integration_slack_outbound_webhook_url: hook,
         },
       )
 
@@ -464,8 +464,8 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
         described_class.setup(
           admin,
           {
-            "chat_integration_slack_access_token" => "xoxb-good",
-            "chat_integration_slack_outbound_webhook_url" => "https://example.com/hook",
+            chat_integration_slack_access_token: "xoxb-good",
+            chat_integration_slack_outbound_webhook_url: "https://example.com/hook",
           },
         )
       }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|

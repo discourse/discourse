@@ -28,25 +28,28 @@ module DiscourseChatIntegration::Provider::SlackProvider
     webhook_url = provider_site_settings[:chat_integration_slack_outbound_webhook_url].to_s.strip
 
     if token.blank? && webhook_url.blank?
-      raise DiscourseChatIntegration::ProviderError.new info: {
-                                                          error_key:
-                                                            "chat_integration.provider.slack.errors.at_least_one_required",
-                                                        }
+      raise DiscourseChatIntegration::ProviderError.new(
+              info: {
+                error_key: "chat_integration.provider.slack.errors.at_least_one_required",
+              },
+            )
     end
 
     verify_slack_access_token!(token) if token.present?
 
     # Incoming webhooks have no auth.test equivalent; validate URL shape only (no live POST to avoid posting to the channel).
     if webhook_url.present? && !valid_slack_incoming_webhook_url?(webhook_url)
-      raise DiscourseChatIntegration::ProviderError.new info: {
-                                                          error_key:
-                                                            "chat_integration.provider.slack.errors.invalid_webhook_url",
-                                                        }
+      raise DiscourseChatIntegration::ProviderError.new(
+              info: {
+                error_key: "chat_integration.provider.slack.errors.invalid_webhook_url",
+              },
+            )
     end
 
     if token.present?
       SiteSetting.set_and_log(:chat_integration_slack_access_token, token, current_user)
     end
+
     if webhook_url.present?
       SiteSetting.set_and_log(
         :chat_integration_slack_outbound_webhook_url,
@@ -54,6 +57,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
         current_user,
       )
     end
+
     SiteSetting.set_and_log(PROVIDER_ENABLED_SETTING, true, current_user)
   end
 
@@ -64,31 +68,34 @@ module DiscourseChatIntegration::Provider::SlackProvider
     response = http.request(req)
 
     unless response.kind_of?(Net::HTTPSuccess)
-      raise DiscourseChatIntegration::ProviderError.new info: {
-                                                          error_key:
-                                                            "chat_integration.provider.slack.errors.auth_error",
-                                                          response_code: response.code,
-                                                          response_body: response.body,
-                                                        }
+      raise DiscourseChatIntegration::ProviderError.new(
+              info: {
+                error_key: "chat_integration.provider.slack.errors.auth_error",
+                response_code: response.code,
+                response_body: response.body,
+              },
+            )
     end
 
     json =
       begin
         JSON.parse(response.body)
       rescue JSON::ParserError
-        raise DiscourseChatIntegration::ProviderError.new info: {
-                                                            error_key:
-                                                              "chat_integration.provider.slack.errors.auth_error",
-                                                            response_body: response.body,
-                                                          }
+        raise DiscourseChatIntegration::ProviderError.new(
+                info: {
+                  error_key: "chat_integration.provider.slack.errors.auth_error",
+                  response_body: response.body,
+                },
+              )
       end
 
     unless json["ok"] == true
-      raise DiscourseChatIntegration::ProviderError.new info: {
-                                                          error_key:
-                                                            "chat_integration.provider.slack.errors.auth_error",
-                                                          response_body: json,
-                                                        }
+      raise DiscourseChatIntegration::ProviderError.new(
+              info: {
+                error_key: "chat_integration.provider.slack.errors.auth_error",
+                response_body: json,
+              },
+            )
     end
   end
 

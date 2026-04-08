@@ -17,10 +17,11 @@ module DiscourseChatIntegration
         access_token = provider_site_settings[:chat_integration_telegram_access_token].to_s.strip
 
         if access_token.blank?
-          raise DiscourseChatIntegration::ProviderError.new info: {
-                                                              error_key:
-                                                                "chat_integration.provider.telegram.errors.access_token_required",
-                                                            }
+          raise DiscourseChatIntegration::ProviderError.new(
+                  info: {
+                    error_key: "chat_integration.provider.telegram.errors.access_token_required",
+                  },
+                )
         end
 
         new_secret = SecureRandom.hex
@@ -39,9 +40,9 @@ module DiscourseChatIntegration
         response =
           begin
             self.do_api_request("setWebhook", webhook_message, access_token: access_token)
-          rescue JSON::ParserError => e
-            Rails.logger.error("Failed to parse telegram setWebhook response: #{e.message}")
-            { "ok" => false, "description" => e.message }
+          rescue JSON::ParserError => err
+            Rails.logger.error("Failed to parse telegram setWebhook response: #{err.message}")
+            { "ok" => false, "description" => err.message }
           end
 
         if response["ok"] != true
@@ -77,21 +78,6 @@ module DiscourseChatIntegration
         display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         topic = post.topic
-
-        category = ""
-        if topic.category
-          category =
-            (
-              if (topic.category.parent_category)
-                "[#{topic.category.parent_category.name}/#{topic.category.name}]"
-              else
-                "[#{topic.category.name}]"
-              end
-            )
-        end
-
-        tags = ""
-        tags = topic.tags.map(&:name).join(", ") if topic.tags.present?
 
         I18n.t(
           "chat_integration.provider.telegram.message",

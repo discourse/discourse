@@ -89,7 +89,7 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
           },
         )
 
-      described_class.setup(admin, { "chat_integration_telegram_access_token" => "newtok" })
+      described_class.setup(admin, { chat_integration_telegram_access_token: "newtok" })
 
       expect(stub).to have_been_requested.once
       expect(SiteSetting.chat_integration_telegram_access_token).to eq("newtok")
@@ -109,7 +109,7 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
       )
 
       expect {
-        described_class.setup(admin, { "chat_integration_telegram_access_token" => "bad" })
+        described_class.setup(admin, { chat_integration_telegram_access_token: "bad" })
       }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
         expect(e.info[:error_key]).to eq(
           "chat_integration.provider.telegram.errors.webhook_setup_failed",
