@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import {
   click,
   currentURL,
@@ -148,6 +149,21 @@ acceptance(`Composer`, function (needs) {
       actualHeight,
       "Updated height is persistent"
     );
+  });
+
+  test("fires resize event after width transition", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    let resizedTriggered = false;
+    appEvents.on("composer:resized", () => (resizedTriggered = true));
+
+    await triggerEvent("#reply-control", "transitionend", {
+      propertyName: "max-width",
+    });
+
+    assert.true(resizedTriggered, "composer:resized is triggered");
   });
 
   test("composer controls", async function (assert) {
