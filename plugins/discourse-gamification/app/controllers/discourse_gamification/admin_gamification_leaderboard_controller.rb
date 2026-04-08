@@ -13,7 +13,7 @@ class DiscourseGamification::AdminGamificationLeaderboardController < Admin::Adm
 
   def show
     render json:
-             LeaderboardSerializer.new(
+             AdminLeaderboardSerializer.new(
                DiscourseGamification::GamificationLeaderboard.find(params[:id]),
              )
   end
@@ -27,9 +27,9 @@ class DiscourseGamification::AdminGamificationLeaderboardController < Admin::Adm
         created_by_id: params[:created_by_id],
       )
     if leaderboard.save
-      Jobs.enqueue(Jobs::GenerateLeaderboardPositions, leaderboard_id: leaderboard.id)
+      Jobs.enqueue(Jobs::RecalculateLeaderboardScores, leaderboard_id: leaderboard.id)
 
-      render_serialized(leaderboard, LeaderboardSerializer, root: false)
+      render_serialized(leaderboard, AdminLeaderboardSerializer, root: false)
     else
       render_json_error(leaderboard)
     end

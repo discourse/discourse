@@ -93,7 +93,7 @@ after_initialize do
       gamification_leaderboards:
         DiscourseGamification::GamificationLeaderboard
           .order(updated_at: :desc)
-          .map { |leaderboard| LeaderboardSerializer.new(leaderboard, root: false).as_json },
+          .map { |leaderboard| AdminLeaderboardSerializer.new(leaderboard, root: false).as_json },
     }
   end
 

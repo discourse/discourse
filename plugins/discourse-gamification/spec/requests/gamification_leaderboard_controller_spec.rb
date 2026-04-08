@@ -81,6 +81,25 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
       expect(data["users"][0]["total_score"]).to eq(current_user.gamification_score)
     end
 
+    it "does not expose admin scoring configuration" do
+      scorable_category_id = 123
+      leaderboard.update!(
+        score_overrides: {
+          "like_received" => 10,
+        },
+        scorable_category_ids: [scorable_category_id],
+      )
+      DiscourseGamification::LeaderboardCachedView.new(leaderboard).create
+
+      get "/leaderboard/#{leaderboard.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["leaderboard"]).to_not include(
+        "score_overrides",
+        "scorable_category_ids",
+      )
+    end
+
     it "returns an in progress message when leaderboard positions are not ready" do
       expect do get "/leaderboard/#{leaderboard.id}.json" end.to change {
         Jobs::GenerateLeaderboardPositions.jobs.size

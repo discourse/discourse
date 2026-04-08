@@ -11,7 +11,5 @@ class LeaderboardSerializer < ApplicationSerializer
              :excluded_groups_ids,
              :default_period,
              :updated_at,
-             :period_filter_disabled,
-             :score_overrides,
-             :scorable_category_ids
+             :period_filter_disabled
 end

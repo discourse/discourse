@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
@@ -31,22 +33,34 @@ const SCORABLE_KEYS = [
   "chat_reaction_received",
 ];
 
-function categoriesFromIds(ids) {
-  if (!ids) {
-    return [];
-  }
-  return ids.map((id) => Category.findById(id)).filter(Boolean);
-}
-
 export default class AdminEditLeaderboard extends Component {
   @service site;
   @service toasts;
   @service router;
 
+  @tracked selectedScorableCategories = [];
+
+  constructor() {
+    super(...arguments);
+
+    this.pendingScorableCategoriesRequest = Promise.resolve();
+    this.syncSelectedScorableCategories(
+      this.args.leaderboard.scorableCategoryIds
+    );
+  }
+
   get siteGroups() {
     return this.site.groups.filter(
       (group) => group.id !== AUTO_GROUPS.everyone.id
     );
+  }
+
+  async updateSelectedScorableCategories(ids, previousRequest) {
+    const categories = ids?.length ? await Category.asyncFindByIds(ids) : [];
+
+    await previousRequest;
+
+    this.selectedScorableCategories = categories;
   }
 
   get formData() {
@@ -73,8 +87,16 @@ export default class AdminEditLeaderboard extends Component {
   }
 
   @action
+  syncSelectedScorableCategories(ids) {
+    const previousRequest = this.pendingScorableCategoriesRequest;
+    this.pendingScorableCategoriesRequest =
+      this.updateSelectedScorableCategories(ids, previousRequest);
+  }
+
+  @action
   onCategoryChange(set, categories) {
-    set(categories.map((c) => c.id));
+    this.selectedScorableCategories = categories || [];
+    set((categories || []).map((c) => c.id));
   }
 
   @action
@@ -280,10 +302,17 @@ export default class AdminEditLeaderboard extends Component {
             as |field|
           >
             <field.Control>
-              <CategorySelector
-                @categories={{categoriesFromIds field.value}}
-                @onChange={{fn this.onCategoryChange field.set}}
-              />
+              <div
+                {{didUpdate
+                  (fn this.syncSelectedScorableCategories field.value)
+                  field.value
+                }}
+              >
+                <CategorySelector
+                  @categories={{this.selectedScorableCategories}}
+                  @onChange={{fn this.onCategoryChange field.set}}
+                />
+              </div>
             </field.Control>
           </form.Field>
         </form.Section>
