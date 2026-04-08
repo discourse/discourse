@@ -170,7 +170,9 @@ export default class ChatDrawer extends Component {
     const composerIsClosed = composer.classList.contains("closed");
     const minRightMargin = 15;
 
-    if (composerIsClosed) {
+    const isPeekMode = document.body.classList.contains("peek-mode-active");
+
+    if (composerIsClosed || isPeekMode) {
       drawerContainer.style.setProperty(
         "--composer-right",
         minRightMargin + "px"
