@@ -42,7 +42,7 @@ module DiscourseWorkflows
         @status = status
         @output = output
         @error = error
-        @started_at = started_at || Time.current.iso8601
+        @started_at = started_at || Time.current.iso8601(3)
         @finished_at = finished_at || (status != RUNNING ? @started_at : nil)
         @metadata = metadata
       end
@@ -56,19 +56,19 @@ module DiscourseWorkflows
       def succeed!(output:)
         @status = SUCCESS
         @output = output
-        @finished_at = Time.current.iso8601
+        @finished_at = Time.current.iso8601(3)
       end
 
       def filter!(output:)
         @status = FILTERED
         @output = output
-        @finished_at = Time.current.iso8601
+        @finished_at = Time.current.iso8601(3)
       end
 
       def fail!(message)
         @status = ERROR
         @error = message
-        @finished_at = Time.current.iso8601
+        @finished_at = Time.current.iso8601(3)
       end
 
       def mark_waiting!

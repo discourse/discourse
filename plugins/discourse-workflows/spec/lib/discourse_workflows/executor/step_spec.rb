@@ -58,6 +58,16 @@ RSpec.describe DiscourseWorkflows::Executor::Step do
     end
   end
 
+  describe "timestamp precision" do
+    it "stores timestamps with millisecond precision" do
+      step = described_class.build(node: node, position: 0, input: [])
+      expect(step.started_at).to match(/\.\d{3}/)
+
+      step.succeed!(output: [])
+      expect(step.finished_at).to match(/\.\d{3}/)
+    end
+  end
+
   describe "status transitions" do
     let(:step) { described_class.build(node: node, position: 0, input: []) }
 
