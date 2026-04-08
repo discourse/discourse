@@ -65,6 +65,7 @@ describe "Content Localization" do
       SiteSetting.content_localization_allowed_groups =
         "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
       SiteSetting.content_localization_supported_locales = "en|ja"
+      japanese_user.user_option.update!(show_original_content: false)
     end
 
     it "shows the user's language based on their user locale" do
