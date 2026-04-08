@@ -741,5 +741,223 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       expect(execution.status).to eq("skipped")
     end
+
+    it "records an error step for unknown node types" do
+      workflow =
+        Fabricate(
+          :discourse_workflows_workflow,
+          created_by: user,
+          enabled: true,
+          nodes: [
+            {
+              "id" => "trigger-1",
+              "type" => "trigger:topic_closed",
+              "type_version" => "1.0",
+              "name" => "Topic Closed",
+              "position" => {
+                "x" => 0,
+                "y" => 0,
+              },
+              "position_index" => 0,
+              "configuration" => {
+              },
+            },
+            {
+              "id" => "unknown-1",
+              "type" => "action:nonexistent_type",
+              "type_version" => "1.0",
+              "name" => "Bad Node",
+              "position" => {
+                "x" => 200,
+                "y" => 0,
+              },
+              "position_index" => 1,
+              "configuration" => {
+              },
+            },
+          ],
+          connections: [
+            {
+              "source_node_id" => "trigger-1",
+              "target_node_id" => "unknown-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+      trigger_data = { topic_id: topic.id, tags: [] }
+      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+      expect(execution.status).to eq("success")
+
+      step = execution.execution_data.find_step(node_id: "unknown-1")
+      expect(step["status"]).to eq("error")
+      expect(step["error"]).to include("Unknown node type 'action:nonexistent_type'")
+    end
+
+    it "redacts sensitive headers in step metadata" do
+      stub_request(:get, "https://api.example.com/test").to_return(
+        status: 200,
+        body: '{"ok": true}',
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      workflow =
+        Fabricate(
+          :discourse_workflows_workflow,
+          created_by: user,
+          enabled: true,
+          nodes: [
+            {
+              "id" => "trigger-1",
+              "type" => "trigger:topic_closed",
+              "type_version" => "1.0",
+              "name" => "Topic Closed",
+              "position" => {
+                "x" => 0,
+                "y" => 0,
+              },
+              "position_index" => 0,
+              "configuration" => {
+              },
+            },
+            {
+              "id" => "http-1",
+              "type" => "action:http_request",
+              "type_version" => "1.0",
+              "name" => "HTTP Request",
+              "position" => {
+                "x" => 200,
+                "y" => 0,
+              },
+              "position_index" => 1,
+              "configuration" => {
+                "method" => "GET",
+                "url" => "https://api.example.com/test",
+                "authentication" => "none",
+                "headers" => [
+                  { "key" => "Authorization", "value" => "Bearer secret123" },
+                  { "key" => "Content-Type", "value" => "application/json" },
+                  { "key" => "X-Api-Key", "value" => "my-secret-key" },
+                ],
+              },
+            },
+          ],
+          connections: [
+            {
+              "source_node_id" => "trigger-1",
+              "target_node_id" => "http-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+      trigger_data = { topic_id: topic.id, tags: [] }
+      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+      step = execution.execution_data.find_step(node_id: "http-1")
+      resolved_headers = step.dig("metadata", "resolved_configuration", "headers")
+
+      auth_header = resolved_headers.find { |h| h["key"] == "Authorization" }
+      content_header = resolved_headers.find { |h| h["key"] == "Content-Type" }
+      api_key_header = resolved_headers.find { |h| h["key"] == "X-Api-Key" }
+
+      expect(auth_header["value"]).to eq("[FILTERED]")
+      expect(api_key_header["value"]).to eq("[FILTERED]")
+      expect(content_header["value"]).to eq("application/json")
+    end
+
+    it "truncates long error messages" do
+      workflow =
+        Fabricate(
+          :discourse_workflows_workflow,
+          created_by: user,
+          enabled: true,
+          nodes: [
+            {
+              "id" => "trigger-1",
+              "type" => "trigger:topic_closed",
+              "type_version" => "1.0",
+              "name" => "Topic Closed",
+              "position" => {
+                "x" => 0,
+                "y" => 0,
+              },
+              "position_index" => 0,
+              "configuration" => {
+              },
+            },
+            {
+              "id" => "code-1",
+              "type" => "action:code",
+              "type_version" => "1.0",
+              "name" => "Code",
+              "position" => {
+                "x" => 200,
+                "y" => 0,
+              },
+              "position_index" => 1,
+              "configuration" => {
+                "code" => "throw new Error('x'.repeat(2000));",
+              },
+            },
+          ],
+          connections: [
+            {
+              "source_node_id" => "trigger-1",
+              "target_node_id" => "code-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+      trigger_data = { topic_id: topic.id, tags: [] }
+      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+      expect(execution.status).to eq("error")
+      expect(execution.error.length).to be <= 1000
+    end
+
+    context "with rate limiting" do
+      before { RateLimiter.enable }
+      after { RateLimiter.disable }
+
+      it "creates a rate_limited execution when limits are exceeded" do
+        SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 1
+
+        workflow =
+          Fabricate(
+            :discourse_workflows_workflow,
+            created_by: user,
+            enabled: true,
+            nodes: [
+              {
+                "id" => "trigger-1",
+                "type" => "trigger:topic_closed",
+                "type_version" => "1.0",
+                "name" => "Topic Closed",
+                "position" => {
+                  "x" => 0,
+                  "y" => 0,
+                },
+                "position_index" => 0,
+                "configuration" => {
+                },
+              },
+            ],
+            connections: [],
+          )
+
+        trigger_data = { topic_id: topic.id, tags: [] }
+
+        first_execution = described_class.new(workflow, "trigger-1", trigger_data).run
+        expect(first_execution.status).to eq("success")
+
+        second_execution = described_class.new(workflow, "trigger-1", trigger_data).run
+        expect(second_execution.status).to eq("rate_limited")
+      end
+    end
   end
 end
