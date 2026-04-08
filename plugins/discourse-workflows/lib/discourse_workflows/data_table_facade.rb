@@ -5,7 +5,7 @@ module DiscourseWorkflows
     class Query
       include ActiveModel::Validations
 
-      attr_reader :normalized_filter, :options
+      attr_reader :normalized_filter, :limit, :offset, :sort_by, :sort_direction
 
       validate :check_filter_errors
 
@@ -23,14 +23,10 @@ module DiscourseWorkflows
 
         @invalid_filter = normalized_filter if normalized_filter.invalid?
         @normalized_filter = normalized_filter.value
-        @options =
-          DiscourseWorkflows::DataTableQueryOptions.new(
-            normalized_filter: @normalized_filter,
-            limit:,
-            offset:,
-            sort_by:,
-            sort_direction:,
-          )
+        @limit = limit
+        @offset = offset
+        @sort_by = sort_by
+        @sort_direction = sort_direction
       end
 
       def has_changes_to_save?
@@ -49,14 +45,13 @@ module DiscourseWorkflows
 
       attr_reader :columns
 
-      validate :check_row_errors
+      validate :check_normalization_error
 
       def initialize(data_table:, data:, fill_missing: false)
-        normalized_data =
-          DiscourseWorkflows::NormalizedRowData.new(data_table:, data:, fill_missing: fill_missing)
-
-        @invalid_row_input = normalized_data if normalized_data.invalid?
-        @columns = normalized_data.columns
+        @columns = DataTableRow.normalize_row_data(data_table, data, fill_missing: fill_missing)
+      rescue ArgumentError => e
+        @normalization_error = e.message
+        @columns = {}
       end
 
       def has_changes_to_save?
@@ -65,8 +60,8 @@ module DiscourseWorkflows
 
       private
 
-      def check_row_errors
-        @invalid_row_input&.errors&.full_messages&.each { |message| errors.add(:base, message) }
+      def check_normalization_error
+        errors.add(:base, @normalization_error) if @normalization_error.present?
       end
     end
 
@@ -120,7 +115,7 @@ module DiscourseWorkflows
     end
 
     def query(query)
-      query_rows(query.options)
+      query_rows(query)
     end
 
     def find_row(row_id)
@@ -207,12 +202,11 @@ module DiscourseWorkflows
 
     private
 
-    def query_rows(query_options)
+    def query_rows(data_query)
       query = @table.project(Arel.star, Arel.sql("COUNT(*) OVER() AS _total_count"))
-      query = @query_builder.apply_filters(query, query_options.normalized_filter)
-      query =
-        @query_builder.apply_ordering(query, query_options.sort_by, query_options.sort_direction)
-      query = @query_builder.apply_pagination(query, query_options.limit, query_options.offset)
+      query = @query_builder.apply_filters(query, data_query.normalized_filter)
+      query = @query_builder.apply_ordering(query, data_query.sort_by, data_query.sort_direction)
+      query = @query_builder.apply_pagination(query, data_query.limit, data_query.offset)
 
       results = connection.exec_query(query.to_sql).to_a
       total_count = results.first&.[]("_total_count") || 0

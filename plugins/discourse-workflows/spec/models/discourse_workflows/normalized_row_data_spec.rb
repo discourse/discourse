@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::NormalizedRowData do
+RSpec.describe DiscourseWorkflows::DataTableFacade::RowInput do
   fab!(:data_table) do
     Fabricate(
       :discourse_workflows_data_table,
