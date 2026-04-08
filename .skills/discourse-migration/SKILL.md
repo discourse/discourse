@@ -25,8 +25,6 @@ bin/rails g plugin_migration CreatePluginTable --plugin-name=my-plugin       # p
 bin/rails g plugin_post_migration DropOldPluginCols --plugin-name=my-plugin  # plugins/<name>/db/post_migrate/
 ```
 
-Use `ActiveRecord::Migration[8.0]` (current version). Always include `# frozen_string_literal: true`.
-
 Use `change` for reversible ops, `up`/`down` for irreversible. Use `raise ActiveRecord::IrreversibleMigration` in `down`. Use `up_only { ... }` for data ops inside an otherwise reversible `change`.
 
 ## Safely removing columns
