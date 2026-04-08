@@ -23,10 +23,38 @@
 .vote-button {
   border-radius: var(--d-button-border-radius) var(--d-button-border-radius) 0 0;
   padding: var(--space-1) var(--space-3);
+  background: var(--transparent);
+  border: 1px solid var(--content-border-color);
+
+  .discourse-no-touch & {
+    &:hover {
+      background: var(--primary-low);
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+  }
+
+  &.btn-success {
+    .d-icon {
+      color: var(--success);
+    }
+
+    .discourse-no-touch & {
+      &:hover {
+        background: var(--primary-low);
+
+        .d-icon {
+          color: var(--success);
+        }
+      }
+    }
+  }
 }
 
 .vote-count {
-  color: var(--primary-high);
+  color: var(--primary-medium);
 }
 
 .vote-count-wrapper {
