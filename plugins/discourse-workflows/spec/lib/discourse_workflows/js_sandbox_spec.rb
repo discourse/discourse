@@ -1,0 +1,125 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseWorkflows::JsSandbox do
+  subject(:sandbox) { described_class.new(workflow_context, user: user, vars: vars) }
+
+  fab!(:user)
+
+  let(:workflow_context) { { "trigger" => { "topic_id" => 42 } } }
+  let(:vars) { { "API_URL" => "https://example.com" } }
+
+  after { sandbox.dispose }
+
+  describe "timeout" do
+    it "raises when JS execution exceeds the time limit" do
+      expect { sandbox.eval("while(true) {}") }.to raise_error(MiniRacer::ScriptTerminatedError)
+    end
+  end
+
+  describe "memory limit" do
+    it "raises when JS allocates too much memory" do
+      expect { sandbox.eval(<<~JS) }.to raise_error(MiniRacer::Error)
+          var a = [];
+          while(true) { a.push(new Array(10000).fill('x')); }
+        JS
+    end
+  end
+
+  describe "site setting filtering" do
+    it "returns [FILTERED] for secret settings" do
+      SiteSetting.secret_settings << :some_secret_key
+      result = sandbox.eval("$site_settings.some_secret_key")
+      expect(result).to eq("[FILTERED]")
+    ensure
+      SiteSetting.secret_settings.delete(:some_secret_key)
+    end
+
+    it "returns [FILTERED] for hidden settings" do
+      SiteSetting.stubs(:hidden_settings).returns(Set.new([:some_hidden_key]))
+      result = sandbox.eval("$site_settings.some_hidden_key")
+      expect(result).to eq("[FILTERED]")
+    end
+
+    it "returns the value for normal settings" do
+      SiteSetting.title = "Test Forum"
+      expect(sandbox.eval("$site_settings.title")).to eq("Test Forum")
+    end
+  end
+
+  describe "private node names" do
+    it "returns empty object for underscore-prefixed node names" do
+      context = { "_internal" => [{ "json" => { "secret" => "data" } }] }
+      private_sandbox = described_class.new(context, vars: {})
+
+      result = private_sandbox.eval("$('_internal')")
+      expect(result).to eq({ "item" => { "json" => {} } })
+    ensure
+      private_sandbox&.dispose
+    end
+
+    it "returns node data for normal names" do
+      context = { "My Node" => [{ "json" => { "value" => 123 } }] }
+      named_sandbox = described_class.new(context, vars: {})
+
+      result = named_sandbox.eval("$('My Node')")
+      expect(result).to eq({ "item" => { "json" => { "value" => 123 } } })
+    ensure
+      named_sandbox&.dispose
+    end
+  end
+
+  describe "current user exposure" do
+    it "only exposes schema-declared fields" do
+      result = sandbox.eval("JSON.stringify(Object.keys($current_user).sort())")
+      keys = JSON.parse(result)
+      expect(keys).to contain_exactly("id", "username")
+    end
+
+    it "populates user fields correctly" do
+      expect(sandbox.eval("$current_user.id")).to eq(user.id)
+      expect(sandbox.eval("$current_user.username")).to eq(user.username)
+    end
+
+    it "returns empty object when no user is provided" do
+      no_user_sandbox = described_class.new(workflow_context, vars: vars)
+      expect(no_user_sandbox.eval("JSON.stringify($current_user)")).to eq("{}")
+    ensure
+      no_user_sandbox&.dispose
+    end
+  end
+
+  describe "console capture" do
+    it "captures log messages when enabled" do
+      capturing_sandbox =
+        described_class.new(workflow_context, user: user, vars: vars, capture_logs: true)
+
+      capturing_sandbox.eval('console.log("hello")')
+      capturing_sandbox.eval('console.warn("careful")')
+      capturing_sandbox.eval('console.error("boom")')
+
+      entries = capturing_sandbox.log.as_json
+      expect(entries.map { |e| e["message"] }).to eq(%w[hello careful boom])
+      expect(entries.map { |e| e["level"] }).to eq(%w[info warn error])
+    ensure
+      capturing_sandbox&.dispose
+    end
+  end
+
+  describe ".extract_item_json" do
+    it "extracts json from array format" do
+      expect(described_class.extract_item_json([{ "json" => { "a" => 1 } }])).to eq({ "a" => 1 })
+    end
+
+    it "returns hash as-is" do
+      expect(described_class.extract_item_json({ "b" => 2 })).to eq({ "b" => 2 })
+    end
+
+    it "returns empty hash for nil" do
+      expect(described_class.extract_item_json(nil)).to eq({})
+    end
+
+    it "returns empty hash for empty array" do
+      expect(described_class.extract_item_json([])).to eq({})
+    end
+  end
+end
