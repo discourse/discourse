@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 de:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Feed mit Kalenderereignissen lesen"
   reports:
     currently_away:
       title: Derzeit abwesende Benutzer

@@ -586,6 +586,7 @@ ar:
       start_posting:
         title: "بدء النشر"
         description: "امنح الناس موضوعًا يتحدثون عنه معًا"
+        action: "اطّلع على الأفكار"
         choose_option: "كيف تود أن تبدأ؟"
         predefined_topics: "قوالب لكسر حالة السكوت"
         predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
@@ -860,6 +861,7 @@ ar:
       storage_access_prompt: "هل لديك بالفعل حساب %{site_name}؟ اسمح بالوصول إلى جلستك للتعليق بنفسك."
       allow_access: "السماح بالوصول"
       continue_as_guest: "المتابعة كضيف"
+      be_first_to_reply: "كن أول مَن يرد!"
     topic_count_all:
       zero: "عرض %{count} موضوع جديد"
       one: "عرض موضوع واحد (%{count}) جديد"
@@ -1435,6 +1437,7 @@ ar:
       add_members:
         title: "إضافة مستخدمين إلى %{group_name}"
         description: "أدخل قائمة المستخدمين الذين تريد دعوتهم إلى المجموعة أو الصقها في قائمة مفصولة بفاصلات:"
+        description_usernames_only: "أدخل قائمة المستخدمين الذين تريد دعوتهم إلى المجموعة أو الصقها في قائمة مفصولة بفاصلات:"
         usernames_placeholder: "اسم المستخدمين"
         usernames_or_emails_placeholder: "أسماء المستخدمين أو عناوين البريد الإلكتروني"
         notify_users: "إشعار المستخدمين"
@@ -2213,6 +2216,8 @@ ar:
         upcoming_changes: "التغييرات القادمة"
         calendar_subscriptions: "التقويم"
       calendar_subscriptions:
+        regenerate: "أعد توليد عناوين URL"
+        copy: "انسخ الرابط"
         copied: "تم النسخ!"
         add_to_google: "تقويم Google"
       change_password:
@@ -4073,6 +4078,7 @@ ar:
         clear_all: "مسح الكل"
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
         defer: "وضع علامة كغير مقروءة"
+        delete: "احذف الموضوعات"
         delete_topics_count:
           zero: "حذف الموضوعات"
           one: "حذف الموضوع"
@@ -4143,8 +4149,12 @@ ar:
           other: "تجاهل الجديدة (%{count})"
         toggle: "تفعيل التحديد الجماعي للموضوعات"
         actions: "الإجراءات الجماعية"
+        change_category: "حدِّث الفئة"
+        close_topics: "أغلِق الموضوعات"
+        archive_topics: "أرشف الموضوعات"
         move_messages_to_inbox: "النقل إلى صندوق الوارد"
         archive_messages: "النقل إلى الأرشيف"
+        notification_level: "حدِّث الإشعارات"
         change_notification_level: "تغيير مستوى الإشعارات"
         choose_new_category: "اختر الفئة الجديدة للموضوعات:"
         selected_sole_category:
@@ -4161,10 +4171,12 @@ ar:
           few: "المحدَّدة: %{count}"
           many: "المحدَّدة: %{count}"
           other: "المحدَّدة: %{count}"
+        change_tags: "استبدل الوسوم"
         append_tags: "إضافة وسوم"
         choose_new_tags: "اختيار الوسوم الجديدة لهذه الموضوعات:"
         choose_append_tags: "إضافة وسوم"
         changed_tags: "تم تغيير وسومات هذه الموضوعات."
+        remove_tags: "أزِل الوسوم"
         confirm_remove_tags:
           zero: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوع. هل أنت متأكد؟"
           one: "ستتم إزالة كل الوسوم من هذا الموضوع. هل أنت متأكد؟"
@@ -4246,6 +4258,8 @@ ar:
         name: "إعادة الإدراج"
       remove_tags:
         name: "إزالة الوسوم"
+      append_tags:
+        name: "أضف وسوم"
       replace_tags:
         name: "استبدال الوسوم"
       delete_topics:
@@ -4258,6 +4272,7 @@ ar:
         name: "وضع علامة غير مقروءة"
       update_notifications:
         name: "تحديث الإشعارات"
+        description: "قم بتحديث مستوى الإشعارات الشخصي للموضوعات المحددة ليصبح:"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -4473,6 +4488,13 @@ ar:
         few: "مضت %{count} ساعات بالفعل على آخر منشور في الموضوع؛ لذا فسيتم إغلاق الموضوع على الفور."
         many: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم إغلاق الموضوع على الفور."
         other: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم إغلاق الموضوع على الفور."
+      auto_delete_immediate:
+        zero: "مضت %{count} من الساعات بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        one: "مضت ساعة واحدة (%{count}) بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        two: "مضت ساعتان (%{count}) بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        few: "مضت %{count} ساعات بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        many: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        other: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
       timeline:
         back: "الرجوع"
         back_description: "الرجوع إلى آخر منشور غير مقروء"
@@ -5129,6 +5151,7 @@ ar:
           many: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
           other: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
       revisions:
+        diff_too_complex: "من المعقد للغاية عرض الفروقات. يُرجى محاولة عرض تعديلات فردية أصغر."
         locale:
           no_locale_set: "لم تُحدد أي لغة بعد"
           locale_removed: "تمت إزالة اللغة"
@@ -5221,6 +5244,8 @@ ar:
       tags: "الوسوم"
       localizations: "التوطينات"
       localization:
+        language: "لغة الفئة"
+        language_description: "اللغة الرئيسية لاسم هذه الفئة ووصفها."
         locale: "اللغة"
         name: "الاسم"
         description: "الوصف"
@@ -5241,10 +5266,12 @@ ar:
         delete: "حذف"
         add: "إضافة مجموعة الوسوم المطلوبة"
         placeholder: "تحديد مجموعة الوسوم…"
+        min_count: "عدد الوسوم"
         tag_group: "مجموعة الوسوم"
       topic_featured_link_allowed: "السماح بالروابط المميَّزة في هذه الفئة."
       delete: "احذف الفئة"
       create: "فئة جديدة"
+      create_with_type: "الفئة %{typeName} الجديدة"
       create_long: "إنشاء فئة جديدة"
       type_settings_schema:
         site_settings: "إعدادات الموقع"

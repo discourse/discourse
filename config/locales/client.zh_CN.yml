@@ -3051,8 +3051,8 @@ zh_CN:
         votes_released: "投票额度已释放"
         new_features: "新的 Discourse 功能已发布"
         admin_problems: "网站信息中心有新建议"
-        upcoming_change_available: "即将推出的新变化已发布"
-        upcoming_change_automatically_promoted: "即将发生的更改已自动启用"
+        upcoming_change_available: "即将推出的更改已发布"
+        upcoming_change_automatically_promoted: "即将推出的更改已自动启用"
     upload_selector:
       change: "更改"
       delete: "删除"

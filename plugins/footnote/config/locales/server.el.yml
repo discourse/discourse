@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    enable_markdown_footnotes: ενεργοποίηση της υποσημείωσης Markdown σε αυτόν τον ιστότοπο
+    display_footnotes_inline: ενεργοποίηση ενδογραμμικής επέκτασης των υποσημειώσεων

@@ -14,6 +14,9 @@ de:
     chat_integration:
       menu_title: "Chat-Integrationen"
       settings: "Einstellungen"
+      nav:
+        providers: "Anbieter"
+      add_provider: "Anbieter hinzufügen"
       more_providers: "Mehr"
       channels_title: "Kanäle"
       channels_with_errors: "Das letzte Versenden von Nachrichten ist bei einigen Kanälen dieses Providers fehlgeschlagen. Klicke auf das/die Fehlersymbol(e), um mehr zu erfahren."
