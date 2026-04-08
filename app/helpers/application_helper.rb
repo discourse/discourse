@@ -369,9 +369,17 @@ module ApplicationHelper
 
     if opts[:read_time] && opts[:read_time] > 0 && opts[:like_count] && opts[:like_count] > 0
       result << tag(:meta, name: "twitter:label1", value: I18n.t("reading_time"))
-      result << tag(:meta, name: "twitter:data1", value: "#{opts[:read_time]} mins 🕑")
+      result << tag(
+        :meta,
+        name: "twitter:data1",
+        value: I18n.t("reading_time_minutes", count: opts[:read_time]),
+      )
       result << tag(:meta, name: "twitter:label2", value: I18n.t("likes"))
-      result << tag(:meta, name: "twitter:data2", value: "#{opts[:like_count]} ❤")
+      result << tag(
+        :meta,
+        name: "twitter:data2",
+        value: I18n.t("likes_count", count: opts[:like_count]),
+      )
     end
 
     if opts[:published_time]

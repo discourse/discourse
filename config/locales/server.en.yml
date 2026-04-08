@@ -481,7 +481,13 @@ en:
   delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
 
   action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
 
