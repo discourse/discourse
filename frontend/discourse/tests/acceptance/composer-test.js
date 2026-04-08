@@ -1,4 +1,3 @@
-import { getOwner } from "@ember/owner";
 import {
   click,
   currentURL,
@@ -155,7 +154,7 @@ acceptance(`Composer`, function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const appEvents = getOwner(this).lookup("service:app-events");
+    const appEvents = this.container.lookup("service:app-events");
     let resizedTriggered = false;
     appEvents.on("composer:resized", () => (resizedTriggered = true));
 
