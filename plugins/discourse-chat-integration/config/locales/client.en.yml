@@ -21,7 +21,7 @@ en:
         confirm_setup: "Confirm setup"
         success: "Provider %{provider} setup successfully"
         slack:
-          instructions: "Either access token or outbound webhook URL is required."
+          instructions: "Either access token or outbound webhook URL is required. <a href='%{learnMoreUrl}' target='_blank'>Learn more...</a>"
           at_least_one_required: "Enter an access token or outbound webhook URL."
           access_token:
             title: "Access token"
@@ -30,6 +30,7 @@ en:
             title: "Outbound webhook URL"
             description: "The Slack outbound webhook URL"
         telegram:
+          instructions: "<a href='%{learnMoreUrl}' target='_blank'>Learn more...</a>"
           access_token:
             title: "Access token"
             description: "The Telegram bot access token from BotFather"
@@ -37,6 +38,7 @@ en:
         title: "Connect your chat platform"
         body: "Send notifications from Discourse to your team's chat. Choose a provider to get started."
       channels_title: "Channels"
+      channels_description: "Configure channels for the %{provider} provider."
       no_channels: "No channels have been configured yet."
       channel_actions: "Channel actions"
       add_first_channel: "Add your first %{provider} channel"

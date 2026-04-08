@@ -9,6 +9,7 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChannelDetails from "../../../../components/channel-details";
 import InlineChannelForm from "../../../../components/inline-channel-form";
+import { PROVIDER_LEARN_MORE_URLS } from "../../../../lib/utilities";
 
 export default class extends Component {
   @service router;
@@ -17,6 +18,10 @@ export default class extends Component {
     return i18n(
       `chat_integration.provider.${this.args.controller.model.provider.name}.title`
     );
+  }
+
+  get providerLearnMoreUrl() {
+    return PROVIDER_LEARN_MORE_URLS[this.args.controller.model.provider.name];
   }
 
   @action
@@ -44,7 +49,14 @@ export default class extends Component {
     {{/if}}
 
     <div class="admin-detail">
-      <DPageSubheader @titleLabel={{i18n "chat_integration.channels_title"}}>
+      <DPageSubheader
+        @titleLabel={{i18n "chat_integration.channels_title"}}
+        @descriptionLabel={{i18n
+          "chat_integration.channels_description"
+          provider=this.providerTitle
+        }}
+        @learnMoreUrl={{this.providerLearnMoreUrl}}
+      >
         <:actions as |actions|>
           <actions.Default
             @label="chat_integration.view_provider_settings"
