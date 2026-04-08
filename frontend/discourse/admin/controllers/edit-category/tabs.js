@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed, getProperties } from "@ember/object";
-import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -117,14 +116,17 @@ export default class EditCategoryTabsController extends Controller {
   validators = [];
   textColors = ["000000", "FFFFFF"];
 
-  @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
-
   /**
    * Callbacks registered by tab components that are invoked when the form
    * is reset, allowing child components to clean up their own state.
    * @type {Function[]}
    */
   afterResetCallbacks = [];
+
+  @computed("showTooltip", "model.cannot_delete_reason")
+  get showDeleteReason() {
+    return this.showTooltip && this.model?.cannot_delete_reason;
+  }
 
   @action
   initFormData() {
