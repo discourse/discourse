@@ -5,13 +5,13 @@ import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 /** @type {import("discourse/components/d-button.gjs").default} */
 import DButton from "discourse/components/d-button";
-/** @type {import("discourse/components/d-icon-grid-picker/content.gjs").default} */
-import DIconGridPickerContent from "discourse/components/d-icon-grid-picker/content";
 /** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
+/** @type {import("discourse/ui-kit/d-icon-grid-picker/content.gjs").default} */
+import DIconGridPickerContent from "discourse/ui-kit/d-icon-grid-picker/content";
 import { i18n } from "discourse-i18n";
 
 /**

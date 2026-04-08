@@ -125,6 +125,9 @@ loaderShim("discourse/components/date-time-input-range", () =>
 loaderShim("discourse/components/decorated-html", () =>
   importSync("discourse/ui-kit/d-decorated-html")
 );
+loaderShim("discourse/components/d-icon-grid-picker", () =>
+  importSync("discourse/ui-kit/d-icon-grid-picker")
+);
 loaderShim("discourse/components/dropdown-menu", () =>
   importSync("discourse/ui-kit/d-dropdown-menu")
 );
