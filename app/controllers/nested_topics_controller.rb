@@ -151,11 +151,14 @@ class NestedTopicsController < ApplicationController
     @topic_view =
       TopicView.new(topic_id, current_user, skip_custom_fields: true, skip_post_loading: true)
     @topic = @topic_view.topic
+    guardian.ensure_can_see!(@topic)
+  rescue Discourse::InvalidAccess
+    raise Discourse::NotFound
   end
 
   def find_topic
     @topic = Topic.find_by(id: params[:topic_id].to_i)
-    raise Discourse::NotFound unless @topic
+    raise Discourse::NotFound if @topic.blank? || !guardian.can_see?(@topic)
   end
 
   def validated_sort

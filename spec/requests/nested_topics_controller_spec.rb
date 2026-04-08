@@ -37,13 +37,13 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response.status).to eq(301)
     end
 
-    it "returns 403 for anonymous users on private topics" do
+    it "returns 404 for anonymous users on private topics" do
       private_category = Fabricate(:private_category, group: Fabricate(:group))
       private_topic = Fabricate(:topic, category: private_category)
       Fabricate(:post, topic: private_topic, post_number: 1)
 
       get "/n/#{private_topic.slug}/#{private_topic.id}"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "redirects private messages to flat view" do
@@ -87,12 +87,21 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response).to redirect_to("/t/#{pm.slug}/#{pm.id}")
     end
 
-    it "returns 403 for anonymous users on private topics" do
+    it "returns 404 for anonymous users on private topics" do
       private_category = Fabricate(:private_category, group: Fabricate(:group))
       private_topic = Fabricate(:topic, category: private_category)
       Fabricate(:post, topic: private_topic, post_number: 1)
       get show_url(private_topic)
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for signed-in users who cannot see the topic" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      Fabricate(:post, topic: private_topic, post_number: 1)
+      sign_in(user)
+      get show_url(private_topic)
+      expect(response.status).to eq(404)
     end
 
     it "returns topic metadata and OP on initial load (page 0)" do
@@ -890,6 +899,16 @@ RSpec.describe NestedTopicsController, type: :request do
       get children_url(topic, root.post_number)
       expect(response.status).to eq(404)
     end
+
+    it "returns 404 for unauthorized topic" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      private_topic = Fabricate(:topic, category: private_category)
+      Fabricate(:post, topic: private_topic, post_number: 1)
+      private_root = Fabricate(:post, topic: private_topic, reply_to_post_number: nil)
+      sign_in(user)
+      get children_url(private_topic, private_root.post_number)
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "GET context" do
@@ -943,14 +962,14 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response.status).to eq(404)
     end
 
-    it "returns 403 for unauthorized topic" do
+    it "returns 404 for unauthorized topic" do
       private_category = Fabricate(:private_category, group: Fabricate(:group))
       private_topic = Fabricate(:topic, category: private_category)
       Fabricate(:post, topic: private_topic, post_number: 1)
       root = Fabricate(:post, topic: private_topic, reply_to_post_number: nil)
       sign_in(user)
       get context_url(private_topic, root.post_number)
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "includes target post children" do
