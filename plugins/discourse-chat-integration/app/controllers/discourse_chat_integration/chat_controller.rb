@@ -43,7 +43,7 @@ class DiscourseChatIntegration::ChatController < ApplicationController
         }
       end
 
-    render json: { enabled_providers: providers, available_providers: }, root: "providers"
+    render json: { enabled_providers: providers, available_providers: }
   end
 
   def setup_provider
@@ -54,6 +54,10 @@ class DiscourseChatIntegration::ChatController < ApplicationController
     provider_klass = DiscourseChatIntegration::Provider.get_by_name(name)
     raise Discourse::InvalidParameters.new("provider not found") if provider_klass.nil?
 
+    if DiscourseChatIntegration::Provider.is_enabled(provider_klass)
+      raise Discourse::InvalidParameters.new("provider is already enabled")
+    end
+
     permitted_site_settings = permitted_provider_site_settings(name)
 
     DiscourseChatIntegration::Provider.setup(provider_klass, current_user, permitted_site_settings)
@@ -63,8 +67,6 @@ class DiscourseChatIntegration::ChatController < ApplicationController
   rescue DiscourseChatIntegration::ProviderError => e
     if e.info[:error_key].present?
       Rails.logger.error("Chat integration setup failed error_key=#{e.info[:error_key]}")
-    end
-    if e.info.key?(:error_key) && e.info[:error_key].present?
       render json: { error_key: e.info[:error_key] }, status: :unprocessable_entity
     else
       render json: { errors: [e.message.presence || "error"] }, status: :unprocessable_entity

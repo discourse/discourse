@@ -23,7 +23,10 @@ module DiscourseChatIntegration
       self
         .providers
         .reject { |provider| self.is_enabled(provider) }
-        .sort_by { |provider| [-provider::POPULARITY_SCORE, provider::PROVIDER_NAME] }
+        .sort_by do |provider|
+          score = defined?(provider::POPULARITY_SCORE) ? provider::POPULARITY_SCORE : 0
+          [-score, provider::PROVIDER_NAME]
+        end
     end
 
     def self.provider_names

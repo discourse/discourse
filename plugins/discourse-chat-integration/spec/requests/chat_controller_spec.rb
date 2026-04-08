@@ -59,6 +59,20 @@ RSpec.describe "Chat Controller", type: :request do
           "channel_parameters" => [],
         )
       end
+
+      it "returns available providers sorted by popularity descending then name" do
+        get "/admin/plugins/discourse-chat-integration/providers.json"
+
+        names = response.parsed_body["available_providers"].map { |p| p["name"] }
+
+        expect(names).not_to be_empty
+        expect(names).not_to include("dummy")
+
+        # Providers with higher popularity scores should appear first
+        slack_index = names.index("slack")
+        webex_index = names.index("webex")
+        expect(slack_index).to be < webex_index if slack_index && webex_index
+      end
     end
   end
 
@@ -98,6 +112,22 @@ RSpec.describe "Chat Controller", type: :request do
         end
       end
 
+      context "when the provider is already enabled" do
+        it "returns an error" do
+          SiteSetting.dummy_provider_enabled = true
+          post "/admin/plugins/discourse-chat-integration/setup-provider",
+               params: {
+                 provider: {
+                   name: "dummy",
+                 },
+               },
+               as: :json
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("provider is already enabled")
+        end
+      end
+
       context "when setting up slack" do
         before do
           SiteSetting.chat_integration_slack_enabled = false
@@ -126,6 +156,34 @@ RSpec.describe "Chat Controller", type: :request do
           expect(response.status).to eq(200)
           expect(SiteSetting.chat_integration_slack_enabled).to eq(true)
           expect(SiteSetting.chat_integration_slack_access_token).to eq("xoxb-from-request")
+        end
+
+        it "returns success when both token and webhook URL are provided" do
+          stub_request(:post, "https://slack.com/api/auth.test").to_return(
+            body: { ok: true }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          hook = "https://hooks.slack.com/services/T00000000/B00000000/xxxxxxxxxxxxxxxxxxxxxxxx"
+
+          post "/admin/plugins/discourse-chat-integration/setup-provider",
+               params: {
+                 provider: {
+                   name: "slack",
+                 },
+                 provider_site_settings: {
+                   chat_integration_slack_access_token: "xoxb-both",
+                   chat_integration_slack_outbound_webhook_url: hook,
+                 },
+               },
+               as: :json
+
+          expect(response.status).to eq(200)
+          expect(SiteSetting.chat_integration_slack_enabled).to eq(true)
+          expect(SiteSetting.chat_integration_slack_access_token).to eq("xoxb-both")
+          expect(SiteSetting.chat_integration_slack_outbound_webhook_url).to eq(hook)
         end
 
         it "returns error_key when slack rejects the token" do

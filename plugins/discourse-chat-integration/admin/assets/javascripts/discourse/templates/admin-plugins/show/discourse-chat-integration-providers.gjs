@@ -10,6 +10,7 @@ import NavItem from "discourse/components/nav-item";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import SetupProvider from "../../../components/modal/setup-provider";
 
@@ -59,9 +60,8 @@ export default class DiscourseChatIntegrationProviders extends Component {
 
   @action
   async configureProvider(provider) {
-    const disabledProvider = this.disabledProviders.find(
-      (p) => p.name === provider.name
-    );
+    const disabledProvider =
+      this.disabledProviders.find((p) => p.name === provider.name) ?? provider;
 
     if (provider.additional_site_settings_required) {
       this.openProviderSetupModal(disabledProvider);
@@ -71,26 +71,30 @@ export default class DiscourseChatIntegrationProviders extends Component {
           provider: disabledProvider.title,
         }),
         didConfirm: async () => {
-          await ajax(
-            "/admin/plugins/discourse-chat-integration/setup-provider",
-            {
-              type: "POST",
-              data: {
-                provider: {
-                  name: disabledProvider.name,
+          try {
+            await ajax(
+              "/admin/plugins/discourse-chat-integration/setup-provider",
+              {
+                type: "POST",
+                data: {
+                  provider: {
+                    name: disabledProvider.name,
+                  },
                 },
+              }
+            );
+            this.toasts.success({
+              data: {
+                message: i18n("chat_integration.setup_provider_modal.success", {
+                  provider: disabledProvider.title,
+                }),
               },
-            }
-          );
-          this.toasts.success({
-            data: {
-              message: i18n("chat_integration.setup_provider_modal.success", {
-                provider: disabledProvider.title,
-              }),
-            },
-            duration: "short",
-          });
-          this.navigateToProvider(disabledProvider);
+              duration: "short",
+            });
+            this.navigateToProvider(disabledProvider);
+          } catch (error) {
+            popupAjaxError(error);
+          }
         },
       });
     }

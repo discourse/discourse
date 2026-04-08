@@ -44,7 +44,7 @@ RSpec.describe "Chat integration setup provider" do
     end
   end
 
-  describe "adding more providerswhen at least one provider is enabled" do
+  describe "adding more providers when at least one provider is enabled" do
     before { SiteSetting.chat_integration_teams_enabled = true }
     it "sets up Discord" do
       setup_provider_from_menu("discord")
