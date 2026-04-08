@@ -61,7 +61,6 @@ class TopicView
   )
 
   delegate :category, to: :topic, allow_nil: true, private: true
-  delegate :require_reply_approval?, to: :category, prefix: true, allow_nil: true, private: true
 
   def self.print_chunk_size
     1000
@@ -172,7 +171,9 @@ class TopicView
     @draft_sequence = DraftSequence.current(@user, @draft_key)
 
     @can_review_topic = @guardian.can_review_topic?(@topic)
-    @queued_posts_enabled = NewPostManager.queue_enabled? || category_require_reply_approval?
+    @queued_posts_enabled =
+      NewPostManager.queue_enabled? ||
+        (@guardian.authenticated? && @guardian.reply_posting_review_required?(@topic.category))
     @personal_message = @topic.private_message?
   end
 

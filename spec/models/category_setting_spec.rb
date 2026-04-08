@@ -16,26 +16,4 @@ RSpec.describe CategorySetting do
       .is_greater_than_or_equal_to(0)
       .allow_nil
   end
-
-  it "removes category_posting_review_groups when approval is disabled" do
-    category =
-      Fabricate(
-        :category,
-        category_setting_attributes: {
-          require_topic_approval: true,
-          require_reply_approval: true,
-        },
-      )
-    expect(category.category_posting_review_groups.count).to eq(2)
-
-    category.require_topic_approval = false
-    category.save!
-
-    expect(category.category_posting_review_groups.pluck(:post_type)).to eq(%w[reply])
-
-    category.require_reply_approval = false
-    category.save!
-
-    expect(category.category_posting_review_groups.count).to eq(0)
-  end
 end

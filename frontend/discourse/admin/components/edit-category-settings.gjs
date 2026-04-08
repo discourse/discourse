@@ -12,7 +12,10 @@ import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { setting } from "discourse/lib/computed";
-import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import {
+  POSTING_REVIEW_GROUP_BASED_MODES,
+  SEARCH_PRIORITIES,
+} from "discourse/lib/constants";
 import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -181,6 +184,68 @@ export default class EditCategorySettings extends buildCategoryPanel(
     this.form.set(field, event.target.checked);
   }
 
+  @computed
+  get postingReviewModeOptions() {
+    return [
+      {
+        name: i18n("category.posting_review_modes.no_one"),
+        value: "no_one",
+      },
+      {
+        name: i18n("category.posting_review_modes.everyone"),
+        value: "everyone",
+      },
+      {
+        name: i18n("category.posting_review_modes.everyone_except"),
+        value: "everyone_except",
+      },
+      {
+        name: i18n("category.posting_review_modes.no_one_except"),
+        value: "no_one_except",
+      },
+    ];
+  }
+
+  @computed("category.category_setting.topic_posting_review_mode")
+  get topicModeRequiresGroups() {
+    return POSTING_REVIEW_GROUP_BASED_MODES.includes(
+      this.category?.category_setting?.topic_posting_review_mode
+    );
+  }
+
+  @computed("category.category_setting.reply_posting_review_mode")
+  get replyModeRequiresGroups() {
+    return POSTING_REVIEW_GROUP_BASED_MODES.includes(
+      this.category?.category_setting?.reply_posting_review_mode
+    );
+  }
+
+  @action
+  onTopicPostingReviewModeChange(value) {
+    this.set("category.category_setting.topic_posting_review_mode", value);
+    if (!POSTING_REVIEW_GROUP_BASED_MODES.includes(value)) {
+      this.set("category.topic_posting_review_group_ids", []);
+    }
+  }
+
+  @action
+  onReplyPostingReviewModeChange(value) {
+    this.set("category.category_setting.reply_posting_review_mode", value);
+    if (!POSTING_REVIEW_GROUP_BASED_MODES.includes(value)) {
+      this.set("category.reply_posting_review_group_ids", []);
+    }
+  }
+
+  @action
+  onTopicPostingReviewGroupsChange(groupIds) {
+    this.set("category.topic_posting_review_group_ids", groupIds);
+  }
+
+  @action
+  onReplyPostingReviewGroupsChange(groupIds) {
+    this.set("category.reply_posting_review_group_ids", groupIds);
+  }
+
   <template>
     <section>
       {{#if this.showPositionInput}}
@@ -312,24 +377,48 @@ export default class EditCategorySettings extends buildCategoryPanel(
         </section>
       {{/if}}
 
-      <section class="field require-topic-approval">
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.category.category_setting.require_topic_approval}}
+      <section class="field topic-posting-review-mode">
+        <label>{{i18n "category.require_topic_approval_for"}}</label>
+        <div class="controls">
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.postingReviewModeOptions}}
+            @value={{this.category.category_setting.topic_posting_review_mode}}
+            @onChange={{this.onTopicPostingReviewModeChange}}
+            @options={{hash placementStrategy="absolute"}}
           />
-          {{i18n "category.require_topic_approval"}}
-        </label>
+        </div>
+        {{#if this.topicModeRequiresGroups}}
+          <GroupChooser
+            class="posting-review-group-chooser"
+            @content={{this.site.groups}}
+            @value={{this.category.topic_posting_review_group_ids}}
+            @onChange={{this.onTopicPostingReviewGroupsChange}}
+            @options={{hash none="category.posting_review_groups_placeholder"}}
+          />
+        {{/if}}
       </section>
 
-      <section class="field require-reply-approval">
-        <label class="checkbox-label">
-          <Input
-            @type="checkbox"
-            @checked={{this.category.category_setting.require_reply_approval}}
+      <section class="field reply-posting-review-mode">
+        <label>{{i18n "category.require_reply_approval_for"}}</label>
+        <div class="controls">
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.postingReviewModeOptions}}
+            @value={{this.category.category_setting.reply_posting_review_mode}}
+            @onChange={{this.onReplyPostingReviewModeChange}}
+            @options={{hash placementStrategy="absolute"}}
           />
-          {{i18n "category.require_reply_approval"}}
-        </label>
+        </div>
+        {{#if this.replyModeRequiresGroups}}
+          <GroupChooser
+            class="posting-review-group-chooser"
+            @content={{this.site.groups}}
+            @value={{this.category.reply_posting_review_group_ids}}
+            @onChange={{this.onReplyPostingReviewGroupsChange}}
+            @options={{hash none="category.posting_review_groups_placeholder"}}
+          />
+        {{/if}}
       </section>
 
       <section class="field default-slow-mode">
