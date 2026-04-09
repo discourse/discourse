@@ -3,7 +3,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import richEditorExtension from "../../lib/rich-editor-extension";
-import { A } from "@ember/array";
 
 function setCheckboxState(checkbox, checked) {
   checkbox.classList.toggle("checked", checked);
