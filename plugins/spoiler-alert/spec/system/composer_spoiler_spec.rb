@@ -85,16 +85,10 @@ describe "Composer - ProseMirror editor - Spoiler extension", type: :system do
     composer.type_content("This is secret text here")
 
     # Select "secret" and trigger applySurround — the same path plugin toolbar buttons use
+    select_text_range(".ProseMirror p", 8, 6)
+
     page.evaluate_async_script(<<~JS)
       const done = arguments[arguments.length - 1];
-      const selection = window.getSelection();
-      const range = document.createRange();
-      const textNode = document.querySelector('.ProseMirror p').firstChild;
-      range.setStart(textNode, 8);
-      range.setEnd(textNode, 14);
-      selection.removeAllRanges();
-      selection.addRange(range);
-
       setTimeout(() => {
         const appEvents = Discourse.__container__.lookup("service:app-events");
         appEvents.trigger("composer:apply-surround", "[spoiler]", "[/spoiler]", "spoiler_text", { multiline: false });
