@@ -49,7 +49,6 @@
 }
 
 $solved-color: var(--success);
-$solved-color-light: hsl(from var(--success) h 90% 97%);
 
 .select-kit {
   &.solved-status-filter {
@@ -95,27 +94,6 @@ $solved-color-light: hsl(from var(--success) h 90% 97%);
   height: 100%;
 }
 
-.mobile-view .solved-panel {
-  margin-bottom: 15px;
-}
-
-.solved-panel {
-  .by {
-    display: none;
-  }
-  margin-top: 20px;
-  margin-bottom: 0;
-  font-size: 13px;
-}
-
-aside.quote.accepted-answer {
-  &:not(.accepted-answer--has-excerpt) {
-    > blockquote {
-      display: none;
-    }
-  }
-}
-
 .user-card-metadata-outlet.accepted-answers {
   display: inline-block;
 }
@@ -132,15 +110,8 @@ aside.quote.accepted-answer {
 }
 
 .d-solved-answer {
-  background: $solved-color-light;
   border-radius: var(--d-border-radius-large);
-  border: 0;
-
-  > .title {
-    padding: 0;
-    background: none;
-    border: 0;
-  }
+  background: var(--secondary);
 
   &__header {
     display: flex;
@@ -208,13 +179,14 @@ aside.quote.accepted-answer {
 
   > blockquote {
     position: relative;
+    background: var(--secondary);
     border: 0;
-    background: var(--primary-50);
     padding: var(--space-3);
     max-height: clamp(1px, 20vh, 20em);
     overflow: hidden;
-    border-radius: var(--d-border-radius);
     margin: 0;
+    border-left: 1px solid var(--primary-low);
+    border-right: 1px solid var(--primary-low);
 
     * {
       font-size: var(--font-down-1-rem) !important;
@@ -236,38 +208,31 @@ aside.quote.accepted-answer {
       left: 0;
       right: 0;
       height: 3em;
-      background: linear-gradient(transparent, var(--primary-50));
+      background: linear-gradient(transparent, var(--secondary));
       pointer-events: none;
     }
   }
-}
 
-@include viewport.until(sm) {
-  #topic-title .d-icon-far-square-check {
-    margin-top: 0.25em;
+  &__footer {
+    border: 1px solid var(--primary-low);
+    white-space: nowrap;
   }
 
-  .topic-post {
-    nav.post-controls {
-      .extra-buttons {
-        button {
-          max-width: unset;
-          white-space: nowrap;
-        }
-      }
+  &__solver,
+  &__accepter {
+    @include ellipsis;
+  }
 
-      &.expanded {
-        .accepted,
-        .unaccepted {
-          .d-button-label {
-            display: none;
-          }
-        }
-      }
+  &[data-expanded="true"] > blockquote {
+    max-height: none;
+    overflow: visible;
+
+    &::after {
+      display: none;
     }
   }
 
-  li.solved-status-filter {
-    margin: 0 3px 5px 3px; // matches core styles
+  &:not(.accepted-answer--has-excerpt) > blockquote {
+    display: none;
   }
 }
