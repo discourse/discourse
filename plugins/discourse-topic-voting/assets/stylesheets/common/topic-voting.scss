@@ -75,7 +75,6 @@
 #topic-title:has(.voting) {
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-auto-rows: auto;
   gap: 0 0.8em;
 
   > * {
@@ -84,8 +83,20 @@
 
   .voting {
     grid-column: 1;
-    grid-row: 1 / span 999;
+    grid-row: 1 / span 10; // can't use -1 with an implicit grid
     align-self: start;
+  }
+
+  // when there's no category, tags, or excerpt, center the title
+  &:not(
+    :has(.discourse-tags),
+    :has(.topic-excerpt),
+    :has(.badge-category__wrapper)
+  ) {
+    .link-top-line {
+      align-self: center;
+      grid-row: 1 / span 10;
+    }
   }
 }
 
