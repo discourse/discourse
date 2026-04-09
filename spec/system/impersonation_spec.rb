@@ -58,12 +58,9 @@ describe "Impersonation" do
 
     visit("/admin/users/#{user.id}/#{user.username}")
 
-    # Suppress expected error from raised StandardError
-    Rails.logger.silence do
-      page.find(".btn-impersonate").click
+    page.find(".btn-impersonate").click
 
-      expect(dialog).to be_open
-      expect(dialog).to have_content(I18n.t("admin_js.admin.impersonate.error"))
-    end
+    expect(dialog).to be_open
+    expect(dialog).to have_content(I18n.t("admin_js.admin.impersonate.error"))
   end
 end

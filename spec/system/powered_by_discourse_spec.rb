@@ -11,7 +11,7 @@ describe "Powered by Discourse" do
   it "does not appear on admin routes when enabled" do
     SiteSetting.enable_powered_by_discourse = true
 
-    visit "/admin/site_settings"
+    visit "/admin"
     expect(page).not_to have_css(".powered-by-discourse")
   end
 

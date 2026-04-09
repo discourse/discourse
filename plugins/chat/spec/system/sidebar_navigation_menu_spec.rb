@@ -195,8 +195,6 @@ RSpec.describe "Sidebar navigation menu" do
       end
 
       it "escapes the title attribute using it" do
-        # Suppress expected RoutingError from letter_avatar request
-        Rails.logger.silence do
           visit("/")
 
           expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
@@ -204,7 +202,6 @@ RSpec.describe "Sidebar navigation menu" do
           )
         end
       end
-    end
 
     context "as admin" do
       fab!(:admin)

@@ -13,12 +13,9 @@ RSpec.describe "Deleted channel" do
 
   context "when visiting deleted channel" do
     it "redirects to homepage" do
-      # Suppress expected RecordNotFound from visiting a deleted channel
-      Rails.logger.silence do
-        chat_page.visit_channel(channel_1, check: false)
+      chat_page.visit_channel(channel_1)
 
-        expect(page).to have_content("Not Found") # this is not a translated key
-      end
+      expect(page).to have_content("Not Found") # this is not a translated key
     end
   end
 end

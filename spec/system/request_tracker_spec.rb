@@ -143,8 +143,7 @@ describe "Request tracking" do
 
       events =
         DiscourseEvent.track_events(:browser_pageview) do
-          # Suppress expected RoutingError from nonexistent path
-          Rails.logger.silence { visit "/foobar" }
+          visit "/foobar"
 
           try_until_success do
             CachedCounting.flush
