@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
 import icon from "discourse/helpers/d-icon";
@@ -13,6 +15,34 @@ export default class EmbedTopicFooter extends Component {
   @service composer;
   @service currentUser;
   @service siteSettings;
+
+  @tracked footerButtonsVisible = false;
+
+  trackFooterVisibility = modifier((element) => {
+    const footerButtons = document.querySelector("#topic-footer-buttons");
+    const targets = [footerButtons, element].filter(Boolean);
+
+    if (targets.length === 0) {
+      return;
+    }
+
+    const visibilityMap = new Map();
+    targets.forEach((t) => visibilityMap.set(t, false));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          visibilityMap.set(entry.target, entry.isIntersecting);
+        });
+        this.footerButtonsVisible = [...visibilityMap.values()].some(Boolean);
+      },
+      { threshold: 0 }
+    );
+
+    targets.forEach((t) => observer.observe(t));
+
+    return () => observer.disconnect();
+  });
 
   get isEmbedMode() {
     return EmbedMode.enabled;
@@ -28,6 +58,12 @@ export default class EmbedTopicFooter extends Component {
 
   get replyButtonLabel() {
     return this.currentUser ? "topic.reply.title" : "topic.login_reply";
+  }
+
+  get showFloatingReplyButton() {
+    return (
+      this.args.topic?.details?.can_create_post && !this.footerButtonsVisible
+    );
   }
 
   @action
@@ -52,7 +88,7 @@ export default class EmbedTopicFooter extends Component {
 
   <template>
     {{#if this.isEmbedMode}}
-      <div class="embed-topic-footer">
+      <div class="embed-topic-footer" {{this.trackFooterVisibility}}>
         {{#if this.showFirstReplyMessage}}
           <div class="embed-topic-footer__first-reply">
             {{icon "comment"}}
@@ -70,6 +106,14 @@ export default class EmbedTopicFooter extends Component {
           </div>
         {{/if}}
       </div>
+      {{#if this.showFloatingReplyButton}}
+        <DButton
+          @action={{this.handleReply}}
+          @icon="reply"
+          @label={{this.replyButtonLabel}}
+          class="btn-primary embed-floating-reply-button"
+        />
+      {{/if}}
     {{/if}}
   </template>
 }

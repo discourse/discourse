@@ -27,7 +27,6 @@ body.embed-mode {
   nav.post-controls .actions .show-more-actions,
   .software-update-prompt,
   .time-gap,
-  .topic-navigation,
   .post-stream .gap,
   .container.posts:not(:has(.post-stream .topic-post ~ .topic-post))
     ~ #topic-footer-buttons {
@@ -95,6 +94,22 @@ body.embed-mode {
 
   .topic-area .posts-wrapper:has(.post-stream .topic-post + .topic-post) {
     border-bottom: 1px solid var(--content-border-color);
+  }
+
+  // Floating reply button above the topic-progress widget (bottom-right)
+  // Visible while scrolling, hides when the footer reply area is in view
+  // On wide viewports (>=925px) the timeline already has its own reply button
+  .embed-floating-reply-button {
+    position: fixed;
+    bottom: calc(
+      env(safe-area-inset-bottom) + var(--composer-height, 0px) + 3.5em
+    );
+    right: var(--space-4);
+    z-index: z("timeline");
+
+    @media screen and (width >= 925px) {
+      display: none;
+    }
   }
 
   // Hide OP

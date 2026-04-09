@@ -28,6 +28,12 @@ describe "Embed mode" do
     expect(page).to have_no_css(".suggested-topics")
   end
 
+  it "shows the topic navigation widget" do
+    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+    expect(page).to have_css(".topic-navigation")
+  end
+
   it "loads topic content without JS errors" do
     visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
@@ -112,6 +118,29 @@ describe "Embed mode" do
         topic_page.click_reply_button
 
         expect(page).to have_css("#reply-control.open")
+      end
+
+      context "with many replies" do
+        before { 15.times { Fabricate(:post, topic: topic) } }
+
+        it "shows a floating reply button when footer is not visible" do
+          resize_window(width: 900) do
+            visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+            expect(topic_page).to have_post_number(2)
+
+            expect(topic_page).to have_floating_reply_button
+          end
+        end
+
+        it "opens the composer when clicking the floating reply button" do
+          resize_window(width: 900) do
+            visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+            expect(topic_page).to have_post_number(2)
+
+            topic_page.click_floating_reply_button
+            expect(page).to have_css("#reply-control.open")
+          end
+        end
       end
 
       it "does not show 'be the first to reply' message" do
