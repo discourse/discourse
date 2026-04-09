@@ -25,9 +25,22 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'legacy' && ' (legacy)' || '' }}
-    runs-on: ubuntu-latest
+    runs-on: >-
+      ${{
+        github.repository_owner == 'discourse' && (
+          matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
+          && 'cdck-linux-16-core'
+          || 'cdck-linux-8-core'
+        )
+        || 'ubuntu-latest'
+      }}
     container: discourse/discourse_test:release
-    timeout-minutes: 60
+    timeout-minutes: >-
+      ${{
+        matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
+        && 30
+        || 20
+      }}
 
     defaults:
       run:
