@@ -173,21 +173,13 @@ class NestedTopicsController < ApplicationController
     user_id = current_user&.id
     ip = request.remote_ip
 
-    if current_user
-      Scheduler::Defer.later("Track Visit") { TopicUser.track_visit!(topic_id, user_id) }
-    end
+    TopicsController.defer_track_visit(topic_id, user_id) if should_track_visit?
 
-    Scheduler::Defer.later("Topic View") do
-      topic = Topic.find_by(id: topic_id)
-      next if topic.blank? || topic.shared_draft?
+    TopicsController.defer_topic_view(topic_id, ip, user_id)
+  end
 
-      if user_id
-        user = User.find_by(id: user_id)
-        next if user.blank? || !Guardian.new(user).can_see_topic?(topic)
-      end
-
-      TopicViewItem.add(topic_id, ip, user_id)
-    end
+  def should_track_visit?
+    !!((!request.format.json? || params[:track_visit]) && current_user)
   end
 
   def validated_sort

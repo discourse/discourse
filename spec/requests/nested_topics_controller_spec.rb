@@ -1073,7 +1073,7 @@ RSpec.describe NestedTopicsController, type: :request do
 
     it "tracks a visit on show" do
       sign_in(user)
-      get show_url(topic)
+      get show_url(topic), params: { track_visit: true }
       expect(response.status).to eq(200)
 
       Scheduler::Defer.do_all_work
@@ -1084,7 +1084,7 @@ RSpec.describe NestedTopicsController, type: :request do
 
     it "tracks a visit on context" do
       sign_in(user)
-      get context_url(topic, root_reply.post_number)
+      get context_url(topic, root_reply.post_number), params: { track_visit: true }
       expect(response.status).to eq(200)
 
       Scheduler::Defer.do_all_work

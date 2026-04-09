@@ -39,7 +39,7 @@ export default class NestedRoute extends Route {
     this._restoringFromCache = null;
 
     if (post_number) {
-      const queryParts = [`sort=${sort}`];
+      const queryParts = [`sort=${sort}`, "track_visit=true"];
       if (params.context !== undefined && params.context !== null) {
         queryParts.push(`context=${params.context}`);
       }
@@ -56,7 +56,7 @@ export default class NestedRoute extends Route {
 
     const data = await PreloadStore.getAndRemove(
       `nested_topic_${topic_id}`,
-      () => ajax(`/n/${slug}/${topic_id}.json?sort=${sort}`)
+      () => ajax(`/n/${slug}/${topic_id}.json?sort=${sort}&track_visit=true`)
     );
     return this._processResponse(data, params);
   }
