@@ -8,8 +8,8 @@
     "@discourse/lint-configs": "^2.44.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.2.0",
-    "@glint/ember-tsc": "^1.2.3",
-    "@glint/tsserver-plugin": "^2.2.4",
+    "@glint/ember-tsc": "^1.5.0",
+    "@glint/tsserver-plugin": "^2.4.0",
     "@rdil/parallel-prettier": "^3.0.0",
     "@swc/core": "^1.15.21",
     "chrome-launcher": "^1.2.1",
@@ -29,7 +29,7 @@
     "puppeteer-core": "^24.40.0",
     "stylelint": "17.4.0",
     "terser": "^5.46.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
