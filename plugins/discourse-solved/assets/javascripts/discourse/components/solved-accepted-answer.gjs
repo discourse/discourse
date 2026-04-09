@@ -161,8 +161,8 @@ export default class SolvedAcceptedAnswer extends Component {
               @key="solved.accepted_answer_solver_info"
               as |Placeholder|
             >
-              <Placeholder @name="user">
-                <span>{{this.solverDisplayName}}</span>
+              <Placeholder @name="user" @class="d-solved-answer__solver">
+                {{this.solverDisplayName}}
               </Placeholder>
               <Placeholder @name="post">
                 <a
@@ -174,14 +174,16 @@ export default class SolvedAcceptedAnswer extends Component {
           {{/if}}
           {{#if this.showMarkedBy}}
             <span class="dot-separator"></span>
+
             <InterpolatedTranslation
               @key="solved.marked_solved_by"
               as |Placeholder|
             >
-              <Placeholder @name="user">
-                <span>{{this.accepterDisplayName}}</span>
+              <Placeholder @name="user" @class="d-solved-answer__accepter">
+                {{this.accepterDisplayName}}
               </Placeholder>
             </InterpolatedTranslation>
+
           {{/if}}
         </div>
       </aside>
