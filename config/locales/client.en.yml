@@ -3709,6 +3709,8 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist topics"
         relist_topics: "Relist topics"
+        pin_topics: "Feature these topics"
+        unpin_topics: "Un-pin topics"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete topics"
@@ -3773,6 +3775,9 @@ en:
         confirm_remove_tags:
           one: "All tags will be removed from this topic. Are you sure?"
           other: "All tags will be removed from %{count} topics. Are you sure?"
+        confirm_unpin_topics:
+          one: "Un-pin %{count} topic"
+          other: "Un-pin %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
@@ -3878,6 +3883,11 @@ en:
       update_notifications:
         name: "Update Notifications"
         description: "Update your personal notification level for the selected topics to:"
+      pin_topics:
+        name: "Pin"
+      unpin_topics:
+        name: "Un-pin"
+        description: "Un-pin all the selected topics that are pinned to a category or pinned globally"
 
     topic:
       filter_to:
@@ -4215,6 +4225,13 @@ en:
         banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
         no_banner_exists: "There is no banner topic."
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
+
+      bulk_feature_topic:
+        pin: "Make these topics appear at the top of the topic's category until"
+        pin_note: "Users can unpin topics individually for themselves."
+        pin_globally: "Make these topics appear at the top of all topic lists until"
+        pin_button: "Pin topics"
+        pin_globally_button: "Pin topics globally"
 
       inviting: "Inviting…"
       automatically_add_to_groups: "This invite also includes access to these groups:"

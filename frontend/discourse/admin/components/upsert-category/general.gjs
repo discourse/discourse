@@ -327,11 +327,53 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
+  get #currentPermissionsArePrivate() {
+    const currentPermissions = this.permissions || [];
+    return (
+      currentPermissions.length > 0 &&
+      !currentPermissions.some((p) => p.group_id === AUTO_GROUPS.everyone.id)
+    );
+  }
+
+  get #isEditingExistingCategory() {
+    return Boolean(this.args.category.id);
+  }
+
+  #parentPermissionsAllowEveryone(parentPermissions) {
+    return parentPermissions.some(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
+  }
+
+  #currentPermissionsAreSubsetOf(parentPermissions) {
+    const parentGroupIds = new Set(parentPermissions.map((p) => p.group_id));
+    return (this.permissions || []).every((p) =>
+      parentGroupIds.has(p.group_id)
+    );
+  }
+
+  #shouldRetainPermissionsForParent(parentPermissions) {
+    if (!this.#isEditingExistingCategory) {
+      return false;
+    }
+
+    if (this.#parentPermissionsAllowEveryone(parentPermissions)) {
+      return true;
+    }
+
+    return (
+      this.#currentPermissionsArePrivate &&
+      this.#currentPermissionsAreSubsetOf(parentPermissions)
+    );
+  }
+
   @action
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       this.args.form.set("visibility", null);
-      this.#setFormPermissions([this.#everyoneFullPermission]);
+      if (!this.#isEditingExistingCategory) {
+        this.#setFormPermissions([this.#everyoneFullPermission]);
+      }
       return;
     }
 
@@ -339,25 +381,32 @@ export default class UpsertCategoryGeneral extends Component {
       const result = await Category.reloadById(parentCategoryId);
       const parentCategory = this.site.updateCategory(result.category);
       parentCategory.setupGroupsAndPermissions();
+      const parentPermissions = parentCategory?.permissions;
 
-      if (parentCategory?.permissions?.length > 0) {
-        const hasEveryone = parentCategory.permissions.some(
-          (p) => p.group_id === AUTO_GROUPS.everyone.id
-        );
+      if (parentPermissions?.length > 0) {
+        const parentIsPublic =
+          this.#parentPermissionsAllowEveryone(parentPermissions);
 
-        if (!hasEveryone) {
+        if (!parentIsPublic) {
           this.args.form.set("visibility", null);
-
-          const newPermissions = parentCategory.permissions.map((p) => ({
-            group_name: p.group_name,
-            group_id: p.group_id,
-            permission_type: p.permission_type,
-          }));
-
-          this.#setFormPermissions(newPermissions);
-        } else {
-          this.#setFormPermissions([this.#everyoneFullPermission]);
         }
+
+        if (this.#shouldRetainPermissionsForParent(parentPermissions)) {
+          return;
+        }
+
+        if (parentIsPublic) {
+          this.#setFormPermissions([this.#everyoneFullPermission]);
+          return;
+        }
+
+        const newPermissions = parentPermissions.map((p) => ({
+          group_name: p.group_name,
+          group_id: p.group_id,
+          permission_type: p.permission_type,
+        }));
+
+        this.#setFormPermissions(newPermissions);
       }
     } catch (error) {
       popupAjaxError(error);
