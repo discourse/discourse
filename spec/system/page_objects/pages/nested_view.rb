@@ -366,9 +366,14 @@ module PageObjects
       end
 
       def click_post_recover_button(post)
-        within("[data-post-number='#{post.post_number}']") do
-          find(".show-more-actions").click if has_css?(".show-more-actions", wait: 2)
-          find("button.recover").click
+        selector = "[data-post-number='#{post.post_number}']"
+        if has_css?("#{selector} button.recover", wait: 5)
+          find("#{selector} button.recover").click
+        else
+          within(selector) do
+            find(".show-more-actions").click
+            find("button.recover").click
+          end
         end
         self
       end

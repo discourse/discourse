@@ -84,14 +84,18 @@ RSpec.describe NestedReplies do
 
   describe "stop_at_op option" do
     it "stops before OP when stop_at_op: true" do
-      chain = build_chain(2)
+      reply_to_op = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+      child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: reply_to_op.post_number)
+
       results =
         NestedReplies.walk_ancestors(
           topic_id: topic.id,
-          start_post_number: chain[2].reply_to_post_number,
+          start_post_number: child.reply_to_post_number,
           stop_at_op: true,
         )
       post_numbers = results.map(&:post_number)
+      expect(post_numbers).to include(reply_to_op.post_number)
       expect(post_numbers).not_to include(1)
     end
 

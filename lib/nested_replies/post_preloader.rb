@@ -69,14 +69,6 @@ module NestedReplies
         end
       end
 
-      def limit(_n)
-        self
-      end
-
-      def order(*_args)
-        self
-      end
-
       def not(conditions = {})
         if conditions.is_a?(Hash)
           PostsArray.new(
@@ -90,10 +82,6 @@ module NestedReplies
         else
           Post.where(id: map(&:id)).where.not(conditions)
         end
-      end
-
-      def reorder(*_args)
-        self
       end
 
       def respond_to_missing?(name, include_private = false)

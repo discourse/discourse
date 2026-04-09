@@ -4,102 +4,105 @@ const MAX_ENTRIES = 15;
 const TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 export default class NestedViewCacheService extends Service {
-  _cache = new Map();
-  _lastNavigationType = null;
-  _popstateTime = null;
+  #cache = new Map();
+  #lastNavigationType = null;
+  #popstateTime = null;
+  #forceUseCache = false;
+  #onNavigate = null;
+  #onPopstate = null;
 
   constructor() {
     super(...arguments);
 
     if (window.navigation) {
-      this._onNavigate = (e) => {
-        this._lastNavigationType = e.navigationType;
+      this.#onNavigate = (e) => {
+        this.#lastNavigationType = e.navigationType;
       };
-      window.navigation.addEventListener("navigate", this._onNavigate);
+      window.navigation.addEventListener("navigate", this.#onNavigate);
     }
 
     // Always listen for popstate as a fallback — the Navigation API's
     // navigate event may not fire in all environments (e.g. Playwright CDP).
-    this._onPopstate = () => {
-      this._popstateTime = Date.now();
+    this.#onPopstate = () => {
+      this.#popstateTime = Date.now();
     };
-    window.addEventListener("popstate", this._onPopstate);
+    window.addEventListener("popstate", this.#onPopstate);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this._onNavigate) {
-      window.navigation?.removeEventListener("navigate", this._onNavigate);
+    if (this.#onNavigate) {
+      window.navigation?.removeEventListener("navigate", this.#onNavigate);
     }
-    window.removeEventListener("popstate", this._onPopstate);
+    window.removeEventListener("popstate", this.#onPopstate);
   }
 
   useNextTransition() {
-    this._forceUseCache = true;
+    this.#forceUseCache = true;
   }
 
   consumeTraversal() {
-    if (this._forceUseCache) {
-      this._forceUseCache = false;
-      this._lastNavigationType = null;
-      this._popstateTime = null;
+    if (this.#forceUseCache) {
+      this.#forceUseCache = false;
+      this.#lastNavigationType = null;
+      this.#popstateTime = null;
       return true;
     }
 
     // Prefer Navigation API (explicit traversal type) when available
-    if (this._lastNavigationType != null) {
-      const result = this._lastNavigationType === "traverse";
-      this._lastNavigationType = null;
-      this._popstateTime = null;
+    if (this.#lastNavigationType != null) {
+      const result = this.#lastNavigationType === "traverse";
+      this.#lastNavigationType = null;
+      this.#popstateTime = null;
       return result;
     }
 
     // Fallback: popstate fires for back/forward in all browsers
-    if (this._popstateTime && Date.now() - this._popstateTime < 1000) {
-      this._popstateTime = null;
+    if (this.#popstateTime && Date.now() - this.#popstateTime < 1000) {
+      this.#popstateTime = null;
       return true;
     }
-    this._popstateTime = null;
+    this.#popstateTime = null;
     return false;
   }
 
   save(key, entry) {
     entry.timestamp = Date.now();
-    this._cache.set(key, entry);
-    this._evict();
+    this.#cache.set(key, entry);
+    this.#evict();
   }
 
   get(key) {
-    const entry = this._cache.get(key);
+    const entry = this.#cache.get(key);
     if (!entry) {
       return null;
     }
     if (Date.now() - entry.timestamp > TTL_MS) {
-      this._cache.delete(key);
+      this.#cache.delete(key);
       return null;
     }
     return entry;
   }
 
   remove(key) {
-    this._cache.delete(key);
+    this.#cache.delete(key);
   }
 
-  _evict() {
+  #evict() {
     const now = Date.now();
-    for (const [k, v] of this._cache) {
+    for (const [k, v] of this.#cache) {
       if (now - v.timestamp > TTL_MS) {
-        this._cache.delete(k);
+        this.#cache.delete(k);
       }
     }
 
-    if (this._cache.size > MAX_ENTRIES) {
-      const entries = [...this._cache.entries()].sort(
+    if (this.#cache.size > MAX_ENTRIES) {
+      const entries = [...this.#cache.entries()].sort(
         (a, b) => a[1].timestamp - b[1].timestamp
       );
       const toRemove = entries.length - MAX_ENTRIES;
       for (let i = 0; i < toRemove; i++) {
-        this._cache.delete(entries[i][0]);
+        this.#cache.delete(entries[i][0]);
       }
     }
   }

@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
@@ -368,6 +369,13 @@ export default class NestedPost extends Component {
               <span class="nested-post__deleted-label">{{i18n
                   "nested_replies.deleted_post_placeholder"
                 }}</span>
+              {{#if @post.can_recover}}
+                <DButton
+                  class="btn-flat recover"
+                  @action={{fn @recoverPost @post}}
+                  @icon="arrow-rotate-left"
+                />
+              {{/if}}
             </div>
           {{else}}
             {{#let (lazyHash post=@post) as |postOutletArgs|}}

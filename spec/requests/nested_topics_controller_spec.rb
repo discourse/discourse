@@ -135,13 +135,15 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     it "paginates with has_more_roots" do
-      20.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      NestedReplies::TreeLoader::ROOTS_PER_PAGE.times do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      end
       sign_in(user)
 
       get show_url(topic, page: 0)
       json = response.parsed_body
       expect(json["has_more_roots"]).to eq(true)
-      expect(json["roots"].length).to eq(20)
+      expect(json["roots"].length).to eq(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
     end
 
     it "returns has_more_roots false on last page" do
@@ -418,202 +420,163 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_ids[1]).to eq(high_post.id)
       end
     end
+  end
 
-    describe "PUT pin" do
-      fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+  describe "PUT pin" do
+    fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
 
-      before { Fabricate(:nested_topic, topic: topic) }
+    before { Fabricate(:nested_topic, topic: topic) }
 
-      def pin_url(topic)
-        "/n/#{topic.slug}/#{topic.id}/pin.json"
-      end
-
-      it "returns 403 for non-staff users" do
-        sign_in(user)
-        put pin_url(topic), params: { post_id: root_post.id }
-        expect(response.status).to eq(403)
-      end
-
-      it "allows moderators to pin a post" do
-        sign_in(Fabricate(:moderator))
-        put pin_url(topic), params: { post_id: root_post.id }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["pinned_post_ids"]).to contain_exactly(root_post.id)
-      end
-
-      it "allows staff to pin a post" do
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: root_post.id }
-        expect(response.status).to eq(200)
-
-        json = response.parsed_body
-        expect(json["pinned_post_ids"]).to contain_exactly(root_post.id)
-
-        topic.reload
-        expect(topic.nested_topic.pinned_post_ids).to contain_exactly(root_post.id)
-      end
-
-      it "allows staff to unpin a post by toggling" do
-        topic.reload.nested_topic.update!(pinned_post_ids: [root_post.id])
-
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: root_post.id }
-        expect(response.status).to eq(200)
-
-        json = response.parsed_body
-        expect(json["pinned_post_ids"]).to eq([])
-
-        topic.reload
-        expect(topic.nested_topic.pinned_post_ids).to eq([])
-      end
-
-      it "returns 404 for a nonexistent post_id" do
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: 99_999 }
-        expect(response.status).to eq(404)
-      end
-
-      it "returns 404 when no post_id is provided" do
-        sign_in(admin)
-        put pin_url(topic)
-        expect(response.status).to eq(404)
-      end
-
-      it "returns 400 when pinning a non-root post" do
-        child_post =
-          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root_post.post_number)
-
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: child_post.id }
-        expect(response.status).to eq(400)
-      end
-
-      it "persists the pin so that roots returns it first" do
-        high_post =
-          Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
-
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: root_post.id }
-        expect(response.status).to eq(200)
-
-        get show_url(topic, sort: "top")
-        json = response.parsed_body
-        root_ids = json["roots"].map { |r| r["id"] }
-        expect(root_ids.first).to eq(root_post.id)
-        expect(json["pinned_post_ids"]).to contain_exactly(root_post.id)
-      end
-
-      it "allows pinning multiple posts" do
-        second_root =
-          Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
-
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: root_post.id }
-        expect(response.status).to eq(200)
-
-        put pin_url(topic), params: { post_id: second_root.id }
-        expect(response.status).to eq(200)
-
-        json = response.parsed_body
-        expect(json["pinned_post_ids"]).to contain_exactly(root_post.id, second_root.id)
-      end
-
-      it "rejects pinning when 10 posts are already pinned" do
-        posts = 10.times.map { Fabricate(:post, topic: topic, reply_to_post_number: nil) }
-        topic.nested_topic.update!(pinned_post_ids: posts.map(&:id))
-
-        extra = Fabricate(:post, topic: topic, reply_to_post_number: nil)
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: extra.id }
-        expect(response.status).to eq(400)
-      end
-
-      it "lazily creates a NestedTopic record when nested_replies_default is on" do
-        topic.nested_topic.destroy!
-        SiteSetting.nested_replies_default = true
-
-        sign_in(admin)
-        put pin_url(topic), params: { post_id: root_post.id }
-        expect(response.status).to eq(200)
-
-        topic.reload
-        expect(topic.nested_topic).to be_present
-        expect(topic.nested_topic.pinned_post_ids).to contain_exactly(root_post.id)
-      end
+    def pin_url(topic)
+      "/n/#{topic.slug}/#{topic.id}/pin.json"
     end
 
-    describe "whisper visibility" do
-      before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
-
-      fab!(:whisper) do
-        Fabricate(
-          :post,
-          topic: topic,
-          user: admin,
-          reply_to_post_number: nil,
-          post_type: Post.types[:whisper],
-        )
-      end
-
-      it "excludes whispers for regular users" do
-        sign_in(user)
-        get show_url(topic)
-        json = response.parsed_body
-        root_ids = json["roots"].map { |r| r["id"] }
-        expect(root_ids).not_to include(whisper.id)
-      end
-
-      it "includes whispers for staff" do
-        sign_in(admin)
-        get show_url(topic)
-        json = response.parsed_body
-        root_ids = json["roots"].map { |r| r["id"] }
-        expect(root_ids).to include(whisper.id)
-      end
-
-      it "excludes whisper children for regular users" do
-        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
-        whisper_child =
-          Fabricate(
-            :post,
-            topic: topic,
-            user: admin,
-            reply_to_post_number: root.post_number,
-            post_type: Post.types[:whisper],
-          )
-        sign_in(user)
-
-        get children_url(topic, root.post_number)
-        json = response.parsed_body
-        child_ids = json["children"].map { |c| c["id"] }
-        expect(child_ids).not_to include(whisper_child.id)
-      end
-
-      it "includes whisper children for staff" do
-        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
-        whisper_child =
-          Fabricate(
-            :post,
-            topic: topic,
-            user: admin,
-            reply_to_post_number: root.post_number,
-            post_type: Post.types[:whisper],
-          )
-        sign_in(admin)
-
-        get children_url(topic, root.post_number)
-        json = response.parsed_body
-        child_ids = json["children"].map { |c| c["id"] }
-        expect(child_ids).to include(whisper_child.id)
-      end
+    it "returns 403 for non-staff users" do
+      sign_in(user)
+      put pin_url(topic), params: { post_id: root_post.id }
+      expect(response.status).to eq(403)
     end
 
-    describe "whisper reply count visibility" do
-      before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
+    it "allows moderators to pin a post" do
+      sign_in(Fabricate(:moderator))
+      put pin_url(topic), params: { post_id: root_post.id }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["pinned_post_ids"]).to contain_exactly(root_post.id)
+    end
 
-      it "excludes whisper from reply counts for regular users" do
-        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
-        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+    it "allows staff to pin a post" do
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: root_post.id }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["pinned_post_ids"]).to contain_exactly(root_post.id)
+
+      topic.reload
+      expect(topic.nested_topic.pinned_post_ids).to contain_exactly(root_post.id)
+    end
+
+    it "allows staff to unpin a post by toggling" do
+      topic.reload.nested_topic.update!(pinned_post_ids: [root_post.id])
+
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: root_post.id }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["pinned_post_ids"]).to eq([])
+
+      topic.reload
+      expect(topic.nested_topic.pinned_post_ids).to eq([])
+    end
+
+    it "returns 404 for a nonexistent post_id" do
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: 99_999 }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when no post_id is provided" do
+      sign_in(admin)
+      put pin_url(topic)
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 400 when pinning a non-root post" do
+      child_post =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root_post.post_number)
+
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: child_post.id }
+      expect(response.status).to eq(400)
+    end
+
+    it "persists the pin so that roots returns it first" do
+      high_post =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
+
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: root_post.id }
+      expect(response.status).to eq(200)
+
+      get show_url(topic, sort: "top")
+      json = response.parsed_body
+      root_ids = json["roots"].map { |r| r["id"] }
+      expect(root_ids.first).to eq(root_post.id)
+      expect(json["pinned_post_ids"]).to contain_exactly(root_post.id)
+    end
+
+    it "allows pinning multiple posts" do
+      second_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
+
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: root_post.id }
+      expect(response.status).to eq(200)
+
+      put pin_url(topic), params: { post_id: second_root.id }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["pinned_post_ids"]).to contain_exactly(root_post.id, second_root.id)
+    end
+
+    it "rejects pinning when 10 posts are already pinned" do
+      posts = 10.times.map { Fabricate(:post, topic: topic, reply_to_post_number: nil) }
+      topic.nested_topic.update!(pinned_post_ids: posts.map(&:id))
+
+      extra = Fabricate(:post, topic: topic, reply_to_post_number: nil)
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: extra.id }
+      expect(response.status).to eq(400)
+    end
+
+    it "lazily creates a NestedTopic record when nested_replies_default is on" do
+      topic.nested_topic.destroy!
+      SiteSetting.nested_replies_default = true
+
+      sign_in(admin)
+      put pin_url(topic), params: { post_id: root_post.id }
+      expect(response.status).to eq(200)
+
+      topic.reload
+      expect(topic.nested_topic).to be_present
+      expect(topic.nested_topic.pinned_post_ids).to contain_exactly(root_post.id)
+    end
+  end
+
+  describe "whisper visibility" do
+    before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
+
+    fab!(:whisper) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: admin,
+        reply_to_post_number: nil,
+        post_type: Post.types[:whisper],
+      )
+    end
+
+    it "excludes whispers for regular users" do
+      sign_in(user)
+      get show_url(topic)
+      json = response.parsed_body
+      root_ids = json["roots"].map { |r| r["id"] }
+      expect(root_ids).not_to include(whisper.id)
+    end
+
+    it "includes whispers for staff" do
+      sign_in(admin)
+      get show_url(topic)
+      json = response.parsed_body
+      root_ids = json["roots"].map { |r| r["id"] }
+      expect(root_ids).to include(whisper.id)
+    end
+
+    it "excludes whisper children for regular users" do
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      whisper_child =
         Fabricate(
           :post,
           topic: topic,
@@ -621,18 +584,17 @@ RSpec.describe NestedTopicsController, type: :request do
           reply_to_post_number: root.post_number,
           post_type: Post.types[:whisper],
         )
-        sign_in(user)
+      sign_in(user)
 
-        get show_url(topic)
-        json = response.parsed_body
-        root_json = json["roots"].find { |r| r["id"] == root.id }
-        expect(root_json["direct_reply_count"]).to eq(1)
-        expect(root_json["total_descendant_count"]).to eq(1)
-      end
+      get children_url(topic, root.post_number)
+      json = response.parsed_body
+      child_ids = json["children"].map { |c| c["id"] }
+      expect(child_ids).not_to include(whisper_child.id)
+    end
 
-      it "includes whisper in reply counts for staff" do
-        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
-        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+    it "includes whisper children for staff" do
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      whisper_child =
         Fabricate(
           :post,
           topic: topic,
@@ -640,14 +602,54 @@ RSpec.describe NestedTopicsController, type: :request do
           reply_to_post_number: root.post_number,
           post_type: Post.types[:whisper],
         )
-        sign_in(admin)
+      sign_in(admin)
 
-        get show_url(topic)
-        json = response.parsed_body
-        root_json = json["roots"].find { |r| r["id"] == root.id }
-        expect(root_json["direct_reply_count"]).to eq(2)
-        expect(root_json["total_descendant_count"]).to eq(2)
-      end
+      get children_url(topic, root.post_number)
+      json = response.parsed_body
+      child_ids = json["children"].map { |c| c["id"] }
+      expect(child_ids).to include(whisper_child.id)
+    end
+  end
+
+  describe "whisper reply count visibility" do
+    before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
+
+    it "excludes whisper from reply counts for regular users" do
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      Fabricate(
+        :post,
+        topic: topic,
+        user: admin,
+        reply_to_post_number: root.post_number,
+        post_type: Post.types[:whisper],
+      )
+      sign_in(user)
+
+      get show_url(topic)
+      json = response.parsed_body
+      root_json = json["roots"].find { |r| r["id"] == root.id }
+      expect(root_json["direct_reply_count"]).to eq(1)
+      expect(root_json["total_descendant_count"]).to eq(1)
+    end
+
+    it "includes whisper in reply counts for staff" do
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      Fabricate(
+        :post,
+        topic: topic,
+        user: admin,
+        reply_to_post_number: root.post_number,
+        post_type: Post.types[:whisper],
+      )
+      sign_in(admin)
+
+      get show_url(topic)
+      json = response.parsed_body
+      root_json = json["roots"].find { |r| r["id"] == root.id }
+      expect(root_json["direct_reply_count"]).to eq(2)
+      expect(root_json["total_descendant_count"]).to eq(2)
     end
   end
 

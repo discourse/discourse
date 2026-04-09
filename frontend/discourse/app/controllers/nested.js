@@ -59,33 +59,34 @@ export default class NestedController extends Controller {
   // Populated by NestedPost components via appEvents so that readPosts
   // can find posts at any depth, not just those in the preloaded tree.
   postRegistry = new Map();
-  _postEventsSubscribed = false;
+  #postEventsSubscribed = false;
+  #messageBusChannel = null;
 
   // The topic controller/route are hydrated in setupController so we can
   // delegate shared actions and read shared state instead of duplicating
   // core logic.
-  get _topicController() {
+  get #topicController() {
     return getOwner(this).lookup("controller:topic");
   }
 
-  get _topicRoute() {
+  get #topicRoute() {
     return getOwner(this).lookup("route:topic");
   }
 
   get buffered() {
-    return this._topicController.buffered;
+    return this.#topicController.buffered;
   }
 
   get showCategoryChooser() {
-    return this._topicController.showCategoryChooser;
+    return this.#topicController.showCategoryChooser;
   }
 
   get canEditTags() {
-    return this._topicController.canEditTags;
+    return this.#topicController.canEditTags;
   }
 
   get minimumRequiredTags() {
-    return this._topicController.minimumRequiredTags;
+    return this.#topicController.minimumRequiredTags;
   }
 
   @action
@@ -102,7 +103,7 @@ export default class NestedController extends Controller {
       );
 
       const newNodes = (data.roots || []).map((root) =>
-        this._processNode(root)
+        this.#processNode(root)
       );
 
       this.rootNodes = [...this.rootNodes, ...newNodes];
@@ -176,7 +177,7 @@ export default class NestedController extends Controller {
 
   @action
   editPost(post) {
-    this._topicController.editPost(post);
+    this.#topicController.editPost(post);
     this.composer.set("skipJumpOnSave", true);
   }
 
@@ -196,7 +197,7 @@ export default class NestedController extends Controller {
 
   @action
   recoverPost(post) {
-    this._topicController.recoverPost(post);
+    this.#topicController.recoverPost(post);
   }
 
   @action
@@ -232,23 +233,23 @@ export default class NestedController extends Controller {
 
   @action
   selectText() {
-    const tc = this._topicController;
+    const tc = this.#topicController;
     const { postId, buffer, opts } = this.quoteState;
-    this._ensurePostInStream(postId);
+    this.#ensurePostInStream(postId);
     tc.quoteState.selected(postId, buffer, opts);
     return tc.selectText();
   }
 
   @action
   buildQuoteMarkdown() {
-    const tc = this._topicController;
+    const tc = this.#topicController;
     const { postId, buffer, opts } = this.quoteState;
-    this._ensurePostInStream(postId);
+    this.#ensurePostInStream(postId);
     tc.quoteState.selected(postId, buffer, opts);
     return tc.buildQuoteMarkdown();
   }
 
-  _ensurePostInStream(postId) {
+  #ensurePostInStream(postId) {
     const postStream = this.topic?.postStream;
     if (!postStream) {
       return;
@@ -267,12 +268,12 @@ export default class NestedController extends Controller {
 
   @action
   showHistory(post) {
-    this._topicRoute.showHistory(post);
+    this.#topicRoute.showHistory(post);
   }
 
   @action
   showFlags(post) {
-    this._topicRoute.showFlags(post);
+    this.#topicRoute.showFlags(post);
   }
 
   // editingTopic is @tracked locally because the topic controller's
@@ -286,29 +287,29 @@ export default class NestedController extends Controller {
       return;
     }
     this.editingTopic = true;
-    this._topicController.set("editingTopic", true);
+    this.#topicController.set("editingTopic", true);
   }
 
   @action
   cancelEditingTopic() {
-    this._topicController.cancelEditingTopic();
+    this.#topicController.cancelEditingTopic();
     this.editingTopic = false;
   }
 
   @action
   finishedEditingTopic() {
-    this._topicController.finishedEditingTopic();
+    this.#topicController.finishedEditingTopic();
     this.editingTopic = false;
   }
 
   @action
   topicCategoryChanged(categoryId) {
-    this._topicController.topicCategoryChanged(categoryId);
+    this.#topicController.topicCategoryChanged(categoryId);
   }
 
   @action
   topicTagsChanged(value) {
-    this._topicController.topicTagsChanged(value);
+    this.#topicController.topicTagsChanged(value);
   }
 
   subscribe() {
@@ -317,14 +318,14 @@ export default class NestedController extends Controller {
     this.appEvents.on(
       "nested-replies:post-registered",
       this,
-      this._onPostRegistered
+      this.#onPostRegistered
     );
     this.appEvents.on(
       "nested-replies:post-unregistered",
       this,
-      this._onPostUnregistered
+      this.#onPostUnregistered
     );
-    this._postEventsSubscribed = true;
+    this.#postEventsSubscribed = true;
 
     // Register the OP post directly since it's not rendered by NestedPost
     if (this.opPost) {
@@ -332,9 +333,9 @@ export default class NestedController extends Controller {
     }
 
     if (this.topic?.id && this.messageBusLastId != null) {
-      this._messageBusChannel = `/topic/${this.topic.id}`;
+      this.#messageBusChannel = `/topic/${this.topic.id}`;
       this.messageBus.subscribe(
-        this._messageBusChannel,
+        this.#messageBusChannel,
         this._onMessage,
         this.messageBusLastId
       );
@@ -342,33 +343,33 @@ export default class NestedController extends Controller {
   }
 
   unsubscribe() {
-    if (this._postEventsSubscribed) {
+    if (this.#postEventsSubscribed) {
       this.appEvents.off(
         "nested-replies:post-registered",
         this,
-        this._onPostRegistered
+        this.#onPostRegistered
       );
       this.appEvents.off(
         "nested-replies:post-unregistered",
         this,
-        this._onPostUnregistered
+        this.#onPostUnregistered
       );
-      this._postEventsSubscribed = false;
+      this.#postEventsSubscribed = false;
     }
-    if (this._messageBusChannel) {
-      this.messageBus.unsubscribe(this._messageBusChannel, this._onMessage);
-      this._messageBusChannel = null;
+    if (this.#messageBusChannel) {
+      this.messageBus.unsubscribe(this.#messageBusChannel, this._onMessage);
+      this.#messageBusChannel = null;
     }
     this.postRegistry.clear();
   }
 
-  _onPostRegistered(post) {
+  #onPostRegistered(post) {
     if (post?.post_number != null) {
       this.postRegistry.set(post.post_number, post);
     }
   }
 
-  _onPostUnregistered(post) {
+  #onPostUnregistered(post) {
     if (post?.post_number != null) {
       this.postRegistry.delete(post.post_number);
     }
@@ -382,22 +383,22 @@ export default class NestedController extends Controller {
 
     switch (data.type) {
       case "created":
-        this._handleCreated(data);
+        this.#handleCreated(data);
         break;
       case "revised":
       case "rebaked":
       case "deleted":
       case "recovered":
       case "acted":
-        this._handlePostChanged(data);
+        this.#handlePostChanged(data);
         break;
     }
   }
 
-  async _handleCreated(data) {
+  async #handleCreated(data) {
     // Skip if this post is already known (e.g. cache restore replaying
     // messages that were already processed before navigating away)
-    if (this._isPostKnown(data.id)) {
+    if (this.#isPostKnown(data.id)) {
       return;
     }
 
@@ -432,7 +433,7 @@ export default class NestedController extends Controller {
     }
   }
 
-  _isPostKnown(postId) {
+  #isPostKnown(postId) {
     if (this.rootNodes.some((n) => n.post.id === postId)) {
       return true;
     }
@@ -447,9 +448,9 @@ export default class NestedController extends Controller {
     return false;
   }
 
-  async _handlePostChanged(data) {
+  async #handlePostChanged(data) {
     if (data.type === "deleted") {
-      this._markPostDeletedLocally(data.id);
+      this.#markPostDeletedLocally(data.id);
       return;
     }
 
@@ -465,14 +466,16 @@ export default class NestedController extends Controller {
       );
       if (existing) {
         existing.setProperties(postData);
-        existing.set("deleted_post_placeholder", false);
+        if (!postData.deleted_at) {
+          existing.set("deleted_post_placeholder", false);
+        }
       }
     } catch {
       // Post may not be visible
     }
   }
 
-  _markPostDeletedLocally(postId) {
+  #markPostDeletedLocally(postId) {
     for (const post of this.postRegistry.values()) {
       if (post.id === postId) {
         post.set("deleted", true);
@@ -520,7 +523,7 @@ export default class NestedController extends Controller {
     }
   }
 
-  _processNode(nodeData) {
+  #processNode(nodeData) {
     return processNode(this.store, this.topic, nodeData);
   }
 }

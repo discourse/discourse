@@ -24,22 +24,26 @@ export default class NestedContextView extends Component {
   @tracked cloakAbove = 0;
   @tracked cloakBelow = 0;
   viewportTracker = new PostStreamViewportTracker();
-  _scrollAttempts = 0;
-  _maxScrollAttempts = 20;
+  #scrollAttempts = 0;
+  #maxScrollAttempts = 20;
+  #destroyed = false;
+  #nextTimer = null;
+  #retryTimer = null;
+  #highlightTimer = null;
 
   constructor() {
     super(...arguments);
     // Use next() so this runs after RouteScrollManager's next() callback,
     // which otherwise resets scroll position on route transitions.
-    this._nextTimer = next(this, this._scrollToTarget);
+    this.#nextTimer = next(this, this.#scrollToTarget);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this._destroyed = true;
-    cancel(this._nextTimer);
-    cancel(this._retryTimer);
-    clearTimeout(this._highlightTimer);
+    this.#destroyed = true;
+    cancel(this.#nextTimer);
+    cancel(this.#retryTimer);
+    clearTimeout(this.#highlightTimer);
     this.viewportTracker.destroy();
   }
 
@@ -47,8 +51,8 @@ export default class NestedContextView extends Component {
     return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}?flat=1`);
   }
 
-  _scrollToTarget() {
-    if (this._destroyed) {
+  #scrollToTarget() {
+    if (this.#destroyed) {
       return;
     }
 
@@ -65,17 +69,17 @@ export default class NestedContextView extends Component {
       const postEl = target.closest(".nested-post");
       if (postEl) {
         postEl.classList.add("nested-post--highlighted");
-        this._highlightTimer = setTimeout(
+        this.#highlightTimer = setTimeout(
           () => postEl.classList.remove("nested-post--highlighted"),
           2000
         );
       }
       target.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else if (this._scrollAttempts < this._maxScrollAttempts) {
+    } else if (this.#scrollAttempts < this.#maxScrollAttempts) {
       // Element may not be in the DOM yet (async child rendering).
       // Retry after the next render cycle.
-      this._scrollAttempts++;
-      this._retryTimer = schedule("afterRender", this, this._scrollToTarget);
+      this.#scrollAttempts++;
+      this.#retryTimer = schedule("afterRender", this, this.#scrollToTarget);
     }
   }
 

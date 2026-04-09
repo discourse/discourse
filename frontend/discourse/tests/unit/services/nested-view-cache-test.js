@@ -1,8 +1,15 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 
 module("Unit | Service | nested-view-cache", function (hooks) {
   setupTest(hooks);
+
+  let clock;
+
+  hooks.afterEach(function () {
+    clock?.restore();
+  });
 
   function getService(context) {
     return context.owner.lookup("service:nested-view-cache");
@@ -30,56 +37,66 @@ module("Unit | Service | nested-view-cache", function (hooks) {
   });
 
   test("TTL expiration evicts stale entries on get", function (assert) {
+    clock = sinon.useFakeTimers({ now: Date.now(), shouldAdvanceTime: false });
+
     const cache = getService(this);
     cache.save("old", { data: "stale" });
 
-    // Backdate the timestamp beyond TTL (10 minutes)
-    cache._cache.get("old").timestamp = Date.now() - 11 * 60 * 1000;
+    clock.tick(11 * 60 * 1000);
 
     assert.strictEqual(cache.get("old"), null);
   });
 
   test("entries within TTL are returned", function (assert) {
+    clock = sinon.useFakeTimers({ now: Date.now(), shouldAdvanceTime: false });
+
     const cache = getService(this);
     cache.save("fresh", { data: "valid" });
 
-    // Set timestamp to 5 minutes ago (within 10-minute TTL)
-    cache._cache.get("fresh").timestamp = Date.now() - 5 * 60 * 1000;
+    clock.tick(5 * 60 * 1000);
 
     const entry = cache.get("fresh");
     assert.strictEqual(entry.data, "valid");
   });
 
   test("evicts oldest entries when exceeding MAX_ENTRIES (15)", function (assert) {
+    clock = sinon.useFakeTimers({ now: Date.now(), shouldAdvanceTime: false });
+
     const cache = getService(this);
 
     for (let i = 0; i < 16; i++) {
       cache.save(`key${i}`, { data: i });
-      // Stagger timestamps so eviction order is deterministic
-      cache._cache.get(`key${i}`).timestamp = Date.now() - (16 - i) * 1000;
+      clock.tick(1000);
     }
 
-    // The oldest (key0) should have been evicted
-    assert.strictEqual(cache.get("key0"), null);
+    assert.strictEqual(cache.get("key0"), null, "oldest entry is evicted");
     assert.notStrictEqual(cache.get("key15"), null, "newest entry is kept");
   });
 
   test("evicts TTL-expired entries before size check", function (assert) {
+    clock = sinon.useFakeTimers({ now: Date.now(), shouldAdvanceTime: false });
+
     const cache = getService(this);
 
-    // Fill with 14 entries, all expired
     for (let i = 0; i < 14; i++) {
       cache.save(`expired${i}`, { data: i });
-      cache._cache.get(`expired${i}`).timestamp = Date.now() - 11 * 60 * 1000;
     }
 
-    // Add 2 fresh entries — this triggers eviction which should clear expired first
+    clock.tick(11 * 60 * 1000);
+
     cache.save("fresh1", { data: "a" });
     cache.save("fresh2", { data: "b" });
 
     assert.notStrictEqual(cache.get("fresh1"), null, "fresh entries survive");
     assert.notStrictEqual(cache.get("fresh2"), null, "fresh entries survive");
-    assert.strictEqual(cache._cache.size, 2, "expired entries were evicted");
+
+    for (let i = 0; i < 14; i++) {
+      assert.strictEqual(
+        cache.get(`expired${i}`),
+        null,
+        `expired entry ${i} was evicted`
+      );
+    }
   });
 
   test("buildKey with topic ID only", function (assert) {
@@ -123,34 +140,20 @@ module("Unit | Service | nested-view-cache", function (hooks) {
     assert.false(cache.consumeTraversal());
   });
 
-  test("consumeTraversal returns true for navigation API traverse", function (assert) {
+  test("consumeTraversal returns true for popstate within 1s window", function (assert) {
     const cache = getService(this);
-    cache._lastNavigationType = "traverse";
+    window.dispatchEvent(new PopStateEvent("popstate"));
     assert.true(cache.consumeTraversal());
   });
 
-  test("consumeTraversal returns false for navigation API push", function (assert) {
-    const cache = getService(this);
-    cache._lastNavigationType = "push";
-    assert.false(cache.consumeTraversal());
-  });
+  test("consumeTraversal returns false for popstate older than 1s", function (assert) {
+    clock = sinon.useFakeTimers({ now: Date.now(), shouldAdvanceTime: false });
 
-  test("consumeTraversal resets navigation type after check", function (assert) {
     const cache = getService(this);
-    cache._lastNavigationType = "traverse";
-    cache.consumeTraversal();
-    assert.strictEqual(cache._lastNavigationType, null);
-  });
+    window.dispatchEvent(new PopStateEvent("popstate"));
 
-  test("consumeTraversal uses popstate fallback within 1s window", function (assert) {
-    const cache = getService(this);
-    cache._popstateTime = Date.now() - 500; // 500ms ago
-    assert.true(cache.consumeTraversal());
-  });
+    clock.tick(1500);
 
-  test("consumeTraversal ignores popstate older than 1s", function (assert) {
-    const cache = getService(this);
-    cache._popstateTime = Date.now() - 1500; // 1.5s ago
     assert.false(cache.consumeTraversal());
   });
 
@@ -162,7 +165,6 @@ module("Unit | Service | nested-view-cache", function (hooks) {
   test("consumeTraversal prefers forceUseCache over navigation type", function (assert) {
     const cache = getService(this);
     cache.useNextTransition();
-    cache._lastNavigationType = "push";
     assert.true(
       cache.consumeTraversal(),
       "forceUseCache wins even when nav type is push"

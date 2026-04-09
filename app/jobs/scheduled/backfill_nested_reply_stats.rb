@@ -15,7 +15,7 @@ module Jobs
           INNER JOIN nested_topics nt ON nt.topic_id = t.id
           LEFT JOIN nested_view_post_stats s ON s.post_id = (
             SELECT p.id FROM posts p
-            WHERE p.topic_id = t.id AND p.post_number = 1 AND p.deleted_at IS NULL
+            WHERE p.topic_id = t.id AND p.post_number = 1
             LIMIT 1
           )
           WHERE t.deleted_at IS NULL
