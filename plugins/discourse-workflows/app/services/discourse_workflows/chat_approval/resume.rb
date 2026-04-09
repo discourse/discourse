@@ -10,8 +10,10 @@ module DiscourseWorkflows
       params do
         attribute :execution_id, :integer
         attribute :approved, :boolean
+        attribute :wait_nonce, :string
 
         validates :execution_id, presence: true
+        validates :wait_nonce, presence: true
       end
 
       model :execution
@@ -23,6 +25,7 @@ module DiscourseWorkflows
         DiscourseWorkflows::Executor::WaitHandlers::ChatApproval
           .waiting_scope
           .where(id: params.execution_id)
+          .where("waiting_config->>'wait_nonce' = ?", params.wait_nonce)
           .lock("FOR UPDATE SKIP LOCKED")
           .first
       end

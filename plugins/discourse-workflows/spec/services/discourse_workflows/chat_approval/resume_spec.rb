@@ -3,6 +3,7 @@
 RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:execution_id) }
+    it { is_expected.to validate_presence_of(:wait_nonce) }
   end
 
   describe ".call" do
@@ -11,8 +12,9 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
     fab!(:user)
     fab!(:channel, :chat_channel)
 
-    let(:params) { { execution_id:, approved: true } }
+    let(:params) { { execution_id:, approved: true, wait_nonce: } }
     let(:execution_id) { execution.id }
+    let(:wait_nonce) { execution.waiting_config&.dig("wait_nonce") }
 
     before do
       SiteSetting.discourse_workflows_enabled = true
@@ -21,6 +23,7 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
 
     context "when plugin is disabled" do
       let(:execution_id) { 1 }
+      let(:wait_nonce) { "abc" }
 
       before { SiteSetting.discourse_workflows_enabled = false }
 
@@ -29,12 +32,14 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
 
     context "when contract is invalid" do
       let(:execution_id) { nil }
+      let(:wait_nonce) { nil }
 
       it { is_expected.to fail_a_contract }
     end
 
     context "when execution does not exist" do
       let(:execution_id) { -1 }
+      let(:wait_nonce) { "abc" }
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end
@@ -43,6 +48,7 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
       fab!(:execution, :discourse_workflows_execution) do
         Fabricate(:discourse_workflows_execution, status: :success)
       end
+      let(:wait_nonce) { "abc" }
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end
@@ -57,6 +63,23 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
           },
         )
       end
+      let(:wait_nonce) { "abc" }
+
+      it { is_expected.to fail_to_find_a_model(:execution) }
+    end
+
+    context "when wait_nonce does not match" do
+      fab!(:execution, :discourse_workflows_execution) do
+        Fabricate(
+          :discourse_workflows_execution,
+          status: :waiting,
+          waiting_config: {
+            "wait_type" => "chat_approval",
+            "wait_nonce" => "correct_nonce",
+          },
+        )
+      end
+      let(:wait_nonce) { "stale_nonce" }
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end
@@ -117,7 +140,7 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
       end
 
       context "when denied" do
-        let(:params) { { execution_id:, approved: false } }
+        let(:params) { { execution_id:, approved: false, wait_nonce: } }
 
         it { is_expected.to run_successfully }
 

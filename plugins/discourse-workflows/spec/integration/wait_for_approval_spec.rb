@@ -110,4 +110,104 @@ RSpec.describe "Wait for Approval end-to-end" do
       "approved" => true,
     )
   end
+
+  it "rejects a stale approval button when the execution revisits the same approval node" do
+    workflow =
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: user,
+        enabled: true,
+        nodes: [
+          {
+            "id" => "trigger-1",
+            "type" => "trigger:manual",
+            "type_version" => "1.0",
+            "name" => "Manual",
+            "position" => {
+              "x" => 0,
+              "y" => 0,
+            },
+            "position_index" => 0,
+            "configuration" => {
+            },
+          },
+          {
+            "id" => "wait-1",
+            "type" => "action:chat_approval",
+            "type_version" => "1.0",
+            "name" => "Approval",
+            "position" => {
+              "x" => 200,
+              "y" => 0,
+            },
+            "position_index" => 1,
+            "configuration" => {
+              "message" => "Please review",
+              "channel_id" => channel.id.to_s,
+            },
+          },
+        ],
+        connections: [
+          {
+            "source_node_id" => "trigger-1",
+            "target_node_id" => "wait-1",
+            "source_output" => "main",
+          },
+        ],
+      )
+
+    # First visit to the approval node
+    execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+    expect(execution.status).to eq("waiting")
+
+    first_message = Chat::Message.where(chat_channel_id: channel.id).last
+    stale_action_id = first_message.blocks.first["elements"].first["action_id"]
+
+    # Approve via the first button — execution completes
+    interaction =
+      Chat::MessageInteraction.new(
+        user: approver,
+        message: first_message,
+        action: {
+          "action_id" => stale_action_id,
+          "value" => "approve",
+        },
+      )
+    DiscourseEvent.trigger(:chat_message_interaction, interaction)
+    job_args = Jobs::DiscourseWorkflows::ResumeChatApproval.jobs.last&.dig("args", 0)
+    Jobs::DiscourseWorkflows::ResumeChatApproval.new.execute(job_args.symbolize_keys) if job_args
+
+    expect(execution.reload.status).to eq("success")
+
+    # Simulate the same execution re-entering the approval node (e.g. via a loop)
+    execution.update!(
+      status: :waiting,
+      waiting_node_id: "wait-1",
+      waiting_config: {
+        "wait_type" => "chat_approval",
+        "wait_nonce" => SecureRandom.hex(16),
+        "chat_channel_id" => channel.id,
+      },
+    )
+
+    # Replay the stale button — should be rejected because the nonce changed
+    stale_interaction =
+      Chat::MessageInteraction.new(
+        user: approver,
+        message: first_message,
+        action: {
+          "action_id" => stale_action_id,
+          "value" => "approve",
+        },
+      )
+    DiscourseEvent.trigger(:chat_message_interaction, stale_interaction)
+
+    stale_job_args = Jobs::DiscourseWorkflows::ResumeChatApproval.jobs.last&.dig("args", 0)
+    if stale_job_args
+      Jobs::DiscourseWorkflows::ResumeChatApproval.new.execute(stale_job_args.symbolize_keys)
+    end
+
+    # Execution should still be waiting — stale button was rejected
+    expect(execution.reload.status).to eq("waiting")
+  end
 end

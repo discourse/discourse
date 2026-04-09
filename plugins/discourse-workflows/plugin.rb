@@ -95,11 +95,11 @@ after_initialize do
     next unless action_id&.start_with?("dwf:")
 
     parts = action_id.split(":")
-    next unless parts.length == 5
+    next unless parts.length == 6
 
-    _, execution_id, step_id, decision, signature = parts
+    _, execution_id, node_id, decision, wait_nonce, signature = parts
 
-    payload = "#{execution_id}:#{step_id}:#{decision}"
+    payload = "#{execution_id}:#{node_id}:#{decision}:#{wait_nonce}"
     next unless DiscourseWorkflows::HmacSigner.verify(payload, signature)
 
     execution = DiscourseWorkflows::Execution.find_by(id: execution_id.to_i)
@@ -109,6 +109,7 @@ after_initialize do
       Jobs::DiscourseWorkflows::ResumeChatApproval,
       execution_id: execution.id,
       approved: decision == "approve",
+      wait_nonce: wait_nonce,
     )
   end
 end

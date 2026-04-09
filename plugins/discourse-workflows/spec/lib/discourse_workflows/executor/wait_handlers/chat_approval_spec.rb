@@ -73,6 +73,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
       expect(execution.waiting_config).to include("wait_type" => described_class.wait_type)
       expect(execution.waiting_config).to include("chat_message_id" => 42)
       expect(execution.waiting_config).to include("chat_channel_id" => channel.id)
+      expect(execution.waiting_config["wait_nonce"]).to be_present
     end
 
     it "stores timeout config when timeout_minutes is set" do
@@ -121,6 +122,30 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
       expect(elements.first["action_id"]).to start_with("dwf:")
       expect(elements.first["text"]["text"]).to eq("Yes")
       expect(elements.second["text"]["text"]).to eq("No")
+    end
+
+    it "generates unique nonces across successive waits on the same node" do
+      nonces = []
+
+      2.times do
+        state = build_state(execution)
+        fake_message = OpenStruct.new(id: rand(1000))
+        described_class.stubs(:send_chat_message).returns(fake_message)
+
+        handler = described_class.new(state)
+        wait =
+          DiscourseWorkflows::WaitForChatApproval.new(
+            message_text: "Approve",
+            channel_id: channel.id.to_s,
+          )
+
+        handler.pause!(wait)
+        nonces << execution.reload.waiting_config["wait_nonce"]
+
+        execution.update!(status: :running, waiting_config: {}, waiting_node_id: nil)
+      end
+
+      expect(nonces.uniq.size).to eq(2)
     end
   end
 

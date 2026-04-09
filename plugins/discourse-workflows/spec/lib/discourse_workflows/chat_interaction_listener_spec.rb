@@ -10,10 +10,10 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
     SiteSetting.chat_enabled = true
   end
 
-  def build_signed_action_id(execution_id, node_id, decision)
-    payload = "#{execution_id}:#{node_id}:#{decision}"
+  def build_signed_action_id(execution_id, node_id, decision, wait_nonce)
+    payload = "#{execution_id}:#{node_id}:#{decision}:#{wait_nonce}"
     signature = OpenSSL::HMAC.hexdigest("SHA256", Rails.application.secret_key_base, payload)
-    "dwf:#{execution_id}:#{node_id}:#{decision}:#{signature}"
+    "dwf:#{execution_id}:#{node_id}:#{decision}:#{wait_nonce}:#{signature}"
   end
 
   it "enqueues ResumeChatApproval when an approve button is clicked" do
@@ -64,7 +64,8 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
     execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
     expect(execution.status).to eq("waiting")
 
-    action_id = build_signed_action_id(execution.id, "wait-1", "approve")
+    wait_nonce = execution.waiting_config["wait_nonce"]
+    action_id = build_signed_action_id(execution.id, "wait-1", "approve", wait_nonce)
 
     interaction =
       Chat::MessageInteraction.new(
@@ -81,12 +82,13 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
       args: {
         execution_id: execution.id,
         approved: true,
+        wait_nonce: wait_nonce,
       },
     ) { DiscourseEvent.trigger(:chat_message_interaction, interaction) }
   end
 
   it "ignores interactions with invalid signatures" do
-    action_id = "dwf:999:888:approve:invalidsignature"
+    action_id = "dwf:999:888:approve:fakenonce:invalidsignature"
 
     interaction =
       Chat::MessageInteraction.new(
