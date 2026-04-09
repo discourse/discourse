@@ -174,6 +174,33 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
       it { is_expected.to fail_to_find_a_model(:waiting_node) }
     end
 
+    context "when required form fields are missing" do
+      before do
+        waiting_config = execution.waiting_config.dup
+        waiting_config["form_fields"] = [
+          { "field_label" => "Feedback", "field_type" => "text", "required" => true },
+        ]
+        execution.update!(waiting_config: waiting_config)
+
+        node = workflow.nodes.find { |n| n["id"] == "form-action-1" }
+        node["configuration"]["form_fields"] = [
+          { "field_label" => "Feedback", "field_type" => "text", "required" => true },
+        ]
+        workflow.save!
+        execution.execution_data.update!(
+          workflow_data: DiscourseWorkflows::WorkflowSnapshot.snapshot(workflow),
+        )
+      end
+
+      let(:form_data) { {} }
+
+      it { is_expected.to fail_a_step(:validate_required_form_fields) }
+
+      it "sets missing field labels" do
+        expect(result[:missing_fields]).to eq(["Feedback"])
+      end
+    end
+
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 

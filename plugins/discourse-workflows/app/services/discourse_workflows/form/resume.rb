@@ -20,9 +20,18 @@ module DiscourseWorkflows
 
     model :execution
     model :waiting_node
+    step :validate_required_form_fields
     step :resume_execution
 
     private
+
+    def validate_required_form_fields(waiting_node:, params:)
+      missing = Workflow.missing_required_form_fields(waiting_node, params.form_data)
+      if missing.present?
+        context[:missing_fields] = missing
+        fail!(I18n.t("discourse_workflows.errors.missing_required_fields"))
+      end
+    end
 
     def fetch_execution(params:)
       DiscourseWorkflows::Executor::WaitHandlers::Form

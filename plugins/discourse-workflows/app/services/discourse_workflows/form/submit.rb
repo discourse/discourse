@@ -20,10 +20,19 @@ module DiscourseWorkflows
 
     model :workflow
     model :trigger_node
+    step :validate_required_form_fields
     model :execution, :run_workflow
     model :response_metadata, :build_response_metadata
 
     private
+
+    def validate_required_form_fields(trigger_node:, params:)
+      missing = Workflow.missing_required_form_fields(trigger_node, params.form_data)
+      if missing.present?
+        context[:missing_fields] = missing
+        fail!(I18n.t("discourse_workflows.errors.missing_required_fields"))
+      end
+    end
 
     def fetch_workflow(params:)
       DiscourseWorkflows::WorkflowDependency

@@ -73,6 +73,17 @@ RSpec.describe DiscourseWorkflows::FormsController do
       expect(execution.trigger_node_id).to eq("trigger-1")
       expect(execution.execution_data.context_data["__resume_token"]).to eq(json["resume_token"])
     end
+
+    it "returns 422 with missing field labels when required fields are omitted" do
+      post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+           params: {
+             form_data: {
+             },
+           },
+           headers: origin_headers
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["Name"])
+    end
   end
 
   describe "PUT /workflows/form/:uuid.json" do

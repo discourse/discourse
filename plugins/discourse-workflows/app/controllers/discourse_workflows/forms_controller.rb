@@ -35,6 +35,9 @@ module DiscourseWorkflows
                    form_channel: DiscourseWorkflows::Executor.form_channel(execution&.id),
                  }
         end
+        on_failed_step(:validate_required_form_fields) do |missing_fields:|
+          render json: { errors: missing_fields }, status: :unprocessable_entity
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:workflow) { raise Discourse::NotFound }
         on_model_not_found(:trigger_node) { raise Discourse::NotFound }
@@ -47,6 +50,9 @@ module DiscourseWorkflows
           render json: {
                    resume_token: execution.execution_data&.context_data&.dig("__resume_token"),
                  }
+        end
+        on_failed_step(:validate_required_form_fields) do |missing_fields:|
+          render json: { errors: missing_fields }, status: :unprocessable_entity
         end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
         on_model_not_found(:execution) { raise Discourse::NotFound }

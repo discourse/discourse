@@ -70,6 +70,22 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
       it { is_expected.to fail_to_find_a_model(:workflow) }
     end
 
+    context "when required form fields are missing" do
+      let(:form_data) { {} }
+
+      it { is_expected.to fail_a_step(:validate_required_form_fields) }
+
+      it "sets missing field labels" do
+        expect(result[:missing_fields]).to eq(["Name"])
+      end
+    end
+
+    context "when required form fields are blank" do
+      let(:form_data) { { "name" => "" } }
+
+      it { is_expected.to fail_a_step(:validate_required_form_fields) }
+    end
+
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
