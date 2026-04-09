@@ -25,7 +25,6 @@ module("Unit | Instance Initializer | onebox-decorators", function () {
     );
 
     assert.strictEqual(iframe.getAttribute("height"), "321");
-    assert.strictEqual(iframe.getAttribute("scrolling"), "no");
   });
 
   test("handleRedditOneboxResizeMessage ignores unrelated messages", function (assert) {

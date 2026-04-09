@@ -955,8 +955,9 @@ iframe.reddit-onebox {
   max-width: 640px;
   display: block;
   margin: 0 auto;
+  overflow: hidden;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--d-border-radius);
 }
 
 .onebox.githubfolder {

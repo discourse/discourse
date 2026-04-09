@@ -25,6 +25,8 @@ RSpec.describe Onebox::Engine::RedditMediaOnebox do
       )
       expect(html).to include("embed=true")
       expect(html).to include('height="500"')
+      expect(html).not_to include("scrolling=")
+      expect(html).not_to include("frameborder=")
     end
 
     it "does not fetch Reddit content server-side" do
@@ -50,6 +52,13 @@ RSpec.describe Onebox::Engine::RedditMediaOnebox do
   end
 
   describe ".===" do
+    it "allows both Reddit embed iframe origins" do
+      expect(described_class.iframe_origins).to contain_exactly(
+        "https://embed.reddit.com",
+        "https://sh.reddit.com",
+      )
+    end
+
     it "matches valid Reddit URL" do
       valid_url = URI(post_link)
       expect(described_class === valid_url).to eq(true)

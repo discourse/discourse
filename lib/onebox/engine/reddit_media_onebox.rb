@@ -6,7 +6,7 @@ module Onebox
       include Engine
 
       always_https
-      requires_iframe_origins "https://embed.reddit.com"
+      requires_iframe_origins "https://embed.reddit.com", "https://sh.reddit.com"
       matches_domain(
         "reddit.com",
         "www.reddit.com",
@@ -26,8 +26,6 @@ module Onebox
             src="#{embed_url}"
             width="640"
             height="#{default_height}"
-            scrolling="no"
-            frameborder="0"
             allowfullscreen
           ></iframe>
         HTML

@@ -47,7 +47,6 @@ export function handleRedditOneboxResizeMessage(event, root = document) {
   root.querySelectorAll("iframe.reddit-onebox").forEach((iframe) => {
     if (iframe.contentWindow === event.source) {
       iframe.setAttribute("height", `${height}`);
-      iframe.setAttribute("scrolling", "no");
     }
   });
 }
