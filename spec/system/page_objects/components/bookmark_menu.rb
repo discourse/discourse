@@ -31,18 +31,32 @@ module PageObjects
         has_css?(".topic-bookmarks-menu-content")
       end
 
-      def has_jump_to_post_option?(post_number)
+      def has_post_bookmark_option?(post_number)
         has_css?(
-          ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='jump']",
-          text: "##{post_number}",
+          ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='post-#{post_number}']",
         )
       end
 
-      def click_jump_to_post(post_number)
+      def click_post_bookmark(post_number)
         find(
-          ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='jump']",
-          text: "##{post_number}",
+          ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='post-#{post_number}']",
         ).click
+      end
+
+      def has_post_submenu?
+        has_css?(".topic-bookmark-post-submenu")
+      end
+
+      def click_post_submenu_option(option_id)
+        find(
+          ".topic-bookmark-post-submenu .bookmark-menu__row[data-menu-option-id='#{option_id}'] .btn",
+        ).click
+      end
+
+      def has_bookmark_topic_option?
+        has_css?(
+          ".topic-bookmarks-menu-content .bookmark-menu__row[data-menu-option-id='bookmark-topic']",
+        )
       end
 
       def has_clear_all_option?
