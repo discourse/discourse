@@ -82,7 +82,8 @@
       ]
     },
     "overrides": {
-      "@ember/test-waiters": "4.1.1"
+      "@ember/test-waiters": "4.1.1",
+      "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
     }
   }
 }
