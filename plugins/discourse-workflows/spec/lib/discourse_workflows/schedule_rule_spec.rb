@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseWorkflows::ScheduleRule do
   fab!(:user)
   fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }

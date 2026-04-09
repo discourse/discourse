@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::DiscourseWorkflows::ExecuteSecondsSchedule do
   fab!(:user)
 

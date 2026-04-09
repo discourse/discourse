@@ -29,6 +29,8 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
   end
 
   describe "#execute" do
+    let(:item) { { "json" => {} } }
+
     it "creates a reply for the configured user" do
       result = nil
 
@@ -40,10 +42,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
               "raw" => "Workflow reply",
               "user_id" => admin.id.to_s,
             },
-            item: {
-              "json" => {
-              },
-            },
+            item: item,
           )
       end.to change { topic.posts.count }.by(1)
 
@@ -67,10 +66,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
           "topic_id" => topic.id.to_s,
           "raw" => "Created by workflows",
         },
-        item: {
-          "json" => {
-          },
-        },
+        item: item,
       )
 
       expect(topic.posts.order(:id).last.user_id).to eq(Discourse.system_user.id)
@@ -83,10 +79,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
           "raw" => "Threaded reply",
           "reply_to_post_number" => first_post.post_number.to_s,
         },
-        item: {
-          "json" => {
-          },
-        },
+        item: item,
       )
 
       expect(topic.posts.order(:id).last.reply_to_post_number).to eq(first_post.post_number)
@@ -100,10 +93,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
             "raw" => "Workflow reply",
             "user_id" => -999,
           },
-          item: {
-            "json" => {
-            },
-          },
+          item: item,
         )
       end.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -117,10 +107,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
             "topic_id" => topic.id.to_s,
             "raw" => "Workflow reply",
           },
-          item: {
-            "json" => {
-            },
-          },
+          item: item,
         )
       end.to raise_error(
         ActiveRecord::RecordNotSaved,
@@ -137,10 +124,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
             "topic_id" => topic.id.to_s,
             "raw" => "Workflow reply",
           },
-          item: {
-            "json" => {
-            },
-          },
+          item: item,
         )
       end.to raise_error(
         ActiveRecord::RecordNotSaved,
@@ -150,16 +134,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
 
     it "raises when topic does not exist" do
       expect do
-        execute_node(
-          configuration: {
-            "topic_id" => "-1",
-            "raw" => "Workflow reply",
-          },
-          item: {
-            "json" => {
-            },
-          },
-        )
+        execute_node(configuration: { "topic_id" => "-1", "raw" => "Workflow reply" }, item: item)
       end.to raise_error(ActiveRecord::RecordNotFound)
     end
 

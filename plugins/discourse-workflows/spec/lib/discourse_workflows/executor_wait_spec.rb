@@ -77,7 +77,7 @@ RSpec.describe DiscourseWorkflows::Executor do
           ],
         )
 
-      execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+      execution = described_class.new(workflow, "trigger-1", {}).run
 
       expect(execution).to have_attributes(
         status: "waiting",
@@ -147,7 +147,7 @@ RSpec.describe DiscourseWorkflows::Executor do
         )
 
       freeze_time do
-        execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+        execution = described_class.new(workflow, "trigger-1", {}).run
 
         expect(execution).to have_attributes(
           status: "waiting",
@@ -225,7 +225,7 @@ RSpec.describe DiscourseWorkflows::Executor do
           ],
         )
 
-      execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+      execution = described_class.new(workflow, "trigger-1", {}).run
       expect(execution.status).to eq("waiting")
 
       response_items = [{ "json" => { "approved" => true } }]

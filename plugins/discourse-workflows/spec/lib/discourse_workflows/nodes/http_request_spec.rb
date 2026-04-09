@@ -16,7 +16,6 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
     exec_ctx =
       DiscourseWorkflows::NodeExecutionContext.new(input_items: input_items, resolver: resolver)
     items = action.execute(exec_ctx)[0]
-    @last_action = action
     items.first["json"]
   end
 
@@ -177,9 +176,13 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         "body" => '{"name":"test"}',
       }
 
-      execute_node(configuration: config, item: item)
+      action = described_class.new(configuration: config)
+      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
+      exec_ctx =
+        DiscourseWorkflows::NodeExecutionContext.new(input_items: [item], resolver: resolver)
+      action.execute(exec_ctx)
 
-      messages = @last_action.log.entries.map { |e| e["message"] }
+      messages = action.log.entries.map { |e| e["message"] }
       expect(messages).to eq(
         [
           "POST https://api.example.com/data",
@@ -188,7 +191,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
           "[body omitted]",
         ],
       )
-      expect(@last_action.log.entries).to all(include("level" => "info"))
+      expect(action.log.entries).to all(include("level" => "info"))
     end
 
     it "raises when URL is blank" do

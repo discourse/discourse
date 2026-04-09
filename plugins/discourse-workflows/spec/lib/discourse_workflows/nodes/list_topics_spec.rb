@@ -23,77 +23,33 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
     end
   end
 
-  def build_resolver(items)
-    DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first&.dig("json") || {} })
+  def execute_node(configuration:, run_as_user: nil)
+    action = described_class.new(configuration: configuration)
+    items = [{ "json" => {} }]
+    resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
+    kwargs = { input_items: items, resolver: resolver }
+    kwargs[:run_as_user] = run_as_user if run_as_user
+    action.execute(DiscourseWorkflows::NodeExecutionContext.new(**kwargs))[0]
   end
 
   describe "#execute" do
     it "returns topics matching the query" do
-      action =
-        described_class.new(
-          configuration: {
-            "query" => "category:#{category.slug}",
-            "limit" => "10",
-          },
-        )
-      input_items = [{ "json" => {} }]
-
       result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
+        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "10" })
 
       expect(result.length).to eq(2)
       expect(result.map { |r| r["json"]["topic"]["id"] }).to contain_exactly(topic_1.id, topic_2.id)
     end
 
     it "respects the limit parameter" do
-      action =
-        described_class.new(
-          configuration: {
-            "query" => "category:#{category.slug}",
-            "limit" => "1",
-          },
-        )
-      input_items = [{ "json" => {} }]
-
       result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
+        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "1" })
 
       expect(result.length).to eq(1)
     end
 
     it "defaults limit to 30 when not provided" do
-      action = described_class.new(configuration: { "query" => "category:#{category.slug}" })
-      input_items = [{ "json" => {} }]
-
-      result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
+      result = execute_node(configuration: { "query" => "category:#{category.slug}" })
 
       expect(result.length).to eq(2)
     end
@@ -102,26 +58,8 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
       SiteSetting.tagging_enabled = true
       topic_1.tags << tag
 
-      action =
-        described_class.new(
-          configuration: {
-            "query" => "category:#{category.slug}",
-            "limit" => "10",
-          },
-        )
-      input_items = [{ "json" => {} }]
-
       result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
+        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "10" })
 
       topic_data = result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json", "topic")
       expect(topic_data).to include(
@@ -139,89 +77,39 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
     end
 
     it "returns empty array when no topics match" do
-      action =
-        described_class.new(
+      result =
+        execute_node(
           configuration: {
             "query" => "category:#{other_category.slug}",
             "limit" => "10",
           },
         )
-      input_items = [{ "json" => {} }]
-
-      result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
 
       expect(result).to eq([])
     end
 
     it "clamps limit to 100" do
-      action =
-        described_class.new(
-          configuration: {
-            "query" => "category:#{category.slug}",
-            "limit" => "200",
-          },
-        )
-      input_items = [{ "json" => {} }]
-
       result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
+        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "200" })
 
       expect(result.length).to eq(2)
     end
 
     it "defaults to system user for topic queries" do
-      action = described_class.new(configuration: { "query" => "category:#{category.slug}" })
-      input_items = [{ "json" => {} }]
+      result = execute_node(configuration: { "query" => "category:#{category.slug}" })
 
-      result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
       expect(result.length).to eq(2)
     end
 
     it "uses run_as_user when set" do
-      action = described_class.new(configuration: { "query" => "category:#{category.slug}" })
-      input_items = [{ "json" => {} }]
-
       result =
-        action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: input_items,
-            node_context: {
-            },
-            run_as_user: other_user,
-            resolver: build_resolver(input_items),
-          ),
-        )[
-          0
-        ]
+        execute_node(
+          configuration: {
+            "query" => "category:#{category.slug}",
+          },
+          run_as_user: other_user,
+        )
+
       expect(result.length).to eq(2)
     end
   end

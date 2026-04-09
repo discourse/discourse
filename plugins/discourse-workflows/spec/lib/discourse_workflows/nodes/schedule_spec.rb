@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseWorkflows::Nodes::Schedule::V1 do
   describe ".identifier" do
     it "returns trigger:schedule" do

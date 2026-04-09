@@ -21,33 +21,34 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   end
 
   describe "POST /admin/plugins/discourse-workflows/executions" do
-    it "creates an execution" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual Trigger",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
+    let(:enabled_workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: admin,
+        enabled: true,
+        nodes: [
+          {
+            "id" => "trigger-1",
+            "type" => "trigger:manual",
+            "type_version" => "1.0",
+            "name" => "Manual Trigger",
+            "position" => {
+              "x" => 0,
+              "y" => 0,
             },
-          ],
-          connections: [],
-        )
+            "position_index" => 0,
+            "configuration" => {
+            },
+          },
+        ],
+        connections: [],
+      )
+    end
 
+    it "creates an execution" do
       post "/admin/plugins/discourse-workflows/executions.json",
            params: {
-             workflow_id: workflow.id,
+             workflow_id: enabled_workflow.id,
              trigger_node_id: "trigger-1",
            }
 
@@ -64,29 +65,6 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
     end
 
     it "passes current user to execution" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual Trigger",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [],
-        )
-
       DiscourseWorkflows::Workflow::Execute
         .expects(:call)
         .with { |kwargs| kwargs.dig(:params, :user_id) == admin.id }
@@ -94,7 +72,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
       post "/admin/plugins/discourse-workflows/executions.json",
            params: {
-             workflow_id: workflow.id,
+             workflow_id: enabled_workflow.id,
              trigger_node_id: "trigger-1",
            }
     end

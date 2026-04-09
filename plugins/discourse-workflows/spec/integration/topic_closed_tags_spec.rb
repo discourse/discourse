@@ -2,7 +2,6 @@
 
 RSpec.describe "Workflow: topic closed -> topic tags" do
   fab!(:admin)
-  fab!(:user)
   fab!(:topic)
   fab!(:tag) { Fabricate(:tag, name: "resolved") }
 

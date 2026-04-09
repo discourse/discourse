@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseWorkflows::NodeTypeChecks do
   def build_node(type:)
     DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(

@@ -12,101 +12,92 @@ RSpec.describe DiscourseWorkflows::Executor do
   end
 
   def build_workflow
-    workflow =
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: user,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:topic_closed",
-            "type_version" => "1.0",
-            "name" => "Topic Closed",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
+    Fabricate(
+      :discourse_workflows_workflow,
+      created_by: user,
+      enabled: true,
+      nodes: [
+        {
+          "id" => "trigger-1",
+          "type" => "trigger:topic_closed",
+          "type_version" => "1.0",
+          "name" => "Topic Closed",
+          "position" => {
+            "x" => 0,
+            "y" => 0,
           },
-          {
-            "id" => "action-1",
-            "type" => "action:topic_tags",
-            "type_version" => "1.0",
-            "name" => "Topic Tags",
-            "position" => {
-              "x" => 200,
-              "y" => 0,
-            },
-            "position_index" => 1,
-            "configuration" => {
-              "topic_id" => "={{ trigger.topic_id }}",
-              "tag_names" => tag.name,
-            },
+          "position_index" => 0,
+          "configuration" => {
           },
-        ],
-        connections: [
-          {
-            "source_node_id" => "trigger-1",
-            "target_node_id" => "action-1",
-            "source_output" => "main",
+        },
+        {
+          "id" => "action-1",
+          "type" => "action:topic_tags",
+          "type_version" => "1.0",
+          "name" => "Topic Tags",
+          "position" => {
+            "x" => 200,
+            "y" => 0,
           },
-        ],
-      )
-
-    workflow
+          "position_index" => 1,
+          "configuration" => {
+            "topic_id" => "={{ trigger.topic_id }}",
+            "tag_names" => tag.name,
+          },
+        },
+      ],
+      connections: [
+        {
+          "source_node_id" => "trigger-1",
+          "target_node_id" => "action-1",
+          "source_output" => "main",
+        },
+      ],
+    )
   end
 
   describe "#run" do
-    it "executes a simple trigger -> action workflow" do
-      workflow = build_workflow
-      trigger_node = workflow.find_node("trigger-1")
-      trigger_data = { topic_id: topic.id, tags: topic.tags.pluck(:name) }
+    context "with a simple trigger -> action workflow" do
+      let(:workflow) { build_workflow }
+      let(:trigger_data) { { topic_id: topic.id, tags: topic.tags.pluck(:name) } }
 
-      executor = described_class.new(workflow, trigger_node["id"], trigger_data)
-      execution = executor.run
+      it "executes successfully and tags the topic" do
+        execution = described_class.new(workflow, "trigger-1", trigger_data).run
 
-      expect(execution.status).to eq("success")
-      expect(topic.reload.tags).to include(tag)
-    end
+        expect(execution.status).to eq("success")
+        expect(topic.reload.tags).to include(tag)
+      end
 
-    it "creates an execution record" do
-      workflow = build_workflow
-      trigger_node = workflow.find_node("trigger-1")
-      trigger_data = { topic_id: topic.id, tags: topic.tags.pluck(:name) }
+      it "creates an execution record" do
+        expect { described_class.new(workflow, "trigger-1", trigger_data).run }.to change {
+          DiscourseWorkflows::Execution.count
+        }.by(1)
+      end
 
-      executor = described_class.new(workflow, trigger_node["id"], trigger_data)
+      it "stores context with item arrays in the execution" do
+        execution = described_class.new(workflow, "trigger-1", trigger_data).run
 
-      expect { executor.run }.to change { DiscourseWorkflows::Execution.count }.by(1)
-    end
+        ed = execution.execution_data.context_data
+        expect(ed["Topic Closed"]).to be_an(Array)
 
-    it "stores context with item arrays in the execution" do
-      workflow = build_workflow
-      trigger_node = workflow.find_node("trigger-1")
-      trigger_data = { topic_id: topic.id, tags: topic.tags.pluck(:name) }
+        topic_tags_output = ed["Topic Tags"]
+        expect(topic_tags_output).to be_an(Array)
+        expect(topic_tags_output.first["json"]["tag_names"]).to eq([tag.name])
+      end
 
-      executor = described_class.new(workflow, trigger_node["id"], trigger_data)
-      execution = executor.run
+      it "handles errors gracefully" do
+        execution = described_class.new(workflow, "trigger-1", { topic_id: -999, tags: [] }).run
 
-      ed = execution.execution_data.context_data
-      expect(ed["Topic Closed"]).to be_an(Array)
+        expect(execution).to have_attributes(status: "error", error: be_present)
+      end
 
-      topic_tags_output = ed["Topic Tags"]
-      expect(topic_tags_output).to be_an(Array)
-      expect(topic_tags_output.first["json"]["tag_names"]).to eq([tag.name])
-    end
+      it "skips disabled workflows" do
+        workflow.update!(enabled: false)
 
-    it "handles errors gracefully" do
-      workflow = build_workflow
-      trigger_node = workflow.find_node("trigger-1")
-      trigger_data = { topic_id: -999, tags: [] }
+        execution = described_class.new(workflow, "trigger-1", trigger_data).run
 
-      executor = described_class.new(workflow, trigger_node["id"], trigger_data)
-      execution = executor.run
-
-      expect(execution).to have_attributes(status: "error", error: be_present)
+        expect(execution.status).to eq("skipped")
+      end
     end
 
     it "fails when trigger node is not in the snapshot" do
@@ -247,8 +238,8 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(topic.reload.tags.map(&:name)).not_to include("needs-review")
     end
 
-    it "continues execution when filter passes" do
-      workflow =
+    context "with a filter workflow" do
+      let(:filter_workflow) do
         Fabricate(
           :discourse_workflows_workflow,
           created_by: user,
@@ -321,179 +312,34 @@ RSpec.describe DiscourseWorkflows::Executor do
             },
           ],
         )
+      end
 
-      trigger_data = { topic_id: topic.id, tags: %w[bug help] }
-      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+      it "continues execution when filter passes" do
+        trigger_data = { topic_id: topic.id, tags: %w[bug help] }
+        execution = described_class.new(filter_workflow, "trigger-1", trigger_data).run
 
-      expect(execution.status).to eq("success")
-      expect(topic.reload.tags.map(&:name)).to include(tag.name)
-    end
+        expect(execution.status).to eq("success")
+        expect(topic.reload.tags.map(&:name)).to include(tag.name)
+      end
 
-    it "supports $json expressions in filter conditions" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "filter-1",
-              "type" => "condition:filter",
-              "type_version" => "1.0",
-              "name" => "Has Bug Tag",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "conditions" => [
-                  {
-                    "id" => "1",
-                    "leftValue" => "={{ $json.tags }}",
-                    "rightValue" => "bug",
-                    "operator" => {
-                      "type" => "array",
-                      "operation" => "contains",
-                    },
-                  },
-                ],
-                "combinator" => "and",
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Topic Tags",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "topic_id" => "={{ trigger.topic_id }}",
-                "tag_names" => tag.name,
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "filter-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "filter-1",
-              "target_node_id" => "action-1",
-              "source_output" => "true",
-            },
-          ],
-        )
+      it "supports $json expressions in filter conditions" do
+        trigger_data = { topic_id: topic.id, tags: %w[bug help] }
+        execution = described_class.new(filter_workflow, "trigger-1", trigger_data).run
 
-      trigger_data = { topic_id: topic.id, tags: %w[bug help] }
-      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+        expect(execution.status).to eq("success")
+        expect(topic.reload.tags.map(&:name)).to include(tag.name)
 
-      expect(execution.status).to eq("success")
-      expect(topic.reload.tags.map(&:name)).to include(tag.name)
+        filter_step = execution.execution_data.find_step(node_id: "filter-1")
+        expect(filter_step["metadata"].dig("conditions", 0, "left")).to eq(%w[bug help])
+      end
 
-      filter_step = execution.execution_data.find_step(node_id: "filter-1")
-      expect(filter_step["metadata"].dig("conditions", 0, "left")).to eq(%w[bug help])
-    end
+      it "stops execution when filter does not pass" do
+        trigger_data = { topic_id: topic.id, tags: %w[feature help] }
+        execution = described_class.new(filter_workflow, "trigger-1", trigger_data).run
 
-    it "stops execution when filter does not pass" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "filter-1",
-              "type" => "condition:filter",
-              "type_version" => "1.0",
-              "name" => "Has Bug Tag",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "conditions" => [
-                  {
-                    "id" => "1",
-                    "leftValue" => "={{ $json.tags }}",
-                    "rightValue" => "bug",
-                    "operator" => {
-                      "type" => "array",
-                      "operation" => "contains",
-                    },
-                  },
-                ],
-                "combinator" => "and",
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Topic Tags",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "topic_id" => "={{ trigger.topic_id }}",
-                "tag_names" => tag.name,
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "filter-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "filter-1",
-              "target_node_id" => "action-1",
-              "source_output" => "true",
-            },
-          ],
-        )
-
-      trigger_data = { topic_id: topic.id, tags: %w[feature help] }
-      execution = described_class.new(workflow, "trigger-1", trigger_data).run
-
-      expect(execution.status).to eq("success")
-      expect(topic.reload.tags.map(&:name)).not_to include(tag.name)
+        expect(execution.status).to eq("success")
+        expect(topic.reload.tags.map(&:name)).not_to include(tag.name)
+      end
     end
 
     it "stores resolved configuration and result on execution steps" do
@@ -729,17 +575,6 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(execution.execution_data.context_data["Rejected"].first.dig("json", "rejected")).to eq(
         "yes",
       )
-    end
-
-    it "skips disabled workflows" do
-      workflow = build_workflow
-      workflow.update!(enabled: false)
-      trigger_data = { topic_id: topic.id, tags: topic.tags.pluck(:name) }
-
-      executor = described_class.new(workflow, "trigger-1", trigger_data)
-      execution = executor.run
-
-      expect(execution.status).to eq("skipped")
     end
 
     it "records an error step for unknown node types" do

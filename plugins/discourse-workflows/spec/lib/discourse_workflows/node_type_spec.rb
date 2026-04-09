@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseWorkflows::NodeType do
   describe ".inputs" do
     it "defaults to [:main]" do
