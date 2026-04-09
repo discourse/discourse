@@ -191,17 +191,20 @@ RSpec.describe "Sidebar navigation menu" do
 
       before do
         other_user.username = "<script>alert('hello')</script>"
+        # Use an uploaded avatar to avoid a letter_avatar request with the
+        # malicious username (which contains `/` and breaks URL routing)
+        other_user.uploaded_avatar_id = Fabricate(:image_upload).id
         other_user.save!(validate: false)
       end
 
       it "escapes the title attribute using it" do
-          visit("/")
+        visit("/")
 
-          expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
-            "Chat with &lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
-          )
-        end
+        expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
+          "Chat with &lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
+        )
       end
+    end
 
     context "as admin" do
       fab!(:admin)
