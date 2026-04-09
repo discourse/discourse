@@ -79,6 +79,10 @@ hr {
   padding: 0;
 }
 
+.dot-separator {
+  @include dot-separator;
+}
+
 // Lists
 // --------------------------------------------------
 ul,
