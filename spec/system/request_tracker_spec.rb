@@ -205,7 +205,7 @@ describe "Request tracking" do
     it "tracks bootstrapped error pages correctly" do
       SiteSetting.bootstrap_error_pages = true
 
-      Rails.logger.silence { visit "/foobar" }
+      visit "/foobar"
 
       try_until_success do
         CachedCounting.flush
