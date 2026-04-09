@@ -18,8 +18,7 @@ RSpec.describe Jobs::GenerateTopicOgImage do
   end
 
   it "does nothing when topic already has a generated OG image" do
-    topic.custom_fields["og_image_upload_id"] = 123
-    topic.save_custom_fields
+    topic.update_column(:og_image_upload_id, Fabricate(:upload).id)
     TopicOgImageGenerator.any_instance.expects(:generate).never
     described_class.new.execute(topic_id: topic.id)
   end
@@ -28,6 +27,8 @@ RSpec.describe Jobs::GenerateTopicOgImage do
     upload = Fabricate(:upload)
     TopicOgImageGenerator.any_instance.expects(:generate).returns(upload)
     described_class.new.execute(topic_id: topic.id)
-    expect(topic.reload.custom_fields["og_image_upload_id"].to_i).to eq(upload.id)
+    topic.reload
+    expect(topic.og_image_upload_id).to eq(upload.id)
+    expect(UploadReference.exists?(upload_id: upload.id, target: topic)).to eq(true)
   end
 end

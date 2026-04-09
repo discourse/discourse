@@ -444,8 +444,7 @@ class TopicView
 
   def og_image_upload
     return unless SiteSetting.generate_topic_og_image
-    upload_id = @topic.custom_fields["og_image_upload_id"]
-    Upload.find_by(id: upload_id) if upload_id.present?
+    @topic.og_image_upload
   end
 
   def og_image_url
