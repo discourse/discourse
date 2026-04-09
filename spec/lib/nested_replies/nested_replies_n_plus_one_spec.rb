@@ -300,7 +300,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       }.not_to raise_error
     end
 
-    it "increments living ancestors above a deleted intermediary" do
+    it "increments all ancestors including deleted intermediaries" do
       chain = create_reply_chain(depth: 3)
       grandparent = chain[0]
       parent = chain[1]
@@ -316,7 +316,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
       expect(NestedViewPostStat.find_by(post_id: child.id).total_descendant_count).to eq(1)
       expect(NestedViewPostStat.find_by(post_id: parent.id).total_descendant_count).to eq(
-        parent_before,
+        parent_before + 1,
       )
       expect(NestedViewPostStat.find_by(post_id: grandparent.id).total_descendant_count).to eq(
         grandparent_before + 1,
