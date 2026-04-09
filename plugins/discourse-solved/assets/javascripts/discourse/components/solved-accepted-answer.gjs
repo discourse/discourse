@@ -109,12 +109,6 @@ export default class SolvedAcceptedAnswer extends Component {
         data-post={{this.acceptedAnswer.post_number}}
         data-topic={{this.topic.id}}
       >
-        {{!-- <div
-          class="title"
-          data-has-quote-controls="true"
-          role={{if this.content "button"}}
-          {{(if this.content (modifier on "click" this.onClickTitle))}}
-        > --}}
         <div class="d-solved-answer__header">
           <h3 class="d-solved-answer__title">
             {{icon "far-square-check"}}
@@ -141,7 +135,6 @@ export default class SolvedAcceptedAnswer extends Component {
           </div>
         </div>
 
-        {{! </div> }}
         {{#if this.content}}
           <blockquote id={{this.quoteId}}>
             <PostCookedHtml
