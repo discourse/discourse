@@ -4,7 +4,9 @@ const REDDIT_EMBED_ORIGINS = [
   "https://embed.reddit.com",
   "https://sh.reddit.com",
 ];
-let redditOneboxResizeListenerAdded = false;
+const REDDIT_ONEBOX_RESIZE_LISTENER_STATE = Symbol(
+  "reddit-onebox-resize-listener-state"
+);
 
 export function decorateGithubOneboxBody(element) {
   const containers = element.querySelectorAll(
@@ -51,13 +53,48 @@ export function handleRedditOneboxResizeMessage(event, root = document) {
   });
 }
 
-function ensureRedditOneboxResizeListener() {
-  if (redditOneboxResizeListenerAdded || typeof window === "undefined") {
+function redditOneboxResizeListenerState(eventTarget) {
+  eventTarget[REDDIT_ONEBOX_RESIZE_LISTENER_STATE] ||= {
+    activeDecorations: 0,
+    listenerAdded: false,
+  };
+
+  return eventTarget[REDDIT_ONEBOX_RESIZE_LISTENER_STATE];
+}
+
+function addRedditOneboxResizeListener(eventTarget) {
+  const state = redditOneboxResizeListenerState(eventTarget);
+  state.activeDecorations += 1;
+
+  if (!state.listenerAdded) {
+    eventTarget.addEventListener("message", handleRedditOneboxResizeMessage);
+    state.listenerAdded = true;
+  }
+
+  return () => {
+    if (state.activeDecorations > 0) {
+      state.activeDecorations -= 1;
+    }
+
+    if (state.activeDecorations === 0 && state.listenerAdded) {
+      eventTarget.removeEventListener(
+        "message",
+        handleRedditOneboxResizeMessage
+      );
+      state.listenerAdded = false;
+    }
+  };
+}
+
+export function decorateRedditOneboxes(
+  element,
+  eventTarget = typeof window === "undefined" ? null : window
+) {
+  if (!eventTarget || !element.querySelector("iframe.reddit-onebox")) {
     return;
   }
 
-  window.addEventListener("message", handleRedditOneboxResizeMessage);
-  redditOneboxResizeListenerAdded = true;
+  return addRedditOneboxResizeListener(eventTarget);
 }
 
 function _handleClick(event) {
@@ -78,10 +115,9 @@ function _handleClick(event) {
 
 export default {
   initialize() {
-    ensureRedditOneboxResizeListener();
-
     withPluginApi((api) => {
       api.decorateCookedElement(decorateGithubOneboxBody);
+      api.decorateCookedElement((element) => decorateRedditOneboxes(element));
     });
   },
 };
