@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
+import OgImagePreview from "discourse/admin/components/og-image-preview";
 import SimpleList from "discourse/admin/components/simple-list";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
@@ -73,6 +74,7 @@ export default class AdminLogoForm extends Component {
           manifest_screenshots: data.manifest_screenshots,
           apple_touch_icon: data.apple_touch_icon,
           digest_logo: data.digest_logo,
+          generate_topic_og_image: data.generate_topic_og_image,
           opengraph_image: data.opengraph_image,
           x_summary_large_image: data.x_summary_large_image,
         },
@@ -117,6 +119,7 @@ export default class AdminLogoForm extends Component {
       manifest_screenshots: this.siteSettings.manifest_screenshots,
       apple_touch_icon: this.siteSettings.apple_touch_icon,
       digest_logo: this.siteSettings.digest_logo,
+      generate_topic_og_image: this.siteSettings.generate_topic_og_image,
       opengraph_image: this.siteSettings.opengraph_image,
       x_summary_large_image: this.siteSettings.x_summary_large_image,
     };
@@ -383,6 +386,20 @@ export default class AdminLogoForm extends Component {
                 @placeholderUrl={{this.placeholders.opengraph_image}}
               />
             </form.Field>
+            <form.Field
+              @name="generate_topic_og_image"
+              @title={{i18n
+                "admin.config.logo.form.generate_topic_og_image.title"
+              }}
+              @format="full"
+              @type="toggle"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
+            {{#if transientData.generate_topic_og_image}}
+              <OgImagePreview />
+            {{/if}}
           </:content>
         </AdminConfigAreaCardSection>
         <form.Submit />

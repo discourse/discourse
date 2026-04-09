@@ -3,6 +3,34 @@ class Admin::Config::LogoController < Admin::AdminController
   def index
   end
 
+  def og_image_preview
+    if params[:topic_id].present?
+      topic = Topic.find_by(id: params[:topic_id])
+      raise Discourse::NotFound if topic.nil?
+    else
+      topic = Topic.visible.listable_topics.order("posts_count DESC").first
+    end
+
+    if topic.nil?
+      topic =
+        Topic.new(
+          title: "Welcome to #{SiteSetting.title}",
+          category: Category.first,
+          like_count: 5,
+          posts_count: 3,
+        )
+    end
+
+    generator = TopicOgImageGenerator.new(topic)
+    upload = generator.generate
+
+    if upload&.errors&.empty?
+      render json: { url: upload.url, topic_id: topic.id, topic_title: topic.title }
+    else
+      render json: { error: "Failed to generate preview image" }, status: :unprocessable_entity
+    end
+  end
+
   def update
     settings =
       %i[
@@ -18,6 +46,7 @@ class Admin::Config::LogoController < Admin::AdminController
         manifest_screenshots
         apple_touch_icon
         digest_logo
+        generate_topic_og_image
         opengraph_image
         x_summary_large_image
       ].filter_map do |setting|

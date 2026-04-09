@@ -176,6 +176,75 @@
   }
 }
 
+.og-image-preview {
+  margin-top: 1em;
+
+  &__header {
+    margin-bottom: 0.25em;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: var(--font-0-rem);
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+    margin-bottom: 0.75em;
+  }
+
+  &__form {
+    margin-bottom: 0.75em;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5em;
+
+    .form-kit__field {
+      margin-bottom: 0;
+    }
+
+    .form-kit__container {
+      width: 120px !important;
+    }
+  }
+
+  &__frame {
+    border: 1px solid var(--primary-low);
+    border-radius: 0.5em;
+    overflow: hidden;
+    max-width: 600px;
+    background: var(--secondary);
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__topic-title {
+    display: block;
+    margin-top: 0.5em;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+  }
+
+  &__loading,
+  &__error,
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1200 / 630;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+  }
+}
+
 .admin-fonts-form {
   &__more {
     font-size: var(--font-down-1-rem);

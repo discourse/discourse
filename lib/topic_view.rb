@@ -413,12 +413,20 @@ class TopicView
   end
 
   def image_url
-    return @topic.image_url if @post_number == 1
-    desired_post&.image_url
+    if @post_number == 1
+      @topic.image_url || og_image_url
+    else
+      desired_post&.image_url
+    end
   end
 
   def image_upload
-    @image_upload ||= @post_number == 1 ? @topic.image_upload : desired_post&.image_upload
+    @image_upload ||=
+      if @post_number == 1
+        @topic.image_upload || og_image_upload
+      else
+        desired_post&.image_upload
+      end
   end
 
   def image_width
@@ -432,6 +440,18 @@ class TopicView
   def image_type
     ext = image_upload&.extension
     MiniMime.lookup_by_extension(ext)&.content_type if ext.present?
+  end
+
+  def og_image_upload
+    return unless SiteSetting.generate_topic_og_image
+    upload_id = @topic.custom_fields["og_image_upload_id"]
+    Upload.find_by(id: upload_id) if upload_id.present?
+  end
+
+  def og_image_url
+    upload = og_image_upload
+    return unless upload
+    UrlHelper.cook_url(upload.url, secure: upload.secure?, local: true)
   end
 
   def filter_posts(opts = {})

@@ -6267,6 +6267,17 @@ en:
             opengraph_image:
               title: "OpenGraph image"
               description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+            generate_topic_og_image:
+              title: "Generate topic OG images"
+              description: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
+            og_image_preview:
+              title: "Generated OG image preview"
+              description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID or leave blank to use the most popular topic."
+              generate: "Generate"
+              topic_id_label: "Topic ID"
+              topic_id_placeholder: "auto"
+              placeholder: "Enter a topic ID and click Generate to preview."
+              error: "Could not generate preview. Check the topic ID and try again."
             x_summary_large_image:
               title: "X summary large image"
               description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
