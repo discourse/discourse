@@ -84,6 +84,18 @@
   }
 }
 
+.permanently-delete-confirm__instruction {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  white-space: nowrap;
+
+  .confirmation-phrase {
+    width: 12em;
+    margin: 0;
+  }
+}
+
 .dialog-footer {
   display: flex;
   flex-wrap: wrap;
