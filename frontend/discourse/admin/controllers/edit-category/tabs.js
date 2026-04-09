@@ -58,6 +58,8 @@ const SIMPLIFIED_FIELD_LIST = [
   "all_topics_wiki",
   "allow_unlimited_owner_edits_on_first_post",
   "moderating_group_ids",
+  "topic_posting_review_group_ids",
+  "reply_posting_review_group_ids",
   "auto_close_hours",
   "auto_close_based_on_last_post",
   "default_view",

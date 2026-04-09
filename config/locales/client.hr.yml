@@ -541,8 +541,6 @@ hr:
           other: "Kreirano prije %{count} godina/e."
     bookmarked:
       title: "Zabilješka"
-      edit_bookmark: "Uredi oznaku"
-      clear_bookmarks: "Očisti oznake"
       help:
         bookmark: "Kliknite za spremanje ove teme u oznake"
         edit_bookmark: "Kliknite za uređivanje knjižne oznake na objavi u ovoj temi"
@@ -561,12 +559,12 @@ hr:
       clear_reminder: "Očisti podsjetnik"
       edit: "Uredi oznaku"
       not_bookmarked: "Sačuvaj objavu za kasnije"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Ukloni podsjetnik i zadrži oznaku"
       created_with_reminder: "Označili ste ovu objavu s podsjetnikom %{date}. %{name}"
       created_with_reminder_generic: "Označili ste ovo s podsjetnikom %{date}. %{name}"
       delete: "Izbriši oznaku"
       confirm_delete: "Jeste li sigurni da želite izbrisati ovu oznaku? Podsjetnik će također biti izbrisan."
-      confirm_clear: "Jeste li sigurni da želite ukloniti sve vaše zabilježbe iz ove teme?"
       save: "Spremi"
       no_timezone: 'Još niste postavili vremensku zonu. Nećete moći postaviti podsjetnike. Postavi jedan <a href="%{basePath}/my/preferences/profile">u svom profilu</a>.'
       invalid_custom_datetime: "Datum i vrijeme koje ste naveli nisu valjani. Pokušajte ponovo."
@@ -4355,6 +4353,9 @@ hr:
       review_group_name: "ime grupe"
       require_topic_approval: "Zahtijeva odobrenje moderatora za sve nove teme"
       require_reply_approval: "Zahtijeva odobrenje moderatora za sve nove odgovore"
+      posting_review_modes:
+        everyone: "Svi"
+      posting_review_groups_placeholder: "Odaberite grupe..."
       this_year: "ove godine"
       position: "Položaj na stranici kategorija:"
       position_disabled: "Kategorije će biti prikazane prema redoslijedu aktivnosti. Da biste kontrolirali redoslijed kategorija na popisima, omogućite postavku <a href='%{url}'>'fiksnih pozicija kategorija'</a>."

@@ -10,6 +10,8 @@ lt:
       default_query: "Numatytasis"
       or: "arba"
       create: "Sukurti"
+      ai:
+        generate: "Generuoti"
       import:
         label: "Importuoti"
       help:

@@ -23,6 +23,8 @@ es:
       create: "Crear"
       create_placeholder: "Nombre de la consulta..."
       description_placeholder: "Escribe una descripción aquí"
+      ai:
+        generate: "Generar clave de API"
       import:
         label: "Importar"
         unparseable_json: "Archivo JSON no analizable."

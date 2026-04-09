@@ -16,6 +16,8 @@ et:
       title: "Andmete eksportija"
       create: "Loo"
       create_placeholder: "Päringu nimi..."
+      ai:
+        generate: "Genereeri"
       import:
         label: "Impordi"
       help:

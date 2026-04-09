@@ -8,8 +8,9 @@ module PageObjects
         self
       end
 
-      def visit_admin_query(query_id, query_string: nil)
+      def visit_admin_query(query_id, query_string: nil, params: nil)
         path = "/admin/plugins/discourse-data-explorer/queries/#{query_id}"
+        query_string = "params=#{CGI.escape(params.to_json)}" if params.present?
         path += "?#{query_string}" if query_string.present?
         page.visit(path)
         self
@@ -88,6 +89,22 @@ module PageObjects
 
       def has_query_description?(text)
         page.has_css?(".query-edit .desc", text: text)
+      end
+
+      def has_no_result_header?
+        page.has_no_css?(".query-results .result-header")
+      end
+
+      def has_cached_result_notice?
+        page.has_css?(".cached-result-notice")
+      end
+
+      def has_no_cached_result_notice?
+        page.has_no_css?(".cached-result-notice")
+      end
+
+      def has_chart?
+        page.has_css?(".query-results .chart-canvas-container")
       end
     end
   end

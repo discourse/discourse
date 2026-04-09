@@ -15,28 +15,30 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
   get urgentCount() {
     return (
-      this.args.urgentCount ||
-      this.chatTrackingStateManager.allChannelUrgentCount
+      this.args.urgentCount ??
+      this.chatTrackingStateManager.allChannelUrgentCount()
     );
   }
 
   get mentionCount() {
     return (
-      this.args.mentionCount ||
-      this.chatTrackingStateManager.allChannelMentionCount
+      this.args.mentionCount ??
+      this.chatTrackingStateManager.allChannelMentionCount()
     );
   }
 
   get unreadCount() {
     return (
-      this.args.unreadCount ||
-      this.chatTrackingStateManager.publicChannelUnreadCount
+      this.args.unreadCount ??
+      this.chatTrackingStateManager.publicChannelUnreadCount()
     );
   }
 
   get hasUnreads() {
     return (
-      this.unreadCount > 0 || this.chatTrackingStateManager.hasUnreadThreads
+      this.unreadCount > 0 ||
+      (this.args.hasUnreadThreads ??
+        this.chatTrackingStateManager.hasUnreadThreads())
     );
   }
 

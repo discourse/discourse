@@ -289,8 +289,6 @@ id:
         other: "%{formatted_number} Anggota"
     bookmarked:
       title: "Penandaan"
-      edit_bookmark: "Edit Bookmark"
-      clear_bookmarks: "Bersihkan Penandaan"
       help:
         bookmark: "Klik untuk bookmark topik ini"
         edit_bookmark: "Klik untuk mengedit bookmark pada post di topik ini"
@@ -303,12 +301,12 @@ id:
       create: "Buat penanda"
       edit: "Sunting penanda"
       not_bookmarked: "tandai pos ini"
+      topic_bookmark: "Topik"
       remove_reminder_keep_bookmark: "Hapus pengingat dan simpan penanda"
       created_with_reminder: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
       created_with_reminder_generic: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
       delete: "Hapus Bookmark"
       confirm_delete: "Yakin ingin menghapus penanda ini? Pengingat juga akan dihapus."
-      confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
       invalid_custom_datetime: "Tanggal dan waktu yang Anda berikan tidak valid, silakan coba lagi."
@@ -1979,6 +1977,8 @@ id:
         create: "Buat"
       email_in_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
       review_group_name: "nama grup"
+      posting_review_modes:
+        everyone: "Semua orang"
       none_subcategory_text: "Tidak ada"
       visibility:
         public: "Umum"

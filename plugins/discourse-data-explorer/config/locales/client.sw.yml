@@ -22,6 +22,8 @@ sw:
       create: "Tengeneza"
       create_placeholder: "Jina la ulizo..."
       description_placeholder: "Andika maelezo hapa"
+      ai:
+        generate: "Tengeneza"
       import:
         label: "Imeingizwa kutoka sehemu nyingine"
       help:

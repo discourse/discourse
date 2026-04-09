@@ -66,6 +66,10 @@ export default class DiscoursePostEvent extends Component {
     }
   }
 
+  get clampDescription() {
+    return this.args.clampDescription ?? false;
+  }
+
   get withDescription() {
     return this.args.withDescription ?? true;
   }
@@ -203,7 +207,9 @@ export default class DiscoursePostEvent extends Component {
                   Section=(component InfoSection event=event)
                   Url=(component Url url=event.url)
                   Description=(component
-                    Description description=event.description
+                    Description
+                    description=event.description
+                    clamp=this.clampDescription
                   )
                   Location=(component Location location=event.location)
                   Dates=(component
@@ -235,7 +241,10 @@ export default class DiscoursePostEvent extends Component {
                 <Invitees @event={{event}} />
 
                 {{#if this.withDescription}}
-                  <Description @description={{event.description}} />
+                  <Description
+                    @description={{event.description}}
+                    @clamp={{this.clampDescription}}
+                  />
                 {{/if}}
 
                 {{#if @event.canUpdateAttendance}}

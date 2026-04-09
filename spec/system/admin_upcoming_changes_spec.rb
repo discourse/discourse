@@ -305,4 +305,45 @@ describe "Admin upcoming changes" do
       )
     end
   end
+
+  context "when the upcoming change has a default override" do
+    let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+      mock_upcoming_change_default_overrides(
+        {
+          suggested_topics_max_days_old: {
+            upcoming_change: :enable_upload_debug_mode,
+            new_default: 1000,
+          },
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+      SiteSetting.refresh!
+    end
+
+    after do
+      clear_mocked_upcoming_change_metadata
+      clear_mocked_upcoming_change_default_overrides
+    end
+
+    it "shows information about the default override in the site settings UI" do
+      settings_page.visit("suggested_topics_max_days_old")
+      expect(settings_page).to have_upcoming_change_default_warning(
+        :suggested_topics_max_days_old,
+        old_default: 365,
+        new_default: 1000,
+      )
+    end
+  end
 end

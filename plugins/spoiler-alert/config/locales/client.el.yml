@@ -9,3 +9,5 @@ el:
     spoiler:
       label:
         show: "Εμφάνιση κρυφού περιεχομένου"
+    composer:
+      spoiler_text: "Αυτό το κείμενο θα θολωθεί"

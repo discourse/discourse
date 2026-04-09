@@ -143,15 +143,38 @@ RSpec.describe TopicsController do
       expect(doc.css('[itemtype*="QAPage"]').size).to eq(0)
     end
 
-    it "marks the solution post as acceptedAnswer and other replies as suggestedAnswer" do
+    it "emits valid QAPage microdata with all required schema.org properties" do
       p3 = Fabricate(:post, topic:, user: Fabricate(:user))
       Fabricate(:solved_topic, topic:, answer_post: p2)
 
       get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
       doc = parsed_crawler_body
 
-      expect(doc.at_css("#post_#{p2.post_number}")["itemprop"]).to eq("acceptedAnswer")
-      expect(doc.at_css("#post_#{p3.post_number}")["itemprop"]).to eq("suggestedAnswer")
+      qa_page = doc.at_css('[itemtype*="QAPage"]')
+      expect(qa_page).to be_present
+      expect(qa_page.at_css('> [itemprop="name"]')["content"]).to eq(topic.title)
+      expect(qa_page.at_css('> [itemprop="datePublished"]')["content"]).to be_present
+
+      question = doc.at_css('[itemtype*="Question"]')
+      expect(question).to be_present
+      expect(question.at_css('[itemprop="name"]')["content"]).to eq(topic.title)
+      expect(question.at_css('[itemprop="answerCount"]')["content"]).to eq("2")
+      expect(question.at_css('[itemprop="text"]')).to be_present
+      expect(question.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+
+      accepted = doc.at_css("#post_#{p2.post_number}")
+      expect(accepted["itemprop"]).to eq("acceptedAnswer")
+      expect(accepted["itemtype"]).to include("Answer")
+      expect(accepted.at_css('[itemprop="text"]')).to be_present
+      expect(accepted.at_css('[itemprop="datePublished"]')).to be_present
+      expect(accepted.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+
+      suggested = doc.at_css("#post_#{p3.post_number}")
+      expect(suggested["itemprop"]).to eq("suggestedAnswer")
+      expect(suggested["itemtype"]).to include("Answer")
+      expect(suggested.at_css('[itemprop="text"]')).to be_present
+      expect(suggested.at_css('[itemprop="datePublished"]')).to be_present
+      expect(suggested.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
     end
 
     it "does not modify schema for topics without solved enabled" do

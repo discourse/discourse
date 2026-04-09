@@ -2,12 +2,15 @@
 
 module Jobs
   class LocalizePosts < ::Jobs::Base
-    cluster_concurrency 1
     sidekiq_options retry: false
+
+    REDIS_KEY = "discourse-ai:localize_posts:in_progress"
 
     def execute(args)
       limit = args[:limit]
       raise Discourse::InvalidParameters.new(:limit) if limit.blank? || limit <= 0
+
+      offset = args[:offset].to_i
 
       return if !DiscourseAi::Translation.backfill_enabled?
 
@@ -37,11 +40,13 @@ module Jobs
             .where("posts.locale NOT LIKE '#{base_locale}%'")
             .where("pl.id IS NULL")
             .order(updated_at: :desc)
+            .offset(offset)
             .limit(limit)
 
         next if posts.empty?
 
         posts.each do |post|
+          Discourse.redis.expire(REDIS_KEY, 15.minutes.to_i)
           next unless DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
 
           begin
@@ -57,6 +62,9 @@ module Jobs
 
         DiscourseAi::Translation::VerboseLogger.log("Translated #{posts.size} posts to #{locale}")
       end
+    ensure
+      remaining = Discourse.redis.decr(REDIS_KEY)
+      Discourse.redis.del(REDIS_KEY) if remaining <= 0
     end
 
     private

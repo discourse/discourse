@@ -259,7 +259,7 @@ export default class Chat extends Service {
 
   getDocumentTitleCount() {
     if (this.currentUser?.user_option?.title_count_mode === "notifications") {
-      return this.chatTrackingStateManager.allChannelUrgentCount;
+      return this.chatTrackingStateManager.allChannelUrgentCount();
     } else {
       return this.chatPanePendingManager.totalPendingMessageCount;
     }

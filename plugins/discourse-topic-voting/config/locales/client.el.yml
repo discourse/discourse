@@ -10,6 +10,9 @@ el:
       sort_options:
         votes: "Ψήφοι"
     topic_voting:
+      notification_label:
+        vote_released: "Ψήφος επιστράφηκε"
+      title: "Ψηφοφορία Θέματος"
       reached_limit: "Έχετε χρησιμοποιήσει όλες τις ψήφους σας, αφαιρέστε μια υπάρχουσα ψήφο!"
       list_votes: "Λίστα των ψήφων σας"
       votes_nav_help: "θέματα με τις περισσότερες ψήφους"
@@ -20,6 +23,9 @@ el:
       voted_title: "Ψήφισα"
       voting_closed_title: "Κλειστή"
       voting_limit: "Όριο"
+      see_votes: "Έχετε %{count}/%{max} ψήφους ακόμα"
+      locked: "Κλειδωμένη"
+      locked_description: "Αυξήστε το επίπεδο εμπιστοσύνης σας για να ψηφίσετε"
       votes:
         one: "%{count} ψήφος"
         other: "%{count} ψήφοι"
