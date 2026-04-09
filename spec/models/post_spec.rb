@@ -1367,6 +1367,18 @@ RSpec.describe Post do
       expect(post.topic.excerpt).to eq("test")
     end
 
+    it "updates the category description when rebaking a category description topic" do
+      category = Fabricate(:category_with_definition)
+      first_post = category.topic.first_post
+      first_post.revise(first_post.user, { raw: "Original description" })
+      expect(category.reload.description).to include("Original description")
+
+      first_post.update_column(:raw, "Updated description")
+      first_post.rebake!
+
+      expect(category.reload.description).to include("Updated description")
+    end
+
     it "works with posts in deleted topics" do
       post = create_post
       post.topic.trash!
