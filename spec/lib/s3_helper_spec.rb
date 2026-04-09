@@ -448,4 +448,55 @@ RSpec.describe "S3Helper" do
       )
     end
   end
+
+  describe ".s3_credentials" do
+    it "returns AssumeRoleCredentials when s3_role_arn is configured" do
+      SiteSetting.s3_region = "us-east-1"
+      SiteSetting.s3_access_key_id = "some-key"
+      SiteSetting.s3_secret_access_key = "some-secret"
+      SiteSetting.s3_role_arn = "arn:aws:iam::123456789012:role/some-role"
+      SiteSetting.s3_role_session_name = "some-session"
+
+      creds = S3Helper.s3_credentials(SiteSetting, stub_responses: true)
+
+      expect(creds).to be_a(Aws::AssumeRoleCredentials)
+      expect(creds.assume_role_params[:role_arn]).to eq("arn:aws:iam::123456789012:role/some-role")
+      expect(creds.assume_role_params[:role_session_name]).to eq("some-session")
+      expect(creds.client.config.access_key_id).to eq("some-key")
+      expect(creds.client.config.secret_access_key).to eq("some-secret")
+    end
+
+    it "returns static Aws::Credentials when s3_role_arn is blank" do
+      SiteSetting.s3_region = "us-east-1"
+      SiteSetting.s3_access_key_id = "some-key"
+      SiteSetting.s3_secret_access_key = "some-secret"
+      SiteSetting.s3_role_arn = ""
+
+      creds = S3Helper.s3_credentials(SiteSetting)
+
+      expect(creds).to be_a(Aws::Credentials)
+      expect(creds.access_key_id).to eq("some-key")
+      expect(creds.secret_access_key).to eq("some-secret")
+    end
+
+    it "returns nil when s3_use_iam_profile is true" do
+      SiteSetting.s3_use_iam_profile = true
+      SiteSetting.s3_role_arn = "arn:aws:iam::123456789012:role/some-role"
+
+      expect(S3Helper.s3_credentials(SiteSetting)).to be_nil
+    end
+
+    it "falls back to Discourse.os_hostname when s3_role_session_name is blank" do
+      SiteSetting.s3_region = "us-east-1"
+      SiteSetting.s3_access_key_id = "some-key"
+      SiteSetting.s3_secret_access_key = "some-secret"
+      SiteSetting.s3_role_arn = "arn:aws:iam::123456789012:role/some-role"
+      SiteSetting.s3_role_session_name = ""
+      Discourse.stubs(:os_hostname).returns("some-host")
+
+      creds = S3Helper.s3_credentials(SiteSetting, stub_responses: true)
+
+      expect(creds.assume_role_params[:role_session_name]).to eq("some-host")
+    end
+  end
 end

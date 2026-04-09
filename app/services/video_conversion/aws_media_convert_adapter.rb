@@ -349,13 +349,8 @@ module VideoConversion
     def create_basic_client(endpoint: nil)
       client_options = { region: SiteSetting.s3_region }
       client_options[:endpoint] = endpoint if endpoint.present?
-
-      if !SiteSetting.s3_use_iam_profile
-        client_options[:credentials] = Aws::Credentials.new(
-          SiteSetting.s3_access_key_id,
-          SiteSetting.s3_secret_access_key,
-        )
-      end
+      creds = S3Helper.s3_credentials(SiteSetting)
+      client_options[:credentials] = creds if creds
 
       Aws::MediaConvert::Client.new(client_options)
     end
