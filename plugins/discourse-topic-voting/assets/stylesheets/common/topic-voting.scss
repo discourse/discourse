@@ -1,5 +1,6 @@
 @use "lib/viewport";
 
+// base styles
 .voting-wrapper {
   display: flex;
   flex-direction: column;
@@ -69,6 +70,7 @@
   text-align: center;
 }
 
+// grid layout for voting in topic title and topic list
 .main-link:has(.voting),
 #topic-title:has(.voting) {
   display: grid;
@@ -87,29 +89,27 @@
   }
 }
 
-// Topic title voting
+// topic title
 .title-voting {
-  margin-top: 0.25em;
+  width: 48px; // matches topic avatar width
 
   .voting-wrapper {
     min-width: 2.75em;
   }
-}
-
-// Header voting
-.header-title-voting {
-  margin-top: 0.05em;
-  margin-right: 0.65em;
 
   .vote-button {
-    width: 100%;
-    padding: var(--space-half) var(--space-1);
-    background: var(--header_background);
-
-    .d-icon {
-      height: 0.85em;
-    }
+    padding-block: var(--space-2);
   }
+
+  @include viewport.until(sm) {
+    margin-top: 0.15em;
+  }
+}
+
+// docked header
+.header-title-voting {
+  margin-top: 0.15em;
+  margin-right: 0.65em;
 
   @include viewport.until(sm) {
     margin-top: -0.15em;
@@ -118,9 +118,15 @@
       font-size: var(--font-down-3);
     }
   }
+
+  .vote-button {
+    width: 100%;
+    padding: 0.35em;
+    background: var(--header_background);
+  }
 }
 
-// Topic list voting
+// desktop topic list
 #main-outlet .list-voting {
   margin-bottom: 0;
 
@@ -131,24 +137,32 @@
 
   .vote-button {
     width: 100%;
-    padding: var(--space-half) var(--space-1);
+    padding: 0.25em var(--space-1);
 
     .d-icon {
       height: 0.9em;
     }
   }
 
+  .vote-count-wrapper {
+    padding-block: 0.1em;
+  }
+
   .vote-count {
     font-size: var(--font-down-1);
   }
+}
 
-  .fk-d-tooltip__trigger-container,
-  .fk-d-tooltip__trigger {
-    width: 100%;
+// mobile topic list
+.mobile-voting {
+  width: 48px; // matches mobile avatar width
+
+  .vote-button {
+    padding-block: 0.5em;
   }
 }
 
-// Voting menu
+// Voter popup
 .vote-count__voter-list {
   display: flex;
   flex-wrap: wrap;
@@ -175,17 +189,13 @@
   font-size: var(--font-down-1);
 }
 
-// Mobile topic list voting
-.mobile-voting {
-  width: 48px; // matches mobile avatar width
-
-  .vote-button {
-    padding-block: 0.4em;
-  }
-
-  .vote-count-wrapper {
-    padding-block: 0.4em;
-  }
+.vote-count-overflow-notice {
+  width: 100%;
+  padding: var(--space-2) var(--space-2) 0;
+  text-align: center;
+  color: var(--primary);
+  font-size: var(--font-down-1);
+  border-top: 1px solid var(--primary-low);
 }
 
 // Hide like buttons on voting posts
@@ -194,13 +204,4 @@
   button.toggle-like {
     display: none;
   }
-}
-
-.vote-count-overflow-notice {
-  width: 100%;
-  padding: var(--space-2) var(--space-2) 0;
-  text-align: center;
-  color: var(--primary);
-  font-size: var(--font-down-1);
-  border-top: 1px solid var(--primary-low);
 }
