@@ -16,11 +16,21 @@ export default class TopicFromParams extends DiscourseRoute {
   @service router;
 
   // Avoid default model hook
-  model(params) {
+  model(params, transition) {
     params = params || {};
     params.track_visit = true;
 
     const topic = this.modelFor("topic");
+
+    // Skip the full post-stream load when we know afterModel will redirect
+    // to the nested route. The nested route handles its own visit tracking.
+    const flatParam =
+      transition?.to?.queryParams?.flat ||
+      transition?.to?.parent?.queryParams?.flat;
+    if (topic.is_nested_view && !flatParam && !topic._forcedFlat) {
+      return params;
+    }
+
     const postStream = topic.postStream;
 
     // I sincerely hope no topic gets this many posts

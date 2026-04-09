@@ -8,6 +8,7 @@ class NestedTopic::Toggle
     attribute :enabled, :boolean
 
     validates :topic_id, presence: true
+    validates :enabled, inclusion: { in: [true, false] }
   end
 
   model :topic

@@ -4,6 +4,11 @@ RSpec.describe NestedTopic::ShowContext do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:target_post_number) }
     it { is_expected.to validate_presence_of(:sort) }
+    it { is_expected.to allow_value(nil).for(:context_depth) }
+    it { is_expected.to allow_value(0).for(:context_depth) }
+    it { is_expected.to allow_value(100).for(:context_depth) }
+    it { is_expected.not_to allow_value(101).for(:context_depth) }
+    it { is_expected.not_to allow_value(-1).for(:context_depth) }
   end
 
   describe ".call" do

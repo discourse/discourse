@@ -233,6 +233,7 @@ export default class NestedRoute extends Route {
       topic,
       opPost,
       sort,
+      pinnedPostIds: [],
       messageBusLastId: data.message_bus_last_id,
       postNumber: Number(params.post_number),
       contextMode: true,

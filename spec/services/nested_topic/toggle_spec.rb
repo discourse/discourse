@@ -3,6 +3,7 @@
 RSpec.describe NestedTopic::Toggle do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:topic_id) }
+    it { is_expected.to validate_inclusion_of(:enabled).in_array([true, false]) }
   end
 
   describe ".call" do
@@ -17,6 +18,12 @@ RSpec.describe NestedTopic::Toggle do
 
     context "when contract is invalid" do
       let(:params) { { topic_id: nil, enabled: true } }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when enabled is nil" do
+      let(:params) { { topic_id: topic.id, enabled: nil } }
 
       it { is_expected.to fail_a_contract }
     end

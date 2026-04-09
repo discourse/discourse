@@ -240,9 +240,15 @@ export default class Post extends RestModel {
     return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
-  @computed("post_number", "topic_id", "topic.slug", "topic.is_nested_view")
+  @computed(
+    "post_number",
+    "topic_id",
+    "topic.slug",
+    "topic.is_nested_view",
+    "topic._forcedFlat"
+  )
   get url() {
-    if (this.topic?.is_nested_view) {
+    if (this.topic?.is_nested_view && !this.topic?._forcedFlat) {
       const slug = this.topic.slug || "topic";
       const topicId = this.topic_id || this.topic.id;
       return getURL(`/n/${slug}/${topicId}/${this.post_number}`);

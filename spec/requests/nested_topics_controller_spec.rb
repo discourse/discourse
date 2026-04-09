@@ -1057,5 +1057,50 @@ RSpec.describe NestedTopicsController, type: :request do
       topic.reload
       expect(topic.reload.nested_topic).to be_nil
     end
+
+    it "returns 404 for private messages" do
+      pm = Fabricate(:private_message_topic, user: admin)
+      Fabricate(:post, topic: pm, user: admin, post_number: 1)
+
+      sign_in(admin)
+      put toggle_url(pm), params: { enabled: true }
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "visit tracking" do
+    fab!(:root_reply) { Fabricate(:post, topic: topic, user: user) }
+
+    it "tracks a visit on show" do
+      sign_in(user)
+      get show_url(topic)
+      expect(response.status).to eq(200)
+
+      Scheduler::Defer.do_all_work
+
+      expect(TopicUser.find_by(topic: topic, user: user).first_visited_at).to be_present
+      expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id)).to eq(true)
+    end
+
+    it "tracks a visit on context" do
+      sign_in(user)
+      get context_url(topic, root_reply.post_number)
+      expect(response.status).to eq(200)
+
+      Scheduler::Defer.do_all_work
+
+      expect(TopicUser.find_by(topic: topic, user: user).first_visited_at).to be_present
+      expect(TopicViewItem.exists?(topic_id: topic.id, user_id: user.id)).to eq(true)
+    end
+
+    it "does not track a user visit for anonymous users" do
+      topic_user_count = TopicUser.count
+
+      get show_url(topic)
+      expect(response.status).to eq(200)
+      Scheduler::Defer.do_all_work
+
+      expect(TopicUser.count).to eq(topic_user_count)
+    end
   end
 end

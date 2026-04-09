@@ -6,7 +6,8 @@ class NestedTopicsController < ApplicationController
   before_action :ensure_nested_replies_enabled
   before_action :find_topic_with_topic_view, only: %i[show children context]
   before_action :find_topic, only: %i[pin toggle]
-  before_action :ensure_not_pm, only: %i[show children context]
+  before_action :ensure_not_pm
+  after_action :track_visit, only: %i[show context]
 
   # GET /n/:slug/:topic_id (HTML + JSON)
   # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)
@@ -138,11 +139,15 @@ class NestedTopicsController < ApplicationController
   end
 
   def ensure_not_pm
-    if @topic.private_message?
+    return unless @topic.private_message?
+
+    if request.get?
       url = "/t/#{@topic.slug}/#{@topic.id}"
       post_number = params[:post_number].to_i
       url << "/#{post_number}" if post_number > 0
       redirect_to url, status: :found
+    else
+      raise Discourse::NotFound
     end
   end
 
@@ -159,6 +164,30 @@ class NestedTopicsController < ApplicationController
   def find_topic
     @topic = Topic.find_by(id: params[:topic_id].to_i)
     raise Discourse::NotFound if @topic.blank? || !guardian.can_see?(@topic)
+  end
+
+  def track_visit
+    return if response.redirect?
+
+    topic_id = @topic.id
+    user_id = current_user&.id
+    ip = request.remote_ip
+
+    if current_user
+      Scheduler::Defer.later("Track Visit") { TopicUser.track_visit!(topic_id, user_id) }
+    end
+
+    Scheduler::Defer.later("Topic View") do
+      topic = Topic.find_by(id: topic_id)
+      next if topic.blank? || topic.shared_draft?
+
+      if user_id
+        user = User.find_by(id: user_id)
+        next if user.blank? || !Guardian.new(user).can_see_topic?(topic)
+      end
+
+      TopicViewItem.add(topic_id, ip, user_id)
+    end
   end
 
   def validated_sort

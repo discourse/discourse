@@ -27,6 +27,7 @@ export default class NestedRepliesSettingsUpsert extends Component {
       <form.Section @title={{i18n "nested_replies.nested_view"}}>
         <form.Object @name="category_setting" as |categorySetting|>
           <categorySetting.Field
+            @type="checkbox"
             @name="nested_replies_default"
             @title={{i18n
               "nested_replies.category_settings.default_nested_view"
@@ -34,7 +35,7 @@ export default class NestedRepliesSettingsUpsert extends Component {
             @onSet={{this.onToggle}}
             as |field|
           >
-            <field.Checkbox checked={{this.enabled}} />
+            <field.Control />
           </categorySetting.Field>
         </form.Object>
       </form.Section>

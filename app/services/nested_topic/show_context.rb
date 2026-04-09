@@ -10,6 +10,12 @@ class NestedTopic::ShowContext
 
     validates :target_post_number, presence: true
     validates :sort, presence: true
+    validates :context_depth,
+              numericality: {
+                greater_than_or_equal_to: 0,
+                less_than_or_equal_to: 100,
+              },
+              allow_nil: true
   end
 
   model :loader, :build_loader

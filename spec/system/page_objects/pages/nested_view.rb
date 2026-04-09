@@ -373,6 +373,16 @@ module PageObjects
         self
       end
 
+      # ── Pinned post assertions ─────────────────────────────────
+
+      def has_pinned_post?(post)
+        has_css?(".nested-post--pinned [data-post-number='#{post.post_number}']")
+      end
+
+      def has_no_pinned_post?(post)
+        has_no_css?(".nested-post--pinned [data-post-number='#{post.post_number}']")
+      end
+
       # ── Load more ───────────────────────────────────────────────
 
       def has_load_more_roots_button?

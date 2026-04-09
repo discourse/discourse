@@ -5,7 +5,11 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const NestedSortSelector = <template>
-  <div class="nested-sort-selector">
+  <div
+    class="nested-sort-selector"
+    role="group"
+    aria-label={{i18n "nested_replies.sort.label"}}
+  >
     <span class="nested-sort-selector__label">{{i18n
         "nested_replies.sort.label"
       }}</span>
@@ -14,6 +18,7 @@ const NestedSortSelector = <template>
         "btn-flat nested-sort-selector__option"
         (if (eq @current "top") "nested-sort-selector__option--active")
       }}
+      aria-pressed={{if (eq @current "top") "true" "false"}}
       @action={{fn @onChange "top"}}
       @translatedLabel={{i18n "nested_replies.sort.top"}}
     />
@@ -22,6 +27,7 @@ const NestedSortSelector = <template>
         "btn-flat nested-sort-selector__option"
         (if (eq @current "new") "nested-sort-selector__option--active")
       }}
+      aria-pressed={{if (eq @current "new") "true" "false"}}
       @action={{fn @onChange "new"}}
       @translatedLabel={{i18n "nested_replies.sort.new"}}
     />
@@ -30,6 +36,7 @@ const NestedSortSelector = <template>
         "btn-flat nested-sort-selector__option"
         (if (eq @current "old") "nested-sort-selector__option--active")
       }}
+      aria-pressed={{if (eq @current "old") "true" "false"}}
       @action={{fn @onChange "old"}}
       @translatedLabel={{i18n "nested_replies.sort.old"}}
     />

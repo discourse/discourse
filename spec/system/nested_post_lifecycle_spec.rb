@@ -140,6 +140,30 @@ RSpec.describe "Nested view post lifecycle" do
     end
   end
 
+  describe "recovering a deleted post" do
+    fab!(:root_reply) do
+      Fabricate(:post, topic: topic, user: user, raw: "Post that was deleted and recovered")
+    end
+
+    before { sign_in(admin) }
+
+    it "clears the deleted placeholder after recovery" do
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_post(root_reply)
+
+      nested_view.click_post_delete_button(root_reply)
+      dialog.click_yes
+      expect(nested_view).to have_deleted_post_class_for(root_reply)
+
+      nested_view.click_post_recover_button(root_reply)
+      expect(nested_view).to have_no_deleted_placeholder_for(root_reply)
+      expect(page).to have_css(
+        "[data-post-number='#{root_reply.post_number}']",
+        text: "Post that was deleted and recovered",
+      )
+    end
+  end
+
   describe "editing a child post" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Root post") }
 

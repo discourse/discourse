@@ -107,6 +107,12 @@ RSpec.describe NestedTopic::ListRoots do
         response = result[:response]
         expect(response).not_to have_key(:pinned_post_ids)
       end
+
+      it "excludes pinned posts from paginated results" do
+        response = result[:response]
+        root_ids = response[:roots].map { |r| r[:id] }
+        expect(root_ids).not_to include(root_post.id)
+      end
     end
   end
 end

@@ -465,6 +465,7 @@ export default class NestedController extends Controller {
       );
       if (existing) {
         existing.setProperties(postData);
+        existing.set("deleted_post_placeholder", false);
       }
     } catch {
       // Post may not be visible

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { cancel, next } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
@@ -25,7 +25,7 @@ export default class NestedContextView extends Component {
   @tracked cloakBelow = 0;
   viewportTracker = new PostStreamViewportTracker();
   _scrollAttempts = 0;
-  _maxScrollAttempts = 20; // ~1 second at 50ms intervals
+  _maxScrollAttempts = 20;
 
   constructor() {
     super(...arguments);
@@ -38,10 +38,8 @@ export default class NestedContextView extends Component {
     super.willDestroy(...arguments);
     this._destroyed = true;
     cancel(this._nextTimer);
+    cancel(this._retryTimer);
     clearTimeout(this._highlightTimer);
-    if (this._rafId) {
-      cancelAnimationFrame(this._rafId);
-    }
     this.viewportTracker.destroy();
   }
 
@@ -75,9 +73,9 @@ export default class NestedContextView extends Component {
       target.scrollIntoView({ behavior: "smooth", block: "center" });
     } else if (this._scrollAttempts < this._maxScrollAttempts) {
       // Element may not be in the DOM yet (async child rendering).
-      // Retry on the next animation frame.
+      // Retry after the next render cycle.
       this._scrollAttempts++;
-      this._rafId = requestAnimationFrame(() => this._scrollToTarget());
+      this._retryTimer = schedule("afterRender", this, this._scrollToTarget);
     }
   }
 

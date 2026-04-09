@@ -179,6 +179,24 @@ RSpec.describe "Nested context view" do
     end
   end
 
+  describe "pinned posts are not carried into context view" do
+    fab!(:root_reply) { Fabricate(:post, topic: topic, user: user, raw: "A pinned root reply") }
+
+    before do
+      nested_topic = NestedTopic.find_or_create_by!(topic: topic)
+      nested_topic.toggle_pin(root_reply.id)
+    end
+
+    it "does not show pinned badge in context view" do
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_pinned_post(root_reply)
+
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_context_view
+      expect(nested_view).to have_no_pinned_post(root_reply)
+    end
+  end
+
   describe "replying in context view" do
     it "stays in nested view after replying" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[1].post_number)

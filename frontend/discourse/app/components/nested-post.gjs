@@ -247,7 +247,7 @@ export default class NestedPost extends Component {
         url: getAbsoluteURL(this.nestedShareUrl),
       });
     } catch {
-      const topic = post.topic;
+      const topic = this.args.topic;
       this.modal.show(ShareTopicModal, {
         model: { category: topic.category, topic, post },
       });
