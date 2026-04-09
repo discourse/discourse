@@ -13,6 +13,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
           node_context: {
           },
           resolver: resolver,
+          configuration: config,
+          configuration_schema: described_class.configuration_schema,
         ),
       )
     [result[0], instance.log]
@@ -56,6 +58,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
             node_context: {
             },
             resolver: resolver,
+            configuration: config,
+            configuration_schema: described_class.configuration_schema,
           ),
         )[
           0

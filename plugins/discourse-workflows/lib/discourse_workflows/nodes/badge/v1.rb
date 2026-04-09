@@ -67,11 +67,9 @@ module DiscourseWorkflows
           run_as_user = exec_ctx.run_as_user
           items =
             exec_ctx.input_items.map do |item|
-              exec_ctx.with_item(item) do
-                config = exec_ctx.resolve_config(@configuration)
-                result = process(run_as_user, config)
-                Item.new(result).to_h
-              end
+              config = exec_ctx.get_parameters(item)
+              result = process(run_as_user, config)
+              Item.new(result).to_h
             end
           ItemContract.validate_items!(items, source: self.class.identifier)
           [items]

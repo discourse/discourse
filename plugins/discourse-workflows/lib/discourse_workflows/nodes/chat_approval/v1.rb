@@ -64,7 +64,7 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           item = exec_ctx.input_items.first || { "json" => {} }
-          config = exec_ctx.with_item(item) { exec_ctx.resolve_config(@configuration) }
+          config = exec_ctx.get_parameters(item)
 
           raise WaitForChatApproval.new(
                   message_text: config.fetch("message"),

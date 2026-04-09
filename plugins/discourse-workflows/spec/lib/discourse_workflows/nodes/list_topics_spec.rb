@@ -27,7 +27,12 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
     action = described_class.new(configuration: configuration)
     items = [{ "json" => {} }]
     resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
-    kwargs = { input_items: items, resolver: resolver }
+    kwargs = {
+      input_items: items,
+      resolver: resolver,
+      configuration: configuration,
+      configuration_schema: described_class.configuration_schema,
+    }
     kwargs[:run_as_user] = run_as_user if run_as_user
     action.execute(DiscourseWorkflows::NodeExecutionContext.new(**kwargs))[0]
   end

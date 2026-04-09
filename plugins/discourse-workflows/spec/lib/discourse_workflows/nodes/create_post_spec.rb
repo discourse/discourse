@@ -23,6 +23,8 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
         input_items: input_items,
         run_as_user: run_as_user,
         resolver: resolver,
+        configuration: configuration,
+        configuration_schema: described_class.configuration_schema,
       )
     items = action.execute(exec_ctx)[0]
     items.first["json"]
@@ -139,15 +141,14 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
     end
 
     it "resolves expressions for each input item" do
+      config = {
+        "topic_id" => "={{ trigger.topic_id }}",
+        "raw" => "=Hello {{ $json.name }}",
+        "reply_to_post_number" => "={{ trigger.reply_to_post_number }}",
+        "user_id" => "={{ trigger.user_id }}",
+      }
       result =
-        described_class.new(
-          configuration: {
-            "topic_id" => "={{ trigger.topic_id }}",
-            "raw" => "=Hello {{ $json.name }}",
-            "reply_to_post_number" => "={{ trigger.reply_to_post_number }}",
-            "user_id" => "={{ trigger.user_id }}",
-          },
-        ).execute(
+        described_class.new(configuration: config).execute(
           DiscourseWorkflows::NodeExecutionContext.new(
             input_items: [{ "json" => { "name" => "Ada" } }],
             node_context: {
@@ -165,6 +166,8 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
                   },
                 },
               ),
+            configuration: config,
+            configuration_schema: described_class.configuration_schema,
           ),
         )[
           0

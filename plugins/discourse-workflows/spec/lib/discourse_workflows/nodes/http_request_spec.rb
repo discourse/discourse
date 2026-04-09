@@ -14,7 +14,12 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
     input_items = [item]
     resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => item.fetch("json") { {} } })
     exec_ctx =
-      DiscourseWorkflows::NodeExecutionContext.new(input_items: input_items, resolver: resolver)
+      DiscourseWorkflows::NodeExecutionContext.new(
+        input_items: input_items,
+        resolver: resolver,
+        configuration: configuration,
+        configuration_schema: described_class.configuration_schema,
+      )
     items = action.execute(exec_ctx)[0]
     items.first["json"]
   end
@@ -179,7 +184,12 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       action = described_class.new(configuration: config)
       resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
       exec_ctx =
-        DiscourseWorkflows::NodeExecutionContext.new(input_items: [item], resolver: resolver)
+        DiscourseWorkflows::NodeExecutionContext.new(
+          input_items: [item],
+          resolver: resolver,
+          configuration: config,
+          configuration_schema: described_class.configuration_schema,
+        )
       action.execute(exec_ctx)
 
       messages = action.log.entries.map { |e| e["message"] }

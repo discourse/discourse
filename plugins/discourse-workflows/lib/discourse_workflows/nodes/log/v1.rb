@@ -50,7 +50,7 @@ module DiscourseWorkflows
           return [exec_ctx.input_items] if raw_entries.empty?
 
           item = exec_ctx.input_items.first || { "json" => {} }
-          config = exec_ctx.with_item(item) { exec_ctx.resolve_config(@configuration) }
+          config = exec_ctx.get_parameters(item)
           resolved_entries = config.fetch("entries") { [] }
           resolved_entries.each { |entry| @log.kv(entry["key"].to_s, entry["value"].to_s) }
 

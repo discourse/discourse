@@ -42,6 +42,8 @@ module DiscourseWorkflows
           exec_ctx =
             NodeExecutionContext.new(
               input_items: input_items,
+              configuration: node.configuration,
+              configuration_schema: node_type_class.configuration_schema,
               node_context: @state.node_context_for(node),
               user: @user,
               run_as_user: @run_as_user_proc.call,

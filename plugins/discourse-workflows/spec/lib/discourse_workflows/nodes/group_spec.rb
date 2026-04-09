@@ -37,6 +37,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         input_items: input_items,
         run_as_user: run_as_user,
         resolver: resolver,
+        configuration: configuration,
+        configuration_schema: described_class.configuration_schema,
       )
     items = action.execute(exec_ctx)[0]
     items.first["json"]

@@ -16,17 +16,15 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
 
   describe "#execute" do
     it "raises WaitForResume with channel config" do
-      instance =
-        described_class.new(
-          configuration: {
-            "message" => "Please approve this",
-            "approve_label" => "Yes",
-            "deny_label" => "No",
-            "channel_id" => channel.id.to_s,
-            "timeout_minutes" => "30",
-            "timeout_action" => "fail",
-          },
-        )
+      config = {
+        "message" => "Please approve this",
+        "approve_label" => "Yes",
+        "deny_label" => "No",
+        "channel_id" => channel.id.to_s,
+        "timeout_minutes" => "30",
+        "timeout_action" => "fail",
+      }
+      instance = described_class.new(configuration: config)
 
       expect {
         instance.execute(
@@ -35,6 +33,8 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
             node_context: {
             },
             resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
+            configuration: config,
+            configuration_schema: described_class.configuration_schema,
           ),
         )
       }.to raise_error(DiscourseWorkflows::WaitForChatApproval) do |error|

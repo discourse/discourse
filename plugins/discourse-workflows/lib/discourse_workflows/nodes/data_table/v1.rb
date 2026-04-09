@@ -145,7 +145,7 @@ module DiscourseWorkflows
         def execute(exec_ctx)
           @run_as_user = exec_ctx.run_as_user
           item = exec_ctx.input_items.first || { "json" => {} }
-          config = exec_ctx.with_item(item) { exec_ctx.resolve_config(@configuration) }
+          config = exec_ctx.get_parameters(item)
 
           result = execute_with_config(config)
           [result]

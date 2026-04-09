@@ -50,9 +50,7 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          exec_ctx.input_items.partition do |item|
-            exec_ctx.with_item(item) { exec_ctx.evaluate_filter(@configuration) }
-          end
+          exec_ctx.input_items.partition { |item| exec_ctx.get_parameter(:conditions, item) }
         end
       end
     end
