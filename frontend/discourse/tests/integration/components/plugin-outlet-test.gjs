@@ -1755,6 +1755,60 @@ module(
       assert.dom(".targeted").doesNotExist();
     });
 
+    test("position-targeted alias with connectorTagName preserves wrapper element", async function (assert) {
+      registerTemporaryModule(
+        `${TEMPLATE_PREFIX}/old-tagged-outlet/my-connector`,
+        hbs`<span class="legacy-content">Legacy connector</span>`
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-wrapper-with-tag"
+            @aliases={{array
+              (hash
+                name="old-tagged-outlet"
+                position="after"
+                connectorTagName="span"
+              )
+            }}
+          >
+            <span class="wrapped">Wrapped</span>
+          </PluginOutlet>
+        </template>
+      );
+
+      assert.dom(".wrapped").hasText("Wrapped");
+      assert.dom(".legacy-content").hasText("Legacy connector");
+      const wrapper = find(".legacy-content").parentElement;
+      assert.strictEqual(
+        wrapper.tagName,
+        "SPAN",
+        "legacy connector is wrapped in a <span> from connectorTagName"
+      );
+    });
+
+    test("position-targeted alias without connectorTagName renders tagless", async function (assert) {
+      registerTemporaryModule(
+        `${TEMPLATE_PREFIX}/old-tagless-outlet/my-connector`,
+        hbs`<span class="tagless-content">Tagless connector</span>`
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="new-wrapper-tagless"
+            @aliases={{array (hash name="old-tagless-outlet" position="after")}}
+          >
+            <span class="wrapped">Wrapped</span>
+          </PluginOutlet>
+        </template>
+      );
+
+      assert.dom(".wrapped").hasText("Wrapped");
+      assert.dom(".tagless-content").hasText("Tagless connector");
+    });
+
     test("position-targeted alias with deprecation emits warning", async function (assert) {
       extraConnectorComponent(
         "old-below-outlet",

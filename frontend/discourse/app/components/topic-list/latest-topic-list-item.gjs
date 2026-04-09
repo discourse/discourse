@@ -91,6 +91,7 @@ export default class LatestTopicListItem extends Component {
               (hash
                 name="below-latest-topic-list-item-bottom-row"
                 position="after"
+                connectorTagName="span"
                 deprecated=true
                 since="2026.3.0"
               )
@@ -110,6 +111,7 @@ export default class LatestTopicListItem extends Component {
             (hash
               name="above-latest-topic-list-item-post-count"
               position="before"
+              connectorTagName="div"
               deprecated=true
               since="2026.3.0"
             )

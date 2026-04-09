@@ -161,16 +161,17 @@ export function normalizeAlias(alias) {
  *
  * When an alias entry is an object, it supports the following properties:
  *
- * | Property     | Type    | Required | Description |
- * |-------------|---------|----------|-------------|
- * | `name`       | string  | yes      | The alias outlet name |
- * | `deprecated` | boolean | no       | Marks this alias as deprecated |
- * | `position`   | string  | no       | Routes alias to a wrapper sub-outlet: `"before"` or `"after"` |
- * | `since`      | string  | no       | Discourse version when deprecation was introduced |
- * | `message`    | string  | no       | Custom deprecation message |
- * | `id`         | string  | no       | Deprecation ID for silencing (auto-generated if omitted) |
- * | `url`        | string  | no       | URL with more detail about the deprecation |
- * | `raiseError` | boolean | no       | Whether to throw instead of warn |
+ * | Property             | Type    | Required | Description |
+ * |----------------------|---------|----------|-------------|
+ * | `name`               | string  | yes      | The alias outlet name |
+ * | `deprecated`         | boolean | no       | Marks this alias as deprecated |
+ * | `position`           | string  | no       | Routes alias to a wrapper sub-outlet: `"before"` or `"after"` |
+ * | `since`              | string  | no       | Discourse version when deprecation was introduced |
+ * | `message`            | string  | no       | Custom deprecation message |
+ * | `id`                 | string  | no       | Deprecation ID for silencing (auto-generated if omitted) |
+ * | `url`                | string  | no       | URL with more detail about the deprecation |
+ * | `raiseError`         | boolean | no       | Whether to throw instead of warn |
+ * | `connectorTagName`   | string  | no       | HTML tag for legacy file-based connector wrapper (e.g. `"div"`, `"span"`). Only relevant for position-targeted aliases merging standalone outlets that had `@connectorTagName`. |
  *
  * Note: `since`, `message`, `id`, `url`, and `raiseError` are only valid when
  * `deprecated` is `true`. A DEBUG-only assertion will fire if they are set without it.
@@ -178,7 +179,7 @@ export function normalizeAlias(alias) {
  * ## Deprecated hash properties (for `@deprecated` arg)
  *
  * | Property     | Type    | Description |
- * |-------------|---------|-------------|
+ * |--------------|---------|-------------|
  * | `since`      | string  | Version when the outlet was deprecated |
  * | `message`    | string  | Custom deprecation message |
  * | `id`         | string  | Deprecation ID (auto-generated: `discourse.plugin-outlet.deprecated.<name>`) |
@@ -344,6 +345,40 @@ export default class PluginOutlet extends Component {
       }
     }
     return result;
+  }
+
+  /**
+   * The connector tag name inherited from a position-targeted alias routed
+   * to the `__before` sub-outlet. Preserves the old standalone outlet's
+   * `@connectorTagName` for legacy file-based connectors.
+   *
+   * @returns {string|undefined}
+   */
+  @cached
+  get connectorTagNameForBefore() {
+    for (const alias of this.normalizedAliases) {
+      if (alias.position === "before" && alias.connectorTagName) {
+        return alias.connectorTagName;
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * The connector tag name inherited from a position-targeted alias routed
+   * to the `__after` sub-outlet. Preserves the old standalone outlet's
+   * `@connectorTagName` for legacy file-based connectors.
+   *
+   * @returns {string|undefined}
+   */
+  @cached
+  get connectorTagNameForAfter() {
+    for (const alias of this.normalizedAliases) {
+      if (alias.position === "after" && alias.connectorTagName) {
+        return alias.connectorTagName;
+      }
+    }
+    return undefined;
   }
 
   @bind
@@ -515,6 +550,7 @@ export default class PluginOutlet extends Component {
         <PluginOutlet
           @name={{concat @name "__before"}}
           @aliases={{this.aliasesForBefore}}
+          @connectorTagName={{this.connectorTagNameForBefore}}
           @outletArgs={{this.outletArgsWithDeprecations}}
         />
       {{~/if~}}
@@ -554,6 +590,7 @@ export default class PluginOutlet extends Component {
         <PluginOutlet
           @name={{concat @name "__after"}}
           @aliases={{this.aliasesForAfter}}
+          @connectorTagName={{this.connectorTagNameForAfter}}
           @outletArgs={{this.outletArgsWithDeprecations}}
         />
       {{~/if~}}
