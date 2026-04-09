@@ -2,6 +2,11 @@ name: Tests
 
 on:
   pull_request:
+    paths-ignore:
+      - ".github/workflows/migration-tests.yml"
+      - ".github/dependabot.yml"
+      - ".github/labeler.yml"
+      - "migrations/**"
   push:
     branches:
       - main
@@ -9,11 +14,16 @@ on:
       - stable
       - release/*
 
+concurrency:
+  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   build:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: plugins frontend
     runs-on: ubuntu-latest
     container: discourse/discourse_test:release
@@ -27,14 +37,26 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      LOAD_PLUGINS: 1
+      USES_PARALLEL_DATABASES: false
+      CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
+      MINIO_RUNNER_LOG_LEVEL: DEBUG
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: false
       CHEAP_SOURCE_MAPS: "1"
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
+      TESTEM_BROWSER: Chrome
+      TESTEM_FIREFOX_PATH: false
       EMBER_ENV: development
+      LOAD_PLUGINS: 1
+      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
 
     steps:
       - name: Set working directory owner
         run: chown root:root .
+
+      - name: Set QUNIT_PARALLEL for QUnit tests
+        run: |
+          echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
 
       - uses: actions/checkout@v6
         with:
@@ -55,7 +77,8 @@ jobs:
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Symlink vendor/bundle from image
-        run: ln -s /var/www/discourse/vendor/bundle vendor/bundle
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |
@@ -71,12 +94,13 @@ jobs:
       - name: Checkout official plugins
         run: bin/rake plugin:install_all_official
 
-      - name: Symlink plugin gems from image
+      - name: Symlinking plugin gems from image
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")
             plugin_dir="plugins/$plugin_name"
             gem_dir="$plugin_dir/gems"
+
             if [ ! -d "$plugin_dir" ]; then
               echo "Skipping $plugin_name: Plugin directory does not exist"
             elif [ -d "$gem_dir" ]; then
@@ -87,16 +111,55 @@ jobs:
             fi
           done
 
-      - name: Set QUNIT_PARALLEL
-        run: echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
+      - name: Get CPU cores
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
+      - name: Fetch app state cache
+        uses: actions/cache@v5
+        id: app-cache
+        with:
+          path: tmp/app-cache
+          key: >-
+            ${{ runner.os }}-
+            ${{ steps.cpu-info.outputs.cpu-cores }}-
+            ${{ hashFiles('.github/workflows/tests.yml') }}-
+            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ hashFiles('config/environments/test.rb') }}-
+            ${{ env.LOAD_PLUGINS }}-
+            ${{ env.USES_PARALLEL_DATABASES }}-
+            ${{ env.PARALLEL_TEST_PROCESSORS }}-
+            plugins-
+
+      - name: Restore database from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+
+      - name: Restore uploads from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
 
       - name: Create and migrate database
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
 
+      - name: Dump database for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+
+      - name: Dump uploads for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
+
       - name: Ember Build
         run: script/assemble_ember_build.rb
 
       - name: Plugins QUnit
         run: bin/rake 'plugin:qunit[*]'
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ember-exam-execution-plugins-Chrome-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
+          path: ./frontend/discourse/test-execution-*.json
