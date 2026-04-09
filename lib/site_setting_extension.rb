@@ -166,7 +166,7 @@ module SiteSettingExtension
   end
 
   # Has a pointer from a site setting name to the upcoming change name
-  # and overriden default value. Looks like this in site_settings.yml:
+  # and overridden default value. Looks like this in site_settings.yml:
   #
   # setting_name:
   #   upcoming_change_default_override:
