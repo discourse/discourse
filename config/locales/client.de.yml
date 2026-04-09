@@ -564,8 +564,10 @@ de:
           other: "Vor %{count} Jahren erstellt"
     bookmarked:
       title: "Lesezeichen setzen"
-      edit_bookmark: "Lesezeichen bearbeiten"
-      clear_bookmarks: "Lesezeichen entfernen"
+      edit_bookmark:
+        one: "Lesezeichen bearbeiten"
+        other: "Lesezeichen bearbeiten"
+      delete_bookmarks: "Alle Lesezeichen löschen"
       help:
         bookmark: "Klicke, um dieses Thema mit einem Lesezeichen zu markieren"
         edit_bookmark: "Klicke, um das Lesezeichen für einen Beitrag in diesem Thema zu bearbeiten"
@@ -584,6 +586,10 @@ de:
       clear_reminder: "Erinnerung löschen"
       edit: "Lesezeichen bearbeiten"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
+      topic_bookmark: "Thema"
+      bookmark_topic: "Thema mit Lesezeichen versehen"
+      edit_topic_bookmark: "Lesezeichen am Thema bearbeiten"
+      delete_topic_bookmark: "Lesezeichen am Thema löschen"
       remove_reminder_keep_bookmark: "Erinnerung entfernen und Lesezeichen behalten"
       created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert. %{name}"
       created_with_reminder_generic: "Du wirst am %{date} an dieses Lesezeichen erinnert. %{name}"
@@ -1141,6 +1147,7 @@ de:
       add_members:
         title: "Benutzer zu %{group_name} hinzufügen"
         description: "Gib eine Liste von Benutzern ein, die du in die Gruppe einladen möchtest, oder füge eine kommagetrennte Liste ein:"
+        description_usernames_only: "Gib eine Liste von Benutzernamen ein, die du zu der Gruppe hinzufügen möchtest, oder füge eine kommagetrennte Liste ein:"
         usernames_placeholder: "Benutzernamen"
         usernames_or_emails_placeholder: "Benutzernamen oder E-Mail-Adressen"
         notify_users: "Benutzer benachrichtigen"
@@ -1612,6 +1619,7 @@ de:
       enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
       enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       enable_markdown_monospace_font: "Monospace-Schriftart im Markdown-Modus des Editors verwenden"
+      show_original_content: "Zeige den Originalinhalt anstelle der übersetzten Inhalte. Die Einstellung kann auch innerhalb von Themen verändert werden."
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
@@ -1813,6 +1821,7 @@ de:
         upcoming_changes: "Bevorstehende Änderungen"
         calendar_subscriptions: "Kalender"
       calendar_subscriptions:
+        description: "Generiere Abonnement-URLs für die Synchronisierung mit deiner bevorzugten Kalender-App (Google Calendar, Apple Calendar, Outlook, etc.). Bei diesen URLs handelt es sich um private Links zu Kalenderereignissen für dein Konto (Lesezeichen-Erinnerungen, Kalenderereignisse, etc.). Du kannst die generierten Abonnement-URLs jederzeit widerrufen oder erneuern."
         generate: "Abonnement-URLs generieren"
         regenerate: "URLs neu generieren"
         regenerate_confirm: "Dadurch werden deine bestehenden Kalender-Abonnement-URLs ungültig. Alle Kalender-Apps, die die alten URLs verwenden, werden keine Updates mehr erhalten. Fortfahren?"
@@ -2811,6 +2820,10 @@ de:
         filter_for_more: Filtern nach mehr …
         categories_admin_dropdown:
           title: "Kategorien verwalten"
+        tag_category_admin_dropdown:
+          title: "Kategorie- und Schlagworteinstellungen"
+          edit_category: "Kategorie bearbeiten"
+          edit_tag: "Schlagwort bearbeiten"
         bulk_select_topics_dropdown:
           title: "Massenoperationen"
         bulk_select_bookmarks_dropdown:
@@ -2841,6 +2854,10 @@ de:
       medium_dark_tone: Mittel-dunkle Hautfarbe
       dark_tone: Dunkle Hautfarbe
       default: Benutzerdefinierte Emojis
+    filter_input:
+      clear: "Filter löschen"
+    d_icon_grid_picker:
+      select_icon: "Symbol auswählen"
     shared_drafts:
       title: "Gemeinsame Entwürfe"
       notice: "Dieses Thema ist nur für diejenigen sichtbar, die gemeinsame Entwürfe veröffentlichen können."
@@ -3503,6 +3520,12 @@ de:
         confirm_archive_topics:
           one: "%{count} Thema archivieren"
           other: "%{count} Themen archivieren"
+        confirm_unlist_topics:
+          one: "%{count} Thema aus der Liste entfernen"
+          other: "%{count} Themen aus der Liste entfernen"
+        confirm_relist_topics:
+          one: "%{count} Thema erneut auflisten"
+          other: "%{count} Themen erneut auflisten"
         confirm_archive_messages:
           one: "%{count} Nachricht archivieren"
           other: "%{count} Nachrichten archivieren"
@@ -3553,6 +3576,8 @@ de:
         name: "Verwerfen"
       close_topics:
         name: "Schließen"
+        description: "Geschlossene Themen verhindern neue Antworten. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Mehr erfahren</a>"
+        note: "Füge eine Nachricht zu diesen Themen hinzu"
         optional: (optional)
       archive_topics:
         name: "Archivieren"
@@ -3562,14 +3587,18 @@ de:
         name: "In Posteingang verschieben"
       unlist_topics:
         name: "Unsichtbar machen"
+        description: "Nicht gelistete Themen sind in der Themenliste nicht sichtbar aber der Zugriff ist immer noch über einem direkten Link möglich. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Mehr erfahren</a>"
       relist_topics:
         name: "Wieder sichtbar machen"
       remove_tags:
         name: "Schlagwörter entfernen"
+        description: "Entferne alle Schlagwörter von den ausgewählten Themen."
       append_tags:
         name: "Schlagwörter hinzufügen"
+        description: "Füge die folgenden Schlagwörter zu den ausgewählten Themen hinzu:"
       replace_tags:
         name: "Schlagwörter ersetzen"
+        description: "Ersetze alle vorhandenen Schlagwörter der ausgewählten Themen durch die folgenden:"
       delete_topics:
         name: "Löschen"
         description: "Lösche die ausgewählten Themen endgültig. Diese Aktion kann nicht rückgängig gemacht werden."
@@ -3578,10 +3607,12 @@ de:
         description: "Verschiebe alle ausgewählten Themen in die folgende Kategorie:"
       reset_bump_dates:
         name: "„Nach oben verschieben“-Daten zurücksetzen"
+        description: "Möchtest du das „Nach oben verschieben“-Datum auf das vom zuletzt erstellten Beitrag setzen? Das kann die Reihenfolge in der Themenliste beeinflussen."
       defer:
         name: "Als ungelesen markieren"
       update_notifications:
         name: "Benachrichtigungsstufe aktualisieren"
+        description: "Ändere deine persönliche Benachrichtigungsstufe für die ausgewählten Themen auf:"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -3757,6 +3788,9 @@ de:
       auto_close_immediate:
         one: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunde alt. Das Thema wird daher sofort geschlossen."
         other: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunden alt. Das Thema wird daher sofort geschlossen."
+      auto_delete_immediate:
+        one: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunde alt. Das Thema wird daher sofort gelöscht."
+        other: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunden alt. Das Thema wird daher sofort gelöscht."
       timeline:
         back: "Zurück"
         back_description: "Gehe zurück zum letzten ungelesenen Beitrag"
@@ -4345,6 +4379,7 @@ de:
         instructions: "Link zu diesem Beitrag teilen:"
       original_language: "Dieser Beitrag wurde ursprünglich auf %{language} geschrieben"
       original_language_and_outdated: "Dieser Beitrag wurde ursprünglich auf %{language} geschrieben. Die Übersetzung ist möglicherweise veraltet"
+      ai_translation_disclaimer: "KI-generierte Übersetzungen können ungenau sein."
     category:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
@@ -4359,6 +4394,8 @@ de:
       advanced: "Erweitert "
       show_advanced: "Erweiterte Einstellungen"
       topic_template: "Vorlage"
+      topic_title_placeholder: "Platzhaltertitel dieser Kategorie"
+      topic_title_placeholder_placeholder: "[optional] benutzerdefinierter Platzhalter für Thementitel in dieser Kategorie"
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
       localization:
@@ -4496,6 +4533,10 @@ de:
       review_group_name: "Gruppenname"
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
+      posting_review_modes:
+        no_one: "Keinen"
+        everyone: "Jeden"
+      posting_review_groups_placeholder: "Gruppen auswählen …"
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
       default_position: "Standardposition"
@@ -5683,6 +5724,9 @@ de:
           permanent: "Dauerhaft"
         status_descriptions:
           experimental: "Diese Funktion befindet sich in einer frühen Entwicklungsphase und kann noch erheblich verändert oder eingestellt werden. Möglicherweise ist sie nicht vollständig mit anderen Funktionen kompatibel."
+          alpha: "Dies wird aktiv weiterentwickelt und verfeinert. Die Funktionalität kann sich ändern und es ist vielleicht nicht vollständig ausgereift, aber es ist stabil genug, um es auszuprobieren."
+          beta: "Dies steht kurz vor der Fertigstellung und ist für eine frühzeitige Einführung verfügbar. Kleinere Änderungen sind noch möglich."
+          stable: "Dies ist vollständig und wird gut unterstützt. Es wird bald auf allen Discourse-Websites verfügbar sein."
         impact_roles:
           admins: "Administratoren"
           moderators: "Moderatoren"
@@ -7163,6 +7207,10 @@ de:
           update_success: "Update von %{theme} abgeschlossen"
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
+          change_source:
+            button: "Quelle ändern"
+            title: "Theme-Quelle ändern"
+            repository_url: "Repository-URL"
           add: "Hinzufügen"
           theme_settings: "Theme-eigene Einstellungen"
           theme_site_settings: "Einstellungen, die das Theme überschreiben kann"
@@ -7606,6 +7654,7 @@ de:
             upcoming_change_available: "bevorstehende Änderung verfügbar"
             change_site_setting_groups: "Website-Einstellungen für Gruppen geändert"
             discourse_id_regenerate_credentials: "Discourse-ID-Anmeldedaten neu generieren"
+            configure_category_type: "Kategorietyp konfigurieren"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."

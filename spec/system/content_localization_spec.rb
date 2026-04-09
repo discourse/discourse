@@ -65,6 +65,7 @@ describe "Content Localization" do
       SiteSetting.content_localization_allowed_groups =
         "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
       SiteSetting.content_localization_supported_locales = "en|ja"
+      japanese_user.user_option.update!(show_original_content: false)
     end
 
     it "shows the user's language based on their user locale" do
@@ -97,6 +98,42 @@ describe "Content Localization" do
       end
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
+    end
+
+    it "persists 'Show Original' preference for logged-in users across page loads" do
+      sign_in(japanese_user)
+
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
+
+      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+      # preference persists after full page reload
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+
+      expect(japanese_user.reload.user_option.show_original_content).to eq(true)
+    end
+
+    it "persists 'Show Original' preference from user preferences interface" do
+      sign_in(japanese_user)
+
+      visit("/u/#{japanese_user.username}/preferences/interface")
+      page.find(".pref-show-original-content input[type='checkbox']").click
+      page.find(".save-changes").click
+
+      I18n.with_locale(:ja) { expect(page).to have_content(I18n.t("js.saved")) }
+
+      expect(japanese_user.reload.user_option.show_original_content).to eq(true)
+
+      # preference persists after page reload
+      visit("/u/#{japanese_user.username}/preferences/interface")
+      expect(page).to have_css(".pref-show-original-content input[type='checkbox']:checked")
+
+      # and reflects on topic view
+      visit("/t/#{topic.id}")
+      expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
     end
 
     it "allows users to set their post's locale when posting" do

@@ -286,18 +286,16 @@ lv:
           today: "šodien"
     bookmarked:
       title: "Grāmatzīmes"
-      edit_bookmark: "Rediģēt grāmatzīmi"
-      clear_bookmarks: "Noņemt grāmatzīmi"
       help:
         unbookmark: "Uzklikšķiniet, lai noņemtu visas grāmatzīmes šai temā"
         unbookmark_with_reminder: "Noklikšķiniet, lai šajā tēmā noņemtu visas grāmatzīmes un atgādinājumus"
     bookmarks:
       created: "Jūs esat atzīmējis šo ziņu ar grāmatzīmi. %{name}"
       not_bookmarked: "atzīmējiet šo ziņu ar grāmatzīmi"
+      topic_bookmark: "Tēmas"
       created_with_reminder: "Jūs atzīmējāt šo ziņu ar grāmatzīmi, atgādinot %{date}. %{name}"
       delete: "Dzēst grāmatzīmi"
       confirm_delete: "Vai tiešām vēlaties dzēst šo grāmatzīmi? Atgādinājums arī tiks dzēsts."
-      confirm_clear: "Vai tiešām vēlaties notīrīt visas grāmatzīmes no šīs tēmas?"
       save: "Saglabāt"
       no_timezone: 'Jūs vēl neesat iestatījis laika joslu. Jūs nevarēsit iestatīt atgādinājumus. Uzstādīt vadībā <a href="%{basePath}/my/preferences/profile">savā profilā</a>.'
       invalid_custom_datetime: "Norādītais datums un laiks nav derīgi. Lūdzu, mēģiniet vēlreiz."
@@ -2359,6 +2357,8 @@ lv:
       subcategory_list_style: "Apakšsadaļu saraksta stils:"
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
       review_group_name: "grupas nosaukums"
+      posting_review_modes:
+        everyone: "Ikviens"
       this_year: "šogad"
       none_subcategory_text: "Nav"
       visibility:

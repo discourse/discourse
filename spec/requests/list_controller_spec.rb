@@ -728,6 +728,83 @@ RSpec.describe ListController do
         expect(response.media_type).to eq("application/rss+xml")
       end
     end
+
+    describe "RSS feeds ignore current user" do
+      fab!(:muted_topic, :topic)
+
+      before do
+        Fabricate(:post, topic: muted_topic)
+        sign_in(user)
+        TopicUser.change(
+          user.id,
+          muted_topic.id,
+          notification_level: TopicUser.notification_levels[:muted],
+        )
+      end
+
+      it "includes muted topics in top RSS" do
+        TopTopic.create!(topic: muted_topic, yearly_score: 1.0)
+        get "/top.rss?period=yearly"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(muted_topic.title)
+      end
+
+      it "includes muted topics in hot RSS" do
+        TopicHotScore.create!(topic: muted_topic, score: 1.0)
+        get "/hot.rss"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(muted_topic.title)
+      end
+    end
+
+    describe "exclude_tag" do
+      fab!(:tag) { Fabricate(:tag, name: "excludeme") }
+      fab!(:tagged_topic) { Fabricate(:topic, tags: [tag]) }
+      fab!(:untagged_topic, :topic)
+
+      before do
+        Fabricate(:post, topic: tagged_topic)
+        Fabricate(:post, topic: untagged_topic)
+      end
+
+      it "is respected in latest RSS" do
+        get "/latest.rss?exclude_tag=excludeme"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(untagged_topic.title)
+        expect(response.body).not_to include(tagged_topic.title)
+      end
+
+      it "is respected in top RSS" do
+        TopTopic.create!(topic: tagged_topic, yearly_score: 1.0)
+        TopTopic.create!(topic: untagged_topic, yearly_score: 1.0)
+
+        get "/top.rss?period=yearly&exclude_tag=excludeme"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(untagged_topic.title)
+        expect(response.body).not_to include(tagged_topic.title)
+      end
+
+      it "is respected in hot RSS" do
+        TopicHotScore.create!(topic: tagged_topic, score: 1.0)
+        TopicHotScore.create!(topic: untagged_topic, score: 1.0)
+
+        get "/hot.rss?exclude_tag=excludeme"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(untagged_topic.title)
+        expect(response.body).not_to include(tagged_topic.title)
+      end
+
+      it "is respected in user topics RSS" do
+        sign_in(user)
+        tagged_topic.update!(user: user)
+        untagged_topic.update!(user: user)
+
+        get "/u/#{user.username}/activity/topics.rss?exclude_tag=excludeme"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(untagged_topic.title)
+        expect(response.body).not_to include(tagged_topic.title)
+      end
+    end
   end
 
   describe "Top" do
@@ -861,6 +938,19 @@ RSpec.describe ListController do
           expect(response.status).to eq(200)
           expect(response.body).to_not include("/forum/forum")
           expect(response.body).to include("http://test.localhost/forum/c/#{category.slug}")
+        end
+
+        it "respects exclude_tag query param" do
+          tag = Fabricate(:tag, name: "excludeme")
+          tagged_topic = Fabricate(:topic, category: category, tags: [tag])
+          Fabricate(:post, topic: tagged_topic)
+          untagged_topic = Fabricate(:topic, category: category)
+          Fabricate(:post, topic: untagged_topic)
+
+          get "/c/#{category.slug}/#{category.id}.rss?exclude_tag=excludeme"
+          expect(response.status).to eq(200)
+          expect(response.body).to include(untagged_topic.title)
+          expect(response.body).not_to include(tagged_topic.title)
         end
       end
 

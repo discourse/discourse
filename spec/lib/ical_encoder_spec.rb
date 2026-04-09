@@ -47,6 +47,10 @@ RSpec.describe IcalEncoder do
       expect(described_class.encode("line one\r\nline two")).to eq("line one\\nline two")
     end
 
+    it "returns html_safe strings to prevent double-escaping in ERB templates" do
+      expect(described_class.encode("Tom & Jerry")).to be_html_safe
+    end
+
     it "handles complex HTML content from Discourse posts" do
       html =
         '&lt;a class=&quot;lightbox&quot; href=&quot;https://example.com/image.jpg&quot;&gt;[Image]&lt;/a&gt; \nSome text with &amp; special chars'

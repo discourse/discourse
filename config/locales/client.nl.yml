@@ -523,8 +523,6 @@ nl:
           other: "%{count} jaar geleden gemaakt"
     bookmarked:
       title: "Bladwijzer"
-      edit_bookmark: "Bladwijzer bewerken"
-      clear_bookmarks: "Bladwijzers wissen"
       help:
         bookmark: "Klik om een bladwijzer voor dit topic te maken"
         edit_bookmark: "Klik om de bladwijzer voor een bericht in dit topic te bewerken"
@@ -543,12 +541,12 @@ nl:
       clear_reminder: "Herinnering wissen"
       edit: "Bladwijzer bewerken"
       not_bookmarked: "bladwijzer maken voor dit bericht"
+      topic_bookmark: "Topic"
       remove_reminder_keep_bookmark: "Herinnering verwijderen en bladwijzer behouden"
       created_with_reminder: "Je hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}. %{name}"
       created_with_reminder_generic: "Je hebt een bladwijzer hiervoor gemaakt met een herinnering voor %{date}. %{name}"
       delete: "Bladwijzer verwijderen"
       confirm_delete: "Weet je zeker dat je deze bladwijzer wilt verwijderen? De herinnering wordt ook verwijderd."
-      confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
       save: "Opslaan"
       no_timezone: 'Je hebt nog geen tijdzone ingesteld. Hierdoor kun je geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in je profiel</a>.'
       invalid_custom_datetime: "De datum en tijd die je hebt opgegeven zijn ongeldig, probeer het opnieuw."
@@ -2709,6 +2707,8 @@ nl:
       medium_dark_tone: Gemiddelde donkere huidskleur
       dark_tone: Donkere huidskleur
       default: Eigen emoji's
+    filter_input:
+      clear: "Filter wissen"
     shared_drafts:
       title: "Gedeelde concepten"
       notice: "Dit topic is alleen zichtbaar voor degenen die gedeelde concepten kunnen publiceren."
@@ -4194,6 +4194,9 @@ nl:
       review_group_name: "groepsnaam"
       require_topic_approval: "Goedkeuring van moderator vereisen voor alle nieuwe topics"
       require_reply_approval: "Goedkeuring van moderator vereisen voor alle nieuwe antwoorden"
+      posting_review_modes:
+        everyone: "Iedereen"
+      posting_review_groups_placeholder: "Selecteer groepen..."
       this_year: "dit jaar"
       position: "Positie op de categoriepagina:"
       position_disabled: "Categorieën worden weergegeven op volgorde van activiteit. Schakel de instelling <a href='%{url}'>'Vaste categorieposities'</a> in om de volgorde van categorieën in lijsten te regelen."

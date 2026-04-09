@@ -26,6 +26,8 @@ zh_CN:
       create: "创建"
       create_placeholder: "查询名称…"
       description_placeholder: "在此处输入描述"
+      ai:
+        generate: "生成"
       import:
         label: "导入"
         unparseable_json: "无法解析的 JSON 文件。"

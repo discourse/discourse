@@ -466,8 +466,6 @@ da:
           other: "Oprettet %{count} år siden"
     bookmarked:
       title: "Bogmærke"
-      edit_bookmark: "Rediger Bogmærke"
-      clear_bookmarks: "Fjern bogmærker"
       help:
         bookmark: "Klik for at bogmærke dette emne"
         edit_bookmark_for_topic: "Klik for at redigere bogmærket for dette emne"
@@ -483,12 +481,12 @@ da:
       clear_reminder: "Ryd påmindelse"
       edit: "Rediger bogmærke"
       not_bookmarked: "bogmærk dette indlæg"
+      topic_bookmark: "Emne"
       remove_reminder_keep_bookmark: "Fjern påmindelse og behold bogmærke"
       created_with_reminder: "Du har sat et bogmærke med en påmindelse for dette indlæg %{date}. %{name}"
       created_with_reminder_generic: "Du har bogmærket dette med en påmindelse %{date}. %{name}"
       delete: "Slet Bogmærke"
       confirm_delete: "Er du sikker på, at du vil slette dette bogmærke? Påmindelsen vil også blive slettet."
-      confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
       save: "Gem"
       no_timezone: 'Du har ikke indstillet en tidszone endnu. Du vil ikke være i stand til at indstille påmindelser. Konfigurer dette <a href="%{basePath}/my/preferences/profile">i din profil</a>.'
       invalid_custom_datetime: "Dato og klokkeslæt du angav er ugyldigt, prøv venligst igen."
@@ -2322,6 +2320,8 @@ da:
       medium_dark_tone: Medium mørk hudfarve
       dark_tone: Mørk hudfarve
       default: Brugerdefineret humørikoner
+    filter_input:
+      clear: "Ryd filter"
     shared_drafts:
       title: "Delte kladder"
       notice: "Dette emne er kun synligt for dem, der kan udgive delte kladder."
@@ -3525,6 +3525,9 @@ da:
       review_group_name: "gruppe navn"
       require_topic_approval: "Kræv moderator godkendelse af alle nye emner"
       require_reply_approval: "Kræv moderator godkendelse af alle nye svar"
+      posting_review_modes:
+        everyone: "Alle"
+      posting_review_groups_placeholder: "Vælg grupper ..."
       this_year: "dette år"
       position: "Placering på kategorisiden:"
       minimum_required_tags: "Minimum antal tags krævet i et emne:"

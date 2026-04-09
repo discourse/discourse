@@ -22,6 +22,8 @@ hy:
       create: "Ստեղծել"
       create_placeholder: "Հարցման անուն..."
       description_placeholder: "Մուտքագրեք նկարագրություն այստեղ"
+      ai:
+        generate: "Գեներացնել"
       import:
         label: "Ներմուծել"
       help:

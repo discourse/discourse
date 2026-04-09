@@ -1721,6 +1721,7 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
+      show_original_content: "Show original content instead of translated content. Can also be toggled within topics."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -3073,6 +3074,20 @@ en:
       dark_tone: Dark skin tone
       default: Custom emojis
 
+    filter_input:
+      clear: "Clear filter"
+
+    d_icon_grid_picker:
+      select_icon: "Select icon"
+      search_placeholder: "Search icons..."
+      no_results: "No icons found"
+      results_count:
+        one: "%{count} icon found"
+        other: "%{count} icons found"
+      favorites: "Favorites"
+      selected_icon: "Selected icon: %{iconName}"
+      clear: "Clear icon"
+
     shared_drafts:
       title: "Shared Drafts"
       notice: "This topic is only visible to those who can publish shared drafts."
@@ -3694,6 +3709,8 @@ en:
         clear_all: "Clear All"
         unlist_topics: "Unlist topics"
         relist_topics: "Relist topics"
+        pin_topics: "Feature these topics"
+        unpin_topics: "Un-pin topics"
         reset_bump_dates: "Reset bump dates"
         defer: "Mark unread"
         delete: "Delete topics"
@@ -3758,6 +3775,9 @@ en:
         confirm_remove_tags:
           one: "All tags will be removed from this topic. Are you sure?"
           other: "All tags will be removed from %{count} topics. Are you sure?"
+        confirm_unpin_topics:
+          one: "Un-pin %{count} topic"
+          other: "Un-pin %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
@@ -3825,19 +3845,19 @@ en:
         name: "Dismiss"
       close_topics:
         name: "Close"
-        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Learn more</a>"
+        description: "Closed topics prevent new replies. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
         note: "Add a note to these topics"
         optional: (optional)
       archive_topics:
         name: "Archive"
-        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Learn more</a>"
+        description: "Archived topics are hidden from search and the latest topic list. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       archive_messages:
         name: "Move to Archive"
       move_messages_to_inbox:
         name: "Move to Inbox"
       unlist_topics:
         name: "Unlist"
-        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Learn more</a>"
+        description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
       remove_tags:
@@ -3863,6 +3883,11 @@ en:
       update_notifications:
         name: "Update Notifications"
         description: "Update your personal notification level for the selected topics to:"
+      pin_topics:
+        name: "Pin"
+      unpin_topics:
+        name: "Un-pin"
+        description: "Un-pin all the selected topics that are pinned to a category or pinned globally"
 
     topic:
       filter_to:
@@ -4007,6 +4032,7 @@ en:
         publish_to: "Publish To:"
         when: "When:"
         time_frame_required: "Please select a time frame"
+        category_required: "Please select a category"
         min_duration: "Duration must be greater than 0"
         max_duration: "Duration must be less than 20 years"
         duration: "Duration"
@@ -4199,6 +4225,13 @@ en:
         banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
         no_banner_exists: "There is no banner topic."
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
+
+      bulk_feature_topic:
+        pin: "Make these topics appear at the top of the topic's category until"
+        pin_note: "Users can unpin topics individually for themselves."
+        pin_globally: "Make these topics appear at the top of all topic lists until"
+        pin_button: "Pin topics"
+        pin_globally_button: "Pin topics globally"
 
       inviting: "Inviting…"
       automatically_add_to_groups: "This invite also includes access to these groups:"
@@ -4778,6 +4811,7 @@ en:
       icon: "Icon"
       emoji: "Emoji"
       select_emoji: "Select emoji"
+      select_icon: "Select icon"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -6098,6 +6132,8 @@ en:
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
+        default_warning: "The default for this setting has changed from %{oldDefaultValue} to %{newDefaultValue} due to an <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming change</a>."
+        default_warning_short: "The default for this setting has changed, read more about this in the <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>upcoming changes</a> page."
         enabled_for_options:
           no_one: "No one"
           everyone: "Everyone"
@@ -6135,6 +6171,7 @@ en:
           impact_type_all: "All impact types"
           impact_type_feature: "Feature"
           impact_type_other: "Other"
+          impact_type_site_setting_default: "Setting default"
           status_all: "All statuses"
           status_conceptual: "Conceptual"
           status_experimental: "Experimental"

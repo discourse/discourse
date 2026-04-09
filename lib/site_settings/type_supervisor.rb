@@ -86,7 +86,7 @@ class SiteSettings::TypeSupervisor
     when TrueClass, FalseClass
       self.types[:bool]
     else
-      raise ArgumentError.new :val
+      raise ArgumentError.new("Invalid value type for site setting: #{val.class}")
     end
   end
 
@@ -164,6 +164,18 @@ class SiteSettings::TypeSupervisor
     @dependencies.change_behavior(name, opts[:depends_behavior]) if opts[:depends_behavior]
   end
 
+  # Converts a site setting value to a Ruby value based on the type of the setting,
+  # which is necessary because the value is stored in the database as a string.
+  #
+  # @param name [Symbol] the name of the setting
+  # @param value [String] the value of the setting
+  # @param override_type [Symbol] the type of the setting to override the type of the setting
+  # @return [Object] the Ruby value of the setting
+  #
+  # @example
+  #   to_rb_value(:enable_mobile_theme, "true") # => true
+  #   to_rb_value(:topics_per_period_in_top_page, "50") # => 50
+  #   to_rb_value(:title, "My awesome forum") # => "My awesome forum"
   def to_rb_value(name, value, override_type = nil)
     name = name.to_sym
     @types[name] = (@types[name] || get_data_type(name, value))

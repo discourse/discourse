@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import IconPicker from "discourse/select-kit/components/icon-picker";
+import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 
 export default class Icon extends Component {
   @action
@@ -10,17 +9,12 @@ export default class Icon extends Component {
   }
 
   <template>
-    <IconPicker
-      @value={{readonly @value}}
-      @onlyAvailable={{true}}
-      @options={{hash
-        maximum=1
-        disabled=@disabled
-        caretDownIcon="angle-down"
-        caretUpIcon="angle-up"
-        icons=@value
-      }}
+    <DIconGridPicker
+      @value={{@value}}
       @onChange={{this.onChangeIcon}}
+      @disabled={{@disabled}}
+      @showCaret={{true}}
+      @showSelectedName={{true}}
     />
   </template>
 }

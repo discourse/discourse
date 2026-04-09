@@ -1,5 +1,5 @@
 import { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import UserTopicsList from "discourse/controllers/user-topics-list";
@@ -17,10 +17,17 @@ export default class GroupAssignedShow extends UserTopicsList {
   ascending = false;
   search = "";
   bulkSelectEnabled = false;
+
   bulkSelectHelper = new BulkSelectHelper(this);
+
   selected = [];
 
   @alias("currentUser.staff") canBulkSelect;
+
+  @computed("search", "model.topics.length")
+  get hasAssignments() {
+    return this.search || !!this.model?.topics?.length;
+  }
 
   _setSearchTerm(searchTerm) {
     this.set("search", searchTerm);

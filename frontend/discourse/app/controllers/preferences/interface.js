@@ -74,6 +74,7 @@ export default class InterfaceController extends Controller {
       "bookmark_auto_delete_preference",
       "interface_color_mode",
       "enable_markdown_monospace_font",
+      "show_original_content",
     ];
 
     if (this.makeThemeDefault) {

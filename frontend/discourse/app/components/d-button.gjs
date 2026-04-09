@@ -19,49 +19,52 @@ import { i18n } from "discourse-i18n";
  * @property {object} Args
  *
  * // Text
- * @property {string} Args.title
- * @property {string} Args.translatedTitle
- * @property {string} Args.label
- * @property {string} Args.translatedLabel
+ * @property {string} [Args.title]
+ * @property {string} [Args.translatedTitle]
+ * @property {string} [Args.label]
+ * @property {string} [Args.translatedLabel]
  *
  * // Actions / events
- * @property {function|object} Args.action
- * @property {any} Args.actionParam
- * @property {boolean} Args.forwardEvent
- * @property {function} Args.onKeyDown
+ * @property {function|object} [Args.action]
+ * @property {any} [Args.actionParam]
+ * @property {boolean} [Args.forwardEvent]
+ * @property {function} [Args.onKeyDown]
  *
  * // Navigation
- * @property {string} Args.href
- * @property {string} Args.route
- * @property {object|object[]} Args.routeModels
+ * @property {string} [Args.href]
+ * @property {string} [Args.route]
+ * @property {object|object[]} [Args.routeModels]
  *
  * // State
- * @property {boolean} Args.isLoading
- * @property {boolean} Args.disabled
- * @property {boolean} Args.preventFocus
+ * @property {boolean} [Args.isLoading]
+ * @property {boolean} [Args.disabled]
+ * @property {boolean} [Args.preventFocus]
  *
  * // Display mode
  * @property {"link"} [Args.display]
  *
  * // Display / icon
- * @property {string} Args.icon
- * @property {boolean} Args.ellipsis
- * @property {string} Args.suffixIcon
+ * @property {string} [Args.icon]
+ * @property {boolean} [Args.ellipsis]
+ * @property {string} [Args.suffixIcon]
  *
  * // Accessibility
- * @property {string} Args.ariaLabel
- * @property {string} Args.translatedAriaLabel
- * @property {boolean} Args.ariaExpanded
- * @property {boolean} Args.ariaPressed
- * @property {string} Args.ariaControls
- * @property {boolean} Args.ariaHidden
+ * @property {string} [Args.ariaLabel]
+ * @property {string} [Args.translatedAriaLabel]
+ * @property {boolean} [Args.ariaExpanded]
+ * @property {boolean} [Args.ariaPressed]
+ * @property {string} [Args.ariaControls]
+ * @property {boolean} [Args.ariaHidden]
  *
  * // HTML attributes
- * @property {string} Args.type
- * @property {string} Args.id
- * @property {string} Args.form
- * @property {string} Args.tabindex
- * @property {string} Args.class
+ * @property {string} [Args.type]
+ * @property {string} [Args.id]
+ * @property {string} [Args.form]
+ * @property {string} [Args.tabindex]
+ * @property {string} [Args.class]
+ *
+ * // Root element type (enables ...attributes type checking)
+ * @property {HTMLButtonElement} Element
  *
  * // Optional yield
  * @property {object} Blocks
