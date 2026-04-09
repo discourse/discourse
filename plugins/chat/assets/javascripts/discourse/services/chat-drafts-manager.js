@@ -1,15 +1,9 @@
-import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 
 export default class ChatDraftsManager extends Service {
   @service chatApi;
 
   drafts = {};
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    cancel(this._persistHandler);
-  }
 
   async add(message, channelId, threadId, persist = true) {
     try {

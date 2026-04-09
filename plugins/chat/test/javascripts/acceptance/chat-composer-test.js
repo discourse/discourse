@@ -6,7 +6,6 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { skip, test } from "qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
@@ -150,9 +149,9 @@ acceptance(
     needs.user({ has_chat_enabled: true });
     needs.settings({ chat_enabled: true });
 
-    needs.hooks.beforeEach(function () {
-      pretender.get("/chat/api/me/channels", () =>
-        response({
+    needs.pretender((server, helper) => {
+      server.get("/chat/api/me/channels", () =>
+        helper.response({
           direct_message_channels: [],
           public_channels: [
             {
@@ -179,16 +178,18 @@ acceptance(
         })
       );
 
-      pretender.get("/chat/api/channels/11/messages", () =>
-        response({
+      server.get("/chat/api/channels/11/messages", () =>
+        helper.response({
           messages: [],
           meta: { can_delete_self: false },
         })
       );
 
-      pretender.post("/chat/11", () => response({ success: true }));
-      pretender.post("/chat/api/channels/11/drafts", () => response({}));
+      server.post("/chat/11", () => helper.response({ success: true }));
+      server.post("/chat/api/channels/11/drafts", () => helper.response({}));
+    });
 
+    needs.hooks.beforeEach(function () {
       Object.defineProperty(this, "chatDraftsManager", {
         get: () => this.container.lookup("service:chat-drafts-manager"),
       });
