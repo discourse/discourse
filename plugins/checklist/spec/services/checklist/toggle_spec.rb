@@ -62,11 +62,7 @@ RSpec.describe Checklist::Toggle do
       it "publishes to MessageBus" do
         messages = MessageBus.track_publish("/checklist/#{topic.id}") { result }
         expect(messages.length).to eq(1)
-        expect(messages.first.data).to include(
-          post_id: post.id,
-          checkbox_offset: 2,
-          checked: true,
-        )
+        expect(messages.first.data).to include(post_id: post.id, checkbox_offset: 2, checked: true)
       end
     end
 
