@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "filter"
         end
 
-        def self.color_key
+        def self.color
           "violet"
         end
 

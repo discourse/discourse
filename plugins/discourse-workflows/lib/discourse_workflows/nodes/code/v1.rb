@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "code"
         end
 
-        def self.color_key
+        def self.color
           "red"
         end
 

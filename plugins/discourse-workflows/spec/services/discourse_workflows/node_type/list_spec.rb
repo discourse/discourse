@@ -83,7 +83,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(create_post.dig(:ui, :palette_group, :id)).to eq("discourse_actions")
         expect(data_table[:ui]).to include(
           icon: "table",
-          color_key: "violet",
+          color: "violet",
           property_i18n_prefix: "discourse_workflows",
           property_i18n_scope: "data_table_node",
           palette_group: a_hash_including(id: "data"),

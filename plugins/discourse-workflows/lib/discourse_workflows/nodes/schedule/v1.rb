@@ -15,7 +15,7 @@ module DiscourseWorkflows
           "calendar-days"
         end
 
-        def self.color_key
+        def self.color
           "orange"
         end
 

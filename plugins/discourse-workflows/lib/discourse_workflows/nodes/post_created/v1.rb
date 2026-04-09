@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "comment"
         end
 
-        def self.color_key
+        def self.color
           "indigo"
         end
 

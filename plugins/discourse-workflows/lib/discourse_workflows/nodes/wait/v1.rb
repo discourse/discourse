@@ -15,7 +15,7 @@ module DiscourseWorkflows
           "pause"
         end
 
-        def self.color_key
+        def self.color
           "salmon"
         end
 

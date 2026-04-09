@@ -21,7 +21,7 @@ module DiscourseWorkflows
       nil
     end
 
-    def self.color_key
+    def self.color
       nil
     end
 

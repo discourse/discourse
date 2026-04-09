@@ -29,7 +29,7 @@ module DiscourseWorkflows
         ports: @latest_class.ports,
         operations: @latest_class.operations,
         icon: ui[:icon],
-        color_key: ui[:color_key],
+        color: ui[:color],
         branching: capabilities[:branching],
         manually_triggerable: capabilities[:manually_triggerable],
       }.compact

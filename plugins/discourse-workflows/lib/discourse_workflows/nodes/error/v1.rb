@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "triangle-exclamation"
         end
 
-        def self.color_key
+        def self.color
           "red"
         end
 

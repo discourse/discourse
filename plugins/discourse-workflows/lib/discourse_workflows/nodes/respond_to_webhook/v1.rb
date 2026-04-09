@@ -16,7 +16,7 @@ module DiscourseWorkflows
           "reply"
         end
 
-        def self.color_key
+        def self.color
           "purple"
         end
 

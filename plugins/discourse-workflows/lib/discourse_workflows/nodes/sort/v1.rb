@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "arrow-down-a-z"
         end
 
-        def self.color_key
+        def self.color
           "yellow"
         end
 

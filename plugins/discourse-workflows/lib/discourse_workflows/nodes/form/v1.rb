@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "rectangle-list"
         end
 
-        def self.color_key
+        def self.color
           "blue"
         end
 

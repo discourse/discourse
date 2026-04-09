@@ -41,13 +41,9 @@ export function nodeTypeIcon(nodeTypeOrIdentifier) {
   return nodeTypeUi(nodeTypeOrIdentifier).icon || null;
 }
 
-export function nodeTypeColorKey(nodeTypeOrIdentifier) {
-  return nodeTypeUi(nodeTypeOrIdentifier).color_key || null;
-}
-
 export function nodeTypeColor(nodeTypeOrIdentifier) {
-  const key = nodeTypeColorKey(nodeTypeOrIdentifier);
-  return key ? `var(--workflow-node-color-${key})` : DEFAULT_COLOR;
+  const color = nodeTypeUi(nodeTypeOrIdentifier).color;
+  return color ? `var(--workflow-node-color-${color})` : DEFAULT_COLOR;
 }
 
 export function nodeTypeStyle(nodeTypeOrIdentifier) {

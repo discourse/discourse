@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "arrow-rotate-right"
         end
 
-        def self.color_key
+        def self.color
           "brown"
         end
 

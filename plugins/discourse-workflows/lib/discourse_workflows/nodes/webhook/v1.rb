@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "globe"
         end
 
-        def self.color_key
+        def self.color
           "purple"
         end
 

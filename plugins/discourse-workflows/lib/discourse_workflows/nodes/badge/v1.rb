@@ -14,7 +14,7 @@ module DiscourseWorkflows
           "certificate"
         end
 
-        def self.color_key
+        def self.color
           "yellow"
         end
 

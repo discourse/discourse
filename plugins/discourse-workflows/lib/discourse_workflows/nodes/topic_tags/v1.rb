@@ -14,7 +14,7 @@ module DiscourseWorkflows
           "tags"
         end
 
-        def self.color_key
+        def self.color
           "orange"
         end
 

@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "magnifying-glass-minus"
         end
 
-        def self.color_key
+        def self.color
           "yellow"
         end
 

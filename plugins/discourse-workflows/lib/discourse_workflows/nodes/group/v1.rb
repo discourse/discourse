@@ -14,7 +14,7 @@ module DiscourseWorkflows
           "user-plus"
         end
 
-        def self.color_key
+        def self.color
           "indigo"
         end
 

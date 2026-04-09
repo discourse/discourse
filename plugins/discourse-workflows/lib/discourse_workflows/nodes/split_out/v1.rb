@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "arrows-turn-to-dots"
         end
 
-        def self.color_key
+        def self.color
           "yellow"
         end
 

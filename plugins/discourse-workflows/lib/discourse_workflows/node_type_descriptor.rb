@@ -105,7 +105,7 @@ module DiscourseWorkflows
     def ui_metadata
       {
         icon: icon,
-        color_key: color_key,
+        color: color,
         label_key: label_key,
         description_key: description_key,
         palette_group: palette_group,

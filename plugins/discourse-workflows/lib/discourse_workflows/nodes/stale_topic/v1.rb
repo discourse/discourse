@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "clock"
         end
 
-        def self.color_key
+        def self.color
           "deep-orange"
         end
 

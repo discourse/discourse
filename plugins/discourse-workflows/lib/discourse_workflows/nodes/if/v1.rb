@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "arrows-split-up-and-left"
         end
 
-        def self.color_key
+        def self.color
           "blue"
         end
 

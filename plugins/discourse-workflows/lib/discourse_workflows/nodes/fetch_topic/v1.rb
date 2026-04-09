@@ -12,7 +12,7 @@ module DiscourseWorkflows
           "download"
         end
 
-        def self.color_key
+        def self.color
           "light-blue"
         end
 

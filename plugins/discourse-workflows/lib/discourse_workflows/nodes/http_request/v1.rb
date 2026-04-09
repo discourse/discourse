@@ -15,7 +15,7 @@ module DiscourseWorkflows
           "globe"
         end
 
-        def self.color_key
+        def self.color
           "indigo"
         end
 

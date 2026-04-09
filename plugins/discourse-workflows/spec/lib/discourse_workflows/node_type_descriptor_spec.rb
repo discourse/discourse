@@ -11,7 +11,7 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
         "bolt"
       end
 
-      def self.color_key
+      def self.color
         "blue"
       end
     end
@@ -224,7 +224,7 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
     it "assembles all UI fields" do
       result = trigger_class.ui_metadata
       expect(result[:icon]).to eq("bolt")
-      expect(result[:color_key]).to eq("blue")
+      expect(result[:color]).to eq("blue")
       expect(result[:label_key]).to eq("discourse_workflows.nodes.trigger:test_event")
       expect(result[:description_key]).to eq(
         "discourse_workflows.node_descriptions.trigger:test_event",
@@ -237,7 +237,7 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
     it "omits nil values" do
       result = action_class.ui_metadata
       expect(result).not_to have_key(:icon)
-      expect(result).not_to have_key(:color_key)
+      expect(result).not_to have_key(:color)
     end
   end
 end
