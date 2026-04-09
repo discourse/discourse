@@ -150,13 +150,10 @@ class OneboxToolbarPluginView {
     });
     const textNode = state.schema.text(href, [linkMark]);
 
-    let tr;
-    if (isBlock) {
-      const paragraph = state.schema.nodes.paragraph.create(null, textNode);
-      tr = state.tr.replaceWith(selection.from, selection.to, paragraph);
-    } else {
-      tr = state.tr.replaceWith(selection.from, selection.to, textNode);
-    }
+    const content = isBlock
+      ? state.schema.nodes.paragraph.create(null, textNode)
+      : textNode;
+    const tr = state.tr.replaceWith(selection.from, selection.to, content);
 
     // Place cursor at end of the new text
     const cursorPos = isBlock

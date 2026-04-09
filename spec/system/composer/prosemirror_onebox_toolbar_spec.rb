@@ -3,6 +3,8 @@
 describe "Composer - ProseMirror - Onebox Toolbar" do
   include_context "with prosemirror editor"
 
+  let(:onebox_toolbar) { PageObjects::Components::ComposerOneboxToolbar.new }
+
   def body(title)
     <<~HTML
       <html>
@@ -27,10 +29,6 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
     )
   end
 
-  def toolbar_selector
-    "[data-identifier='composer-onebox-toolbar']"
-  end
-
   context "with full onebox" do
     it "shows toolbar when selecting a full onebox" do
       cdp.allow_clipboard
@@ -41,10 +39,10 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       expect(rich).to have_css("div.onebox-wrapper")
       rich.find("div.onebox-wrapper").click
 
-      expect(page).to have_css(toolbar_selector)
-      expect(page).to have_css("button.composer-onebox-toolbar__copy")
-      expect(page).to have_css("button.composer-onebox-toolbar__remove-preview")
-      expect(page).to have_css("a.composer-onebox-toolbar__visit")
+      expect(onebox_toolbar).to have_toolbar
+      expect(onebox_toolbar).to have_copy_button
+      expect(onebox_toolbar).to have_remove_preview_button
+      expect(onebox_toolbar).to have_visit_link
     end
 
     it "removes preview and converts to plain link" do
@@ -55,7 +53,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
 
       expect(rich).to have_css("div.onebox-wrapper")
       rich.find("div.onebox-wrapper").click
-      find("button.composer-onebox-toolbar__remove-preview").click
+      onebox_toolbar.click_remove_preview
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a[href='https://example.com']", text: "https://example.com")
@@ -72,7 +70,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
 
       expect(rich).to have_css("div.onebox-wrapper")
       rich.find("div.onebox-wrapper").click
-      find("button.composer-onebox-toolbar__remove-preview").click
+      onebox_toolbar.click_remove_preview
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a[href='https://example.com']")
@@ -95,9 +93,9 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       expect(rich).to have_css("a.inline-onebox")
       rich.find("a.inline-onebox").click
 
-      expect(page).to have_css(toolbar_selector)
-      expect(page).to have_css("button.composer-onebox-toolbar__copy")
-      expect(page).to have_css("button.composer-onebox-toolbar__remove-preview")
+      expect(onebox_toolbar).to have_toolbar
+      expect(onebox_toolbar).to have_copy_button
+      expect(onebox_toolbar).to have_remove_preview_button
     end
 
     it "removes inline preview and converts to plain link" do
@@ -109,7 +107,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
 
       expect(rich).to have_css("a.inline-onebox", text: "Example Site")
       rich.find("a.inline-onebox").click
-      find("button.composer-onebox-toolbar__remove-preview").click
+      onebox_toolbar.click_remove_preview
 
       expect(rich).to have_no_css("a.inline-onebox")
       expect(rich).to have_css("a[href='https://example.com/x']", text: "https://example.com/x")
@@ -125,7 +123,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
 
       expect(rich).to have_css("div.onebox-wrapper")
       rich.find("div.onebox-wrapper").click
-      find("button.composer-onebox-toolbar__remove-preview").click
+      onebox_toolbar.click_remove_preview
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       rich.find("a[href='https://example.com']").click
@@ -144,7 +142,7 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
 
       expect(rich).to have_css("a.inline-onebox")
       rich.find("a.inline-onebox").click
-      find("button.composer-onebox-toolbar__remove-preview").click
+      onebox_toolbar.click_remove_preview
 
       expect(rich).to have_no_css("a.inline-onebox")
       rich.find("a[href='https://example.com/x']").click
