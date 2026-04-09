@@ -420,7 +420,7 @@ GEM
     pitchfork (0.18.2)
       logger
       rack (>= 2.0)
-    playwright-ruby-client (1.58.1)
+    playwright-ruby-client (1.59.0)
       base64
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
@@ -1131,7 +1131,7 @@ CHECKSUMS
   pg (1.6.3-x86_64-linux) sha256=5d9e188c8f7a0295d162b7b88a768d8452a899977d44f3274d1946d67920ae8d
   pg (1.6.3-x86_64-linux-musl) sha256=9c9c90d98c72f78eb04c0f55e9618fe55d1512128e411035fe229ff427864009
   pitchfork (0.18.2) sha256=95d0b5a25792ebc94d627abd8a206652ff22acff1cc32ecd42c71669ead4ab94
-  playwright-ruby-client (1.58.1) sha256=0678b227eb469c551858784441891577b402163e9b2d50bddce4a5a904e3a5ca
+  playwright-ruby-client (1.59.0) sha256=b9e66233ed7b83e917980badc27ecd233e244503c74772a3854dbd5d41438c21
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
   prettier_print (1.2.1) sha256=a72838b5f23facff21f90a5423cdcdda19e4271092b41f4ea7f50b83929e6ff9
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
