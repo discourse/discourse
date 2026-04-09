@@ -213,11 +213,7 @@ export default class OutletInfoComponent extends Component {
                   <ul class="outlet-info__aliases">
                     {{#each @aliases as |alias|}}
                       <li class="outlet-info__alias">
-                        {{#if alias.name}}
-                          <code>{{alias.name}}</code>
-                        {{else}}
-                          <code>{{alias}}</code>
-                        {{/if}}
+                        <code>{{alias.name}}</code>
                         {{#if alias.deprecated}}
                           <span class="outlet-info__alias-deprecated">
                             {{icon "triangle-exclamation"}}
