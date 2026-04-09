@@ -4,7 +4,7 @@ module TopicVotingTopic
   include ::RSpec::Matchers
 
   def vote_count
-    find(".voting .vote-count")
+    find(".title-voting .vote-count")
   end
 
   def has_locked_popup?
@@ -20,7 +20,7 @@ module TopicVotingTopic
   end
 
   def vote
-    find("button.vote-button").click
+    find(".title-voting button.vote-button").click
     self
   end
 
@@ -29,7 +29,7 @@ module TopicVotingTopic
       vote
       find("button.remove-vote").click
     else
-      find("button.vote-button").click
+      find(".title-voting button.vote-button").click
     end
     self
   end
@@ -39,7 +39,7 @@ module TopicVotingTopic
   end
 
   def has_vote_button_label?(text)
-    has_css?("button.vote-button[aria-label='#{text}']")
+    has_css?(".title-voting button.vote-button[aria-label='#{text}']")
   end
 
   def has_no_remove_vote_button?
@@ -55,11 +55,12 @@ module TopicVotingTopic
   end
 
   def has_voted?
-    has_css?("button.vote-button.btn-success")
+    has_css?(".title-voting button.vote-button.btn-success")
   end
 
   def has_not_voted?
-    has_css?("button.vote-button.btn-default") && has_no_css?("button.vote-button.btn-success")
+    has_css?(".title-voting button.vote-button.btn-default") &&
+      has_no_css?(".title-voting button.vote-button.btn-success")
   end
 end
 

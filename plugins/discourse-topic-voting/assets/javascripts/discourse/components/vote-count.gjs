@@ -82,6 +82,7 @@ export default class VoteCount extends Component {
         @identifier="vote-count-voters"
         @triggerComponent={{VoteCountTrigger}}
         @onShow={{this.loadVoters}}
+        @modalForMobile={{true}}
         @placement="right"
         class={{concatClass
           "vote-count-wrapper"

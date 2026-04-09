@@ -84,14 +84,16 @@ after_initialize do
   register_category_custom_field_type(DiscourseTopicVoting::ENABLE_TOPIC_VOTING_SETTING, :boolean)
   register_preloaded_category_custom_fields DiscourseTopicVoting::ENABLE_TOPIC_VOTING_SETTING
 
-  add_to_serializer(:topic_list_item, :vote_count, include_condition: -> { object.can_vote? }) do
-    object.vote_count
-  end
-  add_to_serializer(:topic_list_item, :can_vote, include_condition: -> { object.regular? }) do
-    object.can_vote?
-  end
-  add_to_serializer(:topic_list_item, :user_voted, include_condition: -> { object.can_vote? }) do
-    object.user_voted?(scope.user) if scope.user
+  %i[topic_list_item suggested_topic].each do |serializer|
+    add_to_serializer(serializer, :vote_count, include_condition: -> { object.can_vote? }) do
+      object.vote_count
+    end
+    add_to_serializer(serializer, :can_vote, include_condition: -> { object.regular? }) do
+      object.can_vote?
+    end
+    add_to_serializer(serializer, :user_voted, include_condition: -> { object.can_vote? }) do
+      object.user_voted?(scope.user) if scope.user
+    end
   end
   add_to_serializer(
     :basic_category,

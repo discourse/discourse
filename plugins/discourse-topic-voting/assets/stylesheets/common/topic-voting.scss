@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .voting-wrapper {
   display: flex;
   flex-direction: column;
@@ -23,7 +25,7 @@
 .vote-button {
   border-radius: var(--d-button-border-radius) var(--d-button-border-radius) 0 0;
   padding: var(--space-1) var(--space-3);
-  background: var(--transparent);
+  background: var(--secondary);
   border: 1px solid var(--content-border-color);
 
   .discourse-no-touch & {
@@ -102,9 +104,18 @@
   .vote-button {
     width: 100%;
     padding: var(--space-half) var(--space-1);
+    background: var(--header_background);
 
     .d-icon {
       height: 0.85em;
+    }
+  }
+
+  @include viewport.until(sm) {
+    margin-top: -0.15em;
+
+    .vote-count-wrapper {
+      font-size: var(--font-down-3);
     }
   }
 }
@@ -143,7 +154,10 @@
   flex-wrap: wrap;
   gap: 0.25em;
   padding: 0.5em;
-  max-width: 250px;
+
+  @include viewport.from(sm) {
+    max-width: 250px;
+  }
 }
 
 .vote-count__voter-avatar {
@@ -159,6 +173,19 @@
   padding: 0.5em;
   color: var(--primary);
   font-size: var(--font-down-1);
+}
+
+// Mobile topic list voting
+.mobile-voting {
+  width: 48px; // matches mobile avatar width
+
+  .vote-button {
+    padding-block: 0.4em;
+  }
+
+  .vote-count-wrapper {
+    padding-block: 0.4em;
+  }
 }
 
 // Hide like buttons on voting posts
