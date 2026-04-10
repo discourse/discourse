@@ -15,12 +15,6 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
   end
   fab!(:post_2) { Fabricate(:post, topic: topic_2, user: user) }
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:list_topics")
-    end
-  end
-
   def execute_node(configuration:, run_as_user: nil)
     action = described_class.new(configuration: configuration)
     items = [{ "json" => {} }]

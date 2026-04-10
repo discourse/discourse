@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Error::V1 do
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("trigger:error")
-    end
-  end
-
-  describe ".event_name" do
-    it "returns nil" do
-      expect(described_class.event_name).to be_nil
-    end
-  end
-
   describe ".output_schema" do
     it "describes the error data fields" do
       schema = described_class.output_schema

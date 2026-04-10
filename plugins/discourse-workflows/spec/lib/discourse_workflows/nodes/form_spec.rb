@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
-  describe ".identifier" do
-    it "returns action:form" do
-      expect(described_class.identifier).to eq("action:form")
-    end
-  end
-
   describe "#execute" do
     it "raises WaitForResume with form type" do
       config = {

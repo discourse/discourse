@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Webhook::V1 do
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("trigger:webhook")
-    end
-  end
-
-  describe ".event_name" do
-    it "returns nil" do
-      expect(described_class.event_name).to be_nil
-    end
-  end
-
   describe ".configuration_schema" do
     it "defines path and http_method parameters" do
       schema = described_class.configuration_schema

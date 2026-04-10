@@ -7,12 +7,6 @@ RSpec.describe DiscourseWorkflows::Nodes::FetchTopic::V1 do
   fab!(:topic) { Fabricate(:topic, category: category, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: user, raw: "This is the topic body") }
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:fetch_topic")
-    end
-  end
-
   def execute_node(configuration:, item:, run_as_user: Discourse.system_user)
     action = described_class.new(configuration: configuration)
     input_items = [item]

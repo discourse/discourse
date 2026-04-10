@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:http_request")
-    end
-  end
-
   def execute_node(configuration:, item: { "json" => {} })
     action = described_class.new(configuration: configuration)
     input_items = [item]

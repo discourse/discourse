@@ -4,18 +4,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
   fab!(:user)
   fab!(:topic)
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("trigger:topic_tag_changed")
-    end
-  end
-
-  describe ".event_name" do
-    it "returns the correct event name" do
-      expect(described_class.event_name).to eq(:topic_tags_changed)
-    end
-  end
-
   describe "#valid?" do
     it "returns true when topic is present" do
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])

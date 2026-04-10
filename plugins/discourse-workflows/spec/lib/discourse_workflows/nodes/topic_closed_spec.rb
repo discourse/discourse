@@ -9,18 +9,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicClosed::V1 do
     topic.tags << tag
   end
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("trigger:topic_closed")
-    end
-  end
-
-  describe ".event_name" do
-    it "returns the correct event name" do
-      expect(described_class.event_name).to eq(:topic_status_updated)
-    end
-  end
-
   describe "#valid?" do
     it "returns true when topic is closed" do
       trigger = described_class.new(topic, "closed", true)

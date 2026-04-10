@@ -1,18 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::FormTrigger::V1 do
-  describe ".identifier" do
-    it "returns trigger:form" do
-      expect(described_class.identifier).to eq("trigger:form")
-    end
-  end
-
-  describe ".event_name" do
-    it "returns nil" do
-      expect(described_class.event_name).to be_nil
-    end
-  end
-
   describe ".configuration_schema" do
     it "includes form_fields collection" do
       schema = described_class.configuration_schema

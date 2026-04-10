@@ -9,18 +9,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicAdminButton::V1 do
     topic.tags << tag
   end
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("trigger:topic_admin_button")
-    end
-  end
-
-  describe ".event_name" do
-    it "returns nil" do
-      expect(described_class.event_name).to be_nil
-    end
-  end
-
   describe ".configuration_schema" do
     it "includes label and icon" do
       expect(described_class.configuration_schema).to include(

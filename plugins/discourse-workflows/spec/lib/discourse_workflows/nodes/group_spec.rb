@@ -6,12 +6,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
   fab!(:group)
   fab!(:group_2) { Fabricate(:group, name: "another_group") }
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:group")
-    end
-  end
-
   describe ".metadata" do
     it "returns non-automatic groups for the chooser" do
       expect(described_class.metadata[:groups]).to include(

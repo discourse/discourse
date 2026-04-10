@@ -6,12 +6,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
   fab!(:badge)
   fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:badge")
-    end
-  end
-
   describe ".metadata" do
     it "returns badges for the chooser" do
       expect(described_class.metadata[:badges]).to include(

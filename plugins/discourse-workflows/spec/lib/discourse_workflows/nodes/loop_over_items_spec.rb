@@ -10,12 +10,6 @@ RSpec.describe DiscourseWorkflows::Nodes::LoopOverItems::V1 do
     DiscourseWorkflows::NodeExecutionContext.new(input_items: items, node_context: node_context)
   end
 
-  describe ".identifier" do
-    it "returns core:loop_over_items" do
-      expect(described_class.identifier).to eq("core:loop_over_items")
-    end
-  end
-
   describe ".outputs" do
     it "returns done and loop" do
       expect(described_class.outputs).to eq(

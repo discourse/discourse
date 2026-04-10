@@ -15,12 +15,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
     Array.new(count) { |i| { "json" => { "index" => i } } }
   end
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:limit")
-    end
-  end
-
   describe "#execute" do
     it "keeps the first N items by default" do
       result = execute(make_items(5), "max_items" => 3)

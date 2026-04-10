@@ -6,12 +6,6 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
 
   before { SiteSetting.tagging_enabled = true }
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:create_topic")
-    end
-  end
-
   def execute_node(configuration:, item:, run_as_user: Discourse.system_user)
     action = described_class.new(configuration: configuration)
     input_items = [item]

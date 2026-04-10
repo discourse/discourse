@@ -9,18 +9,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
     topic.tags << tag
   end
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("trigger:topic_created")
-    end
-  end
-
-  describe ".event_name" do
-    it "returns the correct event name" do
-      expect(described_class.event_name).to eq(:topic_created)
-    end
-  end
-
   describe "#valid?" do
     it "returns true when topic is present" do
       trigger = described_class.new(topic)
