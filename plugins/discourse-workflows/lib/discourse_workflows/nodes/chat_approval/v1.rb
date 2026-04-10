@@ -43,11 +43,11 @@ module DiscourseWorkflows
               required: false,
             },
             channel_id: {
-              type: :string,
+              type: :integer,
               required: true,
             },
             timeout_minutes: {
-              type: :string,
+              type: :integer,
               required: false,
             },
             timeout_action: {
