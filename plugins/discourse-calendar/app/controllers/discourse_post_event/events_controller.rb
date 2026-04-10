@@ -23,6 +23,8 @@ module DiscoursePostEvent
 
       respond_to do |format|
         format.ics do
+          @calendar_name = calendar_name_for_ics
+
           after_time = filtered_events_params[:after]&.to_datetime || Time.current
           before_time = filtered_events_params[:before]&.to_datetime || 1.year.from_now
 
@@ -211,6 +213,21 @@ module DiscoursePostEvent
       else
         time.in_time_zone(event.timezone).iso8601(3)
       end
+    end
+
+    def calendar_name_for_ics
+      translation_key =
+        if filtered_events_params[:attending_user].present? &&
+             current_user&.username_lower == filtered_events_params[:attending_user].downcase
+          "my_events_feed_name"
+        else
+          "all_events_feed_name"
+        end
+
+      I18n.t(
+        "discourse_calendar.calendar_subscriptions.#{translation_key}",
+        site_title: SiteSetting.title,
+      )
     end
   end
 end

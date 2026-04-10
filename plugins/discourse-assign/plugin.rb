@@ -99,23 +99,7 @@ after_initialize do
   end
 
   add_to_class(:group, :can_show_assigned_tab?) do
-    allowed_group_ids = SiteSetting.assign_allowed_on_groups.split("|")
-
-    group_has_disallowed_users =
-      DB.query_single(<<~SQL, allowed_group_ids: allowed_group_ids, current_group_id: self.id)[0]
-      SELECT EXISTS(
-        SELECT 1 FROM users
-        JOIN group_users current_group_users
-          ON current_group_users.user_id=users.id
-          AND current_group_users.group_id = :current_group_id
-        LEFT JOIN group_users allowed_group_users
-          ON allowed_group_users.user_id=users.id
-          AND allowed_group_users.group_id IN (:allowed_group_ids)
-        WHERE allowed_group_users.user_id IS NULL
-      )
-    SQL
-
-    !group_has_disallowed_users
+    self.assignable_level > Group::ALIAS_LEVELS[:nobody]
   end
 
   add_to_class(:guardian, :can_assign?) { user && user.can_assign? }

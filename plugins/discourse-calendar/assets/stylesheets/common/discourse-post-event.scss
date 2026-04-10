@@ -358,10 +358,7 @@ $show-interested: inherit;
     margin: 0;
   }
 
-  .event-description {
-    display: flex;
-  }
-
+  .event-description,
   .event-location,
   .event-url,
   .event-dates,
@@ -382,6 +379,33 @@ $show-interested: inherit;
 
     .chat-channel-link {
       @include ellipsis;
+    }
+  }
+
+  .event-description {
+    align-items: start;
+    padding-right: 2em;
+
+    > .d-icon {
+      margin-top: 0.25em;
+    }
+
+    .event-description__text {
+      text-align: justify;
+    }
+
+    &.is-clamped .event-description__text {
+      @include line-clamp(3);
+    }
+
+    &.is-clamped.is-expanded .event-description__text {
+      -webkit-line-clamp: unset;
+    }
+
+    .event-description__toggle {
+      font-size: var(--font-down-1);
+      margin-top: 0.25em;
+      cursor: pointer;
     }
   }
 

@@ -51,7 +51,18 @@ describe "Post event" do
       expect(post_event_page).to have_description(
         %r{this is a test description\s+and a link http://example.com},
       )
-      expect(page).to have_css(".event-description a[href='http://example.com']")
+    end
+
+    it "shows the full description without a toggle in the topic view" do
+      title = "Event with full description"
+      description = "A short event description"
+      raw = "[event start='2222-02-22 14:22']\n#{description}\n[/event]"
+      post = PostCreator.create(admin, title:, raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_description(description)
+      expect(post_event_page).to have_no_description_toggle
     end
 
     it "correctly builds a multiline description" do

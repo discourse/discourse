@@ -16,7 +16,9 @@ export default class GroupAssignedShow extends UserTopicsList {
   ascending = false;
   search = "";
   bulkSelectEnabled = false;
+
   bulkSelectHelper = new BulkSelectHelper(this);
+
   selected = [];
 
   @computed("currentUser.staff")
@@ -26,6 +28,11 @@ export default class GroupAssignedShow extends UserTopicsList {
 
   set canBulkSelect(value) {
     set(this, "currentUser.staff", value);
+  }
+
+  @computed("search", "model.topics.length")
+  get hasAssignments() {
+    return this.search || !!this.model?.topics?.length;
   }
 
   _setSearchTerm(searchTerm) {
