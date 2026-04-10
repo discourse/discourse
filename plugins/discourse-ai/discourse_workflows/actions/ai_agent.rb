@@ -72,8 +72,8 @@ if defined?(DiscourseWorkflows)
 
         def execute(exec_ctx)
           @logs = []
-          first_item = exec_ctx.input_items.first || {}
-          config = exec_ctx.resolve_config(@configuration)
+          item = exec_ctx.input_items.first || { "json" => {} }
+          config = exec_ctx.get_parameters(item)
 
           agent_id = config["agent_id"]
           input = config["input"]
@@ -114,7 +114,8 @@ if defined?(DiscourseWorkflows)
           @logs << "Tool calls: #{tool_calls}" if tool_calls > 0
           @logs << "Result length: #{result.size} chars"
 
-          exec_ctx.input_items.map { |_item| { "json" => { "result" => result } } }
+          items = exec_ctx.input_items.map { |_item| { "json" => { "result" => result } } }
+          [items]
         end
       end
     end

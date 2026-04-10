@@ -46,7 +46,8 @@ module DiscourseDataExplorer
       end
 
       def execute(exec_ctx)
-        config = exec_ctx.resolve_config(@configuration)
+        item = exec_ctx.input_items.first || { "json" => {} }
+        config = exec_ctx.get_parameters(item)
         sql = config["query"].to_s
 
         raise ArgumentError, "No SQL query provided" if sql.blank?
@@ -69,11 +70,13 @@ module DiscourseDataExplorer
         pg_result = result[:pg_result]
         columns = pg_result.fields
 
-        pg_result.values.map do |row|
-          json = {}
-          columns.each_with_index { |col, i| json[col] = row[i] }
-          { "json" => json }
-        end
+        items =
+          pg_result.values.map do |row|
+            json = {}
+            columns.each_with_index { |col, i| json[col] = row[i] }
+            { "json" => json }
+          end
+        [items]
       end
     end
   end

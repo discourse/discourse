@@ -40,11 +40,9 @@ if defined?(DiscourseWorkflows)
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.map do |item|
-              exec_ctx.with_item(item) do
-                config = exec_ctx.resolve_config(@configuration)
-                result = process(config)
-                Item.new(result).to_h
-              end
+              config = exec_ctx.get_parameters(item)
+              result = process(config)
+              Item.new(result).to_h
             end
           ItemContract.validate_items!(items, source: self.class.identifier)
           [items]
