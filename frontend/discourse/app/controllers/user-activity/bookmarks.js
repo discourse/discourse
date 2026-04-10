@@ -25,7 +25,7 @@ export default class UserActivityBookmarksController extends Controller {
 
   bulkSelectHelper = new BulkSelectHelper(this);
 
-  @computed("q.length")
+  @computed("q")
   get inSearchMode() {
     return !isEmpty(this.q);
   }

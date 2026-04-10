@@ -36,7 +36,7 @@ export default class extends Component {
     this.messageBus.unsubscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
   }
 
-  @computed("userExport.length")
+  @computed("userExport")
   get userExportAvailable() {
     return !isEmpty(this.userExport);
   }

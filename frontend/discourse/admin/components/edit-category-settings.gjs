@@ -39,7 +39,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
     return this.category?.show_subcategory_list && this.isParentCategory;
   }
 
-  @computed("category.sort_order.length")
+  @computed("category.sort_order")
   get isDefaultSortOrder() {
     return isEmpty(this.category?.sort_order);
   }

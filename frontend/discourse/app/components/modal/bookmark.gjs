@@ -64,17 +64,17 @@ export default class BookmarkModal extends Component {
     this.keyboardShortcuts.unpause();
   }
 
-  @computed("userTimezone.length")
+  @computed("userTimezone")
   get userHasTimezoneSet() {
     return !isEmpty(this.userTimezone);
   }
 
-  @computed("bookmark.id.length")
+  @computed("bookmark.id")
   get showDelete() {
     return !isEmpty(this.bookmark?.id);
   }
 
-  @computed("bookmark.id.length")
+  @computed("bookmark.id")
   get editingExistingBookmark() {
     return !isEmpty(this.bookmark?.id);
   }

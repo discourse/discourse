@@ -380,7 +380,7 @@ export default class Topic extends RestModel {
     set(this, "details.allowed_groups", value);
   }
 
-  @computed("deleted_at.length")
+  @computed("deleted_at")
   get deleted() {
     return !isEmpty(this.deleted_at);
   }
@@ -414,7 +414,7 @@ export default class Topic extends RestModel {
     return this.pinned && this.category?.isUncategorizedCategory;
   }
 
-  @computed("excerpt.length")
+  @computed("excerpt")
   get hasExcerpt() {
     return !isEmpty(this.excerpt);
   }

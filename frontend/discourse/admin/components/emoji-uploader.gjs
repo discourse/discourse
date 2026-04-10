@@ -54,12 +54,12 @@ export default class EmojiUploader extends Component {
   emojiGroups = null;
   newEmojiGroups = null;
 
-  @computed("name.length")
+  @computed("name")
   get hasName() {
     return !isEmpty(this.name);
   }
 
-  @computed("group.length")
+  @computed("group")
   get hasGroup() {
     return !isEmpty(this.group);
   }

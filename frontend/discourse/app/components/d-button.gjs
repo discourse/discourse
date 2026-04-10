@@ -76,7 +76,7 @@ export default class DButton extends Component {
   @service router;
   @service capabilities;
 
-  @computed("args.icon.length")
+  @computed("args.icon")
   get btnIcon() {
     return !isEmpty(this.args?.icon);
   }
@@ -86,7 +86,7 @@ export default class DButton extends Component {
     return this.args?.display === "link";
   }
 
-  @computed("computedLabel.length")
+  @computed("computedLabel")
   get noText() {
     return isEmpty(this.computedLabel);
   }

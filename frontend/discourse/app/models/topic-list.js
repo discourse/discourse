@@ -126,7 +126,7 @@ export default class TopicList extends RestModel {
   @tracked loadingBefore = false;
   @autoTrackedArray topics;
 
-  @computed("more_topics_url.length")
+  @computed("more_topics_url")
   get canLoadMore() {
     return !isEmpty(this.more_topics_url);
   }

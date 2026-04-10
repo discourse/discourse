@@ -34,7 +34,7 @@ export default class UsernamePreference extends Component {
     return this.siteSettings.min_username_length;
   }
 
-  @computed("newUsername.length")
+  @computed("newUsername")
   get newUsernameEmpty() {
     return isEmpty(this.newUsername);
   }

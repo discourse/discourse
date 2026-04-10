@@ -56,12 +56,12 @@ export default class LocalDatesCreate extends Component {
     });
   }
 
-  @computed("date.length")
+  @computed("date")
   get fromFilled() {
     return !isEmpty(this.date);
   }
 
-  @computed("toDate.length")
+  @computed("toDate")
   get toFilled() {
     return !isEmpty(this.toDate);
   }

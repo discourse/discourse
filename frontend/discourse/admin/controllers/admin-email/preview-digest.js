@@ -12,7 +12,7 @@ export default class AdminEmailPreviewDigestController extends Controller {
   lastSeen = null;
   email = null;
 
-  @computed("email.length")
+  @computed("email")
   get emailEmpty() {
     return isEmpty(this.email);
   }
@@ -22,12 +22,12 @@ export default class AdminEmailPreviewDigestController extends Controller {
     return this.emailEmpty || this.sendingEmail;
   }
 
-  @computed("model.html_content.length")
+  @computed("model.html_content")
   get showSendEmailForm() {
     return !isEmpty(this.model?.html_content);
   }
 
-  @computed("model.html_content.length")
+  @computed("model.html_content")
   get htmlEmpty() {
     return isEmpty(this.model?.html_content);
   }

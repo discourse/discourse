@@ -15,7 +15,7 @@ export default class EmailController extends Controller {
   newEmail = null;
   successMessage = null;
 
-  @computed("newEmail.length")
+  @computed("newEmail")
   get newEmailEmpty() {
     return isEmpty(this.newEmail);
   }

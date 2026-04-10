@@ -28,7 +28,7 @@ export default class ValueList extends Component {
 
   @tracked _noneKeyOverride;
 
-  @computed("newValue.length")
+  @computed("newValue")
   get inputInvalid() {
     return isEmpty(this.newValue);
   }

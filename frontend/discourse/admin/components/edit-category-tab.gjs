@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class EditCategoryTab extends Component {
-  @computed("params.slug.length")
+  @computed("params.slug")
   get newCategory() {
     return isEmpty(this.params?.slug);
   }

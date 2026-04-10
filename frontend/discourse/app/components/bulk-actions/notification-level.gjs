@@ -11,7 +11,7 @@ import { i18n } from "discourse-i18n";
 export default class NotificationLevel extends Component {
   notificationLevelId = null;
 
-  @computed("notificationLevelId.length")
+  @computed("notificationLevelId")
   get disabled() {
     return isEmpty(this.notificationLevelId);
   }

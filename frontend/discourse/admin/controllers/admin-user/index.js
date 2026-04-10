@@ -42,7 +42,7 @@ export default class AdminUserIndexController extends Controller {
     return this.siteSettings.moderators_view_emails;
   }
 
-  @computed("model.manual_locked_trust_level.length")
+  @computed("model.manual_locked_trust_level")
   get hasLockedTrustLevel() {
     return !isEmpty(this.model?.manual_locked_trust_level);
   }

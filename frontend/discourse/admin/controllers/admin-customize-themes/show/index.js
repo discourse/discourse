@@ -43,7 +43,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     );
   }
 
-  @computed("selectedChildThemeId.length")
+  @computed("selectedChildThemeId")
   get addButtonDisabled() {
     return isEmpty(this.selectedChildThemeId);
   }

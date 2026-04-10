@@ -24,7 +24,7 @@ export default class AdminEmailIndexController extends Controller {
     @method testEmailAddressChanged
   **/
 
-  @computed("testEmailAddress.length")
+  @computed("testEmailAddress")
   get sendTestEmailDisabled() {
     return isEmpty(this.testEmailAddress);
   }

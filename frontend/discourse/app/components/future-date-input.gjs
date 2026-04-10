@@ -47,7 +47,7 @@ export default class FutureDateInput extends Component {
     return this.includeDateTime && this.isCustom;
   }
 
-  @computed("_date.length")
+  @computed("_date")
   get timeInputDisabled() {
     return isEmpty(this._date);
   }
