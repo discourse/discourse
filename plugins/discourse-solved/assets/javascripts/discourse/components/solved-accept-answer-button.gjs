@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import setAcceptedSolution from "../lib/set-accepted-solution";
+import setAcceptedSolution from "../lib/set-accepted-solutions";
 
 export default class SolvedAcceptAnswerButton extends Component {
   static hidden(args, context) {

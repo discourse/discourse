@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { SolvedAcceptedAnswer } from "./solved-accepted-answer";
+import SolvedAcceptedAnswer from "./solved-accepted-answer";
 
 export default class SolvedAcceptedAnswers extends Component {
   get topic() {

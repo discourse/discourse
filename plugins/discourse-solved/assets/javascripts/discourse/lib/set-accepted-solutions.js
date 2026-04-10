@@ -1,4 +1,4 @@
-export default function setAcceptedSolution(topic, acceptedAnswers) {
+export default function setAcceptedSolutions(topic, acceptedAnswers) {
   const acceptedPostNumbers = new Set(
     acceptedAnswers?.map((answer) => answer.post_number)
   );

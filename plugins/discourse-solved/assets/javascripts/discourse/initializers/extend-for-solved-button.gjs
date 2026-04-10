@@ -4,9 +4,9 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import SolvedAcceptAnswerButton from "../components/solved-accept-answer-button";
-import SolvedAcceptedAnswer from "../components/solved-accepted-answer";
+import SolvedAcceptedAnswers from "../components/solved-accepted-answers";
 import SolvedUnacceptAnswerButton from "../components/solved-unaccept-answer-button";
-import setAcceptedSolution from "../lib/set-accepted-solution";
+import setAcceptedSolutions from "../lib/set-accepted-solutions";
 
 function topicHasSolvedEnabled(topic) {
   if (!topic) {
@@ -81,7 +81,7 @@ function customizePost(api) {
       }
 
       <template>
-        <SolvedAcceptedAnswer
+        <SolvedAcceptedAnswers
           @post={{@post}}
           @decoratorState={{@decoratorState}}
         />
@@ -145,7 +145,7 @@ function handleMessages(api) {
     const topic = controller.model;
 
     if (topic) {
-      setAcceptedSolution(topic, message.accepted_answers);
+      setAcceptedSolutions(topic, message.accepted_answers);
     }
   };
 
