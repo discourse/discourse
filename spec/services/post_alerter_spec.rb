@@ -1358,6 +1358,7 @@ RSpec.describe PostAlerter do
       changes = {
         "notification_type" => Notification.types[:posted],
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),
@@ -1378,6 +1379,7 @@ RSpec.describe PostAlerter do
 
       changes = {
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),
