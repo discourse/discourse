@@ -12,6 +12,7 @@ import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 
 export default class EmbedTopicFooter extends Component {
+  @service appEvents;
   @service composer;
   @service currentUser;
   @service siteSettings;
@@ -66,6 +67,19 @@ export default class EmbedTopicFooter extends Component {
     );
   }
 
+  get showFloatingTimelineButton() {
+    return this.args.topic?.replyCount > 0 && !this.footerButtonsVisible;
+  }
+
+  get showFloatingButtons() {
+    return this.showFloatingReplyButton || this.showFloatingTimelineButton;
+  }
+
+  @action
+  handleTimelineToggle() {
+    this.appEvents.trigger("topic:toggle-progress-expansion");
+  }
+
   @action
   async handleReply() {
     if (!this.currentUser) {
@@ -106,13 +120,25 @@ export default class EmbedTopicFooter extends Component {
           </div>
         {{/if}}
       </div>
-      {{#if this.showFloatingReplyButton}}
-        <DButton
-          @action={{this.handleReply}}
-          @icon="reply"
-          @label={{this.replyButtonLabel}}
-          class="btn-primary embed-floating-reply-button"
-        />
+      {{#if this.showFloatingButtons}}
+        <div class="embed-floating-buttons">
+          {{#if this.showFloatingTimelineButton}}
+            <DButton
+              @action={{this.handleTimelineToggle}}
+              @icon="bars-staggered"
+              @title="topic.progress.title"
+              class="btn-default embed-floating-timeline-button"
+            />
+          {{/if}}
+          {{#if this.showFloatingReplyButton}}
+            <DButton
+              @action={{this.handleReply}}
+              @icon="reply"
+              @title={{this.replyButtonLabel}}
+              class="btn-primary embed-floating-reply-button"
+            />
+          {{/if}}
+        </div>
       {{/if}}
     {{/if}}
   </template>

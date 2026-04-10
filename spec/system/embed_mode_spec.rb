@@ -101,6 +101,12 @@ describe "Embed mode" do
         expect(page).to have_no_css("#reply-control.open")
         expect(page).to have_no_css("#reply-control.fullscreen")
       end
+
+      it "does not show floating timeline button" do
+        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+
+        expect(topic_page).to have_no_floating_timeline_button
+      end
     end
 
     context "with a topic that has replies" do
@@ -123,23 +129,35 @@ describe "Embed mode" do
       context "with many replies" do
         before { 15.times { Fabricate(:post, topic: topic) } }
 
-        it "shows a floating reply button when footer is not visible" do
-          resize_window(width: 900) do
-            visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-            expect(topic_page).to have_post_number(2)
+        it "shows floating action buttons when footer is not visible" do
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
 
-            expect(topic_page).to have_floating_reply_button
-          end
+          expect(topic_page).to have_floating_reply_button
+          expect(topic_page).to have_floating_timeline_button
         end
 
         it "opens the composer when clicking the floating reply button" do
-          resize_window(width: 900) do
-            visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-            expect(topic_page).to have_post_number(2)
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
 
-            topic_page.click_floating_reply_button
-            expect(page).to have_css("#reply-control.open")
-          end
+          topic_page.click_floating_reply_button
+          expect(page).to have_css("#reply-control.open")
+        end
+
+        it "opens the timeline when clicking the floating timeline button" do
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
+
+          topic_page.click_floating_timeline_button
+          expect(page).to have_css(".timeline-fullscreen.show")
+        end
+
+        it "hides the default topic progress bar" do
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
+
+          expect(page).to have_no_css("#topic-progress-wrapper", visible: :visible)
         end
       end
 

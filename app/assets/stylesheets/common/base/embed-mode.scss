@@ -96,19 +96,55 @@ body.embed-mode {
     border-bottom: 1px solid var(--content-border-color);
   }
 
-  // Floating reply button above the topic-progress widget (bottom-right)
-  // Visible while scrolling, hides when the footer reply area is in view
-  // On wide viewports (>=925px) the timeline already has its own reply button
-  .embed-floating-reply-button {
+  // Hide default topic-progress bar and docked timeline in embed mode
+  // We replace them with floating action buttons
+  #topic-progress-wrapper {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .container.posts .topic-navigation {
+    display: contents;
+  }
+
+  .timeline-container:not(.timeline-fullscreen) {
+    display: none !important;
+  }
+
+  // Floating action buttons (timeline + reply) in the bottom-right
+  .embed-floating-buttons {
     position: fixed;
     bottom: calc(
-      env(safe-area-inset-bottom) + var(--composer-height, 0px) + 3.5em
+      env(safe-area-inset-bottom) + var(--composer-height, 0px) + 1em
     );
     right: var(--space-4);
     z-index: z("timeline");
+    display: flex;
+    flex-direction: column;
+    gap: 0.65em;
+    align-items: center;
 
-    @media screen and (width >= 925px) {
-      display: none;
+    .embed-floating-timeline-button,
+    .embed-floating-reply-button {
+      width: 2.75em;
+      height: 2.75em;
+      border-radius: 50%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-dropdown);
+
+      .d-button-label {
+        display: none;
+      }
+
+      .d-icon {
+        margin: 0;
+      }
     }
   }
 
