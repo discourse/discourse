@@ -78,7 +78,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::RequestBuilder do
       config = {
         "method" => "POST",
         "url" => "https://example.com/api",
-        "body" => '{"name":"test"}',
+        "body_json" => '{"name":"test"}',
       }
       method, _, headers, body = described_class.new(config).build
 
@@ -91,7 +91,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::RequestBuilder do
       config = {
         "method" => "GET",
         "url" => "https://example.com/api",
-        "body" => '{"name":"test"}',
+        "body_json" => '{"name":"test"}',
       }
       _, _, _, body = described_class.new(config).build
 
