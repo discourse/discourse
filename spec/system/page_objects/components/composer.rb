@@ -154,11 +154,11 @@ module PageObjects
       end
 
       def locale
-        find("#{@composer_id} #{POST_LANGUAGE_SELECTOR}")
+        find("#{@composer_id} .d-editor-button-bar #{POST_LANGUAGE_SELECTOR}")
       end
 
       def set_locale(locale)
-        Components::DMenu.new(POST_LANGUAGE_SELECTOR).expand
+        click_toolbar_button("post-language-selector-trigger")
         within("#d-menu-portals", visible: false) { find("button", text: locale).click }
       end
 

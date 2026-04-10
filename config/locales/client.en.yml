@@ -4507,8 +4507,9 @@ en:
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
         post_language_selector:
-          title: "Post Language"
-          none: "None"
+          title: "Post language"
+          header: "I'm posting in…"
+          none: "Not set"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
           action_original: "Edit original post"
