@@ -26,6 +26,8 @@ hu:
       create: "Létrehozás"
       create_placeholder: "Lekérdezés neve…"
       description_placeholder: "Adjon meg egy leírást"
+      ai:
+        generate: "Generálás"
       import:
         label: "Importálás"
         unparseable_json: "Nem értelmezhető JSON-fájl."

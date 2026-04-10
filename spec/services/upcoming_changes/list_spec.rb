@@ -89,6 +89,35 @@ RSpec.describe UpcomingChanges::List do
         expect(mock_setting[:groups]).to eq("trust_level_0,trust_level_1")
       end
 
+      describe "related setting" do
+        context "when an upcoming_change_default_override points to the change" do
+          before do
+            mock_upcoming_change_default_overrides(
+              {
+                suggested_topics_max_days_old: {
+                  upcoming_change: :enable_upload_debug_mode,
+                  new_default: 1000,
+                },
+              },
+            )
+          end
+
+          after { clear_mocked_upcoming_change_default_overrides }
+
+          it "includes the related setting name" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting[:related]).to eq(:suggested_topics_max_days_old)
+          end
+        end
+
+        it "returns nil for related when no upcoming_change_default_override points to the change" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :allow_user_locale }
+          expect(mock_setting[:related]).to be_nil
+        end
+      end
+
       describe "enabled_for logic" do
         it "sets enabled_for to 'no_one' when setting value is false" do
           SiteSetting.enable_upload_debug_mode = false

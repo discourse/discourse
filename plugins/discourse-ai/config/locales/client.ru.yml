@@ -660,6 +660,10 @@ ru:
         url: "URL-адрес"
         auth_types:
           oauth: "OAuth"
+        oauth_authorization_params_help: "Необязательный JSON-объект, который объединяется с запросом авторизации. Используйте null, чтобы удалить параметр по умолчанию."
+        oauth_require_refresh_token: "Требуется токен обновления"
+        oauth_show_advanced_options: "Показать расширенные параметры"
+        oauth_hide_advanced_options: "Скрыть расширенные параметры"
         oauth_statuses:
           connected: "Связанный"
         oauth_connect: "Подключить"

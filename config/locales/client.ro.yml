@@ -495,8 +495,6 @@ ro:
           today: "astăzi"
     bookmarked:
       title: "Semn de carte"
-      edit_bookmark: "Editează marcaj"
-      clear_bookmarks: "Șterge semnele de carte"
       help:
         bookmark: "Clic pentru a pune un semn de carte la acest subiect"
         edit_bookmark: "Clic pentru a edita semnul de carte pe un mesaj din acest subiect"
@@ -514,12 +512,12 @@ ro:
       clear_reminder: "Șterge memento"
       edit: "Editează semn de carte"
       not_bookmarked: "pune semn de carte la acest articol"
+      topic_bookmark: "Subiect"
       remove_reminder_keep_bookmark: "Șterge mementoul și păstrează semnul de carte"
       created_with_reminder: "Ai marcat această postare cu un memento %{date}. %{name}"
       created_with_reminder_generic: "Ai marcat acest articol cu un memento %{date}. %{name}"
       delete: "Șterge semn de carte"
       confirm_delete: "Sigur vrei să ștergi acest semn de carte? Mementoul va fi de asemenea șters."
-      confirm_clear: "Sigur vrei să ștergi toate marcajele tale din acest subiect?"
       save: "Salvează"
       no_timezone: 'Nu ai setat încă un fus orar. Nu vei putea seta mementouri. Setează unul <a href="%{basePath}/my/preferences/profile">în profilul tău</a>.'
       invalid_custom_datetime: "Data și ora pe care le-ai furnizat sunt nevalide, te rugăm să încerci din nou."
@@ -2184,6 +2182,8 @@ ro:
       flags: Semnalări
       recent: Folosite recent
       default: Emojii personalizate
+    filter_input:
+      clear: "Elimină filtrul"
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
@@ -3192,6 +3192,9 @@ ro:
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       review_group_name: "numele grupului"
       require_topic_approval: "Cere obligatoriu aprobarea moderatorilor pentru toate discuțiile noi"
+      posting_review_modes:
+        no_one: "Nimeni"
+        everyone: "Toată lumea"
       this_year: "anul acesta"
       none_subcategory_text: "Nimic"
       visibility:

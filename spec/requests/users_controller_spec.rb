@@ -7333,10 +7333,13 @@ RSpec.describe UsersController do
       sign_in(user1)
       get "/u/#{user1.username}/bookmarks.ics"
       expect(response.status).to eq(200)
+      calendar_name =
+        I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
       expect(response.body).to eq(<<~ICS)
         BEGIN:VCALENDAR
         VERSION:2.0
         PRODID:-//Discourse//#{Discourse.current_hostname}//#{Discourse.full_version}//EN
+        X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}
         BEGIN:VEVENT
         UID:bookmark_reminder_##{bookmark1.id}@#{Discourse.current_hostname}
         DTSTAMP:#{bookmark1.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics"))}
@@ -7381,6 +7384,18 @@ RSpec.describe UsersController do
       expect(body).not_to include("bookmark_reminder_##{bookmark1.id}")
       expect(body).to include("bookmark_reminder_##{bookmark2.id}")
       expect(body).to include("bookmark_reminder_##{bookmark3.id}")
+    end
+
+    it "does not HTML-encode special characters in .ics feed" do
+      bookmark1.update!(name: "Tom & Jerry", reminder_at: 1.day.from_now)
+
+      sign_in(user1)
+      get "/u/#{user1.username}/bookmarks.ics"
+
+      expect(response.status).to eq(200)
+      body = response.body
+      expect(body).not_to include("&amp;")
+      expect(body).to include("SUMMARY:Tom & Jerry")
     end
 
     it "does not show another user's bookmarks" do

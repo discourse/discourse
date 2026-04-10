@@ -14,7 +14,6 @@ register_svg_icon "square-check"
 register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
-register_asset "stylesheets/mobile/solutions.scss", :mobile
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"

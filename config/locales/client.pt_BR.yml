@@ -563,8 +563,6 @@ pt_BR:
           other: "Criado(a) há menos de %{count} anos"
     bookmarked:
       title: "Favorito"
-      edit_bookmark: "Editar favorito"
-      clear_bookmarks: "Limpar favoritos"
       help:
         bookmark: "Clique para adicionar este tópico aos favoritos"
         edit_bookmark: "Clique para editar o favorito numa postagem deste tópico"
@@ -583,12 +581,12 @@ pt_BR:
       clear_reminder: "Limpar lembrete"
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
+      topic_bookmark: "Tópico"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
       created_with_reminder_generic: "Você marcou isso como lembrete em %{date}. %{name}"
       delete: "Excluir favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
-      confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
       no_timezone: 'Você ainda não definiu um fuso horário. Você não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       invalid_custom_datetime: "A data e a hora que você informou são inválidas, tente novamente."
@@ -2797,6 +2795,8 @@ pt_BR:
         filter_for_more: Filtre para ver mais…
         categories_admin_dropdown:
           title: "Gerenciar categorias"
+        tag_category_admin_dropdown:
+          edit_tag: "Editar tag"
         bulk_select_topics_dropdown:
           title: "Ações em massa"
         bulk_select_bookmarks_dropdown:
@@ -2827,6 +2827,8 @@ pt_BR:
       medium_dark_tone: Tom de pele médio-escuro
       dark_tone: Tom de pele escuro
       default: Emojis personalizados
+    filter_input:
+      clear: "Limpar filtro"
     shared_drafts:
       title: "Rascunhos compartilhados"
       notice: "Este tópico está visível apenas para quem puder publicar rascunhos compartilhados."
@@ -4431,6 +4433,10 @@ pt_BR:
       review_group_name: "nome do grupo"
       require_topic_approval: "Requer aprovação dos moderadores(as) de todos os novos tópicos"
       require_reply_approval: "Requer aprovação dos moderadores(as) de todas as novas respostas"
+      posting_review_modes:
+        no_one: "Ninguém"
+        everyone: "Todos(as)"
+      posting_review_groups_placeholder: "Selecionar grupos..."
       this_year: "este ano"
       position: "Posição na página de categorias:"
       default_position: "Posição padrão"

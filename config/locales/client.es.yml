@@ -509,8 +509,6 @@ es:
           other: "Creado hace %{count} años"
     bookmarked:
       title: "Marcador"
-      edit_bookmark: "Editar marcador"
-      clear_bookmarks: "Quitar marcadores"
       help:
         bookmark: "Haz clic para marcar este tema como favorito"
         edit_bookmark: "Haz clic para editar el marcador de una publicación de este tema"
@@ -529,12 +527,12 @@ es:
       clear_reminder: "Quitar recordatorio"
       edit: "Editar marcador"
       not_bookmarked: "guarda esta publicación en marcadores"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Eliminar recordatorio y mantener marcador"
       created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
       created_with_reminder_generic: "Has añadido esto a marcadores con un recordatorio %{date}. %{name}"
       delete: "Eliminar marcador"
       confirm_delete: "¿Quieres borrar este marcador? El recordatorio también se borrará."
-      confirm_clear: "¿Seguro que quieres eliminar todos tus marcadores en este tema?"
       save: "Guardar"
       no_timezone: 'No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes elegir una <a href="%{basePath}/my/preferences/profile">en tu perfil</a>.'
       invalid_custom_datetime: "La fecha y hora que has proporcionado no es válida. Inténtalo de nuevo."
@@ -2728,6 +2726,8 @@ es:
       medium_dark_tone: Tono de piel medio oscuro
       dark_tone: Tono de piel oscuro
       default: Emojis personalizados
+    filter_input:
+      clear: "Limpiar filtro"
     shared_drafts:
       title: "Borradores compartidos"
       notice: "Este tema solo es visible para aquellos que pueden publicar borradores compartidos."
@@ -4299,6 +4299,10 @@ es:
       review_group_name: "nombre del grupo"
       require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
       require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"
+      posting_review_modes:
+        no_one: "Nadie"
+        everyone: "Todos"
+      posting_review_groups_placeholder: "Seleccionar grupos..."
       this_year: "este año"
       position: "Posición en la página de categorías:"
       default_position: "Posición por defecto"

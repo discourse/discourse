@@ -447,8 +447,6 @@ zh_TW:
           other: "建立於 %{count} 年前"
     bookmarked:
       title: "書籤"
-      edit_bookmark: "編輯書籤"
-      clear_bookmarks: "清除書籤"
       help:
         bookmark: "點擊以將此主題加入書籤"
         edit_bookmark: "點擊以編輯此主題中文章的書籤"
@@ -467,12 +465,12 @@ zh_TW:
       clear_reminder: "清除提醒"
       edit: "編輯書籤"
       not_bookmarked: "將此貼文加入書籤"
+      topic_bookmark: "話題"
       remove_reminder_keep_bookmark: "刪除提醒並保留書籤"
       created_with_reminder: "您已使用提醒 %{date}將此帖子添加為書籤。 %{name}"
       created_with_reminder_generic: "您已在 %{date} 將此內容加為書籤並設定提醒。%{name}"
       delete: "刪除書籤"
       confirm_delete: "您確定要刪除這個書籤嗎？提醒也會被刪除。"
-      confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
       no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
       invalid_custom_datetime: "您提供的日期和時間無效，請再試一次。"
@@ -2422,6 +2420,8 @@ zh_TW:
       medium_dark_tone: 膚色深度：4
       dark_tone: 膚色深度：5
       default: 自訂表情符號
+    filter_input:
+      clear: "清除篩選"
     shared_drafts:
       title: "共享草稿"
       notice: "此話題只對可以發布共享草稿的使用者可見。"
@@ -3731,6 +3731,9 @@ zh_TW:
       review_group_name: "群組名稱"
       require_topic_approval: "所有新話題皆需要通過管理員審核"
       require_reply_approval: "所有新回覆皆需要通過管理員審核"
+      posting_review_modes:
+        everyone: "所有使用者"
+      posting_review_groups_placeholder: "選取群組..."
       this_year: "今年"
       position: "在分類頁面上的位置："
       position_disabled: "類別將按活動順序顯示。若要控制清單中類別的順序，請啟用 <a href='%{url}'>「固定類別位置」</a> 設定。"

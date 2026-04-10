@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -156,15 +156,11 @@ module(
 
       await render(<template><QueryResult @content={{content}} /></template>);
 
-      assert.dom(".result-info button:nth-child(3)").doesNotExist();
       assert.dom("canvas").exists("the chart was rendered");
       assert.dom("table").exists("the table was rendered");
       assert
-        .dom("section > :first-child")
-        .matchesSelector(
-          ".query-results-chart",
-          "the chart is shown above the table"
-        );
+        .dom(".query-results-modes")
+        .exists("the chart/table toggle buttons are rendered");
     });
 
     test("renders a chart when data has two columns and numbers in the second column", async function (assert) {
@@ -297,6 +293,48 @@ module(
       await render(<template><QueryResult @content={{content}} /></template>);
 
       assert.dom("canvas").doesNotExist();
+    });
+
+    test("toggle buttons independently show and hide chart and table", async function (assert) {
+      const content = {
+        colrender: [],
+        result_count: 2,
+        columns: ["user_name", "like_count"],
+        rows: [
+          ["user1", 10],
+          ["user2", 20],
+        ],
+      };
+
+      await render(<template><QueryResult @content={{content}} /></template>);
+
+      assert.dom("canvas").exists("chart is visible by default");
+      assert.dom("table").exists("table is visible by default");
+
+      await click(".query-results-modes .btn:first-child");
+      assert.dom("canvas").doesNotExist("chart is hidden after toggle");
+      assert.dom("table").exists("table remains visible");
+
+      await click(".query-results-modes .btn:last-child");
+      assert.dom("canvas").doesNotExist("chart stays hidden");
+      assert.dom("table").doesNotExist("table is hidden after toggle");
+
+      await click(".query-results-modes .btn:first-child");
+      assert.dom("canvas").exists("chart is visible again");
+      assert.dom("table").doesNotExist("table stays hidden");
+    });
+
+    test("toggle buttons are not shown for non-chartable data", async function (assert) {
+      const content = {
+        colrender: [],
+        result_count: 2,
+        columns: ["user_name"],
+        rows: [["user1"], ["user2"]],
+      };
+
+      await render(<template><QueryResult @content={{content}} /></template>);
+
+      assert.dom(".query-results-modes").doesNotExist();
     });
 
     test("handles no results", async function (assert) {

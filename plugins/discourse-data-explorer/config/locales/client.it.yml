@@ -23,6 +23,8 @@ it:
       create: "Crea"
       create_placeholder: "Nome query..."
       description_placeholder: "Inserisci una descrizione qui"
+      ai:
+        generate: "Genera"
       import:
         label: "Importa"
         unparseable_json: "File JSON non analizzabile."

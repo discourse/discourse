@@ -2,6 +2,7 @@
 
 describe "Request tracking" do
   before do
+    ApplicationRequest.delete_all
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable

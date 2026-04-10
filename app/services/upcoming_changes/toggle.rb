@@ -8,7 +8,7 @@ class UpcomingChanges::Toggle
   options { attribute :log_change, default: true }
 
   params do
-    attribute :setting_name, :string
+    attribute :setting_name, :symbol
     attribute :enabled, :boolean
     validates :setting_name, presence: true
     validates :enabled, inclusion: [true, false]
@@ -43,12 +43,11 @@ class UpcomingChanges::Toggle
 
   def toggle(params:, guardian:, options:)
     context[:previous_value] = SiteSetting.public_send(params.setting_name)
-
     SiteSetting.send("#{params.setting_name}=", params.enabled)
   end
 
   def clear_groups_if_disallowed(params:)
-    metadata = SiteSetting.upcoming_change_metadata[params.setting_name.to_sym]
+    metadata = SiteSetting.upcoming_change_metadata[params.setting_name]
     return if !metadata || !metadata[:disallow_enabled_for_groups]
 
     SiteSettingGroup.find_by(name: params.setting_name)&.destroy!

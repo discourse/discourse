@@ -103,6 +103,10 @@ export default class UpcomingChangeItem extends Component {
     );
   }
 
+  get showRelatedSettingLink() {
+    return this.args.change.related && this.bufferedEnabledFor !== "no_one";
+  }
+
   @action
   groupFinder(term) {
     return Group.findAll({ term, ignore_automatic: false });
@@ -413,6 +417,17 @@ export default class UpcomingChangeItem extends Component {
             <LinkTo
               @route="adminSiteSettings"
               @query={{hash filter="all_results" dependsOn=@change.setting}}
+            >
+              {{i18n "admin.upcoming_changes.show_related_settings"}}
+            </LinkTo>
+          </div>
+        {{/if}}
+
+        {{#if this.showRelatedSettingLink}}
+          <div class="upcoming-change__related">
+            <LinkTo
+              @route="adminSiteSettings"
+              @query={{hash filter=@change.related}}
             >
               {{i18n "admin.upcoming_changes.show_related_settings"}}
             </LinkTo>

@@ -10,6 +10,8 @@ pl_PL:
       features:
         data_explorer:
           name: "Eksplorator danych"
+          description: "Generowanie zapytań dla Eksploratora danych oparte na sztucznej inteligencji"
+          query_generation: "Generowanie zapytań"
     errors:
       explorer:
         no_semicolons: "Usuń średniki z zapytania."
@@ -26,6 +28,16 @@ pl_PL:
       create: "Utwórz"
       create_placeholder: "Nazwa zapytania…"
       description_placeholder: "Wprowadź opis zapytania"
+      ai:
+        or_divider: "LUB"
+        description_title: "Generuj za pomocą AI"
+        description_hint: "Opisz, czego potrzebujesz, prostym językiem. Wygenerujemy dla Ciebie kod SQL, nazwę i opis."
+        description_placeholder: "np. Pokaż mi zapisy na przestrzeni czasu"
+        generate: "Generuj"
+        generating_name: "Generowanie..."
+        generating: "Generowanie zapytań za pomocą AI..."
+        generation_timeout: "Przekroczono limit czasu generowania zapytania AI. Możesz wpisać kod SQL ręcznie."
+        generation_error: "Wystąpił błąd podczas generowania zapytania."
       import:
         label: "Import"
         unparseable_json: "Nieprzetwarzalny plik JSON."
@@ -62,6 +74,7 @@ pl_PL:
       show_graph: "Wykres"
       others_dirty: "Zapytanie ma niezapisane zmiany, które utracisz, jeśli przejdziesz w inne miejsce."
       run_time: "Zapytanie zakończone w %{value} ms."
+      cached_result_notice: "Wyświetlanie wyników z pamięci podręcznej z %{relative_time}."
       result_count:
         one: "%{count}wynik."
         few: "%{count}wyniki."

@@ -95,8 +95,7 @@ ALWAYS lint any changes you make
 
 ## Database & Performance
 - ActiveRecord: use `includes()`/`preload()` (N+1), `find_each()`/`in_batches()` (large sets), `update_all`/`delete_all` (bulk), `exists?` over `present?`
-- Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns
-- Use `bin/rails generate migration` for new migrations
+- Migrations: use the skill at .skills/discourse-migration before writing or reviewing any migration
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
 
 ## HTTP Response Codes

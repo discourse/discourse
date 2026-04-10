@@ -1,7 +1,22 @@
 import Controller from "@ember/controller";
-import { alias } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 
 export default class CakedayController extends Controller {
-  @alias("siteSettings.cakeday_enabled") cakedayEnabled;
-  @alias("siteSettings.cakeday_birthday_enabled") birthdayEnabled;
+  @computed("siteSettings.cakeday_enabled")
+  get cakedayEnabled() {
+    return this.siteSettings?.cakeday_enabled;
+  }
+
+  set cakedayEnabled(value) {
+    set(this, "siteSettings.cakeday_enabled", value);
+  }
+
+  @computed("siteSettings.cakeday_birthday_enabled")
+  get birthdayEnabled() {
+    return this.siteSettings?.cakeday_birthday_enabled;
+  }
+
+  set birthdayEnabled(value) {
+    set(this, "siteSettings.cakeday_birthday_enabled", value);
+  }
 }

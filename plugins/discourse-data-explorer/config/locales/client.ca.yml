@@ -22,6 +22,8 @@ ca:
       create: "Crea"
       create_placeholder: "Nom de consulta..."
       description_placeholder: "Introduïu una descripció aquí"
+      ai:
+        generate: "Genera"
       import:
         label: "Importa"
       help:

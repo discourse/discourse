@@ -1,11 +1,11 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { empty, equal, notEmpty } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 /** @type {import("discourse/helpers/element.gjs").default} */
@@ -76,11 +76,20 @@ export default class DButton extends Component {
   @service router;
   @service capabilities;
 
-  @notEmpty("args.icon") btnIcon;
+  @computed("args.icon")
+  get btnIcon() {
+    return !isEmpty(this.args?.icon);
+  }
 
-  @equal("args.display", "link") btnLink;
+  @computed("args.display")
+  get btnLink() {
+    return this.args?.display === "link";
+  }
 
-  @empty("computedLabel") noText;
+  @computed("computedLabel")
+  get noText() {
+    return isEmpty(this.computedLabel);
+  }
 
   get forceDisabled() {
     return !!this.args.isLoading;

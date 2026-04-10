@@ -545,23 +545,26 @@ class TopicsController < ApplicationController
   end
 
   def feature_stats
-    params.require(:category_id)
-    category_id = params[:category_id].to_i
+    category_id = params[:category_id]&.to_i
 
     visible_topics = Topic.listable_topics.visible.secured(guardian)
 
-    render json: {
-             pinned_in_category_count:
-               visible_topics
-                 .where(category_id: category_id)
-                 .where(pinned_globally: false)
-                 .where.not(pinned_at: nil)
-                 .count,
-             pinned_globally_count:
-               visible_topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
-             banner_count:
-               Topic.listable_topics.secured(guardian).where(archetype: Archetype.banner).count,
-           }
+    result = {
+      pinned_globally_count:
+        visible_topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
+      banner_count:
+        Topic.listable_topics.secured(guardian).where(archetype: Archetype.banner).count,
+    }
+
+    if category_id
+      result[:pinned_in_category_count] = visible_topics
+        .where(category_id: category_id)
+        .where(pinned_globally: false)
+        .where.not(pinned_at: nil)
+        .count
+    end
+
+    render json: result
   end
 
   def status
@@ -641,7 +644,7 @@ class TopicsController < ApplicationController
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
 
-    if status_type == TopicTimer.types[:publish_to_category] && params[:category_id].present?
+    if status_type == TopicTimer.types[:publish_to_category] && params[:time].present?
       category = Category.find_by(id: params[:category_id])
       raise Discourse::NotFound if !category
       raise Discourse::InvalidAccess if !guardian.can_create_topic_on_category?(category)
@@ -1134,6 +1137,8 @@ class TopicsController < ApplicationController
           :notification_level_id,
           :message,
           :silent,
+          :pinned_globally,
+          :pinned_until,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tag_ids: [],
           tags: [],
@@ -1141,8 +1146,10 @@ class TopicsController < ApplicationController
         .to_h
         .symbolize_keys
 
-    if operation.has_key? :silent
-      operation[:silent] = ActiveModel::Type::Boolean.new.cast(operation[:silent])
+    %i[silent pinned_globally].each do |key|
+      operation[key] = ActiveModel::Type::Boolean.new.cast(operation[key]) if operation.has_key?(
+        key,
+      )
     end
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?

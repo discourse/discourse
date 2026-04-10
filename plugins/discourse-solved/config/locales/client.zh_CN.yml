@@ -19,6 +19,7 @@ zh_CN:
     solutions: "解决方案"
     solved:
       title: "已解决"
+      notify_on_solved: "当我正在追踪或关注的主题被解决时通知我。仅适用于允许提供解答的类别主题。"
       allow_accepted_answers: "允许话题所有者和管理人员将回复标记为解决方案"
       solved_topics_auto_close_hours: "当话题被标记为已解决后，在最后回复 (n) 小时后自动关闭话题。"
       notify_on_staff_accept_solved: "当管理人员标记解决方案时通知话题创建者"
@@ -59,6 +60,12 @@ zh_CN:
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "您的帖子已被标记为解决方案"
+        topic_solved_title: "话题已解决"
+      topic_notifications:
+        tracking:
+          description: "当有人通过@名称提及您、回复你或主题被解决时，系统会通知你。此话题将显示新回复数量。"
+        watching:
+          description: "您将收到此主题每条新回复的通知，并在该问题得到解决时获得提醒。系统会显示本话题的新回帖数量。"
       category_type_support:
         title: "支持"
         not_support_type: "注意！您已经禁用了在此类别中将帖子标记为解决方案的功能。要重新打开，您可以在 \"设置 \"选项卡中找到相关设置。"

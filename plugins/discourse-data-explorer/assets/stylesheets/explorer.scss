@@ -421,12 +421,20 @@ table.group-reports {
   }
 
   section {
+    display: flex;
+    flex-direction: column;
     width: 100%;
   }
 
   .query-results-chart {
-    width: min(100%, 840px);
-    margin: 0 auto 1rem;
+    height: clamp(200px, 50vh, 350px);
+    min-width: 0;
+    margin-bottom: 1rem;
+    animation: fadein 2s;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 
   table {
@@ -451,6 +459,16 @@ table.group-reports {
   .query-results-table-wrapper {
     overflow: auto;
     max-height: 1000px;
+  }
+
+  .query-results-modes {
+    display: inline-flex;
+    gap: 0.35em;
+    margin: 0.75em 0;
+
+    .btn {
+      margin: 0;
+    }
   }
 }
 

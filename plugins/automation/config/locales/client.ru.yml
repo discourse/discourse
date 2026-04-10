@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Запустите автоматизацию через API"
   js:
     admin:
       logs:
@@ -210,9 +217,6 @@ ru:
               description: "Необязательный параметр, ограничивает срабатывание только для публикаций с этими характеристиками"
           created: Создано
           edited: Изменено
-          topics: Все темы
-          personal_messages: Личные сообщения
-          public_topics: Публичные темы (исключая все защищенные категории)
           with_images: Изображения
           with_links: Ссылки
           with_code: Код

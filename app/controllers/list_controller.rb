@@ -58,13 +58,12 @@ class ListController < ApplicationController
     define_method(filter) do |options = nil|
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
-      user = current_user
       if params[:category].blank? && filter == :latest &&
            !SiteSetting.show_category_definitions_in_topic_lists
         list_opts[:no_definitions] = true
       end
 
-      list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
+      list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
 
       if guardian.can_create_shared_draft? && @category.present?
         if @category.id == SiteSetting.shared_drafts_category.to_i
@@ -75,7 +74,7 @@ class ListController < ApplicationController
           # destination are this category
           shared_drafts =
             TopicQuery.new(
-              user,
+              current_user,
               category: SiteSetting.shared_drafts_category,
               destination_category_id: list_opts[:category],
             ).list_latest
@@ -238,13 +237,11 @@ class ListController < ApplicationController
   def latest_feed
     discourse_expires_in 1.minute
 
-    options = { order: "created" }.merge(build_topic_list_options)
-
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.latest")}"
     @link = "#{Discourse.base_url}/latest"
     @atom_link = "#{Discourse.base_url}/latest.rss"
     @description = I18n.t("rss_description.latest")
-    @topic_list = TopicQuery.new(nil, options).list_latest
+    @topic_list = topic_query(nil, order: "created").list_latest
 
     render "list", formats: [:rss]
   end
@@ -259,7 +256,7 @@ class ListController < ApplicationController
     period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
     TopTopic.validate_period(period)
 
-    @topic_list = TopicQuery.new(nil).list_top_for(period)
+    @topic_list = topic_query(nil).list_top_for(period)
 
     render "list", formats: [:rss]
   end
@@ -272,7 +269,7 @@ class ListController < ApplicationController
     @atom_link = "#{Discourse.base_url}/hot.rss"
     @description = I18n.t("rss_description.hot")
 
-    @topic_list = TopicQuery.new(nil).list_hot
+    @topic_list = topic_query(nil).list_hot
 
     render "list", formats: [:rss]
   end
@@ -286,7 +283,7 @@ class ListController < ApplicationController
     @atom_link = "#{Discourse.base_url_no_prefix}#{@category.url}.rss"
     @description =
       "#{I18n.t("topics_in_category", category: @category.name)} #{@category.description}"
-    @topic_list = TopicQuery.new(current_user).list_new_in_category(@category)
+    @topic_list = topic_query.list_new_in_category(@category)
 
     render "list", formats: [:rss]
   end
@@ -302,7 +299,7 @@ class ListController < ApplicationController
     @atom_link = "#{target_user.full_url}/activity/topics.rss"
     @description = I18n.t("rss_description.user_topics", username: target_user.username)
 
-    @topic_list = TopicQuery.new(nil, order: "created").public_send("list_topics_by", target_user)
+    @topic_list = topic_query(nil, order: "created").public_send("list_topics_by", target_user)
 
     render "list", formats: [:rss]
   end
@@ -359,7 +356,7 @@ class ListController < ApplicationController
       @title = "#{SiteSetting.title} - #{@description}"
       @link = "#{Discourse.base_url}/top?period=#{period}"
       @atom_link = "#{Discourse.base_url}/top.rss?period=#{period}"
-      @topic_list = TopicQuery.new(nil).list_top_for(period)
+      @topic_list = topic_query(nil).list_top_for(period)
 
       render "list", formats: [:rss]
     end
@@ -381,6 +378,10 @@ class ListController < ApplicationController
   end
 
   private
+
+  def topic_query(user = current_user, opts = {})
+    TopicQuery.new(user, build_topic_list_options.merge(opts))
+  end
 
   def page_params
     route_params = { format: "json" }

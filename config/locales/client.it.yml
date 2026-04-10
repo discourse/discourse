@@ -493,8 +493,6 @@ it:
           other: "Creato %{count} anni fa"
     bookmarked:
       title: "Segnalibro"
-      edit_bookmark: "Modifica Segnalibro"
-      clear_bookmarks: "Cancella Segnalibri"
       help:
         bookmark: "Clicca per mettere il segnalibro all'argomento"
         edit_bookmark: "Clicca per modificare il segnalibro di un messaggio in questo argomento"
@@ -513,12 +511,12 @@ it:
       clear_reminder: "Cancella promemoria"
       edit: "Modifica segnalibro"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
+      topic_bookmark: "Argomento"
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
       created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
       created_with_reminder_generic: "L'hai aggiunto ai segnalibri con un promemoria per il %{date}. %{name}"
       delete: "Cancella Segnalibro"
       confirm_delete: "Vuoi eliminare questo segnalibro? Anche il promemoria verrà eliminato."
-      confirm_clear: "Vuoi rimuovere tutti i segnalibri da questo argomento?"
       save: "Salva"
       no_timezone: 'Non hai ancora impostato un fuso orario. Non sarai in grado di impostare promemoria. Creane uno <a href="%{basePath}/my/preferences/profile">nel tuo profilo</a> .'
       invalid_custom_datetime: "La data e l'ora fornite non sono valide, riprova."
@@ -2654,6 +2652,8 @@ it:
       medium_dark_tone: Carnagione di tonalità medio-scura
       dark_tone: Carnagione di tonalità scura
       default: Emoji personalizzate
+    filter_input:
+      clear: "Cancella il filtro"
     shared_drafts:
       title: "Bozze condivise"
       notice: "Questo argomento è visibile solo a coloro che possono pubblicare bozze condivise."
@@ -4127,6 +4127,9 @@ it:
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"
+      posting_review_modes:
+        everyone: "Chiunque"
+      posting_review_groups_placeholder: "Seleziona gruppi..."
       this_year: "quest'anno"
       position: "Posizione nella pagina delle Categorie:"
       position_disabled: "Le categorie verranno visualizzate in ordine di attività. Per controllare l'ordine delle categorie negli elenchi, abilita l'impostazione <a href='%{url}'>'posizioni di categoria fisse'</a>."

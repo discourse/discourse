@@ -224,8 +224,7 @@ gem "rotp", require: false
 
 gem "rqrcode"
 
-# can't upgrade to 3.x due to d-token-gate
-gem "rubyzip", "~> 2.0", require: false
+gem "rubyzip", require: false
 
 gem "sshkey", require: false
 

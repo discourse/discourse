@@ -15,8 +15,8 @@
     }
   }
 
-  // Hide the Summarize label when there are many stats
-  &:has(.--many-stats):has(.top-replies) .topic-map__additional-contents {
+  // Hide the Summarize label when both buttons are present
+  &:has(.top-replies) .topic-map__additional-contents {
     button {
       .d-icon {
         margin: 0;
