@@ -308,7 +308,7 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_json["children"].first["id"]).to eq(child.id)
       end
 
-      it "shows deleted root as placeholder for staff too" do
+      it "shows deleted root as placeholder for staff but preserves content" do
         root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
         root.update!(deleted_at: Time.current)
         sign_in(admin)
@@ -318,7 +318,8 @@ RSpec.describe NestedTopicsController, type: :request do
         root_json = json["roots"].find { |r| r["id"] == root.id }
         expect(root_json).to be_present
         expect(root_json["deleted_post_placeholder"]).to eq(true)
-        expect(root_json["cooked"]).to eq("")
+        expect(root_json["cooked"]).to be_present
+        expect(root_json["cooked"]).not_to eq("")
       end
     end
 
@@ -881,7 +882,7 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(child_json["children"].first["id"]).to eq(grandchild.id)
       end
 
-      it "shows deleted child as placeholder for staff too" do
+      it "shows deleted child as placeholder for staff but preserves content" do
         child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
         child.update!(deleted_at: Time.current)
         sign_in(admin)
@@ -891,7 +892,8 @@ RSpec.describe NestedTopicsController, type: :request do
         child_json = json["children"].find { |c| c["id"] == child.id }
         expect(child_json).to be_present
         expect(child_json["deleted_post_placeholder"]).to eq(true)
-        expect(child_json["cooked"]).to eq("")
+        expect(child_json["cooked"]).to be_present
+        expect(child_json["cooked"]).not_to eq("")
       end
     end
 
@@ -1016,6 +1018,23 @@ RSpec.describe NestedTopicsController, type: :request do
         json = response.parsed_body
         expect(json["ancestor_chain"].map { |a| a["id"] }).to include(child.id)
         expect(json["target_post"]["id"]).to eq(grandchild.id)
+      end
+
+      it "shows deleted ancestor as placeholder for staff but preserves content" do
+        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+        child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        grandchild =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: child.post_number)
+        child.update!(deleted_at: Time.current)
+        sign_in(admin)
+
+        get context_url(topic, grandchild.post_number)
+        json = response.parsed_body
+        ancestor = json["ancestor_chain"].find { |a| a["id"] == child.id }
+        expect(ancestor).to be_present
+        expect(ancestor["deleted_post_placeholder"]).to eq(true)
+        expect(ancestor["cooked"]).to be_present
+        expect(ancestor["cooked"]).not_to eq("")
       end
     end
   end

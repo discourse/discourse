@@ -113,7 +113,7 @@ export default class TopicAdminMenu extends Component {
         type: "PUT",
         data: { enabled: newValue },
       });
-      topic.set("is_nested_view", newValue || null);
+      topic.set("is_nested_view", newValue);
 
       if (newValue) {
         DiscourseURL.routeTo(`/n/${slug}/${topicId}`);

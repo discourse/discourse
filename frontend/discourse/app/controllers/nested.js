@@ -61,6 +61,7 @@ export default class NestedController extends Controller {
   postRegistry = new Map();
   #postEventsSubscribed = false;
   #messageBusChannel = null;
+  #pendingPostIds = new Set();
 
   // The topic controller/route are hydrated in setupController so we can
   // delegate shared actions and read shared state instead of duplicating
@@ -190,7 +191,10 @@ export default class NestedController extends Controller {
     this.dialog.yesNoConfirm({
       message: i18n("post.confirm_delete"),
       didConfirm: () => {
-        post.destroy(this.currentUser).catch(popupAjaxError);
+        post
+          .destroy(this.currentUser)
+          .then(() => this.#markPostDeletedLocally(post.id))
+          .catch(popupAjaxError);
       },
     });
   }
@@ -398,10 +402,11 @@ export default class NestedController extends Controller {
   async #handleCreated(data) {
     // Skip if this post is already known (e.g. cache restore replaying
     // messages that were already processed before navigating away)
-    if (this.#isPostKnown(data.id)) {
+    if (this.#isPostKnown(data.id) || this.#pendingPostIds.has(data.id)) {
       return;
     }
 
+    this.#pendingPostIds.add(data.id);
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
@@ -430,6 +435,8 @@ export default class NestedController extends Controller {
       }
     } catch {
       // Post may not be visible to this user
+    } finally {
+      this.#pendingPostIds.delete(data.id);
     }
   }
 
@@ -478,9 +485,11 @@ export default class NestedController extends Controller {
   #markPostDeletedLocally(postId) {
     for (const post of this.postRegistry.values()) {
       if (post.id === postId) {
-        post.set("deleted", true);
+        post.set("deleted_at", new Date());
         post.set("deleted_post_placeholder", true);
-        post.set("cooked", "");
+        if (!this.currentUser?.staff) {
+          post.set("cooked", "");
+        }
         break;
       }
     }
@@ -491,9 +500,14 @@ export default class NestedController extends Controller {
     const ids = [...this.newRootPostIds];
     this.newRootPostIds = [];
 
+    const topicId = this.topic?.id;
     const results = await Promise.allSettled(
       ids.map((id) => ajax(`/posts/${id}.json`))
     );
+
+    if (this.topic?.id !== topicId) {
+      return;
+    }
 
     const newNodes = [];
     for (const result of results) {

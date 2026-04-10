@@ -594,15 +594,42 @@
   &__deleted-placeholder {
     grid-column: 2;
     grid-row: 1;
+    padding: 0 0 2em;
+    margin-top: -0.35em;
+  }
+
+  &__deleted-actions {
     display: flex;
-    align-items: flex-start;
-    padding: 0.25em 0 2em;
+    align-items: center;
+    gap: 0.25em;
   }
 
   &__deleted-label {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     font-style: italic;
+  }
+
+  &__deleted-content {
+    background-color: var(--danger-low-mid);
+    padding: 0.5em;
+    width: 100%;
+  }
+
+  &__deleted-content-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+
+    .topic-meta-data {
+      display: contents;
+    }
+
+    .post-infos {
+      margin-left: auto;
+      order: 1;
+    }
   }
 
   &--whisper {

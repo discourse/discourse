@@ -355,6 +355,27 @@ module PageObjects
         has_css?(".nested-post--deleted [data-post-number='#{post.post_number}']")
       end
 
+      def has_toggle_deleted_content_button_for?(post)
+        has_css?("[data-post-number='#{post.post_number}'] button.toggle-deleted-content")
+      end
+
+      def has_no_toggle_deleted_content_button_for?(post)
+        has_no_css?("[data-post-number='#{post.post_number}'] button.toggle-deleted-content")
+      end
+
+      def click_toggle_deleted_content(post)
+        find("[data-post-number='#{post.post_number}'] button.toggle-deleted-content").click
+        self
+      end
+
+      def has_deleted_content_visible_for?(post)
+        has_css?(wrapper_selector(post, ".nested-post__deleted-content"))
+      end
+
+      def has_no_deleted_content_visible_for?(post)
+        has_no_css?(wrapper_selector(post, ".nested-post__deleted-content"))
+      end
+
       # ── Post actions ────────────────────────────────────────────
 
       def click_post_delete_button(post)

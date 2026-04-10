@@ -39,6 +39,7 @@ export default class NestedPost extends Component {
   @tracked expanded;
   @tracked lineHighlighted = false;
   @tracked collapsed;
+  @tracked showDeletedContent = false;
 
   restoreScroll = modifier((element) => {
     const anchor = this.args.scrollAnchor;
@@ -199,6 +200,11 @@ export default class NestedPost extends Component {
   }
 
   @action
+  toggleDeletedContent() {
+    this.showDeletedContent = !this.showDeletedContent;
+  }
+
+  @action
   highlightLine() {
     if (!this.site.mobileView) {
       this.lineHighlighted = true;
@@ -356,7 +362,10 @@ export default class NestedPost extends Component {
                   class="nested-post__collapsed-username"
                 >{{@post.username}}</span>
               {{/if}}
-              <span class="nested-post__collapsed-separator">&middot;</span>
+              <span
+                class="nested-post__collapsed-separator"
+                aria-hidden="true"
+              >&middot;</span>
               <span
                 class="nested-post__collapsed-reply-count"
               >{{this.expandLabel}}</span>
@@ -366,15 +375,39 @@ export default class NestedPost extends Component {
               class="nested-post__deleted-placeholder"
               data-post-number={{@post.post_number}}
             >
-              <span class="nested-post__deleted-label">{{i18n
-                  "nested_replies.deleted_post_placeholder"
-                }}</span>
-              {{#if @post.can_recover}}
-                <DButton
-                  class="btn-flat recover"
-                  @action={{fn @recoverPost @post}}
-                  @icon="arrow-rotate-left"
-                />
+              <div class="nested-post__deleted-actions">
+                <span class="nested-post__deleted-label">{{i18n
+                    "nested_replies.deleted_post_placeholder"
+                  }}</span>
+                {{#if this.currentUser.staff}}
+                  <DButton
+                    class="btn-flat toggle-deleted-content"
+                    @action={{this.toggleDeletedContent}}
+                    @icon={{if
+                      this.showDeletedContent
+                      "far-eye-slash"
+                      "far-eye"
+                    }}
+                    @ariaLabel="post.controls.view_deleted"
+                  />
+                {{/if}}
+                {{#if @post.can_recover}}
+                  <DButton
+                    class="btn-flat recover"
+                    @action={{fn @recoverPost @post}}
+                    @icon="arrow-rotate-left"
+                    @ariaLabel="post.controls.undelete"
+                  />
+                {{/if}}
+              </div>
+              {{#if this.showDeletedContent}}
+                <div class="nested-post__deleted-content">
+                  <div class="nested-post__deleted-content-header">
+                    <PostAvatar @post={{@post}} @size="small" />
+                    <PostMetaData @post={{@post}} />
+                  </div>
+                  <PostCookedHtml @post={{@post}} />
+                </div>
               {{/if}}
             </div>
           {{else}}

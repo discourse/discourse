@@ -27,10 +27,10 @@ module NestedReplies
 
       if post.deleted_at.present?
         json[:deleted_post_placeholder] = true
-        json[:cooked] = ""
-        json[:raw] = nil
-        json[:actions_summary] = []
         unless @guardian.is_staff?
+          json[:cooked] = ""
+          json[:raw] = nil
+          json[:actions_summary] = []
           json =
             json.slice(
               :id,

@@ -4584,6 +4584,7 @@ en:
         delete: "delete this post"
         undelete_action: "Undelete post"
         undelete: "undelete this post"
+        view_deleted: "view deleted post content"
         share_action: "Share"
         share: "share a link to this post"
         copy_action: "Copy link"

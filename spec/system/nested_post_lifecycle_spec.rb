@@ -164,6 +164,69 @@ RSpec.describe "Nested view post lifecycle" do
     end
   end
 
+  describe "staff viewing deleted post content" do
+    fab!(:root_reply) do
+      Fabricate(:post, topic: topic, user: user, raw: "Secret deleted content here")
+    end
+
+    context "when logged in as admin" do
+      before { sign_in(admin) }
+
+      it "shows an eye button to toggle deleted content visibility" do
+        nested_view.visit_nested(topic)
+        expect(page).to have_css(
+          "[data-post-number='#{root_reply.post_number}']",
+          text: "Secret deleted content here",
+        )
+
+        nested_view.click_post_delete_button(root_reply)
+        dialog.click_yes
+
+        expect(nested_view).to have_deleted_post_class_for(root_reply)
+        expect(nested_view).to have_toggle_deleted_content_button_for(root_reply)
+        expect(nested_view).to have_no_deleted_content_visible_for(root_reply)
+
+        nested_view.click_toggle_deleted_content(root_reply)
+
+        expect(nested_view).to have_deleted_content_visible_for(root_reply)
+        expect(page).to have_css(
+          ".nested-post__deleted-content",
+          text: "Secret deleted content here",
+        )
+      end
+
+      it "hides deleted content when toggled again" do
+        nested_view.visit_nested(topic)
+        expect(page).to have_css(
+          "[data-post-number='#{root_reply.post_number}']",
+          text: "Secret deleted content here",
+        )
+
+        nested_view.click_post_delete_button(root_reply)
+        dialog.click_yes
+
+        expect(nested_view).to have_deleted_post_class_for(root_reply)
+        nested_view.click_toggle_deleted_content(root_reply)
+        expect(nested_view).to have_deleted_content_visible_for(root_reply)
+
+        nested_view.click_toggle_deleted_content(root_reply)
+        expect(nested_view).to have_no_deleted_content_visible_for(root_reply)
+      end
+    end
+
+    context "when logged in as regular user" do
+      before { sign_in(user) }
+
+      it "does not show an eye button on deleted posts" do
+        root_reply.update!(deleted_at: Time.current)
+
+        nested_view.visit_nested(topic)
+        expect(nested_view).to have_deleted_placeholder_for(root_reply)
+        expect(nested_view).to have_no_toggle_deleted_content_button_for(root_reply)
+      end
+    end
+  end
+
   describe "editing a child post" do
     fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Root post") }
 

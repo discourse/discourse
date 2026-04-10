@@ -155,6 +155,7 @@ export default class Post extends RestModel {
   @tracked customShare = null;
   @tracked deleted_at;
   @tracked deleted_by;
+  @tracked deleted_post_placeholder;
   @tracked excerpt;
   @tracked expandedExcerpt;
   @tracked group_moderator;
