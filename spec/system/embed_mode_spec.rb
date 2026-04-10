@@ -153,11 +153,12 @@ describe "Embed mode" do
           expect(page).to have_css(".timeline-fullscreen.show")
         end
 
-        it "hides the default topic progress bar" do
+        it "shows the topic progress bar at the bottom (not sticky)" do
           visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
           expect(topic_page).to have_post_number(2)
 
-          expect(page).to have_no_css("#topic-progress-wrapper", visible: :visible)
+          expect(page).to have_css("#topic-progress-wrapper", visible: :visible)
+          expect(page).to have_css(".topic-navigation.with-topic-progress", visible: :visible)
         end
       end
 
