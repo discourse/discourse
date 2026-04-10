@@ -88,6 +88,22 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
     end
   end
 
+  describe "$execution exposure" do
+    it "exposes execution variables from workflow context" do
+      context = { "_execution" => { "id" => 42, "workflow_name" => "My Workflow" } }
+      exec_sandbox = described_class.new(context, vars: {})
+
+      expect(exec_sandbox.eval("$execution.id")).to eq(42)
+      expect(exec_sandbox.eval("$execution.workflow_name")).to eq("My Workflow")
+    ensure
+      exec_sandbox&.dispose
+    end
+
+    it "defaults to empty object when no execution context" do
+      expect(sandbox.eval("JSON.stringify($execution)")).to eq("{}")
+    end
+  end
+
   describe "console capture" do
     it "captures log messages when enabled" do
       capturing_sandbox =

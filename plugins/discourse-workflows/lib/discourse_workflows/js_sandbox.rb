@@ -84,8 +84,10 @@ module DiscourseWorkflows
       @js_context.attach("__getSiteSetting", method(:fetch_site_setting))
       @js_context.attach("__getNodeOutput", method(:fetch_node_output))
 
+      execution = @workflow_context.fetch("_execution") { {} }
       @js_context.eval(<<~JS)
         var $vars = #{@vars.to_json};
+        var $execution = #{execution.to_json};
         var $current_user = #{build_current_user.to_json};
         var $site_settings = new Proxy({}, {
           get: function(target, prop) {

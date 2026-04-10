@@ -126,6 +126,22 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
       expect(result.first["json"]["item"]["json"]).to eq({})
     end
 
+    it "exposes $execution variables" do
+      resolver =
+        DiscourseWorkflows::ExpressionResolver.new(
+          { "$json" => {}, "_execution" => { "id" => 99, "workflow_name" => "Test Flow" } },
+        )
+
+      result =
+        execute_code(
+          "return { id: $execution.id, name: $execution.workflow_name };",
+          resolver: resolver,
+        )
+
+      expect(result.first["json"]["id"]).to eq(99)
+      expect(result.first["json"]["name"]).to eq("Test Flow")
+    end
+
     it "allows accessing normal node outputs via $()" do
       resolver =
         DiscourseWorkflows::ExpressionResolver.new(
