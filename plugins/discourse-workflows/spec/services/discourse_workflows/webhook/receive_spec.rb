@@ -11,29 +11,16 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
     fab!(:admin)
     fab!(:workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: admin,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "webhook-1",
-            "type" => "trigger:webhook",
-            "type_version" => "1.0",
-            "name" => "Webhook",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "path" => "my-hook",
-              "http_method" => "POST",
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "webhook-1",
+                 "trigger:webhook",
+                 configuration: {
+                   "path" => "my-hook",
+                   "http_method" => "POST",
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
     end
 
     let(:params) do
@@ -304,30 +291,17 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         end
 
         fab!(:unprotected_workflow) do
-          Fabricate(
-            :discourse_workflows_workflow,
-            created_by: admin,
-            enabled: true,
-            nodes: [
-              {
-                "id" => "unprotected-webhook-1",
-                "type" => "trigger:webhook",
-                "type_version" => "1.0",
-                "name" => "Unprotected Webhook",
-                "position" => {
-                  "x" => 0,
-                  "y" => 0,
-                },
-                "position_index" => 0,
-                "configuration" => {
-                  "path" => "my-hook",
-                  "http_method" => "POST",
-                  "authentication" => "none",
-                },
-              },
-            ],
-            connections: [],
-          )
+          graph =
+            build_workflow_graph do |g|
+              g.node "unprotected-webhook-1",
+                     "trigger:webhook",
+                     configuration: {
+                       "path" => "my-hook",
+                       "http_method" => "POST",
+                       "authentication" => "none",
+                     }
+            end
+          Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
         end
 
         before do

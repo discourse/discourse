@@ -126,26 +126,8 @@ RSpec.describe DiscourseWorkflows::Workflow::List do
 
     context "with trigger_type filter" do
       fab!(:error_workflow) do
-        Fabricate(
-          :discourse_workflows_workflow,
-          name: "Error handler",
-          created_by: user,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:error",
-              "type_version" => "1.0",
-              "name" => "Error Trigger",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-          ],
-        )
+        graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:error" }
+        Fabricate(:discourse_workflows_workflow, name: "Error handler", created_by: user, **graph)
       end
       fab!(:other_workflow) do
         Fabricate(:discourse_workflows_workflow, name: "Other", created_by: user)

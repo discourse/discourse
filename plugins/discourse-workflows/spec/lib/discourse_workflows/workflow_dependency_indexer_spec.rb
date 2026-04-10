@@ -15,32 +15,12 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
 
   describe ".call" do
     it "extracts node_type dependencies for every node" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          nodes: [
-            {
-              "id" => "t1",
-              "type" => "trigger:webhook",
-              "type_version" => "1.0",
-              "name" => "Webhook",
-              "position_index" => 0,
-              "configuration" => {
-                "path" => "test",
-              },
-            },
-            {
-              "id" => "a1",
-              "type" => "action:create_topic",
-              "type_version" => "1.0",
-              "name" => "Create Topic",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "t1", "trigger:webhook", configuration: { "path" => "test" }
+          g.node "a1", "action:create_topic"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
       index(workflow)
 
@@ -50,24 +30,16 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
 
     it "extracts credential_id dependencies" do
       credential = Fabricate(:discourse_workflows_credential)
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          nodes: [
-            {
-              "id" => "t1",
-              "type" => "trigger:webhook",
-              "type_version" => "1.0",
-              "name" => "Webhook",
-              "position_index" => 0,
-              "configuration" => {
-                "path" => "hook1",
-                "credential_id" => credential.id,
-              },
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "t1",
+                 "trigger:webhook",
+                 configuration: {
+                   "path" => "hook1",
+                   "credential_id" => credential.id,
+                 }
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
       index(workflow)
 
@@ -77,23 +49,11 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
 
     it "extracts data_table_id dependencies" do
       data_table = Fabricate(:discourse_workflows_data_table)
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          nodes: [
-            {
-              "id" => "a1",
-              "type" => "action:data_table",
-              "type_version" => "1.0",
-              "name" => "Data Table",
-              "position_index" => 0,
-              "configuration" => {
-                "data_table_id" => data_table.id,
-              },
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "a1", "action:data_table", configuration: { "data_table_id" => data_table.id }
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
       index(workflow)
 
@@ -102,23 +62,11 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
     end
 
     it "extracts webhook_path dependencies" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          nodes: [
-            {
-              "id" => "t1",
-              "type" => "trigger:webhook",
-              "type_version" => "1.0",
-              "name" => "Webhook",
-              "position_index" => 0,
-              "configuration" => {
-                "path" => "my-custom-hook",
-              },
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "t1", "trigger:webhook", configuration: { "path" => "my-custom-hook" }
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
       index(workflow)
 
@@ -128,22 +76,13 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
 
     it "extracts error_workflow dependencies" do
       error_wf = Fabricate(:discourse_workflows_workflow, created_by: admin)
+      graph = build_workflow_graph { |g| g.node "t1", "trigger:schedule" }
       workflow =
         Fabricate(
           :discourse_workflows_workflow,
           created_by: admin,
           error_workflow_id: error_wf.id,
-          nodes: [
-            {
-              "id" => "t1",
-              "type" => "trigger:schedule",
-              "type_version" => "1.0",
-              "name" => "Schedule",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-          ],
+          **graph,
         )
 
       index(workflow)
@@ -154,43 +93,22 @@ RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
     end
 
     it "replaces existing dependencies on re-index" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          nodes: [
-            {
-              "id" => "t1",
-              "type" => "trigger:webhook",
-              "type_version" => "1.0",
-              "name" => "Webhook",
-              "position_index" => 0,
-              "configuration" => {
-                "path" => "old-path",
-              },
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "t1", "trigger:webhook", configuration: { "path" => "old-path" }
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
       index(workflow)
       expect(dependency_rows(workflow).of_type("webhook_path").pluck(:dependency_key)).to eq(
         ["old-path"],
       )
 
-      workflow.update!(
-        nodes: [
-          {
-            "id" => "t1",
-            "type" => "trigger:webhook",
-            "type_version" => "1.0",
-            "name" => "Webhook",
-            "position_index" => 0,
-            "configuration" => {
-              "path" => "new-path",
-            },
-          },
-        ],
-      )
+      updated =
+        build_workflow_graph do |g|
+          g.node "t1", "trigger:webhook", configuration: { "path" => "new-path" }
+        end
+      workflow.update!(nodes: updated[:nodes])
       index(workflow)
 
       expect(dependency_rows(workflow).of_type("webhook_path").pluck(:dependency_key)).to eq(

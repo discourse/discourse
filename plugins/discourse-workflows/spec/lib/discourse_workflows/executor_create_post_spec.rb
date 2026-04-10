@@ -10,51 +10,21 @@ RSpec.describe DiscourseWorkflows::Executor do
 
   describe "#run" do
     it "creates a post from trigger data" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual Trigger",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:create_post",
-              "type_version" => "1.0",
-              "name" => "Create Post",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "topic_id" => "={{ trigger.topic_id }}",
-                "raw" => "={{ trigger.raw }}",
-                "reply_to_post_number" => "={{ trigger.reply_to_post_number }}",
-                "user_id" => "={{ trigger.user_id }}",
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "action-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "action-1",
+                 "action:create_post",
+                 name: "Create Post",
+                 configuration: {
+                   "topic_id" => "={{ trigger.topic_id }}",
+                   "raw" => "={{ trigger.raw }}",
+                   "reply_to_post_number" => "={{ trigger.reply_to_post_number }}",
+                   "user_id" => "={{ trigger.user_id }}",
+                 }
+          g.chain "trigger-1", "action-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
 
       trigger_data = {
         topic_id: topic.id,

@@ -11,72 +11,30 @@ RSpec.describe "Wait for Approval end-to-end" do
   end
 
   it "pauses, receives approval via chat interaction, and completes the workflow" do
-    workflow =
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: user,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:manual",
-            "type_version" => "1.0",
-            "name" => "Manual",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
-          },
-          {
-            "id" => "wait-1",
-            "type" => "action:chat_approval",
-            "type_version" => "1.0",
-            "name" => "Approval",
-            "position" => {
-              "x" => 200,
-              "y" => 0,
-            },
-            "position_index" => 1,
-            "configuration" => {
-              "message" => "Please review",
-              "approve_label" => "LGTM",
-              "deny_label" => "Reject",
-              "channel_id" => channel.id.to_s,
-            },
-          },
-          {
-            "id" => "final-1",
-            "type" => "action:set_fields",
-            "type_version" => "1.0",
-            "name" => "Final",
-            "position" => {
-              "x" => 400,
-              "y" => 0,
-            },
-            "position_index" => 2,
-            "configuration" => {
-              "mode" => "json",
-              "include_input" => true,
-              "json" => '{"completed": "true"}',
-            },
-          },
-        ],
-        connections: [
-          {
-            "source_node_id" => "trigger-1",
-            "target_node_id" => "wait-1",
-            "source_output" => "main",
-          },
-          {
-            "source_node_id" => "wait-1",
-            "target_node_id" => "final-1",
-            "source_output" => "main",
-          },
-        ],
-      )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:manual"
+        g.node "wait-1",
+               "action:chat_approval",
+               name: "Approval",
+               configuration: {
+                 "message" => "Please review",
+                 "approve_label" => "LGTM",
+                 "deny_label" => "Reject",
+                 "channel_id" => channel.id.to_s,
+               }
+        g.node "final-1",
+               "action:set_fields",
+               name: "Final",
+               configuration: {
+                 "mode" => "json",
+                 "include_input" => true,
+                 "json" => '{"completed": "true"}',
+               }
+        g.chain "trigger-1", "wait-1", "final-1"
+      end
+
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
     execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", { "topic_id" => 1 }).run
     expect(execution.status).to eq("waiting")
@@ -112,49 +70,20 @@ RSpec.describe "Wait for Approval end-to-end" do
   end
 
   it "rejects a stale approval button when the execution revisits the same approval node" do
-    workflow =
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: user,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:manual",
-            "type_version" => "1.0",
-            "name" => "Manual",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
-          },
-          {
-            "id" => "wait-1",
-            "type" => "action:chat_approval",
-            "type_version" => "1.0",
-            "name" => "Approval",
-            "position" => {
-              "x" => 200,
-              "y" => 0,
-            },
-            "position_index" => 1,
-            "configuration" => {
-              "message" => "Please review",
-              "channel_id" => channel.id.to_s,
-            },
-          },
-        ],
-        connections: [
-          {
-            "source_node_id" => "trigger-1",
-            "target_node_id" => "wait-1",
-            "source_output" => "main",
-          },
-        ],
-      )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:manual"
+        g.node "wait-1",
+               "action:chat_approval",
+               name: "Approval",
+               configuration: {
+                 "message" => "Please review",
+                 "channel_id" => channel.id.to_s,
+               }
+        g.chain "trigger-1", "wait-1"
+      end
+
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
     # First visit to the approval node
     execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run

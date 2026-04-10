@@ -11,116 +11,38 @@ RSpec.describe DiscourseWorkflows::Executor do
 
   describe "#run" do
     it "executes a loop workflow: trigger -> loop -> action -> loop-back -> done" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "set-fields-1",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "Create Items",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "mode" => "json",
-                "include_input" => false,
-                "json" => '{"item_id": "1"}',
-              },
-            },
-            {
-              "id" => "loop-1",
-              "type" => "core:loop_over_items",
-              "type_version" => "1.0",
-              "name" => "Loop",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "batch_size" => 1,
-              },
-            },
-            {
-              "id" => "process-1",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "Process Item",
-              "position" => {
-                "x" => 600,
-                "y" => 0,
-              },
-              "position_index" => 3,
-              "configuration" => {
-                "mode" => "json",
-                "include_input" => true,
-                "json" => '{"processed": "true"}',
-              },
-            },
-            {
-              "id" => "done-1",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "Final Step",
-              "position" => {
-                "x" => 600,
-                "y" => 200,
-              },
-              "position_index" => 4,
-              "configuration" => {
-                "mode" => "json",
-                "include_input" => true,
-                "json" => '{"completed": "true"}',
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "set-fields-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "set-fields-1",
-              "target_node_id" => "loop-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "loop-1",
-              "target_node_id" => "process-1",
-              "source_output" => "loop",
-            },
-            {
-              "source_node_id" => "process-1",
-              "target_node_id" => "loop-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "loop-1",
-              "target_node_id" => "done-1",
-              "source_output" => "done",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "set-fields-1",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "json",
+                   "include_input" => false,
+                   "json" => '{"item_id": "1"}',
+                 }
+          g.node "loop-1", "core:loop_over_items", configuration: { "batch_size" => 1 }
+          g.node "process-1",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "json",
+                   "include_input" => true,
+                   "json" => '{"processed": "true"}',
+                 }
+          g.node "done-1",
+                 "action:set_fields",
+                 name: "Final Step",
+                 configuration: {
+                   "mode" => "json",
+                   "include_input" => true,
+                   "json" => '{"completed": "true"}',
+                 }
+          g.chain "trigger-1", "set-fields-1", "loop-1"
+          g.connect "loop-1", "process-1", output: "loop"
+          g.chain "process-1", "loop-1"
+          g.connect "loop-1", "done-1", output: "done"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = {}
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -133,94 +55,30 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "processes multiple items through the loop in batches" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "loop-1",
-              "type" => "core:loop_over_items",
-              "type_version" => "1.0",
-              "name" => "Loop",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "batch_size" => 1,
-              },
-            },
-            {
-              "id" => "process-1",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "Process",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "mode" => "json",
-                "include_input" => true,
-                "json" => '{"tagged": "yes"}',
-              },
-            },
-            {
-              "id" => "done-1",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "Done",
-              "position" => {
-                "x" => 400,
-                "y" => 200,
-              },
-              "position_index" => 3,
-              "configuration" => {
-                "include_input" => true,
-                "fields" => [{ "key" => "final", "value" => "true", "type" => "string" }],
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "loop-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "loop-1",
-              "target_node_id" => "process-1",
-              "source_output" => "loop",
-            },
-            {
-              "source_node_id" => "process-1",
-              "target_node_id" => "loop-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "loop-1",
-              "target_node_id" => "done-1",
-              "source_output" => "done",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "loop-1", "core:loop_over_items", configuration: { "batch_size" => 1 }
+          g.node "process-1",
+                 "action:set_fields",
+                 configuration: {
+                   "mode" => "json",
+                   "include_input" => true,
+                   "json" => '{"tagged": "yes"}',
+                 }
+          g.node "done-1",
+                 "action:set_fields",
+                 name: "Done",
+                 configuration: {
+                   "include_input" => true,
+                   "fields" => [{ "key" => "final", "value" => "true", "type" => "string" }],
+                 }
+          g.chain "trigger-1", "loop-1"
+          g.connect "loop-1", "process-1", output: "loop"
+          g.chain "process-1", "loop-1"
+          g.connect "loop-1", "done-1", output: "done"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { items: [{ name: "a" }, { name: "b" }, { name: "c" }] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run

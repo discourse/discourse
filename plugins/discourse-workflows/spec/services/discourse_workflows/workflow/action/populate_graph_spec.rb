@@ -112,35 +112,13 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
 
     context "when workflow has existing nodes and connections" do
       before do
-        workflow.update!(
-          nodes: [
-            {
-              "id" => "existing-1",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Existing Node 1",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "existing-2",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Existing Node 2",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "existing-1",
-              "target_node_id" => "existing-2",
-              "source_output" => "main",
-            },
-          ],
-        )
+        extra =
+          build_workflow_graph do |g|
+            g.node "existing-1", "action:topic_tags", name: "Existing Node 1"
+            g.node "existing-2", "action:topic_tags", name: "Existing Node 2"
+            g.chain "existing-1", "existing-2"
+          end
+        workflow.update!(nodes: extra[:nodes], connections: extra[:connections])
       end
 
       it "removes stale nodes and creates new ones" do
@@ -267,20 +245,11 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
 
     context "when an existing form trigger is updated" do
       before do
-        workflow.update!(
-          nodes: [
-            {
-              "id" => "form-1",
-              "type" => "trigger:form",
-              "type_version" => "1.0",
-              "name" => "Form",
-              "position_index" => 0,
-              "configuration" => {
-                "uuid" => "original-uuid",
-              },
-            },
-          ],
-        )
+        extra =
+          build_workflow_graph do |g|
+            g.node "form-1", "trigger:form", configuration: { "uuid" => "original-uuid" }
+          end
+        workflow.update!(nodes: extra[:nodes])
       end
 
       it "preserves the original uuid from existing configuration" do

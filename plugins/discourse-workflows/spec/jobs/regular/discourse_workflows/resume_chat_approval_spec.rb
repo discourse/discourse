@@ -6,6 +6,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeChatApproval do
       params: {
         execution_id: 7,
         approved: true,
+        wait_nonce: nil,
       },
     )
 

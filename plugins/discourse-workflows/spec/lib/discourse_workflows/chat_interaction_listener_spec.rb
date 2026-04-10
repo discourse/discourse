@@ -17,49 +17,18 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
   end
 
   it "enqueues ResumeChatApproval when an approve button is clicked" do
-    workflow =
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: user,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:manual",
-            "type_version" => "1.0",
-            "name" => "Manual",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
-          },
-          {
-            "id" => "wait-1",
-            "type" => "action:chat_approval",
-            "type_version" => "1.0",
-            "name" => "Wait",
-            "position" => {
-              "x" => 200,
-              "y" => 0,
-            },
-            "position_index" => 1,
-            "configuration" => {
-              "message" => "Approve?",
-              "channel_id" => channel.id.to_s,
-            },
-          },
-        ],
-        connections: [
-          {
-            "source_node_id" => "trigger-1",
-            "target_node_id" => "wait-1",
-            "source_output" => "main",
-          },
-        ],
-      )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:manual"
+        g.node "wait-1",
+               "action:chat_approval",
+               configuration: {
+                 "message" => "Approve?",
+                 "channel_id" => channel.id.to_s,
+               }
+        g.chain "trigger-1", "wait-1"
+      end
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
     execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
     expect(execution.status).to eq("waiting")

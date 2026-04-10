@@ -12,48 +12,24 @@ RSpec.describe "Workflow: post created -> create post" do
 
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:post_created"
+        g.node "action-1",
+               "action:create_post",
+               configuration: {
+                 "topic_id" => "={{ trigger.topic.id }}",
+                 "raw" => "Automated reply",
+               }
+        g.chain "trigger-1", "action-1"
+      end
+
     Fabricate(
       :discourse_workflows_workflow,
       created_by: admin,
       enabled: true,
       name: "Reply to new posts",
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:post_created",
-          "type_version" => "1.0",
-          "name" => "Post Created",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-          },
-        },
-        {
-          "id" => "action-1",
-          "type" => "action:create_post",
-          "type_version" => "1.0",
-          "name" => "Create Post",
-          "position" => {
-            "x" => 200,
-            "y" => 0,
-          },
-          "position_index" => 1,
-          "configuration" => {
-            "topic_id" => "={{ trigger.topic.id }}",
-            "raw" => "Automated reply",
-          },
-        },
-      ],
-      connections: [
-        {
-          "source_node_id" => "trigger-1",
-          "target_node_id" => "action-1",
-          "source_output" => "main",
-        },
-      ],
+      **graph,
     )
   end
 

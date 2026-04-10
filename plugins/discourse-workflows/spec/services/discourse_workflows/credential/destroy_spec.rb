@@ -36,28 +36,15 @@ RSpec.describe DiscourseWorkflows::Credential::Destroy do
 
     context "when credential is referenced by a workflow node" do
       fab!(:workflow) do
-        Fabricate(
-          :discourse_workflows_workflow,
-          name: "My Workflow",
-          created_by: admin,
-          nodes: [
-            {
-              "id" => "webhook-1",
-              "type" => "trigger:webhook",
-              "type_version" => "1.0",
-              "name" => "Webhook",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-                "credential_id" => credential.id,
-              },
-            },
-          ],
-          connections: [],
-        )
+        graph =
+          build_workflow_graph do |g|
+            g.node "webhook-1",
+                   "trigger:webhook",
+                   configuration: {
+                     "credential_id" => credential.id,
+                   }
+          end
+        Fabricate(:discourse_workflows_workflow, name: "My Workflow", created_by: admin, **graph)
       end
 
       before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }

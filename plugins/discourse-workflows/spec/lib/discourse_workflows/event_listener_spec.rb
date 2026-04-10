@@ -12,28 +12,8 @@ RSpec.describe DiscourseWorkflows::EventListener do
   end
 
   it "enqueues a job when a matching event fires" do
-    workflow =
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: user,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:topic_closed",
-            "type_version" => "1.0",
-            "name" => "Topic Closed",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
-          },
-        ],
-        connections: [],
-      )
+    graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
     DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
 
     topic.update_status("closed", true, admin)
@@ -47,28 +27,8 @@ RSpec.describe DiscourseWorkflows::EventListener do
   it "does not enqueue when plugin is disabled" do
     SiteSetting.discourse_workflows_enabled = false
 
-    workflow =
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: user,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:topic_closed",
-            "type_version" => "1.0",
-            "name" => "Topic Closed",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
-          },
-        ],
-        connections: [],
-      )
+    graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
     DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
 
     topic.update_status("closed", true, admin)

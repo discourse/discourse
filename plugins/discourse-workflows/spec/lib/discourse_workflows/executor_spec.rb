@@ -12,48 +12,19 @@ RSpec.describe DiscourseWorkflows::Executor do
   end
 
   def build_workflow
-    Fabricate(
-      :discourse_workflows_workflow,
-      created_by: user,
-      enabled: true,
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:topic_closed",
-          "type_version" => "1.0",
-          "name" => "Topic Closed",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-          },
-        },
-        {
-          "id" => "action-1",
-          "type" => "action:topic_tags",
-          "type_version" => "1.0",
-          "name" => "Topic Tags",
-          "position" => {
-            "x" => 200,
-            "y" => 0,
-          },
-          "position_index" => 1,
-          "configuration" => {
-            "topic_id" => "={{ trigger.topic_id }}",
-            "tag_names" => tag.name,
-          },
-        },
-      ],
-      connections: [
-        {
-          "source_node_id" => "trigger-1",
-          "target_node_id" => "action-1",
-          "source_output" => "main",
-        },
-      ],
-    )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:topic_closed", name: "Topic Closed"
+        g.node "action-1",
+               "action:topic_tags",
+               name: "Topic Tags",
+               configuration: {
+                 "topic_id" => "={{ trigger.topic_id }}",
+                 "tag_names" => tag.name,
+               }
+        g.chain "trigger-1", "action-1"
+      end
+    Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
   end
 
   describe "#run" do
@@ -101,28 +72,8 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "fails when trigger node is not in the snapshot" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [],
-        )
+      graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       executor = described_class.new(workflow, "trigger-1", {})
       workflow.update!(nodes: [])
@@ -136,99 +87,42 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "follows the correct branch of a condition node" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "condition-1",
-              "type" => "condition:if",
-              "type_version" => "1.0",
-              "name" => "Has Bug Tag",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "conditions" => [
-                  {
-                    "id" => "1",
-                    "leftValue" => "={{ $json.tags }}",
-                    "rightValue" => "bug",
-                    "operator" => {
-                      "type" => "array",
-                      "operation" => "contains",
-                    },
-                  },
-                ],
-                "combinator" => "and",
-              },
-            },
-            {
-              "id" => "action-true",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Tag Resolved",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "topic_id" => "={{ trigger.topic_id }}",
-                "tag_names" => tag.name,
-              },
-            },
-            {
-              "id" => "action-false",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Tag Needs Review",
-              "position" => {
-                "x" => 400,
-                "y" => 200,
-              },
-              "position_index" => 3,
-              "configuration" => {
-                "topic_id" => "={{ trigger.topic_id }}",
-                "tag_names" => false_tag.name,
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "condition-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "condition-1",
-              "target_node_id" => "action-true",
-              "source_output" => "true",
-            },
-            {
-              "source_node_id" => "condition-1",
-              "target_node_id" => "action-false",
-              "source_output" => "false",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "condition-1",
+                 "condition:if",
+                 configuration: {
+                   "conditions" => [
+                     {
+                       "id" => "1",
+                       "leftValue" => "={{ $json.tags }}",
+                       "rightValue" => "bug",
+                       "operator" => {
+                         "type" => "array",
+                         "operation" => "contains",
+                       },
+                     },
+                   ],
+                   "combinator" => "and",
+                 }
+          g.node "action-true",
+                 "action:topic_tags",
+                 configuration: {
+                   "topic_id" => "={{ trigger.topic_id }}",
+                   "tag_names" => tag.name,
+                 }
+          g.node "action-false",
+                 "action:topic_tags",
+                 configuration: {
+                   "topic_id" => "={{ trigger.topic_id }}",
+                   "tag_names" => false_tag.name,
+                 }
+          g.chain "trigger-1", "condition-1"
+          g.connect "condition-1", "action-true", output: "true"
+          g.connect "condition-1", "action-false", output: "false"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { topic_id: topic.id, tags: %w[bug help] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -240,78 +134,35 @@ RSpec.describe DiscourseWorkflows::Executor do
 
     context "with a filter workflow" do
       let(:filter_workflow) do
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "filter-1",
-              "type" => "condition:filter",
-              "type_version" => "1.0",
-              "name" => "Has Bug Tag",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "conditions" => [
-                  {
-                    "id" => "1",
-                    "leftValue" => "={{ $json.tags }}",
-                    "rightValue" => "bug",
-                    "operator" => {
-                      "type" => "array",
-                      "operation" => "contains",
-                    },
-                  },
-                ],
-                "combinator" => "and",
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Topic Tags",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "topic_id" => "={{ trigger.topic_id }}",
-                "tag_names" => tag.name,
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "filter-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "filter-1",
-              "target_node_id" => "action-1",
-              "source_output" => "true",
-            },
-          ],
-        )
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "filter-1",
+                   "condition:filter",
+                   configuration: {
+                     "conditions" => [
+                       {
+                         "id" => "1",
+                         "leftValue" => "={{ $json.tags }}",
+                         "rightValue" => "bug",
+                         "operator" => {
+                           "type" => "array",
+                           "operation" => "contains",
+                         },
+                       },
+                     ],
+                     "combinator" => "and",
+                   }
+            g.node "action-1",
+                   "action:topic_tags",
+                   configuration: {
+                     "topic_id" => "={{ trigger.topic_id }}",
+                     "tag_names" => tag.name,
+                   }
+            g.chain "trigger-1", "filter-1"
+            g.connect "filter-1", "action-1", output: "true"
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
       end
 
       it "continues execution when filter passes" do
@@ -343,79 +194,35 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "stores resolved configuration and result on execution steps" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "filter-1",
-              "type" => "condition:filter",
-              "type_version" => "1.0",
-              "name" => "Check Tags",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "conditions" => [
-                  {
-                    "id" => "1",
-                    "leftValue" => "={{ $json.tags }}",
-                    "rightValue" => "bug",
-                    "operator" => {
-                      "type" => "array",
-                      "operation" => "contains",
-                    },
-                  },
-                ],
-                "combinator" => "and",
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Topic Tags",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "topic_id" => "={{ trigger.topic_id }}",
-                "tag_names" => tag.name,
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "filter-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "filter-1",
-              "target_node_id" => "action-1",
-              "source_output" => "true",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "filter-1",
+                 "condition:filter",
+                 configuration: {
+                   "conditions" => [
+                     {
+                       "id" => "1",
+                       "leftValue" => "={{ $json.tags }}",
+                       "rightValue" => "bug",
+                       "operator" => {
+                         "type" => "array",
+                         "operation" => "contains",
+                       },
+                     },
+                   ],
+                   "combinator" => "and",
+                 }
+          g.node "action-1",
+                 "action:topic_tags",
+                 configuration: {
+                   "topic_id" => "={{ trigger.topic_id }}",
+                   "tag_names" => tag.name,
+                 }
+          g.chain "trigger-1", "filter-1"
+          g.connect "filter-1", "action-1", output: "true"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { topic_id: topic.id, tags: %w[bug help] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -430,59 +237,28 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "marks condition step as filtered when all items fail" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "filter-1",
-              "type" => "condition:filter",
-              "type_version" => "1.0",
-              "name" => "Check Tags",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "conditions" => [
-                  {
-                    "id" => "1",
-                    "leftValue" => "={{ $json.tags }}",
-                    "rightValue" => "bug",
-                    "operator" => {
-                      "type" => "array",
-                      "operation" => "contains",
-                    },
-                  },
-                ],
-                "combinator" => "and",
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "filter-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "filter-1",
+                 "condition:filter",
+                 configuration: {
+                   "conditions" => [
+                     {
+                       "id" => "1",
+                       "leftValue" => "={{ $json.tags }}",
+                       "rightValue" => "bug",
+                       "operator" => {
+                         "type" => "array",
+                         "operation" => "contains",
+                       },
+                     },
+                   ],
+                   "combinator" => "and",
+                 }
+          g.chain "trigger-1", "filter-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { topic_id: topic.id, tags: %w[feature help] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -492,80 +268,37 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "routes rejected filter items to the false branch" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "filter-1",
-              "type" => "condition:filter",
-              "type_version" => "1.0",
-              "name" => "Has Bug Tag",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "conditions" => [
-                  {
-                    "id" => "1",
-                    "leftValue" => "={{ $json.tags }}",
-                    "rightValue" => "bug",
-                    "operator" => {
-                      "type" => "array",
-                      "operation" => "contains",
-                    },
-                  },
-                ],
-                "combinator" => "and",
-              },
-            },
-            {
-              "id" => "action-false",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "Rejected",
-              "position" => {
-                "x" => 400,
-                "y" => 200,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "include_input" => true,
-                "mode" => "manual",
-                "fields" => [{ "key" => "rejected", "value" => "yes", "type" => "string" }],
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "filter-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "filter-1",
-              "target_node_id" => "action-false",
-              "source_output" => "false",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "filter-1",
+                 "condition:filter",
+                 configuration: {
+                   "conditions" => [
+                     {
+                       "id" => "1",
+                       "leftValue" => "={{ $json.tags }}",
+                       "rightValue" => "bug",
+                       "operator" => {
+                         "type" => "array",
+                         "operation" => "contains",
+                       },
+                     },
+                   ],
+                   "combinator" => "and",
+                 }
+          g.node "action-false",
+                 "action:set_fields",
+                 name: "Rejected",
+                 configuration: {
+                   "include_input" => true,
+                   "mode" => "manual",
+                   "fields" => [{ "key" => "rejected", "value" => "yes", "type" => "string" }],
+                 }
+          g.chain "trigger-1", "filter-1"
+          g.connect "filter-1", "action-false", output: "false"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { topic_id: topic.id, tags: %w[feature help] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -578,47 +311,13 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "records an error step for unknown node types" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "unknown-1",
-              "type" => "action:nonexistent_type",
-              "type_version" => "1.0",
-              "name" => "Bad Node",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "unknown-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "unknown-1", "action:nonexistent_type"
+          g.chain "trigger-1", "unknown-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { topic_id: topic.id, tags: [] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -639,55 +338,24 @@ RSpec.describe DiscourseWorkflows::Executor do
         },
       )
 
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "http-1",
-              "type" => "action:http_request",
-              "type_version" => "1.0",
-              "name" => "HTTP Request",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "method" => "GET",
-                "url" => "https://api.example.com/test",
-                "authentication" => "none",
-                "headers" => [
-                  { "key" => "Authorization", "value" => "Bearer secret123" },
-                  { "key" => "Content-Type", "value" => "application/json" },
-                  { "key" => "X-Api-Key", "value" => "my-secret-key" },
-                ],
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "http-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "http-1",
+                 "action:http_request",
+                 configuration: {
+                   "method" => "GET",
+                   "url" => "https://api.example.com/test",
+                   "authentication" => "none",
+                   "headers" => [
+                     { "key" => "Authorization", "value" => "Bearer secret123" },
+                     { "key" => "Content-Type", "value" => "application/json" },
+                     { "key" => "X-Api-Key", "value" => "my-secret-key" },
+                   ],
+                 }
+          g.chain "trigger-1", "http-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { topic_id: topic.id, tags: [] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -705,48 +373,17 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "truncates long error messages" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "code-1",
-              "type" => "action:code",
-              "type_version" => "1.0",
-              "name" => "Code",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "code" => "throw new Error('x'.repeat(2000));",
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "code-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "code-1",
+                 "action:code",
+                 configuration: {
+                   "code" => "throw new Error('x'.repeat(2000));",
+                 }
+          g.chain "trigger-1", "code-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       trigger_data = { topic_id: topic.id, tags: [] }
       execution = described_class.new(workflow, "trigger-1", trigger_data).run
@@ -762,28 +399,9 @@ RSpec.describe DiscourseWorkflows::Executor do
       it "creates a rate_limited execution when limits are exceeded" do
         SiteSetting.discourse_workflows_max_executions_per_minute_per_workflow = 1
 
+        graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
         workflow =
-          Fabricate(
-            :discourse_workflows_workflow,
-            created_by: user,
-            enabled: true,
-            nodes: [
-              {
-                "id" => "trigger-1",
-                "type" => "trigger:topic_closed",
-                "type_version" => "1.0",
-                "name" => "Topic Closed",
-                "position" => {
-                  "x" => 0,
-                  "y" => 0,
-                },
-                "position_index" => 0,
-                "configuration" => {
-                },
-              },
-            ],
-            connections: [],
-          )
+          Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
         trigger_data = { topic_id: topic.id, tags: [] }
 

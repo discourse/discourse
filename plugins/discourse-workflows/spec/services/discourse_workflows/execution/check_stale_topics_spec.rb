@@ -7,28 +7,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckStaleTopics do
     fab!(:admin)
     fab!(:topic) { Fabricate(:topic, created_at: 48.hours.ago, last_posted_at: 48.hours.ago) }
     fab!(:workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        created_by: admin,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:stale_topic",
-            "type_version" => "1.0",
-            "name" => "Stale Topic",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "hours" => 24,
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:stale_topic", configuration: { "hours" => 24 }
+        end
+      Fabricate(:discourse_workflows_workflow, enabled: true, created_by: admin, **graph)
     end
 
     before { SiteSetting.discourse_workflows_enabled = true }

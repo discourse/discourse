@@ -221,28 +221,15 @@ RSpec.describe DiscourseWorkflows::ScheduleRule do
 
   describe ".fire_matching_trigger!" do
     fab!(:schedule_workflow, :discourse_workflows_workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        created_by: user,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:schedule",
-            "type_version" => "1.0",
-            "name" => "Schedule",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "rules" => [{ "interval" => "cron", "cron" => "0 9 * * *" }],
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:schedule",
+                 configuration: {
+                   "rules" => [{ "interval" => "cron", "cron" => "0 9 * * *" }],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, enabled: true, created_by: user, **graph)
     end
 
     let(:node) { schedule_workflow.parsed_nodes.first }
@@ -295,28 +282,15 @@ RSpec.describe DiscourseWorkflows::ScheduleRule do
 
   describe ".restart_stalled_chains!" do
     fab!(:seconds_workflow, :discourse_workflows_workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        created_by: user,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:schedule",
-            "type_version" => "1.0",
-            "name" => "Schedule",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "rules" => [{ "interval" => "seconds", "seconds_between_triggers" => 10 }],
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:schedule",
+                 configuration: {
+                   "rules" => [{ "interval" => "seconds", "seconds_between_triggers" => 10 }],
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, enabled: true, created_by: user, **graph)
     end
 
     let(:node) { seconds_workflow.parsed_nodes.first }

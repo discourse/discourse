@@ -22,27 +22,8 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
   describe "POST /admin/plugins/discourse-workflows/executions" do
     let(:enabled_workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: admin,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:manual",
-            "type_version" => "1.0",
-            "name" => "Manual Trigger",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:manual" }
+      Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
     end
 
     it "creates an execution" do

@@ -18,27 +18,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
   end
 
   def build_error_workflow
-    Fabricate(
-      :discourse_workflows_workflow,
-      created_by: user,
-      enabled: true,
-      nodes: [
-        {
-          "id" => "error-trigger-1",
-          "type" => "trigger:error",
-          "type_version" => "1.0",
-          "name" => "Error Trigger",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-          },
-        },
-      ],
-      connections: [],
-    )
+    graph = build_workflow_graph { |g| g.node "error-trigger-1", "trigger:error" }
+    Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
   end
 
   describe "#trigger_error_workflow" do
@@ -106,14 +87,7 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
     end
 
     it "does not trigger when error workflow has no error trigger node" do
-      error_wf =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [],
-          connections: [],
-        )
+      error_wf = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
       state = build_state_double

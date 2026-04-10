@@ -46,23 +46,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Update do
       let(:connections) { nil }
 
       before do
-        workflow.update!(
-          nodes: [
-            {
-              "id" => "existing-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Existing",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-          ],
-        )
+        extra = build_workflow_graph { |g| g.node "existing-1", "trigger:manual", name: "Existing" }
+        workflow.update!(nodes: extra[:nodes])
       end
 
       it { is_expected.to run_successfully }

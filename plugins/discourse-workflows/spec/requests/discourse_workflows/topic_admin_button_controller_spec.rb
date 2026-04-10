@@ -5,29 +5,16 @@ RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
   fab!(:user)
   fab!(:topic)
   fab!(:workflow) do
-    Fabricate(
-      :discourse_workflows_workflow,
-      created_by: admin,
-      enabled: true,
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:topic_admin_button",
-          "type_version" => "1.0",
-          "name" => "Topic Admin Button",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-            "label" => "Run workflow",
-            "icon" => "gear",
-          },
-        },
-      ],
-      connections: [],
-    )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1",
+               "trigger:topic_admin_button",
+               configuration: {
+                 "label" => "Run workflow",
+                 "icon" => "gear",
+               }
+      end
+    Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
   end
 
   before { SiteSetting.discourse_workflows_enabled = true }

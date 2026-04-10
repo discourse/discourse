@@ -6,35 +6,20 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteSecondsSchedule do
   before { SiteSetting.discourse_workflows_enabled = true }
 
   def create_seconds_workflow(seconds:)
-    workflow =
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        created_by: user,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:schedule",
-            "type_version" => "1.0",
-            "name" => "Schedule",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "rules" => [{ "interval" => "seconds", "seconds_between_triggers" => seconds }],
-            },
-          },
-        ],
-        connections: [],
-      )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1",
+               "trigger:schedule",
+               configuration: {
+                 "rules" => [{ "interval" => "seconds", "seconds_between_triggers" => seconds }],
+               }
+      end
+    workflow = Fabricate(:discourse_workflows_workflow, enabled: true, created_by: user, **graph)
 
     rule = { "interval" => "seconds", "seconds_between_triggers" => seconds }
     DiscourseWorkflows::ScheduleRule.start_seconds_chain!(workflow, "trigger-1", 0, rule)
     token = workflow.reload.node_static_data("trigger-1").dig("seconds_tokens", "0")
 
-    # Clear the job enqueued by start_seconds_chain! so tests start clean
     Jobs::DiscourseWorkflows::ExecuteSecondsSchedule.jobs.clear
 
     [workflow, token]

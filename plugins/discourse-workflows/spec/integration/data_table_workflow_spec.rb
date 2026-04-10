@@ -21,51 +21,30 @@ RSpec.describe "Data Table workflow integration" do
   before do
     SiteSetting.discourse_workflows_enabled = true
 
-    workflow.update!(
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:post_created",
-          "type_version" => "1.0",
-          "name" => "trigger",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-            "category_ids" => [category.id],
-          },
-        },
-        {
-          "id" => "action-1",
-          "type" => "action:data_table",
-          "type_version" => "1.0",
-          "name" => "insert_row",
-          "position" => {
-            "x" => 200,
-            "y" => 0,
-          },
-          "position_index" => 1,
-          "configuration" => {
-            "operation" => "insert",
-            "data_table_id" => data_table.id.to_s,
-            "columns" => {
-              "topic_id" => "={{ $json.topic_id }}",
-              "author" => "={{ $json.username }}",
-              "logged" => "true",
-            },
-          },
-        },
-      ],
-      connections: [
-        {
-          "source_node_id" => "trigger-1",
-          "target_node_id" => "action-1",
-          "source_output" => "main",
-        },
-      ],
-    )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1",
+               "trigger:post_created",
+               name: "trigger",
+               configuration: {
+                 "category_ids" => [category.id],
+               }
+        g.node "action-1",
+               "action:data_table",
+               name: "insert_row",
+               configuration: {
+                 "operation" => "insert",
+                 "data_table_id" => data_table.id.to_s,
+                 "columns" => {
+                   "topic_id" => "={{ $json.topic_id }}",
+                   "author" => "={{ $json.username }}",
+                   "logged" => "true",
+                 },
+               }
+        g.chain "trigger-1", "action-1"
+      end
+
+    workflow.update!(**graph)
   end
 
   it "inserts a data table row when a post is created" do

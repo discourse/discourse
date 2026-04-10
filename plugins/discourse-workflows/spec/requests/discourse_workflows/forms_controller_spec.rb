@@ -2,32 +2,20 @@
 
 RSpec.describe DiscourseWorkflows::FormsController do
   fab!(:workflow) do
-    Fabricate(
-      :discourse_workflows_workflow,
-      enabled: true,
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:form",
-          "type_version" => "1.0",
-          "name" => "Form Trigger",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-            "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
-            "form_title" => "Test Form",
-            "form_fields" => [
-              { "field_label" => "Name", "field_type" => "text", "required" => true },
-            ],
-            "response_mode" => "on_received",
-          },
-        },
-      ],
-      connections: [],
-    )
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1",
+               "trigger:form",
+               configuration: {
+                 "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+                 "form_title" => "Test Form",
+                 "form_fields" => [
+                   { "field_label" => "Name", "field_type" => "text", "required" => true },
+                 ],
+                 "response_mode" => "on_received",
+               }
+      end
+    Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
   end
 
   before { SiteSetting.discourse_workflows_enabled = true }
@@ -108,45 +96,29 @@ RSpec.describe DiscourseWorkflows::FormsController do
 
     context "with a workflow containing a downstream form action" do
       before do
+        extra =
+          build_workflow_graph do |g|
+            g.node "form-action-1",
+                   "action:form",
+                   name: "Second Page",
+                   configuration: {
+                     "page_type" => "page",
+                     "form_fields" => [
+                       { "field_label" => "Email", "field_type" => "text", "required" => false },
+                     ],
+                   }
+            g.node "form-completion-1",
+                   "action:form",
+                   name: "Completion",
+                   configuration: {
+                     "page_type" => "completion",
+                     "on_submission" => "completion_screen",
+                     "completion_title" => "Done",
+                     "completion_message" => "Thanks",
+                   }
+          end
         workflow.update!(
-          nodes:
-            workflow.parsed_nodes +
-              [
-                {
-                  "id" => "form-action-1",
-                  "type" => "action:form",
-                  "type_version" => "1.0",
-                  "name" => "Second Page",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "page_type" => "page",
-                    "form_fields" => [
-                      { "field_label" => "Email", "field_type" => "text", "required" => false },
-                    ],
-                  },
-                },
-                {
-                  "id" => "form-completion-1",
-                  "type" => "action:form",
-                  "type_version" => "1.0",
-                  "name" => "Completion",
-                  "position" => {
-                    "x" => 400,
-                    "y" => 0,
-                  },
-                  "position_index" => 2,
-                  "configuration" => {
-                    "page_type" => "completion",
-                    "on_submission" => "completion_screen",
-                    "completion_title" => "Done",
-                    "completion_message" => "Thanks",
-                  },
-                },
-              ],
+          nodes: workflow.parsed_nodes + extra[:nodes],
           connections: [
             {
               "source_node_id" => "trigger-1",

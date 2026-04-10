@@ -11,49 +11,25 @@ RSpec.describe "Workflow: topic category changed -> create post" do
 
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:topic_category_changed"
+        g.node "action-1",
+               "action:create_post",
+               configuration: {
+                 "topic_id" => "={{ trigger.topic.id }}",
+                 "raw" =>
+                   "=Category changed from {{ trigger.old_category_id }} to {{ trigger.topic.category_id }}",
+               }
+        g.chain "trigger-1", "action-1"
+      end
+
     Fabricate(
       :discourse_workflows_workflow,
       created_by: admin,
       enabled: true,
       name: "Notify on category change",
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:topic_category_changed",
-          "type_version" => "1.0",
-          "name" => "Category Changed",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-          },
-        },
-        {
-          "id" => "action-1",
-          "type" => "action:create_post",
-          "type_version" => "1.0",
-          "name" => "Create Post",
-          "position" => {
-            "x" => 200,
-            "y" => 0,
-          },
-          "position_index" => 1,
-          "configuration" => {
-            "topic_id" => "={{ trigger.topic.id }}",
-            "raw" =>
-              "=Category changed from {{ trigger.old_category_id }} to {{ trigger.topic.category_id }}",
-          },
-        },
-      ],
-      connections: [
-        {
-          "source_node_id" => "trigger-1",
-          "target_node_id" => "action-1",
-          "source_output" => "main",
-        },
-      ],
+      **graph,
     )
   end
 

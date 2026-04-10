@@ -129,27 +129,11 @@ RSpec.describe DiscourseWorkflows::CredentialsController do
 
     it "returns 422 when credential is referenced by a node" do
       credential = Fabricate(:discourse_workflows_credential)
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: admin,
-        nodes: [
-          {
-            "id" => "webhook-1",
-            "type" => "trigger:webhook",
-            "type_version" => "1.0",
-            "name" => "Webhook",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "credential_id" => credential.id,
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "webhook-1", "trigger:webhook", configuration: { "credential_id" => credential.id }
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
       delete "/admin/plugins/discourse-workflows/credentials/#{credential.id}.json"
 

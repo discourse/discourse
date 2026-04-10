@@ -12,70 +12,26 @@ RSpec.describe DiscourseWorkflows::Executor do
 
   describe "pause on WaitForResume" do
     it "pauses execution and sends a chat message with approval buttons" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "wait-1",
-              "type" => "action:chat_approval",
-              "type_version" => "1.0",
-              "name" => "Wait for Approval",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "message" => "Please approve",
-                "channel_id" => channel.id.to_s,
-              },
-            },
-            {
-              "id" => "after-1",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "After Approval",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "mode" => "json",
-                "include_input" => true,
-                "json" => '{"done": "true"}',
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "wait-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "wait-1",
-              "target_node_id" => "after-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "wait-1",
+                 "action:chat_approval",
+                 configuration: {
+                   "message" => "Please approve",
+                   "channel_id" => channel.id.to_s,
+                 }
+          g.node "after-1",
+                 "action:set_fields",
+                 name: "After Approval",
+                 configuration: {
+                   "mode" => "json",
+                   "include_input" => true,
+                   "json" => '{"done": "true"}',
+                 }
+          g.chain "trigger-1", "wait-1", "after-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       execution = described_class.new(workflow, "trigger-1", {}).run
 
@@ -100,51 +56,20 @@ RSpec.describe DiscourseWorkflows::Executor do
     end
 
     it "stores timeout config when timeout_minutes is set" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "wait-1",
-              "type" => "action:chat_approval",
-              "type_version" => "1.0",
-              "name" => "Wait",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "message" => "Approve?",
-                "channel_id" => channel.id.to_s,
-                "timeout_minutes" => "60",
-                "timeout_action" => "fail",
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "wait-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "wait-1",
+                 "action:chat_approval",
+                 configuration: {
+                   "message" => "Approve?",
+                   "channel_id" => channel.id.to_s,
+                   "timeout_minutes" => "60",
+                   "timeout_action" => "fail",
+                 }
+          g.chain "trigger-1", "wait-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       freeze_time do
         execution = described_class.new(workflow, "trigger-1", {}).run
@@ -160,70 +85,26 @@ RSpec.describe DiscourseWorkflows::Executor do
 
   describe ".resume" do
     it "resumes a waiting execution with approved response" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          enabled: true,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:manual",
-              "type_version" => "1.0",
-              "name" => "Manual",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "wait-1",
-              "type" => "action:chat_approval",
-              "type_version" => "1.0",
-              "name" => "Wait",
-              "position" => {
-                "x" => 200,
-                "y" => 0,
-              },
-              "position_index" => 1,
-              "configuration" => {
-                "message" => "Approve?",
-                "channel_id" => channel.id.to_s,
-              },
-            },
-            {
-              "id" => "after-1",
-              "type" => "action:set_fields",
-              "type_version" => "1.0",
-              "name" => "After",
-              "position" => {
-                "x" => 400,
-                "y" => 0,
-              },
-              "position_index" => 2,
-              "configuration" => {
-                "mode" => "json",
-                "include_input" => true,
-                "json" => '{"done": "true"}',
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "wait-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "wait-1",
-              "target_node_id" => "after-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "wait-1",
+                 "action:chat_approval",
+                 configuration: {
+                   "message" => "Approve?",
+                   "channel_id" => channel.id.to_s,
+                 }
+          g.node "after-1",
+                 "action:set_fields",
+                 name: "After",
+                 configuration: {
+                   "mode" => "json",
+                   "include_input" => true,
+                   "json" => '{"done": "true"}',
+                 }
+          g.chain "trigger-1", "wait-1", "after-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       execution = described_class.new(workflow, "trigger-1", {}).run
       expect(execution.status).to eq("waiting")

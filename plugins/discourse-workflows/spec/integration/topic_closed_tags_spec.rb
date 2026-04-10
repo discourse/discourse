@@ -9,49 +9,25 @@ RSpec.describe "Workflow: topic closed -> topic tags" do
     SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
 
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:topic_closed"
+        g.node "action-1",
+               "action:topic_tags",
+               configuration: {
+                 "operation" => "add",
+                 "topic_id" => "={{ trigger.topic.id }}",
+                 "tag_names" => "resolved",
+               }
+        g.chain "trigger-1", "action-1"
+      end
+
     Fabricate(
       :discourse_workflows_workflow,
       created_by: admin,
       enabled: true,
       name: "Tag closed topics",
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:topic_closed",
-          "type_version" => "1.0",
-          "name" => "Topic Closed",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-          },
-        },
-        {
-          "id" => "action-1",
-          "type" => "action:topic_tags",
-          "type_version" => "1.0",
-          "name" => "Topic Tags",
-          "position" => {
-            "x" => 200,
-            "y" => 0,
-          },
-          "position_index" => 1,
-          "configuration" => {
-            "operation" => "add",
-            "topic_id" => "={{ trigger.topic.id }}",
-            "tag_names" => "resolved",
-          },
-        },
-      ],
-      connections: [
-        {
-          "source_node_id" => "trigger-1",
-          "target_node_id" => "action-1",
-          "source_output" => "main",
-        },
-      ],
+      **graph,
     )
   end
 

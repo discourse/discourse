@@ -252,27 +252,8 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
 
   describe "GET /admin/plugins/discourse-workflows/workflows/:id" do
     it "returns the workflow with nodes and connections" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: admin,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Trigger",
-              "position" => {
-                "x" => 0,
-                "y" => 0,
-              },
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [],
-        )
+      graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, **graph)
 
       get "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json"
 

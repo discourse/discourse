@@ -7,32 +7,12 @@ RSpec.describe DiscourseWorkflows::Workflow do
 
   describe "#trigger_node" do
     it "returns the trigger node" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Topic Closed",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Tag Topic",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "action-1", "action:topic_tags"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
 
       trigger = workflow.trigger_node
       expect(trigger).to be_a(Hash)
@@ -112,38 +92,13 @@ RSpec.describe DiscourseWorkflows::Workflow do
 
   describe "dependent destroy" do
     it "destroys associated executions" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:topic_closed",
-              "type_version" => "1.0",
-              "name" => "Trigger",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:topic_tags",
-              "type_version" => "1.0",
-              "name" => "Action",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "action-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "action-1", "action:topic_tags"
+          g.chain "trigger-1", "action-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
       Fabricate(:discourse_workflows_execution, workflow: workflow)
 
       workflow.destroy!

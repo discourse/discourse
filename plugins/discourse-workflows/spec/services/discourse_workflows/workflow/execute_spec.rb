@@ -22,27 +22,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
 
     fab!(:user)
     fab!(:workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        created_by: user,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:manual",
-            "type_version" => "1.0",
-            "name" => "Manual Trigger",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:manual" }
+      Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
     end
 
     let(:params) { { workflow_id: workflow.id, trigger_node_id: "trigger-1" } }

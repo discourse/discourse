@@ -9,26 +9,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
     before { SiteSetting.discourse_workflows_enabled = true }
 
     def create_schedule_workflow(configuration:)
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        created_by: user,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:schedule",
-            "type_version" => "1.0",
-            "name" => "Schedule",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => configuration,
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:schedule", configuration: configuration
+        end
+      Fabricate(:discourse_workflows_workflow, enabled: true, created_by: user, **graph)
     end
 
     context "when plugin is disabled" do

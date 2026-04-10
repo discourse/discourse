@@ -18,55 +18,31 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
     let(:dependencies) { { guardian: Guardian.new(user) } }
 
     fab!(:workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:form",
-            "type_version" => "1.0",
-            "name" => "Form Trigger",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
-              "form_title" => "Trigger Form",
-              "form_fields" => [
-                { "field_label" => "Name", "field_type" => "text", "required" => true },
-              ],
-              "response_mode" => "on_received",
-            },
-          },
-          {
-            "id" => "form-action-1",
-            "type" => "action:form",
-            "type_version" => "1.0",
-            "name" => "Form Action",
-            "position" => {
-              "x" => 200,
-              "y" => 0,
-            },
-            "position_index" => 1,
-            "configuration" => {
-              "form_title" => "Resume Form",
-              "form_fields" => [
-                { "field_label" => "Feedback", "field_type" => "text", "required" => false },
-              ],
-            },
-          },
-        ],
-        connections: [
-          {
-            "source_node_id" => "trigger-1",
-            "target_node_id" => "form-action-1",
-            "source_output" => "main",
-          },
-        ],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:form",
+                 name: "Form Trigger",
+                 configuration: {
+                   "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+                   "form_title" => "Trigger Form",
+                   "form_fields" => [
+                     { "field_label" => "Name", "field_type" => "text", "required" => true },
+                   ],
+                   "response_mode" => "on_received",
+                 }
+          g.node "form-action-1",
+                 "action:form",
+                 name: "Form Action",
+                 configuration: {
+                   "form_title" => "Resume Form",
+                   "form_fields" => [
+                     { "field_label" => "Feedback", "field_type" => "text", "required" => false },
+                   ],
+                 }
+          g.chain "trigger-1", "form-action-1"
+        end
+      Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
     end
 
     let(:resume_token) { SecureRandom.uuid }

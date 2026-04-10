@@ -4,29 +4,16 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
   fab!(:admin)
 
   fab!(:workflow) do
-    Fabricate(
-      :discourse_workflows_workflow,
-      created_by: admin,
-      enabled: true,
-      nodes: [
-        {
-          "id" => "webhook-1",
-          "type" => "trigger:webhook",
-          "type_version" => "1.0",
-          "name" => "Webhook",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-            "path" => "my-hook",
-            "http_method" => "POST",
-          },
-        },
-      ],
-      connections: [],
-    )
+    graph =
+      build_workflow_graph do |g|
+        g.node "webhook-1",
+               "trigger:webhook",
+               configuration: {
+                 "path" => "my-hook",
+                 "http_method" => "POST",
+               }
+      end
+    Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
   end
 
   before { SiteSetting.discourse_workflows_enabled = true }
@@ -166,6 +153,18 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       let(:resume_token) { "resume-token" }
       let(:resume_signature) { DiscourseWorkflows::HmacSigner.sign(resume_token) }
 
+      before do
+        extra =
+          build_workflow_graph do |g|
+            g.node "wait-1", "action:wait"
+            g.chain "webhook-1", "wait-1"
+          end
+        workflow.update!(
+          nodes: workflow.parsed_nodes + extra[:nodes],
+          connections: extra[:connections],
+        )
+      end
+
       fab!(:waiting_execution) do
         Fabricate(
           :discourse_workflows_execution,
@@ -180,6 +179,14 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
             "response_mode" => "immediately",
             "webhook_suffix" => "after-approval",
           },
+        )
+      end
+
+      before do
+        Fabricate(
+          :discourse_workflows_execution_data,
+          execution: waiting_execution,
+          workflow_data: DiscourseWorkflows::WorkflowSnapshot.snapshot(workflow),
         )
       end
 
@@ -211,33 +218,23 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       end
 
       it "redirects when the resumed workflow responds to webhook with a redirect" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "redirect",
+                     "redirect_url" => "https://example.com/thanks",
+                   }
+            g.connect "wait-1", "respond-1"
+          end
         workflow.update!(
-          nodes:
-            workflow.parsed_nodes +
-              [
-                {
-                  "id" => "respond-1",
-                  "type" => "action:respond_to_webhook",
-                  "type_version" => "1.0",
-                  "name" => "Respond",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "response_type" => "redirect",
-                    "redirect_url" => "https://example.com/thanks",
-                  },
-                },
-              ],
-          connections: [
-            {
-              "source_node_id" => "wait-1",
-              "target_node_id" => "respond-1",
-              "source_output" => "main",
-            },
-          ],
+          nodes: workflow.parsed_nodes + extra[:nodes],
+          connections: workflow.parsed_connections + extra[:connections],
+        )
+
+        waiting_execution.execution_data.update!(
+          workflow_data: DiscourseWorkflows::WorkflowSnapshot.snapshot(workflow),
         )
 
         waiting_execution.update!(
@@ -258,6 +255,15 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
 
     describe "synchronous response modes" do
       it "redirects when respond_to_webhook node produces a redirect" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "redirect",
+                     "redirect_url" => "https://example.com/thanks",
+                   }
+          end
         workflow.update!(
           nodes:
             workflow.parsed_nodes.map do |n|
@@ -272,24 +278,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
               else
                 n
               end
-            end +
-              [
-                {
-                  "id" => "respond-1",
-                  "type" => "action:respond_to_webhook",
-                  "type_version" => "1.0",
-                  "name" => "Respond",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "response_type" => "redirect",
-                    "redirect_url" => "https://example.com/thanks",
-                  },
-                },
-              ],
+            end + extra[:nodes],
           connections: [
             {
               "source_node_id" => "webhook-1",
@@ -310,6 +299,16 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       end
 
       it "returns JSON when respond_to_webhook node produces JSON" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "json",
+                     "status_code" => "201",
+                     "response_body" => '{"created": true}',
+                   }
+          end
         workflow.update!(
           nodes:
             workflow.parsed_nodes.map do |n|
@@ -324,25 +323,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
               else
                 n
               end
-            end +
-              [
-                {
-                  "id" => "respond-1",
-                  "type" => "action:respond_to_webhook",
-                  "type_version" => "1.0",
-                  "name" => "Respond",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "response_type" => "json",
-                    "status_code" => "201",
-                    "response_body" => '{"created": true}',
-                  },
-                },
-              ],
+            end + extra[:nodes],
           connections: [
             {
               "source_node_id" => "webhook-1",
@@ -363,6 +344,16 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       end
 
       it "returns text when respond_to_webhook node produces text" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "text",
+                     "status_code" => "200",
+                     "response_body" => "OK thanks",
+                   }
+          end
         workflow.update!(
           nodes:
             workflow.parsed_nodes.map do |n|
@@ -377,25 +368,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
               else
                 n
               end
-            end +
-              [
-                {
-                  "id" => "respond-1",
-                  "type" => "action:respond_to_webhook",
-                  "type_version" => "1.0",
-                  "name" => "Respond",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "response_type" => "text",
-                    "status_code" => "200",
-                    "response_body" => "OK thanks",
-                  },
-                },
-              ],
+            end + extra[:nodes],
           connections: [
             {
               "source_node_id" => "webhook-1",
@@ -416,6 +389,15 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       end
 
       it "returns no data response" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "respond-1",
+                   "action:respond_to_webhook",
+                   configuration: {
+                     "response_type" => "no_data",
+                     "status_code" => "204",
+                   }
+          end
         workflow.update!(
           nodes:
             workflow.parsed_nodes.map do |n|
@@ -430,24 +412,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
               else
                 n
               end
-            end +
-              [
-                {
-                  "id" => "respond-1",
-                  "type" => "action:respond_to_webhook",
-                  "type_version" => "1.0",
-                  "name" => "Respond",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "response_type" => "no_data",
-                    "status_code" => "204",
-                  },
-                },
-              ],
+            end + extra[:nodes],
           connections: [
             {
               "source_node_id" => "webhook-1",
@@ -467,6 +432,15 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       end
 
       it "returns last node output as JSON when mode is when_last_node_finishes" do
+        extra =
+          build_workflow_graph do |g|
+            g.node "set-fields-1",
+                   "action:set_fields",
+                   configuration: {
+                     "mode" => "json",
+                     "json" => '{"result": "done"}',
+                   }
+          end
         workflow.update!(
           nodes:
             workflow.parsed_nodes.map do |n|
@@ -482,24 +456,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
               else
                 n
               end
-            end +
-              [
-                {
-                  "id" => "set-fields-1",
-                  "type" => "action:set_fields",
-                  "type_version" => "1.0",
-                  "name" => "SetFields",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "mode" => "json",
-                    "json" => '{"result": "done"}',
-                  },
-                },
-              ],
+            end + extra[:nodes],
           connections: [
             {
               "source_node_id" => "webhook-1",

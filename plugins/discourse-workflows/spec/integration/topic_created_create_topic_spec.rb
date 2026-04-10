@@ -10,49 +10,25 @@ RSpec.describe "Workflow: topic created -> create topic" do
 
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
+    graph =
+      build_workflow_graph do |g|
+        g.node "trigger-1", "trigger:topic_created"
+        g.node "action-1",
+               "action:create_topic",
+               configuration: {
+                 "title" => "Mirror: {{ trigger.topic_title }}",
+                 "raw" => "=Mirrored from topic {{ trigger.topic_id }}",
+                 "category_id" => category.id.to_s,
+               }
+        g.chain "trigger-1", "action-1"
+      end
+
     Fabricate(
       :discourse_workflows_workflow,
       created_by: admin,
       enabled: true,
       name: "Mirror new topics",
-      nodes: [
-        {
-          "id" => "trigger-1",
-          "type" => "trigger:topic_created",
-          "type_version" => "1.0",
-          "name" => "Topic Created",
-          "position" => {
-            "x" => 0,
-            "y" => 0,
-          },
-          "position_index" => 0,
-          "configuration" => {
-          },
-        },
-        {
-          "id" => "action-1",
-          "type" => "action:create_topic",
-          "type_version" => "1.0",
-          "name" => "Create Topic",
-          "position" => {
-            "x" => 200,
-            "y" => 0,
-          },
-          "position_index" => 1,
-          "configuration" => {
-            "title" => "Mirror: {{ trigger.topic_title }}",
-            "raw" => "=Mirrored from topic {{ trigger.topic_id }}",
-            "category_id" => category.id.to_s,
-          },
-        },
-      ],
-      connections: [
-        {
-          "source_node_id" => "trigger-1",
-          "target_node_id" => "action-1",
-          "source_output" => "main",
-        },
-      ],
+      **graph,
     )
   end
 
