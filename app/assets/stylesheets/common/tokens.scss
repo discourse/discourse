@@ -25,7 +25,7 @@
 
   // Border
   --token-color-border-input: var(--primary-300);
-  --token-color-border-default: var(--primary-200);
+  --token-color-border-default: var(--primary-low);
   --token-color-border-focused: var(--tertiary);
   --token-color-border-accent: var(--tertiary-400);
 
@@ -36,6 +36,7 @@
   --token-color-surface-hovered: var(--primary-100);
   --token-color-surface-pressed: var(--primary-200);
   --token-color-background-input: var(--secondary);
+  --token-color-surface-selected: var(--d-selected);
 
   // Accents
   --token-color-background-accent-subtlest: var(--tertiary-200);
