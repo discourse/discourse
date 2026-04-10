@@ -17,9 +17,10 @@ export default {
 
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
+        toolbar.groups.unshift({ group: "locale", buttons: [] });
         toolbar.addButton({
           id: "post-language-selector",
-          group: "extras",
+          group: "locale",
           icon: "language",
           title: "post.localizations.post_language_selector.title",
           className: "post-language-selector-trigger",
