@@ -85,7 +85,8 @@ module DiscourseWorkflows
         form_description: ExpressionResolver.resolve(wc["form_description"], user: guardian.user),
         form_fields: Workflow.resolve_field_keys(wc["form_fields"] || []),
         response_mode: "on_received",
-        has_downstream_form: workflow.node_has_downstream_of_type?(form_node["id"], "action:form"),
+        has_downstream_form:
+          workflow.node_has_reachable_downstream_of_type?(form_node["id"], "action:form"),
       }
     end
 
@@ -102,7 +103,8 @@ module DiscourseWorkflows
         form_description: config["form_description"],
         form_fields: Workflow.resolve_field_keys(config["form_fields"] || []),
         response_mode: config["response_mode"] || "on_received",
-        has_downstream_form: workflow.node_has_downstream_of_type?(form_node["id"], "action:form"),
+        has_downstream_form:
+          workflow.node_has_reachable_downstream_of_type?(form_node["id"], "action:form"),
       }
     end
   end

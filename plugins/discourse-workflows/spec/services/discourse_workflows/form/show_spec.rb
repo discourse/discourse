@@ -90,6 +90,53 @@ RSpec.describe DiscourseWorkflows::Form::Show do
       end
     end
 
+    context "when a non-adjacent downstream form action exists" do
+      before do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes +
+              [
+                {
+                  "id" => "action-1",
+                  "type" => "action:send_message",
+                  "type_version" => "1.0",
+                  "name" => "Send Message",
+                  "position_index" => 1,
+                  "configuration" => {
+                  },
+                },
+                {
+                  "id" => "form-action-1",
+                  "type" => "action:form",
+                  "type_version" => "1.0",
+                  "name" => "Second Form",
+                  "position_index" => 2,
+                  "configuration" => {
+                    "form_fields" => [],
+                  },
+                },
+              ],
+          connections: [
+            {
+              "source_node_id" => "trigger-1",
+              "target_node_id" => "action-1",
+              "source_output" => "main",
+            },
+            {
+              "source_node_id" => "action-1",
+              "target_node_id" => "form-action-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+        DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+      end
+
+      it "detects the downstream form through intermediate nodes" do
+        expect(result[:form_data][:has_downstream_form]).to be(true)
+      end
+    end
+
     context "with a waiting execution" do
       before do
         workflow.update!(
@@ -202,6 +249,54 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         end
 
         it "sets has_downstream_form to true" do
+          expect(result[:form_data][:has_downstream_form]).to be(true)
+        end
+      end
+
+      context "when a non-adjacent downstream form action exists" do
+        before do
+          workflow.update!(
+            nodes:
+              workflow.parsed_nodes +
+                [
+                  {
+                    "id" => "action-between",
+                    "type" => "action:send_message",
+                    "type_version" => "1.0",
+                    "name" => "Intermediate",
+                    "position_index" => 2,
+                    "configuration" => {
+                    },
+                  },
+                  {
+                    "id" => "form-action-2",
+                    "type" => "action:form",
+                    "type_version" => "1.0",
+                    "name" => "Third Page",
+                    "position_index" => 3,
+                    "configuration" => {
+                      "form_fields" => [],
+                    },
+                  },
+                ],
+            connections:
+              (workflow.parsed_connections || []) +
+                [
+                  {
+                    "source_node_id" => "form-action-1",
+                    "target_node_id" => "action-between",
+                    "source_output" => "main",
+                  },
+                  {
+                    "source_node_id" => "action-between",
+                    "target_node_id" => "form-action-2",
+                    "source_output" => "main",
+                  },
+                ],
+          )
+        end
+
+        it "detects the downstream form through intermediate nodes" do
           expect(result[:form_data][:has_downstream_form]).to be(true)
         end
       end

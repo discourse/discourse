@@ -61,7 +61,7 @@ module DiscourseWorkflows
     def build_response_metadata(workflow:, trigger_node:)
       {
         has_downstream_form:
-          workflow.node_has_downstream_of_type?(trigger_node["id"], "action:form"),
+          workflow.node_has_reachable_downstream_of_type?(trigger_node["id"], "action:form"),
         response_mode: trigger_node.dig("configuration", "response_mode") || "on_received",
       }
     end

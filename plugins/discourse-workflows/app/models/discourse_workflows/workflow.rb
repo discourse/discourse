@@ -96,9 +96,25 @@ module DiscourseWorkflows
       parsed_connections.select { |c| c["source_node_id"] == node_id_str }
     end
 
-    def node_has_downstream_of_type?(node_id, type)
-      target_ids = connections_from_node(node_id).map { |c| c["target_node_id"] }.to_set
-      parsed_nodes.any? { |n| target_ids.include?(n["id"]) && n["type"] == type }
+    def node_has_reachable_downstream_of_type?(node_id, type)
+      node_by_id = parsed_nodes.index_by { |n| n["id"] }
+      visited = Set.new
+      queue = [node_id.to_s]
+
+      while (current = queue.shift)
+        next if visited.include?(current)
+        visited << current
+
+        connections_from_node(current).each do |conn|
+          target_id = conn["target_node_id"]
+          target_node = node_by_id[target_id]
+          next unless target_node
+          return true if target_node["type"] == type
+          queue << target_id
+        end
+      end
+
+      false
     end
 
     def self.form_field_key(field)
