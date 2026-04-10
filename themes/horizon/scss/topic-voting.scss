@@ -1,0 +1,126 @@
+@use "lib/viewport";
+
+.voting-wrapper {
+  --d-button-border-radius: var(--d-border-radius);
+}
+
+.main-link:has(.voting) .voting {
+  --voting-radius: calc(var(--d-border-radius) - 1px);
+  grid-column: -1;
+  grid-row: 1 / span 2;
+  justify-self: end;
+
+  @include viewport.from(lg) {
+    margin-top: 0.4em;
+    margin-right: 0.25em;
+  }
+
+  @include viewport.until(lg) {
+    grid-row: 2 / span 1;
+    grid-column: -2;
+
+    .voting-wrapper {
+      flex-direction: row;
+    }
+  }
+
+  @include viewport.until(sm) {
+    grid-row: 3 / span 1;
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .vote-button {
+    border-radius: var(--voting-radius);
+    background: var(--secondary);
+    border-color: var(--primary-300);
+
+    .d-icon {
+      color: var(--primary-500);
+    }
+
+    &.btn-success {
+      .d-icon {
+        color: var(--success);
+      }
+    }
+
+    @include viewport.until(lg) {
+      border-radius: var(--voting-radius) 0 0 var(--voting-radius);
+      border-right: none;
+    }
+
+    @include viewport.from(lg) {
+      border-radius: var(--voting-radius) var(--voting-radius) 0 0;
+      border-bottom: none;
+    }
+  }
+
+  .vote-count-wrapper {
+    border: 1px solid var(--primary-300);
+
+    @include viewport.until(lg) {
+      border-radius: 0 var(--voting-radius) var(--voting-radius) 0;
+      padding-inline: var(--space-1);
+      min-width: 2.5em;
+    }
+
+    @include viewport.from(lg) {
+      border-radius: 0 0 var(--voting-radius) var(--voting-radius);
+    }
+  }
+
+  .vote-button,
+  .vote-count-wrapper {
+    .discourse-no-touch & {
+      &:focus-visible,
+      &:hover {
+        background: var(--background-color);
+        box-shadow: none;
+        color: var(--primary-700);
+
+        .vote-count,
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+    }
+  }
+}
+
+@include viewport.until(lg) {
+  #main-outlet .list-voting .vote-button {
+    padding: var(--space-1) var(--space-1);
+  }
+}
+
+@include viewport.from(lg) {
+  #main-outlet .list-voting .vote-count-wrapper {
+    padding-bottom: 0.25em;
+  }
+}
+
+.mobile-list-voting {
+  .vote-button {
+    padding-inline: var(--space-2);
+  }
+}
+
+@include viewport.from(lg) {
+  .header-title-voting {
+    .vote-count-wrapper,
+    .vote-button {
+      background: var(--background-color);
+      border-color: var(--d-sidebar-border-color);
+    }
+
+    .vote-button {
+      .discourse-no-touch & {
+        &:hover,
+        &:focus-visible {
+          background: var(--d-sidebar-highlight-background);
+        }
+      }
+    }
+  }
+}

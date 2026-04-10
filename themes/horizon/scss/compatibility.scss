@@ -65,6 +65,12 @@
   }
 }
 
+.mobile-list-voting {
+  @include viewport.from(sm) {
+    display: none;
+  }
+}
+
 // TC: Blog Style
 body:not(.d-toc-installed).blog-post .container.posts,
 body.d-toc-installed.blog-post .container.posts {
