@@ -10,6 +10,7 @@ import {
   getLinkify,
   isWhiteSpace,
 } from "discourse/static/prosemirror/lib/markdown-it";
+import { i18n } from "discourse-i18n";
 import { isTopLevel } from "discourse-markdown-it/features/onebox";
 
 export const oneboxPluginKey = new PluginKey("onebox");
@@ -152,7 +153,11 @@ const extension = {
               pos,
               pos + node.nodeSize,
               { class: "onebox-loading", nodeName: "span" },
-              { oneboxUrl: link.attrs.href, oneboxType }
+              {
+                oneboxUrl: link.attrs.href,
+                oneboxType,
+                forceRetry: isForced,
+              }
             )
           );
         }
@@ -196,6 +201,7 @@ const extension = {
                     oneboxType: decoration.spec.oneboxType,
                     oneboxTitle: meta.inlineOneboxes[decoration.spec.oneboxUrl],
                     oneboxDataLoaded: true,
+                    forceRetry: decoration.spec.forceRetry,
                   }
                 )
               );
@@ -229,7 +235,9 @@ const extension = {
               set = set.remove(decosToUpdate).add(tr.doc, newDecorations);
             }
 
-            return set;
+            if (!meta?.forceOneboxUrl) {
+              return set;
+            }
           }
 
           const decorations = scanForOneboxLinks(
@@ -270,7 +278,10 @@ const extension = {
             );
 
             for (const dec of decorations) {
-              if (failedUrls[dec.spec.oneboxType].has(dec.spec.oneboxUrl)) {
+              if (
+                !dec.spec.forceRetry &&
+                failedUrls[dec.spec.oneboxType].has(dec.spec.oneboxUrl)
+              ) {
                 continue;
               }
 
@@ -278,21 +289,35 @@ const extension = {
 
               // Full onebox, one by one
               if (dec.spec.oneboxType === "full") {
-                const { oneboxUrl } = dec.spec;
-                pendingUrls.full.add(oneboxUrl);
+                const { oneboxUrl, forceRetry } = dec.spec;
 
-                processOnebox(oneboxUrl, getContext()).then((html) => {
-                  pendingUrls.full.delete(oneboxUrl);
-                  if (html) {
-                    view.dispatch(
-                      view.state.tr.setMeta(plugin, {
-                        oneboxContent: { url: oneboxUrl, html },
-                      })
-                    );
-                  } else {
+                if (forceRetry) {
+                  failedUrls.full.delete(oneboxUrl);
+                }
+
+                processOnebox(oneboxUrl, getContext(), { refresh: forceRetry })
+                  .then((html) => {
+                    pendingUrls.full.delete(oneboxUrl);
+                    if (html) {
+                      view.dispatch(
+                        view.state.tr.setMeta(plugin, {
+                          oneboxContent: { url: oneboxUrl, html },
+                        })
+                      );
+                    } else {
+                      failedUrls.full.add(oneboxUrl);
+                      if (forceRetry) {
+                        showPreviewFailedToast();
+                      }
+                    }
+                  })
+                  .catch(() => {
+                    pendingUrls.full.delete(oneboxUrl);
                     failedUrls.full.add(oneboxUrl);
-                  }
-                });
+                    if (forceRetry) {
+                      showPreviewFailedToast();
+                    }
+                  });
               }
             }
 
@@ -352,6 +377,9 @@ const extension = {
                   tr.replaceWith(decoration.from, decoration.to, oneboxNode);
                 } else {
                   failedUrls.inline.add(decoration.spec.oneboxUrl);
+                  if (decoration.spec.forceRetry) {
+                    showPreviewFailedToast();
+                  }
                 }
               } else if (decoration.spec.oneboxType === "full") {
                 if (decoration.spec.oneboxHtml) {
@@ -386,6 +414,15 @@ const extension = {
         };
       },
     });
+
+    function showPreviewFailedToast() {
+      getContext().toasts.default({
+        duration: "short",
+        data: {
+          message: i18n("composer.link_toolbar.preview_failed"),
+        },
+      });
+    }
 
     return plugin;
   },
@@ -446,7 +483,7 @@ async function loadInlineOneboxes(urls, { categoryId, topicId }) {
   return oneboxes;
 }
 
-async function processOnebox(href, { topicId, categoryId }) {
+async function processOnebox(href, { topicId, categoryId }, opts = {}) {
   const html = await new Promise((onResolve) => {
     load({
       topicId,
@@ -454,7 +491,7 @@ async function processOnebox(href, { topicId, categoryId }) {
       elem: { ...dummyElement, href },
       onResolve,
       ajax,
-      refresh: false,
+      refresh: opts.refresh ?? false,
     });
   });
 

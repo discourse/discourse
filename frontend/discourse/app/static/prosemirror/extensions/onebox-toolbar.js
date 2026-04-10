@@ -22,7 +22,7 @@ class OneboxToolbar extends ToolbarBase {
 
     this.addButton({
       id: "onebox-remove-preview",
-      icon: "eye-slash",
+      icon: "compress",
       title: "composer.onebox_toolbar.remove_preview",
       className: "composer-onebox-toolbar__remove-preview",
       action: opts.removePreview,
@@ -80,7 +80,7 @@ class OneboxToolbarPluginView {
     this.#menuInstance = null;
 
     if (this.#toolbarReplaced) {
-      this.#getContext().replaceToolbar(null);
+      this.#getContext().replaceToolbar(null, this.#toolbar);
       this.#toolbarReplaced = false;
     }
   }

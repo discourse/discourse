@@ -3321,7 +3321,8 @@ en:
         remove: "Remove link"
         visit: "Open link in external tab"
         link_copied: "Link copied!"
-        show_preview: "Show preview"
+        load_preview: "Load preview"
+        preview_failed: "Could not load preview"
 
       onebox_toolbar:
         copy: "Copy link"

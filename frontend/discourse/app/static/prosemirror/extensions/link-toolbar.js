@@ -46,7 +46,7 @@ class LinkToolbar extends ToolbarBase {
     this.addButton({
       id: "link-show-preview",
       icon: "expand",
-      title: "composer.link_toolbar.show_preview",
+      title: "composer.link_toolbar.load_preview",
       className: "composer-link-toolbar__show-preview",
       condition: opts.canShowPreview,
       action: opts.showPreview,
@@ -138,7 +138,7 @@ class LinkToolbarPluginView {
     this.#menuInstance = null;
 
     if (this.#toolbarReplaced) {
-      this.#getContext().replaceToolbar(null);
+      this.#getContext().replaceToolbar(null, this.#linkToolbar);
       this.#toolbarReplaced = false;
     }
   }
@@ -301,6 +301,8 @@ class LinkToolbarPluginView {
     if (!range) {
       return;
     }
+
+    this.#resetToolbar();
 
     const { state, dispatch } = this.#view;
     const tr = state.tr;
