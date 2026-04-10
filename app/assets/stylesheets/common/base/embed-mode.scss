@@ -96,22 +96,34 @@ body.embed-mode {
     border-bottom: 1px solid var(--content-border-color);
   }
 
-  // Hide default topic-progress bar and docked timeline in embed mode
-  // We replace them with floating action buttons
-  #topic-progress-wrapper {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-    pointer-events: none;
-    position: absolute;
+  // Single-column grid for embed mode (no timeline sidebar)
+  .container.posts {
+    grid-template-areas: "posts";
+    grid-template-columns: auto;
   }
 
+  // Position the topic-navigation in the grid so progress bar appears after posts
   .container.posts .topic-navigation {
-    display: contents;
+    grid-area: posts;
+    grid-row: 3;
+    display: flex;
+    justify-content: flex-end;
+
+    // Don't use sticky positioning — floating buttons handle the scrolling UX
+    &.with-topic-progress {
+      position: static;
+    }
   }
 
+  // Hide the docked timeline sidebar (fullscreen timeline still works)
   .timeline-container:not(.timeline-fullscreen) {
     display: none !important;
+  }
+
+  // Hide admin menu in the progress bar for embed context
+  #topic-progress-wrapper .topic-admin-menu-trigger,
+  #topic-progress-wrapper .btn-toggle-localized-content {
+    display: none;
   }
 
   // Floating action buttons (timeline + reply) in the bottom-right
