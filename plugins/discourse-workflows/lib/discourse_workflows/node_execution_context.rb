@@ -10,7 +10,8 @@ module DiscourseWorkflows
                 :vars,
                 :expression_errors,
                 :condition_details,
-                :resolved_config
+                :resolved_config,
+                :log
 
     def initialize(
       input_items:,
@@ -33,6 +34,7 @@ module DiscourseWorkflows
       @expression_errors = []
       @condition_details = []
       @resolved_config = nil
+      @log = StepLog.new
     end
 
     def get_parameter(name, item)

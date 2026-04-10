@@ -24,10 +24,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
     action.execute(build_exec_ctx(items, **kwargs))[0]
   end
 
-  def execute_code_with_action(code, items: [{ "json" => {} }], **kwargs)
+  def execute_code_with_log(code, items: [{ "json" => {} }], **kwargs)
     action = described_class.new(configuration: kwargs.delete(:configuration) || { "code" => code })
-    action.execute(build_exec_ctx(items, **kwargs))
-    action
+    exec_ctx = build_exec_ctx(items, **kwargs)
+    action.execute(exec_ctx)
+    exec_ctx.log
   end
 
   describe "#execute" do
@@ -46,40 +47,40 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
     end
 
     it "caps console.log output at MAX_ENTRIES" do
-      action =
-        execute_code_with_action(
+      log =
+        execute_code_with_log(
           "for (var i = 0; i < 300; i++) { console.log('line ' + i); } return {};",
         )
 
-      expect(action.log.entries.size).to eq(DiscourseWorkflows::StepLog::MAX_ENTRIES + 1)
-      expect(action.log.entries.last["message"]).to include("truncated")
+      expect(log.entries.size).to eq(DiscourseWorkflows::StepLog::MAX_ENTRIES + 1)
+      expect(log.entries.last["message"]).to include("truncated")
     end
 
     it "captures console.log output" do
-      action = execute_code_with_action('console.log("debug message"); return {};')
+      log = execute_code_with_log('console.log("debug message"); return {};')
 
-      expect(action.log.entries.size).to eq(1)
-      expect(action.log.entries.first).to include("level" => "info", "message" => "debug message")
+      expect(log.entries.size).to eq(1)
+      expect(log.entries.first).to include("level" => "info", "message" => "debug message")
     end
 
     it "accumulates logs across all input items" do
       items = [{ "json" => { "n" => 1 } }, { "json" => { "n" => 2 } }]
-      action = execute_code_with_action('console.log("item " + $json.n); return {};', items: items)
+      log = execute_code_with_log('console.log("item " + $json.n); return {};', items: items)
 
-      expect(action.log.entries.map { |e| e["message"] }).to eq(["item 1", "item 2"])
+      expect(log.entries.map { |e| e["message"] }).to eq(["item 1", "item 2"])
     end
 
     it "captures console.warn as warn level" do
-      action = execute_code_with_action('console.warn("careful"); return {};')
+      log = execute_code_with_log('console.warn("careful"); return {};')
 
-      expect(action.log.entries.first).to include("level" => "warn", "message" => "careful")
+      expect(log.entries.first).to include("level" => "warn", "message" => "careful")
     end
 
     it "captures console.error as error level" do
-      action = execute_code_with_action('console.error("broken"); return {};')
+      log = execute_code_with_log('console.error("broken"); return {};')
 
-      expect(action.log.entries.first).to include("level" => "error", "message" => "broken")
-      expect(action.log.errors?).to be(true)
+      expect(log.entries.first).to include("level" => "error", "message" => "broken")
+      expect(log.errors?).to be(true)
     end
 
     it "processes each input item independently" do

@@ -192,7 +192,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         )
       action.execute(exec_ctx)
 
-      messages = action.log.entries.map { |e| e["message"] }
+      messages = exec_ctx.log.entries.map { |e| e["message"] }
       expect(messages).to eq(
         [
           "POST https://api.example.com/data",
@@ -201,7 +201,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
           "[body omitted]",
         ],
       )
-      expect(action.log.entries).to all(include("level" => "info"))
+      expect(exec_ctx.log.entries).to all(include("level" => "info"))
     end
 
     it "raises when URL is blank" do

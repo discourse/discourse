@@ -177,11 +177,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
             "code" => 'console.log("comparing", a.json.n, b.json.n); return a.json.n - b.json.n;',
           },
         )
-      action.execute(
-        DiscourseWorkflows::NodeExecutionContext.new(input_items: input, node_context: {}),
-      )
+      exec_ctx = DiscourseWorkflows::NodeExecutionContext.new(input_items: input, node_context: {})
+      action.execute(exec_ctx)
 
-      messages = action.log.entries.map { |e| e["message"] }
+      messages = exec_ctx.log.entries.map { |e| e["message"] }
       expect(messages).to include(a_string_matching(/comparing/))
     end
   end

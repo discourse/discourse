@@ -146,13 +146,11 @@ module DiscourseWorkflows
           { status: :integer, headers: :object, body: :object }
         end
 
-        attr_reader :log
-
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(config)
+              result = process(config, exec_ctx.log)
               Item.new(result).to_h
             end
           ItemContract.validate_items!(items, source: self.class.identifier)
@@ -161,22 +159,21 @@ module DiscourseWorkflows
 
         private
 
-        def process(config)
+        def process(config, log)
           method, uri, headers, body = RequestBuilder.new(config).build
-          log_request(method, uri, headers, body)
+          log_request(log, method, uri, headers, body)
           never_error = config.fetch("never_error", false)
           response = send_request(method, uri, headers, body, never_error:)
           ResponseParser.parse(response)
         end
 
-        def log_request(method, uri, headers, body)
-          @log ||= StepLog.new
-          @log.info("#{method.to_s.upcase} #{uri}")
+        def log_request(log, method, uri, headers, body)
+          log.info("#{method.to_s.upcase} #{uri}")
           if headers.present?
             filtered = ActiveSupport::ParameterFilter.new(FILTERED_HEADER_PATTERNS).filter(headers)
-            filtered.each { |k, v| @log.info("#{k}: #{v}") }
+            filtered.each { |k, v| log.info("#{k}: #{v}") }
           end
-          @log.info("[body omitted]") if body.present?
+          log.info("[body omitted]") if body.present?
         end
 
         def send_request(method, uri, headers, body, never_error: false)

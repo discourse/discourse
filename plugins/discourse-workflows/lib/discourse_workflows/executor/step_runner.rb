@@ -118,9 +118,8 @@ module DiscourseWorkflows
         end
       end
 
-      def collect_log(instance)
-        log = instance.respond_to?(:log) ? instance.log : nil
-        log ||= StepLog.new
+      def collect_log(_instance)
+        log = @current_exec_ctx&.log || StepLog.new
         errors = @current_exec_ctx&.expression_errors || []
         errors.each { |err| log.error("#{err[:expression]}: #{err[:error]}") } if errors.present?
         log

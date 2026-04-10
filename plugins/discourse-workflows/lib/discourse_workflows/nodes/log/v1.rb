@@ -4,8 +4,6 @@ module DiscourseWorkflows
   module Nodes
     module Log
       class V1 < NodeType
-        attr_reader :log
-
         def self.identifier
           "action:log"
         end
@@ -45,14 +43,13 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          @log = StepLog.new
           raw_entries = @configuration.fetch("entries") { [] }
           return [exec_ctx.input_items] if raw_entries.empty?
 
           item = exec_ctx.input_items.first || { "json" => {} }
           config = exec_ctx.get_parameters(item)
           resolved_entries = config.fetch("entries") { [] }
-          resolved_entries.each { |entry| @log.kv(entry["key"].to_s, entry["value"].to_s) }
+          resolved_entries.each { |entry| exec_ctx.log.kv(entry["key"].to_s, entry["value"].to_s) }
 
           [exec_ctx.input_items]
         end

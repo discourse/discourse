@@ -54,11 +54,8 @@ module DiscourseWorkflows
           { result: :string }
         end
 
-        attr_reader :log
-
         def execute(exec_ctx)
           code = @configuration["code"].to_s
-          @log = StepLog.new
           context = resolver_context_from(exec_ctx)
           all_items_json = exec_ctx.input_items.map { |item| item.fetch("json") { {} } }
           vars = exec_ctx.vars || DiscourseWorkflows::Variable.pluck(:key, :value).to_h
@@ -75,7 +72,7 @@ module DiscourseWorkflows
             end
           [items]
         ensure
-          @log.merge(sandbox.log) if sandbox&.log
+          exec_ctx.log.merge(sandbox.log) if sandbox&.log
           sandbox&.dispose
         end
 

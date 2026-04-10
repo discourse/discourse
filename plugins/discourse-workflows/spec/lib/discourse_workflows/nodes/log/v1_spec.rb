@@ -6,18 +6,17 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
     instance = described_class.new(configuration: config)
     item_json = input_items.first&.dig("json") || {}
     resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => item_json })
-    result =
-      instance.execute(
-        DiscourseWorkflows::NodeExecutionContext.new(
-          input_items: input_items,
-          node_context: {
-          },
-          resolver: resolver,
-          configuration: config,
-          configuration_schema: described_class.configuration_schema,
-        ),
+    exec_ctx =
+      DiscourseWorkflows::NodeExecutionContext.new(
+        input_items: input_items,
+        node_context: {
+        },
+        resolver: resolver,
+        configuration: config,
+        configuration_schema: described_class.configuration_schema,
       )
-    [result[0], instance.log]
+    result = instance.execute(exec_ctx)
+    [result[0], exec_ctx.log]
   end
 
   describe ".identifier" do
@@ -51,22 +50,19 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
       config = { "entries" => entries }
       instance = described_class.new(configuration: config)
       resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first["json"] })
-      result =
-        instance.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
-            input_items: items,
-            node_context: {
-            },
-            resolver: resolver,
-            configuration: config,
-            configuration_schema: described_class.configuration_schema,
-          ),
-        )[
-          0
-        ]
+      exec_ctx =
+        DiscourseWorkflows::NodeExecutionContext.new(
+          input_items: items,
+          node_context: {
+          },
+          resolver: resolver,
+          configuration: config,
+          configuration_schema: described_class.configuration_schema,
+        )
+      result = instance.execute(exec_ctx)[0]
 
       expect(result).to eq(items)
-      expect(instance.log.entries.first).to include(
+      expect(exec_ctx.log.entries.first).to include(
         "level" => "info",
         "key" => "name",
         "value" => "Bob",

@@ -68,10 +68,8 @@ if defined?(DiscourseWorkflows)
           }
         end
 
-        attr_reader :logs
-
         def execute(exec_ctx)
-          @logs = []
+          log = exec_ctx.log
           item = exec_ctx.input_items.first || { "json" => {} }
           config = exec_ctx.get_parameters(item)
 
@@ -83,9 +81,9 @@ if defined?(DiscourseWorkflows)
 
           raise "AI Agent '#{agent_record.name}' is disabled" if !agent_record.enabled
 
-          @logs << "Agent: #{agent_record.name}"
-          @logs << "LLM: #{agent_record.default_llm_id}"
-          @logs << "Input: #{input.to_s[0..200]}"
+          log.info("Agent: #{agent_record.name}")
+          log.info("LLM: #{agent_record.default_llm_id}")
+          log.info("Input: #{input.to_s[0..200]}")
 
           agent_instance = agent_record.class_instance.new
           bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent_instance)
@@ -103,7 +101,7 @@ if defined?(DiscourseWorkflows)
           bot.reply(bot_context) do |partial, _, type|
             if type == :tool_call
               tool_calls += 1
-              @logs << "Tool call: #{partial}" if partial.is_a?(String)
+              log.info("Tool call: #{partial}") if partial.is_a?(String)
             elsif type == :structured_output
               result = partial.to_s
             elsif type.blank?
@@ -111,8 +109,8 @@ if defined?(DiscourseWorkflows)
             end
           end
 
-          @logs << "Tool calls: #{tool_calls}" if tool_calls > 0
-          @logs << "Result length: #{result.size} chars"
+          log.info("Tool calls: #{tool_calls}") if tool_calls > 0
+          log.info("Result length: #{result.size} chars")
 
           items = exec_ctx.input_items.map { |_item| { "json" => { "result" => result } } }
           [items]
