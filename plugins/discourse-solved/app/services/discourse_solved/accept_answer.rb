@@ -192,8 +192,6 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def answer_is_acceptable(topic:, post:)
-    # TODO: Maybe this can be clearer
-    return true unless SiteSetting.solved_allow_multiple_solutions
     !topic.solved&.topic_answers&.exists?(answer_post_id: post.id)
   end
 

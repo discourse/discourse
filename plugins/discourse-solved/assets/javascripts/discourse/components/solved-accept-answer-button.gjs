@@ -11,9 +11,8 @@ export default class SolvedAcceptAnswerButton extends Component {
   static hidden(args, context) {
     if (context.siteSettings.solved_allow_multiple_solutions) {
       return false;
-    } else {
-      return args.post.topic_accepted_answer !== args.post.id;
     }
+    return args.post.topic_accepted_answer;
   }
 
   @service appEvents;

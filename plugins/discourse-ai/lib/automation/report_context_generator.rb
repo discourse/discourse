@@ -68,7 +68,6 @@ module DiscourseAi
 
         if defined?(DiscourseSolved)
           @solutions =
-            # TODO possibly clean this up
             DiscourseSolved::TopicAnswer
               .joins(:solved_topic)
               .where("discourse_solved_solved_topics.topic_id": @posts.select(:topic_id))
