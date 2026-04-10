@@ -5,16 +5,55 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import concatClass from "discourse/helpers/concat-class";
+import { i18n } from "discourse-i18n";
+import { isExpression } from "../../../lib/workflows/property-engine";
 import ExpressionInput from "./expression-input";
+
+const MODE_ITEMS = [
+  {
+    value: "plain",
+    icon: "paragraph",
+    label: i18n("discourse_workflows.parameter_field.plain"),
+  },
+  {
+    value: "dynamic",
+    icon: "code",
+    label: i18n("discourse_workflows.parameter_field.dynamic"),
+  },
+];
 
 export default class ExpressionWrapper extends Component {
   @service workflowsNodeTypes;
 
   @tracked isDragOver = false;
 
+  get expressionMode() {
+    return isExpression(this.args.field?.value);
+  }
+
+  @action
+  toggleMode(value) {
+    const wantsDynamic = value === "dynamic";
+    if (wantsDynamic === this.expressionMode) {
+      return;
+    }
+
+    const currentValue = this.args.field.value || "";
+
+    if (wantsDynamic) {
+      this.args.field.set(
+        currentValue.startsWith("=") ? currentValue : `=${currentValue}`
+      );
+    } else {
+      this.args.field.set(
+        currentValue.startsWith("=") ? currentValue.slice(1) : currentValue
+      );
+    }
+  }
+
   @action
   handleDragOver(event) {
-    if (!this.args.supportsExpression || this.args.expressionMode) {
+    if (!this.args.supportsExpression || this.expressionMode) {
       return;
     }
     if (event.dataTransfer.types.includes("application/x-workflow-variable")) {
@@ -33,7 +72,7 @@ export default class ExpressionWrapper extends Component {
 
   @action
   handleDrop(event) {
-    if (!this.args.supportsExpression || this.args.expressionMode) {
+    if (!this.args.supportsExpression || this.expressionMode) {
       return;
     }
 
@@ -59,7 +98,6 @@ export default class ExpressionWrapper extends Component {
       ? variable.id
       : `${prefix}.${variable.id}`;
 
-    this.args.onModeChange("dynamic");
     this.args.field.set(`={{ ${variableId} }}`);
   }
 
@@ -74,7 +112,7 @@ export default class ExpressionWrapper extends Component {
       {{on "dragleave" this.handleDragLeave}}
       {{on "drop" this.handleDrop}}
     >
-      {{#if @expressionMode}}
+      {{#if this.expressionMode}}
         <ExpressionInput
           @field={{@field}}
           @placeholder={{@placeholder}}
@@ -86,9 +124,9 @@ export default class ExpressionWrapper extends Component {
 
       {{#if @supportsExpression}}
         <DSegmentedControl
-          @items={{@modeItems}}
-          @value={{if @expressionMode "dynamic" "plain"}}
-          @onSelect={{@onModeChange}}
+          @items={{MODE_ITEMS}}
+          @value={{if this.expressionMode "dynamic" "plain"}}
+          @onSelect={{this.toggleMode}}
           @size="small"
           class="workflows-property-engine__mode-control"
         />
