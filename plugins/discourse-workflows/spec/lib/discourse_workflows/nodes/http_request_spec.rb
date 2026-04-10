@@ -116,7 +116,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       config = {
         "method" => "POST",
         "url" => "https://api.example.com/data",
-        "body" => '{"name":"test"}',
+        "body_json" => '{"name":"test"}',
       }
 
       result = execute_node(configuration: config, item: item)
@@ -142,7 +142,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         body: "Internal Server Error",
       )
 
-      config = { "method" => "POST", "url" => "https://api.example.com/error", "body" => "{}" }
+      config = { "method" => "POST", "url" => "https://api.example.com/error", "body_json" => "{}" }
 
       expect { execute_node(configuration: config, item: item) }.to raise_error(
         RuntimeError,
@@ -178,7 +178,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         "method" => "POST",
         "url" => "https://api.example.com/data",
         "headers" => [{ "key" => "Authorization", "value" => "Bearer tok" }],
-        "body" => '{"name":"test"}',
+        "body_json" => '{"name":"test"}',
       }
 
       action = described_class.new(configuration: config)
@@ -233,6 +233,66 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
 
         expect(result["status"]).to eq(404)
         expect(result["body"]).to eq("error" => "not found")
+      end
+    end
+
+    context "with form_urlencoded content type" do
+      it "sends URL-encoded form data" do
+        stub_request(:post, "https://api.example.com/form").with(
+          body: "name=test&value=123",
+          headers: {
+            "Content-Type" => "application/x-www-form-urlencoded",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "POST",
+          "url" => "https://api.example.com/form",
+          "content_type" => "form_urlencoded",
+          "body_form" => [
+            { "key" => "name", "value" => "test" },
+            { "key" => "value", "value" => "123" },
+          ],
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["status"]).to eq(200)
+      end
+    end
+
+    context "with raw content type" do
+      it "sends raw body with custom content type" do
+        stub_request(:post, "https://api.example.com/raw").with(
+          body: "<xml>data</xml>",
+          headers: {
+            "Content-Type" => "application/xml",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "POST",
+          "url" => "https://api.example.com/raw",
+          "content_type" => "raw",
+          "raw_content_type" => "application/xml",
+          "body_raw" => "<xml>data</xml>",
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["status"]).to eq(200)
       end
     end
 

@@ -327,8 +327,17 @@ en:
         value_placeholder: "value"
         add_query_param: "Add parameter"
         add_header: "Add header"
-        body: "Request Body"
-        body_placeholder: '{"key": "value"}'
+        content_type: "Content type"
+        content_type_json: "JSON"
+        content_type_form_urlencoded: "Form URL-encoded"
+        content_type_raw: "Raw"
+        body_json: "Request body"
+        body_json_placeholder: '{"key": "value"}'
+        body_raw: "Request body"
+        body_form: "Form data"
+        add_body_form: "Add field"
+        raw_content_type: "Content type"
+        raw_content_type_placeholder: "text/plain"
         never_error: "Never Error"
         never_error_description: "Return non-2xx responses instead of raising an error."
       split_out:

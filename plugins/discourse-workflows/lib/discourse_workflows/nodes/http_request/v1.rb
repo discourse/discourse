@@ -74,15 +74,64 @@ module DiscourseWorkflows
                 },
               },
             },
-            body: {
+            content_type: {
+              type: :options,
+              required: false,
+              options: %w[json form_urlencoded raw],
+              default: "json",
+              visible_if: {
+                method: %w[POST PUT PATCH],
+              },
+            },
+            body_json: {
               type: :string,
               required: false,
               visible_if: {
                 method: %w[POST PUT PATCH],
+                content_type: "json",
               },
               ui: {
                 control: :textarea,
                 rows: 6,
+              },
+            },
+            body_raw: {
+              type: :string,
+              required: false,
+              visible_if: {
+                method: %w[POST PUT PATCH],
+                content_type: "raw",
+              },
+              ui: {
+                control: :textarea,
+                rows: 6,
+              },
+            },
+            body_form: {
+              type: :collection,
+              required: false,
+              visible_if: {
+                method: %w[POST PUT PATCH],
+                content_type: "form_urlencoded",
+              },
+              item_schema: {
+                key: {
+                  type: :string,
+                  required: true,
+                },
+                value: {
+                  type: :string,
+                  required: true,
+                },
+              },
+            },
+            raw_content_type: {
+              type: :string,
+              required: false,
+              default: "text/plain",
+              visible_if: {
+                method: %w[POST PUT PATCH],
+                content_type: "raw",
               },
             },
             never_error: {
