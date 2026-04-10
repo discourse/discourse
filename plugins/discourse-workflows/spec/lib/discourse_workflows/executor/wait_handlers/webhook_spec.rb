@@ -12,45 +12,16 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
     )
   end
 
-  def build_state(execution)
-    state =
-      instance_double(
-        DiscourseWorkflows::Executor::ExecutionState,
-        execution: execution,
-        waiting_step:
-          DiscourseWorkflows::Executor::Step.new(
-            node_id: "wait-1",
-            node_name: "Wait",
-            node_type: "core:wait",
-            position: 0,
-            input: [],
-          ),
-        waiting_node:
-          DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
-            id: "wait-1",
-            type: "core:wait",
-            type_version: "1.0",
-            name: "Wait",
-            position: {
-              "x" => 0,
-              "y" => 0,
-            },
-            configuration: {
-            },
-          ),
-        waiting_config: {
-        },
-        context: {
-          "__resume_token" => "test-token",
-        },
-      )
-    allow(state).to receive(:save!)
-    state
-  end
-
   describe "#pause!" do
     it "stores resume_token and http_method in waiting_config" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "core:wait",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       handler = described_class.new(state)
       wait = DiscourseWorkflows::WaitForWebhook.new(http_method: "POST")
 
@@ -68,7 +39,14 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
     end
 
     it "stores webhook_suffix when configured" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "core:wait",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       handler = described_class.new(state)
       wait = DiscourseWorkflows::WaitForWebhook.new(webhook_suffix: "after-approval")
 
@@ -79,7 +57,14 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
     end
 
     it "sets waiting_until and enqueues timeout job when timeout is configured" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "core:wait",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       handler = described_class.new(state)
       wait = DiscourseWorkflows::WaitForWebhook.new(timeout_amount: 2, timeout_unit: "hours")
 
@@ -96,7 +81,14 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
     end
 
     it "leaves waiting_until nil and does not enqueue timeout job when no timeout" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "core:wait",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       handler = described_class.new(state)
       wait = DiscourseWorkflows::WaitForWebhook.new
 

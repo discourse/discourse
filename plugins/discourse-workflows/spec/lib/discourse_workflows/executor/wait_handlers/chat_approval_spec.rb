@@ -14,45 +14,16 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
   end
   before { SiteSetting.chat_enabled = true }
 
-  def build_state(execution)
-    state =
-      instance_double(
-        DiscourseWorkflows::Executor::ExecutionState,
-        execution: execution,
-        waiting_step:
-          DiscourseWorkflows::Executor::Step.new(
-            node_id: "wait-1",
-            node_name: "Wait",
-            node_type: "action:chat_approval",
-            position: 0,
-            input: [],
-          ),
-        waiting_node:
-          DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
-            id: "wait-1",
-            type: "action:chat_approval",
-            type_version: "1.0",
-            name: "Wait",
-            position: {
-              "x" => 0,
-              "y" => 0,
-            },
-            configuration: {
-            },
-          ),
-        waiting_config: {
-        },
-        context: {
-          "__resume_token" => "test-token",
-        },
-      )
-    allow(state).to receive(:save!)
-    state
-  end
-
   describe "#pause!" do
     it "stores chat_message_id in waiting_config" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "action:chat_approval",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       fake_message = OpenStruct.new(id: 42)
       described_class.stubs(:send_chat_message).returns(fake_message)
 
@@ -74,7 +45,14 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
     end
 
     it "stores timeout config when timeout_minutes is set" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "action:chat_approval",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       fake_message = OpenStruct.new(id: 99)
       described_class.stubs(:send_chat_message).returns(fake_message)
 
@@ -100,7 +78,14 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
     end
 
     it "builds HMAC-signed action IDs for approve and deny" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "action:chat_approval",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
 
       handler = described_class.new(state)
       wait =
@@ -125,7 +110,14 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
       nonces = []
 
       2.times do
-        state = build_state(execution)
+        state =
+          build_wait_state(
+            execution,
+            node_type: "action:chat_approval",
+            context: {
+              "__resume_token" => "test-token",
+            },
+          )
         fake_message = OpenStruct.new(id: rand(1000))
         described_class.stubs(:send_chat_message).returns(fake_message)
 

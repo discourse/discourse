@@ -12,45 +12,16 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Form do
     )
   end
 
-  def build_state(execution)
-    state =
-      instance_double(
-        DiscourseWorkflows::Executor::ExecutionState,
-        execution: execution,
-        waiting_step:
-          DiscourseWorkflows::Executor::Step.new(
-            node_id: "wait-1",
-            node_name: "Wait",
-            node_type: "action:form",
-            position: 0,
-            input: [],
-          ),
-        waiting_node:
-          DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
-            id: "wait-1",
-            type: "action:form",
-            type_version: "1.0",
-            name: "Wait",
-            position: {
-              "x" => 0,
-              "y" => 0,
-            },
-            configuration: {
-            },
-          ),
-        waiting_config: {
-        },
-        context: {
-          "__resume_token" => "test-token",
-        },
-      )
-    allow(state).to receive(:save!)
-    state
-  end
-
   describe "#pause!" do
     it "publishes waiting_for_form on MessageBus" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "action:form",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       handler = described_class.new(state)
       wait =
         DiscourseWorkflows::WaitForForm.new(
@@ -68,7 +39,14 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Form do
     end
 
     it "stores form_fields in waiting_config" do
-      state = build_state(execution)
+      state =
+        build_wait_state(
+          execution,
+          node_type: "action:form",
+          context: {
+            "__resume_token" => "test-token",
+          },
+        )
       handler = described_class.new(state)
       fields = [{ "field_label" => "Email", "field_type" => "text" }]
       wait =
