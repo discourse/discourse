@@ -20,22 +20,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
     end
   end
 
-  def execute_node(configuration:, item:, run_as_user: Discourse.system_user)
-    action = described_class.new(configuration: configuration)
-    input_items = [item]
-    resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => item.fetch("json") { {} } })
-    exec_ctx =
-      DiscourseWorkflows::NodeExecutionContext.new(
-        input_items: input_items,
-        run_as_user: run_as_user,
-        resolver: resolver,
-        configuration: configuration,
-        configuration_schema: described_class.configuration_schema,
-      )
-    items = action.execute(exec_ctx)[0]
-    items.first["json"]
-  end
-
   describe "#execute" do
     let(:item) { { "json" => {} } }
 

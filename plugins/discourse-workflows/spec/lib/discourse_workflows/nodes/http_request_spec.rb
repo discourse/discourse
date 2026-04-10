@@ -1,21 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
-  def execute_node(configuration:, item: { "json" => {} })
-    action = described_class.new(configuration: configuration)
-    input_items = [item]
-    resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => item.fetch("json") { {} } })
-    exec_ctx =
-      DiscourseWorkflows::NodeExecutionContext.new(
-        input_items: input_items,
-        resolver: resolver,
-        configuration: configuration,
-        configuration_schema: described_class.configuration_schema,
-      )
-    items = action.execute(exec_ctx)[0]
-    items.first["json"]
-  end
-
   describe "#execute" do
     let(:item) { { "json" => {} } }
 
