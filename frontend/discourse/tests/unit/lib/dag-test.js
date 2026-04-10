@@ -894,4 +894,64 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.true(result.indexOf("reply") < showMoreIdx);
     assert.true(result.indexOf("plugin-btn") < showMoreIdx);
   });
+
+  /* replace/reposition cycle handling */
+
+  test("replace with cycle-creating position throws and leaves DAG unchanged", function (assert) {
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("b", 2, { after: "a" });
+    dag.add("c", 3, { after: "b" });
+
+    assert.throws(
+      () => dag.replace("a", "new-value", { after: "c" }),
+      /cycle detected/
+    );
+
+    assert.deepEqual(
+      resolveKeys(dag),
+      ["a", "b", "c"],
+      "DAG order unchanged after failed replace"
+    );
+    assert.deepEqual(
+      dag.resolve().map((e) => e.value),
+      [1, 2, 3],
+      "values unchanged after failed replace"
+    );
+  });
+
+  test("reposition with cycle-creating position throws and leaves DAG unchanged", function (assert) {
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("b", 2, { after: "a" });
+    dag.add("c", 3, { after: "b" });
+
+    assert.throws(() => dag.reposition("a", { after: "c" }), /cycle detected/);
+
+    assert.deepEqual(
+      resolveKeys(dag),
+      ["a", "b", "c"],
+      "DAG order unchanged after failed reposition"
+    );
+  });
+
+  test("replace with cycle and throwErrorOnCycle false falls back gracefully", function (assert) {
+    const dag = new DAG({
+      throwErrorOnCycle: false,
+      defaultPosition: { before: "c" },
+    });
+    dag.add("a", 1);
+    dag.add("b", 2, { after: "a" });
+    dag.add("c", 3, { after: "b" });
+
+    dag.replace("a", "new-value", { after: "c" });
+
+    assert.true(dag.has("a"), "a still exists");
+    const result = dag.resolve();
+    assert.strictEqual(
+      result.find((e) => e.key === "a").value,
+      "new-value",
+      "value was updated"
+    );
+  });
 });

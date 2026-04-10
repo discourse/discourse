@@ -10,6 +10,7 @@ import { makeArray } from "discourse/lib/helpers";
  * same button set is resolved per post.
  */
 const sortCache = new Map();
+const SORT_CACHE_MAX = 50;
 
 const WAITING = 0;
 const READY_QUEUE = 1;
@@ -23,7 +24,7 @@ function normalizePosition(pos) {
   if (typeof pos === "string") {
     return pos;
   }
-  return pos.join(",");
+  return pos.join("\x1F");
 }
 
 /**
@@ -448,7 +449,16 @@ export default class DAG {
     }
 
     this.#dirty = true;
-    this.#rebuildGraph();
+
+    try {
+      this.#rebuildGraph();
+    } catch (e) {
+      existingItem.value = oldValue;
+      existingItem.before = oldPosition.before;
+      existingItem.after = oldPosition.after;
+      this.#rebuildGraph();
+      throw e;
+    }
 
     if (repositionOnly) {
       this.#onRepositionItem?.(key, position, oldPosition);
@@ -471,11 +481,18 @@ export default class DAG {
     const fingerprint = this.#contentFingerprint();
     const cached = sortCache.get(fingerprint);
     if (cached) {
+      sortCache.delete(fingerprint);
+      sortCache.set(fingerprint, cached);
       return cached;
     }
 
     const sortedKeys = this.#sort();
+
+    if (sortCache.size >= SORT_CACHE_MAX) {
+      sortCache.delete(sortCache.keys().next().value);
+    }
     sortCache.set(fingerprint, sortedKeys);
+
     return sortedKeys;
   }
 
@@ -590,7 +607,7 @@ export default class DAG {
           remaining.push(key);
         }
       }
-      throw new Error("cycle detected: " + remaining.join(" <- "));
+      throw new Error("cycle detected among: " + JSON.stringify(remaining));
     }
 
     return result;
