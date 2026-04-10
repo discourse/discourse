@@ -17,14 +17,16 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
     it "transfers the solution to an existing topic" do
       topic.move_posts(admin, post_ids, destination_topic_id: destination_topic.id)
 
-      expect(solved.reload.topic_id).to eq(destination_topic.id)
+      expect(topic.reload.solved).to be_nil
+      expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "transfers the solution to a new topic" do
-      topic.move_posts(admin, [reply.id], title: "This is a new topic for the moved post")
+      new_topic =
+        topic.move_posts(admin, [reply.id], title: "This is a new topic for the moved post")
 
       expect(topic.reload.solved).to be_nil
-      expect(solved.reload.topic_id).not_to eq(topic.id)
+      expect(new_topic.reload.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "does not transfer the solution when destination topic does not allow solved" do
@@ -42,7 +44,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       topic.move_posts(admin, post_ids, destination_topic_id: destination_topic.id)
 
       expect(topic.reload.solved).to be_nil
-      expect(destination_topic.reload.solved.answer_post_id).not_to eq(reply.id)
+      expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).not_to eq(reply.id)
     end
   end
 
@@ -65,7 +67,9 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
       topic.move_posts(admin, [another_reply.id], destination_topic_id: destination_topic.id)
 
       expect(solved.reload.topic_id).to eq(topic.id)
-      expect(destination_topic.reload.solved.answer_post_id).to eq(destination_topic.first_post.id)
+      expect(destination_topic.reload.solved.topic_answers.first.answer_post_id).to eq(
+        destination_topic.first_post.id,
+      )
     end
   end
 end

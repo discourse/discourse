@@ -266,7 +266,7 @@ RSpec.describe "Managing Posts solved status" do
       post "/solution/accept.json", params: { id: p1.id }
 
       expect(response.status).to eq(200)
-      expect(topic.solved.answer_post_id).to eq(p1.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(p1.id)
 
       topic.reload
 
@@ -288,7 +288,7 @@ RSpec.describe "Managing Posts solved status" do
       post "/solution/accept.json", params: { id: post_2.id }
 
       expect(response.status).to eq(200)
-      expect(topic_2.solved.answer_post_id).to eq(post_2.id)
+      expect(topic_2.solved.topic_answers.first.answer_post_id).to eq(post_2.id)
 
       topic_2.reload
 
@@ -376,7 +376,7 @@ RSpec.describe "Managing Posts solved status" do
       post "/solution/accept.json", params: { id: reply.id }
 
       expect(response.status).to eq(200)
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "works when the topic author has been deleted" do
@@ -389,7 +389,7 @@ RSpec.describe "Managing Posts solved status" do
       post "/solution/accept.json", params: { id: p1.id }
 
       expect(response.status).to eq(200)
-      expect(topic.solved.answer_post_id).to eq(p1.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(p1.id)
     end
 
     it "does not set a timer when the topic is closed" do
@@ -401,7 +401,7 @@ RSpec.describe "Managing Posts solved status" do
       p1.reload
       topic.reload
 
-      expect(topic.solved.answer_post_id).to eq(p1.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(p1.id)
       expect(topic.public_topic_timer).to eq(nil)
       expect(topic.closed).to eq(true)
     end
@@ -417,7 +417,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(response.status).to eq(200)
 
       p1.reload
-      expect(topic.solved.answer_post_id).to eq(p1.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(p1.id)
     end
 
     it "removes the solution when the post is deleted" do
@@ -426,7 +426,7 @@ RSpec.describe "Managing Posts solved status" do
       post "/solution/accept.json", params: { id: reply.id }
       expect(response.status).to eq(200)
 
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
 
       PostDestroyer.new(Discourse.system_user, reply, context: "spec").destroy
       reply.topic.reload
@@ -442,19 +442,19 @@ RSpec.describe "Managing Posts solved status" do
       post "/solution/accept.json", params: { id: reply2.id }
       expect(response.status).to eq(200)
 
-      expect(topic.solved.answer_post_id).to eq(reply2.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply2.id)
 
       PostDestroyer.new(Discourse.system_user, reply1, context: "spec").destroy
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply2.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply2.id)
 
       PostDestroyer.new(Discourse.system_user, reply3, context: "spec").destroy
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply2.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply2.id)
     end
 
     it "does not allow you to accept a whisper" do
@@ -559,7 +559,7 @@ RSpec.describe "Managing Posts solved status" do
         DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, guardian: user.guardian)
         topic.reload
 
-        expect(topic.solved.answer_post_id).to eq(p1.id)
+        expect(topic.solved.topic_answers.first.answer_post_id).to eq(p1.id)
         expect(p1.topic.assignment.reload.status).to eq("Done")
       end
 
@@ -716,13 +716,13 @@ RSpec.describe "Managing Posts solved status" do
       DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply1.id }, guardian: user.guardian)
       topic.reload
 
-      expect(topic.solved.answer_post_id).to eq(reply1.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply1.id)
       expect(topic.solved.topic_timer).to eq(topic.public_topic_timer)
 
       DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply2.id }, guardian: user.guardian)
       topic.reload
 
-      expect(topic.solved.answer_post_id).to eq(reply2.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply2.id)
     end
   end
 
@@ -803,15 +803,18 @@ RSpec.describe "Managing Posts solved status" do
       )
 
       accepted_message = messages.find { |m| m.data[:type] == :accepted_solution }
-      expect(accepted_message.data[:accepted_answer][:post_number]).to eq(2)
-      expect(accepted_message.data[:accepted_answer][:username]).to eq(user.username)
-      expect(accepted_message.data[:accepted_answer][:name]).to eq(user.name)
-      expect(accepted_message.data[:accepted_answer][:excerpt]).to eq(reply.cooked)
-      expect(accepted_message.data[:accepted_answer][:accepter_name]).to eq(admin.name)
-      expect(accepted_message.data[:accepted_answer][:accepter_username]).to eq(admin.username)
+      expect(accepted_message.data[:accepted_answers].count).to eq(1)
+
+      first_accepted_answer = accepted_message.data[:accepted_answers].first
+      expect(first_accepted_answer[:post_number]).to eq(2)
+      expect(first_accepted_answer[:username]).to eq(user.username)
+      expect(first_accepted_answer[:name]).to eq(user.name)
+      expect(first_accepted_answer[:excerpt]).to eq(reply.cooked)
+      expect(first_accepted_answer[:accepter_name]).to eq(admin.name)
+      expect(first_accepted_answer[:accepter_username]).to eq(admin.username)
 
       unaccepted_message = messages.find { |m| m.data[:type] == :unaccepted_solution }
-      expect(unaccepted_message.data[:accepted_answer]).to eq(nil)
+      expect(unaccepted_message.data[:accepted_answers]).to be_empty
     end
 
     it "publishes MessageBus messages securely for PMs" do
@@ -935,7 +938,7 @@ RSpec.describe "Managing Posts solved status" do
 
       DiscourseSolved.accept_answer!(reply, user)
 
-      expect(topic.reload.solved.answer_post_id).to eq(reply.id)
+      expect(topic.reload.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
   end
 

@@ -59,7 +59,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "keeps the answer when allow_solved_on_all_topics is true" do
@@ -69,7 +69,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
   end
 
@@ -112,7 +112,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "keeps answer when solved tag is removed but topic is in a solved category" do
@@ -125,7 +125,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "unaccepts answer when both category changes to unsolved and solved tag is removed" do

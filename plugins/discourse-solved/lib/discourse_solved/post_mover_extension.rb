@@ -14,10 +14,11 @@ module DiscourseSolved
         topic_answers_to_move.each do |ta|
           target_solved_topic = DiscourseSolved::SolvedTopic.find_by(topic: topic)
           accepts_answers = Guardian.new(user).allow_accepted_answers?(topic)
-          post_is_answer =
-            target_solved_topic&.topic_answers&.exists?(answer_post_id: ta.answer_post_id)
+          can_have_more_answers =
+            SiteSetting.solved_allow_multiple_solutions ||
+              !target_solved_topic&.topic_answers.present?
 
-          if accepts_answers && !post_is_answer
+          if accepts_answers && can_have_more_answers
             target_solved_topic ||= DiscourseSolved::SolvedTopic.find_or_create_by!(topic: topic)
             ta.update!(solved_topic: target_solved_topic)
           else
@@ -30,7 +31,8 @@ module DiscourseSolved
           end
         end
 
-        solved_topic.reload.destroy! if solved_topic.topic_answers.none?
+        solved_topic = DiscourseSolved::SolvedTopic.find_by(id: solved_topic.id)
+        solved_topic&.destroy! if solved_topic&.topic_answers&.none?
       end
 
       super

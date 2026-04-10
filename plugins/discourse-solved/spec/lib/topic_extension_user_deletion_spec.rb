@@ -8,23 +8,26 @@ RSpec.describe DiscourseSolved::TopicExtension do
   fab!(:accepter, :user)
 
   describe "#accepted_answer_post_info" do
-    let(:solved_topic) { Fabricate(:solved_topic, topic:, answer_post:, accepter:) }
+    let(:topic_answer) { Fabricate(:topic_answer, answer_post:, accepter:) }
+    let(:solved_topic) { Fabricate(:solved_topic, topic:, topic_answer:) }
 
     context "when users are deleted" do
       it "does not crash when accepter is deleted" do
         solved_topic
         accepter.destroy!
 
-        expect { topic.reload.accepted_answer_post_info }.not_to raise_error
-        expect(topic.accepted_answer_post_info).to be_present
+        expect { topic.reload.accepted_answers_post_info }.not_to raise_error
+        expect(topic.accepted_answers_post_info).to be_present
       end
 
       it "does not crash when answer post user is deleted" do
         solved_topic
         answer_post.user.destroy!
 
-        expect { topic.reload.accepted_answer_post_info }.not_to raise_error
-        expect(topic.accepted_answer_post_info[:username]).to eq(Discourse.system_user.username)
+        expect { topic.reload.accepted_answers_post_info }.not_to raise_error
+        expect(topic.accepted_answers_post_info.first[:username]).to eq(
+          Discourse.system_user.username,
+        )
       end
 
       it "falls back to system user when both accepter and topic author are deleted" do
@@ -33,8 +36,8 @@ RSpec.describe DiscourseSolved::TopicExtension do
         accepter.destroy!
         topic.user.destroy!
 
-        expect { topic.reload.accepted_answer_post_info }.not_to raise_error
-        expect(topic.accepted_answer_post_info[:accepter_username]).to eq(
+        expect { topic.reload.accepted_answers_post_info }.not_to raise_error
+        expect(topic.accepted_answers_post_info.first[:accepter_username]).to eq(
           Discourse.system_user.username,
         )
       end
@@ -43,13 +46,13 @@ RSpec.describe DiscourseSolved::TopicExtension do
         solved_topic
         answer_post.destroy!
 
-        expect { topic.reload.accepted_answer_post_info }.not_to raise_error
-        expect(topic.accepted_answer_post_info).to be_nil
+        expect { topic.reload.accepted_answers_post_info }.not_to raise_error
+        expect(topic.accepted_answers_post_info).to be_empty
       end
     end
 
     it "returns nil when topic is not solved" do
-      expect(topic.accepted_answer_post_info).to be_nil
+      expect(topic.accepted_answers_post_info).to be_empty
     end
   end
 end
