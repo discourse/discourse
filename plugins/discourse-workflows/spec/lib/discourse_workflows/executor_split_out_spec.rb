@@ -3,8 +3,6 @@
 RSpec.describe DiscourseWorkflows::Executor do
   fab!(:user)
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe "#run" do
     it "splits items then loops over them in batches" do
       graph =

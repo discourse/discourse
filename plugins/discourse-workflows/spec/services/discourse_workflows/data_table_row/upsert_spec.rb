@@ -35,8 +35,6 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
       }
     end
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 

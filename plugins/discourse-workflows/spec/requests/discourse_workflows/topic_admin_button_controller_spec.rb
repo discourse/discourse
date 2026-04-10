@@ -17,8 +17,6 @@ RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
     Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
   end
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe "POST /discourse-workflows/trigger-topic-admin-button" do
     it "requires authentication" do
       post "/discourse-workflows/trigger-topic-admin-button.json",

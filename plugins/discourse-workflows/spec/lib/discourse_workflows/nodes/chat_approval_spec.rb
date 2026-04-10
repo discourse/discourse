@@ -3,10 +3,7 @@
 RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
   fab!(:channel, :chat_channel)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.chat_enabled = true
-  end
+  before { SiteSetting.chat_enabled = true }
 
   describe ".identifier" do
     it "returns the correct identifier" do

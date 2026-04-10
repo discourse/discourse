@@ -20,8 +20,6 @@ RSpec.describe DiscourseWorkflows::DataTable::Update do
     let(:params) { { data_table_id: data_table.id, name: "updated" } }
     let(:dependencies) { { guardian: admin.guardian } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when data table does not exist" do
       let(:params) { { data_table_id: -1 } }
 

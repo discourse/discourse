@@ -5,7 +5,6 @@ RSpec.describe DiscourseWorkflows::WorkflowExecutionsController do
   fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     sign_in(admin)
   end
 

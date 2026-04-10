@@ -21,8 +21,6 @@ RSpec.describe DiscourseWorkflows::Workflow::List do
 
     let(:params) { {} }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when there are no workflows" do
       it { is_expected.to run_successfully }
 

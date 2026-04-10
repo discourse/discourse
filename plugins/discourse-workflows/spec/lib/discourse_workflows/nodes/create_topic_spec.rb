@@ -4,10 +4,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
   fab!(:admin)
   fab!(:category)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   describe ".identifier" do
     it "returns the correct identifier" do

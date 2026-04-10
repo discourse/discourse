@@ -16,8 +16,6 @@ RSpec.describe DiscourseWorkflows::Workflow::Create do
     let(:nodes) { [] }
     let(:connections) { [] }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:name) { nil }
 

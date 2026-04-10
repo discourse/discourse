@@ -4,10 +4,7 @@ RSpec.describe DiscourseWorkflows::Executor do
   fab!(:user)
   fab!(:topic)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   describe "#run" do
     it "executes a loop workflow: trigger -> loop -> action -> loop-back -> done" do

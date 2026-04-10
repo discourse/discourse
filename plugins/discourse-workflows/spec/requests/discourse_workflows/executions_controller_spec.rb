@@ -4,10 +4,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   fab!(:admin)
   fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   context "when not logged in as admin" do
     fab!(:user)

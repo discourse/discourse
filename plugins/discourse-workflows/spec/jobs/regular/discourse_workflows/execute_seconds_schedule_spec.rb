@@ -3,8 +3,6 @@
 RSpec.describe Jobs::DiscourseWorkflows::ExecuteSecondsSchedule do
   fab!(:user)
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   def create_seconds_workflow(seconds:)
     graph =
       build_workflow_graph do |g|

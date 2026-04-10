@@ -3,10 +3,7 @@
 RSpec.describe DiscourseWorkflows::CredentialsController do
   fab!(:admin)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   context "when not logged in as admin" do
     fab!(:user)

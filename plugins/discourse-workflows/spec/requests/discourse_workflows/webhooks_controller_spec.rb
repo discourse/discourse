@@ -16,8 +16,6 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
     Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
   end
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe "POST /workflows/webhooks/:path" do
     it "enqueues workflow execution for matching webhook" do
       post "/workflows/webhooks/my-hook.json",

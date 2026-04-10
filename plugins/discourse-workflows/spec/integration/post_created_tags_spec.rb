@@ -9,7 +9,6 @@ RSpec.describe "Workflow: post created -> topic tags" do
   fab!(:tag) { Fabricate(:tag, name: "responded") }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
 
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear

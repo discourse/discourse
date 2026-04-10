@@ -5,10 +5,7 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
   fab!(:channel, :chat_channel)
   fab!(:chat_message) { Fabricate(:chat_message, chat_channel: channel) }
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.chat_enabled = true
-  end
+  before { SiteSetting.chat_enabled = true }
 
   def build_signed_action_id(execution_id, node_id, decision, wait_nonce)
     payload = "#{execution_id}:#{node_id}:#{decision}:#{wait_nonce}"

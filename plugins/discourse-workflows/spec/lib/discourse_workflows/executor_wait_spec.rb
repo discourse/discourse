@@ -5,10 +5,7 @@ RSpec.describe DiscourseWorkflows::Executor do
   fab!(:channel, :chat_channel)
   fab!(:completed_execution) { Fabricate(:discourse_workflows_execution, status: :success) }
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.chat_enabled = true
-  end
+  before { SiteSetting.chat_enabled = true }
 
   describe "pause on WaitForResume" do
     it "pauses execution and sends a chat message with approval buttons" do

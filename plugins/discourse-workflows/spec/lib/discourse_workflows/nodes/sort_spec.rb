@@ -135,8 +135,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
   end
 
   describe "code mode" do
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     it "sorts items using a custom JavaScript comparator" do
       input = [{ "json" => { "n" => 3 } }, { "json" => { "n" => 1 } }, { "json" => { "n" => 2 } }]
       result = execute(input, "type" => "code", "code" => "return a.json.n - b.json.n;")

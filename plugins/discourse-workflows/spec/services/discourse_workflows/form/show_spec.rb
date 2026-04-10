@@ -31,10 +31,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
     let(:uuid) { "a1b2c3d4-e5f6-7890-abcd-ef0123456789" }
     let(:params) { { uuid: uuid } }
 
-    before do
-      SiteSetting.discourse_workflows_enabled = true
-      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
-    end
+    before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
 
     context "when contract is invalid" do
       let(:uuid) { nil }

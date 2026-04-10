@@ -23,8 +23,6 @@ RSpec.describe DiscourseWorkflows::Credential::Create do
     end
     let(:dependencies) { { guardian: admin.guardian } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when user cannot manage workflows" do
       fab!(:user)
 

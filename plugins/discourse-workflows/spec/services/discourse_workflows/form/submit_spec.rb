@@ -35,10 +35,7 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
     let(:form_data) { { "name" => "Test User" } }
     let(:params) { { uuid: uuid, form_data: form_data } }
 
-    before do
-      SiteSetting.discourse_workflows_enabled = true
-      DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
-    end
+    before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
 
     context "when the contract is invalid" do
       let(:uuid) { nil }

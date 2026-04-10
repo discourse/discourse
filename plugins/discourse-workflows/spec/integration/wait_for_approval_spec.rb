@@ -5,10 +5,7 @@ RSpec.describe "Wait for Approval end-to-end" do
   fab!(:approver, :user)
   fab!(:channel, :chat_channel)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.chat_enabled = true
-  end
+  before { SiteSetting.chat_enabled = true }
 
   it "pauses, receives approval via chat interaction, and completes the workflow" do
     graph =

@@ -7,8 +7,6 @@ RSpec.describe DiscourseWorkflows::Nodes::FetchTopic::V1 do
   fab!(:topic) { Fabricate(:topic, category: category, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: user, raw: "This is the topic body") }
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:fetch_topic")

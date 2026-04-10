@@ -5,10 +5,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
   fab!(:tag) { Fabricate(:tag, name: "existing") }
   fab!(:tag_2) { Fabricate(:tag, name: "second") }
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   describe ".identifier" do
     it "returns the correct identifier" do

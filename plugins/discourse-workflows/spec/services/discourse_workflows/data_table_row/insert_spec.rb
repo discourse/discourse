@@ -22,8 +22,6 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Insert do
       { data_table_id: data_table.id, data: { "email" => "test@test.com", "score" => "42" } }
     end
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 

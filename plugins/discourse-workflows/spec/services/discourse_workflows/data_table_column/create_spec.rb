@@ -23,8 +23,6 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Create do
 
     let(:params) { { data_table_id: data_table.id, name: "score", column_type: "number" } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil, name: nil, column_type: nil } }
 

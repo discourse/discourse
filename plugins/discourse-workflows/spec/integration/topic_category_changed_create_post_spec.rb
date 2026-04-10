@@ -7,8 +7,6 @@ RSpec.describe "Workflow: topic category changed -> create post" do
   fab!(:topic) { Fabricate(:topic, category: category) }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
-
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
     graph =

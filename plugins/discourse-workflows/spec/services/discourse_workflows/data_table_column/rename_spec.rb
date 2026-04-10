@@ -26,8 +26,6 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Rename do
 
     let(:params) { { data_table_id: data_table.id, column_name: "email", name: "contact_email" } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: data_table.id, column_name: "email", name: "123-invalid" } }
 

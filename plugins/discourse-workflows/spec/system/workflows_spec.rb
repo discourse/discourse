@@ -8,7 +8,6 @@ RSpec.describe "Discourse Workflows" do
   let(:editor_page) { PageObjects::Pages::WorkflowEditor.new }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
     sign_in(admin)
   end

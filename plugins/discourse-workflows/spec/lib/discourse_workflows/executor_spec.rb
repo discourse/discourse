@@ -6,10 +6,7 @@ RSpec.describe DiscourseWorkflows::Executor do
   fab!(:tag)
   fab!(:false_tag) { Fabricate(:tag, name: "needs-review") }
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   def build_workflow
     graph =

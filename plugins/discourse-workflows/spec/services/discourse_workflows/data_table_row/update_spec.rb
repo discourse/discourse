@@ -28,8 +28,6 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Update do
     end
     let(:params) { { data_table_id: data_table.id, filter: filter, data: { "score" => 42 } } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 

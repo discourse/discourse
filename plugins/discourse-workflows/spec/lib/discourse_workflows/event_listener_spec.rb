@@ -6,10 +6,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
   fab!(:topic)
   fab!(:tag)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   it "enqueues a job when a matching event fires" do
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }

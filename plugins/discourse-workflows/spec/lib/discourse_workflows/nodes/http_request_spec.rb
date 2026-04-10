@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:http_request")

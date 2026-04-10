@@ -6,8 +6,6 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
   describe ".call" do
     subject(:result) { described_class.call }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 

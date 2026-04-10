@@ -6,8 +6,6 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
     fab!(:user)
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     def create_schedule_workflow(configuration:)
       graph =
         build_workflow_graph do |g|

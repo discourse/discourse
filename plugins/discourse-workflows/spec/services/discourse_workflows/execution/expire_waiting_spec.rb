@@ -7,10 +7,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
     fab!(:user)
     fab!(:channel, :chat_channel)
 
-    before do
-      SiteSetting.discourse_workflows_enabled = true
-      SiteSetting.chat_enabled = true
-    end
+    before { SiteSetting.chat_enabled = true }
 
     def create_waiting_execution(timeout_minutes:, timeout_action:)
       graph =

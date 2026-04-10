@@ -39,8 +39,6 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
       }
     end
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { path: nil, http_method: nil } }
 

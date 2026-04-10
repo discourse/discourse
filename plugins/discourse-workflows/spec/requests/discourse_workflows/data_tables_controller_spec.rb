@@ -4,10 +4,7 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
   fab!(:admin)
   fab!(:user)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   shared_examples "requires admin" do |method, path_proc, params_proc = nil|
     it "returns 404 when not logged in" do

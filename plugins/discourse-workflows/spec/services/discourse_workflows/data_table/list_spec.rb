@@ -55,8 +55,6 @@ RSpec.describe DiscourseWorkflows::DataTable::List do
 
     let(:params) { {} }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when there are no data tables" do
       it { is_expected.to run_successfully }
 

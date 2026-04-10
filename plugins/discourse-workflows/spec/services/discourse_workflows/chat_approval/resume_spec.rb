@@ -16,10 +16,7 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
     let(:execution_id) { execution.id }
     let(:wait_nonce) { execution.waiting_config&.dig("wait_nonce") }
 
-    before do
-      SiteSetting.discourse_workflows_enabled = true
-      SiteSetting.chat_enabled = true
-    end
+    before { SiteSetting.chat_enabled = true }
 
     context "when plugin is disabled" do
       let(:execution_id) { 1 }

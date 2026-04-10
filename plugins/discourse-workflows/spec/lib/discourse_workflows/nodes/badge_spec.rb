@@ -6,8 +6,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
   fab!(:badge)
   fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:badge")

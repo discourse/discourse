@@ -14,8 +14,6 @@ RSpec.describe DiscourseWorkflows::DataTable::Delete do
     let(:params) { { data_table_id: data_table.id } }
     let(:dependencies) { { guardian: admin.guardian } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 

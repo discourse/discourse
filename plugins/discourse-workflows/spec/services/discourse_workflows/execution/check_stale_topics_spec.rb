@@ -14,8 +14,6 @@ RSpec.describe DiscourseWorkflows::Execution::CheckStaleTopics do
       Fabricate(:discourse_workflows_workflow, enabled: true, created_by: admin, **graph)
     end
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when plugin is disabled" do
       before { SiteSetting.discourse_workflows_enabled = false }
 

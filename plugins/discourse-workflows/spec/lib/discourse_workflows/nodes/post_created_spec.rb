@@ -19,7 +19,6 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
   end
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
     topic.tags << tag
   end

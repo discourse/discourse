@@ -15,8 +15,6 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
   end
   fab!(:post_2) { Fabricate(:post, topic: topic_2, user: user) }
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:list_topics")

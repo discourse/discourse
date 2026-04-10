@@ -19,8 +19,6 @@ RSpec.describe "Data Table workflow integration" do
   fab!(:workflow) { Fabricate(:discourse_workflows_workflow, enabled: true, created_by: admin) }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
-
     graph =
       build_workflow_graph do |g|
         g.node "trigger-1",

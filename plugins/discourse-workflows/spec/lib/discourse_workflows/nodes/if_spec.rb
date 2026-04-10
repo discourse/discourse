@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   def build_config(conditions:, combinator: "and", options: {})
     { "conditions" => conditions, "combinator" => combinator, "options" => options }
   end

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::FilterParameter do
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".evaluate_type" do
     context "with string type" do
       it "equals" do

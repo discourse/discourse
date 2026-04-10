@@ -16,8 +16,6 @@ RSpec.describe DiscourseWorkflows::DataTableRow::BulkDestroy do
 
     let(:params) { { data_table_id: data_table.id, row_ids: [row_1["id"], row_2["id"]] } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil, row_ids: nil } }
 

@@ -5,8 +5,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
     Fabricate(:discourse_workflows_variable, key: "api_key", value: "secret123")
   end
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:code")

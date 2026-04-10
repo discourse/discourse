@@ -3,8 +3,6 @@
 RSpec.describe DiscourseWorkflows::WorkflowDependencyIndexer do
   fab!(:admin)
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   def index(workflow)
     described_class.call(workflow)
   end

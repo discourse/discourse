@@ -11,7 +11,6 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       started_at: Time.current,
     )
   end
-  before { SiteSetting.discourse_workflows_enabled = true }
 
   def build_state(execution)
     state =

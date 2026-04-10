@@ -75,7 +75,6 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
     let(:params) { { resume_token: resume_token, form_data: form_data } }
 
     before do
-      SiteSetting.discourse_workflows_enabled = true
       execution.update!(
         waiting_config: execution.waiting_config.merge("resume_token" => resume_token),
       )

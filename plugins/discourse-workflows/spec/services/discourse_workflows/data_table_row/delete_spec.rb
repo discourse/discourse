@@ -25,8 +25,6 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Delete do
     end
     let(:params) { { data_table_id: data_table.id, filter: filter } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 

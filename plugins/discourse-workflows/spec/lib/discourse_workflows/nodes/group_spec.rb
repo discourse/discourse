@@ -6,8 +6,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
   fab!(:group)
   fab!(:group_2) { Fabricate(:group, name: "another_group") }
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:group")

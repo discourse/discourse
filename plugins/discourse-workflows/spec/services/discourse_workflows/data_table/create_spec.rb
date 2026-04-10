@@ -15,8 +15,6 @@ RSpec.describe DiscourseWorkflows::DataTable::Create do
     let(:guardian) { admin.guardian }
     let(:columns) { [{ "name" => "value", "type" => "string" }] }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { name: nil } }
 

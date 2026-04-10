@@ -4,10 +4,7 @@ RSpec.describe DiscourseWorkflows::Executor do
   fab!(:admin)
   fab!(:category)
 
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  before { SiteSetting.tagging_enabled = true }
 
   describe "#run" do
     it "creates a topic from trigger data" do

@@ -3,8 +3,6 @@
 RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
   fab!(:user)
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   def build_handler(workflow, state, error_depth: 0, execution_mode: :normal)
     described_class.new(workflow, state, error_depth: error_depth, execution_mode: execution_mode)
   end

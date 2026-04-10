@@ -4,8 +4,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
   fab!(:user)
   fab!(:topic)
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("trigger:topic_tag_changed")

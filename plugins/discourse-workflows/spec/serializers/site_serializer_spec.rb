@@ -4,8 +4,6 @@ RSpec.describe SiteSerializer do
   fab!(:admin)
   let(:guardian) { Guardian.new(admin) }
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe "#topic_admin_button_workflows" do
     fab!(:workflow) do
       graph =

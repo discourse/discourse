@@ -8,8 +8,6 @@ RSpec.describe "Workflow: post created -> create post" do
   fab!(:topic) { first_post.topic }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
-
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
     graph =

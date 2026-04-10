@@ -5,7 +5,6 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
   fab!(:tag)
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
     sign_in(admin)
   end

@@ -23,8 +23,6 @@ RSpec.describe DiscourseWorkflows::DataTableRow::UpdateSingle do
 
     let(:params) { { data_table_id: data_table.id, row_id: row["id"], data: { "score" => 99 } } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil, row_id: nil } }
 

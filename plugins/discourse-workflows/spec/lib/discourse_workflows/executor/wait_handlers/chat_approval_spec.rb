@@ -12,10 +12,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
       started_at: Time.current,
     )
   end
-  before do
-    SiteSetting.discourse_workflows_enabled = true
-    SiteSetting.chat_enabled = true
-  end
+  before { SiteSetting.chat_enabled = true }
 
   def build_state(execution)
     state =

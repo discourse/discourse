@@ -28,8 +28,6 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
 
     let(:params) { { workflow_id: workflow.id, trigger_node_id: "trigger-1" } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { workflow_id: workflow.id, trigger_node_id: nil } }
 

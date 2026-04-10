@@ -6,8 +6,6 @@ RSpec.describe DiscourseWorkflows::Executor do
   fab!(:first_post) { create_post(user: topic_owner, raw: "First post") }
   fab!(:topic) { first_post.topic }
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe "#run" do
     it "creates a post from trigger data" do
       graph =

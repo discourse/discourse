@@ -7,7 +7,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCategoryChanged::V1 do
   fab!(:tag) { Fabricate(:tag, name: "test-tag") }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
     topic.tags << tag
   end

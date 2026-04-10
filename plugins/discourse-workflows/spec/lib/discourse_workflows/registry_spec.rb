@@ -2,7 +2,6 @@
 
 RSpec.describe DiscourseWorkflows::Registry do
   before do
-    SiteSetting.discourse_workflows_enabled = true
     described_class.reset_indexes!
   end
 

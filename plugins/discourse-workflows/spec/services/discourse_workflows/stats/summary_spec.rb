@@ -9,8 +9,6 @@ RSpec.describe DiscourseWorkflows::Stats::Summary do
 
     let(:params) { {} }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when there are no executions" do
       it { is_expected.to run_successfully }
 

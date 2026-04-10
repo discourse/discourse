@@ -18,8 +18,6 @@ RSpec.describe DiscourseWorkflows::FormsController do
     Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
   end
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   let(:origin_headers) { { "Origin" => "http://#{Discourse.current_hostname}" } }
 
   describe "GET /workflows/form/:uuid.json" do

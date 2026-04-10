@@ -3,8 +3,6 @@
 RSpec.describe DiscourseWorkflows::Workflow do
   fab!(:user)
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe "#trigger_node" do
     it "returns the trigger node" do
       graph =

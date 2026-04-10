@@ -6,7 +6,6 @@ RSpec.describe "Workflow: topic closed -> topic tags" do
   fab!(:tag) { Fabricate(:tag, name: "resolved") }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
 
     graph =

@@ -6,8 +6,6 @@ RSpec.describe "Workflow: topic created -> create topic" do
   fab!(:category)
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
-
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
     graph =

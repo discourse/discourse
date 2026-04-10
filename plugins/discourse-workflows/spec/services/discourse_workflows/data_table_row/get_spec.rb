@@ -23,8 +23,6 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Get do
 
     let(:params) { { data_table_id: data_table.id } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil } }
 

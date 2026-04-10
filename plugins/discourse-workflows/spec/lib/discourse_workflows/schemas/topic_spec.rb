@@ -6,7 +6,6 @@ RSpec.describe DiscourseWorkflows::Schemas::Topic do
   fab!(:tag)
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     SiteSetting.tagging_enabled = true
     topic.tags << tag
   end

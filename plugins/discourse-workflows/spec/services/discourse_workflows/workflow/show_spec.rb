@@ -14,8 +14,6 @@ RSpec.describe DiscourseWorkflows::Workflow::Show do
     let(:params) { { workflow_id: workflow.id } }
     let(:dependencies) { { guardian: user.guardian } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when params are not valid" do
       let(:params) { { workflow_id: nil } }
 

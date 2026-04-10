@@ -4,7 +4,6 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutorRateLimiter do
   fab!(:user)
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
     RateLimiter.enable
   end
 

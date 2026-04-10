@@ -27,8 +27,6 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Delete do
 
     let(:params) { { data_table_id: data_table.id, column_name: "email" } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { data_table_id: nil, column_name: nil } }
 

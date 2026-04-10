@@ -6,8 +6,6 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
   fab!(:first_post) { create_post(user: topic_owner, raw: "First post") }
   fab!(:topic) { first_post.topic }
 
-  before { SiteSetting.discourse_workflows_enabled = true }
-
   describe ".identifier" do
     it "returns the correct identifier" do
       expect(described_class.identifier).to eq("action:create_post")

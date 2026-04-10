@@ -14,8 +14,6 @@ RSpec.describe DiscourseWorkflows::Workflow::Destroy do
     let(:params) { { workflow_id: workflow.id } }
     let(:dependencies) { { guardian: admin.guardian } }
 
-    before { SiteSetting.discourse_workflows_enabled = true }
-
     context "when contract is invalid" do
       let(:params) { { workflow_id: nil } }
 
