@@ -52,38 +52,13 @@ RSpec.describe DiscourseWorkflows::Workflow do
 
   describe "#node_has_reachable_downstream_of_type?" do
     it "returns true when the target type is a direct downstream" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:form",
-              "type_version" => "1.0",
-              "name" => "Form",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:form",
-              "type_version" => "1.0",
-              "name" => "Second Form",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "action-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:form"
+          g.node "action-1", "action:form"
+          g.chain "trigger-1", "action-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
 
       expect(workflow.node_has_reachable_downstream_of_type?("trigger-1", "action:form")).to be(
         true,
@@ -91,52 +66,14 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
 
     it "returns true when the target type is separated by intermediate nodes" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:form",
-              "type_version" => "1.0",
-              "name" => "Form",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:send_message",
-              "type_version" => "1.0",
-              "name" => "Send Message",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "action-2",
-              "type" => "action:form",
-              "type_version" => "1.0",
-              "name" => "Second Form",
-              "position_index" => 2,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "action-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "action-1",
-              "target_node_id" => "action-2",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:form"
+          g.node "action-1", "action:send_message"
+          g.node "action-2", "action:form"
+          g.chain "trigger-1", "action-1", "action-2"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
 
       expect(workflow.node_has_reachable_downstream_of_type?("trigger-1", "action:form")).to be(
         true,
@@ -144,38 +81,13 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
 
     it "returns false when no downstream node matches" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:form",
-              "type_version" => "1.0",
-              "name" => "Form",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "action-1",
-              "type" => "action:send_message",
-              "type_version" => "1.0",
-              "name" => "Send Message",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "action-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:form"
+          g.node "action-1", "action:send_message"
+          g.chain "trigger-1", "action-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
 
       expect(workflow.node_has_reachable_downstream_of_type?("trigger-1", "action:form")).to be(
         false,
@@ -183,43 +95,14 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
 
     it "handles cycles without infinite looping" do
-      workflow =
-        Fabricate(
-          :discourse_workflows_workflow,
-          created_by: user,
-          nodes: [
-            {
-              "id" => "trigger-1",
-              "type" => "trigger:form",
-              "type_version" => "1.0",
-              "name" => "Form",
-              "position_index" => 0,
-              "configuration" => {
-              },
-            },
-            {
-              "id" => "condition-1",
-              "type" => "condition:boolean",
-              "type_version" => "1.0",
-              "name" => "Check",
-              "position_index" => 1,
-              "configuration" => {
-              },
-            },
-          ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "condition-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "condition-1",
-              "target_node_id" => "trigger-1",
-              "source_output" => "main",
-            },
-          ],
-        )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:form"
+          g.node "condition-1", "condition:boolean"
+          g.connect "trigger-1", "condition-1"
+          g.connect "condition-1", "trigger-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
 
       expect(workflow.node_has_reachable_downstream_of_type?("trigger-1", "action:form")).to be(
         false,

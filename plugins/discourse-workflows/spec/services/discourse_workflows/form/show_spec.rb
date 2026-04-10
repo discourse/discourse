@@ -10,33 +10,21 @@ RSpec.describe DiscourseWorkflows::Form::Show do
 
     fab!(:user)
     fab!(:workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:form",
-            "type_version" => "1.0",
-            "name" => "Form Trigger",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
-              "form_title" => "Test Form",
-              "form_description" => "A test form",
-              "form_fields" => [
-                { "field_label" => "Name", "field_type" => "text", "required" => true },
-              ],
-              "response_mode" => "on_received",
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:form",
+                 configuration: {
+                   "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+                   "form_title" => "Test Form",
+                   "form_description" => "A test form",
+                   "form_fields" => [
+                     { "field_label" => "Name", "field_type" => "text", "required" => true },
+                   ],
+                   "response_mode" => "on_received",
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
     end
 
     let(:dependencies) { { guardian: Guardian.new(user) } }
@@ -92,42 +80,15 @@ RSpec.describe DiscourseWorkflows::Form::Show do
 
     context "when a non-adjacent downstream form action exists" do
       before do
+        extra =
+          build_workflow_graph do |g|
+            g.node "action-1", "action:send_message"
+            g.node "form-action-1", "action:form", configuration: { "form_fields" => [] }
+            g.chain "trigger-1", "action-1", "form-action-1"
+          end
         workflow.update!(
-          nodes:
-            workflow.parsed_nodes +
-              [
-                {
-                  "id" => "action-1",
-                  "type" => "action:send_message",
-                  "type_version" => "1.0",
-                  "name" => "Send Message",
-                  "position_index" => 1,
-                  "configuration" => {
-                  },
-                },
-                {
-                  "id" => "form-action-1",
-                  "type" => "action:form",
-                  "type_version" => "1.0",
-                  "name" => "Second Form",
-                  "position_index" => 2,
-                  "configuration" => {
-                    "form_fields" => [],
-                  },
-                },
-              ],
-          connections: [
-            {
-              "source_node_id" => "trigger-1",
-              "target_node_id" => "action-1",
-              "source_output" => "main",
-            },
-            {
-              "source_node_id" => "action-1",
-              "target_node_id" => "form-action-1",
-              "source_output" => "main",
-            },
-          ],
+          nodes: workflow.parsed_nodes + extra[:nodes],
+          connections: extra[:connections],
         )
         DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
       end
@@ -139,30 +100,19 @@ RSpec.describe DiscourseWorkflows::Form::Show do
 
     context "with a waiting execution" do
       before do
-        workflow.update!(
-          nodes:
-            workflow.parsed_nodes +
-              [
-                {
-                  "id" => "form-action-1",
-                  "type" => "action:form",
-                  "type_version" => "1.0",
-                  "name" => "Form Action",
-                  "position" => {
-                    "x" => 200,
-                    "y" => 0,
-                  },
-                  "position_index" => 1,
-                  "configuration" => {
-                    "form_title" => "Waiting Form",
-                    "form_description" => "A waiting form",
-                    "form_fields" => [
-                      { "field_label" => "Feedback", "field_type" => "text", "required" => false },
-                    ],
-                  },
-                },
-              ],
-        )
+        extra =
+          build_workflow_graph do |g|
+            g.node "form-action-1",
+                   "action:form",
+                   configuration: {
+                     "form_title" => "Waiting Form",
+                     "form_description" => "A waiting form",
+                     "form_fields" => [
+                       { "field_label" => "Feedback", "field_type" => "text", "required" => false },
+                     ],
+                   }
+          end
+        workflow.update!(nodes: workflow.parsed_nodes + extra[:nodes])
       end
 
       let(:resume_token) { SecureRandom.uuid }
@@ -217,34 +167,14 @@ RSpec.describe DiscourseWorkflows::Form::Show do
 
       context "when a downstream form action exists" do
         before do
+          extra =
+            build_workflow_graph do |g|
+              g.node "form-action-2", "action:form", configuration: { "form_fields" => [] }
+              g.connect "form-action-1", "form-action-2"
+            end
           workflow.update!(
-            nodes:
-              workflow.parsed_nodes +
-                [
-                  {
-                    "id" => "form-action-2",
-                    "type" => "action:form",
-                    "type_version" => "1.0",
-                    "name" => "Third Page",
-                    "position" => {
-                      "x" => 400,
-                      "y" => 0,
-                    },
-                    "position_index" => 2,
-                    "configuration" => {
-                      "form_fields" => [],
-                    },
-                  },
-                ],
-            connections:
-              (workflow.parsed_connections || []) +
-                [
-                  {
-                    "source_node_id" => "form-action-1",
-                    "target_node_id" => "form-action-2",
-                    "source_output" => "main",
-                  },
-                ],
+            nodes: workflow.parsed_nodes + extra[:nodes],
+            connections: (workflow.parsed_connections || []) + extra[:connections],
           )
         end
 
@@ -255,44 +185,15 @@ RSpec.describe DiscourseWorkflows::Form::Show do
 
       context "when a non-adjacent downstream form action exists" do
         before do
+          extra =
+            build_workflow_graph do |g|
+              g.node "action-between", "action:send_message"
+              g.node "form-action-2", "action:form", configuration: { "form_fields" => [] }
+              g.chain "form-action-1", "action-between", "form-action-2"
+            end
           workflow.update!(
-            nodes:
-              workflow.parsed_nodes +
-                [
-                  {
-                    "id" => "action-between",
-                    "type" => "action:send_message",
-                    "type_version" => "1.0",
-                    "name" => "Intermediate",
-                    "position_index" => 2,
-                    "configuration" => {
-                    },
-                  },
-                  {
-                    "id" => "form-action-2",
-                    "type" => "action:form",
-                    "type_version" => "1.0",
-                    "name" => "Third Page",
-                    "position_index" => 3,
-                    "configuration" => {
-                      "form_fields" => [],
-                    },
-                  },
-                ],
-            connections:
-              (workflow.parsed_connections || []) +
-                [
-                  {
-                    "source_node_id" => "form-action-1",
-                    "target_node_id" => "action-between",
-                    "source_output" => "main",
-                  },
-                  {
-                    "source_node_id" => "action-between",
-                    "target_node_id" => "form-action-2",
-                    "source_output" => "main",
-                  },
-                ],
+            nodes: workflow.parsed_nodes + extra[:nodes],
+            connections: (workflow.parsed_connections || []) + extra[:connections],
           )
         end
 

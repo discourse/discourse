@@ -15,32 +15,20 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
     let(:dependencies) { { guardian: Guardian.new(user) } }
 
     fab!(:workflow) do
-      Fabricate(
-        :discourse_workflows_workflow,
-        enabled: true,
-        nodes: [
-          {
-            "id" => "trigger-1",
-            "type" => "trigger:form",
-            "type_version" => "1.0",
-            "name" => "Form Trigger",
-            "position" => {
-              "x" => 0,
-              "y" => 0,
-            },
-            "position_index" => 0,
-            "configuration" => {
-              "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
-              "form_title" => "Test Form",
-              "form_fields" => [
-                { "field_label" => "Name", "field_type" => "text", "required" => true },
-              ],
-              "response_mode" => "on_received",
-            },
-          },
-        ],
-        connections: [],
-      )
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1",
+                 "trigger:form",
+                 configuration: {
+                   "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+                   "form_title" => "Test Form",
+                   "form_fields" => [
+                     { "field_label" => "Name", "field_type" => "text", "required" => true },
+                   ],
+                   "response_mode" => "on_received",
+                 }
+        end
+      Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
     end
 
     let(:uuid) { "a1b2c3d4-e5f6-7890-abcd-ef0123456789" }
@@ -108,42 +96,15 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
 
       context "when a non-adjacent downstream form action exists" do
         before do
+          extra =
+            build_workflow_graph do |g|
+              g.node "action-1", "action:send_message"
+              g.node "form-action-1", "action:form", configuration: { "form_fields" => [] }
+              g.chain "trigger-1", "action-1", "form-action-1"
+            end
           workflow.update!(
-            nodes:
-              workflow.parsed_nodes +
-                [
-                  {
-                    "id" => "action-1",
-                    "type" => "action:send_message",
-                    "type_version" => "1.0",
-                    "name" => "Send Message",
-                    "position_index" => 1,
-                    "configuration" => {
-                    },
-                  },
-                  {
-                    "id" => "form-action-1",
-                    "type" => "action:form",
-                    "type_version" => "1.0",
-                    "name" => "Second Form",
-                    "position_index" => 2,
-                    "configuration" => {
-                      "form_fields" => [],
-                    },
-                  },
-                ],
-            connections: [
-              {
-                "source_node_id" => "trigger-1",
-                "target_node_id" => "action-1",
-                "source_output" => "main",
-              },
-              {
-                "source_node_id" => "action-1",
-                "target_node_id" => "form-action-1",
-                "source_output" => "main",
-              },
-            ],
+            nodes: workflow.parsed_nodes + extra[:nodes],
+            connections: extra[:connections],
           )
           DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
         end
