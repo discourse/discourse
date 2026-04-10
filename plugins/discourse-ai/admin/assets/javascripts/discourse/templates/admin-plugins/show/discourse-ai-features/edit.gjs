@@ -2,7 +2,7 @@ import { concat } from "@ember/helper";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
-import { eq } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiFeatureSettingField from "discourse/plugins/discourse-ai/discourse/components/ai-feature-setting-field";
 
@@ -55,11 +55,13 @@ export default <template>
                                   (eq setting.type "enum")
                                   "select"
                                   (if
-                                    (eq setting.type "category_list")
-                                    "custom"
-                                    (if
-                                      (eq setting.type "list") "custom" "input"
+                                    (or
+                                      (eq setting.type "category_list")
+                                      (eq setting.type "group_list")
+                                      (eq setting.type "list")
                                     )
+                                    "custom"
+                                    "input"
                                   )
                                 )
                               )
@@ -97,7 +99,15 @@ export default <template>
                         (if
                           (eq setting.type "enum")
                           "select"
-                          (if (eq setting.type "list") "custom" "input")
+                          (if
+                            (or
+                              (eq setting.type "category_list")
+                              (eq setting.type "group_list")
+                              (eq setting.type "list")
+                            )
+                            "custom"
+                            "input"
+                          )
                         )
                       )
                     }}
