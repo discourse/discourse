@@ -17,7 +17,7 @@
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.27.4",
-    "eslint": "9.39.2",
+    "eslint": "10.1.0",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.1.4",
     "licensee": "^11.1.1",
@@ -27,7 +27,7 @@
     "playwright": "1.59.1",
     "prettier": "3.8.1",
     "puppeteer-core": "^24.40.0",
-    "stylelint": "17.4.0",
+    "stylelint": "17.6.0",
     "terser": "^5.46.1",
     "typescript": "^5.9.3"
   },
