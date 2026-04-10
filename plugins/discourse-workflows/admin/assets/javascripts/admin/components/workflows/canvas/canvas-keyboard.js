@@ -4,10 +4,14 @@ function isInputElement(target) {
   return target.tagName === "INPUT" || target.tagName === "TEXTAREA";
 }
 
-export function setupCanvasKeyboard(keyboardShortcutsService, actions) {
+export function setupCanvasKeyboard(
+  keyboardShortcutsService,
+  actions,
+  canvasElement
+) {
   keyboardShortcutsService.pause(PAUSED_SHORTCUTS);
 
-  const keyActions = {
+  const bindings = {
     "meta::z": (e) => {
       e.preventDefault();
       actions.onUndo?.();
@@ -28,9 +32,6 @@ export function setupCanvasKeyboard(keyboardShortcutsService, actions) {
     "::+": () => actions.onZoomIn?.(),
     "::=": () => actions.onZoomIn?.(),
     "::-": () => actions.onZoomOut?.(),
-  };
-
-  const codeActions = {
     "::Digit1": () => actions.onFitToView?.(),
     "::Digit2": () => actions.onAutoLayout?.(),
   };
@@ -42,17 +43,17 @@ export function setupCanvasKeyboard(keyboardShortcutsService, actions) {
     const meta = event.metaKey || event.ctrlKey ? "meta" : "";
     const shift = event.shiftKey ? "shift" : "";
     const key = event.key.toLowerCase();
-    const action =
-      keyActions[`${meta}:${shift}:${key}`] ??
-      codeActions[`${meta}:${shift}:${event.code}`];
-    action?.(event);
+    const binding =
+      bindings[`${meta}:${shift}:${key}`] ??
+      bindings[`${meta}:${shift}:${event.code}`];
+    binding?.(event);
   };
 
-  document.addEventListener("keydown", handler);
+  canvasElement.addEventListener("keydown", handler);
 
   return {
     teardown() {
-      document.removeEventListener("keydown", handler);
+      canvasElement.removeEventListener("keydown", handler);
       try {
         keyboardShortcutsService.unpause(PAUSED_SHORTCUTS);
       } catch {

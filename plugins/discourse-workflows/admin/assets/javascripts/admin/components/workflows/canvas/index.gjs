@@ -102,22 +102,26 @@ export default class WorkflowCanvas extends Component {
 
   @action
   async setupCanvas(element) {
-    this._keyboard = setupCanvasKeyboard(this.keyboardShortcuts, {
-      onUndo: () => this.args.onUndo?.(),
-      onRedo: () => this.args.onRedo?.(),
-      onCopy: () => this.#copy(),
-      onPaste: () => this.#paste(),
-      onDelete: () => this.deleteSelected(),
-      onEscape: () => {
-        this._contextMenuApi?.close();
-        this.rete?.selector.unselectAll();
-        this._selectionVersion++;
+    this._keyboard = setupCanvasKeyboard(
+      this.keyboardShortcuts,
+      {
+        onUndo: () => this.args.onUndo?.(),
+        onRedo: () => this.args.onRedo?.(),
+        onCopy: () => this.#copy(),
+        onPaste: () => this.#paste(),
+        onDelete: () => this.deleteSelected(),
+        onEscape: () => {
+          this._contextMenuApi?.close();
+          this.rete?.selector.unselectAll();
+          this._selectionVersion++;
+        },
+        onZoomIn: () => this.zoomIn(),
+        onZoomOut: () => this.zoomOut(),
+        onFitToView: () => this.fitToView(),
+        onAutoLayout: () => this.autoLayout(),
       },
-      onZoomIn: () => this.zoomIn(),
-      onZoomOut: () => this.zoomOut(),
-      onFitToView: () => this.fitToView(),
-      onAutoLayout: () => this.autoLayout(),
-    });
+      element
+    );
 
     this.canvasElement = element;
 
