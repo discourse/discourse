@@ -68,6 +68,17 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       )
     end
 
+    it "stores webhook_suffix when configured" do
+      state = build_state(execution)
+      handler = described_class.new(state)
+      wait = DiscourseWorkflows::WaitForWebhook.new(webhook_suffix: "after-approval")
+
+      handler.pause!(wait)
+
+      execution.reload
+      expect(execution.waiting_config["webhook_suffix"]).to eq("after-approval")
+    end
+
     it "sets waiting_until and enqueues timeout job when timeout is configured" do
       state = build_state(execution)
       handler = described_class.new(state)

@@ -48,8 +48,9 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionState do
 
     it "includes _execution variables in resolver_context" do
       context = state.resolver_context
-      expect(context["_execution"]).to include("id", "workflow_id", "workflow_name")
+      expect(context["_execution"]).to include("id", "workflow_id", "workflow_name", "resume_url")
       expect(context["_execution"]["workflow_id"]).to eq(workflow.id)
+      expect(context["_execution"]["resume_url"]).to match(%r{/workflows/webhooks/.+:.+})
     end
   end
 

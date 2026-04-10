@@ -10,6 +10,17 @@ module DiscourseWorkflows
           waiting_input_items(execution)
         end
 
+        def self.find_waiting_execution_by_resume_path(
+          token,
+          webhook_suffix,
+          scope = DiscourseWorkflows::Execution.all
+        )
+          find_waiting_execution_by_resume_token(token, scope).where(
+            "COALESCE(waiting_config->>'webhook_suffix', '') = ?",
+            webhook_suffix.to_s,
+          )
+        end
+
         def pause!(wait)
           timeout = wait.timeout_seconds
 
@@ -22,7 +33,8 @@ module DiscourseWorkflows
               "http_method" => wait.http_method,
               "response_mode" => wait.response_mode,
               "response_code" => wait.response_code,
-            },
+              "webhook_suffix" => wait.webhook_suffix.presence,
+            }.compact,
           )
 
           if timeout

@@ -21,16 +21,11 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
 
     it "declares $execution fields matching ExecutionState#execution_variables" do
       fields = described_class.environment_symbols["$execution"][:fields]
-      expect(fields.keys).to contain_exactly(
-        "id",
-        "workflow_id",
-        "workflow_name",
-        "resume_webhook_url",
-      )
+      expect(fields.keys).to contain_exactly("id", "workflow_id", "workflow_name", "resume_url")
     end
 
-    it "marks resume_webhook_url as conditionally visible" do
-      field = described_class.environment_symbols.dig("$execution", :fields, "resume_webhook_url")
+    it "marks resume_url as conditionally visible" do
+      field = described_class.environment_symbols.dig("$execution", :fields, "resume_url")
       expect(field[:visible_if]).to eq(
         node_present: {
           type: "core:wait",

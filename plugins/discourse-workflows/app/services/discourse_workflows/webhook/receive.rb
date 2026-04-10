@@ -19,6 +19,21 @@ module DiscourseWorkflows
         "#{Discourse.base_url}/workflows/webhooks/#{path}"
       end
 
+      def resume_token
+        token_and_signature, = path.to_s.split("/", 2)
+        token_and_signature.to_s.split(":", 2).first
+      end
+
+      def resume_signature
+        token_and_signature, = path.to_s.split("/", 2)
+        token_and_signature.to_s.split(":", 2).second
+      end
+
+      def resume_webhook_suffix
+        _, webhook_suffix = path.to_s.split("/", 2)
+        webhook_suffix.presence.to_s
+      end
+
       def trigger_data
         {
           body: body,
@@ -29,7 +44,7 @@ module DiscourseWorkflows
         }
       end
 
-      def response_items_for(token)
+      def response_items
         [
           {
             "json" => {
@@ -37,7 +52,7 @@ module DiscourseWorkflows
               "headers" => headers,
               "query" => query_params,
               "method" => http_method,
-              "webhook_url" => "#{Discourse.base_url}/workflows/webhooks/#{token}",
+              "webhook_url" => webhook_url,
             },
           },
         ]
@@ -64,12 +79,13 @@ module DiscourseWorkflows
     private
 
     def fetch_waiting_execution(params:)
-      token, signature = params.path.to_s.split(":", 2)
-      return nil if token.blank? || signature.blank?
-      return nil unless DiscourseWorkflows::HmacSigner.verify(token, signature)
+      return nil if params.resume_token.blank? || params.resume_signature.blank?
+      unless DiscourseWorkflows::HmacSigner.verify(params.resume_token, params.resume_signature)
+        return nil
+      end
 
       DiscourseWorkflows::Executor::WaitHandlers::Webhook
-        .find_waiting_execution_by_resume_token(token)
+        .find_waiting_execution_by_resume_path(params.resume_token, params.resume_webhook_suffix)
         .lock("FOR UPDATE SKIP LOCKED")
         .first
     end
@@ -100,21 +116,19 @@ module DiscourseWorkflows
     end
 
     def enqueue_async_resume(waiting_execution:, params:)
-      token = waiting_execution.waiting_config["resume_token"]
       Jobs.enqueue(
         Jobs::DiscourseWorkflows::ResumeWebhookWaiting,
         execution_id: waiting_execution.id,
-        response_items: params.response_items_for(token),
+        response_items: params.response_items,
       )
     end
 
     def resume_execution_synchronously(waiting_execution:, params:)
       config = waiting_execution.waiting_config
-      token = config["resume_token"]
 
       context[:sync_execution] = DiscourseWorkflows::Executor.resume(
         waiting_execution,
-        params.response_items_for(token),
+        params.response_items,
       )
       context[:sync_response_mode] = config["response_mode"]
       context[:sync_response_code] = config["response_code"]

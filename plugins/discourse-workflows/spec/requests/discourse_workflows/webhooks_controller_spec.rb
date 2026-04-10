@@ -162,6 +162,100 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       expect(trigger_data["body"]).to eq({ "data" => "test" })
     end
 
+    context "when resuming a waiting webhook" do
+      let(:resume_token) { "resume-token" }
+      let(:resume_signature) { DiscourseWorkflows::HmacSigner.sign(resume_token) }
+
+      fab!(:waiting_execution) do
+        Fabricate(
+          :discourse_workflows_execution,
+          workflow: workflow,
+          status: :waiting,
+          trigger_node_id: "webhook-1",
+          waiting_node_id: "wait-1",
+          waiting_config: {
+            "resume_token" => "resume-token",
+            "wait_type" => "webhook",
+            "http_method" => "POST",
+            "response_mode" => "immediately",
+            "webhook_suffix" => "after-approval",
+          },
+        )
+      end
+
+      it "resumes when the suffix matches" do
+        post "/workflows/webhooks/#{resume_token}:#{resume_signature}/after-approval.json",
+             params: { foo: "bar" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+
+        job = Jobs::DiscourseWorkflows::ResumeWebhookWaiting.jobs.last
+        expect(job["args"].first).to include("execution_id" => waiting_execution.id)
+        expect(job["args"].first["response_items"].first["json"]["webhook_url"]).to eq(
+          "#{Discourse.base_url}/workflows/webhooks/#{resume_token}:#{resume_signature}/after-approval",
+        )
+      end
+
+      it "returns 404 when the suffix does not match" do
+        post "/workflows/webhooks/#{resume_token}:#{resume_signature}/wrong-suffix.json",
+             params: { foo: "bar" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(404)
+      end
+
+      it "redirects when the resumed workflow responds to webhook with a redirect" do
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes +
+              [
+                {
+                  "id" => "respond-1",
+                  "type" => "action:respond_to_webhook",
+                  "type_version" => "1.0",
+                  "name" => "Respond",
+                  "position" => {
+                    "x" => 200,
+                    "y" => 0,
+                  },
+                  "position_index" => 1,
+                  "configuration" => {
+                    "response_type" => "redirect",
+                    "redirect_url" => "https://example.com/thanks",
+                  },
+                },
+              ],
+          connections: [
+            {
+              "source_node_id" => "wait-1",
+              "target_node_id" => "respond-1",
+              "source_output" => "main",
+            },
+          ],
+        )
+
+        waiting_execution.update!(
+          waiting_config:
+            waiting_execution.waiting_config.merge("response_mode" => "respond_to_webhook"),
+        )
+
+        post "/workflows/webhooks/#{resume_token}:#{resume_signature}/after-approval.json",
+             params: { foo: "bar" }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+             }
+
+        expect(response.status).to eq(302)
+        expect(response.headers["Location"]).to eq("https://example.com/thanks")
+      end
+    end
+
     describe "synchronous response modes" do
       it "redirects when respond_to_webhook node produces a redirect" do
         workflow.update!(

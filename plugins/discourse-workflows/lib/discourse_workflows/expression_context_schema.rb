@@ -33,7 +33,7 @@ module DiscourseWorkflows
           "workflow_name" => {
             type: :string,
           },
-          "resume_webhook_url" => {
+          "resume_url" => {
             type: :string,
             visible_if: {
               node_present: {

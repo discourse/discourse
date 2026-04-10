@@ -134,7 +134,7 @@ module DiscourseWorkflows
         "id" => ->(state) { state.execution&.id },
         "workflow_id" => ->(state) { state.workflow&.id },
         "workflow_name" => ->(state) { state.workflow&.name },
-        "resume_webhook_url" =>
+        "resume_url" =>
           lambda do |state|
             token = state.instance_variable_get(:@resume_token)
             return unless token

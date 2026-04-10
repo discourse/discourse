@@ -52,6 +52,8 @@ module DiscourseWorkflows
       },
     }.freeze
 
+    WEBHOOK_SUFFIX_FIELD = { type: :string, required: false }.freeze
+
     OUTPUT_FIELDS = {
       body: :object,
       headers: :object,

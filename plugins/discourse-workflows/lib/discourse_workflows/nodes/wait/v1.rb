@@ -67,6 +67,8 @@ module DiscourseWorkflows
               },
             },
             **webhook_fields,
+            webhook_suffix:
+              Schemas::Webhook::WEBHOOK_SUFFIX_FIELD.merge(visible_if: { resume: "webhook" }),
             limit_wait_time: {
               type: :boolean,
               default: false,
@@ -117,6 +119,7 @@ module DiscourseWorkflows
                     http_method: @configuration.fetch("http_method") { "GET" },
                     response_mode: @configuration.fetch("response_mode") { "immediately" },
                     response_code: @configuration.fetch("response_code") { "200" },
+                    webhook_suffix: @configuration["webhook_suffix"],
                     timeout_amount: timeout_amount,
                     timeout_unit: timeout_unit,
                   )

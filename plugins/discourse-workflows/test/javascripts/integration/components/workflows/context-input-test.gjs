@@ -17,7 +17,7 @@ const EXPRESSION_CONTEXT = {
         id: { type: "integer" },
         workflow_id: { type: "integer" },
         workflow_name: { type: "string" },
-        resume_webhook_url: {
+        resume_url: {
           type: "string",
           visible_if: {
             node_present: {
@@ -84,7 +84,7 @@ module("Integration | Component | workflows/context/input", function (hooks) {
     assert.true(fieldKeys.includes("execution"));
   });
 
-  test("execution fields include resume_webhook_url when webhook wait node exists", async function (assert) {
+  test("execution fields include resume_url when webhook wait node exists", async function (assert) {
     const waitNode = {
       clientId: "w1",
       type: "core:wait",
@@ -124,10 +124,10 @@ module("Integration | Component | workflows/context/input", function (hooks) {
       ...this.element.querySelectorAll(".workflows-schema-field__key"),
     ].map((el) => el.textContent.trim());
 
-    assert.true(allKeys.includes("resume_webhook_url"));
+    assert.true(allKeys.includes("resume_url"));
   });
 
-  test("execution fields exclude resume_webhook_url when no webhook wait node", async function (assert) {
+  test("execution fields exclude resume_url when no webhook wait node", async function (assert) {
     const node = {
       clientId: "n1",
       type: "action:http_request",
@@ -161,7 +161,7 @@ module("Integration | Component | workflows/context/input", function (hooks) {
       ...this.element.querySelectorAll(".workflows-schema-field__key"),
     ].map((el) => el.textContent.trim());
 
-    assert.false(allKeys.includes("resume_webhook_url"));
+    assert.false(allKeys.includes("resume_url"));
   });
 
   test("renders ancestor nodes with $() expression format", async function (assert) {

@@ -61,7 +61,12 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
     end
 
     context "when resuming a waiting execution" do
-      let(:signed_path) { "my-hook:#{DiscourseWorkflows::HmacSigner.sign("my-hook")}" }
+      let(:webhook_suffix) { nil }
+      let(:signed_path) do
+        path = +"my-hook:#{DiscourseWorkflows::HmacSigner.sign("my-hook")}"
+        path << "/#{webhook_suffix}" if webhook_suffix.present?
+        path
+      end
       let(:params) { super().merge(path: signed_path) }
 
       fab!(:waiting_execution) do
@@ -77,6 +82,13 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
             "http_method" => "POST",
             "response_mode" => "immediately",
           },
+        )
+      end
+
+      before do
+        waiting_execution.update!(
+          waiting_config:
+            waiting_execution.waiting_config.merge("webhook_suffix" => webhook_suffix).compact,
         )
       end
 
@@ -98,8 +110,24 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
               "foo" => "bar",
             },
             "method" => "POST",
+            "webhook_url" => "#{Discourse.base_url}/workflows/webhooks/#{signed_path}",
           )
         end
+      end
+
+      context "when waiting execution expects a webhook suffix" do
+        let(:webhook_suffix) { "after-approval" }
+
+        it { is_expected.to run_successfully }
+      end
+
+      context "when webhook suffix does not match" do
+        let(:webhook_suffix) { "after-approval" }
+        let(:signed_path) do
+          "my-hook:#{DiscourseWorkflows::HmacSigner.sign("my-hook")}/wrong-suffix"
+        end
+
+        it { is_expected.to fail_to_find_a_model(:webhook_nodes) }
       end
 
       context "when response mode is synchronous" do
