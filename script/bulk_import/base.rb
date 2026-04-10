@@ -869,7 +869,8 @@ class BulkImport::Base
 
   GAMIFICATION_SCORE_EVENT_COLUMNS = %i[user_id date points description created_at updated_at]
 
-  SOLVED_TOPIC_COLUMNS = %i[topic_id answer_post_id accepter_user_id created_at updated_at]
+  SOLVED_TOPIC_COLUMNS = %i[topic_id created_at updated_at]
+  TOPIC_ANSWER_COLUMNS = %i[solved_topic_id answer_post_id accepter_user_id created_at updated_at]
 
   POST_EVENT_COLUMNS = %i[
     id
@@ -1193,6 +1194,10 @@ class BulkImport::Base
 
   def create_solved_topic(rows, &block)
     create_records(rows, "discourse_solved_solved_topics", SOLVED_TOPIC_COLUMNS, &block)
+  end
+
+  def create_topic_answers(rows, &block)
+    create_records(rows, "discourse_solved_topic_answers", TOPIC_ANSWER_COLUMNS, &block)
   end
 
   def create_post_events(rows, &block)

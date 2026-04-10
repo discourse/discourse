@@ -36,7 +36,7 @@ class DiscourseSolved::BuildSchemaMarkup
   end
 
   def fetch_accepted_answer(topic:)
-    post = topic.solved&.answer_post
+    post = topic.solved&.answer_posts&.first
     return unless post.present? && Guardian.new.can_see_post?(post)
     post if post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
   end

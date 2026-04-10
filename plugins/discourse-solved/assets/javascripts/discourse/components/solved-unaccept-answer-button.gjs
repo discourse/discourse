@@ -35,20 +35,28 @@ export default class SolvedUnacceptAnswerButton extends Component {
     }
   }
 
+  get answerInfo() {
+    return (
+      this.args.post.topic.accepted_answers?.find(
+        (a) => a.post_number === this.args.post.post_number
+      ) ?? null
+    );
+  }
+
   get showAcceptedBy() {
-    return !(
-      !this.siteSettings.show_who_marked_solved ||
-      !this.args.post.topic.accepted_answer.accepter_username
+    return !!(
+      !this.siteSettings.show_who_marked_solved &&
+      this.answerInfo?.accepter_username
     );
   }
 
   get acceptedByUsername() {
-    return this.args.post.topic.accepted_answer.accepter_username;
+    return this.answerInfo?.accepter_username;
   }
 
   get acceptedByDisplayName() {
-    const username = this.args.post.topic.accepted_answer.accepter_username;
-    const name = this.args.post.topic.accepted_answer.accepter_name;
+    const username = this.answerInfo?.accepter_username;
+    const name = this.answerInfo?.accepter_name;
     return this.siteSettings.display_name_on_posts && name ? name : username;
   }
 

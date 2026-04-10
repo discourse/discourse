@@ -3,8 +3,8 @@
 module DiscourseSolved
   module Queries
     def self.solved_count(user_id)
-      DiscourseSolved::SolvedTopic
-        .joins(answer_post: :user, topic: {})
+      DiscourseSolved::TopicAnswer
+        .joins(post: :user, solved_topic: :topic)
         .where(posts: { user_id: user_id, deleted_at: nil })
         .where(topics: { archetype: Archetype.default, deleted_at: nil })
         .count

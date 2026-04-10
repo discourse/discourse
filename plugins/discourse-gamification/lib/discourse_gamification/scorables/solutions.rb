@@ -28,8 +28,10 @@ module DiscourseGamification
         INNER JOIN topics
           ON dsst.topic_id = topics.id
           #{category_filter(leaderboard:)}
-        INNER JOIN posts
-          ON posts.id = dsst.answer_post_id
+        INNER JOIN discourse_solved_topic_answers dsta 
+          ON dsta.solved_topic_id = dsst.id
+        INNER JOIN posts 
+          ON posts.id = dsta.answer_post_id
         WHERE
           posts.deleted_at IS NULL AND
           topics.deleted_at IS NULL AND

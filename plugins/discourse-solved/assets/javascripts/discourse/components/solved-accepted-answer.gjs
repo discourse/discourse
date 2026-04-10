@@ -97,7 +97,7 @@ export default class SolvedAcceptedAnswer extends Component {
 
   <template>
     {{! template-lint-disable no-unnecessary-concat }}
-    {{#if this.acceptedAnswer}}
+    {{#if this.answer}}
       <aside
         class={{concatClass
           "quote accepted-answer d-solved-answer"

@@ -8,8 +8,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import setAcceptedSolution from "../lib/set-accepted-solution";
 
 export default class SolvedAcceptAnswerButton extends Component {
-  static hidden(args) {
-    return args.post.topic_accepted_answer;
+  static hidden(args, context) {
+    if (context.siteSettings.solved_allow_multiple_solutions) {
+      return false;
+    } else {
+      return args.post.topic_accepted_answer !== args.post.id;
+    }
   }
 
   @service appEvents;

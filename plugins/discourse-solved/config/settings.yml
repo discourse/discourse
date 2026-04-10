@@ -2,6 +2,9 @@ discourse_solved:
   solved_enabled:
     default: true
     client: true
+  solved_allow_multiple_solutions:
+    default: false
+    client: true 
   show_who_marked_solved:
     default: false
     client: true

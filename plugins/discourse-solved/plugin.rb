@@ -55,7 +55,7 @@ after_initialize do
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
 
-    ::Topic.attr_accessor(:accepted_answer_user_id)
+    ::Topic.attr_accessor(:accepted_answer_user_ids)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)
     [
@@ -196,7 +196,9 @@ after_initialize do
   add_to_serializer(:post, :can_unaccept_answer) do
     scope.can_unaccept_answer?(topic, object) && accepted_answer
   end
-  add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
+  add_to_serializer(:post, :accepted_answer) do
+    topic&.solved&.topic_answers&.exists?(answer_post_id: object.id)
+  end
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
   on(:post_destroyed) do |post|
@@ -241,16 +243,13 @@ after_initialize do
       options[:refresh_stream] = true
 
       if !new_allowed
-        if topic.solved.present?
-          post = topic.solved.answer_post
-          if post
-            DiscourseSolved::UnacceptAnswer.call(
-              params: {
-                post_id: post.id,
-              },
-              guardian: Discourse.system_user.guardian,
-            )
-          end
+        topic.solved&.topic_answers&.each do |ta|
+          DiscourseSolved::UnacceptAnswer.call(
+            params: {
+              post_id: ta.answer_post_id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
         end
       end
     end
@@ -306,15 +305,18 @@ after_initialize do
 
   register_topic_list_preload_user_ids do |topics, user_ids|
     # [{ topic_id => answer_user_id }, ... ]
-    topics_with_answer_poster =
+    topics_with_answer_users =
       DiscourseSolved::SolvedTopic
-        .joins(:answer_post)
+        .joins(topic_answers: :post)
         .where(topic_id: topics.map(&:id))
-        .pluck(:topic_id, "posts.user_id")
-        .to_h
+        .pluck("discourse_solved_solved_topics.topic_id", "posts.user_id")
+        .each_with_object({}) { |(topic_id, user_id), h| (h[topic_id] ||= []) << user_id }
 
-    topics.each { |topic| topic.accepted_answer_user_id = topics_with_answer_poster[topic.id] }
-    user_ids.concat(topics_with_answer_poster.values)
+    topics.each do |topic|
+      topic.accepted_answer_user_ids = topics_with_answer_users[topic.id] || []
+    end
+
+    user_ids.concat(topics_with_answer_users.values.flatten.uniq)
   end
 
   DiscourseSolved::RegisterFilters.register(self)

@@ -33,7 +33,8 @@ def solved_query_with_count(min_count)
   <<~SQL
     SELECT p.user_id, MAX(dsst.created_at) AS granted_at
     FROM discourse_solved_solved_topics dsst
-         JOIN badge_posts p ON dsst.answer_post_id = p.id
+         JOIN discourse_solved_topic_answers dsta ON dsta.solved_topic_id = dsst.id
+         JOIN badge_posts p ON dsta.answer_post_id = p.id
          JOIN topics t ON p.topic_id = t.id
     WHERE p.user_id <> t.user_id -- ignore topics solved by OP
       AND (:backfill OR p.id IN (:post_ids))

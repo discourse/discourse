@@ -39,7 +39,7 @@ function initializeWithApi(api) {
     api.addDiscoveryQueryParam("solved", { replace: true, refreshModel: true });
   }
 
-  api.addTrackedTopicProperties("accepted_answer", "has_accepted_answer");
+  api.addTrackedTopicProperties("accepted_answers", "has_accepted_answer");
 }
 
 function customizeNotificationDescriptions(api) {
@@ -75,7 +75,8 @@ function customizePost(api) {
     class extends Component {
       static shouldRender(args) {
         return (
-          args.post?.post_number === 1 && args.post?.topic?.accepted_answer
+          args.post?.post_number === 1 &&
+          args.post?.topic?.accepted_answers?.length > 0
         );
       }
 
@@ -90,6 +91,8 @@ function customizePost(api) {
 }
 
 function customizePostMenu(api) {
+  const siteSettings = helperContext().siteSettings;
+
   api.registerValueTransformer(
     "post-menu-buttons",
     ({
@@ -109,22 +112,30 @@ function customizePostMenu(api) {
         solvedButton = SolvedAcceptAnswerButton;
       }
 
-      solvedButton &&
-        dag.add(
-          "solved",
-          solvedButton,
-          post.topic_accepted_answer && !post.accepted_answer
-            ? {
-                before: lastHiddenButtonKey,
-                after: secondLastHiddenButtonKey,
-              }
-            : {
-                before: [
-                  "assign", // button added by the assign plugin
-                  firstButtonKey,
-                ],
-              }
-        );
+      if (!solvedButton) {
+        return;
+      }
+
+      const collapse =
+        !siteSettings.solved_allow_multiple_solutions &&
+        post.topic_accepted_answer &&
+        !post.accepted_answer;
+
+      dag.add(
+        "solved",
+        solvedButton,
+        collapse
+          ? {
+              before: lastHiddenButtonKey,
+              after: secondLastHiddenButtonKey,
+            }
+          : {
+              before: [
+                "assign", // button added by the assign plugin
+                firstButtonKey,
+              ],
+            }
+      );
     }
   );
 }
@@ -134,7 +145,7 @@ function handleMessages(api) {
     const topic = controller.model;
 
     if (topic) {
-      setAcceptedSolution(topic, message.accepted_answer);
+      setAcceptedSolution(topic, message.accepted_answers);
     }
   };
 

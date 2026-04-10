@@ -18,9 +18,7 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
 
     posts =
       Post
-        .joins(
-          "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.answer_post_id = posts.id",
-        )
+        .joins(:topic_answers) # TODO Check this
         .joins(:topic)
         .joins("LEFT JOIN categories ON categories.id = topics.category_id")
         .where(user_id: user.id, deleted_at: nil)

@@ -1,25 +1,21 @@
-export default function setAcceptedSolution(topic, acceptedAnswer) {
+export default function setAcceptedSolution(topic, acceptedAnswers) {
+  const acceptedPostNumbers = new Set(
+    acceptedAnswers?.map((answer) => answer.post_number)
+  );
+
+  const topicHasAcceptedAnswer = acceptedPostNumbers.size > 0;
+
   topic.postStream?.posts?.forEach((post) => {
-    if (!acceptedAnswer) {
-      post.setProperties({
-        accepted_answer: false,
-        topic_accepted_answer: false,
-      });
-    } else if (post.post_number > 1) {
-      post.setProperties(
-        acceptedAnswer.post_number === post.post_number
-          ? {
-              accepted_answer: true,
-              topic_accepted_answer: true,
-            }
-          : {
-              accepted_answer: false,
-              topic_accepted_answer: true,
-            }
-      );
+    if (post.post_number === 1) {
+      return;
     }
+
+    post.setProperties({
+      accepted_answer: acceptedPostNumbers.has(post.post_number),
+      topic_accepted_answer: topicHasAcceptedAnswer,
+    });
   });
 
-  topic.accepted_answer = acceptedAnswer;
-  topic.has_accepted_answer = !!acceptedAnswer;
+  topic.accepted_answers = acceptedAnswers;
+  topic.has_accepted_answer = topicHasAcceptedAnswer;
 }

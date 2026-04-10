@@ -49,7 +49,8 @@ module DiscourseSolved
     end
 
     def can_unaccept_answer?(topic, post)
-      can_accept_answer?(topic, post) || (is_staff? && topic&.solved.present?)
+      can_accept_answer?(topic, post) ||
+        (is_staff? && topic&.solved&.topic_answers&.exists?(answer_post_id: post.id))
     end
   end
 end

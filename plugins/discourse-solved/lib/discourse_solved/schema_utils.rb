@@ -49,7 +49,8 @@ module DiscourseSolved
       return nil unless qa_page_schema?(topic)
       return { data: { qa_question: true } } if post.is_first_post?
       return {} unless eligible_answer?(post)
-      if accepted_answer_visible?(topic) && topic.solved.answer_post_id == post.id
+      if accepted_answer_visible?(topic) &&
+           topic.solved.topic_answers.exists?(answer_post_id: post.id)
         { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
       else
         { itemprop: "suggestedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
@@ -72,8 +73,7 @@ module DiscourseSolved
     end
 
     private_class_method def self.accepted_answer_visible?(topic)
-      post = topic.solved&.answer_post
-      post.present? && Guardian.new.can_see_post?(post)
+      topic.solved&.answer_posts&.any? { |post| Guardian.new.can_see_post?(post) }
     end
 
     private_class_method def self.eligible_answers(topic)

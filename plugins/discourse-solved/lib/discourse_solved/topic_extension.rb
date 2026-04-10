@@ -10,33 +10,39 @@ module DiscourseSolved::TopicExtension
     hours.zero? ? SiteSetting.solved_topics_auto_close_hours : hours
   end
 
-  def accepted_answer_post_info
-    return unless solved
-    return unless answer_post = solved.answer_post
+  def accepted_answers_post_info # renamed plural
+    return [] unless solved
 
-    answer_post_user = answer_post.user || Discourse.system_user
-    accepter = solved.accepter || self.user || Discourse.system_user
+    solved
+      .topic_answers
+      .includes(:post, :accepter)
+      .filter_map do |ta|
+        post = ta.post
+        next unless post
 
-    excerpt = SiteSetting.solved_quote_length > 0 ? answer_post.cooked : nil
+        post_user = post.user || Discourse.system_user
+        accepter = ta.accepter || self.user || Discourse.system_user
+        excerpt = SiteSetting.solved_quote_length > 0 ? post.cooked : nil
 
-    accepted_answer = {
-      post_number: answer_post.post_number,
-      username: answer_post_user.username,
-      name: answer_post_user.name,
-      avatar_template: answer_post_user.avatar_template,
-      excerpt:,
-    }
+        answer = {
+          post_number: post.post_number,
+          username: post_user.username,
+          name: post_user.name,
+          avatar_template: post_user.avatar_template,
+          excerpt:,
+        }
 
-    if SiteSetting.show_who_marked_solved
-      accepted_answer[:accepter_name] = accepter.name
-      accepted_answer[:accepter_username] = accepter.username
-    end
+        if SiteSetting.show_who_marked_solved
+          answer[:accepter_name] = accepter.name
+          answer[:accepter_username] = accepter.username
+        end
 
-    if !SiteSetting.enable_names || !SiteSetting.display_name_on_posts
-      accepted_answer[:name] = nil
-      accepted_answer[:accepter_name] = nil
-    end
+        if !SiteSetting.enable_names || !SiteSetting.display_name_on_posts
+          answer[:name] = nil
+          answer[:accepter_name] = nil
+        end
 
-    accepted_answer
+        answer
+      end
   end
 end

@@ -12,12 +12,14 @@ class DiscourseSolved::AcceptAnswer
   model :post
   model :topic
   policy :can_accept_answer
+  policy :answer_is_acceptable
 
   lock(:topic) do
     transaction do
-      only_if(:previous_answer_exists) { step :revoke_previous_accepted_answer }
+      only_if(:should_revoke_previous) { step :revoke_previous_accepted_answer }
       step :credit_post_author
-      model :solved, :mark_as_solved
+      model :solved_topic, :find_or_create_solved_topic
+      model :topic_answer, :create_topic_answer
       only_if(:should_notify_post_author) { step :notify_post_author }
       only_if(:should_notify_topic_owner) { step :notify_topic_owner }
       model :topic_user_ids, optional: true
@@ -47,16 +49,17 @@ class DiscourseSolved::AcceptAnswer
     guardian.can_accept_answer?(topic, post)
   end
 
-  def previous_answer_exists(topic:)
-    topic.solved&.answer_post_id.present?
+  def should_revoke_previous(topic:)
+    !SiteSetting.solved_allow_multiple_solutions && topic.solved&.topic_answers&.any?
   end
 
   def revoke_previous_accepted_answer(topic:)
-    UserAction.where(
-      action_type: UserAction::SOLVED,
-      target_post: topic.solved.answer_post,
-    ).destroy_all
-    topic.solved.destroy!
+    topic_answer = topic.solved.topic_answers.first
+    return unless topic_answer
+
+    UserAction.where(action_type: UserAction::SOLVED, target_post: topic_answer.post).destroy_all
+
+    topic_answer.destroy!
   end
 
   def credit_post_author(post:, guardian:)
@@ -67,10 +70,6 @@ class DiscourseSolved::AcceptAnswer
       target_post_id: post.id,
       target_topic_id: post.topic_id,
     )
-  end
-
-  def mark_as_solved(post:, topic:, guardian:)
-    DiscourseSolved::SolvedTopic.create(topic:, answer_post: post, accepter: guardian.user)
   end
 
   def should_notify_post_author(post:, guardian:)
@@ -163,8 +162,8 @@ class DiscourseSolved::AcceptAnswer
     Notification::Action::BulkCreate.call(records:)
   end
 
-  def topic_will_auto_close(solved:)
-    solved.topic_timer.present?
+  def topic_will_auto_close(solved_topic:)
+    solved_topic.previously_new_record? && solved_topic.topic_timer.present?
   end
 
   def publish_topic_reload(topic:)
@@ -187,8 +186,22 @@ class DiscourseSolved::AcceptAnswer
     DiscourseEvent.trigger(:accepted_solution, post)
     MessageBus.publish(
       "/topic/#{topic.id}",
-      { type: :accepted_solution, accepted_answer: topic.reload.accepted_answer_post_info },
+      { type: :accepted_solution, accepted_answers: topic.reload.accepted_answers_post_info },
       topic.secure_audience_publish_messages,
     )
+  end
+
+  def answer_is_acceptable(topic:, post:)
+    # TODO: Maybe this can be clearer
+    return true unless SiteSetting.solved_allow_multiple_solutions
+    !topic.solved&.topic_answers&.exists?(answer_post_id: post.id)
+  end
+
+  def find_or_create_solved_topic(topic:)
+    DiscourseSolved::SolvedTopic.find_or_create_by!(topic:)
+  end
+
+  def create_topic_answer(solved_topic:, post:, guardian:)
+    DiscourseSolved::TopicAnswer.create!(solved_topic:, post:, accepter: guardian.user)
   end
 end

@@ -3,14 +3,13 @@
 module DiscourseSolved::TopicViewSerializerExtension
   extend ActiveSupport::Concern
 
-  prepended { attributes :accepted_answer }
+  prepended { attributes :accepted_answers }
 
-  def include_accepted_answer?
-    SiteSetting.solved_enabled? && object.topic.solved.present? &&
-      object.topic.solved.answer_post.present?
+  def include_accepted_answers?
+    SiteSetting.solved_enabled? && object.topic.solved&.topic_answers&.any?
   end
 
-  def accepted_answer
-    object.topic.accepted_answer_post_info
+  def accepted_answers
+    object.topic.accepted_answers_post_info
   end
 end

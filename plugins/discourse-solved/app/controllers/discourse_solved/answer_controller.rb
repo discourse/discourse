@@ -7,11 +7,14 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
   def accept
     DiscourseSolved::AcceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
-      on_success { |topic:| render_json_dump(topic.accepted_answer_post_info) }
+      on_success { |topic:| render_json_dump(topic.accepted_answers_post_info) }
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_accept_answer) { raise Discourse::InvalidAccess }
-      on_model_errors(:solved) do |model|
+      on_model_errors(:solved_topic) do |model|
+        render_json_error(model, type: :record_invalid, status: 422)
+      end
+      on_model_errors(:topic_answer) do |model|
         render_json_error(model, type: :record_invalid, status: 422)
       end
       on_failed_contract do |contract|
