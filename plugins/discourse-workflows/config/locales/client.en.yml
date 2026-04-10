@@ -329,6 +329,8 @@ en:
         add_header: "Add header"
         body: "Request Body"
         body_placeholder: '{"key": "value"}'
+        never_error: "Never Error"
+        never_error_description: "Return non-2xx responses instead of raising an error."
       split_out:
         field: "Fields To Split Out"
         field_description: "Comma-separated field name(s) containing arrays to split. Supports dot notation for nested fields."

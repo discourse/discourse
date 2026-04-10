@@ -203,6 +203,13 @@ export default class Field extends Component {
     return description ? trustHTML(description) : undefined;
   }
 
+  get fieldTooltip() {
+    if (!fieldShowDescription(this.args.schema)) {
+      return undefined;
+    }
+    return propertyDescription(this.nodeDefinition, this.args.fieldName);
+  }
+
   get fieldTitle() {
     return this.label || this.args.fieldName || "-";
   }
@@ -272,6 +279,7 @@ export default class Field extends Component {
         <@form.Field
           @name={{@fieldName}}
           @title={{this.label}}
+          @tooltip={{this.fieldTooltip}}
           @type="toggle"
           @format={{this.format}}
           @validation={{this.validation}}

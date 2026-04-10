@@ -125,7 +125,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       expect(result["body"]).to eq("id" => 1)
     end
 
-    it "raises an error for non-2xx status codes" do
+    it "raises an error for non-2xx status codes by default" do
       stub_request(:get, "https://api.example.com/fail").to_return(status: 404, body: "Not Found")
 
       config = { "method" => "GET", "url" => "https://api.example.com/fail" }
@@ -211,6 +211,29 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         RuntimeError,
         "URL is required",
       )
+    end
+
+    context "with never_error enabled" do
+      it "returns non-2xx responses without raising" do
+        stub_request(:get, "https://api.example.com/missing").to_return(
+          status: 404,
+          body: { error: "not found" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/missing",
+          "never_error" => true,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["status"]).to eq(404)
+        expect(result["body"]).to eq("error" => "not found")
+      end
     end
 
     context "with basic_auth authentication" do

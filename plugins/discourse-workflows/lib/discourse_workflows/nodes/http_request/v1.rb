@@ -85,6 +85,11 @@ module DiscourseWorkflows
                 rows: 6,
               },
             },
+            never_error: {
+              type: :boolean,
+              required: false,
+              default: false,
+            },
           }
         end
 
@@ -110,7 +115,8 @@ module DiscourseWorkflows
         def process(config)
           method, uri, headers, body = RequestBuilder.new(config).build
           log_request(method, uri, headers, body)
-          response = send_request(method, uri, headers, body)
+          never_error = config.fetch("never_error", false)
+          response = send_request(method, uri, headers, body, never_error:)
           ResponseParser.parse(response)
         end
 
@@ -124,13 +130,13 @@ module DiscourseWorkflows
           @log.info("[body omitted]") if body.present?
         end
 
-        def send_request(method, uri, headers, body)
+        def send_request(method, uri, headers, body, never_error: false)
           conn =
             Faraday.new(nil, request: { timeout: TIMEOUT_SECONDS }) do |f|
               f.adapter FinalDestination::FaradayAdapter
             end
           response = conn.run_request(method, uri.to_s, body, headers)
-          unless (200..299).cover?(response.status)
+          if !never_error && !(200..299).cover?(response.status)
             raise "HTTP request failed with status #{response.status}"
           end
           response
