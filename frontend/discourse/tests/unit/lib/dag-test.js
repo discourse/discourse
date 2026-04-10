@@ -295,6 +295,54 @@ module("Unit | Lib | DAG", function (hooks) {
     );
   });
 
+  test("throwErrorOnCycle false: stale edges cleaned up on array constraint cycle", function (assert) {
+    // When a before/after array partially applies (some edges succeed,
+    // then a later one cycles), the successful edges must be rolled
+    // back before retrying with the default position.
+    const dag = new DAG({
+      throwErrorOnCycle: false,
+      defaultPosition: { before: "end" },
+    });
+    dag.add("start", 1);
+    dag.add("middle", 2, { after: "start" });
+    dag.add("end", 3, { after: "middle" });
+
+    // "trouble" tries before:["start","middle"] + after:"end".
+    // before-start and before-middle edges are added, then after-end
+    // creates a cycle (end -> trouble -> start -> middle -> end).
+    // Without rollback, the stale before-start and before-middle
+    // edges push trouble to the very beginning of the sort.
+    dag.add("trouble", 4, { before: ["start", "middle"], after: "end" });
+
+    // With rollback: trouble gets default { before: "end" }, placing
+    // it between middle and end.
+    assert.deepEqual(resolveKeys(dag), ["start", "middle", "trouble", "end"]);
+  });
+
+  test("throwErrorOnCycle false: graceful fallback when default position also cycles", function (assert) {
+    // When the original position cycles and the default position also
+    // cycles, the item should be added with no constraints rather
+    // than throwing.
+    const dag = new DAG({
+      throwErrorOnCycle: false,
+      defaultPosition: { before: "base" },
+    });
+    dag.add("base", 1);
+    // mid's { before: "trouble" } creates an edge mid->trouble,
+    // giving trouble an inEdge before it is explicitly added.
+    dag.add("mid", 2, { after: "base", before: "trouble" });
+
+    // trouble tries { before: "base" } which cycles (base->mid->trouble->base).
+    // Default { before: "base" } also cycles (same path).
+    // Should gracefully add with no constraints.
+    dag.add("trouble", 3, { after: "mid", before: "base" });
+
+    assert.true(dag.has("trouble"), "trouble was added despite double cycle");
+
+    // trouble still appears after mid because of mid's { before: "trouble" }
+    assert.deepEqual(resolveKeys(dag), ["base", "mid", "trouble"]);
+  });
+
   test("resolve returns cached result when DAG is not mutated", function (assert) {
     // Instance-level cache: repeated resolve() calls on the same
     // unmutated DAG return the exact same array reference.

@@ -283,7 +283,15 @@ export default class DAG {
         if (e.message.match(/cycle/i)) {
           const { before: newBefore, after: newAfter } =
             this.#defaultPositionForKey(key);
-          this.#addVertexAndEdges(key, value, newBefore, newAfter);
+          try {
+            this.#addVertexAndEdges(key, value, newBefore, newAfter);
+          } catch (e2) {
+            if (!e2.message?.match(/cycle/i)) {
+              throw e2;
+            }
+            // Both the requested and default positions create a cycle.
+            // The vertex exists but has no constraint edges.
+          }
         }
       }
     }
@@ -296,24 +304,44 @@ export default class DAG {
       v.insertionIdx = this.#insertionCounter++;
     }
 
-    if (before) {
-      if (typeof before === "string") {
-        this.#addEdge(v, this.#getOrCreateVertex(before));
-      } else {
-        for (let i = 0; i < before.length; i++) {
-          this.#addEdge(v, this.#getOrCreateVertex(before[i]));
-        }
-      }
-    }
+    // Track edges added during this call as [fromKey, toKey] pairs
+    // so they can be rolled back if a later constraint creates a cycle.
+    const added = [];
 
-    if (after) {
-      if (typeof after === "string") {
-        this.#addEdge(this.#getOrCreateVertex(after), v);
-      } else {
-        for (let i = 0; i < after.length; i++) {
-          this.#addEdge(this.#getOrCreateVertex(after[i]), v);
+    try {
+      if (before) {
+        if (typeof before === "string") {
+          if (this.#addEdge(v, this.#getOrCreateVertex(before))) {
+            added.push(v.key, before);
+          }
+        } else {
+          for (let i = 0; i < before.length; i++) {
+            if (this.#addEdge(v, this.#getOrCreateVertex(before[i]))) {
+              added.push(v.key, before[i]);
+            }
+          }
         }
       }
+
+      if (after) {
+        if (typeof after === "string") {
+          if (this.#addEdge(this.#getOrCreateVertex(after), v)) {
+            added.push(after, v.key);
+          }
+        } else {
+          for (let i = 0; i < after.length; i++) {
+            if (this.#addEdge(this.#getOrCreateVertex(after[i]), v)) {
+              added.push(after[i], v.key);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      for (let i = 0; i < added.length; i += 2) {
+        this.#vertices.get(added[i]).outEdges.delete(added[i + 1]);
+        this.#vertices.get(added[i + 1]).inEdges.delete(added[i]);
+      }
+      throw e;
     }
   }
 
@@ -323,7 +351,7 @@ export default class DAG {
     }
 
     if (from.outEdges.has(to.key)) {
-      return;
+      return false;
     }
 
     if (to.outEdges.size > 0) {
@@ -335,6 +363,7 @@ export default class DAG {
 
     from.outEdges.add(to.key);
     to.inEdges.add(from.key);
+    return true;
   }
 
   #findCyclePath(start, targetKey) {
