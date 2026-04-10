@@ -59,7 +59,7 @@ module DiscourseWorkflows
     end
 
     def palette_group
-      palette_group_definition.merge(id: group)
+      group_definition.merge(id: group)
     end
 
     def property_i18n_prefix
@@ -116,7 +116,7 @@ module DiscourseWorkflows
 
     private
 
-    def palette_group_definition
+    def group_definition
       PALETTE_GROUPS.fetch(group)
     end
 

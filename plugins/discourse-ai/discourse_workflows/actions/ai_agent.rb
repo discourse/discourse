@@ -20,7 +20,7 @@ if defined?(DiscourseWorkflows)
           "ai"
         end
 
-        def self.palette_group_definition
+        def self.group_definition
           { icon: "robot", label_key: "discourse_workflows.add_node.categories.ai", order: 40 }
         end
 
