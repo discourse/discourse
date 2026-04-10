@@ -41,6 +41,9 @@ es:
             visited_with_posts:
               one: "Hiciste %{count} publicación en %{date}."
               other: "Hiciste %{count} publicaciones en %{date}."
+            visited_with_posts_others:
+              one: "%{username} ha hecho %{count} publicación en %{date}."
+              other: "%{username} ha hecho %{count} publicaciones en %{date}."
             no_activity: "No estuviste por aquí en %{date}."
         top_words:
           title: Uso de palabras
@@ -102,8 +105,14 @@ es:
           author_others: "%{username}"
           channel_title: "#actividad-en-el-chat"
           status_online: "● en línea"
+          message_1:
+            one: "¡Has enviado <strong>%{count}</strong> mensaje este año!"
+            other: "¡Has enviado <strong>%{count}</strong> mensajes este año!"
           reply_1: "lol impresionante B-)"
           reply_2: "MOo0oLa :D"
+          message_3:
+            one: "¡A la gente le han encantado tus mensajes! Has recibido <strong>%{count}</strong> reacción ❤️"
+            other: "¡A la gente le han encantado tus mensajes! Has recibido <strong>%{count}</strong> reacciones ❤️"
           message_4: "La longitud media de tus mensajes fue de <strong>%{length}</strong> caracteres"
           message_5: "Tus canales favoritos:"
         favorite_gifs:
@@ -139,6 +148,9 @@ es:
           subtitle:
             one: Has ayudado a %{count} nuevo usuario este año
             other: Has ayudado a %{count} nuevos usuarios este año
+          subtitle_others:
+            one: "%{username} ha ayudado a %{count} usuario nuevo este año"
+            other: "%{username} ha ayudado a %{count} usuarios nuevos este año"
           new_member:
             one: "%{count} nuevo miembro"
             other: "%{count} nuevos miembros"

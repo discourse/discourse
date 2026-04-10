@@ -60,6 +60,8 @@ es:
   inline_oneboxer:
     topic_page_title_post_number: "nº %{post_number}"
     topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
+    too_many_urls: "No se pueden convertir más de 10 URL en inline oneboxes en una sola solicitud."
+    concurrency_not_allowed: "No se permiten solicitudes simultáneas para convertir URL en inline oneboxes. Envía una solicitud cada vez."
   components:
     enabled_filter: "Activado"
     disabled_filter: "Desactivado"
@@ -142,6 +144,8 @@ es:
         invalid_type: "%{type} no es un tipo válido"
         humanize_not_valid_string_value: "La propiedad en el puntero JSON «%{property_json_pointer}» debe ser una cadena."
         not_valid_string_value: "debe ser una cadena"
+        humanize_not_valid_datetime_value: "La propiedad en el puntero JSON «%{property_json_pointer}» debe ser una fecha y hora válidas."
+        not_valid_datetime_value: "debe ser una fecha y hora válidas"
         humanize_not_valid_integer_value: "La propiedad en el puntero JSON «%{property_json_pointer}» debe ser un valor entero."
         not_valid_integer_value: "debe ser un valor entero"
         humanize_not_valid_float_value: "La propiedad en el puntero JSON «%{property_json_pointer}» debe ser un valor flotante."
@@ -256,6 +260,7 @@ es:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    diff_too_complex: "La diferencia es demasiado compleja para calcularla de forma segura. Intenta hacer ediciones más pequeñas."
     messages:
       invalid_locale: "%{invalid_locale} no es un idioma local válido"
       too_long_validation:
@@ -275,6 +280,7 @@ es:
       greater_than: debe ser mayor que %{count}
       greater_than_or_equal_to: debe ser mayor o igual que %{count}
       has_already_been_used: "ya se ha utilizado"
+      in: debe estar en %{count}
       inclusion: no está incluido en la lista
       invalid: no es válido
       is_invalid: "parece poco claro, ¿es una oración completa?"
@@ -391,6 +397,7 @@ es:
     redemption_count_less_than_max: "debe ser inferior a %{max_redemptions_allowed}."
     email_xor_domain: "Los campos de correo electrónico y dominio no están permitidos al mismo tiempo"
     existing_user_success: "Invitación canjeada con éxito"
+    email_invites_disabled: "El envío de correos electrónicos de invitación está desactivado"
   bulk_invite:
     file_should_be_csv: "El archivo subido debería estar en formato csv."
     max_rows: "Las primeras %{max_bulk_invites} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
@@ -588,11 +595,13 @@ es:
         one: "Se puede añadir un máximo de %{count} usuario a la vez"
         other: "Se puede añadir un máximo de %{count} usuarios a la vez"
       usernames_or_emails_required: "Debe haber nombres de usuario o correos electrónicos"
+      cannot_add_emails: "Solo se pueden usar nombres de usuario para añadir miembros a este grupo. Para invitar por correo electrónico, usa el botón Invitar."
       counting_too_many_email_domains:
         one: "Se puede contar un máximo de %{count} dominio de correo electrónico a la vez"
         other: "Se puede contar un máximo de %{count} dominios de correo electrónico a la vez"
       no_invites_with_discourse_connect: "Solo puedes invitar a usuarios ya registrados cuando DiscourseConnect está activado"
       no_invites_without_local_logins: "Solo puedes invitar usuarios ya registrados cuando los inicios de sesión locales están desactivados"
+      update_existing_users_required: "Este cambio afecta a %{count} miembros existentes del grupo. Debes especificar el parámetro «update_existing_users» (verdadero o falso) para indicar si se deben aplicar las nuevas notificaciones por defecto a los miembros existentes."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -791,6 +800,9 @@ es:
       email_already_used_in_group: "«%{email}» ya está siendo utilizado por el grupo «%{group_name}»."
       email_already_used_in_category: "«%{email}» ya está siendo utilizado por la categoría «%{category_name}»."
       description_incomplete: "La publicación que contiene la descripción de la categoría debe tener al menos un párrafo."
+      description_too_long:
+        one: "La descripción es demasiado larga (el máximo es %{count} carácter)."
+        other: "La descripción es demasiado larga (el máximo son %{count} caracteres)."
       permission_conflict: "Cualquier grupo que tenga acceso a una subcategoría también debe tener acceso a la categoría primaria. Los siguientes grupos tienen acceso a una de las subcategorías, pero no a la categoría primaria: %{group_names}."
       disallowed_topic_tags: "Este tema tiene etiquetas no permitidas en esta categoría: «%{tags}»"
       disallowed_tags_generic: "Este tema tiene etiquetas no permitidas."
@@ -806,9 +818,11 @@ es:
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el número de temas es %{count}."
     uncategorized_description: "Temas que no necesitan una categoría o no encajan en ninguna de las categorías existentes."
   category_types:
+    not_available: "El tipo de categoría «%{type_name}» no está disponible"
     discussion:
       name: "Debate"
       title: "debate"
+      description: "Una categoría estándar con todo lo esencial para una conversación."
   trust_levels:
     admin: "Administrador"
     staff: "Personal"
@@ -1034,6 +1048,7 @@ es:
     too_many_drafts:
       title: "Demasiados borradores"
       description: "Has alcanzado el número máximo de borradores permitidos. Elimina algunos de [tus borradores](%{base_url}/my/activity/drafts) e inténtalo de nuevo."
+    bulk_destroy_limit: "Solo puedes eliminar hasta %{limit} borradores a la vez."
   draft_backup:
     pm_title: "Borradores de respaldo de temas en curso"
     pm_body: "Tema que contiene borradores de respaldo"
@@ -1047,6 +1062,8 @@ es:
     connection_error: "Ha habido un problema de conexión con el servidor, comprueba el nombre del servidor y el puerto e inténtalo de nuevo."
     timeout_error: "La conexión con el servidor se ha interrumpido, comprueba el nombre y el puerto del servidor e inténtalo de nuevo."
     unhandled_error: "Error no controlado al probar la configuración del correo electrónico. %{message}"
+    invalid_host: "El anfitrión proporcionado corresponde a una dirección IP no permitida."
+    host_resolve_failed: "No se ha podido resolver el anfitrión proporcionado."
   webauthn:
     validation:
       invalid_type_error: "El proveedor tipo webauthn provisto no es válido. Los tipos válidos son webauthn.get y webauthn.create."
@@ -1131,6 +1148,8 @@ es:
       weekly: "semanalmente"
       every_month: "cada mes"
       every_six_months: "cada seis meses"
+  calendar_subscriptions:
+    application_name: "Suscripciones al calendario"
   user_api_key:
     title: 'Autorizar a "%{application_name}"'
     authorize: "Autorizar"
@@ -3596,6 +3615,10 @@ es:
         Hola,
 
         Publicaciones de usuarios nuevos se retuvieron para que sean moderados y actualmente se encuentran en espera de ser revisados. [Aprueba o rechaza desde aquí](%{base_url}/review?type=ReviewableQueuedPost).
+    user_posts_deleted:
+      text_body_template:
+        one: "@%{staff_user} ha eliminado %{count} publicación de @%{user}."
+        other: "@%{staff_user} ha eliminado %{count} publicaciones de @%{user}."
   unsubscribe_link: |
     Para darte de baja de estos correos electrónicos, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -4841,6 +4864,12 @@ es:
     upload_row_too_long: "El archivo CSV debe tener una etiqueta por línea. Opcionalmente, la etiqueta puede ir seguida de una coma, luego el nombre del grupo de etiquetas."
     bulk_create:
       invalid_name: "Nombre de etiqueta inválido."
+      tag_too_long:
+        one: "La etiqueta es demasiado larga (máx. %{count} carácter)."
+        other: "La etiqueta es demasiado larga (máx. %{count} caracteres)."
+      too_many_tags:
+        one: "Hay demasiadas etiquetas. Puedes crear hasta %{count} etiqueta a la vez. Para importaciones más grandes, usa la característica de subir archivo CSV."
+        other: "Hay demasiadas etiquetas. Puedes crear hasta %{count} etiquetas a la vez. Para importaciones más grandes, usa la característica de subir archivo CSV."
     forbidden:
       invalid:
         one: "La etiqueta que seleccionó no se puede usar"

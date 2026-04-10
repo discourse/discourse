@@ -18,7 +18,7 @@ hr:
       vote_title: "Glasaj"
       vote_title_plural: "Glasovi"
       voted_title: "Glas dan"
-      voting_closed_title: "\U0001F510"
+      voting_closed_title: "🔐"
       voting_limit: "Limit"
       votes:
         one: "%{count} glas"

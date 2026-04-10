@@ -3566,6 +3566,7 @@ de:
         optional: (optional)
       archive_topics:
         name: "Archivieren"
+        description: "Archivierte Themen werden bei der Suche und in der Liste der aktuellen Themen ausgeblendet. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Mehr erfahren</a>"
       archive_messages:
         name: "Ins Archiv verschieben"
       move_messages_to_inbox:

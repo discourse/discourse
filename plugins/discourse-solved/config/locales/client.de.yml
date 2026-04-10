@@ -63,6 +63,7 @@ de:
       category_type_support:
         title: "Support"
         not_support_type: "Achtung! Du hast die Möglichkeit deaktiviert, Beiträge in dieser Kategorie als Lösungen auszuwählen. Du findest die entsprechenden Einstellungen, um diese Funktion wieder zu aktivieren, im Tab „Einstellungen“."
+        remove_support_type: "Typ „Unterstützung“ entfernen"
         confirm_remove_support_type: "Bist du sicher, dass du die Möglichkeit, Beiträge in dieser Kategorie als Lösungen auszuwählen, entfernen möchtest? Du kannst sie später auf der Registerkarte Einstellungen wieder aktivieren."
     topic_statuses:
       solved:

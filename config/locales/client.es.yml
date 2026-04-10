@@ -11,9 +11,21 @@ es:
         status: "Estado"
         conditions: "Condiciones"
         arguments: "Parámetros"
+        container_args: "Argumentos del contenedor"
         in_location: "en"
         hidden: "oculto"
+        not_registered: "no registrado"
+        no_visible_children: "no hay niños visibles"
         failed: "falló"
+      ghost_reasons:
+        optional_missing_hint: "Este bloque opcional no se representa porque no está registrado."
+        no_visible_children_hint: "Este bloque contenedor no se representa porque ninguno de sus elementos secundarios es visible."
+        condition_failed_hint: "Este bloque no se representa porque no se cumplen sus condiciones."
+        head_hidden_tail_hint: "Este bloque no se representa porque otro bloque se representó primero en el contenedor «head»."
+    carousel:
+      go_to_slide: "Ir a la diapositiva %{index}"
+      previous: "Diapositiva anterior"
+      next: "Diapositiva siguiente"
     number:
       format:
         separator: ","
@@ -293,11 +305,15 @@ es:
       forwarded: "Reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     skip_to_main_content: "Saltar al contenido principal"
+    skip_links_label: "Omitir enlaces de navegación"
     skip_to_post: "saltar a la publicación %{post_number}"
+    skip_to_where_you_left_off: "Salta a donde lo dejaste (publicación %{post_number})"
+    skip_to_where_you_left_off_last: "Salta a donde lo dejaste (última respuesta, publicación %{post_number})"
     skip_to_last_reply: "Saltar a la última respuesta"
     skip_to_top: "Saltar al principio"
     skip_user_nav: "Saltar al contenido del perfil"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
+    emails_are_disabled_no_smtp: "Todos los correos electrónicos salientes están deshabilitados porque no se ha configurado ningún servidor SMTP. No se pueden enviar correos electrónicos de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
       message: "Hemos actualizado este sitio, <span>vuelva a cargarlo</span> para que todo funcione sin problemas."
@@ -307,10 +323,12 @@ es:
     back_button: "Volver"
     welcome_banner:
       header:
+        new_members: "¡Hola, %{preferred_display_name}!"
         logged_in_members: "¡Te damos la bienvenida de nuevo, %{preferred_display_name}!"
         anonymous_members: "¡Te damos la bienvenida a %{site_name}!"
       search_placeholder: "Buscar"
     impersonation:
+      notice: "Estás suplantando la identidad de %{username}"
       stop: "Deja de suplantar"
     themes:
       default_description: "Por defecto"
@@ -321,12 +339,27 @@ es:
     broken_page_change_alert: "Un controlador onPageChange ha generado un error. Comprueba las herramientas de desarrollo del navegador para obtener más información."
     broken_plugin_alert: "Causado por el plugin «%{name}»"
     broken_transformer_alert: "Hubo un error. Es posible que su sitio no funcione correctamente."
+    broken_block_alert: "Se ha detectado un error de configuración del bloque. Consulta la consola del navegador para obtener más detalles."
+    broken_block_factory_alert: "Error al cargar un bloque. Algunos elementos de la interfaz pueden no mostrarse correctamente."
     critical_deprecation:
       notice: "<b>[Aviso al administrador]</b> %{source} contiene código que necesita actualizarse. (id:%{id})"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>más información</em></a>)"
       theme_source: "Tema <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plugin «%{name}»"
       unknown_source: "Uno de tus temas o plugins"
+    dev_tools:
+      drag_to_move: "Arrastra para mover"
+      toggle_plugin_outlet_debug: "Activar/desactivar la depuración de la salida del plugin"
+      toggle_block_debug: "Activar/desactivar la depuración de bloques"
+      block_debug:
+        outlet_boundaries: "Límites de la salida"
+        visual_overlay: "Superposición visual"
+        ghost_blocks: "Bloques fantasma"
+        condition_debugging: "Depuración de condiciones"
+      toggle_safe_mode: "Activar/desactivar el modo seguro"
+      toggle_verbose_localization: "Activar/desactivar la localización detallada"
+      toggle_mobile_view: "Activar/desactivar vista móvil"
+      disable_dev_tools: "Activar/desactivar herramientas de desarrollo"
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -417,15 +450,37 @@ es:
       pm_title: "Mensajes sugeridos"
     admin_onboarding_banner:
       launch_in_easy_steps: "Empieza en %{step_count} sencillos pasos"
+      congrats_onboarding_complete: "¡Enhorabuena por haber completado el proceso de incorporación!"
       invite_collaborators:
+        title: "Invitar colaboradores"
+        description: "Los primeros miembros ayudan a dar vida a tu comunidad"
         action: "Crear invitación"
       start_posting:
         title: "Empezar a publicar"
+        description: "Dale a la gente algo de qué hablar en conjunto"
+        action: "Ver ideas"
+        choose_option: "¿Cómo te gustaría empezar?"
+        predefined_topics: "Plantillas para romper el hielo"
+        predefined_topics_subtitle: "Da a los nuevos miembros algo de lo que hablar, elige una plantilla para editar y personalízala."
+        predefined_topics_description: "Elige entre una colección de temas para iniciar conversaciones y dar pie a debates"
+        use_predefined: "Explorar plantillas"
         back: "Atrás"
         icebreakers:
+          fun_facts:
+            title: "¿Cuáles son algunos datos curiosos sobre ti?"
+            body: "¡Hola a todos! Me entusiasma empezar esta nueva comunidad. Para empezar, compartamos algo curioso sobre nosotros. Empiezo yo: ¡me encanta el senderismo y explorar nuevos senderos! ¿Qué hay de interesante sobre vosotros?"
+          coolest_thing_you_have_seen_today:
+            title: "¿Qué es lo más guay que habéis visto hoy?"
+            body: "¿Qué es lo más guay que habéis visto o qué os ha pasado hoy? Puede ser cualquier cosa, desde una preciosa puesta de sol hasta un acto de bondad aleatorio. Empiezo yo: ¡he visto a un perro ayudando a una persona mayor a cruzar la calle!"
           introduce_yourself:
             title: "Preséntate"
+            body: "¡Os doy la bienvenida a la comunidad! Vamos a conocernos. Presentaos y hablad un poco de vuestros intereses. Empiezo yo: ¡me apasiona la tecnología y me encanta enseñar a los demás!"
+          what_is_your_favorite_food:
+            title: "¿Cuál es vuestra comida favorita?"
+            body: "¡Compartid vuestra comida favorita con la comunidad! Empiezo yo: me encanta la pizza, sobre todo con extra de queso y pepperoni."
       spread_the_word:
+        title: "¡Haz correr la voz!"
+        description: "Comparte un enlace con todos los miembros de tu red"
         action: "Copiar enlace"
         copied_to_clipboard: "Enlace copiado en el portapapeles!"
     about:
@@ -587,6 +642,7 @@ es:
       resume: "Reanudar"
       remove: "Eliminar"
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
+      bulk_delete: "Eliminar selección"
       bulk_delete_confirmation: "Eliminar borradores"
       bulk_delete_message:
         one: "¿Seguro que quieres eliminar este borrador?"
@@ -605,6 +661,7 @@ es:
       storage_access_prompt: "¿Ya tienes una cuenta en %{site_name}? Permite acceso a tu sesión para comentar con tu nombre."
       allow_access: "Permitir acceso"
       continue_as_guest: "Continuar sin iniciar sesión"
+      be_first_to_reply: "¡Sé la primera persona en responder!"
     topic_count_all:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
@@ -670,13 +727,19 @@ es:
       in_reply_to: "en respuesta a"
       filtered_flagged_by: "Denunciado por"
       unknown:
+        title:
+          one: "Hay elementos pendientes en la cola de revisión del plugin desactivado:"
+          other: "Hay elementos pendientes en la cola de revisión de los plugins desactivados:"
         instruction: "No se mostrarán correctamente hasta que actives el plugin correspondiente. Activa el plugin y actualiza la página. También puedes ignorarlos. <a href='%{url}' target='_blank'>Más información...</a>"
         reviewable_unknown_source: "%{reviewableType} (plugin desconocido)"
         reviewable_known_source: "%{reviewableType} (del plugin «%{pluginName}»)"
         ignore_all: "Ignorar todo"
         enable_plugins: "Activar plugins"
+        delete_confirm: "¿Seguro que quieres eliminar todos los elementos de la cola de revisión creados por plugins desactivados?"
+        ignore_success: "Se han eliminado todos los elementos de la cola de revisión creados por los plugins desactivados."
       explain:
         why: "explica por qué este elemento ha acabado en la cola"
+        title: "Puntuación de los elementos de la cola de revisión"
         formula: "Fórmula"
         subtotal: "Subtotal"
         total: "Total"
@@ -690,8 +753,10 @@ es:
           title: "Los usuarios con los que se ha coincidido en denuncias anteriores reciben puntos extra."
         trust_level_bonus:
           name: "nivel de confianza"
+          title: "Las denuncias creadas por usuarios con niveles de confianza elevados reciben una puntuación más alta."
         type_bonus:
           name: "tipo de bonificación"
+          title: "Algunas denuncias pueden recibir una bonificación por parte del personal para que tengan mayor prioridad."
       revise_and_reject_post:
         title: "Revisar"
         reason: "Motivo"
@@ -700,6 +765,7 @@ es:
         custom_reason: "Describe claramente el motivo"
         other_reason: "Otro..."
         optional: "opcional"
+      stale_help: "Este elemento ha sido resuelto por <b>%{username}</b>."
       claim_help:
         optional: "Puedes reclamar este elemento para evitar que otros lo revisen."
         required: "Debes reclamar los elementos antes de poder revisarlos."
@@ -933,6 +999,9 @@ es:
           one: "Denunciado por %{count} usuario único"
           other: "Denunciado por %{count} usuarios únicos"
         similar_posts: "Infracciones anteriores"
+        flagged_in_timeframe:
+          one: "%{count} denuncia confirmada"
+          other: "%{count} denuncias confirmadas"
         user_activity: "Info del usuario"
         activities:
           joined_on: "se registró: %{joinDate}"
@@ -1072,6 +1141,7 @@ es:
       add_members:
         title: "Añadir usuarios a %{group_name}"
         description: "Introduce la lista de usuarios a los que quieres invitar al grupo o pega una lista separada por comas:"
+        description_usernames_only: "Introduce una lista de nombres de usuario a los que quieres añadir al grupo o pega una lista separada por comas:"
         usernames_placeholder: "nombres de usuario"
         usernames_or_emails_placeholder: "nombres de usuario o correos electrónicos"
         notify_users: "Notificar usuarios"
@@ -1099,6 +1169,7 @@ es:
           title: Interacción
           posting: Publicando
           notification: Notificación
+          self_lockout: "Estás a punto de cambiar la visibilidad del grupo de una forma en la que perderías tu propio acceso. ¿Seguro que quieres continuar?"
         email:
           title: "Correo electrónico"
           enable_smtp: "Activar SMTP"
@@ -1111,6 +1182,7 @@ es:
           smtp_title: "SMTP"
           smtp_instructions: "Cuando activas SMTP para el grupo, todos los correos salientes enviados desde la bandeja de entrada del grupo se enviarán mediante la configuración SMTP especificada aquí en lugar del servidor de correo electrónico configurado para otros correos enviados por su foro."
           additional_settings: "Ajustes adicionales"
+          smtp_disable_confirm: "Si desactivas SMTP, todos los ajustes SMTP se restablecerán y la funcionalidad asociada se desactivará. ¿Seguro que quieres continuar?"
           prefill:
             title: "Rellenar con los ajustes de:"
             gmail: "Gmail"
@@ -1229,6 +1301,8 @@ es:
         make_owner_description: "Hacer a <b>%{username}</b> un propietario de este grupo"
         remove_owner: "Eliminar como propietario"
         remove_owner_description: "Eliminar a <b>%{username}</b> como propietario de este grupo"
+        remove_member_self_lockout: "Si te eliminas de este grupo, perderás el acceso para gestionarlo. ¿Seguro que quieres continuar?"
+        remove_owner_self_lockout: "Si te eliminas como propietario, perderás el acceso para gestionar este grupo. ¿Seguro que quieres continuar?"
         make_primary: "Elegir como principal"
         make_primary_description: "Hacer de este el grupo principal de <b>%{username}</b>"
         remove_primary: "Eliminar como principal"
@@ -1363,6 +1437,9 @@ es:
       organisation: Organización
       phone: Teléfono
       other_accounts: "Otras cuentas con esta dirección IP:"
+      other_accounts_with_ip:
+        one: "%{count} cuenta más con esta dirección IP"
+        other: "%{count} cuentas más con esta dirección IP"
       delete_other_accounts:
         one: "Eliminar %{count}"
         other: "Eliminar %{count}"
@@ -1400,8 +1477,14 @@ es:
       upcoming_changes:
         title: "Próximos cambios"
         for_user:
+          upcoming_change: "Próximo cambio"
           enabled: "¿Activado?"
           why: "¿Por qué?"
+        why_reasons:
+          not_in_specific_groups: "El usuario no pertenece a los grupos específicos necesarios para este cambio"
+          in_specific_groups: "El usuario pertenece a los grupos específicos necesarios para este cambio"
+          enabled_for_everyone: "Este cambio está activado para todos los miembros"
+          enabled_for_no_one: "Este cambio está desactivado para todos los miembros"
       user_notifications:
         filters:
           filter_by: "Filtrar por"
@@ -1606,6 +1689,9 @@ es:
       undo_revoke_access: "Deshacer revocación de acceso"
       api_approved: "Fecha de aprobación:"
       api_last_used_at: "Fecha de último uso:"
+      api_show_permissions:
+        one: "Permisos concedidos (%{count})"
+        other: "Permisos concedidos (%{count})"
       theme: "Tema"
       save_to_change_theme: 'Este tema se actualizará después de que hagas clic en «%{save_text}»'
       home: "Página de inicio por defecto"
@@ -1614,6 +1700,9 @@ es:
         flags_given:
           one: '<span class="%{className}">%{count}</span> denuncia útil'
           other: '<span class="%{className}">%{count}</span> denuncias útiles'
+        flags:
+          one: '<span class="%{className}">%{count}</span> denuncia'
+          other: '<span class="%{className}">%{count}</span> denuncias'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> publicación eliminada'
           other: '<span class="%{className}">%{count}</span> publicaciones eliminadas'
@@ -1725,19 +1814,34 @@ es:
         upcoming_changes: "Próximos cambios"
         calendar_subscriptions: "Calendario"
       calendar_subscriptions:
+        description: "Genera URL de suscripción para sincronizarlas con tu aplicación de calendario favorita (Google Calendar, Apple Calendar, Outlook, etc.). Estas URL son privadas y te permiten acceder a los eventos de tu cuenta (recordatorios de marcadores, eventos del calendario, etc.). Puedes revocar o renovar las URL de suscripción generadas cuando quieras."
+        generate: "Generar URL de suscripción"
+        regenerate: "Regenerar direcciones URL"
+        regenerate_confirm: "Esto invalidará las URL de suscripción al calendario existentes. Todas las aplicaciones de calendario que utilicen las URL antiguas dejarán de recibir actualizaciones. ¿Quieres continuar?"
+        revoke: "Revocar suscripción"
+        revoke_confirm: "Esto revocará las URL de suscripción al calendario existentes. Todas las aplicaciones de calendario que las utilicen dejarán de recibir actualizaciones. ¿Quieres continuar?"
+        urls_warning: "¡Las URL de suscripción ya están listas! Haz clic en los botones de abajo para vincularlas a tu calendario. Nota: Estas URL se muestran solo una vez."
+        bookmarks: "Recordatorios de marcador"
+        bookmarks_description: "Tus marcadores con fechas de recordatorio"
+        copy: "Copiar URL"
         copied: "¡Copiado!"
         add_to_google: "Calendario de Google"
+        add_to_outlook: "Microsoft Outlook"
+        add_to_apple: "Calendario de Apple"
+        active_subscription: "Tienes una suscripción al calendario activa."
       change_password:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"
         error: "(error)"
         action: "Enviar correo electrónico para restablecer la contraseña"
+        staged_user: "Los usuarios temporales no pueden recibir correos electrónicos para reestablecer la contraseña."
         set_password: "Establecer contraseña"
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
         verify_identity: "Para continuar, verifica tu identidad."
         title: "Restablecer contraseña"
         remove: "Eliminar contraseña"
+        remove_disabled: "La cuenta necesita al menos otro método de inicio de sesión (por ejemplo, una clave de acceso o una cuenta externa vinculada) antes de poder eliminar la contraseña."
         remove_detail: "Ya no podrás acceder a tu cuenta usando una contraseña, a no ser que la restablezcas."
       second_factor_backup:
         title: "Códigos de respaldo de la verificación en dos factores"
@@ -2328,10 +2432,17 @@ es:
       no_results: "No hay resultados"
       search: "Buscar…"
       label: "Selecciona las opciones"
+    d_otp:
+      screen_reader:
+        one: Introduce un número
+        other: Introduce %{count} números
     form_kit:
       reset: Restablecer
       optional: opcional
       required: obligatorio
+      errors_summary_title:
+        one: "Corrige este error para continuar"
+        other: "Corrige estos errores para continuar"
       dirty_form: "¡No has enviado tus cambios! ¿Seguro que quieres salir?"
       errors:
         starts_with: "Debe comenzar con %{prefix}"
@@ -2352,7 +2463,9 @@ es:
           one: "Debe tener al menos %{count} carácter"
           other: "Debe tener al menos %{count} caracteres"
       color:
+        available_presets: "Preajustes disponibles"
         already_used: "Ya está en uso"
+        edit_presets: "Editar preajustes de colores"
     close: "Cerrar"
     assets_changed_confirm: "Se ha recibido una actualización de software. ¿Obtener la última versión ahora?"
     logout: "Has cerrado sesión."
@@ -2556,6 +2669,7 @@ es:
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
       resend_activation_email: "Haz clic aquí para enviar el correo electrónico de activación de nuevo."
       omniauth_disallow_totp: "Tu cuenta tiene la autenticación de dos factores activada. Inicia sesión con tu contraseña."
+      works_with: "Funciona con"
       activate_account: "Activar cuenta"
       resend_title: "Volver a enviar el correo electrónico de activación"
       change_email: "Cambiar dirección de correo electrónico"
@@ -2674,6 +2788,7 @@ es:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
       read_only: "solo lectura"
+      read_only_description: "Esta categoría es de solo lectura, por lo que no puedes seleccionarla para este tema."
     timezone_input:
       ambiguous_ist: "El IST es ambiguo, selecciona una zona horaria específica (por ejemplo: Asia/Kolkata)"
     select_kit:
@@ -3298,11 +3413,20 @@ es:
         confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Limpiar todo"
+        unlist_topics: "Eliminar temas de la lista"
+        relist_topics: "Volver a añadir temas a la lista"
         reset_bump_dates: "Restablecer fechas de reflote"
         defer: "Marcar como no leído"
+        delete: "Eliminar temas"
         delete_topics_count:
           one: "Eliminar tema"
           other: "Eliminar temas"
+        delete_posts_count:
+          one: "Eliminar publicación"
+          other: "Eliminar publicaciones"
+        delete_posts_confirmation:
+          one: "¿Seguro que quieres eliminar %{count} publicación?"
+          other: "¿Seguro que quieres eliminar %{count} publicaciones?"
         dismiss: "Descartar"
         dismiss_read: "Descartar todos los temas sin leer"
         dismiss_read_with_selected:
@@ -3332,8 +3456,12 @@ es:
           other: "Descartar nuevos (%{count})"
         toggle: "activar selección de temas en bloque"
         actions: "Acciones en bloque"
+        change_category: "Actualizar categoría"
+        close_topics: "Cerrar temas"
+        archive_topics: "Archivar temas"
         move_messages_to_inbox: "Mover a la bandeja de entrada"
         archive_messages: "Mover al archivo"
+        notification_level: "Actualizar notificaciones"
         change_notification_level: "Cambiar nivel de notificación"
         choose_new_category: "Elige la nueva categoría de los temas:"
         selected_sole_category:
@@ -3342,19 +3470,54 @@ es:
         selected_count:
           one: "%{count} seleccionado"
           other: "%{count} seleccionados"
+        change_tags: "Remplazar etiquetas"
         append_tags: "Añadir etiquetas"
         choose_new_tags: "Elige etiquetas nuevas para estos temas:"
         choose_append_tags: "Añadir etiquetas"
         changed_tags: "Se han cambiado las etiquetas de esos temas."
+        remove_tags: "Eliminar etiquetas"
         confirm_remove_tags:
           one: "Todas las etiquetas se eliminarán de este tema. ¿Estás seguro/a?"
           other: "Todas las etiquetas se eliminarán de <b>%{count}</b> temas. ¿Estás seguro/a?"
+        confirm_update_topics:
+          one: "Actualizar %{count} tema"
+          other: "Actualizar %{count} temas"
+        confirm_close_topics:
+          one: "Cerrar %{count} tema"
+          other: "Cerrar %{count} temas"
+        confirm_archive_topics:
+          one: "Archivar %{count} tema"
+          other: "Archivar %{count} temas"
+        confirm_unlist_topics:
+          one: "Quitar %{count} tema de la lista"
+          other: "Quitar %{count} temas de la lista"
+        confirm_relist_topics:
+          one: "Volver a publicar %{count} tema"
+          other: "Volver a publicar %{count} temas"
+        confirm_archive_messages:
+          one: "Archivar %{count} mensaje"
+          other: "Archivar %{count} mensajes"
+        confirm_move_to_inbox:
+          one: "Mover %{count} mensaje a la bandeja de entrada"
+          other: "Mover %{count} mensajes a la bandeja de entrada"
+        confirm_delete_topics:
+          one: "Eliminar %{count} tema"
+          other: "Eliminar %{count} temas"
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
         notify: "Notificar a los usuarios afectados por el cambio"
         performing: "Realizando operaciones en bloque, espera…"
         completed: "¡Operaciones en bloque completadas con éxito!"
+        completed_count:
+          one: "Se ha actualizado <b>%{count}</b> tema"
+          other: "Se han actualizado <b>%{count}</b> temas"
+        not_completed:
+          one: "No se ha podido actualizar <b>%{count}</b> tema:"
+          other: "No se han podido actualizar <b>%{count}</b> temas:"
+        skipped_count:
+          one: "<b>%{count}</b> tema ya estaba actualizado."
+          other: "<b>%{count}</b> temas ya estaban actualizados."
         error_topic_count:
           one: "%{count} tema"
           other: "%{count} temas"
@@ -3381,6 +3544,7 @@ es:
         name: "Descartar"
       close_topics:
         name: "Cerrar"
+        description: "Los temas cerrados impiden nuevas respuestas. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Más información</a>"
         optional: (opcional)
       archive_topics:
         name: "Archivar"
@@ -3394,24 +3558,34 @@ es:
         name: "Volver a publicar"
       remove_tags:
         name: "Eliminar etiquetas"
+        description: "Elimina todas las etiquetas de los temas seleccionados."
+      append_tags:
+        name: "Añadir etiquetas"
+        description: "Añade las siguientes etiquetas a los temas seleccionados:"
       replace_tags:
         name: "Remplazar etiquetas"
+        description: "Sustituye todas las etiquetas existentes en los temas seleccionados por lo siguiente:"
       delete_topics:
         name: "Eliminar"
+        description: "Elimina permanentemente los temas seleccionados. Esta acción no se puede deshacer."
       update_category:
         name: "Actualizar Categoría"
+        description: "Mueve todos los temas seleccionados a la siguiente categoría:"
       reset_bump_dates:
         name: "Restablecer las fechas de reflote"
+        description: "¿Quieres actualizar las fechas de reflote a la fecha de la última publicación creada? Esto puede afectar a su orden en la lista de temas."
       defer:
         name: "Marcar como no leído"
       update_notifications:
         name: "Actualizar notificaciones"
+        description: "Actualiza tu nivel de notificación personal para los temas seleccionados para:"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
         other: "%{count} publicaciones en el tema"
       create: "Nuevo tema"
       create_long: "Crear un nuevo tema"
+      create_group: "Nuevo tema y borradores"
       open_draft: "Abrir borrador"
       private_message: "Comenzar un mensaje"
       archive_message:
@@ -3580,6 +3754,9 @@ es:
       auto_close_immediate:
         one: "La última publicación se realizó hace %{count} hora, por lo que el tema se cerrará inmediatamente."
         other: "La última publicación se realizó hace %{count} horas, por lo que el tema se cerrará inmediatamente."
+      auto_delete_immediate:
+        one: "La última publicación se realizó hace %{count} hora, por lo que el tema se eliminará inmediatamente."
+        other: "La última publicación se realizó hace %{count} horas, por lo que el tema se eliminará inmediatamente."
       timeline:
         back: "Volver"
         back_description: "Volver a la última publicación sin leer"
@@ -3859,6 +4036,9 @@ es:
       empty: "No hay publicaciones"
       aria_post_number: "%{title}, publicación n.º %{postNumber}"
       bulk:
+        selected:
+          one: "%{count} publicación seleccionada"
+          other: "%{count} publicaciones seleccionadas"
         select_all: "Seleccionar todo"
         clear_all: "Limpiar todo"
         actions: "Acciones en bloque"
@@ -4089,6 +4269,7 @@ es:
           one: "¿Seguro que quieres fusionar estas publicaciones?"
           other: "¿Seguro que quieres fusionar estas %{count} publicaciones?"
       revisions:
+        diff_too_complex: "La diferencia es demasiado compleja para mostrarla. Intente ver las ediciones individuales más pequeñas."
         locale:
           no_locale_set: "No hay ningún idioma establecido"
           locale_removed: "Idioma eliminado"
@@ -4164,6 +4345,7 @@ es:
         instructions: "Comparte un enlace a esta publicación:"
       original_language: "El idioma original de esta publicación es %{language}"
       original_language_and_outdated: "El idioma original de esta publicación es %{language}. La traducción podría estar desactualizada."
+      ai_translation_disclaimer: "Las traducciones generadas por IA pueden ser inexactas."
     category:
       none: "(sin categoría)"
       all: "Todas las categorías"
@@ -4178,9 +4360,13 @@ es:
       advanced: "Avanzado"
       show_advanced: "Ajustes avanzados"
       topic_template: "Plantilla"
+      topic_title_placeholder: "Marcador de posición para el título del tema de la categoría"
+      topic_title_placeholder_placeholder: "[opcional] Marcador de posición para el título del tema personalizado de esta categoría"
       tags: "Etiquetas"
       localizations: "Localizaciones"
       localization:
+        language: "Idioma de la categoría"
+        language_description: "El idioma principal del nombre y la descripción de esta categoría."
         locale: "Idioma local"
         name: "Nombre"
         description: "Descripción"
@@ -4206,10 +4392,15 @@ es:
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
       create: "Crear categoría"
+      create_with_type: "Nueva categoría %{typeName}"
       create_long: "Crear una nueva categoría"
+      settings_apply_to_all_of_type_warning: "Los cambios que se detallan a continuación se aplicarán a todas las categorías de este tipo"
       type_settings_schema:
+        category_settings: "Ajustes de la categoría"
+        category_custom_fields: "Ajustes de la categoría"
         site_settings: "Ajustes del sitio"
       choose_type:
+        title: "Elegir el tipo de categoría"
         requires_plugin: "Requiere plugin"
       create_category: "Crear categoría"
       save: "Guardar categoría"
@@ -4253,12 +4444,14 @@ es:
           emoji: "Emoji"
       color_used: "Color en uso"
       predefined_colors: "Opciones de color predefinidas"
+      name_placeholder: "Se recomiendan una o dos palabras"
       color_placeholder: "Cualquier color web"
       delete_confirm: "¿Seguro que quieres eliminar esta categoría?"
       delete_error: "Se produjo un error al eliminar la categoría."
       list: "Lista de categorías"
       no_description: "Añade una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
+      description_updated: "Descripción actualizada"
       description_expand: "Mostrar más"
       description_collapse: "Mostrar menos"
       already_used: "Este color ya ha sido usado para otra categoría"
@@ -4271,8 +4464,15 @@ es:
         reply: "Responder"
         create: "Crear"
         no_groups_selected: "Ningún grupo tiene acceso. Esta categoría solo será visible por el personal."
+        everyone_full_access: 'Esta categoría es pública. Todo el mundo puede ver, responder y crear publicaciones. Para restringir permisos, quita uno o varios permisos del grupo «%{everyone_group}».'
+        everyone_reply_access: 'Esta categoría es pública. Todo el mundo puede ver y responder a los temas. Para restringir permisos, elimina el grupo «%{everyone_group}».'
+        everyone_see_access: 'Esta categoría es pública. Todo el mundo puede ver las publicaciones. Para restringir permisos, elimina el grupo «%{everyone_group}».'
+        specific_groups_have_access: "Esta categoría es privada; solo los grupos seleccionados pueden ver, responder y crear publicaciones."
+        all_parent_groups_used: "Se han añadido todos los grupos de la categoría principal. Para añadir más grupos, añádelos primero a la categoría principal."
         toggle_reply: "Alternar el permiso para responder"
         toggle_full: "Alternar el permiso para crear temas"
+        inherited: 'Este permiso se ha heredado de «%{everyone_group}»'
+      special_warning: "Esta categoría se ajusta por defecto y los ajustes de seguridad no se pueden editar. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y no puede tener ajustes de seguridad."
       uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
       pending_permission_change_alert: "No has añadido a %{group} a esta categoría. Haz clic en este botón para añadirlos."
@@ -4315,6 +4515,9 @@ es:
         group_restricted: "Privado"
         who_can_see: "Quién puede ver esta categoría"
         who_can_post: "Quién puede publicar en esta categoría"
+        which_groups_can_access: "Qué grupos pueden ver y publicar en esta categoría"
+        more_options_hint: "Más permisos disponibles en <a href>ajustes avanzados</a>."
+        inherited_from_parent: "Los permisos se heredan de la categoría principal. Para refinar, ve a los <a href>ajustes avanzados</a>."
       num_auto_bump_daily: "Número de temas abiertos que se reflotarán diariamente de forma automática:"
       auto_bump_cooldown_days: "Mínimo de días antes de reactivar el mismo tema:"
       navigate_to_first_post_after_read: "Ir a la primera publicación después de haber leído los temas"
@@ -4658,6 +4861,7 @@ es:
         latest: "%{shortcut} Recientes"
         new: "%{shortcut} Nuevos"
         unread: "%{shortcut} Sin leer"
+        unseen: "%{shortcut} sin ver"
         categories: "%{shortcut} Categorías"
         top: "%{shortcut} Destacado"
         bookmarks: "%{shortcut} Marcadores"
@@ -4672,10 +4876,12 @@ es:
         back: "%{shortcut} Volver"
         up_down: "%{shortcut} Desplazar selección &uarr; &darr;"
         open: "%{shortcut} Abrir tema seleccionado"
+        open_new_window: "%{shortcut} Abrir el tema seleccionado en una nueva pestaña/ventana"
         next_prev: "%{shortcut} Sección siguiente/anterior"
         go_to_unread_post: "%{shortcut} Ir a la primera publicación sin leer"
       application:
         title: "Aplicación"
+        create: "%{shortcut} Crear un nuevo tema o mensaje personal"
         notifications: "%{shortcut} Abrir notificaciones"
         hamburger_menu: "%{shortcut} Abrir menú de navegación"
         user_profile_menu: "%{shortcut} Abrir menú de usuario"
@@ -4823,13 +5029,19 @@ es:
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
       synonyms: "Sinónimos"
       synonyms_description: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por <b>%{base_tag_name}</b>."
+      synonyms_inline: "Estos sinónimos se sustituirán por %{base_tag_name}:"
       save: "Guardar el nombre y la descripción de la etiqueta"
       tag_groups_info:
         one: 'Esta etiqueta pertence al grupo: «%{tag_groups}»'
         other: "Esta etiqueta pertence a estos grupos: %{tag_groups}."
+      tag_groups_info_prefix:
+        one: "Esta etiqueta pertenece al grupo "
+        other: "Esta etiqueta pertenece a estos grupos: "
       category_restrictions:
         one: "Solo se puede usar en esta categoría:"
         other: "Solo se puede usar en estas categorías:"
+      restricted_to: "Restringido a"
+      no_synonyms: "Esta etiqueta no tiene sinónimos."
       edit_synonyms: "Editar sinónimos"
       add_synonyms_label: "Añadir sinónimos:"
       add_synonyms: "Añadir"
@@ -4852,15 +5064,26 @@ es:
       description: "Descripción"
       settings:
         title: "Ajustes"
+        edit_title: "Editar etiqueta: %{name}"
+        edit_tag_prefix: "Editar etiqueta:"
+        select_tag: "Seleccionar etiqueta para editarla"
         general: "General"
         localizations: "Localizaciones"
         back: "Atrás"
         name: "Nombre"
         slug: "Slug"
         name_placeholder: "Nombre de la etiqueta"
+        slug_placeholder: "Slug de la etiqueta (opcional, se genera automáticamente a partir del nombre)"
+        saved: "Ajustes de etiqueta guardados"
+        no_synonyms: "No se han definido sinónimos para esta etiqueta."
+        add_synonym_placeholder: "Buscar etiquetas para añadir como sinónimos..."
         synonyms_subtitle: "Cuando las siguientes etiquetas sean usadas, serán reemplazadas por %{name}"
         save: "Guardar etiqueta"
+        delete: "Eliminar etiquetas"
+        synonyms_hint: "Cuando las etiquetas anteriores se usen, se reemplazarán por %{baseTagName}."
+        add_synonyms_confirm: "Cualquier lugar que actualmente tenga %{synonymNames} se cambiará por %{tagName}. ¿Seguro que quieres hacer este cambio?"
       localization:
+        hint: "Añade traducciones para mostrar diferentes nombres de etiquetas a los usuarios de diferentes idiomas."
         locale: "Idioma local"
         name: "Nombre"
         description: "Descripción"
@@ -4877,6 +5100,12 @@ es:
       upload_successful: "Etiquetas subidas con éxito"
       bulk_create_inline_placeholder: "Crear etiquetas (separadas por comas)"
       bulk_create_button: "Crear"
+      bulk_create_success:
+        one: "Se ha creado %{count} etiqueta:"
+        other: "Se han creado %{count} etiquetas:"
+      bulk_create_already_exist:
+        one: "%{count} etiqueta ya existe:"
+        other: "%{count} etiquetas ya existen:"
       delete_unused_confirmation:
         one: "%{count} etiqueta será eliminada: %{tags}"
         other: "%{count} etiquetas serán eliminadas: %{tags}"
@@ -5839,6 +6068,7 @@ es:
         select_setting: "Selecciona un ajuste del sitio para ver los valores actuales del tema"
         add: "Ir a ajustes del tema del sitio"
         help: "El tema que estás usando actualmente es <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Ve a la <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>página de configuración del tema</a> para modificar los ajustes del tema del sitio, o haz clic en un tema vinculado en la siguiente tabla para editar sus ajustes."
+        site_setting_warning: 'El tema por defecto de tu sitio gestiona estos ajustes (%{defaultThemeName}). Puedes modificarlo desde <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">la página de edición del tema</a>.'
       search:
         modal_title: "Busca todo en administración"
         title: "Buscar"
@@ -5870,6 +6100,8 @@ es:
         new_features:
           title: "Novedades"
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
+          no_new_features_found: "No hay elementos en el feed o el filtro que has seleccionado no ha mostrado resultados. Puedes ver anuncios anteriores de nuevas características en <a href='%{url}' target='_blank'>la comunidad Discourse Meta</a>."
+          no_new_features_error: "Se ha producido un error al cargar el feed. Puedes ver anuncios anteriores de nuevas características en <a href='%{url}' target='_blank'>la comunidad Discourse Meta</a>."
           learn_more: "Más información..."
         last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
@@ -5937,6 +6169,7 @@ es:
           daily: Diariamente
           monthly: Mensualmente
           weekly: Semanalmente
+          chart_group_period: "Seleccionar un período"
           value_so_far: "%{value} (hasta ahora)"
           dates: "Fechas (UTC)"
           groups: "Todos los grupos"
@@ -5948,7 +6181,9 @@ es:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de búsqueda</a>'
             disabled: 'El informe de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recopilar datos.'
+          average_chart_label: Se muestran promedios, no totales
           sort_button: "Ordenar por %{column}"
+          sort_button_current: "Ordenado por %{column}, %{direction}"
           sort_ascending: "ascendente"
           sort_descending: "descendente"
           filters:
@@ -6054,6 +6289,7 @@ es:
         cancel: "Cancelar"
         continue: "Continuar"
         copy_key: "Copiar"
+        key_copied_to_clipboard: "Clave API copiada al portapapeles"
         back: "Volver a Claves API"
         revoke: "Revocar"
         undo_revoke: "Deshacer la revocación"
@@ -6120,6 +6356,7 @@ es:
               recover: Recuperar un tema.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
               status: "Actualiza el estado de un tema. Estado: cerrado, archivado, visible, anclado. Activado: verdadero, falso. Especifica un category_id aquí y en la carga útil de la solicitud para permitir solo cambios de estado en temas de esa categoría."
+              change_owner: Cambia la propiedad de las publicaciones en un tema.
             posts:
               edit: Edita cualquier publicación o una específica.
               delete: Eliminar una publicación.
@@ -6489,8 +6726,10 @@ es:
           install: "Instalar"
           theme_site_settings:
             title: "Ajustes del tema del sitio"
+            description: "Ajustes que permiten que los temas tengan un mayor control sobre la experiencia completa del sitio anulando un pequeño subconjunto de ajustes básicos del sitio."
           themes:
             title: "Temas"
+            description: "Temas que se aplican a todo el sitio web y que cambian la apariencia general del sitio para todos los usuarios."
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
             new_theme: "Nuevo tema"
             back: "Volver a los temas"
@@ -6556,6 +6795,8 @@ es:
             title: "Opciones de color"
             toggle: "Seleccionable por el usuario"
             toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
+            toggle_default_light_on_theme: "La paleta de colores es la paleta clara por defecto en el tema por defecto (%{themeName})"
+            toggle_default_dark_on_theme: "La paleta de colores es la paleta oscura por defecto en el tema por defecto (%{themeName})"
           colors:
             title: "Colores"
           save_changes: "Guardar cambios"
@@ -6646,6 +6887,7 @@ es:
             confirm: "¿Seguro que quieres destruir esta copia de seguridad?"
           restore:
             is_disabled: "La restauración está desactivada actualmente. Para activarla, visita los <a href='%{url}'>ajustes del sitio</a>."
+            is_disabled_title: "La restauración está desactivada actualmente. Para activarla, busca «activar la restauración» en los ajustes del sitio."
             label: "Restaurar"
             title: "Restaurar la copia de seguridad"
             confirm: "¿Seguro que quieres restaurar esta copia de seguridad?"
@@ -6688,6 +6930,8 @@ es:
         delete: "Eliminar"
         delete_confirm: '¿Seguro que quieres eliminar «%{theme_name}»?'
         bulk_delete: "¿Estás seguro/a?"
+        bulk_themes_delete_confirm: "Esto desinstalará los siguientes temas, que ya no podrán ser utilizados por ningún usuario de tu sitio:"
+        bulk_components_delete_confirm: "Esto desinstalará los siguientes componentes, que ya no podrán ser utilizados por ningún usuario de tu sitio:"
         color: "Color"
         opacity: "Opacidad"
         copy: "Duplicar"
@@ -6699,9 +6943,12 @@ es:
           title: "Correo electrónico"
           subject: "Asunto"
           multiple_subjects: "Esta plantilla de correo electrónico tiene múltiples asuntos."
+          multiple_bodies: "Esta plantilla de correo electrónico tiene múltiples cuerpos."
           body: "Cuerpo del correo electrónico"
           revert: "Revertir los cambios"
           revert_confirm: "¿Seguro que quieres revertir los cambios?"
+          search_templates: "Filtrar por nombre de plantilla..."
+          no_templates_found: "No hay plantillas que coincidan con tus filtros."
           edit: "Editar"
           back: "Volver a plantillas"
         component:
@@ -6766,6 +7013,7 @@ es:
           dark_color_scheme: "Paleta de color oscuro"
           default_light_scheme: "Claro (predeterminado)"
           color_scheme_select: "Selecciona colores para usar en el tema."
+          only_theme_color_schemes: "Este tema limita las paletas de colores que se pueden utilizar."
           dark_color_scheme_select: "Selecciona colores para usar en el tema en modo oscuro."
           edit_colors: "Editar colores"
           custom_sections: "Secciones personalizadas:"
@@ -6826,6 +7074,7 @@ es:
           import_web_tip: "Repositorio que contiene el tema"
           direct_install_tip: "¿Seguro que quieres instalar <strong>%{name}</strong> del repositorio listado abajo?"
           import_web_advanced: "Avanzado…"
+          import_file_tip: "archivo .tar.gz o .zip contiene un tema"
           is_private: "El tema está en un repositorio privado de git"
           finish_install: "Terminar la instalación del tema"
           last_attempt: "La instalación no ha terminado, último intento:"
@@ -6980,6 +7229,7 @@ es:
             reset: "Restablecer filtros"
           default_dark_badge:
             text: "Oscuro por defecto"
+            title: "Paleta de colores oscuros por defecto"
           system_palette: "Esta es una paleta de colores incorporada, no se puede editar ni eliminar."
           back_to_colors: "Volver a las paletas de colores"
           long_title: "Paletas de colores"
@@ -7300,6 +7550,11 @@ es:
             delete_associated_accounts: "eliminar cuentas asociadas"
             change_theme_site_setting: "cambiar ajustes del tema del sitio"
             stop_impersonating: "deja de suplantar"
+            upcoming_change_toggled: "cambio próximo activado"
+            upcoming_change_available: "cambio próximo disponible"
+            change_site_setting_groups: "cambiar grupos de configuración del sitio"
+            discourse_id_regenerate_credentials: "regenerar credenciales de Discourse ID"
+            configure_category_type: "configurar tipo de categoría"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos electrónicos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
@@ -7354,6 +7609,7 @@ es:
         clear_all: Limpiar todo
         clear_all_confirm: "¿Quitar todas las palabras vigiladas para la acción %{action}?"
         invalid_regex: 'La palabra vigilada «%{word}» no es una expresión regular válida.'
+        invalid_regex_multiple: "Expresiones regulares no válidas:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Las palabras vigiladas son expresiones regulares</a> y no incluyen automáticamente los límites de las palabras. Si quieres que la expresión regular coincida con palabras enteras, incluye <code>\b</code> al principio y al final de tu expresión regular.'
         actions:
           block: "Bloquear"
@@ -7386,6 +7642,7 @@ es:
           success: "Éxito"
           exists: "Ya existe"
           upload: "Añadir desde archivo"
+          upload_successful: "Se ha subido correctamente. Las palabras se procesarán en breve."
           case_sensitivity_label: "Distingue entre mayúsculas y minúsculas"
           case_sensitivity_description: "Solo palabras con caracteres coincidentes"
           html_label: "HTML"
@@ -7598,6 +7855,17 @@ es:
         penalty_post_actions: "¿Qué te gustaría hacer con la publicación asociada?"
         penalty_post_delete: "Eliminar la publicación"
         penalty_post_delete_replies: "Eliminar la publicación + sus respuestas"
+        penalty_post_delete_all: "Eliminar todos los temas del usuario + sus respuestas"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Esto eliminará
+          { TOPICS, plural,
+              one {# tema}
+            other {# temas}
+          } y
+          { REPLIES, plural,
+              one {# respuesta}
+            other {# respuestas}
+          }. <b>Esta acción no se puede deshacer.</b>¿Seguro que quieres continuar?</span>
         penalty_post_edit: "Editar la publicación"
         penalty_post_none: "No hacer nada"
         penalty_count: "Contador de faltas"
@@ -7655,6 +7923,11 @@ es:
         approve_bulk_success: "¡Perfecto! Todos los usuarios seleccionados han sido aprobados y notificados."
         time_read: "Tiempo de lectura"
         post_edits_count: "Ediciones de la publicación"
+        upcoming_changes:
+          title: "Próximos cambios del usuario"
+          description: "Para modificar grupos o para activar o desactivar los próximos cambios, consulta la <a href='%{basePath}/admin/config/upcoming-changes'>página de configuración de próximos cambios</a>."
+          filter_placeholder: "Filtrar los próximos cambios por nombre o descripción"
+          filter_no_results: "No se han encontrado cambios próximos"
         exports:
           title: Exportaciones de usuario
           download:
@@ -7679,6 +7952,9 @@ es:
           button: "Eliminar todas las publicaciones"
           progress:
             title: "Progreso de la eliminación de publicaciones"
+            description:
+              one: "Eliminando %{count} publicación de @%{username}..."
+              other: "Eliminando %{count} publicaciones de @%{username}..."
           confirmation:
             title: "Eliminar todas las publicaciones de @%{username}"
             description: |
@@ -7690,6 +7966,7 @@ es:
             text: "eliminar publicaciones de @%{username}"
             delete: "Eliminar publicaciones de @%{username}"
             cancel: "Cancelar"
+          all_enqueued: "Todas las publicaciones de @%{username} se han puesto en cola para su eliminación"
         merge:
           button: "Fusionar"
           prompt:
@@ -7717,6 +7994,7 @@ es:
         merging_user: "Fusionando usuario…"
         merge_failed: "Ha ocurrido un error al fusionar los usuarios."
         delete_forbidden_because_admin: "Los administradores no pueden ser eliminados."
+        delete_posts_forbidden_because_admin: "No se pueden eliminar todas las publicaciones de los administradores."
         delete_forbidden:
           one: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} día, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."
           other: "Los usuarios no se pueden eliminar si tienen publicaciones. Elimina todas las publicaciones antes de tratar de eliminar a un usuario. (No se pueden eliminar las publicaciones que se hayan creado hace más de %{count} días)"
@@ -7897,6 +8175,7 @@ es:
         interpolation_keys: "Claves de interpolación disponibles:"
         interpolation_key_insert: "Haz clic para insertar"
         interpolation_key_used: "Ya está en uso"
+        interpolation_key_invalid: "Clave desconocida. No se interpolará."
         outdated:
           title: "Esta traducción está anticuada"
           description: "La traducción por defecto de esta clave ha cambiado desde que se creó esta anulación. Comprueba a continuación que tu traducción coincide con cualquier cambio que se haya hecho en la intención original."
@@ -7985,6 +8264,7 @@ es:
           experimental: "Experimental"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
+          already_exists: "Ya existe una entrada para %{key}."
         default_categories:
           modal_description:
             one: "¿Quieres aplicar este cambio históricamente? Esto cambiará las preferencias de %{count} usuario existente."
@@ -8009,13 +8289,20 @@ es:
             prompt: "Cambiar esta configuración puede tener consecuencias de largo alcance o no deseadas para tu sitio. ¿Seguro que quieres proceder?"
             confirm: "Sí, seguro"
           min_password_length:
+            prompt: "Estás a punto de cambiar la política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres continuar?"
             confirm: "Sí, actualizar la política de contraseñas"
           min_admin_password_length:
+            prompt: "Estás a punto de cambiar la política de contraseñas. Esto afectará a todos los administradores que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres continuar?"
             confirm: "Sí, actualizar la política de contraseñas"
           password_unique_characters:
+            prompt: "Estás a punto de cambiar la política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres continuar?"
             confirm: "Sí, actualizar la política de contraseñas"
           block_common_passwords:
+            prompt: "Estás a punto de cambiar la política de contraseñas. Esto afectará a todos los usuarios que cambien sus contraseñas a partir de ahora. ¿Seguro que quieres continuar?"
             confirm: "Sí, actualizar la política de contraseñas"
+          clean_up_inactive_users_after_days:
+            prompt: "Si se establece este valor en cualquier cantidad distinta de 0, los usuarios que permanezcan inactivos durante ese número de días serán eliminados permanentemente. ¿Seguro que quieres continuar?"
+            confirm: "Sí, entiendo que los usuarios inactivos se eliminarán permanentemente, a menos que establezca este valor en 0."
         job_status:
           completed: "Actualización completada"
           enqueued: "Actualización en curso"
@@ -8158,6 +8445,7 @@ es:
         category: "Publicar en categoría"
         tags: "Etiquetas del tema"
         post_author: "Autor de la publicación"
+        post_author_description: "Autor para todos los temas incrustados de este anfitrión, anulando las metaetiquetas de la página del blog. Déjalo vacío para leer el autor de la página <meta name='discourse-username'> o <meta name='author'> de las etiquetas."
         post_author_with_default: "Autor de la publicación (el valor predeterminado es %{author})"
         add_host: "Añadir anfitrión"
         posts_and_topics: "Configuración de publicaciones y temas"

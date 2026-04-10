@@ -611,6 +611,9 @@ es:
         short:
           one: "%{count} día"
           other: "%{count} días"
+        long:
+          one: "%{chatSettingsLink} están configurados para conservar los mensajes del canal durante %{count} día."
+          other: "%{chatSettingsLink} están configurados para conservar los mensajes del canal durante %{count} días."
       flags:
         off_topic: "Este mensaje no es relevante para la discusión actual, tal y como se define en el título del canal, y probablemente debería moverse a otro lugar."
         inappropriate: "Este mensaje tiene un contenido que una persona razonable consideraría ofensivo, abusivo o que viola las <a href=\"%{basePath}/guidelines\">directrices de nuestra comunidad</a>."

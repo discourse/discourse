@@ -551,7 +551,7 @@ zh_CN:
       adding_too_many_users:
         other: "一次最多可以添加 %{count} 个用户"
       usernames_or_emails_required: "必须存在用户名或电子邮件"
-      cannot_add_emails: "只有用户名才能添加成员到此群组。如需通过电子邮件邀请，请使用“邀请”按钮。"
+      cannot_add_emails: "只有用户名才能用于将成员添加到此群组。如需通过电子邮件邀请，请使用“邀请”按钮。"
       counting_too_many_email_domains:
         other: "一次最多可以统计 %{count} 个电子邮件域"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
@@ -1164,10 +1164,10 @@ zh_CN:
     visits:
       title: "用户访问"
       xaxis:
-        desktop: "桌面"
-        mobile: "移动"
+        desktop: "桌面设备"
+        mobile: "移动设备"
       yaxis: "访问次数"
-      description: "按设备类型登录的用户访问次数。"
+      description: "按设备类型的登录用户访问次数。"
     signups:
       title: "注册"
       xaxis: "天"
@@ -1234,7 +1234,7 @@ zh_CN:
       title: "DAU / MAU"
       xaxis: "天"
       yaxis: "DAU/MAU"
-      description: "最后一天返回的月活跃会员比例。该百分比反映了用户回归的频率，也称为社区“粘性”。目标是高于 20%。"
+      description: "最后一天返回的每月活跃会员比例。此百分比反映用户回归的频率，也称为社区“粘性”。目标是高于 20%。"
     daily_engaged_users:
       title: "每日参与用户"
       xaxis: "天"
@@ -2168,7 +2168,7 @@ zh_CN:
     allow_likes_in_anonymous_mode: "启用此设置，允许匿名浏览您的站点的用户为帖子点赞。激活后，用户在为帖子或话题点赞时可以选择隐藏其身份。此设置需要先启用 `allow anonymous mode`。"
     anonymous_posting_allowed_groups: "可以启用匿名发帖的群组。此设置需要启用 `allow anonymous mode` 设置。"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
-    hide_user_profiles_from_public: "禁用匿名用户的用户卡和用户配置文件。用户目录中仍将提供汇总的统计数据。"
+    hide_user_profiles_from_public: "禁用匿名用户的用户卡片和用户个人资料。用户目录中仍将提供汇总的统计数据。"
     hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户个人资料，并隐藏信任级别 1 的用户，直到他们首次发帖。此功能在 must_approve_users 和 invite_only 网站上无条件禁用。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
     hide_user_activity_tab: "隐藏用户个人资料中的活动标签页，管理员和自己除外。"
@@ -2380,7 +2380,7 @@ zh_CN:
     show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
     enable_site_owner_onboarding: "在首页上向新管理员显示面板以帮助他们开始。重新启用此设置以再次查看入门步骤。"
-    site_owner_onboarding_max_days: "网站创建后显示入门横幅的最大天数。"
+    site_owner_onboarding_max_days: "站点创建后显示入门横幅的最大天数。"
     enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎成员并允许他们搜索站点内容"
     welcome_banner_image: "设置在欢迎横幅背景中显示的图片。"
     welcome_banner_location: "确定欢迎横幅在页面上的显示位置。"
@@ -2542,8 +2542,8 @@ zh_CN:
       exclude_tag_group: "排除带有特定标签组的标签的话题"
       activity_before: "显示最新活动在某个日期之前（YYYY-MM-DD 或几天前）的话题"
       activity_after: "显示最新活动在某个日期之后（YYYY-MM-DD 或几天前）的话题"
-      bookmarked_before: "显示指定日期（YYYY-MM-DD 或天数前）之前收藏的主题"
-      bookmarked_after: "显示按日期（YYYY-MM-DD 或天数）后收藏的主题"
+      bookmarked_before: "显示指定日期（YYYY-MM-DD 或天数前）之前收藏的话题"
+      bookmarked_after: "显示指定日期（YYYY-MM-DD 或天数）后收藏的话题"
       created_before: "显示在某个日期之前（YYYY-MM-DD 或几天前）创建的话题"
       created_after: "显示在某个日期之后（YYYY-MM-DD 或几天前）创建的话题"
       created_by: "显示特定用户或群组创建的话题"
@@ -2947,32 +2947,32 @@ zh_CN:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
     text_body_template: |
-      太好了！[Discourse](https://www.discourse.org) 新版本已发布！
+      太好了！新版本的 [Discourse](https://www.discourse.org) 已发布！
 
-      您的版本： %{installed_version}
+      您的版本：%{installed_version}
       新版本：**%{new_version}**
 
-      - 使用我们便捷的 **一键浏览器更新](%{base_url}/admin/update)** 进行更新
+      - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[发行说明](https://releases.discourse.org/changelog/%{new_version})了解新增功能
+      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
 
-      - 访问[meta.discourse.org](https://meta.discourse.org)获取Discourse的新闻、讨论和支持
+      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
   new_version_mailer_with_notes:
     title: "带版本说明的新版本邮件"
     subject_template: "[%{email_prefix}] 有可用更新"
     text_body_template: |
-      太好了！[Discourse](https://www.discourse.org) 新版本上线啦！
+      太好了！新版本的 [Discourse](https://www.discourse.org) 已发布！
 
-      您的版本： %{installed_version}
+      您的版本：%{installed_version}
       新版本：**%{new_version}**
 
-      - 使用我们便捷的 **[一键浏览器更新](%{base_url}/admin/update)** 进行更新
+      - 使用我们便捷的**[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[发行说明](https://releases.discourse.org/changelog/%{new_version})中的新增功能
+      - 查看[版本说明](https://releases.discourse.org/changelog/%{new_version})了解最新变化
 
-      - 访问[meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
+      - 访问 [meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
 
-      ### 发行说明
+      ### 版本说明
 
       %{notes}
   flag_reasons:

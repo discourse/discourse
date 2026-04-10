@@ -20,12 +20,14 @@ de:
     patreon_verbose_log: 'aktiviert die ausführliche Protokollierung des Patreon-Payload'
     patreon_donation_prompt_enabled: "Spendenaufforderung aktivieren?"
     patreon_donation_prompt_show_after_topics: "Zeige Spendenaufforderung nach n Themen an"
+    patreon_api_version: "Patreon API Version. Version 1 ist veraltet - erstelle einen neuen OAuth-Client auf Patreon und wechsle zu Version 2."
     patreon_donation_prompt_campaign_url: "URL der Spendenaufforderungskampagne"
     errors:
       patreon_creator_username_not_set: "Bevor du das Patreon-Log-in aktivieren kannst, musst du den Patreon-Ersteller-Discourse-Benutzernamen einstellen."
   dashboard:
     problem:
       access_token_invalid: "Die Werte für die Zugangs- und Aktualisierungs-Token des Patreon-Erstellers sind falsch. Du musst neue Token von der <a href='https://www.patreon.com/platform/documentation/clients'>Patreon-Website</a> kopieren und in die <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>Website-Einstellungen</a> einfügen."
+      patreon_api_v1_deprecated: "Du verwendest Patreon API v1, die veraltet ist. Bitte <a href='https://www.patreon.com/portal/registration/register-clients'>erstelle einen neuen v2 OAuth-Client auf Patreon</a>, aktualisiere deine Anmeldedaten und wechsle in den <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon_api_version'>Seiteneinstellungen</a> zu API v2."
   patreon:
     error:
       invalid_response: "Ungültige Antwort der Patreon-API"

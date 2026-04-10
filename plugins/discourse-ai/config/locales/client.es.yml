@@ -232,6 +232,9 @@ es:
           post_raw_translator: "Traductor de publicaciones"
           topic_title_translator: "Traductor de títulos de temas"
           short_text_translator: "Traductor de textos cortos"
+          schedule_topic_success:
+            one: "Traducción programada para %{count} publicación no traducida."
+            other: "Traducción programada para %{count} publicaciones no traducidas."
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
@@ -345,6 +348,15 @@ es:
           custom: "Personalizado..."
       ai_agent:
         ai_tools: "Herramientas"
+        mcp_server_tool_count:
+          one: "%{count} herramienta"
+          other: "%{count} herramientas"
+        mcp_server_enabled_tool_count:
+          one: "%{count} herramienta activada"
+          other: "%{count} herramientas activadas"
+        mcp_server_enabled_tools:
+          one: "%{count} de %{total} herramienta activada"
+          other: "%{count} de %{total} herramientas activadas"
         tool_strategies:
           all: "Aplicar a todas las respuestas"
           replies:
@@ -380,9 +392,18 @@ es:
         save: "Guardar"
         enabled: "¿Activado?"
         tools: "Herramientas habilitadas"
+        tool_count_value:
+          one: "%{count} herramienta"
+          other: "%{count} herramientas"
+        mcp_server_cost_value:
+          one: "~%{tokens} tokens, %{count} herramienta"
+          other: "~%{tokens} tokens, %{count} herramientas"
         mcp_tools_modal:
           select_all: "Seleccionar todo"
           clear_all: "Limpiar todo"
+          selection_summary:
+            one: "%{count} de %{total} herramienta seleccionada"
+            other: "%{count} de %{total} herramientas seleccionadas"
         forced_tools: "Herramientas forzadas"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
@@ -502,9 +523,18 @@ es:
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
+        tool_count:
+          one: "%{count} herramienta"
+          other: "%{count} herramientas"
         tools_modal:
+          summary:
+            one: "Este servidor actualmente ofrece %{count} herramienta."
+            other: "Este servidor actualmente ofrece %{count} herramientas."
           parameters: "Parámetros"
           required: "Obligatorio"
+        test_summary:
+          one: "Se ha descubierto %{count} herramienta usando el protocolo %{version}."
+          other: "Se han descubierto %{count} herramientas usando el protocolo %{version}."
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"
@@ -729,11 +759,16 @@ es:
         semantic_search: "Temas (semánticos)"
         semantic_search_results:
           unavailable: "Resultados de IA no disponibles"
+          zero_results_expanded: "No se han encontrado resultados, mostrando %{count} resultados de IA"
         semantic_search_tooltips:
           results_explanation: "Cuando esté activada, se añadirán resultados de búsqueda de IA adicionales a continuación."
           invalid_sort: "Los resultados de la búsqueda deben ordenarse por Relevancia para mostrar resultados de IA"
         semantic_search_unavailable_tooltip: "Los resultados de la búsqueda deben ordenarse por Relevancia para mostrar resultados de IA"
         ai_generated_result: "Resultado de búsqueda encontrado mediante IA"
+        ai_results_notice:
+          few_results:
+            one: "Se ha encontrado %{count} coincidencia. Mostrando resultados relacionados."
+            other: "Se han encontrado %{count} coincidencias. Mostrando resultados relacionados."
         quick_search:
           suffix: "en todos los temas y publicaciones con IA"
       ai_artifact:
