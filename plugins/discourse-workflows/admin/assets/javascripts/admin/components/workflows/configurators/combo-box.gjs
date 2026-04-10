@@ -9,6 +9,7 @@ import {
   propertyOptionLabel,
   propertySelectNoneKey,
 } from "../../../lib/workflows/property-engine";
+import ExpressionWrapper from "./expression-wrapper";
 
 function optionValue(option, valueProperty) {
   return option[valueProperty] ?? option.id ?? option.value;
@@ -107,13 +108,19 @@ export default class ComboBoxField extends Component {
   }
 
   <template>
-    <ComboBox
-      @content={{this.options}}
-      @nameProperty="name"
-      @value={{@field.value}}
-      @valueProperty="id"
-      @onChange={{this.handleChange}}
-      @options={{hash filterable=this.filterable none=this.none}}
-    />
+    <ExpressionWrapper
+      @field={{@field}}
+      @supportsExpression={{@supportsExpression}}
+      @placeholder={{@placeholder}}
+    >
+      <ComboBox
+        @content={{this.options}}
+        @nameProperty="name"
+        @value={{@field.value}}
+        @valueProperty="id"
+        @onChange={{this.handleChange}}
+        @options={{hash filterable=this.filterable none=this.none}}
+      />
+    </ExpressionWrapper>
   </template>
 }

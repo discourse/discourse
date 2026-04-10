@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { propertySelectNoneKey } from "../../../lib/workflows/property-engine";
+import ExpressionWrapper from "./expression-wrapper";
 
 export default class DataTableColumnSelect extends Component {
   get none() {
@@ -31,16 +32,22 @@ export default class DataTableColumnSelect extends Component {
   }
 
   <template>
-    {{#if this.options.length}}
-      <ComboBox
-        class="workflows-data-table-column-select"
-        @content={{this.options}}
-        @nameProperty="name"
-        @value={{@field.value}}
-        @valueProperty="id"
-        @onChange={{this.handleChange}}
-        @options={{hash none=this.none}}
-      />
-    {{/if}}
+    <ExpressionWrapper
+      @field={{@field}}
+      @supportsExpression={{@supportsExpression}}
+      @placeholder={{@placeholder}}
+    >
+      {{#if this.options.length}}
+        <ComboBox
+          class="workflows-data-table-column-select"
+          @content={{this.options}}
+          @nameProperty="name"
+          @value={{@field.value}}
+          @valueProperty="id"
+          @onChange={{this.handleChange}}
+          @options={{hash none=this.none}}
+        />
+      {{/if}}
+    </ExpressionWrapper>
   </template>
 }

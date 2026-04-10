@@ -15,7 +15,7 @@ function columnTypeToFieldType(columnType) {
 
 export default class DataTableConditionBuilder extends Component {
   get dataTable() {
-    const id = parseInt(this.args.dataTableId, 10);
+    const id = parseInt(this.args.configuration?.data_table_id, 10);
     return this.args.metadata?.data_tables?.find((dt) => dt.id === id) || null;
   }
 

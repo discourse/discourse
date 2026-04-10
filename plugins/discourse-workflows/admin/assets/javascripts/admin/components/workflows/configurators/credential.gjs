@@ -8,6 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import CredentialModal from "../credential/modal";
+import ExpressionWrapper from "./expression-wrapper";
 
 export default class Credential extends Component {
   @service modal;
@@ -62,23 +63,29 @@ export default class Credential extends Component {
   }
 
   <template>
-    <div class="workflows-property-engine-credential">
-      <ComboBox
-        @content={{this.options}}
-        @value={{@field.value}}
-        @nameProperty="name"
-        @valueProperty="id"
-        @onChange={{this.handleChange}}
-        @options={{hash none="discourse_workflows.credentials.select_type"}}
-      />
-      {{#unless @field.value}}
-        <DButton
-          @action={{this.setupCredential}}
-          @label="discourse_workflows.credentials.set_up_credential"
-          @icon="plus"
-          class="btn-default"
+    <ExpressionWrapper
+      @field={{@field}}
+      @supportsExpression={{@supportsExpression}}
+      @placeholder={{@placeholder}}
+    >
+      <div class="workflows-property-engine-credential">
+        <ComboBox
+          @content={{this.options}}
+          @value={{@field.value}}
+          @nameProperty="name"
+          @valueProperty="id"
+          @onChange={{this.handleChange}}
+          @options={{hash none="discourse_workflows.credentials.select_type"}}
         />
-      {{/unless}}
-    </div>
+        {{#unless @field.value}}
+          <DButton
+            @action={{this.setupCredential}}
+            @label="discourse_workflows.credentials.set_up_credential"
+            @icon="plus"
+            class="btn-default"
+          />
+        {{/unless}}
+      </div>
+    </ExpressionWrapper>
   </template>
 }

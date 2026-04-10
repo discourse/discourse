@@ -5,6 +5,7 @@ import {
   normalizeOptions,
   propertyOptionLabel,
 } from "../../../lib/workflows/property-engine";
+import ExpressionWrapper from "./expression-wrapper";
 
 export default class MultiComboBox extends Component {
   get options() {
@@ -27,10 +28,16 @@ export default class MultiComboBox extends Component {
   }
 
   <template>
-    <MultiSelect
-      @content={{this.options}}
-      @value={{this.value}}
-      @onChange={{@field.set}}
-    />
+    <ExpressionWrapper
+      @field={{@field}}
+      @supportsExpression={{@supportsExpression}}
+      @placeholder={{@placeholder}}
+    >
+      <MultiSelect
+        @content={{this.options}}
+        @value={{this.value}}
+        @onChange={{@field.set}}
+      />
+    </ExpressionWrapper>
   </template>
 }

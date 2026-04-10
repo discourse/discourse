@@ -28,19 +28,21 @@ export default class DataTableColumns extends Component {
 
   <template>
     {{#if this.columns.length}}
-      <@form.Object @name={{@fieldName}} as |object|>
-        {{#each this.columns key="name" as |column|}}
-          <Field
-            @form={{object}}
-            @formApi={{@formApi}}
-            @fieldName={{column.name}}
-            @formApiPath={{concat @fieldName "." column.name}}
-            @configuration={{this.columnsConfiguration}}
-            @label={{column.name}}
-            @schema={{schemaForColumn column}}
-          />
-        {{/each}}
-      </@form.Object>
+      <@form.Section @title={{@label}}>
+        <@form.Object @name={{@fieldName}} as |object|>
+          {{#each this.columns key="name" as |column|}}
+            <Field
+              @form={{object}}
+              @formApi={{@formApi}}
+              @fieldName={{column.name}}
+              @formApiPath={{concat @fieldName "." column.name}}
+              @configuration={{this.columnsConfiguration}}
+              @label={{column.name}}
+              @schema={{schemaForColumn column}}
+            />
+          {{/each}}
+        </@form.Object>
+      </@form.Section>
     {{/if}}
   </template>
 }

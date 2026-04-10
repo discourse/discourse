@@ -7,6 +7,7 @@ import icon from "discourse/helpers/d-icon";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ExpressionWrapper from "./expression-wrapper";
 
 export default class UrlPreview extends Component {
   @tracked copied = false;
@@ -54,21 +55,27 @@ export default class UrlPreview extends Component {
   }
 
   <template>
-    {{#if this.hasUrl}}
-      {{! template-lint-disable no-invalid-interactive }}
-      <div
-        class={{concatClass
-          "workflows-url-preview"
-          (if this.copied "is-copied")
-        }}
-        title={{i18n "discourse_workflows.webhook.click_to_copy"}}
-        {{on "click" this.copy}}
-      >
-        <code>{{this.previewUrl}}</code>
-        {{icon (if this.copied "check" "copy")}}
-      </div>
-    {{else if this.hint}}
-      <p class="workflows-url-preview__hint">{{this.hint}}</p>
-    {{/if}}
+    <ExpressionWrapper
+      @field={{@field}}
+      @supportsExpression={{@supportsExpression}}
+      @placeholder={{@placeholder}}
+    >
+      {{#if this.hasUrl}}
+        {{! template-lint-disable no-invalid-interactive }}
+        <div
+          class={{concatClass
+            "workflows-url-preview"
+            (if this.copied "is-copied")
+          }}
+          title={{i18n "discourse_workflows.webhook.click_to_copy"}}
+          {{on "click" this.copy}}
+        >
+          <code>{{this.previewUrl}}</code>
+          {{icon (if this.copied "check" "copy")}}
+        </div>
+      {{else if this.hint}}
+        <p class="workflows-url-preview__hint">{{this.hint}}</p>
+      {{/if}}
+    </ExpressionWrapper>
   </template>
 }

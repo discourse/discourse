@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
 import { ajax } from "discourse/lib/ajax";
+import ExpressionWrapper from "./expression-wrapper";
 
 export default class FilterQuery extends Component {
   @tracked tips = null;
@@ -27,12 +28,18 @@ export default class FilterQuery extends Component {
   }
 
   <template>
-    {{#if this.tips}}
-      <FilterNavigationMenu
-        @initialInputValue={{@field.value}}
-        @onChange={{this.handleChange}}
-        @tips={{this.tips}}
-      />
-    {{/if}}
+    <ExpressionWrapper
+      @field={{@field}}
+      @supportsExpression={{@supportsExpression}}
+      @placeholder={{@placeholder}}
+    >
+      {{#if this.tips}}
+        <FilterNavigationMenu
+          @initialInputValue={{@field.value}}
+          @onChange={{this.handleChange}}
+          @tips={{this.tips}}
+        />
+      {{/if}}
+    </ExpressionWrapper>
   </template>
 }
