@@ -66,6 +66,21 @@ class UserApiKey < ActiveRecord::Base
       SiteSetting.allowed_user_api_push_urls.include?(push_url)
   end
 
+  def self.push_clients_for(user)
+    return [] if SiteSetting.allow_user_api_key_scopes.split("|").exclude?("push")
+    return [] if SiteSetting.allowed_user_api_push_urls.blank?
+
+    user
+      .user_api_keys
+      .joins(:scopes, :client)
+      .where("user_api_key_scopes.name IN ('push', 'notifications')")
+      .where("push_url IS NOT NULL AND push_url <> ''")
+      .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
+      .where("revoked_at IS NULL")
+      .order("user_api_key_clients.client_id ASC")
+      .pluck("user_api_key_clients.client_id, user_api_keys.push_url")
+  end
+
   def allow?(env)
     scopes.any? { |s| s.permits?(env) } || is_revoke_self_request?(env)
   end
