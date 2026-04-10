@@ -11,13 +11,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
     result[0]
   end
 
-  def make_items(count)
+  def make_indexed_items(count)
     Array.new(count) { |i| { "json" => { "index" => i } } }
   end
 
   describe "#execute" do
     it "keeps the first N items by default" do
-      result = execute(make_items(5), "max_items" => 3)
+      result = execute(make_indexed_items(5), "max_items" => 3)
 
       expect(result.length).to eq(3)
       expect(result[0]["json"]["index"]).to eq(0)
@@ -26,7 +26,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
     end
 
     it "keeps the last N items when keep is last" do
-      result = execute(make_items(5), "max_items" => 2, "keep" => "last")
+      result = execute(make_indexed_items(5), "max_items" => 2, "keep" => "last")
 
       expect(result.length).to eq(2)
       expect(result[0]["json"]["index"]).to eq(3)
@@ -34,7 +34,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
     end
 
     it "returns all items when max_items exceeds input size" do
-      result = execute(make_items(3), "max_items" => 10)
+      result = execute(make_indexed_items(3), "max_items" => 10)
 
       expect(result.length).to eq(3)
     end
@@ -46,20 +46,20 @@ RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
     end
 
     it "defaults to 10 items" do
-      result = execute(make_items(15))
+      result = execute(make_indexed_items(15))
 
       expect(result.length).to eq(10)
     end
 
     it "handles max_items of 1" do
-      result = execute(make_items(5), "max_items" => 1)
+      result = execute(make_indexed_items(5), "max_items" => 1)
 
       expect(result.length).to eq(1)
       expect(result[0]["json"]["index"]).to eq(0)
     end
 
     it "handles max_items of 1 with keep last" do
-      result = execute(make_items(5), "max_items" => 1, "keep" => "last")
+      result = execute(make_indexed_items(5), "max_items" => 1, "keep" => "last")
 
       expect(result.length).to eq(1)
       expect(result[0]["json"]["index"]).to eq(4)
