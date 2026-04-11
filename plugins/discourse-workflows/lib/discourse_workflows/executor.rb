@@ -6,21 +6,32 @@ module DiscourseWorkflows
 
     MAX_ITERATIONS = 1000
 
-    delegate :execution, to: :@state
+    delegate :execution, to: :@persistence
 
     def initialize(workflow, trigger_node_id, trigger_data, options = ExecutionOptions.new)
       @workflow = workflow
       @trigger_node_id = trigger_node_id.to_s
       @trigger_data = trigger_data.deep_stringify_keys
       @options = options
-      @state =
-        ExecutionState.new(
-          workflow: @workflow,
+      @context =
+        ExecutionContext.new(workflow: @workflow, trigger_data: @trigger_data, user: @options.user)
+      @journal = StepsJournal.new
+      @runtime = ExecutionRuntime.new(context: @context, user: @options.user)
+      @persistence =
+        ExecutionPersistence.new(
           trigger_node_id: @trigger_node_id,
-          trigger_data: @trigger_data,
+          execution_context: @context,
+          steps_journal: @journal,
+          execution_mode: @options.execution_mode,
+        )
+      @completion =
+        CompletionHandler.new(
+          persistence: @persistence,
+          context: @context,
+          journal: @journal,
+          runtime: @runtime,
           options: @options,
         )
-      @completion = CompletionHandler.new(state: @state, options: @options)
     end
 
     def self.resume(execution, response_items, user: nil)
@@ -47,7 +58,7 @@ module DiscourseWorkflows
       return @completion.create_terminal(:skipped) unless @workflow.enabled?
       return @completion.create_terminal(:rate_limited) unless rate_limiter.within_limits?
 
-      @state.start!
+      start_execution!
       build_pipeline
 
       execute_flow do
@@ -56,21 +67,21 @@ module DiscourseWorkflows
 
         trigger_items = [Item.new(@trigger_data).to_h]
         ItemContract.validate_items!(trigger_items, source: "trigger:#{trigger_node.type}")
-        @state.store_context(trigger_node.name, trigger_items) if trigger_node.name.present?
+        @context.store_context(trigger_node.name, trigger_items) if trigger_node.name.present?
         @router.record_trigger_step(trigger_node, trigger_items)
         @router.enqueue_downstream(trigger_node, "main", trigger_items)
       end
     end
 
     def resume_from(execution, response_items)
-      @state.resume!(execution)
+      resume_execution!(execution)
       build_pipeline
 
       waiting_node_id = execution.waiting_node_id
       waiting_node = @snapshot.find_node(waiting_node_id)
       raise "Waiting node #{waiting_node_id} not found in workflow snapshot" if waiting_node.nil?
 
-      @state.update_step_in_run_data!(
+      @journal.update_step!(
         node_id: waiting_node_id,
         from_status: Step::WAITING,
         updates: {
@@ -80,8 +91,8 @@ module DiscourseWorkflows
         },
       )
 
-      @state.store_context(waiting_node.name, response_items)
-      @state.clear_waiting_execution!
+      @context.store_context(waiting_node.name, response_items)
+      clear_waiting_execution!
 
       ItemContract.validate_items!(response_items, source: "resume:#{waiting_node.type}")
       execute_flow { @router.enqueue_downstream(waiting_node, "main", response_items) }
@@ -90,12 +101,15 @@ module DiscourseWorkflows
     private
 
     def build_pipeline
-      @snapshot = WorkflowSnapshot.new(@state.workflow_snapshot_data)
+      @snapshot = WorkflowSnapshot.new(@persistence.workflow_snapshot_data)
       @completion.snapshot = @snapshot
-      step_runner = StepRunner.new(@state)
+      step_runner =
+        StepRunner.new(context: @context, journal: @journal, runtime: @runtime, user: @options.user)
       @router =
         NodeRouter.new(
-          state: @state,
+          context: @context,
+          journal: @journal,
+          runtime: @runtime,
           step_runner: step_runner,
           snapshot: @snapshot,
           user: @options.user,
@@ -115,16 +129,16 @@ module DiscourseWorkflows
     rescue => e
       @completion.fail!(e)
     ensure
-      @state.dispose_shared_sandbox
+      @runtime.dispose_shared_sandbox
     end
 
     def process_queue
       iterations = 0
-      while @state.queued?
+      while @runtime.queued?
         iterations += 1
         raise "Max iterations (#{MAX_ITERATIONS}) exceeded" if iterations > MAX_ITERATIONS
 
-        node, input_items = @state.shift_queue
+        node, input_items = @runtime.shift_queue
         commands = @router.execute_node(node, input_items)
         outcome = apply_commands!(commands)
         return outcome if outcome.wait?
@@ -137,18 +151,33 @@ module DiscourseWorkflows
       commands.each do |cmd|
         case cmd
         when RoutingCommand::StoreContext
-          @state.store_context(cmd.name, cmd.items)
+          @context.store_context(cmd.name, cmd.items)
         when RoutingCommand::Enqueue
-          @state.enqueue(cmd.node, cmd.items)
+          @runtime.enqueue(cmd.node, cmd.items)
         when RoutingCommand::RecordStep
-          @state.record_step(cmd.node_name, cmd.step)
+          @journal.record_step(cmd.node_name, cmd.step)
         when RoutingCommand::Pause
-          @state.mark_wait(node: cmd.node, step: cmd.step)
+          @runtime.mark_wait(node: cmd.node, step: cmd.step)
           return ExecutionOutcome.wait(wait: cmd.wait)
         end
       end
 
       ExecutionOutcome.complete
+    end
+
+    def start_execution!
+      @persistence.start!
+      @runtime.reset!
+    end
+
+    def resume_execution!(execution)
+      @persistence.resume!(execution)
+      @runtime.reset!
+    end
+
+    def clear_waiting_execution!
+      @persistence.clear_waiting_execution!
+      @runtime.clear_wait
     end
 
     def rate_limiter

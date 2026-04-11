@@ -146,7 +146,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       DiscourseWorkflows::ExecutionData.create!(
         execution_id: execution.id,
         data: {
-          "run_data" => {
+          "entries" => {
             "Manual Trigger" => [
               {
                 "node_id" => "trigger-1",

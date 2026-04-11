@@ -144,8 +144,8 @@ module DiscourseWorkflows
         {
           "$json" => @context.fetch("$json") { {} },
           "trigger" => @context.fetch("trigger") { {} },
-          "$execution" => @context.fetch("_execution") { {} },
-          "_node_contexts" => @context.fetch("_node_contexts") { {} },
+          "$execution" => @context.fetch("__execution") { {} },
+          "__node_contexts" => @context.fetch("__node_contexts") { {} },
         }
       end
 
@@ -166,7 +166,7 @@ module DiscourseWorkflows
             }
             return {
               item: { json: __nodeCache[name] },
-              context: __data._node_contexts[name] || {}
+              context: __data.__node_contexts[name] || {}
             };
           }
         JS

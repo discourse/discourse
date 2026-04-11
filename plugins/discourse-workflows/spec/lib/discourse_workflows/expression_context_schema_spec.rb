@@ -89,7 +89,7 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
         "$json" => {
         },
         "Test Node" => [{ "json" => { "data" => 1 } }],
-        "_node_contexts" => {
+        "__node_contexts" => {
           "Test Node" => {
             "approved" => true,
           },
@@ -111,16 +111,17 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       execution =
         Fabricate(:discourse_workflows_execution, status: :running, started_at: Time.current)
 
-      state =
-        DiscourseWorkflows::Executor::ExecutionState.new(
+      context =
+        DiscourseWorkflows::Executor::ExecutionContext.new(
           workflow: execution.workflow,
-          trigger_node_id: "t1",
           trigger_data: {
           },
+          user: user,
+          execution: execution,
         )
-      state.start!
+      context.reset!(resume_token: SecureRandom.uuid)
 
-      resolver_ctx = state.resolver_context
+      resolver_ctx = context.resolver_context
       resolver =
         DiscourseWorkflows::ExpressionResolver.new(resolver_ctx.merge("$json" => {}), user: user)
 

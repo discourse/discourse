@@ -97,9 +97,9 @@ module DiscourseWorkflows
 
         def build_signed_action_id(step, decision, wait_nonce)
           node_id = step.node_id
-          payload = "#{@state.execution.id}:#{node_id}:#{decision}:#{wait_nonce}"
+          payload = "#{execution.id}:#{node_id}:#{decision}:#{wait_nonce}"
           signature = HmacSigner.sign(payload)
-          "dwf:#{@state.execution.id}:#{node_id}:#{decision}:#{wait_nonce}:#{signature}"
+          "dwf:#{execution.id}:#{node_id}:#{decision}:#{wait_nonce}:#{signature}"
         end
       end
     end

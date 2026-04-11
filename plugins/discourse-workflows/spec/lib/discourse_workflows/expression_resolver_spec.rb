@@ -53,7 +53,7 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
     end
 
     it "resolves node context references preserving type" do
-      node_context = { "_node_contexts" => { "Approval" => { "approved" => true } } }
+      node_context = { "__node_contexts" => { "Approval" => { "approved" => true } } }
       node_resolver =
         described_class.new(context.merge(node_context, "$json" => context["trigger"]))
 

@@ -84,7 +84,7 @@ module DiscourseWorkflows
       @js_context.attach("__getSiteSetting", method(:fetch_site_setting))
       @js_context.attach("__getNodeOutput", method(:fetch_node_output))
 
-      execution = @workflow_context.fetch("_execution") { {} }
+      execution = @workflow_context.fetch("__execution") { {} }
       @js_context.eval(<<~JS)
         var $vars = #{@vars.to_json};
         var $execution = #{execution.to_json};

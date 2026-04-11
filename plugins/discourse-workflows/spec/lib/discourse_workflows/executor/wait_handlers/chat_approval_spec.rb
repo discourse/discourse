@@ -16,8 +16,8 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
 
   describe "#pause!" do
     it "stores chat_message_id in waiting_config" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "action:chat_approval",
           context: {
@@ -27,7 +27,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
       fake_message = OpenStruct.new(id: 42)
       described_class.stubs(:send_chat_message).returns(fake_message)
 
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait =
         DiscourseWorkflows::WaitForChatApproval.new(
           message_text: "Please approve",
@@ -45,8 +45,8 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
     end
 
     it "stores timeout config when timeout_minutes is set" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "action:chat_approval",
           context: {
@@ -56,7 +56,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
       fake_message = OpenStruct.new(id: 99)
       described_class.stubs(:send_chat_message).returns(fake_message)
 
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait =
         DiscourseWorkflows::WaitForChatApproval.new(
           message_text: "Approve?",
@@ -78,8 +78,8 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
     end
 
     it "builds HMAC-signed action IDs for approve and deny" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "action:chat_approval",
           context: {
@@ -87,7 +87,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
           },
         )
 
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait =
         DiscourseWorkflows::WaitForChatApproval.new(
           message_text: "Approve this",
@@ -110,8 +110,8 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
       nonces = []
 
       2.times do
-        state =
-          build_wait_state(
+        dependencies =
+          build_wait_dependencies(
             execution,
             node_type: "action:chat_approval",
             context: {
@@ -121,7 +121,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
         fake_message = OpenStruct.new(id: rand(1000))
         described_class.stubs(:send_chat_message).returns(fake_message)
 
-        handler = described_class.new(state)
+        handler = described_class.new(**dependencies)
         wait =
           DiscourseWorkflows::WaitForChatApproval.new(
             message_text: "Approve",

@@ -3,8 +3,11 @@
 module DiscourseWorkflows
   class Executor
     class StepRunner
-      def initialize(state)
-        @state = state
+      def initialize(context:, journal:, runtime:, user:)
+        @context = context
+        @journal = journal
+        @runtime = runtime
+        @user = user
       end
 
       def run(node, input_items, node_type_class)
@@ -13,7 +16,7 @@ module DiscourseWorkflows
         step = build_step(node, input_items)
         @current_exec_ctx = nil
 
-        execute_step(instance, step) do
+        execute_step(instance, step, node) do
           block_return = yield(instance, resolver)
           if block_return.is_a?(Array) && block_return.last.is_a?(NodeExecutionContext)
             result, @current_exec_ctx = block_return
@@ -31,14 +34,15 @@ module DiscourseWorkflows
 
       private
 
-      def execute_step(instance, step)
+      def execute_step(instance, step, node)
         result = yield
         return StepOutcome.wait(step: step, wait: result) if wait_request?(result)
 
-        error = finalize_success!(step, instance, result)
+        normalized_result = normalize_result(result, node, instance.class.ports)
+        error = finalize_success!(step, instance, normalized_result)
         return StepOutcome.error(step: step, error: error) if error
 
-        StepOutcome.success(step: step, result: result)
+        StepOutcome.success(step: step, result: normalized_result)
       rescue => e
         finalize_error!(step, instance, e)
         StepOutcome.error(step: step, error: e)
@@ -51,8 +55,8 @@ module DiscourseWorkflows
         conditions = build_conditions(instance)
         step.add_metadata("conditions", conditions) if conditions.present?
 
-        primary_empty = result.is_a?(Array) && result.first.is_a?(Array) && result.first.empty?
-        flat_output = result.is_a?(Array) && result.first.is_a?(Array) ? result.flatten(1) : result
+        primary_empty = result.primary_items(ports: instance.class.ports).empty?
+        flat_output = result.all_items(ports: instance.class.ports)
         if instance.class.branching? && primary_empty
           step.filter!(output: flat_output)
         else
@@ -80,22 +84,22 @@ module DiscourseWorkflows
       end
 
       def build_resolver(node, input_items)
-        base = @state.resolver_context
+        base = @context.resolver_context
         first_json = input_items.first&.dig("json")
         context = first_json ? base.merge("$json" => first_json) : base
-        ExpressionResolver.new(context, user: @state.user, sandbox: @state.shared_sandbox)
+        ExpressionResolver.new(context, user: @user, sandbox: @runtime.shared_sandbox)
       end
 
       def build_step(node, input_items)
         step =
           Step.build(
             node: node,
-            position: @state.next_step_position,
+            position: @journal.next_step_position,
             input: input_items,
             metadata: {
             },
           )
-        @state.record_step(node.name, step)
+        @journal.record_step(node.name, step)
         step
       end
 
@@ -136,6 +140,19 @@ module DiscourseWorkflows
 
       def wait_request?(result)
         result.is_a?(WaitForResume)
+      end
+
+      def normalize_result(result, node, ports)
+        normalized_result =
+          if result.is_a?(NodeResult)
+            result
+          else
+            ItemContract.validate_output_arrays!(result, source: node.type)
+            NodeResult.from_output_arrays(result, ports: ports)
+          end
+
+        ItemContract.validate_node_result!(normalized_result, source: node.type, ports: ports)
+        normalized_result
       end
 
       def redact_sensitive_headers(config)

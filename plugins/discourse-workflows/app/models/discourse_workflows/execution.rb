@@ -94,7 +94,7 @@ module DiscourseWorkflows
       return unless execution_data
 
       full_data = execution_data.parsed_data
-      rd = execution_data.run_data
+      rd = execution_data.entries
       rd.each_value do |steps|
         Array(steps).each do |step|
           if step["node_id"] == node_id.to_s && step["status"] == from_status.to_s

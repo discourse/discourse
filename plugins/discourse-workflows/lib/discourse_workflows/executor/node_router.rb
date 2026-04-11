@@ -3,8 +3,18 @@
 module DiscourseWorkflows
   class Executor
     class NodeRouter
-      def initialize(state:, step_runner:, snapshot:, user:, run_as_user_proc:)
-        @state = state
+      def initialize(
+        context:,
+        journal:,
+        runtime:,
+        step_runner:,
+        snapshot:,
+        user:,
+        run_as_user_proc:
+      )
+        @context = context
+        @journal = journal
+        @runtime = runtime
         @step_runner = step_runner
         @snapshot = snapshot
         @user = user
@@ -31,7 +41,7 @@ module DiscourseWorkflows
             next if connection.source_output.present? && connection.source_output != output_name
             next if connection.source_output.blank? && output_name != "main"
             target = @snapshot.target_node(connection)
-            @state.enqueue(target, items) if target
+            @runtime.enqueue(target, items) if target
           end
       end
 
@@ -44,11 +54,11 @@ module DiscourseWorkflows
               input_items: input_items,
               configuration: node.configuration,
               configuration_schema: node_type_class.configuration_schema,
-              node_context: @state.node_context_for(node),
+              node_context: @context.node_context_for(node),
               user: @user,
               run_as_user: @run_as_user_proc.call,
               resolver: resolver,
-              vars: @state.preloaded_vars,
+              vars: @runtime.preloaded_vars,
             )
           result = instance.execute(exec_ctx)
           [result, exec_ctx]
@@ -57,7 +67,7 @@ module DiscourseWorkflows
 
       def outcome_to_commands(node, node_type_class, outcome)
         if outcome.success?
-          route_by_port_index(node, node_type_class, outcome.result)
+          route_result(node, node_type_class, outcome.result)
         elsif outcome.wait?
           [RoutingCommand::Pause.new(node: node, step: outcome.step, wait: outcome.wait)]
         elsif outcome.error?
@@ -65,16 +75,16 @@ module DiscourseWorkflows
         end
       end
 
-      def route_by_port_index(node, node_type_class, output_arrays)
-        ItemContract.validate_output_arrays!(output_arrays, source: node.type)
+      def route_result(node, node_type_class, result)
         ports = node_type_class.ports
         commands = []
 
-        all_items = output_arrays.flatten(1)
+        all_items = result.all_items(ports: ports)
         if all_items.any?
           commands << RoutingCommand::StoreContext.new(name: node.name, items: all_items)
         end
 
+        output_arrays = result.output_arrays(ports: ports)
         output_arrays.each_with_index do |items, index|
           next if items.empty?
           port_key = ports.dig(index, :key) || "main"
@@ -98,12 +108,12 @@ module DiscourseWorkflows
       def unknown_node_commands(node, input_items)
         Rails.logger.warn(
           "discourse-workflows: unknown node type '#{node.type}' (version: #{node.type_version}) " \
-            "in workflow #{@state.workflow.id}, skipping node '#{node.name}'",
+            "in workflow #{@context.workflow.id}, skipping node '#{node.name}'",
         )
         step =
           Step.build(
             node: node,
-            position: @state.next_step_position,
+            position: @journal.next_step_position,
             input: input_items,
             status: Step::ERROR,
             error: "Unknown node type '#{node.type}'",
@@ -115,13 +125,13 @@ module DiscourseWorkflows
         step =
           Step.build(
             node: node,
-            position: @state.next_step_position,
+            position: @journal.next_step_position,
             input: input_items,
             status: status,
             output: output,
             error: error,
           )
-        @state.record_step(node.name, step)
+        @journal.record_step(node.name, step)
       end
     end
   end

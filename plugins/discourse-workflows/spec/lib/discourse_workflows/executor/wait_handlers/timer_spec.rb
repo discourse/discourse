@@ -14,8 +14,8 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Timer do
 
   describe "#pause!" do
     it "enqueues ResumeTimer job with correct duration" do
-      state = build_wait_state(execution, node_type: "core:wait")
-      handler = described_class.new(state)
+      dependencies = build_wait_dependencies(execution, node_type: "core:wait")
+      handler = described_class.new(**dependencies)
       wait =
         DiscourseWorkflows::WaitForTimer.new(
           wait_amount: 2,
@@ -31,8 +31,8 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Timer do
     end
 
     it "sets waiting_until to duration from now" do
-      state = build_wait_state(execution, node_type: "core:wait")
-      handler = described_class.new(state)
+      dependencies = build_wait_dependencies(execution, node_type: "core:wait")
+      handler = described_class.new(**dependencies)
       wait =
         DiscourseWorkflows::WaitForTimer.new(
           wait_amount: 30,

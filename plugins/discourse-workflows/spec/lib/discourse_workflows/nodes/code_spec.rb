@@ -128,7 +128,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
     it "exposes $execution variables" do
       resolver =
         DiscourseWorkflows::ExpressionResolver.new(
-          { "$json" => {}, "_execution" => { "id" => 99, "workflow_name" => "Test Flow" } },
+          { "$json" => {}, "__execution" => { "id" => 99, "workflow_name" => "Test Flow" } },
         )
 
       result =

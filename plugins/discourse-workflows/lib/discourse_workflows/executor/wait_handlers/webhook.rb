@@ -29,7 +29,7 @@ module DiscourseWorkflows
             waiting_until: timeout&.seconds&.from_now,
             extra_config: {
               "wait_type" => self.class.wait_type,
-              "resume_token" => @state.context["__resume_token"],
+              "resume_token" => @context.resume_token,
               "http_method" => wait.http_method,
               "response_mode" => wait.response_mode,
               "response_code" => wait.response_code,
@@ -41,11 +41,11 @@ module DiscourseWorkflows
             Jobs.enqueue_in(
               timeout.seconds,
               Jobs::DiscourseWorkflows::ExpireWebhookWait,
-              execution_id: @state.execution.id,
+              execution_id: execution.id,
             )
           end
 
-          @state.execution
+          execution
         end
       end
     end

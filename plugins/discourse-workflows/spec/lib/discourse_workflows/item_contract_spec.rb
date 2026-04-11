@@ -71,4 +71,40 @@ RSpec.describe DiscourseWorkflows::ItemContract do
       }.to raise_error(DiscourseWorkflows::ItemContract::Error)
     end
   end
+
+  describe ".validate_node_result!" do
+    it "accepts a valid node result" do
+      result = DiscourseWorkflows::NodeResult.new("main" => [{ "json" => { "a" => 1 } }])
+
+      expect {
+        described_class.validate_node_result!(result, source: "test", ports: [{ key: "main" }])
+      }.not_to raise_error
+    end
+
+    it "rejects non-node-result values" do
+      expect {
+        described_class.validate_node_result!([], source: "test", ports: [{ key: "main" }])
+      }.to raise_error(DiscourseWorkflows::ItemContract::Error)
+    end
+
+    it "rejects unknown outputs" do
+      result = DiscourseWorkflows::NodeResult.new("unexpected" => [{ "json" => { "a" => 1 } }])
+
+      expect {
+        described_class.validate_node_result!(result, source: "test", ports: [{ key: "main" }])
+      }.to raise_error(DiscourseWorkflows::ItemContract::Error, /unknown outputs/)
+    end
+
+    it "rejects multiple outputs without declared ports" do
+      result =
+        DiscourseWorkflows::NodeResult.new(
+          "true" => [{ "json" => { "a" => 1 } }],
+          "false" => [{ "json" => { "b" => 2 } }],
+        )
+
+      expect {
+        described_class.validate_node_result!(result, source: "test", ports: [])
+      }.to raise_error(DiscourseWorkflows::ItemContract::Error, /multiple outputs/)
+    end
+  end
 end

@@ -11,19 +11,16 @@ module DiscourseWorkflows
             node,
             extra_config: {
               "wait_type" => self.class.wait_type,
-              "resume_token" => @state.context["__resume_token"],
+              "resume_token" => @context.resume_token,
               "form_title" => wait.form_title,
               "form_description" => wait.form_description,
               "form_fields" => wait.form_fields,
             },
           )
 
-          MessageBus.publish(
-            Executor.form_channel(@state.execution.id),
-            { status: "waiting_for_form" },
-          )
+          MessageBus.publish(Executor.form_channel(execution.id), { status: "waiting_for_form" })
 
-          @state.execution
+          execution
         end
       end
     end

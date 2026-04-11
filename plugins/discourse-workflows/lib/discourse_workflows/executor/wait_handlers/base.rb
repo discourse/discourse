@@ -62,8 +62,10 @@ module DiscourseWorkflows
           end
         end
 
-        def initialize(state)
-          @state = state
+        def initialize(persistence:, context:, runtime:)
+          @persistence = persistence
+          @context = context
+          @runtime = runtime
         end
 
         def pause!(wait)
@@ -73,22 +75,23 @@ module DiscourseWorkflows
         private
 
         def pause_execution!(node, waiting_until: nil, extra_config: {})
-          @state.execution.update!(
-            status: :waiting,
-            waiting_node_id: node.id,
+          @persistence.pause_waiting_execution!(
+            node: node,
             waiting_until: waiting_until,
-            waiting_config: @state.waiting_config.merge(extra_config),
+            extra_config: extra_config,
           )
-          @state.save!
-          @state.execution
         end
 
         def step
-          @state.waiting_step
+          @runtime.waiting_step
         end
 
         def node
-          @state.waiting_node
+          @runtime.waiting_node
+        end
+
+        def execution
+          @persistence.execution
         end
       end
     end

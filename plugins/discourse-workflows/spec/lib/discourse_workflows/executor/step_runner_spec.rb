@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Executor::StepRunner do
-  subject(:step_runner) { described_class.new(state) }
+  subject(:step_runner) do
+    described_class.new(context: context, journal: journal, runtime: runtime, user: nil)
+  end
 
-  let(:state) do
-    instance_double(
-      DiscourseWorkflows::Executor::ExecutionState,
-      resolver_context: {
-      },
-      user: nil,
-      shared_sandbox: nil,
-      next_step_position: 1,
-    )
+  let(:context) do
+    instance_double(DiscourseWorkflows::Executor::ExecutionContext, resolver_context: {})
+  end
+  let(:journal) do
+    instance_double(DiscourseWorkflows::Executor::StepsJournal, next_step_position: 1)
+  end
+  let(:runtime) do
+    instance_double(DiscourseWorkflows::Executor::ExecutionRuntime, shared_sandbox: nil)
   end
   let(:node) do
     Struct.new(:id, :name, :type, :configuration).new("node-1", "Test", "action:test", {})
@@ -28,9 +29,60 @@ RSpec.describe DiscourseWorkflows::Executor::StepRunner do
     end
   end
 
-  before { allow(state).to receive(:record_step) }
+  before { allow(journal).to receive(:record_step) }
 
   describe "#run" do
+    it "normalizes valid node output into a node result" do
+      exec_ctx =
+        DiscourseWorkflows::NodeExecutionContext.new(
+          input_items: [{ "json" => {} }],
+          configuration: {
+          },
+          configuration_schema: node_type_class.configuration_schema,
+          node_context: {
+          },
+          resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
+        )
+
+      outcome =
+        step_runner.run(node, [{ "json" => {} }], node_type_class) do
+          [[[{ "json" => { "ok" => true } }]], exec_ctx]
+        end
+
+      expect(outcome).to be_success
+      expect(outcome.result).to be_a(DiscourseWorkflows::NodeResult)
+      expect(outcome.result.outputs).to eq("main" => [{ "json" => { "ok" => true } }])
+      expect(outcome.step).to have_attributes(
+        status: "success",
+        output: [{ "json" => { "ok" => true } }],
+      )
+    end
+
+    it "fails the step when a node returns an invalid output shape" do
+      exec_ctx =
+        DiscourseWorkflows::NodeExecutionContext.new(
+          input_items: [{ "json" => {} }],
+          configuration: {
+          },
+          configuration_schema: node_type_class.configuration_schema,
+          node_context: {
+          },
+          resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
+        )
+
+      outcome =
+        step_runner.run(node, [{ "json" => {} }], node_type_class) do
+          [[{ "json" => { "ok" => true } }], exec_ctx]
+        end
+
+      expect(outcome).to be_error
+      expect(outcome.error).to be_a(DiscourseWorkflows::ItemContract::Error)
+      expect(outcome.step).to have_attributes(
+        status: "error",
+        error: "action:test: execute must return Array<Array<Item>>, got Array",
+      )
+    end
+
     it "returns an error outcome when the step log contains errors" do
       exec_ctx =
         DiscourseWorkflows::NodeExecutionContext.new(

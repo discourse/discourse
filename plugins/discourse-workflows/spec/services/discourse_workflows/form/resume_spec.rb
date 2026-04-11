@@ -81,7 +81,7 @@ RSpec.describe DiscourseWorkflows::Form::Resume do
       DiscourseWorkflows::ExecutionData.create!(
         execution_id: execution.id,
         data: {
-          "run_data" => {
+          "entries" => {
             "Form Trigger" => [
               {
                 "node_id" => "trigger-1",

@@ -7,10 +7,10 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
     described_class.new(workflow, state, error_depth: error_depth, execution_mode: execution_mode)
   end
 
-  def build_state_double(run_data: {}, last_failed_step: nil)
+  def build_state_double(entries: {}, last_failed_step: nil)
     instance_double(
-      DiscourseWorkflows::Executor::ExecutionState,
-      run_data: run_data,
+      DiscourseWorkflows::Executor::StepsJournal,
+      entries: entries,
       last_failed_step: last_failed_step,
     )
   end

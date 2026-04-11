@@ -1,37 +1,55 @@
 # frozen_string_literal: true
 
 module WaitHandlerHelpers
-  def build_wait_state(execution, node_type:, configuration: {}, context: {})
-    state =
-      instance_double(
-        DiscourseWorkflows::Executor::ExecutionState,
-        execution: execution,
-        waiting_step:
-          DiscourseWorkflows::Executor::Step.new(
-            node_id: "wait-1",
-            node_name: "Wait",
-            node_type: node_type,
-            position: 0,
-            input: [],
-          ),
-        waiting_node:
-          DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
-            id: "wait-1",
-            type: node_type,
-            type_version: "1.0",
-            name: "Wait",
-            position: {
-              "x" => 0,
-              "y" => 0,
-            },
-            configuration: configuration,
-          ),
-        waiting_config: {
-        },
-        context: context,
+  def build_wait_dependencies(execution, node_type:, configuration: {}, context: {})
+    waiting_step =
+      DiscourseWorkflows::Executor::Step.new(
+        node_id: "wait-1",
+        node_name: "Wait",
+        node_type: node_type,
+        position: 0,
+        input: [],
       )
-    allow(state).to receive(:save!)
-    state
+    waiting_node =
+      DiscourseWorkflows::WorkflowSnapshot::SnapshotNode.new(
+        id: "wait-1",
+        type: node_type,
+        type_version: "1.0",
+        name: "Wait",
+        position: {
+          "x" => 0,
+          "y" => 0,
+        },
+        configuration: configuration,
+      )
+    persistence =
+      instance_double(DiscourseWorkflows::Executor::ExecutionPersistence, execution: execution)
+    allow(persistence).to receive(
+      :pause_waiting_execution!,
+    ) do |node:, waiting_until: nil, extra_config: {}|
+      execution.update!(
+        status: :waiting,
+        waiting_node_id: node.id,
+        waiting_until: waiting_until,
+        waiting_config: { "node_contexts" => {}, "step_position" => 0 }.merge(extra_config),
+      )
+      execution
+    end
+
+    {
+      persistence: persistence,
+      context:
+        instance_double(
+          DiscourseWorkflows::Executor::ExecutionContext,
+          resume_token: context["__resume_token"],
+        ),
+      runtime:
+        instance_double(
+          DiscourseWorkflows::Executor::ExecutionRuntime,
+          waiting_step: waiting_step,
+          waiting_node: waiting_node,
+        ),
+    }
   end
 end
 

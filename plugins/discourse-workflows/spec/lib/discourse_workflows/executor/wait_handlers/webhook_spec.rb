@@ -14,15 +14,15 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
 
   describe "#pause!" do
     it "stores resume_token and http_method in waiting_config" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "core:wait",
           context: {
             "__resume_token" => "test-token",
           },
         )
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait = DiscourseWorkflows::WaitForWebhook.new(http_method: "POST")
 
       handler.pause!(wait)
@@ -39,15 +39,15 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
     end
 
     it "stores webhook_suffix when configured" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "core:wait",
           context: {
             "__resume_token" => "test-token",
           },
         )
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait = DiscourseWorkflows::WaitForWebhook.new(webhook_suffix: "after-approval")
 
       handler.pause!(wait)
@@ -57,15 +57,15 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
     end
 
     it "sets waiting_until and enqueues timeout job when timeout is configured" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "core:wait",
           context: {
             "__resume_token" => "test-token",
           },
         )
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait = DiscourseWorkflows::WaitForWebhook.new(timeout_amount: 2, timeout_unit: "hours")
 
       freeze_time do
@@ -81,15 +81,15 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
     end
 
     it "leaves waiting_until nil and does not enqueue timeout job when no timeout" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "core:wait",
           context: {
             "__resume_token" => "test-token",
           },
         )
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait = DiscourseWorkflows::WaitForWebhook.new
 
       handler.pause!(wait)

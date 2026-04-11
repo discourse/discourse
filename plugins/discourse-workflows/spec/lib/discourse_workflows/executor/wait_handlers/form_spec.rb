@@ -14,15 +14,15 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Form do
 
   describe "#pause!" do
     it "publishes waiting_for_form on MessageBus" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "action:form",
           context: {
             "__resume_token" => "test-token",
           },
         )
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       wait =
         DiscourseWorkflows::WaitForForm.new(
           form_fields: [{ "field_label" => "Name", "field_type" => "text" }],
@@ -39,15 +39,15 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Form do
     end
 
     it "stores form_fields in waiting_config" do
-      state =
-        build_wait_state(
+      dependencies =
+        build_wait_dependencies(
           execution,
           node_type: "action:form",
           context: {
             "__resume_token" => "test-token",
           },
         )
-      handler = described_class.new(state)
+      handler = described_class.new(**dependencies)
       fields = [{ "field_label" => "Email", "field_type" => "text" }]
       wait =
         DiscourseWorkflows::WaitForForm.new(

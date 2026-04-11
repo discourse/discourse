@@ -5,9 +5,9 @@ module DiscourseWorkflows
     class ErrorHandler
       MAX_ERROR_DEPTH = 3
 
-      def initialize(workflow, state, error_depth:, execution_mode:)
+      def initialize(workflow, failure_source, error_depth:, execution_mode:)
         @workflow = workflow
-        @state = state
+        @failure_source = failure_source
         @error_depth = error_depth
         @execution_mode = execution_mode
       end
@@ -41,8 +41,15 @@ module DiscourseWorkflows
       def build_error_data(error)
         {
           error_message: error.message.to_s.truncate(1000),
-          failed_node_name: @state.last_failed_step&.dig("node_name"),
+          failed_node_name: last_failed_step_node_name,
         }
+      end
+
+      def last_failed_step_node_name
+        step = @failure_source.last_failed_step
+        return step.node_name if step.respond_to?(:node_name)
+
+        step&.dig("node_name")
       end
     end
   end

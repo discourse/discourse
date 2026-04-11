@@ -26,10 +26,10 @@ module DiscourseWorkflows
           Jobs.enqueue_in(
             duration,
             Jobs::DiscourseWorkflows::ResumeTimer,
-            execution_id: @state.execution.id,
+            execution_id: execution.id,
           )
 
-          @state.execution
+          execution
         end
       end
     end

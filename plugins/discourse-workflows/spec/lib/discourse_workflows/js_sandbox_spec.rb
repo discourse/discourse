@@ -90,7 +90,7 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
 
   describe "$execution exposure" do
     it "exposes execution variables from workflow context" do
-      context = { "_execution" => { "id" => 42, "workflow_name" => "My Workflow" } }
+      context = { "__execution" => { "id" => 42, "workflow_name" => "My Workflow" } }
       exec_sandbox = described_class.new(context, vars: {})
 
       expect(exec_sandbox.eval("$execution.id")).to eq(42)
