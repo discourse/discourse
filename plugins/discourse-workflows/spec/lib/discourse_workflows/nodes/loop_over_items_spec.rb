@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::LoopOverItems::V1 do
-
   def make_items(*values)
     values.map { |v| { "json" => v.deep_stringify_keys } }
   end

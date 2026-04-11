@@ -3,9 +3,7 @@
 RSpec.describe DiscourseWorkflows::NodeTypesController do
   fab!(:admin)
 
-  before do
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   context "when not logged in as admin" do
     fab!(:user)

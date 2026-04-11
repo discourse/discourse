@@ -166,12 +166,7 @@ module DiscourseWorkflows
         "discourse-workflows: unknown node type '#{node.type}' (version: #{node.type_version}) " \
           "in workflow #{@context.workflow.id}, skipping node '#{node.name}'",
       )
-      record_step(
-        node,
-        input_items,
-        status: Step::ERROR,
-        error: "Unknown node type '#{node.type}'",
-      )
+      record_step(node, input_items, status: Step::ERROR, error: "Unknown node type '#{node.type}'")
     end
 
     def build_node_execution_context(node, input_items, node_type_class, resolver)
@@ -240,10 +235,7 @@ module DiscourseWorkflows
     end
 
     def update_waiting_step(waiting_node, response_items)
-      step =
-        @steps.find do |s|
-          s.node_id == waiting_node.id.to_s && s.status == Step::WAITING
-        end
+      step = @steps.find { |s| s.node_id == waiting_node.id.to_s && s.status == Step::WAITING }
       step&.apply_updates!(
         "status" => Step::SUCCESS,
         "output" => response_items,
@@ -255,15 +247,13 @@ module DiscourseWorkflows
 
     def begin_wait!(wait_request)
       handler =
-        WaitHandlers
-          .for(wait_request.type)
-          .new(
-            persistence: @store,
-            context: @context,
-            node: @waiting_node,
-            step: @waiting_step,
-            steps: @steps,
-          )
+        WaitHandlers.for(wait_request.type).new(
+          persistence: @store,
+          context: @context,
+          node: @waiting_node,
+          step: @waiting_step,
+          steps: @steps,
+        )
       handler.begin_wait!(wait_request)
     rescue => e
       @store.fail!(error: e, steps: @steps)

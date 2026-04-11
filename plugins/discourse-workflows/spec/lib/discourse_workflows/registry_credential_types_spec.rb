@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Registry do
-  before do
-    described_class.reset_indexes!
-  end
+  before { described_class.reset_indexes! }
 
   describe ".credential_types" do
     it "returns registered credential types from the plugin registry" do

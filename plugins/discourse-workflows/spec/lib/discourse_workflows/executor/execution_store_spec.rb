@@ -39,8 +39,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       execution_context.store_context("node_a", [{ "json" => { "x" => 1 } }])
       steps = [
         DiscourseWorkflows::Executor::Step.build(
-          node:
-            OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
+          node: OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
           position: 0,
           input: [],
           status: DiscourseWorkflows::Executor::Step::SUCCESS,
@@ -61,8 +60,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       execution_context.store_context("node_a", "data_a")
       steps = [
         DiscourseWorkflows::Executor::Step.build(
-          node:
-            OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
+          node: OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
           position: 0,
           input: [],
           status: DiscourseWorkflows::Executor::Step::WAITING,
@@ -99,9 +97,9 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       restored.resume!(store.execution)
 
       expect(restored_context.context).to include("node_a" => "data_a")
-      expect(
-        restored_context.node_context_for(OpenStruct.new(id: "node_a", name: "node_a")),
-      ).to eq("counter" => 1)
+      expect(restored_context.node_context_for(OpenStruct.new(id: "node_a", name: "node_a"))).to eq(
+        "counter" => 1,
+      )
       expect(restored.workflow_snapshot_data).to be_present
     end
   end

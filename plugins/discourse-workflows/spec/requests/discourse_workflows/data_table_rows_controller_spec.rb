@@ -4,9 +4,7 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   fab!(:admin)
   fab!(:user)
 
-  before do
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   shared_examples "requires admin" do |method, path_proc, params_proc = nil|
     it "returns 404 when not logged in" do

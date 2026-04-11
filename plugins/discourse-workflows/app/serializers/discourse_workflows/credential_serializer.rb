@@ -10,12 +10,11 @@ module DiscourseWorkflows
 
       decrypted.each_with_object({}) do |(key, value), hash|
         field_schema = schema[key.to_sym] || {}
-        hash[key] =
-          if field_schema.dig(:ui, :control) == :password
-            Credential::REDACTED_VALUE
-          else
-            value
-          end
+        hash[key] = if field_schema.dig(:ui, :control) == :password
+          Credential::REDACTED_VALUE
+        else
+          value
+        end
       end
     end
 

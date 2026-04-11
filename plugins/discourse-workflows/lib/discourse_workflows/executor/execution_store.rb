@@ -87,7 +87,8 @@ module DiscourseWorkflows
           status: :running,
           waiting_node_id: nil,
           waiting_until: nil,
-          waiting_config: {},
+          waiting_config: {
+          },
         )
       end
 
@@ -146,10 +147,7 @@ module DiscourseWorkflows
       end
 
       def waiting_config(steps)
-        {
-          "node_contexts" => @execution_context.node_contexts,
-          "step_position" => steps.size,
-        }
+        { "node_contexts" => @execution_context.node_contexts, "step_position" => steps.size }
       end
 
       def trigger_error_workflow(error, steps)

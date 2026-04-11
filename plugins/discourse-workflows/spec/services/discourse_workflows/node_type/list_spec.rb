@@ -47,9 +47,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
         expect(award_badge.dig(:property_schema, :badge_id, :ui, :control)).to eq(:combo_box)
         expect(code.dig(:property_schema, :code, :ui, :control)).to eq(:code)
-        expect(data_table.dig(:property_schema, :columns, :ui, :control)).to eq(
-          :data_table_columns,
-        )
+        expect(data_table.dig(:property_schema, :columns, :ui, :control)).to eq(:data_table_columns)
         expect(data_table.dig(:property_schema, :sort_column, :ui, :control)).to eq(
           :data_table_column_select,
         )
@@ -125,8 +123,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           a_hash_including(
             identifier: "basic_auth",
             display_name: "Basic Auth",
-            property_schema:
-              DiscourseWorkflows::CredentialTypes::BasicAuth.property_schema,
+            property_schema: DiscourseWorkflows::CredentialTypes::BasicAuth.property_schema,
           ),
         )
       end
