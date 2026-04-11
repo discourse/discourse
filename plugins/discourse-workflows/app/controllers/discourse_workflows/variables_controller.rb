@@ -68,7 +68,7 @@ module DiscourseWorkflows
     end
 
     def destroy
-      DiscourseWorkflows::Variable::Delete.call(
+      DiscourseWorkflows::Variable::Destroy.call(
         service_params.deep_merge(params: { variable_id: params[:id] }),
       ) do |result|
         on_success { head :no_content }

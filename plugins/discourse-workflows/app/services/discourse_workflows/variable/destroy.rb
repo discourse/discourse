@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class Variable::Delete
+  class Variable::Destroy
     include Service::Base
 
     params do

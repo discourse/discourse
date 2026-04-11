@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::DataTableRow::Delete do
+RSpec.describe DiscourseWorkflows::DataTableRow::Destroy do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:data_table_id) }
   end

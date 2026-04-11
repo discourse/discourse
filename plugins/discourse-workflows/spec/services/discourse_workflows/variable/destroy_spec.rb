@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::Variable::Delete do
+RSpec.describe DiscourseWorkflows::Variable::Destroy do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:variable_id) }
   end

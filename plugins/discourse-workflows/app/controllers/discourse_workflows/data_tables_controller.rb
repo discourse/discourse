@@ -130,7 +130,7 @@ module DiscourseWorkflows
     end
 
     def destroy_column
-      DiscourseWorkflows::DataTableColumn::Delete.call(
+      DiscourseWorkflows::DataTableColumn::Destroy.call(
         service_params.deep_merge(
           params: {
             data_table_id: params[:data_table_id],
@@ -151,7 +151,7 @@ module DiscourseWorkflows
     end
 
     def destroy
-      DiscourseWorkflows::DataTable::Delete.call(
+      DiscourseWorkflows::DataTable::Destroy.call(
         service_params.deep_merge(params: { data_table_id: params[:id] }),
       ) do |result|
         on_success { head :no_content }

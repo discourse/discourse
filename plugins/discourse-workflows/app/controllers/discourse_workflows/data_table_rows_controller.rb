@@ -107,7 +107,7 @@ module DiscourseWorkflows
     end
 
     def destroy_bulk
-      DiscourseWorkflows::DataTableRow::Delete.call(
+      DiscourseWorkflows::DataTableRow::Destroy.call(
         service_params.deep_merge(params: { data_table_id: params[:data_table_id] }),
       ) do |result|
         on_success { |deleted_count:| render json: { deleted_count: deleted_count } }

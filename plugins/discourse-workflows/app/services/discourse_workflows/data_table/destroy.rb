@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class DataTable::Delete
+  class DataTable::Destroy
     include Service::Base
 
     params do
