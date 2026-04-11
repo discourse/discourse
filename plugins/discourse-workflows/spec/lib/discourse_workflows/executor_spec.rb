@@ -280,6 +280,50 @@ RSpec.describe DiscourseWorkflows::Executor do
       expect(step["error"]).to include("Unknown node type 'action:nonexistent_type'")
     end
 
+    it "persists node logs to step metadata" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "log-1",
+                 "action:log",
+                 configuration: {
+                   "entries" => [{ "key" => "topic", "value" => "={{ $json.topic_id }}" }],
+                 }
+          g.chain "trigger-1", "log-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+      trigger_data = { topic_id: topic.id, tags: [] }
+      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+      expect(execution.status).to eq("success")
+      log_step = execution.execution_data.find_step(node_id: "log-1")
+      logs = log_step.dig("metadata", "logs")
+      expect(logs).to be_present
+      expect(logs.first).to include("key" => "topic", "value" => topic.id.to_s)
+    end
+
+    it "fails the step when expression errors are logged" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "code-1",
+                 "action:code",
+                 configuration: {
+                   "code" => "throw new Error('deliberate failure');",
+                 }
+          g.chain "trigger-1", "code-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+      trigger_data = { topic_id: topic.id, tags: [] }
+      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+      expect(execution.status).to eq("error")
+      code_step = execution.execution_data.find_step(node_id: "code-1")
+      expect(code_step["status"]).to eq("error")
+    end
+
     it "truncates long error messages" do
       graph =
         build_workflow_graph do |g|
