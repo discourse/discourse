@@ -9,9 +9,9 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicAdminButton::V1 do
     topic.tags << tag
   end
 
-  describe ".configuration_schema" do
+  describe ".property_schema" do
     it "includes label and icon" do
-      expect(described_class.configuration_schema).to include(
+      expect(described_class.property_schema).to include(
         label: include(type: :string, required: true),
         icon: include(type: :icon, required: false),
       )

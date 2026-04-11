@@ -37,7 +37,7 @@ module DiscourseWorkflows
       [:main]
     end
 
-    def self.configuration_schema
+    def self.property_schema
       {}
     end
 

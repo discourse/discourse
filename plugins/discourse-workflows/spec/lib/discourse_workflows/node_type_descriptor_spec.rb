@@ -114,7 +114,7 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
             "action:single_op"
           end
 
-          def self.configuration_schema
+          def self.property_schema
             { operation: { type: :options, options: %w[get] } }
           end
         end
@@ -129,7 +129,7 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
             "action:multi_op"
           end
 
-          def self.configuration_schema
+          def self.property_schema
             { operation: { type: :options, options: %w[get insert delete] } }
           end
         end

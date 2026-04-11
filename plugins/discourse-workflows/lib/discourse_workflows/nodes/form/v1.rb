@@ -24,7 +24,7 @@ module DiscourseWorkflows
           Schemas::FormFields::OUTPUT_SCHEMA
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             page_type: {
               type: :options,

@@ -13,7 +13,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
         },
         resolver: resolver,
         configuration: config,
-        configuration_schema: described_class.configuration_schema,
+        property_schema: described_class.property_schema,
       )
     result = instance.execute(exec_ctx)
     [result[0], exec_ctx.log]
@@ -57,7 +57,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
           },
           resolver: resolver,
           configuration: config,
-          configuration_schema: described_class.configuration_schema,
+          property_schema: described_class.property_schema,
         )
       result = instance.execute(exec_ctx)[0]
 

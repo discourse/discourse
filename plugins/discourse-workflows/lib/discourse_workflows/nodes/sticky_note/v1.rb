@@ -28,7 +28,7 @@ module DiscourseWorkflows
           []
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             content: {
               type: :string,

@@ -151,7 +151,7 @@ export function nodeTypeOperations(nodeTypeOrIdentifier) {
     return nodeType.operations;
   }
 
-  const operationField = nodeType?.configuration_schema?.operation;
+  const operationField = nodeType?.property_schema?.operation;
   if (
     operationField?.type === "options" &&
     Array.isArray(operationField.options) &&

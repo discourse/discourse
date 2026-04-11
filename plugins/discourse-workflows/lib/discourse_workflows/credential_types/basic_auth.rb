@@ -11,7 +11,7 @@ module DiscourseWorkflows
         "Basic Auth"
       end
 
-      def self.configuration_schema
+      def self.property_schema
         {
           user: {
             type: :string,

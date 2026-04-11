@@ -31,7 +31,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
             },
             resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
             configuration: config,
-            configuration_schema: described_class.configuration_schema,
+            property_schema: described_class.property_schema,
           ),
         )
 

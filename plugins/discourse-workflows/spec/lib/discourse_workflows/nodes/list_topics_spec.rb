@@ -23,7 +23,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
       input_items: items,
       resolver: resolver,
       configuration: configuration,
-      configuration_schema: described_class.configuration_schema,
+      property_schema: described_class.property_schema,
     }
     kwargs[:run_as_user] = run_as_user if run_as_user
     action.execute(DiscourseWorkflows::NodeExecutionContext.new(**kwargs))[0]

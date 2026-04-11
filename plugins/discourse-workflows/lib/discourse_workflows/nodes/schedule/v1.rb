@@ -27,7 +27,7 @@ module DiscourseWorkflows
           { timestamp: :string }
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             rules: {
               type: :collection,

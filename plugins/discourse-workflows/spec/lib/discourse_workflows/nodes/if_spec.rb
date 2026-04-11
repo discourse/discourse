@@ -19,7 +19,7 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
     DiscourseWorkflows::NodeExecutionContext.new(
       input_items: items,
       configuration: configuration,
-      configuration_schema: described_class.configuration_schema,
+      property_schema: described_class.property_schema,
       resolver: resolver,
     )
   end

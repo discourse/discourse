@@ -20,8 +20,8 @@ module DiscourseWorkflows
         category: @latest_class.kind,
         latest_version: @latest_version,
         available_versions: @available_versions,
-        configuration_schema: @latest_class.configuration_schema,
-        configuration_schema_versions: configuration_schema_versions,
+        property_schema: @latest_class.property_schema,
+        property_schema_versions: property_schema_versions,
         output_schema: output_schema,
         metadata: metadata,
         ui: ui,
@@ -37,11 +37,11 @@ module DiscourseWorkflows
 
     private
 
-    def configuration_schema_versions
+    def property_schema_versions
       return if @available_versions.size <= 1
 
       @available_versions.to_h do |version|
-        [version, Registry.find_node_type(@identifier, version: version).configuration_schema]
+        [version, Registry.find_node_type(@identifier, version: version).property_schema]
       end
     end
 

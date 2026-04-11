@@ -23,7 +23,7 @@ module DiscourseWorkflows
           ]
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             combinator: {
               type: :options,

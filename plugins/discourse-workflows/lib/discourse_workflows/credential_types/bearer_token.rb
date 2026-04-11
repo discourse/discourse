@@ -11,7 +11,7 @@ module DiscourseWorkflows
         "Bearer Token"
       end
 
-      def self.configuration_schema
+      def self.property_schema
         { token: { type: :string, required: true, ui: { control: :password } } }
       end
     end

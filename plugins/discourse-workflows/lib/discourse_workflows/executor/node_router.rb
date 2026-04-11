@@ -53,7 +53,7 @@ module DiscourseWorkflows
             NodeExecutionContext.new(
               input_items: input_items,
               configuration: node.configuration,
-              configuration_schema: node_type_class.configuration_schema,
+              property_schema: node_type_class.property_schema,
               node_context: @context.node_context_for(node),
               user: @user,
               run_as_user: @run_as_user_proc.call,

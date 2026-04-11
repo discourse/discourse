@@ -20,7 +20,7 @@ module DiscourseWorkflows
           "data"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             include_input: {
               type: :boolean,

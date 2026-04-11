@@ -17,7 +17,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
             },
             resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
             configuration: config,
-            configuration_schema: described_class.configuration_schema,
+            property_schema: described_class.property_schema,
           ),
         )
 

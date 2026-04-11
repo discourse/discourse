@@ -16,7 +16,7 @@ module DiscourseWorkflows
     def initialize(
       input_items:,
       configuration: {},
-      configuration_schema: {},
+      property_schema: {},
       node_context: {},
       user: nil,
       run_as_user: Discourse.system_user,
@@ -25,7 +25,7 @@ module DiscourseWorkflows
     )
       @input_items = input_items
       @configuration = configuration
-      @configuration_schema = configuration_schema
+      @property_schema = property_schema
       @node_context = node_context
       @user = user
       @run_as_user = run_as_user
@@ -39,7 +39,7 @@ module DiscourseWorkflows
 
     def get_parameter(name, item)
       name_str = name.to_s
-      schema = @configuration_schema[name.to_sym] || @configuration_schema[name_str]
+      schema = @property_schema[name.to_sym] || @property_schema[name_str]
       with_item(item) { resolve_parameter(name_str, schema) }
     end
 

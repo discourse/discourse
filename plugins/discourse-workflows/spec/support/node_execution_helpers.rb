@@ -13,7 +13,7 @@ module NodeExecutionHelpers
       input_items: input_items,
       resolver: resolver,
       configuration: configuration,
-      configuration_schema: described_class.configuration_schema,
+      property_schema: described_class.property_schema,
     }
     kwargs[:run_as_user] = run_as_user if run_as_user
 

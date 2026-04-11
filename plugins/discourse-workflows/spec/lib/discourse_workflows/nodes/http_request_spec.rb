@@ -165,7 +165,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
           input_items: [item],
           resolver: resolver,
           configuration: config,
-          configuration_schema: described_class.configuration_schema,
+          property_schema: described_class.property_schema,
         )
       action.execute(exec_ctx)
 

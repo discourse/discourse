@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Webhook::V1 do
-  describe ".configuration_schema" do
+  describe ".property_schema" do
     it "defines path and http_method parameters" do
-      schema = described_class.configuration_schema
+      schema = described_class.property_schema
       expect(schema[:path]).to eq({ type: :string, required: true })
       expect(schema[:http_method][:type]).to eq(:options)
       expect(schema[:http_method][:options]).to include(

@@ -47,22 +47,18 @@ export function findNodeType(nodeTypes, nodeType) {
   );
 }
 
-export function getConfigurationSchema(
-  nodeTypes,
-  nodeType,
-  typeVersion = null
-) {
+export function getPropertySchema(nodeTypes, nodeType, typeVersion = null) {
   const definition = findNodeType(nodeTypes, nodeType);
 
   if (!definition) {
     return {};
   }
 
-  if (typeVersion && definition.configuration_schema_versions?.[typeVersion]) {
-    return definition.configuration_schema_versions[typeVersion];
+  if (typeVersion && definition.property_schema_versions?.[typeVersion]) {
+    return definition.property_schema_versions[typeVersion];
   }
 
-  return definition.configuration_schema || {};
+  return definition.property_schema || {};
 }
 
 export function normalizeSchema(schema = {}) {

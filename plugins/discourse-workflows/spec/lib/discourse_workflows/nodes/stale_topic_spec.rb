@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::StaleTopic::V1 do
-  describe ".configuration_schema" do
+  describe ".property_schema" do
     it "defines hours parameter" do
-      schema = described_class.configuration_schema
+      schema = described_class.property_schema
       expect(schema[:hours]).to eq({ type: :integer, required: true, default: 24, min: 1 })
     end
   end

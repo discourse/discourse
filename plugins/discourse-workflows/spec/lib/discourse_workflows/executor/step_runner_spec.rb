@@ -23,7 +23,7 @@ RSpec.describe DiscourseWorkflows::Executor::StepRunner do
         "action:test"
       end
 
-      def self.configuration_schema
+      def self.property_schema
         {}
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe DiscourseWorkflows::Executor::StepRunner do
           input_items: [{ "json" => {} }],
           configuration: {
           },
-          configuration_schema: node_type_class.configuration_schema,
+          property_schema: node_type_class.property_schema,
           node_context: {
           },
           resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
@@ -64,7 +64,7 @@ RSpec.describe DiscourseWorkflows::Executor::StepRunner do
           input_items: [{ "json" => {} }],
           configuration: {
           },
-          configuration_schema: node_type_class.configuration_schema,
+          property_schema: node_type_class.property_schema,
           node_context: {
           },
           resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
@@ -89,7 +89,7 @@ RSpec.describe DiscourseWorkflows::Executor::StepRunner do
           input_items: [{ "json" => {} }],
           configuration: {
           },
-          configuration_schema: node_type_class.configuration_schema,
+          property_schema: node_type_class.property_schema,
           node_context: {
           },
           resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),

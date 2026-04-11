@@ -24,7 +24,7 @@ module DiscourseWorkflows
           { topic: Schemas::Topic.fields }
         end
 
-        def self.configuration_schema
+        def self.property_schema
           { hours: { type: :integer, required: true, default: 24, min: 1 } }
         end
 

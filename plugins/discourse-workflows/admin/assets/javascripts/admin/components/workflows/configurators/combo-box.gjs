@@ -94,7 +94,7 @@ export default class ComboBoxField extends Component {
       );
     }
 
-    const schema = this.args.nodeDefinition?.configuration_schema || {};
+    const schema = this.args.nodeDefinition?.property_schema || {};
     for (const fieldName of this.resets) {
       const type = fieldType(schema[fieldName]);
       let resetValue = null;

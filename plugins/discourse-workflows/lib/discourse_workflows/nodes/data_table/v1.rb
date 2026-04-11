@@ -30,7 +30,7 @@ module DiscourseWorkflows
           "#{property_i18n_prefix}.#{property_i18n_scope}.operations.#{operation}"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             operation: {
               type: :options,

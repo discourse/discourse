@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::FormTrigger::V1 do
-  describe ".configuration_schema" do
+  describe ".property_schema" do
     it "includes form_fields collection" do
-      schema = described_class.configuration_schema
+      schema = described_class.property_schema
       expect(schema[:form_fields][:type]).to eq(:collection)
       expect(schema[:form_fields][:item_schema][:field_type][:options]).to include(
         "text",
@@ -12,7 +12,7 @@ RSpec.describe DiscourseWorkflows::Nodes::FormTrigger::V1 do
     end
 
     it "includes response_mode" do
-      schema = described_class.configuration_schema
+      schema = described_class.property_schema
       expect(schema[:response_mode][:options]).to eq(%w[on_received workflow_finishes])
     end
   end

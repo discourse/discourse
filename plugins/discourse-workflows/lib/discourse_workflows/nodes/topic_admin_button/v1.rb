@@ -32,7 +32,7 @@ module DiscourseWorkflows
           { topic: Schemas::Topic.fields }
         end
 
-        def self.configuration_schema
+        def self.property_schema
           { label: { type: :string, required: true }, icon: { type: :icon, required: false } }
         end
 

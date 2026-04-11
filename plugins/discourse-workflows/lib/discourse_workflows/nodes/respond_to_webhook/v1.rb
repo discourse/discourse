@@ -20,7 +20,7 @@ module DiscourseWorkflows
           "purple"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             response_type: {
               type: :options,

@@ -21,7 +21,7 @@ import {
 } from "../../../lib/workflows/node-types";
 import {
   findNodeType,
-  getConfigurationSchema,
+  getPropertySchema,
 } from "../../../lib/workflows/property-engine";
 import PropertyEngineConfigurator from "../configurators/property-engine";
 import InputContext from "../context/input";
@@ -76,7 +76,7 @@ export default class NodeConfigurator extends Component {
   #applyDefaults() {
     const config = this.initialConfiguration;
 
-    for (const [key, fs] of Object.entries(this.configurationSchema)) {
+    for (const [key, fs] of Object.entries(this.propertySchema)) {
       if (config[key] != null) {
         continue;
       }
@@ -110,8 +110,8 @@ export default class NodeConfigurator extends Component {
     return nodeTypeDescription(this.resolvedNodeType);
   }
 
-  get configurationSchema() {
-    return getConfigurationSchema(
+  get propertySchema() {
+    return getPropertySchema(
       this.nodeTypes,
       this.args.model.node.type,
       this.args.model.node.type_version
@@ -119,7 +119,7 @@ export default class NodeConfigurator extends Component {
   }
 
   get hasConfiguration() {
-    return Object.keys(this.configurationSchema).length > 0;
+    return Object.keys(this.propertySchema).length > 0;
   }
 
   @action
@@ -172,10 +172,7 @@ export default class NodeConfigurator extends Component {
     }
 
     const config = {};
-    for (const key of [
-      ...Object.keys(this.configurationSchema),
-      "description",
-    ]) {
+    for (const key of [...Object.keys(this.propertySchema), "description"]) {
       const value = this.parametersApi.get(key);
       if (value !== undefined) {
         config[key] = value;
@@ -281,7 +278,7 @@ export default class NodeConfigurator extends Component {
                     @formApi={{this.parametersApi}}
                     @configuration={{transientData}}
                     @nodeType={{@model.node.type}}
-                    @schema={{this.configurationSchema}}
+                    @schema={{this.propertySchema}}
                     @triggerType={{@model.triggerType}}
                     @node={{@model.node}}
                     @nodes={{@model.nodes}}

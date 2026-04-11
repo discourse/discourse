@@ -22,7 +22,7 @@ module DiscourseWorkflows
           "discourse_actions"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             operation: {
               type: :options,

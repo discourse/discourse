@@ -143,7 +143,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
                 },
               ),
             configuration: config,
-            configuration_schema: described_class.configuration_schema,
+            property_schema: described_class.property_schema,
           ),
         )[
           0

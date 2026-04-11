@@ -34,7 +34,7 @@ module DiscourseWorkflows
         {
           identifier: klass.identifier,
           display_name: klass.display_name,
-          configuration_schema: klass.configuration_schema,
+          property_schema: klass.property_schema,
         }
       end
     end

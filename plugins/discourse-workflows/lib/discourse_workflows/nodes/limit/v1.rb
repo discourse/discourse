@@ -20,7 +20,7 @@ module DiscourseWorkflows
           "flow"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             max_items: {
               type: :integer,

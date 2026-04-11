@@ -22,9 +22,9 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
       it "includes expected schema fields for each node type" do
         node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
-        expect(node_type).to include(:id, :identifier, :category, :configuration_schema)
+        expect(node_type).to include(:id, :identifier, :category, :property_schema)
         expect(node_type[:category]).to eq("action")
-        expect(node_type[:configuration_schema].keys).to contain_exactly(
+        expect(node_type[:property_schema].keys).to contain_exactly(
           :topic_id,
           :raw,
           :reply_to_post_number,
@@ -35,7 +35,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       it "returns UI hints for schema-driven configurators" do
         node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
 
-        expect(node_type.dig(:configuration_schema, :raw, :ui)).to eq(control: :textarea, rows: 8)
+        expect(node_type.dig(:property_schema, :raw, :ui)).to eq(control: :textarea, rows: 8)
       end
 
       it "includes specialized property-engine controls in node schemas" do
@@ -45,18 +45,18 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
         webhook = result[:node_types].find { |nt| nt[:identifier] == "trigger:webhook" }
 
-        expect(award_badge.dig(:configuration_schema, :badge_id, :ui, :control)).to eq(:combo_box)
-        expect(code.dig(:configuration_schema, :code, :ui, :control)).to eq(:code)
-        expect(data_table.dig(:configuration_schema, :columns, :ui, :control)).to eq(
+        expect(award_badge.dig(:property_schema, :badge_id, :ui, :control)).to eq(:combo_box)
+        expect(code.dig(:property_schema, :code, :ui, :control)).to eq(:code)
+        expect(data_table.dig(:property_schema, :columns, :ui, :control)).to eq(
           :data_table_columns,
         )
-        expect(data_table.dig(:configuration_schema, :sort_column, :ui, :control)).to eq(
+        expect(data_table.dig(:property_schema, :sort_column, :ui, :control)).to eq(
           :data_table_column_select,
         )
-        expect(condition.dig(:configuration_schema, :conditions, :ui, :control)).to eq(
+        expect(condition.dig(:property_schema, :conditions, :ui, :control)).to eq(
           :condition_builder,
         )
-        expect(webhook.dig(:configuration_schema, :url_preview, :ui, :control)).to eq(:url_preview)
+        expect(webhook.dig(:property_schema, :url_preview, :ui, :control)).to eq(:url_preview)
       end
 
       it "includes metadata for badge chooser options" do
@@ -125,8 +125,8 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           a_hash_including(
             identifier: "basic_auth",
             display_name: "Basic Auth",
-            configuration_schema:
-              DiscourseWorkflows::CredentialTypes::BasicAuth.configuration_schema,
+            property_schema:
+              DiscourseWorkflows::CredentialTypes::BasicAuth.property_schema,
           ),
         )
       end

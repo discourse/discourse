@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Schedule::V1 do
-  describe ".configuration_schema" do
+  describe ".property_schema" do
     it "has a rules collection" do
-      schema = described_class.configuration_schema
+      schema = described_class.property_schema
       expect(schema[:rules][:type]).to eq(:collection)
       expect(schema[:rules][:required]).to be(true)
       expect(schema[:rules][:item_schema][:interval][:type]).to eq(:options)
     end
 
     it "includes all interval types" do
-      schema = described_class.configuration_schema
+      schema = described_class.property_schema
       options = schema[:rules][:item_schema][:interval][:options]
       expect(options).to contain_exactly(
         "seconds",

@@ -75,7 +75,7 @@ module DiscourseWorkflows
     end
 
     def operations
-      operation_field = configuration_schema[:operation]
+      operation_field = property_schema[:operation]
       options = Array(operation_field&.dig(:options))
 
       return [] unless operation_field&.dig(:type) == :options

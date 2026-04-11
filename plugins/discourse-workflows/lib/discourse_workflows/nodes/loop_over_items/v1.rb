@@ -16,7 +16,7 @@ module DiscourseWorkflows
           "brown"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           { batch_size: { type: :integer, required: true, default: 1, min: 1 } }
         end
 

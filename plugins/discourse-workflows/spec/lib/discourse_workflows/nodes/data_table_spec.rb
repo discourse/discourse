@@ -24,7 +24,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
           },
           resolver: resolver,
           configuration: configuration,
-          configuration_schema: described_class.configuration_schema,
+          property_schema: described_class.property_schema,
         ),
       )
     result[0]

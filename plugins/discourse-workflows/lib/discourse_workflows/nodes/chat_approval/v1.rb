@@ -24,7 +24,7 @@ module DiscourseWorkflows
           { approved: :boolean, channel_id: :integer }
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             message: {
               type: :string,

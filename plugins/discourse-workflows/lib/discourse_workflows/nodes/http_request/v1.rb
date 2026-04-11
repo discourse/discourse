@@ -19,7 +19,7 @@ module DiscourseWorkflows
           "indigo"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             method: {
               type: :options,

@@ -21,7 +21,7 @@ function credentialTypeDefinition(credentialTypes, type) {
 
 function credentialTypeSchema(credentialTypes, type) {
   const def = credentialTypeDefinition(credentialTypes, type);
-  return def ? normalizeSchema(def.configuration_schema) : [];
+  return def ? normalizeSchema(def.property_schema) : [];
 }
 
 export default class CredentialModal extends Component {

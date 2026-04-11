@@ -29,7 +29,7 @@ module DiscourseWorkflows
           %w[main]
         end
 
-        def self.configuration_schema
+        def self.property_schema
           webhook_fields =
             Schemas::Webhook::CONFIGURATION_FIELDS.transform_values do |field|
               visible_if = (field[:visible_if] || {}).merge(resume: "webhook")
