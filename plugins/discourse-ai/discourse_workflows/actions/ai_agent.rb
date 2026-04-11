@@ -28,7 +28,7 @@ if defined?(DiscourseWorkflows)
           "discourse_ai.discourse_workflows"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             agent_id: {
               type: :integer,

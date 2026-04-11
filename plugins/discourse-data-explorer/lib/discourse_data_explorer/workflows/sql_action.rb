@@ -15,7 +15,7 @@ module DiscourseDataExplorer
         "purple"
       end
 
-      def self.configuration_schema
+      def self.property_schema
         {
           params: {
             type: :collection,
@@ -54,14 +54,22 @@ module DiscourseDataExplorer
 
         req_params = {}
         Array(config["params"]).each do |param|
-          req_params[param["name"]] = param["value"] if param["name"].present?
+          req_params[param["name"].to_sym] = param["value"] if param["name"].present?
+        end
+
+        if req_params.present?
+          sql =
+            MiniSql::InlineParamEncoder.new(ActiveRecord::Base.connection.raw_connection).encode(
+              sql,
+              req_params,
+            )
         end
 
         query = DiscourseDataExplorer::Query.new(name: "workflow", sql: sql)
         result =
           DiscourseDataExplorer::DataExplorer.run_query(
             query,
-            req_params,
+            {},
             { limit: SiteSetting.data_explorer_query_result_limit },
           )
 

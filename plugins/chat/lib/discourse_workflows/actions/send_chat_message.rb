@@ -20,7 +20,7 @@ if defined?(DiscourseWorkflows)
           { channel_id: :integer, message: :string }
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             channel_id: {
               type: :integer,

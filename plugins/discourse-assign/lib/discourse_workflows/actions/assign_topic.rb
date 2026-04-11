@@ -35,7 +35,7 @@ if defined?(DiscourseWorkflows)
           "cyan"
         end
 
-        def self.configuration_schema
+        def self.property_schema
           {
             operation: {
               type: :options,
