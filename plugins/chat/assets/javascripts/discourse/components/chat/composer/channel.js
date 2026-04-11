@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { debounce } from "discourse/lib/decorators";
+import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 import ChatComposer from "../../chat-composer";
 
@@ -16,8 +16,11 @@ export default class ChatComposerChannel extends ChatComposer {
 
   composerId = "channel-composer";
 
-  @debounce(2000)
   persistDraft() {
+    this._persistHandler = discourseDebounce(this, this._doPersistDraft, 2000);
+  }
+
+  _doPersistDraft() {
     this.chatDraftsManager.add(this.draft, this.args.channel.id);
   }
 

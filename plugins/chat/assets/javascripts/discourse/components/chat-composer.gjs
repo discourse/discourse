@@ -286,6 +286,8 @@ export default class ChatComposer extends Component {
       return;
     }
 
+    this.cancelPersistDraft();
+    this.destroyDraft();
     await this.args.onSendMessage(this.draft);
     this.composer.textarea.refreshHeight();
   }

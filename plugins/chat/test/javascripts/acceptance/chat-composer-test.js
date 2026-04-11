@@ -5,7 +5,7 @@ import {
   triggerEvent,
   visit,
 } from "@ember/test-helpers";
-import { skip } from "qunit";
+import { skip, test } from "qunit";
 import {
   acceptance,
   publishToMessageBus,
@@ -142,3 +142,77 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
       .exists("it displays a network error icon");
   });
 });
+
+acceptance(
+  "Discourse Chat - Composer - draft cleared on send",
+  function (needs) {
+    needs.user({ has_chat_enabled: true });
+    needs.settings({ chat_enabled: true });
+
+    needs.pretender((server, helper) => {
+      server.get("/chat/api/me/channels", () =>
+        helper.response({
+          direct_message_channels: [],
+          public_channels: [
+            {
+              id: 11,
+              title: "General",
+              chatable_id: 1,
+              chatable_type: "Category",
+              chatable: { id: 1, color: "ff0000", name: "general" },
+              current_user_membership: { following: true },
+              meta: {
+                message_bus_last_ids: {
+                  new_mentions: 0,
+                  new_messages: 0,
+                  kick: 0,
+                },
+              },
+            },
+          ],
+          meta: { message_bus_last_ids: {} },
+          tracking: {
+            channel_tracking: { 11: { unread_count: 0, mention_count: 0 } },
+            thread_tracking: {},
+          },
+        })
+      );
+
+      server.get("/chat/api/channels/11/messages", () =>
+        helper.response({
+          messages: [],
+          meta: { can_delete_self: false },
+        })
+      );
+
+      server.post("/chat/11", () => helper.response({ success: true }));
+      server.post("/chat/api/channels/11/drafts", () => helper.response({}));
+    });
+
+    needs.hooks.beforeEach(function () {
+      Object.defineProperty(this, "chatDraftsManager", {
+        get: () => this.container.lookup("service:chat-drafts-manager"),
+      });
+    });
+
+    test("clears the draft from chatDraftsManager when a message is sent", async function (assert) {
+      await visit("/chat/c/another-category/11");
+
+      await fillIn(".chat-composer__input", "hello world");
+
+      assert.notStrictEqual(
+        this.chatDraftsManager.get(11),
+        undefined,
+        "draft is saved to chatDraftsManager after typing"
+      );
+
+      await click(".chat-composer-button.-send");
+
+      assert.strictEqual(
+        this.chatDraftsManager.get(11),
+        undefined,
+        "draft is removed from chatDraftsManager after sending"
+      );
+    });
+  }
+);
