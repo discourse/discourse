@@ -10,7 +10,7 @@ module DiscourseWorkflows
           waiting_input_items(execution)
         end
 
-        def pause!(wait)
+        def begin_wait!(wait)
           duration = wait.wait_duration_seconds.seconds
 
           pause_execution!(

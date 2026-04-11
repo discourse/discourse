@@ -62,13 +62,15 @@ module DiscourseWorkflows
           end
         end
 
-        def initialize(persistence:, context:, runtime:)
+        def initialize(persistence:, context:, node:, step:, steps: [])
           @persistence = persistence
           @context = context
-          @runtime = runtime
+          @node = node
+          @step = step
+          @steps = steps
         end
 
-        def pause!(wait)
+        def begin_wait!(wait)
           raise NotImplementedError
         end
 
@@ -79,15 +81,16 @@ module DiscourseWorkflows
             node: node,
             waiting_until: waiting_until,
             extra_config: extra_config,
+            steps: @steps,
           )
         end
 
         def step
-          @runtime.waiting_step
+          @step
         end
 
         def node
-          @runtime.waiting_node
+          @node
         end
 
         def execution

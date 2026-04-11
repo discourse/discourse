@@ -34,7 +34,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
           channel_id: channel.id.to_s,
         )
 
-      handler.pause!(wait)
+      handler.begin_wait!(wait)
 
       execution.reload
       expect(execution.status).to eq("waiting")
@@ -66,7 +66,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
         )
 
       freeze_time do
-        handler.pause!(wait)
+        handler.begin_wait!(wait)
 
         execution.reload
         expect(execution.waiting_until).to eq_time(60.minutes.from_now)
@@ -96,7 +96,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
           deny_label: "No",
         )
 
-      handler.pause!(wait)
+      handler.begin_wait!(wait)
 
       chat_message = Chat::Message.where(chat_channel_id: channel.id).last
       elements = chat_message.blocks.first["elements"]
@@ -128,7 +128,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::ChatApproval do
             channel_id: channel.id.to_s,
           )
 
-        handler.pause!(wait)
+        handler.begin_wait!(wait)
         nonces << execution.reload.waiting_config["wait_nonce"]
 
         execution.update!(status: :running, waiting_config: {}, waiting_node_id: nil)

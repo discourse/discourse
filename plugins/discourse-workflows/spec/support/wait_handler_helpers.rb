@@ -23,10 +23,10 @@ module WaitHandlerHelpers
         configuration: configuration,
       )
     persistence =
-      instance_double(DiscourseWorkflows::Executor::ExecutionPersistence, execution: execution)
+      instance_double(DiscourseWorkflows::Executor::ExecutionStore, execution: execution)
     allow(persistence).to receive(
       :pause_waiting_execution!,
-    ) do |node:, waiting_until: nil, extra_config: {}|
+    ) do |node:, waiting_until: nil, extra_config: {}, steps: []|
       execution.update!(
         status: :waiting,
         waiting_node_id: node.id,
@@ -43,12 +43,9 @@ module WaitHandlerHelpers
           DiscourseWorkflows::Executor::ExecutionContext,
           resume_token: context["__resume_token"],
         ),
-      runtime:
-        instance_double(
-          DiscourseWorkflows::Executor::ExecutionRuntime,
-          waiting_step: waiting_step,
-          waiting_node: waiting_node,
-        ),
+      node: waiting_node,
+      step: waiting_step,
+      steps: [],
     }
   end
 end

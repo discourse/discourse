@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::Executor::ExecutionPersistence do
+RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
   fab!(:workflow, :discourse_workflows_workflow)
 
   let(:trigger_data) { { "topic_id" => 1 } }
@@ -11,19 +11,19 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionPersistence do
       user: nil,
     )
   end
-  let(:steps_journal) { DiscourseWorkflows::Executor::StepsJournal.new }
-  let(:persistence) do
+  let(:options) { DiscourseWorkflows::Executor::ExecutionOptions.new }
+  let(:store) do
     described_class.new(
       trigger_node_id: "node_1",
       execution_context: execution_context,
-      steps_journal: steps_journal,
       execution_mode: :normal,
+      options: options,
     )
   end
 
   describe "#start!" do
     it "creates the execution and seeds the resume token" do
-      execution = persistence.start!
+      execution = store.start!
 
       expect(execution).to be_present
       expect(execution_context.execution).to eq(execution)
@@ -32,57 +32,44 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionPersistence do
     end
   end
 
-  describe "#save!" do
-    before { persistence.start! }
+  describe "#save! via finish!" do
+    before { store.start! }
 
     it "persists entries and context to execution_data" do
       execution_context.store_context("node_a", [{ "json" => { "x" => 1 } }])
-      steps_journal.record_step(
-        "node_a",
-        {
-          "node_id" => "1",
-          "node_name" => "Node A",
-          "node_type" => "action:code",
-          "position" => 0,
-          "input" => [],
-          "status" => "success",
-        },
-      )
+      steps = [
+        DiscourseWorkflows::Executor::Step.build(
+          node:
+            OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
+          position: 0,
+          input: [],
+          status: DiscourseWorkflows::Executor::Step::SUCCESS,
+        ),
+      ]
 
-      persistence.save!
+      store.finish!(steps: steps)
 
-      parsed = JSON.parse(persistence.execution.execution_data.data)
+      parsed = JSON.parse(store.execution.execution_data.data)
       expect(parsed["context"]["node_a"]).to eq([{ "json" => { "x" => 1 } }])
-      expect(parsed["entries"]["node_a"]).to be_present
-    end
-
-    it "truncates context when data exceeds max size" do
-      execution_context.store_context("big_data", "x" * 6.megabytes)
-
-      persistence.save!(max_size: 5.megabytes)
-      parsed = JSON.parse(persistence.execution.execution_data.data)
-
-      expect(parsed["context"]).to eq({ "__truncated" => true })
+      expect(parsed["entries"]["1"]).to be_present
     end
   end
 
   describe "#resume!" do
-    it "restores journal state, context, and workflow snapshot data" do
-      persistence.start!
+    it "restores context and workflow snapshot data" do
+      store.start!
       execution_context.store_context("node_a", "data_a")
-      steps_journal.record_step(
-        "node_a",
-        {
-          "node_id" => "1",
-          "node_name" => "Node A",
-          "node_type" => "action:code",
-          "position" => 0,
-          "input" => [],
-          "status" => "waiting",
-        },
-      )
-      persistence.save!
-      persistence.execution.update!(
+      steps = [
+        DiscourseWorkflows::Executor::Step.build(
+          node:
+            OpenStruct.new(id: "1", name: "Node A", type: "action:code", type_version: "1.0"),
+          position: 0,
+          input: [],
+          status: DiscourseWorkflows::Executor::Step::WAITING,
+        ),
+      ]
+      store.finish!(steps: steps)
+      store.execution.update!(
         status: :waiting,
         waiting_node_id: "1",
         waiting_config: {
@@ -101,22 +88,20 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionPersistence do
           trigger_data: trigger_data,
           user: nil,
         )
-      restored_journal = DiscourseWorkflows::Executor::StepsJournal.new
       restored =
         described_class.new(
           trigger_node_id: "node_1",
           execution_context: restored_context,
-          steps_journal: restored_journal,
           execution_mode: :normal,
+          options: options,
         )
 
-      restored.resume!(persistence.execution)
+      restored.resume!(store.execution)
 
       expect(restored_context.context).to include("node_a" => "data_a")
-      expect(restored_context.node_context_for(OpenStruct.new(name: "node_a"))).to eq(
-        "counter" => 1,
-      )
-      expect(restored_journal.next_step_position).to eq(1)
+      expect(
+        restored_context.node_context_for(OpenStruct.new(id: "node_a", name: "node_a")),
+      ).to eq("counter" => 1)
       expect(restored.workflow_snapshot_data).to be_present
     end
   end

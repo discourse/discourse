@@ -31,7 +31,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Form do
 
       messages =
         MessageBus.track_publish(DiscourseWorkflows::Executor.form_channel(execution.id)) do
-          handler.pause!(wait)
+          handler.begin_wait!(wait)
         end
 
       expect(messages.size).to eq(1)
@@ -56,7 +56,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Form do
           form_description: "Fill out your info",
         )
 
-      handler.pause!(wait)
+      handler.begin_wait!(wait)
 
       execution.reload
       expect(execution.status).to eq("waiting")

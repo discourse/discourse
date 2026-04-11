@@ -21,7 +21,7 @@ module DiscourseWorkflows
           )
         end
 
-        def pause!(wait)
+        def begin_wait!(wait)
           timeout = wait.timeout_seconds
 
           pause_execution!(

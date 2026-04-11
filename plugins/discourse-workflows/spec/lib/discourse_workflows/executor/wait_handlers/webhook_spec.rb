@@ -25,7 +25,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       handler = described_class.new(**dependencies)
       wait = DiscourseWorkflows::WaitForWebhook.new(http_method: "POST")
 
-      handler.pause!(wait)
+      handler.begin_wait!(wait)
 
       execution.reload
       expect(execution.status).to eq("waiting")
@@ -50,7 +50,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       handler = described_class.new(**dependencies)
       wait = DiscourseWorkflows::WaitForWebhook.new(webhook_suffix: "after-approval")
 
-      handler.pause!(wait)
+      handler.begin_wait!(wait)
 
       execution.reload
       expect(execution.waiting_config["webhook_suffix"]).to eq("after-approval")
@@ -69,7 +69,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       wait = DiscourseWorkflows::WaitForWebhook.new(timeout_amount: 2, timeout_unit: "hours")
 
       freeze_time do
-        handler.pause!(wait)
+        handler.begin_wait!(wait)
 
         execution.reload
         expect(execution.waiting_until).to eq_time(2.hours.from_now)
@@ -92,7 +92,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       handler = described_class.new(**dependencies)
       wait = DiscourseWorkflows::WaitForWebhook.new
 
-      handler.pause!(wait)
+      handler.begin_wait!(wait)
 
       execution.reload
       expect(execution.waiting_until).to be_nil

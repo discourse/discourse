@@ -6,7 +6,7 @@ module DiscourseWorkflows
       class Form < Base
         handles_wait_type :form
 
-        def pause!(wait)
+        def begin_wait!(wait)
           pause_execution!(
             node,
             extra_config: {

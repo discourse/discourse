@@ -1,18 +1,16 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
+RSpec.describe DiscourseWorkflows::Executor::ErrorWorkflowTrigger do
   fab!(:user)
 
-  def build_handler(workflow, state, error_depth: 0, execution_mode: :normal)
-    described_class.new(workflow, state, error_depth: error_depth, execution_mode: execution_mode)
+  def build_handler(workflow, steps, error_depth: 0, execution_mode: :normal)
+    described_class.new(workflow, steps, error_depth: error_depth, execution_mode: execution_mode)
   end
 
-  def build_state_double(entries: {}, last_failed_step: nil)
-    instance_double(
-      DiscourseWorkflows::Executor::StepsJournal,
-      entries: entries,
-      last_failed_step: last_failed_step,
-    )
+  def build_steps(last_failed_step: nil)
+    return [] if last_failed_step.nil?
+
+    [DiscourseWorkflows::Executor::Step.from_h(last_failed_step.merge("status" => "error"))]
   end
 
   def build_error_workflow
@@ -25,8 +23,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
       error_wf = build_error_workflow
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
-      state = build_state_double
-      handler = build_handler(workflow, state)
+      steps = build_steps
+      handler = build_handler(workflow, steps)
 
       handler.trigger_error_workflow(StandardError.new("boom"))
 
@@ -41,8 +39,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
       error_wf = build_error_workflow
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
-      state = build_state_double
-      handler = build_handler(workflow, state, error_depth: 3)
+      steps = build_steps
+      handler = build_handler(workflow, steps, error_depth: 3)
 
       handler.trigger_error_workflow(StandardError.new("boom"))
 
@@ -53,8 +51,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
       error_wf = build_error_workflow
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
-      state = build_state_double
-      handler = build_handler(workflow, state, execution_mode: :error_mode)
+      steps = build_steps
+      handler = build_handler(workflow, steps, execution_mode: :error_mode)
 
       handler.trigger_error_workflow(StandardError.new("boom"))
 
@@ -63,8 +61,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
 
     it "does not trigger when no error workflow is configured" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
-      state = build_state_double
-      handler = build_handler(workflow, state)
+      steps = build_steps
+      handler = build_handler(workflow, steps)
 
       handler.trigger_error_workflow(StandardError.new("boom"))
 
@@ -76,8 +74,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
       error_wf.update!(enabled: false)
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
-      state = build_state_double
-      handler = build_handler(workflow, state)
+      steps = build_steps
+      handler = build_handler(workflow, steps)
 
       handler.trigger_error_workflow(StandardError.new("boom"))
 
@@ -88,8 +86,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
       error_wf = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
-      state = build_state_double
-      handler = build_handler(workflow, state)
+      steps = build_steps
+      handler = build_handler(workflow, steps)
 
       handler.trigger_error_workflow(StandardError.new("boom"))
 
@@ -101,8 +99,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
       failed_step = { "node_id" => "1", "node_name" => "My Node", "status" => "error" }
-      state = build_state_double(last_failed_step: failed_step)
-      handler = build_handler(workflow, state)
+      steps = build_steps(last_failed_step: failed_step)
+      handler = build_handler(workflow, steps)
 
       handler.trigger_error_workflow(StandardError.new("something broke"))
 
@@ -116,8 +114,8 @@ RSpec.describe DiscourseWorkflows::Executor::ErrorHandler do
       error_wf = build_error_workflow
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
       workflow.update!(error_workflow_id: error_wf.id)
-      state = build_state_double
-      handler = build_handler(workflow, state)
+      steps = build_steps
+      handler = build_handler(workflow, steps)
 
       handler.trigger_error_workflow(StandardError.new("x" * 2000))
 

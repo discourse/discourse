@@ -2,7 +2,7 @@
 
 module DiscourseWorkflows
   class Executor
-    module FormPresenter
+    module FormExecutionChannel
       extend ActiveSupport::Concern
 
       class_methods do

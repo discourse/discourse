@@ -2,12 +2,12 @@
 
 module DiscourseWorkflows
   class Executor
-    class ErrorHandler
+    class ErrorWorkflowTrigger
       MAX_ERROR_DEPTH = 3
 
-      def initialize(workflow, failure_source, error_depth:, execution_mode:)
+      def initialize(workflow, steps, error_depth:, execution_mode:)
         @workflow = workflow
-        @failure_source = failure_source
+        @steps = steps
         @error_depth = error_depth
         @execution_mode = execution_mode
       end
@@ -46,7 +46,10 @@ module DiscourseWorkflows
       end
 
       def last_failed_step_node_name
-        step = @failure_source.last_failed_step
+        step =
+          @steps.reverse_each.find do |s|
+            s.respond_to?(:error?) ? s.error? : s["status"] == "error"
+          end
         return step.node_name if step.respond_to?(:node_name)
 
         step&.dig("node_name")

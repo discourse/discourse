@@ -2,7 +2,7 @@
 
 module DiscourseWorkflows
   class Executor
-    class ExecutorRateLimiter
+    class ExecutionRateLimiter
       def initialize(workflow)
         @workflow = workflow
       end

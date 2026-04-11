@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::Executor::ExecutorRateLimiter do
+RSpec.describe DiscourseWorkflows::Executor::ExecutionRateLimiter do
   fab!(:user)
 
-  before do
-    RateLimiter.enable
-  end
+  before { RateLimiter.enable }
 
   after { RateLimiter.disable }
 

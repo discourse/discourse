@@ -18,7 +18,7 @@ module DiscourseWorkflows
           ]
         end
 
-        def pause!(wait)
+        def begin_wait!(wait)
           channel_id = wait.channel_id.to_i
           wait_nonce = SecureRandom.hex(16)
           chat_message =

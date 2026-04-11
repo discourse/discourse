@@ -23,7 +23,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Timer do
           wait_duration_seconds: 2.hours.to_i,
         )
 
-      handler.pause!(wait)
+      handler.begin_wait!(wait)
 
       job = Jobs::DiscourseWorkflows::ResumeTimer.jobs.last
       expect(job).to be_present
@@ -41,7 +41,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Timer do
         )
 
       freeze_time do
-        handler.pause!(wait)
+        handler.begin_wait!(wait)
 
         execution.reload
         expect(execution.status).to eq("waiting")

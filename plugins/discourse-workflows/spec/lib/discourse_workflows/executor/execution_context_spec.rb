@@ -62,8 +62,20 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionContext do
       )
 
       expect(execution_context.context).to include("trigger" => trigger_data, "node_a" => "data_a")
-      expect(execution_context.node_context_for(OpenStruct.new(name: "node_a"))).to eq(
-        "counter" => 1,
+      expect(
+        execution_context.node_context_for(OpenStruct.new(id: "node_a", name: "node_a")),
+      ).to eq("counter" => 1)
+    end
+
+    it "exposes node contexts to expressions by node name" do
+      workflow.update!(nodes: [{ "id" => "1", "name" => "Node A" }])
+
+      execution_context.restore!(context: {}, node_contexts: { "1" => { "counter" => 1 } })
+
+      expect(execution_context.resolver_context["__node_contexts"]).to eq(
+        "Node A" => {
+          "counter" => 1,
+        },
       )
     end
   end
