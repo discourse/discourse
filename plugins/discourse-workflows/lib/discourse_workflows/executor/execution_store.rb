@@ -57,7 +57,7 @@ module DiscourseWorkflows
         execution
       end
 
-      def create_terminal(status)
+      def create_execution_with_status(status)
         now = Time.current
 
         DiscourseWorkflows::Execution.create!(

@@ -59,8 +59,8 @@ module DiscourseWorkflows
     end
 
     def run
-      return @store.create_terminal(:skipped) unless @workflow.enabled?
-      return @store.create_terminal(:rate_limited) unless rate_limiter.within_limits?
+      return @store.create_execution_with_status(:skipped) unless @workflow.enabled?
+      return @store.create_execution_with_status(:rate_limited) unless rate_limiter.within_limits?
 
       start_execution!
       execute_flow do
