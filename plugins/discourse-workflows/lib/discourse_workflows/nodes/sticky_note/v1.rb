@@ -5,7 +5,7 @@ module DiscourseWorkflows
     module StickyNote
       class V1 < NodeType
         def self.identifier
-          "core:sticky_note"
+          "flow:sticky_note"
         end
 
         def self.icon

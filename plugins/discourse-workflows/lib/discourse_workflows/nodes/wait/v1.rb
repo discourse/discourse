@@ -8,7 +8,7 @@ module DiscourseWorkflows
         MAX_WAIT_DURATION_SECONDS = 30.days.to_i
 
         def self.identifier
-          "core:wait"
+          "flow:wait"
         end
 
         def self.icon

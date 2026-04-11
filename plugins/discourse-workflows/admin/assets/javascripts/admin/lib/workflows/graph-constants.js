@@ -1,5 +1,5 @@
 export const DEFAULT_OUTPUT = "main";
-export const LOOP_NODE_TYPE = "core:loop_over_items";
+export const LOOP_NODE_TYPE = "flow:loop_over_items";
 export const LOOP_OUTPUT = "loop";
 
 export function normalizeSourceOutput(sourceOutput) {

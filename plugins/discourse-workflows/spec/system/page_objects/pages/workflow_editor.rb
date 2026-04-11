@@ -61,7 +61,7 @@ module PageObjects
         "action:http_request" => "HTTP Request",
         "action:data_table" => "Data Table",
         "action:chat_approval" => "Chat Approval",
-        "core:loop_over_items" => "Loop Over Items",
+        "flow:loop_over_items" => "Loop Over Items",
       }.freeze
 
       NODE_TYPE_OPERATION_LABELS = {

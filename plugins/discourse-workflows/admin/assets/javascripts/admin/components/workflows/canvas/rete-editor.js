@@ -51,7 +51,7 @@ export class ReteEditorBridge {
             new ClassicPreset.Input(
               socket,
               "",
-              data.type === "core:loop_over_items"
+              data.type === "flow:loop_over_items"
             )
           );
         }

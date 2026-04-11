@@ -25,9 +25,9 @@ module DiscourseWorkflows
         label_key: "discourse_workflows.add_node.categories.data",
         order: 50,
       },
-      "core" => {
+      "utilities" => {
         icon: "code",
-        label_key: "discourse_workflows.add_node.categories.core",
+        label_key: "discourse_workflows.add_node.categories.utilities",
         order: 60,
       },
       "flow" => {
@@ -124,10 +124,10 @@ module DiscourseWorkflows
       case kind
       when "trigger"
         "triggers"
-      when "condition", "core"
+      when "condition", "flow"
         "flow"
       else
-        "core"
+        "utilities"
       end
     end
 

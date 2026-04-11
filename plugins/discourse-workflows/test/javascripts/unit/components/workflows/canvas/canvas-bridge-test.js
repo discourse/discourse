@@ -12,7 +12,7 @@ const NODE_TYPES = [
     ports: [{ key: "main", primary: true }],
   },
   {
-    identifier: "core:loop_over_items",
+    identifier: "flow:loop_over_items",
     ports: [
       { key: "done", primary: true },
       { key: "loop", primary: false },
@@ -178,7 +178,7 @@ module("Unit | Canvas Bridge", function (hooks) {
         },
         {
           clientId: "loop",
-          type: "core:loop_over_items",
+          type: "flow:loop_over_items",
           position: { x: 200, y: 0 },
         },
       ],

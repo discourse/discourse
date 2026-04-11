@@ -50,7 +50,7 @@
       }
     },
     {
-      "type": "core:sticky_note",
+      "type": "flow:sticky_note",
       "type_version": "1.0",
       "name": "Sticky Note",
       "configuration": {
@@ -65,7 +65,7 @@
       }
     },
     {
-      "type": "core:sticky_note",
+      "type": "flow:sticky_note",
       "type_version": "1.0",
       "name": "Sticky Note",
       "configuration": {

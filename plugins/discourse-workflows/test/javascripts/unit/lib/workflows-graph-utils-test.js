@@ -65,7 +65,7 @@ module("Unit | Utility | workflows graph utils", function () {
     const graph = removeNodesFromGraph(
       [
         { clientId: "trigger", type: "trigger:manual" },
-        { clientId: "loop", type: "core:loop_over_items" },
+        { clientId: "loop", type: "flow:loop_over_items" },
         { clientId: "body", type: "action:set_fields" },
         { clientId: "done", type: "action:topic_tags" },
       ],
@@ -119,7 +119,7 @@ module("Unit | Utility | workflows graph utils", function () {
     const graph = removeNodesFromGraph(
       [
         { clientId: "trigger", type: "trigger:manual" },
-        { clientId: "loop", type: "core:loop_over_items" },
+        { clientId: "loop", type: "flow:loop_over_items" },
         { clientId: "body", type: "action:set_fields" },
         { clientId: "done", type: "action:topic_tags" },
       ],
@@ -156,7 +156,7 @@ module("Unit | Utility | workflows graph utils", function () {
     assert.deepEqual(normalizeGraph(graph), {
       nodes: [
         { clientId: "done", type: "action:topic_tags" },
-        { clientId: "loop", type: "core:loop_over_items" },
+        { clientId: "loop", type: "flow:loop_over_items" },
         { clientId: "trigger", type: "trigger:manual" },
       ],
       connections: [
@@ -183,7 +183,7 @@ module("Unit | Utility | workflows graph utils", function () {
     const graph = removeNodesFromGraph(
       [
         { clientId: "trigger", type: "trigger:manual" },
-        { clientId: "loop", type: "core:loop_over_items" },
+        { clientId: "loop", type: "flow:loop_over_items" },
         { clientId: "branch", type: "condition:if" },
         { clientId: "true_body", type: "action:set_fields" },
         { clientId: "false_body", type: "action:topic_tags" },
@@ -261,7 +261,7 @@ module("Unit | Utility | workflows graph utils", function () {
     const graph = removeNodesFromGraph(
       [
         { clientId: "trigger", type: "trigger:manual" },
-        { clientId: "loop", type: "core:loop_over_items" },
+        { clientId: "loop", type: "flow:loop_over_items" },
         { clientId: "body_1", type: "action:set_fields" },
         { clientId: "body_2", type: "action:topic_tags" },
         { clientId: "done", type: "action:http_request" },

@@ -26,7 +26,7 @@ RSpec.describe DiscourseWorkflows::Execution do
       steps = [
         build_step(started_at: "2026-01-01T00:00:00.000Z", finished_at: "2026-01-01T00:00:00.200Z"),
         build_step(
-          node_type: "core:wait",
+          node_type: "flow:wait",
           started_at: "2026-01-01T00:00:00.200Z",
           finished_at: "2026-01-01T00:05:00.000Z",
         ),

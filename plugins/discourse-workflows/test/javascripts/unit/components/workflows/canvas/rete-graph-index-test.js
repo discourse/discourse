@@ -16,7 +16,7 @@ module("Unit | Utility | workflows rete graph index", function () {
   test("classifies branched loop body and loop return connections", function (assert) {
     const nodes = [
       node("trigger", "trigger:manual"),
-      node("loop", "core:loop_over_items"),
+      node("loop", "flow:loop_over_items"),
       node("branch", "condition:if"),
       node("true_body", "action:set_fields"),
       node("false_body", "action:topic_tags"),
@@ -58,7 +58,7 @@ module("Unit | Utility | workflows rete graph index", function () {
 
   test("ignores the loop self-connection placeholder when indexing loop bodies", function (assert) {
     const graphIndex = buildWorkflowGraphIndex(
-      [node("loop", "core:loop_over_items")],
+      [node("loop", "flow:loop_over_items")],
       [connection("loop", "loop", "loop")]
     );
 

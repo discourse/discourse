@@ -5,7 +5,7 @@ module DiscourseWorkflows
     module LoopOverItems
       class V1 < NodeType
         def self.identifier
-          "core:loop_over_items"
+          "flow:loop_over_items"
         end
 
         def self.icon

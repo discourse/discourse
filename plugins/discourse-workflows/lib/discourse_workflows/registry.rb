@@ -21,8 +21,8 @@ module DiscourseWorkflows
         nodes.select { |n| n.identifier.start_with?("condition:") }
       end
 
-      def cores
-        nodes.select { |n| n.identifier.start_with?("core:") }
+      def flows
+        nodes.select { |n| n.identifier.start_with?("flow:") }
       end
 
       def credential_types

@@ -75,7 +75,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         data_table = result[:node_types].find { |nt| nt[:identifier] == "action:data_table" }
         condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
         form = result[:node_types].find { |nt| nt[:identifier] == "action:form" }
-        loop = result[:node_types].find { |nt| nt[:identifier] == "core:loop_over_items" }
+        loop = result[:node_types].find { |nt| nt[:identifier] == "flow:loop_over_items" }
         topic_closed = result[:node_types].find { |nt| nt[:identifier] == "trigger:topic_closed" }
 
         expect(create_post.dig(:ui, :palette_group, :id)).to eq("discourse_actions")

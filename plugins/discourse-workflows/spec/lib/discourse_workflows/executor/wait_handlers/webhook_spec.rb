@@ -17,7 +17,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       dependencies =
         build_wait_dependencies(
           execution,
-          node_type: "core:wait",
+          node_type: "flow:wait",
           context: {
             "__resume_token" => "test-token",
           },
@@ -42,7 +42,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       dependencies =
         build_wait_dependencies(
           execution,
-          node_type: "core:wait",
+          node_type: "flow:wait",
           context: {
             "__resume_token" => "test-token",
           },
@@ -60,7 +60,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       dependencies =
         build_wait_dependencies(
           execution,
-          node_type: "core:wait",
+          node_type: "flow:wait",
           context: {
             "__resume_token" => "test-token",
           },
@@ -84,7 +84,7 @@ RSpec.describe DiscourseWorkflows::Executor::WaitHandlers::Webhook do
       dependencies =
         build_wait_dependencies(
           execution,
-          node_type: "core:wait",
+          node_type: "flow:wait",
           context: {
             "__resume_token" => "test-token",
           },

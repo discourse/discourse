@@ -21,7 +21,7 @@ const EXPRESSION_CONTEXT = {
           type: "string",
           visible_if: {
             node_present: {
-              type: "core:wait",
+              type: "flow:wait",
               configuration: { resume: "webhook" },
             },
           },
@@ -87,7 +87,7 @@ module("Integration | Component | workflows/context/input", function (hooks) {
   test("execution fields include resume_url when webhook wait node exists", async function (assert) {
     const waitNode = {
       clientId: "w1",
-      type: "core:wait",
+      type: "flow:wait",
       name: "Wait",
       configuration: { resume: "webhook" },
     };

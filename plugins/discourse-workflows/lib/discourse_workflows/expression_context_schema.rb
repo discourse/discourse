@@ -37,7 +37,7 @@ module DiscourseWorkflows
             type: :string,
             visible_if: {
               node_present: {
-                type: "core:wait",
+                type: "flow:wait",
                 configuration: {
                   resume: "webhook",
                 },

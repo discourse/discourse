@@ -21,7 +21,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                  configuration: {
                    "field" => "urls",
                  }
-          g.node "loop-1", "core:loop_over_items", configuration: { "batch_size" => 2 }
+          g.node "loop-1", "flow:loop_over_items", configuration: { "batch_size" => 2 }
           g.node "code-1",
                  "action:code",
                  configuration: {

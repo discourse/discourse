@@ -1,4 +1,4 @@
-export const STICKY_NOTE_TYPE = "core:sticky_note";
+export const STICKY_NOTE_TYPE = "flow:sticky_note";
 
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 150;

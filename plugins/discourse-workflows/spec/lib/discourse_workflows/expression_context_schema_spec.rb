@@ -28,7 +28,7 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       field = described_class.environment_symbols.dig("$execution", :fields, "resume_url")
       expect(field[:visible_if]).to eq(
         node_present: {
-          type: "core:wait",
+          type: "flow:wait",
           configuration: {
             resume: "webhook",
           },

@@ -67,12 +67,12 @@ module("Unit | lib | discourse-workflows | resolve-node-fields", function () {
 
   test("resolveNodeFields filters fields by visible_if", function (assert) {
     const node = {
-      type: "core:wait",
+      type: "flow:wait",
       configuration: { resume: "webhook" },
     };
     const nodeTypes = [
       {
-        identifier: "core:wait",
+        identifier: "flow:wait",
         output_schema: {
           body: { type: "object", visible_if: { resume: "webhook" } },
           hidden: {
@@ -89,7 +89,7 @@ module("Unit | lib | discourse-workflows | resolve-node-fields", function () {
   });
 
   test("resolveNodeFields returns null for node with no schema", function (assert) {
-    const node = { type: "core:code", configuration: {} };
+    const node = { type: "action:code", configuration: {} };
     const fields = resolveNodeFields(node, []);
 
     assert.strictEqual(fields, null);

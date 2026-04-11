@@ -33,10 +33,10 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
     end
   end
 
-  let(:core_class) do
+  let(:flow_class) do
     Class.new(DiscourseWorkflows::NodeType) do
       def self.identifier
-        "core:wait"
+        "flow:wait"
       end
     end
   end
@@ -83,12 +83,12 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
       expect(condition_class.group).to eq("flow")
     end
 
-    it "returns 'flow' for core nodes" do
-      expect(core_class.group).to eq("flow")
+    it "returns 'flow' for flow nodes" do
+      expect(flow_class.group).to eq("flow")
     end
 
-    it "returns 'core' for action nodes" do
-      expect(action_class.group).to eq("core")
+    it "returns 'utilities' for action nodes" do
+      expect(action_class.group).to eq("utilities")
     end
   end
 

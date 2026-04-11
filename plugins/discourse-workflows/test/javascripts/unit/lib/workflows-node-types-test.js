@@ -70,7 +70,7 @@ module("Unit | Utility | workflows node types", function () {
       ],
     };
     const loopNodeType = {
-      identifier: "core:loop_over_items",
+      identifier: "flow:loop_over_items",
       ports: [
         {
           key: "done",

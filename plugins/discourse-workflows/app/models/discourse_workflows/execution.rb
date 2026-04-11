@@ -28,7 +28,7 @@ module DiscourseWorkflows
             )
           end
 
-    WAITING_NODE_TYPES = %w[action:chat_approval action:form core:wait].freeze
+    WAITING_NODE_TYPES = %w[action:chat_approval action:form flow:wait].freeze
 
     def self.compute_run_time_ms(steps)
       timed =

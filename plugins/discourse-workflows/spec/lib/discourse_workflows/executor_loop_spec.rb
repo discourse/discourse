@@ -18,7 +18,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                    "include_input" => false,
                    "json" => '{"item_id": "1"}',
                  }
-          g.node "loop-1", "core:loop_over_items", configuration: { "batch_size" => 1 }
+          g.node "loop-1", "flow:loop_over_items", configuration: { "batch_size" => 1 }
           g.node "process-1",
                  "action:set_fields",
                  configuration: {
@@ -55,7 +55,7 @@ RSpec.describe DiscourseWorkflows::Executor do
       graph =
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:manual"
-          g.node "loop-1", "core:loop_over_items", configuration: { "batch_size" => 1 }
+          g.node "loop-1", "flow:loop_over_items", configuration: { "batch_size" => 1 }
           g.node "process-1",
                  "action:set_fields",
                  configuration: {
