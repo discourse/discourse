@@ -231,8 +231,8 @@ export default class WorkflowCanvas extends Component {
     return this.rete?.renderer.connectionEntryList ?? [];
   }
 
-  get outputStubEntries() {
-    return this.rete?.renderer.outputStubEntryList ?? [];
+  get outputHandleEntries() {
+    return this.rete?.renderer.outputHandleEntryList ?? [];
   }
 
   get areaContentElement() {
@@ -265,7 +265,7 @@ export default class WorkflowCanvas extends Component {
   }
 
   @action
-  handleOutputStubAdd(nodeClientId, outputKey, e) {
+  handleOutputHandleAdd(nodeClientId, outputKey, e) {
     e.stopPropagation();
     this.args.onOpenNodePanel?.({
       sourceClientId: nodeClientId,
@@ -636,10 +636,10 @@ export default class WorkflowCanvas extends Component {
         {{/in-element}}
       {{/each}}
 
-      {{#each this.outputStubEntries as |entry|}}
+      {{#each this.outputHandleEntries as |entry|}}
         {{#in-element entry.areaElement insertBefore=null}}
           {{! template-lint-disable no-forbidden-elements }}
-          <svg class="workflow-output-stub" style={{SVG_STYLE_Z0}}>
+          <svg class="workflow-output-handle" style={{SVG_STYLE_Z0}}>
             <path
               fill="none"
               stroke="var(--primary-low-mid)"
@@ -647,7 +647,7 @@ export default class WorkflowCanvas extends Component {
               d={{entry.pathD}}
             />
             <foreignObject
-              class="workflow-output-stub__button-fo"
+              class="workflow-output-handle__button-fo"
               width="14"
               height="14"
               x={{entry.buttonX}}
@@ -655,11 +655,13 @@ export default class WorkflowCanvas extends Component {
             >
               <button
                 type="button"
-                class="workflow-output-stub__add-btn"
+                class="workflow-output-handle__add-btn"
                 {{on
                   "click"
                   (fn
-                    this.handleOutputStubAdd entry.nodeClientId entry.outputKey
+                    this.handleOutputHandleAdd
+                    entry.nodeClientId
+                    entry.outputKey
                   )
                 }}
               >

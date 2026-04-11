@@ -376,8 +376,8 @@
   z-index: 1;
 }
 
-// Output stub styles (unlinked output -> [+] button)
-.workflow-output-stub {
+// Output handle styles (unlinked output -> [+] button)
+.workflow-output-handle {
   &__button-fo {
     pointer-events: all;
   }

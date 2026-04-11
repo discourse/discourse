@@ -55,7 +55,7 @@ module("Unit | Canvas Bridge", function (hooks) {
     assert.strictEqual(bridge.nodeCount, 0);
     assert.deepEqual(bridge.renderer.nodeEntryList, []);
     assert.deepEqual(bridge.renderer.connectionEntryList, []);
-    assert.deepEqual(bridge.renderer.outputStubEntryList, []);
+    assert.deepEqual(bridge.renderer.outputHandleEntryList, []);
     assert.strictEqual(typeof bridge.transform.k, "number");
 
     bridge.destroy();

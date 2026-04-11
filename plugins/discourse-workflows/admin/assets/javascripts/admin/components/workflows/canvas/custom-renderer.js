@@ -4,7 +4,7 @@ import {
   getConnectionKind,
   normalizeSourceOutput,
 } from "../../../lib/workflows/graph-constants";
-import { updateOutputStubs } from "./output-stubs";
+import { updateOutputHandles } from "./output-handles";
 import { loopBackLayout, loopBodyPath } from "./rete-path-utils";
 
 function resolveCurve(classicPath, kind) {
@@ -23,7 +23,7 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
 
     connectionEntries = trackedMap();
 
-    outputStubEntries = trackedMap();
+    outputHandleEntries = trackedMap();
 
     onSocketRendered = (nodeId, side, key, socketOrOutputs, element) => {
       const socket =
@@ -67,9 +67,9 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
             for (const [id, entry] of this.nodeEntries) {
               if (entry.element === element) {
                 this.nodeEntries.delete(id);
-                for (const stubKey of this.outputStubEntries.keys()) {
-                  if (stubKey.startsWith(id + ":")) {
-                    this.outputStubEntries.delete(stubKey);
+                for (const handleKey of this.outputHandleEntries.keys()) {
+                  if (handleKey.startsWith(id + ":")) {
+                    this.outputHandleEntries.delete(handleKey);
                   }
                 }
                 break;
@@ -101,8 +101,8 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
       return [...this.connectionEntries.values()];
     }
 
-    get outputStubEntryList() {
-      return [...this.outputStubEntries.values()];
+    get outputHandleEntryList() {
+      return [...this.outputHandleEntries.values()];
     }
 
     async #handleRender(context) {
@@ -390,8 +390,8 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
         }
       }
 
-      await updateOutputStubs(
-        this.outputStubEntries,
+      await updateOutputHandles(
+        this.outputHandleEntries,
         this.nodeEntries,
         this.connectionElements,
         (nodeId, side, key) => this.getSocketCanvasPos(nodeId, side, key),

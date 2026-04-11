@@ -1,9 +1,9 @@
 import { buildConnectedOutputsIndex } from "../../../lib/workflows/graph-constants";
 
-const STUB_LENGTH = 30;
+const HANDLE_LENGTH = 30;
 
-function buildStubEntry(nodeEntry, nodeId, outputKey, startPos) {
-  const endX = startPos.x + STUB_LENGTH;
+function buildHandleEntry(nodeEntry, nodeId, outputKey, startPos) {
+  const endX = startPos.x + HANDLE_LENGTH;
   return {
     areaElement: nodeEntry.element.parentElement,
     nodeClientId: nodeId,
@@ -14,8 +14,8 @@ function buildStubEntry(nodeEntry, nodeId, outputKey, startPos) {
   };
 }
 
-export function updateOutputStubs(
-  outputStubEntries,
+export function updateOutputHandles(
+  outputHandleEntries,
   nodeEntries,
   connectionElements,
   getSocketCanvasPos,
@@ -26,7 +26,7 @@ export function updateOutputStubs(
       .filter((e) => !e.payload?.isPseudo)
       .map((e) => e.payload)
   );
-  const activeStubKeys = new Set();
+  const activeHandleKeys = new Set();
   const promises = [];
 
   for (const [nodeId, nodeEntry] of nodeEntries) {
@@ -37,15 +37,15 @@ export function updateOutputStubs(
         continue;
       }
 
-      const stubKey = `${nodeId}:${outputKey}`;
+      const handleKey = `${nodeId}:${outputKey}`;
       const isConnected = connectedOutputs.get(nodeId)?.has(outputKey) ?? false;
 
       if (isConnected) {
-        outputStubEntries.delete(stubKey);
+        outputHandleEntries.delete(handleKey);
         continue;
       }
 
-      activeStubKeys.add(stubKey);
+      activeHandleKeys.add(handleKey);
 
       if (dirtyNodeIds && !dirtyNodeIds.has(nodeId)) {
         continue;
@@ -61,9 +61,9 @@ export function updateOutputStubs(
           if (!startPos) {
             return;
           }
-          outputStubEntries.set(
-            stubKey,
-            buildStubEntry(nodeEntry, nodeId, outputKey, startPos)
+          outputHandleEntries.set(
+            handleKey,
+            buildHandleEntry(nodeEntry, nodeId, outputKey, startPos)
           );
         })()
       );
@@ -71,9 +71,9 @@ export function updateOutputStubs(
   }
 
   return Promise.all(promises).then(() => {
-    for (const stubKey of outputStubEntries.keys()) {
-      if (!activeStubKeys.has(stubKey)) {
-        outputStubEntries.delete(stubKey);
+    for (const handleKey of outputHandleEntries.keys()) {
+      if (!activeHandleKeys.has(handleKey)) {
+        outputHandleEntries.delete(handleKey);
       }
     }
   });
