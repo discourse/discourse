@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class WaitForResume < StandardError
-    attr_reader :type
+  class WaitForResume
+    attr_reader :type, :message
 
     def initialize(type:, message:)
       @type = type
-      super(message)
+      @message = message
     end
   end
 end

@@ -3,17 +3,17 @@
 module DiscourseWorkflows
   class Executor
     StepOutcome =
-      Data.define(:status, :step, :result, :error) do
+      Data.define(:status, :step, :result, :wait, :error) do
         def self.success(step:, result:)
-          new(status: :success, step: step, result: result, error: nil)
+          new(status: :success, step: step, result: result, wait: nil, error: nil)
         end
 
-        def self.wait(step:, error:)
-          new(status: :wait, step: step, result: nil, error: error)
+        def self.wait(step:, wait:)
+          new(status: :wait, step: step, result: nil, wait: wait, error: nil)
         end
 
         def self.error(step:, error:)
-          new(status: :error, step: step, result: nil, error: error)
+          new(status: :error, step: step, result: nil, wait: nil, error: error)
         end
 
         def success? = status == :success

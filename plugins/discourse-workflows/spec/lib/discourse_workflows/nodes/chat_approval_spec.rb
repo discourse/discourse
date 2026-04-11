@@ -12,7 +12,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
   end
 
   describe "#execute" do
-    it "raises WaitForResume with channel config" do
+    it "returns a chat approval wait request" do
       config = {
         "message" => "Please approve this",
         "approve_label" => "Yes",
@@ -23,7 +23,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
       }
       instance = described_class.new(configuration: config)
 
-      expect {
+      wait =
         instance.execute(
           DiscourseWorkflows::NodeExecutionContext.new(
             input_items: [{ "json" => {} }],
@@ -34,14 +34,14 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
             configuration_schema: described_class.configuration_schema,
           ),
         )
-      }.to raise_error(DiscourseWorkflows::WaitForChatApproval) do |error|
-        expect(error.message_text).to eq("Please approve this")
-        expect(error.approve_label).to eq("Yes")
-        expect(error.deny_label).to eq("No")
-        expect(error.channel_id).to eq(channel.id.to_s)
-        expect(error.timeout_minutes).to eq(30)
-        expect(error.timeout_action).to eq("fail")
-      end
+
+      expect(wait).to be_a(DiscourseWorkflows::WaitForChatApproval)
+      expect(wait.message_text).to eq("Please approve this")
+      expect(wait.approve_label).to eq("Yes")
+      expect(wait.deny_label).to eq("No")
+      expect(wait.channel_id).to eq(channel.id.to_s)
+      expect(wait.timeout_minutes).to eq(30)
+      expect(wait.timeout_action).to eq("fail")
     end
   end
 end

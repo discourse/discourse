@@ -105,10 +105,13 @@ module DiscourseWorkflows
 
     def execute_flow
       yield
-      process_queue
-      @completion.finish!
-    rescue WaitForResume => e
-      @completion.wait!(e)
+      outcome = process_queue
+
+      if outcome.wait?
+        @completion.wait!(outcome.wait)
+      else
+        @completion.finish!
+      end
     rescue => e
       @completion.fail!(e)
     ensure
@@ -123,8 +126,11 @@ module DiscourseWorkflows
 
         node, input_items = @state.shift_queue
         commands = @router.execute_node(node, input_items)
-        apply_commands!(commands)
+        outcome = apply_commands!(commands)
+        return outcome if outcome.wait?
       end
+
+      ExecutionOutcome.complete
     end
 
     def apply_commands!(commands)
@@ -138,9 +144,11 @@ module DiscourseWorkflows
           @state.record_step(cmd.node_name, cmd.step)
         when RoutingCommand::Pause
           @state.mark_wait(node: cmd.node, step: cmd.step)
-          raise cmd.error
+          return ExecutionOutcome.wait(wait: cmd.wait)
         end
       end
+
+      ExecutionOutcome.complete
     end
 
     def rate_limiter

@@ -119,11 +119,11 @@ module DiscourseWorkflows
             return [exec_ctx.input_items]
           end
 
-          raise WaitForForm.new(
-                  form_fields: config["form_fields"],
-                  form_title: config["form_title"],
-                  form_description: config["form_description"],
-                )
+          WaitForForm.new(
+            form_fields: config["form_fields"],
+            form_title: config["form_title"],
+            form_description: config["form_description"],
+          )
         end
       end
     end

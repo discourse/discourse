@@ -66,14 +66,14 @@ module DiscourseWorkflows
           item = exec_ctx.input_items.first || { "json" => {} }
           config = exec_ctx.get_parameters(item)
 
-          raise WaitForChatApproval.new(
-                  message_text: config.fetch("message"),
-                  approve_label: config["approve_label"].presence || "Approve",
-                  deny_label: config["deny_label"].presence || "Deny",
-                  channel_id: config.fetch("channel_id"),
-                  timeout_minutes: config["timeout_minutes"].presence&.to_i,
-                  timeout_action: config.fetch("timeout_action") { "deny" },
-                )
+          WaitForChatApproval.new(
+            message_text: config.fetch("message"),
+            approve_label: config["approve_label"].presence || "Approve",
+            deny_label: config["deny_label"].presence || "Deny",
+            channel_id: config.fetch("channel_id"),
+            timeout_minutes: config["timeout_minutes"].presence&.to_i,
+            timeout_action: config.fetch("timeout_action") { "deny" },
+          )
         end
       end
     end

@@ -13,21 +13,23 @@ RSpec.describe DiscourseWorkflows::Executor::StepOutcome do
       expect(outcome).not_to be_error
       expect(outcome.step).to eq(step)
       expect(outcome.result).to eq(result)
+      expect(outcome.wait).to be_nil
       expect(outcome.error).to be_nil
     end
   end
 
   describe ".wait" do
-    it "creates a wait outcome with step and error" do
-      error = DiscourseWorkflows::WaitForWebhook.new
-      outcome = described_class.wait(step: step, error: error)
+    it "creates a wait outcome with step and wait request" do
+      wait = DiscourseWorkflows::WaitForWebhook.new
+      outcome = described_class.wait(step: step, wait: wait)
 
       expect(outcome).to be_wait
       expect(outcome).not_to be_success
       expect(outcome).not_to be_error
       expect(outcome.step).to eq(step)
-      expect(outcome.error).to eq(error)
+      expect(outcome.wait).to eq(wait)
       expect(outcome.result).to be_nil
+      expect(outcome.error).to be_nil
     end
   end
 
@@ -40,6 +42,7 @@ RSpec.describe DiscourseWorkflows::Executor::StepOutcome do
       expect(outcome).not_to be_success
       expect(outcome).not_to be_wait
       expect(outcome.step).to eq(step)
+      expect(outcome.wait).to be_nil
       expect(outcome.error).to eq(error)
       expect(outcome.result).to be_nil
     end

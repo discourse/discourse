@@ -59,7 +59,7 @@ module DiscourseWorkflows
         if outcome.success?
           route_by_port_index(node, node_type_class, outcome.result)
         elsif outcome.wait?
-          [RoutingCommand::Pause.new(node: node, step: outcome.step, error: outcome.error)]
+          [RoutingCommand::Pause.new(node: node, step: outcome.step, wait: outcome.wait)]
         elsif outcome.error?
           raise outcome.error
         end

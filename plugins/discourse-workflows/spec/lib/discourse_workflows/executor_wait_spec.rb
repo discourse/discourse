@@ -7,7 +7,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
   before { SiteSetting.chat_enabled = true }
 
-  describe "pause on WaitForResume" do
+  describe "pause on wait request" do
     it "pauses execution and sends a chat message with approval buttons" do
       graph =
         build_workflow_graph do |g|

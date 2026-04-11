@@ -6,7 +6,7 @@ module DiscourseWorkflows
       StoreContext = Data.define(:name, :items)
       Enqueue = Data.define(:node, :items)
       RecordStep = Data.define(:node_name, :step)
-      Pause = Data.define(:node, :step, :error)
+      Pause = Data.define(:node, :step, :wait)
     end
   end
 end

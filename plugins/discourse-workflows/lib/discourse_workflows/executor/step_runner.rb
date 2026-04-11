@@ -13,7 +13,7 @@ module DiscourseWorkflows
         step = build_step(node, input_items)
         @current_exec_ctx = nil
 
-        execute_step(instance, step, node) do
+        execute_step(instance, step) do
           block_return = yield(instance, resolver)
           if block_return.is_a?(Array) && block_return.last.is_a?(NodeExecutionContext)
             result, @current_exec_ctx = block_return
@@ -31,21 +31,23 @@ module DiscourseWorkflows
 
       private
 
-      def execute_step(instance, step, node)
+      def execute_step(instance, step)
         result = yield
-        finalize_success!(step, node, instance, result)
+        return StepOutcome.wait(step: step, wait: result) if wait_request?(result)
+
+        error = finalize_success!(step, instance, result)
+        return StepOutcome.error(step: step, error: error) if error
+
         StepOutcome.success(step: step, result: result)
-      rescue WaitForResume => e
-        StepOutcome.wait(step: step, error: e)
-      rescue StepLogError => e
-        StepOutcome.error(step: step, error: e)
       rescue => e
         finalize_error!(step, instance, e)
         StepOutcome.error(step: step, error: e)
       end
 
-      def finalize_success!(step, node, instance, result)
-        process_step_log!(step, instance)
+      def finalize_success!(step, instance, result)
+        error = process_step_log!(step, instance)
+        return error if error
+
         conditions = build_conditions(instance)
         step.add_metadata("conditions", conditions) if conditions.present?
 
@@ -56,6 +58,8 @@ module DiscourseWorkflows
         else
           step.succeed!(output: flat_output)
         end
+
+        nil
       end
 
       def process_step_log!(step, instance)
@@ -66,7 +70,7 @@ module DiscourseWorkflows
 
       def fail_step_with_log!(step, step_log)
         step.fail!(step_log.error_summary)
-        raise StepLogError, step.error
+        StandardError.new(step.error)
       end
 
       def finalize_error!(step, instance, error)
@@ -128,6 +132,10 @@ module DiscourseWorkflows
       def attach_log!(step, step_log)
         return if step_log.nil? || step_log.empty?
         step.add_metadata("logs", step_log.as_json)
+      end
+
+      def wait_request?(result)
+        result.is_a?(WaitForResume)
       end
 
       def redact_sensitive_headers(config)
