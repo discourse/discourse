@@ -13,7 +13,7 @@ module DiscourseWorkflows
 
     def data=(value)
       @parsed_data = nil
-      @steps_journal = nil
+      @all_steps = nil
       super
     end
 
@@ -26,25 +26,29 @@ module DiscourseWorkflows
     end
 
     def steps_array
-      steps_journal.serialized_steps_array
+      all_steps.sort_by { |s| s["position"] || 0 }
     end
 
     def find_step(node_id:, status: nil)
-      steps_journal.find_step(node_id: node_id, status: status)&.to_h
+      node_id_str = node_id.to_s
+      all_steps.find do |step|
+        step["node_id"] == node_id_str && (!status || step["status"] == status.to_s)
+      end
     end
 
     def find_steps_by_type(node_type)
-      steps_journal.find_steps_by_type(node_type).map(&:to_h)
+      all_steps.select { |step| step["node_type"] == node_type }
     end
 
     def last_step_with_status(status)
-      steps_journal.last_step_with_status(status)&.to_h
+      status_str = status.to_s
+      all_steps.reverse_each.find { |step| step["status"] == status_str }
     end
 
     private
 
-    def steps_journal
-      @steps_journal ||= DiscourseWorkflows::Executor::StepsJournal.new(entries: entries)
+    def all_steps
+      @all_steps ||= entries.values.flatten
     end
   end
 end
