@@ -163,10 +163,6 @@ export function nodeTypeOperations(nodeTypeOrIdentifier) {
   return [];
 }
 
-export function nodeTypeHasOperations(nodeTypeOrIdentifier) {
-  return nodeTypeOperations(nodeTypeOrIdentifier).length > 0;
-}
-
 export function nodeTypeOperationLabel(nodeTypeOrIdentifier, operation) {
   const entry = nodeTypeOperations(nodeTypeOrIdentifier).find(
     (item) => item.value === operation

@@ -66,10 +66,6 @@ module DiscourseWorkflows
     end
 
     class << self
-      def count_for(data_table)
-        new(data_table).count
-      end
-
       def within_storage_limit?
         DataTableSizeValidator.within_limit?
       end

@@ -3,9 +3,7 @@
 module DiscourseWorkflows
   class WorkflowSnapshot
     SnapshotNode =
-      Struct.new(:id, :type, :type_version, :name, :position, :configuration, keyword_init: true) do
-        include NodeTypeChecks
-      end
+      Struct.new(:id, :type, :type_version, :name, :position, :configuration, keyword_init: true)
 
     SnapshotConnection =
       Struct.new(:source_node_id, :source_output, :target_node_id, keyword_init: true)

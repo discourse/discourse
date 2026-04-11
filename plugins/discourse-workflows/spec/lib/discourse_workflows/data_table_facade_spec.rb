@@ -339,10 +339,4 @@ RSpec.describe DiscourseWorkflows::DataTableFacade do
       expect(sizes[data_table.id]).to be_a(Integer)
     end
   end
-
-  describe ".count_for" do
-    it "returns the count for a data table" do
-      expect(described_class.count_for(data_table)).to eq(3)
-    end
-  end
 end
