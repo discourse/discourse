@@ -139,6 +139,13 @@ module DiscourseWorkflows
           raise WaitRequested, result
         end
 
+        step_log = collect_step_log(exec_ctx)
+        attach_step_log(step, step_log)
+        if step_log&.errors?
+          step.fail!(step_log.error_summary)
+          raise StandardError, step.error
+        end
+
         normalized = normalize_result(result, node, node_type_class.ports)
         all_items = normalized.all_items(ports: node_type_class.ports)
         primary_empty = normalized.primary_items(ports: node_type_class.ports).empty?
@@ -154,11 +161,28 @@ module DiscourseWorkflows
       rescue WaitRequested
         raise
       rescue => e
-        step.fail!(e.message)
+        step.fail!(e.message) unless step.error?
+        attach_step_log(step, collect_step_log(exec_ctx)) unless step.metadata&.key?("logs")
         raise
       ensure
         resolver&.dispose
       end
+    end
+
+    def collect_step_log(exec_ctx)
+      return unless exec_ctx
+
+      exec_ctx.collect_errors!
+      log = exec_ctx.log || StepLog.new
+      errors = exec_ctx.expression_errors || []
+      errors.each { |err| log.error("#{err[:expression]}: #{err[:error]}") } if errors.present?
+      log
+    end
+
+    def attach_step_log(step, step_log)
+      return if step_log.nil? || step_log.empty?
+
+      step.add_metadata("logs", step_log.as_json)
     end
 
     def handle_unknown_node(node, input_items)
