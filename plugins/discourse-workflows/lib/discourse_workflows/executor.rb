@@ -2,7 +2,7 @@
 
 module DiscourseWorkflows
   class Executor
-    include FormPublishing
+    include FormPresenter
 
     MAX_ITERATIONS = 1000
 
