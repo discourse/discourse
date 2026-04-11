@@ -333,6 +333,9 @@ export default class NodeConfigurator extends Component {
                     <p class="workflows-configurator-modal__node-description">
                       {{this.nodeDescription}}
                     </p>
+                    <span class="workflows-configurator-modal__node-version">
+                      v{{@model.node.type_version}}
+                    </span>
                   </div>
                 {{/if}}
               {{/if}}

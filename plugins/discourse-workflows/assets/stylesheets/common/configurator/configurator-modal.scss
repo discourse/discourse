@@ -155,6 +155,11 @@
     margin: 0;
   }
 
+  &__node-version {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
   .form-kit__field-code .form-kit__container-content {
     width: 100% !important;
   }
