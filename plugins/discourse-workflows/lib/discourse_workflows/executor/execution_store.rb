@@ -107,7 +107,7 @@ module DiscourseWorkflows
 
       def reset_collaborators!
         @execution_context.execution = @execution
-        @execution_context.reset!(resume_token: SecureRandom.uuid)
+        @execution_context.reset!
       end
 
       def restore_from!(execution_data)

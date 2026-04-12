@@ -23,17 +23,17 @@ module DiscourseWorkflows
         reset!
       end
 
-      def reset!(resume_token: nil)
+      def reset!(resume_token: SecureRandom.uuid)
         @context = { "trigger" => trigger_data }
         @node_contexts_by_id = {}
-        @context["__resume_token"] = resume_token if resume_token.present?
+        @context["__resume_token"] = resume_token
       end
 
-      def restore!(context:, node_contexts:, resume_token: nil)
+      def restore!(context:, node_contexts:, resume_token: SecureRandom.uuid)
         @context = context.deep_stringify_keys
         @context["trigger"] ||= trigger_data
         @node_contexts_by_id = normalize_node_contexts(node_contexts)
-        @context["__resume_token"] = resume_token if resume_token.present?
+        @context["__resume_token"] = resume_token
       end
 
       def store_context(key, value)
