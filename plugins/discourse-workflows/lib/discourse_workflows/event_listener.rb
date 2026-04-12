@@ -5,12 +5,12 @@ module DiscourseWorkflows
     def self.handle(trigger_class, *args)
       return unless SiteSetting.discourse_workflows_enabled
 
+      trigger = trigger_class.new(*args)
+      return unless trigger.valid?
+
       DiscourseWorkflows::WorkflowDependency
         .enabled_trigger_entries(trigger_class.identifier)
         .each do |entry|
-          trigger = trigger_class.new(*args)
-          next unless trigger.valid?
-
           Jobs.enqueue(
             Jobs::DiscourseWorkflows::ExecuteWorkflow,
             workflow_id: entry[:workflow_id],
