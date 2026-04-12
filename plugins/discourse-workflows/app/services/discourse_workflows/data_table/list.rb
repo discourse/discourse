@@ -35,7 +35,7 @@ module DiscourseWorkflows
     end
 
     def compute_table_sizes(data_tables:)
-      DiscourseWorkflows::DataTableFacade.batch_size_bytes(data_tables.map(&:id))
+      DiscourseWorkflows::DataTables::Facade.batch_size_bytes(data_tables.map(&:id))
     end
 
     def compute_total_rows

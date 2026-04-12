@@ -49,7 +49,7 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Create do
 
     context "when column limit is reached" do
       before do
-        facade = DiscourseWorkflows::DataTableFacade.new(data_table)
+        facade = DiscourseWorkflows::DataTables::Facade.new(data_table)
         29.times { |i| facade.add_column!("col_#{i}", "string") }
       end
 

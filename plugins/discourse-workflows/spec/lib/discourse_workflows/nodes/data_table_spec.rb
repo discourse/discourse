@@ -66,7 +66,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     end
 
     it "raises when the storage limit is exceeded" do
-      allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:within_limit?).and_return(false)
+      allow(DiscourseWorkflows::DataTables::SizeValidator).to receive(:within_limit?).and_return(false)
 
       expect {
         execute_data_table(
@@ -151,7 +151,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     end
 
     it "raises when the storage limit is exceeded" do
-      allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:within_limit?).and_return(false)
+      allow(DiscourseWorkflows::DataTables::SizeValidator).to receive(:within_limit?).and_return(false)
 
       expect {
         execute_data_table(
@@ -277,7 +277,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     end
 
     it "raises when the storage limit is exceeded" do
-      allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:within_limit?).and_return(false)
+      allow(DiscourseWorkflows::DataTables::SizeValidator).to receive(:within_limit?).and_return(false)
 
       expect {
         execute_data_table(

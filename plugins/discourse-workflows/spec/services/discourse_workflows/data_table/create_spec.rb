@@ -46,13 +46,13 @@ RSpec.describe DiscourseWorkflows::DataTable::Create do
       end
 
       it "resets the cached size" do
-        allow(DiscourseWorkflows::DataTableFacade).to receive(
+        allow(DiscourseWorkflows::DataTables::Facade).to receive(
           :reset_storage_cache!,
         ).and_call_original
 
         result
 
-        expect(DiscourseWorkflows::DataTableFacade).to have_received(:reset_storage_cache!).once
+        expect(DiscourseWorkflows::DataTables::Facade).to have_received(:reset_storage_cache!).once
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe DiscourseWorkflows::DataTable::Create do
         expect(data_table.name).to eq("empty_table")
         user_columns =
           data_table.columns.reject do |c|
-            DiscourseWorkflows::DataTableStorage::RESERVED_COLUMN_NAMES.include?(c["name"])
+            DiscourseWorkflows::DataTables::Storage::RESERVED_COLUMN_NAMES.include?(c["name"])
           end
         expect(user_columns).to be_empty
       end

@@ -33,7 +33,7 @@ module DiscourseWorkflows
 
     def create_storage_table(data_table:, params:)
       columns = normalize_columns(params.columns)
-      DiscourseWorkflows::DataTableFacade.create_table!(data_table, columns: columns)
+      DiscourseWorkflows::DataTables::Facade.create_table!(data_table, columns: columns)
     end
 
     def log(data_table:, guardian:)
@@ -44,7 +44,7 @@ module DiscourseWorkflows
     end
 
     def reset_cached_size
-      DiscourseWorkflows::DataTableFacade.reset_storage_cache!
+      DiscourseWorkflows::DataTables::Facade.reset_storage_cache!
     end
 
     def normalize_columns(columns)
@@ -55,7 +55,7 @@ module DiscourseWorkflows
         next if name.blank? || type.blank?
         next unless COLUMN_NAME_FORMAT.match?(name)
         next if VALID_COLUMN_TYPES.exclude?(type)
-        next if DiscourseWorkflows::DataTableStorage::RESERVED_COLUMN_NAMES.include?(name)
+        next if DiscourseWorkflows::DataTables::Storage::RESERVED_COLUMN_NAMES.include?(name)
         next if name.length > MAX_COLUMN_NAME_LENGTH
 
         { "name" => name, "type" => type }

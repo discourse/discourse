@@ -12,7 +12,7 @@ module DiscourseWorkflows
       if @options[:table_sizes]
         @options[:table_sizes].fetch(object.id, 0)
       else
-        DiscourseWorkflows::DataTableFacade.size_bytes(object.id)
+        DiscourseWorkflows::DataTables::Facade.size_bytes(object.id)
       end
     end
   end

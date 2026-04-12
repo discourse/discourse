@@ -25,7 +25,7 @@ module DiscourseWorkflows
     end
 
     def build_facade(data_table:)
-      DataTableFacade.new(data_table)
+      DataTables::Facade.new(data_table)
     end
 
     def fetch_row(facade:, params:)
@@ -37,7 +37,7 @@ module DiscourseWorkflows
     end
 
     def invalidate_storage_size
-      DiscourseWorkflows::DataTableFacade.reset_storage_cache!
+      DiscourseWorkflows::DataTables::Facade.reset_storage_cache!
     end
   end
 end

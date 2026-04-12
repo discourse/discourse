@@ -31,11 +31,11 @@ module DiscourseWorkflows
     end
 
     def not_reserved_column(params:)
-      DataTableStorage::RESERVED_COLUMN_NAMES.exclude?(params.column_name)
+      DataTables::Storage::RESERVED_COLUMN_NAMES.exclude?(params.column_name)
     end
 
     def drop_storage_column(data_table:, params:)
-      DiscourseWorkflows::DataTableFacade.new(data_table).drop_column!(params.column_name)
+      DiscourseWorkflows::DataTables::Facade.new(data_table).drop_column!(params.column_name)
     end
 
     def log(guardian:, data_table:, params:)
@@ -47,7 +47,7 @@ module DiscourseWorkflows
     end
 
     def reset_storage_cache
-      DiscourseWorkflows::DataTableFacade.reset_storage_cache!
+      DiscourseWorkflows::DataTables::Facade.reset_storage_cache!
     end
   end
 end

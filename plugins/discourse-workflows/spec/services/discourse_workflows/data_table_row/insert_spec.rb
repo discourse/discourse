@@ -36,7 +36,7 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Insert do
 
     context "when the storage limit is exceeded" do
       before do
-        allow(DiscourseWorkflows::DataTableFacade).to receive(:within_storage_limit?).and_return(
+        allow(DiscourseWorkflows::DataTables::Facade).to receive(:within_storage_limit?).and_return(
           false,
         )
       end
@@ -68,13 +68,13 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Insert do
       end
 
       it "resets the cached size after inserting" do
-        allow(DiscourseWorkflows::DataTableFacade).to receive(
+        allow(DiscourseWorkflows::DataTables::Facade).to receive(
           :reset_storage_cache!,
         ).and_call_original
 
         result
 
-        expect(DiscourseWorkflows::DataTableFacade).to have_received(:reset_storage_cache!).once
+        expect(DiscourseWorkflows::DataTables::Facade).to have_received(:reset_storage_cache!).once
       end
     end
   end

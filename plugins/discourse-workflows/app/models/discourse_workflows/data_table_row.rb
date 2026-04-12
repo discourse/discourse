@@ -90,7 +90,7 @@ module DiscourseWorkflows
         data_table
           .columns
           .reject do |column|
-            DataTableStorage::RESERVED_COLUMN_NAMES.include?(DataTable.column_name(column))
+            DataTables::Storage::RESERVED_COLUMN_NAMES.include?(DataTable.column_name(column))
           end
           .index_by { |column| DataTable.column_name(column) }
       end

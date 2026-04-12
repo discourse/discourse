@@ -25,7 +25,7 @@ module DiscourseWorkflows
                     "must start with a letter or underscore and contain only letters, numbers, and underscores",
                 },
                 exclusion: {
-                  in: DataTableStorage::RESERVED_COLUMN_NAMES,
+                  in: DataTables::Storage::RESERVED_COLUMN_NAMES,
                   message: "is reserved",
                 }
       validates :column_type, presence: true, inclusion: { in: VALID_COLUMN_TYPES }
@@ -49,7 +49,7 @@ module DiscourseWorkflows
     end
 
     def add_storage_column(data_table:, params:)
-      DiscourseWorkflows::DataTableFacade.new(data_table).add_column!(
+      DiscourseWorkflows::DataTables::Facade.new(data_table).add_column!(
         params.name,
         params.column_type,
       )
@@ -65,7 +65,7 @@ module DiscourseWorkflows
     end
 
     def reset_storage_cache
-      DiscourseWorkflows::DataTableFacade.reset_storage_cache!
+      DiscourseWorkflows::DataTables::Facade.reset_storage_cache!
     end
   end
 end

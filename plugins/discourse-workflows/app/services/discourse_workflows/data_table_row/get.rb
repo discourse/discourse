@@ -32,7 +32,7 @@ module DiscourseWorkflows
     end
 
     def build_facade(data_table:)
-      DataTableFacade.new(data_table)
+      DataTables::Facade.new(data_table)
     end
 
     def build_query(facade:, params:)

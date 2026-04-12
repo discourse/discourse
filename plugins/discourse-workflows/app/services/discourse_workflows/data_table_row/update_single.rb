@@ -28,11 +28,11 @@ module DiscourseWorkflows
     end
 
     def build_facade(data_table:)
-      DataTableFacade.new(data_table)
+      DataTables::Facade.new(data_table)
     end
 
     def within_storage_limit
-      DataTableFacade.within_storage_limit?
+      DataTables::Facade.within_storage_limit?
     end
 
     def fetch_existing_row(facade:, params:)
@@ -48,7 +48,7 @@ module DiscourseWorkflows
     end
 
     def reset_storage_cache
-      DiscourseWorkflows::DataTableFacade.reset_storage_cache!
+      DiscourseWorkflows::DataTables::Facade.reset_storage_cache!
     end
   end
 end

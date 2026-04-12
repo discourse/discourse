@@ -2,12 +2,12 @@
 
 module DataTableHelpers
   def data_table_facade(data_table)
-    DiscourseWorkflows::DataTableFacade.new(data_table.reload)
+    DiscourseWorkflows::DataTables::Facade.new(data_table.reload)
   end
 
   def insert_data_table_row(data_table, data = {})
     dt = data_table.reload
-    facade = DiscourseWorkflows::DataTableFacade.new(dt)
+    facade = DiscourseWorkflows::DataTables::Facade.new(dt)
     facade.insert(facade.build_row_input(data: data, fill_missing: true))
   end
 

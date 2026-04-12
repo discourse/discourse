@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::DataTableQueryBuilder do
+RSpec.describe DiscourseWorkflows::DataTables::QueryBuilder do
   fab!(:data_table) do
     Fabricate(
       :discourse_workflows_data_table,
@@ -12,7 +12,7 @@ RSpec.describe DiscourseWorkflows::DataTableQueryBuilder do
     )
   end
 
-  let(:table_name) { DiscourseWorkflows::DataTableStorage.table_name(data_table.id) }
+  let(:table_name) { DiscourseWorkflows::DataTables::Storage.table_name(data_table.id) }
   let(:table) { Arel::Table.new(table_name) }
   let(:builder) { described_class.new(table) }
 

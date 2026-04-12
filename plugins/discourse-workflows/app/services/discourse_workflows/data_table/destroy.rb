@@ -46,7 +46,7 @@ module DiscourseWorkflows
     end
 
     def reset_cached_size
-      DiscourseWorkflows::DataTableFacade.reset_storage_cache!
+      DiscourseWorkflows::DataTables::Facade.reset_storage_cache!
     end
   end
 end

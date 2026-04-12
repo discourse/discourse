@@ -155,7 +155,7 @@ module DiscourseWorkflows
 
         def execute_with_config(config)
           data_table = DiscourseWorkflows::DataTable.find(Integer(config.fetch("data_table_id")))
-          facade = DiscourseWorkflows::DataTableFacade.new(data_table)
+          facade = DiscourseWorkflows::DataTables::Facade.new(data_table)
           filter_resolver = FilterResolver.new(data_table)
           columns_resolver = ColumnsResolver.new(data_table)
 
@@ -167,12 +167,12 @@ module DiscourseWorkflows
               .for(operation_name)
               .new(facade, filter_resolver, columns_resolver)
               .execute(config)
-          DiscourseWorkflows::DataTableFacade.reset_storage_cache! unless operation_name == "get"
+          DiscourseWorkflows::DataTables::Facade.reset_storage_cache! unless operation_name == "get"
           result
         end
 
         def validate_storage_limit!
-          return if DiscourseWorkflows::DataTableFacade.within_storage_limit?
+          return if DiscourseWorkflows::DataTables::Facade.within_storage_limit?
           raise ArgumentError, "Data table storage limit exceeded"
         end
       end

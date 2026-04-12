@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::DataTableFacade do
+RSpec.describe DiscourseWorkflows::DataTables::Facade do
   fab!(:data_table) do
     Fabricate(
       :discourse_workflows_data_table,
@@ -282,7 +282,7 @@ RSpec.describe DiscourseWorkflows::DataTableFacade do
     it "renames a column in the storage table" do
       facade.rename_column!(old_name: "email", new_name: "contact_email")
 
-      table_name = DiscourseWorkflows::DataTableStorage.table_name(data_table.id)
+      table_name = DiscourseWorkflows::DataTables::Storage.table_name(data_table.id)
       columns =
         DB.query_single(
           "SELECT column_name FROM information_schema.columns WHERE table_name = :table_name",
@@ -298,7 +298,7 @@ RSpec.describe DiscourseWorkflows::DataTableFacade do
     it "drops a column from the storage table" do
       facade.drop_column!("active")
 
-      table_name = DiscourseWorkflows::DataTableStorage.table_name(data_table.id)
+      table_name = DiscourseWorkflows::DataTables::Storage.table_name(data_table.id)
       columns =
         DB.query_single(
           "SELECT column_name FROM information_schema.columns WHERE table_name = :table_name",

@@ -18,7 +18,7 @@ module DiscourseWorkflows
     before_destroy :drop_storage_table
 
     def columns
-      DataTableStorage.columns(id)
+      DataTables::Storage.columns(id)
     end
 
     class << self
@@ -34,7 +34,7 @@ module DiscourseWorkflows
     private
 
     def drop_storage_table
-      DiscourseWorkflows::DataTableFacade.drop_table!(id)
+      DiscourseWorkflows::DataTables::Facade.drop_table!(id)
     end
   end
 end

@@ -20,6 +20,6 @@ Fabricator(:discourse_workflows_data_table, class_name: "DiscourseWorkflows::Dat
         { "name" => c["name"].to_s, "type" => c["type"].to_s }
       end
 
-    DiscourseWorkflows::DataTableFacade.create_table!(data_table, columns: columns)
+    DiscourseWorkflows::DataTables::Facade.create_table!(data_table, columns: columns)
   end
 end

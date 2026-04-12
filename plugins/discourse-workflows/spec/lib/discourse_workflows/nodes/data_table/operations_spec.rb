@@ -12,7 +12,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::Operations do
     )
   end
 
-  let(:facade) { DiscourseWorkflows::DataTableFacade.new(data_table) }
+  let(:facade) { DiscourseWorkflows::DataTables::Facade.new(data_table) }
   let(:filter_resolver) { DiscourseWorkflows::Nodes::DataTable::FilterResolver.new(data_table) }
   let(:columns_resolver) { DiscourseWorkflows::Nodes::DataTable::ColumnsResolver.new(data_table) }
 
