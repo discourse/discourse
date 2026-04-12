@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  module FilterParameter
+  class Executor
+    module FilterParameter
     def self.execute_filter(conditions, combinator, options, resolver)
       details = conditions.map { |c| execute_filter_condition(c, options, resolver) }
       passed =
@@ -134,5 +135,6 @@ module DiscourseWorkflows
       nil
     end
     private_class_method :coerce_number
+    end
   end
 end

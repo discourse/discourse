@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::FilterParameter do
+RSpec.describe DiscourseWorkflows::Executor::FilterParameter do
   describe ".evaluate_type" do
     context "with string type" do
       it "equals" do
