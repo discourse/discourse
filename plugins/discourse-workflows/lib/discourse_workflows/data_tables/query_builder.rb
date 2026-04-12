@@ -73,6 +73,8 @@ module DiscourseWorkflows
           col.matches(escape_like_specials(value), "!", false)
         when "not_ilike"
           col.does_not_match(escape_like_specials(value), "!", false)
+        else
+          raise ArgumentError, "Unknown filter condition: #{filter["condition"].inspect}"
         end
       end
 

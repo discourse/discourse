@@ -174,6 +174,17 @@ RSpec.describe DiscourseWorkflows::DataTables::QueryBuilder do
       end
     end
 
+    it "raises ArgumentError for unknown condition" do
+      filter = {
+        "type" => "and",
+        "filters" => [{ "columnName" => "score", "condition" => "bogus", "value" => 1 }],
+      }
+      expect { builder.apply_filters(base_query, filter) }.to raise_error(
+        ArgumentError,
+        /Unknown filter condition: "bogus"/,
+      )
+    end
+
     describe "AND/OR combination" do
       it "AND requires all conditions to match" do
         filter = {
