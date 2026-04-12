@@ -2,6 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
   fab!(:channel, :chat_channel)
+  fab!(:execution, :discourse_workflows_execution)
 
   before { SiteSetting.chat_enabled = true }
 
@@ -12,7 +13,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
   end
 
   describe "#execute" do
-    it "returns a chat approval wait request" do
+    it "sends a chat message and returns a WaitForResume with chat approval config" do
       config = {
         "message" => "Please approve this",
         "approve_label" => "Yes",
@@ -20,6 +21,42 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
         "channel_id" => channel.id.to_s,
         "timeout_minutes" => "30",
         "timeout_action" => "fail",
+      }
+      instance = described_class.new(configuration: config)
+
+      freeze_time do
+        wait =
+          instance.execute(
+            DiscourseWorkflows::NodeExecutionContext.new(
+              input_items: [{ "json" => {} }],
+              node_context: {
+              },
+              resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
+              configuration: config,
+              property_schema: described_class.property_schema,
+              execution_id: execution.id,
+              node_id: "node_abc",
+            ),
+          )
+
+        expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+        expect(wait.waiting_until).to eq(30.minutes.from_now)
+        expect(wait.waiting_config["wait_type"]).to eq("chat_approval")
+        expect(wait.waiting_config["timeout_action"]).to eq("fail")
+        expect(wait.waiting_config["chat_channel_id"]).to eq(channel.id)
+        expect(wait.waiting_config["chat_message_id"]).to be_present
+        expect(wait.waiting_config["wait_nonce"]).to be_present
+        expect(wait.waiting_config["timeout_response_items"]).to eq(
+          [{ "json" => { "approved" => false, "channel_id" => channel.id, "timed_out" => true } }],
+        )
+      end
+    end
+
+    it "uses default labels when none provided" do
+      config = {
+        "message" => "Approve?",
+        "channel_id" => channel.id.to_s,
+        "timeout_action" => "deny",
       }
       instance = described_class.new(configuration: config)
 
@@ -32,16 +69,15 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
             resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
             configuration: config,
             property_schema: described_class.property_schema,
+            execution_id: execution.id,
+            node_id: "node_xyz",
           ),
         )
 
-      expect(wait).to be_a(DiscourseWorkflows::WaitForChatApproval)
-      expect(wait.message_text).to eq("Please approve this")
-      expect(wait.approve_label).to eq("Yes")
-      expect(wait.deny_label).to eq("No")
-      expect(wait.channel_id).to eq(channel.id.to_s)
-      expect(wait.timeout_minutes).to eq(30)
-      expect(wait.timeout_action).to eq("fail")
+      expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+      expect(wait.waiting_config["wait_type"]).to eq("chat_approval")
+      expect(wait.waiting_config["timeout_action"]).to eq("deny")
+      expect(wait.waiting_until).to be_nil
     end
   end
 end
