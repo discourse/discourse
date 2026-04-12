@@ -16,7 +16,7 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
   def build_exec_ctx(items, configuration: {}, resolver: nil)
     resolver ||=
       DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first&.dig("json") || {} })
-    DiscourseWorkflows::NodeExecutionContext.new(
+    DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: items,
       configuration: configuration,
       property_schema: described_class.property_schema,

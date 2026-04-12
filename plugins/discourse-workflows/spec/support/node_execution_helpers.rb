@@ -17,10 +17,10 @@ module NodeExecutionHelpers
     }
     kwargs[:run_as_user] = run_as_user if run_as_user
 
-    result = action.execute(DiscourseWorkflows::NodeExecutionContext.new(**kwargs))
-    return result if result.is_a?(DiscourseWorkflows::NodeResult)
+    result = action.execute(DiscourseWorkflows::Executor::NodeExecutionContext.new(**kwargs))
+    return result if result.is_a?(DiscourseWorkflows::Executor::NodeResult)
 
-    DiscourseWorkflows::NodeResult.from_output_arrays(result, ports: described_class.ports)
+    DiscourseWorkflows::Executor::NodeResult.from_output_arrays(result, ports: described_class.ports)
   end
 
   def execute_node(configuration:, item: { "json" => {} }, run_as_user: Discourse.system_user)

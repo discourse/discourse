@@ -6,7 +6,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
     instance = described_class.new(configuration: config)
     result =
       instance.execute(
-        DiscourseWorkflows::NodeExecutionContext.new(input_items: input_items, node_context: {}),
+        DiscourseWorkflows::Executor::NodeExecutionContext.new(input_items: input_items, node_context: {}),
       )
     result[0]
   end
@@ -153,7 +153,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
             "code" => 'console.log("comparing", a.json.n, b.json.n); return a.json.n - b.json.n;',
           },
         )
-      exec_ctx = DiscourseWorkflows::NodeExecutionContext.new(input_items: input, node_context: {})
+      exec_ctx = DiscourseWorkflows::Executor::NodeExecutionContext.new(input_items: input, node_context: {})
       action.execute(exec_ctx)
 
       messages = exec_ctx.log.entries.map { |e| e["message"] }

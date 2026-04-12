@@ -7,7 +7,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
     item_json = input_items.first&.dig("json") || {}
     resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => item_json })
     exec_ctx =
-      DiscourseWorkflows::NodeExecutionContext.new(
+      DiscourseWorkflows::Executor::NodeExecutionContext.new(
         input_items: input_items,
         node_context: {
         },

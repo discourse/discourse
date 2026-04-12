@@ -80,7 +80,7 @@ module DiscourseWorkflows
           blocks = approval_blocks(execution_id, node_id, approve_label, deny_label, wait_nonce)
           chat_message = send_chat_message(channel_id, message_text, blocks)
 
-          WaitForResume.new(
+          Executor::WaitForResume.new(
             waiting_until: timeout_minutes&.minutes&.from_now,
             waiting_config: {
               "wait_type" => "chat_approval",

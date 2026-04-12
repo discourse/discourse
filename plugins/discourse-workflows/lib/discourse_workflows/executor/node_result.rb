@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class NodeResult
+  class Executor
+    class NodeResult
     attr_reader :outputs
 
     def self.main(items)
@@ -47,6 +48,7 @@ module DiscourseWorkflows
     def primary_output_name(ports)
       primary_port = Array(ports).find { |port| port[:primary] } || Array(ports).first
       primary_port&.dig(:key).to_s.presence || outputs.keys.first || "main"
+    end
     end
   end
 end

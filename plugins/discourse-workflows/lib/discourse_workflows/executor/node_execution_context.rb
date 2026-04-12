@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class NodeExecutionContext
+  class Executor
+    class NodeExecutionContext
     attr_reader :input_items,
                 :node_context,
                 :user,
@@ -83,6 +84,7 @@ module DiscourseWorkflows
       resolved = resolver.resolve_hash(@configuration)
       @resolved_config ||= resolved
       resolved
+    end
     end
   end
 end

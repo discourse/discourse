@@ -123,7 +123,7 @@ module DiscourseWorkflows
     end
 
     def setup_console_capture!
-      @log = StepLog.new
+      @log = Executor::StepLog.new
       capture = proc { |level, *args| @log.public_send(level, args.map(&:to_s).join(" ")) }
       @js_context.attach("__captureLog", proc { |*args| capture.call(:info, *args) })
       @js_context.attach("__captureWarn", proc { |*args| capture.call(:warn, *args) })

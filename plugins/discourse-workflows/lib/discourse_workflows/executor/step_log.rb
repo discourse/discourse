@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class StepLog
+  class Executor
+    class StepLog
     MAX_ENTRIES = 200
 
     attr_reader :entries
@@ -89,6 +90,7 @@ module DiscourseWorkflows
       @entries << { "level" => level, "at" => Time.current.utc.iso8601 }.merge(
         fields.transform_keys(&:to_s),
       )
+    end
     end
   end
 end

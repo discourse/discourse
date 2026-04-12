@@ -125,7 +125,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
       }
       result =
         described_class.new(configuration: config).execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
+          DiscourseWorkflows::Executor::NodeExecutionContext.new(
             input_items: [{ "json" => { "name" => "Ada" } }],
             node_context: {
             },

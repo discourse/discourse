@@ -23,8 +23,8 @@ module DiscourseWorkflows
 
     def self.validate_node_result!(result, source:, ports:)
       return unless Rails.env.local?
-      unless result.is_a?(NodeResult)
-        raise Error, "#{source}: execute must return NodeResult, got #{result.class}"
+      unless result.is_a?(Executor::NodeResult)
+        raise Error, "#{source}: execute must return Executor::NodeResult, got #{result.class}"
       end
 
       port_names = Array(ports).map { |port| port[:key].to_s }

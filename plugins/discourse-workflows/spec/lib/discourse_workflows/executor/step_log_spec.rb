@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::StepLog do
+RSpec.describe DiscourseWorkflows::Executor::StepLog do
   subject(:log) { described_class.new }
 
   describe "#info" do
@@ -92,7 +92,7 @@ RSpec.describe DiscourseWorkflows::StepLog do
 
   describe "entry cap" do
     it "stops adding entries after MAX_ENTRIES and warns about truncation" do
-      stub_const(DiscourseWorkflows::StepLog, :MAX_ENTRIES, 5) do
+      stub_const(DiscourseWorkflows::Executor::StepLog, :MAX_ENTRIES, 5) do
         7.times { |i| log.info("msg #{i}") }
         expect(log.entries.size).to eq(6)
         expect(log.entries.last).to include(

@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
   def build_exec_ctx(configuration, resume_token: nil)
-    DiscourseWorkflows::NodeExecutionContext.new(
+    DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: [{ "json" => {} }],
       configuration: configuration,
       property_schema: described_class.property_schema,
@@ -20,7 +20,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
       freeze_time do
         wait = described_class.new(configuration: config).execute(build_exec_ctx(config))
 
-        expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+        expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
         expect(wait.waiting_config["wait_type"]).to eq("timer")
         expect(wait.waiting_config["wait_amount"]).to eq(2)
         expect(wait.waiting_config["wait_unit"]).to eq("hours")
@@ -46,7 +46,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
             build_exec_ctx(config, resume_token: "tok-abc"),
           )
 
-        expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+        expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
         expect(wait.waiting_config["wait_type"]).to eq("webhook")
         expect(wait.waiting_config["resume_token"]).to eq("tok-abc")
         expect(wait.waiting_config["http_method"]).to eq("POST")

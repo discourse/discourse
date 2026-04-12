@@ -13,7 +13,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
 
       wait =
         action.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
+          DiscourseWorkflows::Executor::NodeExecutionContext.new(
             input_items: [],
             node_context: {
             },
@@ -25,7 +25,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
           ),
         )
 
-      expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+      expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
       expect(wait.waiting_config["wait_type"]).to eq("form")
       expect(wait.waiting_config["form_title"]).to eq("Page 2")
       expect(wait.waiting_config["form_fields"]).to be_present

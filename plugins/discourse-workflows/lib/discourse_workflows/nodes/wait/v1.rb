@@ -117,7 +117,7 @@ module DiscourseWorkflows
 
             timeout_seconds = timeout_amount&.public_send(timeout_unit)&.to_i
 
-            WaitForResume.new(
+            Executor::WaitForResume.new(
               waiting_until: timeout_seconds&.seconds&.from_now,
               waiting_config: {
                 "wait_type" => "webhook",
@@ -137,7 +137,7 @@ module DiscourseWorkflows
 
             duration_seconds = [amount.public_send(unit).to_i, MAX_WAIT_DURATION_SECONDS].min
 
-            WaitForResume.new(
+            Executor::WaitForResume.new(
               waiting_until: duration_seconds.seconds.from_now,
               waiting_config: {
                 "wait_type" => "timer",

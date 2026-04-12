@@ -27,7 +27,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
       freeze_time do
         wait =
           instance.execute(
-            DiscourseWorkflows::NodeExecutionContext.new(
+            DiscourseWorkflows::Executor::NodeExecutionContext.new(
               input_items: [{ "json" => {} }],
               node_context: {
               },
@@ -39,7 +39,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
             ),
           )
 
-        expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+        expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
         expect(wait.waiting_until).to eq(30.minutes.from_now)
         expect(wait.waiting_config["wait_type"]).to eq("chat_approval")
         expect(wait.waiting_config["timeout_action"]).to eq("fail")
@@ -62,7 +62,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
 
       wait =
         instance.execute(
-          DiscourseWorkflows::NodeExecutionContext.new(
+          DiscourseWorkflows::Executor::NodeExecutionContext.new(
             input_items: [{ "json" => {} }],
             node_context: {
             },
@@ -74,7 +74,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
           ),
         )
 
-      expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+      expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
       expect(wait.waiting_config["wait_type"]).to eq("chat_approval")
       expect(wait.waiting_config["timeout_action"]).to eq("deny")
       expect(wait.waiting_until).to be_nil

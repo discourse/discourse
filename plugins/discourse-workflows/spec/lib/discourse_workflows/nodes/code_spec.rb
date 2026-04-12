@@ -4,7 +4,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
   def build_exec_ctx(items, resolver: nil, **kwargs)
     resolver ||=
       DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first&.dig("json") || {} })
-    DiscourseWorkflows::NodeExecutionContext.new(input_items: items, resolver: resolver, **kwargs)
+    DiscourseWorkflows::Executor::NodeExecutionContext.new(input_items: items, resolver: resolver, **kwargs)
   end
 
   def execute_code(code, items: [{ "json" => {} }], **kwargs)
@@ -40,7 +40,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
           "for (var i = 0; i < 300; i++) { console.log('line ' + i); } return {};",
         )
 
-      expect(log.entries.size).to eq(DiscourseWorkflows::StepLog::MAX_ENTRIES + 1)
+      expect(log.entries.size).to eq(DiscourseWorkflows::Executor::StepLog::MAX_ENTRIES + 1)
       expect(log.entries.last["message"]).to include("truncated")
     end
 

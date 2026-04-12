@@ -161,7 +161,7 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       action = described_class.new(configuration: config)
       resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
       exec_ctx =
-        DiscourseWorkflows::NodeExecutionContext.new(
+        DiscourseWorkflows::Executor::NodeExecutionContext.new(
           input_items: [item],
           resolver: resolver,
           configuration: config,
