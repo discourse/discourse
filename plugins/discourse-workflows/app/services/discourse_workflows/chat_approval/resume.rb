@@ -22,8 +22,8 @@ module DiscourseWorkflows
       private
 
       def fetch_execution(params:)
-        DiscourseWorkflows::Executor::WaitHandlers::ChatApproval
-          .waiting_scope
+        DiscourseWorkflows::Execution
+          .waiting_with_type("chat_approval")
           .where(id: params.execution_id)
           .where("waiting_config->>'wait_nonce' = ?", params.wait_nonce)
           .lock("FOR UPDATE SKIP LOCKED")

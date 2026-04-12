@@ -73,7 +73,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
     end
 
     context "when wait_type is timer" do
-      it "delegates expired timer waits to the timer handler" do
+      it "handles expired timer waits with the generic timeout logic" do
         freeze_time
 
         execution =
@@ -84,15 +84,15 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
             waiting_node_id: "wait-1",
             waiting_config: {
               "wait_type" => "timer",
-              "timeout_action" => "deny",
-              "timeout_minutes" => "30",
+              "timeout_action" => "fail",
             },
           )
 
-        DiscourseWorkflows::Executor::WaitHandlers::Timer.expects(:on_timeout).with(execution)
         result
 
         expect(result).to run_successfully
+        execution.reload
+        expect(execution.status).to eq("error")
       end
     end
 

@@ -34,8 +34,8 @@ module DiscourseWorkflows
     end
 
     def fetch_execution(params:)
-      DiscourseWorkflows::Executor::WaitHandlers::Form
-        .find_waiting_execution_by_resume_token(params.resume_token)
+      DiscourseWorkflows::Execution
+        .by_resume_token(params.resume_token)
         .lock("FOR UPDATE SKIP LOCKED")
         .first
     end

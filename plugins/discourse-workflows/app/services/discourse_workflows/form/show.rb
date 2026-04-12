@@ -38,9 +38,7 @@ module DiscourseWorkflows
     def fetch_waiting_execution(params:)
       return unless params.resume_token
 
-      DiscourseWorkflows::Executor::WaitHandlers::Form.find_waiting_execution_by_resume_token(
-        params.resume_token,
-      ).first
+      DiscourseWorkflows::Execution.by_resume_token(params.resume_token).first
     end
 
     def fetch_workflow_from_execution(waiting_execution:)

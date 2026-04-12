@@ -84,8 +84,8 @@ module DiscourseWorkflows
         return nil
       end
 
-      DiscourseWorkflows::Executor::WaitHandlers::Webhook
-        .find_waiting_execution_by_resume_path(params.resume_token, params.resume_webhook_suffix)
+      DiscourseWorkflows::Execution
+        .by_resume_token_and_suffix(params.resume_token, params.resume_webhook_suffix)
         .lock("FOR UPDATE SKIP LOCKED")
         .first
     end
