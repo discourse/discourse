@@ -94,7 +94,7 @@ RSpec.describe DiscourseWorkflows::Executor::StepLog do
     it "stops adding entries after MAX_ENTRIES and warns about truncation" do
       stub_const(DiscourseWorkflows::Executor::StepLog, :MAX_ENTRIES, 5) do
         7.times { |i| log.info("msg #{i}") }
-        expect(log.entries.size).to eq(6)
+        expect(log.entries.size).to eq(5)
         expect(log.entries.last).to include(
           "level" => "warn",
           "message" => "Log truncated at 5 entries",
