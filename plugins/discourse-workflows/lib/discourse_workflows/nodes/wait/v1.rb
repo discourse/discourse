@@ -115,13 +115,18 @@ module DiscourseWorkflows
               end
             end
 
-            WaitForWebhook.new(
-              http_method: @configuration.fetch("http_method") { "GET" },
-              response_mode: @configuration.fetch("response_mode") { "immediately" },
-              response_code: @configuration.fetch("response_code") { "200" },
-              webhook_suffix: @configuration["webhook_suffix"],
-              timeout_amount: timeout_amount,
-              timeout_unit: timeout_unit,
+            timeout_seconds = timeout_amount&.public_send(timeout_unit)&.to_i
+
+            WaitForResume.new(
+              waiting_until: timeout_seconds&.seconds&.from_now,
+              waiting_config: {
+                "wait_type" => "webhook",
+                "resume_token" => exec_ctx.resume_token,
+                "http_method" => @configuration.fetch("http_method") { "GET" },
+                "response_mode" => @configuration.fetch("response_mode") { "immediately" },
+                "response_code" => @configuration.fetch("response_code") { "200" },
+                "webhook_suffix" => @configuration["webhook_suffix"].presence,
+              }.compact,
             )
           else
             amount = @configuration.fetch("wait_amount") { 1 }.to_i
@@ -132,10 +137,13 @@ module DiscourseWorkflows
 
             duration_seconds = [amount.public_send(unit).to_i, MAX_WAIT_DURATION_SECONDS].min
 
-            WaitForTimer.new(
-              wait_amount: amount,
-              wait_unit: unit,
-              wait_duration_seconds: duration_seconds,
+            WaitForResume.new(
+              waiting_until: duration_seconds.seconds.from_now,
+              waiting_config: {
+                "wait_type" => "timer",
+                "wait_amount" => amount,
+                "wait_unit" => unit,
+              },
             )
           end
         end

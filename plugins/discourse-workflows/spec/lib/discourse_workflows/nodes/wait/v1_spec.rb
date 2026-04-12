@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
-  def build_exec_ctx(configuration)
+  def build_exec_ctx(configuration, resume_token: nil)
     DiscourseWorkflows::NodeExecutionContext.new(
       input_items: [{ "json" => {} }],
       configuration: configuration,
@@ -9,6 +9,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
       node_context: {
       },
       resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
+      resume_token: resume_token,
     )
   end
 
@@ -16,12 +17,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
     it "returns a timer wait request for interval waits" do
       config = { "resume" => "time_interval", "wait_amount" => 2, "wait_unit" => "hours" }
 
-      wait = described_class.new(configuration: config).execute(build_exec_ctx(config))
+      freeze_time do
+        wait = described_class.new(configuration: config).execute(build_exec_ctx(config))
 
-      expect(wait).to be_a(DiscourseWorkflows::WaitForTimer)
-      expect(wait.wait_amount).to eq(2)
-      expect(wait.wait_unit).to eq("hours")
-      expect(wait.wait_duration_seconds).to eq(2.hours.to_i)
+        expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+        expect(wait.waiting_config["wait_type"]).to eq("timer")
+        expect(wait.waiting_config["wait_amount"]).to eq(2)
+        expect(wait.waiting_config["wait_unit"]).to eq("hours")
+        expect(wait.waiting_until).to eq(2.hours.from_now)
+      end
     end
 
     it "returns a webhook wait request for webhook waits" do
@@ -36,14 +40,21 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
         "timeout_unit" => "hours",
       }
 
-      wait = described_class.new(configuration: config).execute(build_exec_ctx(config))
+      freeze_time do
+        wait =
+          described_class.new(configuration: config).execute(
+            build_exec_ctx(config, resume_token: "tok-abc"),
+          )
 
-      expect(wait).to be_a(DiscourseWorkflows::WaitForWebhook)
-      expect(wait.http_method).to eq("POST")
-      expect(wait.response_mode).to eq("immediately")
-      expect(wait.response_code).to eq("202")
-      expect(wait.webhook_suffix).to eq("after-approval")
-      expect(wait.timeout_seconds).to eq(3.hours.to_i)
+        expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+        expect(wait.waiting_config["wait_type"]).to eq("webhook")
+        expect(wait.waiting_config["resume_token"]).to eq("tok-abc")
+        expect(wait.waiting_config["http_method"]).to eq("POST")
+        expect(wait.waiting_config["response_mode"]).to eq("immediately")
+        expect(wait.waiting_config["response_code"]).to eq("202")
+        expect(wait.waiting_config["webhook_suffix"]).to eq("after-approval")
+        expect(wait.waiting_until).to eq(3.hours.from_now)
+      end
     end
   end
 end
