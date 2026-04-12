@@ -4,7 +4,7 @@ module DiscourseWorkflows
   module NodeTypeDescriptor
     DEFAULT_I18N_PREFIX = "discourse_workflows"
 
-    PALETTE_GROUPS = {
+    GROUPS = {
       "discourse_triggers" => {
         icon: "discourse-other-tab",
         label_key: "discourse_workflows.add_node.categories.discourse_triggers",
@@ -117,7 +117,7 @@ module DiscourseWorkflows
     private
 
     def group_definition
-      PALETTE_GROUPS.fetch(group)
+      GROUPS.fetch(group)
     end
 
     def default_group
