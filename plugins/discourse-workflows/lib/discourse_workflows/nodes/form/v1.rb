@@ -119,10 +119,17 @@ module DiscourseWorkflows
             return [exec_ctx.input_items]
           end
 
-          WaitForForm.new(
-            form_fields: config["form_fields"],
-            form_title: config["form_title"],
-            form_description: config["form_description"],
+          channel = DiscourseWorkflows::Executor.form_channel(exec_ctx.execution_id)
+          MessageBus.publish(channel, { status: "waiting_for_form" })
+
+          WaitForResume.new(
+            waiting_config: {
+              "wait_type" => "form",
+              "resume_token" => exec_ctx.resume_token,
+              "form_title" => config["form_title"],
+              "form_description" => config["form_description"],
+              "form_fields" => config["form_fields"],
+            },
           )
         end
       end

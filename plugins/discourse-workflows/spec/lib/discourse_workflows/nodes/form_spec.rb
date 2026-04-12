@@ -9,6 +9,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
       }
       action = described_class.new(configuration: config)
 
+      allow(MessageBus).to receive(:publish)
+
       wait =
         action.execute(
           DiscourseWorkflows::NodeExecutionContext.new(
@@ -18,12 +20,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Form::V1 do
             resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
             configuration: config,
             property_schema: described_class.property_schema,
+            execution_id: 42,
+            resume_token: "test-token",
           ),
         )
 
-      expect(wait).to be_a(DiscourseWorkflows::WaitForForm)
-      expect(wait.form_title).to eq("Page 2")
-      expect(wait.form_fields).to be_present
+      expect(wait).to be_a(DiscourseWorkflows::WaitForResume)
+      expect(wait.waiting_config["wait_type"]).to eq("form")
+      expect(wait.waiting_config["form_title"]).to eq("Page 2")
+      expect(wait.waiting_config["form_fields"]).to be_present
     end
   end
 end
