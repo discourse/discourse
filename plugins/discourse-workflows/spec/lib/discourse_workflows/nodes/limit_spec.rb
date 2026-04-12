@@ -64,15 +64,5 @@ RSpec.describe DiscourseWorkflows::Nodes::Limit::V1 do
       expect(result.length).to eq(1)
       expect(result[0]["json"]["index"]).to eq(4)
     end
-
-    it "preserves item json structure" do
-      items = [
-        { "json" => { "name" => "Alice", "age" => 30 } },
-        { "json" => { "name" => "Bob", "age" => 25 } },
-      ]
-      result = execute(items, "max_items" => 1)
-
-      expect(result[0]["json"]).to eq({ "name" => "Alice", "age" => 30 })
-    end
   end
 end

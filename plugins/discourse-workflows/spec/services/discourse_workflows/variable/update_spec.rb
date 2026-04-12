@@ -38,9 +38,7 @@ RSpec.describe DiscourseWorkflows::Variable::Update do
     end
 
     context "when variable has invalid attributes" do
-      fab!(:other_variable, :discourse_workflows_variable) do
-        Fabricate(:discourse_workflows_variable, key: "NEW_KEY")
-      end
+      fab!(:other_variable) { Fabricate(:discourse_workflows_variable, key: "NEW_KEY") }
 
       it { is_expected.to fail_with_an_invalid_model(:variable) }
     end

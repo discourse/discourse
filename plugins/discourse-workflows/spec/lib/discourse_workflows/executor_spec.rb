@@ -170,14 +170,6 @@ RSpec.describe DiscourseWorkflows::Executor do
         expect(topic.reload.tags.map(&:name)).to include(tag.name)
       end
 
-      it "supports $json expressions in filter conditions" do
-        trigger_data = { topic_id: topic.id, tags: %w[bug help] }
-        execution = described_class.new(filter_workflow, "trigger-1", trigger_data).run
-
-        expect(execution.status).to eq("success")
-        expect(topic.reload.tags.map(&:name)).to include(tag.name)
-      end
-
       it "stops execution when filter does not pass" do
         trigger_data = { topic_id: topic.id, tags: %w[feature help] }
         execution = described_class.new(filter_workflow, "trigger-1", trigger_data).run

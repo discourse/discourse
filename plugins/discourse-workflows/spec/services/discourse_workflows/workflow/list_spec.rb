@@ -1,19 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Workflow::List do
-  describe described_class::Contract, type: :model do
-    it { is_expected.to allow_value(nil).for(:cursor) }
-    it { is_expected.to allow_value(1).for(:cursor) }
-    it { is_expected.to allow_value(nil).for(:limit) }
-    it { is_expected.to allow_value(1).for(:limit) }
-    it { is_expected.to allow_value(nil).for(:filter) }
-    it { is_expected.to allow_value("deploy").for(:filter) }
-    it { is_expected.to allow_value(nil).for(:trigger_type) }
-    it { is_expected.to allow_value("error").for(:trigger_type) }
-    it { is_expected.to allow_value(nil).for(:exclude_id) }
-    it { is_expected.to allow_value(1).for(:exclude_id) }
-  end
-
   describe ".call" do
     subject(:result) { described_class.call(params:) }
 

@@ -15,24 +15,21 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
   end
   fab!(:post_2) { Fabricate(:post, topic: topic_2, user: user) }
 
-  def execute_node(configuration:, run_as_user: nil)
-    action = described_class.new(configuration: configuration)
-    items = [{ "json" => {} }]
-    resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
-    kwargs = {
-      input_items: items,
-      resolver: resolver,
-      configuration: configuration,
-      property_schema: described_class.property_schema,
-    }
-    kwargs[:run_as_user] = run_as_user if run_as_user
-    action.execute(DiscourseWorkflows::NodeExecutionContext.new(**kwargs))[0]
+  def execute_list_topics(configuration:, run_as_user: Discourse.system_user)
+    execute_node_result(configuration: configuration, run_as_user: run_as_user).primary_items(
+      ports: described_class.ports,
+    )
   end
 
   describe "#execute" do
     it "returns topics matching the query" do
       result =
-        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "10" })
+        execute_list_topics(
+          configuration: {
+            "query" => "category:#{category.slug}",
+            "limit" => "10",
+          },
+        )
 
       expect(result.length).to eq(2)
       expect(result.map { |r| r["json"]["topic"]["id"] }).to contain_exactly(topic_1.id, topic_2.id)
@@ -40,13 +37,18 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
 
     it "respects the limit parameter" do
       result =
-        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "1" })
+        execute_list_topics(
+          configuration: {
+            "query" => "category:#{category.slug}",
+            "limit" => "1",
+          },
+        )
 
       expect(result.length).to eq(1)
     end
 
     it "defaults limit to 30 when not provided" do
-      result = execute_node(configuration: { "query" => "category:#{category.slug}" })
+      result = execute_list_topics(configuration: { "query" => "category:#{category.slug}" })
 
       expect(result.length).to eq(2)
     end
@@ -56,7 +58,12 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
       topic_1.tags << tag
 
       result =
-        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "10" })
+        execute_list_topics(
+          configuration: {
+            "query" => "category:#{category.slug}",
+            "limit" => "10",
+          },
+        )
 
       topic_data = result.find { |r| r["json"]["topic"]["id"] == topic_1.id }.dig("json", "topic")
       expect(topic_data).to include(
@@ -75,7 +82,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
 
     it "returns empty array when no topics match" do
       result =
-        execute_node(
+        execute_list_topics(
           configuration: {
             "query" => "category:#{other_category.slug}",
             "limit" => "10",
@@ -86,28 +93,47 @@ RSpec.describe DiscourseWorkflows::Nodes::ListTopics::V1 do
     end
 
     it "clamps limit to 100" do
-      result =
-        execute_node(configuration: { "query" => "category:#{category.slug}", "limit" => "200" })
+      captured_opts = nil
+      original_new = TopicQuery.method(:new)
+      allow(TopicQuery).to receive(:new).and_wrap_original do |_method, *args|
+        captured_opts = args[1]
+        original_new.call(*args)
+      end
 
-      expect(result.length).to eq(2)
+      execute_list_topics(
+        configuration: {
+          "query" => "category:#{category.slug}",
+          "limit" => "200",
+        },
+      )
+
+      expect(captured_opts[:per_page]).to eq(100)
     end
 
     it "defaults to system user for topic queries" do
-      result = execute_node(configuration: { "query" => "category:#{category.slug}" })
+      restricted = Fabricate(:category, read_restricted: true)
+      Fabricate(:category_group, category: restricted, group: Group[:staff], permission_type: 0)
+      Fabricate(:topic, category: restricted)
 
-      expect(result.length).to eq(2)
+      result = execute_list_topics(configuration: { "query" => "category:#{restricted.slug}" })
+
+      expect(result.length).to eq(1)
     end
 
     it "uses run_as_user when set" do
+      restricted = Fabricate(:category, read_restricted: true)
+      Fabricate(:category_group, category: restricted, group: Group[:staff], permission_type: 0)
+      Fabricate(:topic, category: restricted)
+
       result =
-        execute_node(
+        execute_list_topics(
           configuration: {
-            "query" => "category:#{category.slug}",
+            "query" => "category:#{restricted.slug}",
           },
           run_as_user: other_user,
         )
 
-      expect(result.length).to eq(2)
+      expect(result.length).to eq(0)
     end
   end
 end

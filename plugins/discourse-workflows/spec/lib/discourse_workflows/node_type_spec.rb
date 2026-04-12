@@ -32,7 +32,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
   describe "#execute" do
     it "raises NotImplementedError" do
       instance = described_class.new(configuration: {})
-      exec_ctx = OpenStruct.new
+      exec_ctx = Struct.new(:dummy).new
       expect { instance.execute(exec_ctx) }.to raise_error(NotImplementedError)
     end
   end

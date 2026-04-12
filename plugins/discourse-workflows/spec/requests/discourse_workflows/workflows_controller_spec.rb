@@ -2,7 +2,6 @@
 
 RSpec.describe DiscourseWorkflows::WorkflowsController do
   fab!(:admin)
-  fab!(:tag)
 
   before do
     SiteSetting.tagging_enabled = true
@@ -92,6 +91,8 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
   end
 
   describe "POST /admin/plugins/discourse-workflows/workflows" do
+    fab!(:tag)
+
     it "creates a workflow" do
       post "/admin/plugins/discourse-workflows/workflows.json",
            params: {

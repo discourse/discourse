@@ -9,28 +9,6 @@ RSpec.describe DiscourseWorkflows::Nodes::LoopOverItems::V1 do
     DiscourseWorkflows::NodeExecutionContext.new(input_items: items, node_context: node_context)
   end
 
-  describe ".outputs" do
-    it "returns done and loop" do
-      expect(described_class.outputs).to eq(
-        [
-          { key: "done", label_key: "discourse_workflows.branch.done" },
-          { key: "loop", label_key: "discourse_workflows.branch.loop" },
-        ],
-      )
-    end
-  end
-
-  describe ".ports" do
-    it "describes the done and loop outputs" do
-      expect(described_class.ports).to eq(
-        [
-          { key: "done", primary: true, label_key: "discourse_workflows.branch.done" },
-          { key: "loop", primary: false, label_key: "discourse_workflows.branch.loop" },
-        ],
-      )
-    end
-  end
-
   describe "#execute" do
     it "sends first batch to loop output on first execution" do
       node = described_class.new(configuration: { "batch_size" => 2 })

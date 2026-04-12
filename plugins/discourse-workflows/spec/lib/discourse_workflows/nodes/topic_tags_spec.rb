@@ -124,6 +124,8 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
     end
 
     context "with restricted tags" do
+      fab!(:regular_user, :user)
+      fab!(:admin)
       fab!(:staff_tag_group) do
         Fabricate(
           :tag_group,
@@ -142,7 +144,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
         config = { "operation" => "add", "topic_id" => topic.id.to_s, "tag_names" => "staff-only" }
 
         expect do
-          execute_node(configuration: config, item: item, run_as_user: Fabricate(:user))
+          execute_node(configuration: config, item: item, run_as_user: regular_user)
         end.to raise_error(RuntimeError)
         expect(topic.reload.tags.pluck(:name)).not_to include("staff-only")
       end
@@ -150,7 +152,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTags::V1 do
       it "allows adding staff-only tags when run_as_user is staff" do
         config = { "operation" => "add", "topic_id" => topic.id.to_s, "tag_names" => "staff-only" }
 
-        result = execute_node(configuration: config, item: item, run_as_user: Fabricate(:admin))
+        result = execute_node(configuration: config, item: item, run_as_user: admin)
 
         expect(result["tag_names"]).to include("staff-only")
         expect(topic.reload.tags.pluck(:name)).to include("staff-only")

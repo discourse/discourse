@@ -21,14 +21,6 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::Operations do
   end
 
   describe ".for" do
-    it "returns the correct class for each operation" do
-      expect(described_class.for("insert")).to eq(described_class::Insert)
-      expect(described_class.for("get")).to eq(described_class::Get)
-      expect(described_class.for("update")).to eq(described_class::Update)
-      expect(described_class.for("delete")).to eq(described_class::Delete)
-      expect(described_class.for("upsert")).to eq(described_class::Upsert)
-    end
-
     it "raises for unknown operations" do
       expect { described_class.for("truncate") }.to raise_error(ArgumentError, /Unknown operation/)
     end

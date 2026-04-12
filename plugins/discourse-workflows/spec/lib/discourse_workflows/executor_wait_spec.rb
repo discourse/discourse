@@ -3,7 +3,6 @@
 RSpec.describe DiscourseWorkflows::Executor do
   fab!(:user)
   fab!(:channel, :chat_channel)
-  fab!(:completed_execution) { Fabricate(:discourse_workflows_execution, status: :success) }
 
   before { SiteSetting.chat_enabled = true }
 
@@ -81,6 +80,8 @@ RSpec.describe DiscourseWorkflows::Executor do
   end
 
   describe ".resume" do
+    fab!(:completed_execution) { Fabricate(:discourse_workflows_execution, status: :success) }
+
     it "resumes a waiting execution with approved response" do
       graph =
         build_workflow_graph do |g|

@@ -42,16 +42,14 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
     end
 
     context "when execution is not waiting" do
-      fab!(:execution, :discourse_workflows_execution) do
-        Fabricate(:discourse_workflows_execution, status: :success)
-      end
+      fab!(:execution) { Fabricate(:discourse_workflows_execution, status: :success) }
       let(:wait_nonce) { "abc" }
 
       it { is_expected.to fail_to_find_a_model(:execution) }
     end
 
     context "when execution is waiting on a different handler type" do
-      fab!(:execution, :discourse_workflows_execution) do
+      fab!(:execution) do
         Fabricate(
           :discourse_workflows_execution,
           status: :waiting,
@@ -66,7 +64,7 @@ RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
     end
 
     context "when wait_nonce does not match" do
-      fab!(:execution, :discourse_workflows_execution) do
+      fab!(:execution) do
         Fabricate(
           :discourse_workflows_execution,
           status: :waiting,

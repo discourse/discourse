@@ -234,13 +234,11 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
     context "when workflow is disabled" do
       it "does not enqueue" do
         freeze_time Time.utc(2026, 3, 18, 9, 0)
-        workflow =
-          create_schedule_workflow(
-            configuration: {
-              "rules" => [{ "interval" => "cron", "cron" => "0 9 * * *" }],
-            },
-          )
-        workflow.update!(enabled: false)
+        create_schedule_workflow(
+          configuration: {
+            "rules" => [{ "interval" => "cron", "cron" => "0 9 * * *" }],
+          },
+        ).update!(enabled: false)
 
         expect { result }.not_to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }
       end
@@ -267,19 +265,18 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
       it "skips when recurrence interval has not elapsed" do
         freeze_time Time.utc(2026, 3, 18, 9, 0)
-        workflow =
-          create_schedule_workflow(
-            configuration: {
-              "rules" => [
-                {
-                  "interval" => "days",
-                  "days_between_triggers" => 3,
-                  "trigger_at_hour" => 9,
-                  "trigger_at_minute" => 0,
-                },
-              ],
-            },
-          )
+        create_schedule_workflow(
+          configuration: {
+            "rules" => [
+              {
+                "interval" => "days",
+                "days_between_triggers" => 3,
+                "trigger_at_hour" => 9,
+                "trigger_at_minute" => 0,
+              },
+            ],
+          },
+        )
 
         described_class.call
         expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(1)
@@ -291,19 +288,18 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
 
       it "fires when recurrence interval has elapsed" do
         freeze_time Time.utc(2026, 3, 18, 9, 0)
-        workflow =
-          create_schedule_workflow(
-            configuration: {
-              "rules" => [
-                {
-                  "interval" => "days",
-                  "days_between_triggers" => 3,
-                  "trigger_at_hour" => 9,
-                  "trigger_at_minute" => 0,
-                },
-              ],
-            },
-          )
+        create_schedule_workflow(
+          configuration: {
+            "rules" => [
+              {
+                "interval" => "days",
+                "days_between_triggers" => 3,
+                "trigger_at_hour" => 9,
+                "trigger_at_minute" => 0,
+              },
+            ],
+          },
+        )
 
         described_class.call
         expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(1)

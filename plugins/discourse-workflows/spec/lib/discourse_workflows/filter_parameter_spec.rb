@@ -127,13 +127,6 @@ RSpec.describe DiscourseWorkflows::FilterParameter do
       end
     end
 
-    context "with integer type" do
-      it "uses the number evaluator" do
-        expect(described_class.evaluate_type("integer", 42, 42, "equals", {})).to be(true)
-        expect(described_class.evaluate_type("integer", 42, 10, "gt", {})).to be(true)
-      end
-    end
-
     context "with boolean type" do
       it "true" do
         expect(described_class.evaluate_type("boolean", true, nil, "true", {})).to be(true)

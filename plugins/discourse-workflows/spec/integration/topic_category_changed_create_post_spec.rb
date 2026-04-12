@@ -51,9 +51,7 @@ RSpec.describe "Workflow: topic category changed -> create post" do
     expect(execution.status).to eq("success")
   end
 
-  it "does not trigger when category stays the same" do
-    topic.change_category_to_id(category.id)
-
+  def expect_no_workflow_jobs_for(topic)
     jobs =
       Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.select do |j|
         j["args"].first["trigger_data"]&.dig("topic", "id") == topic.id
@@ -61,15 +59,14 @@ RSpec.describe "Workflow: topic category changed -> create post" do
     expect(jobs).to be_empty
   end
 
+  it "does not trigger when category stays the same" do
+    topic.change_category_to_id(category.id)
+    expect_no_workflow_jobs_for(topic)
+  end
+
   it "does not trigger when the workflow is disabled" do
     DiscourseWorkflows::Workflow.update_all(enabled: false)
-
     topic.change_category_to_id(target_category.id)
-
-    jobs =
-      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.select do |j|
-        j["args"].first["trigger_data"]&.dig("topic", "id") == topic.id
-      end
-    expect(jobs).to be_empty
+    expect_no_workflow_jobs_for(topic)
   end
 end

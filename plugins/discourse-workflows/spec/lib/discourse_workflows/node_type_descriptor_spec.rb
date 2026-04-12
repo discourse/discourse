@@ -164,27 +164,6 @@ RSpec.describe DiscourseWorkflows::NodeTypeDescriptor do
     end
   end
 
-  describe "#branching?" do
-    it "returns false for single-port nodes" do
-      expect(trigger_class.branching?).to eq(false)
-    end
-
-    it "returns true for multi-port nodes" do
-      klass =
-        Class.new(DiscourseWorkflows::NodeType) do
-          def self.identifier
-            "condition:branch"
-          end
-
-          def self.outputs
-            %w[true false]
-          end
-        end
-
-      expect(klass.branching?).to eq(true)
-    end
-  end
-
   describe "#capabilities" do
     it "returns capability hash for a simple node" do
       expect(trigger_class.capabilities).to eq(

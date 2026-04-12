@@ -252,6 +252,32 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
     end
 
     describe "synchronous response modes" do
+      def setup_webhook_with_response(response_mode:, target_node_id:, extra:, webhook_config: {})
+        workflow.update!(
+          nodes:
+            workflow.parsed_nodes.map do |n|
+              if n["id"] == "webhook-1"
+                n.merge(
+                  "configuration" => {
+                    "path" => "my-hook",
+                    "http_method" => "POST",
+                    "response_mode" => response_mode,
+                  }.merge(webhook_config),
+                )
+              else
+                n
+              end
+            end + extra[:nodes],
+          connections: [
+            {
+              "source_node_id" => "webhook-1",
+              "target_node_id" => target_node_id,
+              "source_output" => "main",
+            },
+          ],
+        )
+      end
+
       it "redirects when respond_to_webhook node produces a redirect" do
         extra =
           build_workflow_graph do |g|
@@ -262,28 +288,10 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                      "redirect_url" => "https://example.com/thanks",
                    }
           end
-        workflow.update!(
-          nodes:
-            workflow.parsed_nodes.map do |n|
-              if n["id"] == "webhook-1"
-                n.merge(
-                  "configuration" => {
-                    "path" => "my-hook",
-                    "http_method" => "POST",
-                    "response_mode" => "respond_to_webhook",
-                  },
-                )
-              else
-                n
-              end
-            end + extra[:nodes],
-          connections: [
-            {
-              "source_node_id" => "webhook-1",
-              "target_node_id" => "respond-1",
-              "source_output" => "main",
-            },
-          ],
+        setup_webhook_with_response(
+          response_mode: "respond_to_webhook",
+          target_node_id: "respond-1",
+          extra: extra,
         )
 
         post "/workflows/webhooks/my-hook.json",
@@ -307,28 +315,10 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                      "response_body" => '{"created": true}',
                    }
           end
-        workflow.update!(
-          nodes:
-            workflow.parsed_nodes.map do |n|
-              if n["id"] == "webhook-1"
-                n.merge(
-                  "configuration" => {
-                    "path" => "my-hook",
-                    "http_method" => "POST",
-                    "response_mode" => "respond_to_webhook",
-                  },
-                )
-              else
-                n
-              end
-            end + extra[:nodes],
-          connections: [
-            {
-              "source_node_id" => "webhook-1",
-              "target_node_id" => "respond-1",
-              "source_output" => "main",
-            },
-          ],
+        setup_webhook_with_response(
+          response_mode: "respond_to_webhook",
+          target_node_id: "respond-1",
+          extra: extra,
         )
 
         post "/workflows/webhooks/my-hook.json",
@@ -352,28 +342,10 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                      "response_body" => "OK thanks",
                    }
           end
-        workflow.update!(
-          nodes:
-            workflow.parsed_nodes.map do |n|
-              if n["id"] == "webhook-1"
-                n.merge(
-                  "configuration" => {
-                    "path" => "my-hook",
-                    "http_method" => "POST",
-                    "response_mode" => "respond_to_webhook",
-                  },
-                )
-              else
-                n
-              end
-            end + extra[:nodes],
-          connections: [
-            {
-              "source_node_id" => "webhook-1",
-              "target_node_id" => "respond-1",
-              "source_output" => "main",
-            },
-          ],
+        setup_webhook_with_response(
+          response_mode: "respond_to_webhook",
+          target_node_id: "respond-1",
+          extra: extra,
         )
 
         post "/workflows/webhooks/my-hook.json",
@@ -396,28 +368,10 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                      "status_code" => "204",
                    }
           end
-        workflow.update!(
-          nodes:
-            workflow.parsed_nodes.map do |n|
-              if n["id"] == "webhook-1"
-                n.merge(
-                  "configuration" => {
-                    "path" => "my-hook",
-                    "http_method" => "POST",
-                    "response_mode" => "respond_to_webhook",
-                  },
-                )
-              else
-                n
-              end
-            end + extra[:nodes],
-          connections: [
-            {
-              "source_node_id" => "webhook-1",
-              "target_node_id" => "respond-1",
-              "source_output" => "main",
-            },
-          ],
+        setup_webhook_with_response(
+          response_mode: "respond_to_webhook",
+          target_node_id: "respond-1",
+          extra: extra,
         )
 
         post "/workflows/webhooks/my-hook.json",
@@ -439,29 +393,13 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                      "json" => '{"result": "done"}',
                    }
           end
-        workflow.update!(
-          nodes:
-            workflow.parsed_nodes.map do |n|
-              if n["id"] == "webhook-1"
-                n.merge(
-                  "configuration" => {
-                    "path" => "my-hook",
-                    "http_method" => "POST",
-                    "response_mode" => "when_last_node_finishes",
-                    "response_code" => "200",
-                  },
-                )
-              else
-                n
-              end
-            end + extra[:nodes],
-          connections: [
-            {
-              "source_node_id" => "webhook-1",
-              "target_node_id" => "set-fields-1",
-              "source_output" => "main",
-            },
-          ],
+        setup_webhook_with_response(
+          response_mode: "when_last_node_finishes",
+          target_node_id: "set-fields-1",
+          extra: extra,
+          webhook_config: {
+            "response_code" => "200",
+          },
         )
 
         post "/workflows/webhooks/my-hook.json",

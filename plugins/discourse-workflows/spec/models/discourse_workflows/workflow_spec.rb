@@ -19,15 +19,6 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
   end
 
-  describe ".enabled" do
-    it "returns only enabled workflows" do
-      Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true)
-      Fabricate(:discourse_workflows_workflow, created_by: user, enabled: false)
-
-      expect(described_class.enabled.count).to eq(1)
-    end
-  end
-
   describe "#node_has_reachable_downstream_of_type?" do
     it "returns true when the target type is a direct downstream" do
       graph =

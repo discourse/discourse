@@ -2,11 +2,11 @@
 
 RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
   fab!(:user)
-  fab!(:admin)
   fab!(:badge)
-  fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
 
   describe ".metadata" do
+    fab!(:badge_2) { Fabricate(:badge, name: "A badge") }
+
     it "returns badges for the chooser" do
       expect(described_class.metadata[:badges]).to include(
         { id: badge_2.id, name: badge_2.name },
@@ -16,6 +16,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
   end
 
   describe "#execute" do
+    fab!(:admin)
+
     let(:item) { { "json" => {} } }
 
     context "with grant operation" do

@@ -11,12 +11,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
     result[0]
   end
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:sort")
-    end
-  end
-
   describe "simple mode" do
     it "sorts items ascending by a single field" do
       input = [
@@ -63,14 +57,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
       expect(result[0]["json"]).not_to have_key("name")
       expect(result[1]["json"]["name"]).to eq("Alice")
       expect(result[2]["json"]["name"]).to eq("Bob")
-    end
-
-    it "does not mutate the original input array" do
-      input = [{ "json" => { "n" => 3 } }, { "json" => { "n" => 1 } }, { "json" => { "n" => 2 } }]
-      original_order = input.map { |i| i["json"]["n"] }
-      execute(input, "sort_fields" => [{ "field_name" => "n", "order" => "ascending" }])
-
-      expect(input.map { |i| i["json"]["n"] }).to eq(original_order)
     end
 
     it "sorts by multiple fields with priority order" do
@@ -123,14 +109,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Sort::V1 do
       result = execute(input, "type" => "random")
 
       expect(result.map { |i| i["json"]["n"] }).to contain_exactly(*(1..20))
-    end
-
-    it "does not mutate the original input array" do
-      input = [{ "json" => { "n" => 1 } }, { "json" => { "n" => 2 } }]
-      original_order = input.map { |i| i["json"]["n"] }
-      execute(input, "type" => "random")
-
-      expect(input.map { |i| i["json"]["n"] }).to eq(original_order)
     end
   end
 

@@ -80,11 +80,13 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
       end
 
       it "resets the cached size after inserting" do
-        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+        allow(DiscourseWorkflows::DataTableFacade).to receive(
+          :reset_storage_cache!,
+        ).and_call_original
 
         result
 
-        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+        expect(DiscourseWorkflows::DataTableFacade).to have_received(:reset_storage_cache!).once
       end
     end
 
@@ -110,11 +112,13 @@ RSpec.describe DiscourseWorkflows::DataTableRow::Upsert do
       end
 
       it "resets the cached size after updating" do
-        allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!).and_call_original
+        allow(DiscourseWorkflows::DataTableFacade).to receive(
+          :reset_storage_cache!,
+        ).and_call_original
 
         result
 
-        expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!).once
+        expect(DiscourseWorkflows::DataTableFacade).to have_received(:reset_storage_cache!).once
       end
     end
   end

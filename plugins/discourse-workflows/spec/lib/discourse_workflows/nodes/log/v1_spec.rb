@@ -19,12 +19,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
     [result[0], exec_ctx.log]
   end
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:log")
-    end
-  end
-
   describe "#execute" do
     it "passes input items through unchanged" do
       items = [{ "json" => { "name" => "Alice" } }, { "json" => { "count" => 42 } }]
@@ -45,28 +39,11 @@ RSpec.describe DiscourseWorkflows::Nodes::Log::V1 do
 
     it "resolves expressions in entry values" do
       items = [{ "json" => { "user_name" => "Bob" } }]
-      entries = [{ "key" => "name", "value" => "={{ $json.user_name }}" }]
-
-      config = { "entries" => entries }
-      instance = described_class.new(configuration: config)
-      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first["json"] })
-      exec_ctx =
-        DiscourseWorkflows::NodeExecutionContext.new(
-          input_items: items,
-          node_context: {
-          },
-          resolver: resolver,
-          configuration: config,
-          property_schema: described_class.property_schema,
-        )
-      result = instance.execute(exec_ctx)[0]
+      result, log =
+        execute(items, "entries" => [{ "key" => "name", "value" => "={{ $json.user_name }}" }])
 
       expect(result).to eq(items)
-      expect(exec_ctx.log.entries.first).to include(
-        "level" => "info",
-        "key" => "name",
-        "value" => "Bob",
-      )
+      expect(log.entries.first).to include("level" => "info", "key" => "name", "value" => "Bob")
     end
 
     it "handles empty entries gracefully" do

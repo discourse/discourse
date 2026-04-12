@@ -44,35 +44,27 @@ RSpec.describe "Workflow: topic closed -> topic tags" do
     expect(execution.status).to eq("success")
   end
 
-  it "does not trigger when the topic is not closed" do
-    topic.update_status("visible", true, admin)
-
+  def expect_no_workflow_jobs_for(topic)
     jobs =
       Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.select do |j|
         j["args"].first["trigger_data"].dig("topic", "id") == topic.id
       end
     expect(jobs).to be_empty
+  end
+
+  it "does not trigger when the topic is not closed" do
+    topic.update_status("visible", true, admin)
+    expect_no_workflow_jobs_for(topic)
   end
 
   it "does not trigger when the topic is reopened" do
     topic.update_status("closed", false, admin)
-
-    jobs =
-      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.select do |j|
-        j["args"].first["trigger_data"].dig("topic", "id") == topic.id
-      end
-    expect(jobs).to be_empty
+    expect_no_workflow_jobs_for(topic)
   end
 
   it "does not tag when the workflow is disabled" do
     DiscourseWorkflows::Workflow.update_all(enabled: false)
-
     topic.update_status("closed", true, admin)
-
-    jobs =
-      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.select do |j|
-        j["args"].first["trigger_data"].dig("topic", "id") == topic.id
-      end
-    expect(jobs).to be_empty
+    expect_no_workflow_jobs_for(topic)
   end
 end

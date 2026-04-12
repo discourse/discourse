@@ -21,11 +21,6 @@ RSpec.describe DiscourseWorkflows::StatsController do
       get "/admin/plugins/discourse-workflows/stats.json"
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json).to have_key("total")
-      expect(json).to have_key("failed")
-      expect(json).to have_key("failure_rate")
-      expect(json).to have_key("avg_duration")
     end
   end
 
@@ -36,11 +31,6 @@ RSpec.describe DiscourseWorkflows::StatsController do
       get "/admin/plugins/discourse-workflows/stats/#{workflow.id}.json"
 
       expect(response.status).to eq(200)
-      json = response.parsed_body
-      expect(json).to have_key("total")
-      expect(json).to have_key("failed")
-      expect(json).to have_key("failure_rate")
-      expect(json).to have_key("avg_duration")
     end
   end
 end

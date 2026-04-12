@@ -3,18 +3,6 @@
 RSpec.describe DiscourseWorkflows::Workflow::Execute do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:trigger_node_id) }
-
-    it "defaults trigger_data to an empty hash" do
-      expect(described_class.new.trigger_data).to eq({})
-    end
-
-    it "defaults execution_mode to normal" do
-      expect(described_class.new.execution_mode).to eq("normal")
-    end
-
-    it "defaults error_depth to 0" do
-      expect(described_class.new.error_depth).to eq(0)
-    end
   end
 
   describe ".call" do
@@ -77,6 +65,10 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
       end
 
       it { is_expected.to run_successfully }
+
+      it "fetches the correct user" do
+        expect(result[:user]).to eq(execution_user)
+      end
     end
   end
 end

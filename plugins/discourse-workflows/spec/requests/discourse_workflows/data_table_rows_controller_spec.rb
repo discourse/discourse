@@ -3,6 +3,15 @@
 RSpec.describe DiscourseWorkflows::DataTableRowsController do
   fab!(:admin)
   fab!(:user)
+  fab!(:data_table) do
+    Fabricate(
+      :discourse_workflows_data_table,
+      columns: [
+        { "name" => "email", "type" => "string" },
+        { "name" => "score", "type" => "number" },
+      ],
+    )
+  end
 
   before { sign_in(admin) }
 
@@ -29,12 +38,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   end
 
   describe "GET /admin/plugins/discourse-workflows/data-tables/:id/rows" do
-    fab!(:data_table) do
-      Fabricate(
-        :discourse_workflows_data_table,
-        columns: [{ "name" => "email", "type" => "string" }],
-      )
-    end
     fab!(:row) { insert_data_table_row(data_table, "email" => "test@test.com") }
 
     include_examples "requires admin",
@@ -78,13 +81,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   end
 
   describe "POST /admin/plugins/discourse-workflows/data-tables/:id/rows" do
-    fab!(:data_table) do
-      Fabricate(
-        :discourse_workflows_data_table,
-        columns: [{ "name" => "email", "type" => "string" }],
-      )
-    end
-
     include_examples "requires admin",
                      :post,
                      -> do
@@ -105,15 +101,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   end
 
   describe "PUT /admin/plugins/discourse-workflows/data-tables/:id/rows" do
-    fab!(:data_table) do
-      Fabricate(
-        :discourse_workflows_data_table,
-        columns: [
-          { "name" => "email", "type" => "string" },
-          { "name" => "score", "type" => "number" },
-        ],
-      )
-    end
     fab!(:row) { insert_data_table_row(data_table, "email" => "up@test.com", "score" => 1) }
 
     include_examples "requires admin",
@@ -156,12 +143,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   end
 
   describe "DELETE /admin/plugins/discourse-workflows/data-tables/:id/rows" do
-    fab!(:data_table) do
-      Fabricate(
-        :discourse_workflows_data_table,
-        columns: [{ "name" => "email", "type" => "string" }],
-      )
-    end
     fab!(:row) { insert_data_table_row(data_table, "email" => "del@test.com") }
 
     include_examples "requires admin",
@@ -186,15 +167,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   end
 
   describe "PUT /admin/plugins/discourse-workflows/data-tables/:id/rows/:row_id" do
-    fab!(:data_table) do
-      Fabricate(
-        :discourse_workflows_data_table,
-        columns: [
-          { "name" => "email", "type" => "string" },
-          { "name" => "score", "type" => "number" },
-        ],
-      )
-    end
     fab!(:row) { insert_data_table_row(data_table, "email" => "cell@test.com", "score" => 1) }
 
     include_examples "requires admin",
@@ -238,12 +210,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   end
 
   describe "DELETE /admin/plugins/discourse-workflows/data-tables/:id/rows/:row_id" do
-    fab!(:data_table) do
-      Fabricate(
-        :discourse_workflows_data_table,
-        columns: [{ "name" => "email", "type" => "string" }],
-      )
-    end
     fab!(:row) { insert_data_table_row(data_table, "email" => "gone@test.com") }
 
     include_examples "requires admin",
@@ -271,12 +237,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
   end
 
   describe "POST /admin/plugins/discourse-workflows/data-tables/:id/rows/batch-destroy" do
-    fab!(:data_table) do
-      Fabricate(
-        :discourse_workflows_data_table,
-        columns: [{ "name" => "email", "type" => "string" }],
-      )
-    end
     fab!(:row_1) { insert_data_table_row(data_table, "email" => "one@test.com") }
     fab!(:row_2) { insert_data_table_row(data_table, "email" => "two@test.com") }
 

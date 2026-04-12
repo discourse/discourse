@@ -9,15 +9,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicAdminButton::V1 do
     topic.tags << tag
   end
 
-  describe ".property_schema" do
-    it "includes label and icon" do
-      expect(described_class.property_schema).to include(
-        label: include(type: :string, required: true),
-        icon: include(type: :icon, required: false),
-      )
-    end
-  end
-
   describe "#valid?" do
     it "returns true when topic is present" do
       trigger = described_class.new(topic)

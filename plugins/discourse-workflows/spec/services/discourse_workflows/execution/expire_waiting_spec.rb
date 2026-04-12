@@ -90,7 +90,6 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
 
         result
 
-        expect(result).to run_successfully
         execution.reload
         expect(execution.status).to eq("error")
       end

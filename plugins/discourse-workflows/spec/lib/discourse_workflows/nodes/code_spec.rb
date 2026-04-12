@@ -1,16 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
-  fab!(:api_key_variable) do
-    Fabricate(:discourse_workflows_variable, key: "api_key", value: "secret123")
-  end
-
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("action:code")
-    end
-  end
-
   def build_exec_ctx(items, resolver: nil, **kwargs)
     resolver ||=
       DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first&.dig("json") || {} })
@@ -101,10 +91,16 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
       expect(result.first["json"]["count"]).to eq(2)
     end
 
-    it "accesses workflow variables via $vars" do
-      result = execute_code("return { key: $vars.api_key };")
+    context "with workflow variables" do
+      fab!(:api_key_variable) do
+        Fabricate(:discourse_workflows_variable, key: "api_key", value: "secret123")
+      end
 
-      expect(result.first["json"]["key"]).to eq("secret123")
+      it "accesses workflow variables via $vars" do
+        result = execute_code("return { key: $vars.api_key };")
+
+        expect(result.first["json"]["key"]).to eq("secret123")
+      end
     end
 
     it "filters secret site settings from $site_settings" do

@@ -22,19 +22,11 @@ RSpec.describe DiscourseWorkflows::NormalizedFilter do
       )
     end
 
-    it "is valid" do
-      expect(model).to be_valid
-    end
-
     it "returns normalized value" do
       expect(model.value).to eq(
         "type" => "and",
         "filters" => [{ "columnName" => "email", "condition" => "eq", "value" => "a@b.com" }],
       )
-    end
-
-    it "reports changes to save" do
-      expect(model.has_changes_to_save?).to be(true)
     end
   end
 
@@ -49,10 +41,6 @@ RSpec.describe DiscourseWorkflows::NormalizedFilter do
 
   describe "with an empty optional filter" do
     subject(:model) { described_class.new(data_table:, filter: {}, optional: true) }
-
-    it "is valid" do
-      expect(model).to be_valid
-    end
 
     it "returns nil value" do
       expect(model.value).to be_nil

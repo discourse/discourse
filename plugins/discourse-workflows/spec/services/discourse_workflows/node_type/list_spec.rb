@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::NodeType::List do
-  fab!(:badge) { Fabricate(:badge, name: "Helpful") }
-
   describe ".call" do
     subject(:result) { described_class.call }
 
     context "when everything's ok" do
+      fab!(:badge) { Fabricate(:badge, name: "Helpful") }
+
       it { is_expected.to run_successfully }
 
       it "returns all registered node types" do
@@ -68,15 +68,17 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(condition[:branching]).to be(true)
       end
 
-      it "serializes canonical ui, capability, port, and operation descriptors" do
+      it "serializes ui palette group for action nodes" do
         create_post = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
-        data_table = result[:node_types].find { |nt| nt[:identifier] == "action:data_table" }
-        condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
         form = result[:node_types].find { |nt| nt[:identifier] == "action:form" }
-        loop = result[:node_types].find { |nt| nt[:identifier] == "flow:loop_over_items" }
-        topic_closed = result[:node_types].find { |nt| nt[:identifier] == "trigger:topic_closed" }
 
         expect(create_post.dig(:ui, :palette_group, :id)).to eq("discourse_actions")
+        expect(form.dig(:ui, :palette_group, :id)).to eq("human_review")
+      end
+
+      it "serializes ui and operations for data_table node" do
+        data_table = result[:node_types].find { |nt| nt[:identifier] == "action:data_table" }
+
         expect(data_table[:ui]).to include(
           icon: "table",
           color: "violet",
@@ -88,6 +90,10 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           value: "insert",
           label_key: "discourse_workflows.data_table_node.operations.insert",
         )
+      end
+
+      it "serializes capabilities and ports for condition node" do
+        condition = result[:node_types].find { |nt| nt[:identifier] == "condition:if" }
 
         expect(condition[:capabilities]).to include(
           branching: true,
@@ -100,9 +106,18 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
             { key: "false", primary: false, label_key: "discourse_workflows.branch.false" },
           ],
         )
-        expect(form.dig(:ui, :palette_group, :id)).to eq("human_review")
-        expect(loop[:ports].map { |port| port[:key] }).to eq(%w[done loop])
-        expect(loop.dig(:ui, :palette_group, :id)).to eq("flow")
+      end
+
+      it "serializes ports and ui palette group for loop node" do
+        loop_node = result[:node_types].find { |nt| nt[:identifier] == "flow:loop_over_items" }
+
+        expect(loop_node[:ports].map { |port| port[:key] }).to eq(%w[done loop])
+        expect(loop_node.dig(:ui, :palette_group, :id)).to eq("flow")
+      end
+
+      it "serializes ui palette group for trigger nodes" do
+        topic_closed = result[:node_types].find { |nt| nt[:identifier] == "trigger:topic_closed" }
+
         expect(topic_closed.dig(:ui, :palette_group, :id)).to eq("discourse_triggers")
       end
 

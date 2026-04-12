@@ -65,7 +65,10 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
         },
       )
 
-    DiscourseEvent.trigger(:chat_message_interaction, interaction)
+    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change(
+      Jobs::DiscourseWorkflows::ResumeChatApproval.jobs,
+      :size,
+    )
   end
 
   it "ignores non-workflow interactions" do
@@ -78,6 +81,9 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
         },
       )
 
-    DiscourseEvent.trigger(:chat_message_interaction, interaction)
+    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change(
+      Jobs::DiscourseWorkflows::ResumeChatApproval.jobs,
+      :size,
+    )
   end
 end

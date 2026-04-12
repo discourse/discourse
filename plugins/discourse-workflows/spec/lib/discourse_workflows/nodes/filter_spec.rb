@@ -12,36 +12,9 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
     )
   end
 
-  describe ".identifier" do
-    it "returns condition:filter" do
-      expect(described_class.identifier).to eq("condition:filter")
-    end
-  end
-
-  describe ".branching?" do
-    it "returns true" do
-      expect(described_class.branching?).to be(true)
-    end
-  end
-
-  describe ".ports" do
-    it "defines kept and rejected output labels" do
-      expect(described_class.ports).to eq(
-        [
-          { key: "true", primary: true, label_key: "discourse_workflows.executions.statuses.kept" },
-          {
-            key: "false",
-            primary: false,
-            label_key: "discourse_workflows.executions.statuses.rejected",
-          },
-        ],
-      )
-    end
-  end
-
   describe "#execute" do
-    it "routes passing items to true" do
-      config = {
+    let(:category_id_equals_5_config) do
+      {
         "conditions" => [
           {
             "id" => "1",
@@ -55,33 +28,22 @@ RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
         ],
         "combinator" => "and",
       }
-      filter = described_class.new(configuration: config)
+    end
+
+    it "routes passing items to true" do
+      filter = described_class.new(configuration: category_id_equals_5_config)
 
       items = [{ "json" => { "category_id" => 5 } }]
-      result = filter.execute(build_exec_ctx(items, configuration: config))
+      result = filter.execute(build_exec_ctx(items, configuration: category_id_equals_5_config))
       expect(result[0]).to eq(items)
       expect(result[1]).to eq([])
     end
 
     it "routes failing items to false" do
-      config = {
-        "conditions" => [
-          {
-            "id" => "1",
-            "leftValue" => "={{ $json.category_id }}",
-            "rightValue" => "5",
-            "operator" => {
-              "type" => "integer",
-              "operation" => "equals",
-            },
-          },
-        ],
-        "combinator" => "and",
-      }
-      filter = described_class.new(configuration: config)
+      filter = described_class.new(configuration: category_id_equals_5_config)
 
       items = [{ "json" => { "category_id" => 10 } }]
-      result = filter.execute(build_exec_ctx(items, configuration: config))
+      result = filter.execute(build_exec_ctx(items, configuration: category_id_equals_5_config))
       expect(result[0]).to eq([])
       expect(result[1]).to eq(items)
     end

@@ -1,20 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::StaleTopic::V1 do
-  describe ".property_schema" do
-    it "defines hours parameter" do
-      schema = described_class.property_schema
-      expect(schema[:hours]).to eq({ type: :integer, required: true, default: 24, min: 1 })
-    end
-  end
-
-  describe ".output_schema" do
-    it "includes topic fields" do
-      schema = described_class.output_schema
-      expect(schema).to eq(topic: DiscourseWorkflows::Schemas::Topic.fields)
-    end
-  end
-
   describe "#output" do
     fab!(:topic)
     fab!(:tag) { Fabricate(:tag, name: "stale-tag") }

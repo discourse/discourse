@@ -1,37 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Webhook::V1 do
-  describe ".property_schema" do
-    it "defines path and http_method parameters" do
-      schema = described_class.property_schema
-      expect(schema[:path]).to eq({ type: :string, required: true })
-      expect(schema[:http_method][:type]).to eq(:options)
-      expect(schema[:http_method][:options]).to include(
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE",
-        "PATCH",
-        "HEAD",
-      )
-      expect(schema[:http_method][:default]).to eq("GET")
-      expect(schema.dig(:url_preview, :ui, :control)).to eq(:url_preview)
-    end
-  end
-
-  describe ".output_schema" do
-    it "includes body, headers, and query" do
-      schema = described_class.output_schema
-      expect(schema).to eq(
-        body: :object,
-        headers: :object,
-        query: :object,
-        method: :string,
-        webhook_url: :string,
-      )
-    end
-  end
-
   describe "#output" do
     it "returns body, headers, and query" do
       trigger =

@@ -12,54 +12,26 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     )
   end
 
-  let(:input_items) { [{ "json" => {} }] }
-
-  def execute(configuration)
-    resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
-    result =
-      described_class.new(configuration: configuration).execute(
-        DiscourseWorkflows::NodeExecutionContext.new(
-          input_items: input_items,
-          node_context: {
-          },
-          resolver: resolver,
-          configuration: configuration,
-          property_schema: described_class.property_schema,
-        ),
-      )
-    result[0]
-  end
-
-  describe ".identifier" do
-    it "returns action:data_table" do
-      expect(described_class.identifier).to eq("action:data_table")
-    end
-  end
-
-  describe ".property_i18n_scope" do
-    it "uses the data_table_node translation namespace" do
-      expect(described_class.property_i18n_scope).to eq("data_table_node")
-    end
-  end
-
-  describe ".operation_label_key" do
-    it "uses the nested operations translation key" do
-      expect(described_class.operation_label_key("insert")).to eq(
-        "discourse_workflows.data_table_node.operations.insert",
-      )
-    end
+  def execute_data_table(configuration)
+    execute_node_result(configuration: configuration).primary_items(ports: described_class.ports)
   end
 
   describe "error handling" do
     it "raises when data table does not exist" do
       expect {
-        execute("operation" => "insert", "data_table_id" => "-1", "columns" => { "email" => "x" })
+        execute_data_table(
+          "operation" => "insert",
+          "data_table_id" => "-1",
+          "columns" => {
+            "email" => "x",
+          },
+        )
       }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "raises for unknown column names" do
       expect {
-        execute(
+        execute_data_table(
           "operation" => "insert",
           "data_table_id" => data_table.id.to_s,
           "columns" => {
@@ -71,7 +43,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "raises for unknown operations" do
       expect {
-        execute("operation" => "truncate", "data_table_id" => data_table.id.to_s)
+        execute_data_table("operation" => "truncate", "data_table_id" => data_table.id.to_s)
       }.to raise_error(ArgumentError, /Unknown operation/)
     end
   end
@@ -79,7 +51,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
   describe "insert operation" do
     it "inserts a row and returns it" do
       items =
-        execute(
+        execute_data_table(
           "operation" => "insert",
           "data_table_id" => data_table.id.to_s,
           "columns" => {
@@ -97,7 +69,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:within_limit?).and_return(false)
 
       expect {
-        execute(
+        execute_data_table(
           "operation" => "insert",
           "data_table_id" => data_table.id.to_s,
           "columns" => {
@@ -117,7 +89,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "returns each row as a separate output item" do
       items =
-        execute(
+        execute_data_table(
           "operation" => "get",
           "data_table_id" => data_table.id.to_s,
           "filter_combinator" => "and",
@@ -131,7 +103,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     end
 
     it "returns all rows without filters" do
-      items = execute("operation" => "get", "data_table_id" => data_table.id.to_s)
+      items = execute_data_table("operation" => "get", "data_table_id" => data_table.id.to_s)
 
       expect(items.length).to eq(2)
     end
@@ -142,7 +114,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "updates matching rows" do
       items =
-        execute(
+        execute_data_table(
           "operation" => "update",
           "data_table_id" => data_table.id.to_s,
           "filter" => [
@@ -167,7 +139,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "second@test.com", "score" => 2)
 
       items =
-        execute(
+        execute_data_table(
           "operation" => "update",
           "data_table_id" => data_table.id.to_s,
           "columns" => {
@@ -182,7 +154,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:within_limit?).and_return(false)
 
       expect {
-        execute(
+        execute_data_table(
           "operation" => "update",
           "data_table_id" => data_table.id.to_s,
           "filter" => [
@@ -207,7 +179,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "deletes matching rows" do
       items =
-        execute(
+        execute_data_table(
           "operation" => "delete",
           "data_table_id" => data_table.id.to_s,
           "filter" => [
@@ -228,7 +200,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     it "deletes all rows without filter" do
       insert_data_table_row(data_table, "email" => "del2@test.com", "score" => 10)
 
-      items = execute("operation" => "delete", "data_table_id" => data_table.id.to_s)
+      items = execute_data_table("operation" => "delete", "data_table_id" => data_table.id.to_s)
 
       expect(items[0]["json"]["deleted_count"]).to eq(2)
       expect(count_data_table_rows(data_table)).to eq(0)
@@ -240,7 +212,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       insert_data_table_row(data_table, "email" => "existing@test.com", "score" => 1)
 
       items =
-        execute(
+        execute_data_table(
           "operation" => "upsert",
           "data_table_id" => data_table.id.to_s,
           "columns" => {
@@ -255,7 +227,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
 
     it "inserts when no match" do
       items =
-        execute(
+        execute_data_table(
           "operation" => "upsert",
           "data_table_id" => data_table.id.to_s,
           "filter" => [
@@ -281,7 +253,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       row = insert_data_table_row(data_table, "email" => "exists@test.com", "score" => 10)
 
       items =
-        execute(
+        execute_data_table(
           "operation" => "upsert",
           "data_table_id" => data_table.id.to_s,
           "filter" => [
@@ -308,7 +280,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
       allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:within_limit?).and_return(false)
 
       expect {
-        execute(
+        execute_data_table(
           "operation" => "upsert",
           "data_table_id" => data_table.id.to_s,
           "filter" => [

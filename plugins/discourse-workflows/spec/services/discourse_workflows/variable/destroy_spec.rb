@@ -38,7 +38,6 @@ RSpec.describe DiscourseWorkflows::Variable::Destroy do
       it { is_expected.to run_successfully }
 
       it "deletes the variable" do
-        variable
         expect { result }.to change { DiscourseWorkflows::Variable.count }.by(-1)
       end
 

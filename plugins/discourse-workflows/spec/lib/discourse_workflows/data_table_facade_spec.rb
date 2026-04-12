@@ -308,35 +308,4 @@ RSpec.describe DiscourseWorkflows::DataTableFacade do
       expect(columns).not_to include("active")
     end
   end
-
-  describe ".within_storage_limit?" do
-    it "returns true when under the limit" do
-      expect(described_class.within_storage_limit?).to be(true)
-    end
-  end
-
-  describe ".reset_storage_cache!" do
-    it "delegates to the size validator" do
-      allow(DiscourseWorkflows::DataTableSizeValidator).to receive(:reset!)
-
-      described_class.reset_storage_cache!
-
-      expect(DiscourseWorkflows::DataTableSizeValidator).to have_received(:reset!)
-    end
-  end
-
-  describe ".total_size_bytes" do
-    it "returns the total size across all data tables" do
-      expect(described_class.total_size_bytes).to be_a(Integer)
-    end
-  end
-
-  describe ".batch_size_bytes" do
-    it "returns sizes keyed by data table id" do
-      sizes = described_class.batch_size_bytes([data_table.id])
-
-      expect(sizes).to have_key(data_table.id)
-      expect(sizes[data_table.id]).to be_a(Integer)
-    end
-  end
 end

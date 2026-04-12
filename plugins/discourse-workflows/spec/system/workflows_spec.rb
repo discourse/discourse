@@ -2,7 +2,6 @@
 
 RSpec.describe "Discourse Workflows" do
   fab!(:admin)
-  fab!(:tag) { Fabricate(:tag, name: "resolved") }
 
   let(:workflows_page) { PageObjects::Pages::Workflows.new }
   let(:editor_page) { PageObjects::Pages::WorkflowEditor.new }

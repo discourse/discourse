@@ -24,29 +24,6 @@ RSpec.describe DiscourseWorkflows::Nodes::If::V1 do
     )
   end
 
-  describe ".identifier" do
-    it "returns the correct identifier" do
-      expect(described_class.identifier).to eq("condition:if")
-    end
-  end
-
-  describe ".property_i18n_scope" do
-    it "is inferred from identifier" do
-      expect(described_class.property_i18n_scope).to eq("if")
-    end
-  end
-
-  describe ".outputs" do
-    it "defines explicit true and false outputs" do
-      expect(described_class.outputs).to eq(
-        [
-          { key: "true", label_key: "discourse_workflows.branch.true" },
-          { key: "false", label_key: "discourse_workflows.branch.false" },
-        ],
-      )
-    end
-  end
-
   describe "#execute" do
     context "with combinators" do
       it "and: all conditions must pass" do

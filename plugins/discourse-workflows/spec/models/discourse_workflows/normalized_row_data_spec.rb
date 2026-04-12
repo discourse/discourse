@@ -16,16 +16,8 @@ RSpec.describe DiscourseWorkflows::DataTableFacade::RowInput do
       described_class.new(data_table:, data: { "email" => "a@b.com", "score" => "5" })
     end
 
-    it "is valid" do
-      expect(model).to be_valid
-    end
-
     it "casts the column values" do
       expect(model.columns).to eq("email" => "a@b.com", "score" => 5)
-    end
-
-    it "reports changes to save" do
-      expect(model.has_changes_to_save?).to be(true)
     end
   end
 

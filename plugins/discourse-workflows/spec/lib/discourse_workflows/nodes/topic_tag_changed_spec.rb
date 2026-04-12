@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
-  fab!(:user)
   fab!(:topic)
 
   describe "#valid?" do
@@ -23,7 +22,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
           topic,
           old_tag_names: %w[bug help],
           new_tag_names: %w[bug urgent],
-          user: user,
+          user: topic.user,
         )
       output = trigger.output
 

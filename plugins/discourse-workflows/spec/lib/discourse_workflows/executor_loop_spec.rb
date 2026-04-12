@@ -2,7 +2,6 @@
 
 RSpec.describe DiscourseWorkflows::Executor do
   fab!(:user)
-  fab!(:topic)
 
   before { SiteSetting.tagging_enabled = true }
 

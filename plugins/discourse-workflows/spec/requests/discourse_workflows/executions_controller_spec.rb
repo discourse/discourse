@@ -18,7 +18,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
   end
 
   describe "POST /admin/plugins/discourse-workflows/executions" do
-    let(:enabled_workflow) do
+    fab!(:enabled_workflow) do
       graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:manual" }
       Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
     end
@@ -90,12 +90,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
 
     it "paginates with cursor param" do
       execution_1 =
-        DiscourseWorkflows::Execution.create!(
-          workflow: workflow,
-          status: :pending,
-          trigger_data: {
-          },
-        )
+        DiscourseWorkflows::Execution.create!(workflow: workflow, status: :pending, trigger_data: {})
       execution_2 =
         DiscourseWorkflows::Execution.create!(
           workflow: workflow,

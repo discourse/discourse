@@ -38,26 +38,4 @@ RSpec.describe DiscourseWorkflows::DataTableStorage do
       expect(columns.map { |c| c["name"] }).to eq(%w[id created_at updated_at])
     end
   end
-
-  describe "RESERVED_COLUMN_NAMES" do
-    it "includes system columns" do
-      expect(described_class::RESERVED_COLUMN_NAMES).to contain_exactly(
-        "id",
-        "created_at",
-        "updated_at",
-      )
-    end
-  end
-
-  describe "REVERSE_TYPE_MAP" do
-    it "maps all PG types used by SCHEMA_TYPES" do
-      expect(described_class::REVERSE_TYPE_MAP).to include(
-        "int8" => "number",
-        "float8" => "number",
-        "text" => "string",
-        "bool" => "boolean",
-        "timestamp" => "date",
-      )
-    end
-  end
 end

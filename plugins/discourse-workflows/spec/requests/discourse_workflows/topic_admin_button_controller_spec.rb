@@ -28,51 +28,6 @@ RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
       expect(response.status).to eq(403)
     end
 
-    it "returns 204 on success" do
-      sign_in(admin)
-
-      post "/discourse-workflows/trigger-topic-admin-button.json",
-           params: {
-             trigger_node_id: "trigger-1",
-             topic_id: topic.id,
-           }
-
-      expect(response.status).to eq(204)
-    end
-
-    it "enqueues an ExecuteWorkflow job" do
-      sign_in(admin)
-
-      post "/discourse-workflows/trigger-topic-admin-button.json",
-           params: {
-             trigger_node_id: "trigger-1",
-             topic_id: topic.id,
-           }
-
-      job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
-      expect(job["args"].first["trigger_node_id"]).to eq("trigger-1")
-    end
-
-    it "returns 400 when contract is invalid" do
-      sign_in(admin)
-
-      post "/discourse-workflows/trigger-topic-admin-button.json", params: {}
-
-      expect(response.status).to eq(400)
-    end
-
-    it "returns 404 when trigger node does not exist" do
-      sign_in(admin)
-
-      post "/discourse-workflows/trigger-topic-admin-button.json",
-           params: {
-             trigger_node_id: "nonexistent",
-             topic_id: topic.id,
-           }
-
-      expect(response.status).to eq(404)
-    end
-
     it "returns 403 when user is not an admin" do
       sign_in(user)
 
@@ -85,17 +40,57 @@ RSpec.describe DiscourseWorkflows::TopicAdminButtonController do
       expect(response.status).to eq(403)
     end
 
-    it "returns 404 when workflow is disabled" do
-      sign_in(admin)
-      workflow.update!(enabled: false)
+    context "when signed in as admin" do
+      before { sign_in(admin) }
 
-      post "/discourse-workflows/trigger-topic-admin-button.json",
-           params: {
-             trigger_node_id: "trigger-1",
-             topic_id: topic.id,
-           }
+      it "returns 204 on success" do
+        post "/discourse-workflows/trigger-topic-admin-button.json",
+             params: {
+               trigger_node_id: "trigger-1",
+               topic_id: topic.id,
+             }
 
-      expect(response.status).to eq(404)
+        expect(response.status).to eq(204)
+      end
+
+      it "enqueues an ExecuteWorkflow job" do
+        post "/discourse-workflows/trigger-topic-admin-button.json",
+             params: {
+               trigger_node_id: "trigger-1",
+               topic_id: topic.id,
+             }
+
+        job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
+        expect(job["args"].first["trigger_node_id"]).to eq("trigger-1")
+      end
+
+      it "returns 400 when contract is invalid" do
+        post "/discourse-workflows/trigger-topic-admin-button.json", params: {}
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 404 when trigger node does not exist" do
+        post "/discourse-workflows/trigger-topic-admin-button.json",
+             params: {
+               trigger_node_id: "nonexistent",
+               topic_id: topic.id,
+             }
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 when workflow is disabled" do
+        workflow.update!(enabled: false)
+
+        post "/discourse-workflows/trigger-topic-admin-button.json",
+             params: {
+               trigger_node_id: "trigger-1",
+               topic_id: topic.id,
+             }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 end
