@@ -37,7 +37,7 @@ module DiscourseWorkflows
         rows << build_row("error_workflow", @workflow.error_workflow_id, nil)
       end
 
-      WorkflowDependency.transaction do
+      @workflow.with_lock do
         WorkflowDependency.where(workflow_id: @workflow.id).delete_all
         WorkflowDependency.insert_all(rows) if rows.present?
       end
