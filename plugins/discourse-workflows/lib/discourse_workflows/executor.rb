@@ -62,8 +62,7 @@ module DiscourseWorkflows
       return @store.create_execution_with_status(:skipped) unless @workflow.enabled?
       return @store.create_execution_with_status(:rate_limited) unless rate_limiter.within_limits?
 
-      start_execution!
-      execute_flow do
+      execute_flow(:start_execution!) do
         trigger_node = @snapshot.find_node(@trigger_node_id)
         raise "Trigger node #{@trigger_node_id} not found in workflow snapshot" if trigger_node.nil?
 
@@ -76,25 +75,26 @@ module DiscourseWorkflows
     end
 
     def resume_from(execution, response_items)
-      resume_execution!(execution)
+      execute_flow(:resume_execution!, execution) do
+        waiting_node_id = execution.waiting_node_id
+        waiting_node = @snapshot.find_node(waiting_node_id)
+        raise "Waiting node #{waiting_node_id} not found in workflow snapshot" if waiting_node.nil?
 
-      waiting_node_id = execution.waiting_node_id
-      waiting_node = @snapshot.find_node(waiting_node_id)
-      raise "Waiting node #{waiting_node_id} not found in workflow snapshot" if waiting_node.nil?
+        update_waiting_step(waiting_node, response_items)
+        @context.store_node_output(waiting_node, response_items)
+        clear_waiting!
 
-      update_waiting_step(waiting_node, response_items)
-      @context.store_node_output(waiting_node, response_items)
-      clear_waiting!
-
-      ItemContract.validate_items!(response_items, source: "resume:#{waiting_node.type}")
-      execute_flow { enqueue_downstream(waiting_node, "main", response_items) }
+        ItemContract.validate_items!(response_items, source: "resume:#{waiting_node.type}")
+        enqueue_downstream(waiting_node, "main", response_items)
+      end
     end
 
     private
 
     # --- Main loop ---
 
-    def execute_flow
+    def execute_flow(setup_method, *setup_args, &block)
+      send(setup_method, *setup_args)
       yield
       process_queue
       @store.finish!(steps: @steps)
