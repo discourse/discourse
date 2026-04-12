@@ -109,7 +109,9 @@ module DiscourseWorkflows
           value: function(name) {
             var data = JSON.parse(__getNodeOutput(name));
             return { item: { json: data } };
-          }
+          },
+          configurable: true,
+          writable: true
         });
       JS
     end
