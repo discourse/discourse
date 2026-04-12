@@ -86,20 +86,31 @@ module DiscourseWorkflows
 
       execution = @workflow_context.fetch("__execution") { {} }
       @js_context.eval(<<~JS)
-        var $vars = #{@vars.to_json};
-        var $execution = #{execution.to_json};
-        var $current_user = #{build_current_user.to_json};
-        var $site_settings = new Proxy({}, {
-          get: function(target, prop) {
-            if (prop in target) return target[prop];
-            target[prop] = __getSiteSetting(prop);
-            return target[prop];
+        Object.defineProperty(this, '$vars', {
+          value: Object.freeze(#{@vars.to_json})
+        });
+        Object.defineProperty(this, '$execution', {
+          value: Object.freeze(#{execution.to_json})
+        });
+        Object.defineProperty(this, '$current_user', {
+          value: Object.freeze(#{build_current_user.to_json})
+        });
+        Object.defineProperty(this, '$site_settings', {
+          value: new Proxy({}, {
+            get: function(target, prop) {
+              if (prop in target) return target[prop];
+              target[prop] = __getSiteSetting(prop);
+              return target[prop];
+            },
+            set: function() { return false; }
+          })
+        });
+        Object.defineProperty(this, '$', {
+          value: function(name) {
+            var data = JSON.parse(__getNodeOutput(name));
+            return { item: { json: data } };
           }
         });
-        function $(name) {
-          var data = JSON.parse(__getNodeOutput(name));
-          return { item: { json: data } };
-        }
       JS
     end
 
@@ -130,12 +141,14 @@ module DiscourseWorkflows
       @js_context.attach("__captureError", proc { |*args| capture.call(:error, *args) })
 
       @js_context.eval(<<~JS)
-        var console = {
-          log: function() { __captureLog(...arguments); },
-          info: function() { __captureLog(...arguments); },
-          warn: function() { __captureWarn(...arguments); },
-          error: function() { __captureError(...arguments); }
-        };
+        Object.defineProperty(this, 'console', {
+          value: Object.freeze({
+            log: function() { __captureLog(...arguments); },
+            info: function() { __captureLog(...arguments); },
+            warn: function() { __captureWarn(...arguments); },
+            error: function() { __captureError(...arguments); }
+          })
+        });
       JS
     end
   end
