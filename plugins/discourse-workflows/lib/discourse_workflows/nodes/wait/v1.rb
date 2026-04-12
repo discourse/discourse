@@ -115,7 +115,8 @@ module DiscourseWorkflows
               end
             end
 
-            timeout_seconds = timeout_amount&.public_send(timeout_unit)&.to_i
+            timeout_seconds =
+              timeout_amount&.public_send(timeout_unit)&.to_i&.clamp(..MAX_WAIT_DURATION_SECONDS)
 
             Executor::WaitForResume.new(
               waiting_until: timeout_seconds&.seconds&.from_now,
