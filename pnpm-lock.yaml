@@ -47,8 +47,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3(typescript@5.9.3)
       '@glint/tsserver-plugin':
-        specifier: ^2.2.4
-        version: 2.2.4
+        specifier: ^2.4.0
+        version: 2.4.0
       '@rdil/parallel-prettier':
         specifier: ^3.0.0
         version: 3.0.0(prettier@3.8.1)
@@ -2265,11 +2265,17 @@ packages:
     peerDependencies:
       typescript: '>=5.6.0'
 
+  '@glint/ember-tsc@1.5.0':
+    resolution: {integrity: sha512-mMAG91QyzKQvklnoQFy5orNA4gYU2LPQlPHUbJnuAHJ0c5pwyUO/rjseudFXAWRA5F8cQmNLqtximnLTvHSMzw==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=5.6.0'
+
   '@glint/template@1.7.7':
     resolution: {integrity: sha512-jcPdQ3A6cXo5h9RBi0tK4/o5qNn7868Y8xpkwWQNPAd8xQKuRKmG9dGJwUycXvtqISzfrnL1p3MQr3hYN/Ua6Q==}
 
-  '@glint/tsserver-plugin@2.2.4':
-    resolution: {integrity: sha512-RzwgOB4E9M2HyVaEox7Sh1MZPe2Uy9AuKsx5vcXSBFguENwW3EhEgTo8NqORjgwfK3YFfl9Hj85TQaFyuRuDvw==}
+  '@glint/tsserver-plugin@2.4.0':
+    resolution: {integrity: sha512-3HD8v9c2PvIR1dOCJfeilgIjLnSCiBeEgi6NEm14oa90bw0mu9LVB/YO8aCAGWw9A/CERnrV4HZdHqsr3rdySQ==}
 
   '@handlebars/parser@2.0.0':
     resolution: {integrity: sha512-EP9uEDZv/L5Qh9IWuMUGJRfwhXJ4h1dqKTT4/3+tY0eu7sPis7xh23j61SYUnNF4vqCQvvUXpDo9Bh/+q1zASA==}
@@ -11350,11 +11356,33 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@glint/ember-tsc@1.5.0(typescript@5.9.3)':
+    dependencies:
+      '@glimmer/syntax': 0.95.0
+      '@glint/template': 1.7.7
+      '@volar/kit': 2.4.28(typescript@5.9.3)
+      '@volar/language-core': 2.4.28
+      '@volar/language-server': 2.4.28
+      '@volar/language-service': 2.4.28
+      '@volar/source-map': 2.4.28
+      '@volar/test-utils': 2.4.28
+      '@volar/typescript': 2.4.28
+      content-tag: 4.1.1
+      silent-error: 1.1.1
+      typescript: 5.9.3
+      volar-service-html: 0.0.70(@volar/language-service@2.4.28)
+      volar-service-typescript: 0.0.70(@volar/language-service@2.4.28)
+      vscode-languageserver-protocol: 3.17.5
+      vscode-languageserver-textdocument: 1.0.12
+      vscode-uri: 3.1.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@glint/template@1.7.7': {}
 
-  '@glint/tsserver-plugin@2.2.4':
+  '@glint/tsserver-plugin@2.4.0':
     dependencies:
-      '@glint/ember-tsc': 1.2.3(typescript@5.9.3)
+      '@glint/ember-tsc': 1.5.0(typescript@5.9.3)
       '@volar/language-core': 2.4.28
       '@volar/typescript': 2.4.28
       jiti: 2.6.1

@@ -9,7 +9,7 @@
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.2.0",
     "@glint/ember-tsc": "^1.2.3",
-    "@glint/tsserver-plugin": "^2.2.4",
+    "@glint/tsserver-plugin": "^2.4.0",
     "@rdil/parallel-prettier": "^3.0.0",
     "@swc/core": "^1.15.21",
     "chrome-launcher": "^1.2.1",
