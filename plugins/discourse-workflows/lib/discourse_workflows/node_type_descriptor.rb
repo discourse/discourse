@@ -95,9 +95,8 @@ module DiscourseWorkflows
     def capabilities
       {
         branching: branching?,
-        manually_triggerable: respond_to?(:manually_triggerable?) ? manually_triggerable? : false,
-        provides_current_user:
-          respond_to?(:provides_current_user?) ? provides_current_user? : false,
+        manually_triggerable: manually_triggerable?,
+        provides_current_user: provides_current_user?,
         result_mode: branching? ? "ports" : "items",
       }
     end
