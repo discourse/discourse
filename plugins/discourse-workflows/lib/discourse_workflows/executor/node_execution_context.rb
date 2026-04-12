@@ -102,7 +102,7 @@ module DiscourseWorkflows
           options = @configuration.fetch("options") { {} }
           result =
             Executor::FilterParameter.execute_filter(conditions, combinator, options, @resolver)
-          @condition_details.concat(result["details"]) if @condition_details.empty?
+          @condition_details.concat(result["details"])
           result["passed"]
         else
           @resolver.resolve(@configuration[name])
