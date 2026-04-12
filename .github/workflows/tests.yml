@@ -47,7 +47,6 @@ jobs:
       TESTEM_FIREFOX_PATH: false
       EMBER_ENV: development
       LOAD_PLUGINS: 1
-      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
 
     steps:
