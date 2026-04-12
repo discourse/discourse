@@ -110,9 +110,7 @@ module DiscourseWorkflows
       end
 
       def resolve_all_parameters
-        resolved = @resolver.resolve_hash(@configuration)
-        @resolved_config ||= resolved
-        resolved
+        @resolved_config ||= @resolver.resolve_hash(@configuration)
       end
     end
   end
