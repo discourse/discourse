@@ -129,6 +129,7 @@ module DiscourseWorkflows
       resolver_ctx = build_resolver_context(input_items)
       resolver = build_resolver(resolver_ctx)
 
+      exec_ctx = nil
       begin
         exec_ctx = build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
         result = node_type_class.new(configuration: node.configuration).execute(exec_ctx)
