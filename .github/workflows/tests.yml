@@ -47,7 +47,6 @@ jobs:
       TESTEM_FIREFOX_PATH: false
       EMBER_ENV: development
       LOAD_PLUGINS: 1
-      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
 
     steps:
@@ -111,6 +110,26 @@ jobs:
             fi
           done
 
+      - name: Get CPU cores
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
+      - name: Fetch app state cache
+        uses: actions/cache@v5
+        id: app-cache
+        with:
+          path: tmp/app-cache
+          key: >-
+            Linux- 4- ef30576195b6911f3c671efda268e53cd1c5ffe76219ec7be445a1003fd3fa1e- e9c2cea9ccccca261fcdee1ba5f0b471a211a9f784ace6fbd870049452cd43af- adb103188e26789ff33d34972331b0afe19d40b86f91e70e1dae8e1e5d7a1f23- 1- false- - plugins-
+
+      - name: Restore database from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+
+      - name: Restore uploads from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+
       - name: Create and migrate database
         run: |
           bin/rake db:create
@@ -137,7 +156,7 @@ jobs:
           # assets.json
           cp frontend/discourse/dist/assets.json tmp/build-artifacts/
           # Cache hit info
-          echo "cache-hit=none" > tmp/build-artifacts/cache-info.txt
+          echo "cache-hit=${{ steps.app-cache.outputs.cache-hit }}" > tmp/build-artifacts/cache-info.txt
 
       - name: Plugins QUnit
         run: bin/rake 'plugin:qunit[*]'
