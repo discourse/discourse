@@ -36,7 +36,7 @@ module DiscourseWorkflows
               type: :options,
               required: true,
               options: OPERATIONS,
-              default: "get",
+              default: "insert",
             },
             data_table_id: {
               type: :integer,
