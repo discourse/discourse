@@ -131,7 +131,8 @@ module DiscourseWorkflows
 
       exec_ctx = nil
       begin
-        exec_ctx = build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
+        exec_ctx =
+          build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
         result = node_type_class.new(configuration: node.configuration).execute(exec_ctx)
 
         if result.is_a?(WaitForResume)
@@ -267,7 +268,14 @@ module DiscourseWorkflows
 
     def update_waiting_step(waiting_node, response_items)
       step = @steps.find { |s| s.node_id == waiting_node.id.to_s && s.status == Step::WAITING }
-      step&.apply_updates!(
+      if step.nil?
+        Rails.logger.warn(
+          "discourse-workflows: waiting step not found for node '#{waiting_node.id}' " \
+            "in workflow #{@context.workflow.id}",
+        )
+        return
+      end
+      step.apply_updates!(
         "status" => Step::SUCCESS,
         "output" => response_items,
         "finished_at" => Time.current.iso8601,
