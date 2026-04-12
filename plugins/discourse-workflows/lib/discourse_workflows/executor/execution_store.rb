@@ -139,11 +139,7 @@ module DiscourseWorkflows
       end
 
       def steps_to_entries(steps)
-        steps
-          .group_by { |s| s.respond_to?(:node_id) ? s.node_id : s["node_id"] }
-          .transform_values do |node_steps|
-            node_steps.map { |s| s.respond_to?(:to_h) ? s.to_h : s }
-          end
+        steps.group_by(&:node_id).transform_values { |node_steps| node_steps.map(&:to_h) }
       end
 
       def base_waiting_config(steps)
