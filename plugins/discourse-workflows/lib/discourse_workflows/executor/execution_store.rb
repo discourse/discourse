@@ -71,12 +71,12 @@ module DiscourseWorkflows
         )
       end
 
-      def pause_waiting_execution!(node:, waiting_until: nil, extra_config: {}, steps: [])
+      def pause_waiting_execution!(node:, waiting_until: nil, waiting_config: {}, steps: [])
         execution.update!(
           status: :waiting,
           waiting_node_id: node.id,
           waiting_until: waiting_until,
-          waiting_config: waiting_config(steps).merge(extra_config),
+          waiting_config: base_waiting_config(steps).merge(waiting_config),
         )
         save!(steps)
         execution
@@ -146,7 +146,7 @@ module DiscourseWorkflows
           end
       end
 
-      def waiting_config(steps)
+      def base_waiting_config(steps)
         { "node_contexts" => @execution_context.node_contexts, "step_position" => steps.size }
       end
 

@@ -11,7 +11,7 @@ module DiscourseWorkflows
 
       def initialize(wait_request)
         @wait_request = wait_request
-        super("Wait requested: #{wait_request.type}")
+        super("Wait requested")
       end
     end
 
@@ -273,15 +273,24 @@ module DiscourseWorkflows
     # --- Wait handling ---
 
     def begin_wait!(wait_request)
-      handler =
-        WaitHandlers.for(wait_request.type).new(
-          persistence: @store,
-          context: @context,
+      execution =
+        @store.pause_waiting_execution!(
           node: @waiting_node,
-          step: @waiting_step,
+          waiting_until: wait_request.waiting_until,
+          waiting_config: wait_request.waiting_config,
           steps: @steps,
         )
-      handler.begin_wait!(wait_request)
+
+      if wait_request.waiting_until.present?
+        duration = [wait_request.waiting_until - Time.current, 0].max
+        Jobs.enqueue_in(
+          duration,
+          Jobs::DiscourseWorkflows::ResumeWaitingExecution,
+          execution_id: @store.execution.id,
+        )
+      end
+
+      execution
     rescue => e
       @store.fail!(error: e, steps: @steps)
     end
