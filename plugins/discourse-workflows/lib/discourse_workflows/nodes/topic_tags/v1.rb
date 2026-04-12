@@ -77,11 +77,10 @@ module DiscourseWorkflows
             old_tag_names = topic.tags.pluck(:name)
             desired_tag_names = old_tag_names - names
             tag_topic!(topic, guardian, desired_tag_names)
-            removed = old_tag_names - topic.reload.tags.pluck(:name)
-            { tag_names: removed, topic_id: topic.id }
+            { tag_names: old_tag_names & names, topic_id: topic.id }
           else
             tag_topic!(topic, guardian, names, append: true)
-            { tag_names: topic.reload.tags.pluck(:name) & names, topic_id: topic.id }
+            { tag_names: names, topic_id: topic.id }
           end
         end
 
