@@ -178,12 +178,14 @@ module DiscourseWorkflows
       def upsert(query:, row_input:)
         return { operation: "insert", row: insert(row_input) } if row_input.columns.empty?
 
-        updated_count = update(query:, row_input:)
+        connection.transaction do
+          updated_count = update(query:, row_input:)
 
-        if updated_count > 0
-          { operation: "update", updated_count: updated_count }
-        else
-          { operation: "insert", row: insert(row_input) }
+          if updated_count > 0
+            { operation: "update", updated_count: updated_count }
+          else
+            { operation: "insert", row: insert(row_input) }
+          end
         end
       end
 
