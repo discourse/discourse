@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
-  def build_exec_ctx(items, resolver: nil, **kwargs)
-    resolver ||=
-      DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first&.dig("json") || {} })
-    DiscourseWorkflows::Executor::NodeExecutionContext.new(input_items: items, resolver: resolver, **kwargs)
+  def build_exec_ctx(items, resolver_context: nil, **kwargs)
+    resolver_context ||= { "$json" => items.first&.dig("json") || {} }
+    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context)
+    DiscourseWorkflows::Executor::NodeExecutionContext.new(
+      input_items: items,
+      resolver: resolver,
+      resolver_context: resolver_context,
+      **kwargs,
+    )
   end
 
   def execute_code(code, items: [{ "json" => {} }], **kwargs)
@@ -122,15 +127,17 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
     end
 
     it "exposes $execution variables" do
-      resolver =
-        DiscourseWorkflows::ExpressionResolver.new(
-          { "$json" => {}, "__execution" => { "id" => 99, "workflow_name" => "Test Flow" } },
-        )
-
       result =
         execute_code(
           "return { id: $execution.id, name: $execution.workflow_name };",
-          resolver: resolver,
+          resolver_context: {
+            "$json" => {
+            },
+            "__execution" => {
+              "id" => 99,
+              "workflow_name" => "Test Flow",
+            },
+          },
         )
 
       expect(result.first["json"]["id"]).to eq(99)
@@ -138,12 +145,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
     end
 
     it "allows accessing normal node outputs via $()" do
-      resolver =
-        DiscourseWorkflows::ExpressionResolver.new(
-          { "$json" => {}, "MyNode" => [{ "json" => { "data" => "visible" } }] },
+      result =
+        execute_code(
+          'return $("MyNode").item.json;',
+          resolver_context: {
+            "$json" => {
+            },
+            "MyNode" => [{ "json" => { "data" => "visible" } }],
+          },
         )
-
-      result = execute_code('return $("MyNode").item.json;', resolver: resolver)
 
       expect(result.first["json"]["data"]).to eq("visible")
     end

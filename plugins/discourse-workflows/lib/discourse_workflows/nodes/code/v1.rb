@@ -56,31 +56,22 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           code = @configuration["code"].to_s
-          context = resolver_context_from(exec_ctx)
           all_items_json = exec_ctx.input_items.map { |item| item.fetch("json") { {} } }
-          vars = exec_ctx.vars || DiscourseWorkflows::Variable.pluck(:key, :value).to_h
-
-          sandbox = JsSandbox.new(context, user: exec_ctx.user, vars: vars, capture_logs: true)
-          setup_code_sandbox!(sandbox, all_items_json)
 
           items =
-            exec_ctx.input_items.map do |item|
-              item_json = item.fetch("json") { {} }
-              sandbox.rebind_code_item(item_json)
-              raw = sandbox.eval("(function() { #{code} })()")
-              Item.new(normalize_code_result(raw)).to_h
+            exec_ctx.with_sandbox(capture_logs: true) do |sandbox|
+              setup_code_sandbox!(sandbox, all_items_json)
+              exec_ctx.input_items.map do |item|
+                item_json = item.fetch("json") { {} }
+                sandbox.rebind_code_item(item_json)
+                raw = sandbox.eval("(function() { #{code} })()")
+                Item.new(normalize_code_result(raw)).to_h
+              end
             end
           [items]
-        ensure
-          exec_ctx.log.merge(sandbox.log) if sandbox&.log
-          sandbox&.dispose
         end
 
         private
-
-        def resolver_context_from(exec_ctx)
-          exec_ctx.resolver.instance_variable_get(:@context) || {}
-        end
 
         def normalize_code_result(raw)
           result = raw.is_a?(Hash) ? raw : { "result" => raw.to_s }

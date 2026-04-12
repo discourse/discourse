@@ -108,8 +108,7 @@ module DiscourseWorkflows
           page_type = config.fetch("page_type") { "page" }
 
           if page_type == "completion"
-            context = exec_ctx.resolver.instance_variable_get(:@context) || {}
-            context["__form_completion"] = {
+            exec_ctx.get_context(:flow)["__form_completion"] = {
               "on_submission" => config.fetch("on_submission") { "completion_screen" },
               "completion_title" => config["completion_title"],
               "completion_message" => config["completion_message"],

@@ -95,8 +95,7 @@ module DiscourseWorkflows
             when "random"
               sort_random(exec_ctx.input_items)
             when "code"
-              context = resolver_context_from(exec_ctx)
-              sort_code(context, exec_ctx.input_items, exec_ctx.user, exec_ctx.log)
+              sort_code(exec_ctx)
             else
               exec_ctx.input_items.dup
             end
@@ -104,10 +103,6 @@ module DiscourseWorkflows
         end
 
         private
-
-        def resolver_context_from(exec_ctx)
-          exec_ctx.resolver.instance_variable_get(:@context) || {}
-        end
 
         def sort_simple(input_items)
           sort_fields = @configuration["sort_fields"]
@@ -152,22 +147,20 @@ module DiscourseWorkflows
           input_items.shuffle
         end
 
-        def sort_code(context, input_items, user, log)
+        def sort_code(exec_ctx)
           code = @configuration["code"].to_s
           unless code.match?(/\breturn\b/)
             raise ArgumentError, "Code must contain a return statement"
           end
 
-          items = input_items.map { |item| { "json" => item.fetch("json") { {} } } }
-          sandbox = JsSandbox.new(context, user: user, capture_logs: true)
-          sandbox.eval("var __items = #{items.to_json};")
+          items = exec_ctx.input_items.map { |item| { "json" => item.fetch("json") { {} } } }
           sorted =
-            sandbox.eval("(function() { return __items.sort(function(a, b) { #{code} }); })()")
+            exec_ctx.with_sandbox(capture_logs: true) do |sandbox|
+              sandbox.eval("var __items = #{items.to_json};")
+              sandbox.eval("(function() { return __items.sort(function(a, b) { #{code} }); })()")
+            end
 
           sorted.map { |item| Item.new(item.fetch("json") { {} }).to_h }
-        ensure
-          log.merge(sandbox.log) if sandbox&.log
-          sandbox&.dispose
         end
       end
     end

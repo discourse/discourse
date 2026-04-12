@@ -126,10 +126,11 @@ module DiscourseWorkflows
       return handle_unknown_node(node, input_items) unless node_type_class
 
       step = record_step(node, input_items)
-      resolver = build_resolver(node, input_items)
+      resolver_ctx = build_resolver_context(input_items)
+      resolver = build_resolver(resolver_ctx)
 
       begin
-        exec_ctx = build_node_execution_context(node, input_items, node_type_class, resolver)
+        exec_ctx = build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
         result = node_type_class.new(configuration: node.configuration).execute(exec_ctx)
 
         if result.is_a?(WaitForResume)
@@ -193,7 +194,7 @@ module DiscourseWorkflows
       record_step(node, input_items, status: Step::ERROR, error: "Unknown node type '#{node.type}'")
     end
 
-    def build_node_execution_context(node, input_items, node_type_class, resolver)
+    def build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
       NodeExecutionContext.new(
         input_items: input_items,
         configuration: node.configuration,
@@ -206,6 +207,8 @@ module DiscourseWorkflows
         execution_id: @store.execution&.id,
         resume_token: @context.resume_token,
         node_id: node.id.to_s,
+        flow_context: @context.context,
+        resolver_context: resolver_ctx,
       )
     end
 
@@ -324,11 +327,14 @@ module DiscourseWorkflows
 
     # --- Helpers ---
 
-    def build_resolver(node, input_items)
+    def build_resolver_context(input_items)
       base = @context.resolver_context
       first_json = input_items.first&.dig("json")
-      context = first_json ? base.merge("$json" => first_json) : base
-      ExpressionResolver.new(context, user: @options.user, sandbox: shared_sandbox)
+      first_json ? base.merge("$json" => first_json) : base
+    end
+
+    def build_resolver(resolver_ctx)
+      ExpressionResolver.new(resolver_ctx, user: @options.user, sandbox: shared_sandbox)
     end
 
     def shared_sandbox

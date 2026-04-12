@@ -8,12 +8,14 @@ module NodeExecutionHelpers
   )
     action = described_class.new(configuration: configuration)
     input_items = [item]
-    resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => item.fetch("json") { {} } })
+    resolver_context = { "$json" => item.fetch("json") { {} } }
+    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context)
     kwargs = {
       input_items: input_items,
       resolver: resolver,
       configuration: configuration,
       property_schema: described_class.property_schema,
+      resolver_context: resolver_context,
     }
     kwargs[:run_as_user] = run_as_user if run_as_user
 
