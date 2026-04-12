@@ -14,10 +14,8 @@ module DiscourseWorkflows
       capabilities = @latest_class.capabilities
 
       {
-        id: @identifier,
         identifier: @identifier,
         kind: @latest_class.kind,
-        category: @latest_class.kind,
         latest_version: @latest_version,
         available_versions: @available_versions,
         property_schema: @latest_class.property_schema,
