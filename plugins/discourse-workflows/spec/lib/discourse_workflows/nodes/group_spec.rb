@@ -57,6 +57,14 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
           ).count
         }.by(1)
       end
+
+      it "raises when run_as_user cannot edit the group" do
+        config = { "operation" => "add", "username" => user.username, "group_id" => group.id.to_s }
+
+        expect {
+          execute_node(configuration: config, item: item, run_as_user: user)
+        }.to raise_error(Discourse::InvalidAccess)
+      end
     end
 
     context "with remove operation" do
@@ -94,6 +102,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
             action: GroupHistory.actions[:remove_user_from_group],
           ).count
         }.by(1)
+      end
+
+      it "raises when run_as_user cannot edit the group" do
+        config = {
+          "operation" => "remove",
+          "username" => user.username,
+          "group_id" => group.id.to_s,
+        }
+
+        expect {
+          execute_node(configuration: config, item: item, run_as_user: user)
+        }.to raise_error(Discourse::InvalidAccess)
       end
     end
 
@@ -149,6 +169,15 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         expect { execute_node(configuration: config, item: item) }.to raise_error(
           ActiveRecord::RecordNotFound,
         )
+      end
+
+      it "raises when run_as_user cannot see the group" do
+        group.update!(visibility_level: Group.visibility_levels[:staff])
+        config = { "operation" => "get", "group_id" => group.id.to_s }
+
+        expect {
+          execute_node(configuration: config, item: item, run_as_user: user)
+        }.to raise_error(Discourse::InvalidAccess)
       end
     end
   end

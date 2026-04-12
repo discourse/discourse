@@ -98,6 +98,7 @@ module DiscourseWorkflows
 
         def process(run_as_user, config)
           group = ::Group.find(config["group_id"])
+          Guardian.new(run_as_user).ensure_can_see_group!(group)
           group_data = Schemas::Group.resolve(group)
 
           return { group: group_data } if config["operation"] == "get"
