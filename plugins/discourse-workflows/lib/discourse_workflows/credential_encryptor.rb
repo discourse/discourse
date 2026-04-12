@@ -12,11 +12,6 @@ module DiscourseWorkflows
 
     def self.decrypt(encrypted_string)
       version, payload = encrypted_string.split(":", 2)
-
-      # Legacy format stored the encrypted blob without a version prefix.
-      # Current format is "v1:<encrypted_payload>".
-      return JSON.parse(encryptor.decrypt_and_verify(encrypted_string)) unless payload
-
       JSON.parse(encryptor_for_version(version).decrypt_and_verify(payload))
     end
 
