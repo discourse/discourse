@@ -2,11 +2,11 @@
 
 module DiscourseWorkflows
   class WaitForResume
-    attr_reader :type, :message
+    attr_reader :waiting_until, :waiting_config
 
-    def initialize(type:, message:)
-      @type = type
-      @message = message
+    def initialize(waiting_until: nil, waiting_config: {})
+      @waiting_until = waiting_until
+      @waiting_config = waiting_config
     end
   end
 end
