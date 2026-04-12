@@ -47,6 +47,7 @@ jobs:
       TESTEM_FIREFOX_PATH: false
       EMBER_ENV: development
       LOAD_PLUGINS: 1
+      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
 
     steps:
@@ -110,46 +111,10 @@ jobs:
             fi
           done
 
-      - name: Get CPU cores
-        id: cpu-info
-        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
-
-      - name: Fetch app state cache
-        uses: actions/cache@v5
-        id: app-cache
-        with:
-          path: tmp/app-cache
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.cpu-info.outputs.cpu-cores }}-
-            ${{ hashFiles('.github/workflows/tests.yml') }}-
-            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-            ${{ hashFiles('config/environments/test.rb') }}-
-            ${{ env.LOAD_PLUGINS }}-
-            ${{ env.USES_PARALLEL_DATABASES }}-
-            ${{ env.PARALLEL_TEST_PROCESSORS }}-
-            plugins-
-
-      - name: Restore database from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
-
-      - name: Restore uploads from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
-
       - name: Create and migrate database
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
-
-      - name: Dump database for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
-
-      - name: Dump uploads for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Ember Build
         run: script/assemble_ember_build.rb
@@ -172,7 +137,7 @@ jobs:
           # assets.json
           cp frontend/discourse/dist/assets.json tmp/build-artifacts/
           # Cache hit info
-          echo "cache-hit=${{ steps.app-cache.outputs.cache-hit }}" > tmp/build-artifacts/cache-info.txt
+          echo "cache-hit=none" > tmp/build-artifacts/cache-info.txt
 
       - name: Plugins QUnit
         run: bin/rake 'plugin:qunit[*]'
