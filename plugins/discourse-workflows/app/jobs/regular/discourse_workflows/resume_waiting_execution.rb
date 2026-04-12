@@ -19,19 +19,9 @@ module Jobs
         if timeout_action == "fail"
           execution.fail_with_timeout!
         else
-          response_items = config["timeout_response_items"] || passthrough_items(execution)
+          response_items = config["timeout_response_items"] || execution.waiting_step_input_items
           ::DiscourseWorkflows::Executor.resume(execution, response_items)
         end
-      end
-
-      private
-
-      def passthrough_items(execution)
-        entries = execution.execution_data&.entries || {}
-        waiting_node_id = execution.waiting_node_id
-        steps = entries[waiting_node_id.to_s] || []
-        waiting_step = steps.find { |s| s["status"] == "waiting" }
-        waiting_step&.dig("input") || [{ "json" => {} }]
       end
     end
   end

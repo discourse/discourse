@@ -94,6 +94,15 @@ module DiscourseWorkflows
       end
     end
 
+    def waiting_step_input_items
+      return [{ "json" => {} }] unless execution_data
+
+      entries = execution_data.entries || {}
+      steps = entries[waiting_node_id.to_s] || []
+      waiting_step = steps.find { |s| s["status"] == "waiting" }
+      waiting_step&.dig("input") || [{ "json" => {} }]
+    end
+
     def accumulated_form_data
       return {} unless execution_data
       execution_data

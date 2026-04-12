@@ -25,16 +25,9 @@ module DiscourseWorkflows
         expired_execution.fail_with_timeout!
       else
         response_items =
-          config["timeout_response_items"] || default_response_items(expired_execution)
+          config["timeout_response_items"] || expired_execution.waiting_step_input_items
         Executor.resume(expired_execution, response_items)
       end
-    end
-
-    def default_response_items(execution)
-      entries = execution.execution_data&.entries || {}
-      steps = entries[execution.waiting_node_id.to_s] || []
-      waiting_step = steps.find { |s| s["status"] == "waiting" }
-      waiting_step&.dig("input") || [{ "json" => {} }]
     end
   end
 end
