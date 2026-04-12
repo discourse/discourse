@@ -11,7 +11,10 @@ module DiscourseWorkflows
                 :expression_errors,
                 :condition_details,
                 :resolved_config,
-                :log
+                :log,
+                :execution_id,
+                :resume_token,
+                :node_id
 
     def initialize(
       input_items:,
@@ -21,7 +24,10 @@ module DiscourseWorkflows
       user: nil,
       run_as_user: Discourse.system_user,
       resolver: nil,
-      vars: nil
+      vars: nil,
+      execution_id: nil,
+      resume_token: nil,
+      node_id: nil
     )
       @input_items = input_items
       @configuration = configuration
@@ -31,6 +37,9 @@ module DiscourseWorkflows
       @run_as_user = run_as_user
       @resolver = resolver
       @vars = vars
+      @execution_id = execution_id
+      @resume_token = resume_token
+      @node_id = node_id
       @expression_errors = []
       @condition_details = []
       @resolved_config = nil
