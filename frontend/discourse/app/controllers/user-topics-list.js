@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { or } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
@@ -27,15 +26,21 @@ export default class UserTopicsListController extends Controller {
 
   bulkSelectHelper = new BulkSelectHelper(this);
 
-  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
-  canBulkSelect;
-
   constructor() {
     super(...arguments);
 
     for (const [name, info] of Object.entries(QUERY_PARAMS)) {
       defineTrackedProperty(this, name, info.default);
     }
+  }
+
+  @computed("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  get canBulkSelect() {
+    return (
+      this.currentUser?.canManageTopic ||
+      this.showDismissRead ||
+      this.showResetNew
+    );
   }
 
   @dependentKeyCompat

@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { dasherize } from "@ember/string";
 import {
@@ -44,7 +44,19 @@ export default class SelectKitRow extends Component {
   index = 0;
   role = "menuitemradio";
 
-  @reads("item.lang") lang;
+  @tracked _langOverride;
+
+  @computed("item.lang")
+  get lang() {
+    if (this._langOverride !== undefined) {
+      return this._langOverride;
+    }
+    return this.item?.lang;
+  }
+
+  set lang(value) {
+    this._langOverride = value;
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);

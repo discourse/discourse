@@ -81,6 +81,14 @@ class S3Helper
           options[:body] = file
           obj.put(options).etag
         end
+      rescue Aws::S3::Errors::MetadataTooLarge
+        if options[:content_disposition].present?
+          options.delete(:content_disposition)
+          file.rewind if file.respond_to?(:rewind)
+          retry
+        else
+          raise
+        end
       end
 
     [path, etag.gsub('"', "")]

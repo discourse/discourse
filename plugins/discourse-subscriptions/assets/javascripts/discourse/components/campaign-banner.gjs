@@ -2,7 +2,6 @@
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -14,7 +13,6 @@ import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
-import { setting } from "discourse/lib/computed";
 import { i18n } from "discourse-i18n";
 import formatCurrency from "../helpers/format-currency";
 
@@ -26,36 +24,6 @@ export default class CampaignBanner extends Component {
 
   dismissed = false;
   loading = false;
-
-  @setting("discourse_subscriptions_campaign_banner_shadow_color")
-  dropShadowColor;
-
-  @setting("discourse_subscriptions_campaign_banner_bg_image")
-  backgroundImageUrl;
-
-  @equal(
-    "siteSettings.discourse_subscriptions_campaign_banner_location",
-    "Sidebar"
-  )
-  isSidebar;
-
-  @setting("discourse_subscriptions_campaign_subscribers") subscribers;
-
-  @equal("siteSettings.discourse_subscriptions_campaign_type", "Subscribers")
-  subscriberGoal;
-
-  @setting("discourse_subscriptions_currency") currency;
-
-  @setting("discourse_subscriptions_campaign_amount_raised") amountRaised;
-
-  @setting("discourse_subscriptions_campaign_goal") goalTarget;
-
-  @setting("discourse_subscriptions_campaign_product") product;
-
-  @setting("discourse_subscriptions_pricing_table_enabled") pricingTableEnabled;
-
-  @setting("discourse_subscriptions_campaign_show_contributors")
-  showContributors;
 
   init() {
     super.init(...arguments);
@@ -90,6 +58,67 @@ export default class CampaignBanner extends Component {
         });
       });
     }
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_banner_shadow_color")
+  get dropShadowColor() {
+    return this.siteSettings
+      .discourse_subscriptions_campaign_banner_shadow_color;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_banner_bg_image")
+  get backgroundImageUrl() {
+    return this.siteSettings.discourse_subscriptions_campaign_banner_bg_image;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_banner_location")
+  get isSidebar() {
+    return (
+      this.siteSettings?.discourse_subscriptions_campaign_banner_location ===
+      "Sidebar"
+    );
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_subscribers")
+  get subscribers() {
+    return this.siteSettings.discourse_subscriptions_campaign_subscribers;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_type")
+  get subscriberGoal() {
+    return (
+      this.siteSettings?.discourse_subscriptions_campaign_type === "Subscribers"
+    );
+  }
+
+  @computed("siteSettings.discourse_subscriptions_currency")
+  get currency() {
+    return this.siteSettings.discourse_subscriptions_currency;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_amount_raised")
+  get amountRaised() {
+    return this.siteSettings.discourse_subscriptions_campaign_amount_raised;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_goal")
+  get goalTarget() {
+    return this.siteSettings.discourse_subscriptions_campaign_goal;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_product")
+  get product() {
+    return this.siteSettings.discourse_subscriptions_campaign_product;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_pricing_table_enabled")
+  get pricingTableEnabled() {
+    return this.siteSettings.discourse_subscriptions_pricing_table_enabled;
+  }
+
+  @computed("siteSettings.discourse_subscriptions_campaign_show_contributors")
+  get showContributors() {
+    return this.siteSettings.discourse_subscriptions_campaign_show_contributors;
   }
 
   didInsertElement() {

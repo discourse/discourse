@@ -1,10 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { alias, equal } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { computedI18n, setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
@@ -12,10 +11,29 @@ export default class AdminBackupsIndexController extends Controller {
   @service dialog;
   @controller("admin.backups") adminBackups;
 
-  @alias("adminBackups.model") status;
-  @computedI18n("admin.backups.upload.label") uploadLabel;
-  @setting("backup_location") backupLocation;
-  @equal("backupLocation", "local") localBackupStorage;
+  @computed("adminBackups.model")
+  get status() {
+    return this.adminBackups?.model;
+  }
+
+  set status(value) {
+    set(this, "adminBackups.model", value);
+  }
+
+  @dependentKeyCompat
+  get uploadLabel() {
+    return i18n(`admin.backups.upload.label`);
+  }
+
+  @computed("siteSettings.backup_location")
+  get backupLocation() {
+    return this.siteSettings.backup_location;
+  }
+
+  @computed("backupLocation")
+  get localBackupStorage() {
+    return this.backupLocation === "local";
+  }
 
   get restoreSettingsUrl() {
     return getURL("/admin/backups/settings?filter=allow_restore");

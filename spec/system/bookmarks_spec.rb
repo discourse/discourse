@@ -146,7 +146,7 @@ describe "Bookmarking posts and topics" do
   end
 
   describe "topic footer bookmark button with post bookmarks" do
-    it "shows jump/edit/delete for a single post bookmark" do
+    it "shows post bookmark with submenu for a single post bookmark" do
       Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
       topic_page.visit_topic(topic)
 
@@ -155,9 +155,8 @@ describe "Bookmarking posts and topics" do
       )
 
       bookmark_menu.click_topic_bookmark_button
-      expect(bookmark_menu).to have_jump_to_post_option(post_2.post_number)
-      expect(page).to have_css(".topic-bookmarks-menu-content [data-menu-option-id='edit']")
-      expect(page).to have_css(".topic-bookmarks-menu-content [data-menu-option-id='delete']")
+      expect(bookmark_menu).to have_post_bookmark_option(post_2.post_number)
+      expect(bookmark_menu).to have_bookmark_topic_option
     end
 
     it "shows plural label, correct tooltip, and grouped menu for multiple bookmarks" do
@@ -173,28 +172,32 @@ describe "Bookmarking posts and topics" do
       )
 
       bookmark_menu.click_topic_bookmark_button
-      expect(bookmark_menu).to have_jump_to_post_option(post_2.post_number)
+      expect(bookmark_menu).to have_post_bookmark_option(post_2.post_number)
       expect(bookmark_menu).to have_edit_topic_bookmark_option
       expect(bookmark_menu).to have_delete_topic_bookmark_option
       expect(bookmark_menu).to have_clear_all_option
     end
 
-    it "navigates to the bookmarked post when clicking jump" do
+    it "navigates to the bookmarked post via submenu" do
       Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
       topic_page.visit_topic(topic)
 
       bookmark_menu.click_topic_bookmark_button
-      bookmark_menu.click_jump_to_post(post_2.post_number)
+      bookmark_menu.click_post_bookmark(post_2.post_number)
+      expect(bookmark_menu).to have_post_submenu
+      bookmark_menu.click_post_submenu_option("jump")
 
       expect(page).to have_current_path(%r{/t/.*#{topic.id}/#{post_2.post_number}})
     end
 
-    it "deletes a single post bookmark from the footer menu" do
+    it "deletes a single post bookmark via submenu" do
       Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
       topic_page.visit_topic(topic)
 
       bookmark_menu.click_topic_bookmark_button
-      bookmark_menu.click_menu_option("delete")
+      bookmark_menu.click_post_bookmark(post_2.post_number)
+      expect(bookmark_menu).to have_post_submenu
+      bookmark_menu.click_post_submenu_option("delete")
 
       expect(topic_page).to have_no_bookmarks(topic)
       expect(Bookmark.where(user: current_user, bookmarkable: post_2)).not_to exist
