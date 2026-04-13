@@ -53,7 +53,7 @@ module("Integration | Component | text-field", function (hooks) {
     assert.dom("input").hasAttribute("dir", "auto");
   });
 
-  test("uses site direction until mixed text direction has a strong character", async function (assert) {
+  test("uses site direction if the input is empty and `auto` if the input isn't empty", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
     document.documentElement.removeAttribute("dir");
     document.documentElement.classList.add("rtl");
@@ -64,7 +64,7 @@ module("Integration | Component | text-field", function (hooks) {
     assert.dom("input").hasAttribute("dir", "rtl");
 
     await fillIn("input", "123");
-    assert.dom("input").hasAttribute("dir", "rtl");
+    assert.dom("input").hasAttribute("dir", "auto");
 
     await fillIn("input", "hello");
     assert.dom("input").hasAttribute("dir", "auto");
