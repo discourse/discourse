@@ -342,10 +342,6 @@ class Middleware::RequestTracker
     env["discourse.request_tracker"] = self
 
     if self.class.is_beacon_tracking_request?(request)
-      # Let the request reach the Rails app so that Rails generates
-      # request logs. The app's response is discarded — the middleware
-      # handles the actual 204 response and all beacon tracking logic.
-      @app.call(env)
       result = [204, {}, []]
       return result
     end

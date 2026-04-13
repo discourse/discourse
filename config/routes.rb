@@ -96,7 +96,6 @@ Discourse::Application.routes.draw do
     get "site/statistics" => "site#statistics"
 
     get "srv/status" => "forums#status"
-    post "srv/pv" => "srv#beacon_pv"
 
     get "wizard" => "wizard#index"
     get "wizard/steps/:id" => "wizard#index"
