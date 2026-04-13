@@ -20,25 +20,24 @@ import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import VoteBox from "discourse/plugins/discourse-topic-voting/discourse/components/vote-box";
 import { getTopicStatusBadge } from "../../lib/topic-status-badge";
 
 export default class HighContextTopicCard extends Component {
   @service capabilities;
+  @service siteSettings;
+
+  get showVoting() {
+    return (
+      this.siteSettings.topic_voting_show_vote_in_topic_list &&
+      this.args.topic.can_vote
+    );
+  }
 
   get hasSolved() {
     return (
       this.args.topic.has_accepted_answer || this.args.topic.accepted_answer
     );
-  }
-
-  get hasVotes() {
-    return this.args.topic.can_vote && this.args.topic.vote_count > 0;
-  }
-
-  get voteCountLabel() {
-    return i18n(themePrefix("vote_count"), {
-      count: this.args.topic.vote_count,
-    });
   }
 
   get hasAssigned() {
@@ -132,7 +131,9 @@ export default class HighContextTopicCard extends Component {
       />
     {{/if}}
 
-    <td class="hc-topic-card">
+    <td
+      class={{concatClass "hc-topic-card" (if this.showVoting "--has-voting")}}
+    >
       <div class="hc-topic-card__header">
         <div class="hc-topic-card__op">
           <div class="hc-topic-card__avatar">
@@ -205,6 +206,12 @@ export default class HighContextTopicCard extends Component {
         {{/if}}
       </div>
 
+      {{#if this.showVoting}}
+        <div class="hc-topic-card__voting voting list-voting">
+          <VoteBox @topic={{@topic}} />
+        </div>
+      {{/if}}
+
       {{#if (or this.hasReplies this.hasAssigned)}}
         <div class="hc-topic-card__context">
           {{#if this.hasReplies}}
@@ -257,19 +264,6 @@ export default class HighContextTopicCard extends Component {
         </div>
 
         <div class="hc-topic-card__stats">
-          {{#if this.hasVotes}}
-            <span
-              class="hc-topic-card__votes"
-              aria-label={{this.voteCountLabel}}
-              title={{this.voteCountLabel}}
-            >
-              {{icon "check-to-slot" skipTitle=true}}
-              <span class="hc-topic-card__votes-count">{{number
-                  @topic.vote_count
-                }}</span>
-            </span>
-          {{/if}}
-
           {{#if this.hasReplies}}
             <span
               class="hc-topic-card__replies"

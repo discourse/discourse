@@ -62,6 +62,65 @@ $padding-pills-small: var(--space-half) var(--space-2);
   width: 100%;
   box-sizing: border-box;
 
+  &.--has-voting {
+    display: grid;
+    grid-template-columns: 1fr auto;
+
+    > * {
+      grid-column-start: 1;
+      grid-column-end: -1;
+    }
+
+    .hc-topic-card__content {
+      grid-column-end: 2;
+    }
+
+    .hc-topic-card__voting {
+      grid-column-start: 2;
+    }
+
+    .voting-wrapper {
+      font-size: var(--font-up-2);
+
+      button {
+        background: transparent;
+
+        .discourse-no-touch & {
+          &:hover {
+            box-shadow: none;
+          }
+        }
+      }
+
+      .vote-count-wrapper {
+        border-radius: 0 0 var(--d-border-radius-small)
+          var(--d-border-radius-small);
+      }
+
+      .vote-button {
+        border: 1px solid var(--content-border-color);
+        border-radius: var(--d-border-radius-small) var(--d-border-radius-small)
+          0 0;
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
+
+        .discourse-no-touch & {
+          &:hover {
+            background: var(--primary-low);
+          }
+        }
+
+        &.btn-success {
+          .d-icon {
+            color: var(--success);
+          }
+        }
+      }
+    }
+  }
+
   @include viewport.until(sm) {
     padding: var(--space-4) 0;
 
