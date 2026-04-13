@@ -27,6 +27,7 @@ class TopicOgImageGenerator
     category_color = @topic.category&.color || "888888"
     like_count = @topic.like_count || 0
     posts_count = [@topic.posts_count - 1, 0].max
+    read_time = calculate_read_time
     colors = fetch_colors
     logo_upload = (SiteSetting.logo.presence || SiteSetting.logo_small)
     logo_data_uri = fetch_as_data_uri(logo_upload&.url)
@@ -88,7 +89,7 @@ class TopicOgImageGenerator
         #{logo_svg(logo_data_uri, logo_upload, 80, logo_y)}
 
         <!-- Stats -->
-        #{stats_svg(like_count, posts_count, colors, OG_WIDTH - 80, stats_y)}
+        #{stats_svg(like_count, posts_count, read_time, colors, OG_WIDTH - 80, stats_y)}
 
         <!-- Site domain -->
         #{domain_svg(colors, OG_WIDTH - 80, 88)}
@@ -160,65 +161,32 @@ class TopicOgImageGenerator
     SVG
   end
 
-  def stats_svg(likes, replies, colors, right_x, y)
-    groups = []
-    if replies > 0
-      groups << { icon: :reply, text: "#{replies} #{replies == 1 ? "reply" : "replies"}" }
-    end
-    groups << { icon: :heart, text: "#{likes} #{likes == 1 ? "like" : "likes"}" } if likes > 0
-    return "" if groups.empty?
+  def stats_svg(likes, replies, read_time, colors, right_x, y)
+    items = []
+    items << "#{read_time}m read" if read_time && read_time >= 1
+    items << "#{replies} #{replies == 1 ? "reply" : "replies"}" if replies > 0
+    items << "#{likes} #{likes == 1 ? "like" : "likes"}" if likes > 0
+    return "" if items.empty?
 
-    font_size = 30
-    icon_size = 28
-    icon_gap = 2
-    group_gap = 42
-    char_width = 15.0
-    icon_y = y - 8 - (icon_size / 2)
-
-    svg_parts = []
-    cursor = right_x
-    groups.reverse.each do |group|
-      text_width = (group[:text].length * char_width).round
-      text_x = cursor
-      icon_x = text_x - text_width - icon_gap - icon_size
-
-      svg_parts.unshift(<<~SVG.strip)
-        #{icon_svg(group[:icon], icon_x, icon_y, icon_size, colors[:primary])}
-        <text x="#{text_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="#{font_size}" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(group[:text])}</text>
-      SVG
-
-      cursor = icon_x - group_gap
-    end
-
-    svg_parts.join("\n    ")
+    text = items.join("  ·  ")
+    %(<text x="#{right_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(text)}</text>)
   end
 
   def domain_svg(colors, right_x, y)
     domain = Discourse.current_hostname
     return "" if domain.blank?
 
-    %(<text x="#{right_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(domain)}</text>)
+    %(<text x="#{right_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(domain)}</text>)
   end
 
-  ICON_PATHS = {
-    heart: {
-      vb_size: 512,
-      d:
-        "M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z",
-    },
-    reply: {
-      vb_size: 512,
-      d:
-        "M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z",
-    },
-  }
+  def calculate_read_time
+    return nil if @topic.word_count.to_i <= 0 || SiteSetting.read_time_word_count.to_i <= 0
 
-  def icon_svg(name, x, y, size, color)
-    icon = ICON_PATHS[name]
-    return "" unless icon
-
-    scale = size.to_f / icon[:vb_size]
-    %(<g transform="translate(#{x} #{y}) scale(#{scale})" fill="##{color}" fill-opacity="0.25"><path d="#{icon[:d]}"/></g>)
+    min_post_read_time = 4.0
+    [
+      @topic.word_count / SiteSetting.read_time_word_count,
+      @topic.posts_count * min_post_read_time / 60,
+    ].max.ceil
   end
 
   def truncated_title

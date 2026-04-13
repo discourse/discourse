@@ -57,13 +57,11 @@ RSpec.describe TopicOgImageGenerator do
       expect(svg).to include("0088cc")
     end
 
-    it "includes stats with larger font" do
+    it "includes stats separated by middle dots" do
       generator = described_class.new(topic)
       svg = generator.send(:build_svg)
 
-      expect(svg).to include("12 replies")
-      expect(svg).to include("42 likes")
-      expect(svg).to include('font-size="30"')
+      expect(svg).to include("12 replies  ·  42 likes")
     end
 
     it "includes author avatar and username" do
