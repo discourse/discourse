@@ -1144,6 +1144,7 @@ RSpec.describe PostAlerter do
         post_number: post.post_number,
         topic_title: post.topic.title,
         topic_id: post.topic.id,
+        post_id: post.id,
         excerpt: post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
         username: post.username,
         post_url: post.url,
@@ -1300,6 +1301,8 @@ RSpec.describe PostAlerter do
       end
 
       set_subfolder "/subpath"
+      post = mention_post
+
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,
         "url" => Discourse.base_url,
@@ -1311,9 +1314,10 @@ RSpec.describe PostAlerter do
             "post_number" => 1,
             "topic_title" => topic.title,
             "topic_id" => topic.id,
+            "post_id" => post.id,
             "excerpt" => "Hello @eviltrout ❤",
             "username" => user.username,
-            "url" => UrlHelper.absolute(Discourse.base_path + mention_post.url),
+            "url" => UrlHelper.absolute(Discourse.base_path + post.url),
             "client_id" => "xxx0",
           },
           {
@@ -1321,15 +1325,14 @@ RSpec.describe PostAlerter do
             "post_number" => 1,
             "topic_title" => topic.title,
             "topic_id" => topic.id,
+            "post_id" => post.id,
             "excerpt" => "Hello @eviltrout ❤",
             "username" => user.username,
-            "url" => UrlHelper.absolute(Discourse.base_path + mention_post.url),
+            "url" => UrlHelper.absolute(Discourse.base_path + post.url),
             "client_id" => "xxx1",
           },
         ],
       }
-
-      post = mention_post
 
       expect(JSON.parse(body)).to eq(payload)
       expect(headers["Content-Type"]).to eq("application/json")
@@ -1355,6 +1358,7 @@ RSpec.describe PostAlerter do
       changes = {
         "notification_type" => Notification.types[:posted],
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),
@@ -1375,6 +1379,7 @@ RSpec.describe PostAlerter do
 
       changes = {
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),

@@ -15,6 +15,8 @@ module DiscoursePostEvent
     belongs_to :chat_channel, class_name: "Chat::Channel"
     has_many :invitees, foreign_key: :post_id, dependent: :delete_all
     belongs_to :post, foreign_key: :id
+    belongs_to :image_upload, class_name: "Upload", optional: true
+    has_many :upload_references, as: :target, dependent: :destroy
 
     scope :visible, -> { where(deleted_at: nil) }
     scope :open, -> { where(closed: false) }
@@ -22,6 +24,11 @@ module DiscoursePostEvent
     before_save :chat_channel_sync
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
+    after_save do
+      if saved_change_to_image_upload_id?
+        UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
+      end
+    end
 
     validate :raw_invitees_are_groups
     validates :original_starts_at, presence: true
@@ -324,6 +331,54 @@ module DiscoursePostEvent
         )
     end
 
+    def self.resolve_image_upload(image_param, post)
+      return if image_param.blank?
+
+      upload =
+        if image_param.start_with?("upload://")
+          sha1 = Upload.sha1_from_short_url(image_param)
+          Upload.find_by(sha1: sha1) if sha1
+        else
+          Upload.get_from_url(image_param)
+        end
+
+      return if upload.nil?
+
+      if !upload.secure? || upload.user_id == post.user_id ||
+           UserUpload.exists?(upload_id: upload.id, user_id: post.user_id)
+        upload
+      end
+    end
+
+    def sync_image_to_post_and_topic(generate_thumbnails: false)
+      return unless image_upload_id
+
+      post.update_column(:image_upload_id, image_upload_id)
+      if post.is_first_post?
+        post.topic.update_column(:image_upload_id, image_upload_id)
+        if generate_thumbnails
+          extra_sizes =
+            ThemeModifierHelper.new(
+              theme_ids: Theme.user_selectable.pluck(:id),
+            ).topic_thumbnail_sizes
+          post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+        end
+      end
+    end
+
+    def self.handle_post_event_webhooks(post, event_before)
+      had_event_before = event_before.present?
+
+      if post.event && had_event_before
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_updated, post.event)
+      elsif post.event && !had_event_before
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
+      elsif !post.event && had_event_before
+        payload = WebHook.build_calendar_event_payload(event_before)
+        WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
+      end
+    end
+
     def self.update_from_raw(post)
       events = DiscoursePostEvent::EventParser.extract_events(post)
 
@@ -369,6 +424,7 @@ module DiscoursePostEvent
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
           max_attendees: event_params[:"max-attendees"]&.to_i,
           all_day: parsed_all_day,
+          image_upload_id: resolve_image_upload(event_params[:image], post)&.id,
         }
 
         params[:custom_fields] = {}
@@ -560,25 +616,30 @@ end
 # Table name: discourse_post_event_events
 #
 #  id                 :bigint           not null, primary key
-#  status             :integer          default(0), not null
-#  original_starts_at :datetime         not null
-#  original_ends_at   :datetime
+#  chat_enabled       :boolean          default(FALSE), not null
+#  closed             :boolean          default(FALSE), not null
+#  custom_fields      :jsonb            not null
 #  deleted_at         :datetime
-#  raw_invitees       :string           is an Array
-#  name               :string
-#  url                :string(1000)
 #  description        :string(1000)
 #  location           :string(1000)
-#  custom_fields      :jsonb            not null
-#  reminders          :string
-#  recurrence         :string
-#  timezone           :string
-#  minimal            :boolean
-#  closed             :boolean          default(FALSE), not null
-#  chat_enabled       :boolean          default(FALSE), not null
-#  chat_channel_id    :bigint
-#  recurrence_until   :datetime
-#  show_local_time    :boolean          default(FALSE), not null
 #  max_attendees      :integer
+#  minimal            :boolean
+#  name               :string
+#  original_ends_at   :datetime
+#  original_starts_at :datetime         not null
+#  raw_invitees       :string           is an Array
+#  recurrence         :string
+#  recurrence_until   :datetime
+#  reminders          :string
+#  show_local_time    :boolean          default(FALSE), not null
 #  all_day            :boolean          default(FALSE), not null
+#  status             :integer          default(0), not null
+#  timezone           :string
+#  url                :string(1000)
+#  chat_channel_id    :bigint
+#  image_upload_id    :bigint
+#
+# Indexes
+#
+#  index_discourse_post_event_events_on_image_upload_id  (image_upload_id)
 #

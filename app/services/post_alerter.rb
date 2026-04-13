@@ -29,6 +29,7 @@ class PostAlerter
         post_number: post.post_number,
         topic_title: post.topic.title,
         topic_id: post.topic.id,
+        post_id: post.id,
         excerpt:
           excerpt ||
             post.excerpt(

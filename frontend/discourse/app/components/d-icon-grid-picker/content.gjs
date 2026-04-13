@@ -10,7 +10,7 @@ import { modifier } from "ember-modifier";
 import AsyncContent from "discourse/components/async-content";
 import FilterInput from "discourse/components/filter-input";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { eq } from "discourse/truth-helpers";
@@ -32,6 +32,8 @@ const unfilteredIconCache = new Map();
  *   current SVG sprite set. Defaults to true.
  */
 export default class DIconGridPickerContent extends Component {
+  /** @type {import("discourse/float-kit/services/tooltip").default} */
+  // @ts-ignore (incorrect no-initialization error)
   @service tooltip;
 
   @tracked filter = "";
@@ -146,10 +148,11 @@ export default class DIconGridPickerContent extends Component {
       return;
     }
 
-    const wrapper = target.closest(".d-icon-grid-picker__grid-wrapper");
-    const allIcons = /** @type {HTMLElement[]} */ ([
-      ...wrapper.querySelectorAll(".d-icon-grid-picker__icon"),
-    ]);
+    const wrapper = /** @type {HTMLElement!} */ (
+      target.closest(".d-icon-grid-picker__grid-wrapper")
+    );
+    const icons = wrapper.querySelectorAll(".d-icon-grid-picker__icon");
+    const allIcons = /** @type {HTMLElement[]} */ ([...icons]);
     const idx = allIcons.indexOf(target);
 
     switch (event.key) {
@@ -231,11 +234,15 @@ export default class DIconGridPickerContent extends Component {
     this.onGridKeyDown(event);
   }
 
+  /**
+   * @param {HTMLElement} wrapper
+   */
   focusFilter(wrapper) {
-    wrapper
-      .closest(".d-icon-grid-picker__content")
-      ?.querySelector(".filter-input")
-      ?.focus();
+    /** @type {HTMLInputElement?} */ (
+      wrapper
+        .closest(".d-icon-grid-picker__content")
+        ?.querySelector(".filter-input")
+    )?.focus();
   }
 
   get resultAnnouncement() {
@@ -326,7 +333,7 @@ export default class DIconGridPickerContent extends Component {
                   {{this.snapToGrid}}
                   {{on "click" (fn @onSelect favIcon)}}
                 >
-                  {{dIcon favIcon}}
+                  {{icon favIcon}}
                   {{#if @showSelectedName}}
                     <span
                       class="d-icon-grid-picker__selected-name"
@@ -345,7 +352,7 @@ export default class DIconGridPickerContent extends Component {
                   {{this.registerIconTooltip}}
                   {{on "click" (fn @onSelect favIcon)}}
                 >
-                  {{dIcon favIcon}}
+                  {{icon favIcon}}
                 </button>
               {{/if}}
             {{/each}}
@@ -379,7 +386,7 @@ export default class DIconGridPickerContent extends Component {
                   {{this.registerIconTooltip}}
                   {{on "click" (fn @onSelect item.id)}}
                 >
-                  {{dIcon item.id}}
+                  {{icon item.id}}
                 </button>
               {{/each}}
             </:content>

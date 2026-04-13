@@ -3253,6 +3253,8 @@ en:
         name_label: "Wrap name"
         attributes_label: "Attributes"
         add_attribute: "Add attribute"
+        attribute_key: "Key"
+        attribute_value: "Value"
         remove_attribute: "Remove attribute"
         apply: "Apply"
         unwrap: "Unwrap"
