@@ -1,0 +1,38 @@
+@use "lib/viewport";
+
+.voting .voting-wrapper {
+  --d-button-border-radius: var(--d-border-radius-small);
+
+  &__button {
+    background: var(--secondary);
+  }
+
+  .discourse-no-touch & {
+    button {
+      &:hover {
+        box-shadow: none;
+      }
+
+      &:not(.btn-success) {
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+    }
+  }
+}
+
+.voting.header-title-voting .voting-wrapper {
+  --primary-high: var(--header_primary-medium);
+
+  @include viewport.from(lg) {
+    --secondary: var(--background-color);
+    --content-border-color: var(--d-sidebar-border-color);
+
+    .discourse-no-touch & {
+      button:hover {
+        --primary-100: var(--d-selected);
+      }
+    }
+  }
+}
