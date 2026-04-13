@@ -116,6 +116,17 @@
     background: var(--primary-very-low);
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
+
+    // Establish a containing block for the absolutely-positioned
+    // .read-state dot so it anchors to the post-infos right edge
+    // instead of climbing to a distant ancestor.
+    .post-infos {
+      position: relative;
+
+      .read-state {
+        right: -10px;
+      }
+    }
   }
 
   &__op-row {
