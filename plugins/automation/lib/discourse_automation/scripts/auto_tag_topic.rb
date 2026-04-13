@@ -23,7 +23,8 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_TAG_TOPIC
 
     tags = fields.dig("tags", "value")
     if (context["status"] == :manually && fields.dig("closed_manually", "value")) ||
-         (context["status"] == :automatically && fields.dig("closed_automatically", "value"))
+         (context["status"] == :automatically && fields.dig("closed_automatically", "value")) ||
+         context["post"]
       DiscourseTagging.tag_topic_by_names(
         topic,
         Guardian.new(Discourse.system_user),
