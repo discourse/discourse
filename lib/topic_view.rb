@@ -998,9 +998,10 @@ class TopicView
       elsif SiteSetting.tagging_enabled
         :tags
       end
+    nested_topic_include = :nested_topic if SiteSetting.nested_replies_enabled
     Topic
       .with_deleted
-      .includes(:category, :nested_topic, tags_include)
+      .includes(:category, nested_topic_include, tags_include)
       .find_by(id: topic_or_topic_id)
   end
 
