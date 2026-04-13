@@ -1,220 +1,96 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
+import loadCodemirrorEditor from "discourse/lib/load-codemirror";
+import buildWorkflowExtension from "../../../lib/workflows/codemirror-extension";
+import {
+  resolveAllAncestors,
+  resolvePreviousOutput,
+} from "../../../lib/workflows/graph-traversal";
 
 export default class VariableInput extends Component {
+  @service siteSettings;
   @service workflowsNodeTypes;
 
-  @tracked isDragOver = false;
-  editorElement = null;
+  @tracked Editor;
 
-  @action
-  setupEditor(element) {
-    this.editorElement = element;
-    this.#renderContent(this.args.value || "");
+  get #graph() {
+    return {
+      nodes: this.workflowsNodeTypes.graphNodes || [],
+      connections: this.workflowsNodeTypes.graphConnections || [],
+      nodeTypes: this.workflowsNodeTypes.nodeTypes || [],
+    };
+  }
 
-    if (this.args.autofocus) {
-      this.#focusAtEnd();
-    }
+  get #node() {
+    return this.workflowsNodeTypes.editingNode;
+  }
+
+  get #itemPrefix() {
+    return this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
+  }
+
+  get extension() {
+    const node = this.#node;
+    const graph = this.#graph;
+    const domainOpts = {
+      inputFields: node ? resolvePreviousOutput(node, graph) : [],
+      ancestorNodes: node ? resolveAllAncestors(node, graph) : [],
+      siteSettings: this.siteSettings,
+      workflowVars: this.workflowsNodeTypes.workflowVars,
+      nodes: graph.nodes,
+      itemPrefix: this.#itemPrefix,
+    };
+    return (cmParams) => buildWorkflowExtension(cmParams, domainOpts);
   }
 
   @action
-  handleInput() {
-    this.args.onChange?.(this.#serialize());
-  }
+  async loadEditor() {
+    const [Editor] = await Promise.all([
+      loadCodemirrorEditor(),
+      this.workflowsNodeTypes.loadWorkflowVars(),
+    ]);
 
-  @action
-  handleClick() {
-    if (!this.editorElement.childNodes.length) {
-      this.editorElement.appendChild(document.createTextNode(""));
-    }
-
-    const selection = window.getSelection();
-    if (
-      !selection.rangeCount ||
-      !this.editorElement.contains(selection.anchorNode)
-    ) {
-      const range = document.createRange();
-      const lastChild = this.editorElement.lastChild;
-      if (lastChild?.nodeType === Node.TEXT_NODE) {
-        range.setStart(lastChild, lastChild.textContent.length);
-      } else {
-        range.setStart(
-          this.editorElement,
-          this.editorElement.childNodes.length
-        );
-      }
-      range.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-  }
-
-  @action
-  handleDragOver(event) {
-    if (event.dataTransfer.types.includes("application/x-workflow-variable")) {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = "copy";
-      this.isDragOver = true;
-    }
-  }
-
-  @action
-  handleDragLeave() {
-    this.isDragOver = false;
-  }
-
-  @action
-  handleDrop(event) {
-    const data = event.dataTransfer.getData("application/x-workflow-variable");
-    if (!data) {
+    if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
-    event.preventDefault();
-    this.isDragOver = false;
-
-    let variable;
-    try {
-      variable = JSON.parse(data);
-    } catch {
-      return;
-    }
-    const prefix =
-      this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
-    const variableId = variable.id.startsWith("$")
-      ? variable.id
-      : `${prefix}.${variable.id}`;
-    const pill = this.#createPill(variableId);
-
-    const trailing = document.createTextNode(" ");
-
-    const selection = window.getSelection();
-    if (
-      selection.rangeCount &&
-      this.editorElement.contains(selection.anchorNode)
-    ) {
-      const range = selection.getRangeAt(0);
-      range.deleteContents();
-      range.insertNode(trailing);
-      range.insertNode(pill);
-    } else {
-      this.editorElement.appendChild(pill);
-      this.editorElement.appendChild(trailing);
-    }
-
-    this.#focusAtEnd();
-    this.args.onChange?.(this.#serialize());
+    this.Editor = Editor;
   }
 
   @action
-  handleKeydown(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      event.stopPropagation();
-      document.execCommand("insertLineBreak");
-      return;
-    }
+  handleSetup(view, extensionResult) {
+    this.args.onEditorReady?.({
+      view,
+      markInvalidExpressions: extensionResult?.markInvalidExpressions,
+      clearInvalidExpressions: extensionResult?.clearInvalidExpressions,
+    });
   }
 
   @action
-  handlePaste(event) {
-    event.preventDefault();
-    const text = event.clipboardData.getData("text/plain");
-    document.execCommand("insertText", false, text);
-  }
-
-  #focusAtEnd() {
-    this.editorElement.focus();
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(this.editorElement);
-    range.collapse(false);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-
-  #createPill(variableId) {
-    const pill = document.createElement("span");
-    pill.className = "workflows-variable-pill";
-    pill.dataset.variableId = variableId;
-    pill.textContent = variableId;
-    return pill;
-  }
-
-  #renderContent(value) {
-    if (!this.editorElement) {
-      return;
-    }
-
-    this.editorElement.innerHTML = "";
-    const regex = /\{\{\s*([^}]+?)\s*\}\}|\n/g;
-    let lastIndex = 0;
-    let match;
-
-    while ((match = regex.exec(value)) !== null) {
-      if (match.index > lastIndex) {
-        this.editorElement.appendChild(
-          document.createTextNode(value.slice(lastIndex, match.index))
-        );
-      }
-
-      if (match[0] === "\n") {
-        this.editorElement.appendChild(document.createElement("br"));
-      } else {
-        this.editorElement.appendChild(this.#createPill(match[1]));
-      }
-
-      lastIndex = regex.lastIndex;
-    }
-
-    if (lastIndex < value.length) {
-      this.editorElement.appendChild(
-        document.createTextNode(value.slice(lastIndex))
-      );
-    }
-  }
-
-  #serialize() {
-    return this.#serializeNodes(this.editorElement.childNodes);
-  }
-
-  #serializeNodes(nodes) {
-    let result = "";
-    for (const node of nodes) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        result += node.textContent;
-      } else if (node.nodeName === "BR") {
-        result += "\n";
-      } else if (node.classList?.contains("workflows-variable-pill")) {
-        result += `{{ ${node.textContent.trim()} }}`;
-      } else if (node.childNodes.length) {
-        result += "\n" + this.#serializeNodes(node.childNodes);
-      }
-    }
-    return result;
+  handleChange(value) {
+    this.args.onChange?.(value);
   }
 
   <template>
     <div
-      class={{concatClass
-        "workflows-variable-input"
-        (if this.isDragOver "is-drag-over")
-      }}
-      contenteditable="true"
-      role="textbox"
-      {{didInsert this.setupEditor}}
-      {{on "click" this.handleClick}}
-      {{on "keydown" this.handleKeydown}}
-      {{on "input" this.handleInput}}
-      {{on "dragover" this.handleDragOver}}
-      {{on "dragleave" this.handleDragLeave}}
-      {{on "drop" this.handleDrop}}
-      {{on "paste" this.handlePaste}}
-    ></div>
+      class="workflows-variable-input-container"
+      {{didInsert this.loadEditor}}
+    >
+      {{#if this.Editor}}
+        <this.Editor
+          @value={{@value}}
+          @change={{this.handleChange}}
+          @extension={{this.extension}}
+          @class="workflows-variable-input"
+          @lineWrapping={{true}}
+          @onSetup={{this.handleSetup}}
+          @focusIn={{@onFocusIn}}
+          @focusOut={{@onFocusOut}}
+        />
+      {{/if}}
+    </div>
   </template>
 }

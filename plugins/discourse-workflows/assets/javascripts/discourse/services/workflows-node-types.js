@@ -8,6 +8,15 @@ export default class WorkflowsNodeTypes extends Service {
   @tracked credentialTypes = null;
   @tracked expressionContext = {};
 
+  // Graph context for the currently-editing node. Set by the editor
+  // when the configurator modal opens, read by VariableInput to build
+  // CodeMirror completion scope without prop drilling.
+  @tracked editingNode = null;
+  @tracked graphNodes = null;
+  @tracked graphConnections = null;
+  @tracked workflowVars = null;
+  @tracked workflowId = null;
+
   _nodeTypeMap = new Map();
 
   async load() {
@@ -36,10 +45,47 @@ export default class WorkflowsNodeTypes extends Service {
     return this._nodeTypeMap.get(identifier) || null;
   }
 
+  setEditingContext(node, nodes, connections, { workflowId } = {}) {
+    this.editingNode = node;
+    this.graphNodes = nodes;
+    this.graphConnections = connections;
+    this.workflowId = workflowId;
+  }
+
+  async loadWorkflowVars() {
+    if (this.workflowVars) {
+      return this.workflowVars;
+    }
+
+    try {
+      const result = await ajax(
+        "/admin/plugins/discourse-workflows/variables.json"
+      );
+      this.workflowVars = result.variables || [];
+    } catch {
+      this.workflowVars = [];
+    }
+    return this.workflowVars;
+  }
+
+  invalidateWorkflowVars() {
+    this.workflowVars = null;
+  }
+
+  clearEditingContext() {
+    this.editingNode = null;
+    this.graphNodes = null;
+    this.graphConnections = null;
+    this.workflowId = null;
+  }
+
   clear() {
     this.nodeTypes = null;
     this.credentialTypes = null;
     this.expressionContext = {};
     this._nodeTypeMap = new Map();
+    this.invalidateWorkflowVars();
+    this.workflowId = null;
+    this.clearEditingContext();
   }
 }

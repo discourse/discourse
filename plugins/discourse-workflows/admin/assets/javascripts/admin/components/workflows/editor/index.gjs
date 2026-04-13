@@ -376,6 +376,10 @@ export default class WorkflowsEditor extends Component {
 
     const triggerNode = nodes.find((n) => n.type?.startsWith("trigger:"));
 
+    this.workflowsNodeTypes.setEditingContext(node, nodes, connections, {
+      workflowId: this.args.workflow?.id,
+    });
+
     this.modal.show(NodeConfigurator, {
       model: {
         node,

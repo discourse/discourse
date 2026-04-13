@@ -2,8 +2,27 @@
 
 module DiscourseWorkflows
   class ExpressionResolver
-    EXPRESSION_REGEX = /\{\{(.*?)\}\}/
     WHOLE_EXPRESSION_REGEX = /\A\{\{\s*([^{}]*?)\s*\}\}\z/
+
+    def self.find_matching_close(template, start)
+      depth = 1
+      cursor = start
+
+      while cursor < template.length - 1 && depth > 0
+        if template[cursor] == "{" && template[cursor + 1] == "{"
+          depth += 1
+          cursor += 2
+        elsif template[cursor] == "}" && template[cursor + 1] == "}"
+          depth -= 1
+          return cursor if depth == 0
+          cursor += 2
+        else
+          cursor += 1
+        end
+      end
+
+      nil
+    end
 
     def self.resolve(value, context: {}, user: nil)
       resolver = new(context, user: user)
@@ -47,6 +66,54 @@ module DiscourseWorkflows
       @js_evaluator&.expression_errors || []
     end
 
+    def evaluate_expression(expression)
+      result = js_evaluator.evaluate(expression)
+      last_error = js_evaluator.expression_errors.last
+
+      if last_error && last_error[:expression] == expression
+        { result: nil, error: last_error[:error], error_type: last_error[:type] }
+      else
+        { result:, error: nil, error_type: nil }
+      end
+    end
+
+    def resolve_segments(template)
+      segments = []
+      pos = 0
+
+      while pos < template.length
+        open = template.index("{{", pos)
+
+        if open.nil?
+          segments << { kind: "plaintext", text: template[pos..] } if pos < template.length
+          break
+        end
+
+        segments << { kind: "plaintext", text: template[pos...open] } if open > pos
+
+        close = self.class.find_matching_close(template, open + 2)
+
+        unless close
+          segments << { kind: "plaintext", text: template[open..] }
+          break
+        end
+
+        expression = template[(open + 2)...close].strip
+        segment = { kind: "resolved", from: open, to: close + 2 }
+
+        if expression.empty?
+          segment.merge!(text: "", state: "empty")
+        else
+          segment.merge!(classify_eval_result(evaluate_expression(expression)))
+        end
+
+        segments << segment
+        pos = close + 2
+      end
+
+      segments
+    end
+
     def with_item(item_json)
       previous_json = @context["$json"]
       @context["$json"] = item_json
@@ -58,6 +125,19 @@ module DiscourseWorkflows
     end
 
     private
+
+    def classify_eval_result(eval_result)
+      if eval_result[:error]
+        state = eval_result[:error_type] == :undefined ? "undefined" : "invalid"
+        return { text: "", state: }
+      end
+
+      result = eval_result[:result]
+      return { text: "", state: "undefined" } if result.nil?
+      return { text: "", state: "warning" } if result.is_a?(MiniRacer::JavaScriptFunction)
+
+      { text: format_value(result), state: "valid" }
+    end
 
     def resolve_tree(value)
       case value
@@ -75,10 +155,36 @@ module DiscourseWorkflows
     end
 
     def render_template(template)
-      template.gsub(EXPRESSION_REGEX) do
-        expression = Regexp.last_match(1).strip
-        format_value(js_evaluator.evaluate(expression))
+      result = +""
+      pos = 0
+
+      while pos < template.length
+        open = template.index("{{", pos)
+
+        if open.nil?
+          result << template[pos..]
+          break
+        end
+
+        result << template[pos...open] if open > pos
+
+        close = find_matching_close(template, open + 2)
+
+        if close
+          expression = template[(open + 2)...close].strip
+          result << format_value(js_evaluator.evaluate(expression))
+          pos = close + 2
+        else
+          result << template[open..]
+          break
+        end
       end
+
+      result
+    end
+
+    def find_matching_close(template, start)
+      self.class.find_matching_close(template, start)
     end
 
     def js_evaluator
@@ -106,8 +212,24 @@ module DiscourseWorkflows
         ensure_sandbox!
         @sandbox.eval(expression)
       rescue MiniRacer::Error => e
-        @expression_errors << { expression: expression, error: e.message }
+        # Bare objects like { a: 1 } fail as blocks — retry wrapped in parens
+        if e.message.include?("SyntaxError") && expression.strip.start_with?("{")
+          begin
+            return @sandbox.eval("(#{expression})")
+          rescue MiniRacer::Error
+          end
+        end
+        @expression_errors << { expression: expression, error: e.message, type: classify_error(e) }
         nil
+      end
+
+      def classify_error(error)
+        msg = error.message
+        if msg.include?("is not defined") || msg.include?("Cannot read properties")
+          :undefined
+        else
+          :invalid
+        end
       end
 
       def dispose

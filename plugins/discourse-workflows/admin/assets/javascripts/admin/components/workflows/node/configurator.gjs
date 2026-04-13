@@ -185,6 +185,7 @@ export default class NodeConfigurator extends Component {
   handleClose() {
     this.args.model.onSave(this.configuration, this.nodeName);
     this.args.closeModal();
+    this.workflowsNodeTypes.clearEditingContext();
   }
 
   <template>

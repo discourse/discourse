@@ -1,32 +1,339 @@
 .workflows-variable-input {
-  padding: 0.5em;
-  min-height: 80px;
   width: 100%;
   border: 1px solid var(--primary-low-mid);
   border-radius: var(--d-border-radius);
   background: var(--secondary);
-  font-size: var(--font-0);
-  font-family: inherit;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  overflow-y: auto;
-  overflow-wrap: break-word;
   box-sizing: border-box;
-  cursor: text;
-  resize: vertical;
 
-  &:focus {
+  .cm-editor .cm-content {
+    min-height: 60px;
+    padding: 0.5em;
+    font-size: var(--font-0);
+    font-family: inherit;
+  }
+
+  .cm-editor .cm-lineWrapping {
+    word-break: break-all;
+  }
+
+  &:focus-within {
     outline: none;
     border-color: var(--tertiary);
     box-shadow: 0 0 0 1px var(--tertiary);
   }
 
-  &.is-drag-over {
+  .is-drag-over & {
     border-color: var(--tertiary);
-    background: color-mix(in srgb, var(--tertiary) 5%, var(--secondary));
+    background: var(--tertiary-50);
+  }
+
+  .cm-editor {
+    background: transparent;
+    color: var(--primary);
+
+    &.cm-focused {
+      outline: none;
+    }
+
+    .cm-cursor {
+      border-left-color: var(--primary);
+    }
+
+    .cm-selectionBackground {
+      background: var(--tertiary-low) !important;
+    }
+
+    .cm-content {
+      caret-color: var(--primary);
+    }
+
+    .cm-activeLine {
+      background: transparent;
+    }
+
+    // Base override for all CM tooltips — CM injects a light baseTheme
+    // dynamically, so we must override it for dark mode support.
+    .cm-tooltip {
+      z-index: z("modal", "tooltip") !important;
+      background: var(--secondary);
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary);
+      font-size: var(--font-down-2);
+      box-shadow: var(--shadow-dropdown);
+    }
+
+    .cm-tooltip-autocomplete {
+      > ul {
+        font-family: inherit;
+
+        > li {
+          padding: 1px 0.4em;
+        }
+      }
+
+      li[aria-selected] {
+        background: var(--tertiary-low);
+        color: var(--primary);
+      }
+    }
+
+    // Section headers in the autocomplete dropdown
+    .cm-expr-section-header {
+      padding: 0.1em 0.4em;
+      font-size: var(--font-down-3);
+      font-weight: 700;
+      color: var(--primary-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    // Info tooltip panel next to autocomplete — inherits font-size
+    // from .cm-tooltip (--font-down-2) for consistency with the list.
+    .cm-completionInfo {
+      padding: 0.3em 0.5em;
+      max-width: 200px;
+      width: 200px;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+    }
+
+    .cm-expr-completion-info {
+      &__signature {
+        font-family: var(--d-font-family--monospace);
+        font-weight: 600;
+        margin-bottom: 0.15em;
+        color: var(--primary-medium);
+        word-break: break-all;
+      }
+
+      &__description {
+        color: var(--primary-high);
+        margin-bottom: 0.15em;
+        line-height: 1.3;
+      }
+
+      &__example code {
+        background: var(--primary-very-low);
+        padding: 0.1em 0.2em;
+        border-radius: 2px;
+        font-family: var(--d-font-family--monospace);
+        font-size: 0.9em;
+        word-break: break-all;
+      }
+    }
+
+    // Syntax highlighting — theme-aware via Discourse CSS vars
+    .cm-wf-text {
+      color: var(--primary);
+    }
+
+    .cm-wf-brace {
+      color: var(--tertiary);
+      opacity: 0.7;
+      font-weight: 700;
+    }
+
+    .cm-wf-keyword {
+      color: var(--tertiary);
+    }
+
+    .cm-wf-string {
+      color: var(--success);
+    }
+
+    .cm-wf-number {
+      color: var(--success);
+    }
+
+    .cm-wf-bool,
+    .cm-wf-null {
+      color: var(--tertiary);
+    }
+
+    .cm-wf-variable {
+      color: var(--primary-high);
+    }
+
+    .cm-wf-property {
+      color: var(--primary-high);
+    }
+
+    .cm-wf-function {
+      color: var(--tertiary-hover);
+    }
+
+    .cm-wf-operator,
+    .cm-wf-punctuation {
+      color: var(--primary);
+    }
+
+    .cm-wf-comment {
+      color: var(--primary-medium);
+      font-style: italic;
+    }
+
+    // Validation underlines
+    .cm-wf-error {
+      text-decoration: wavy underline var(--danger);
+      text-decoration-skip-ink: none;
+      text-underline-offset: 3px;
+    }
+
+    // Expression state colors — applied by backend evaluation results
+    .cm-wf-valid-expression {
+      background: color-mix(in srgb, var(--success) 12%, transparent);
+      border-radius: 2px;
+    }
+
+    .cm-wf-invalid-expression {
+      background: color-mix(in srgb, var(--danger) 20%, transparent);
+      border-radius: 2px;
+      outline: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+    }
+
+    .cm-wf-empty-expression {
+      background: color-mix(in srgb, var(--primary-low-mid) 20%, transparent);
+      border-radius: 2px;
+      outline: 1px dashed
+        color-mix(in srgb, var(--primary-medium) 40%, transparent);
+    }
+
+    .cm-wf-warning-expression {
+      background: color-mix(in srgb, var(--highlight-medium) 40%, transparent);
+      border-radius: 2px;
+    }
+
+    .cm-wf-pending-expression {
+      background: color-mix(in srgb, var(--primary-low-mid) 30%, transparent);
+      border-radius: 2px;
+    }
+
+    // Drop cursor during variable drag
+    .cm-dropCursor {
+      position: absolute;
+      width: 2px;
+      background: var(--tertiary);
+      pointer-events: none;
+      z-index: 10;
+    }
+  }
+
+  // Hover tooltip — matches n8n's subtle style
+  .cm-tooltip-hover {
+    background: var(--secondary) !important;
+    border: 1px solid var(--primary-low-mid) !important;
+    border-radius: var(--d-border-radius);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .cm-wf-hover-tooltip {
+    padding: 0.4em 0.6em;
+    max-width: 260px;
+    font-size: var(--font-down-2);
+
+    &__name {
+      color: var(--tertiary);
+      margin-bottom: 0.15em;
+    }
+
+    &__description {
+      color: var(--primary-high);
+      line-height: 1.3;
+    }
   }
 
   .workflows-property-engine__collection-fields & {
+    background: transparent;
     min-height: 100px;
+
+    &:focus-within {
+      box-shadow: none;
+    }
+  }
+}
+
+.fk-d-tooltip__content[data-identifier="expression-preview"] {
+  // Above normal content, below modal tooltips/popovers where CM autocomplete lives
+  z-index: z("tooltip") !important;
+  box-sizing: border-box;
+  pointer-events: auto;
+  user-select: text;
+
+  .fk-d-tooltip__inner-content {
+    display: block;
+    width: 100%;
+    pointer-events: auto;
+    user-select: text;
+  }
+}
+
+.expression-preview {
+  padding: 0.3em 0.5em;
+  font-size: var(--font-down-2);
+  font-family: var(--d-font-family--monospace);
+  max-height: 80px;
+  overflow-y: auto;
+
+  &__result {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__label {
+    float: right;
+    font-weight: 700;
+    font-size: var(--font-down-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary-low-mid);
+    margin-left: 0.5em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  &__error-text {
+    color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
+    border-radius: 2px;
+    padding: 0.1em 0.2em;
+  }
+
+  &__resolved {
+    &--valid {
+      color: var(--tertiary);
+    }
+
+    &--invalid,
+    &--undefined {
+      color: var(--danger);
+      background: color-mix(in srgb, var(--danger) 10%, transparent);
+      border-radius: 2px;
+      padding: 0.1em 0.2em;
+    }
+
+    &--warning {
+      color: var(--warning, light-dark(#b5651d, #e6a33e));
+      background: color-mix(in srgb, var(--warning, #e6a33e) 10%, transparent);
+      border-radius: 2px;
+      padding: 0.1em 0.2em;
+      font-style: italic;
+    }
+
+    &--pending {
+      color: var(--primary-medium);
+    }
+
+    &--label {
+      background: color-mix(in srgb, var(--primary-low-mid) 40%, transparent);
+      border-radius: 2px;
+      padding: 0.1em 0.4em;
+      font-size: var(--font-down-1);
+    }
+  }
+
+  &__plaintext {
+    color: var(--primary);
   }
 }

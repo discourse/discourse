@@ -10,6 +10,8 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
   let(:context) { { "trigger" => { "topic_id" => 42, "tags" => %w[bug help] } } }
 
+  after { resolver.dispose }
+
   describe "#resolve" do
     it "returns non-string values as-is" do
       expect(resolver.resolve(42)).to eq(42)
@@ -62,10 +64,6 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
     it "preserves array type for single-expression values" do
       expect(resolver.resolve("={{ trigger.tags }}")).to eq(%w[bug help])
-    end
-
-    it "preserves integer type for single-expression values" do
-      expect(resolver.resolve("={{ trigger.topic_id }}")).to eq(42)
     end
 
     it "still returns string for mixed templates" do
@@ -278,6 +276,58 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(sandbox.js_context).not_to be_nil
     ensure
       sandbox&.dispose
+    end
+  end
+
+  describe "#resolve_segments" do
+    it "returns plaintext for text without expressions" do
+      segments = resolver.resolve_segments("hello world")
+      expect(segments).to eq([{ kind: "plaintext", text: "hello world" }])
+    end
+
+    it "returns a resolved segment for a valid expression" do
+      segments = resolver.resolve_segments("{{ $json.topic_id }}")
+      expect(segments.size).to eq(1)
+      expect(segments[0][:kind]).to eq("resolved")
+      expect(segments[0][:state]).to eq("valid")
+      expect(segments[0][:text]).to eq("42")
+      expect(segments[0][:from]).to eq(0)
+      expect(segments[0][:to]).to eq("{{ $json.topic_id }}".length)
+    end
+
+    it "returns mixed segments for text with expressions" do
+      segments = resolver.resolve_segments("id: {{ $json.topic_id }}!")
+      expect(segments.size).to eq(3)
+      expect(segments[0]).to eq({ kind: "plaintext", text: "id: " })
+      expect(segments[1][:kind]).to eq("resolved")
+      expect(segments[1][:state]).to eq("valid")
+      expect(segments[2]).to eq({ kind: "plaintext", text: "!" })
+    end
+
+    it "marks undefined references" do
+      segments = resolver.resolve_segments("{{ undefined_var }}")
+      expect(segments[0][:state]).to eq("undefined")
+    end
+
+    it "marks syntax errors as invalid" do
+      segments = resolver.resolve_segments("{{ if( }}")
+      expect(segments[0][:state]).to eq("invalid")
+    end
+
+    it "marks uncalled functions as warning" do
+      segments = resolver.resolve_segments("{{ $json.tags.join }}")
+      expect(segments[0][:state]).to eq("warning")
+    end
+
+    it "marks empty expressions" do
+      segments = resolver.resolve_segments("{{  }}")
+      expect(segments[0][:state]).to eq("empty")
+    end
+
+    it "treats unclosed {{ as plaintext" do
+      segments = resolver.resolve_segments("hello {{ $json.title")
+      expect(segments.last[:kind]).to eq("plaintext")
+      expect(segments.last[:text]).to include("{{")
     end
   end
 

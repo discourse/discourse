@@ -237,6 +237,13 @@ en:
         fixed: "Fixed"
         plain: "Plain"
         dynamic: "Dynamic"
+      expression_preview:
+        result: "Result"
+        empty: "empty"
+        undefined: "undefined"
+        invalid: "invalid JavaScript"
+        warning: "missing function call"
+        pending: "not resolved yet"
       property_engine:
         add_item: "Add item"
         remove_item: "Remove item"

@@ -1,5 +1,6 @@
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -11,6 +12,8 @@ import EmptyState from "../empty-state";
 import VariableModal from "./modal";
 
 export default class VariablesManager extends CrudManager {
+  @service workflowsNodeTypes;
+
   get itemsKey() {
     return "variables";
   }
@@ -29,6 +32,7 @@ export default class VariablesManager extends CrudManager {
             type: "POST",
             data,
           });
+          this.workflowsNodeTypes.invalidateWorkflowVars();
           await this.loadItems();
         },
       },
@@ -45,6 +49,7 @@ export default class VariablesManager extends CrudManager {
             type: "PUT",
             data,
           });
+          this.workflowsNodeTypes.invalidateWorkflowVars();
           await this.loadItems();
         },
       },
@@ -62,6 +67,7 @@ export default class VariablesManager extends CrudManager {
           await ajax(`${this.basePath}/${variable.id}.json`, {
             type: "DELETE",
           });
+          this.workflowsNodeTypes.invalidateWorkflowVars();
           await this.loadItems();
         } catch (e) {
           popupAjaxError(e);

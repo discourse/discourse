@@ -1,102 +1,86 @@
-import { render, settled, triggerEvent } from "@ember/test-helpers";
+import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import VariableInput from "discourse/plugins/discourse-workflows/admin/components/workflows/variable/input";
+
+function editorText(element) {
+  return element.querySelector(".cm-content")?.textContent ?? "";
+}
 
 module("Integration | Component | workflows/variable/input", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("renders existing expression value as pills", async function (assert) {
+  hooks.beforeEach(function () {
+    pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
+      response(200, { variables: [] })
+    );
+  });
+
+  test("renders CodeMirror editor", async function (assert) {
+    await render(<template><VariableInput @value="" /></template>);
+    await waitFor(".cm-editor");
+
+    assert.dom(".workflows-variable-input").exists();
+    assert.dom(".cm-editor").exists();
+    assert.dom(".cm-content").exists();
+  });
+
+  test("displays expression value as text", async function (assert) {
     const value = "Hello {{ $current_user.username }}!";
 
     await render(<template><VariableInput @value={{value}} /></template>);
+    await waitFor(".cm-editor");
 
-    const pills = this.element.querySelectorAll(".workflows-variable-pill");
-    assert.strictEqual(pills.length, 1);
-    assert.strictEqual(pills[0].textContent.trim(), "$current_user.username");
+    const text = editorText(this.element);
+    assert.true(
+      text.includes("$current_user.username"),
+      "editor displays the expression variable"
+    );
   });
 
-  test("renders multiple pills in a value", async function (assert) {
+  test("displays multiple expressions", async function (assert) {
     const value = "{{ $execution.id }} - {{ $json.title }}";
 
     await render(<template><VariableInput @value={{value}} /></template>);
+    await waitFor(".cm-editor");
 
-    const pills = this.element.querySelectorAll(".workflows-variable-pill");
-    assert.strictEqual(pills.length, 2);
-    assert.strictEqual(pills[0].textContent.trim(), "$execution.id");
-    assert.strictEqual(pills[1].textContent.trim(), "$json.title");
+    const text = editorText(this.element);
+    assert.true(text.includes("$execution.id"), "contains first expression");
+    assert.true(text.includes("$json.title"), "contains second expression");
   });
 
-  test("drop with $ prefix keeps variable id as-is", async function (assert) {
-    let captured = null;
-    const onChange = (val) => (captured = val);
-
-    await render(
-      <template><VariableInput @value="" @onChange={{onChange}} /></template>
-    );
-
-    const editor = this.element.querySelector(".workflows-variable-input");
-
-    const dataTransfer = new DataTransfer();
-    dataTransfer.setData(
-      "application/x-workflow-variable",
-      JSON.stringify({
-        id: "$current_user.username",
-        key: "username",
-        type: "string",
-      })
-    );
-
-    await triggerEvent(editor, "drop", { dataTransfer });
-
-    assert.true(
-      captured.includes("{{ $current_user.username }}"),
-      `serialized value "${captured}" includes $current_user.username`
-    );
-  });
-
-  test("drop without $ prefix adds $json. prefix", async function (assert) {
-    let captured = null;
-    const onChange = (val) => (captured = val);
-
-    await render(
-      <template><VariableInput @value="" @onChange={{onChange}} /></template>
-    );
-
-    const editor = this.element.querySelector(".workflows-variable-input");
-
-    const dataTransfer = new DataTransfer();
-    dataTransfer.setData(
-      "application/x-workflow-variable",
-      JSON.stringify({
-        id: "topic_id",
-        key: "topic_id",
-        type: "integer",
-      })
-    );
-
-    await triggerEvent(editor, "drop", { dataTransfer });
-
-    assert.true(
-      captured.includes("{{ $json.topic_id }}"),
-      `serialized value "${captured}" includes $json.topic_id`
-    );
-  });
-
-  test("serializes pills back to expression format", async function (assert) {
-    let captured = null;
-    const onChange = (val) => (captured = val);
+  test("preserves value through render cycle", async function (assert) {
     const value = "prefix {{ $vars.API_URL }} suffix";
+
+    await render(<template><VariableInput @value={{value}} /></template>);
+    await waitFor(".cm-editor");
+
+    const text = editorText(this.element);
+    assert.true(text.includes("$vars.API_URL"), "expression is preserved");
+    assert.true(text.includes("prefix"), "prefix text is preserved");
+    assert.true(text.includes("suffix"), "suffix text is preserved");
+  });
+
+  test("fires onChange when user types", async function (assert) {
+    let captured = null;
+    let editorView = null;
+    const onChange = (val) => (captured = val);
+    const onEditorReady = (api) => (editorView = api.view);
 
     await render(
       <template>
-        <VariableInput @value={{value}} @onChange={{onChange}} />
+        <VariableInput
+          @value=""
+          @onChange={{onChange}}
+          @onEditorReady={{onEditorReady}}
+        />
       </template>
     );
+    await waitFor(".cm-editor");
 
-    const editor = this.element.querySelector(".workflows-variable-input");
-    await triggerEvent(editor, "input");
+    editorView.dispatch({ changes: { from: 0, insert: "hello" } });
 
-    assert.strictEqual(captured, "prefix {{ $vars.API_URL }} suffix");
+    assert.strictEqual(captured, "hello", "onChange was called with the value");
   });
 });

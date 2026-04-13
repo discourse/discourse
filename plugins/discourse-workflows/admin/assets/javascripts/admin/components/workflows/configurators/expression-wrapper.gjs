@@ -6,6 +6,10 @@ import { service } from "@ember/service";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
+import {
+  resolveVariableId,
+  WORKFLOW_VARIABLE_MIME,
+} from "../../../lib/workflows/expression-context";
 import { isExpression } from "../../../lib/workflows/property-engine";
 import ExpressionInput from "./expression-input";
 
@@ -26,6 +30,15 @@ export default class ExpressionWrapper extends Component {
   @service workflowsNodeTypes;
 
   @tracked isDragOver = false;
+  _dragEndHandler = null;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this._dragEndHandler) {
+      document.removeEventListener("dragend", this._dragEndHandler);
+      this._dragEndHandler = null;
+    }
+  }
 
   get expressionMode() {
     return isExpression(this.args.field?.value);
@@ -53,13 +66,26 @@ export default class ExpressionWrapper extends Component {
 
   @action
   handleDragOver(event) {
-    if (!this.args.supportsExpression || this.expressionMode) {
+    if (!this.args.supportsExpression) {
       return;
     }
-    if (event.dataTransfer.types.includes("application/x-workflow-variable")) {
-      event.preventDefault();
-      event.dataTransfer.dropEffect = "copy";
-      this.isDragOver = true;
+    if (!event.dataTransfer.types.includes(WORKFLOW_VARIABLE_MIME)) {
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+    this.isDragOver = true;
+
+    // Safety: clear on next dragend in case dragleave doesn't fire
+    if (!this._dragEndHandler) {
+      this._dragEndHandler = () => {
+        this.isDragOver = false;
+        document.removeEventListener("dragend", this._dragEndHandler);
+        this._dragEndHandler = null;
+      };
+      document.addEventListener("dragend", this._dragEndHandler, {
+        once: true,
+      });
     }
   }
 
@@ -72,18 +98,19 @@ export default class ExpressionWrapper extends Component {
 
   @action
   handleDrop(event) {
+    this.isDragOver = false;
+
     if (!this.args.supportsExpression || this.expressionMode) {
       return;
     }
 
-    const data = event.dataTransfer.getData("application/x-workflow-variable");
+    const data = event.dataTransfer.getData(WORKFLOW_VARIABLE_MIME);
     if (!data) {
       return;
     }
 
     event.preventDefault();
     event.stopPropagation();
-    this.isDragOver = false;
 
     let variable;
     try {
@@ -94,9 +121,7 @@ export default class ExpressionWrapper extends Component {
 
     const prefix =
       this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
-    const variableId = variable.id.startsWith("$")
-      ? variable.id
-      : `${prefix}.${variable.id}`;
+    const variableId = resolveVariableId(variable, prefix);
 
     this.args.field.set(`={{ ${variableId} }}`);
   }

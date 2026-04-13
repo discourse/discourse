@@ -1,0 +1,12 @@
+@top Template { entity* }
+
+entity { Text | Expression }
+
+@tokens {
+  Text { ![{] Text? | "{" (@eof | ![{] Text?) }
+  OpenExpression[closedBy="CloseExpression"] { "{{" }
+  CloseExpression[openedBy="OpenExpression"] { "}}" }
+  Expression { OpenExpression expressionContent* CloseExpression }
+  expressionContent { unicodeChar | "}" ![}] | "\\}}" }
+  unicodeChar { $[\u0000-\u007C] | $[\u007E-\u{10FFFF}] }
+}

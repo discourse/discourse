@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { and, not } from "discourse/truth-helpers";
+import { WORKFLOW_VARIABLE_MIME } from "../../../lib/workflows/expression-context";
 
 export default class SchemaField extends Component {
   @tracked collapsed = true;
@@ -40,7 +41,7 @@ export default class SchemaField extends Component {
     event.stopPropagation();
     const field = this.args.field;
     event.dataTransfer.setData(
-      "application/x-workflow-variable",
+      WORKFLOW_VARIABLE_MIME,
       JSON.stringify({ id: this.fieldId, key: field.key, type: field.type })
     );
     event.dataTransfer.effectAllowed = "copy";
@@ -72,10 +73,7 @@ export default class SchemaField extends Component {
 
         <span
           class="workflows-schema-field__key"
-          draggable={{if
-            (and @draggable this.fieldId (not this.hasChildren))
-            "true"
-          }}
+          draggable={{if (and @draggable this.fieldId) "true"}}
           {{on "dragstart" this.handleDragStart}}
           {{on "dragend" this.handleDragEnd}}
         >
