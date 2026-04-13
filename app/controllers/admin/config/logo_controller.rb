@@ -4,31 +4,20 @@ class Admin::Config::LogoController < Admin::AdminController
   end
 
   def og_image_preview
-    if params[:topic_id].present?
-      topic = Topic.find_by(id: params[:topic_id])
-      raise Discourse::NotFound if topic.nil?
-    else
-      topic = Topic.visible.listable_topics.order("posts_count DESC").first
-    end
+    raise Discourse::InvalidParameters.new(:topic_id) if params[:topic_id].blank?
 
-    if topic.nil?
-      topic =
-        Topic.new(
-          title: "Welcome to #{SiteSetting.title}",
-          category: Category.first,
-          like_count: 5,
-          posts_count: 3,
-        )
-    end
+    topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::NotFound if topic.nil?
 
-    generator = TopicOgImageGenerator.new(topic)
-    upload = generator.generate
+    png_bytes = TopicOgImageGenerator.new(topic).generate_bytes
 
-    if upload&.errors&.empty?
-      render json: { url: upload.url, topic_id: topic.id, topic_title: topic.title }
-    else
+    if png_bytes.blank?
       render json: { error: "Failed to generate preview image" }, status: :unprocessable_entity
+      return
     end
+
+    data_uri = "data:image/png;base64,#{Base64.strict_encode64(png_bytes)}"
+    render json: { url: data_uri, topic_id: topic.id, topic_title: topic.title }
   end
 
   def update

@@ -450,7 +450,7 @@ class TopicView
   def og_image_url
     upload = og_image_upload
     return unless upload
-    UrlHelper.cook_url(upload.url, secure: upload.secure?, local: true)
+    UrlHelper.cook_url(upload.url, secure: upload.secure?)
   end
 
   def filter_posts(opts = {})

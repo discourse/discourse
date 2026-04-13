@@ -443,6 +443,12 @@ class Topic < ActiveRecord::Base
     elsif saved_changes[:category_id] && self.category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
     end
+
+    if (saved_changes[:title] || saved_changes[:category_id]) && og_image_upload_id.present? &&
+         SiteSetting.generate_topic_og_image
+      update_column(:og_image_upload_id, nil)
+      Jobs.enqueue(:generate_topic_og_image, topic_id: id)
+    end
   end
 
   def initialize_default_values

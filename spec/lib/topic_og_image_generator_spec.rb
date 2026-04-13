@@ -42,11 +42,16 @@ RSpec.describe TopicOgImageGenerator do
     end
 
     it "adds ellipsis when title exceeds two lines" do
+      long_title =
+        "This is a very long topic title that will definitely wrap onto more than two lines and require truncation with an ellipsis at the end"
+      topic.update!(title: long_title)
+
       generator = described_class.new(topic)
       svg = generator.send(:build_svg)
 
-      title_lines = generator.send(:word_wrap, topic.title, TopicOgImageGenerator::TITLE_LINE_CHARS)
-      expect(svg).to include("…") if title_lines.length > TopicOgImageGenerator::MAX_TITLE_LINES
+      title_line_count = svg.scan(/font-size="62"/).length
+      expect(title_line_count).to eq(TopicOgImageGenerator::MAX_TITLE_LINES)
+      expect(svg).to include("…")
     end
 
     it "includes category name" do

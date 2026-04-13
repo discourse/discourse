@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
-import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class OgImagePreview extends Component {
@@ -28,7 +27,7 @@ export default class OgImagePreview extends Component {
         type: "GET",
         data: { topic_id: data.topic_id },
       });
-      this.imageUrl = getURL(response.url);
+      this.imageUrl = response.url;
     } catch {
       this.error = true;
     } finally {

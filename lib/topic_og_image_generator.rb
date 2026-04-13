@@ -9,14 +9,26 @@ class TopicOgImageGenerator
   LOGO_HEIGHT = 100
   LOGO_WIDTH = 300
   AVATAR_SIZE = 72
+  SIDE_MARGIN = 80
+  FONT_FAMILY = "sans-serif"
 
   def initialize(topic)
     @topic = topic
   end
 
+  # Generates the OG image, persists as an Upload, and returns it (or nil on failure).
   def generate
     svg = build_svg
-    convert_svg_to_png(svg)
+    png = render_png(svg)
+    return nil if png.nil?
+    create_upload(png)
+  end
+
+  # Renders the OG image to PNG bytes without persisting an Upload. Used by the
+  # admin preview endpoint to avoid producing orphaned uploads on every click.
+  def generate_bytes
+    svg = build_svg
+    render_png(svg)
   end
 
   private
@@ -62,11 +74,8 @@ class TopicOgImageGenerator
     <<~SVG
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="#{OG_WIDTH}" height="#{OG_HEIGHT}" viewBox="0 0 #{OG_WIDTH} #{OG_HEIGHT}">
         <defs>
-          <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap');
-          </style>
           <clipPath id="avatar-clip">
-            <rect x="80" y="#{author_y}" width="#{AVATAR_SIZE}" height="#{AVATAR_SIZE}" rx="20"/>
+            <rect x="#{SIDE_MARGIN}" y="#{author_y}" width="#{AVATAR_SIZE}" height="#{AVATAR_SIZE}" rx="20"/>
           </clipPath>
         </defs>
 
@@ -77,34 +86,43 @@ class TopicOgImageGenerator
         <rect width="#{OG_WIDTH}" height="18" fill="##{colors[:tertiary]}"/>
 
         <!-- Category pill -->
-        #{category_pill_svg(category_name, category_color, 80, 60)}
+        #{category_pill_svg(category_name, category_color, SIDE_MARGIN, 60)}
 
         <!-- Title -->
-        #{title_svg(display_lines, colors[:primary], 80, title_start_y)}
+        #{title_svg(display_lines, colors[:primary], SIDE_MARGIN, title_start_y)}
 
         <!-- Author -->
-        #{author_svg(avatar_data_uri, username, created_at, colors, 80, author_y)}
+        #{author_svg(avatar_data_uri, username, created_at, colors, SIDE_MARGIN, author_y)}
 
         <!-- Site logo -->
-        #{logo_svg(logo_data_uri, logo_upload, 80, logo_y)}
+        #{logo_svg(logo_data_uri, logo_upload, SIDE_MARGIN, logo_y)}
 
         <!-- Stats -->
-        #{stats_svg(like_count, posts_count, read_time, colors, OG_WIDTH - 80, stats_y)}
+        #{stats_svg(like_count, posts_count, read_time, colors, OG_WIDTH - SIDE_MARGIN, stats_y)}
 
         <!-- Site domain -->
-        #{domain_svg(colors, OG_WIDTH - 80, 88)}
+        #{domain_svg(colors, OG_WIDTH - SIDE_MARGIN, 88)}
       </svg>
     SVG
   end
 
+  # Category pill size. Character-width heuristic is approximate and tuned for a
+  # generic sans-serif at font-size 24; long / non-Latin names are truncated
+  # client-side and the rect is capped to the canvas width so we never render
+  # past the right edge. Non-Latin glyphs may not fill the pill perfectly but
+  # will stay visually contained.
   def category_pill_svg(name, color, x, y)
     return "" if name.blank?
 
     pill_padding = 16
-    pill_width = name.length * 14.5 + pill_padding
+    max_pill_width = OG_WIDTH - (2 * SIDE_MARGIN)
+    pill_width = [name.length * 14.5 + (pill_padding * 2), max_pill_width].min
+    max_name_chars = [((pill_width - (pill_padding * 2)) / 14.5).floor, 1].max
+    display_name = name.length > max_name_chars ? "#{name[0...[max_name_chars - 1, 1].max]}…" : name
+
     <<~SVG
       <rect x="#{x}" y="#{y}" width="#{pill_width}" height="40" rx="6" fill="##{color}" fill-opacity="0.15"/>
-      <text x="#{x + pill_padding}" y="#{y + 30}" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="600" fill="##{color}">#{escape_xml(name)}</text>
+      <text x="#{x + pill_padding}" y="#{y + 30}" font-family="#{FONT_FAMILY}" font-size="24" font-weight="600" fill="##{color}">#{escape_xml(display_name)}</text>
     SVG
   end
 
@@ -113,7 +131,7 @@ class TopicOgImageGenerator
       .each_with_index
       .map do |line, i|
         y = start_y + (i * 68)
-        %(<text x="#{x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="62" font-weight="700" fill="##{primary_color}">#{escape_xml(line)}</text>)
+        %(<text x="#{x}" y="#{y}" font-family="#{FONT_FAMILY}" font-size="62" font-weight="700" fill="##{primary_color}">#{escape_xml(line)}</text>)
       end
       .join("\n    ")
   end
@@ -134,7 +152,7 @@ class TopicOgImageGenerator
     author_text = username
     author_text = "#{author_text}  ·  #{created_at}" if created_at.present?
 
-    parts << %(<text x="#{text_x}" y="#{text_y}" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="400" fill="##{colors[:primary]}" opacity="0.6">#{escape_xml(author_text)}</text>)
+    parts << %(<text x="#{text_x}" y="#{text_y}" font-family="#{FONT_FAMILY}" font-size="34" font-weight="400" fill="##{colors[:primary]}" opacity="0.6">#{escape_xml(author_text)}</text>)
 
     parts.join("\n    ")
   end
@@ -169,14 +187,14 @@ class TopicOgImageGenerator
     return "" if items.empty?
 
     text = items.join("  ·  ")
-    %(<text x="#{right_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(text)}</text>)
+    %(<text x="#{right_x}" y="#{y}" font-family="#{FONT_FAMILY}" font-size="30" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(text)}</text>)
   end
 
   def domain_svg(colors, right_x, y)
     domain = Discourse.current_hostname
     return "" if domain.blank?
 
-    %(<text x="#{right_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(domain)}</text>)
+    %(<text x="#{right_x}" y="#{y}" font-family="#{FONT_FAMILY}" font-size="30" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(domain)}</text>)
   end
 
   def calculate_read_time
@@ -247,7 +265,15 @@ class TopicOgImageGenerator
       )
     return nil if tmp.nil?
 
-    content_type = MiniMime.lookup_by_filename(absolute_url)&.content_type || "image/png"
+    path =
+      (
+        begin
+          URI.parse(absolute_url).path
+        rescue StandardError
+          absolute_url
+        end
+      )
+    content_type = MiniMime.lookup_by_filename(path)&.content_type || "image/png"
     encoded = Base64.strict_encode64(tmp.read)
     "data:#{content_type};base64,#{encoded}"
   rescue => e
@@ -274,7 +300,7 @@ class TopicOgImageGenerator
       .gsub('"', "&quot;")
   end
 
-  def convert_svg_to_png(svg)
+  def render_png(svg)
     Dir.mktmpdir("topic_og") do |dir|
       svg_path = File.join(dir, "og.svg")
       png_path = File.join(dir, "og.png")
@@ -296,21 +322,22 @@ class TopicOgImageGenerator
       )
 
       return nil unless File.exist?(png_path)
-
-      upload = create_upload(png_path)
-      upload
+      File.binread(png_path)
     end
   end
 
-  def create_upload(png_path)
-    tmp = File.open(png_path)
-    UploadCreator.new(
-      tmp,
-      "topic-og-#{@topic.id}.png",
-      type: "topic_og_image",
-      skip_validations: true,
-    ).create_for(Discourse.system_user.id)
-  ensure
-    tmp&.close
+  def create_upload(png_bytes)
+    Tempfile.create(["topic-og-#{@topic.id}", ".png"], binmode: true) do |tmp|
+      tmp.write(png_bytes)
+      tmp.rewind
+      return(
+        UploadCreator.new(
+          tmp,
+          "topic-og-#{@topic.id}.png",
+          type: "topic_og_image",
+          skip_validations: true,
+        ).create_for(Discourse.system_user.id)
+      )
+    end
   end
 end

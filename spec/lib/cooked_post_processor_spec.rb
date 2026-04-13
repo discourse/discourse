@@ -860,6 +860,41 @@ RSpec.describe CookedPostProcessor do
         end
       end
 
+      context "with topic og image generation" do
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "no image in this post") }
+
+        it "enqueues the generator job when the first post has no image and setting is on" do
+          SiteSetting.generate_topic_og_image = true
+          expect { CookedPostProcessor.new(post).post_process }.to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }.by(1)
+        end
+
+        it "does not enqueue when the setting is off" do
+          SiteSetting.generate_topic_og_image = false
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue when the topic already has a generated OG image" do
+          SiteSetting.generate_topic_og_image = true
+          post.topic.update_column(:og_image_upload_id, Fabricate(:upload).id)
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for non-first posts" do
+          SiteSetting.generate_topic_og_image = true
+          reply =
+            Fabricate(:post, user: user_with_auto_groups, topic: post.topic, raw: "no image reply")
+          expect { CookedPostProcessor.new(reply).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+      end
+
       it "prioritizes data-thumbnail images" do
         upload1 = Fabricate(:image_upload, width: 1750, height: 2000)
         upload2 = Fabricate(:image_upload, width: 1750, height: 2000)
