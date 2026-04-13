@@ -2,6 +2,8 @@
 
 .voting .voting-wrapper {
   --d-button-border-radius: var(--d-border-radius-small);
+  --primary-100: var(--d-selected);
+  --primary-low: var(--d-selected);
 
   &__button {
     background: var(--secondary);
@@ -9,6 +11,7 @@
 
   .discourse-no-touch & {
     button {
+      &:focus-visible,
       &:hover {
         box-shadow: none;
       }
@@ -28,11 +31,5 @@
   @include viewport.from(lg) {
     --secondary: var(--background-color);
     --content-border-color: var(--d-sidebar-border-color);
-
-    .discourse-no-touch & {
-      button:hover {
-        --primary-100: var(--d-selected);
-      }
-    }
   }
 }

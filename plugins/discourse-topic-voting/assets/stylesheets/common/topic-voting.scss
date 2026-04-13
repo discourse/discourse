@@ -35,6 +35,7 @@
   background: var(--secondary);
   border: 1px solid var(--content-border-color);
 
+  &:focus-visible,
   .discourse-no-touch &:hover {
     background: var(--primary-low);
 
@@ -48,6 +49,7 @@
       color: var(--success);
     }
 
+    &:focus-visible,
     .discourse-no-touch &:hover {
       background: var(--primary-low);
 
