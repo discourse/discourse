@@ -5,10 +5,10 @@ class TopicOgImageGenerator
   OG_HEIGHT = 630
   MAX_TITLE_LENGTH = 100
   MAX_TITLE_LINES = 2
-  TITLE_LINE_CHARS = 30
+  TITLE_LINE_CHARS = 34
   LOGO_HEIGHT = 100
   LOGO_WIDTH = 300
-  AVATAR_SIZE = 48
+  AVATAR_SIZE = 72
 
   def initialize(topic)
     @topic = topic
@@ -65,7 +65,7 @@ class TopicOgImageGenerator
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap');
           </style>
           <clipPath id="avatar-clip">
-            <rect x="80" y="#{author_y}" width="#{AVATAR_SIZE}" height="#{AVATAR_SIZE}" rx="8"/>
+            <rect x="80" y="#{author_y}" width="#{AVATAR_SIZE}" height="#{AVATAR_SIZE}" rx="20"/>
           </clipPath>
         </defs>
 
@@ -73,7 +73,7 @@ class TopicOgImageGenerator
         <rect width="#{OG_WIDTH}" height="#{OG_HEIGHT}" fill="##{colors[:secondary]}"/>
 
         <!-- Top accent bar -->
-        <rect width="#{OG_WIDTH}" height="12" fill="##{colors[:tertiary]}"/>
+        <rect width="#{OG_WIDTH}" height="18" fill="##{colors[:tertiary]}"/>
 
         <!-- Category pill -->
         #{category_pill_svg(category_name, category_color, 80, 60)}
@@ -96,11 +96,11 @@ class TopicOgImageGenerator
   def category_pill_svg(name, color, x, y)
     return "" if name.blank?
 
-    pill_padding = 12
-    pill_width = name.length * 12 + pill_padding
+    pill_padding = 16
+    pill_width = name.length * 14.5 + pill_padding
     <<~SVG
-      <rect x="#{x}" y="#{y}" width="#{pill_width}" height="38" rx="6" fill="##{color}" fill-opacity="0.15"/>
-      <text x="#{x + pill_padding}" y="#{y + 26}" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="600" fill="##{color}">#{escape_xml(name)}</text>
+      <rect x="#{x}" y="#{y}" width="#{pill_width}" height="40" rx="6" fill="##{color}" fill-opacity="0.15"/>
+      <text x="#{x + pill_padding}" y="#{y + 30}" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="600" fill="##{color}">#{escape_xml(name)}</text>
     SVG
   end
 
@@ -108,8 +108,8 @@ class TopicOgImageGenerator
     lines
       .each_with_index
       .map do |line, i|
-        y = start_y + (i * 58)
-        %(<text x="#{x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="52" font-weight="700" fill="##{primary_color}">#{escape_xml(line)}</text>)
+        y = start_y + (i * 68)
+        %(<text x="#{x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="62" font-weight="700" fill="##{primary_color}">#{escape_xml(line)}</text>)
       end
       .join("\n    ")
   end
@@ -121,16 +121,16 @@ class TopicOgImageGenerator
 
     parts << <<~SVG.strip if avatar_data_uri.present?
         <image x="#{x}" y="#{y}" width="#{AVATAR_SIZE}" height="#{AVATAR_SIZE}" href="#{avatar_data_uri}" clip-path="url(#avatar-clip)"/>
-        <rect x="#{x}" y="#{y}" width="#{AVATAR_SIZE}" height="#{AVATAR_SIZE}" rx="8" fill="none" stroke="##{colors[:primary]}" stroke-opacity="0.1" stroke-width="1"/>
+        <rect x="#{x}" y="#{y}" width="#{AVATAR_SIZE}" height="#{AVATAR_SIZE}" rx="20" fill="none" stroke="##{colors[:secondary]}" stroke-opacity="0.1" stroke-width="1"/>
       SVG
 
-    text_x = avatar_data_uri.present? ? x + AVATAR_SIZE + 14 : x
-    text_y = y + (AVATAR_SIZE / 2) + 6
+    text_x = avatar_data_uri.present? ? x + AVATAR_SIZE + 32 : x
+    text_y = y + (AVATAR_SIZE / 2) + 8
 
     author_text = username
     author_text = "#{author_text}  ·  #{created_at}" if created_at.present?
 
-    parts << %(<text x="#{text_x}" y="#{text_y}" font-family="Inter, system-ui, sans-serif" font-size="29" font-weight="400" fill="##{colors[:primary]}" opacity="0.6">#{escape_xml(author_text)}</text>)
+    parts << %(<text x="#{text_x}" y="#{text_y}" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="400" fill="##{colors[:primary]}" opacity="0.6">#{escape_xml(author_text)}</text>)
 
     parts.join("\n    ")
   end
@@ -158,24 +158,57 @@ class TopicOgImageGenerator
   end
 
   def stats_svg(likes, replies, colors, right_x, y)
-    parts = []
-
+    groups = []
     if replies > 0
-      reply_text = "#{replies} #{replies == 1 ? "reply" : "replies"}"
-      parts << reply_text
+      groups << { icon: :reply, text: "#{replies} #{replies == 1 ? "reply" : "replies"}" }
+    end
+    groups << { icon: :heart, text: "#{likes} #{likes == 1 ? "like" : "likes"}" } if likes > 0
+    return "" if groups.empty?
+
+    font_size = 30
+    icon_size = 28
+    icon_gap = 2
+    group_gap = 42
+    char_width = 15.0
+    icon_y = y - 8 - (icon_size / 2)
+
+    svg_parts = []
+    cursor = right_x
+    groups.reverse.each do |group|
+      text_width = (group[:text].length * char_width).round
+      text_x = cursor
+      icon_x = text_x - text_width - icon_gap - icon_size
+
+      svg_parts.unshift(<<~SVG.strip)
+        #{icon_svg(group[:icon], icon_x, icon_y, icon_size, colors[:primary])}
+        <text x="#{text_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="#{font_size}" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(group[:text])}</text>
+      SVG
+
+      cursor = icon_x - group_gap
     end
 
-    if likes > 0
-      like_text = "#{likes} #{likes == 1 ? "like" : "likes"}"
-      parts << like_text
-    end
+    svg_parts.join("\n    ")
+  end
 
-    return "" if parts.empty?
+  ICON_PATHS = {
+    heart: {
+      vb_size: 512,
+      d:
+        "M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z",
+    },
+    reply: {
+      vb_size: 512,
+      d:
+        "M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z",
+    },
+  }
 
-    stat_text = parts.join("  ·  ")
-    <<~SVG
-      <text x="#{right_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(stat_text)}</text>
-    SVG
+  def icon_svg(name, x, y, size, color)
+    icon = ICON_PATHS[name]
+    return "" unless icon
+
+    scale = size.to_f / icon[:vb_size]
+    %(<g transform="translate(#{x} #{y}) scale(#{scale})" fill="##{color}" fill-opacity="0.25"><path d="#{icon[:d]}"/></g>)
   end
 
   def truncated_title

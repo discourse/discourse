@@ -10,7 +10,6 @@ export default class OgImagePreview extends Component {
   @tracked imageUrl = null;
   @tracked loading = false;
   @tracked error = false;
-  @tracked topicTitle = null;
 
   get formData() {
     return { topic_id: "" };
@@ -24,14 +23,12 @@ export default class OgImagePreview extends Component {
     this.loading = true;
     this.error = false;
     this.imageUrl = null;
-    this.topicTitle = null;
     try {
       const response = await ajax("/admin/config/logo/og-image-preview", {
         type: "GET",
         data: { topic_id: data.topic_id },
       });
       this.imageUrl = getURL(response.url);
-      this.topicTitle = response.topic_title;
     } catch {
       this.error = true;
     } finally {
@@ -97,9 +94,6 @@ export default class OgImagePreview extends Component {
             }}</div>
         {{/if}}
       </div>
-      {{#if this.topicTitle}}
-        <span class="og-image-preview__topic-title">{{this.topicTitle}}</span>
-      {{/if}}
     </div>
   </template>
 }
