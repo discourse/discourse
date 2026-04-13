@@ -6,7 +6,7 @@ plugins:
     default: true
     client: true
   topic_voting_show_who_voted:
-    default: false
+    default: true
     client: true
   topic_voting_show_votes_on_profile:
     default: true
