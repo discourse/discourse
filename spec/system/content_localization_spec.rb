@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe "Content Localization" do
-  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
+  let(:toggle_localize_button_selector) { "button.btn-toggle-localized-content" }
+  let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
   fab!(:site_local_user) { Fabricate(:user, locale: "en") }
@@ -84,15 +85,15 @@ describe "Content Localization" do
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
 
       I18n.with_locale(:ja) do
-        expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        expect(page.find(toggle_localize_button_selector)["title"]).to eq(
           I18n.t("js.content_localization.toggle_localized.translated"),
         )
       end
-      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+      page.find(toggle_localize_button_selector).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
       I18n.with_locale(:ja) do
-        expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        expect(page.find(toggle_localize_button_selector)["title"]).to eq(
           I18n.t("js.content_localization.toggle_localized.not_translated"),
         )
       end
@@ -106,7 +107,7 @@ describe "Content Localization" do
       visit("/t/#{topic.id}")
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
 
-      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+      page.find(toggle_localize_button_selector).click
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
 
       # preference persists after full page reload
@@ -294,11 +295,11 @@ describe "Content Localization" do
           expect(topic_page).to have_topic_title(original_translated_title)
 
           # View original - displayed title should update to new original title
-          page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+          page.find(toggle_localize_button_selector).click
           expect(topic_page).to have_topic_title("New Original Title")
 
           # switch back to Japanese to test translation editing
-          page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+          page.find(toggle_localize_button_selector).click
 
           # Viewing translation - Edit translation
           topic_page.click_topic_edit_title
@@ -403,7 +404,7 @@ describe "Content Localization" do
         expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
 
         # toggle should show correct state of post content
-        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        page.find(toggle_localize_button_selector).click
         scroll_to_post(21)
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
 
@@ -437,10 +438,10 @@ describe "Content Localization" do
         topic_page.visit_topic(shady_topic)
         expect(page).to have_title(shady_topic_ja_localization.fancy_title)
 
-        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        page.find(toggle_localize_button_selector).click
         expect(page).to have_title(shady_topic.title)
 
-        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        page.find(toggle_localize_button_selector).click
         expect(page).to have_title(shady_topic_ja_localization.fancy_title)
 
         SiteSetting.content_localization_enabled = false
@@ -527,11 +528,9 @@ describe "Content Localization" do
     end
 
     context "for tags" do
-      SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
-
       let(:discovery) { PageObjects::Pages::Discovery.new }
       let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
-      let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+      let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
 
       fab!(:tag) { Fabricate(:tag, name: "strategy", locale: "en") }
       fab!(:tag_localization) { Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略") }
