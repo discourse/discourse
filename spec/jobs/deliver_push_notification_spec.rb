@@ -88,4 +88,103 @@ RSpec.describe Jobs::DeliverPushNotification do
       Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: payload)
     end
   end
+
+  describe "content localization" do
+    fab!(:topic) { Fabricate(:topic, title: "Original topic title") }
+    fab!(:localized_post) { Fabricate(:post, topic: topic, raw: "Original post content") }
+
+    let(:localizable_payload) do
+      {
+        "notification_type" => 1,
+        "post_url" => "/t/#{topic.id}/#{localized_post.post_number}",
+        "topic_title" => topic.title,
+        "topic_id" => topic.id,
+        "post_id" => localized_post.id,
+        "excerpt" => "Original post content",
+        "username" => "system",
+        "post_number" => localized_post.post_number,
+      }
+    end
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.allow_user_locale = true
+      user.update!(last_seen_at: 10.minutes.ago, locale: "ja")
+    end
+
+    it "localizes payload before delivering to web push" do
+      Fabricate(:push_subscription, user: user)
+      Fabricate(
+        :topic_localization,
+        topic: topic,
+        locale: "ja",
+        title: "ローカライズされたトピック",
+        fancy_title: "ローカライズされたトピック",
+      )
+      Fabricate(
+        :post_localization,
+        post: localized_post,
+        locale: "ja",
+        raw: "ローカライズされた投稿",
+        cooked: "<p>ローカライズされた投稿</p>",
+      )
+
+      PushNotificationPusher
+        .expects(:push)
+        .with { |u, p| p[:topic_title] == "ローカライズされたトピック" && p[:excerpt] == "ローカライズされた投稿" }
+        .once
+
+      Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
+    end
+
+    it "localizes payload before delivering to hub push" do
+      SiteSetting.allowed_user_api_push_urls = "https://hub.example.com/push"
+      client = Fabricate(:user_api_key_client)
+      Fabricate(
+        :user_api_key,
+        user: user,
+        scopes: ["notifications"].map { |name| UserApiKeyScope.new(name: name) },
+        push_url: "https://hub.example.com/push",
+        user_api_key_client_id: client.id,
+      )
+      Fabricate(
+        :topic_localization,
+        topic: topic,
+        locale: "ja",
+        title: "ローカライズされたトピック",
+        fancy_title: "ローカライズされたトピック",
+      )
+
+      body = nil
+      stub_request(:post, "https://hub.example.com/push").to_return do |request|
+        body = JSON.parse(request.body)
+        { status: 200 }
+      end
+
+      Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
+
+      expect(body["notifications"].first["topic_title"]).to eq("ローカライズされたトピック")
+    end
+
+    it "does not localize when content_localization_enabled is false" do
+      SiteSetting.content_localization_enabled = false
+      Fabricate(:push_subscription, user: user)
+      Fabricate(
+        :topic_localization,
+        topic: topic,
+        locale: "ja",
+        title: "ローカライズされたトピック",
+        fancy_title: "ローカライズされたトピック",
+      )
+
+      PushNotificationPusher
+        .expects(:push)
+        .with do |u, p|
+          p[:topic_title] == "Original topic title" || p["topic_title"] == "Original topic title"
+        end
+        .once
+
+      Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
+    end
+  end
 end
