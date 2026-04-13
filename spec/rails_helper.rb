@@ -338,6 +338,12 @@ RSpec.configure do |config|
 
     Sidekiq.default_configuration.error_handlers.clear
 
+    # No-op handler to suppress Sidekiq's `p ["!!!!!", ex]` fallback.
+    Sidekiq.default_configuration.error_handlers << ->(_ex, _ctx, _config) {}
+
+    # Quiet seed-fu output produced by specs that call `Model.seed`.
+    SeedFu.quiet = true
+
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 

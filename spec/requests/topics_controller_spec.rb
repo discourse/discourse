@@ -1208,7 +1208,7 @@ RSpec.describe TopicsController do
         end
 
         it "returns 403 when group is not allow listed" do
-          SiteSetting.change_post_ownership_allowed_groups = nil
+          SiteSetting.change_post_ownership_allowed_groups = ""
 
           post "/t/#{topic_allowed_user_can_see.id}/change-owner.json",
                params: {
