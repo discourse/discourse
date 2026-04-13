@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
@@ -23,6 +22,8 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   errorId = uniqueId();
+
+  #controlCache = new Map();
 
   // Set by legacy controls in their constructor (during render),
   // read by the applyControlType modifier (post-render)
@@ -102,15 +103,28 @@ export default class FKFieldData extends Component {
     this._legacyControlType = value;
   }
 
-  /**
-   * Contextual component for the control set by `@type`.
-   * @type {Component}
-   */
-  @cached
-  get Control() {
-    const { component, args } = resolveFieldControl(this.type);
+  // Rerenders can revisit <field.Control> even when the resolved type is unchanged.
+  // Cache the curried component by type so the control DOM is preserved, while
+  // still allowing real type changes to swap to a different control component.
+  controlFor(type) {
+    let curried = this.#controlCache.get(type);
 
-    return curryComponent(component, { field: this, ...args }, getOwner(this));
+    if (!curried) {
+      const { component, args } = resolveFieldControl(type);
+
+      curried = curryComponent(
+        component,
+        { field: this, ...args },
+        getOwner(this)
+      );
+      this.#controlCache.set(type, curried);
+    }
+
+    return curried;
+  }
+
+  get Control() {
+    return this.controlFor(this.type);
   }
 
   /**
