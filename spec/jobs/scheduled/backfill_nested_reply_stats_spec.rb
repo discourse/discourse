@@ -144,6 +144,41 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(NestedViewPostStat.find_by(post_id: non_nested_op.id)).to be_nil
   end
 
+  it "inserts a zero-count sentinel row for the OP of a topic with no replies" do
+    NestedViewPostStat.delete_all
+
+    execute
+
+    stat = NestedViewPostStat.find_by(post_id: op.id)
+    expect(stat).to be_present
+    expect(stat.direct_reply_count).to eq(0)
+    expect(stat.total_descendant_count).to eq(0)
+    expect(stat.whisper_direct_reply_count).to eq(0)
+    expect(stat.whisper_total_descendant_count).to eq(0)
+  end
+
+  it "does not re-pick reply-less topics on subsequent runs" do
+    NestedViewPostStat.delete_all
+
+    execute
+    initial_updated_at = NestedViewPostStat.find_by(post_id: op.id).updated_at
+
+    freeze_time 1.hour.from_now
+    execute
+    expect(NestedViewPostStat.find_by(post_id: op.id).updated_at).to eq_time(initial_updated_at)
+  end
+
+  it "lets a later reply increment the sentinel row via ON CONFLICT" do
+    NestedViewPostStat.delete_all
+    execute
+
+    Fabricate(:post, topic: topic, reply_to_post_number: 1)
+
+    stat = NestedViewPostStat.find_by(post_id: op.id)
+    expect(stat.direct_reply_count).to eq(1)
+    expect(stat.total_descendant_count).to eq(1)
+  end
+
   it "only picks up topics with missing stats" do
     Fabricate(:post, topic: topic, reply_to_post_number: 1)
 

@@ -27,10 +27,30 @@ module Jobs
 
       return if topic_ids.empty?
 
-      topic_ids.each { |topic_id| backfill_topic(topic_id) }
+      topic_ids.each do |topic_id|
+        backfill_topic(topic_id)
+        ensure_op_stat_row(topic_id)
+      end
     end
 
     private
+
+    # Guarantees the OP has a stats row so the selector (which keys on
+    # s.post_id IS NULL for post_number = 1) will not re-pick this topic
+    # on the next run when it has no qualifying replies. When a reply later
+    # arrives, nested_replies_increment_stats upserts into the same row.
+    def ensure_op_stat_row(topic_id)
+      DB.exec(<<~SQL, topic_id: topic_id)
+        INSERT INTO nested_view_post_stats
+          (post_id, direct_reply_count, whisper_direct_reply_count,
+           total_descendant_count, whisper_total_descendant_count,
+           created_at, updated_at)
+        SELECT p.id, 0, 0, 0, 0, NOW(), NOW()
+        FROM posts p
+        WHERE p.topic_id = :topic_id AND p.post_number = 1
+        ON CONFLICT (post_id) DO NOTHING
+      SQL
+    end
 
     def backfill_topic(topic_id)
       DB.exec(<<~SQL, topic_id: topic_id, whisper_type: Post.types[:whisper])
