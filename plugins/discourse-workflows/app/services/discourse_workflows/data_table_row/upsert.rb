@@ -1,0 +1,48 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  class DataTableRow::Upsert
+    include Service::Base
+
+    params do
+      attribute :data_table_id, :integer
+      attribute :filter
+      attribute :data, default: {}
+
+      validates :data_table_id, presence: true
+    end
+
+    model :data_table
+    model :facade, :build_facade
+    policy :within_storage_limit
+    model :query, :build_query
+    model :row_input, :build_row_input
+    model :upsert_result, :perform_upsert
+
+    private
+
+    def fetch_data_table(params:)
+      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
+    end
+
+    def build_facade(data_table:)
+      DataTables::Facade.new(data_table)
+    end
+
+    def within_storage_limit
+      DataTables::Facade.within_storage_limit?
+    end
+
+    def build_query(facade:, params:)
+      facade.build_query(filter: params.filter)
+    end
+
+    def build_row_input(facade:, params:)
+      facade.build_row_input(data: params.data)
+    end
+
+    def perform_upsert(facade:, query:, row_input:)
+      facade.upsert(query:, row_input:)
+    end
+  end
+end

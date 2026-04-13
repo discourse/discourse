@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -32,6 +33,14 @@ export default class DSegmentedControl extends Component {
     return () => cancelAnimationFrame(frameId);
   });
 
+  get classNames() {
+    const classes = ["d-segmented-control"];
+    if (this.args.size === "small") {
+      classes.push("d-segmented-control--small");
+    }
+    return classes.join(" ");
+  }
+
   get legend() {
     if (this.args.label) {
       return i18n(this.args.label);
@@ -46,7 +55,7 @@ export default class DSegmentedControl extends Component {
 
   <template>
     <fieldset
-      class="d-segmented-control"
+      class={{this.classNames}}
       {{this.positionSlider @value}}
       ...attributes
     >
@@ -75,7 +84,10 @@ export default class DSegmentedControl extends Component {
             class="d-segmented-control__input"
             {{on "change" (fn this.handleChange item.value)}}
           />
-          <span class="d-segmented-control__text">{{item.label}}</span>
+          <span class="d-segmented-control__text">
+            {{~#if item.icon}}{{icon item.icon}}{{/if~}}
+            {{~#if item.label}} {{item.label}}{{/if~}}
+          </span>
         </label>
       {{/each}}
     </fieldset>

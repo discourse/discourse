@@ -1,0 +1,38 @@
+# frozen_string_literal: true
+
+module DiscourseWorkflows
+  module Nodes
+    module Error
+      class V1 < NodeType
+        def self.identifier
+          "trigger:error"
+        end
+
+        def self.icon
+          "triangle-exclamation"
+        end
+
+        def self.color
+          "red"
+        end
+
+        def self.output_schema
+          { error_message: :string, failed_node_name: :string }
+        end
+
+        def initialize(error_data = {}, *)
+          super(configuration: {})
+          @error_data = error_data.is_a?(Hash) ? error_data : {}
+        end
+
+        def valid?
+          true
+        end
+
+        def output
+          @error_data
+        end
+      end
+    end
+  end
+end

@@ -45,7 +45,6 @@ module ::Chat
 end
 
 require_relative "lib/chat/engine"
-
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
 
@@ -97,6 +96,14 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
   register_reviewable_type Chat::ReviewableMessage
+
+  if defined?(DiscourseWorkflows)
+    require_relative "lib/discourse_workflows/actions/send_chat_message"
+    DiscoursePluginRegistry.register_discourse_workflows_node(
+      DiscourseWorkflows::Nodes::SendChatMessage,
+      self,
+    )
+  end
 
   reloadable_patch do |plugin|
     Site.preloaded_category_custom_fields << Chat::HAS_CHAT_ENABLED

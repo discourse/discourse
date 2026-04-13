@@ -1,0 +1,377 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
+  describe "#execute" do
+    let(:item) { { "json" => {} } }
+
+    it "makes a GET request and returns parsed JSON response" do
+      stub_request(:get, "https://api.example.com/data").to_return(
+        status: 200,
+        body: { result: "ok" }.to_json,
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = { "method" => "GET", "url" => "https://api.example.com/data" }
+      result = execute_node(configuration: config, item: item)
+
+      expect(result["status"]).to eq(200)
+      expect(result["body"]).to eq("result" => "ok")
+    end
+
+    it "appends query parameters to the URL" do
+      stub_request(:get, "https://api.example.com/data?page=1&per=10").to_return(
+        status: 200,
+        body: "[]",
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = {
+        "method" => "GET",
+        "url" => "https://api.example.com/data",
+        "query_params" => [
+          { "key" => "page", "value" => "1" },
+          { "key" => "per", "value" => "10" },
+        ],
+      }
+
+      result = execute_node(configuration: config, item: item)
+
+      expect(result["status"]).to eq(200)
+    end
+
+    it "merges query parameters with existing ones in URL" do
+      stub_request(:get, "https://api.example.com/data?existing=true&extra=yes").to_return(
+        status: 200,
+        body: "{}",
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = {
+        "method" => "GET",
+        "url" => "https://api.example.com/data?existing=true",
+        "query_params" => [{ "key" => "extra", "value" => "yes" }],
+      }
+
+      result = execute_node(configuration: config, item: item)
+
+      expect(result["status"]).to eq(200)
+    end
+
+    it "sends custom headers" do
+      stub_request(:get, "https://api.example.com/data").with(
+        headers: {
+          "X-Api-Key" => "secret123",
+        },
+      ).to_return(status: 200, body: "{}", headers: { "content-type" => "application/json" })
+
+      config = {
+        "method" => "GET",
+        "url" => "https://api.example.com/data",
+        "headers" => [{ "key" => "X-Api-Key", "value" => "secret123" }],
+      }
+
+      result = execute_node(configuration: config, item: item)
+
+      expect(result["status"]).to eq(200)
+    end
+
+    it "sends a JSON body with POST requests" do
+      stub_request(:post, "https://api.example.com/data").with(body: '{"name":"test"}').to_return(
+        status: 201,
+        body: { id: 1 }.to_json,
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = {
+        "method" => "POST",
+        "url" => "https://api.example.com/data",
+        "body_json" => '{"name":"test"}',
+      }
+
+      result = execute_node(configuration: config, item: item)
+
+      expect(result["status"]).to eq(201)
+      expect(result["body"]).to eq("id" => 1)
+    end
+
+    it "raises an error for non-2xx status codes by default" do
+      stub_request(:get, "https://api.example.com/fail").to_return(status: 404, body: "Not Found")
+
+      config = { "method" => "GET", "url" => "https://api.example.com/fail" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        RuntimeError,
+        /HTTP request failed with status 404/,
+      )
+    end
+
+    it "raises an error for server errors" do
+      stub_request(:post, "https://api.example.com/error").to_return(
+        status: 500,
+        body: "Internal Server Error",
+      )
+
+      config = { "method" => "POST", "url" => "https://api.example.com/error", "body_json" => "{}" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        RuntimeError,
+        /HTTP request failed with status 500/,
+      )
+    end
+
+    it "returns non-JSON responses wrapped in a data key" do
+      stub_request(:get, "https://example.com/page").to_return(
+        status: 200,
+        body: "<html>hello</html>",
+        headers: {
+          "content-type" => "text/html",
+        },
+      )
+
+      config = { "method" => "GET", "url" => "https://example.com/page" }
+      result = execute_node(configuration: config, item: item)
+
+      expect(result["body"]).to eq("data" => "<html>hello</html>")
+    end
+
+    it "records request details in logs" do
+      stub_request(:post, "https://api.example.com/data").to_return(
+        status: 200,
+        body: { ok: true }.to_json,
+        headers: {
+          "content-type" => "application/json",
+        },
+      )
+
+      config = {
+        "method" => "POST",
+        "url" => "https://api.example.com/data",
+        "headers" => [{ "key" => "Authorization", "value" => "Bearer tok" }],
+        "body_json" => '{"name":"test"}',
+      }
+
+      action = described_class.new(configuration: config)
+      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
+      exec_ctx =
+        DiscourseWorkflows::Executor::NodeExecutionContext.new(
+          input_items: [item],
+          resolver: resolver,
+          configuration: config,
+          property_schema: described_class.property_schema,
+        )
+      action.execute(exec_ctx)
+
+      messages = exec_ctx.log.entries.map { |e| e["message"] }
+      expect(messages).to eq(
+        [
+          "POST https://api.example.com/data",
+          "Authorization: [FILTERED]",
+          "Content-Type: application/json",
+          "[body omitted]",
+        ],
+      )
+      expect(exec_ctx.log.entries).to all(include("level" => "info"))
+    end
+
+    it "raises when URL is blank" do
+      config = { "method" => "GET", "url" => "" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        RuntimeError,
+        "URL is required",
+      )
+    end
+
+    it "raises when URL has no host" do
+      config = { "method" => "GET", "url" => "http:///path" }
+
+      expect { execute_node(configuration: config, item: item) }.to raise_error(
+        RuntimeError,
+        "URL must include a host",
+      )
+    end
+
+    context "with never_error enabled" do
+      it "returns non-2xx responses without raising" do
+        stub_request(:get, "https://api.example.com/missing").to_return(
+          status: 404,
+          body: { error: "not found" }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/missing",
+          "never_error" => true,
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["status"]).to eq(404)
+        expect(result["body"]).to eq("error" => "not found")
+      end
+    end
+
+    context "with form_urlencoded content type" do
+      it "sends URL-encoded form data" do
+        stub_request(:post, "https://api.example.com/form").with(
+          body: "name=test&value=123",
+          headers: {
+            "Content-Type" => "application/x-www-form-urlencoded",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "POST",
+          "url" => "https://api.example.com/form",
+          "content_type" => "form_urlencoded",
+          "body_form" => [
+            { "key" => "name", "value" => "test" },
+            { "key" => "value", "value" => "123" },
+          ],
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["status"]).to eq(200)
+      end
+    end
+
+    context "with raw content type" do
+      it "sends raw body with custom content type" do
+        stub_request(:post, "https://api.example.com/raw").with(
+          body: "<xml>data</xml>",
+          headers: {
+            "Content-Type" => "application/xml",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "POST",
+          "url" => "https://api.example.com/raw",
+          "content_type" => "raw",
+          "raw_content_type" => "application/xml",
+          "body_raw" => "<xml>data</xml>",
+        }
+
+        result = execute_node(configuration: config, item: item)
+
+        expect(result["status"]).to eq(200)
+      end
+    end
+
+    context "with basic_auth authentication" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "basic_auth",
+          data:
+            DiscourseWorkflows::CredentialEncryptor.encrypt(
+              { "user" => "api_user", "password" => "api_pass" },
+            ),
+        )
+      end
+
+      it "injects Authorization header" do
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "Authorization" => "Basic #{Base64.strict_encode64("api_user:api_pass")}",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "basic_auth",
+          "credential_id" => credential.id,
+        }
+
+        result = execute_node(configuration: config, item: item)
+        expect(result["status"]).to eq(200)
+      end
+    end
+
+    context "with bearer_token authentication" do
+      fab!(:credential) do
+        Fabricate(
+          :discourse_workflows_credential,
+          credential_type: "bearer_token",
+          data: DiscourseWorkflows::CredentialEncryptor.encrypt({ "token" => "my-secret-token" }),
+        )
+      end
+
+      it "injects Bearer Authorization header" do
+        stub_request(:get, "https://api.example.com/data").with(
+          headers: {
+            "Authorization" => "Bearer my-secret-token",
+          },
+        ).to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "bearer_token",
+          "credential_id" => credential.id,
+        }
+
+        result = execute_node(configuration: config, item: item)
+        expect(result["status"]).to eq(200)
+      end
+    end
+
+    context "with authentication set to none" do
+      it "does not add Authorization header" do
+        stub_request(:get, "https://api.example.com/data").to_return(
+          status: 200,
+          body: { ok: true }.to_json,
+          headers: {
+            "content-type" => "application/json",
+          },
+        )
+
+        config = {
+          "method" => "GET",
+          "url" => "https://api.example.com/data",
+          "authentication" => "none",
+        }
+
+        result = execute_node(configuration: config, item: item)
+        expect(result["status"]).to eq(200)
+      end
+    end
+  end
+end

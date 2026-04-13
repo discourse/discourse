@@ -215,7 +215,9 @@ class QunitRunner
   end
 
   def run_ember_exam(filter: nil, file_path_filter: nil)
+    p 1
     check_dev_environment!
+    p 2
 
     puts "\nRunning tests against Rails on localhost:#{@rails_port}"
     puts "  Using existing build in frontend/discourse/dist" unless @standalone_mode

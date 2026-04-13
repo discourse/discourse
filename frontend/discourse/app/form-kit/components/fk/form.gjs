@@ -187,6 +187,16 @@ class FKForm extends Component {
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       await this.triggerRevalidationFor(name);
     }
+
+    if (this.args.onSet) {
+      await this.args.onSet(name, value, this.formData.draftData);
+      this.formData.save();
+    }
+  }
+
+  @action
+  commitField(name) {
+    this.formData.commitField(name);
   }
 
   @action
@@ -219,9 +229,7 @@ class FKForm extends Component {
     }
 
     if (this.fields.has(name)) {
-      throw new Error(
-        `@name="${name}", is already in use. Names of \`<form.Field />\` must be unique!`
-      );
+      this.fields.delete(name);
     }
 
     this.fields.set(name, field);
@@ -280,7 +288,10 @@ class FKForm extends Component {
       return;
     }
 
-    if (this.formData.errors[name]) {
+    if (
+      this.fieldValidationEvent === VALIDATION_TYPES.change ||
+      this.formData.errors[name]
+    ) {
       await this.validate([field]);
     }
   }
@@ -374,6 +385,7 @@ const Form = <template>
       @validateOn={{@validateOn}}
       @onRegisterApi={{@onRegisterApi}}
       @onReset={{@onReset}}
+      @onSet={{@onSet}}
       @onDirtyCheck={{@onDirtyCheck}}
       ...attributes
       as |components draftData|

@@ -134,6 +134,19 @@ en:
           descriptions:
             data_explorer:
               run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
+    discourse_workflows:
+      nodes:
+        "action:sql": "SQL Query"
+      node_descriptions:
+        "action:sql": "Run a read-only SQL query against the database"
+      sql:
+        query: "SQL query"
+        query_description: "Write a read-only SQL query. Declare parameters with Data Explorer syntax and map their values below."
+        params: "Query parameters"
+        params_description: "Parameters can be used as :my_param in the SQL query."
+        add_param: "Add parameter"
+        param_name: "Param"
+        param_value: "Value"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

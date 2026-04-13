@@ -1,0 +1,123 @@
+import { click, render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import Form from "discourse/components/form";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import BooleanControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/boolean-control";
+
+module("Integration | Component | workflows boolean control", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("renders toggle in plain mode", async function (assert) {
+    this.setProperties({
+      configuration: { enabled: false },
+      formApi: null,
+      schema: { type: "boolean", ui: { expression: true } },
+      registerApi: (api) => this.set("formApi", api),
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <BooleanControl
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @fieldName="enabled"
+            @label="Enabled"
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-toggle").exists();
+    assert.dom(".workflows-property-engine__mode-control").exists();
+  });
+
+  test("switches to expression mode", async function (assert) {
+    this.setProperties({
+      configuration: { enabled: false },
+      formApi: null,
+      schema: { type: "boolean", ui: { expression: true } },
+      registerApi: (api) => this.set("formApi", api),
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <BooleanControl
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @fieldName="enabled"
+            @label="Enabled"
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(
+      '.workflows-property-engine__mode-control input[value="dynamic"]'
+    );
+
+    assert.dom(".form-kit__control-toggle").doesNotExist();
+    assert.dom(".workflows-variable-input").exists();
+  });
+
+  test("renders in expression mode when value starts with =", async function (assert) {
+    this.setProperties({
+      configuration: { enabled: "=true" },
+      schema: { type: "boolean", ui: { expression: true } },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <BooleanControl
+            @form={{form}}
+            @configuration={{transientData}}
+            @fieldName="enabled"
+            @label="Enabled"
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-toggle").doesNotExist();
+    assert.dom(".workflows-variable-input").exists();
+  });
+
+  test("renders plain toggle without mode control when expressions disabled", async function (assert) {
+    this.setProperties({
+      configuration: { enabled: false },
+      schema: { type: "boolean", ui: { expression: false } },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <BooleanControl
+            @form={{form}}
+            @configuration={{transientData}}
+            @fieldName="enabled"
+            @label="Enabled"
+            @schema={{this.schema}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".form-kit__control-toggle").exists();
+    assert.dom(".workflows-property-engine__mode-control").doesNotExist();
+  });
+});

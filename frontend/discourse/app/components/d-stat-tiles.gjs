@@ -16,10 +16,12 @@ const DStatTile = <template>
     </div>
     {{#if @url}}
       <a href={{@url}} class="d-stat-tile__value" title={{@value}}>
-        {{number @value}}
+        {{if @formattedValue @formattedValue (number @value)}}
       </a>
     {{else}}
-      <span class="d-stat-tile__value" title={{@value}}>{{number @value}}</span>
+      <span class="d-stat-tile__value" title={{@value}}>
+        {{if @formattedValue @formattedValue (number @value)}}
+      </span>
     {{/if}}
   </div>
 </template>;
