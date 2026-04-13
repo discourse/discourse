@@ -12,6 +12,7 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AdminLogoForm extends Component {
@@ -74,7 +75,7 @@ export default class AdminLogoForm extends Component {
           manifest_screenshots: data.manifest_screenshots,
           apple_touch_icon: data.apple_touch_icon,
           digest_logo: data.digest_logo,
-          generate_topic_og_image: data.generate_topic_og_image,
+          generate_topic_og_image: data.og_image_source === "generated",
           opengraph_image: data.opengraph_image,
           x_summary_large_image: data.x_summary_large_image,
         },
@@ -119,7 +120,9 @@ export default class AdminLogoForm extends Component {
       manifest_screenshots: this.siteSettings.manifest_screenshots,
       apple_touch_icon: this.siteSettings.apple_touch_icon,
       digest_logo: this.siteSettings.digest_logo,
-      generate_topic_og_image: this.siteSettings.generate_topic_og_image,
+      og_image_source: this.siteSettings.generate_topic_og_image
+        ? "generated"
+        : "uploaded",
       opengraph_image: this.siteSettings.opengraph_image,
       x_summary_large_image: this.siteSettings.x_summary_large_image,
     };
@@ -372,32 +375,41 @@ export default class AdminLogoForm extends Component {
         >
           <:content>
             <form.Field
-              @name="opengraph_image"
-              @title={{i18n "admin.config.logo.form.opengraph_image.title"}}
+              @name="og_image_source"
+              @title={{i18n "admin.config.logo.form.og_image_source.title"}}
               @description={{i18n
-                "admin.config.logo.form.opengraph_image.description"
-              }}
-              @onSet={{fn this.handleUpload "opengraph_image"}}
-              @type="image"
-              as |field|
-            >
-              <field.Control
-                @type="branding"
-                @placeholderUrl={{this.placeholders.opengraph_image}}
-              />
-            </form.Field>
-            <form.Field
-              @name="generate_topic_og_image"
-              @title={{i18n
-                "admin.config.logo.form.generate_topic_og_image.title"
+                "admin.config.logo.form.og_image_source.description"
               }}
               @format="full"
-              @type="toggle"
+              @type="radio-group"
               as |field|
             >
-              <field.Control />
+              <field.Control as |radioGroup|>
+                <radioGroup.Radio @value="uploaded">
+                  {{i18n "admin.config.logo.form.og_image_source.uploaded"}}
+                </radioGroup.Radio>
+                <radioGroup.Radio @value="generated">
+                  {{i18n "admin.config.logo.form.og_image_source.generated"}}
+                </radioGroup.Radio>
+              </field.Control>
             </form.Field>
-            {{#if transientData.generate_topic_og_image}}
+            {{#if (eq transientData.og_image_source "uploaded")}}
+              <form.Field
+                @name="opengraph_image"
+                @title={{i18n "admin.config.logo.form.opengraph_image.title"}}
+                @description={{i18n
+                  "admin.config.logo.form.opengraph_image.description"
+                }}
+                @onSet={{fn this.handleUpload "opengraph_image"}}
+                @type="image"
+                as |field|
+              >
+                <field.Control
+                  @type="branding"
+                  @placeholderUrl={{this.placeholders.opengraph_image}}
+                />
+              </form.Field>
+            {{else if (eq transientData.og_image_source "generated")}}
               <OgImagePreview />
             {{/if}}
           </:content>
