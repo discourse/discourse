@@ -253,7 +253,7 @@ acceptance(
       discourse_reactions_enabled_reactions: "otter|open_mouth",
       discourse_reactions_reaction_for_like: "heart",
       discourse_reactions_like_icon: "heart",
-      prioritize_full_name_in_ux: true,
+      prioritize_username_in_ux: false,
     });
 
     needs.pretender((server, helper) => {

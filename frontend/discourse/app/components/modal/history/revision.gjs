@@ -26,10 +26,10 @@ export default class Revision extends Component {
           class="revision-details__user"
         >
           {{boundAvatarTemplate @model.avatar_template "small"}}
-          {{#if this.siteSettings.prioritize_full_name_in_ux}}
-            {{@model.acting_user_name}}
-          {{else}}
+          {{#if this.siteSettings.prioritize_username_in_ux}}
             {{@model.username}}
+          {{else}}
+            {{@model.acting_user_name}}
           {{/if}}
         </LinkTo>
         <PluginOutlet

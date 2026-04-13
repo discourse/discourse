@@ -75,7 +75,7 @@ export default {
       content.push(
         unassignFromTopicButton(
           this.topic,
-          this.siteSettings.prioritize_full_name_in_ux
+          this.siteSettings.prioritize_username_in_ux
         )
       );
     }
@@ -136,11 +136,11 @@ function reassignToSelfButton() {
   };
 }
 
-function unassignFromTopicButton(topic, prioritize_full_name_in_ux) {
+function unassignFromTopicButton(topic, prioritize_username_in_ux) {
   let username =
     topic.assigned_to_user?.username || topic.assigned_to_group?.name;
 
-  if (topic.assigned_to_user && prioritize_full_name_in_ux) {
+  if (topic.assigned_to_user && !prioritize_username_in_ux) {
     username = topic.assigned_to_user?.name || topic.assigned_to_user?.username;
   }
 
