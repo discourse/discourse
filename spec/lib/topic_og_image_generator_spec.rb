@@ -37,7 +37,7 @@ RSpec.describe TopicOgImageGenerator do
       svg = generator.send(:build_svg)
 
       expect(svg).to include("How to configure your")
-      title_line_count = svg.scan(/font-size="52"/).length
+      title_line_count = svg.scan(/font-size="62"/).length
       expect(title_line_count).to eq(2)
     end
 
@@ -63,7 +63,7 @@ RSpec.describe TopicOgImageGenerator do
 
       expect(svg).to include("12 replies")
       expect(svg).to include("42 likes")
-      expect(svg).to include('font-size="26"')
+      expect(svg).to include('font-size="30"')
     end
 
     it "includes author avatar and username" do
