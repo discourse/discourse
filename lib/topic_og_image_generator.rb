@@ -45,9 +45,9 @@ class TopicOgImageGenerator
       )
     end
 
-    title_start_y = 183
+    title_start_y = 190
     title_end_y = title_start_y + ((display_lines.length - 1) * 58)
-    author_y = title_end_y + 50
+    author_y = title_end_y + 55
 
     author = @topic.user
     avatar_data_uri =
@@ -56,7 +56,7 @@ class TopicOgImageGenerator
     created_at = @topic.created_at&.strftime("%b %-d, %Y")
 
     logo_y = OG_HEIGHT - 60 - LOGO_HEIGHT
-    stats_y = OG_HEIGHT - 60 - (LOGO_HEIGHT / 2) + 10
+    stats_y = OG_HEIGHT - 60 - (LOGO_HEIGHT / 2) + 15
 
     <<~SVG
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="#{OG_WIDTH}" height="#{OG_HEIGHT}" viewBox="0 0 #{OG_WIDTH} #{OG_HEIGHT}">
@@ -89,6 +89,9 @@ class TopicOgImageGenerator
 
         <!-- Stats -->
         #{stats_svg(like_count, posts_count, colors, OG_WIDTH - 80, stats_y)}
+
+        <!-- Site domain -->
+        #{domain_svg(colors, OG_WIDTH - 80, 88)}
       </svg>
     SVG
   end
@@ -188,6 +191,13 @@ class TopicOgImageGenerator
     end
 
     svg_parts.join("\n    ")
+  end
+
+  def domain_svg(colors, right_x, y)
+    domain = Discourse.current_hostname
+    return "" if domain.blank?
+
+    %(<text x="#{right_x}" y="#{y}" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(domain)}</text>)
   end
 
   ICON_PATHS = {
