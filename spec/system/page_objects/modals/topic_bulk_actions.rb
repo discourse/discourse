@@ -38,6 +38,30 @@ module PageObjects
         end
       end
 
+      def pin_in_category_date_selector
+        PageObjects::Components::SelectKit.new(
+          "#{MODAL_SELECTOR} .feature-section:first-of-type .future-date-input-selector",
+        )
+      end
+
+      def click_pin_in_category
+        find("#{MODAL_SELECTOR} .feature-section:first-of-type .btn-primary").click
+      end
+
+      def pin_globally_date_selector
+        PageObjects::Components::SelectKit.new(
+          "#{MODAL_SELECTOR} .feature-section:last-of-type .future-date-input-selector",
+        )
+      end
+
+      def click_pin_globally
+        find("#{MODAL_SELECTOR} .feature-section:last-of-type .btn-primary").click
+      end
+
+      def has_pin_stats_text?(text)
+        page.has_css?("#{MODAL_SELECTOR} .feature-section", text: text, normalize_ws: true)
+      end
+
       def has_no_category_badge?(category)
         within(MODAL_SELECTOR) do
           has_no_css?(PageObjects::Components::CategoryBadge.new.category_selector(category))

@@ -412,12 +412,12 @@ RSpec.describe "AI Bot - Homepage" do
         SiteSetting.ai_bot_add_to_header = true
       end
 
-      it "keeps robot icon in the header and doesn't display sidebar back link" do
+      it "shows shuffle icon in the header and doesn't display sidebar back link" do
         visit "/"
         expect(header).to have_icon_in_bot_button(icon: "robot")
         header.click_bot_button
         expect(ai_pm_homepage).to have_homepage
-        expect(header).to have_icon_in_bot_button(icon: "robot")
+        expect(header).to have_icon_in_bot_button(icon: "shuffle")
         expect(ai_pm_homepage).to have_no_sidebar_back_link
       end
 
