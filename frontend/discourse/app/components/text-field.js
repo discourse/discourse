@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { attributeBindings } from "@ember-decorators/component";
 import discourseDebounce from "discourse/lib/debounce";
+import { isLTR, isRTL, siteDir } from "discourse/lib/text-direction";
 import { i18n } from "discourse-i18n";
 import TextField from "./ember-text-field";
 
@@ -49,8 +50,15 @@ export default class DiscourseTextField extends TextField {
     next(() => this.onChange(this.value));
   }
 
+  @computed("siteSettings.support_mixed_text_direction", "value")
   get dir() {
     if (this.siteSettings.support_mixed_text_direction) {
+      const value = this.value?.toString() || "";
+
+      if (!isLTR(value) && !isRTL(value)) {
+        return siteDir();
+      }
+
       return "auto";
     }
   }
