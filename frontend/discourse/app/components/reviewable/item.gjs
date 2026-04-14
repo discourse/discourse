@@ -101,6 +101,7 @@ export default class ReviewableItem extends Component {
 
   @tracked disabled = false;
   @tracked activeTab = "timeline";
+  @tracked insightsOpened = false;
 
   updating = null;
   editing = false;
@@ -116,6 +117,12 @@ export default class ReviewableItem extends Component {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
+  }
+
+  didUpdateAttrs() {
+    super.didUpdateAttrs(...arguments);
+    this.activeTab = "timeline";
+    this.insightsOpened = false;
   }
 
   @computed("reviewable.claimed_by.automatic")
@@ -610,6 +617,9 @@ export default class ReviewableItem extends Component {
   switchTab(tabName, event) {
     event.preventDefault();
     this.activeTab = tabName;
+    if (tabName === "insights") {
+      this.insightsOpened = true;
+    }
   }
 
   @action
@@ -832,9 +842,12 @@ export default class ReviewableItem extends Component {
               </HorizontalOverflowNav>
             </div>
 
-            {{#if (eq this.activeTab "insights")}}
-              <ReviewableInsights @reviewable={{this.reviewable}} />
-            {{else if (eq this.activeTab "timeline")}}
+            {{#if this.insightsOpened}}
+              <div hidden={{if (eq this.activeTab "insights") false true}}>
+                <ReviewableInsights @reviewable={{this.reviewable}} />
+              </div>
+            {{/if}}
+            {{#if (eq this.activeTab "timeline")}}
               <ReviewableTimeline
                 @reviewable={{this.reviewable}}
                 @historyEvents={{this.reviewable.reviewable_histories}}
