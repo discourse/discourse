@@ -168,6 +168,7 @@ RSpec.describe TopicsController do
       expect(accepted.at_css('[itemprop="text"]')).to be_present
       expect(accepted.at_css('[itemprop="datePublished"]')).to be_present
       expect(accepted.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+      expect(accepted.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p2.like_count.to_s)
 
       suggested = doc.at_css("#post_#{p3.post_number}")
       expect(suggested["itemprop"]).to eq("suggestedAnswer")
@@ -175,6 +176,7 @@ RSpec.describe TopicsController do
       expect(suggested.at_css('[itemprop="text"]')).to be_present
       expect(suggested.at_css('[itemprop="datePublished"]')).to be_present
       expect(suggested.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+      expect(suggested.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p3.like_count.to_s)
     end
 
     it "does not modify schema for topics without solved enabled" do

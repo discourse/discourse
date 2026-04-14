@@ -110,11 +110,13 @@
               <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
             </div>
 
-            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
-              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
-              <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
-              <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
-            </div>
+            <% unless crawler_post_schema_overridden?(post, @topic_view.topic) %>
+              <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+                <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+                <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
+                <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
+              </div>
+            <% end %>
 
               <% if (linkbacks = @topic_view.linkbacks_for(post)).present? %>
                 <div class='crawler-linkback-list'>

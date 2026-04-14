@@ -757,20 +757,25 @@ module ApplicationHelper
     ).presence
   end
 
+  def crawler_post_schema_hash(post, topic)
+    @crawler_post_schema_hash ||= {}
+    @crawler_post_schema_hash[post.id] ||= begin
+      default = {
+        itemprop: "comment",
+        itemscope: true,
+        itemtype: "http://schema.org/Comment",
+      } unless post.is_first_post?
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_post_schema, default || {}, post, topic)
+    end
+  end
+
   def crawler_post_schema(post, topic)
-    default = {
-      itemprop: "comment",
-      itemscope: true,
-      itemtype: "http://schema.org/Comment",
-    } unless post.is_first_post?
-    tag.attributes(
-      DiscoursePluginRegistry.apply_modifier(
-        :topic_crawler_post_schema,
-        default || {},
-        post,
-        topic,
-      ),
-    )
+    tag.attributes(crawler_post_schema_hash(post, topic))
+  end
+
+  def crawler_post_schema_overridden?(post, topic)
+    itemprop = crawler_post_schema_hash(post, topic)[:itemprop]
+    itemprop.present? && itemprop != "comment"
   end
 
   # If there is plugin HTML return that, otherwise yield to the template

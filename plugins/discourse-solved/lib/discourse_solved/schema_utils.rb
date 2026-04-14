@@ -57,6 +57,11 @@ module DiscourseSolved
       end
     end
 
+    def self.post_upvote_count_meta(post, topic)
+      return unless post_schema(post, topic)&.[](:itemprop)
+      "<meta itemprop='upvoteCount' content='#{post.like_count}'>"
+    end
+
     def self.main_entity_meta(topic, crawler_posts)
       return unless qa_page_schema?(topic)
       "<meta itemprop='name' content='#{ERB::Util.html_escape(topic.title)}'>" \
