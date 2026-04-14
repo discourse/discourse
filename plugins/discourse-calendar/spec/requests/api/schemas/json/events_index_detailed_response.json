@@ -235,6 +235,12 @@
           "at_capacity": {
             "type": "boolean"
           },
+          "image_upload": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
           "post": {
             "type": "object",
             "additionalProperties": false,

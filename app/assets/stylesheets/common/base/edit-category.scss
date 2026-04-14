@@ -380,6 +380,14 @@ div.edit-category {
   }
 }
 
+.posting-review-group-chooser {
+  margin-top: 0.5em;
+
+  .form-kit__field & {
+    margin-top: 0;
+  }
+}
+
 .edit-category .add-group {
   margin: 1em 0 2em;
 

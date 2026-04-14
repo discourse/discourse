@@ -2,7 +2,6 @@
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { not } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
 import {
   attributeBindings,
@@ -20,7 +19,10 @@ import { i18n } from "discourse-i18n";
 export default class SelectKitFilter extends Component {
   tabIndex = -1;
 
-  @not("isHidden") isExpanded;
+  @computed("isHidden")
+  get isExpanded() {
+    return !this.isHidden;
+  }
 
   @computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",

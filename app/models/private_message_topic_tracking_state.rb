@@ -92,6 +92,7 @@ class PrivateMessageTopicTrackingState
         topics.archetype = 'private_message' AND
         ((#{unread}) OR (#{new})) AND
         topics.deleted_at IS NULL
+        #{user.staff? ? "" : "AND topics.visible"}
     SQL
   end
 
@@ -104,7 +105,7 @@ class PrivateMessageTopicTrackingState
     allowed_group_ids = topic.allowed_groups.pluck(:id)
 
     group_ids =
-      if post.post_type == Post.types[:whisper]
+      if post.post_type == Post.types[:whisper] || post.post_type == Post.types[:small_action]
         [Group::AUTO_GROUPS[:staff]]
       else
         allowed_group_ids

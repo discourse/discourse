@@ -1,7 +1,6 @@
 import deprecated from "discourse/lib/deprecated";
 import { isDevelopment } from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
-import { warnWidgetsDecommissioned } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
@@ -93,15 +92,6 @@ export function iconHTML(id, params) {
   return renderIcon("string", id, params);
 }
 
-/**
- * @deprecated The widget rendering system has been decommissioned.
- * - If you need to create DOM nodes directly, use `iconElement` instead.
- * - If you need to render icons in a template, use the `{{icon}}` helper.
- */
-export function iconNode() {
-  warnWidgetsDecommissioned();
-}
-
 export function iconElement(id, params) {
   return renderIcon("element", id, params);
 }
@@ -120,11 +110,9 @@ export function registerIconRenderer(renderer) {
 }
 
 function iconClasses(icon, params) {
-  // "notification." is invalid syntax for classes, use replacement instead
+  // dots are invalid syntax for classes, use replacement instead
   const dClass =
-    icon.replacementId && icon.id.includes("notification.")
-      ? icon.replacementId
-      : icon.id;
+    icon.replacementId && icon.id.includes(".") ? icon.replacementId : icon.id;
 
   let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 

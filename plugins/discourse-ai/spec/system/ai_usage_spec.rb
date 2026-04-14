@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Usage Admin Page", type: :system do
+RSpec.describe "AI Usage Admin Page" do
   fab!(:admin)
   fab!(:llm_model)
 

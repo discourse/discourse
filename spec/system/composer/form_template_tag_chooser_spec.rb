@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer Form Template", type: :system do
+describe "Composer Form Template" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:tag1) { Fabricate(:tag, name: "persian") }
   fab!(:tag2) { Fabricate(:tag, name: "siamese") }

@@ -156,7 +156,7 @@ build_cmd << "-prod" if resolved_ember_env == "production"
 core_build_reusable =
   existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
 
-if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
   if core_build_reusable
     log "Reusing existing core ember build. All done."
   else

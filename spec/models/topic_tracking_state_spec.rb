@@ -141,19 +141,15 @@ RSpec.describe TopicTrackingState do
       )
     end
 
-    it "publishes whisper post to staff users and members of whisperers group" do
-      whisperers_group = Fabricate(:group)
-      Fabricate(:user, groups: [whisperers_group])
-      Fabricate(:topic_user_watching, topic: topic, user: user)
-      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+    it "does not publish whisper posts to /latest" do
       post.update!(post_type: Post.types[:whisper])
 
-      message =
-        MessageBus
-          .track_publish("/latest") { TopicTrackingState.publish_latest(post.topic, true) }
-          .first
+      messages =
+        MessageBus.track_publish("/latest") do
+          Jobs::PostUpdateTopicTrackingState.new.execute(post_id: post.id)
+        end
 
-      expect(message.group_ids).to contain_exactly(whisperers_group.id, Group::AUTO_GROUPS[:staff])
+      expect(messages).to be_empty
     end
   end
 

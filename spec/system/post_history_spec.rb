@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post history with tag changes", type: :system do
+describe "Post history with tag changes" do
   fab!(:admin)
   fab!(:tag1) { Fabricate(:tag, name: "alpha") }
   fab!(:tag2) { Fabricate(:tag, name: "beta") }

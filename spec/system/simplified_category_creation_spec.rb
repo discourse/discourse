@@ -7,8 +7,10 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:icon_picker) { PageObjects::Components::DIconGridPicker.new }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.enable_simplified_category_creation = true
@@ -124,10 +126,9 @@ describe "Simplified Category Creation" do
 
       form.field("name").fill_in("Test Category")
 
-      icon_picker = PageObjects::Components::SelectKit.new(".form-kit__control-icon")
       icon_picker.expand
+      icon_picker.select_first_icon
       icon_picker.clear
-      icon_picker.collapse
 
       category_page.save_settings
 
@@ -198,6 +199,55 @@ describe "Simplified Category Creation" do
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       expect(group_chooser).to have_selected_name(group.name)
     end
+
+    it "collapses long descriptions with a show more toggle" do
+      category_with_definition = Fabricate(:category_with_definition)
+      long_description = (["This is a long paragraph of text."] * 20).join(" ")
+      post = category_with_definition.topic.first_post
+      post.update!(cooked: "<p>#{long_description}</p>")
+      category_with_definition.update!(description: "<p>#{long_description}</p>")
+
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+      expect(page).to have_css(".toggle-description")
+
+      find(".toggle-description").click
+
+      expect(page).to have_no_css(".description-content.--collapsed")
+      expect(page).to have_css(".description-content.--overflowing")
+
+      find(".toggle-description").click
+
+      expect(page).to have_css(".description-content.--collapsed.--overflowing")
+    end
+
+    it "does not show expand toggle for short descriptions" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      expect(page).to have_css(".description-content")
+      expect(page).to have_no_css(".toggle-description")
+      expect(page).to have_no_css(".description-content.--overflowing")
+    end
+
+    it "opens the composer to edit the category description and updates it after save" do
+      category_with_definition = Fabricate(:category_with_definition)
+      category_page.visit_general(category_with_definition)
+
+      composer = PageObjects::Components::Composer.new
+
+      find(".edit-category-description").click
+      expect(composer).to be_opened
+
+      composer.fill_content("Updated category description")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(page).to have_css(".edit-category-description-container .readonly-field")
+      expect(page).to have_content("Updated category description")
+      expect(toasts).to have_success(I18n.t("js.category.description_updated"))
+    end
   end
 
   describe "Security Tab" do
@@ -246,13 +296,70 @@ describe "Simplified Category Creation" do
   end
 
   describe "Settings Tab" do
-    it "enables topic approval requirement" do
+    it "creates a category with a group-based posting review mode" do
+      category_page.visit_new_category
+
+      form.field("name").fill_in("Review Test")
+      category_page.toggle_advanced_settings
+      find(".edit-category-settings a").click
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone_except",
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_posting_review_groups_error
+
+      category_page.topic_posting_review_group_chooser(simplified: true).expand
+      category_page.topic_posting_review_group_chooser(simplified: true).select_row_by_value(
+        group.id,
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_no_posting_review_groups_error
+
+      created_category = Category.find_by(name: "Review Test")
+      category_page.visit_settings(created_category)
+      expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
+      expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
+    end
+
+    it "allows selecting 'everyone' mode" do
       category_page.visit_settings(category)
 
-      form.field("category_setting.require_topic_approval").toggle
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone",
+      )
       category_page.save_settings
 
-      expect(category.reload.require_topic_approval?).to eq(true)
+      category_page.visit_settings(category)
+      expect(category_page).to have_topic_posting_review_mode("everyone", simplified: true)
+    end
+
+    it "allows selecting 'everyone_except' mode with groups" do
+      category_page.visit_settings(category)
+
+      category_page.topic_posting_review_mode_chooser(simplified: true).expand
+      category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
+        "everyone_except",
+      )
+
+      category_page.save_settings
+      expect(category_page).to have_posting_review_groups_error
+
+      category_page.topic_posting_review_group_chooser(simplified: true).expand
+      category_page.topic_posting_review_group_chooser(simplified: true).select_row_by_value(
+        group.id,
+      )
+
+      category_page.save_settings
+
+      category_page.visit_settings(category)
+      expect(category_page).to have_no_posting_review_groups_error
+      expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
+      expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
     end
   end
 

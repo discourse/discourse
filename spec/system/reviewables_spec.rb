@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Reviewables", type: :system do
+describe "Reviewables" do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin)
   fab!(:theme)
@@ -307,6 +307,84 @@ describe "Reviewables", type: :system do
         "a.review-resources__link",
         text: I18n.t("js.review.help.community_moderation_guide"),
       )
+    end
+  end
+
+  describe "XSS prevention in queued post titles via server-side cooking" do
+    fab!(:untrusted_user) { Fabricate(:user, trust_level: 0) }
+
+    before do
+      SiteSetting.approve_post_count = 1
+      sign_in(admin)
+    end
+
+    it "prevents stored XSS in topic title when viewing review queue" do
+      xss_payload = '<img src=x onerror="alert(\'XSS\')">'
+      reviewable =
+        ReviewableQueuedPost.needs_review!(
+          target_created_by: untrusted_user,
+          created_by: untrusted_user,
+          payload: {
+            raw: "This is the post body",
+            title: xss_payload,
+          },
+        )
+
+      visit("/review")
+
+      # The title should be visible as text but not execute
+      expect(page).to have_no_css("img[src='x']")
+      expect(page).to have_no_css("img[onerror]")
+
+      # Verify the XSS payload is escaped in the HTML
+      title_element = page.find(".title-text", match: :first)
+      title_html = title_element.native.inner_html
+      expect(title_html).to include("&lt;img")
+      expect(title_html).to include("&gt;")
+      expect(title_html).not_to include("<img src=x onerror")
+    end
+
+    it "prevents stored XSS with script tags in topic title" do
+      xss_payload = '<script>alert("XSS")</script>Malicious Title'
+      reviewable =
+        ReviewableQueuedPost.needs_review!(
+          target_created_by: untrusted_user,
+          created_by: untrusted_user,
+          payload: {
+            raw: "This is the post body",
+            title: xss_payload,
+          },
+        )
+
+      visit("/review")
+
+      expect(page).to have_no_css("script")
+      title_element = page.find(".title-text", match: :first)
+      title_html = title_element.native.inner_html
+      expect(title_html).to include("&lt;script&gt;")
+      expect(title_html).not_to include("<script>alert")
+    end
+
+    it "escapes special characters in title" do
+      special_chars_title = "Test & <b>Bold</b> & \"Quotes\" & 'Apostrophes'"
+      reviewable =
+        ReviewableQueuedPost.needs_review!(
+          target_created_by: untrusted_user,
+          created_by: untrusted_user,
+          payload: {
+            raw: "This is the post body",
+            title: special_chars_title,
+          },
+        )
+
+      visit("/review")
+
+      # The <b> tag should not render as bold
+      expect(page).to have_no_css(".title-text b")
+      title_element = page.find(".title-text", match: :first)
+      title_html = title_element.native.inner_html
+      expect(title_html).to include("&amp;")
+      expect(title_html).to include("&lt;b&gt;")
     end
   end
 end

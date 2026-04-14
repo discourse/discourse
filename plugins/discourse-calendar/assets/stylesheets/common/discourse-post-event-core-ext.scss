@@ -26,12 +26,19 @@
     display: inline-flex;
     align-items: center;
     font-size: var(--font-down-2);
-    border: 1px solid var(--primary-medium);
-    background: none;
-    padding: 0 0.25em;
+    border: 1px solid var(--tertiary-very-low);
+    background: var(--tertiary-very-low);
+    color: var(--tertiary);
+    padding: 0 0.35em;
     border-radius: 3px;
     pointer-events: auto; // needed to show title attribute on hover
-    vertical-align: text-bottom;
+    vertical-align: middle;
+
+    &.past {
+      border: 1px solid var(--primary-very-low);
+      background: var(--primary-very-low);
+      color: var(--primary-medium);
+    }
 
     .indicator {
       display: flex;

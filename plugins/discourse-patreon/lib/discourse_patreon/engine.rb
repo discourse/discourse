@@ -3,6 +3,16 @@
 module Patreon
   USER_DETAIL_FIELDS = %w[id amount_cents rewards declined_since].freeze
 
+  module ApiVersion
+    def self.current
+      SiteSetting.patreon_api_version == "2" ? V2 : V1
+    end
+
+    def self.adapter_for_payload(data)
+      data.dig("data", "type") == "pledge" ? V1 : V2
+    end
+  end
+
   class Engine < ::Rails::Engine
     engine_name PLUGIN_NAME
     isolate_namespace Patreon

@@ -3,6 +3,7 @@
 RSpec.describe DiscourseSubscriptions::HooksController do
   before do
     SiteSetting.discourse_subscriptions_webhook_secret = "zascharoo"
+    SiteSetting.discourse_subscriptions_secret_key = "secret-key"
     SiteSetting.discourse_subscriptions_enabled = true
   end
 
@@ -156,7 +157,11 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         event = { type: "checkout.session.completed", data: checkout_session_completed_data }
         ::Stripe::Checkout::Session
           .stubs(:list_line_items)
-          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
+          .with(
+            checkout_session_completed_data[:object][:id],
+            { limit: 1 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(list_line_items_data)
 
         ::Stripe::Subscription
@@ -164,6 +169,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           .with(
             checkout_session_completed_data[:object][:subscription],
             { metadata: { user_id: user.id, username: user.username } },
+            DiscourseSubscriptions::Stripe.request_opts,
           )
           .returns(
             {
@@ -198,11 +204,18 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         event = { type: "checkout.session.completed", data: checkout_session_completed_bad_data }
         ::Stripe::Checkout::Session
           .stubs(:list_line_items)
-          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
+          .with(
+            checkout_session_completed_data[:object][:id],
+            { limit: 1 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(list_line_items_data)
 
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
-        ::Stripe::Customer.stubs(:create).returns(id: "cus_1234")
+        ::Stripe::Customer
+          .stubs(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns(id: "cus_1234")
       end
 
       it "is returns 422" do
@@ -219,11 +232,18 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         }
         ::Stripe::Checkout::Session
           .stubs(:list_line_items)
-          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
+          .with(
+            checkout_session_completed_data[:object][:id],
+            { limit: 1 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(list_line_items_data)
 
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
-        ::Stripe::Customer.stubs(:create).returns(id: "cus_1234")
+        ::Stripe::Customer
+          .stubs(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns(id: "cus_1234")
       end
 
       it "is returns 200" do
@@ -239,11 +259,18 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         event = { type: "checkout.session.completed", data: data }
         ::Stripe::Checkout::Session
           .stubs(:list_line_items)
-          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
+          .with(
+            checkout_session_completed_data[:object][:id],
+            { limit: 1 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(list_line_items_data)
 
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
-        ::Stripe::Customer.stubs(:create).returns(id: "cus_1234")
+        ::Stripe::Customer
+          .stubs(:create)
+          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .returns(id: "cus_1234")
       end
 
       it "is returns 422" do
@@ -259,7 +286,11 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         event = { type: "checkout.session.completed", data: data }
         ::Stripe::Checkout::Session
           .stubs(:list_line_items)
-          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
+          .with(
+            checkout_session_completed_data[:object][:id],
+            { limit: 1 },
+            DiscourseSubscriptions::Stripe.request_opts,
+          )
           .returns(list_line_items_data)
 
         ::Stripe::Webhook.stubs(:construct_event).returns(event)

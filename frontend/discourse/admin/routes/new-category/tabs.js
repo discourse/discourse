@@ -37,6 +37,7 @@ export default class NewCategoryTabs extends DiscourseRoute {
         id: result.type,
         name: result.typeName,
         configuration_schema: result.typeSchema,
+        title: result.typeTitle,
       };
       model.set("categoryTypes", initialTypes);
 

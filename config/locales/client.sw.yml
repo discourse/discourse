@@ -236,12 +236,11 @@ sw:
           today: "leo"
     bookmarked:
       title: "Alamisho"
-      clear_bookmarks: "Futa Maalamisho"
       help:
         unbookmark: "Bofya kuondoa mialamisho yote kwenye mada hii"
     bookmarks:
       not_bookmarked: "alamisha chapisho hili"
-      confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
+      topic_bookmark: "Mada"
       save: "hifadhi"
       search: "Tafuta"
       bookmark: "Alamisha"
@@ -1482,9 +1481,6 @@ sw:
       bulk:
         select_all: "Chagua Zote"
         clear_all: "Ondoa Zote"
-        unlist_topics: "Ondoa Mada kwenye listi"
-        relist_topics: "Orodhesha Upya Mada"
-        delete: "Futa Mada"
         delete_topics_count:
           one: "Futa Mada"
           other: "Futa Mada"
@@ -1496,17 +1492,9 @@ sw:
         dismiss_new: "Ondosha Mpya"
         toggle: "Badili kwa wingi chaguo la topiki"
         actions: "Vitendo za Jumla"
-        close_topics: "Funga Mada"
-        archive_topics: "Hifadhi Mada kwenye nyaraka"
         move_messages_to_inbox: "Hamishia kwenye kisanduku-pokezi"
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
-        selected:
-          one: "Umechagua mada <b>%{count}</b>."
-          other: "Umechagua mada <b>%{count}</b>."
-        change_tags: "Badilisha Lebo"
-        append_tags: "Jumlisha Lebo"
         choose_new_tags: "Chagua lebo mpya kwa ajili ya hizi mada:"
-        choose_append_tags: "Chagua lebo mpya kuweka kwenye mada hizi:"
         changed_tags: "lebo za hizo mada zilibadilishwa."
         error_topic_count:
           one: "%{count} topiki"
@@ -1529,8 +1517,6 @@ sw:
         name: "Nyaraka"
       move_messages_to_inbox:
         name: "Hamisha kwenda Kisanduku pokezi"
-      append_tags:
-        name: "Jumlisha Lebo"
       replace_tags:
         name: "Badilisha Lebo"
       delete_topics:
@@ -1967,6 +1953,8 @@ sw:
       all_topics_wiki: "Hifadhi mada mpya kama chaguo msingi"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
       review_group_name: "jina la kikundi"
+      posting_review_modes:
+        everyone: "Kila Mtu"
       this_year: "mwaka huu"
       minimum_required_tags: "Kiwango cha chini cha lebo zinazohitajika kwenye mada:"
       none_subcategory_text: "Hakuna"
@@ -2413,7 +2401,6 @@ sw:
         title: "Orodha ya ripoti zilizopo"
         group_traffic: "Utembeleaji"
         group_members: "Wanachama"
-        group_security: "Ulinzi"
         group_other: "Nyingine"
       config_sections:
         account:

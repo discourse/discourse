@@ -6,7 +6,8 @@ module DiscourseAi
       requires_plugin PLUGIN_NAME
 
       def index
-        render json: serialize_modules(DiscourseAi::Configuration::Module.all)
+        modules = DiscourseAi::Configuration::Module.all.select(&:visible?)
+        render json: serialize_modules(modules)
       end
 
       def edit

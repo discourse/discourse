@@ -49,7 +49,10 @@ export default {
             "$1templates/connectors/"
           );
         } else if (!isTemplate && isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(/^templates\//, "");
+          compatModuleName = compatModuleName.replace(
+            /(^|\/)templates\//,
+            "$1"
+          );
         }
       }
 

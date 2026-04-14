@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { attributeBindings } from "@ember-decorators/component";
 import discourseDebounce from "discourse/lib/debounce";
+import { siteDir } from "discourse/lib/text-direction";
 import { i18n } from "discourse-i18n";
 import TextField from "./ember-text-field";
 
@@ -49,9 +50,16 @@ export default class DiscourseTextField extends TextField {
     next(() => this.onChange(this.value));
   }
 
+  @computed("siteSettings.support_mixed_text_direction", "value")
   get dir() {
     if (this.siteSettings.support_mixed_text_direction) {
-      return "auto";
+      const value = this.value?.toString() || "";
+
+      if (value) {
+        return "auto";
+      }
+
+      return siteDir();
     }
   }
 

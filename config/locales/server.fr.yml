@@ -1133,6 +1133,7 @@ fr:
     read: "lecture"
     read_write: "lecture/écriture"
     instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
+    copied: "Copié !"
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:
       confirm_title: Continuer vers %{site_name}
@@ -2926,35 +2927,9 @@ fr:
   new_version_mailer:
     title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Hourra ! Une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/update)**
-
-      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes de modifications"
     subject_template: "[%{email_prefix}] Mise à jour disponible"
-    text_body_template: |
-      Hourra ! Une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/update)**
-
-      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
-
-      ### Notes de version
-
-      %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint les [lignes directrices de notre communauté](%{base_path}/guidelines)."
@@ -3003,47 +2978,9 @@ fr:
     reviewable_queued_post_revise_and_reject:
       title: "Commentaires sur votre message"
       subject_template: "Commentaires sur votre message dans %{topic_title}"
-      text_body_template: |
-        Bonjour %{username},
-
-        Nous avons examiné votre message dans [%{topic_title}] (%{topic_url}) et avons quelques commentaires à vous faire.
-
-        Motif : %{reason}
-
-        Commentaire : %{feedback}
-
-        Vous pouvez modifier votre message d'origine ci-dessous et le soumettre à nouveau pour apporter les modifications suggérées, ou répondre à ce message si vous avez des questions.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Merci,
-        Modérateurs %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Commentaires sur votre sujet"
       subject_template: 'Commentaires sur le nouveau sujet intitulé « %{topic_title} »'
-      text_body_template: |
-        Bonjour %{username},
-
-        Nous avons examiné votre nouveau sujet intitulé « %{topic_title} » et avons quelques commentaires à vous faire.
-
-        Motif : %{reason}
-
-        Commentaires : %{feedback}
-
-        Vous pouvez modifier le message original de votre sujet ci-dessous et le soumettre à nouveau pour apporter les modifications suggérées, ou répondre à ce message si vous avez des questions.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Merci,
-        Modérateurs %{site_name}
     post_hidden_again:
       title: "Message masqué à nouveau"
       subject_template: "Message masqué suite à des signalements de la communauté, responsables avertis"

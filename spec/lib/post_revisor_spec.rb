@@ -119,6 +119,37 @@ describe PostRevisor do
       expect(post.reload.topic.category_id).to eq(new_category.id)
     end
 
+    it "allows category change with localized tags" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+      tag = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      old_category = Fabricate(:category)
+      new_category = Fabricate(:category, tag_groups: [tag_group])
+
+      post = create_post(category: old_category)
+
+      post.revise(post.user, category_id: new_category.id, tags: [{ id: tag.id, name: tag.name }])
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+    end
+
+    it "allows category change when clearing all tags with an empty array" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+      tag = Fabricate(:tag)
+      old_category = Fabricate(:category)
+      new_category = Fabricate(:category)
+
+      post = create_post(category: old_category, tags: [tag.name])
+      expect(post.topic.tags).to contain_exactly(tag)
+
+      post.revise(post.user, category_id: new_category.id, tags: [])
+      expect(post.reload.topic.category_id).to eq(new_category.id)
+      expect(post.topic.tags).to be_empty
+    end
+
     it "returns an error if the topic does not have minimum amount of tags that the new category requires" do
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]

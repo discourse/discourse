@@ -423,7 +423,6 @@ nl:
       start_posting:
         title: "Begin met posten"
         description: "Geef mensen iets om samen over te praten"
-        action: "Ideeën voor ijsbrekers"
         back: "Terug"
         icebreakers:
           fun_facts:
@@ -524,8 +523,6 @@ nl:
           other: "%{count} jaar geleden gemaakt"
     bookmarked:
       title: "Bladwijzer"
-      edit_bookmark: "Bladwijzer bewerken"
-      clear_bookmarks: "Bladwijzers wissen"
       help:
         bookmark: "Klik om een bladwijzer voor dit topic te maken"
         edit_bookmark: "Klik om de bladwijzer voor een bericht in dit topic te bewerken"
@@ -544,12 +541,12 @@ nl:
       clear_reminder: "Herinnering wissen"
       edit: "Bladwijzer bewerken"
       not_bookmarked: "bladwijzer maken voor dit bericht"
+      topic_bookmark: "Topic"
       remove_reminder_keep_bookmark: "Herinnering verwijderen en bladwijzer behouden"
       created_with_reminder: "Je hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}. %{name}"
       created_with_reminder_generic: "Je hebt een bladwijzer hiervoor gemaakt met een herinnering voor %{date}. %{name}"
       delete: "Bladwijzer verwijderen"
       confirm_delete: "Weet je zeker dat je deze bladwijzer wilt verwijderen? De herinnering wordt ook verwijderd."
-      confirm_clear: "Weet je zeker dat je alle bladwijzers van dit topic wilt verwijderen?"
       save: "Opslaan"
       no_timezone: 'Je hebt nog geen tijdzone ingesteld. Hierdoor kun je geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in je profiel</a>.'
       invalid_custom_datetime: "De datum en tijd die je hebt opgegeven zijn ongeldig, probeer het opnieuw."
@@ -2710,6 +2707,8 @@ nl:
       medium_dark_tone: Gemiddelde donkere huidskleur
       dark_tone: Donkere huidskleur
       default: Eigen emoji's
+    filter_input:
+      clear: "Filter wissen"
     shared_drafts:
       title: "Gedeelde concepten"
       notice: "Dit topic is alleen zichtbaar voor degenen die gedeelde concepten kunnen publiceren."
@@ -3246,11 +3245,8 @@ nl:
         confirm: "Bevestigen"
         select_all: "Alles selecteren"
         clear_all: "Alles wissen"
-        unlist_topics: "Topics onzichtbaar maken"
-        relist_topics: "Topics opnieuw weergeven"
         reset_bump_dates: "Omhoogplaatsingsdatums resetten"
         defer: "Markeren als ongelezen"
-        delete: "Topics verwijderen"
         delete_topics_count:
           one: "Topic verwijderen"
           other: "Topics verwijderen"
@@ -3286,29 +3282,20 @@ nl:
           other: "Nieuwe negeren (%{count})"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
-        change_category: "Categorie instellen..."
-        close_topics: "Topics sluiten"
-        archive_topics: "Topics archiveren"
         move_messages_to_inbox: "Verplaatsen naar inbox"
         archive_messages: "Verplaatsen naar archief"
-        notification_level: "Meldingen…"
         change_notification_level: "Meldingsniveau wijzigen"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
-        selected:
-          one: "Je hebt <b>%{count}</b> topic geselecteerd."
-          other: "Je hebt <b>%{count}</b> topics geselecteerd."
         selected_sole_category:
           one: "Je hebt <b>%{count}</b> topic geselecteerd uit de categorie:"
           other: "Je hebt <b>%{count}</b> topics geselecteerd uit de categorie:"
         selected_count:
           one: "%{count} geselecteerd"
           other: "%{count} geselecteerd"
-        change_tags: "Tags vervangen"
         append_tags: "Tags toevoegen"
         choose_new_tags: "Kies nieuwe tags voor deze topics:"
-        choose_append_tags: "Kies nieuwe tags om toe te voegen voor deze topics:"
+        choose_append_tags: "Tags toevoegen"
         changed_tags: "De tags van deze topics zijn gewijzigd."
-        remove_tags: "Alle tags verwijderen"
         confirm_remove_tags:
           one: "Alle tags worden verwijderd van dit topic. Weet je het zeker?"
           other: "Alle tags worden verwijderd van %{count} topics. Weet je het zeker?"
@@ -3343,7 +3330,6 @@ nl:
         name: "Sluiten"
       close_topics:
         name: "Sluiten"
-        note: "Opmerking"
         optional: (optioneel)
       archive_topics:
         name: "Archiveren"
@@ -3357,24 +3343,18 @@ nl:
         name: "Opnieuw zichtbaar maken"
       remove_tags:
         name: "Tags verwijderen"
-      append_tags:
-        name: "Tags toevoegen"
       replace_tags:
         name: "Tags vervangen"
       delete_topics:
         name: "Verwijderen"
       update_category:
         name: "Categorie bijwerken"
-        description: "Kies de nieuwe categorie voor de geselecteerde topics"
       reset_bump_dates:
         name: "Omhoogplaatsingsdatums resetten"
-        description: "Reset de omhoogplaatsingsdatum van het topic naar de datum van het laatst gemaakte bericht, wat de volgorde in de topicslijst beïnvloedt"
       defer:
         name: "Markeren als ongelezen"
-        description: "Markeer topics als ongelezen"
       update_notifications:
         name: "Meldingen bijwerken"
-        description: "Wijzig het meldingsniveau naar Kijken, Volgen, Normaal of Gedempt"
     topic:
       filter_to:
         one: "%{count} bericht in topic"
@@ -4179,6 +4159,8 @@ nl:
       list: "Categorieën weergeven"
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
+      description_expand: "Meer weergeven"
+      description_collapse: "Minder weergeven"
       already_used: "Deze kleur is al in gebruik door een andere categorie"
       color_palette: "Kleurenpalet"
       security: "Beveiliging"
@@ -4212,6 +4194,9 @@ nl:
       review_group_name: "groepsnaam"
       require_topic_approval: "Goedkeuring van moderator vereisen voor alle nieuwe topics"
       require_reply_approval: "Goedkeuring van moderator vereisen voor alle nieuwe antwoorden"
+      posting_review_modes:
+        everyone: "Iedereen"
+      posting_review_groups_placeholder: "Selecteer groepen..."
       this_year: "dit jaar"
       position: "Positie op de categoriepagina:"
       position_disabled: "Categorieën worden weergegeven op volgorde van activiteit. Schakel de instelling <a href='%{url}'>'Vaste categorieposities'</a> in om de volgorde van categorieën in lijsten te regelen."
@@ -5261,8 +5246,6 @@ nl:
         back: "Terug naar alle rapporten"
         group_traffic: "Verkeer"
         group_members: "Leden"
-        group_moderation: "Moderatie"
-        group_security: "Beveiliging"
         group_other: "Overig"
       config_sections:
         account:
@@ -6629,7 +6612,6 @@ nl:
           import_web_tip: "Repository die thema bevat"
           direct_install_tip: "Weet je zeker dat je <strong>%{name}</strong> uit de onderstaande repository wilt installeren?"
           import_web_advanced: "Geavanceerd…"
-          import_file_tip: ".tar.gz-, .zip- of .dcstyle.json-bestand dat thema bevat"
           is_private: "Thema bevindt zich in een privé-git-repository"
           finish_install: "Thema-installatie voltooien"
           last_attempt: "Installatieproces is niet voltooid, laatste poging:"

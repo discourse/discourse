@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin | Sidebar Navigation", type: :system do
+RSpec.describe "Admin | Sidebar Navigation" do
   fab!(:admin)
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }

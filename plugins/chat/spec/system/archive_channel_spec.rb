@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Archive channel", type: :system do
+RSpec.describe "Archive channel" do
   fab!(:channel_1, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }

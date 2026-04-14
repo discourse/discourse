@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def has_header_title?(title)
-        has_css?(".about__header h3", text: title)
+        has_css?(".about__header h1", text: title)
       end
 
       def has_short_description?(content)

@@ -24,9 +24,12 @@
 #                         is changed.
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
+#                          - upcoming_change: The site setting of the upcoming change to control this
+#                          - new_default: The new default value when the upcoming change is enabled
 # upcoming_change       - Additional metadata with the following options to show in the /admin/config/upcoming-changes page:
 #                          - status: experimental | alpha | beta | stable
-#                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
+#                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
 #                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
 #                            to only "Everyone" and "No One", removing group-based options.
@@ -70,6 +73,7 @@
 # type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
 # type: tag_group_list        - A list of tag group names.
 # type: file_size_restriction - A file size restriction in bytes.
+# type: icon                  - A single fontawesome icon name from the Discourse icon set (e.g. heart, star)
 #
 required:
   title:
@@ -2189,6 +2193,8 @@ files:
     type: list
     regex: '\A((https?:\/\/.+)(\|https?:\/\/.+[|$])*)?\z'
   create_thumbnails: true
+  animated_topic_thumbnails:
+    default: false
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours:
     default: 48
@@ -2709,7 +2715,7 @@ security:
     list_type: compact
   crawler_check_bypass_agents:
     hidden: true
-    default: "cubot"
+    default: "cubot|MetaIAB"
   cors_origins:
     default: ""
     type: list
@@ -2808,6 +2814,9 @@ security:
     refresh: true
     hidden: true
     area: "group_permissions"
+  cache_control_bfcache_compatibility:
+    default: false
+    hidden: true
 
 onebox:
   post_onebox_maxlength:
@@ -2857,12 +2866,6 @@ onebox:
     type: list
     secret: true
     list_type: secret
-  reddit_onebox_client_id:
-    default: ""
-    secret: true
-  reddit_onebox_client_secret:
-    default: ""
-    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -3188,7 +3191,8 @@ navigation:
 embedding:
   embed_full_app:
     default: false
-    hidden: true
+    client: true
+    area: "embedding"
   embed_by_username:
     default: ""
     type: username
@@ -3773,7 +3777,7 @@ uncategorized:
     hidden: true
     area: "interface"
     upcoming_change:
-      status: "experimental"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/395100"
 
@@ -3805,7 +3809,9 @@ uncategorized:
     client: true
     default: false
     hidden: true
-    area: "site_admin"
+  site_owner_onboarding_max_days:
+    default: 5
+    hidden: true
 
   enable_welcome_banner:
     client: true
@@ -4234,37 +4240,39 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
+  enable_new_checkbox_style:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
-    area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "beta"
+      status: "stable"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
-  experimental_tag_settings_page:
-    default: false
-    client: true
-    area: "experimental"
   enable_form_templates:
     client: true
     default: false
     hidden: true
-    area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
   impersonate_without_logout:
     default: false
+    client: true
     hidden: true
-    area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
@@ -4306,13 +4314,9 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
   experimental_topic_category_change_notification:
     default: false
     hidden: true
-  enable_upcoming_changes:
-    default: true
-    hidden: true
-    client: true

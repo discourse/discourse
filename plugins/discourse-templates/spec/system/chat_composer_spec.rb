@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Inserting templates in the chat composer", type: :system do
+RSpec.describe "Inserting templates in the chat composer" do
   fab!(:current_user, :user)
   fab!(:other_user, :user)
   fab!(:templates_category, :category)

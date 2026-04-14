@@ -138,10 +138,6 @@ cs:
           unassigned: "nejsou přidělena"
         assigned:
           label: "Přiřazeno"
-    topics:
-      bulk:
-        unassign: "Zrušit přidělení témat"
-        assign: "Přidělit témata"
     discourse_automation:
       scriptables:
         random_assign:

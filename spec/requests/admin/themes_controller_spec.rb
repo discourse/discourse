@@ -166,13 +166,6 @@ RSpec.describe Admin::ThemesController do
   end
 
   describe "#import" do
-    let(:theme_json_file) do
-      Rack::Test::UploadedFile.new(
-        file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"),
-        "application/json",
-      )
-    end
-
     let(:theme_archive) do
       Rack::Test::UploadedFile.new(
         file_from_fixtures("discourse-test-theme.zip", "themes"),
@@ -213,11 +206,6 @@ RSpec.describe Admin::ThemesController do
           expect(response.parsed_body["errors"]).to include(
             I18n.t("themes.import_error.not_allowed_theme", { repo: remote.strip }),
           )
-        end
-
-        it "bans json file import" do
-          post "/admin/themes/import.json", params: { theme: theme_json_file }
-          expect(response.status).to eq(403)
         end
       end
 
@@ -282,18 +270,6 @@ RSpec.describe Admin::ThemesController do
         expect(RemoteTheme.last.private_key).to eq("rsa private key")
 
         expect(response.status).to eq(201)
-      end
-
-      it "imports a theme" do
-        post "/admin/themes/import.json", params: { theme: theme_json_file }
-        expect(response.status).to eq(201)
-
-        json = response.parsed_body
-
-        expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
-        expect(json["theme"]["theme_fields"].length).to eq(2)
-        expect(json["theme"]["auto_update"]).to eq(false)
-        expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
 
       it "can fail if theme is not accessible" do
@@ -440,7 +416,7 @@ RSpec.describe Admin::ThemesController do
 
     shared_examples "theme import not allowed" do
       it "prevents theme import with a 404 response" do
-        post "/admin/themes/import.json", params: { theme: theme_json_file }
+        post "/admin/themes/import.json", params: { theme: theme_archive }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -1706,6 +1682,158 @@ RSpec.describe Admin::ThemesController do
       get "/admin/customize/components/#{theme_component.id}/schema/some_setting_name"
 
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#update_source" do
+    fab!(:theme)
+
+    let!(:other_repo) { setup_git_repo("about.json" => { name: "other-theme" }.to_json) }
+
+    let!(:other_repo_url) do
+      MockGitImporter.register("https://github.com/discourse/other-theme.git", other_repo)
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "updates the remote theme source" do
+        theme.remote_theme =
+          RemoteTheme.create!(remote_url: repo_url, branch: "main", local_version: "abc")
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/source.json",
+            params: {
+              remote_url: other_repo_url,
+              branch: "develop",
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload
+        expect(theme.remote_theme.remote_url).to eq(other_repo_url)
+        expect(theme.remote_theme.branch).to eq("develop")
+      end
+
+      it "returns error for non-git theme" do
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns error for zip-imported theme" do
+        theme.remote_theme = RemoteTheme.create!(remote_url: "")
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns error for missing remote_url" do
+        theme.remote_theme = RemoteTheme.create!(remote_url: repo_url)
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: "" }
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns error for disallowed repo when allowlist is configured" do
+        global_setting :allowed_theme_repos, repo_url
+        theme.remote_theme = RemoteTheme.create!(remote_url: repo_url)
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/source.json",
+            params: {
+              remote_url: "https://github.com/not-allowed/theme.git",
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t(
+            "themes.import_error.not_allowed_theme",
+            { repo: "https://github.com/not-allowed/theme.git" },
+          ),
+        )
+      end
+
+      it "can use SSH key from Redis" do
+        theme.remote_theme = RemoteTheme.create!(remote_url: repo_url, local_version: "abc")
+        theme.save!
+        Discourse.redis.setex("ssh_key_test_public_key", 1.hour, "test_private_key")
+
+        put "/admin/themes/#{theme.id}/source.json",
+            params: {
+              remote_url: other_repo_url,
+              public_key: "test_public_key",
+            }
+
+        expect(response.status).to eq(200)
+        expect(theme.reload.remote_theme.private_key).to eq("test_private_key")
+      end
+
+      it "returns error when SSH key has expired" do
+        theme.remote_theme = RemoteTheme.create!(remote_url: repo_url)
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/source.json",
+            params: {
+              remote_url: other_repo_url,
+              public_key: "expired_key",
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("themes.import_error.ssh_key_gone"),
+        )
+      end
+
+      it "reverts changes on import failure" do
+        theme.remote_theme =
+          RemoteTheme.create!(remote_url: repo_url, branch: "main", private_key: "old_key")
+        theme.save!
+
+        RemoteTheme
+          .any_instance
+          .stubs(:update_from_remote)
+          .raises(RemoteTheme::ImportError.new("error message"))
+
+        put "/admin/themes/#{theme.id}/source.json",
+            params: {
+              remote_url: other_repo_url,
+              branch: "develop",
+            }
+
+        expect(response.status).to eq(422)
+        theme.reload
+        expect(theme.remote_theme.remote_url).to eq(repo_url)
+        expect(theme.remote_theme.branch).to eq("main")
+        expect(theme.remote_theme.private_key).to eq("old_key")
+      end
+    end
+
+    shared_examples "source update not allowed" do
+      it "prevents source update with a 404 response" do
+        theme.remote_theme = RemoteTheme.create!(remote_url: repo_url)
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/source.json", params: { remote_url: other_repo_url }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "source update not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "source update not allowed"
     end
   end
 

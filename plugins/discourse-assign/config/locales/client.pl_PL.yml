@@ -138,10 +138,6 @@ pl_PL:
           unassigned: "jest nieprzypisany"
         assigned:
           label: "Przypisany do"
-    topics:
-      bulk:
-        unassign: "Cofnij przypisanie tematów"
-        assign: "Przypisz tematy"
     discourse_automation:
       scriptables:
         random_assign:

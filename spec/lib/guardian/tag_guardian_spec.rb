@@ -67,6 +67,21 @@ RSpec.describe TagGuardian do
       SiteSetting.edit_tags_allowed_groups = "1|2|13"
       expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to be_truthy
     end
+
+    it "returns false for a hidden tag when user is not in the tag's permitted group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+      expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to be_falsey
+    end
+
+    it "returns true for a hidden tag when user is admin" do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+      expect(Guardian.new(admin).can_edit_tag?(tag)).to be_truthy
+    end
+
+    it "requires a tag" do
+      expect { Guardian.new(trust_level_3).can_edit_tag? }.to raise_error(ArgumentError)
+    end
   end
 
   describe "#can_tag_topics?" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message user info", type: :system do
+RSpec.describe "Message user info" do
   fab!(:current_user, :user)
   fab!(:channel_1, :category_channel)
 

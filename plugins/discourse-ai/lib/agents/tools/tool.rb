@@ -60,7 +60,7 @@ module DiscourseAi
 
         # llm being public makes it a bit easier to test
         attr_accessor :custom_raw, :parameters, :llm, :provider_data
-        attr_reader :tool_call_id, :agent_options, :bot_user, :context
+        attr_reader :tool_call_id, :agent_options, :bot_user, :context, :agent
 
         def initialize(
           parameters,
@@ -69,7 +69,8 @@ module DiscourseAi
           bot_user:,
           llm:,
           context: nil,
-          provider_data: {}
+          provider_data: {},
+          agent: nil
         )
           @parameters = parameters
           @tool_call_id = tool_call_id
@@ -79,6 +80,7 @@ module DiscourseAi
           @llm = llm
           @context = context.nil? ? DiscourseAi::Agents::BotContext.new(messages: []) : context
           @provider_data = provider_data.is_a?(Hash) ? provider_data.deep_symbolize_keys : {}
+          @agent = agent
           if !@context.is_a?(DiscourseAi::Agents::BotContext)
             raise ArgumentError, "context must be a DiscourseAi::Agents::Context"
           end

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-describe "Request tracking", type: :system do
+describe "Request tracking" do
   before do
+    ApplicationRequest.delete_all
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable

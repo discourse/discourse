@@ -109,6 +109,21 @@ module("Unit | Model | user", function (hooks) {
     assert.false(spyMomentGuess.called);
   });
 
+  test("findByUsername() maps backend timezone to user_option.timezone", async function (assert) {
+    const timezone = "Europe/Warsaw";
+    PreloadStore.store("user_eviltrout", {
+      user: {
+        id: 1,
+        username: "eviltrout",
+        timezone,
+      },
+    });
+
+    const user = await User.findByUsername("eviltrout");
+
+    assert.strictEqual(user.user_option.timezone, timezone);
+  });
+
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user");

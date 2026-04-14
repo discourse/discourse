@@ -43,32 +43,26 @@ const DEPRECATED_MODULES = new Map(
     "store:main": {
       newName: "service:store",
       since: "2.8.0.beta8",
-      silent: true,
     },
     "search-service:main": {
       newName: "service:search",
       since: "2.8.0.beta8",
-      silent: true,
     },
     "key-value-store:main": {
       newName: "service:key-value-store",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "pm-topic-tracking-state:main": {
       newName: "service:pm-topic-tracking-state",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "message-bus:main": {
       newName: "service:message-bus",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "site-settings:main": {
       newName: "service:site-settings",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "capabilities:main": {
       newName: "service:capabilities",
@@ -78,22 +72,18 @@ const DEPRECATED_MODULES = new Map(
     "current-user:main": {
       newName: "service:current-user",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "session:main": {
       newName: "service:session",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "site:main": {
       newName: "service:site",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "topic-tracking-state:main": {
       newName: "service:topic-tracking-state",
       since: "2.9.0.beta7",
-      silent: true,
     },
     "controller:composer": {
       newName: "service:composer",

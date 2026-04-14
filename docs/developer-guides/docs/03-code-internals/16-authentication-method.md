@@ -12,9 +12,9 @@ This post isn't designed to be a step-by-step instruction manual for adding a ne
 
 ## Implementing an authenticator
 
-Each authenticator **must** implement a subclass of [Auth::Authenticator](https://github.com/discourse/discourse/blob/master/lib/auth/authenticator.rb). To use the new shared logic, the authenticator **can** instead extend [Auth::ManagedAuthenticator](https://github.com/discourse/discourse/blob/master/lib/auth/managed_authenticator.rb). An example of a bare-bones implementation can be found in the core Facebook authenticator:
+Each authenticator **must** implement a subclass of [Auth::Authenticator](https://github.com/discourse/discourse/blob/main/lib/auth/authenticator.rb). To use the new shared logic, the authenticator **can** instead extend [Auth::ManagedAuthenticator](https://github.com/discourse/discourse/blob/main/lib/auth/managed_authenticator.rb). An example of a bare-bones implementation can be found in the core Facebook authenticator:
 
-https://github.com/discourse/discourse/blob/master/lib/auth/facebook_authenticator.rb
+https://github.com/discourse/discourse/blob/main/lib/auth/facebook_authenticator.rb
 
 `name`, `enabled?` and `register_middleware` must be overridden by implementing classes.
 
@@ -34,7 +34,7 @@ Once an `Authenticator` class has been defined, it needs to be registered. This 
 auth_provider authenticator: OpenIDConnectAuthenticator.new()
 ```
 
-In core, registration takes place in [`discourse.rb`](https://github.com/discourse/discourse/blob/b46b6e72d1906ca31e29855bda71f3498c8e203f/lib/discourse.rb#L215-L222). A full list of possible `AuthProvider` options can be found [here](https://github.com/discourse/discourse/blob/master/lib/auth/auth_provider.rb#L8-L12). Text content **can** be defined using these options, but it is better to provide localisable strings in `client.en.yml` following the standard keys. For example:
+In core, registration takes place in [`discourse.rb`](https://github.com/discourse/discourse/blob/b46b6e72d1906ca31e29855bda71f3498c8e203f/lib/discourse.rb#L215-L222). A full list of possible `AuthProvider` options can be found [here](https://github.com/discourse/discourse/blob/b46b6e72d1906ca31e29855bda71f3498c8e203f/lib/auth/auth_provider.rb#L8-L12). Text content **can** be defined using these options, but it is better to provide localisable strings in `client.en.yml` following the standard keys. For example:
 
 https://github.com/discourse/discourse-openid-connect/blob/88fdf7b5ab624aba7c207e403665e0393334794a/config/locales/client.en.yml#L1-L7
 
@@ -88,6 +88,6 @@ The user is a fresh instance will be populated by session data which is prepared
 
 To provide a seamless switch to the new system, data should be migrated from the old storage location. For core authentication providers, this may be dedicated tables. For plugins, this may be `plugin_store_rows`, or `oauth2_user_infos`. The minimum data required in a `user_associated_accounts` row is `provider_name`, `provider_uid` and `user_id`. For an example migration see:
 
-https://github.com/discourse/discourse/blob/master/db/migrate/20181207141900_migrate_twitter_user_info.rb
+https://github.com/discourse/discourse/blob/main/db/migrate/20181207141900_migrate_twitter_user_info.rb
 
 Once the `ManagedAuthenticator` system has been released to the stable branch with v2.2.0, we will begin migrating official authentication **plugins**. At this point, a `plugin_store_row` migration example will be added here.

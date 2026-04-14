@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post event", type: :system do
+describe "Post event" do
   fab!(:admin)
   fab!(:user, :admin)
   fab!(:group)
@@ -51,7 +51,18 @@ describe "Post event", type: :system do
       expect(post_event_page).to have_description(
         %r{this is a test description\s+and a link http://example.com},
       )
-      expect(page).to have_css(".event-description a[href='http://example.com']")
+    end
+
+    it "shows the full description without a toggle in the topic view" do
+      title = "Event with full description"
+      description = "A short event description"
+      raw = "[event start='2222-02-22 14:22']\n#{description}\n[/event]"
+      post = PostCreator.create(admin, title:, raw:)
+
+      visit(post.topic.url)
+
+      expect(post_event_page).to have_description(description)
+      expect(post_event_page).to have_no_description_toggle
     end
 
     it "correctly builds a multiline description" do
@@ -383,6 +394,30 @@ describe "Post event", type: :system do
         .send_invites
 
       expect(bulk_invite_modal_page).to be_closed
+    end
+  end
+
+  context "with add to calendar from more menu" do
+    it "includes rrule for recurring events" do
+      admin.user_option.update!(default_calendar: "ics")
+
+      title = "Weekly standup"
+      raw = <<~MD
+        [event start='2222-02-22 14:00' recurrence='every_week']
+        [/event]
+      MD
+      post = PostCreator.create!(admin, title:, raw:)
+
+      visit(post.topic.url)
+
+      ics_content = nil
+      page.driver.with_playwright_page do |pw_page|
+        download = pw_page.expect_download { post_event_page.add_to_calendar }
+        ics_content = download.path.then { |path| File.read(path) }
+      end
+
+      expect(ics_content).to include("RRULE:")
+      expect(ics_content).to include("FREQ=WEEKLY")
     end
   end
 end

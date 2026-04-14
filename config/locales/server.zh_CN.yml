@@ -551,6 +551,7 @@ zh_CN:
       adding_too_many_users:
         other: "一次最多可以添加 %{count} 个用户"
       usernames_or_emails_required: "必须存在用户名或电子邮件"
+      cannot_add_emails: "只有用户名才能添加成员到此群组。如需通过电子邮件邀请，请使用“邀请”按钮。"
       counting_too_many_email_domains:
         other: "一次最多可以统计 %{count} 个电子邮件域"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
@@ -986,6 +987,8 @@ zh_CN:
     connection_error: "与服务器连接时出现问题，请检查服务器名称和端口并重试。"
     timeout_error: "连接服务器时超时，请检查服务器名称和端口后并重试。"
     unhandled_error: "测试电子邮件设置时出现未处理的错误。%{message}"
+    invalid_host: "提供的主机解析到了一个被禁止的 IP 地址。"
+    host_resolve_failed: "无法解析提供的主机。"
   webauthn:
     validation:
       invalid_type_error: "提供的 webauthn 类型无效。有效类型为 webauthn.get 和 webauthn.create。"
@@ -1070,6 +1073,8 @@ zh_CN:
       weekly: "每周"
       every_month: "每月"
       every_six_months: "每六个月"
+  calendar_subscriptions:
+    application_name: "日历订阅"
   user_api_key:
     title: '授权“%{application_name}”'
     authorize: "授权"
@@ -1080,6 +1085,8 @@ zh_CN:
     permissions_header: '这将允许“%{application_name}”：'
     redirect_warning: "授权会将您重定向到"
     instructions: '我们刚刚生成了一个新的用户 API 密钥供您与“%{application_name}”搭配使用，请将以下密钥粘贴到您的应用程序中：'
+    copy_key: "复制密钥"
+    copied: "已复制！"
     otp_description: '要允许“%{application_name}”访问此网站吗？'
     otp_confirmation:
       confirm_title: 继续访问 %{site_name}
@@ -2375,6 +2382,7 @@ zh_CN:
     show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
     enable_site_owner_onboarding: "在首页上向新管理员显示面板以帮助他们开始。重新启用此设置以再次查看入门步骤。"
+    site_owner_onboarding_max_days: "网站创建后显示入门横幅的最大天数。"
     enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎成员并允许他们搜索站点内容"
     welcome_banner_image: "设置在欢迎横幅背景中显示的图片。"
     welcome_banner_location: "确定欢迎横幅在页面上的显示位置。"
@@ -2390,6 +2398,7 @@ zh_CN:
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     enable_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图片包装在 [grid] 标记中。"
+    enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
     impersonate_without_logout: "允许管理员在不退出其管理员帐户的情况下模拟用户。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
@@ -2415,7 +2424,6 @@ zh_CN:
     fake_upcoming_change: "这是用于测试目的虚假即将推出的更改。无需翻译此字符串。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
     rename_faq_to_guidelines: "此次更改将常见问题解答页面重命名为准则。常见问题解答页面仍可通过 /faq 访问。'faq url' 设置与以前一样有效。"
-    experimental_tag_settings_page: "在 /tag/:slug/:id/edit 下为标签启用专用设置页面。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     enable_custom_splash_screen: "允许您使用自己的 SVG 图片自定义加载启动画面。通过 'splash screen image' 设置上传图片。警告：这可能会对 LCP 分数和 Google 索引产生负面影响。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
@@ -2535,6 +2543,8 @@ zh_CN:
       exclude_tag_group: "排除带有特定标签组的标签的话题"
       activity_before: "显示最新活动在某个日期之前（YYYY-MM-DD 或几天前）的话题"
       activity_after: "显示最新活动在某个日期之后（YYYY-MM-DD 或几天前）的话题"
+      bookmarked_before: "显示指定日期（YYYY-MM-DD 或天数前）之前收藏的主题"
+      bookmarked_after: "显示按日期（YYYY-MM-DD 或天数）后收藏的主题"
       created_before: "显示在某个日期之前（YYYY-MM-DD 或几天前）创建的话题"
       created_after: "显示在某个日期之后（YYYY-MM-DD 或几天前）创建的话题"
       created_by: "显示特定用户或群组创建的话题"
@@ -2938,32 +2948,32 @@ zh_CN:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
     text_body_template: |
-      太好了，新版本的 [Discourse](https://www.discourse.org) 现已发布！
+      太好了！[Discourse](https://www.discourse.org) 新版本已发布！
 
-      您的版本：%{installed_version}
+      您的版本： %{installed_version}
       新版本：**%{new_version}**
 
-      - 使用我们的**[一键式浏览器更新](%{base_url}/admin/update)**进行更新
+      - 使用我们便捷的 **一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化，或查看[原始 GitHub 更改日志](https://github.com/discourse/discourse/commits/main)
+      - 查看[发行说明](https://releases.discourse.org/changelog/%{new_version})了解新增功能
 
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 了解 Discourse 的新闻、讨论和支持。
+      - 访问[meta.discourse.org](https://meta.discourse.org)获取Discourse的新闻、讨论和支持
   new_version_mailer_with_notes:
     title: "带版本说明的新版本邮件"
     subject_template: "[%{email_prefix}] 有可用更新"
     text_body_template: |
-      太好了，新版本的 [Discourse](https://www.discourse.org) 现已发布！
+      太好了！[Discourse](https://www.discourse.org) 新版本上线啦！
 
-      您的版本：%{installed_version}
+      您的版本： %{installed_version}
       新版本：**%{new_version}**
 
-      - 使用我们简单的**[一键式浏览器更新](%{base_url}/admin/update)**进行更新
+      - 使用我们便捷的 **[一键浏览器更新](%{base_url}/admin/update)** 进行更新
 
-      - 查看[版本说明](https://meta.discourse.org/tag/release-notes)中的最新变化，或查看[原始 GitHub 更改日志](https://github.com/discourse/discourse/commits/main)
+      - 查看[发行说明](https://releases.discourse.org/changelog/%{new_version})中的新增功能
 
-      - 访问 [meta.discourse.org](https://meta.discourse.org) 了解 Discourse 的新闻、讨论和支持
+      - 访问[meta.discourse.org](https://meta.discourse.org) 获取 Discourse 的新闻、讨论和支持
 
-      ### 版本说明
+      ### 发行说明
 
       %{notes}
   flag_reasons:
@@ -3015,47 +3025,9 @@ zh_CN:
     reviewable_queued_post_revise_and_reject:
       title: "对您的帖子的反馈"
       subject_template: "对您在 %{topic_title} 下发表的帖子的反馈"
-      text_body_template: |
-        %{username}，您好！
-
-        我们审核了您在 [%{topic_title}](%{topic_url}) 下发表的帖子，并有一些反馈供您查阅。
-
-        原因：%{reason}
-
-        反馈：%{feedback}
-
-        您可以在下方编辑原帖，然后重新提交，进行建议的修改。如果您有任何问题，也可以回复此消息。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        谢谢！
-        %{site_name} 版主
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "对您的话题的反馈"
       subject_template: '对标题为“%{topic_title}”的新话题的反馈'
-      text_body_template: |
-        %{username}，您好！
-
-        我们审核了您标题为“%{topic_title}”的新话题，并有一些反馈供您查阅。
-
-        原因：%{reason}
-
-        反馈：%{feedback}
-
-        您可以在下方编辑话题的原帖，然后重新提交，进行建议的修改。如果您有任何问题，也可以回复此消息。
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        谢谢！
-        %{site_name} 版主
     post_hidden_again:
       title: "帖子被再次隐藏"
       preview: "由于社区成员的再次举报，帖子已被隐藏。"

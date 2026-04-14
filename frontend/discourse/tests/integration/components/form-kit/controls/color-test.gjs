@@ -210,6 +210,53 @@ module(
       assert.strictEqual(formKit().field("color").value(), "AABBCC");
     });
 
+    test("@prefixHex stores value with # prefix", async function (assert) {
+      let data = { color: "" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @prefixHex={{true}} />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.true(formKit().field("color").hasPrefix());
+
+      await fillIn(".form-kit__control-color-input-hex", "FF0000");
+      await formKit().submit();
+
+      assert.strictEqual(data.color, "#FF0000");
+    });
+
+    test("@prefixHex with native color picker", async function (assert) {
+      let data = { color: "#FF0000" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
+            <form.Field @type="color" @name="color" @title="Color" as |field|>
+              <field.Control @prefixHex={{true}} />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.dom(".form-kit__control-color-input-hex").hasValue("FF0000");
+
+      const picker = formKit().field("color").pickerElement;
+      picker.value = "#00FF00";
+      picker.dispatchEvent(new Event("input", { bubbles: true }));
+
+      await formKit().submit();
+
+      assert.strictEqual(data.color, "#00ff00");
+    });
+
     test("@collapseSwatches and @collapseSwatchesLabel", async function (assert) {
       const colors = ["FF0000", "00FF00", "0000FF"];
       let data = { color: null };

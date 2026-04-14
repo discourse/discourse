@@ -830,6 +830,9 @@
             },
             "interface_color_mode": {
               "type": "integer"
+            },
+            "show_original_content": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -871,7 +874,8 @@
             "timezone",
             "skip_new_user_tips",
             "topics_unread_when_closed",
-            "interface_color_mode"
+            "interface_color_mode",
+            "show_original_content"
           ]
         }
       },

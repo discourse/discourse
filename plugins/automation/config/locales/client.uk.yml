@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Запустити автоматизацію через API"
   js:
     admin:
       logs:
@@ -210,9 +217,9 @@ uk:
               description: "Необов’язково, обмежувати лише повідомлення з цими функціями"
           created: Створено
           edited: Відредаговано
-          topics: Всі теми
-          personal_messages: Особисті повідомлення
-          public_topics: Публічні теми (виключати всі захищені категорії)
+          topics: Теми (всі категорії)
+          personal_messages: Тільки особисті повідомлення
+          public_topics: Теми (лише загальнодоступні категорії)
           with_images: Зображення
           with_links: Посилання
           with_code: Код

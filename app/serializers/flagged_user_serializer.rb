@@ -31,6 +31,10 @@ class FlaggedUserSerializer < BasicUserSerializer
     object.ip_address.try(:to_s)
   end
 
+  def include_ip_address?
+    scope.can_see_ip?
+  end
+
   def flags_agreed
     object.user_stat.flags_agreed
   end

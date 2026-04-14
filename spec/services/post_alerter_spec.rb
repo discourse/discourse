@@ -1144,6 +1144,7 @@ RSpec.describe PostAlerter do
         post_number: post.post_number,
         topic_title: post.topic.title,
         topic_id: post.topic.id,
+        post_id: post.id,
         excerpt: post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
         username: post.username,
         post_url: post.url,
@@ -1300,6 +1301,8 @@ RSpec.describe PostAlerter do
       end
 
       set_subfolder "/subpath"
+      post = mention_post
+
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,
         "url" => Discourse.base_url,
@@ -1311,9 +1314,10 @@ RSpec.describe PostAlerter do
             "post_number" => 1,
             "topic_title" => topic.title,
             "topic_id" => topic.id,
+            "post_id" => post.id,
             "excerpt" => "Hello @eviltrout ❤",
             "username" => user.username,
-            "url" => UrlHelper.absolute(Discourse.base_path + mention_post.url),
+            "url" => UrlHelper.absolute(Discourse.base_path + post.url),
             "client_id" => "xxx0",
           },
           {
@@ -1321,15 +1325,14 @@ RSpec.describe PostAlerter do
             "post_number" => 1,
             "topic_title" => topic.title,
             "topic_id" => topic.id,
+            "post_id" => post.id,
             "excerpt" => "Hello @eviltrout ❤",
             "username" => user.username,
-            "url" => UrlHelper.absolute(Discourse.base_path + mention_post.url),
+            "url" => UrlHelper.absolute(Discourse.base_path + post.url),
             "client_id" => "xxx1",
           },
         ],
       }
-
-      post = mention_post
 
       expect(JSON.parse(body)).to eq(payload)
       expect(headers["Content-Type"]).to eq("application/json")
@@ -1355,6 +1358,7 @@ RSpec.describe PostAlerter do
       changes = {
         "notification_type" => Notification.types[:posted],
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),
@@ -1375,6 +1379,7 @@ RSpec.describe PostAlerter do
 
       changes = {
         "post_number" => new_post.post_number,
+        "post_id" => new_post.id,
         "username" => new_post.user.username,
         "excerpt" => new_post.raw,
         "url" => UrlHelper.absolute(Discourse.base_path + new_post.url),
@@ -2654,6 +2659,29 @@ RSpec.describe PostAlerter do
       expect(email.to).to contain_exactly(group_user1.user.email)
       expect(email.cc).to eq(nil)
       expect(email.subject).to eq("[Discourse] [PM] #{topic.title}")
+    end
+
+    it "excludes users with email_messages_level set to never from group SMTP emails" do
+      NotificationEmailer.enable
+
+      incoming_email_post = create_post_with_incoming
+      topic = incoming_email_post.topic
+
+      # Get one of the topic allowed users and set their email preference to never
+      topic_allowed_user = topic.topic_allowed_users.first
+      topic_allowed_user.user.user_option.update!(
+        email_messages_level: UserOption.email_level_types[:never],
+      )
+
+      post = Fabricate(:post, topic: topic.reload)
+
+      PostAlerter.new.after_save_post(post, true)
+
+      # The group SMTP email should not include the user who has email disabled
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to eq([group.email_username])
+      expect(email.to).not_to include(topic_allowed_user.user.email)
+      expect(email.cc).not_to include(topic_allowed_user.user.email)
     end
 
     it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do

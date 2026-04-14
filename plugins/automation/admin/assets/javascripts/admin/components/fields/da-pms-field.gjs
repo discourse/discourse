@@ -2,13 +2,12 @@ import { Input } from "@ember/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedArray, trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
@@ -68,11 +67,7 @@ export default class PmsField extends BaseField {
             <DAFieldLabel @label={{this.rawLabel}} @field={{@field}} />
             <div class="controls">
               <div class="field-wrapper">
-                <DEditor
-                  @value={{pm.raw}}
-                  @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
-                  @processPreview={{false}}
-                />
+                <DEditor @value={{pm.raw}} />
 
                 {{#if this.displayPlaceholders}}
                   <PlaceholdersList
@@ -129,9 +124,9 @@ export default class PmsField extends BaseField {
 
     // a hack to prevent warnings about modifying multiple times in the same runloop
     next(() => {
-      this.args.field.metadata.value = new TrackedArray(
+      this.args.field.metadata.value = trackedArray(
         (this.args.field.metadata.value || []).map((pm) => {
-          return new TrackedObject(pm);
+          return trackedObject(pm);
         })
       );
     });
@@ -150,7 +145,7 @@ export default class PmsField extends BaseField {
   @action
   insertPM() {
     this.args.field.metadata.value.push(
-      new TrackedObject({
+      trackedObject({
         title: "",
         raw: "",
         delay: 0,

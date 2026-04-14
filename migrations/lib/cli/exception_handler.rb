@@ -8,15 +8,16 @@ module Migrations
       rescue ClassFilter::UnknownClassNamesError => e
         handle_unknown_class_names_error(e)
         exit(1)
+      rescue Database::Schema::ConfigError, Database::Schema::GenerationError => e
+        puts e.message.red
+        exit(1)
       rescue => e
         puts "An error occurred: #{e.message}".red
         puts e.backtrace.join("\n")
         exit(1)
       end
 
-      private
-
-      def self.handle_unknown_class_names_error(error)
+      private_class_method def self.handle_unknown_class_names_error(error)
         all_suggestions_found = true
 
         error.missing_names.each do |missing_name|

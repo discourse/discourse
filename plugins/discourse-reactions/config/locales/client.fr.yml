@@ -15,8 +15,6 @@ fr:
       reactions_title: "Réactions"
       state_panel:
         more_users: "et %{count} de plus..."
-      reaction:
-        forbidden: "Cette réaction a été créée il y a trop longtemps. Elle ne peut plus être modifiée ou supprimée."
       picker:
         react_with: "Réagir à ce message avec : %{reaction}"
         cant_remove_reaction: "Vous ne pouvez plus supprimer votre réaction"

@@ -1,5 +1,7 @@
 // @ts-check
 
+import { waitForPromise } from "@ember/test-waiters";
+
 /**
  * @typedef PluginContext
  * @property {string} placeholder
@@ -11,6 +13,7 @@
  * @property {import("discourse/services/modal").default} modal
  * @property {import("discourse/float-kit/services/toasts").default} toasts
  * @property {import("discourse/models/site").default} site
+ * @property {Record<string, unknown>} siteSettings
  * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} replaceToolbar
  * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} addGlimmerNodeView
  * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} removeGlimmerNodeView
@@ -149,8 +152,9 @@ export function clearRichEditorExtensions() {
 }
 
 export async function resetRichEditorExtensions() {
-  const { default: extensions } =
-    await import("discourse/static/prosemirror/extensions/register-default");
+  const { default: extensions } = await waitForPromise(
+    import("discourse/static/prosemirror/extensions/register-default")
+  );
   clearRichEditorExtensions();
   extensions.forEach(registerRichEditorExtension);
 }

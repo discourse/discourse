@@ -3,7 +3,8 @@
 DiscourseDataExplorer::Engine.routes.draw do
   root to: "query#index"
   get "queries" => "query#index"
-  get "queries/:id" => "query#show"
+  get "queries/new" => "query#index"
+  get "queries/:id" => "query#show", :constraints => { id: /-?\d+/ }
 
   scope "/", defaults: { format: :json } do
     get "schema" => "query#schema"

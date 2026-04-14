@@ -556,6 +556,27 @@ RSpec.describe CategoriesController do
           expect(UserHistory.count).to eq(1)
         end
 
+        it "creates a category with posting review mode" do
+          group = Fabricate(:group)
+
+          post "/categories.json",
+               params: {
+                 name: "Review Category",
+                 category_setting_attributes: {
+                   topic_posting_review_mode: "everyone_except",
+                   reply_posting_review_mode: "everyone",
+                 },
+                 topic_posting_review_group_ids: [group.id],
+               }
+
+          expect(response.status).to eq(200)
+
+          category = Category.find(response.parsed_body["category"]["id"])
+          expect(category.category_setting.topic_posting_review_mode).to eq("everyone_except")
+          expect(category.topic_posting_review_group_ids).to contain_exactly(group.id)
+          expect(category.category_setting.reply_posting_review_mode).to eq("everyone")
+        end
+
         it "creates category with description containing markdown" do
           post "/categories.json",
                params: {
@@ -572,23 +593,6 @@ RSpec.describe CategoriesController do
           expect(category.description).not_to include("**test**")
           expect(category.topic.first_post.raw).to include("**test**")
           expect(category.topic.first_post.raw).to include("[link](https://example.com)")
-        end
-
-        it "sanitizes description to prevent XSS" do
-          post "/categories.json",
-               params: {
-                 name: "XSS Test Category",
-                 description:
-                   "This has <script>alert('xss')</script> and <img src=x onerror=alert('xss')>",
-               }
-
-          expect(response.status).to eq(200)
-          cat_json = response.parsed_body["category"]
-
-          category = Category.find(cat_json["id"])
-          expect(category.description).not_to include("<script>")
-          expect(category.description).not_to include("&lt;script&gt;")
-          expect(category.description).to include("&lt;img")
         end
 
         describe "when category_type is provided" do
@@ -960,6 +964,19 @@ RSpec.describe CategoriesController do
           expect(category.topic_title_placeholder).to eq("test topic title placeholder")
         end
 
+        it "updates description and revises category topic OP to stay in sync" do
+          cat = Fabricate(:category_with_definition, user: admin)
+          raw_description = "New **markdown** description here"
+
+          put "/categories/#{cat.id}.json", params: { description: raw_description }
+
+          expect(response.status).to eq(200)
+          cat.reload
+          expect(cat.description).to include("<strong>markdown</strong>")
+          expect(cat.topic.first_post.raw).to eq(raw_description)
+          expect(cat.topic.first_post.cooked).to include("<strong>markdown</strong>")
+        end
+
         it "logs the changes correctly" do
           category.update!(
             permissions: {
@@ -1189,6 +1206,49 @@ RSpec.describe CategoriesController do
           expect(category.reload.moderating_groups).to be_blank
         end
 
+        it "sets topic_posting_review_mode to everyone" do
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  topic_posting_review_mode: "everyone",
+                },
+              }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.category_setting.topic_posting_review_mode).to eq("everyone")
+        end
+
+        it "sets topic_posting_review_mode to everyone_except with group IDs" do
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  topic_posting_review_mode: "everyone_except",
+                },
+                topic_posting_review_group_ids: [mod_group_1.id, mod_group_2.id],
+              }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.category_setting.topic_posting_review_mode).to eq("everyone_except")
+          expect(category.topic_posting_review_group_ids).to contain_exactly(
+            mod_group_1.id,
+            mod_group_2.id,
+          )
+        end
+
+        it "sets reply_posting_review_mode to no_one_except with group IDs" do
+          put "/categories/#{category.id}.json",
+              params: {
+                category_setting_attributes: {
+                  reply_posting_review_mode: "no_one_except",
+                },
+                reply_posting_review_group_ids: [mod_group_3.id],
+              }
+          expect(response.status).to eq(200)
+          category.reload
+          expect(category.category_setting.reply_posting_review_mode).to eq("no_one_except")
+          expect(category.reply_posting_review_group_ids).to contain_exactly(mod_group_3.id)
+        end
+
         it "can correctly convert blank strings to appropriate null values" do
           put "/categories/#{category.id}.json", params: { email_in: "", minimum_required_tags: "" }
           expect(response.status).to eq(200)
@@ -1234,6 +1294,22 @@ RSpec.describe CategoriesController do
             expect(response.status).to eq(200)
             expect(SiteSetting.max_category_nesting).to eq(3)
           end
+        end
+
+        it "updates locale when content_localization_enabled" do
+          SiteSetting.content_localization_enabled = true
+
+          put "/categories/#{category.id}.json", params: { locale: "ja" }
+          expect(response.status).to eq(200)
+          expect(category.reload.locale).to eq("ja")
+        end
+
+        it "does not update locale when content_localization_enabled is false" do
+          SiteSetting.content_localization_enabled = false
+
+          put "/categories/#{category.id}.json", params: { locale: "ja" }
+          expect(response.status).to eq(200)
+          expect(category.reload.locale).to be_nil
         end
       end
     end

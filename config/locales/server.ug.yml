@@ -1131,6 +1131,7 @@ ug:
     read: "ئوقۇ"
     read_write: "ئوقۇ/ياز"
     instructions: 'بىز «%{application_name}» بىلەن ماسلاشتۇرۇپ ئىشلىتىش ئۈچۈن سىزگە يېڭى ئىشلەتكۈچى API شىفىرلىق ئاچقۇچى ھاسىللىدۇق، تۆۋەندىكى شىفىرلىق ئاچقۇچنى پىروگراممىڭىزغا كۆچۈرۈڭ:'
+    copied: "كۆچۈرۈلدى!"
     otp_description: '«%{application_name}» نىڭ بۇ تور بېكەتنى زىيارەت قىلىشىغا يول قويامسىز؟'
     otp_confirmation:
       confirm_title: '%{site_name} زىيارىتىنى داۋاملاشتۇرىدۇ'
@@ -2893,35 +2894,9 @@ ug:
   new_version_mailer:
     title: "يېڭى نەشرىدىكى خەت"
     subject_template: "[%{email_prefix}] يېڭى Discourse نەشرى، يېڭىلانما بار"
-    text_body_template: |
-      ھۇررا، يېڭى نەشرىدىكى [Discourse](https://www.discourse.org) ئېلان قىلىندى!
-
-      نەشرىڭىز: %{installed_version}
-      يېڭى نەشرى: **%{new_version}**
-
-      - يېڭىلاشتا بىزنىڭ **[بىر چېكىپلا توركۆرگۈدە يېڭىلاش](%{base_url}/admin/update) نى ئىشلىتىڭ**
-
-      - [تارقىتىش ئۇقتۇرۇشى](https://meta.discourse.org/tag/release-notes) دىكى يېڭىلىق ياكى [ئەسلى GitHub ئۆزگىرىش خاتىرىسى] (https://github.com/discourse/discourse/commits/main) نى كۆرۈشتە
-
-      - Discourse ھەققىدىكى خەۋەر، سۆھبەت ۋە قوللاش ئۇچۇرىنى كۆرۈشتە [meta.discourse.org](https://meta.discourse.org) نى زىيارەت قىلىڭ
   new_version_mailer_with_notes:
     title: "نەشر ئىزاھاتى بار يېڭى نەشرىدىكى خەت"
     subject_template: "[%{email_prefix}] يېڭىلانما بار"
-    text_body_template: |
-      ھۇررا، يېڭى نەشرىدىكى [Discourse](https://www.discourse.org) ئېلان قىلىندى!
-
-      نەشرىڭىز: %{installed_version}
-      يېڭى نەشرى: **%{new_version}**
-
-      - يېڭىلاشتا بىزنىڭ **[بىر چېكىپلا توركۆرگۈدە يېڭىلاش](%{base_url}/admin/update) نى ئىشلىتىڭ**
-
-      - [تارقىتىش ئۇقتۇرۇشى](https://meta.discourse.org/tag/release-notes) دىكى يېڭىلىق ياكى [ئەسلى GitHub ئۆزگىرىش خاتىرىسى] (https://github.com/discourse/discourse/commits/main) نى كۆرۈشتە
-
-      - Discourse ھەققىدىكى خەۋەر، سۆھبەت ۋە قوللاش ئۇچۇرىنى كۆرۈشتە [meta.discourse.org](https://meta.discourse.org) نى زىيارەت قىلىڭ
-
-      ###تارقىتىش ئىزاھاتى
-
-      %{notes}
   flag_reasons:
     off_topic: "يازمىڭىز **تېمىدىن چەتنىگەن** دەپ پاش قىلىنغان: تېمىنىڭ ماۋزۇسى ۋە تۇنجى يازمىغا ئاساسەن جامائەت بۇ تېمىغا ماس كەلمەيدۇ دەپ قارايدۇ."
     inappropriate: "يازمىڭىز **مۇۋاپىق بولمىغان** دەپ پاش قىلىنغان: جامائەت ئۇنى كىشىنى بىزار قىلىدىغان، ھاقارەتلەيدىغان، ئۆچمەنلىككە تەۋە قىلمىش ياكى [جامائەت مىزانىمىز](%{base_path}/guidelines) غا خىلاپ دەپ قارايدۇ."
@@ -2970,47 +2945,9 @@ ug:
     reviewable_queued_post_revise_and_reject:
       title: "يازمىڭىزدىكى قايتۇرما ئىنكاس"
       subject_template: "%{topic_title} دىكى يازمىڭىزدىكى قايتۇرما ئىنكاس"
-      text_body_template: |
-        سالام %{username}،
-
-        بىز[%{topic_title}](%{topic_url}) دىكى يازمىڭىزنى تەكشۈردۇق ھەمدە سىزگە ئازراق ئىنكاسىمىز بار.
-
-        سەۋەب: %{reason}
-
-        قايتۇرما ئىنكاس: %{feedback}
-
-        سىز تۆۋەندە ئەسلى يازمىنى تەھرىرلەپ، تەۋسىيە ئۆزگەرتىشلەرنى ئېلىپ بېرىپ، ئاندىن ئۇنى قايتا يوللىيالايسىز، ياكى ئەگەر قانداق مەسىلە بولسا مەزكۇر ئۇچۇرغا ئىنكاس يازسىڭىز بولىدۇ.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        كۆپ رەھمەت،
-        %{site_name} رىياسەتچىسى
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "تېمىڭىزدىكى قايتۇرما ئىنكاس"
       subject_template: '«%{topic_title}» ماۋزۇلۇق يېڭى تېمىدىكى قايتۇرما ئىنكاس'
-      text_body_template: |
-        سالام %{username}،
-
-        بىز«%{topic_title}» دىكى يازمىڭىزنى تەكشۈردۇق ھەمدە سىزگە ئازراق ئىنكاسىمىز بار.
-
-        سەۋەب: %{reason}
-
-        قايتۇرما ئىنكاس: %{feedback}
-
-        سىز تۆۋەندە تېمىڭىزنىڭ ئەسلى يازمىسىنى تەھرىرلەپ، تەۋسىيە ئۆزگەرتىشلەرنى ئېلىپ بېرىپ، ئاندىن ئۇنى قايتا يوللىيالايسىز، ياكى ئەگەر قانداق سوئالىڭىز بولسا مەزكۇر ئۇچۇرغا ئىنكاس يازسىڭىز بولىدۇ.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        كۆپ رەھمەت،
-        %{site_name} رىياسەتچىسى
     post_hidden_again:
       title: "يازما قايتا يوشۇرۇلدى"
       subject_template: "جامائەت پاش قىلغانلىقتىن يازما يوشۇرۇلدى، باشقۇرغۇچى خادىمغا ئۇقتۇرۇش قىلىندى"

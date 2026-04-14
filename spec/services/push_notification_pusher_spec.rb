@@ -225,6 +225,91 @@ RSpec.describe PushNotificationPusher do
       end
     end
 
+    describe "localized content" do
+      fab!(:topic) { Fabricate(:topic, title: "Original topic title") }
+      fab!(:post) { Fabricate(:post, topic: topic, raw: "Original post content") }
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.allow_user_locale = true
+        user.update!(locale: "ja")
+      end
+
+      def execute_localized_push
+        PushNotificationPusher.push(
+          user,
+          {
+            topic_title: topic.title,
+            username: "system",
+            excerpt: "Original post content",
+            topic_id: topic.id,
+            post_id: post.id,
+            post_url: "/t/#{topic.id}/#{post.post_number}",
+            notification_type: Notification.types[:mentioned],
+            post_number: post.post_number,
+          },
+        )
+      end
+
+      it "uses localized topic title and post excerpt when localization exists" do
+        Fabricate(
+          :topic_localization,
+          topic: topic,
+          locale: "ja",
+          title: "ローカライズされたトピック",
+          fancy_title: "ローカライズされたトピック",
+        )
+        Fabricate(
+          :post_localization,
+          post: post,
+          locale: "ja",
+          raw: "ローカライズされた投稿",
+          cooked: "<p>ローカライズされた投稿</p>",
+        )
+
+        message = execute_localized_push
+
+        expect(message[:title]).to include("ローカライズされたトピック")
+        expect(message[:body]).to eq("ローカライズされた投稿")
+      end
+
+      it "falls back to original content when no localization exists" do
+        message = execute_localized_push
+
+        expect(message[:title]).to include("Original topic title")
+        expect(message[:body]).to eq("Original post content")
+      end
+
+      it "falls back to original content when content_localization_enabled is false" do
+        SiteSetting.content_localization_enabled = false
+        Fabricate(
+          :topic_localization,
+          topic: topic,
+          locale: "ja",
+          title: "ローカライズされたトピック",
+          fancy_title: "ローカライズされたトピック",
+        )
+
+        message = execute_localized_push
+
+        expect(message[:title]).to include("Original topic title")
+      end
+
+      it "matches regionless locale variants" do
+        Fabricate(
+          :topic_localization,
+          topic: topic,
+          locale: "ja_JP",
+          title: "ローカライズされたトピック",
+          fancy_title: "ローカライズされたトピック",
+        )
+
+        message = execute_localized_push
+
+        expect(message[:title]).to include("ローカライズされたトピック")
+      end
+    end
+
     describe "push_notification_pusher_title_payload modifier" do
       let(:modifier_block) do
         Proc.new do |payload|

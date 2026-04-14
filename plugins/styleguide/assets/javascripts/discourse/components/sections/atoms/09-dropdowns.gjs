@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { fn, get, hash } from "@ember/helper";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
+import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 import PinnedButton from "discourse/components/pinned-button";
 import PinnedOptions from "discourse/components/pinned-options";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
@@ -10,7 +11,6 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import FutureDateInputSelector from "discourse/select-kit/components/future-date-input-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
-import IconPicker from "discourse/select-kit/components/icon-picker";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import MultiSelect from "discourse/select-kit/components/multi-select";
@@ -276,10 +276,10 @@ import UserNotificationsDropdown from "discourse/select-kit/components/user-noti
 
   get iconPickerCode() {
     return `
-import IconPicker from "discourse/select-kit/components/icon-picker";
+import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 
 <template>
-  <IconPicker @name="icon" />
+  <DIconGridPicker />
 </template>
     `;
   }
@@ -484,8 +484,8 @@ import IconPicker from "discourse/select-kit/components/icon-picker";
       />
     </StyleguideExample>
 
-    <StyleguideExample @title="<IconPicker>" @code={{this.iconPickerCode}}>
-      <IconPicker @name="icon" />
+    <StyleguideExample @title="<DIconGridPicker>" @code={{this.iconPickerCode}}>
+      <DIconGridPicker />
     </StyleguideExample>
   </template>
 }

@@ -399,7 +399,7 @@ class Post < ActiveRecord::Base
     hosts = linked_hosts.clone
     allowlisted = allowed_spam_hosts
 
-    hosts.reject! { |h| allowlisted.any? { |w| h.end_with?(w) } }
+    hosts.reject! { |h| allowlisted.any? { |w| h == w || h.end_with?(".#{w}") } }
 
     return hosts if hosts.length == 0
 

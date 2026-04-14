@@ -512,7 +512,7 @@ module("Unit | Model | composer", function (hooks) {
     assert.strictEqual(composer.composerVersion, 1);
   });
 
-  test("serialize normalizes tags to names and keeps original_tags as objects", function (assert) {
+  test("serialize normalizes tags to {id, name} objects", function (assert) {
     const composer = createComposer.call(this, {
       tags: [
         { id: 1, name: "bug", slug: "bug" },
@@ -531,8 +531,11 @@ module("Unit | Model | composer", function (hooks) {
 
     assert.deepEqual(
       serialized.tags,
-      ["bug", "feature"],
-      "tags are normalized to string names"
+      [
+        { id: 1, name: "bug" },
+        { id: 2, name: "feature" },
+      ],
+      "tags are sent as objects with IDs for backend to resolve original names"
     );
     assert.deepEqual(
       serialized.original_tags,
@@ -555,5 +558,28 @@ module("Unit | Model | composer", function (hooks) {
       composer.showCategoryChooser,
       "shows category chooser when lazy_load_categories is enabled even with no categories loaded"
     );
+  });
+
+  test("editPost rolls back state on save failure", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 123,
+      post_number: 2,
+      cooked: "<p>original content</p>",
+    });
+
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      post,
+      reply: "this will 409",
+      topic: store.createRecord("topic", { id: 456 }),
+    });
+
+    await assert.rejects(composer.editPost({}));
+
+    assert.strictEqual(post.cooked, "<p>original content</p>");
+    assert.false(post.staged);
+    assert.strictEqual(composer.composeState, "open");
+    assert.true(composer.editConflict);
   });
 });

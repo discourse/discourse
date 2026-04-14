@@ -9,7 +9,7 @@ en:
     discourse_reactions_like_sync_enabled: "If this is enabled, historical reactions will have their matching Like records created, except those reactions defined in `discourse_reactions_excluded_from_like`. This sync will happen on a regular basis in the background, and also when you change `discourse_reactions_excluded_from_like`."
     discourse_reactions_allow_any_emoji: "If this is enabled, will add a button allowing users to select any emoji in the reactions picker. Members will be allowed to choose any emoji, including custom emoji, for reactions. To limit available reactions, use the `emoji_deny_list` site setting."
     errors:
-      invalid_excluded_emoji: "You cannot exclude emojis that are not in 'discourse reactions enabled reactions' and you cannot exclude the emoji used for 'discourse reactions reaction for like'."
+      invalid_excluded_emoji: "You cannot exclude emojis that are not in 'discourse reactions enabled reactions' (except built-in default exclusions), and you cannot exclude the emoji used for 'discourse reactions reaction for like'."
   badges:
     first_reaction:
       name: First Reaction

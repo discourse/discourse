@@ -50,45 +50,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def import
     @theme = nil
-    if params[:theme] && params[:theme].content_type == "application/json"
-      ban_in_allowlist_mode!
-
-      # .dcstyle.json import. Deprecated, but still available to allow conversion
-      json = JSON.parse(params[:theme].read)
-      theme = json["theme"]
-
-      @theme = Theme.new(name: theme["name"], user_id: theme_user.id, auto_update: false)
-      theme["theme_fields"]&.each do |field|
-        if field["raw_upload"]
-          begin
-            tmp = Tempfile.new
-            tmp.binmode
-            file = Base64.decode64(field["raw_upload"])
-            tmp.write(file)
-            tmp.rewind
-            upload = UploadCreator.new(tmp, field["filename"]).create_for(theme_user.id)
-            field["upload_id"] = upload.id
-          ensure
-            tmp.unlink
-          end
-        end
-
-        @theme.set_field(
-          target: field["target"],
-          name: field["name"],
-          value: field["value"],
-          type_id: field["type_id"],
-          upload_id: field["upload_id"],
-        )
-      end
-
-      if @theme.save
-        log_theme_change(nil, @theme)
-        render json: serialize_data(@theme, ThemeSerializer), status: :created
-      else
-        render json: @theme.errors, status: :unprocessable_entity
-      end
-    elsif remote = params[:remote]
+    if remote = params[:remote]
       if remote.length > MAX_REMOTE_LENGTH
         error =
           I18n.t("themes.import_error.not_allowed_theme", { repo: remote[0..MAX_REMOTE_LENGTH] })
@@ -399,6 +361,67 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:setting_name) unless theme_setting
 
     render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
+  end
+
+  def update_source
+    @theme = Theme.include_relations.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+    raise Discourse::InvalidParameters.new(:remote_theme) unless @theme.remote_theme&.is_git?
+
+    remote_url = params[:remote_url]&.strip
+    raise Discourse::InvalidParameters.new(:remote_url) if remote_url.blank?
+
+    if remote_url.length > MAX_REMOTE_LENGTH
+      error = I18n.t("themes.import_error.not_allowed_theme", { repo: remote_url[0..100] })
+      return render_json_error(error, status: 422)
+    end
+
+    begin
+      guardian.ensure_allowed_theme_repo_import!(remote_url)
+    rescue Discourse::InvalidAccess
+      return(
+        render_json_error I18n.t("themes.import_error.not_allowed_theme", { repo: remote_url }),
+                          status: :forbidden
+      )
+    end
+
+    theme_id = @theme.id
+
+    hijack do
+      begin
+        private_key = nil
+        if params[:public_key].present?
+          private_key = Discourse.redis.get("ssh_key_#{params[:public_key]}")
+          return render_json_error I18n.t("themes.import_error.ssh_key_gone") if private_key.blank?
+        end
+
+        theme = Theme.include_relations.find(theme_id)
+        remote_theme = theme.remote_theme
+        original_url = remote_theme.remote_url
+        original_branch = remote_theme.branch
+        original_private_key = remote_theme.private_key
+
+        remote_theme.remote_url = remote_url
+        remote_theme.branch = params[:branch].presence
+        remote_theme.private_key = private_key if private_key.present?
+        remote_theme.local_version = nil
+        remote_theme.remote_version = nil
+        remote_theme.commits_behind = nil
+        remote_theme.save!
+
+        remote_theme.update_from_remote
+
+        log_theme_change(nil, theme.reload)
+        render json: serialize_data(theme, ThemeSerializer), status: :ok
+      rescue RemoteTheme::ImportError, ActiveRecord::RecordInvalid => e
+        remote_theme.update!(
+          remote_url: original_url,
+          branch: original_branch,
+          private_key: original_private_key,
+        )
+        render_json_error e.message
+      end
+    end
   end
 
   private

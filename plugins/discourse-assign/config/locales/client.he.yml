@@ -135,10 +135,6 @@ he:
           unassigned: "אינם מוקצים"
         assigned:
           label: "הוקצה לטובת"
-    topics:
-      bulk:
-        unassign: "ביטול הקצאת נושאים"
-        assign: "הקצאת נושאים"
     discourse_automation:
       scriptables:
         random_assign:

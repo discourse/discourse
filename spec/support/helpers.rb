@@ -200,7 +200,7 @@ module Helpers
     system("git -C #{path} fetch -q", exception: true)
     branch = `git -C #{path} rev-parse --abbrev-ref HEAD`.strip
     raise "no branch in setup_remote_upstream" if branch.blank?
-    system("git -C #{path} branch -u origin/#{branch}", exception: true)
+    system("git -C #{path} branch -q -u origin/#{branch}", exception: true)
     system("git -C #{path} remote set-head origin #{branch}", exception: true)
   end
 
@@ -342,7 +342,9 @@ module Helpers
   end
 
   def mock_upcoming_change_metadata(metadata)
-    @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
+    # Without ||= here nested blocks would further mutate the instance var so
+    # resetting in clear_mocked_upcoming_change_metadata would not work.
+    @original_upcoming_changes_metadata ||= SiteSetting.upcoming_change_metadata.dup
 
     # We do this because upcoming changes are ephemeral in site settings,
     # so we cannot rely on them for specs. Instead we can fake some metadata
@@ -354,9 +356,35 @@ module Helpers
   end
 
   def clear_mocked_upcoming_change_metadata
+    return if @original_upcoming_changes_metadata.nil?
+
     SiteSetting.instance_variable_set(
       :@upcoming_change_metadata,
       @original_upcoming_changes_metadata,
+    )
+  end
+
+  def mock_upcoming_change_default_overrides(overrides)
+    # Without ||= here nested blocks would further mutate the instance var so
+    # resetting in clear_mocked_upcoming_change_metadata would not work.
+    @original_upcoming_change_default_overrides ||=
+      SiteSetting.upcoming_change_default_overrides.dup
+
+    # We do this because upcoming changes are ephemeral in site settings,
+    # so we cannot rely on them for specs. Instead we can fake some metadata
+    # for an existing stable setting.
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
+      @original_upcoming_change_default_overrides.merge(overrides),
+    )
+  end
+
+  def clear_mocked_upcoming_change_default_overrides
+    return if @original_upcoming_change_default_overrides.nil?
+
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_default_overrides,
+      @original_upcoming_change_default_overrides,
     )
   end
 

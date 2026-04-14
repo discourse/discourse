@@ -77,6 +77,10 @@ Discourse::Application.configure do
     config.logger = Logger.new(STDOUT)
     config.log_level =
       ENV["RAILS_TEST_LOG_LEVEL"].present? ? ENV["RAILS_TEST_LOG_LEVEL"].to_sym : :info
+
+    # Don't log rescued exceptions (RoutingError, RecordNotFound, etc.)
+    # These are expected in system specs that intentionally visit nonexistent routes
+    config.action_dispatch.log_rescued_responses = false
   else
     config.logger = Logger.new(nil)
     config.log_level = :fatal

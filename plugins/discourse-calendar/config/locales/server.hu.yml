@@ -8,6 +8,7 @@ hu:
   reports:
     currently_away:
       title: Jelenleg távol lévő felhasználók
+      description: "Jelenleg szabadságon vagy távolléten lévő felhasználók, akik csoport alapján szűrhetők."
       labels:
         username: Felhasználónév
   discourse_automation:
@@ -15,6 +16,8 @@ hu:
       event_started:
         title: Az esemény elkezdődött
   system_messages:
+    discourse_calendar_holiday_region_invalid: "A megadott ünnepi régió nem létezik."
+    discourse_calendar_enable_holiday_failed: "Ez az ünnep nem engedélyezhető; már engedélyezve van, vagy nincs letiltva."
     discourse_post_event_bulk_invite_succeeded:
       title: "Esemény – A csoportos meghívás sikeres"
       subject_template: "A csoportos meghívás feldolgozása sikeres"
@@ -31,14 +34,43 @@ hu:
         %{logs}
         ```
   site_settings:
+    map_events_to_color: "Rendeljen hozzá egy színt minden egyes címkéhez vagy kategóriához."
+    map_events_title: "Kategóriánként felülírja az „Események” kifejezést a „Közelgő események” oldalsáv címében."
+    calendar_enabled: "A discourse-calendar bővítmény engedélyezése. Ez támogatást biztosít a [calendar][/calendar] címkéhez a témák első hozzászólásában."
+    discourse_post_event_enabled: "Engedélyezi az eseményfunkciókat. Megjegyzés: a „calendar enabled” beállításnak is engedélyezve kell lennie."
+    displayed_invitees_limit: "Korlátozza az eseményen megjelenített meghívottak számát."
+    display_post_event_date_on_topic_title: "Az esemény dátumát a téma címe után jeleníti meg."
+    use_local_event_date: "Helyi dátum használata a téma címe után a relatív idő helyett."
+    discourse_post_event_allowed_on_groups: "Események létrehozására jogosult csoportok."
+    discourse_post_event_allowed_custom_fields: "Lehetővé teszi az egyedi mezők értékeinek beállítását az egyes eseményeknél."
+    discourse_post_event_edit_notifications_time_extension: "Meghosszabbítja (percekben) azt az időtartamot az esemény vége után, amely alatt a „résztvevő” állapotú meghívottak még értesítést kapnak az eredeti bejegyzés szerkesztésekor."
+    holiday_calendar_topic_id: "A munkatársak szabadság/távollét naptárának témaazonosítója."
+    holiday_status_emoji: Meghatározza a szabadság állapothoz használt emojit.
+    delete_expired_event_posts_after: "A lejárt eseményeket tartalmazó bejegyzések (n) óra elteltével automatikusan törlődnek. A törlés kikapcsolásához állítsa az értéket -1-re."
+    all_day_event_start_time: "A megadott kezdési időpont nélküli események ebben az időpontban kezdődnek. A formátum ÓÓ:pp. Reggel 6:00-hoz írja be a 06:00 értéket."
+    all_day_event_end_time: "A megadott befejezési időpont nélküli események ebben az időpontban fejeződnek be. A formátum ÓÓ:pp. Délután 6:00-hoz írja be a 18:00 értéket."
+    all_day_event_time_error: "Érvénytelen idő. A formátumnak ÓÓ:pp-nek kell lennie (pl.: 08:00)."
+    calendar_categories: "Naptár megjelenítése egy kategória tetején. A categoryId megadása kötelező. Példa: categoryId=6;weekends=false;defaultView=year; Egyéb érvényes beállítások: weekends (true/false) és defaultView (day, week, month, year)."
+    calendar_categories_outlet: "Lehetővé teszi annak módosítását, hogy melyik megjelenítési helyen jelenjen meg a kategórianaptár."
+    working_days: "Munkanapok beállítása. Egy csoport elérhetőségét a timezones címke használatával jelenítheti meg egy bejegyzésben, például: [timezones group=admins][timezones]"
     working_day_start_hour: "A munkanapok kezdési időpontja."
     working_day_end_hour: "A munkanapok befejezési időpontja."
+    close_to_working_day_hours_extension: "Állítsa be a munkaórákban megadott hosszabbítási időt az időzónák kiemeléséhez."
+    events_calendar_categories: "Eseménynaptár megjelenítése egy kategória tetején."
+    sort_categories_by_event_start_date_enabled: "Engedélyezi a kategória témáinak rendezését az esemény kezdési dátuma szerint."
+    disable_resorting_on_categories_enabled: "Lehetővé teszi a kategóriák számára az eseménykategória szerinti rendezés letiltását a felhasználók számára."
+    calendar_automatic_holidays_enabled: "A szabadság állapotának automatikus beállítása a felhasználó régiója alapján (megjegyzés: a bővítmény beállításaiban az egyes automatikus ünnepnapok letilthatók)."
+    event_participation_buttons: "Az eseményeken való részvételhez használható gombok listája."
+    sidebar_show_upcoming_events: "Közelgő események linkjének megjelenítése az oldalsávon a „Továbbiak” alatt."
+    calendar_first_day_of_week: "A hét első napjának beállítása a naptár megjelenítéséhez. Választható lehetőségek: szombat, vasárnap vagy hétfő."
   discourse_calendar:
     invite_user_notification: "%{username} meghívta erre: %{description}"
     calendar_must_be_in_first_post: "A naptár címke csak a téma első bejegyzésében használható."
     more_than_one_calendar: "Egy bejegyzésben nem lehet több naptár."
     more_than_two_dates: "Egy naptártéma bejegyzése nem tartalmazhat kettőnél több dátumot."
     event_expired: "Az esemény lejárt"
+    holiday_status:
+      description: "Szabadságon"
   discourse_post_event:
     notifications:
       before_event_reminder: "A(z) %{title} mindjárt kezdődik."
@@ -56,10 +88,18 @@ hu:
           raw_invitees:
             only_group: "Egy esemény csak csoportneveket fogad el."
           ends_at_before_starts_at: "Egy esemény nem érhet véget, mielőtt elkezdődne."
+          max_attendees_reached: "Ez az esemény megtelt."
           start_must_be_present_and_a_valid_date: "Az eseményhez érvényes kezdési dátum szükséges."
           end_must_be_a_valid_date: "A befejezés dátumának érvényes dátumnak kell lennie."
+          invalid_recurrence: "Az ismétlődés a következők egyike kell, hogy legyen: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Ismeretlen időzóna"
           acting_user_not_allowed_to_create_event: "A jelenlegi felhasználó nem hozhat létre eseményeket."
           acting_user_not_allowed_to_act_on_this_event: "A jelenlegi felhasználó nem tehet semmit ennél az eseménynél."
+          invalid_allowed_groups: "Érvénytelen engedélyezett csoportok."
+          acting_user_not_allowed_to_invite_these_groups: "A jelenlegi felhasználó nem hívhatja meg ezeket a csoportokat."
           custom_field_is_invalid: "A(z) „%{field}” egyéni mező nem engedélyezett."
           name:
             length: "Az eseménynév hosszának %{minimum} és %{maximum} karakter között kell lennie."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Esemény emlékeztető"

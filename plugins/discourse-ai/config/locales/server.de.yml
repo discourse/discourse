@@ -127,12 +127,10 @@ de:
     ai_discord_search_mode: "Wähle den Suchmodus für die Discord-Suche aus"
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
-    ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
-    ai_translation_max_tokens_multiplier: "Multiplikator, um die maximale Anzahl der Token festzulegen, die für die Übersetzung verwendet werden sollen. Standardmäßig wird die maximale Anzahl der Token auf etwa das Zwei- bis Fünffache der Anzahl der Zeichen im Beitrag gesetzt. Dieser Multiplikator kann angepasst werden, um Denk- oder Argumentationsmodelle zu berücksichtigen, die mehr Token benötigen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
     ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:
@@ -287,6 +285,13 @@ de:
         missing_required_aliases: "Für folgende Aliase fehlen erforderliche Verknüpfungen zu Anmeldedaten: %{aliases}."
         secret_not_found: "Der Alias „%{alias}“ ist mit nicht vorhandenen Anmeldedaten verknüpft."
         unknown_error: "Die angeforderte Anmeldedaten konnten nicht ermittelt werden."
+    mcp_servers:
+      secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
+      errors:
+        oauth_callback_failed: "OAuth-Verbindung fehlgeschlagen: %{message}"
+        oauth_registration_endpoint_missing: "Der OAuth-Autorisierungsserver bietet keinen Registrierungsendpunkt an."
+        oauth_client_registration_failed: "Die dynamische Client-Registrierung ist mit dem Status „%{status}“ fehlgeschlagen."
+        oauth_client_registration_failed_no_id: "Die dynamische Client-Registrierung war erfolgreich, aber es wurde keine „client_id“ zurückgegeben."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
@@ -487,8 +492,18 @@ de:
         random_picker: "Zufallsauswahl"
         categories: "Kategorien auflisten"
         flag_post: "Beitrag melden"
+        close_topic: "Thema schließen"
+        lock_post: "Beitrag sperren"
+        delete_topic: "Thema löschen"
         edit_post: "Beitrag bearbeiten"
+        edit_tags: "Schlagwörter bearbeiten"
+        edit_category: "Kategorie bearbeiten"
+        set_topic_timer: "Themen-Timer einstellen"
+        set_slow_mode: "Aktiviere langsamen Modus"
         move_posts: "Beiträge verschieben"
+        grant_badge: "Abzeichen verleihen"
+        assign: "Thema zuordnen"
+        mark_as_solved: "Als gelöst markieren"
         search: "Suche"
         tags: "Schlagwörter auflisten"
         time: "Zeit"
@@ -518,7 +533,11 @@ de:
         random_picker: "Zufallszahl oder zufälliges Element aus einer Liste auswählen"
         categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
         flag_post: "Melde den aktuellen Beitrag zur Überprüfung durch das Team"
+        close_topic: "Thema schließen oder öffnen"
         delete_topic: "Ein Thema löschen"
+        edit_post: "Den Inhalt eines Beitrags bearbeiten"
+        edit_category: "Ein Thema in eine andere Kategorie verschieben"
+        grant_badge: "Einem Benutzer ein Abzeichen verleihen"
         search: "Alle öffentlichen Themen im Forum durchsuchen"
         tags: "Alle Schlagwörter im Forum auflisten"
         time: "Zeit in verschiedenen Zeitzonen finden"
@@ -617,9 +636,28 @@ de:
       move_posts:
         errors:
           not_found: "Thema nicht gefunden."
+          move_failed: "Fehler beim Verschieben der Beiträge."
+        success: "Beiträge erfolgreich verschoben."
+      grant_badge:
+        errors:
+          user_not_found: "Benutzer nicht gefunden."
+          badge_not_found: "Abzeichen nicht gefunden."
+          badge_disabled: "Das Abzeichen ist nicht aktiviert."
+          grant_failed: "Das Abzeichen konnte nicht verliehen werden."
+        success: "Abzeichen erfolgreich verliehen."
       assign:
         errors:
+          plugin_not_installed: "Das Discourse Zuordnen Plug-in ist nicht installiert."
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst dieses Thema nicht zuordnen."
+          no_reason: "Um ein Thema zuzuordnen oder die Zuordnung aufzuheben, ist eine Begründung erforderlich."
+          assignee_not_found: "Benutzer oder Gruppe nicht gefunden."
+          assign_failed: "Thema konnte nicht zugeordnet werden."
+        success: "Zuordnung des Themas erfolgreich aktualisiert."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "Das Discourse Gelöst Plug-in ist nicht installiert."
+          no_reason: "Um ein Thema als gelöst oder ungelöst zu markieren, ist eine Begründung erforderlich."
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -702,6 +740,7 @@ de:
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
       user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
+      no_default_llm: Der Agent muss ein default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.
       no_tool_results_specified: Der Parameter tool_results ist beim Fortsetzen eines Streams erforderlich.
@@ -724,6 +763,7 @@ de:
       stream_reply_state_too_large: "Der Stream-Zustand ist zu groß, um ihn zu behalten (maximal %{max} Bytes)."
       stream_reply_unexpected_error: Beim Streaming der Antwort ist ein unerwarteter Fehler aufgetreten.
       prompt_message_length: Die Nachricht %{idx} hat die 1000-Zeichen-Grenze überschritten.
+      agent_already_exists: Ein Agent mit dem Namen %{name} existiert bereits.
       custom_tool_exists:
         one: "Ein benutzerdefiniertes Tool mit dem Namen %{names} existiert bereits."
         other: "Benutzerdefinierte Tools mit dem Namen %{names} existieren bereits."

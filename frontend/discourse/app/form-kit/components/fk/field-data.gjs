@@ -24,6 +24,8 @@ export default class FKFieldData extends Component {
    */
   errorId = uniqueId();
 
+  #controlArgs = { field: this };
+
   // Set by legacy controls in their constructor (during render),
   // read by the applyControlType modifier (post-render)
   _legacyControlType;
@@ -108,9 +110,11 @@ export default class FKFieldData extends Component {
    */
   @cached
   get Control() {
-    const { component, args } = resolveFieldControl(this.type);
-
-    return curryComponent(component, { field: this, ...args }, getOwner(this));
+    return curryComponent(
+      resolveFieldControl(this.type, getOwner(this)),
+      this.#controlArgs,
+      getOwner(this)
+    );
   }
 
   /**

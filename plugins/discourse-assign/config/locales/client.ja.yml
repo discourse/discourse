@@ -136,10 +136,6 @@ ja:
           unassigned: "未割り当てである"
         assigned:
           label: "割り当て先"
-    topics:
-      bulk:
-        unassign: "トピックを割り当て解除"
-        assign: "トピックを割り当てる"
     discourse_automation:
       scriptables:
         random_assign:

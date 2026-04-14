@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { trackedObject } from "@ember/reactive/collections";
 import DButton from "discourse/components/d-button";
 import AssignUserForm from "../assign-user-form";
 
 export default class AssignUser extends Component {
-  model = new TrackedObject({});
+  model = trackedObject({});
 
   // `submit` property will be mutated by the `AssignUserForm` component
   formApi = {

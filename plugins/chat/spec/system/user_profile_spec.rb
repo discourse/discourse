@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User profile", type: :system do
+RSpec.describe "User profile" do
   fab!(:current_user, :user)
   fab!(:user)
 

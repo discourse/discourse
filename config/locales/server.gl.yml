@@ -804,6 +804,7 @@ gl:
     read: "lectura"
     read_write: "lectura/escritura"
     instructions: 'Acabamos de xerar unha nova chave API de usuario para que utilice con "%{application_name}"; pegue a seguinte chave na súa aplicación:'
+    copied: "Copiado!"
     otp_description: 'Gustaríalle darlle permiso a "%{application_name}" para acceder a este sitio?'
     otp_confirmation:
       confirm_title: Continuar a %{site_name}

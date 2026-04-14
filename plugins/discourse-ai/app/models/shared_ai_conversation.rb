@@ -91,8 +91,9 @@ class SharedAiConversation < ActiveRecord::Base
     html = +""
     populated_context.each do |post|
       text = PrettyText.excerpt(post.cooked, 400, strip_links: true, strip_details: true)
+      username = ERB::Util.html_escape(post.user.username)
 
-      html << "<p><b>#{post.user.username}</b>: #{text}</p>"
+      html << "<p><b>#{username}</b>: #{text}</p>"
       if html.length > 1000
         html << "<p>...</p>"
         break
@@ -103,6 +104,7 @@ class SharedAiConversation < ActiveRecord::Base
   end
 
   def onebox
+    escaped_title = ERB::Util.html_escape(title)
     <<~HTML
     <div>
       <aside class="onebox allowlistedgeneric" data-onebox-src="#{url}">
@@ -111,7 +113,7 @@ class SharedAiConversation < ActiveRecord::Base
         <a href="#{url}" target="_blank" rel="nofollow ugc noopener" tabindex="-1">#{Discourse.base_uri}</a>
       </header>
       <article class="onebox-body">
-      <h3><a href="#{url}" rel="nofollow ugc noopener" tabindex="-1">#{title}</a></h3>
+      <h3><a href="#{url}" rel="nofollow ugc noopener" tabindex="-1">#{escaped_title}</a></h3>
     #{html_excerpt}
     </article>
     <div style="clear: both"></div>

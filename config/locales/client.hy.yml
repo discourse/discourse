@@ -382,8 +382,6 @@ hy:
           other: "Ստեղծվել է %{count} տարի առաջ"
     bookmarked:
       title: "Էջանշել"
-      edit_bookmark: "Խմբագրել Էջանիշը"
-      clear_bookmarks: "Ջնջել Էջանշանները"
       help:
         bookmark: "Սեղմեք այս թեման էջանշելու համար"
         edit_bookmark: "Սեղմեք՝ այս թեմայի գրառման էջանիշը խմբագրելու համար"
@@ -400,12 +398,12 @@ hy:
       create: "Ստեղծել էջանշան"
       edit: "Խմբագրել էջանշանը"
       not_bookmarked: "Էջանշել այս գրառումը"
+      topic_bookmark: "Թեմա"
       remove_reminder_keep_bookmark: "Հեռացնել հիշեցումը և պահել էջանիշը"
       created_with_reminder: "Դուք էջանշել եք այս գրառումը %{date} %{name} հիշեցմամբ"
       created_with_reminder_generic: "Դուք էջանշել եք սա %{date} %{name} հիշեցմամբ"
       delete: "Ջնջել Էջանշանը"
       confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս էջանշանը: Բոլոր կապակցված   հիշեցումները կջնջվեն: "
-      confirm_clear: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հեռացնել այս թեմայի բոլոր էջանշանները:"
       save: "Պահպանել"
       no_timezone: 'Դուք դեռ չեք նշել ձեր ժամային գոտին: Դուք չեք կարողանա հիշեցումներ անել: Տեղադրեք <a href="%{basePath}/my/preferences/profile"> ձեր պրոֆիլում:'
       invalid_custom_datetime: "Ամսաթիվը և ժամանակը ճիշտ չէ նշված, կրկին փորձեք:"
@@ -2542,9 +2540,6 @@ hy:
         confirm: "Հաստատել"
         select_all: "Ընտրել Բոլորը"
         clear_all: "Ջնջել Բոլորը"
-        unlist_topics: "Թեմաները Ցուցակից Հանել"
-        relist_topics: "Վերացանկավորել Թեմաները"
-        delete: "Ջնջել Թեմաները"
         delete_topics_count:
           one: "Ջնջել Թեման"
           other: "Ջնջել Թեմաները"
@@ -2556,20 +2551,12 @@ hy:
         dismiss_new: "Չեղարկել Նորերը"
         toggle: "փոխանջատել թեմաների զանգվածային ընտրությունը"
         actions: "Զանգվածային Գործողությունները"
-        close_topics: "Փակել Թեմաները"
-        archive_topics: "Արխիվացնել Թեմաները"
         move_messages_to_inbox: "Տեղափոխել Մուտքային"
         choose_new_category: "Ընտրել նոր կատեգորիա թեմաների համար՝"
-        selected:
-          one: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
-          other: "Դուք ընտրել եք <b>%{count}</b> թեմա:"
         selected_count:
           one: "%{count} ընտրված"
           other: "%{count} ընտրված"
-        change_tags: "Փոխարինել Պիտակները"
-        append_tags: "Ավելացնել Պիտակներ"
         choose_new_tags: "Ընտրել նոր պիտակներ այս թեմաների համար՝"
-        choose_append_tags: "Ընտրել նոր պիտակներ այս թեմաներին ավելացնելու համար՝"
         changed_tags: "Այդ թեմաների պիտակները փոփոխվել են:"
         error_topic_count:
           one: "%{count} թեմա"
@@ -2596,8 +2583,6 @@ hy:
         name: "Տեղափոխել Մուտքային"
       unlist_topics:
         name: "Ցուցակից հանել"
-      append_tags:
-        name: "Ավելացնել Պիտակներ"
       replace_tags:
         name: "Փոխարինել Պիտակները"
       delete_topics:
@@ -3168,6 +3153,8 @@ hy:
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
       no_description: "Խնդրում ենք այս կատեգորիայի համար ավելացնել նկարագրություն:"
+      description_expand: "Ցույց տալ ավելին"
+      description_collapse: "Ցույց տալ ավելի քիչ"
       already_used: "Այս գույնը օգտագործվել է մեկ այլ կատեգորիայի կողմից"
       security: "Անվտանգություն"
       permissions:
@@ -3192,6 +3179,8 @@ hy:
       review_group_name: "խմբի անունը"
       require_topic_approval: "Բոլոր նոր թեմաների համար պահանջել մոդերատորի հաստատումը"
       require_reply_approval: "Բոլոր նոր պատասխանների համար պահանջել մոդերատորի հաստատումը "
+      posting_review_modes:
+        everyone: "Բոլորը"
       this_year: "այս տարի"
       position: "Դիրքը կատեգորիայի էջում."
       minimum_required_tags: "Թեմայում պահանջվող պիտակների նվազագույն քանակը՝"
@@ -3814,8 +3803,6 @@ hy:
         sidebar_title: "Հաշվետվություններ"
         group_traffic: "Այցելությունները"
         group_members: "Անդամներ"
-        group_moderation: "Մոդերացիա"
-        group_security: "Անվտանգություն"
         group_other: "Այլ"
       config_sections:
         account:
@@ -4480,7 +4467,6 @@ hy:
           included_components: "Ներառված բաղադրիչներ"
           add_all: "Ավելացնել բոլորը "
           import_web_tip: "Թեմա պարունակող ռեպոզիտորիա"
-          import_file_tip: ".tar.gz, .zip, կամ .dcstyle.json ֆայլ, պարունակող թեման"
           is_private: "Թեման մասնավոր git ռեպոզիտորիայում է:"
           remote_branch: "Ճյուղի անունը (ըստ ցանկության)"
           public_key: "Շնորհել հետևյալ public key թույլտվություն ռեպոյին՝ "

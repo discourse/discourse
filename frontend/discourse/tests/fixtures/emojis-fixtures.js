@@ -2,13 +2,12 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 const emojisFixtures = {
   "/emojis.json": {
-     favorites: [
+    favorites: [
       {
         name: "grinning",
         tonable: false,
         url: `/images/emoji/twitter/grinning.png?v=${v}`,
         group: "smileys_\u0026_emotion",
-        search_aliases: ["smiley_cat", "star_struck"],
       },
     ],
     "smileys_&_emotion": [
@@ -17,7 +16,6 @@ const emojisFixtures = {
         tonable: false,
         url: `/images/emoji/twitter/grinning.png?v=${v}`,
         group: "smileys_\u0026_emotion",
-        search_aliases: ["smiley_cat", "star_struck"],
       },
       {
         name: "smiley_cat",
@@ -32,14 +30,12 @@ const emojisFixtures = {
         tonable: true,
         url: `/images/emoji/twitter/raised_hands.png?v=${v}`,
         group: "people_&_body",
-        search_aliases: [],
       },
       {
         name: "man_rowing_boat",
         tonable: true,
         url: `/images/emoji/twitter/man_rowing_boat.png?v=${v}`,
         group: "people_&_body",
-        search_aliases: [],
       },
     ],
     objects: [
@@ -48,7 +44,6 @@ const emojisFixtures = {
         tonable: false,
         url: `/images/emoji/twitter/womans_clothes.png?v=${v}`,
         group: "objects",
-        search_aliases: [],
       },
     ],
   },

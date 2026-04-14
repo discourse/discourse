@@ -18,6 +18,7 @@ describe Jobs::DetectTranslatePost do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")
+    SiteSetting.ai_translation_target_categories = post.topic.category_id.to_s
   end
 
   it "does nothing when translator is disabled" do
@@ -143,10 +144,13 @@ describe Jobs::DetectTranslatePost do
     expect { job.execute({ post_id: post.id }) }.not_to raise_error
   end
 
-  describe "with public content and PM limitations" do
-    fab!(:private_category) { Fabricate(:private_category, group: Group[:staff]) }
-    fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-    fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+  describe "with target categories and PM scope" do
+    fab!(:target_category, :category)
+    fab!(:non_target_category, :category)
+    fab!(:target_topic) { Fabricate(:topic, category: target_category) }
+    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category) }
+    fab!(:target_post) { Fabricate(:post, topic: target_topic) }
+    fab!(:non_target_post) { Fabricate(:post, topic: non_target_topic) }
 
     fab!(:personal_pm_topic, :private_message_topic)
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic) }
@@ -156,27 +160,28 @@ describe Jobs::DetectTranslatePost do
     end
     fab!(:group_pm_post) { Fabricate(:post, topic: group_pm_topic) }
 
-    context "when ai_translation_backfill_limit_to_public_content is true" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }
+    before { SiteSetting.ai_translation_target_categories = target_category.id.to_s }
 
-      it "skips posts from restricted categories and PMs" do
-        DiscourseAi::Translation::PostLocaleDetector
-          .expects(:detect_locale)
-          .with(private_post)
-          .never
-        DiscourseAi::Translation::PostLocalizer
-          .expects(:localize)
-          .with(private_post, any_parameters)
-          .never
-        job.execute({ post_id: private_post.id })
+    it "skips posts not in target categories" do
+      DiscourseAi::Translation::PostLocaleDetector
+        .expects(:detect_locale)
+        .with(non_target_post)
+        .never
+      job.execute({ post_id: non_target_post.id })
+    end
 
+    it "processes posts in target categories" do
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(target_post).once
+      job.execute({ post_id: target_post.id })
+    end
+
+    context "when pm_translation_scope is none" do
+      before { SiteSetting.ai_translation_personal_messages = "none" }
+
+      it "skips all PMs" do
         DiscourseAi::Translation::PostLocaleDetector
           .expects(:detect_locale)
           .with(personal_pm_post)
-          .never
-        DiscourseAi::Translation::PostLocalizer
-          .expects(:localize)
-          .with(personal_pm_post, any_parameters)
           .never
         job.execute({ post_id: personal_pm_post.id })
 
@@ -184,21 +189,14 @@ describe Jobs::DetectTranslatePost do
           .expects(:detect_locale)
           .with(group_pm_post)
           .never
-        DiscourseAi::Translation::PostLocalizer
-          .expects(:localize)
-          .with(group_pm_post, any_parameters)
-          .never
         job.execute({ post_id: group_pm_post.id })
       end
     end
 
-    context "when ai_translation_backfill_limit_to_public_content is false" do
-      before { SiteSetting.ai_translation_backfill_limit_to_public_content = false }
+    context "when pm_translation_scope is group" do
+      before { SiteSetting.ai_translation_personal_messages = "group" }
 
-      it "processes posts from private categories and group PMs but skips personal PMs" do
-        DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(private_post).once
-        job.execute({ post_id: private_post.id })
-
+      it "processes group PMs but skips personal PMs" do
         DiscourseAi::Translation::PostLocaleDetector
           .expects(:detect_locale)
           .with(group_pm_post)
@@ -209,31 +207,45 @@ describe Jobs::DetectTranslatePost do
           .expects(:detect_locale)
           .with(personal_pm_post)
           .never
-        DiscourseAi::Translation::PostLocalizer
-          .expects(:localize)
-          .with(personal_pm_post, any_parameters)
-          .never
         job.execute({ post_id: personal_pm_post.id })
       end
+    end
 
-      describe "force arg" do
-        it "processes private content when force is true" do
-          DiscourseAi::Translation::PostLocaleDetector
-            .expects(:detect_locale)
-            .with(group_pm_post)
-            .once
+    context "when pm_translation_scope is all" do
+      before { SiteSetting.ai_translation_personal_messages = "all" }
 
-          job.execute({ post_id: group_pm_post.id, force: true })
-        end
+      it "processes all PMs" do
+        DiscourseAi::Translation::PostLocaleDetector
+          .expects(:detect_locale)
+          .with(group_pm_post)
+          .once
+        job.execute({ post_id: group_pm_post.id })
 
-        it "processes PM content when force is true" do
-          DiscourseAi::Translation::PostLocaleDetector
-            .expects(:detect_locale)
-            .with(personal_pm_post)
-            .once
+        DiscourseAi::Translation::PostLocaleDetector
+          .expects(:detect_locale)
+          .with(personal_pm_post)
+          .once
+        job.execute({ post_id: personal_pm_post.id })
+      end
+    end
 
-          job.execute({ post_id: personal_pm_post.id, force: true })
-        end
+    describe "force arg" do
+      it "processes private content when force is true" do
+        DiscourseAi::Translation::PostLocaleDetector
+          .expects(:detect_locale)
+          .with(group_pm_post)
+          .once
+
+        job.execute({ post_id: group_pm_post.id, force: true })
+      end
+
+      it "processes PM content when force is true" do
+        DiscourseAi::Translation::PostLocaleDetector
+          .expects(:detect_locale)
+          .with(personal_pm_post)
+          .once
+
+        job.execute({ post_id: personal_pm_post.id, force: true })
       end
     end
   end

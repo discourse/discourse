@@ -114,12 +114,13 @@ describe DiscoursePostEvent::EventParser do
 
   it "doesn't escape urls" do
     post_event = build_post user, <<~TXT
-        [event start="2020" url="https://example.com/?q=foo&all=true"]
+        [event start="2020" url="https://example.com/?q=foo&all=true" image="upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg"]
         [/event]
       TXT
 
     events = parser.extract_events(post_event)
     expect(events[0][:url]).to eq("https://example.com/?q=foo&all=true")
+    expect(events[0][:image]).to eq("upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg")
   end
 
   context "with custom fields" do

@@ -195,6 +195,7 @@ th:
   user_api_key:
     deny: "ยกเลิก"
     read: "อ่าน"
+    copied: "คัดลอกแล้ว!"
     otp_confirmation:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{username}

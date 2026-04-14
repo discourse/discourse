@@ -1,9 +1,8 @@
 /* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action, computed } from "@ember/object";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { alias, and, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -95,16 +94,6 @@ export default class TopicController extends Controller {
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
 
-  @and("canEditTopicFeaturedLink", "buffered.featured_link")
-  canRemoveTopicFeaturedLink;
-  @not("model.isPrivateMessage") showCategoryChooser;
-  @or("model.errorHtml", "model.errorMessage") hasError;
-  @not("hasError") noErrorYet;
-  @alias("site.categoriesList") categories;
-  @alias("selectedAllPosts") canDeselectAll;
-  @or("model.postStream.loadedAllPosts", "model.postStream.loadingLastPost")
-  loadedAllPosts;
-
   editingTopic = false;
   enteredAt = null;
   enteredIndex = null;
@@ -136,6 +125,56 @@ export default class TopicController extends Controller {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  @computed("model.isPrivateMessage")
+  get showCategoryChooser() {
+    return !this.model?.isPrivateMessage;
+  }
+
+  @computed("model.errorHtml", "model.errorMessage")
+  get hasError() {
+    return this.model?.errorHtml || this.model?.errorMessage;
+  }
+
+  @computed("hasError")
+  get noErrorYet() {
+    return !this.hasError;
+  }
+
+  @computed("site.categoriesList")
+  get categories() {
+    return this.site?.categoriesList;
+  }
+
+  set categories(value) {
+    set(this, "site.categoriesList", value);
+  }
+
+  @dependentKeyCompat
+  get canDeselectAll() {
+    return this.selectedAllPosts;
+  }
+
+  set canDeselectAll(value) {
+    this.selectedAllPosts = value;
+  }
+
+  @computed(
+    "model.postStream.loadedAllPosts",
+    "model.postStream.loadingLastPost"
+  )
+  get loadedAllPosts() {
+    return (
+      this.model?.postStream?.loadedAllPosts ||
+      this.model?.postStream?.loadingLastPost
+    );
+  }
+
+  @computed("canEditTopicFeaturedLink", "buffered.featured_link")
+  get canRemoveTopicFeaturedLink() {
+    // TODO (devxp) we need a buffered proxy that works with tracked properties
+    return this.canEditTopicFeaturedLink && this.get("buffered.featured_link");
   }
 
   @cached
@@ -876,7 +915,7 @@ export default class TopicController extends Controller {
         if (replies.length === 0) {
           return post.destroy(user, opts).catch((error) => {
             popupAjaxError(error);
-            post.undoDeleteState();
+            post.undoDeleteState(opts);
           });
         }
 
@@ -924,7 +963,7 @@ export default class TopicController extends Controller {
           action: () => {
             post.destroy(user, opts).catch((error) => {
               popupAjaxError(error);
-              post.undoDeleteState();
+              post.undoDeleteState(opts);
             });
           },
         });
@@ -942,7 +981,7 @@ export default class TopicController extends Controller {
     } else {
       return post.destroy(user, opts).catch((error) => {
         popupAjaxError(error);
-        post.undoDeleteState();
+        post.undoDeleteState(opts);
       });
     }
   }

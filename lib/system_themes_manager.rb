@@ -13,7 +13,12 @@ class SystemThemesManager
 
     is_initial_install = !Theme.exists?(id: theme_id)
 
-    theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
+    theme =
+      RemoteTheme.import_theme_from_directory(
+        theme_dir,
+        theme_id: theme_id,
+        allow_out_of_sequence_migration: !is_initial_install,
+      )
     theme.update_column(:enabled, true)
 
     if is_initial_install

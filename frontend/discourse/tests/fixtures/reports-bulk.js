@@ -1,4 +1,4 @@
-import { SCHEMA_VERSION } from "admin/models/report";
+import { SCHEMA_VERSION } from "discourse/admin/models/report";
 
 let signups = {
   type: "signups",

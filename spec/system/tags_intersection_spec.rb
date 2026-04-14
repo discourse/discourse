@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tags intersection", type: :system do
+describe "Tags intersection" do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   fab!(:category) { Fabricate(:category, name: "fruits") }

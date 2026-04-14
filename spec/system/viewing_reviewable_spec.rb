@@ -2,7 +2,7 @@
 
 require "discourse_ip_info"
 
-describe "Viewing reviewable item", type: :system do
+describe "Viewing reviewable item" do
   fab!(:admin)
   fab!(:moderator)
   fab!(:group)

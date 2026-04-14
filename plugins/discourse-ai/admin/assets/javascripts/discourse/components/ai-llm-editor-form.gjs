@@ -595,58 +595,64 @@ export default class AiLlmEditorForm extends Component {
             <tbody class="ai-llm-quotas__table-body">
               <form.Collection
                 @name="llm_quotas"
-                @tagName="tr"
-                class="ai-llm-quotas__row"
                 as |collection index collectionData|
               >
-                <td
-                  class="ai-llm-quotas__cell"
-                >{{collectionData.group_name}}</td>
-                <td class="ai-llm-quotas__cell">
-                  <collection.Field
-                    @name="max_tokens"
-                    @title="max_tokens"
-                    @showTitle={{false}}
-                    @type="input-number"
-                    as |field|
-                  >
-                    <field.Control class="ai-llm-quotas__input" min="1" />
-                  </collection.Field>
-                </td>
-                <td class="ai-llm-quotas__cell">
-                  <collection.Field
-                    @name="max_usages"
-                    @title="max_usages"
-                    @showTitle={{false}}
-                    @type="input-number"
-                    as |field|
-                  >
-                    <field.Control class="ai-llm-quotas__input" min="1" />
-                  </collection.Field>
-                </td>
-                <td class="ai-llm-quotas__cell">
-                  <collection.Field
-                    @name="duration_seconds"
-                    @title="duration_seconds"
-                    @showTitle={{false}}
-                    @type="custom"
-                    as |field|
-                  >
-                    <field.Control>
-                      <DurationSelector
-                        @value={{collectionData.duration_seconds}}
-                        @onChange={{field.set}}
+                <tr class="ai-llm-quotas__row">
+                  <td
+                    class="ai-llm-quotas__cell"
+                  >{{collectionData.group_name}}</td>
+                  <td class="ai-llm-quotas__cell">
+                    <collection.Field
+                      @name="max_tokens"
+                      @title="max_tokens"
+                      @showTitle={{false}}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control
+                        class="ai-llm-quotas__input ai-llm-quotas__input--tokens"
+                        min="1"
                       />
-                    </field.Control>
-                  </collection.Field>
-                </td>
-                <td>
-                  <form.Button
-                    @icon="trash-can"
-                    @action={{fn collection.remove index}}
-                    class="btn-danger ai-llm-quotas__delete-btn"
-                  />
-                </td>
+                    </collection.Field>
+                  </td>
+                  <td class="ai-llm-quotas__cell">
+                    <collection.Field
+                      @name="max_usages"
+                      @title="max_usages"
+                      @showTitle={{false}}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control
+                        class="ai-llm-quotas__input ai-llm-quotas__input--usages"
+                        min="1"
+                      />
+                    </collection.Field>
+                  </td>
+                  <td class="ai-llm-quotas__cell">
+                    <collection.Field
+                      @name="duration_seconds"
+                      @title="duration_seconds"
+                      @showTitle={{false}}
+                      @type="custom"
+                      as |field|
+                    >
+                      <field.Control>
+                        <DurationSelector
+                          @value={{collectionData.duration_seconds}}
+                          @onChange={{field.set}}
+                        />
+                      </field.Control>
+                    </collection.Field>
+                  </td>
+                  <td>
+                    <form.Button
+                      @icon="trash-can"
+                      @action={{fn collection.remove index}}
+                      class="btn-danger ai-llm-quotas__delete-btn"
+                    />
+                  </td>
+                </tr>
               </form.Collection>
             </tbody>
           </table>
@@ -664,13 +670,13 @@ export default class AiLlmEditorForm extends Component {
       {{/if}}
 
       <form.Actions>
+        <form.Submit />
         <form.Button
           @action={{fn this.test data}}
           @disabled={{this.testRunning}}
           @label="discourse_ai.llms.tests.title"
+          class="btn-default"
         />
-
-        <form.Submit />
 
         {{#if (eq data.llm_quotas.length 0)}}
           <form.Button
@@ -679,7 +685,7 @@ export default class AiLlmEditorForm extends Component {
               (fn form.addItemToCollection "llm_quotas")
             }}
             @label="discourse_ai.llms.quotas.add"
-            class="ai-llm-editor__add-quota-btn"
+            class="btn-default ai-llm-editor__add-quota-btn"
           />
         {{/if}}
 
@@ -688,6 +694,7 @@ export default class AiLlmEditorForm extends Component {
             <form.Button
               @action={{this.delete}}
               @label="discourse_ai.llms.delete"
+              @icon="trash-can"
               class="btn-danger"
             />
           {{/unless}}

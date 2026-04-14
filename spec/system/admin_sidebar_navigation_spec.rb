@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin | Sidebar Navigation", type: :system do
+describe "Admin | Sidebar Navigation" do
   UNFILTERED_LINK_COUNT = 42
 
   fab!(:admin)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Custom sidebar sections", type: :system do
+describe "Custom sidebar sections" do
   fab!(:user)
   fab!(:admin)
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
@@ -184,7 +184,9 @@ describe "Custom sidebar sections", type: :system do
     sidebar.click_add_link_button
 
     is_focused =
-      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+      page.evaluate_script(
+        "document.activeElement.classList.contains('d-icon-grid-picker-trigger')",
+      )
 
     expect(is_focused).to be true
   end

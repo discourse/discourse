@@ -1141,6 +1141,7 @@ es:
     permissions_header: 'Esto permitirá a "%{application_name}" hacer lo siguiente:'
     redirect_warning: "Si lo autorizas, se te redireccionará a"
     instructions: 'Acabamos de generar una nueva clave API de usuario para que uses con «%{application_name}». Pega la siguiente clave en tu aplicación:'
+    copied: "¡Copiado!"
     otp_description: '¿Te gustaría permitir a «%{application_name}» acceder a este sitio?'
     otp_confirmation:
       confirm_title: Continuar a %{site_name}
@@ -2927,35 +2928,9 @@ es:
   new_version_mailer:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      ¡Bien! ¡Hay una nueva versión de [Discourse](https://www.discourse.org) disponible!
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a las novedades en las [notas de la versión](https://meta.discourse.org/tag/release-notes), o mira el [registro de cambios completo en GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debate y ayuda sobre Discourse
   new_version_mailer_with_notes:
     title: "Correo electrónico de nueva versión con notas"
     subject_template: "[%{email_prefix}] actualización disponible"
-    text_body_template: |
-      ¡Bien! ¡Hay una nueva versión de [Discourse](https://www.discourse.org) disponible!
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a las novedades en las [notas de la versión](https://meta.discourse.org/tag/release-notes), o mira el [registro de cambios completo en GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debate y ayuda sobre Discourse
-
-      ### Notas de la versión
-
-      %{notes}
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva, una conducta de odio o que vulnera alguna de las [directrices de la comunidad](%{base_path}/guidelines)."
@@ -3004,47 +2979,9 @@ es:
     reviewable_queued_post_revise_and_reject:
       title: "Comentarios sobre tu publicación"
       subject_template: "Comentarios sobre tu publicación en %{topic_title}"
-      text_body_template: |
-        Hola %{username}:
-
-        Hemos revisado tu publicación en [%{topic_title}](%{topic_url}) y tenemos algunos comentarios para ti.
-
-        Motivo: %{reason}
-
-        Opinión: %{feedback}
-
-        Puedes editar tu publicación original a continuación y volver a enviarlo para realizar los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Gracias,
-        Moderadores de %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Comentarios sobre tu tema"
       subject_template: 'Comentarios sobre el nuevo tema titulado «%{topic_title}»'
-      text_body_template: |
-        Hola %{username}:
-
-        Hemos revisado tu nuevo tema titulado «%{topic_title}» y tenemos algunos comentarios para ti.
-
-        Motivo: %{reason}
-
-        Comentarios: %{feedback}
-
-        Puedes editar la publicación original de tu tema y volver a enviarlo para realizar los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Gracias,
-        Moderadores de %{site_name}
     post_hidden_again:
       title: "Publicación ocultada de nuevo"
       subject_template: "Publicación ocultada debido a denuncias de la comunidad, se ha informado al personal"

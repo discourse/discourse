@@ -101,8 +101,12 @@ class ApplicationController < ActionController::Base
 
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
-      response.cache_control[:no_cache] = true
-      response.cache_control[:extras] = ["no-store"]
+      if SiteSetting.cache_control_bfcache_compatibility
+        response.cache_control[:no_cache] = true
+      else
+        response.cache_control[:no_cache] = true
+        response.cache_control[:extras] = ["no-store"]
+      end
     end
     response.headers["Discourse-No-Onebox"] = "1" if SiteSetting.login_required
   end

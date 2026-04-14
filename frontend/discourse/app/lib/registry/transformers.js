@@ -15,6 +15,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "full-page-search-load-more",
   "post-menu-toggle-like-action",
   "post-stream-error-loading",
+  "post-stream-update-from-json",
   "topic-controller:finished-editing",
   "topic-list-item-click",
 ]);
@@ -71,6 +72,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "move-to-topic-move-options",
   "navigation-bar-dropdown-icon",
   "navigation-bar-dropdown-mode",
+  "navigation-items",
+  "notifications-tracking-description",
   "parent-category-row-class",
   "parent-category-row-class-mobile",
   "post-article-class",

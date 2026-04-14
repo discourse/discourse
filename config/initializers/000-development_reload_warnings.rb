@@ -40,7 +40,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
       only: /(\.rb|settings.yml)$/,
       ignore: [/node_modules/, /\.git/, /\.devenv/],
     ) do |modified, added, removed|
-      supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
+      supervisor_pid = DEV_SUPERVISOR_PID
       auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 
       files = modified + added + removed

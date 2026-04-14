@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Viewing User Menu", system: true do
+RSpec.describe "Viewing User Menu" do
   fab!(:user)
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }

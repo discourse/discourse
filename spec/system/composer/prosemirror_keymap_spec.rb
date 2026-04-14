@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Keyboard shortcuts", type: :system do
+describe "Composer - ProseMirror - Keyboard shortcuts" do
   include_context "with prosemirror editor"
 
   it "supports Ctrl + B to create a bold text" do

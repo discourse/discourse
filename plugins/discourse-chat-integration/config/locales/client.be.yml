@@ -8,7 +8,6 @@ be:
   js:
     chat_integration:
       settings: "Налады"
-      all_categories: "(Усе катэгорыі)"
       delete_channel: "Выдаліць"
       edit_channel: "Рэдагаваць"
       test_modal:

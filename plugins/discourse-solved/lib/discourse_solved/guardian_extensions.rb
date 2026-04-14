@@ -35,6 +35,7 @@ module DiscourseSolved
       return false if !authenticated?
       return false if !topic || !post || post.post_number <= 1 || post.whisper?
       return false if !allow_accepted_answers?(topic)
+      return false if !can_see_post?(post)
 
       return true if is_staff?
 

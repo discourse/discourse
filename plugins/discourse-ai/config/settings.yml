@@ -454,8 +454,18 @@ discourse_ai:
     max: 100000
     client: false
     area: "ai-features/translation"
-  ai_translation_backfill_limit_to_public_content:
-    default: true
+  ai_translation_target_categories:
+    type: category_list
+    default: ""
+    client: false
+    area: "ai-features/translation"
+  ai_translation_personal_messages:
+    type: enum
+    default: "none"
+    choices:
+      - "none"
+      - "group"
+      - "all"
     client: false
     area: "ai-features/translation"
   ai_translation_include_bot_content:
@@ -472,12 +482,14 @@ discourse_ai:
     max: 20000
     client: false
     area: "ai-features/translation"
-  ai_translation_max_tokens_multiplier:
-    default: 1.0
-    type: float
-    min: 1.0
-    max: 10.0
+
+  ai_translation_backfill_parallel_jobs:
+    default: 1
+    min: 1
+    max: 10
+    hidden: true
     area: "ai-features/translation"
+
   ai_translation_verbose_logs:
     default: false
     client: false

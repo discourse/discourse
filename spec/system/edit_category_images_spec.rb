@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category Images", type: :system do
+describe "Edit Category Images" do
   fab!(:admin)
   fab!(:category)
   let(:category_page) { PageObjects::Pages::Category.new }

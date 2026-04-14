@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { optionalRequire } from "discourse/lib/utilities";
 import User from "discourse/models/user";
@@ -53,6 +53,7 @@ export default class DiscoursePostEventEvent {
   @tracked recurrence;
   @tracked customFields;
   @tracked channel;
+  @tracked imageUpload;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
@@ -98,6 +99,7 @@ export default class DiscoursePostEventEvent {
     if (args.channel && ChatChannel) {
       this.channel = ChatChannel.create(args.channel);
     }
+    this.imageUpload = args.image_upload;
   }
 
   get watchingInvitee() {
@@ -115,7 +117,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set sampleInvitees(invitees = []) {
-    this._sampleInvitees = new TrackedArray(
+    this._sampleInvitees = trackedArray(
       invitees.map((i) => DiscoursePostEventInvitee.create(i))
     );
   }
@@ -133,7 +135,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set reminders(reminders = []) {
-    this._reminders = new TrackedArray(reminders);
+    this._reminders = trackedArray(reminders);
   }
 
   get creator() {
@@ -150,6 +152,10 @@ export default class DiscoursePostEventEvent {
 
   get isPrivate() {
     return this.status === "private";
+  }
+
+  get imageUrl() {
+    return this.imageUpload?.url;
   }
 
   updateFromEvent(event) {
@@ -181,6 +187,7 @@ export default class DiscoursePostEventEvent {
     this.stats = event.stats;
     this.sampleInvitees = event.sampleInvitees || [];
     this.reminders = event.reminders;
+    this.imageUpload = event.imageUpload;
   }
 
   @bind

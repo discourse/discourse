@@ -463,8 +463,6 @@ lt:
           other: "Sukurta prieš %{count} metų"
     bookmarked:
       title: "Žymės"
-      edit_bookmark: "Redaguoti žymę"
-      clear_bookmarks: "Pašalinti žymes"
       help:
         bookmark: "Spustelėkite norėdami pažymėti šią temą"
         edit_bookmark: "Spustelėkite, jei norite redaguoti pažymėjimą šios įrašo šioje temoje"
@@ -483,12 +481,12 @@ lt:
       clear_reminder: "Išvalyti priminimą."
       edit: "Redaguoti žymę"
       not_bookmarked: "pažymėkite šį įrašą"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Pašalinkite priminimą ir išsaugokite žymę"
       created_with_reminder: "Jūs pažymėjote šį įrašą priminimu %{date}. %{name}"
       created_with_reminder_generic: "Jūs pažymėjote tai su priminimu %{date}. %{name}"
       delete: "Ištrinti žymę"
       confirm_delete: "Ar tikrai norite ištrinti šią žymę? Priminimas taip pat bus ištrintas."
-      confirm_clear: "Ar tikrai norite išvalyti visas savo žymes iš šios temos?"
       save: "Saugoti"
       no_timezone: 'Jūs dar nenustatėte laiko juostos. Negalėsite nustatyti priminimų. Nustatykite vieną iki <a href="%{basePath}/my/preferences/profile">savo profilyje</a>.'
       invalid_custom_datetime: "Pateikta data ir laikas yra neteisingi, bandykite dar kartą."
@@ -2745,8 +2743,6 @@ lt:
         confirm: "Patvirtinti"
         select_all: "Pasirinkti viską"
         clear_all: "Išvalyti viską"
-        unlist_topics: "Atžymėti temas"
-        delete: "Ištrinti temas"
         delete_topics_count:
           one: "Ištrinti temą"
           few: "Ištrinti temas"
@@ -2760,22 +2756,11 @@ lt:
         dismiss_new: "Praleisti Naujas"
         toggle: "perjungti temų pasirinkimus"
         actions: "Veiksmai"
-        close_topics: "Uždaryti temas"
-        archive_topics: "Archyvuoti temas"
         move_messages_to_inbox: "Perkelti į Pranešimų dėžutę"
         change_notification_level: "Keisti pranešimo lygį"
         choose_new_category: "Pasirinkti naują kategoriją temoms:"
-        selected:
-          one: "Jūs pasirinkote <b>%{count}</b> temą."
-          few: "Jūs pasirinkote <b>%{count}</b> temas."
-          many: "Jūs pasirinkote <b>%{count}</b> temų."
-          other: "Jūs pasirinkote <b>%{count}</b> temų."
-        change_tags: "Pakeisti žymas"
-        append_tags: "Pridėti žymas"
         choose_new_tags: "Pasirinkite naujas žymas šioms temoms:"
-        choose_append_tags: "Pasirinkite naujas žymas, kurias norite pridėti šioms temoms:"
         changed_tags: "Šių temų žymos buvo pakeistos."
-        remove_tags: "Pašalinti visas žymes"
         confirm_remove_tags:
           one: "Visos žymos bus pašalintos iš šios temos. Ar esate tikras?"
           few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
@@ -2805,8 +2790,6 @@ lt:
         name: "Archyvuoti"
       move_messages_to_inbox:
         name: "Perkelti į Pranešimų dėžutę"
-      append_tags:
-        name: "Pridėti žymas"
       replace_tags:
         name: "Pakeisti žymas"
       delete_topics:
@@ -3434,6 +3417,8 @@ lt:
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"
       delete_error: "Įvyko klaida ištrinant kategoriją."
       no_description: "Prašome pridėti aprašymą šiai kategorijai."
+      description_expand: "Rodyti daugiau"
+      description_collapse: "Rodyti mažiau"
       already_used: "Ši spalva jau priskirta prie kitos kategorijos"
       security: "Saugumo"
       security_add_group: "Pridėti grupę"
@@ -3461,6 +3446,9 @@ lt:
       review_group_name: "grupės pavadinimas"
       require_topic_approval: "Reikalauti, kad moderatorius patvirtintų visas naujas temas"
       require_reply_approval: "Reikalauti, kad moderatorius patvirtintų visus naujus atsakymus"
+      posting_review_modes:
+        everyone: "Visi"
+      posting_review_groups_placeholder: "Pasirinkite grupes..."
       this_year: "šiais metais"
       position: "Pozicija kategorijų puslapyje:"
       minimum_required_tags: "Minimalus temoje reikalingas žymų skaičius:"
@@ -4144,8 +4132,6 @@ lt:
         sidebar_title: "Pranešimai"
         group_traffic: "Srautas"
         group_members: "Nariai"
-        group_moderation: "Moderavimas"
-        group_security: "Apsauga"
         group_other: "Kiti"
       config_sections:
         account:
@@ -4828,7 +4814,6 @@ lt:
           add_all: "Pridėti visus"
           import_web_tip: "Saugykla, kurioje yra tema"
           direct_install_tip: "Ar tikrai norite įdiegti <strong>%{name}</strong> iš toliau nurodytos saugyklos?"
-          import_file_tip: ".tar.gz, .zip arba .dcstyle.json failas, kuriame yra tema"
           is_private: "Tema yra privačioje „git“ saugykloje"
           remote_branch: "Filialo pavadinimas (neprivaloma)"
           install: "diegti"

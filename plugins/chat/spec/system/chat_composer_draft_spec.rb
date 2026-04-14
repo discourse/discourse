@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat composer draft", type: :system do
+RSpec.describe "Chat composer draft" do
   fab!(:current_user, :user)
   fab!(:channel_1, :chat_channel)
   fab!(:message_1) do
@@ -86,16 +86,7 @@ RSpec.describe "Chat composer draft", type: :system do
     end
 
     context "with uploads" do
-      fab!(:upload_1) do
-        Fabricate(
-          :upload,
-          url: "/images/logo-dark.png",
-          original_filename: "logo_dark.png",
-          width: 400,
-          height: 300,
-          extension: "png",
-        )
-      end
+      fab!(:upload_1, :image_upload)
 
       before do
         create_draft(channel_1, user: current_user, data: { message: "draft", uploads: [upload_1] })
@@ -215,16 +206,7 @@ RSpec.describe "Chat composer draft", type: :system do
     end
 
     context "with uploads" do
-      fab!(:upload_1) do
-        Fabricate(
-          :upload,
-          url: "/images/logo-dark.png",
-          original_filename: "logo_dark.png",
-          width: 400,
-          height: 300,
-          extension: "png",
-        )
-      end
+      fab!(:upload_1, :image_upload)
 
       before do
         create_draft(

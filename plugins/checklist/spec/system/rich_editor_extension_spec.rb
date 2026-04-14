@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror editor - Checklist extension", type: :system do
+describe "Composer - ProseMirror editor - Checklist extension" do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }

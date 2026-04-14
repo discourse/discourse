@@ -6,6 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
+import { iconHTML } from "discourse/lib/icon-library";
 import loadFullCalendar from "discourse/lib/load-full-calendar";
 import DiscourseURL from "discourse/lib/url";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
@@ -20,7 +21,8 @@ const PostEventMenu = <template>
     @linkToPost={{true}}
     @event={{@data.event}}
     @onClose={{@data.onClose}}
-    @withDescription={{false}}
+    @withDescription={{true}}
+    @clampDescription={{true}}
   />
 </template>;
 
@@ -107,6 +109,16 @@ export default class FullCalendar extends Component {
       eventWillUnmount: async () => {
         await this.activeMenu?.close?.();
         await this.activeTooltip?.close?.();
+      },
+      eventDidMount: ({ el, event }) => {
+        const { postEvent } = event.extendedProps;
+        if (postEvent?.recurrence) {
+          el.classList.add("fc-recurring-event");
+          const titleEl = el.querySelector(".fc-event-title");
+          if (titleEl) {
+            titleEl.insertAdjacentHTML("afterbegin", iconHTML("arrows-rotate"));
+          }
+        }
       },
       datesSet: (info) => {
         this.args.onDatesChange?.(info);

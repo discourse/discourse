@@ -54,5 +54,26 @@ module(
         await testMarkdown(assert, markdown, html, expectedMarkdown, true);
       });
     });
+
+    test("language selector options are alphabetically sorted", async function (assert) {
+      await testMarkdown(
+        assert,
+        "```\nconsole.log('Hello, world!');\n```",
+        () => {
+          const options = [
+            ...document.querySelectorAll(".code-language-select option"),
+          ]
+            .slice(1)
+            .map((option) => option.textContent);
+
+          assert.deepEqual(
+            options,
+            [...options].sort((a, b) => a.localeCompare(b))
+          );
+        },
+        "```\nconsole.log('Hello, world!');\n```",
+        true
+      );
+    });
   }
 );

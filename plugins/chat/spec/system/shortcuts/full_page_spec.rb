@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Shortcuts | full page", type: :system do
+RSpec.describe "Shortcuts | full page" do
   fab!(:channel_1, :chat_channel)
   fab!(:current_user, :user)
 

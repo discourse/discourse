@@ -16,6 +16,7 @@ module DiscoursePostEvent
       @events =
         DiscoursePostEvent::EventFinder.search(current_user, search_params).includes(
           :event_dates,
+          :image_upload,
           post: {
             topic: %i[tags category],
           },
@@ -23,6 +24,29 @@ module DiscoursePostEvent
 
       respond_to do |format|
         format.ics do
+          @calendar_name = calendar_name_for_ics
+
+          after_time = filtered_events_params[:after]&.to_datetime || Time.current
+          before_time = filtered_events_params[:before]&.to_datetime || 1.year.from_now
+
+          @ics_events =
+            @events.flat_map do |event|
+              if event.recurring?
+                expanded =
+                  DiscoursePostEvent::Action::ExpandOccurrences.call(
+                    event: event,
+                    after: after_time,
+                    before: before_time,
+                    limit: 52,
+                  )
+                expanded[:occurrences].map { |occ| { event: event, **occ } }
+              else
+                [{ event: event, starts_at: event.starts_at, ends_at: event.ends_at }]
+              end
+            end
+
+          @ics_events = @ics_events.sort_by { |e| e[:starts_at] || Time.current }.first(500)
+
           filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}.ics"
           response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
         end
@@ -75,7 +99,7 @@ module DiscoursePostEvent
     end
 
     def show
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_see!(event.post)
 
       serializer = EventSerializer.new(event, scope: guardian)
@@ -83,7 +107,7 @@ module DiscoursePostEvent
     end
 
     def destroy
-      event = Event.find(params[:id])
+      event = Event.includes(:image_upload).find(params[:id])
       guardian.ensure_can_act_on_discourse_post_event!(event)
       event.publish_update!
       payload = WebHook.build_calendar_event_payload(event)
@@ -172,6 +196,7 @@ module DiscoursePostEvent
         :category_id,
         :include_subcategories,
         :include_interested,
+        :include_ongoing,
         :limit,
         :attending_user,
         :before,
@@ -189,6 +214,21 @@ module DiscoursePostEvent
       else
         time.in_time_zone(event.timezone).iso8601(3)
       end
+    end
+
+    def calendar_name_for_ics
+      translation_key =
+        if filtered_events_params[:attending_user].present? &&
+             current_user&.username_lower == filtered_events_params[:attending_user].downcase
+          "my_events_feed_name"
+        else
+          "all_events_feed_name"
+        end
+
+      I18n.t(
+        "discourse_calendar.calendar_subscriptions.#{translation_key}",
+        site_title: SiteSetting.title,
+      )
     end
   end
 end

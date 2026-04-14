@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit category topic template", type: :system do
+describe "Edit category topic template" do
   fab!(:admin)
   fab!(:category)
 

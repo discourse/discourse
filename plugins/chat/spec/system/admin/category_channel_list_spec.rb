@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin category channels list", type: :system do
+RSpec.describe "Admin category channels list" do
   fab!(:current_user, :admin)
   fab!(:category)
   fab!(:channel_1) { Fabricate(:chat_channel, chatable: category, emoji: "goat") }

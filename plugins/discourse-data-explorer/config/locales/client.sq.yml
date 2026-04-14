@@ -10,6 +10,8 @@ sq:
       default_query: "Paracaktuar"
       or: "ose"
       create: "Krijo"
+      ai:
+        generate: "Gjenero"
       import:
         label: "Importo"
       help:

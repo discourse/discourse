@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Event Editor", type: :system do
+describe "Composer - ProseMirror - Event Editor" do
   include_context "with prosemirror editor"
 
   before do

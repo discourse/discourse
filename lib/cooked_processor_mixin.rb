@@ -205,7 +205,8 @@ module CookedProcessorMixin
     # we can't direct FastImage to our secure-uploads url because it bounces
     # anonymous requests with a 404 error
     if url && Upload.secure_uploads_url?(url)
-      absolute_url = Upload.signed_url_from_secure_uploads_url(absolute_url)
+      absolute_url =
+        Upload.signed_url_from_secure_uploads_url(absolute_url, include_content_disposition: false)
     end
 
     return unless is_valid_image_url?(absolute_url)

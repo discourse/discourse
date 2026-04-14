@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { or } from "discourse/truth-helpers";
@@ -104,8 +105,8 @@ export default class UpcomingEventsList extends Component {
     const data = {
       limit: this.count,
       before: moment().add(this.upcomingDays, "days").toISOString(),
-      // this enables showing ongoing multi-day events that started in the past but haven't ended yet
-      after: moment().subtract(30, "days").toISOString(),
+      after: moment().toISOString(),
+      include_ongoing: true,
     };
 
     if (this.includeSubcategories) {
@@ -274,6 +275,9 @@ export default class UpcomingEventsList extends Component {
                         class="upcoming-events-list__event-name"
                         title={{or event.name event.post.topic.title}}
                       >
+                        {{#if event.recurrence}}
+                          {{icon "arrows-rotate"}}
+                        {{/if}}
                         {{or event.name event.post.topic.title}}
                       </span>
                       {{#if this.timeFormat}}

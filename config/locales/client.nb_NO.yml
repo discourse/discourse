@@ -362,8 +362,6 @@ nb_NO:
           other: "Opprettet %{count} år siden"
     bookmarked:
       title: "Bokmerke"
-      edit_bookmark: "Rediger bokmerke"
-      clear_bookmarks: "Fjern bokmerker"
       help:
         bookmark: "Klikk for å bokmerke dette emnet"
         edit_bookmark: "Klikk for å redigere bokmerket på et innlegg i dette emnet"
@@ -381,12 +379,12 @@ nb_NO:
       clear_reminder: "Fjern påminnelse"
       edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
+      topic_bookmark: "Emne"
       remove_reminder_keep_bookmark: "Fjern påminnelse og behold bokmerke"
       created_with_reminder: "Du har bokmerket dette innlegget med en påminnelse %{date} %{name}"
       created_with_reminder_generic: "Du har bokmerket dette med en påminnelse %{date} %{name}"
       delete: "Slett bokmerke"
       confirm_delete: "Er du sikker på at du vil slette denne bokmerket? Påminnelsen vil også bli slettet."
-      confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
       save: "Lagre"
       no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
       invalid_custom_datetime: "Dato og klokkeslett du oppga er ugyldig, prøv igjen."
@@ -2815,11 +2813,8 @@ nb_NO:
         confirm: "Bekreft"
         select_all: "Velg alle"
         clear_all: "Fjern alle"
-        unlist_topics: "Fjern emner fra lister"
-        relist_topics: "Før opp igjen emner i lister"
         reset_bump_dates: "Tilbakestill støtdatoer"
         defer: "Merk ulest"
-        delete: "Slett emner"
         delete_topics_count:
           one: "Slett emne"
           other: "Slett emner"
@@ -2852,29 +2847,18 @@ nb_NO:
           other: "Avvis nye (%{count})"
         toggle: "slå på/av massevelging av emner"
         actions: "Massehandlinger"
-        change_category: "Sett kategori…"
-        close_topics: "Lukk emner"
-        archive_topics: "Arkiver emner"
         move_messages_to_inbox: "Flytt til innboks"
         archive_messages: "Flytt til arkiv"
-        notification_level: "Varsler…"
         change_notification_level: "Endre varslingsnivå"
         choose_new_category: "Velg den nye kategorien for emnene:"
-        selected:
-          one: "Du har valgt <b>%{count}</b> emne."
-          other: "Du har valgt <b>%{count}</b> emner."
         selected_sole_category:
           one: "Du har valgt <b>%{count}</b> emne fra kategorien:"
           other: "Du har valgt <b>%{count}</b> emner fra kategorien:"
         selected_count:
           one: "%{count} valgt"
           other: "%{count} valgt"
-        change_tags: "Erstatt stikkord"
-        append_tags: "Legg til stikkord"
         choose_new_tags: "Velg nye stikkord for følgende emner:"
-        choose_append_tags: "Velg nye stikkord å legge til følgende emner:"
         changed_tags: "Stikkordene for de valgte emnene ble endret."
-        remove_tags: "Fjern alle stikkord"
         confirm_remove_tags:
           one: "Alle stikkord vil bli fjernet fra dette emnet. Er du sikker?"
           other: "Alle stikkord vil bli fjernet fra %{count} emner. Er du sikker?"
@@ -2903,7 +2887,6 @@ nb_NO:
         name: "Avslå"
       close_topics:
         name: "Lukk"
-        note: "Merk"
         optional: (valgfritt)
       archive_topics:
         name: "Arkiver"
@@ -2917,24 +2900,18 @@ nb_NO:
         name: "Liste på nytt"
       remove_tags:
         name: "Fjern stikkord"
-      append_tags:
-        name: "Legg til stikkord"
       replace_tags:
         name: "Erstatt stikkord"
       delete_topics:
         name: "Slett"
       update_category:
         name: "Oppdater kategori"
-        description: "Velg en ny kategori for de valgte emnene"
       reset_bump_dates:
         name: "Tilbakestill støtdatoer"
-        description: "Tilbakestill støtdatoen til siste opprettet innleggsdatoen, noe som påvirker rekkefølgen i emnelisten"
       defer:
         name: "Merk ulest"
-        description: "Merk emner som ulest"
       update_notifications:
         name: "Oppdater varsler"
-        description: "Endre varslingsnivå til følging, overvåking, normal, eller ignorert"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -3666,6 +3643,8 @@ nb_NO:
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
       no_description: "Legg til en beskrivelse for denne kategorien."
+      description_expand: "Vis mer"
+      description_collapse: "Vis mindre"
       already_used: "Denne fargen er i bruk av en annen kategori"
       security: "Sikkerhet"
       security_add_group: "Legg til gruppe"
@@ -3698,6 +3677,9 @@ nb_NO:
       review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra en moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra en moderator for alle nye svar"
+      posting_review_modes:
+        everyone: "Alle"
+      posting_review_groups_placeholder: "Velg grupper..."
       this_year: "dette året"
       position: "Posisjon på kategorisiden:"
       position_disabled: "Kategoriene vises i aktivitetsrekkefølge. Hvis du vil kontrollere rekkefølgen på kategoriene i lister, aktiverer du innstillingen <a href='%{url}'>'faste kategoriposisjoner'</a>."
@@ -4348,8 +4330,6 @@ nb_NO:
         sidebar_title: "Rapporter"
         group_traffic: "Trafikk"
         group_members: "Medlemmer"
-        group_moderation: "Moderering"
-        group_security: "Sikkerhet"
         group_other: "Annet"
       config_sections:
         account:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Code formatting", type: :system do
+describe "Composer - ProseMirror - Code formatting" do
   include_context "with prosemirror editor"
 
   describe "code formatting" do
