@@ -9,7 +9,8 @@ en:
       title: "Topic voting"
       reached_limit: "You are out of votes, remove an existing vote!"
       list_votes: "List your votes"
-      votes_nav_help: "topics with the most votes"
+      votes_nav_help: "topics with the all time most votes"
+      hot_nav_help: "top recent topics, including those with recent votes"
       voted: "You voted on this topic"
       allow_topic_voting: "Allow users to vote on topics in this category"
       vote_title: "Vote"
@@ -33,7 +34,7 @@ en:
     filters:
       votes:
         title: "Votes"
-        help: "topics with the most votes"
+        help: "topics with the all time most votes"
       my_votes:
         title: "My Votes"
         help: "topics you voted on"

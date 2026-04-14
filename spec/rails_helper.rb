@@ -344,6 +344,9 @@ RSpec.configure do |config|
     # Quiet seed-fu output produced by specs that call `Model.seed`.
     SeedFu.quiet = true
 
+    # json-schema's MultiJSON support is deprecated.
+    JSON::Validator.use_multi_json = false
+
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 

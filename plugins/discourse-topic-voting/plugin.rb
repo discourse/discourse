@@ -165,11 +165,9 @@ after_initialize do
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, max_votes: value)
   end
 
-  filter_order_votes = ->(scope, order_direction, _guardian) do
+  add_filter_custom_filter("order:votes") do |scope, order_direction, _guardian|
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_direction:)
   end
-
-  add_filter_custom_filter("order:votes", &filter_order_votes)
 
   on(:topic_status_updated) do |topic, status, enabled|
     next if topic.trashed?

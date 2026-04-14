@@ -153,13 +153,19 @@ export default class DNavigation extends Component {
     "skipCategoriesNavItem"
   )
   get navItems() {
-    return NavItem.buildList(this.category, {
+    const items = NavItem.buildList(this.category, {
       filterType: this.filterType,
       noSubcategories: this.noSubcategories,
       currentRouteQueryParams: this.router?.currentRoute?.queryParams,
       tag: this.tag,
       siteSettings: this.siteSettings,
       skipCategoriesNavItem: this.skipCategoriesNavItem,
+    });
+
+    return applyValueTransformer("navigation-items", items, {
+      category: this.category,
+      tag: this.tag,
+      filterType: this.filterType,
     });
   }
 
