@@ -45,13 +45,13 @@ module.exports = {
           {
             source: "@glimmer/env",
             flags: {
-              DEBUG: process.env.NODE_ENV === "development",
+              DEBUG: process.env.EMBER_ENV === "development",
               CI: !!process.env.CI,
             },
           },
         ],
         debugTools: {
-          isDebug: process.env.NODE_ENV === "development",
+          isDebug: process.env.EMBER_ENV === "development",
           source: "@ember/debug",
           assertPredicateIndex: 1,
         },
