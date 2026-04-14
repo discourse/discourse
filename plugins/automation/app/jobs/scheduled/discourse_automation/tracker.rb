@@ -67,7 +67,7 @@ module Jobs
 
           pending_automation.automation.trigger!(
             "kind" => pending_automation.automation.trigger,
-            "execute_at" => pending_automation.execute_at,
+            "execute_at" => pending_automation.execute_at.iso8601,
           )
 
           pending_automation.destroy!

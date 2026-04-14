@@ -34,7 +34,7 @@ export default class TopicLocalizedContentToggle extends Component {
 
     if (this.currentUser) {
       this.currentUser.set("user_option.show_original_content", newValue);
-      ajax(`/u/${this.currentUser.username}.json`, {
+      await ajax(`/u/${this.currentUser.username}.json`, {
         type: "PUT",
         data: { show_original_content: newValue },
       });

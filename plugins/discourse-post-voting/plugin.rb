@@ -184,7 +184,7 @@ after_initialize do
   TopicSubtype.register(Topic::POST_VOTING_SUBTYPE)
 
   NewPostManager.add_handler do |manager|
-    if !manager.args[:topic_id] && manager.args[:create_as_post_voting] == "true" &&
+    if !manager.args[:topic_id] && manager.args[:create_as_post_voting].to_s == "true" &&
          (manager.args[:archetype].blank? || manager.args[:archetype] == Archetype.default)
       manager.args[:subtype] = Topic::POST_VOTING_SUBTYPE
     end
