@@ -7,8 +7,6 @@ class PushNotificationPusher
   def self.push(user, payload)
     message = nil
     I18n.with_locale(user.effective_locale) do
-      localize_content!(payload) if SiteSetting.content_localization_enabled
-
       notification_icon_name = Notification.types[payload[:notification_type]]
       if !File.exist?(
            File.expand_path(
@@ -184,34 +182,6 @@ class PushNotificationPusher
     end
   end
 
-  def self.localize_content!(payload)
-    locale = I18n.locale.to_s.sub("-", "_")
-
-    if (topic_id = payload[:topic_id])
-      topic_localization =
-        TopicLocalization.find_by(topic_id: topic_id, locale: locale) ||
-          TopicLocalization.matching_locale(locale).find_by(topic_id: topic_id)
-      payload[:topic_title] = topic_localization.title if topic_localization
-    end
-
-    if (post_id = payload[:post_id])
-      post_localization =
-        PostLocalization.find_by(post_id: post_id, locale: locale) ||
-          PostLocalization.matching_locale(locale).find_by(post_id: post_id)
-      if post_localization
-        payload[:excerpt] = Post.excerpt(
-          post_localization.cooked,
-          400,
-          text_entities: true,
-          strip_links: true,
-          remap_emoji: true,
-          plain_hashtags: true,
-        )
-      end
-    end
-  end
-
   private_class_method :send_notification
   private_class_method :handle_generic_error
-  private_class_method :localize_content!
 end

@@ -1239,7 +1239,7 @@ RSpec.describe PostAlerter do
 
         alerts =
           MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
-            expect { mention_post }.to change { Jobs::PushNotification.jobs.count }.by(1)
+            expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }.by(1)
           end
 
         expect(alerts).not_to be_empty
@@ -1250,7 +1250,7 @@ RSpec.describe PostAlerter do
 
         alerts =
           MessageBus.track_publish("/notification-alert/#{evil_trout.id}") do
-            expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+            expect { mention_post }.not_to change { Jobs::DeliverPushNotification.jobs.count }
           end
 
         expect(alerts).to be_empty
@@ -1269,7 +1269,7 @@ RSpec.describe PostAlerter do
 
     it "pushes nothing to suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
-      expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+      expect { mention_post }.to_not change { Jobs::DeliverPushNotification.jobs.count }
 
       events = DiscourseEvent.track_events { mention_post }
       expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
@@ -1283,7 +1283,7 @@ RSpec.describe PostAlerter do
         ends_at: 1.day.from_now,
       )
 
-      expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+      expect { mention_post }.to_not change { Jobs::DeliverPushNotification.jobs.count }
 
       events = DiscourseEvent.track_events { mention_post }
       expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
@@ -1410,8 +1410,8 @@ RSpec.describe PostAlerter do
       SiteSetting.push_notification_time_window_mins = 10
       evil_trout.update!(last_seen_at: 5.minutes.ago)
 
-      expect { mention_post }.to change { Jobs::PushNotification.jobs.count }
-      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.seconds).of(
+      expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+      expect(Jobs::DeliverPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(
         5.minutes.from_now.to_f,
       )
     end
@@ -1425,8 +1425,8 @@ RSpec.describe PostAlerter do
       it "delays sending push notification for active online user" do
         evil_trout.update!(last_seen_at: 5.minutes.ago)
 
-        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).not_to be_nil
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+        expect(Jobs::DeliverPushNotification.jobs[0]["at"]).not_to be_nil
       end
 
       it "delays sending push notification for active online user for the correct delay ammount" do
@@ -1437,15 +1437,15 @@ RSpec.describe PostAlerter do
         # 10 minutes from now - 5 minutes ago = 5 minutes
         delay = 5.minutes.from_now.to_f
 
-        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(delay)
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+        expect(Jobs::DeliverPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(delay)
       end
 
       it "does not delay push notification for inactive offline user" do
         evil_trout.update!(last_seen_at: 40.minutes.ago)
 
-        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_nil
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }
+        expect(Jobs::DeliverPushNotification.jobs[0]["at"]).to be_nil
       end
     end
   end
@@ -1524,7 +1524,7 @@ RSpec.describe PostAlerter do
 
       expect(events.size).to eq(0)
       expect(messages.size).to eq(0)
-      expect(Jobs::PushNotification.jobs.size).to eq(0)
+      expect(Jobs::DeliverPushNotification.jobs.size).to eq(0)
     end
 
     it "does not publish to MessageBus /notification-alert if the user has not been seen for > 30 days, but still sends a push notification" do
@@ -1559,7 +1559,7 @@ RSpec.describe PostAlerter do
         :post_notification_alert,
       )
       expect(messages.size).to eq(0)
-      expect(Jobs::PushNotification.jobs.size).to eq(1)
+      expect(Jobs::DeliverPushNotification.jobs.size).to eq(1)
     end
   end
 
