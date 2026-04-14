@@ -8,6 +8,8 @@
     <%- if @has_test_bundle %>
       <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
       <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
       <%= theme_translations_lookup %>
 
