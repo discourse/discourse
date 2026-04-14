@@ -8,7 +8,7 @@ class PostActionUsersController < ApplicationController
     params.require(:id)
     post_action_type_id = params[:post_action_type_id].to_i
 
-    page = params[:page].to_i
+    page = fetch_int_from_params(:page, default: 0)
     page_size = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
     # Find the post, and then determine if they can see the post (if deleted)
@@ -19,10 +19,7 @@ class PostActionUsersController < ApplicationController
       post
         .post_actions
         .where(post_action_type_id: post_action_type_id)
-        .includes(:user)
-        .offset(page * page_size)
-        .order("post_actions.created_at ASC")
-        .limit(page_size)
+        .order("post_actions.created_at ASC, post_actions.id ASC")
 
     post_actions =
       DiscoursePluginRegistry.apply_modifier(:post_action_users_list, post_actions, post)
@@ -34,9 +31,8 @@ class PostActionUsersController < ApplicationController
       post_actions = post_actions.where(user_id: current_user.id)
     end
 
-    action_type = PostActionType.types.key(post_action_type_id)
-    total_count = post["#{action_type}_count"].to_i
-    post_actions = post_actions.to_a
+    total_count = post_actions.count if can_see_actors
+    post_actions = post_actions.includes(:user).offset(page * page_size).limit(page_size).to_a
     data = {
       post_action_users:
         serialize_data(
@@ -46,7 +42,18 @@ class PostActionUsersController < ApplicationController
         ),
     }
 
-    data[:total_rows_post_action_users] = total_count if can_see_actors && total_count > page_size
+    if can_see_actors && total_count > page_size
+      data[:total_rows_post_action_users] = total_count
+
+      if total_count > ((page + 1) * page_size)
+        data[:load_more_post_action_users] = post_action_users_path(
+          id: post.id,
+          post_action_type_id: post_action_type_id,
+          page: page + 1,
+          limit: page_size,
+        )
+      end
+    end
 
     render_json_dump(data)
   end

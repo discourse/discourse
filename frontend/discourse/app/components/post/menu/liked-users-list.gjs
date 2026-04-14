@@ -13,14 +13,18 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 const LIKE_ACTION = 2; // The action type ID for "like" in Discourse
-const DISPLAY_MAX_USERS = 8; // will show X users, then a button to show one more row of X;
+const INITIAL_VISIBLE_USER_COUNT = 20;
+const EXPAND_BATCH_SIZES = [20, 40, 60];
+const DEFAULT_EXPAND_BATCH_SIZE = 60;
+const FETCH_USERS_LIMIT = 60;
 
 export default class LikedUsersList extends Component {
   @service store;
 
   @tracked likedUsers;
   @tracked loadingLikedUsers = false;
-  @tracked slicedUsersVisible = false;
+  @tracked visibleUserCount = INITIAL_VISIBLE_USER_COUNT;
+  @tracked expansionCount = 0;
 
   @action
   async fetchLikedUsers() {
@@ -34,15 +38,35 @@ export default class LikedUsersList extends Component {
       this.likedUsers = await this.store.find("post-action-user", {
         id: this.args.post.id,
         post_action_type_id: LIKE_ACTION,
+        limit: FETCH_USERS_LIMIT,
       });
+      this.visibleUserCount = INITIAL_VISIBLE_USER_COUNT;
+      this.expansionCount = 0;
     } finally {
       this.loadingLikedUsers = false;
     }
   }
 
   @action
-  toggleSlicedUsersVisiblity() {
-    this.slicedUsersVisible = !this.slicedUsersVisible;
+  async showMoreLikedUsers() {
+    if (!this.likedUsers || this.likedUsers.loadingMore) {
+      return;
+    }
+
+    const nextVisibleUserCount = this.visibleUserCount + this.nextBatchSize;
+
+    if (
+      this.likedUsers.content.length < nextVisibleUserCount &&
+      this.likedUsers.canLoadMore
+    ) {
+      await this.likedUsers.loadMore();
+    }
+
+    this.visibleUserCount = Math.min(
+      nextVisibleUserCount,
+      this.likedUsers.content.length
+    );
+    this.expansionCount += 1;
   }
 
   get icon() {
@@ -55,26 +79,32 @@ export default class LikedUsersList extends Component {
     }
   }
 
-  get truncatedUsers() {
-    return this.likedUsers?.content.slice(0, DISPLAY_MAX_USERS);
+  get visibleUsers() {
+    return this.likedUsers?.content.slice(0, this.visibleUserCount);
   }
 
-  get slicedUsers() {
-    return this.likedUsers?.content.slice(
-      DISPLAY_MAX_USERS,
-      DISPLAY_MAX_USERS * 2
-    );
+  get remainingUserCount() {
+    return Math.max(this.totalLikedUserCount - this.visibleUserCount, 0);
   }
 
-  get hiddenUserCount() {
-    return (
-      this.likedUsers?.length -
-      (this.truncatedUsers.length + this.slicedUsers.length)
-    );
+  get hasMoreUsers() {
+    return this.remainingUserCount > 0;
   }
 
-  get toggleSlicedUsersVisiblityIcon() {
-    return this.slicedUsersVisible ? "angle-up" : "angle-down";
+  get usesFixedGrid() {
+    return this.totalLikedUserCount > INITIAL_VISIBLE_USER_COUNT;
+  }
+
+  get nextBatchSize() {
+    return EXPAND_BATCH_SIZES[this.expansionCount] ?? DEFAULT_EXPAND_BATCH_SIZE;
+  }
+
+  get totalLikedUserCount() {
+    return this.likedUsers?.totalRows ?? this.likedUsers?.content.length ?? 0;
+  }
+
+  get showMoreLabel() {
+    return i18n("post.liked_users.show_more");
   }
 
   <template>
@@ -92,6 +122,7 @@ export default class LikedUsersList extends Component {
       }}
       @icon={{if @post.yours "d-liked" ""}}
       @placement="top"
+      @contentClass="liked-users-list-menu"
       label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
       id="post-like-users_{{@post.id}}"
     >
@@ -103,61 +134,45 @@ export default class LikedUsersList extends Component {
           @condition={{this.loadingLikedUsers}}
           class="liked-users-list__container"
         >
-          <span class="liked-users-list__count">
-            {{icon "d-liked" class="liked-users-list__count-icon"}}
-            {{@post.likeCount}}
-          </span>
           <div class="liked-users-list">
-            <ul class="liked-users-list__list">
-              {{#each this.truncatedUsers as |user|}}
+            <ul
+              class={{concatClass
+                "liked-users-list__list"
+                (if this.usesFixedGrid "liked-users-list__list--fixed-grid")
+              }}
+            >
+              <li class="liked-users-list__count-item">
+                <span class="liked-users-list__count">
+                  {{icon "d-liked" class="liked-users-list__count-icon"}}
+                  {{this.totalLikedUserCount}}
+                </span>
+              </li>
+              {{#each this.visibleUsers as |user|}}
                 <li class="liked-users-list__item">
                   <PluginOutlet
                     @name="liked-users-list-avatar"
                     @outletArgs={{lazyHash user=user post=@post}}
                   >
                     <UserAvatar
-                      class="trigger-user-card"
+                      class="trigger-user-card liked-users-list__avatar"
                       @user={{user}}
                       @size="small"
                     />
                   </PluginOutlet>
                 </li>
               {{/each}}
-              {{#if this.slicedUsers}}
-                <li class="liked-users-list__item">
-                  <DButton
-                    class="liked-users-list__more-button btn-flat"
-                    @icon={{this.toggleSlicedUsersVisiblityIcon}}
-                    @action={{this.toggleSlicedUsersVisiblity}}
-                  />
-                </li>
-              {{/if}}
             </ul>
-            {{#if this.slicedUsersVisible}}
-              <ul class="liked-users-list__list">
-                {{#each this.slicedUsers as |user|}}
-                  <li class="liked-users-list__item">
-                    <PluginOutlet
-                      @name="liked-users-list-avatar"
-                      @outletArgs={{lazyHash user=user post=@post}}
-                    >
-                      <UserAvatar
-                        class="trigger-user-card"
-                        @user={{user}}
-                        @size="small"
-                      />
-                    </PluginOutlet>
-                  </li>
-                {{/each}}
-              </ul>
-              {{#if this.hiddenUserCount}}
-                <span class="liked-users-list__more">
-                  {{i18n
-                    "discourse_reactions.state_panel.more_users"
-                    count=this.hiddenUserCount
-                  }}
-                </span>
-              {{/if}}
+            {{#if this.hasMoreUsers}}
+              <div class="liked-users-list__controls">
+                <DButton
+                  class="liked-users-list__show-more-button"
+                  @display="link"
+                  @action={{this.showMoreLikedUsers}}
+                  @isLoading={{this.likedUsers.loadingMore}}
+                  @translatedLabel={{this.showMoreLabel}}
+                  @translatedAriaLabel={{this.showMoreLabel}}
+                />
+              </div>
             {{/if}}
           </div>
         </ConditionalLoadingSpinner>

@@ -2118,12 +2118,14 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     margin: 0;
     list-style: none;
     display: flex;
-    justify-content: end;
+    justify-content: center;
     gap: var(--space-1);
-
-    // avatar width + gap * (max amount of users per row + 1)
-    max-width: calc((var(--liked-users-list-avatar-size) + var(--space-1)) * 9);
     flex-wrap: wrap;
+
+    &--fixed-grid {
+      display: grid;
+      grid-template-columns: repeat(13, var(--liked-users-list-avatar-size));
+    }
   }
 
   &__item,
@@ -2132,12 +2134,20 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     height: var(--liked-users-list-avatar-size);
   }
 
+  &__count-item {
+    height: var(--liked-users-list-avatar-size);
+    display: flex;
+    align-items: center;
+
+    .liked-users-list__list--fixed-grid & {
+      grid-column: span 3;
+    }
+  }
+
   &__container {
     --liked-users-list-avatar-size: 22px;
     padding: var(--space-2);
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
+    display: block;
   }
 
   &__count {
@@ -2146,23 +2156,29 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     color: var(--primary-medium);
     font-weight: 300;
     align-items: center;
+    padding-inline: var(--space-1);
   }
 
   &__count-icon {
     color: var(--love);
   }
 
-  &__more {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--space-1);
   }
 
-  &__more-button.btn-flat.btn {
-    padding: 0;
-    width: var(--liked-users-list-avatar-size);
+  &__show-more-button.btn-link {
+    min-height: calc(var(--liked-users-list-avatar-size) + var(--space-2));
+    padding: var(--space-1) var(--space-3);
     border-radius: var(--d-button-border-radius);
-    height: var(--liked-users-list-avatar-size);
   }
+}
+
+.liked-users-list-menu .fk-d-menu__inner-content {
+  overflow: visible;
 }
 
 .time-gap + .topic-post .topic-body,

@@ -31,6 +31,7 @@ RSpec.describe PostActionUsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["post_action_users"].map { |u| u["id"] }).to eq([user.id])
       expect(response.parsed_body["total_rows_post_action_users"]).to be_nil
+      expect(response.parsed_body["load_more_post_action_users"]).to be_nil
     end
 
     it "includes total_rows_post_action_users for restricted action types when staff" do
@@ -55,6 +56,7 @@ RSpec.describe PostActionUsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["post_action_users"].map { |u| u["id"] }).to eq([user.id])
       expect(response.parsed_body["total_rows_post_action_users"]).to eq(2)
+      expect(response.parsed_body["load_more_post_action_users"]).to be_present
     end
   end
 
@@ -189,6 +191,28 @@ RSpec.describe PostActionUsersController do
     expect(users.map { |u| u["id"] }).to eq(user_ids[2..3])
 
     expect(total).to eq(5)
+    load_more_url = response.parsed_body["load_more_post_action_users"]
+    expect(load_more_url).to be_present
+
+    load_more_params = Rack::Utils.parse_nested_query(URI.parse(load_more_url).query)
+    expect(load_more_params).to include(
+      "id" => post.id.to_s,
+      "post_action_type_id" => PostActionType.types[:like].to_s,
+      "page" => "2",
+      "limit" => "2",
+    )
+
+    get "/post_action_users.json",
+        params: {
+          id: post.id,
+          post_action_type_id: PostActionType.types[:like],
+          page: 2,
+          limit: 2,
+        }
+
+    expect(response.parsed_body["post_action_users"].length).to eq(1)
+    expect(response.parsed_body["total_rows_post_action_users"]).to eq(5)
+    expect(response.parsed_body["load_more_post_action_users"]).to be_nil
   end
 
   it "returns no users when the action type id is invalid" do
@@ -211,36 +235,46 @@ RSpec.describe PostActionUsersController do
     before do
       @post_action_1 = PostActionCreator.like(Fabricate(:user), post).post_action
       @post_action_2 = PostActionCreator.like(Fabricate(:user), post).post_action
+      @post_action_3 = PostActionCreator.like(Fabricate(:user), post).post_action
     end
-
-    after { DiscoursePluginRegistry.clear_modifiers! }
 
     it "allows the plugin to modify the post action query" do
       excluded_post_action_ids = [@post_action_1.id]
-      Plugin::Instance
-        .new
-        .register_modifier(:post_action_users_list) do |query, modifier_post|
+      plugin_instance = Plugin::Instance.new
+      modifier_block =
+        Proc.new do |query, modifier_post|
           expect(modifier_post.id).to eq(post.id)
           query.where.not(post_actions: { id: excluded_post_action_ids })
         end
 
+      plugin_instance.register_modifier(:post_action_users_list, &modifier_block)
+
+      begin
+        get "/post_action_users.json",
+            params: {
+              id: post.id,
+              post_action_type_id: PostActionType.types[:like],
+              limit: 1,
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["post_action_users"].count).to eq(1)
+        expect(response.parsed_body["total_rows_post_action_users"]).to eq(2)
+        expect(response.parsed_body["load_more_post_action_users"]).to be_present
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :post_action_users_list,
+          &modifier_block
+        )
+      end
+
       get "/post_action_users.json",
           params: {
             id: post.id,
             post_action_type_id: PostActionType.types[:like],
           }
       expect(response.status).to eq(200)
-      expect(response.parsed_body["post_action_users"].count).to eq(1)
-
-      DiscoursePluginRegistry.clear_modifiers!
-
-      get "/post_action_users.json",
-          params: {
-            id: post.id,
-            post_action_type_id: PostActionType.types[:like],
-          }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["post_action_users"].count).to eq(2)
+      expect(response.parsed_body["post_action_users"].count).to eq(3)
     end
   end
 end

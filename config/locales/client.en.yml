@@ -4475,6 +4475,8 @@ en:
       sr_post_like_count_button:
         one: "%{count} person liked this post."
         other: "%{count} people liked this post."
+      liked_users:
+        show_more: "Show more…"
       sr_post_read_count_button:
         one: "%{count} person read this post."
         other: "%{count} people read this post."
