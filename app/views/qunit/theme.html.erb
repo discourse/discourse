@@ -5,7 +5,7 @@
     <%= discourse_color_scheme_stylesheets %>
     <meta name="color-scheme" content="light dark">
 
-    <%- if @has_test_bundle && !@suggested_themes %>
+    <%- if @has_test_bundle %>
       <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
       <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
@@ -39,12 +39,6 @@
       <%- Discourse.find_plugin_css_assets(include_disabled: true, only: @required_plugins, mobile_view: false, desktop_view: true, request: request).each do |file| %>
         <%= discourse_stylesheet_link_tag(file) %>
       <%- end %>
-    <%- else %>
-      <style>
-        html {
-          font-family: Arial;
-        }
-      </style>
     <%- end %>
 
     <%- if params['testem'] %>
@@ -55,17 +49,6 @@
     <%- if !@has_test_bundle %>
       This is a production installation of Discourse, and cannot be used for theme testing.
       For more information, see <a href="https://meta.discourse.org/t/66857">this guide</a>.
-    <% elsif @suggested_themes %>
-      <h2>Theme QUnit Test Runner</h2>
-
-      <%- if @suggested_themes.empty? %>
-        <p>Cannot find any theme tests.</p>
-      <%- else %>
-        <h3>Select a theme/component: </h3>
-        <%- @suggested_themes.each do |(id, name)| %>
-          <h4><%= link_to name, theme_qunit_path(id: id) %></h4>
-        <%- end %>
-      <%- end %>
     <% else %>
       <%= preload_script "tests/test-entrypoint", type_module: true %>
     <%- end %>

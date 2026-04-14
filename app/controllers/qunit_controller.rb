@@ -12,13 +12,23 @@ class QunitController < ApplicationController
                      ]
   layout false
 
+  def index
+    @suggested_themes =
+      Theme
+        .where(id: ThemeField.where(target_id: Theme.targets[:tests_js]).distinct.pluck(:theme_id))
+        .order(updated_at: :desc)
+        .pluck(:id, :name)
+  end
+
+  def core
+  end
+
   def theme
     raise Discourse::NotFound.new if !can_see_theme_qunit?
 
     @has_test_bundle = EmberCli.has_tests?
 
     param_key = nil
-    @suggested_themes = nil
     if (id = get_param(:id)).present?
       theme = Theme.find_by(id: id.to_i)
       param_key = :id
@@ -35,17 +45,6 @@ class QunitController < ApplicationController
         render plain: "Can't find theme with #{param_key} #{get_param(param_key).inspect}",
                status: :not_found
       )
-    end
-
-    if !param_key
-      @suggested_themes =
-        Theme
-          .where(
-            id: ThemeField.where(target_id: Theme.targets[:tests_js]).distinct.pluck(:theme_id),
-          )
-          .order(updated_at: :desc)
-          .pluck(:id, :name)
-      return
     end
 
     about_json =
