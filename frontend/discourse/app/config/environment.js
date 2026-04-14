@@ -6,7 +6,7 @@ let output;
 if (isTesting()) {
   output = {
     modulePrefix: "discourse",
-    rootURL: `${import.meta.env.DISCOURSE_RELATIVE_URL_ROOT}/`,
+    rootURL: "/",
     locationType: "none",
     APP: {
       autoboot: false,
