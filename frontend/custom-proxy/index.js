@@ -9,6 +9,31 @@ const { Buffer } = require("node:buffer");
 const { env } = require("node:process");
 const { glob } = require("glob");
 const { HTMLRewriter } = require("html-rewriter-wasm");
+const yaml = require("js-yaml");
+
+function getPathPrefixes() {
+  const configPath =
+    process.env.DISCOURSE_MULTISITE_CONFIG_PATH ||
+    path.resolve(__dirname, "../../config/multisite.yml");
+
+  try {
+    const sites = yaml.load(fs.readFileSync(configPath, "utf-8"));
+    return Object.values(sites)
+      .map((s) => s.path_prefix)
+      .filter(Boolean)
+      .map((p) => cleanBaseURL(p));
+  } catch {
+    return [];
+  }
+}
+
+function findMatchingBase(requestPath, baseURLs) {
+  return (
+    baseURLs
+      .filter((b) => requestPath.startsWith(b))
+      .sort((a, b) => b.length - a.length)[0] ?? baseURLs[0]
+  );
+}
 
 async function listDistAssets(outputPath) {
   const files = await glob("**/*.js", {
@@ -253,9 +278,22 @@ to serve API requests. For example:
 
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
+    // eslint-disable-next-line no-console
+    console.log(`Base URL for Ember CLI Proxy: "${baseURL}"`);
+
+    const pathPrefixes = getPathPrefixes();
+    // baseURL is the canonical ember-cli rootURL (from DISCOURSE_RELATIVE_URL_ROOT).
+    // Additional multisite path prefixes are proxy-layer concerns only — we remap
+    // their asset requests to the canonical prefix so broccoli-watcher can serve them.
+    const baseURLs =
+      pathPrefixes.length > 0 ? [baseURL, ...pathPrefixes] : [baseURL];
+
+    // eslint-disable-next-line no-console
+    console.log(`Multisite path prefixes: ${JSON.stringify(baseURLs)}`);
+
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
     const pathRestrictedRawMiddleware = (req, res, next) => {
-      if (this.shouldHandleRequest(req, baseURL)) {
+      if (this.shouldHandleRequest(req, baseURLs)) {
         return rawMiddleware(req, res, next);
       } else {
         return next();
@@ -274,11 +312,21 @@ to serve API requests. For example:
 
     app.use(pathRestrictedRawMiddleware, async (req, res, next) => {
       try {
-        if (this.shouldHandleRequest(req, baseURL)) {
-          await handleRequest(proxy, baseURL, req, res, outputPath);
+        // eslint-disable-next-line no-console
+        console.log(`[proxy] ${req.method} ${req.path}`);
+        if (this.shouldHandleRequest(req, baseURLs)) {
+          const matchedBase = findMatchingBase(req.path, baseURLs);
+          await handleRequest(proxy, matchedBase, req, res, outputPath);
         } else {
           // Fixes issues when using e.g. "localhost" instead of loopback IP address
           req.headers.host = "127.0.0.1";
+          // For asset requests under non-canonical path prefixes (e.g. /alt/assets/...),
+          // remap to the canonical baseURL prefix (e.g. /main/assets/...) so that
+          // broccoli-watcher's rootURL prefix check passes and it can serve the file.
+          const matchedBase = findMatchingBase(req.path, baseURLs);
+          if (matchedBase !== baseURL) {
+            req.url = baseURL + req.url.slice(matchedBase.length);
+          }
         }
       } catch (error) {
         res.send(`
@@ -295,13 +343,15 @@ to serve API requests. For example:
     });
   },
 
-  shouldHandleRequest(request, baseURL) {
+  shouldHandleRequest(request, baseURLs) {
+    const base = findMatchingBase(request.path, baseURLs);
+
     if (
       [
-        `${baseURL}tests/index.html`,
-        `${baseURL}ember-cli-live-reload.js`,
-        `${baseURL}testem.js`,
-        `${baseURL}assets/test-i18n.js`,
+        `${base}tests/index.html`,
+        `${base}ember-cli-live-reload.js`,
+        `${base}testem.js`,
+        `${base}assets/test-i18n.js`,
       ].includes(request.path)
     ) {
       return false;
@@ -310,17 +360,17 @@ to serve API requests. For example:
     // All JS assets are served by Ember CLI, except for
     // plugin assets which end in _extra.js
     if (
-      request.path.startsWith(`${baseURL}assets/`) &&
+      request.path.startsWith(`${base}assets/`) &&
       !request.path.endsWith("_extra.js")
     ) {
       return false;
     }
 
-    if (request.path.startsWith(`${baseURL}_lr/`)) {
+    if (request.path.startsWith(`${base}_lr/`)) {
       return false;
     }
 
-    if (request.path.startsWith(`${baseURL}message-bus/`)) {
+    if (request.path.startsWith(`${base}message-bus/`)) {
       return false;
     }
 

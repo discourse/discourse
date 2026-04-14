@@ -186,9 +186,11 @@ module Discourse
 
     require "auth"
 
-    if GlobalSetting.relative_url_root.present?
+    # TODO: rough disable of relative url root from env if multisite for subpath.
+    if GlobalSetting.relative_url_root.present? && !File.file?(config.multisite_config_path)
       config.relative_url_root = GlobalSetting.relative_url_root
     end
+    config.multisite_default_path_prefix = GlobalSetting.relative_url_root
 
     if Rails.env.test? && GlobalSetting.load_plugins?
       Discourse.activate_plugins!

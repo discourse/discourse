@@ -107,7 +107,9 @@ class Stylesheet::Manager::Builder
   end
 
   def root_path
-    "#{GlobalSetting.relative_url_root}/"
+    # TODO: temporary use current path prefix for POC
+    prefix = RailsMultisite::ConnectionManagement.current_path_prefix
+    "#{prefix || GlobalSetting.relative_url_root}/"
   end
 
   def stylesheet_relpath
