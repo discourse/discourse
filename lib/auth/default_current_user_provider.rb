@@ -346,9 +346,13 @@ class Auth::DefaultCurrentUserProvider
         cookie_jar.delete("__profilin")
       end
 
+      PushNotificationPusher.clear_subscriptions(user)
       user.logged_out
     elsif user && @user_token
       @user_token.destroy
+      if (push_subscription = @env["discourse.push_subscription"])
+        PushNotificationPusher.unsubscribe(user, push_subscription)
+      end
       DiscourseEvent.trigger(:user_logged_out, user)
     end
 
