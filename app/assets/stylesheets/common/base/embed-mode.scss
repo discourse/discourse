@@ -166,5 +166,7 @@ body.embed-mode {
     opacity: 0;
     height: 0;
     visibility: hidden;
+    position: absolute;
+    pointer-events: none;
   }
 }
