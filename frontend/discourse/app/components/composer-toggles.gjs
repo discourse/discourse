@@ -48,7 +48,7 @@ export default class ComposerToggles extends Component {
   }
 
   <template>
-    <div class={{dConcatClass "composer-controls" this.additionalClasses}}>
+    <div class={{concatClass "composer-controls" this.additionalClasses}}>
       <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
 
       {{#if this.site.mobileView}}
