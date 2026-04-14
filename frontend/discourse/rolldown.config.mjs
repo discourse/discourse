@@ -54,6 +54,10 @@ const aliases = [
 ];
 
 export function buildConfig({ devMode } = {}) {
+  if (process.env.EMBER_ENV !== "production") {
+    process.env.NODE_ENV = "development";
+  }
+
   return {
     resolve: {
       extensions,
@@ -66,11 +70,9 @@ export function buildConfig({ devMode } = {}) {
       vendor: "vendor.js",
       "start-discourse": "start-discourse.js",
       "media-optimization-bundle": "media-optimization-bundle.js",
-      ...(process.env.NODE_ENV !== "production" || process.env.FORCE_BUILD_TESTS
-        ? {
-            // tests: "tests/index.html",
-            "tests/test-entrypoint": "tests/test-entrypoint.js",
-          }
+      ...(process.env.EMBER_ENV !== "production" ||
+      process.env.FORCE_BUILD_TESTS
+        ? { "tests/test-entrypoint": "tests/test-entrypoint.js" }
         : undefined),
     },
     output: {
