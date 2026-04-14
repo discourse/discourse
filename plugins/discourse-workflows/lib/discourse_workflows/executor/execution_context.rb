@@ -56,7 +56,7 @@ module DiscourseWorkflows
       def resolver_context(extra_context = {})
         @context.merge(
           "__node_contexts" => resolver_node_contexts,
-          "__execution" => execution_variables,
+          "__execution" => execution_variables(extra_context),
           **extra_context,
         )
       end
@@ -84,19 +84,24 @@ module DiscourseWorkflows
         "workflow_id" => ->(execution_context) { execution_context.workflow&.id },
         "workflow_name" => ->(execution_context) { execution_context.workflow&.name },
         "resume_url" =>
-          lambda do |execution_context|
+          lambda do |execution_context, extra_context|
             token = execution_context.resume_token
-            next if token.blank?
+            execution_id = execution_context.execution&.id
+            next if token.blank? || execution_id.blank?
 
-            signature = DiscourseWorkflows::HmacSigner.sign(token)
-            "#{Discourse.base_url}/workflows/webhooks/#{token}:#{signature}"
+            suffix = extra_context&.dig("__webhook_suffix")
+            base = "#{Discourse.base_url}/workflows/webhooks/#{execution_id}"
+            base = "#{base}/#{suffix}" if suffix.present?
+            "#{base}?token=#{token}"
           end,
       }.freeze
 
-      def execution_variables
+      def execution_variables(extra_context = {})
         schema_fields = ExpressionContextSchema.environment_symbols.dig("$execution", :fields) || {}
         schema_fields.each_with_object({}) do |(field_name, _), vars|
-          value = EXECUTION_VALUE_SOURCES[field_name]&.call(self)
+          source = EXECUTION_VALUE_SOURCES[field_name]
+          next unless source
+          value = source.arity > 1 ? source.call(self, extra_context) : source.call(self)
           vars[field_name] = value unless value.nil?
         end
       end

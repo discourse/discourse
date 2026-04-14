@@ -94,22 +94,30 @@ after_initialize do
     action_id = interaction.action&.dig("action_id")
     next unless action_id&.start_with?("dwf:")
 
-    parts = action_id.split(":")
-    next unless parts.length == 6
+    token = action_id.delete_prefix("dwf:")
+    next if token.blank?
 
-    _, execution_id, node_id, decision, wait_nonce, signature = parts
+    execution =
+      DiscourseWorkflows::Execution
+        .where(status: :waiting)
+        .where(
+          "waiting_config->>'approve_token' = :token OR waiting_config->>'deny_token' = :token",
+          token: token,
+        )
+        .first
+    next unless execution
 
-    payload = "#{execution_id}:#{node_id}:#{decision}:#{wait_nonce}"
-    next unless DiscourseWorkflows::HmacSigner.verify(payload, signature)
-
-    execution = DiscourseWorkflows::Execution.find_by(id: execution_id.to_i)
-    next unless execution&.waiting?
+    approved =
+      ActiveSupport::SecurityUtils.secure_compare(
+        execution.waiting_config["approve_token"].to_s,
+        token,
+      )
 
     Jobs.enqueue(
       Jobs::DiscourseWorkflows::ResumeChatApproval,
       execution_id: execution.id,
-      approved: decision == "approve",
-      wait_nonce: wait_nonce,
+      approved: approved,
+      action_token: token,
     )
   end
 end

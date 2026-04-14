@@ -8,7 +8,7 @@ module Jobs
           params: {
             execution_id: args[:execution_id],
             approved: args[:approved],
-            wait_nonce: args[:wait_nonce],
+            action_token: args[:action_token],
           },
         )
       end

@@ -79,6 +79,8 @@ export default class WorkflowsForm extends Component {
 
       if (isResume) {
         payload.resume_token = this.resumeToken;
+      } else if (this.args.model.resume_token) {
+        payload.resume_token = this.args.model.resume_token;
       }
 
       const result = await ajax(

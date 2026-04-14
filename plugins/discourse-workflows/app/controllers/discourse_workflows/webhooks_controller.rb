@@ -42,6 +42,9 @@ module DiscourseWorkflows
         on_model_not_found(:webhook_nodes) do
           render json: { error: "not_found" }, status: :not_found
         end
+        on_failed_step(:validate_resume_request) do
+          render json: { error: "not_found" }, status: :not_found
+        end
         on_failed_step(:validate_waiting_http_method) do
           render json: { error: "not_found" }, status: :not_found
         end
@@ -139,12 +142,17 @@ module DiscourseWorkflows
 
     def webhook_params
       parser = WebhookRequestParser.new(request, params)
+      is_resume = params[:execution_id].present?
+      query = request.query_parameters
       {
-        path: params[:path],
+        execution_id: params[:execution_id]&.to_i,
+        token: query["token"],
+        webhook_suffix: params[:suffix].to_s,
+        path: params[:path].to_s,
         http_method: request.method,
         body: parser.parse_body,
         headers: parser.extract_headers,
-        query_params: request.query_parameters,
+        query_params: is_resume ? query.except("token") : query,
         raw_authorization: request.headers["Authorization"],
       }
     end

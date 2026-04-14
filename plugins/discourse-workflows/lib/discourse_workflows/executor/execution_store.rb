@@ -7,6 +7,30 @@ module DiscourseWorkflows
 
       MAX_EXECUTION_DATA_SIZE = 5.megabytes
 
+      def self.create_waiting_for_trigger(workflow:, trigger_node_id:)
+        resume_token = SecureRandom.uuid
+
+        execution =
+          DiscourseWorkflows::Execution.create!(
+            workflow: workflow,
+            trigger_node_id: trigger_node_id.to_s,
+            status: :waiting,
+            trigger_data: {
+            },
+            execution_mode: :normal,
+            started_at: Time.current,
+            waiting_node_id: trigger_node_id.to_s,
+            waiting_until: 1.hour.from_now,
+            waiting_config: {
+              "wait_type" => "form_trigger",
+              "resume_token" => resume_token,
+              "timeout_action" => "fail",
+            },
+          )
+
+        [execution, resume_token]
+      end
+
       delegate :workflow, :trigger_data, to: :@execution_context
 
       attr_reader :trigger_node_id, :execution, :workflow_snapshot_data
@@ -162,7 +186,7 @@ module DiscourseWorkflows
         trigger_node = snapshot.find_node(@trigger_node_id)
         return unless trigger_node&.type == "trigger:form"
 
-        channel = self.class.form_channel(execution.id)
+        channel = self.class.form_channel(execution.id, @execution_context.resume_token)
 
         case status
         when :success

@@ -6,8 +6,7 @@ module DiscourseWorkflows
       extend ActiveSupport::Concern
 
       class_methods do
-        def form_channel(execution_id)
-          token = HmacSigner.sign("form_execution:#{execution_id}")
+        def form_channel(execution_id, token)
           "/discourse-workflows/form-execution/#{execution_id}-#{token}"
         end
       end

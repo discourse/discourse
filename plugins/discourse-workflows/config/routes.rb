@@ -71,6 +71,11 @@ DiscourseWorkflows::Engine.routes.draw do
   end
 
   scope "/workflows", defaults: { format: :json } do
+    match "/webhooks/:execution_id(/*suffix)" => "webhooks#receive",
+          :via => :all,
+          :constraints => {
+            execution_id: /\d+/,
+          }
     match "/webhooks/*path" => "webhooks#receive", :via => :all
   end
 

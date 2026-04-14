@@ -36,14 +36,6 @@ module DiscourseWorkflows
             where(status: :waiting).where("waiting_config->>'resume_token' = ?", token.to_s)
           end
 
-    scope :by_resume_token_and_suffix,
-          ->(token, suffix) do
-            by_resume_token(token).where(
-              "COALESCE(waiting_config->>'webhook_suffix', '') = ?",
-              suffix.to_s,
-            )
-          end
-
     WAITING_NODE_TYPES = %w[action:chat_approval action:form flow:wait].freeze
 
     def self.compute_run_time_ms(steps)

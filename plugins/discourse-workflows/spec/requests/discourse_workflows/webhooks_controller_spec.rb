@@ -149,7 +149,6 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
 
     context "when resuming a waiting webhook" do
       let(:resume_token) { "resume-token" }
-      let(:resume_signature) { DiscourseWorkflows::HmacSigner.sign(resume_token) }
 
       before do
         extra =
@@ -189,7 +188,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       end
 
       it "resumes when the suffix matches" do
-        post "/workflows/webhooks/#{resume_token}:#{resume_signature}/after-approval.json",
+        post "/workflows/webhooks/#{waiting_execution.id}/after-approval.json?token=#{resume_token}",
              params: { foo: "bar" }.to_json,
              headers: {
                "CONTENT_TYPE" => "application/json",
@@ -201,12 +200,12 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
         job = Jobs::DiscourseWorkflows::ResumeWebhookWaiting.jobs.last
         expect(job["args"].first).to include("execution_id" => waiting_execution.id)
         expect(job["args"].first["response_items"].first["json"]["webhook_url"]).to eq(
-          "#{Discourse.base_url}/workflows/webhooks/#{resume_token}:#{resume_signature}/after-approval",
+          "#{Discourse.base_url}/workflows/webhooks/#{waiting_execution.id}/after-approval?token=#{resume_token}",
         )
       end
 
       it "returns 404 when the suffix does not match" do
-        post "/workflows/webhooks/#{resume_token}:#{resume_signature}/wrong-suffix.json",
+        post "/workflows/webhooks/#{waiting_execution.id}/wrong-suffix.json?token=#{resume_token}",
              params: { foo: "bar" }.to_json,
              headers: {
                "CONTENT_TYPE" => "application/json",
@@ -240,7 +239,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
             waiting_execution.waiting_config.merge("response_mode" => "respond_to_webhook"),
         )
 
-        post "/workflows/webhooks/#{resume_token}:#{resume_signature}/after-approval.json",
+        post "/workflows/webhooks/#{waiting_execution.id}/after-approval.json?token=#{resume_token}",
              params: { foo: "bar" }.to_json,
              headers: {
                "CONTENT_TYPE" => "application/json",

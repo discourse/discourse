@@ -10,10 +10,10 @@ module DiscourseWorkflows
       params do
         attribute :execution_id, :integer
         attribute :approved, :boolean
-        attribute :wait_nonce, :string
+        attribute :action_token, :string
 
         validates :execution_id, presence: true
-        validates :wait_nonce, presence: true
+        validates :action_token, presence: true
       end
 
       model :execution
@@ -22,12 +22,25 @@ module DiscourseWorkflows
       private
 
       def fetch_execution(params:)
-        DiscourseWorkflows::Execution
-          .waiting_with_type("chat_approval")
-          .where(id: params.execution_id)
-          .where("waiting_config->>'wait_nonce' = ?", params.wait_nonce)
-          .lock("FOR UPDATE SKIP LOCKED")
-          .first
+        execution =
+          DiscourseWorkflows::Execution
+            .waiting_with_type("chat_approval")
+            .where(id: params.execution_id)
+            .lock("FOR UPDATE SKIP LOCKED")
+            .first
+
+        return nil unless execution
+
+        approve_token = execution.waiting_config&.dig("approve_token").to_s
+        deny_token = execution.waiting_config&.dig("deny_token").to_s
+        token = params.action_token.to_s
+
+        unless ActiveSupport::SecurityUtils.secure_compare(approve_token, token) ||
+                 ActiveSupport::SecurityUtils.secure_compare(deny_token, token)
+          return nil
+        end
+
+        execution
       end
 
       def resume_execution(execution:, params:)

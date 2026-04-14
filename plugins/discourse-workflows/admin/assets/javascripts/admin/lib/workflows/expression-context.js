@@ -123,11 +123,11 @@ function buildExecutionScope(nodes) {
   });
 
   const hasWebhookWait = (nodes || []).some(
-    (n) => n.type === "core:wait" && n.configuration?.resume === "webhook"
+    (n) => n.type === "flow:wait" && n.configuration?.resume === "webhook"
   );
 
   if (hasWebhookWait) {
-    scope.resume_webhook_url = "";
+    scope.resume_url = "";
   }
 
   return scope;

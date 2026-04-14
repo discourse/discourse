@@ -75,6 +75,33 @@ RSpec.describe DiscourseWorkflows::Form::Show do
       end
     end
 
+    context "when form_description references $execution.resume_url" do
+      before do
+        trigger_node = workflow.parsed_nodes.find { |n| n["type"] == "trigger:form" }
+        trigger_node["configuration"]["form_description"] = "={{ $execution.resume_url }}"
+        workflow.update!(nodes: workflow.parsed_nodes)
+        DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+      end
+
+      it "resolves $execution.resume_url to a valid webhook URL" do
+        expect(result).to run_successfully
+        description = result[:form_data][:form_description]
+        expect(description).to match(%r{/workflows/webhooks/\d+\?token=[a-f0-9-]+})
+      end
+
+      it "returns resume_token in the response" do
+        expect(result).to run_successfully
+        expect(result[:form_data][:resume_token]).to be_present
+      end
+
+      it "creates a waiting execution for the form trigger" do
+        expect { result }.to change { DiscourseWorkflows::Execution.waiting.count }.by(1)
+        execution = DiscourseWorkflows::Execution.waiting.last
+        expect(execution.waiting_config["wait_type"]).to eq("form_trigger")
+        expect(execution.waiting_until).to be_within(5.seconds).of(1.hour.from_now)
+      end
+    end
+
     context "when a non-adjacent downstream form action exists" do
       before do
         extra =

@@ -76,22 +76,57 @@ module DiscourseWorkflows
       guardian:
     )
       wc = waiting_execution.waiting_config
+      resume_token = wc["resume_token"]
+
+      exec_context = {
+        "__execution" => {
+          "id" => waiting_execution.id,
+          "workflow_id" => workflow.id,
+          "workflow_name" => workflow.name,
+          "resume_url" =>
+            "#{Discourse.base_url}/workflows/webhooks/#{waiting_execution.id}?token=#{resume_token}",
+        },
+      }
 
       {
         uuid: params.uuid,
-        form_title: ExpressionResolver.resolve(wc["form_title"], user: guardian.user),
-        form_description: ExpressionResolver.resolve(wc["form_description"], user: guardian.user),
+        form_title:
+          ExpressionResolver.resolve(wc["form_title"], context: exec_context, user: guardian.user),
+        form_description:
+          ExpressionResolver.resolve(
+            wc["form_description"],
+            context: exec_context,
+            user: guardian.user,
+          ),
         form_fields: Workflow.resolve_field_keys(wc["form_fields"] || []),
         response_mode: "on_received",
         has_downstream_form:
           workflow.node_has_reachable_downstream_of_type?(form_node["id"], "action:form"),
+        resume_token: resume_token,
       }
     end
 
     def build_form_data_from_config(workflow:, form_node:, params:, guardian:)
+      execution, resume_token =
+        DiscourseWorkflows::Executor::ExecutionStore.create_waiting_for_trigger(
+          workflow: workflow,
+          trigger_node_id: form_node["id"],
+        )
+
+      exec_context = {
+        "__execution" => {
+          "id" => execution.id,
+          "workflow_id" => workflow.id,
+          "workflow_name" => workflow.name,
+          "resume_url" =>
+            "#{Discourse.base_url}/workflows/webhooks/#{execution.id}?token=#{resume_token}",
+        },
+      }
+
       config =
         ExpressionResolver.resolve_hash(
           (form_node["configuration"] || {}).deep_stringify_keys,
+          context: exec_context,
           user: guardian.user,
         )
 
@@ -103,6 +138,7 @@ module DiscourseWorkflows
         response_mode: config["response_mode"] || "on_received",
         has_downstream_form:
           workflow.node_has_reachable_downstream_of_type?(form_node["id"], "action:form"),
+        resume_token: resume_token,
       }
     end
   end

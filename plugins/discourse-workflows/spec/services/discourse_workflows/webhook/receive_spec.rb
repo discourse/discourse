@@ -2,7 +2,6 @@
 
 RSpec.describe DiscourseWorkflows::Webhook::Receive do
   describe described_class::Contract, type: :model do
-    it { is_expected.to validate_presence_of(:path) }
     it { is_expected.to validate_presence_of(:http_method) }
   end
 
@@ -40,19 +39,14 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
     end
 
     context "when contract is invalid" do
-      let(:params) { { path: nil, http_method: nil } }
+      let(:params) { { http_method: nil } }
 
       it { is_expected.to fail_a_contract }
     end
 
     context "when resuming a waiting execution" do
+      let(:resume_token) { "my-hook" }
       let(:webhook_suffix) { nil }
-      let(:signed_path) do
-        path = +"my-hook:#{DiscourseWorkflows::HmacSigner.sign("my-hook")}"
-        path << "/#{webhook_suffix}" if webhook_suffix.present?
-        path
-      end
-      let(:params) { super().merge(path: signed_path) }
 
       fab!(:waiting_execution) do
         Fabricate(
@@ -68,6 +62,24 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
             "response_mode" => "immediately",
           },
         )
+      end
+
+      let(:params) do
+        {
+          execution_id: waiting_execution.id,
+          token: resume_token,
+          webhook_suffix: webhook_suffix.to_s,
+          http_method: "POST",
+          body: {
+            "foo" => "bar",
+          },
+          headers: {
+            "content-type" => "application/json",
+          },
+          query_params: {
+            "source" => "test",
+          },
+        }
       end
 
       before do
@@ -95,7 +107,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
               "foo" => "bar",
             },
             "method" => "POST",
-            "webhook_url" => "#{Discourse.base_url}/workflows/webhooks/#{signed_path}",
+            "webhook_url" =>
+              "#{Discourse.base_url}/workflows/webhooks/#{waiting_execution.id}?token=#{resume_token}",
           )
         end
       end
@@ -108,11 +121,15 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
       context "when webhook suffix does not match" do
         let(:webhook_suffix) { "after-approval" }
-        let(:signed_path) do
-          "my-hook:#{DiscourseWorkflows::HmacSigner.sign("my-hook")}/wrong-suffix"
-        end
+        let(:params) { super().merge(webhook_suffix: "wrong-suffix") }
 
-        it { is_expected.to fail_to_find_a_model(:webhook_nodes) }
+        it { is_expected.to fail_a_step(:validate_resume_request) }
+      end
+
+      context "when token does not match" do
+        let(:params) { super().merge(token: "wrong-token") }
+
+        it { is_expected.to fail_a_step(:validate_resume_request) }
       end
 
       context "when response mode is synchronous" do

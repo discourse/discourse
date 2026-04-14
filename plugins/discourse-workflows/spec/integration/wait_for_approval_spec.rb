@@ -111,12 +111,13 @@ RSpec.describe "Wait for Approval end-to-end" do
       waiting_node_id: "wait-1",
       waiting_config: {
         "wait_type" => "chat_approval",
-        "wait_nonce" => SecureRandom.hex(16),
+        "approve_token" => SecureRandom.hex(32),
+        "deny_token" => SecureRandom.hex(32),
         "chat_channel_id" => channel.id,
       },
     )
 
-    # Replay the stale button — should be rejected because the nonce changed
+    # Replay the stale button — should be rejected because the tokens changed
     stale_interaction =
       Chat::MessageInteraction.new(
         user: approver,

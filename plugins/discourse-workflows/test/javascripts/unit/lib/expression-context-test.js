@@ -83,17 +83,17 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.strictEqual(scope.$execution.workflow_name, "");
   });
 
-  test("includes resume_webhook_url when a webhook wait node exists", function (assert) {
+  test("includes resume_url when a webhook wait node exists", function (assert) {
     const scope = buildScope({
-      nodes: [{ type: "core:wait", configuration: { resume: "webhook" } }],
+      nodes: [{ type: "flow:wait", configuration: { resume: "webhook" } }],
     });
 
-    assert.strictEqual(scope.$execution.resume_webhook_url, "");
+    assert.strictEqual(scope.$execution.resume_url, "");
   });
 
-  test("omits resume_webhook_url when no webhook wait", function (assert) {
+  test("omits resume_url when no webhook wait", function (assert) {
     assert.strictEqual(
-      buildScope({ nodes: [] }).$execution.resume_webhook_url,
+      buildScope({ nodes: [] }).$execution.resume_url,
       undefined
     );
   });

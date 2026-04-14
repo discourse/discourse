@@ -5,6 +5,9 @@ module DiscourseWorkflows
     include Service::Base
 
     params do
+      attribute :execution_id, :integer
+      attribute :token, :string
+      attribute :webhook_suffix, :string
       attribute :path, :string
       attribute :http_method, :string
       attribute :body, default: -> { {} }
@@ -12,26 +15,16 @@ module DiscourseWorkflows
       attribute :query_params, default: -> { {} }
       attribute :raw_authorization, :string
 
-      validates :path, presence: true
       validates :http_method, presence: true
 
       def webhook_url
-        "#{Discourse.base_url}/workflows/webhooks/#{path}"
-      end
-
-      def resume_token
-        token_and_signature, = path.to_s.split("/", 2)
-        token_and_signature.to_s.split(":", 2).first
-      end
-
-      def resume_signature
-        token_and_signature, = path.to_s.split("/", 2)
-        token_and_signature.to_s.split(":", 2).second
-      end
-
-      def resume_webhook_suffix
-        _, webhook_suffix = path.to_s.split("/", 2)
-        webhook_suffix.presence.to_s
+        if execution_id.present?
+          base = "#{Discourse.base_url}/workflows/webhooks/#{execution_id}"
+          base = "#{base}/#{webhook_suffix}" if webhook_suffix.present?
+          "#{base}?token=#{token}"
+        else
+          "#{Discourse.base_url}/workflows/webhooks/#{path}"
+        end
       end
 
       def trigger_data
@@ -60,6 +53,7 @@ module DiscourseWorkflows
     end
 
     model :waiting_execution, optional: true
+    step :validate_resume_request
 
     only_if(:resuming_execution) do
       step :validate_waiting_http_method
@@ -78,24 +72,35 @@ module DiscourseWorkflows
 
     private
 
-    def fetch_waiting_execution(params:)
-      return nil if params.resume_token.blank? || params.resume_signature.blank?
-      unless DiscourseWorkflows::HmacSigner.verify(params.resume_token, params.resume_signature)
-        return nil
-      end
+    def validate_resume_request(waiting_execution:, params:)
+      fail!("invalid resume request") if params.execution_id.present? && waiting_execution.nil?
+    end
 
-      DiscourseWorkflows::Execution
-        .by_resume_token_and_suffix(params.resume_token, params.resume_webhook_suffix)
-        .lock("FOR UPDATE SKIP LOCKED")
-        .first
+    def fetch_waiting_execution(params:)
+      return nil if params.execution_id.blank? || params.token.blank?
+
+      execution =
+        DiscourseWorkflows::Execution.where(status: :waiting).find_by(id: params.execution_id)
+      return nil unless execution
+
+      stored_token = execution.waiting_config&.dig("resume_token")
+      return nil if stored_token.blank?
+      return nil unless ActiveSupport::SecurityUtils.secure_compare(stored_token, params.token)
+
+      suffix = params.webhook_suffix.to_s
+      stored_suffix = (execution.waiting_config&.dig("webhook_suffix") || "").to_s
+      return nil unless suffix == stored_suffix
+
+      execution.lock!("FOR UPDATE SKIP LOCKED")
+      execution
     end
 
     def resuming_execution(waiting_execution:)
       waiting_execution.present?
     end
 
-    def triggering_new_workflow(waiting_execution:)
-      waiting_execution.nil?
+    def triggering_new_workflow(waiting_execution:, params:)
+      waiting_execution.nil? && params.execution_id.blank?
     end
 
     def validate_waiting_http_method(waiting_execution:, params:)

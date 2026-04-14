@@ -73,11 +73,10 @@ module DiscourseWorkflows
           timeout_minutes = config["timeout_minutes"].presence&.to_i
           timeout_action = config.fetch("timeout_action") { "deny" }
 
-          wait_nonce = SecureRandom.hex(16)
-          execution_id = exec_ctx.execution_id
-          node_id = exec_ctx.node_id
+          approve_token = SecureRandom.hex(32)
+          deny_token = SecureRandom.hex(32)
 
-          blocks = approval_blocks(execution_id, node_id, approve_label, deny_label, wait_nonce)
+          blocks = approval_blocks(approve_token, deny_token, approve_label, deny_label)
           chat_message = send_chat_message(channel_id, message_text, blocks)
 
           Executor::WaitForResume.new(
@@ -87,7 +86,8 @@ module DiscourseWorkflows
               "timeout_action" => timeout_action,
               "chat_message_id" => chat_message.id,
               "chat_channel_id" => channel_id,
-              "wait_nonce" => wait_nonce,
+              "approve_token" => approve_token,
+              "deny_token" => deny_token,
               "timeout_response_items" => [
                 {
                   "json" => {
@@ -123,21 +123,13 @@ module DiscourseWorkflows
           end
         end
 
-        def approval_blocks(execution_id, node_id, approve_label, deny_label, wait_nonce)
+        def approval_blocks(approve_token, deny_token, approve_label, deny_label)
           [
             {
               "type" => "actions",
               "elements" => [
-                button_block(
-                  approve_label,
-                  build_signed_action_id(execution_id, node_id, "approve", wait_nonce),
-                  "approve",
-                ),
-                button_block(
-                  deny_label,
-                  build_signed_action_id(execution_id, node_id, "deny", wait_nonce),
-                  "deny",
-                ),
+                button_block(approve_label, "dwf:#{approve_token}", "approve"),
+                button_block(deny_label, "dwf:#{deny_token}", "deny"),
               ],
             },
           ]
@@ -153,12 +145,6 @@ module DiscourseWorkflows
             "action_id" => action_id,
             "value" => value,
           }
-        end
-
-        def build_signed_action_id(execution_id, node_id, decision, wait_nonce)
-          payload = "#{execution_id}:#{node_id}:#{decision}:#{wait_nonce}"
-          signature = DiscourseWorkflows::HmacSigner.sign(payload)
-          "dwf:#{execution_id}:#{node_id}:#{decision}:#{wait_nonce}:#{signature}"
         end
       end
     end

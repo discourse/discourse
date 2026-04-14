@@ -8,6 +8,7 @@ module DiscourseWorkflows
 
     params do
       attribute :uuid, :string
+      attribute :resume_token, :string
       attribute :form_data, default: -> { {} }
 
       validates :uuid, presence: true
@@ -53,7 +54,23 @@ module DiscourseWorkflows
     def run_workflow(workflow:, trigger_node:, params:, guardian:)
       form_data = DiscourseWorkflows::Workflow.form_data_from(trigger_node, params.form_data)
       form_data.transform_values! { |v| v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v }
-      trigger_data = { form_data: form_data, submitted_at: Time.current.utc.iso8601 }
+      trigger_data = { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 }
+      response_items = [{ "json" => trigger_data }]
+
+      if params.resume_token.present?
+        execution =
+          DiscourseWorkflows::Execution
+            .where(status: :waiting, workflow: workflow)
+            .where("waiting_config->>'resume_token' = ?", params.resume_token)
+            .where("waiting_config->>'wait_type' = ?", "form_trigger")
+            .first
+
+        if execution
+          execution.update!(trigger_data: trigger_data)
+          return DiscourseWorkflows::Executor.resume(execution, response_items, user: guardian.user)
+        end
+      end
+
       options = DiscourseWorkflows::Executor::ExecutionOptions.new(user: guardian.user)
       DiscourseWorkflows::Executor.new(workflow, trigger_node["id"], trigger_data, options).run
     end

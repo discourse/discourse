@@ -28,7 +28,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionContext do
     before do
       execution = Fabricate(:discourse_workflows_execution, workflow: workflow)
       execution_context.execution = execution
-      execution_context.reset!(resume_token: "resume-token")
+      execution_context.reset!(resume_token: SecureRandom.uuid)
       execution_context.store_context("node_a", "data_a")
     end
 
@@ -44,7 +44,16 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionContext do
 
       expect(context["__execution"]).to include("id", "workflow_id", "workflow_name", "resume_url")
       expect(context["__execution"]["workflow_id"]).to eq(workflow.id)
-      expect(context["__execution"]["resume_url"]).to match(%r{/workflows/webhooks/.+:.+})
+      expect(context["__execution"]["resume_url"]).to match(
+        %r{/workflows/webhooks/\d+\?token=[a-f0-9-]+},
+      )
+    end
+
+    it "appends webhook suffix to resume_url when present" do
+      context = execution_context.resolver_context("__webhook_suffix" => "my-hook/path")
+      expect(context["__execution"]["resume_url"]).to match(
+        %r{/workflows/webhooks/\d+/my-hook/path\?token=},
+      )
     end
   end
 

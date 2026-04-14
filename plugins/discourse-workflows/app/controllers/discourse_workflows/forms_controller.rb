@@ -28,11 +28,13 @@ module DiscourseWorkflows
     def create
       DiscourseWorkflows::Form::Submit.call(service_params) do
         on_success do |execution:, response_metadata:|
+          resume_token = execution&.execution_data&.context_data&.dig("__resume_token")
           render json: {
-                   resume_token: execution&.execution_data&.context_data&.dig("__resume_token"),
+                   resume_token: resume_token,
                    has_downstream_form: response_metadata[:has_downstream_form],
                    response_mode: response_metadata[:response_mode],
-                   form_channel: DiscourseWorkflows::Executor.form_channel(execution&.id),
+                   form_channel:
+                     DiscourseWorkflows::Executor.form_channel(execution&.id, resume_token),
                  }
         end
         on_failed_step(:validate_required_form_fields) do |missing_fields:|
