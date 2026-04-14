@@ -50,6 +50,8 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
     it "includes the accepted answer" do
       accepted = json["acceptedAnswer"]
       expect(accepted["@type"]).to eq("Answer")
+      expect(accepted["text"]).to be_present
+      expect(accepted["datePublished"]).to be_present
       expect(accepted["upvoteCount"]).to eq(7)
       expect(accepted["author"]).to eq(
         { "@type" => "Person", "name" => answer_user.username, "url" => answer_user.full_url },
@@ -73,7 +75,11 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
     end
 
     it "includes suggestedAnswer as an array of Answer objects" do
-      expect(json["suggestedAnswer"].sole["@type"]).to eq("Answer")
+      suggested = json["suggestedAnswer"].sole
+      expect(suggested["@type"]).to eq("Answer")
+      expect(suggested["text"]).to be_present
+      expect(suggested["datePublished"]).to be_present
+      expect(suggested["upvoteCount"]).to eq(0)
     end
   end
 end

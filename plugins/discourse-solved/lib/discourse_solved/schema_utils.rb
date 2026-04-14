@@ -49,6 +49,7 @@ module DiscourseSolved
       return nil unless qa_page_schema?(topic)
       return {} if post.is_first_post?
       return { itemscope: true } if post.post_type == Post.types[:small_action]
+      return {} unless eligible_answer?(post)
       if accepted_answer_visible?(topic) && topic.solved.answer_post_id == post.id
         { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
       else
@@ -56,10 +57,11 @@ module DiscourseSolved
       end
     end
 
-    def self.main_entity_meta(topic)
+    def self.main_entity_meta(topic, crawler_posts)
       return unless qa_page_schema?(topic)
       "<meta itemprop='name' content='#{ERB::Util.html_escape(topic.title)}'>" \
-        "<meta itemprop='answerCount' content='#{eligible_answers(topic).count}'>"
+        "<meta itemprop='datePublished' content='#{topic.created_at.iso8601}'>" \
+        "<meta itemprop='answerCount' content='#{Array(crawler_posts).count { |p| eligible_answer?(p) }}'>"
     end
 
     private_class_method def self.accepted_answer_visible?(topic)
@@ -69,6 +71,11 @@ module DiscourseSolved
 
     private_class_method def self.eligible_answers(topic)
       topic.posts.where.not(post_number: 1).where(post_type: Post.types[:regular], hidden: false)
+    end
+
+    private_class_method def self.eligible_answer?(post)
+      !post.is_first_post? && post.post_type == Post.types[:regular] && !post.hidden &&
+        post.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present?
     end
   end
 end

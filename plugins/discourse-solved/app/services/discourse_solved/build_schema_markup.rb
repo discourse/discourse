@@ -45,7 +45,11 @@ class DiscourseSolved::BuildSchemaMarkup
     excluded_ids << accepted_answer.id if accepted_answer.present?
     scope = topic.posts.where.not(id: excluded_ids)
     scope = scope.where(id: params.post_ids) if params.post_ids.present?
-    scope.where(post_type: Post.types[:regular], hidden: false).order(:post_number).to_a
+    scope
+      .where(post_type: Post.types[:regular], hidden: false)
+      .order(:post_number)
+      .to_a
+      .select { |p| p.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present? }
   end
 
   def fetch_html(topic:, accepted_answer:, suggested_answers:)

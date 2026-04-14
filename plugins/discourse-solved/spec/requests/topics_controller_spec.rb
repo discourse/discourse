@@ -153,11 +153,11 @@ RSpec.describe TopicsController do
       qa_page = doc.at_css('[itemtype*="QAPage"]')
       expect(qa_page).to be_present
       expect(qa_page.at_css('> [itemprop="name"]')["content"]).to eq(topic.title)
-      expect(qa_page.at_css('> [itemprop="datePublished"]')["content"]).to be_present
 
       question = doc.at_css('[itemtype*="Question"]')
       expect(question).to be_present
       expect(question.at_css('[itemprop="name"]')["content"]).to eq(topic.title)
+      expect(question.at_css('[itemprop="datePublished"]')["content"]).to be_present
       expect(question.at_css('[itemprop="answerCount"]')["content"]).to eq("2")
       expect(question.at_css('[itemprop="text"]')).to be_present
       expect(question.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
