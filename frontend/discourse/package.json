@@ -20,7 +20,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "rolldown build",
+    "build": "rolldown -c rolldown.config.mjs",
     "start": "./rolldown-dev.mjs"
   },
   "dependencies": {
