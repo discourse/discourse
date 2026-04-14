@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class Category < PageObjects::Pages::Base
-      # keeping the various category related features combined for now
-
       def visit(category)
         page.visit("/c/#{category.id}")
         self
@@ -53,13 +51,18 @@ module PageObjects
         self
       end
 
+      def visit_appearance(category)
+        visit_images(category)
+        self
+      end
+
       def visit_images(category)
         page.visit("/c/#{category.slug}/edit/images")
         self
       end
 
       def back_to_category
-        find(".edit-category-title-bar span", text: "Back to category").click
+        find(".edit-category .back-button").click
         self
       end
 
@@ -96,7 +99,7 @@ module PageObjects
       end
 
       def toggle_form_templates
-        find(".d-toggle-switch .d-toggle-switch__checkbox-slider").click
+        PageObjects::Components::DToggleSwitch.new(".toggle-template-type").toggle
         self
       end
 
@@ -185,7 +188,7 @@ module PageObjects
         page.has_css?(".category-header h1", text: title)
       end
 
-      def topic_posting_review_mode_chooser(simplified: false)
+      def topic_posting_review_mode_chooser(simplified: true)
         if simplified
           PageObjects::Components::SelectKit.new(
             ".form-kit__field[data-name='category_setting.topic_posting_review_mode'] .combo-box",
@@ -195,7 +198,7 @@ module PageObjects
         end
       end
 
-      def topic_posting_review_group_chooser(simplified: false)
+      def topic_posting_review_group_chooser(simplified: true)
         if simplified
           PageObjects::Components::SelectKit.new(".form-kit .group-chooser")
         else
@@ -211,11 +214,11 @@ module PageObjects
         page.has_no_content?(I18n.t("js.category.validations.groups_required"))
       end
 
-      def has_topic_posting_review_mode?(mode, simplified: false)
+      def has_topic_posting_review_mode?(mode, simplified: true)
         topic_posting_review_mode_chooser(simplified: simplified).has_selected_value?(mode)
       end
 
-      def has_topic_posting_review_groups?(group, simplified: false)
+      def has_topic_posting_review_groups?(group, simplified: true)
         topic_posting_review_group_chooser(simplified: simplified).has_selected_value?(group.id)
       end
     end
