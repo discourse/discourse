@@ -123,9 +123,7 @@ before_service_worker_ready do |server, service_worker|
     demon_class.start(1, logger: server.logger)
   end
 
-  if Rails.env.development? && ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
-    Demon::PluginJsWatcher.start(verbose: true)
-  end
+  Demon::PluginJsWatcher.start(verbose: true) if Rails.env.development?
 
   Thread.new do
     while true
