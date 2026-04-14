@@ -16,6 +16,7 @@ class QunitRunner
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
     @dry_run = false
     @rails_port = ENV["UNICORN_PORT"]&.to_i || 3000
+    @testem_port = next_available_port(42_000)
 
     @standalone_mode = false
 
@@ -256,6 +257,7 @@ class QunitRunner
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
       args += %w[pnpm testem ci -f testem.js]
       args += ["--parallel", parallel.to_s] if parallel
+      args += ["--port", @testem_port.to_s]
     else
       args = %w[pnpm ember exam]
       args += ["--query", query] if query && !query.empty?
@@ -265,6 +267,7 @@ class QunitRunner
       args += ["--random", resolved_seed]
       args += %w[--path dist]
       args += %w[--test-page tests]
+      args += ["--test-port", @testem_port.to_s]
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
@@ -440,6 +443,8 @@ class QunitRunner
       "LOGSTASH_UNICORN_URI" => nil,
       "UNICORN_WORKERS" => "1",
       "UNICORN_TIMEOUT" => "90",
+      "DISCOURSE_HOSTNAME" => "localhost",
+      "DISCOURSE_PORT" => @testem_port.to_s,
     }
 
     env["LOAD_PLUGINS"] = "1" if should_load_plugins?

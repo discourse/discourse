@@ -45,7 +45,7 @@ test:
   reaping_frequency: 0
   checkout_timeout: <%= ENV["CHECKOUT_TIMEOUT"] || 5 %>
   host_names:
-    - test.localhost
+    - "<%= ENV['DISCOURSE_HOSTNAME'] || 'test.localhost' %>"
   variables: <%= db_variables.to_json %>
 
 # profile db is used for benchmarking using the script/bench.rb script
