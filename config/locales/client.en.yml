@@ -4508,7 +4508,7 @@ en:
         success: "Translations have been updated successfully"
         post_language_selector:
           title: "Post language"
-          header: "I'm posting in…"
+          header: "This post is in…"
           none: "Not set"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"

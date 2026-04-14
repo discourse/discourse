@@ -9,15 +9,15 @@ export default apiInitializer((api) => {
     return;
   }
 
-  // When AI translation is enabled, hide the manual language selector for new posts (auto-detected)
-  // but keep it visible when editing so users can correct wrong detections
+  // When AI translation is enabled, deprioritize the manual language selector for new posts
+  // (auto-detected) but keep it prominent when editing so users can correct wrong detections
   api.registerValueTransformer(
-    "post-language-selector-should-show",
+    "post-language-selector-priority",
     ({ value, context }) => {
-      if (context.action === EDIT) {
+      if (context?.action === EDIT) {
         return value;
       }
-      return false;
+      return "last";
     }
   );
 

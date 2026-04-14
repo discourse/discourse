@@ -17,26 +17,30 @@ export default {
 
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
-        toolbar.groups.unshift({ group: "locale", buttons: [] });
+        const composerService = api.container.lookup("service:composer");
+        const priority = applyValueTransformer(
+          "post-language-selector-priority",
+          "first",
+          { action: composerService.model?.action }
+        );
+
+        const group = priority === "last" ? "extras" : "locale";
+
+        if (priority !== "last") {
+          toolbar.groups.unshift({ group: "locale", buttons: [] });
+        }
+
         toolbar.addButton({
           id: "post-language-selector",
-          group: "locale",
+          group,
           icon: "language",
           title: "post.localizations.post_language_selector.title",
           className: "post-language-selector-trigger",
           condition: () => {
             const composer = api.container.lookup("service:composer");
             const currentUser = api.getCurrentUser();
-            if (
-              !currentUser ||
-              !ALLOWED_ACTIONS.includes(composer.model?.action)
-            ) {
-              return false;
-            }
-            return applyValueTransformer(
-              "post-language-selector-should-show",
-              true,
-              { action: composer.model?.action }
+            return (
+              currentUser && ALLOWED_ACTIONS.includes(composer.model?.action)
             );
           },
           popupMenu: {
