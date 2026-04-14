@@ -1,7 +1,6 @@
 import {
   InputRule,
   inputRules,
-  smartQuotes,
   textblockTypeInputRule,
   wrappingInputRule,
 } from "prosemirror-inputrules";
@@ -21,8 +20,6 @@ export function buildInputRules(extensions, params, includeDefault = true) {
     });
 
     const defaultRules = [
-      // TODO(renato) smartQuotes should respect `markdown_typographer_quotation_marks`
-      ...smartQuotes,
       ...[
         wrappingInputRule(/^\s*>\s$/, schema.nodes.blockquote),
         orderedListRule(schema.nodes.ordered_list),

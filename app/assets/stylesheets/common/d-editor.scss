@@ -332,22 +332,14 @@
   z-index: 2;
   background: var(--fade-color);
   border: none;
-  padding: 0 var(--space-1);
   margin-block: 1px;
   display: flex;
   align-items: center;
   cursor: pointer;
   color: var(--primary-high);
+  padding: 0 var(--space-1);
 
-  .discourse-touch & {
-    width: 0;
-    padding: 0;
-    overflow: visible;
-    pointer-events: none;
-    color: transparent;
-  }
-
-  .discourse-no-touch &:hover {
+  &:hover {
     color: var(--primary);
   }
 

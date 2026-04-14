@@ -5546,8 +5546,10 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
+      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
+      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'

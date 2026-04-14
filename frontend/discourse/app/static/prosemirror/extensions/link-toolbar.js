@@ -7,6 +7,8 @@ import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import { isTopLevel } from "discourse-markdown-it/features/onebox";
+import { oneboxPluginKey, oneboxTypeAtPos } from "./onebox";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;
@@ -41,8 +43,18 @@ class LinkToolbar extends ToolbarBase {
       action: opts.unlinkText,
     });
 
+    this.addButton({
+      id: "link-show-preview",
+      icon: "expand",
+      title: "composer.link_toolbar.load_preview",
+      className: "composer-link-toolbar__show-preview",
+      condition: opts.canShowPreview,
+      action: opts.showPreview,
+    });
+
     this.addSeparator({
-      condition: () => opts.canVisit() || opts.canUnlink(),
+      condition: () =>
+        opts.canVisit() || opts.canUnlink() || opts.canShowPreview(),
     });
 
     this.addButton({
@@ -126,7 +138,7 @@ class LinkToolbarPluginView {
     this.#menuInstance = null;
 
     if (this.#toolbarReplaced) {
-      this.#getContext().replaceToolbar(null);
+      this.#getContext().replaceToolbar(null, this.#linkToolbar);
       this.#toolbarReplaced = false;
     }
   }
@@ -145,9 +157,11 @@ class LinkToolbarPluginView {
         editLink: () => this.#openLinkEditor(),
         copyLink: () => this.#copyLink(),
         unlinkText: () => this.#unlinkText(),
+        showPreview: () => this.#showPreview(),
         canVisit: () => this.#canVisit(),
         getHref: () => this.#linkState.href,
         canUnlink: () => this.#canUnlink(),
+        canShowPreview: () => this.#canShowPreview(),
       });
 
       this.#linkToolbar.rovingButtonBar = this.#rovingButtonBar.bind(this);
@@ -258,6 +272,57 @@ class LinkToolbarPluginView {
 
   #canUnlink() {
     return !AUTO_LINKS.includes(this.#linkState.markup);
+  }
+
+  #canShowPreview() {
+    if (
+      !AUTO_LINKS.includes(this.#linkState.markup) ||
+      !this.#utils.getLinkify().matchAtStart(this.#linkState.href)
+    ) {
+      return false;
+    }
+
+    // Top-level URLs (e.g. google.com) can only be full-oneboxed, not inline.
+    // Hide "show preview" when the link is inline and top-level.
+    const { range } = this.#linkState;
+    if (
+      range &&
+      isTopLevel(this.#linkState.href) &&
+      oneboxTypeAtPos(this.#view.state.doc, range.from) === "inline"
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  #showPreview() {
+    const { range } = this.#linkState;
+    if (!range) {
+      return;
+    }
+
+    this.#resetToolbar();
+
+    const { state, dispatch } = this.#view;
+    const tr = state.tr;
+
+    // Change markup to linkify so the onebox plugin recognizes it
+    tr.addMark(
+      range.from,
+      range.to,
+      state.schema.marks.link.create({
+        href: this.#linkState.href,
+        markup: "linkify",
+      })
+    );
+
+    // Tell the onebox plugin to pick up this URL immediately,
+    // bypassing the selection proximity check
+    tr.setMeta(oneboxPluginKey, { forceOneboxUrl: this.#linkState.href });
+
+    dispatch(tr);
+    this.#view.focus();
   }
 
   #showFloatingToolbar() {

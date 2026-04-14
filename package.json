@@ -11,7 +11,7 @@
     "@glint/ember-tsc": "^1.2.3",
     "@glint/tsserver-plugin": "^2.2.4",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.15.21",
+    "@swc/core": "^1.15.24",
     "chrome-launcher": "^1.2.1",
     "chrome-remote-interface": "^0.34.0",
     "concurrently": "^9.2.1",
@@ -19,7 +19,7 @@
     "esbuild": "^0.28.0",
     "eslint": "9.39.2",
     "jsdoc": "^4.0.5",
-    "lefthook": "^2.1.4",
+    "lefthook": "^2.1.5",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.6.4",
     "lint-to-the-future-ember-template": "^4.1.0",
@@ -82,7 +82,8 @@
       ]
     },
     "overrides": {
-      "@ember/test-waiters": "4.1.1"
+      "@ember/test-waiters": "4.1.1",
+      "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
     }
   }
 }
