@@ -11,6 +11,7 @@ class AssetProcessor
     frontend/asset-processor/**/*.js
     frontend/discourse/lib/babel-transform-module-renames.js
     frontend/discourse/config/targets.js
+    frontend/discourse-plugins/transform-action-syntax.js
   ]
 
   @mutex = Mutex.new
