@@ -82,48 +82,48 @@ RSpec.describe DiscourseTopicVoting::Categories::Types::Ideas do
       expect(schema[:general_category_settings][:emoji][:default]).to eq("bulb")
     end
 
-    it "includes site settings for visibility, vote limits toggle, and vote limits" do
+    it "includes site settings with defaults and labels" do
       schema = described_class.configuration_schema
-      site_settings = schema[:site_settings].except(:labels)
-      expect(site_settings).to eq(
+      expect(schema[:site_settings]).to eq(
         {
-          topic_voting_show_who_voted: true,
-          topic_voting_show_votes_on_profile: true,
-          topic_voting_enable_vote_limits: true,
+          topic_voting_show_who_voted: {
+            default: true,
+            label: "Show who voted",
+          },
+          topic_voting_show_votes_on_profile: {
+            default: true,
+            label: "Show votes on profile",
+          },
+          topic_voting_enable_vote_limits: {
+            default: true,
+            label: "Limit member votes",
+          },
           topic_voting_tl0_vote_limit: {
             default: 2,
-            depends_on: :topic_voting_enable_vote_limits,
+            label: "TL0 vote limit",
           },
           topic_voting_tl1_vote_limit: {
             default: 4,
-            depends_on: :topic_voting_enable_vote_limits,
+            label: "TL1 vote limit",
           },
           topic_voting_tl2_vote_limit: {
             default: 6,
-            depends_on: :topic_voting_enable_vote_limits,
+            label: "TL2 vote limit",
           },
           topic_voting_tl3_vote_limit: {
             default: 8,
-            depends_on: :topic_voting_enable_vote_limits,
+            label: "TL3 vote limit",
           },
           topic_voting_tl4_vote_limit: {
             default: 10,
-            depends_on: :topic_voting_enable_vote_limits,
+            label: "TL4 vote limit",
           },
           topic_voting_alert_votes_left: {
             default: 1,
-            depends_on: :topic_voting_enable_vote_limits,
+            label: "Alert when votes remaining",
           },
         },
       )
-    end
-
-    it "includes labels for all site settings" do
-      schema = described_class.configuration_schema
-      labels = schema[:site_settings][:labels]
-      expect(labels.keys).to match_array(schema[:site_settings].except(:labels).keys)
-      expect(labels[:topic_voting_show_who_voted]).to eq("Show who voted")
-      expect(labels[:topic_voting_enable_vote_limits]).to eq("Limit member votes")
     end
   end
 end

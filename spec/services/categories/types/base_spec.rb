@@ -241,13 +241,13 @@ RSpec.describe Categories::Types::Base do
       expect(schema).to be_a(Hash)
     end
 
-    it "uses custom labels from the labels hash when present" do
+    it "uses custom label from the hash config when present" do
       test_type =
         Class.new(described_class) do
           type_id :test_labels
 
           def self.configuration_schema
-            { site_settings: { title: "My Forum", labels: { title: "Custom title label" } } }
+            { site_settings: { title: { default: "My Forum", label: "Custom title label" } } }
           end
         end
 
@@ -305,31 +305,23 @@ RSpec.describe Categories::Types::Base do
       expect(entry).not_to have_key(:max)
     end
 
-    it "includes depends_on when site setting uses hash config" do
+    it "infers depends_on from site setting metadata" do
       test_type =
         Class.new(described_class) do
           type_id :test_depends_on
 
           def self.configuration_schema
-            {
-              site_settings: {
-                title: "My Forum",
-                site_description: {
-                  default: "A great forum",
-                  depends_on: :title,
-                },
-              },
-            }
+            { site_settings: { title: "My Forum", set_locale_from_accept_language_header: true } }
           end
         end
 
       schema = test_type.send(:resolved_configuration_schema)
       title_entry = schema[:site_settings].find { |e| e[:key] == "title" }
-      desc_entry = schema[:site_settings].find { |e| e[:key] == "site_description" }
+      dependent_entry =
+        schema[:site_settings].find { |e| e[:key] == "set_locale_from_accept_language_header" }
 
       expect(title_entry).not_to have_key(:depends_on)
-      expect(desc_entry[:depends_on]).to eq("title")
-      expect(desc_entry[:default]).to eq("A great forum")
+      expect(dependent_entry[:depends_on]).to eq("allow_user_locale")
     end
   end
 
@@ -340,24 +332,12 @@ RSpec.describe Categories::Types::Base do
           type_id :test_hash_config
 
           def self.configuration_schema
-            { site_settings: { title: { default: "Hash Default", depends_on: :some_toggle } } }
+            { site_settings: { title: { default: "Hash Default" } } }
           end
         end
 
       test_type.configure_site_settings(category, guardian: admin.guardian)
       expect(SiteSetting.title).to eq("Hash Default")
-    end
-  end
-
-  describe ".validate_schema!" do
-    it "skips the labels key when validating site_settings" do
-      test_type =
-        Class.new(described_class) do
-          def self.configuration_schema
-            { site_settings: { title: "My Forum", labels: { title: "Custom label" } } }
-          end
-        end
-      expect { test_type.validate_schema! }.not_to raise_error
     end
   end
 

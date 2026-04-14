@@ -27,7 +27,6 @@ module DiscourseTopicVoting
             category.discourse_topic_voting_category_setting ||=
               DiscourseTopicVoting::CategorySetting.new(category: category)
             category.discourse_topic_voting_category_setting.save!
-            Category.reset_voting_cache
           end
 
           def configuration_schema
@@ -47,52 +46,41 @@ module DiscourseTopicVoting
                 },
               },
               site_settings: {
-                topic_voting_show_who_voted: true,
-                topic_voting_show_votes_on_profile: true,
-                topic_voting_enable_vote_limits: true,
+                topic_voting_show_who_voted: {
+                  default: true,
+                  label: I18n.t("topic_voting.category_type.show_who_voted.label"),
+                },
+                topic_voting_show_votes_on_profile: {
+                  default: true,
+                  label: I18n.t("topic_voting.category_type.show_votes_on_profile.label"),
+                },
+                topic_voting_enable_vote_limits: {
+                  default: true,
+                  label: I18n.t("topic_voting.category_type.enable_vote_limits.label"),
+                },
                 topic_voting_tl0_vote_limit: {
                   default: 2,
-                  depends_on: :topic_voting_enable_vote_limits,
+                  label: I18n.t("topic_voting.category_type.tl0_vote_limit.label"),
                 },
                 topic_voting_tl1_vote_limit: {
                   default: 4,
-                  depends_on: :topic_voting_enable_vote_limits,
+                  label: I18n.t("topic_voting.category_type.tl1_vote_limit.label"),
                 },
                 topic_voting_tl2_vote_limit: {
                   default: 6,
-                  depends_on: :topic_voting_enable_vote_limits,
+                  label: I18n.t("topic_voting.category_type.tl2_vote_limit.label"),
                 },
                 topic_voting_tl3_vote_limit: {
                   default: 8,
-                  depends_on: :topic_voting_enable_vote_limits,
+                  label: I18n.t("topic_voting.category_type.tl3_vote_limit.label"),
                 },
                 topic_voting_tl4_vote_limit: {
                   default: 10,
-                  depends_on: :topic_voting_enable_vote_limits,
+                  label: I18n.t("topic_voting.category_type.tl4_vote_limit.label"),
                 },
                 topic_voting_alert_votes_left: {
                   default: 1,
-                  depends_on: :topic_voting_enable_vote_limits,
-                },
-                labels: {
-                  topic_voting_show_who_voted:
-                    I18n.t("topic_voting.category_type.show_who_voted.label"),
-                  topic_voting_show_votes_on_profile:
-                    I18n.t("topic_voting.category_type.show_votes_on_profile.label"),
-                  topic_voting_enable_vote_limits:
-                    I18n.t("topic_voting.category_type.enable_vote_limits.label"),
-                  topic_voting_tl0_vote_limit:
-                    I18n.t("topic_voting.category_type.tl0_vote_limit.label"),
-                  topic_voting_tl1_vote_limit:
-                    I18n.t("topic_voting.category_type.tl1_vote_limit.label"),
-                  topic_voting_tl2_vote_limit:
-                    I18n.t("topic_voting.category_type.tl2_vote_limit.label"),
-                  topic_voting_tl3_vote_limit:
-                    I18n.t("topic_voting.category_type.tl3_vote_limit.label"),
-                  topic_voting_tl4_vote_limit:
-                    I18n.t("topic_voting.category_type.tl4_vote_limit.label"),
-                  topic_voting_alert_votes_left:
-                    I18n.t("topic_voting.category_type.alert_votes_left.label"),
+                  label: I18n.t("topic_voting.category_type.alert_votes_left.label"),
                 },
               },
             }

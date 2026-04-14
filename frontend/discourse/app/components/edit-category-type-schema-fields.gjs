@@ -102,15 +102,17 @@ export default class EditCategoryTypeSchemaFields extends Component {
   @bind
   groupEntries(entries) {
     const groups = [];
-    let currentGroup = null;
+    const byDependsOn = new Map();
 
     entries?.forEach((entry) => {
       const dependsOn = entry.depends_on || null;
-      if (!currentGroup || currentGroup.dependsOn !== dependsOn) {
-        currentGroup = { dependsOn, entries: [] };
-        groups.push(currentGroup);
+      let group = byDependsOn.get(dependsOn);
+      if (!group) {
+        group = { dependsOn, entries: [] };
+        byDependsOn.set(dependsOn, group);
+        groups.push(group);
       }
-      currentGroup.entries.push(entry);
+      group.entries.push(entry);
     });
 
     return groups;

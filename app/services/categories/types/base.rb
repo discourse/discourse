@@ -182,7 +182,6 @@ module Categories
 
           # Validate site_settings keys are real SiteSettings (runtime check)
           schema_as_json["site_settings"]&.each_key do |setting_name|
-            next if setting_name == "labels"
             unless SiteSetting.has_setting?(setting_name)
               raise ArgumentError,
                     "#{name}#configuration_schema[:site_settings] references unknown SiteSetting: #{setting_name.inspect}"
@@ -236,15 +235,13 @@ module Categories
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
           category_type_settings =
-            configuration_schema[:site_settings]
-              &.except(:labels)
-              &.map do |setting_name, config|
-                default_value = config.is_a?(Hash) ? config[:default] : config
-                {
-                  setting_name: setting_name.to_s,
-                  value: configuration_values.fetch(setting_name.to_s, default_value),
-                }
-              end
+            configuration_schema[:site_settings]&.map do |setting_name, config|
+              default_value = config.is_a?(Hash) ? config[:default] : config
+              {
+                setting_name: setting_name.to_s,
+                value: configuration_values.fetch(setting_name.to_s, default_value),
+              }
+            end
 
           return if category_type_settings.blank?
 
@@ -302,25 +299,23 @@ module Categories
             }
           end
 
-          labels = schema.dig(:site_settings, :labels) || {}
           schema[:site_settings]&.each do |setting_name, target_value|
-            next if setting_name == :labels
-
             if target_value.is_a?(Hash)
               default = target_value[:default]
-              depends_on = target_value[:depends_on]&.to_s
+              custom_label = target_value[:label]
             else
               default = target_value
-              depends_on = nil
+              custom_label = nil
             end
 
             meta = SiteSetting.setting_metadata_hash(setting_name)
+            depends_on = SiteSetting.type_supervisor.dependencies[setting_name.to_sym]&.first&.to_s
             entry = {
               key: setting_name.to_s,
               default:,
               current: SiteSetting.public_send(setting_name),
               type: meta[:type],
-              label: labels[setting_name] || meta[:humanized_name],
+              label: custom_label || meta[:humanized_name],
               description: meta[:description],
               required: false,
               show_on_create: true,

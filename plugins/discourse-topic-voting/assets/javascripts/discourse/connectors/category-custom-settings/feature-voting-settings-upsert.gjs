@@ -4,11 +4,15 @@ import { i18n } from "discourse-i18n";
 
 export default class FeatureVotingSettingsUpsert extends Component {
   static shouldRender(args, context) {
-    return (
-      context.siteSettings.enable_simplified_category_creation &&
-      (!args.category?.isType("ideas") ||
-        !context.siteSettings.enable_ideas_category_type_setup)
-    );
+    if (!context.siteSettings.enable_simplified_category_creation) {
+      return false;
+    }
+
+    const handledByIdeasTab =
+      args.category?.isType("ideas") &&
+      context.siteSettings.enable_ideas_category_type_setup;
+
+    return !handledByIdeasTab;
   }
 
   get enableTopicVoting() {
