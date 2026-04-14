@@ -25,6 +25,30 @@ class QunitController < ApplicationController
     @has_test_bundle = EmberCli.has_tests?
     request.env[:resolved_theme_id] = nil
 
+    target = params[:target]
+
+    @required_plugins = []
+    @testing_plugins = []
+
+    if target == "all" || target == "plugins"
+      @required_plugins.push(*Discourse.plugins.map(&:directory_name))
+      @testing_plugins.push(*Discourse.plugins.map(&:directory_name))
+    elsif target == "core"
+      # no plugins
+    elsif target_plugin = Discourse.plugins.find { |p| p.directory_name == target }
+      @required_plugins << target_plugin.directory_name
+      @testing_plugins << target_plugin.directory_name
+
+      target_plugin.test_required_plugins&.map do |plugin_name|
+        additional_plugin = Discourse.plugins.find { |p| p.directory_name == plugin_name }
+        @required_plugins << additional_plugin.directory_name if additional_plugin
+      end
+
+      @required_plugins.push(*QunitController::ALWAYS_LOADED_PLUGINS)
+    else
+      return render plain: "Target '#{target}' not found", status: :not_found
+    end
+
     render "qunit"
   end
 

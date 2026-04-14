@@ -13,12 +13,17 @@
       <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
       <%= theme_translations_lookup %>
 
+      <script nonce="<%= csp_nonce_placeholder %>">
+        window._discourseQunitPluginNames = <%= Discourse.plugins.map(&:directory_name).to_json.html_safe %>;
+      </script>
+
       <%= preload_script "@embroider/virtual/test-support" %>
 
       <%= render "layouts/plugin_js",
         opts: {
           include_disabled: true,
           include_admin_asset: true,
+          include_test_assets_for: @testing_plugins,
           only: @required_plugins
         }
       %>
