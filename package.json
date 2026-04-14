@@ -50,8 +50,7 @@
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
-    "ember": "pnpm --dir=frontend/discourse ember",
-    "vite": "pnpm --dir=frontend/discourse vite",
+    "rolldown": "pnpm --dir=frontend/discourse rolldown",
     "playwright-install": "playwright install --no-shell chromium"
   },
   "engines": {
@@ -80,12 +79,8 @@
         "lint-to-the-future-ember-template>ember-template-lint": "*",
         "ember-this-fallback>ember-source": "*",
         "ember-this-fallback>ember-cli-htmlbars": "*",
-        "@fullcalendar/moment-timezone>moment-timezone": "*",
-        "@vitejs/plugin-basic-ssl>vite": ">8.0.0-beta.0"
-      },
-      "ignoreMissing": [
-        "webpack"
-      ]
+        "@fullcalendar/moment-timezone>moment-timezone": "*"
+      }
     },
     "overrides": {
       "@ember/test-waiters": "4.1.1",

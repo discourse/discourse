@@ -17,9 +17,9 @@ class EmberCli < ActiveSupport::CurrentAttributes
 
     entrypoints = {}
 
-    vite_manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
+    manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
 
-    vite_manifest.each do |key, value|
+    manifest.each do |key, value|
       next unless value["isEntry"]
       entrypoints[key.delete_suffix(".js")] = [
         value["file"].delete_prefix("assets/").delete_suffix(".js"),
@@ -34,11 +34,11 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.route_bundles
-    vite_manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
+    manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
 
     route_bundles = {}
 
-    vite_manifest.each do |key, value|
+    manifest.each do |key, value|
       next unless route = key[/\Aembroider_virtual:.*:route=(.*)\z/, 1]
       route_bundles[route] = deep_preloads_for(key)
     end
@@ -49,13 +49,13 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.deep_preloads_for(asset)
-    vite_manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
+    manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
 
     preloads = []
     seen = Set.new
     seen.add(asset)
 
-    asset = vite_manifest[asset]
+    asset = manifest[asset]
     preloads.push asset["file"].delete_prefix("assets/").delete_suffix(".js")
 
     asset["imports"]&.each do |import|

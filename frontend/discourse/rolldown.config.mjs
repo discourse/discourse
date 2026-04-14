@@ -1,12 +1,8 @@
 import { ember } from "@embroider/vite";
 import * as fs from "fs";
-import {
-  dev,
-  viteAliasPlugin,
-  viteImportGlobPlugin,
-} from "rolldown/experimental";
+import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
-import maybeBabel from "./lib/vite-maybe-babel.mjs";
+import maybeBabel from "./lib/maybe-babel.mjs";
 
 writeResolverConfig(
   {

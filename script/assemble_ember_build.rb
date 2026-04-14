@@ -136,7 +136,7 @@ ensure
   FileUtils.rm_rf(DOWNLOAD_EXTRACT_DIR) if File.exist?(DOWNLOAD_EXTRACT_DIR)
 end
 
-build_cmd = %w[pnpm vite build]
+build_cmd = %w[pnpm build]
 build_env = { "CI" => "1" }
 
 if Etc.nprocessors > 2
