@@ -513,7 +513,7 @@ GEM
       connection_pool
     redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.11.3)
+    regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
     request_store (1.7.0)
@@ -683,7 +683,7 @@ GEM
     stripe (11.1.0)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
-    test-prof (1.6.0)
+    test-prof (1.6.1)
     thor (1.5.0)
     tiktoken_ruby (0.0.15.1-aarch64-linux)
     tiktoken_ruby (0.0.15.1-aarch64-linux-musl)
@@ -701,7 +701,7 @@ GEM
     tokenizers (0.6.3-x86_64-darwin)
     tokenizers (0.6.3-x86_64-linux)
     tokenizers (0.6.3-x86_64-linux-musl)
-    trilogy (2.12.2)
+    trilogy (2.12.3)
       bigdecimal
     tsort (0.2.0)
     ttfunk (1.8.0)
@@ -1170,7 +1170,7 @@ CHECKSUMS
   redis (5.4.0) sha256=798900d869418a9fc3977f916578375b45c38247a556b61d58cba6bb02f7d06b
   redis-client (0.28.0) sha256=888892f9cd8787a41c0ece00bdf5f556dfff7770326ce40bb2bc11f1bfec824b
   redis-namespace (1.11.0) sha256=e91a1aa2b2d888b6dea1d4ab8d39e1ae6fac3426161feb9d91dd5cca598a2239
-  regexp_parser (2.11.3) sha256=ca13f381a173b7a93450e53459075c9b76a10433caadcb2f1180f2c741fc55a4
+  regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
@@ -1241,7 +1241,7 @@ CHECKSUMS
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   stripe (11.1.0) sha256=a76e82cc7e4d2433803ca5fbe9453d019df376236f0b9fbcb7f36e6dd327f98d
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
-  test-prof (1.6.0) sha256=b04cee7b9684b9b31e23e258f835ba67ee5b4fd5f6cc7204d076ef695805c335
+  test-prof (1.6.1) sha256=0332d9c39a7c118ed942b2db582f055d9f24964d150004ec6b964d2fa262499e
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   tiktoken_ruby (0.0.15.1-aarch64-linux) sha256=e2c5d00b20c10bd220a103a271011bfa828e159cfba3b99d2c4029069bbb9198
   tiktoken_ruby (0.0.15.1-aarch64-linux-musl) sha256=2b58d9f2b0615d876a767b756c117b1438e68354513aff3d540b665b8eb6559c
@@ -1258,7 +1258,7 @@ CHECKSUMS
   tokenizers (0.6.3-x86_64-darwin) sha256=4b71386cc08ceff5f86b448c74b2b297c00a280a1d502399b6cda23ef94e01fd
   tokenizers (0.6.3-x86_64-linux) sha256=77a45cbde59daac33bdda1a74d45c18080478992a00ee7d898e7b8d15d0b3149
   tokenizers (0.6.3-x86_64-linux-musl) sha256=a4b08c53bf0c8f7674c3abd03e013f0bb7c0c2457174b116c2872a37c64f0297
-  trilogy (2.12.2) sha256=75186245e831a9a3987234f836bf2934b9ebdfe110b1be88a80836fdc00ead54
+  trilogy (2.12.3) sha256=1473da7ed7e204121929ba3dfa39c1365161f960fd4fe833a1dde4a61ff66fea
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   ttfunk (1.8.0) sha256=a7cbc7e489cc46e979dde04d34b5b9e4f5c8f1ee5fc6b1a7be39b829919d20ca
   tty-color (0.6.0) sha256=6f9c37ca3a4e2367fb2e6d09722762647d6f455c111f05b59f35730eeb24332a

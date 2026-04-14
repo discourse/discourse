@@ -237,6 +237,31 @@ module PageObjects
         has_expanded_composer?
       end
 
+      def click_floating_reply_button
+        find(".embed-floating-reply-button").click
+        has_expanded_composer?
+      end
+
+      def has_floating_reply_button?
+        has_css?(".embed-floating-reply-button")
+      end
+
+      def has_no_floating_reply_button?
+        has_no_css?(".embed-floating-reply-button")
+      end
+
+      def click_floating_timeline_button
+        find(".embed-floating-timeline-button").click
+      end
+
+      def has_floating_timeline_button?
+        has_css?(".embed-floating-timeline-button")
+      end
+
+      def has_no_floating_timeline_button?
+        has_no_css?(".embed-floating-timeline-button")
+      end
+
       def has_expanded_composer?
         has_css?("#reply-control.open")
       end

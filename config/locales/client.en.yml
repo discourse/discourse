@@ -3253,6 +3253,8 @@ en:
         name_label: "Wrap name"
         attributes_label: "Attributes"
         add_attribute: "Add attribute"
+        attribute_key: "Key"
+        attribute_value: "Value"
         remove_attribute: "Remove attribute"
         apply: "Apply"
         unwrap: "Unwrap"
@@ -6192,7 +6194,7 @@ en:
           header_description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
         developer:
           title: "Developer"
-          header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
+          header_description: "Developer settings to control safe mode and other advanced features"
         experimental:
           title: "Experimental"
           header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
@@ -7662,7 +7664,7 @@ en:
             button: "Change source"
             title: "Change Theme Source"
             repository_url: "Repository URL"
-            branch: "Branch (optional)"
+            branch: "Branch"
             updating: "Updating theme source…"
             update: "Update Source"
             has_existing_key: "This theme has an existing SSH key configured."
