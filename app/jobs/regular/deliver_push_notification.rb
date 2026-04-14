@@ -19,8 +19,8 @@ module Jobs
         I18n.with_locale(user.effective_locale) { localize_content!(payload) }
       end
 
-      PushNotificationPusher.push(user, payload) if user.push_subscriptions.exists?
-      HubPushNotificationPusher.push(user, payload)
+      PushNotificationPusher.push(user, payload.deep_dup) if user.push_subscriptions.exists?
+      HubPushNotificationPusher.push(user, payload.deep_dup)
     end
 
     private

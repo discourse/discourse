@@ -5,7 +5,7 @@ class HubPushNotificationPusher
     clients = UserApiKey.push_clients_for(user)
     return if clients.empty?
 
-    notification = payload.deep_dup
+    notification = payload.dup
     notification["url"] = UrlHelper.absolute_without_cdn(
       Discourse.base_path + notification["post_url"],
     )
