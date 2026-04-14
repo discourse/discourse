@@ -115,24 +115,15 @@ class ApplicationController < ActionController::Base
     response.headers.delete("X-Frame-Options") if SiteSetting.allow_embedding_site_in_an_iframe
   end
 
-  def ember_cli_required?
-    Rails.env.development? && ENV["ALLOW_EMBER_CLI_PROXY_BYPASS"] != "1" &&
-      request.headers["X-Discourse-Ember-CLI"] != "true"
-  end
-
-  def application_layout
-    ember_cli_required? ? "ember_cli" : "application"
-  end
-
   def set_layout
     case request.headers["Discourse-Render"]
     when "desktop"
-      return application_layout
+      return "application"
     when "crawler"
       return "crawler"
     end
 
-    use_crawler_layout? ? "crawler" : application_layout
+    use_crawler_layout? ? "crawler" : "application"
   end
 
   class RenderEmpty < StandardError

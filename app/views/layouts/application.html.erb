@@ -52,8 +52,8 @@
       <%= theme_translations_lookup %>
     <%- end %>
 
-    <%= preload_script "vendor", type_module: true, from_vite: true %>
-    <%= preload_script "discourse", type_module: true, from_vite: true %>
+    <%= preload_script "vendor", type_module: true %>
+    <%= preload_script "discourse", type_module: true %>
 
     <%= render("layouts/plugin_js", opts: {
         include_official: allow_plugins?,
@@ -153,7 +153,7 @@
       </form>
     <% end %>
 
-    <%= preload_script "start-discourse", type_module: true, from_vite: true %>
+    <%= preload_script "start-discourse", type_module: true %>
 
     <%= yield :data %>
 
