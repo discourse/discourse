@@ -3189,6 +3189,7 @@ en:
       title: "Or press %{modifier}Enter"
       save_and_close: "Save and close"
       discard: "Discard"
+      cancel_edit: "Cancel edit"
       draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
@@ -4544,7 +4545,9 @@ en:
 
       cancel_composer:
         confirm: "Do you want to discard your post?"
+        confirm_edit: "Do you want to discard your changes?"
         discard: "Discard"
+        discard_edit: "Discard changes"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"

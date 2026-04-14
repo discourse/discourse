@@ -2243,6 +2243,15 @@ files:
   s3_secret_access_key:
     default: ""
     secret: true
+  s3_role_arn:
+    default: ""
+    min: 20
+    max: 2048 # https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
+  s3_role_session_name:
+    default: ""
+    min: 2
+    max: 64
+    regex: '^[\w+=,.@\-]+$' # https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
   s3_region:
     default: "us-east-1"
     enum: "S3RegionSiteSetting"

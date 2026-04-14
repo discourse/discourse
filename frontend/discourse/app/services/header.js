@@ -5,7 +5,7 @@ import { trackedMap } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { SCROLLED_UP } from "./scroll-direction";
+import { SCROLLED_DOWN, SCROLLED_UP } from "./scroll-direction";
 
 const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
@@ -26,12 +26,33 @@ export default class Header extends Service {
    */
   @tracked topicInfo = null;
 
-  @tracked mainTopicTitleVisible = false;
-
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
-
   #hiders = trackedMap();
+  @tracked _mainTopicTitleVisible = false;
+
+  // Latch: when the title scrolls out of view while scrolling down,
+  // hold the "show topic info" decision even if the IntersectionObserver
+  // briefly reports the title as visible again. This prevents a feedback
+  // loop when themes/plugins use a dynamic header height: showing the
+  // topic info grows the sticky header, shifting content, which pushes
+  // the title back into the observer viewport, which hides the topic
+  // info, which shrinks the header — hundreds of times per second.
+  @tracked _topicInfoLatched = false;
+
+  get mainTopicTitleVisible() {
+    return this._mainTopicTitleVisible;
+  }
+
+  set mainTopicTitleVisible(value) {
+    this._mainTopicTitleVisible = value;
+
+    if (!value) {
+      this._topicInfoLatched = true;
+    } else if (this.scrollDirection.lastScrollDirection === SCROLLED_UP) {
+      this._topicInfoLatched = false;
+    }
+  }
 
   get topic() {
     deprecated(
@@ -52,12 +73,18 @@ export default class Header extends Service {
   @dependentKeyCompat // For legacy `site-header` observer compat
   get topicInfoVisible() {
     if (!this.topicInfo) {
-      // Not on a topic page
       return false;
     }
 
-    if (this.mainTopicTitleVisible) {
-      // Title is already visible on screen, no need to duplicate
+    // The latch is only honored while actively scrolling down — this
+    // prevents the IntersectionObserver feedback loop (header height
+    // change shifting content), but automatically releases when scroll
+    // direction changes so topic info hides normally.
+    const isLatched =
+      this._topicInfoLatched &&
+      this.scrollDirection.lastScrollDirection === SCROLLED_DOWN;
+
+    if (this.mainTopicTitleVisible && !isLatched) {
       return false;
     }
 
@@ -65,7 +92,6 @@ export default class Header extends Service {
       this.site.mobileView &&
       this.scrollDirection.lastScrollDirection === SCROLLED_UP
     ) {
-      // On mobile, we hide the topic info when scrolling up
       return false;
     }
 
@@ -116,11 +142,13 @@ export default class Header extends Service {
    */
   enterTopic(topic, isLoadingFirstPost) {
     this.topicInfo = topic;
+    this._topicInfoLatched = false;
     this.mainTopicTitleVisible = isLoadingFirstPost;
   }
 
   clearTopic() {
     this.topicInfo = null;
+    this._topicInfoLatched = false;
     this.mainTopicTitleVisible = false;
   }
 }

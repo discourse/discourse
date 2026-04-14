@@ -84,6 +84,9 @@ GEM
     aws-sdk-sns (1.96.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
+    aws-sdk-sts (1.12.0)
+      aws-sdk-core (~> 3, >= 3.110.0)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
@@ -782,6 +785,7 @@ DEPENDENCIES
   aws-sdk-mediaconvert
   aws-sdk-s3
   aws-sdk-sns
+  aws-sdk-sts
   better_errors
   bootsnap
   bullet
@@ -954,6 +958,7 @@ CHECKSUMS
   aws-sdk-mediaconvert (1.165.0) sha256=d955a571cd8b0407c0778e1d0f2333a70bf9ab48e36c81da8c5b317db24001e4
   aws-sdk-s3 (1.182.0) sha256=d0fc3579395cb6cb69bf6e975240ce031fc673190e74c8dddbdd6c18572b450d
   aws-sdk-sns (1.96.0) sha256=f92b3c7203c53181b1cafb3dbbea85f330002ad696175bda829cfef359fa6dd4
+  aws-sdk-sts (1.12.0) sha256=9bbd64223dd2423540291d9faaac4a169ace8cfe123b1075c9a127fcd65e061f
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   benchmark (0.5.0) sha256=465df122341aedcb81a2a24b4d3bd19b6c67c1530713fd533f3ff034e419236c

@@ -471,6 +471,18 @@ export default class ComposerService extends Service {
     return SAVE_LABELS[this.model?.action];
   }
 
+  @computed("model.editingPost")
+  get cancelLabel() {
+    return this.model?.editingPost
+      ? "composer.cancel_edit"
+      : "composer.discard";
+  }
+
+  @computed("model.editingPost")
+  get cancelIcon() {
+    return this.model?.editingPost ? "xmark" : "trash-can";
+  }
+
   @computed("whisperer", "model.action")
   get canWhisper() {
     return this.whisperer && this.model?.action === Composer.REPLY;
@@ -1756,6 +1768,12 @@ export default class ComposerService extends Service {
       if (this.get("model.anyDirty")) {
         this.modal.show(DiscardDraftModal, {
           model: {
+            confirmMessageKey: this.get("model.editingPost")
+              ? "post.cancel_composer.confirm_edit"
+              : "post.cancel_composer.confirm",
+            discardButtonKey: this.get("model.editingPost")
+              ? "post.cancel_composer.discard_edit"
+              : "post.cancel_composer.discard",
             onDestroyDraft: () => {
               return this.destroyDraft()
                 .then(() => {

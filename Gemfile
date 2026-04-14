@@ -63,6 +63,7 @@ gem "fastimage"
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
+gem "aws-sdk-sts", require: false
 gem "aws-sdk-mediaconvert", require: false
 gem "aws-sdk-bedrockruntime", require: false
 gem "excon"
