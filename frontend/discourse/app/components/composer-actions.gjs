@@ -128,10 +128,8 @@ export default class ComposerActions extends Component {
     }
   }
 
-  // Single cached getter for all template data to prevent reactivity cycles
   @cached
   get templateData() {
-    // First compute icon and label
     const {
       action: currentAction,
       whisper,
@@ -194,7 +192,6 @@ export default class ComposerActions extends Component {
       labelText = i18n("composer.composer_actions.create_topic.label");
     }
 
-    // Now compute available actions
     const availableActions = this._computeAvailableActions();
 
     return {
@@ -205,11 +202,10 @@ export default class ComposerActions extends Component {
     };
   }
 
-  // Focus on just the 3 reply actions for now
+
   _computeAvailableActions() {
     let items = [];
 
-    // Use current args instead of snapshots for stability during rendering
     const currentTopic = this.topic;
     const currentPost = this.post;
     const currentAction = this.action;
@@ -223,7 +219,7 @@ export default class ComposerActions extends Component {
       !currentTopic.isPrivateMessage &&
       !this.isEditing &&
       this.currentUser?.can_create_topic &&
-      currentTopic.id // Use current topic instead of snapshot during rendering
+      currentTopic.id 
     ) {
       const actionObj = {
         name: i18n("composer.composer_actions.reply_as_new_topic.label"),
@@ -382,8 +378,14 @@ export default class ComposerActions extends Component {
   }
 
   @action
+  registerDmenuApi(api) {
+    this.dmenuApi = api;
+  }
+
+  @action
   async onSelectAction(actionId) {
-    // EXACT method dispatch pattern from original
+    await this.dmenuApi?.close({ focusTrigger: true });
+
     const composerAction = `${camelize(actionId)}Selected`;
     if (this[composerAction]) {
       this[composerAction](
@@ -398,8 +400,6 @@ export default class ComposerActions extends Component {
       );
     }
   }
-
-  // Action methods - preserve exact logic from original
 
   _continuedFromText(post, topic) {
     let url = post?.url || topic?.url;
@@ -472,8 +472,6 @@ export default class ComposerActions extends Component {
     model.toggleProperty("unlistTopic");
   }
 
-  // === TEMPORARY: CREATE_TOPIC MODE ACTION METHODS ===
-
   _switchCreate(options, composerAction) {
     options.action = composerAction;
     options.categoryId = this.composerModel.categoryId;
@@ -504,6 +502,7 @@ export default class ComposerActions extends Component {
         @modalForMobile={{true}}
         @closeOnClickOutside={{true}}
         @closeOnEscape={{true}}
+        @onRegisterApi={{this.registerDmenuApi}}
         @triggerClass="composer-actions-trigger btn-flat btn-icon-text"
         @contentClass="composer-actions-dropdown"
         class="composer-actions-new"
@@ -525,14 +524,14 @@ export default class ComposerActions extends Component {
                   <div class="composer-actions-btn__icons">
                     {{icon availAction.icon}}
                   </div>
-                  <div class="composer-actions-btn__texts">
-                    <span class="composer-actions-btn__label">
-                      {{availAction.name}}
-                    </span>
-                    <span class="composer-actions-btn__description">
-                      {{availAction.description}}
-                    </span>
-                  </div>
+                    <div class="composer-actions-btn__texts">
+                      <span class="composer-actions-btn__label">
+                        {{availAction.name}}
+                      </span>
+                      <span class="composer-actions-btn__description">
+                        {{availAction.description}}
+                      </span>
+                    </div>
                 </DButton>
               </dropdown.item>
             {{/each}}
