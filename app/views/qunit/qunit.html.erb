@@ -50,6 +50,12 @@
       This is a production installation of Discourse, and cannot be used for theme testing.
       For more information, see <a href="https://meta.discourse.org/t/66857">this guide</a>.
     <% else %>
+      <script nonce="<%= csp_nonce_placeholder %>">
+        window.EmberENV = {
+          _DEFAULT_ASYNC_OBSERVERS: true,
+        };
+      </script>
+
       <%= preload_script "tests/test-entrypoint", type_module: true %>
     <%- end %>
 
