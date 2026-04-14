@@ -24,7 +24,9 @@ Key methods to understand:
 
 **`app/models/upcoming_change_event.rb`** — Audit trail. Every lifecycle event (added, removed, status change, manual toggle, admin notification) is recorded here. Has unique indexes to prevent duplicate events of specific types per change.
 
-**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`.
+**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`. Also handles `upcoming_change_default_override:` metadata — see [Default Overrides](#default-overrides) below.
+
+**`lib/site_settings/defaults_provider.rb`** — Manages the default values for all settings, including upcoming change default overrides. Tracks which overrides are active via `@active_upcoming_change_overrides` and applies them when resolving defaults. Provides `upcoming_change_override_metadata` for the frontend to display warnings about changed defaults.
 
 **`app/models/site_setting_group.rb`** — Stores group restrictions for settings. Group IDs are pipe-separated strings (`"1|2|3"`). The `setting_group_ids` class method returns a hash used for in-memory caching.
 
@@ -82,6 +84,51 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 
 **`app/services/problem_check/upcoming_change_stable_opted_out.rb`** — Warns admins hourly if they've opted out of a stable/permanent change.
 
+### Default Overrides
+
+Upcoming changes can override the default value of a *different* site setting when enabled. This allows feature rollouts to change related setting defaults without breaking admin customizations.
+
+#### Metadata Format
+
+A setting declares a default override with the `upcoming_change_default_override` key in `config/site_settings.yml`:
+
+```yaml
+# The upcoming change setting (the "trigger")
+increase_suggested_topics_max_days_old_default:
+  default: false
+  type: bool
+  upcoming_change:
+    status: experimental
+    impact: "site_setting_default,all_members"
+
+# The setting whose default changes (the "target")
+suggested_topics_max_days_old:
+  default: 365
+  type: integer
+  upcoming_change_default_override:
+    upcoming_change: increase_suggested_topics_max_days_old_default
+    new_default: 1000
+```
+
+When `increase_suggested_topics_max_days_old_default` is enabled (either manually by admin or via auto-promotion), the default value of `suggested_topics_max_days_old` changes from `365` to `1000`. The `impact` field on the trigger setting should include `site_setting_default` as its `impact_type`.
+
+#### How It Works
+
+1. **Registration** — `lib/site_setting_extension.rb` parses `upcoming_change_default_override` during setting registration and stores it in `upcoming_change_default_overrides` (a hash keyed by setting name).
+
+2. **Activation** — During `SiteSetting.refresh!`, each override is checked: if `UpcomingChanges.enabled?(override[:upcoming_change])` returns true, the override is activated via `defaults.activate_upcoming_change_override`. The setting's current value is updated to `new_default` **only if the admin has not manually modified it**.
+
+3. **Default resolution** — `DefaultsProvider#all` applies active overrides when resolving defaults, so code reading `SiteSetting.defaults[:setting_name]` gets the overridden value.
+
+4. **Frontend display** — `DefaultsProvider#upcoming_change_override_metadata` returns `{ old_default:, new_default:, change_setting_name: }` for active overrides. The site settings UI (`admin/components/site-setting.gjs`) shows a warning linking to the upcoming changes page.
+
+#### Key Behaviors
+
+- **Non-destructive**: If an admin has manually set a custom value for the target setting, the override does not apply — it only affects the default.
+- **Reversible**: Disabling the upcoming change deactivates the override and restores the original default.
+- **Default-locale only**: Overrides currently only apply on the default locale.
+- **Related setting link**: `UpcomingChanges.find_related_default_override_for_change` finds the target setting for a given upcoming change, used to show cross-links in the UI.
+
 ## Key Design Decisions
 
 ### Caching Strategy
@@ -133,6 +180,22 @@ The three main components to know:
 
 State is managed via `trackedObject` for reactivity. API calls go through `ajax()` directly in the item component.
 
+### Adding a Default Override
+
+To make an upcoming change control the default of another setting:
+
+1. Add `upcoming_change_default_override` metadata to the **target** setting in `config/site_settings.yml`:
+   ```yaml
+   target_setting:
+     default: original_value
+     upcoming_change_default_override:
+       upcoming_change: trigger_setting_name
+       new_default: new_value
+   ```
+2. Ensure the **trigger** setting has `impact: "site_setting_default,..."` in its `upcoming_change:` metadata
+3. The override activates automatically when the trigger is enabled — no additional code needed
+4. Test with `mock_upcoming_change_default_overrides` — see [Mocking Default Overrides](#mocking-default-overrides)
+
 ### Changing Resolution Logic
 
 All value resolution goes through `resolved_value` in `lib/upcoming_changes.rb`. If you need to change how settings are evaluated (e.g., adding a new override condition), this is the single place to modify. The method checks in order: permanent status, admin manual override, auto-promotion threshold.
@@ -157,6 +220,39 @@ mock_upcoming_change_metadata(
 ```
 
 Always clean up with `clear_mocked_upcoming_change_metadata` in an `after` block (or the helper handles it automatically depending on context). The helper is defined in `spec/support/helpers.rb`.
+
+### Mocking Default Overrides
+
+Use `mock_upcoming_change_default_overrides` to set up override metadata in tests — never modify `site_settings.yml`:
+
+```ruby
+mock_upcoming_change_default_overrides(
+  {
+    suggested_topics_max_days_old: {
+      upcoming_change: :increase_suggested_topics_max_days_old_default,
+      new_default: 1000,
+    },
+  },
+)
+
+# Enable the trigger setting and refresh to activate the override
+SiteSetting.increase_suggested_topics_max_days_old_default = true
+SiteSetting.refresh!
+
+# Now SiteSetting.suggested_topics_max_days_old returns 1000 (the overridden default)
+```
+
+To test that the override does NOT apply when the admin has customized the target setting:
+
+```ruby
+# Admin sets a custom value before the override activates
+SiteSetting.suggested_topics_max_days_old = 730
+SiteSetting.increase_suggested_topics_max_days_old_default = true
+SiteSetting.refresh!
+
+# Override is not applied — admin's explicit choice is preserved
+expect(SiteSetting.suggested_topics_max_days_old).to eq(730)
+```
 
 ### Cache Clearing in Tests
 
@@ -210,6 +306,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Event model | `app/models/upcoming_change_event.rb` |
 | Group model | `app/models/site_setting_group.rb` |
 | Settings integration | `lib/site_setting_extension.rb` (search for `upcoming_change`) |
+| Defaults provider | `lib/site_settings/defaults_provider.rb` (default override activation/resolution) |
 | Services | `app/services/upcoming_changes/*.rb` |
 | Group upsert | `app/services/site_setting/upsert_groups.rb` |
 | Controller | `admin/config/upcoming_changes_controller.rb` |

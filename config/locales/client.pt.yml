@@ -500,8 +500,6 @@ pt:
           other: "Criado há %{count} anos atrás"
     bookmarked:
       title: "Adicionar Marcador"
-      edit_bookmark: "Editar Marcador"
-      clear_bookmarks: "Limpar Marcadores"
       help:
         bookmark: "Clique para adicionar este tópico aos marcadores"
         edit_bookmark: "Clique para editar o marcador de uma mensagem neste tópico"
@@ -520,12 +518,12 @@ pt:
       clear_reminder: "Limpar lembrete"
       edit: "Editar marcador"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
+      topic_bookmark: "Tópico"
       remove_reminder_keep_bookmark: "Remover lembrete e manter marcador"
       created_with_reminder: "Você marcou este post com um lembrete %{date}. %{name}"
       created_with_reminder_generic: "Marcou isto com um lembrete %{date}. %{name}"
       delete: "Eliminar Marcador"
       confirm_delete: "Tem a certeza que deseja eliminar este marcador? O lembrete também será eliminado."
-      confirm_clear: "Tem a certeza que deseja limpar todos os marcadores deste tópico?"
       save: "Guardar"
       no_timezone: 'Você ainda não definiu um fuso horário. Você não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       invalid_custom_datetime: "A data e a hora fornecidas são inválidas, tente novamente."
@@ -3914,6 +3912,9 @@ pt:
       subcategory_list_style: "Estilo da Lista de Subcategorias:"
       allow_badges_label: "Permitir a atribuição de crachás nesta categoria"
       review_group_name: "nome do grupo"
+      posting_review_modes:
+        everyone: "Todos"
+      posting_review_groups_placeholder: "Selecionar grupos..."
       this_year: "este ano"
       none_subcategory_text: "Nenhuma"
       visibility:

@@ -2424,7 +2424,6 @@ zh_CN:
     fake_upcoming_change: "这是用于测试目的虚假即将推出的更改。无需翻译此字符串。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
     rename_faq_to_guidelines: "此次更改将常见问题解答页面重命名为准则。常见问题解答页面仍可通过 /faq 访问。'faq url' 设置与以前一样有效。"
-    experimental_tag_settings_page: "在 /tag/:slug/:id/edit 下为标签启用专用设置页面。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     enable_custom_splash_screen: "允许您使用自己的 SVG 图片自定义加载启动画面。通过 'splash screen image' 设置上传图片。警告：这可能会对 LCP 分数和 Google 索引产生负面影响。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"

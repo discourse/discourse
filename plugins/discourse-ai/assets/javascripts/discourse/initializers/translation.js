@@ -11,7 +11,12 @@ export default apiInitializer((api) => {
   api.registerCustomPostMessageCallback(
     "localized",
     (topicController, data) => {
-      if (!cookie("content-localization-show-original")) {
+      const currentUser = api.getCurrentUser();
+      const showOriginal =
+        currentUser?.user_option?.show_original_content ||
+        cookie("content-localization-show-original");
+
+      if (!showOriginal) {
         const postStream = topicController.get("model.postStream");
         postStream.triggerChangedPost(data.id, data.updated_at);
       }

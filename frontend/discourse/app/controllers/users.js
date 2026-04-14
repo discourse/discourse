@@ -1,6 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { and, equal } from "@ember/object/computed";
+import { action, computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import EditUserDirectoryColumnsModal from "discourse/components/modal/edit-user-directory-columns";
 import discourseDebounce from "discourse/lib/debounce";
@@ -9,6 +10,8 @@ import Group from "discourse/models/group";
 
 export default class UsersController extends Controller {
   @service modal;
+
+  @tracked period = "weekly";
 
   queryParams = [
     "period",
@@ -20,7 +23,6 @@ export default class UsersController extends Controller {
     "exclude_groups",
   ];
 
-  period = "weekly";
   order = "";
   asc = null;
   name = "";
@@ -33,8 +35,15 @@ export default class UsersController extends Controller {
   groupOptions = null;
   params = null;
 
-  @and("currentUser", "groupOptions") showGroupFilter;
-  @equal("period", "all") showTimeRead;
+  @computed("currentUser", "groupOptions")
+  get showGroupFilter() {
+    return this.currentUser && this.groupOptions;
+  }
+
+  @dependentKeyCompat
+  get showTimeRead() {
+    return this.period === "all";
+  }
 
   loadUsers(params = null) {
     if (params) {

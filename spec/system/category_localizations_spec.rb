@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Category Localizations" do
-  SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+  let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:admin)
   fab!(:category) do
@@ -17,7 +17,7 @@ describe "Category Localizations" do
   end
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
-  let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+  let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
 
   before do
     SiteSetting.content_localization_supported_locales = "es|ja|fr"

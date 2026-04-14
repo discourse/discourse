@@ -208,9 +208,6 @@ hu:
               description: "Választható, korlátozza a kiváltást csak a következő jellemzőkkel rendelkező bejegyzésekre"
           created: Létrehozott
           edited: Szerkesztve
-          topics: Minden téma
-          personal_messages: Személyes üzenetek
-          public_topics: Nyilvános témák (kivéve az összes biztonságos kategóriát)
           with_images: Képek
           with_links: Hivatkozások
           with_code: Kód

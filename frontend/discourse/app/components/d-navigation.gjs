@@ -16,12 +16,12 @@ import TagInfoButton from "discourse/components/tag-info-button";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { setting } from "discourse/lib/computed";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
 import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
+import TagCategoryAdminDropdown from "discourse/select-kit/components/tag-category-admin-dropdown";
 import { and, gt } from "discourse/truth-helpers";
 
 @tagName("")
@@ -31,7 +31,10 @@ export default class DNavigation extends Component {
   @service siteSettings;
   @service currentUser;
 
-  @setting("fixed_category_positions") fixedCategoryPositions;
+  @computed("siteSettings.fixed_category_positions")
+  get fixedCategoryPositions() {
+    return this.siteSettings.fixed_category_positions;
+  }
 
   get createTopicLabel() {
     const defaultKey = "topic.create";
@@ -120,6 +123,27 @@ export default class DNavigation extends Component {
     return this.category?.can_edit;
   }
 
+  @computed("tag", "tag.name", "additionalTags", "currentUser.canEditTags")
+  get showTagEdit() {
+    return (
+      this.tag &&
+      this.tag.name !== "none" &&
+      !this.additionalTags &&
+      this.currentUser?.canEditTags
+    );
+  }
+
+  @computed(
+    "category.can_edit",
+    "tag",
+    "tag.name",
+    "additionalTags",
+    "currentUser.canEditTags"
+  )
+  get showCombinedAdminDropdown() {
+    return this.category?.can_edit && this.showTagEdit;
+  }
+
   @computed(
     "filterType",
     "category",
@@ -129,13 +153,19 @@ export default class DNavigation extends Component {
     "skipCategoriesNavItem"
   )
   get navItems() {
-    return NavItem.buildList(this.category, {
+    const items = NavItem.buildList(this.category, {
       filterType: this.filterType,
       noSubcategories: this.noSubcategories,
       currentRouteQueryParams: this.router?.currentRoute?.queryParams,
       tag: this.tag,
       siteSettings: this.siteSettings,
       skipCategoriesNavItem: this.skipCategoriesNavItem,
+    });
+
+    return applyValueTransformer("navigation-items", items, {
+      category: this.category,
+      tag: this.tag,
+      filterType: this.filterType,
     });
   }
 
@@ -176,6 +206,23 @@ export default class DNavigation extends Component {
         break;
       case "reorder":
         this.reorderCategories();
+        break;
+    }
+  }
+
+  @action
+  handleTagCategoryAdmin(actionId) {
+    switch (actionId) {
+      case "editCategory":
+        this.editCategory();
+        break;
+      case "editTag":
+        this.router.transitionTo(
+          "tag.edit.tab",
+          this.tag.slug,
+          this.tag.id,
+          "general"
+        );
         break;
     }
   }
@@ -250,19 +297,26 @@ export default class DNavigation extends Component {
         {{/if}}
       {{/if}}
 
-      {{#if (and this.category this.showCategoryEdit)}}
-        <DButton
-          @action={{this.editCategory}}
-          @icon="wrench"
-          @title="category.edit_title"
-          class="btn-default edit-category"
+      {{#if this.showCombinedAdminDropdown}}
+        <TagCategoryAdminDropdown
+          @category={{this.category}}
+          @tag={{this.tag}}
+          @onChange={{this.handleTagCategoryAdmin}}
+          @options={{hash triggerOnChangeOnTab=false}}
         />
-      {{/if}}
+      {{else}}
+        {{#if (and this.category this.showCategoryEdit)}}
+          <DButton
+            @action={{this.editCategory}}
+            @icon="wrench"
+            @title="category.edit_title"
+            class="btn-default edit-category"
+          />
+        {{/if}}
 
-      {{#if this.tag}}
-        {{#unless this.additionalTags}}
+        {{#if this.showTagEdit}}
           <TagInfoButton @tag={{this.tag}} @currentUser={{this.currentUser}} />
-        {{/unless}}
+        {{/if}}
       {{/if}}
 
       <PluginOutlet

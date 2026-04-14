@@ -261,8 +261,6 @@ th:
           today: "วันนี้"
     bookmarked:
       title: "บุ๊กมาร์ก"
-      edit_bookmark: "แก้ไขบุ๊กมาร์ก"
-      clear_bookmarks: "ล้างบุ๊กมาร์ก"
       help:
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
@@ -271,9 +269,9 @@ th:
       create: "สร้างบุ๊กมาร์ก"
       edit: "แก้ไขบุ๊กมาร์ก"
       not_bookmarked: "บุ๊กมาร์กโพสต์นี้"
+      topic_bookmark: "หัวข้อ"
       delete: "ลบบุ๊กมาร์ก"
       confirm_delete: "คุณแน่ใจหรือไม่ว่าต้องการลบบุ๊กมาร์กนี้ การเตือนความจำจะถูกลบออกด้วย"
-      confirm_clear: "คุณแน่ใจหรือว่าต้องการล้างบุ๊กมาร์กทั้งหมดจากกระทู้นี้"
       save: "บันทึก"
       invalid_custom_datetime: "วันและเวลาที่คุณกรอกไม่ถูกต้อง กรุณาลองอีกครั้ง"
       list_permission_denied: "คุณไม่ได้รับอนุญาตให้ดูบุ๊กมาร์กของผู้ใช้งานนี้"
@@ -2108,6 +2106,8 @@ th:
       review_group_name: "ชื่อกลุ่ม"
       require_topic_approval: "กระทู้ใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
       require_reply_approval: "คำตอบใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
+      posting_review_modes:
+        everyone: "ทุกคน"
       this_year: "ปีนี้"
       minimum_required_tags: "จำนวนแท็กขั้นต่ำในกระทู้:"
       none_subcategory_text: "ไม่มี"

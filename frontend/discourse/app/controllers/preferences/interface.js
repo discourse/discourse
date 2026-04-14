@@ -9,8 +9,8 @@ import {
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
-import { propertyEqual } from "discourse/lib/computed";
 import { INTERFACE_COLOR_MODES } from "discourse/lib/constants";
+import { deepEqual } from "discourse/lib/object";
 import {
   currentThemeId,
   listThemes,
@@ -46,10 +46,17 @@ export default class InterfaceController extends Controller {
   previewingColorScheme = false;
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
-
-  @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
-  @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
+
+  @computed("model.id", "currentUser.id")
+  get canPreviewColorScheme() {
+    return deepEqual(this.model?.id, this.currentUser?.id);
+  }
+
+  @computed("model.id", "currentUser.id")
+  get isViewingOwnProfile() {
+    return deepEqual(this.model?.id, this.currentUser?.id);
+  }
 
   @computed("makeThemeDefault")
   get saveAttrNames() {
@@ -74,6 +81,7 @@ export default class InterfaceController extends Controller {
       "bookmark_auto_delete_preference",
       "interface_color_mode",
       "enable_markdown_monospace_font",
+      "show_original_content",
     ];
 
     if (this.makeThemeDefault) {

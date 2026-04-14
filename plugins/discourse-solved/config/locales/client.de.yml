@@ -62,6 +62,7 @@ de:
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "dein Beitrag wurde als Lösung markiert"
+        topic_solved_title: "Thema gelöst"
       category_type_support:
         title: "Support"
         not_support_type: "Achtung! Du hast die Möglichkeit deaktiviert, Beiträge in dieser Kategorie als Lösungen auszuwählen. Du findest die entsprechenden Einstellungen, um diese Funktion wieder zu aktivieren, im Tab „Einstellungen“."

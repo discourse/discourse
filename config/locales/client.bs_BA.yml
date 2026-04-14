@@ -297,7 +297,6 @@ bs_BA:
           today: "today"
     bookmarked:
       title: "Zabilješka"
-      clear_bookmarks: "Odstrani zabilješku"
       help:
         unbookmark: "Klikni za uklanjanje svih zabilješki sa ove teme"
     bookmarks:
@@ -305,9 +304,9 @@ bs_BA:
       create: "Stvaranje zabilješke"
       edit: "Izmijeni zabilješku"
       not_bookmarked: "zabilježi objavu"
+      topic_bookmark: "Topic"
       delete: "Izbriši zabilješku"
       confirm_delete: "Jeste li sigurni da želite izbrisati ovu zabilješku? Podsjetnik će takođe biti izbrisan."
-      confirm_clear: "Jeste li sigurni da želite ukloniti sve vaše zabilješke iz ove teme?"
       save: "Sačuvaj"
       no_timezone: 'Još niste postavili vremensku zonu. Nećete moći postavljati podsjetnike. Postavi vremensku zonu <a href="%{basePath}/my/preferences/profile">u svom profilu</a>.'
       invalid_custom_datetime: "Datum i vrijeme koje ste naveli nisu valjani. Pokušajte ponovo."
@@ -2552,6 +2551,8 @@ bs_BA:
       review_group_name: "group name"
       require_topic_approval: "Potrebno je odobrenje moderatora za sve nove teme"
       require_reply_approval: "Potrebno je odobrenje moderatora za sve nove odgovore"
+      posting_review_modes:
+        everyone: "Svatko"
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"

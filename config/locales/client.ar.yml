@@ -586,6 +586,7 @@ ar:
       start_posting:
         title: "بدء النشر"
         description: "امنح الناس موضوعًا يتحدثون عنه معًا"
+        action: "اطّلع على الأفكار"
         choose_option: "كيف تود أن تبدأ؟"
         predefined_topics: "قوالب لكسر حالة السكوت"
         predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
@@ -743,8 +744,6 @@ ar:
           other: "تم إنشاؤه منذ %{count} عام"
     bookmarked:
       title: "وضع إشارة مرجعية"
-      edit_bookmark: "تعديل الإشارة المرجعية"
-      clear_bookmarks: "مسح الإشارات المرجعية"
       help:
         bookmark: "انقر لإنشاء إشارة مرجعية لهذا الموضوع"
         edit_bookmark: "انقر لتعديل الإشارة المرجعية لمنشور في هذا الموضوع"
@@ -763,12 +762,12 @@ ar:
       clear_reminder: "مسح التذكير"
       edit: "تعديل الإشارة المرجعية"
       not_bookmarked: "وضع إشارة مرجعية على هذا المنشور"
+      topic_bookmark: "الموضوع"
       remove_reminder_keep_bookmark: "إزالة التذكير والاحتفاظ بالإشارة المرجعية"
       created_with_reminder: "لقد وضعت إشارة مرجعية على هذا المنشور وعيَّنت تذكيرًا في %{date}. ‏%{name}"
       created_with_reminder_generic: "لقد وضعت إشارة مرجعية على هذا المنشور وعيَّنت تذكيرًا في %{date}. ‏%{name}"
       delete: "حذف الإشارة المرجعية"
       confirm_delete: "هل تريد بالتأكيد حذف هذه الإشارة المرجعية؟ سيتم حذف التذكير أيضًا."
-      confirm_clear: "هل تريد بالتأكيد مسح كل إشاراتك المرجعية من هذا الموضوع؟"
       save: "حفظ"
       no_timezone: 'لم تقم بتعيين منطقة زمنية بعد. ولن تتمكن من تعيين التذكيرات. قم بتعيين منطقة زمنية <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
       invalid_custom_datetime: "التاريخ والوقت الذين أدخلتهما غير صالحين، يُرجى إعادة المحاولة."
@@ -860,6 +859,7 @@ ar:
       storage_access_prompt: "هل لديك بالفعل حساب %{site_name}؟ اسمح بالوصول إلى جلستك للتعليق بنفسك."
       allow_access: "السماح بالوصول"
       continue_as_guest: "المتابعة كضيف"
+      be_first_to_reply: "كن أول مَن يرد!"
     topic_count_all:
       zero: "عرض %{count} موضوع جديد"
       one: "عرض موضوع واحد (%{count}) جديد"
@@ -1435,6 +1435,7 @@ ar:
       add_members:
         title: "إضافة مستخدمين إلى %{group_name}"
         description: "أدخل قائمة المستخدمين الذين تريد دعوتهم إلى المجموعة أو الصقها في قائمة مفصولة بفاصلات:"
+        description_usernames_only: "أدخل قائمة المستخدمين الذين تريد دعوتهم إلى المجموعة أو الصقها في قائمة مفصولة بفاصلات:"
         usernames_placeholder: "اسم المستخدمين"
         usernames_or_emails_placeholder: "أسماء المستخدمين أو عناوين البريد الإلكتروني"
         notify_users: "إشعار المستخدمين"
@@ -2213,6 +2214,8 @@ ar:
         upcoming_changes: "التغييرات القادمة"
         calendar_subscriptions: "التقويم"
       calendar_subscriptions:
+        regenerate: "أعد توليد عناوين URL"
+        copy: "انسخ الرابط"
         copied: "تم النسخ!"
         add_to_google: "تقويم Google"
       change_password:
@@ -3333,6 +3336,8 @@ ar:
         filter_for_more: التصفية للمزيد…
         categories_admin_dropdown:
           title: "إدارة الفئات"
+        tag_category_admin_dropdown:
+          edit_tag: "تعديل الوسم"
         bulk_select_topics_dropdown:
           title: "الإجراءات الجماعية"
         bulk_select_bookmarks_dropdown:
@@ -3363,6 +3368,8 @@ ar:
       medium_dark_tone: لون البشرة الداكن المتوسط
       dark_tone: لون البشرة الداكن
       default: الرموز التعبيرية المخصَّصة
+    filter_input:
+      clear: "مسح الفلتر"
     shared_drafts:
       title: "المسودات المشتركة"
       notice: "هذا الموضوع مرئي فقط لمن يمكنهم نشر المسودات المشتركة."
@@ -4073,6 +4080,7 @@ ar:
         clear_all: "مسح الكل"
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
         defer: "وضع علامة كغير مقروءة"
+        delete: "احذف الموضوعات"
         delete_topics_count:
           zero: "حذف الموضوعات"
           one: "حذف الموضوع"
@@ -4143,8 +4151,12 @@ ar:
           other: "تجاهل الجديدة (%{count})"
         toggle: "تفعيل التحديد الجماعي للموضوعات"
         actions: "الإجراءات الجماعية"
+        change_category: "حدِّث الفئة"
+        close_topics: "أغلِق الموضوعات"
+        archive_topics: "أرشف الموضوعات"
         move_messages_to_inbox: "النقل إلى صندوق الوارد"
         archive_messages: "النقل إلى الأرشيف"
+        notification_level: "حدِّث الإشعارات"
         change_notification_level: "تغيير مستوى الإشعارات"
         choose_new_category: "اختر الفئة الجديدة للموضوعات:"
         selected_sole_category:
@@ -4161,10 +4173,12 @@ ar:
           few: "المحدَّدة: %{count}"
           many: "المحدَّدة: %{count}"
           other: "المحدَّدة: %{count}"
+        change_tags: "استبدل الوسوم"
         append_tags: "إضافة وسوم"
         choose_new_tags: "اختيار الوسوم الجديدة لهذه الموضوعات:"
         choose_append_tags: "إضافة وسوم"
         changed_tags: "تم تغيير وسومات هذه الموضوعات."
+        remove_tags: "أزِل الوسوم"
         confirm_remove_tags:
           zero: "ستتم إزالة كل الوسوم من <b>%{count}</b> موضوع. هل أنت متأكد؟"
           one: "ستتم إزالة كل الوسوم من هذا الموضوع. هل أنت متأكد؟"
@@ -4246,6 +4260,8 @@ ar:
         name: "إعادة الإدراج"
       remove_tags:
         name: "إزالة الوسوم"
+      append_tags:
+        name: "أضف وسوم"
       replace_tags:
         name: "استبدال الوسوم"
       delete_topics:
@@ -4258,6 +4274,7 @@ ar:
         name: "وضع علامة غير مقروءة"
       update_notifications:
         name: "تحديث الإشعارات"
+        description: "قم بتحديث مستوى الإشعارات الشخصي للموضوعات المحددة ليصبح:"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -4473,6 +4490,13 @@ ar:
         few: "مضت %{count} ساعات بالفعل على آخر منشور في الموضوع؛ لذا فسيتم إغلاق الموضوع على الفور."
         many: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم إغلاق الموضوع على الفور."
         other: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم إغلاق الموضوع على الفور."
+      auto_delete_immediate:
+        zero: "مضت %{count} من الساعات بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        one: "مضت ساعة واحدة (%{count}) بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        two: "مضت ساعتان (%{count}) بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        few: "مضت %{count} ساعات بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        many: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
+        other: "مضت %{count} ساعة بالفعل على آخر منشور في الموضوع؛ لذا فسيتم حذف الموضوع على الفور."
       timeline:
         back: "الرجوع"
         back_description: "الرجوع إلى آخر منشور غير مقروء"
@@ -5129,6 +5153,7 @@ ar:
           many: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
           other: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
       revisions:
+        diff_too_complex: "من المعقد للغاية عرض الفروقات. يُرجى محاولة عرض تعديلات فردية أصغر."
         locale:
           no_locale_set: "لم تُحدد أي لغة بعد"
           locale_removed: "تمت إزالة اللغة"
@@ -5221,6 +5246,8 @@ ar:
       tags: "الوسوم"
       localizations: "التوطينات"
       localization:
+        language: "لغة الفئة"
+        language_description: "اللغة الرئيسية لاسم هذه الفئة ووصفها."
         locale: "اللغة"
         name: "الاسم"
         description: "الوصف"
@@ -5241,10 +5268,12 @@ ar:
         delete: "حذف"
         add: "إضافة مجموعة الوسوم المطلوبة"
         placeholder: "تحديد مجموعة الوسوم…"
+        min_count: "عدد الوسوم"
         tag_group: "مجموعة الوسوم"
       topic_featured_link_allowed: "السماح بالروابط المميَّزة في هذه الفئة."
       delete: "احذف الفئة"
       create: "فئة جديدة"
+      create_with_type: "الفئة %{typeName} الجديدة"
       create_long: "إنشاء فئة جديدة"
       type_settings_schema:
         site_settings: "إعدادات الموقع"
@@ -5343,6 +5372,10 @@ ar:
       review_group_name: "اسم المجموعة"
       require_topic_approval: "طلب موافقة المشرف على كل الموضوعات الجديدة"
       require_reply_approval: "طلب موافقة المشرف على جميع الردود الجديدة"
+      posting_review_modes:
+        no_one: "لا أحد"
+        everyone: "الجميع"
+      posting_review_groups_placeholder: "تحديد المجموعات..."
       this_year: "هذا العام"
       position: "الترتيب في صفحة الفئات:"
       default_position: "الترتيب الافتراضي"
@@ -8248,6 +8281,15 @@ ar:
           update_success: "اكتمل تحديث السمة %{theme}"
           up_to_date: "السمة محدَّثة، تاريخ آخر تحقُّق:"
           has_overwritten_history: "لم يعُد إصدار السمة الحالي موجودًا لأن سجل Git قد تم استبداله إجباريًا."
+          change_source:
+            button: "غيّر المصدر"
+            title: "غيّر مصدر السمة"
+            repository_url: "رابط المستودع"
+            branch: "الفرع (اختياري)"
+            updating: "يحدث مصدر القالب…"
+            update: "تحديث المصدر"
+            generate_new_key: "ولّد مفتاح SSH جديد"
+            keep_existing_key: "احتفظ بمفتاح SSH الحالي"
           add: "إضافة"
           theme_settings: "إعدادات السمة المخصصة"
           theme_site_settings: "الإعدادات التي يمكن للسمة تجاوزها"
@@ -9697,6 +9739,8 @@ ar:
         crawler_settings_saved: "تم حفظ إعدادات متتبعات ارتباطات الويب"
         back: "العودة إلى التضمين"
         configuration_snippet: "مقتطف من التكوين"
+        full_app_mode: "وضع التطبيق الكامل"
+        full_app_mode_description: "حمّل تطبيق Discourse الكامل في إطار iframe المضمن، مما يسمح للمستخدمين بالرد والإعجاب والاقتباس والتفاعل مع المواضيع بشكل مباشر."
         host_form:
           add_header: "إضافة مضيف"
           edit_header: "تعديل المضيف"

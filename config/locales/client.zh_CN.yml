@@ -332,6 +332,7 @@ zh_CN:
       toggle_verbose_localization: "切换详细本地化"
       toggle_mobile_view: "切换移动视图"
       disable_dev_tools: "禁用开发者工具"
+      toggle_upcoming_changes_debug: "切换“即将推出的更改”调试模式"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -518,8 +519,9 @@ zh_CN:
           other: "%{count} 年前创建"
     bookmarked:
       title: "加入书签"
-      edit_bookmark: "编辑书签"
-      clear_bookmarks: "清除书签"
+      edit_bookmark:
+        other: "编辑书签"
+      delete_bookmarks: "删除所有书签"
       help:
         bookmark: "点击以将此话题加入书签"
         edit_bookmark: "点击以编辑有关此话题中帖子的书签"
@@ -538,12 +540,14 @@ zh_CN:
       clear_reminder: "清除提醒"
       edit: "编辑书签"
       not_bookmarked: "将此帖子加入书签"
+      topic_bookmark: "话题"
+      post_bookmark: "帖子 #%{post_number}"
+      jump_to_post: "跳转到 %{post_number}"
       remove_reminder_keep_bookmark: "移除提醒并保留书签"
       created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
       created_with_reminder_generic: "您已将此加入书签并设置了一个提醒 %{date}。%{name}"
       delete: "删除书签"
       confirm_delete: "确定要删除此书签吗？提醒也将一并删除。"
-      confirm_clear: "确定要清除此话题中的所有书签吗？"
       save: "保存"
       no_timezone: '您尚未设置时区，将无法设置提醒，在<a href="%{basePath}/my/preferences/profile">您的个人资料中</a>进行设置。'
       invalid_custom_datetime: "您提供的日期和时间无效，请重试。"
@@ -2659,6 +2663,8 @@ zh_CN:
         filter_for_more: 筛选更多…
         categories_admin_dropdown:
           title: "管理类别"
+        tag_category_admin_dropdown:
+          edit_category: "编辑类别"
         bulk_select_topics_dropdown:
           title: "批量操作"
         bulk_select_bookmarks_dropdown:
@@ -2689,6 +2695,8 @@ zh_CN:
       medium_dark_tone: 中等深肤色
       dark_tone: 深肤色
       default: 自定义表情符号
+    filter_input:
+      clear: "清除筛选器"
     shared_drafts:
       title: "共享草稿"
       notice: "此话题只对可以发布共享草稿的用户可见。"
@@ -3051,8 +3059,8 @@ zh_CN:
         votes_released: "投票额度已释放"
         new_features: "新的 Discourse 功能已发布"
         admin_problems: "网站信息中心有新建议"
-        upcoming_change_available: "即将推出的新变化已发布"
-        upcoming_change_automatically_promoted: "即将发生的更改已自动启用"
+        upcoming_change_available: "即将推出的更改已发布"
+        upcoming_change_automatically_promoted: "即将推出的更改已自动启用"
     upload_selector:
       change: "更改"
       delete: "删除"
@@ -3351,19 +3359,19 @@ zh_CN:
         name: "忽略"
       close_topics:
         name: "关闭"
-        description: "关闭的话题阻止新的回复。 <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>了解更多</a>"
+        description: "关闭的话题阻止新的回复。 <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解更多</a>"
         note: "为这些话题添加注释"
         optional: '（可选）'
       archive_topics:
         name: "归档"
-        description: "已存档的话题列表在搜索和最新主题列表中被隐藏。 <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>了解更多的</a>"
+        description: "已存档的话题列表在搜索和最新主题列表中被隐藏。 <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解更多的</a>"
       archive_messages:
         name: "移至归档"
       move_messages_to_inbox:
         name: "移至收件箱"
       unlist_topics:
         name: "取消公开"
-        description: "未公开的主题不会显示在话题列表中，但仍可通过直接链接访问。 <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>了解更多</a>"
+        description: "未公开的主题不会显示在话题列表中，但仍可通过直接链接访问。 <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解更多</a>"
       relist_topics:
         name: "重新公开"
       remove_tags:
@@ -4261,6 +4269,10 @@ zh_CN:
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
+      posting_review_modes:
+        no_one: "没有人"
+        everyone: "所有人"
+      posting_review_groups_placeholder: "选择组…"
       this_year: "今年"
       position: "类别页面上的位置："
       default_position: "默认位置"
@@ -5387,6 +5399,8 @@ zh_CN:
         permanent_no_group_selection: "不适用，永久更改适用于所有群组。"
         no_changes: "目前暂无即将推出的更改"
         preview: "预览"
+        default_warning: "由于<a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即将推出的更改</a>，该设置的默认值已从 %{oldDefaultValue} 更改为 %{newDefaultValue}。"
+        default_warning_short: "此设置的默认值已更改，请在 <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即将推出的更改</a> 页面中阅读更多相关信息。"
         enabled_for_options:
           no_one: "没有人"
           everyone: "所有人"
@@ -5423,6 +5437,7 @@ zh_CN:
           impact_type_all: "所有影响类型"
           impact_type_feature: "功能"
           impact_type_other: "其他"
+          impact_type_site_setting_default: "设置默认值"
           status_all: "所有状态"
           status_conceptual: "概念性"
           status_experimental: "实验性"
@@ -8189,6 +8204,7 @@ zh_CN:
         crawler_settings_saved: "抓取工具设置已保存"
         back: "返回嵌入"
         configuration_snippet: "配置片段"
+        full_app_mode_description: "在嵌入的 iframe 中加载完整的 Discourse 应用，使用户能够直接回复、点赞、引用并与话题互动。"
         host_form:
           add_header: "添加主机"
           edit_header: "编辑主机"

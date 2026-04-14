@@ -32,6 +32,54 @@ describe "Upcoming Events" do
     end
   end
 
+  describe "event description in popup" do
+    let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
+
+    it "shows clamped description with expand toggle", time: Time.utc(2025, 9, 10, 12, 0) do
+      long_description =
+        "Join us for a <b>great</b> event :tada: with **bold text** and more details! " * 10
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        title: "Event with long description",
+        raw:
+          "[event start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\n#{long_description}\n[/event]",
+      )
+
+      upcoming_events.visit
+      upcoming_events.open_year_view
+
+      find("a", text: "Event with long description").click
+
+      expect(post_event_page).to have_description_clamped
+      expect(post_event_page).to have_description(
+        "Join us for a great event with bold text and more details!",
+      )
+      expect(post_event_page).to have_description_toggle
+
+      post_event_page.click_description_toggle
+
+      expect(post_event_page).to have_description_expanded
+    end
+
+    it "shows description without toggle for short text", time: Time.utc(2025, 9, 10, 12, 0) do
+      create_post(
+        user: admin,
+        category: Fabricate(:category),
+        title: "Event with short description",
+        raw: "[event start=\"2025-09-11 08:05\" end=\"2025-09-11 10:05\"]\nBrief sync.\n[/event]",
+      )
+
+      upcoming_events.visit
+      upcoming_events.open_year_view
+
+      find("a", text: "Event with short description").click
+
+      expect(post_event_page).to have_description("Brief sync.")
+      expect(post_event_page).to have_no_description_toggle
+    end
+  end
+
   describe "event display and formatting" do
     before { admin.user_option.update!(timezone: "America/New_York") }
 

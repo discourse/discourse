@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { action, computed } from "@ember/object";
-import { alias, and, or, reads } from "@ember/object/computed";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
@@ -20,6 +19,7 @@ import {
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
@@ -102,6 +102,7 @@ export default class ComposerService extends Service {
   @service messageBus;
   @service modal;
   @service router;
+  @service session;
   @service site;
   @service siteSettings;
   @service store;
@@ -126,15 +127,98 @@ export default class ComposerService extends Service {
 
   composerHeight = null;
 
-  @and("site.mobileView", "showPreview") forcePreview;
-  @alias("site.categoriesList") categories;
-  @alias("topicController.model") topicModel;
-  @reads("currentUser.staff") isStaffUser;
-  @reads("currentUser.whisperer") whisperer;
-  @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
-  @or("replyingToWhisper", "model.whisper") isWhispering;
-
   @tracked _showPreview;
+
+  @tracked _isStaffUserOverride;
+  @tracked _whispererOverride;
+
+  init() {
+    super.init(...arguments);
+    window.addEventListener("beforeunload", this._beaconSaveDraft);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("beforeunload", this._beaconSaveDraft);
+  }
+
+  @bind
+  _beaconSaveDraft() {
+    if (!this._saveDraftDebounce || !this.model || !this.model.canSaveDraft) {
+      return;
+    }
+
+    cancel(this._saveDraftDebounce);
+    this._saveDraftDebounce = null;
+
+    const draftSequence = this.model.draftSequence;
+    this.model.set("draftSequence", draftSequence + 1);
+
+    Draft.saveBeacon(
+      this.model.draftKey,
+      draftSequence,
+      this.model.serializeDraftData(),
+      this.messageBus.clientId,
+      this.session.csrfToken
+    );
+  }
+
+  @computed("site.mobileView", "showPreview")
+  get forcePreview() {
+    return this.site?.mobileView && this.showPreview;
+  }
+
+  @computed("site.categoriesList")
+  get categories() {
+    return this.site?.categoriesList;
+  }
+
+  set categories(value) {
+    set(this, "site.categoriesList", value);
+  }
+
+  @computed("topicController.model")
+  get topicModel() {
+    return this.topicController?.model;
+  }
+
+  set topicModel(value) {
+    set(this, "topicController.model", value);
+  }
+
+  @computed("currentUser.staff")
+  get isStaffUser() {
+    if (this._isStaffUserOverride !== undefined) {
+      return this._isStaffUserOverride;
+    }
+    return this.currentUser?.staff;
+  }
+
+  set isStaffUser(value) {
+    this._isStaffUserOverride = value;
+  }
+
+  @computed("currentUser.whisperer")
+  get whisperer() {
+    if (this._whispererOverride !== undefined) {
+      return this._whispererOverride;
+    }
+    return this.currentUser?.whisperer;
+  }
+
+  set whisperer(value) {
+    this._whispererOverride = value;
+  }
+
+  @computed("model.creatingTopic", "isStaffUser")
+  get canUnlistTopic() {
+    return this.model?.creatingTopic && this.isStaffUser;
+  }
+
+  @computed("replyingToWhisper", "model.whisper")
+  get isWhispering() {
+    return this.replyingToWhisper || this.model?.whisper;
+  }
 
   get showPreview() {
     return (

@@ -286,7 +286,10 @@ if (pluginTestPages) {
 const themeTestPages = process.env.THEME_TEST_PAGES;
 
 if (themeTestPages) {
-  module.exports.test_page = themeTestPages.split(",");
+  // avoid double-slash in paths
+  module.exports.test_page = themeTestPages
+    .split(",")
+    .map((p) => p.replace(/^\//, ""));
   module.exports.proxies = {};
 
   // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`

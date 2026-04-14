@@ -306,7 +306,8 @@
 
 .fk-d-menu[data-identifier="composer-link-toolbar"],
 .fk-d-menu[data-identifier="composer-image-toolbar"],
-.fk-d-menu[data-identifier="composer-image-alt-text"] {
+.fk-d-menu[data-identifier="composer-image-alt-text"],
+.fk-d-menu[data-identifier="composer-onebox-toolbar"] {
   user-select: none;
   z-index: z("composer", "dropdown");
 

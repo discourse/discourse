@@ -2,7 +2,6 @@
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
-import { empty, equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
@@ -24,10 +23,25 @@ export default class WatchedWordForm extends Component {
   selectedTags = [];
   words = [];
 
-  @empty("words") submitDisabled;
-  @equal("actionKey", "replace") canReplace;
-  @equal("actionKey", "tag") canTag;
-  @equal("actionKey", "link") canLink;
+  @computed("words.length")
+  get submitDisabled() {
+    return isEmpty(this.words);
+  }
+
+  @computed("actionKey")
+  get canReplace() {
+    return this.actionKey === "replace";
+  }
+
+  @computed("actionKey")
+  get canTag() {
+    return this.actionKey === "tag";
+  }
+
+  @computed("actionKey")
+  get canLink() {
+    return this.actionKey === "link";
+  }
 
   @computed("siteSettings.watched_words_regular_expressions")
   get placeholderKey() {

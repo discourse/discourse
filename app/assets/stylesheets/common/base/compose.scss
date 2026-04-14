@@ -318,7 +318,7 @@ html.composer-open:not(.has-full-page-chat) {
     width: 100%;
     align-items: center;
     position: relative;
-    gap: 0 0.5em;
+    gap: 0 var(--space-2);
   }
 
   .user-selector {
@@ -365,9 +365,10 @@ html.composer-open:not(.has-full-page-chat) {
   .category-input {
     position: relative;
     display: flex;
-    flex: 1 0 40%;
+    flex: 1 1 auto;
     max-width: 40%;
-    margin: 0 0 8px 8px;
+    margin: 0 0 8px 0;
+    min-width: 0;
 
     .category-chooser {
       display: flex;
@@ -665,7 +666,7 @@ html.composer-open:not(.has-full-page-chat) {
       .with-tags {
         .title-and-category {
           flex-wrap: nowrap;
-          gap: 0.5em;
+          gap: var(--space-2);
 
           .tags-input {
             max-width: 50%;

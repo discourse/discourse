@@ -33,6 +33,8 @@ module DiscoursePostEvent
     attributes :max_attendees
     attributes :at_capacity
 
+    has_one :image_upload, embed: :object, serializer: UploadSerializer
+
     def channel
       ::Chat::ChannelSerializer.new(object.chat_channel, root: false, scope:)
     end
