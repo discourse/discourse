@@ -287,13 +287,13 @@ if (typeof module !== "undefined") {
   }
 
   const themeTestPages = process.env.THEME_TEST_PAGES;
+  module.exports.proxies = {};
 
   if (themeTestPages) {
     // avoid double-slash in paths
     module.exports.test_page = themeTestPages
       .split(",")
       .map((p) => p.replace(/^\//, ""));
-    module.exports.proxies = {};
 
     // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
     // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
@@ -303,8 +303,6 @@ if (typeof module !== "undefined") {
       target: `${target}/testem-theme-qunit`,
       xfwd: true,
     };
-
-    module.exports.proxies["/*/*"] = { target, xfwd: true };
 
     module.exports.middleware = [
       function (app) {
@@ -316,30 +314,7 @@ if (typeof module !== "undefined") {
         });
       },
     ];
-  } else {
-    // Running with ember cli, but we want to pass through plugin request to Rails
-    module.exports.proxies = {
-      "/assets/plugins/": {
-        target,
-      },
-      "/assets/js/plugins/": {
-        target,
-      },
-      "/assets/map/plugins/": {
-        target,
-      },
-      "/plugins/": {
-        target,
-      },
-      "/bootstrap/": {
-        target,
-      },
-      "/stylesheets/": {
-        target,
-      },
-      "/extra-locales/": {
-        target,
-      },
-    };
   }
+
+  module.exports.proxies["/*/*"] = { target, xfwd: true };
 }
