@@ -94,7 +94,6 @@
     "rete-connection-plugin": "^2.0.5",
     "rete-history-plugin": "^2.1.1",
     "rete-render-utils": "^2.0.3",
-    "rrule": "^2.8.1",
     "web-worker": "^1.5.0"
   },
   "devDependencies": {

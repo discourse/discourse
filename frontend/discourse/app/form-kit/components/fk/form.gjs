@@ -200,11 +200,6 @@ class FKForm extends Component {
   }
 
   @action
-  commitField(name) {
-    this.formData.commitField(name);
-  }
-
-  @action
   async setProperties(object) {
     for (const [name, value] of Object.entries(object)) {
       await this.set(name, value);
