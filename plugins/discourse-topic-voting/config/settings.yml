@@ -53,5 +53,5 @@ plugins:
     client: true
     upcoming_change:
       status: "experimental"
-      impact: "feature,admin"
+      impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/399365"
