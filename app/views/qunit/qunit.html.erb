@@ -57,6 +57,8 @@
       This is a production installation of Discourse, and cannot be used for theme testing.
       For more information, see <a href="https://meta.discourse.org/t/66857">this guide</a>.
     <% else %>
+      <discourse-assets-icons></discourse-assets-icons>
+
       <script nonce="<%= csp_nonce_placeholder %>">
         window.EmberENV = {
           _DEFAULT_ASYNC_OBSERVERS: true,

@@ -26,6 +26,7 @@ import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
 import PreloadStore from "discourse/lib/preload-store";
+import { loadSprites } from "discourse/lib/svg-sprite-loader";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
 import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -266,6 +267,7 @@ export default function setupTests(config) {
     } else {
       setupS3CDN(null, null, { snapshot: true });
     }
+    loadSprites(setupData.svgSpritePath, "fontawesome");
 
     applyDefaultHandlers();
 
