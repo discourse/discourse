@@ -229,6 +229,14 @@ class OneboxToolbarPluginView {
           crossAxis: -MENU_PADDING,
         };
       },
+      limitShift: {
+        offset: ({ rects }) => ({
+          crossAxis: Math.min(
+            rects.floating.height + 2 * MENU_PADDING,
+            rects.reference.height - MENU_PADDING
+          ),
+        }),
+      },
     });
 
     await this.#menuInstance.show();
