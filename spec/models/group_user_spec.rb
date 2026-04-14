@@ -276,7 +276,7 @@ RSpec.describe GroupUser do
   describe "#destroy!" do
     fab!(:group)
 
-    it "removes `primary_group_id`, `flair_group_id` and exec `match_primary_group_changes` method on user model" do
+    it "removes `primary_group_id`, `flair_group_id` on user model" do
       user = Fabricate(:user, primary_group: group, flair_group: group)
       group_user = Fabricate(:group_user, group: group, user: user)
       group_user.destroy!
