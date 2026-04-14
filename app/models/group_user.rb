@@ -78,16 +78,8 @@ class GroupUser < ActiveRecord::Base
     self.notification_level = group&.default_notification_level || 3
   end
 
-  def set_category_notifications
-    self.class.set_category_notifications(group, user)
-  end
-
   def self.set_category_notifications(group, user)
     bulk_set_category_notifications(group, [user.id])
-  end
-
-  def set_tag_notifications
-    self.class.set_tag_notifications(group, user)
   end
 
   def self.set_tag_notifications(group, user)
