@@ -4,10 +4,9 @@ RSpec.describe "Network Disconnected" do
   let(:cdp) { PageObjects::CDP.new }
 
   it "NetworkConnectivity service adds class to DOM and displays offline indicator" do
-    skip_on_ci!(<<~TEXT)
-      In CI this test will randomly flake - timing issue with the offline indicator
-      not being rendered soon enough after network conditions change
-    TEXT
+    skip_on_ci!(
+      "In CI this test will randomly flake - timing issue with the offline indicator not being rendered soon enough after network conditions change",
+    )
 
     SiteSetting.enable_offline_indicator = true
 

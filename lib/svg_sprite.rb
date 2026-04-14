@@ -71,6 +71,7 @@ module SvgSprite
         cloud-arrow-down
         cloud-arrow-up
         code
+        code-branch
         comment
         compress
         copy

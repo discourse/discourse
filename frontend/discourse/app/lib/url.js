@@ -35,6 +35,14 @@ const SERVER_SIDE_ONLY = [
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
+  /^\/safe-mode/,
+  /^\/dev-mode/,
+  /^\/theme-qunit/,
+  /^\/llms\.txt$/,
+  /^\/robots\.txt$/,
+  /^\/offline\.html$/,
+  /^\/manifest\.webmanifest$/,
+  /^\/opensearch\.xml$/,
 ];
 
 // The amount of height (in pixels) that we factor in when jumpEnd is called so

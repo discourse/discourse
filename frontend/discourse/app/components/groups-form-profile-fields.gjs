@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
 import EmberObject, { computed } from "@ember/object";
-import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
@@ -21,7 +20,10 @@ export default class GroupsFormProfileFields extends Component {
   disableSave = null;
   nameInput = null;
 
-  @not("model.automatic") canEdit;
+  @computed("model.automatic")
+  get canEdit() {
+    return !this.model?.automatic;
+  }
 
   didInsertElement() {
     super.didInsertElement(...arguments);

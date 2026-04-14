@@ -5,27 +5,33 @@ import { cloneJSON } from "discourse/lib/object";
 import User from "discourse/models/user";
 
 export function parsePostData(query) {
-  const result = {};
-  if (query) {
-    query.split("&").forEach(function (part) {
-      const item = part.split("=");
-      const firstSeg = decodeURIComponent(item[0]);
-      const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
-      const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
-      const isArray = firstSeg.endsWith("[]");
-
-      if (m) {
-        let key = m[1];
-        result[key] = result[key] || {};
-        result[key][m[2].replace("][", ".")] = val;
-      } else if (isArray) {
-        result[firstSeg] ||= [];
-        result[firstSeg].push(val);
-      } else {
-        result[firstSeg] = val;
-      }
-    });
+  if (!query) {
+    return {};
   }
+
+  if (query.startsWith("{") || query.startsWith("[")) {
+    return JSON.parse(query);
+  }
+
+  const result = {};
+  query.split("&").forEach(function (part) {
+    const item = part.split("=");
+    const firstSeg = decodeURIComponent(item[0]);
+    const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
+    const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
+    const isArray = firstSeg.endsWith("[]");
+
+    if (m) {
+      let key = m[1];
+      result[key] = result[key] || {};
+      result[key][m[2].replace("][", ".")] = val;
+    } else if (isArray) {
+      result[firstSeg] ||= [];
+      result[firstSeg].push(val);
+    } else {
+      result[firstSeg] = val;
+    }
+  });
   return result;
 }
 
@@ -222,6 +228,22 @@ export function applyDefaultHandlers() {
           },
         ],
       },
+    });
+  });
+
+  pretender.get("/tag/:tag_id/info.json", (request) => {
+    return response({
+      tag_info: {
+        id: parseInt(request.params.tag_id, 10) || request.params.tag_id,
+        name: request.params.tag_id,
+        slug: request.params.tag_id,
+        topic_count: 0,
+        staff: false,
+        synonyms: [],
+        tag_group_names: [],
+        category_ids: [],
+      },
+      categories: [],
     });
   });
 

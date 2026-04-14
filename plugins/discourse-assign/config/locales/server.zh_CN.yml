@@ -25,9 +25,6 @@ zh_CN:
     assign_allowed_on_groups: "这些群组中的用户可以指定话题，也可以向他们指定话题。"
     enable_assign_status: "向每个指定添加可自定义的状态字段。"
     assign_statuses: "每个指定可用的状态列表。第一个状态是应用于每个新指定的默认状态。"
-    ignore_solved_topics_in_assigned_reminder: "防止指定的提醒中包含已解决的话题。仅在使用 discourse-assign 插件时相关。"
-    assignment_status_on_solve: "当一个话题被解决时，将所有指定更新为此状态"
-    assignment_status_on_unsolve: "当一个话题被取消解决时，将所有指定更新为此状态"
     errors:
       assign_statuses:
         too_few: "必须至少有两种不同的状态。"

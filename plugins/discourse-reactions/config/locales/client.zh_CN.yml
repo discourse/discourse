@@ -20,7 +20,7 @@ zh_CN:
         reaction_group:
           other: "%{reaction}: %{count} 名用户"
       reaction:
-        forbidden: "该回应是很久以前创建的。它不能再被修改或移除。"
+        forbidden: "您不能对此帖子作出反应或改变对该帖子的反应。"
       picker:
         react_with: "使用以下方式回应此帖子：%{reaction}"
         cant_remove_reaction: "您无法再移除您自己的回应了"

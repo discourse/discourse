@@ -416,6 +416,7 @@ sq:
     authorize: "Autorizo"
     deny: "Anulo"
     read: "lexuar"
+    copied: "Kopjuar!"
     otp_confirmation:
       confirm_title: Vazhdo tek %{site_name}
     scopes:

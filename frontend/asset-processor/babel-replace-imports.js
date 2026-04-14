@@ -77,17 +77,15 @@ export default function (babel) {
 
         const replacements = [];
 
-        const moduleBrokerLookup = t.awaitExpression(
-          t.callExpression(
+        const moduleBrokerLookup = t.callExpression(
+          t.memberExpression(
             t.memberExpression(
-              t.memberExpression(
-                t.identifier("window"),
-                t.identifier("moduleBroker")
-              ),
-              t.identifier("lookup")
+              t.identifier("window"),
+              t.identifier("moduleBroker")
             ),
-            [t.stringLiteral(moduleName)]
-          )
+            t.identifier("lookup")
+          ),
+          [t.stringLiteral(moduleName)]
         );
 
         if (properties.length) {

@@ -138,18 +138,6 @@ de:
           unassigned: "sind nicht zugeordnet"
         assigned:
           label: "Zugeordnet zu"
-    topics:
-      bulk:
-        unassign: "Zuordnung von Themen aufheben"
-        assign: "Themen zuordnen"
-        assign_description: "Die ausgewählten Themen dem folgenden Benutzer zuweisen:"
-        unassign_description: "Möchtest du die Zuordnung der ausgewählten Themen aufheben?"
-        confirm_assign_topics:
-          one: "%{count} Thema zuordnen"
-          other: "%{count} Themen zuordnen"
-        confirm_unassign_topics:
-          one: "Zuordnung von %{count} Thema aufheben"
-          other: "Zuordnung von %{count} Themen aufheben"
     discourse_automation:
       scriptables:
         random_assign:

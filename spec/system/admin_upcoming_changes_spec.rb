@@ -62,6 +62,22 @@ describe "Admin upcoming changes" do
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
+  it "does not show permanent upcoming changes" do
+    mock_upcoming_change_metadata(
+      {
+        allow_uppercase_posts: {
+          impact: "feature,all_members",
+          status: :permanent,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page).to have_no_change(:allow_uppercase_posts)
+  end
+
   # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
   # sample plugin settings loaded in the SiteSetting model.
   xit "shows upcoming changes from plugins" do
@@ -286,6 +302,47 @@ describe "Admin upcoming changes" do
       upcoming_changes_page.visit
       expect(upcoming_changes_page.change_item(:enable_upload_debug_mode).enabled_for).to eq(
         Group.find(Group::AUTO_GROUPS[:staff]).name,
+      )
+    end
+  end
+
+  context "when the upcoming change has a default override" do
+    let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+      mock_upcoming_change_default_overrides(
+        {
+          suggested_topics_max_days_old: {
+            upcoming_change: :enable_upload_debug_mode,
+            new_default: 1000,
+          },
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+      SiteSetting.refresh!
+    end
+
+    after do
+      clear_mocked_upcoming_change_metadata
+      clear_mocked_upcoming_change_default_overrides
+    end
+
+    it "shows information about the default override in the site settings UI" do
+      settings_page.visit("suggested_topics_max_days_old")
+      expect(settings_page).to have_upcoming_change_default_warning(
+        :suggested_topics_max_days_old,
+        old_default: 365,
+        new_default: 1000,
       )
     end
   end

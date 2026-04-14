@@ -717,6 +717,7 @@ ca:
     read: "llegeix"
     read_write: "llegeix/escriu"
     instructions: 'Hem generat una nova clau d''API d''usuari per a utilitzar amb "%{application_name}". Enganxeu la clau següent en la vostra aplicació:'
+    copied: "Copiat!"
     otp_description: 'Voleu permetre que "%{application_name}" accedeixi a aquest lloc web?'
     otp_confirmation:
       confirm_title: Continua a %{site_name}

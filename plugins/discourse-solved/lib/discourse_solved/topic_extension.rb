@@ -23,6 +23,7 @@ module DiscourseSolved::TopicExtension
       post_number: answer_post.post_number,
       username: answer_post_user.username,
       name: answer_post_user.name,
+      avatar_template: answer_post_user.avatar_template,
       excerpt:,
     }
 

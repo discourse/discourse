@@ -30,6 +30,21 @@ describe DiscourseTopicVoting do
     expect(user0.reached_voting_limit?).to eq(true)
   end
 
+  it "does not enforce vote limits when vote limits are disabled" do
+    SiteSetting.topic_voting_enable_vote_limits = false
+    SiteSetting.topic_voting_tl1_vote_limit = 0
+    user0.update!(trust_level: 1)
+
+    DiscourseTopicVoting::Vote.create!(user: user0, topic: topic0)
+
+    expect(user0.vote_limit).to be_nil
+    expect(user0.votes_left).to be_nil
+    expect(user0.can_vote?).to eq(true)
+    expect(user0.reached_voting_limit?).to eq(false)
+    expect(user0.alert_low_votes?).to eq(false)
+    expect(user0.vote_limit_0?).to eq(false)
+  end
+
   it "doesn't allow users to vote if their trust level vote limit is 0" do
     SiteSetting.topic_voting_tl1_vote_limit = 0
     user0.update!(trust_level: 1)

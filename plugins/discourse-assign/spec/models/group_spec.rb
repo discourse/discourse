@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../support/assign_allowed_group"
-
 RSpec.describe Group do
   let(:group) { Fabricate(:group) }
 
@@ -37,32 +35,26 @@ RSpec.describe Group do
     end
   end
 
-  describe "includes can_show_assigned_tab? method" do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
-    let(:user1) { Fabricate(:user) }
-    let(:user2) { Fabricate(:user) }
-
-    include_context "with group that is allowed to assign"
-
-    before do
-      add_to_assign_allowed_group(user)
-      add_to_assign_allowed_group(user1)
-      add_to_assign_allowed_group(admin)
-    end
-
-    it "gives false in can_show_assigned_tab? when all users are not in assigned_allowed_group" do
-      group.add(user)
-      group.add(user1)
-      group.add(user2)
-
+  describe "#can_show_assigned_tab?" do
+    it "returns false when assignable_level is nobody" do
+      group.update!(assignable_level: Group::ALIAS_LEVELS[:nobody])
       expect(group.can_show_assigned_tab?).to eq(false)
     end
 
-    it "gives true in can_show_assigned_tab? when all users are in assigned_allowed_group" do
-      group.add(user)
-      group.add(user1)
+    it "returns true when assignable_level is only_admins" do
+      group.update!(assignable_level: Group::ALIAS_LEVELS[:only_admins])
+      expect(group.can_show_assigned_tab?).to eq(true)
+    end
 
+    it "returns true when assignable_level is everyone" do
+      group.update!(assignable_level: Group::ALIAS_LEVELS[:everyone])
+      expect(group.can_show_assigned_tab?).to eq(true)
+    end
+
+    it "does not depend on group members being in assign_allowed_on_groups" do
+      user = Fabricate(:user)
+      group.update!(assignable_level: Group::ALIAS_LEVELS[:everyone])
+      group.add(user)
       expect(group.can_show_assigned_tab?).to eq(true)
     end
   end

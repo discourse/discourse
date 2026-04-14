@@ -597,6 +597,7 @@ class CategoriesController < ApplicationController
         end
 
         if SiteSetting.content_localization_enabled?
+          conditional_param_keys << :locale
           conditional_param_keys << { category_localizations: %i[id locale name description] }
         end
 
@@ -641,6 +642,8 @@ class CategoriesController < ApplicationController
           :allow_global_tags,
           :read_only_banner,
           :default_list_filter,
+          { topic_posting_review_group_ids: [] },
+          { reply_posting_review_group_ids: [] },
           *conditional_param_keys,
         ]
 
@@ -656,6 +659,8 @@ class CategoriesController < ApplicationController
               num_auto_bump_daily
               require_reply_approval
               require_topic_approval
+              topic_posting_review_mode
+              reply_posting_review_mode
             ],
             custom_fields: {
             },

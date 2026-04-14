@@ -7,7 +7,6 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
-import DismissNew from "discourse/components/modal/dismiss-new";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
@@ -92,6 +91,20 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "close-topics",
         icon: "topic.closed",
         name: i18n("topic_bulk_actions.close_topics.name"),
+      },
+      {
+        id: "pin-topics",
+        icon: "thumbtack",
+        name: i18n("topic_bulk_actions.pin_topics.name"),
+        visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
+      },
+      {
+        id: "unpin-topics",
+        icon: "thumbtack",
+        name: i18n("topic_bulk_actions.unpin_topics.name"),
+        visible: ({ topics }) =>
+          topics.some((t) => t.pinned || t.unpinned) &&
+          !topics.some((t) => t.isPrivateMessage),
       },
       {
         id: "archive-topics",
@@ -219,6 +232,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         allowSilent,
         initialAction,
         initialActionLabel,
+        showFooter: opts.showFooter !== false,
       },
     });
   }
@@ -238,12 +252,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         });
         break;
       case "dismiss-new":
-        this.modal.show(DismissNew, {
-          model: {
-            selectedTopics: this.args.bulkSelectHelper.selected,
-            dismissCallback: (dismissTopics) => this.dismissRead(dismissTopics),
-          },
-        });
+        this.args.bulkSelectHelper.onResetNew?.();
         break;
       case "update-category":
         this.showBulkTopicActionsModal(actionId, "change_category", {
@@ -326,6 +335,17 @@ export default class BulkSelectTopicsDropdown extends Component {
         this.showBulkTopicActionsModal(actionId, "reset_bump_dates", {
           description: i18n(`topic_bulk_actions.reset_bump_dates.description`),
           confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+        });
+        break;
+      case "pin-topics":
+        this.showBulkTopicActionsModal("pin", "pin_topics", {
+          showFooter: false,
+        });
+        break;
+      case "unpin-topics":
+        this.showBulkTopicActionsModal("unpin", "unpin_topics", {
+          description: i18n("topic_bulk_actions.unpin_topics.description"),
+          confirmButtonTranslationKey: "topics.bulk.confirm_unpin_topics",
         });
         break;
       case "defer":

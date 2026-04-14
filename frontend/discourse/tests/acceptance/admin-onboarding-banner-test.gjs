@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
@@ -12,6 +12,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
+    show_site_owner_onboarding: true,
   });
 
   needs.settings({
@@ -72,9 +73,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert.dom(".admin-onboarding-banner").exists();
 
     await click(".admin-onboarding-banner .btn-close");
-    this.siteSettings.enable_site_owner_onboarding = false;
-
-    await settled();
     assert.dom(".admin-onboarding-banner").doesNotExist();
   });
 

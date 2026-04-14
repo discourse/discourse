@@ -967,7 +967,7 @@ RSpec.describe Admin::SiteTextsController do
             I18n.t("staff_category_name", locale: :de),
           )
           expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(
-            I18n.t("guidelines_topic.title", locale: :de),
+            I18n.t("guidelines_topic.guidelines_title", locale: :de),
           )
         end
       end

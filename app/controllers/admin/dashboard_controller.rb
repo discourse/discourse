@@ -44,13 +44,17 @@ class Admin::DashboardController < Admin::StaffController
     end
 
     new_features = DiscourseUpdates.new_features(force_refresh:)
+    new_features_with_permanent_uc =
+      DiscourseUpdates.merge_new_features_with_upcoming_changes(
+        new_features&.map { |item| item.symbolize_keys } || [],
+      )
 
-    if current_user.admin? && most_recent = new_features&.first
-      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent["created_at"])
+    if current_user.admin? && most_recent = new_features_with_permanent_uc&.first
+      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent[:created_at])
     end
 
     data = {
-      new_features: new_features,
+      new_features: new_features_with_permanent_uc,
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
       release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
     }

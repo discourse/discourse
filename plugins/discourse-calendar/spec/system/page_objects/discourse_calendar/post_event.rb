@@ -30,6 +30,31 @@ module PageObjects
           has_css?(".event-description", text:)
         end
 
+        def has_no_description?
+          has_no_css?(".event-description")
+        end
+
+        def has_description_toggle?
+          has_css?(".event-description__toggle")
+        end
+
+        def has_no_description_toggle?
+          has_no_css?(".event-description__toggle")
+        end
+
+        def click_description_toggle
+          find(".event-description__toggle").click
+          self
+        end
+
+        def has_description_clamped?
+          has_css?(".event-description.is-clamped:not(.is-expanded)")
+        end
+
+        def has_description_expanded?
+          has_css?(".event-description.is-clamped.is-expanded")
+        end
+
         def close
           has_css?(".discourse-post-event .status-and-creators .status:not(.closed)")
           open_more_menu
@@ -47,6 +72,12 @@ module PageObjects
           find("#dialog-holder .btn-primary").click
           has_css?(".discourse-post-event .status-and-creators .status:not(.closed)")
           has_no_css?("#{TRIGGER_MENU_SELECTOR}.--saving")
+          self
+        end
+
+        def add_to_calendar
+          open_more_menu
+          find(".add-to-calendar .btn").click
           self
         end
 

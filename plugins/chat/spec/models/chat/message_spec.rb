@@ -634,7 +634,9 @@ describe Chat::Message do
         user = Fabricate(:unicode_user)
         cooked = described_class.cook("<h1>@#{user.username}</h1>")
 
-        expect(cooked).to eq("<p>&lt;h1&gt;@#{user.username}&lt;/h1&gt;</p>")
+        expect(cooked).to eq(
+          "<p>&lt;h1&gt;<a class=\"mention\" href=\"/u/#{user.encoded_username(lower: true)}\">@#{user.username}</a>&lt;/h1&gt;</p>",
+        )
       end
     end
   end
@@ -659,7 +661,7 @@ describe Chat::Message do
       expect(message.to_markdown).to eq(<<~MSG.chomp)
       hey friend, what's up?!
 
-      ![test_image.jpg|400x300](#{image.short_url})
+      ![test\\_image.jpg|400x300](#{image.short_url})
       ![meme.jpg|10x10](#{image2.short_url})
       MSG
     end

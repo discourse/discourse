@@ -481,7 +481,13 @@ en:
   delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
 
   action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
 
@@ -651,6 +657,7 @@ en:
         one: "Maximum %{count} user can be added at once"
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
+      cannot_add_emails: "Only usernames can be used to add members to this group. To invite by email, use the Invite button."
       counting_too_many_email_domains:
         one: "Maximum %{count} email domain can be counted at once"
         other: "Maximum %{count} email domains can be counted at once"
@@ -875,6 +882,7 @@ en:
       invalid_email_in: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      groups_required_for_mode: "You must select at least one group for %{setting}."
       description_incomplete: "The category description post must have at least one paragraph."
       description_too_long:
         one: "Description is too long (maximum is %{count} character)."
@@ -1154,6 +1162,8 @@ en:
     connection_error: "There was an issue connecting with the server, check the server name and port and try again."
     timeout_error: "Connection to the server timed out, check the server name and port and try again."
     unhandled_error: "Unhandled error when testing email settings. %{message}"
+    invalid_host: "The provided host resolves to a disallowed IP address."
+    host_resolve_failed: "The provided host could not be resolved."
   webauthn:
     validation:
       invalid_type_error: "The webauthn type provided was invalid. Valid types are webauthn.get and webauthn.create."
@@ -1249,6 +1259,7 @@ en:
 
   calendar_subscriptions:
     application_name: "Calendar Subscriptions"
+    bookmarks_feed_name: "%{site_title} - Bookmark reminders"
 
   user_api_key:
     title: 'Authorize "%{application_name}"'
@@ -1260,6 +1271,8 @@ en:
     permissions_header: 'This will allow "%{application_name}" to:'
     redirect_warning: "Authorizing will redirect you to"
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
+    copy_key: "Copy Key"
+    copied: "Copied!"
     otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     otp_confirmation:
       confirm_title: Continue to %{site_name}
@@ -1828,9 +1841,6 @@ en:
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
     github_onebox_access_tokens: "A mapping of a GitHub organisation or user to a GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
-    reddit_onebox_client_id: "Reddit API OAuth client ID used for authenticated Reddit oneboxes. Create a 'script' type app at reddit.com/prefs/apps to obtain credentials."
-    reddit_onebox_client_secret: "Reddit API OAuth client secret used for authenticated Reddit oneboxes. Found under the 'script' type app created at reddit.com/prefs/apps."
-
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
@@ -2241,6 +2251,7 @@ en:
     here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    animated_topic_thumbnails: "Use the original animated image as the topic thumbnail instead of generating a static thumbnail."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
@@ -2550,6 +2561,7 @@ en:
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
+    embed_full_app: "Enable full app mode for embedded comments. When enabled, embedded comments will load the full Discourse application in an iframe, allowing users to interact with topics directly"
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
@@ -2724,11 +2736,12 @@ en:
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
-    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
+    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames during SSO and OAuth signup flows."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
     enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
+    site_owner_onboarding_max_days: "Maximum number of days after site creation to show the onboarding banner."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
@@ -2745,6 +2758,7 @@ en:
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     impersonate_without_logout: "Allow admins to impersonate a user without having to log out of their admin account."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
@@ -2770,7 +2784,6 @@ en:
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
-    experimental_tag_settings_page: "Enable a dedicated settings page for tags at /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -3437,6 +3450,10 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
+    reviewable_queued_post_revise_and_reject_edit_post: "You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "You can edit your original post below and re-submit to make the suggested changes."
+    reviewable_queued_post_revise_and_reject_edit_topic: "You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "You can edit your topic's original post below and re-submit to make the suggested changes."
     reviewable_queued_post_revise_and_reject:
       title: "Feedback on your post"
       subject_template: "Feedback on your post in %{topic_title}"
@@ -3449,7 +3466,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -3472,7 +3489,7 @@ en:
 
         Feedback: %{feedback}
 
-        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+        %{edit_instructions}
 
         --------
 
@@ -5529,8 +5546,10 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
+      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
+      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'

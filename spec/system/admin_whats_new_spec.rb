@@ -10,12 +10,12 @@ describe "Admin What's New Page" do
     sign_in(admin)
   end
 
-  def set_new_features_payload(payload)
+  def set_new_features_response_json(payload)
     Discourse.redis.set("new_features", MultiJson.dump(payload))
   end
 
   it "shows an error message when the backend returns an empty list" do
-    set_new_features_payload(nil)
+    set_new_features_response_json(nil)
     whats_new_page.visit
     expect(whats_new_page).to have_content(
       html_translation_to_text(
@@ -26,7 +26,7 @@ describe "Admin What's New Page" do
 
   it "displays a new feature indicator on the sidebar and clears it when navigating to what's new" do
     DiscourseUpdates.stubs(:has_unseen_features?).returns(true)
-    set_new_features_payload(
+    set_new_features_response_json(
       [
         {
           "id" => 7,
@@ -56,7 +56,7 @@ describe "Admin What's New Page" do
   end
 
   it "displays new features with screenshot taking precedence over emoji" do
-    set_new_features_payload(
+    set_new_features_response_json(
       [
         {
           "id" => 7,
@@ -108,7 +108,7 @@ describe "Admin What's New Page" do
   end
 
   it "displays new features with emoji when no screenshot" do
-    set_new_features_payload(
+    set_new_features_response_json(
       [
         {
           "id" => 7,
@@ -125,7 +125,9 @@ describe "Admin What's New Page" do
       ],
     )
     whats_new_page.visit
-    expect(whats_new_page).to have_emoji
-    expect(whats_new_page).to have_no_screenshot
+    whats_new_page.within_new_feature_item("New feature") do
+      expect(whats_new_page).to have_emoji
+      expect(whats_new_page).to have_no_screenshot
+    end
   end
 end

@@ -2,14 +2,14 @@
 
 discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
-unicorn_stderr_path = "#{discourse_path}/log/unicorn.stderr.log"
+stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/pitchfork_logstash_patch"
-  FileUtils.touch(unicorn_stderr_path) if !File.exist?(unicorn_stderr_path)
+  FileUtils.touch(stderr_log_path) if !File.exist?(stderr_log_path)
   logger DiscourseLogstashLogger.logger(
-           logdev: unicorn_stderr_path,
+           logdev: stderr_log_path,
            type: :unicorn,
            customize_event: lambda { |event| event["@timestamp"] = ::Time.now.utc },
          )
@@ -77,6 +77,7 @@ oob_gc_enabled = ENV["DISCOURSE_DISABLE_MAJOR_GC_DURING_REQUESTS"] && RUBY_VERSI
 
 after_worker_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
+  Discourse.apply_worker_db_variables_overrides
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
 
@@ -101,17 +102,17 @@ before_service_worker_ready do |server, service_worker|
 
     if Discourse.enable_sidekiq_logging?
       # Trap USR1, so we can re-issue to sidekiq workers
-      # but chain the default unicorn implementation as well
+      # but chain the default pitchfork implementation as well
       old_handler =
         Signal.trap("USR1") do
           old_handler.call
 
           # We have seen Sidekiq processes getting stuck in production sporadically when log rotation happens.
-          # The cause is currently unknown but we suspect that it is related to the Unicorn master process and
-          # Sidekiq demon processes reopening logs at the same time as we noticed that Unicorn worker processes only
-          # reopen logs after the Unicorn master process is done. To workaround the problem, we are adding an arbitrary
+          # The cause is currently unknown but we suspect that it is related to the master process and
+          # Sidekiq demon processes reopening logs at the same time as we noticed that worker processes only
+          # reopen logs after the master process is done. To workaround the problem, we are adding an arbitrary
           # delay of 1 second to Sidekiq's log reopening procedure. The 1 second delay should be
-          # more than enough for the Unicorn master process to finish reopening logs.
+          # more than enough for the master process to finish reopening logs.
           Demon::Sidekiq.kill("USR2")
         end
     end

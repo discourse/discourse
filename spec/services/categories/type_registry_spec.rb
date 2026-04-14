@@ -60,10 +60,10 @@ RSpec.describe Categories::TypeRegistry do
       expect(queries.size).to eq(1)
     end
 
-    it "returns empty hash when no types are registered" do
+    it "returns only the core discussion type in the hash when no other types are registered" do
       original_types = described_class.all.dup
       described_class.reset!
-      expect(described_class.counts).to eq({})
+      expect(described_class.counts).to eq({ discussion: 0 })
     ensure
       original_types&.each_value { |klass| described_class.register(klass) }
     end

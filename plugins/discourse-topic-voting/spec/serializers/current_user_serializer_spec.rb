@@ -19,6 +19,18 @@ RSpec.describe CurrentUserSerializer do
     expect(json[:votes_left]).to eq(nil)
   end
 
+  it "returns nil for vote_limit and votes_left when vote limits are disabled" do
+    SiteSetting.topic_voting_enabled = true
+    SiteSetting.topic_voting_enable_vote_limits = false
+    Fabricate(:topic_voting_votes, user: user1, topic: topic1)
+
+    json = described_class.new(user1, scope: guardian, root: false).as_json
+
+    expect(json[:vote_limit]).to be_nil
+    expect(json[:votes_left]).to be_nil
+    expect(json[:votes_exceeded]).to eq(false)
+  end
+
   describe "votes_exceeded" do
     it "returns false when within voting limits" do
       SiteSetting.topic_voting_enabled = true

@@ -509,6 +509,26 @@ uk:
         credit_allocations: "Кредитні асигнування"
       ai_agent:
         ai_tools: "Інструменти"
+        mcp_servers: "Сервери MCP"
+        mcp_server_tools_help: "Вибрані MCP-сервери за замовчуванням надають доступ до всіх своїх інструментів. Звузьте їх для кожного агента, щоб зменшити використання токенів і зосередити вибір інструментів."
+        mcp_server_tool_count:
+          one: "%{count} інструмент"
+          few: "%{count} інструменти"
+          many: "%{count} інструментів"
+          other: "%{count} інструментів"
+        mcp_server_enabled_tool_count:
+          one: "%{count} інструмент увімкнено"
+          few: "%{count} інструменти увімкнено"
+          many: "%{count} інструментів увімкнено"
+          other: "%{count} інструментів увімкнено"
+        mcp_server_all_tools_enabled: "Усі інструменти ввімкнено"
+        mcp_server_enabled_tools:
+          one: "%{count} інструмент з %{total} увімкнено"
+          few: "%{count} інструменти з %{total} увімкнено"
+          many: "%{count} інструментів з %{total} увімкнено"
+          other: "%{count} інструментів з %{total} увімкнено"
+        mcp_server_choose_tools: "Виберіть інструменти"
+        mcp_server_edit_tools: "Інструменти редагування"
         tool_strategies:
           all: "Застосувати до всіх відповідей"
           replies:
@@ -553,8 +573,6 @@ uk:
         create_user_help: За бажанням, ви можете прив’язати користувача до цього агента. Якщо ви це зробите, ШІ використовуватиме цього користувача для відповіді на запити.
         default_llm: Мовна модель за замовчуванням
         default_llm_help: Мовна модель за замовчуванням, яка використовуватиметься для цього агента. Обов’язково, якщо ви хочете згадати агента в публічних публікаціях.
-        question_consolidator_llm: Мовна модель для Question Consolidator
-        question_consolidator_llm_help: Мовна модель для об’єднання запитань, ви можете вибрати менш потужну модель, щоб заощадити кошти.
         system_prompt: Системний запит
         forced_tool_strategy: Стратегія примусового використання інструментів
         allow_chat_direct_messages: "Дозволити прямі повідомлення в чаті"
@@ -582,6 +600,25 @@ uk:
           many: "%{count} інструментів"
           other: "%{count} інструментів"
         tool_tokens_total: "~%{tokens} Маркери"
+        mcp_server_cost_name: "%{name} (сервер MCP)"
+        mcp_server_cost_value:
+          one: "~%{tokens} токени, %{count} інструмент"
+          few: "~%{tokens} токени, %{count} інструменти"
+          many: "~%{tokens} токени, %{count} інструментів"
+          other: "~%{tokens} токени, %{count} інструментів"
+        mcp_server_tokens_only: "~%{tokens} маркери"
+        mcp_tools_modal:
+          title: "%{name} інструментів"
+          summary: "За замовчуванням цей агент може використовувати всі інструменти з цього сервера. Виберіть менший набір, щоб обмежити доступ і зменшити вартість запиту."
+          filter_placeholder: "Інструменти фільтрації"
+          select_all: "Вибрати все"
+          clear_all: "Очистити все"
+          selection_summary:
+            one: "Вибрано %{count} інструмент з %{total}"
+            few: "Вибрано %{count} інструменти з %{total}"
+            many: "Вибрано %{count} інструментів з %{total}"
+            other: "Вибрано %{count} інструментів з %{total}"
+          empty: "Жоден інструмент не відповідає цьому фільтру."
         tool_severity_medium: "Помірна місткість"
         tool_severity_high: "Висока ємність"
         tool_severity_too_many: "Занадто багато інструментів"
@@ -661,6 +698,8 @@ uk:
       tools:
         back: "Назад до інструментів"
         short_title: "Інструменти"
+        keywords: "mcp|mcp сервер|протокол контексту моделі"
+        script_tools: "Інструменти скриптів"
         export: "Експорт"
         import: "Імпорт"
         import_error_conflict: "Інструмент вже існує, бажаєте його оновити?"
@@ -673,7 +712,7 @@ uk:
         tool_name_help: "Назва інструменту представлена у великій мовній моделі. Вона не є окремою, але є окремою для кожного агента. (агент перевіряє під час збереження)"
         description: "Опис"
         description_help: "Чіткий опис призначення інструменту для мовної моделі"
-        subheader_description: "Інструменти розширюють можливості ботів на базі штучного інтелекту за допомогою визначених користувачем функцій JavaScript."
+        subheader_description: "Інструменти та MCP-сервери розширюють можливості ШІ-агентів."
         summary: "Підсумок"
         summary_help: "Короткий опис призначення інструментів для відображення кінцевим користувачам"
         script: "Скрипт"
@@ -727,8 +766,97 @@ uk:
         embedding: "Взаємодія"
         cannot_delete_in_use: "Ці облікові дані не можна видалити, оскільки вони використовуються:"
         tool: "Інструмент"
+        mcp_server: "Сервер MCP"
+        mcp_server_oauth_client_secret: "Секрет клієнта OAuth сервера MCP"
         modal:
           title: "Створити нові облікові дані"
+      mcp_servers:
+        short_title: "Сервери MCP"
+        new: "Новий MCP-сервер"
+        name: "Імʼя"
+        description: "Опис"
+        url: "Посилання"
+        auth_type: "Автентифікація"
+        auth_types:
+          none: "Без автентифікації"
+          header_secret: "Заголовок облікових даних"
+          oauth: "OAuth"
+        secret: "Облікові дані"
+        auth_header: "Заголовок авторизації"
+        auth_scheme: "Схема авторизації"
+        oauth_client_registration: "Реєстрація клієнта OAuth"
+        oauth_client_registration_types:
+          client_metadata_document: "Документ метаданих клієнта"
+          manual: "Ручні облікові дані клієнта"
+        oauth_client_id: "ID клієнта OAuth"
+        oauth_client_secret: "Секрет клієнта OAuth"
+        oauth_scopes: "Області OAuth"
+        oauth_authorization_params: "Параметри авторизації OAuth"
+        oauth_authorization_params_help: "Необов'язковий об’єкт JSON влитий у запит авторизації. Використовуйте null для видалення типового параметру."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "Параметри токена OAuth"
+        oauth_token_params_help: "Необов'язковий JSON-об'єкт, об'єднаний у запити токенів. Використовуйте null, щоб видалити параметр за замовчуванням."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Потрібен токен оновлення"
+        oauth_require_refresh_token_help: "Збій OAuth-з’єднання, якщо постачальник не повертає токен оновлення."
+        oauth_json_object_required: "%{field} має бути об'єктом JSON."
+        oauth_show_advanced_options: "Показати розширені параметри"
+        oauth_hide_advanced_options: "Приховати розширені параметри"
+        oauth_connection: "Підключення OAuth"
+        oauth_status: "Статус OAuth"
+        oauth_statuses:
+          disconnected: "Відключено"
+          connected: "Пов’язаний"
+          refresh_failed: "Не вдалося оновити"
+          error: "Потребує уваги"
+        oauth_connect: "Підключити"
+        oauth_reconnect: "Повторно підключитися"
+        oauth_disconnect: "Відключитися"
+        oauth_connect_help: "Використовуйте Connect, щоб зберегти сервер і авторизуватися на ньому."
+        oauth_client_metadata_url: "URL-адреса метаданих клієнта"
+        oauth_granted_scopes: "Надані області дії"
+        oauth_access_token_expires_at: "Термін дії токену доступу закінчується в"
+        oauth_authorization_endpoint: "Кінцева точка авторизації"
+        oauth_token_endpoint: "Кінцева точка токену"
+        oauth_revocation_endpoint: "Кінцева точка анулювання"
+        oauth_issuer: "Емітент"
+        oauth_last_error: "Остання помилка OAuth"
+        oauth_show_details: "Показати деталі"
+        oauth_hide_details: "Приховати подробиці"
+        timeout_seconds: "Час очікування запиту (в секундах)"
+        timeout_seconds_tooltip: "Як довго Discourse чекає на сервер MCP до того, як запит не буде виконано. Залиште 30, якщо тільки сервер не працює постійно повільно."
+        enabled: "Включено"
+        save: "Зберегти"
+        edit: "Редагувати"
+        delete: "Видалити"
+        test: "Тестове з'єднання"
+        saved: "MCP-сервер збережений"
+        confirm_delete: "Ви впевнені, що хочете видалити цей MCP-сервер?"
+        back: "Назад до інструментів"
+        health: "Здоров'я"
+        healthy: "Здоровий"
+        unhealthy: "Потребує уваги"
+        tool_count:
+          one: "%{count} інструмент"
+          few: "%{count} інструменти"
+          many: "%{count} інструментів"
+          other: "%{count} інструментів"
+        tools_modal:
+          title: "%{name} інструментів"
+          summary:
+            one: "На цьому сервері наразі працює %{count} інструмент."
+            few: "На цьому сервері наразі працює %{count} інструменти."
+            many: "На цьому сервері наразі працює %{count} інструментів."
+            other: "На цьому сервері наразі працює %{count} інструментів."
+          parameters: "Параметри"
+          required: "Обов'язкові"
+          no_parameters: "Цей інструмент не вимагає жодних параметрів."
+        test_result: "Результат підключення"
+        test_summary:
+          one: "Виявлено %{count} інструмент, що використовує протокол %{version}."
+          few: "Виявлено %{count} інструменти, що використовують протокол %{version}."
+          many: "Виявлено %{count} інструментів, що використовують протокол %{version}."
+          other: "Виявлено %{count} інструментів, що використовують протокол %{version}."
       llms:
         short_title: "LLMs"
         no_llms: "Ще немає LLM"
@@ -842,6 +970,7 @@ uk:
           cost_measure: "$/1 млн токенів"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -859,6 +988,7 @@ uk:
         provider_fields:
           access_key_id: "Ідентифікатор ключа доступу AWS Bedrock"
           role_arn: "AWS Bedrock Role ARN"
+          inference_profile_arn: "Профіль виведення застосунку AWS Bedrock (ARN)"
           region: "Регіон AWS Bedrock"
           organization: "Додатковий ідентифікатор організації OpenAI"
           disable_system_prompt: "Вимкнути системні повідомлення у підказках"

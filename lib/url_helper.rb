@@ -93,7 +93,9 @@ class UrlHelper
     url = uri.to_s
 
     if url.length > MAX_URL_LENGTH
-      raise ArgumentError.new("URL starting with #{url[0..100]} is too long")
+      raise ArgumentError.new(
+              "URL is too long (#{url.length} characters): #{url.truncate(MAX_URL_LENGTH)}",
+            )
     end
 
     # Ideally we will jump straight to `Addressable::URI.normalized_encode`. However,

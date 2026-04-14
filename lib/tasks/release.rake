@@ -1,189 +1,7 @@
 # frozen_string_literal: true
 
 require "tty-prompt"
-require_relative "../release_utils/version"
-
-module ReleaseUtils
-  PRIMARY_RELEASE_TAG = "release"
-  RELEASE_TAGS = [PRIMARY_RELEASE_TAG, "beta", "latest-release"].freeze
-  PRIMARY_ESR_TAG = "esr"
-  ESR_TAGS = [PRIMARY_ESR_TAG, "stable"].freeze
-  PR_LABEL = "release"
-
-  def self.dry_run?
-    !!ENV["DRY_RUN"]
-  end
-
-  def self.test_mode?
-    ENV["RUNNING_RELEASE_IN_RSPEC_TESTS"] == "1"
-  end
-
-  def self.read_versions_json
-    ReleaseUtils.with_clean_worktree("main") { JSON.parse(File.read("versions.json")) }
-  end
-
-  def self.released_versions
-    read_versions_json
-      .select { |_version, info| info["released"] }
-      .keys
-      .sort_by { |v| Gem::Version.new(v) }
-  end
-
-  def self.released_esrs
-    read_versions_json
-      .select { |_version, info| info["released"] && info["esr"] }
-      .keys
-      .sort_by { |v| Gem::Version.new(v) }
-  end
-
-  def self.read_version_rb
-    File.read("lib/version.rb")
-  end
-
-  def self.write_version(version)
-    File.write("lib/version.rb", read_version_rb.sub(/STRING = ".*"/, "STRING = \"#{version}\""))
-  end
-
-  def self.commit_version_bump(version, message)
-    write_version(version)
-    git "add", "lib/version.rb"
-    git "commit", "-m", message
-  end
-
-  def self.update_versions_json(new_version)
-    today_date = DateTime.now.utc.strftime("%Y-%m-%d")
-
-    version_year, version_month = new_version.split(".").map(&:to_i)
-    esr = [1, 7].include?(version_month)
-
-    support_period = esr ? 8.months : 2.months
-    support_end_date = (Date.new(version_year, version_month, 1) + support_period).strftime("%Y-%m")
-
-    new_version_info = {
-      new_version => {
-        developmentStartDate: today_date,
-        releaseDate: "#{version_year}-#{version_month.to_s.rjust(2, "0")}",
-        supportEndDate: support_end_date,
-        released: false,
-        esr: esr,
-        supported: true,
-      },
-    }
-
-    data = JSON.parse(File.read("versions.json"))
-    data.transform_values! do |v|
-      if !v["released"]
-        v["released"] = true
-        v["releaseDate"] = today_date
-      end
-
-      if v["supported"] &&
-           Date.parse(v["supportEndDate"] + "-01") < Date.new(version_year, version_month, 1)
-        v["supported"] = false
-        v["supportEndDate"] = today_date
-      end
-
-      v
-    end
-
-    File.write("versions.json", JSON.pretty_generate({ **new_version_info, **data }) + "\n")
-  end
-
-  def self.git(*args, allow_failure: false, silent: false)
-    puts "> git #{args.inspect}" unless silent
-    stdout, stderr, status = Open3.capture3({ "LEFTHOOK" => "0" }, "git", *args)
-    if !status.success? && !allow_failure
-      raise "Command failed: git #{args.inspect}\n#{stdout.indent(2)}\n#{stderr.indent(2)}"
-    end
-    stdout
-  end
-
-  def self.gh(*args)
-    puts "> gh #{args.inspect}"
-    return true if test_mode?
-    system "gh", *args
-  end
-
-  def self.ref_exists?(ref)
-    git "rev-parse", "--verify", ref
-    true
-  rescue StandardError
-    false
-  end
-
-  def self.confirm(msg)
-    return true if test_mode?
-    TTY::Prompt.new.yes?(msg)
-  end
-
-  def self.confirm_or_abort(msg)
-    return if test_mode?
-    raise "Aborted" unless confirm(msg)
-  end
-
-  def self.merge_pr(base:, branch:)
-    if dry_run?
-      puts "[DRY RUN] Skipping merge of #{branch}"
-      return
-    end
-
-    loop do
-      confirm_or_abort "Ready to merge #{branch}?"
-
-      if test_mode?
-        git "push", "origin", "#{branch}:#{base}"
-        break
-      else
-        if !gh("pr", "ready", branch) # remove draft status
-          puts "Failed to mark PR as ready-for-review... trying to merge anyway"
-        end
-        success = gh("pr", "merge", branch, "--rebase", "--delete-branch")
-        break if success
-        puts "Merge failed. Maybe the PR isn't approved yet, or there's a conflict."
-      end
-    end
-
-    puts "Merge successful"
-  end
-
-  def self.make_pr(base:, branch:, title: nil, body: nil, draft: false)
-    title ||= git("log", "-1", branch, "--pretty=%s").strip
-    body ||= git("log", "-1", branch, "--pretty=%b").strip
-
-    title_and_body = ["--title", title, "--body", body]
-    draft_flag = draft ? ["--draft"] : []
-
-    success =
-      gh(
-        "pr",
-        "create",
-        "--base",
-        base,
-        "--head",
-        branch,
-        *title_and_body,
-        *draft_flag,
-        "--label",
-        PR_LABEL,
-      ) || gh("pr", "edit", branch, *title_and_body, "--add-label", PR_LABEL)
-
-    raise "Failed to create or update PR" unless success
-  end
-
-  def self.with_clean_worktree(origin_branch)
-    git "fetch", "origin", origin_branch
-    path = "#{Rails.root}/tmp/version-bump-worktree-#{SecureRandom.hex}"
-    begin
-      FileUtils.mkdir_p(path)
-      git "worktree", "add", path, "origin/#{origin_branch}"
-      Dir.chdir(path) { yield } # rubocop:disable Discourse/NoChdir
-    ensure
-      puts "Cleaning up temporary worktree..."
-      git "worktree", "remove", "--force", path, silent: true, allow_failure: true
-      FileUtils.rm_rf(path)
-    end
-  end
-end
+require_relative "../release_utils"
 
 namespace :release do
   desc "Check a commit hash and create a release branch if it's a trigger"
@@ -368,65 +186,79 @@ namespace :release do
     base = args[:base]
     raise "Unknown base: #{base.inspect}" unless base.start_with?("release/") || base == "main"
 
-    fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
-    private_mirror_pr_numbers = []
+    json_output =
+      ReleaseUtils.gh(
+        "pr",
+        "list",
+        "--repo",
+        "discourse/discourse-private-mirror",
+        "--base",
+        base,
+        "--state",
+        "open",
+        "--json",
+        "number,title,body,headRefName",
+        "--limit",
+        "100",
+        capture: true,
+      )
 
-    if fix_refs.nil? || fix_refs.empty?
-      json_output, status =
-        Open3.capture2(
-          "gh",
-          "pr",
-          "list",
-          "--repo",
-          "discourse/discourse-private-mirror",
-          "--base",
-          base,
-          "--state",
-          "open",
-          "--json",
-          "number,title,headRefName",
-          "--limit",
-          "100",
-        )
-      raise "Failed to fetch PRs from private-mirror" if !status.success?
+    prs = JSON.parse(json_output)
+    raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
 
-      prs = JSON.parse(json_output)
-      raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
-
-      prompt = TTY::Prompt.new
-      choices =
-        prs.map do |pr|
-          { name: "##{pr["number"]}: #{pr["title"]}", value: pr.slice("number", "headRefName") }
-        end
-
-      selected =
-        prompt.multi_select(
-          "Select security fix PRs to include (space to toggle, enter to finish):",
-          choices,
-          default: [],
-          per_page: choices.size,
-        )
-      raise "No PRs selected" if selected.empty?
-
-      fix_refs = selected.map { |pr| "privatemirror/#{pr["headRefName"]}" }
-      private_mirror_pr_numbers = selected.map { |pr| pr["number"] }
+    extract_ghsa_id = ->(body) do
+      return nil if body.nil?
+      match = body.match(%r{github\.com/discourse/discourse/security/advisories/(GHSA-[\w-]+)})
+      match&.[](1)
     end
 
-    puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
+    choices =
+      prs.map do |pr|
+        pr.slice("number", "title", "body", "headRefName").merge(
+          "ghsa_id" => extract_ghsa_id.call(pr["body"]),
+        )
+      end
+
+    selected =
+      if (ghsa_ids = ENV["SECURITY_FIX_GHSA_IDS"])
+        requested = ghsa_ids.split(",").map(&:strip)
+        choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"]) }
+      else
+        prompt = TTY::Prompt.new
+        prompt_choices =
+          choices.map do |pr|
+            ghsa_label = pr["ghsa_id"] || "GHSA MISSING"
+            { name: "##{pr["number"]} [#{ghsa_label}]: #{pr["title"]}", value: pr }
+          end
+        prompt.multi_select(
+          "Select security fix PRs to include (space to toggle, enter to finish):",
+          prompt_choices,
+          default: [],
+          per_page: prompt_choices.size,
+        )
+      end
+    raise "No PRs selected" if selected.empty?
+
+    puts "Staging security fixes for #{base} branch: #{selected.map { |pr| pr["headRefName"] }.inspect}"
 
     branch = "security/#{base}-security-fixes"
 
     ReleaseUtils.with_clean_worktree(base) do
-      ReleaseUtils.git "branch", "-D", branch if ReleaseUtils.ref_exists?(branch)
-      ReleaseUtils.git "checkout", "-b", branch
+      selected.each do |pr|
+        ReleaseUtils.git "fetch", "privatemirror", pr["headRefName"]
 
-      fix_refs.each do |ref|
-        origin, origin_branch = ref.split("/", 2)
-        ReleaseUtils.git "fetch", origin, origin_branch
+        ReleaseUtils.git "merge", "--squash", "privatemirror/#{pr["headRefName"]}"
 
-        first_commit_on_branch =
-          ReleaseUtils.git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
-        ReleaseUtils.git "cherry-pick", "#{first_commit_on_branch}^..#{ref}"
+        commit_message = "#{pr["title"]}\n\n#{pr["body"]}".strip
+        author =
+          ReleaseUtils.git(
+            "log",
+            "-1",
+            "--format=%an <%ae>",
+            "privatemirror/#{pr["headRefName"]}",
+          ).strip
+
+        ReleaseUtils.git "commit", "-m", commit_message, "--author", author
       end
 
       if base == "main" &&
@@ -443,11 +275,11 @@ namespace :release do
         ReleaseUtils.commit_version_bump(new_version, "DEV: Bump release branch to v#{new_version}")
       end
 
-      puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"
-      puts ReleaseUtils.git("log", "origin/#{base}..#{branch}")
+      puts "Finished merging commits into a locally-staged branch. Git log is:"
+      puts ReleaseUtils.git("log", "origin/#{base}..HEAD")
 
       ReleaseUtils.confirm_or_abort "Check the log above. Ready to push this branch to the origin and create a PR?"
-      ReleaseUtils.git("push", "-f", "--set-upstream", "origin", branch)
+      ReleaseUtils.git("push", "-f", "origin", "HEAD:refs/heads/#{branch}")
 
       ReleaseUtils.make_pr(
         base: base,
@@ -464,18 +296,125 @@ namespace :release do
       ReleaseUtils.merge_pr(base: base, branch: branch)
     end
 
-    if private_mirror_pr_numbers.any?
+    if selected.any?
       puts "Closing associated PRs in private-mirror..."
-      private_mirror_pr_numbers.each do |pr_number|
+      selected.each do |pr|
         ReleaseUtils.gh(
           "pr",
           "close",
-          pr_number.to_s,
+          pr["number"].to_s,
           "--repo",
           "discourse/discourse-private-mirror",
           "--delete-branch",
         )
       end
     end
+  end
+
+  desc "Update advisory affected versions on GitHub for all supported Discourse versions"
+  task "update_security_advisories" do
+    advisories_base = "repos/discourse/discourse/security-advisories"
+
+    puts "Fetching draft security advisories..."
+    pages =
+      JSON.parse(
+        ReleaseUtils.gh(
+          "api",
+          "#{advisories_base}?state=draft",
+          "--paginate",
+          "--slurp",
+          capture: true,
+        ),
+      )
+    advisories = pages.flat_map { |page| page.is_a?(Array) ? page : [page] }
+
+    draft_advisories =
+      advisories.reject { |advisory| advisory.fetch("summary").start_with?("DRAFT") }
+
+    if draft_advisories.empty?
+      puts "No draft advisories to update."
+      next
+    end
+
+    puts "Found #{draft_advisories.size} draft advisory(ies) to update."
+
+    # Calculate patched versions for all supported versions
+    version_patches = []
+    version_info = ReleaseUtils.supported_version_info
+
+    version_info.each do |series, info|
+      branch = info["released"] ? "release/#{series}" : "main"
+
+      current_version = ReleaseUtils.with_clean_worktree(branch) { ReleaseUtils::Version.current }
+
+      if info["released"]
+        # For released versions, next patch is current patch + 1
+        next_version =
+          "#{current_version.major}.#{current_version.minor}.#{current_version.patch + 1}"
+        version_patches << { series:, patched_version: next_version }
+        puts "  #{series}: #{current_version} -> #{next_version}"
+      else
+        # For unreleased (latest/development) version, ask about release type
+        prompt = TTY::Prompt.new
+        release_type =
+          prompt.select(
+            "What type of release for #{series} (currently #{current_version})?",
+            {
+              "Intermediate release (security patch)" => :intermediate,
+              "Monthly release" => :monthly,
+            },
+          )
+
+        next_version =
+          if release_type == :intermediate
+            current_version.next_revision.to_s
+          else
+            "#{current_version.major}.#{current_version.minor}.#{current_version.patch}"
+          end
+
+        version_patches << { series:, patched_version: next_version }
+        puts "  #{series}: #{current_version} -> #{next_version} (#{release_type})"
+      end
+    end
+
+    vulnerabilities =
+      version_patches.map.with_index do |entry, index|
+        vulnerable_range = index == 0 ? ">= 0" : ">= #{entry[:series]}.0-latest"
+        {
+          package: {
+            ecosystem: "other",
+            name: "Discourse",
+          },
+          vulnerable_version_range: vulnerable_range,
+          patched_versions: entry[:patched_version],
+        }
+      end
+
+    patched_versions = version_patches.map { |e| e[:patched_version] }
+    puts "\nAdvisories to update:"
+    draft_advisories.each { |a| puts "  - #{a.fetch("ghsa_id")}: #{a.fetch("summary")}" }
+    puts "\nPatched versions: #{patched_versions.join(", ")}"
+
+    ReleaseUtils.confirm_or_abort("Proceed with updating #{draft_advisories.size} advisory(ies)?")
+
+    draft_advisories.each do |advisory|
+      ghsa_id = advisory.fetch("ghsa_id")
+      payload = { vulnerabilities: vulnerabilities }
+
+      ReleaseUtils.gh(
+        "api",
+        "#{advisories_base}/#{ghsa_id}",
+        "--method",
+        "PATCH",
+        "--input",
+        "-",
+        capture: true,
+        input: JSON.pretty_generate(payload),
+      )
+
+      puts "Updated #{ghsa_id}"
+    end
+
+    puts "\nDone! Updated #{draft_advisories.size} advisory(ies)."
   end
 end

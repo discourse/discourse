@@ -65,6 +65,9 @@ en:
     calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
 
   discourse_calendar:
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - All events"
+      my_events_feed_name: "%{site_title} - My events"
     invite_user_notification: "%{username} invited you to: %{description}"
     calendar_must_be_in_first_post: "Calendar tag can only be used in first post of a topic."
     more_than_one_calendar: "You can’t have more than one calendar in a post."

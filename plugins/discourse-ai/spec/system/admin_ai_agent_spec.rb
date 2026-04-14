@@ -4,6 +4,8 @@ RSpec.describe "Admin AI agent configuration" do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
+  let(:agent_editor_page) { PageObjects::Pages::AdminAiAgent.new }
+  let(:mcp_tool_selector_modal) { PageObjects::Modals::AiAgentMcpToolSelector.new }
 
   before do
     enable_current_plugin
@@ -126,5 +128,123 @@ RSpec.describe "Admin AI agent configuration" do
 
     visit "/admin/plugins/discourse-ai/ai-personas/#{agent.id}/edit"
     expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-agents/#{agent.id}/edit")
+  end
+
+  it "allows selecting a subset of MCP tools for an agent" do
+    agent = Fabricate(:ai_agent, name: "Test Agent")
+    mcp_server = Fabricate(:ai_mcp_server, name: "GitHub", last_health_status: "healthy")
+
+    DiscourseAi::Mcp::ToolRegistry.stubs(:tool_definitions_for).returns([])
+    DiscourseAi::Mcp::ToolRegistry
+      .stubs(:tool_definitions_for)
+      .with(mcp_server)
+      .returns(
+        [
+          {
+            "name" => "search_issues",
+            "title" => "Search issues",
+            "description" => "Search GitHub issues",
+            "inputSchema" => {
+              "type" => "object",
+              "properties" => {
+                "query" => {
+                  "type" => "string",
+                  "description" => "Search query",
+                },
+              },
+              "required" => ["query"],
+            },
+          },
+          {
+            "name" => "create_issue",
+            "title" => "Create issue",
+            "description" => "Create a GitHub issue",
+            "inputSchema" => {
+              "type" => "object",
+              "properties" => {
+                "title" => {
+                  "type" => "string",
+                  "description" => "Issue title",
+                },
+              },
+              "required" => ["title"],
+            },
+          },
+        ],
+      )
+
+    agent_editor_page.visit_edit(agent)
+    agent_editor_page.select_mcp_server(mcp_server)
+
+    expect(agent_editor_page).to have_mcp_server_summary(
+      "GitHub",
+      I18n.t("js.discourse_ai.ai_agent.mcp_server_enabled_tool_count", count: 2),
+    )
+
+    agent_editor_page.open_mcp_tool_selector("GitHub")
+
+    expect(mcp_tool_selector_modal).to be_open
+    expect(mcp_tool_selector_modal).to have_tool_selected("search_issues")
+    expect(mcp_tool_selector_modal).to have_tool_selected("create_issue")
+
+    mcp_tool_selector_modal.toggle_tool("create_issue")
+
+    expect(mcp_tool_selector_modal).to have_selection_summary(1, 2)
+
+    mcp_tool_selector_modal.click_primary_button
+
+    expect(mcp_tool_selector_modal).to be_closed
+    expect(agent_editor_page).to have_mcp_server_summary(
+      "GitHub",
+      I18n.t("js.discourse_ai.ai_agent.mcp_server_enabled_tools", count: 1, total: 2),
+    )
+    expect(agent_editor_page).to have_mcp_server_action(
+      "GitHub",
+      I18n.t("js.discourse_ai.ai_agent.mcp_server_edit_tools"),
+    )
+
+    agent_editor_page.form.submit
+
+    expect(page).to have_content(I18n.t("js.discourse_ai.ai_agent.saved"))
+    wait_for do
+      agent
+        .reload
+        .ai_agent_mcp_servers
+        .find_by!(ai_mcp_server_id: mcp_server.id)
+        .selected_tool_names == ["search_issues"]
+    end
+
+    agent_editor_page.visit_edit(agent)
+
+    expect(agent_editor_page).to have_mcp_server_summary(
+      "GitHub",
+      I18n.t("js.discourse_ai.ai_agent.mcp_server_enabled_tools", count: 1, total: 2),
+    )
+
+    agent_editor_page.open_mcp_tool_selector("GitHub")
+
+    expect(mcp_tool_selector_modal).to have_tool_selected("search_issues")
+    expect(mcp_tool_selector_modal).to have_tool_unselected("create_issue")
+    expect(mcp_tool_selector_modal).to have_selection_summary(1, 2)
+  end
+
+  it "renders the new agent form when MCP servers exist" do
+    Fabricate(:ai_mcp_server, name: "GitHub", enabled: true)
+    DiscourseAi::Mcp::ToolRegistry.stubs(:tool_definitions_for).returns(
+      [
+        {
+          "name" => "search_issues",
+          "description" => "Search",
+          "inputSchema" => {
+            "type" => "object",
+          },
+        },
+      ],
+    )
+
+    visit "/admin/plugins/discourse-ai/ai-agents/new"
+
+    expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-agents/new")
+    expect(page).to have_field("name")
   end
 end

@@ -815,6 +815,7 @@ lt:
     read: "skaityti"
     read_write: "skaityti/rašyti"
     instructions: 'Ką tik sukūrėme naują vartotojo API raktą, kurį galėsite naudoti su „%{application_name}“, įklijuokite šį raktą į savo programą:'
+    copied: "Nukopijuota!"
     otp_description: 'Ar norite leisti „%{application_name}“ pasiekti šią svetainę?'
     otp_confirmation:
       confirm_title: Tęsti į %{site_name}

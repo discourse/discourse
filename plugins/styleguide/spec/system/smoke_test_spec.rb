@@ -96,8 +96,8 @@ RSpec.describe "Styleguide Smoke Test" do
     end
   end
 
-  it "renders the index page correctly on a site with no default theme" do
-    SiteSetting.default_theme_id = nil
+  it "renders the index page correctly on a site with no default color schemes" do
+    SiteSetting.default_theme_id = Fabricate(:theme).id
     visit "/styleguide"
 
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
@@ -113,9 +113,8 @@ RSpec.describe "Styleguide Smoke Test" do
     sections.each do |section, items|
       items.each do |item|
         it "renders the #{section}: #{item[:title]} page correctly" do
-          # TODO: fix chat and more-topics pages
-          skip_pages = %w[/organisms/chat /organisms/more-topics]
-          skip "Skipping smoke test for #{item[:href]} page" if skip_pages.include?(item[:href])
+          # TODO: fix more-topics page flake
+          skip "Skipping smoke test for more-topics page" if item[:href] == "/organisms/more-topics"
 
           visit "/styleguide/#{item[:href]}"
 

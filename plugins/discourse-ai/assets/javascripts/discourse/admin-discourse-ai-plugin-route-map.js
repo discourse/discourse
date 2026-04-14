@@ -23,6 +23,8 @@ export default {
     this.route("discourse-ai-tools", { path: "ai-tools" }, function () {
       this.route("new");
       this.route("edit", { path: "/:id/edit" });
+      this.route("mcp-server-new", { path: "/mcp-servers/new" });
+      this.route("mcp-server-edit", { path: "/mcp-servers/:id/edit" });
     });
     this.route("discourse-ai-spam", { path: "ai-spam" });
     this.route("discourse-ai-translations", { path: "ai-translations" });

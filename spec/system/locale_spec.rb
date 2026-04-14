@@ -197,7 +197,10 @@ RSpec.describe "Locale choice" do
 
     it "does not throw error for malformed messages" do
       SiteSetting.default_locale = "zh_TW"
-      visit "/"
+
+      # Suppress the expected error from the intentionally malformed zh_TW MF string
+      silence_stdout { visit "/" }
+
       expect(page).to have_css("#site-logo")
 
       expect(page.evaluate_script("Object.keys(I18n._mfMessages._data)").length).to eq(0)

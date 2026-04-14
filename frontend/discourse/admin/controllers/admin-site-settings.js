@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -8,8 +7,23 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 export default class AdminSiteSettingsController extends Controller {
   @service router;
 
-  @alias("model.filteredSettings") visibleSiteSettings;
-  @alias("model.filtersApplied") filtersApplied;
+  @computed("model.filteredSettings")
+  get visibleSiteSettings() {
+    return this.model?.filteredSettings;
+  }
+
+  set visibleSiteSettings(value) {
+    set(this, "model.filteredSettings", value);
+  }
+
+  @computed("model.filtersApplied")
+  get filtersApplied() {
+    return this.model?.filtersApplied;
+  }
+
+  set filtersApplied(value) {
+    set(this, "model.filtersApplied", value);
+  }
 
   @debounce(INPUT_DELAY)
   filterContent(filterData) {

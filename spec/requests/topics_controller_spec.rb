@@ -1208,7 +1208,7 @@ RSpec.describe TopicsController do
         end
 
         it "returns 403 when group is not allow listed" do
-          SiteSetting.change_post_ownership_allowed_groups = nil
+          SiteSetting.change_post_ownership_allowed_groups = ""
 
           post "/t/#{topic_allowed_user_can_see.id}/change-owner.json",
                params: {
@@ -2620,6 +2620,20 @@ RSpec.describe TopicsController do
             expect(result["errors"][0]).not_to include(tag3.name)
           end
 
+          it "does not resolve hidden tags sent by ID" do
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag3.name])
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json",
+                params: {
+                  tags: [{ id: tag2.id, name: tag2.name }, { id: tag3.id, name: "anything" }],
+                  category_id: restricted_category.id,
+                }
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.map(&:name)).not_to include(tag3.name)
+          end
+
           it "will clean tag params" do
             restricted_category.allowed_tags = [tag2.name]
 
@@ -2630,6 +2644,53 @@ RSpec.describe TopicsController do
                 }
 
             expect(response.status).to eq(200)
+          end
+
+          context "with content localization enabled" do
+            before do
+              SiteSetting.content_localization_enabled = true
+              SiteSetting.content_localization_supported_locales = "en|ja"
+              tag1.update!(locale: "en")
+              Fabricate(:tag_localization, tag: tag1, locale: "ja", name: "タグ1")
+              user.update!(locale: "ja")
+            end
+
+            it "can change category with localized tags" do
+              restricted_category.allowed_tags = [tag1.name]
+
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag1.id, name: "タグ1" }],
+                    category_id: restricted_category.id,
+                  }
+
+              expect(response.status).to eq(200)
+            end
+
+            it "can change category when tags are sent as strings" do
+              restricted_category.allowed_tags = [tag1.name]
+
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [tag1.name],
+                    category_id: restricted_category.id,
+                  }
+
+              expect(response.status).to eq(200)
+            end
+
+            it "can edit tags with localized tag names" do
+              tag2 = Fabricate(:tag, name: "planning", locale: "en")
+              Fabricate(:tag_localization, tag: tag2, locale: "ja", name: "計画")
+
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag1.id, name: "タグ1" }, { id: tag2.id, name: "計画" }],
+                  }
+
+              expect(response.status).to eq(200)
+              expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+            end
           end
         end
 
@@ -4399,6 +4460,8 @@ RSpec.describe TopicsController do
     end
 
     describe "when logged in" do
+      fab!(:topic_2, :topic)
+
       before { sign_in(user) }
       let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
@@ -4738,6 +4801,43 @@ RSpec.describe TopicsController do
         )
         put "/topics/bulk.json", params: { topic_ids: [1], operation: operation }
         expect(response.parsed_body["errors"]).to eq(nil)
+      end
+
+      it "can pin multiple topics with pinned_until" do
+        sign_in(moderator)
+        pinned_until = 3.days.from_now.beginning_of_minute.iso8601
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id, topic_2.id],
+              operation: {
+                type: "pin",
+                pinned_globally: false,
+                pinned_until: pinned_until,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(topic.id, topic_2.id)
+        expect(topic.reload.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+        expect(topic_2.reload.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+      end
+
+      it "can unpin multiple topics" do
+        sign_in(moderator)
+        topic.update_pinned(true, true)
+        topic_2.update_pinned(true, false)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id, topic_2.id],
+              operation: {
+                type: "unpin",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"]).to contain_exactly(topic.id, topic_2.id)
       end
 
       it "respects the tracked parameter" do
@@ -5429,20 +5529,37 @@ RSpec.describe TopicsController do
   end
 
   describe "#feature_stats" do
-    it "works" do
-      get "/topics/feature_stats.json", params: { category_id: 1 }
+    fab!(:category_for_stats, :category)
+    fab!(:pinned_in_category_topic) do
+      Fabricate(:topic, category: category_for_stats, pinned_at: 1.hour.ago, pinned_globally: false)
+    end
+    fab!(:globally_pinned_topic) { Fabricate(:topic, pinned_at: 1.hour.ago, pinned_globally: true) }
+    fab!(:banner_topic) { Fabricate(:topic, archetype: Archetype.banner) }
+
+    it "returns category and global pin counts when category_id is provided" do
+      get "/topics/feature_stats.json", params: { category_id: category_for_stats.id }
 
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["pinned_in_category_count"]).to eq(0)
-      expect(json["pinned_globally_count"]).to eq(0)
-      expect(json["banner_count"]).to eq(0)
+      expect(json["pinned_in_category_count"]).to eq(1)
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
+    end
+
+    it "returns only global pin and banner counts when category_id is omitted" do
+      get "/topics/feature_stats.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json).not_to have_key("pinned_in_category_count")
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
     end
 
     it "allows unlisted banner topic" do
-      Fabricate(:topic, category_id: 1, archetype: Archetype.banner, visible: false)
+      banner_topic.update!(visible: false)
 
-      get "/topics/feature_stats.json", params: { category_id: 1 }
+      get "/topics/feature_stats.json", params: { category_id: category_for_stats.id }
       json = response.parsed_body
       expect(json["banner_count"]).to eq(1)
     end
@@ -5462,8 +5579,8 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["pinned_in_category_count"]).to eq(0)
-      expect(json["pinned_globally_count"]).to eq(0)
-      expect(json["banner_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(1)
+      expect(json["banner_count"]).to eq(1)
     end
   end
 
@@ -5844,6 +5961,32 @@ RSpec.describe TopicsController do
           json = response.parsed_body
 
           expect(json["category_id"]).to eq(topic.category_id)
+        end
+      end
+
+      describe "publishing topic to category without category_id" do
+        it "should return an error when setting a timer" do
+          post "/t/#{topic.id}/timer.json", params: { time: 24, status_type: "publish_to_category" }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "should allow removing a timer" do
+          topic.set_or_create_timer(
+            TopicTimer.types[:publish_to_category],
+            24,
+            by_user: admin,
+            category_id: topic.category_id,
+          )
+
+          post "/t/#{topic.id}/timer.json",
+               params: {
+                 time: nil,
+                 status_type: "publish_to_category",
+               }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.public_topic_timer).to eq(nil)
         end
       end
 

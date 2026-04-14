@@ -191,6 +191,12 @@ RSpec.describe Chat::CreateDirectMessageChannel do
       it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
     end
 
+    context "when the acting user has chat disabled" do
+      before { current_user.user_option.update!(chat_enabled: false) }
+
+      it { is_expected.to fail_to_find_a_model(:target_users) }
+    end
+
     context "when the current user cannot make direct messages" do
       fab!(:current_user, :user)
 

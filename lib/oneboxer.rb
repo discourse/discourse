@@ -28,6 +28,11 @@ module Oneboxer
       "http://www.dropbox.com",
       "http://store.steampowered.com",
       "http://vimeo.com",
+      "https://reddit.com",
+      "https://www.reddit.com",
+      "https://old.reddit.com",
+      "https://np.reddit.com",
+      "https://new.reddit.com",
       "https://www.youtube.com",
       "https://youtu.be",
       "https://twitter.com",
@@ -365,6 +370,8 @@ module Oneboxer
 
     if current_category.blank? || current_category.id != topic.category_id
       return unless Guardian.new.can_see_topic?(topic)
+    else
+      return unless Guardian.new(current_user).can_see_topic?(topic)
     end
 
     topic

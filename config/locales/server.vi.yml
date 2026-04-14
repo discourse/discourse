@@ -711,6 +711,7 @@ vi:
   user_api_key:
     deny: "Hủy"
     read: "đã đọc"
+    copied: "Đã sao chép!"
     otp_confirmation:
       confirm_title: Tiếp tục tới %{site_name}
       logging_in_as: Đăng nhập bằng %{username}

@@ -450,7 +450,6 @@ pt_BR:
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
-      skipped: "A lista de verificação de integração de administradores foi ignorada. Se quiser reativá-la, procure por `enable site owner onboarding` nas configurações do site."
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
       invite_collaborators:
         title: "Convidar colaboradores"
@@ -459,7 +458,6 @@ pt_BR:
       start_posting:
         title: "Comece a postar"
         description: "Dê às pessoas algo sobre o que conversar."
-        action: "Ideias para quebrar o gelo"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
         predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."
@@ -565,8 +563,6 @@ pt_BR:
           other: "Criado(a) há menos de %{count} anos"
     bookmarked:
       title: "Favorito"
-      edit_bookmark: "Editar favorito"
-      clear_bookmarks: "Limpar favoritos"
       help:
         bookmark: "Clique para adicionar este tópico aos favoritos"
         edit_bookmark: "Clique para editar o favorito numa postagem deste tópico"
@@ -585,12 +581,12 @@ pt_BR:
       clear_reminder: "Limpar lembrete"
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
+      topic_bookmark: "Tópico"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
       created_with_reminder_generic: "Você marcou isso como lembrete em %{date}. %{name}"
       delete: "Excluir favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
-      confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
       no_timezone: 'Você ainda não definiu um fuso horário. Você não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       invalid_custom_datetime: "A data e a hora que você informou são inválidas, tente novamente."
@@ -2799,6 +2795,8 @@ pt_BR:
         filter_for_more: Filtre para ver mais…
         categories_admin_dropdown:
           title: "Gerenciar categorias"
+        tag_category_admin_dropdown:
+          edit_tag: "Editar tag"
         bulk_select_topics_dropdown:
           title: "Ações em massa"
         bulk_select_bookmarks_dropdown:
@@ -2829,6 +2827,8 @@ pt_BR:
       medium_dark_tone: Tom de pele médio-escuro
       dark_tone: Tom de pele escuro
       default: Emojis personalizados
+    filter_input:
+      clear: "Limpar filtro"
     shared_drafts:
       title: "Rascunhos compartilhados"
       notice: "Este tópico está visível apenas para quem puder publicar rascunhos compartilhados."
@@ -4433,6 +4433,10 @@ pt_BR:
       review_group_name: "nome do grupo"
       require_topic_approval: "Requer aprovação dos moderadores(as) de todos os novos tópicos"
       require_reply_approval: "Requer aprovação dos moderadores(as) de todas as novas respostas"
+      posting_review_modes:
+        no_one: "Ninguém"
+        everyone: "Todos(as)"
+      posting_review_groups_placeholder: "Selecionar grupos..."
       this_year: "este ano"
       position: "Posição na página de categorias:"
       default_position: "Posição padrão"
@@ -7057,7 +7061,6 @@ pt_BR:
           import_web_tip: "Repositório contendo tema"
           direct_install_tip: "Tem certeza de que quer instalar <strong>%{name}</strong> do repositório listado abaixo?"
           import_web_advanced: "Avançado…"
-          import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json com o tema"
           is_private: "O tema está em um repositório git privado"
           finish_install: "Concluir a instalação do tema"
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"
@@ -8155,6 +8158,7 @@ pt_BR:
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
         no_results: "Nennhum texto de site correspondente encontrado"
         interpolation_keys: "Chaves de interpolação disponíveis:"
+        interpolation_key_used: "Já utilizado"
         outdated:
           title: "Esta tradução está desatualizada"
           description: "A tradução padrão para esta chave mudou desde que esta substituição foi criada. Verifique abaixo que a sua tradução corresponde a quaisquer alterações feitas na intenção original."
@@ -8274,6 +8278,7 @@ pt_BR:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) administradores(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           password_unique_characters:
+            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           block_common_passwords:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"

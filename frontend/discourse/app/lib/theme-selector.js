@@ -81,6 +81,7 @@ export function listThemes(site) {
       id: t.theme_id,
       color_scheme_id: t.color_scheme_id,
       dark_color_scheme_id: t.dark_color_scheme_id,
+      only_theme_color_schemes: t.only_theme_color_schemes,
     });
   });
 

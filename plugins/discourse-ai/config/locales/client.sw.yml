@@ -109,6 +109,17 @@ sw:
         edit: "Hariri"
         delete: "Futa"
         embedding: "Ambatanisha"
+      mcp_servers:
+        name: "Jina"
+        description: "Maelezo"
+        url: "Anwani ya mtandao"
+        oauth_connect: "Unganisha"
+        enabled: "Imeruhusiwa"
+        save: "Hifadhi"
+        edit: "Hariri"
+        delete: "Futa"
+        tools_modal:
+          required: "Muhimu na Inahitajika"
       llms:
         display_name: "Jina"
         provider: "Mkimu"

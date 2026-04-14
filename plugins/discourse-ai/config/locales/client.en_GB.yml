@@ -20,3 +20,5 @@ en_GB:
       tools:
         description: "Description"
         summary: "Summary"
+      mcp_servers:
+        description: "Description"

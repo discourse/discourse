@@ -135,6 +135,36 @@ RSpec.describe(DiscoursePostEvent::UpdateInvitee) do
       it { is_expected.to fail_a_policy(:has_capacity) }
     end
 
+    context "when event creator updates another user's invitee" do
+      fab!(:event_creator) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:creator_topic) { Fabricate(:topic, user: event_creator) }
+      fab!(:creator_post) { Fabricate(:post, user: event_creator, topic: creator_topic) }
+      fab!(:creator_event) { Fabricate(:event, post: creator_post) }
+      fab!(:creator_event_invitee) do
+        creator_event.create_invitees(
+          [{ user_id: invitee_user.id, status: DiscoursePostEvent::Invitee.statuses[:going] }],
+        )
+        creator_event.invitees.find_by(user_id: invitee_user.id)
+      end
+
+      let(:params) do
+        { event_id: creator_event.id, invitee_id: creator_event_invitee.id, status: "not_going" }
+      end
+      let(:dependencies) { { guardian: event_creator.guardian } }
+
+      before do
+        SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "updates the invitee status" do
+        expect { result }.to change { creator_event_invitee.reload.status }.from(
+          DiscoursePostEvent::Invitee.statuses[:going],
+        ).to(DiscoursePostEvent::Invitee.statuses[:not_going])
+      end
+    end
+
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 

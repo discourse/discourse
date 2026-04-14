@@ -136,6 +136,16 @@ export default class AiSecretEditorForm extends Component {
                     @route="adminPlugins.show.discourse-ai-embeddings.edit"
                     @model={{usage.id}}
                   >{{usage.name}}</LinkTo>
+                {{~else if (eq usage.type "tool")~}}
+                  <LinkTo
+                    @route="adminPlugins.show.discourse-ai-tools.edit"
+                    @model={{usage.id}}
+                  >{{usage.name}}</LinkTo>
+                {{~else if (eq usage.type "mcp_server")~}}
+                  <LinkTo
+                    @route="adminPlugins.show.discourse-ai-tools.mcp-server-edit"
+                    @model={{usage.id}}
+                  >{{usage.name}}</LinkTo>
                 {{~else~}}
                   <LinkTo
                     @route="adminPlugins.show.discourse-ai-llms.edit"

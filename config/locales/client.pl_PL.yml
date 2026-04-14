@@ -416,6 +416,7 @@ pl_PL:
       toggle_verbose_localization: "Przełącz szczegółową lokalizację"
       toggle_mobile_view: "Przełącz widok mobilny"
       disable_dev_tools: "Wyłącz narzędzia programistyczne"
+      toggle_upcoming_changes_debug: "Przełącz debugowanie nadchodzących zmian"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -514,7 +515,6 @@ pl_PL:
       pm_title: "Sugerowane wiadomości"
     admin_onboarding_banner:
       launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
-      skipped: "Lista kontrolna dotycząca wdrażania administratora została pominięta. Jeśli chcesz ją ponownie włączyć, poszukaj opcji „włącz wdrażanie właściciela witryny” w ustawieniach witryny."
       congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
       invite_collaborators:
         title: "Zaproś współpracowników"
@@ -523,7 +523,7 @@ pl_PL:
       start_posting:
         title: "Rozpocznij publikowanie"
         description: "Daj ludziom temat do wspólnej rozmowy"
-        action: "Pomysły na przełamanie lodów"
+        action: "Zobacz pomysły"
         choose_option: "Jak chcesz zacząć?"
         predefined_topics: "Szablony przełamujące lody"
         predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
@@ -653,8 +653,12 @@ pl_PL:
           other: "Utworzono %{count} lat temu"
     bookmarked:
       title: "Zakładka"
-      edit_bookmark: "Edytuj zakładkę"
-      clear_bookmarks: "Wyczyść zakładki"
+      edit_bookmark:
+        one: "Edytuj zakładkę"
+        few: "Edytuj zakładki"
+        many: "Edytuj zakładki"
+        other: "Edytuj zakładki"
+      delete_bookmarks: "Usuń wszystkie zakładki"
       help:
         bookmark: "Kliknij, aby dodać ten temat do zakładek"
         edit_bookmark: "Kliknij, aby edytować zakładkę we wpisie tego tematu"
@@ -673,12 +677,18 @@ pl_PL:
       clear_reminder: "Wyczyść przypomnienie"
       edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
+      topic_bookmark: "Temat"
+      post_bookmark: "Wpis nr %{post_number}"
+      jump_to_post: "Przejdź do nr %{post_number}"
+      bookmark_topic: "Dodaj temat do zakładek"
+      edit_topic_bookmark: "Edytuj zakładkę tematu"
+      delete_topic_bookmark: "Usuń zakładkę tematu"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano wpis do zakładek z przypomnieniem %{date}. %{name}"
       created_with_reminder_generic: "Dodałeś to do zakładek z przypomnieniem %{date}. %{name}"
       delete: "Usuń zakładkę"
       confirm_delete: "Czy na pewno chcesz usunąć tę zakładkę? Przypomnienie również zostanie usunięte."
-      confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
+      confirm_clear: "Czy na pewno chcesz usunąć wszystkie zakładki z tego tematu?"
       save: "Zapisz"
       no_timezone: 'Nie ustawiłeś/łaś jeszcze strefy czasowej. Nie będziesz mógł/mogła ustawić przypomnień. Skonfiguruj jeden <a href="%{basePath}/my/preferences/profile">w swoim profilu</a> .'
       invalid_custom_datetime: "Podana data i godzina są nieprawidłowe, spróbuj ponownie."
@@ -760,6 +770,7 @@ pl_PL:
       storage_access_prompt: "Masz już konto %{site_name} ? Zezwól na dostęp do swojej sesji, aby móc komentować jako Ty."
       allow_access: "Zezwól na dostęp"
       continue_as_guest: "Kontynuuj jako gość"
+      be_first_to_reply: "Bądź pierwszą osobą, która odpowie!"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -1287,6 +1298,7 @@ pl_PL:
       add_members:
         title: "Dodaj użytkowników do %{group_name}"
         description: "Wpisz listę użytkowników, których chcesz zaprosić do grupy, lub wklej listę oddzieloną przecinkami:"
+        description_usernames_only: "Wprowadź listę nazw użytkowników, których chcesz dodać do grupy, lub wklej listę rozdzieloną przecinkami:"
         usernames_placeholder: "nazwy użytkowników"
         usernames_or_emails_placeholder: "nazwy użytkowników lub e-maile"
         notify_users: "Powiadom użytkowników"
@@ -1780,6 +1792,7 @@ pl_PL:
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
+      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej. Można to również przełączać w obrębie tematów."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -2016,7 +2029,7 @@ pl_PL:
         upcoming_changes: "Nadchodzące zmiany"
         calendar_subscriptions: "Kalendarz"
       calendar_subscriptions:
-        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić. "
+        description: "Wygeneruj adresy URL subskrypcji, aby zsynchronizować je z ulubioną aplikacją kalendarza (Kalendarz Google, Kalendarz Apple, Outlook itp.). Te adresy URL to prywatne linki do wydarzeń w kalendarzu na Twoim koncie (przypomnienia o zakładkach, wydarzenia w kalendarzu itp.). Wygenerowane adresy URL subskrypcji możesz zawsze anulować lub odnowić."
         generate: "Generuj adresy URL subskrypcji"
         regenerate: "Wygeneruj ponownie adresy URL"
         regenerate_confirm: "Spowoduje to unieważnienie istniejących adresów URL subskrypcji kalendarza. Wszystkie aplikacje kalendarza korzystające ze starych adresów URL przestaną otrzymywać aktualizacje. Kontynuować?"
@@ -3087,6 +3100,12 @@ pl_PL:
         filter_for_more: Filtruj po więcej...
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
+        tag_category_admin_dropdown:
+          title: "Ustawienia kategorii i tagów"
+          edit_category: "Edytuj kategorię"
+          edit_category_description: "Dostosuj ustawienia dla %{badge}"
+          edit_tag: "Edytuj tag"
+          edit_tag_description: "Dostosuj ustawienia dla %{badge}"
         bulk_select_topics_dropdown:
           title: "Operacje grupowe"
         bulk_select_bookmarks_dropdown:
@@ -3117,6 +3136,20 @@ pl_PL:
       medium_dark_tone: Średnio ciemny kolor skóry
       dark_tone: Ciemny kolor skóry
       default: Spersonalizowane emoji
+    filter_input:
+      clear: "Wyczyść filtr"
+    d_icon_grid_picker:
+      select_icon: "Wybierz ikonę"
+      search_placeholder: "Szukaj ikon..."
+      no_results: "Nie znaleziono ikon"
+      results_count:
+        one: "Znaleziono %{count} ikonę"
+        few: "Znaleziono %{count} ikony"
+        many: "Znaleziono %{count} ikon"
+        other: "Znaleziono %{count} ikon"
+      favorites: "Ulubione"
+      selected_icon: "Wybrana ikona: %{iconName}"
+      clear: "Wyczyść ikonę"
     shared_drafts:
       title: "Udostępnione szkice"
       notice: "Ten temat jest widoczny tylko dla osób, które mogą publikować współdzielone szkice postów."
@@ -3947,19 +3980,19 @@ pl_PL:
         name: "Odrzuć"
       close_topics:
         name: "Zamknij"
-        description: "Zamknięte tematy uniemożliwiają nowe odpowiedzi. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Dowiedz się więcej</a>"
+        description: "Zamknięte tematy uniemożliwiają nowe odpowiedzi. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
         note: "Dodaj notatkę do tych tematów"
         optional: (opcjonalne)
       archive_topics:
         name: "Archiwum"
-        description: "Zarchiwizowane tematy są ukryte w wynikach wyszukiwania i na liście najnowszych tematów. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Dowiedz się więcej</a>"
+        description: "Zarchiwizowane tematy są ukryte w wynikach wyszukiwania i na liście najnowszych tematów. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
       archive_messages:
         name: "Przenieś do archiwum"
       move_messages_to_inbox:
         name: "Przenieś do skrzynki odbiorczej"
       unlist_topics:
         name: "Zastrzeż"
-        description: "Tematy niewymienione na liście są ukryte, ale nadal można uzyskać do nich dostęp za pomocą bezpośredniego linku. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Dowiedz się więcej</a>"
+        description: "Tematy niewymienione na liście są ukryte, ale nadal można uzyskać do nich dostęp za pomocą bezpośredniego linku. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
       relist_topics:
         name: "Dodaj do listy"
       remove_tags:
@@ -4867,6 +4900,8 @@ pl_PL:
       tags: "Tagi"
       localizations: "Języki"
       localization:
+        language: "Język kategorii"
+        language_description: "Podstawowy język nazwy i opisu tej kategorii."
         locale: "Ustawienia regionalne"
         name: "Nazwa"
         description: "Opis"
@@ -4915,6 +4950,7 @@ pl_PL:
       validations:
         emoji_required: "Wybierz emoji."
         icon_required: "Wybierz ikonę."
+        groups_required: "Wybierz co najmniej jedną grupę dla tego trybu zatwierdzania."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -4927,6 +4963,7 @@ pl_PL:
       icon: "Ikona"
       emoji: "Emoji"
       select_emoji: "Wybierz emoji"
+      select_icon: "Wybierz ikonę"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -4999,6 +5036,14 @@ pl_PL:
       review_group_name: "nazwa grupy"
       require_topic_approval: "Wymagaj zatwierdzenia moderatora dla wszystkich nowych tematów"
       require_reply_approval: "Wymagaj zatwierdzenia moderatora dla wszystkich nowych odpowiedzi"
+      require_topic_approval_for: "Wymagaj zatwierdzenia nowych tematów przez moderatora..."
+      require_reply_approval_for: "Wymagaj zatwierdzenia nowych odpowiedzi przez moderatora..."
+      posting_review_modes:
+        no_one: "Nikt"
+        everyone: "Wszyscy"
+        everyone_except: "Wszyscy oprócz wybranych grup"
+        no_one_except: "Nikt oprócz wybranych grup"
+      posting_review_groups_placeholder: "Wybierz grupy..."
       this_year: "ten rok"
       position: "Pozycja na stronie kategorii:"
       default_position: "Domyślna pozycja"
@@ -6258,6 +6303,8 @@ pl_PL:
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
+        default_warning: "Domyślna wartość tego ustawienia została zmieniona z %{oldDefaultValue} na %{newDefaultValue} z powodu <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>nadchodzącej zmiany</a>."
+        default_warning_short: "Domyślna wartość tego ustawienia uległa zmianie. Więcej informacji na ten temat znajdziesz na stronie <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>nadchodzące zmiany</a>."
         enabled_for_options:
           no_one: "Nikt"
           everyone: "Wszyscy"
@@ -6274,6 +6321,11 @@ pl_PL:
           beta: "Beta"
           stable: "Stabilna"
           permanent: "Stała"
+        status_descriptions:
+          experimental: "Funkcja jest na wczesnym etapie rozwoju i może ulec znacznym zmianom lub zostać wycofana. Może nie być w pełni kompatybilna z innymi funkcjami."
+          alpha: "Jest on aktywnie rozwijany i udoskonalany. Funkcjonalność może ulec zmianie i może nie być w pełni dopracowany, ale jest wystarczająco stabilny, aby go wypróbować."
+          beta: "Rozwiązanie jest już prawie ukończone i dostępne do szybkiego wdrożenia. Możliwe są jednak drobne zmiany."
+          stable: "To jest kompletne i dobrze obsługiwane. Wkrótce będzie dostępne na wszystkich stronach Discourse."
         impact_roles:
           admins: "Administratorzy"
           moderators: "Moderatorzy"
@@ -6292,6 +6344,7 @@ pl_PL:
           impact_type_all: "Wszystkie rodzaje uderzeń"
           impact_type_feature: "Funkcja"
           impact_type_other: "Inne"
+          impact_type_site_setting_default: "Ustawienie domyślne"
           status_all: "Wszystkie statusy"
           status_conceptual: "Konceptualny"
           status_experimental: "Eksperymentalne"
@@ -7682,6 +7735,7 @@ pl_PL:
           dark_color_scheme: "Ciemna paleta kolorów"
           default_light_scheme: "Jasny (domyślnie)"
           color_scheme_select: "Wybierz kolory, które mają być użyte w zależności od motywu."
+          only_theme_color_schemes: "Ten motyw ogranicza palety kolorów, które mogą być używane."
           dark_color_scheme_select: "Wybierz kolory, które mają być używane w trybie ciemnym."
           edit_colors: "Edytuj kolory"
           custom_sections: "Spersonalizowane sekcje:"
@@ -7746,7 +7800,7 @@ pl_PL:
           import_web_tip: "Repozytorium zawierające motyw"
           direct_install_tip: "Czy na pewno chcesz zainstalować <strong>%{name}</strong> z repozytorium wymienionego poniżej?"
           import_web_advanced: "Zaawansowane…"
-          import_file_tip: "plik .tar.gz, .zip, lub .dcstyle.json zawierający motyw"
+          import_file_tip: "Plik .tar.gz lub .zip zawierający motyw"
           is_private: "Motyw jest w prywatnym repozytorium git"
           finish_install: "Zakończ instalację motywu"
           last_attempt: "Proces instalacji nie został zakończony, ostatnia próba:"
@@ -7783,6 +7837,16 @@ pl_PL:
           update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
+          change_source:
+            button: "Zmień źródło"
+            title: "Zmień źródło motywu"
+            repository_url: "Adres URL repozytorium"
+            branch: "Gałąź (opcjonalnie)"
+            updating: "Aktualizowanie źródła motywu…"
+            update: "Aktualizuj źródło"
+            has_existing_key: "W tym motywie skonfigurowano istniejący klucz SSH."
+            generate_new_key: "Wygeneruj nowy klucz SSH"
+            keep_existing_key: "Zachowaj istniejący klucz SSH"
           add: "Dodaj"
           theme_settings: "Ustawienia motywu niestandardowego"
           theme_site_settings: "Ustawienia, które motyw może zastąpić"
@@ -9190,6 +9254,8 @@ pl_PL:
         crawler_settings_saved: "Ustawienia robota zostały zapisane"
         back: "Powrót do osadzania"
         configuration_snippet: "Fragment konfiguracji"
+        full_app_mode: "Pełny tryb aplikacji"
+        full_app_mode_description: "Załaduj pełną aplikację Discourse w osadzonej ramce iframe, umożliwiając użytkownikom odpowiadanie, polubienie, cytowanie i bezpośrednią interakcję z tematami"
         host_form:
           add_header: "Dodaj host"
           edit_header: "Edytuj hosta"

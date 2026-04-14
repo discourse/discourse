@@ -6,14 +6,6 @@
 
 ar:
   accepted_answer: "الإجابة المقبولة"
-  category_types:
-    support:
-      name: "الدعم"
-      title: "الدعم"
-  discourse_solved:
-    category_type:
-      allow_accepted_answers:
-        label: "السماح لصاحب الموضوع وفريق العمل بوضع علامة على أحد الردود على أنه الحل"
   site_settings:
     solved_enabled: "تفعيل المكوِّن الإضافي للحل السماح للمستخدمين باختيار حلول لمواضيعهم"
     allow_solved_on_all_topics: "السماح للمستخدمين بتحديد الحلول في جميع الموضوعات (عند إلغاء التحديد، يمكن تفعيل الحلول لكل فئة أو وسم)"

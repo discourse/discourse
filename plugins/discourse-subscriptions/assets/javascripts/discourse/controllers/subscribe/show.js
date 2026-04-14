@@ -1,7 +1,6 @@
 /* global Stripe */
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { not } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 import Subscription from "discourse/plugins/discourse-subscriptions/discourse/models/subscription";
@@ -22,8 +21,6 @@ export default class SubscribeShowController extends Controller {
     postalCode: null,
   };
 
-  @not("currentUser") isAnonymous;
-
   isCountryUS = false;
   isCountryCA = false;
 
@@ -39,6 +36,11 @@ export default class SubscribeShowController extends Controller {
 
     this.set("isCountryUS", this.cardholderAddress.country === "US");
     this.set("isCountryCA", this.cardholderAddress.country === "CA");
+  }
+
+  @computed("currentUser")
+  get isAnonymous() {
+    return !this.currentUser;
   }
 
   alert(path) {
@@ -172,12 +174,10 @@ export default class SubscribeShowController extends Controller {
         if (result.error) {
           this.dialog.alert(result.error.message || result.error);
         } else if (result.status === "incomplete" || result.status === "open") {
-          const transactionId = result.id;
-          const planId = this.selectedPlan;
           this.handleAuthentication(plan, result).then(
             (authenticationResult) => {
               if (authenticationResult && !authenticationResult.error) {
-                return Transaction.finalize(transactionId, planId).then(() => {
+                return Transaction.finalize().then(() => {
                   this._advanceSuccessfulTransaction(plan);
                 });
               }

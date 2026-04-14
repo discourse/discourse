@@ -76,7 +76,7 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  async lookup(moduleName) {
+  lookup(moduleName) {
     return require(moduleName);
   },
 };

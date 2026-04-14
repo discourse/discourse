@@ -205,9 +205,6 @@ it:
               description: "Facoltativo, limita l'attivazione solo ai messaggi con queste caratteristiche"
           created: Creazione
           edited: Modificato
-          topics: Tutti gli argomenti
-          personal_messages: Messaggi personali
-          public_topics: Argomenti pubblici (escludi tutte le categorie sicure)
           with_images: Immagini
           with_links: Collegamenti
           with_code: Codice

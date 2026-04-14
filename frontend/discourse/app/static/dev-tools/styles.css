@@ -387,7 +387,8 @@
   font-size: 11px;
 }
 
-.block-debug-menu {
+.block-debug-menu,
+.upcoming-changes-debug-menu {
   display: flex;
   flex-direction: column;
   gap: 8px;

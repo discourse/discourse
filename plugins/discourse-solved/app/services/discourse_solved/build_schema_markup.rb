@@ -4,14 +4,17 @@ class DiscourseSolved::BuildSchemaMarkup
   include Service::Base
 
   params do
+    attribute :post_ids, :array
     attribute :topic_id, :integer
     validates :topic_id, presence: true
   end
 
   model :topic
   policy :accepted_answers_allowed
-  model :accepted_answer, optional: true
   policy :schema_markup_enabled
+  model :accepted_answer, optional: true
+  model :suggested_answers, optional: true
+  policy :has_answers
   model :html
 
   private
@@ -24,27 +27,34 @@ class DiscourseSolved::BuildSchemaMarkup
     guardian.allow_accepted_answers?(topic)
   end
 
+  def schema_markup_enabled(topic:)
+    DiscourseSolved::SchemaUtils.schema_markup_enabled?(topic)
+  end
+
+  def has_answers(accepted_answer:, suggested_answers:)
+    accepted_answer.present? || suggested_answers.present?
+  end
+
   def fetch_accepted_answer(topic:)
-    topic.solved&.answer_post
+    post = topic.solved&.answer_post
+    post if post.present? && Guardian.new.can_see_post?(post)
   end
 
-  def schema_markup_enabled(accepted_answer:)
-    case SiteSetting.solved_add_schema_markup
-    when "never"
-      false
-    when "answered only"
-      accepted_answer.present?
-    else
-      true
-    end
+  def fetch_suggested_answers(params:, topic:, accepted_answer:)
+    excluded_ids = [topic.first_post.id]
+    excluded_ids << accepted_answer.id if accepted_answer.present?
+    scope = topic.posts.where.not(id: excluded_ids)
+    scope = scope.where(id: params.post_ids) if params.post_ids.present?
+    scope.where(post_type: Post.types[:regular], hidden: false).order(:post_number).to_a
   end
 
-  def fetch_html(topic:, accepted_answer:)
+  def fetch_html(topic:, accepted_answer:, suggested_answers:)
     question_json =
       DiscourseSolved::QuestionSchemaSerializer.new(
         topic,
         root: false,
         accepted_answer: accepted_answer,
+        suggested_answers: suggested_answers,
       ).serializable_hash
 
     json =

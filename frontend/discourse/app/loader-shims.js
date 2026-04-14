@@ -123,7 +123,6 @@ loaderShim("truth-helpers/helpers/not", () =>
 loaderShim("truth-helpers/helpers/or", () =>
   importSync("discourse/truth-helpers/helpers/or")
 );
-loaderShim("virtual-dom", () => importSync("discourse/widgets/virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
 loaderShim("ember-this-fallback/deprecations-helper", () =>
   importSync("./lib/ember-this-fallback-deprecation-helper")

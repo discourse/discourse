@@ -20,8 +20,6 @@ de:
         reaction_group:
           one: "%{reaction}: %{count} Benutzer"
           other: "%{reaction}: %{count} Benutzer"
-      reaction:
-        forbidden: "Diese Reaktion wurde vor zu langer Zeit erstellt. Sie kann nicht mehr bearbeitet oder gelöscht werden."
       picker:
         react_with: "Reagiere auf diesen Beitrag mit: %{reaction}"
         cant_remove_reaction: "Du kannst deine Reaktion nicht mehr entfernen"

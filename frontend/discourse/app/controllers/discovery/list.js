@@ -65,6 +65,8 @@ export default class DiscoveryListController extends Controller {
     for (const [name, info] of Object.entries(queryParams)) {
       defineTrackedProperty(this, name, info.default);
     }
+
+    this.bulkSelectHelper.onResetNew = () => this.resetNew();
   }
 
   // NOTE: (martin) Please keep this in tact for now, will remove once we have
@@ -156,6 +158,8 @@ export default class DiscoveryListController extends Controller {
     if (result.topic_ids) {
       this.topicTrackingState.removeTopics(result.topic_ids);
     }
+    this.bulkSelectHelper.bulkSelectEnabled = false;
+    this.bulkSelectHelper.clear();
     this.router.refresh();
   }
 
@@ -206,11 +210,6 @@ export default class DiscoveryListController extends Controller {
   changeNewListSubset(subset) {
     this.subset = subset;
     this.model.list.updateNewListSubsetParam(subset);
-  }
-
-  @action
-  toggleTagInfo() {
-    this.toggleProperty("showTagInfo");
   }
 
   @action

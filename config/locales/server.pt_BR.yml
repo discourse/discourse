@@ -1150,6 +1150,7 @@ pt_BR:
     permissions_header: 'Isso permitirá que "%{application_name}":'
     redirect_warning: "A autorização redirecionará você para"
     instructions: 'Acabamos de gerar uma nova chave de API de usuário(a) para você usar com "%{application_name}", cole a seguinte chave em seu aplicativo:'
+    copied: "Copiou!"
     otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
     otp_confirmation:
       confirm_title: Continuar para %{site_name}
@@ -2481,7 +2482,6 @@ pt_BR:
     fake_upcoming_change: "Esta é uma alteração prevista fictícia para fins de teste. Não é necessário traduzir esta string."
     floating_dismiss_topics_on_mobile: "Exibe um botão flutuante \"Fechar...\" na lista de tópicos em dispositivos móveis para facilitar o acesso e liberar espaço na parte superior da lista."
     rename_faq_to_guidelines: "Esta alteração renomeia a página de perguntas frequentes para \"Diretrizes\". A página de perguntas frequentes continuará disponível em `/faq`. A configuração \"URL da FAQ\" funciona como antes."
-    experimental_tag_settings_page: "Ativar uma página de configurações dedicada para tags em /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Ativa um fluxo de criação de categorias simplificado, com menos opções e uma interface mais limpa."
     enable_custom_splash_screen: "Permite personalizar a tela de carregamento com sua própria imagem SVG. Faça o upload de uma imagem através da configuração 'splash screen image'. Aviso: Isso pode afetar negativamente as pontuações do LCP e a indexação do Google."
     modernize_foundation_theme: "Essa alteração introduz modificações de design ao tema Foundation no Discourse."
@@ -3083,47 +3083,9 @@ pt_BR:
     reviewable_queued_post_revise_and_reject:
       title: "Comentários sobre sua postagem"
       subject_template: "Comentários sobre sua postagem em %{topic_title}"
-      text_body_template: |
-        Olá, %{username},
-
-        Revisamos sua postagem em [%{topic_title}](%{topic_url}) e temos um comentário para você.
-
-        Motivo: %{reason}
-
-        Comentário: %{feedback}
-
-        Você pode editar sua postagem original abaixo e enviá-la novamente para fazer as alterações sugeridas, ou responder a esta mensagem se tiver alguma dúvida.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Atenciosamente,
-        Moderadores do %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Comentários sobre seu tópico"
       subject_template: 'Comentário sobre o novo tópico chamado "%{topic_title}"'
-      text_body_template: |
-        Olá, %{username},
-
-        Revisamos seu novo tópico chamado "%{topic_title}" e temos um comentário para você.
-
-        Motivo: %{reason}
-
-        Comentário: %{feedback}
-
-        Você pode editar a postagem original do seu tópico abaixo e enviá-la novamente para fazer as alterações sugeridas, ou responder a esta mensagem se tiver alguma dúvida.
-
-        --------
-
-        %{original_post}
-
-        --------
-
-        Atenciosamente,
-        Moderadores do %{site_name}
     post_hidden_again:
       title: "Postagem oculta novamente"
       preview: "Postagem ocultada novamente pelos membros da comunidade."
@@ -4255,7 +4217,7 @@ pt_BR:
     see_more: "Mais"
     search_title: "Que tal tentar pesquisar?"
     search_button: "Pesquisar"
-    home: "Me leve para casa"
+    home: "Voltar para o início"
     placeholder: "Procurar tópicos por título ou palavras-chave…"
   offline:
     title: "Não é possível carregar o aplicativo"

@@ -100,6 +100,8 @@ hr:
         user: Korisnik
         save: "Spremi"
         enabled: "Omogućeno?"
+        mcp_tools_modal:
+          clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
         delete: "Izbriši"
         response_format:
@@ -132,6 +134,19 @@ hr:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Ugrađivanje"
+      mcp_servers:
+        name: "Ime"
+        description: "Opis"
+        url: "URL"
+        oauth_statuses:
+          connected: "Povezano"
+        oauth_connect: "Povežite se"
+        enabled: "Omogućeno"
+        save: "Spremi"
+        edit: "Uredi"
+        delete: "Izbriši"
+        tools_modal:
+          required: "Potrebno"
       llms:
         display_name: "Ime"
         provider: "Pružatelj usluga"

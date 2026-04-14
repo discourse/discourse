@@ -16,7 +16,7 @@ en:
     remind_assigns_frequency: "Frequency for reminding users about assigned topics."
     pending_assign_reminder_threshold: "Number of pending assignments that triggers a reminder notification."
     max_assigned_topics: "Maximum number of topics that can be assigned to a user."
-    assign_allowed_on_groups: "Users in these groups are allowed to assign topics and can be assigned topics."
+    assign_allowed_on_groups: "Users in these groups are allowed to assign topics."
     enable_assign_status: "Add a customizable status field to every assignment."
     assign_statuses: "List of statuses available to each assignment. The first status is the default status applied to every new assignment."
     ignore_solved_topics_in_assigned_reminder: "Prevent reminders for assignments from including solved topics. Only relevant when using the discourse-solved plugin."
