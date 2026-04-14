@@ -221,7 +221,7 @@ if (typeof module !== "undefined") {
   }
 
   module.exports = {
-    test_page: "tests/index.html?hidepassed",
+    test_page: "tests?hidepassed",
     disable_watching: true,
     launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
     tap_failed_tests_only: false,
@@ -285,7 +285,7 @@ if (typeof module !== "undefined") {
 
   if (pluginTestPages) {
     module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
-      return `tests/index.html?hidepassed&target=${plugin}`;
+      return `tests?hidepassed&target=${plugin}`;
     });
   } else if (themeTestPages) {
     // avoid double-slash in paths

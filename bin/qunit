@@ -266,7 +266,6 @@ class QunitRunner
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
       args += ["--random", resolved_seed]
       args += %w[--path dist]
-      args += %w[--test-page tests]
       args += ["--test-port", @testem_port.to_s]
       args << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
