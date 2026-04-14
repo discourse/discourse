@@ -54,7 +54,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
       /topics/timings
       /uploads/
       /user_avatar/
-    ].map { |path| "#{Discourse.base_path}#{path}" }.concat([/.*theme-qunit/])
+      /theme-qunit/
+    ].map { |path| "#{Discourse.base_path}#{path}" }.concat([%r{/(\d+/)?(theme-qunit|tests)}])
 
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
   # so let's rule out all handheld, tablet, and mobile devices

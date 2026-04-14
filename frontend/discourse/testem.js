@@ -280,33 +280,18 @@ if (typeof module !== "undefined") {
   });
 
   const pluginTestPages = process.env.PLUGIN_TARGETS;
+  const themeTestPages = process.env.THEME_TEST_PAGES;
+  module.exports.proxies = {};
+
   if (pluginTestPages) {
     module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
       return `tests/index.html?hidepassed&target=${plugin}`;
     });
-  }
-
-  const themeTestPages = process.env.THEME_TEST_PAGES;
-  module.exports.proxies = {};
-
-  if (themeTestPages) {
+  } else if (themeTestPages) {
     // avoid double-slash in paths
     module.exports.test_page = themeTestPages
       .split(",")
       .map((p) => p.replace(/^\//, ""));
-
-    module.exports.middleware = [
-      function (app) {
-        // Make the testem.js file available under /assets
-        // so it's within the app's CSP
-        app.get("/assets/testem.js", function (req, res, next) {
-          req.url = "/testem.js";
-          next();
-        });
-      },
-    ];
-  } else {
-    module.exports.test_page = "tests/index.html?hidepassed";
   }
 
   module.exports.proxies["/*/*"] = { target, xfwd: true };

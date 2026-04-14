@@ -26,7 +26,6 @@ import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setLoadedFaker } from "discourse/lib/load-faker";
 import PreloadStore from "discourse/lib/preload-store";
-import { loadSprites } from "discourse/lib/svg-sprite-loader";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
 import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -384,14 +383,6 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
-  if (!window.Testem) {
-    // Running in a dev server - svg sprites are available
-    // Using a fake 40-char version hash will redirect to the current one
-    loadSprites(
-      "/svg-sprite/localhost/svg--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js",
-      "fontawesome"
-    );
-  }
 
   setLoadedFaker(FakerModule);
 

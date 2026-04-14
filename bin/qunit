@@ -492,11 +492,9 @@ class QunitRunner
   def build_theme_test_pages(query)
     pages =
       if ENV["THEME_IDS"] && !ENV["THEME_IDS"].empty?
-        ENV["THEME_IDS"]
-          .split("|")
-          .map { |theme_id| "#{@qunit_path}?#{query}&testem=1&id=#{theme_id}" }
+        ENV["THEME_IDS"].split("|").map { |theme_id| "#{@qunit_path}?#{query}&id=#{theme_id}" }
       else
-        ["#{@qunit_path}?#{query}&testem=1"]
+        ["#{@qunit_path}?#{query}"]
       end
 
     pages.shuffle.join(",")
@@ -521,6 +519,7 @@ class QunitRunner
     params["theme_id"] = @theme_id if @theme_id
     params["target"] = resolved_target if resolved_target && !@plugin_targets.any?
     params["report_requests"] = "1" if @report_requests
+    params["testem"] = "1"
 
     encode_query_string(params)
   end
