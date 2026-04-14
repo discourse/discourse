@@ -25,7 +25,7 @@ class QunitController < ApplicationController
     @has_test_bundle = EmberCli.has_tests?
     request.env[:resolved_theme_id] = nil
 
-    target = params[:target]
+    target = params[:target] || "core"
 
     @required_plugins = []
     @testing_plugins = []
