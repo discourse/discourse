@@ -37,21 +37,19 @@ export default {
           title: "post.localizations.post_language_selector.title",
           className: "post-language-selector-trigger",
           condition: () => {
-            const composer = api.container.lookup("service:composer");
             const currentUser = api.getCurrentUser();
             return (
-              currentUser && ALLOWED_ACTIONS.includes(composer.model?.action)
+              currentUser &&
+              ALLOWED_ACTIONS.includes(composerService.model?.action)
             );
           },
           popupMenu: {
             header: i18n("post.localizations.post_language_selector.header"),
             triggerLabel: () => {
-              const composer = api.container.lookup("service:composer");
-              return composer.model?.locale?.toUpperCase() || "";
+              return composerService.model?.locale?.toUpperCase() || "";
             },
             action: (option) => {
-              const composer = api.container.lookup("service:composer");
-              composer.model.locale = option.locale;
+              composerService.model.locale = option.locale;
             },
             options: () => {
               const locales =

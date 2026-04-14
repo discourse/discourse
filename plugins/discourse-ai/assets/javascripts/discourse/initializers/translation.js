@@ -1,6 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
 import cookie from "discourse/lib/cookie";
-import { EDIT } from "discourse/models/composer";
 
 export default apiInitializer((api) => {
   const settings = api.container.lookup("service:site-settings");
@@ -9,17 +8,8 @@ export default apiInitializer((api) => {
     return;
   }
 
-  // When AI translation is enabled, deprioritize the manual language selector for new posts
-  // (auto-detected) but keep it prominent when editing so users can correct wrong detections
-  api.registerValueTransformer(
-    "post-language-selector-priority",
-    ({ value, context }) => {
-      if (context?.action === EDIT) {
-        return value;
-      }
-      return "last";
-    }
-  );
+  // When AI translation is enabled, deprioritize the manual language selector since language is auto-detected
+  api.registerValueTransformer("post-language-selector-priority", () => "last");
 
   api.registerCustomPostMessageCallback(
     "localized",
