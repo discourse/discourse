@@ -66,12 +66,12 @@ export function buildConfig({ devMode } = {}) {
       vendor: "vendor.js",
       "start-discourse": "start-discourse.js",
       "media-optimization-bundle": "media-optimization-bundle.js",
-      // ...(process.env.NODE_ENV !== "production" || process.env.FORCE_BUILD_TESTS
-      //   ? {
-      //       tests: "tests/index.html",
-      //       "tests/test-entrypoint": "tests/test-entrypoint.js",
-      //     }
-      //   : undefined),
+      ...(process.env.NODE_ENV !== "production" || process.env.FORCE_BUILD_TESTS
+        ? {
+            // tests: "tests/index.html",
+            "tests/test-entrypoint": "tests/test-entrypoint.js",
+          }
+        : undefined),
     },
     output: {
       minify: false,
