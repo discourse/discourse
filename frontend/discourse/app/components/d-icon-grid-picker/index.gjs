@@ -10,42 +10,52 @@ import DIconGridPickerContent from "discourse/components/d-icon-grid-picker/cont
 /** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef DIconGridPickerSignature
+ *
+ * @property {HTMLInputElement} Element
+ * @property {object} Args
+ *
+ * @property {string} Args.value - The currently selected icon ID.
+ * @property {Function} Args.onChange - Called with the selected icon ID when an icon is picked.
+ * @property {string[]} [Args.favorites] - Icon IDs to display in a pinned favorites row above the grid.
+ * @property {boolean} [Args.showSelectedName] - When true, the selected favorite chip also displays
+ *   the icon name alongside the icon.
+ * @property {string} [Args.btnClass] - CSS class(es) for the trigger button. Defaults to "btn-default".
+ * @property {string} [Args.label] - Optional text label shown next to the icon in the trigger button.
+ * @property {boolean} [Args.allowClear] - When true, shows a clear button next to the trigger
+ *   in a split-button layout when a value is selected.
+ * @property {boolean} [Args.showCaret] - When true, shows a chevron icon in the trigger
+ *   that flips between angle-down and angle-up based on the menu's expanded state.
+ * @property {boolean} [Args.disabled] - When true, disables the trigger button and clear button.
+ * @property {boolean} [Args.onlyAvailable] - When true, only shows icons available in the
+ *   current SVG sprite set. Defaults to true.
+ * @property {string} [Args.iconColor] - CSS color value applied to icons in both the trigger
+ *   and the picker grid via the `--icon-color` custom property.
+ * @property {string} [Args.selectedTitle] - Translation key for the trigger button title when an
+ *   icon is selected. Receives `{iconName}` as an interpolation variable.
+ *   Defaults to "d_icon_grid_picker.selected_icon".
+ * @property {string} [Args.clearTitle] - Translation key for the clear button title.
+ *   Defaults to "d_icon_grid_picker.clear".
+ * @property {boolean} [Args.modalForMobile] - Whether to show as a modal on mobile. Defaults to true.
+ * @property {boolean} [Args.inline] - When true, renders the menu inline instead of floating.
+ * @property {Function} [Args.onShow] - Called when the picker menu is opened.
+ * @property {Function} [Args.onClose] - Called when the picker menu is closed.
+ */
 
 /**
  * A grid-based icon picker that displays available icons in a searchable
  * dropdown (desktop) or modal (mobile). Icons are fetched from the
  * `/svg-sprite/picker-search` endpoint and rendered in a 12-column grid.
  *
- * @param {string} value - The currently selected icon ID.
- * @param {Function} onChange - Called with the selected icon ID when an icon is picked.
- * @param {string[]} [favorites] - Icon IDs to display in a pinned favorites row above the grid.
- * @param {boolean} [showSelectedName] - When true, the selected favorite chip also displays
- *   the icon name alongside the icon.
- * @param {string} [btnClass] - CSS class(es) for the trigger button. Defaults to "btn-default".
- * @param {string} [label] - Optional text label shown next to the icon in the trigger button.
- * @param {boolean} [allowClear] - When true, shows a clear button next to the trigger
- *   in a split-button layout when a value is selected.
- * @param {boolean} [showCaret] - When true, shows a chevron icon in the trigger
- *   that flips between angle-down and angle-up based on the menu's expanded state.
- * @param {boolean} [disabled] - When true, disables the trigger button and clear button.
- * @param {boolean} [onlyAvailable] - When true, only shows icons available in the
- *   current SVG sprite set. Defaults to true.
- * @param {string} [iconColor] - CSS color value applied to icons in both the trigger
- *   and the picker grid via the `--icon-color` custom property.
- * @param {string} [selectedTitle] - Translation key for the trigger button title when an
- *   icon is selected. Receives `{iconName}` as an interpolation variable.
- *   Defaults to "d_icon_grid_picker.selected_icon".
- * @param {string} [clearTitle] - Translation key for the clear button title.
- *   Defaults to "d_icon_grid_picker.clear".
- * @param {boolean} [modalForMobile] - Whether to show as a modal on mobile. Defaults to true.
- * @param {boolean} [inline] - When true, renders the menu inline instead of floating.
- * @param {Function} [onShow] - Called when the picker menu is opened.
- * @param {Function} [onClose] - Called when the picker menu is closed.
+ * @extends {Component<DIconGridPickerSignature>}
  */
 export default class DIconGridPicker extends Component {
+  /** @type {import("discourse/float-kit/lib/d-menu-instance").default?} */
   @tracked menu = null;
 
   /**
@@ -100,7 +110,7 @@ export default class DIconGridPicker extends Component {
    * Stores the DMenu API instance so the content can close the menu
    * programmatically after an icon is selected.
    *
-   * @param {Object} api - The DMenu API instance.
+   * @param {import("discourse/float-kit/lib/d-menu-instance").default} api - The DMenu API instance.
    */
   @action
   onRegisterMenu(api) {
@@ -161,7 +171,7 @@ export default class DIconGridPicker extends Component {
       >
         <:trigger>
           {{#if @value}}
-            {{dIcon @value}}
+            {{icon @value}}
           {{/if}}
 
           {{#if this.triggerLabel}}
@@ -171,7 +181,7 @@ export default class DIconGridPicker extends Component {
           {{/if}}
 
           {{#if @showCaret}}
-            {{dIcon this.caretIcon class="d-icon-grid-picker__caret"}}
+            {{icon this.caretIcon class="d-icon-grid-picker__caret"}}
           {{/if}}
         </:trigger>
         <:content>

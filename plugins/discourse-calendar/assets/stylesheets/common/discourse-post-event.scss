@@ -12,12 +12,10 @@ $show-interested: inherit;
   .event__section {
     padding: 0.5em 0.75rem;
 
-    &:first-child {
-      border-top: 1px solid var(--primary-low);
-    }
-
     p {
       margin: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     > .d-icon {
@@ -29,6 +27,23 @@ $show-interested: inherit;
     }
   }
 
+  .event-image {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 1px;
+    aspect-ratio: 16 / 9;
+    box-sizing: border-box;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-top-left-radius: var(--d-border-radius);
+      border-top-right-radius: var(--d-border-radius);
+    }
+  }
+
   .discourse-post-event-widget {
     display: flex;
     background: var(--secondary);
@@ -36,6 +51,7 @@ $show-interested: inherit;
     flex: 1 0 auto;
     max-width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
 
     .cooked & {
       box-shadow: 0 0 0 3px var(--primary-100);

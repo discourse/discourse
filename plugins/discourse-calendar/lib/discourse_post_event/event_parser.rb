@@ -20,6 +20,7 @@ module DiscoursePostEvent
       :"chat-enabled",
       :"max-attendees",
       :"all-day",
+      :image,
     ]
 
     def self.extract_events(post)
@@ -48,7 +49,9 @@ module DiscoursePostEvent
 
             if value && valid_options.include?(name)
               event ||= {}
-              event[name.sub("data-", "").to_sym] = if %w[data-name data-url].include?(name)
+              event[name.sub("data-", "").to_sym] = if %w[data-name data-url data-image].include?(
+                   name,
+                 )
                 value
               else
                 CGI.escapeHTML(value)
