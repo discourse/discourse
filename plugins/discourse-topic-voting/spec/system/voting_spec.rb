@@ -20,6 +20,7 @@ RSpec.describe "Topic voting" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:user_page) { PageObjects::Pages::User.new }
   let(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before do
     SiteSetting.topic_voting_enabled = true
@@ -31,10 +32,9 @@ RSpec.describe "Topic voting" do
     expect(category_page).to have_no_css(category_page.votes)
 
     # enable voting in category
-    category_page
-      .visit_settings(category1)
-      .toggle_setting("enable-topic-voting", "Allow users to vote on topics in this category")
-      .save_settings
+    category_page.visit_settings(category1)
+    form.field("custom_fields.enable_topic_voting").toggle
+    category_page.save_settings
 
     expect(Category.can_vote?(category1.id)).to eq(true)
 
