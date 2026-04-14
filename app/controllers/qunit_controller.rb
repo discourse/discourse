@@ -13,6 +13,7 @@ class QunitController < ApplicationController
   layout false
 
   def index
+    raise Discourse::NotFound.new if !can_see_theme_qunit?
     @suggested_themes =
       Theme
         .where(id: ThemeField.where(target_id: Theme.targets[:tests_js]).distinct.pluck(:theme_id))

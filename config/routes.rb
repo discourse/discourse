@@ -1875,15 +1875,16 @@ Discourse::Application.routes.draw do
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"
 
-    get "/tests" => "qunit#core"
     get "/theme-qunit" => "qunit#index", :constraints => ->(req) { req.params["id"].nil? }
     get "/theme-qunit" => "qunit#theme"
     get "/theme-tests", to: redirect("/theme-qunit")
 
-    # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
-    # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
-    # handle it here.
     if Rails.env.local?
+      get "/tests" => "qunit#core"
+
+      # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
+      # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
+      # handle it here.
       get "/:testem_id/theme-qunit" => "qunit#theme", :constraints => { testem_id: /\d+/ }
       get "/:testem_id/tests" => "qunit#core", :constraints => { testem_id: /\d+/ }
     end

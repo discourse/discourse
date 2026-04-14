@@ -36,11 +36,13 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        "target=core",
+        "target=core&testem=1",
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
+        "--test-page",
+        "tests",
       ],
     )
     expect(result.env).to match(
@@ -61,13 +63,15 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        "target=core",
+        "target=core&testem=1",
         "--file-path",
         core_test_file.sub("#{Rails.root}/frontend/discourse/", ""),
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
+        "--test-page",
+        "tests",
       ],
     )
     expect(result.env).to match(
@@ -87,10 +91,14 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        "--query",
+        "testem=1",
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
+        "--test-page",
+        "tests",
       ],
     )
     expect(result.env).to match(
@@ -111,10 +119,14 @@ describe "bin/qunit" do
         "pnpm",
         "ember",
         "exam",
+        "--query",
+        "testem=1",
         "--random",
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
+        "--test-page",
+        "tests",
       ],
     )
     expect(result.env).to match(
@@ -136,7 +148,7 @@ describe "bin/qunit" do
         "ember",
         "exam",
         "--query",
-        "target=chat",
+        "target=chat&testem=1",
         "--file-path",
         chat_test_file.sub(
           "#{Rails.root}/plugins/chat/test/javascripts/",
@@ -146,6 +158,8 @@ describe "bin/qunit" do
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
+        "--test-page",
+        "tests",
       ],
     )
     expect(result.env).to match(
