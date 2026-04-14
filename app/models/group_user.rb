@@ -136,9 +136,8 @@ class GroupUser < ActiveRecord::Base
       GroupUserManager.new(group).sync_add_side_effects([user.id])
     else
       group_user_manager = GroupUserManager.new(group)
-      # Need to decrease the count no matter what
       group_user_manager.decrease_group_user_count([user.id])
-      # No need for side effects if user no longer exists
+
       return unless User.exists?(user.id)
       group_user_manager.sync_removal_side_effects([user.id])
     end
