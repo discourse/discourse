@@ -86,12 +86,11 @@
 
 .permanently-delete-confirm__instruction {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.5em;
-  white-space: nowrap;
 
   .confirmation-phrase {
-    width: 12em;
+    width: 100%;
     margin: 0;
   }
 }

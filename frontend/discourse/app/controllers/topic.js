@@ -1016,12 +1016,8 @@ export default class TopicController extends Controller {
       ? i18n("post.controls.permanently_delete_topic_confirmation")
       : i18n("post.controls.permanently_delete_post_confirmation");
 
-    const titleKey = post.firstPost
-      ? "post.controls.permanently_delete_topic_title"
-      : "post.controls.permanently_delete_post_title";
-
     return this.dialog.confirm({
-      title: i18n(titleKey),
+      title: i18n("post.controls.permanently_delete_title"),
       bodyComponent: PermanentlyDeleteConfirm,
       bodyComponentModel: { message },
       confirmButtonLabel: "post.controls.permanently_delete",
