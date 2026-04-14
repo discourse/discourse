@@ -206,8 +206,8 @@ export default class ComposerActions extends Component {
   _computeAvailableActions() {
     let items = [];
 
-    const currentTopic = this.topic;
-    const currentPost = this.post;
+    const currentTopic = _topicSnapshot || this.topic;
+    const currentPost = _postSnapshot || this.post;
     const currentAction = this.action;
 
     // 1. Reply as New Topic (reply_as_new_topic)
