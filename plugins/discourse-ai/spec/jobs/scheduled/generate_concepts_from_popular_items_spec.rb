@@ -205,14 +205,13 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
     end
 
     it "handles nil site setting values gracefully" do
-      capture_stderr do
-        SiteSetting.inferred_concepts_daily_topics_limit = nil
-        SiteSetting.inferred_concepts_daily_posts_limit = nil
-        SiteSetting.inferred_concepts_min_posts = nil
-        SiteSetting.inferred_concepts_min_likes = nil
-        SiteSetting.inferred_concepts_min_views = nil
-        SiteSetting.inferred_concepts_post_min_likes = nil
-      end
+      Discourse.expects(:deprecate).times(6)
+      SiteSetting.inferred_concepts_daily_topics_limit = nil
+      SiteSetting.inferred_concepts_daily_posts_limit = nil
+      SiteSetting.inferred_concepts_min_posts = nil
+      SiteSetting.inferred_concepts_min_likes = nil
+      SiteSetting.inferred_concepts_min_views = nil
+      SiteSetting.inferred_concepts_post_min_likes = nil
       # Keep lookback_days at default so .days.ago doesn't fail
 
       freeze_time do
