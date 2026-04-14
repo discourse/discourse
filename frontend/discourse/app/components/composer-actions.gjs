@@ -452,6 +452,20 @@ export default class ComposerActions extends Component {
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
 
+  replyAsNewGroupMessageSelected(options) {
+    const recipients = [];
+    const details = this.topic.details;
+
+    details.allowed_users.forEach((u) => recipients.push(u.username));
+    details.allowed_groups.forEach((g) => recipients.push(g.name));
+
+    options.action = PRIVATE_MESSAGE;
+    options.draftKey = this.composer.pmDraftKey;
+    options.archetypeId = "private_message";
+    options.recipients = recipients.join(",");
+    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
+  }
+
   replyToPostSelected(options) {
     options.action = REPLY;
     options.post = _postSnapshot;
