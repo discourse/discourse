@@ -168,7 +168,7 @@ module DiscourseUpdates
 
     def new_features_response_json
       response =
-        Excon.new("#{new_features_endpoint}#{new_features_endpoint_query_params}").request(
+        Excon.new(new_features_full_endpoint_url).request(
           expects: [200],
           method: :Get,
           read_timeout: 5,
@@ -304,6 +304,10 @@ module DiscourseUpdates
         *Discourse.redis.keys("#{missing_versions_key_prefix}*"),
         *Discourse.redis.keys(new_features_last_seen_key("*")),
       )
+    end
+
+    def new_features_full_endpoint_url
+      "#{new_features_endpoint}#{new_features_endpoint_query_params}"
     end
 
     def new_features_endpoint
