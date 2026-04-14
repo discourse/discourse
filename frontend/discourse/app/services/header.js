@@ -49,6 +49,8 @@ export default class Header extends Service {
 
     if (!value) {
       this._topicInfoLatched = true;
+    } else if (this.scrollDirection.lastScrollDirection === SCROLLED_UP) {
+      this._topicInfoLatched = false;
     }
   }
 
