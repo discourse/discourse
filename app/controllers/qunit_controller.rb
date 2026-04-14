@@ -21,6 +21,10 @@ class QunitController < ApplicationController
   end
 
   def core
+    @has_test_bundle = EmberCli.has_tests?
+    request.env[:resolved_theme_id] = nil
+
+    render "qunit"
   end
 
   def theme
@@ -58,6 +62,8 @@ class QunitController < ApplicationController
 
     request.env[:resolved_theme_id] = theme.id
     request.env[:skip_theme_ids_transformation] = true
+
+    render "qunit"
   end
 
   protected
