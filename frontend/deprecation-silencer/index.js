@@ -3,7 +3,6 @@ const SILENCED_WARN_PREFIXES = [
   'unexpectedly found "', // https://github.com/emberjs/ember.js/issues/19392
   "The setting 'staticAddonTestSupportTrees'",
   "The setting 'staticAddonTrees'",
-  "\n\n--------\n+ Your app is using the legacy ember-template-compiler.js AMD bundle", // Remove when ROLLUP_PLUGIN_COMPILER is promoted
 ];
 
 class DeprecationSilencer {
