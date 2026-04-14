@@ -41,7 +41,6 @@ RSpec.describe "Topic voting" do
     # make a vote
     category_page.visit(category1)
     expect(category_page).to have_css(category_page.votes)
-    expect(category_page).to have_css(category_page.topic_with_vote_count(0), count: 2)
     category_page.select_topic(topic1)
 
     expect(topic_page.vote_count).to have_text("0")
@@ -55,7 +54,7 @@ RSpec.describe "Topic voting" do
     topic_page.click_my_votes
     expect(user_page.active_user_primary_navigation).to have_text("Activity")
     expect(user_page.active_user_secondary_navigation).to have_text("Votes")
-    expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]", text: "1 vote")
+    expect(page).to have_css(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"]")
     find(".topic-list-body tr[data-topic-id=\"#{topic1.id}\"] a.raw-link").click
 
     # unvoting
@@ -76,10 +75,10 @@ RSpec.describe "Topic voting" do
       Fabricate(:post, topic: voting_topic1, raw: "Check out #{voting_topic2.url}")
 
       visit("/t/#{voting_topic3.slug}/#{voting_topic3.id}")
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.voting_closed_title"))
+      expect(page).to have_css("button.voting-wrapper__button[disabled]")
 
       find("a[href='#{voting_topic1.url}']").click
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+      expect(page).to have_no_css("button.voting-wrapper__button[disabled]")
 
       topic_page.vote
       expect(topic_page.vote_popup).to have_text(
@@ -87,7 +86,7 @@ RSpec.describe "Topic voting" do
       )
 
       find("a[href='#{voting_topic2.url}']").click
-      expect(topic_page).to have_vote_button_label(I18n.t("js.topic_voting.vote_title"))
+      expect(page).to have_no_css("button.voting-wrapper__button[disabled]")
 
       topic_page.vote
       expect(topic_page.vote_popup).to have_text(
@@ -104,7 +103,7 @@ RSpec.describe "Topic voting" do
       Fabricate(:post, topic: voting_topic1)
 
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
-      topic_page.vote
+      expect(page).to have_css("button.voting-wrapper__button[disabled]")
       expect(topic_page).to have_no_remove_vote_button
     end
   end
@@ -122,6 +121,70 @@ RSpec.describe "Topic voting" do
       expect(topic_page.vote_popup).to have_text(
         I18n.t("js.topic_voting.see_votes", count: 0, max: 1),
       )
+    end
+  end
+
+  context "when viewing as anonymous user" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+
+    before do
+      DiscourseTopicVoting::CategorySetting.create!(category: voting_category)
+      Capybara.reset_session!
+    end
+
+    it "redirects to login when clicking vote" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+      find(".title-voting button.voting-wrapper__button").click
+      expect(page).to have_current_path("/login")
+    end
+  end
+
+  context "when scrolling down on a voting topic" do
+    fab!(:voting_posts) { Fabricate.times(21, :post, topic: voting_topic1) }
+
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "shows voting in the docked header" do
+      sign_in(admin)
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      expect(page).to have_css(".title-voting")
+      expect(page).to have_no_css(".header-title-voting")
+
+      page.execute_script("document.querySelector('#post_4').scrollIntoView()")
+
+      expect(page).to have_css(".header-title-voting .voting-wrapper")
+    end
+  end
+
+  context "when viewing who voted" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+
+    before do
+      DiscourseTopicVoting::CategorySetting.create!(category: voting_category)
+      SiteSetting.topic_voting_show_who_voted = true
+      DiscourseTopicVoting::Vote.create!(user: admin, topic: voting_topic1)
+      voting_topic1.update_vote_count
+    end
+
+    it "shows voter avatars in the popup" do
+      sign_in(admin)
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      find(".title-voting .voting-wrapper__count").click
+      expect(page).to have_css(".voting-voters__list")
+      expect(page).to have_css(".voting-voters__avatar", count: 1)
+    end
+
+    it "shows empty state when no votes" do
+      DiscourseTopicVoting::Vote.where(topic: voting_topic1).destroy_all
+      voting_topic1.update_vote_count
+
+      sign_in(admin)
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      find(".title-voting .voting-wrapper__count").click
+      expect(page).to have_css(".voting-voters__empty")
     end
   end
 
@@ -160,15 +223,12 @@ RSpec.describe "Topic voting" do
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
 
       topic_page.vote
-      expect(topic_page).to have_see_all_votes_link
-      expect(topic_page).to have_no_votes_left_text
       expect(topic_page.vote_count).to have_text("1")
+      expect(topic_page).to have_voted
 
       visit("/t/#{voting_topic2.slug}/#{voting_topic2.id}")
 
       topic_page.vote
-      expect(topic_page).to have_see_all_votes_link
-      expect(topic_page).to have_no_votes_left_text
       expect(topic_page.vote_count).to have_text("1")
     end
 
@@ -177,6 +237,7 @@ RSpec.describe "Topic voting" do
       voting_topic1.update_vote_count
 
       visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+      expect(topic_page.vote_count).to have_text("1")
 
       topic_page.remove_vote
       expect(topic_page.vote_count).to have_text("0")

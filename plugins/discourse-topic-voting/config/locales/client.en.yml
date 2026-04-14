@@ -20,11 +20,8 @@ en:
       allow_topic_voting: "Allow users to vote on topics in this category"
       vote_title: "Vote"
       vote_title_plural: "Votes"
-      voted_title: "Voted"
-      voting_closed_title: "Closed"
-      voting_limit: "Limit"
+      voting_closed_description: "Voting is closed for this topic"
       see_votes: "You have %{count}/%{max} votes left"
-      see_all_votes: "See your votes"
       locked: "Locked"
       locked_description: "Increase your trust level to vote"
       votes:
@@ -34,6 +31,10 @@ en:
         one: "Vote"
         other: "Votes"
       remove_vote: "Remove vote"
+      no_votes_yet: "No one has voted for this yet"
+      and_more_voters: "and %{count} more..."
+      show_voters: "Show who voted"
+      vote_count_thousands: "%{count}k"
       no_votes_title_self: "You haven't voted for any topic yet"
       no_votes_title_others: "%{username} hasn't voted for any topic yet"
     filters:
