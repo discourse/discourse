@@ -331,25 +331,15 @@
   z-index: 2;
   background: var(--fade-color);
   border: none;
-  padding: 0;
   margin-block: 1px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: transparent;
-  width: 0;
-  overflow: visible;
-  pointer-events: none;
+  color: var(--primary-high);
+  padding: 0 var(--space-1);
 
-  @media (pointer: fine) {
-    width: auto;
-    padding: 0 var(--space-1);
-    pointer-events: auto;
-    color: var(--primary-high);
-
-    &:hover {
-      color: var(--primary);
-    }
+  &:hover {
+    color: var(--primary);
   }
 
   &.--left {
