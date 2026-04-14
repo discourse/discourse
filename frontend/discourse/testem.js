@@ -295,15 +295,6 @@ if (typeof module !== "undefined") {
       .split(",")
       .map((p) => p.replace(/^\//, ""));
 
-    // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
-    // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
-    // the request and there is no easy way for us to strip the string from the path through the proxy. As such, we let the
-    // destination server handle the request base on the prefix instead.
-    module.exports.proxies[`/*/theme-qunit`] = {
-      target: `${target}/testem-theme-qunit`,
-      xfwd: true,
-    };
-
     module.exports.middleware = [
       function (app) {
         // Make the testem.js file available under /assets
@@ -314,6 +305,8 @@ if (typeof module !== "undefined") {
         });
       },
     ];
+  } else {
+    module.exports.test_page = "tests/index.html?hidepassed";
   }
 
   module.exports.proxies["/*/*"] = { target, xfwd: true };
