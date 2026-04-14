@@ -47,15 +47,8 @@ export default class Header extends Service {
   set mainTopicTitleVisible(value) {
     this._mainTopicTitleVisible = value;
 
-    if (!value && this.scrollDirection.lastScrollDirection === SCROLLED_DOWN) {
+    if (!value) {
       this._topicInfoLatched = true;
-    } else if (value) {
-      // Only unlatch when the title is genuinely visible AND we are not
-      // scrolling down (i.e. the observer isn't just oscillating due to
-      // a layout shift from the header height change).
-      if (this.scrollDirection.lastScrollDirection !== SCROLLED_DOWN) {
-        this._topicInfoLatched = false;
-      }
     }
   }
 
@@ -81,7 +74,15 @@ export default class Header extends Service {
       return false;
     }
 
-    if (this.mainTopicTitleVisible && !this._topicInfoLatched) {
+    // The latch is only honored while actively scrolling down — this
+    // prevents the IntersectionObserver feedback loop (header height
+    // change shifting content), but automatically releases when scroll
+    // direction changes so topic info hides normally.
+    const isLatched =
+      this._topicInfoLatched &&
+      this.scrollDirection.lastScrollDirection === SCROLLED_DOWN;
+
+    if (this.mainTopicTitleVisible && !isLatched) {
       return false;
     }
 
