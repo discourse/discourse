@@ -780,11 +780,12 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       end
 
       it "only removes the current device push subscription on normal logout" do
-        env_with_push =
-          env.merge("discourse.push_subscription" => device_a_data.with_indifferent_access)
-
-        user_provider = TestProvider.new(env_with_push)
-        user_provider.log_off_user({}, user_provider.cookie_jar)
+        user_provider = TestProvider.new(env)
+        user_provider.log_off_user(
+          {},
+          user_provider.cookie_jar,
+          push_subscription: device_a_data.with_indifferent_access,
+        )
 
         remaining = user.push_subscriptions.reload
         expect(remaining.size).to eq(1)
