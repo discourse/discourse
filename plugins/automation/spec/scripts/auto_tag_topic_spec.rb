@@ -84,12 +84,67 @@ describe "AutoTagTopic" do
     end
 
     context "when there are tags" do
-      before { automation.upsert_field!("tags", "tags", { value: %w[tag1 tag2] }) }
+      context "when closed_automatically is set" do
+        before do
+          automation.upsert_field!("tags", "tags", { value: %w[tag1 tag2] })
+          automation.upsert_field!(
+            "closed_automatically",
+            "boolean",
+            { value: true },
+            target: "script",
+          )
+        end
+        it "works" do
+          automation.trigger!("topic" => topic, "status" => :automatically)
 
-      it "works" do
-        automation.trigger!("topic" => topic)
+          expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])
+        end
 
-        expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])
+        it "does not apply tags for manual closures" do
+          automation.trigger!("topic" => topic, "status" => :manually)
+
+          expect(topic.reload.tags.pluck(:name)).to be_empty
+        end
+      end
+      context "when closed_manually is set" do
+        before do
+          automation.upsert_field!("tags", "tags", { value: %w[tag1 tag2] })
+          automation.upsert_field!("closed_manually", "boolean", { value: true }, target: "script")
+        end
+
+        it "applies tags for manual closures" do
+          automation.trigger!("topic" => topic, "status" => :manually)
+
+          expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])
+        end
+
+        it "does not apply tags for automatic closures" do
+          automation.trigger!("topic" => topic, "status" => :automatically)
+
+          expect(topic.reload.tags.pluck(:name)).to be_empty
+        end
+      end
+
+      context "when both fields are set" do
+        before do
+          automation.upsert_field!("tags", "tags", { value: %w[tag1 tag2] })
+          automation.upsert_field!(
+            "closed_automatically",
+            "boolean",
+            { value: true },
+            target: "script",
+          )
+          automation.upsert_field!("closed_manually", "boolean", { value: true }, target: "script")
+        end
+
+        it "applies tags for both closure types" do
+          automation.trigger!("topic" => topic, "status" => :manually)
+          expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])
+
+          topic.tags = []
+          automation.trigger!("topic" => topic, "status" => :automatically)
+          expect(topic.reload.tags.pluck(:name)).to match_array(%w[tag1 tag2])
+        end
       end
     end
   end

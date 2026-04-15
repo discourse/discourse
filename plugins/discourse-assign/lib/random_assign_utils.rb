@@ -107,7 +107,7 @@ class RandomAssignUtils
       .assign(assigned_user, allow_self_reassign: true)
       .then do |result|
         next if result[:success]
-        PostDestroyer.new(Discourse.system_user, post).destroy
+        PostDestroyer.new(Discourse.system_user, post, context: "random assign rollback").destroy
         no_one!
       end
   end

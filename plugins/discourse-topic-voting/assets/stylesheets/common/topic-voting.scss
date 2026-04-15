@@ -1,111 +1,169 @@
-.title-voting {
-  padding-right: 0.75em;
-  width: 6em;
-  max-width: 10%;
-  box-sizing: border-box;
-  float: left;
-  margin-top: 0.33em;
-  position: relative;
+@use "lib/viewport";
 
-  .rtl & {
-    float: right;
-    padding-right: 0;
-    padding-left: 0.75em;
-  }
-}
-
-.vote-count-wrapper {
-  border: 3px solid var(--primary-low);
-  font-weight: bold;
+.voting-wrapper {
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 2.5em;
+  margin-top: 0.1em; // minor vertical alignment tweak
 
-.voting-wrapper.show-pointer .vote-count-wrapper:not(.no-votes) {
-  cursor: pointer;
+  .fk-d-tooltip__trigger-container,
+  .fk-d-tooltip__trigger,
+  .topic-voting-menu-trigger {
+    width: 100%;
+  }
 
-  &:hover {
-    background-color: var(--primary-low);
+  .btn[disabled]:not(.is-loading) {
+    opacity: 1;
+    background: var(--primary-very-low);
+    border: 1px solid var(--content-border-color);
+    width: 100%;
+
+    span[aria-hidden="true"] {
+      display: none; // empty span added by tooltip component impacts height
+    }
+
+    .d-icon {
+      opacity: 0.5;
+    }
   }
 }
 
-.vote-button {
+.voting-wrapper__button {
+  border-radius: var(--d-button-border-radius) var(--d-button-border-radius) 0 0;
+  padding: var(--space-1) var(--space-3);
+  background: var(--secondary);
+  border: 1px solid var(--content-border-color);
+
+  &:focus-visible,
+  .discourse-no-touch &:hover {
+    background: var(--primary-low);
+
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+
+  &.btn-success {
+    .d-icon {
+      color: var(--success);
+    }
+
+    &:focus-visible,
+    .discourse-no-touch &:hover {
+      background: var(--primary-low);
+
+      .d-icon {
+        color: var(--success);
+      }
+    }
+  }
+}
+
+.voting-wrapper__count-text {
+  color: var(--primary-medium);
+}
+
+.voting-wrapper__count {
+  border: 1px solid var(--content-border-color);
+  border-top: 0;
+  background: var(--secondary);
+  border-radius: 0 0 var(--d-button-border-radius) var(--d-button-border-radius);
+  font-size: var(--font-down-2);
+  padding: var(--space-half) var(--space-2);
+  text-align: center;
+}
+
+// grid layout for voting in topic title
+#topic-title:has(.voting) {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 var(--topic-body-width-padding);
+
+  > * {
+    grid-column: 2;
+  }
+
+  .voting {
+    grid-column: 1;
+    grid-row: 1 / span 10; // can't use -1 with an implicit grid
+    align-self: start;
+  }
+}
+
+// topic title
+.title-voting {
+  --topic-avatar-width: 48px;
+  width: var(--topic-avatar-width);
+
+  .voting-wrapper {
+    min-width: var(--topic-avatar-width);
+  }
+
+  .voting-wrapper__button {
+    padding-block: var(--space-2);
+  }
+}
+
+// docked header
+.header-title-voting {
+  --secondary: var(--header_background);
+  --primary-high: var(--header_primary-high);
+  --primary-medium: var(--header_primary-medium);
+  --primary-low: var(--header_primary-low);
+  margin-top: 0.15em; // vertical alignment tweak
+  margin-right: var(--space-2);
+
+  @include viewport.until(sm) {
+    margin-top: -0.25em; // centering tweak
+
+    .voting-wrapper__count {
+      font-size: var(--font-down-3);
+    }
+  }
+
+  .voting-wrapper__button {
+    width: 100%;
+    padding: var(--space-1);
+  }
+}
+
+// voter popup
+.voting-voters__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding: var(--space-2);
+
+  @include viewport.from(sm) {
+    max-width: 22.5em;
+  }
+}
+
+.voting-voters__avatar {
+  display: inline-flex;
+}
+
+.voting-voters__empty,
+.voting-voters__loading {
+  padding: 0.5em;
+  color: var(--primary);
+  font-size: var(--font-down-1);
+}
+
+.voting-voters__overflow {
   width: 100%;
-  margin-top: 0.35em;
+  padding: var(--space-2) var(--space-2) 0;
+  text-align: center;
+  color: var(--primary);
+  font-size: var(--font-down-1);
+  border-top: 1px solid var(--primary-low);
 }
 
-.vote-options {
-  text-align: left;
-}
-
-.vote-option {
-  cursor: pointer;
-  padding: 0.35em;
-
-  &:hover {
-    background-color: var(--primary-low);
-  }
-}
-
-.vote-option.remove-vote .d-icon {
-  margin-right: 0.35em;
-  color: var(--danger);
-}
-
-.list-vote-count.voted {
-  font-weight: bold;
-}
-
-.who-voted.popup-menu {
-  a {
-    margin: 0.4em 0.25em;
-    display: inline-block;
-  }
-}
-
+// hide like buttons on voting posts
 .topic-post.voting-post {
   button.like-count,
   button.toggle-like {
     display: none;
   }
-}
-
-.voting-popup-menu {
-  position: absolute;
-  left: 90px;
-  top: 0;
-  padding: 0.5em;
-  line-height: var(--line-height-medium);
-  z-index: z("usercard") - 1;
-  cursor: initial;
-
-  // voter avatars
-  .regular-votes {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .rtl & {
-    left: unset;
-    right: 80px;
-  }
-}
-
-.topic-voting-menu__title {
-  display: flex;
-  align-items: center;
-  gap: 0.75em;
-  background: var(--tertiary-low);
-  color: var(--tertiary);
-  padding: 0.65rem 1rem;
-  font-weight: bold;
-}
-
-.topic-voting-menu__title.--locked {
-  background: var(--secondary);
-  color: var(--primary-medium);
-  font-weight: normal;
 }

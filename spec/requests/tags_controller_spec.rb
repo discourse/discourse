@@ -1417,6 +1417,44 @@ RSpec.describe TagsController do
           )
         end
 
+        it "returns category-restricted tag as disabled for input" do
+          category
+          get "/tags/filter/search.json",
+              params: {
+                q: yup.name,
+                filterForInput: true,
+                categoryId: Fabricate(:category).id,
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == yup.name }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+          expect(result["title"]).to eq(
+            I18n.t(
+              "tags.forbidden.restricted_to",
+              count: 1,
+              tag_name: yup.name,
+              category_names: category.name,
+            ),
+          )
+        end
+
+        it "returns category-restricted tag as disabled for partial match" do
+          category
+          get "/tags/filter/search.json",
+              params: {
+                q: "yu",
+                filterForInput: true,
+                categoryId: Fabricate(:category).id,
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == yup.name }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+        end
+
         it "can filter on category without q param" do
           Fabricate(:tag, name: "nope")
           get "/tags/filter/search.json", params: { categoryId: category.id }
@@ -1446,6 +1484,21 @@ RSpec.describe TagsController do
           expect(response.parsed_body["results"]).to match([include(name: tag.name, id: tag.id)])
         end
 
+        it "returns synonym as disabled when excluded for input" do
+          get "/tags/filter/search.json",
+              params: {
+                q: "plants",
+                filterForInput: true,
+                excludeSynonyms: "true",
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "plants" }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+          expect(result["title"]).to eq(I18n.t("tags.forbidden.synonym", tag_name: tag.name))
+        end
+
         it "can return a message about synonyms not being allowed" do
           get "/tags/filter/search.json", params: { q: "plants", excludeSynonyms: "true" }
           expect(response.status).to eq(200)
@@ -1454,6 +1507,133 @@ RSpec.describe TagsController do
           expect(response.parsed_body["forbidden_message"]).to eq(
             I18n.t("tags.forbidden.synonym", tag_name: tag.name),
           )
+        end
+      end
+
+      context "with one_per_topic tag group" do
+        fab!(:workflow_tag1) { Fabricate(:tag, name: "todo") }
+        fab!(:workflow_tag2) { Fabricate(:tag, name: "ready-to-deploy") }
+        fab!(:tag_group) do
+          Fabricate(
+            :tag_group,
+            name: "Workflow",
+            tags: [workflow_tag1, workflow_tag2],
+            one_per_topic: true,
+          )
+        end
+
+        it "returns sibling tag as disabled when already selected from group" do
+          get "/tags/filter/search.json",
+              params: {
+                q: "ready-to-deploy",
+                filterForInput: true,
+                selected_tag_ids: [workflow_tag1.id],
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "ready-to-deploy" }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+          expect(result["title"]).to eq(
+            I18n.t("tags.forbidden.one_tag_per_topic_group", tag_group_name: "Workflow"),
+          )
+        end
+
+        it "returns sibling tag as disabled for partial match" do
+          get "/tags/filter/search.json",
+              params: {
+                q: "ready",
+                filterForInput: true,
+                selected_tag_ids: [workflow_tag1.id],
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "ready-to-deploy" }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+        end
+
+        it "returns tag as enabled when no sibling is selected" do
+          get "/tags/filter/search.json", params: { q: "ready-to-deploy", filterForInput: true }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "ready-to-deploy" }
+          expect(result).to be_present
+          expect(result["disabled"]).to be_nil
+        end
+      end
+
+      context "with parent tag group" do
+        fab!(:parent_tag) { Fabricate(:tag, name: "vehicles") }
+        fab!(:child_tag) { Fabricate(:tag, name: "sedan") }
+        fab!(:tag_group) do
+          Fabricate(:tag_group, name: "Vehicle Types", tags: [child_tag], parent_tag: parent_tag)
+        end
+
+        it "returns child tag as disabled when parent is not selected" do
+          get "/tags/filter/search.json", params: { q: "sedan", filterForInput: true }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "sedan" }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+          expect(result["title"]).to eq(
+            I18n.t(
+              "tags.forbidden.missing_parent_tag",
+              parent_tag_name: "vehicles",
+              tag_group_name: "Vehicle Types",
+            ),
+          )
+        end
+
+        it "returns child tag as enabled when parent is selected" do
+          get "/tags/filter/search.json",
+              params: {
+                q: "sedan",
+                filterForInput: true,
+                selected_tag_ids: [parent_tag.id],
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "sedan" }
+          expect(result).to be_present
+          expect(result["disabled"]).to be_nil
+        end
+
+        it "does not leak hidden parent tag name" do
+          staff_group = Fabricate(:group)
+          parent_tag_group = Fabricate(:tag_group, tags: [parent_tag])
+          parent_tag_group.permissions = [
+            [staff_group.id, TagGroupPermission.permission_types[:full]],
+          ]
+          parent_tag_group.save!
+
+          get "/tags/filter/search.json", params: { q: "sedan", filterForInput: true }
+
+          expect(response.status).to eq(200)
+          disabled_result = response.parsed_body["results"].find { |t| t["name"] == "sedan" }
+          expect(disabled_result["title"]).not_to include("vehicles") if disabled_result
+          expect(response.parsed_body["forbidden_message"]).to be_nil
+        end
+      end
+
+      context "with staff-only tag group" do
+        fab!(:hidden_tag) { Fabricate(:tag, name: "staff-only-tag") }
+        fab!(:group)
+        fab!(:tag_group) do
+          Fabricate(:tag_group, tags: [hidden_tag]).tap do |tg|
+            tg.permissions = [[group.id, TagGroupPermission.permission_types[:full]]]
+            tg.save!
+          end
+        end
+
+        it "does not leak hidden tag existence via forbidden message" do
+          get "/tags/filter/search.json", params: { q: "staff-only-tag", filterForInput: true }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["results"]).to be_empty
+          expect(response.parsed_body["forbidden"]).to be_nil
+          expect(response.parsed_body["forbidden_message"]).to be_nil
         end
       end
 
