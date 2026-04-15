@@ -87,7 +87,6 @@ export default class NodeConfigurator extends Component {
   async #loadTypes() {
     this.nodeTypes = await this.workflowsNodeTypes.load();
     this.#applyDefaults();
-    this.#populateSqlOutputFields();
   }
 
   #applyDefaults() {
@@ -119,25 +118,22 @@ export default class NodeConfigurator extends Component {
     }
   }
 
-  #populateSqlOutputFields() {
+  get sqlOutputFields() {
     const node = this.args.model.node;
     if (node.type !== "action:sql") {
-      return;
+      return null;
     }
 
-    const json = this.args.model.lastExecutionNodeOutputs?.[node.clientId];
+    const json =
+      this.workflowsNodeTypes.lastExecutionNodeOutputs?.[node.clientId];
     if (!json || typeof json !== "object") {
-      return;
+      return null;
     }
 
-    const fields = Object.entries(json).map(([key, value]) => ({
+    return Object.entries(json).map(([key, value]) => ({
       key,
       type: inferFieldType(value),
     }));
-
-    if (fields.length) {
-      this.initialConfiguration.output_fields = fields;
-    }
   }
 
   get nodeTypeDefaultName() {
@@ -216,6 +212,12 @@ export default class NodeConfigurator extends Component {
         config[key] = value;
       }
     }
+
+    const sqlFields = this.sqlOutputFields;
+    if (sqlFields?.length) {
+      config.output_fields = sqlFields;
+    }
+
     return config;
   }
 

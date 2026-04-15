@@ -65,6 +65,7 @@ module DiscourseWorkflows
           run_time_ms: Execution.compute_run_time_ms(steps),
         )
         publish_form_notification(:success)
+        publish_execution_node_outputs(steps)
         execution
       end
 
@@ -198,6 +199,24 @@ module DiscourseWorkflows
         when :error
           MessageBus.publish(channel, { status: "error" })
         end
+      end
+
+      def publish_execution_node_outputs(steps)
+        outputs = {}
+        steps.each do |step|
+          next unless step.success?
+          items = step.output || []
+          first_json = items.dig(0, "json")
+          outputs[step.node_id] = first_json if first_json.present?
+        end
+
+        return if outputs.empty?
+
+        MessageBus.publish(
+          "/discourse-workflows/workflow/#{workflow.id}",
+          { type: "execution_completed", last_execution_node_outputs: outputs },
+          group_ids: [Group::AUTO_GROUPS[:admins]],
+        )
       end
     end
   end

@@ -16,6 +16,7 @@ export default class WorkflowsNodeTypes extends Service {
   @tracked graphConnections = null;
   @tracked workflowVars = null;
   @tracked workflowId = null;
+  @tracked lastExecutionNodeOutputs = null;
 
   _nodeTypeMap = new Map();
 
@@ -77,6 +78,7 @@ export default class WorkflowsNodeTypes extends Service {
     this.graphNodes = null;
     this.graphConnections = null;
     this.workflowId = null;
+    this.lastExecutionNodeOutputs = null;
   }
 
   clear() {
@@ -86,6 +88,7 @@ export default class WorkflowsNodeTypes extends Service {
     this._nodeTypeMap = new Map();
     this.invalidateWorkflowVars();
     this.workflowId = null;
+    this.lastExecutionNodeOutputs = null;
     this.clearEditingContext();
   }
 }

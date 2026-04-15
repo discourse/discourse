@@ -24,6 +24,7 @@ export default class WorkflowsEditor extends Component {
   @service router;
   @service modal;
   @service workflowsNodeTypes;
+  @service messageBus;
 
   @tracked canUndo = false;
   @tracked canRedo = false;
@@ -44,9 +45,38 @@ export default class WorkflowsEditor extends Component {
   };
   _isUndoRedo = false;
 
+  constructor() {
+    super(...arguments);
+    this.workflowsNodeTypes.lastExecutionNodeOutputs =
+      this.args.workflow?.last_execution_node_outputs || null;
+    this.#subscribeToExecutions();
+  }
+
   willDestroy() {
     super.willDestroy(...arguments);
     this.undoManager.destroy();
+    this.#unsubscribeFromExecutions();
+  }
+
+  #subscribeToExecutions() {
+    const workflowId = this.args.workflow?.id;
+    if (!workflowId) {
+      return;
+    }
+    this._executionChannel = `/discourse-workflows/workflow/${workflowId}`;
+    this.messageBus.subscribe(this._executionChannel, (message) => {
+      if (message.type === "execution_completed") {
+        this.workflowsNodeTypes.lastExecutionNodeOutputs =
+          message.last_execution_node_outputs;
+      }
+    });
+  }
+
+  #unsubscribeFromExecutions() {
+    if (this._executionChannel) {
+      this.messageBus.unsubscribe(this._executionChannel);
+      this._executionChannel = null;
+    }
   }
 
   #mapServerConnections() {
@@ -386,8 +416,6 @@ export default class WorkflowsEditor extends Component {
         nodes,
         connections,
         triggerType: triggerNode?.type,
-        lastExecutionNodeOutputs:
-          this.args.workflow?.last_execution_node_outputs,
         onSave: (configuration, name) =>
           this.updateNodeConfiguration(clientId, configuration, name),
         onRemove: () => this.removeNodes([clientId]),
