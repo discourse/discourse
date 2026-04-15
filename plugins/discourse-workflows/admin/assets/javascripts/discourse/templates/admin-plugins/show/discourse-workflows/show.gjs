@@ -33,7 +33,10 @@ class WorkflowShowPage extends Component {
 
   <template>
     {{htmlClass "workflows-page"}}
-    <DBreadcrumbsItem @label={{this.workflow.name}} />
+    <DBreadcrumbsItem
+      @path="/admin/plugins/discourse-workflows/workflows/{{this.workflow.id}}"
+      @label={{this.workflow.name}}
+    />
 
     <div class="admin-config-page__main-area">
       <div class="workflows-header">

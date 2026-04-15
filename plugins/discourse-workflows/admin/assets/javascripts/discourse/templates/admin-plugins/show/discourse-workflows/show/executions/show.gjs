@@ -4,7 +4,7 @@ import ExecutionDetail from "discourse/plugins/discourse-workflows/admin/compone
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/plugins/discourse-workflows/{{@controller.model.workflow_id}}/executions"
+    @path="/admin/plugins/discourse-workflows/workflows/{{@controller.model.workflow_id}}/executions"
     @label={{i18n "discourse_workflows.tabs.executions"}}
   />
   <DBreadcrumbsItem @label="#{{@controller.model.id}}" />
