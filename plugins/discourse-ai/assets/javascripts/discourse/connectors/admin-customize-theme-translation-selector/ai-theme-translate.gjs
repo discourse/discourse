@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class AiThemeTranslate extends Component {
@@ -32,7 +32,17 @@ export default class AiThemeTranslate extends Component {
         },
       });
     } catch (e) {
-      popupAjaxError(e);
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: extractError(
+            e,
+            i18n(
+              "discourse_ai.translations.theme_translations.translate.failed"
+            )
+          ),
+        },
+      });
     }
   }
 
