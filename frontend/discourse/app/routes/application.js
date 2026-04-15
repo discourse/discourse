@@ -8,6 +8,7 @@ import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
+import { getCurrentPushSubscription } from "discourse/lib/push-notifications";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -82,15 +83,15 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  logout() {
+  async logout() {
     const { isReadOnly, isStaffWritesOnly } = this.site;
 
     if (isReadOnly && !isStaffWritesOnly) {
       this.dialog.alert(i18n("read_only_mode.logout_disabled"));
     } else if (this.currentUser) {
-      this.currentUser
-        .destroySession()
-        .then((response) => logout({ redirect: response["redirect_url"] }));
+      const pushSubscription = await getCurrentPushSubscription();
+      const response = await this.currentUser.destroySession(pushSubscription);
+      logout({ redirect: response["redirect_url"] });
     }
   }
 

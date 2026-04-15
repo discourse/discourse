@@ -111,7 +111,6 @@ acceptance("Category Edit", function (needs) {
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
     assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
 
-    await allowedTagGroupChooser.collapse();
     await allowedTagChooser.expand();
     await allowedTagChooser.deselectItemByName("monkey");
 

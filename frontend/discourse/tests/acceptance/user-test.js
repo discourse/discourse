@@ -7,6 +7,7 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
@@ -343,9 +344,18 @@ acceptance("User - Invalid view_user_route setting", function (needs) {
   });
 
   test("It defaults to summary", async function (assert) {
+    const stub = sinon.stub(console, "error");
+
     await visit("/u/eviltrout");
 
     assert.strictEqual(currentRouteName(), "user.summary");
+    assert.true(
+      stub.calledWith(
+        "Invalid value for view_user_route 'user.X'. Falling back to 'summary'."
+      )
+    );
+
+    stub.restore();
   });
 });
 

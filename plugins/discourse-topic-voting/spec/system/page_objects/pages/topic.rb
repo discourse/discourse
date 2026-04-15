@@ -42,6 +42,19 @@ module TopicVotingTopic
     has_css?(".title-voting button.voting-wrapper__button.btn-default") &&
       has_no_css?(".title-voting button.voting-wrapper__button.btn-success")
   end
+
+  def click_watch_toggle
+    find(".topic-voting-menu__watch-toggle .btn").click
+    self
+  end
+
+  def has_watch_toggle_on?
+    has_css?(".topic-voting-menu__watch-toggle .d-icon-toggle-on")
+  end
+
+  def has_watch_toggle_off?
+    has_css?(".topic-voting-menu__watch-toggle .d-icon-toggle-off")
+  end
 end
 
 PageObjects::Pages::Topic.include(TopicVotingTopic)

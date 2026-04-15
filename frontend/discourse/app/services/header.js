@@ -105,7 +105,7 @@ export default class Header extends Service {
           // eslint-disable-next-line no-console
           console.error(
             `Invalid button to hide: ${button}, valid buttons are: ${VALID_HEADER_BUTTONS_TO_HIDE.join(
-              ","
+              ", "
             )}`
           );
         } else {

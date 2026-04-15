@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   simulateKeys,
@@ -118,3 +119,66 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
       .exists();
   });
 });
+
+acceptance(
+  "#hashtag autocompletion with types unknown to the client",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/hashtags", () => helper.response({ category: [], tag: [] }));
+      server.get("/hashtags/search.json", () => {
+        return helper.response({
+          results: [
+            {
+              id: 1,
+              text: "Music Lounge",
+              slug: "music",
+              icon: "comment",
+              relative_url: "/chat/c/music/1",
+              ref: "music",
+              type: "channel",
+              style_type: "icon",
+            },
+            {
+              id: 28,
+              text: "Other Languages",
+              slug: "other-languages",
+              colors: ["FF0000"],
+              icon: "folder",
+              relative_url: "/c/other-languages/28",
+              ref: "other-languages",
+              type: "category",
+              style_type: "square",
+            },
+          ],
+        });
+      });
+    });
+
+    test("only requests types that have a client-side class registered", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await click("#topic-footer-buttons .btn.create");
+      await simulateKeys(".d-editor-input", "abc #filter-known");
+
+      const searchRequest = pretender.handledRequests.findLast((r) =>
+        r.url.startsWith("/hashtags/search.json")
+      );
+      const order = new URL(
+        searchRequest.url,
+        "http://dummy"
+      ).searchParams.getAll("order[]");
+      assert.deepEqual(order, ["category", "tag"]);
+    });
+
+    test("does not crash when the server returns a type not registered on the client", async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await click("#topic-footer-buttons .btn.create");
+      await simulateKeys(".d-editor-input", "abc #unknown-type");
+
+      // The server-side handler above returns a channel result despite the
+      // client not registering a "channel" hashtag type class. The row should
+      // still render (without an icon) and the promise must not reject.
+      assert.dom(".hashtag-autocomplete__option").exists({ count: 2 });
+    });
+  }
+);

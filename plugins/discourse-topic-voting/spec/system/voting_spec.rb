@@ -20,6 +20,7 @@ RSpec.describe "Topic voting" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:user_page) { PageObjects::Pages::User.new }
   let(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
+  let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before do
     SiteSetting.topic_voting_enabled = true
@@ -31,10 +32,9 @@ RSpec.describe "Topic voting" do
     expect(category_page).to have_no_css(category_page.votes)
 
     # enable voting in category
-    category_page
-      .visit_settings(category1)
-      .toggle_setting("enable-topic-voting", "Allow users to vote on topics in this category")
-      .save_settings
+    category_page.visit_settings(category1)
+    form.field("custom_fields.enable_topic_voting").toggle
+    category_page.save_settings
 
     expect(Category.can_vote?(category1.id)).to eq(true)
 
@@ -91,6 +91,25 @@ RSpec.describe "Topic voting" do
       topic_page.vote
       expect(topic_page.vote_popup).to have_text(
         I18n.t("js.topic_voting.see_votes", count: 8, max: 10),
+      )
+    end
+  end
+
+  context "when toggling watch from the vote menu" do
+    fab!(:voting_post) { Fabricate(:post, topic: voting_topic1) }
+
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "sets the topic to watching" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      topic_page.vote
+      expect(topic_page).to have_watch_toggle_off
+
+      topic_page.click_watch_toggle
+      expect(topic_page).to have_watch_toggle_on
+      expect(TopicUser.find_by(user: admin, topic: voting_topic1).notification_level).to eq(
+        TopicUser.notification_levels[:watching],
       )
     end
   end

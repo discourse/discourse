@@ -401,8 +401,12 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff && this.get("has_new_upcoming_changes");
   }
 
-  destroySession() {
-    return ajax(`/session/${this.username}`, { type: "DELETE" });
+  destroySession(pushSubscription) {
+    const data = {};
+    if (pushSubscription) {
+      data.push_subscription = pushSubscription;
+    }
+    return ajax(`/session/${this.username}`, { type: "DELETE", data });
   }
 
   @computed("username_lower")

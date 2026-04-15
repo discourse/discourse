@@ -427,11 +427,18 @@ module ApplicationHelper
     end
   end
 
-  def discourse_track_view_session_tag
-    return if !SiteSetting.trigger_browser_pageview_events
-    <<~HTML.html_safe
-      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
-    HTML
+  def discourse_pageview_tracking_meta_tags
+    if !SiteSetting.trigger_browser_pageview_events &&
+         !SiteSetting.use_beacon_for_browser_page_views
+      return ""
+    end
+
+    tags = +""
+    tags << tag.meta(name: "discourse-track-view-session-id", content: SecureRandom.base64(32))
+    if SiteSetting.use_beacon_for_browser_page_views
+      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+    tags.html_safe
   end
 
   def gsub_emoji_to_unicode(str)

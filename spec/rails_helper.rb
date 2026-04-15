@@ -1064,7 +1064,7 @@ RSpec.configure do |config|
       super
     end
 
-    def log_off_user(session, cookies)
+    def log_off_user(session, cookies, push_subscription: nil)
       # Try using the main session as `session` sometimes is a server session
       (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super
