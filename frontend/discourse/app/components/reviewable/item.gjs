@@ -38,7 +38,7 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import Topic from "discourse/models/topic";
-import { eq } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 let _components = {};
@@ -106,9 +106,11 @@ export default class ReviewableItem extends Component {
   updating = null;
   editing = false;
   _updates = null;
+  _previousReviewableId = null;
 
   constructor() {
     super(...arguments);
+    this._previousReviewableId = this.reviewable?.id;
     this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.subscribe("/reviewable_action", this._updateStatus);
   }
@@ -121,8 +123,11 @@ export default class ReviewableItem extends Component {
 
   didUpdateAttrs() {
     super.didUpdateAttrs(...arguments);
-    this.activeTab = "timeline";
-    this.insightsOpened = false;
+    if (this.reviewable?.id !== this._previousReviewableId) {
+      this._previousReviewableId = this.reviewable?.id;
+      this.activeTab = "timeline";
+      this.insightsOpened = false;
+    }
   }
 
   @computed("reviewable.claimed_by.automatic")
@@ -843,7 +848,7 @@ export default class ReviewableItem extends Component {
             </div>
 
             {{#if this.insightsOpened}}
-              <div hidden={{if (eq this.activeTab "insights") false true}}>
+              <div hidden={{not (eq this.activeTab "insights")}}>
                 <ReviewableInsights @reviewable={{this.reviewable}} />
               </div>
             {{/if}}
