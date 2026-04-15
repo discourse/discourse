@@ -24,6 +24,8 @@ export default class LikedUsersList extends Component {
 
   #page = 0;
 
+  #scrollHandler = null;
+
   get buttonIcon() {
     if (!this.args.post.showLike) {
       return this.args.post.yours ? "d-liked" : "d-unliked";
@@ -41,20 +43,33 @@ export default class LikedUsersList extends Component {
   @action
   togglePopup() {
     if (this.popupExpanded) {
-      this.popupExpanded = false;
+      this.#closePopup();
     } else {
       this.users = [];
       this.#page = 0;
       this.canLoadMore = true;
       this.popupExpanded = true;
       this.#positionPopup();
+      this.#scrollHandler = () => this.#closePopup();
+      window.addEventListener("scroll", this.#scrollHandler, {
+        once: true,
+        passive: true,
+      });
     }
   }
 
   @action
   clickOutside() {
     if (this.popupExpanded) {
-      this.popupExpanded = false;
+      this.#closePopup();
+    }
+  }
+
+  #closePopup() {
+    this.popupExpanded = false;
+    if (this.#scrollHandler) {
+      window.removeEventListener("scroll", this.#scrollHandler);
+      this.#scrollHandler = null;
     }
   }
 
@@ -62,7 +77,7 @@ export default class LikedUsersList extends Component {
   keyDown(event) {
     if (event.key === "Escape" && this.popupExpanded) {
       event.stopPropagation();
-      this.popupExpanded = false;
+      this.#closePopup();
     }
   }
 

@@ -25,6 +25,8 @@ export default class DiscourseReactionsCounter extends Component {
 
   reactionsUsers = trackedObject();
 
+  #scrollHandler = null;
+
   get elementId() {
     return `discourse-reactions-counter-${this.args.post.id}-${
       this.args.position || "right"
@@ -68,7 +70,7 @@ export default class DiscourseReactionsCounter extends Component {
     } else if (event.key === "Escape") {
       if (this.usersPopupExpanded) {
         event.stopPropagation();
-        this.usersPopupExpanded = false;
+        this.#closeUsersPopup();
         document.getElementById(this.elementId)?.focus();
       } else if (this.args.statePanelExpanded) {
         event.stopPropagation();
@@ -92,20 +94,25 @@ export default class DiscourseReactionsCounter extends Component {
     event.preventDefault();
 
     if (this.usersPopupExpanded) {
-      this.usersPopupExpanded = false;
+      this.#closeUsersPopup();
     } else {
       if (this.args.statePanelExpanded) {
         this.args.collapseStatePanel();
       }
       this.usersPopupExpanded = true;
       this.#positionPopup();
+      this.#scrollHandler = () => this.#closeUsersPopup();
+      window.addEventListener("scroll", this.#scrollHandler, {
+        once: true,
+        passive: true,
+      });
     }
   }
 
   @action
   clickOutside() {
     if (this.usersPopupExpanded) {
-      this.usersPopupExpanded = false;
+      this.#closeUsersPopup();
     } else if (this.args.statePanelExpanded) {
       this.args.collapseAllPanels();
     }
@@ -129,13 +136,18 @@ export default class DiscourseReactionsCounter extends Component {
       event.preventDefault();
 
       if (this.usersPopupExpanded) {
-        this.usersPopupExpanded = false;
+        this.#closeUsersPopup();
       } else {
         if (this.args.statePanelExpanded) {
           this.args.collapseStatePanel();
         }
         this.usersPopupExpanded = true;
         this.#positionPopup();
+        this.#scrollHandler = () => this.#closeUsersPopup();
+        window.addEventListener("scroll", this.#scrollHandler, {
+          once: true,
+          passive: true,
+        });
       }
     }
   }
@@ -202,6 +214,14 @@ export default class DiscourseReactionsCounter extends Component {
       this.args.post.reactions[0].id ===
         this.siteSettings.discourse_reactions_reaction_for_like
     );
+  }
+
+  #closeUsersPopup() {
+    this.usersPopupExpanded = false;
+    if (this.#scrollHandler) {
+      window.removeEventListener("scroll", this.#scrollHandler);
+      this.#scrollHandler = null;
+    }
   }
 
   #positionPopup() {
