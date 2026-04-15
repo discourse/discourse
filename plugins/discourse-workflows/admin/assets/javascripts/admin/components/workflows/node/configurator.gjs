@@ -11,6 +11,7 @@ import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
@@ -26,6 +27,22 @@ import {
 import PropertyEngineConfigurator from "../configurators/property-engine";
 import InputContext from "../context/input";
 import OutputContext from "../context/output";
+
+const JS_TYPE_MAP = {
+  number: "integer",
+  boolean: "boolean",
+  object: "object",
+};
+
+function inferFieldType(value) {
+  if (Array.isArray(value)) {
+    return "array";
+  }
+  if (value !== null && value !== undefined) {
+    return JS_TYPE_MAP[typeof value] || "string";
+  }
+  return "string";
+}
 
 export default class NodeConfigurator extends Component {
   @service workflowsNodeTypes;
@@ -71,6 +88,7 @@ export default class NodeConfigurator extends Component {
   async #loadTypes() {
     this.nodeTypes = await this.workflowsNodeTypes.load();
     this.#applyDefaults();
+    await this.#populateSqlOutputFields();
   }
 
   #applyDefaults() {
@@ -99,6 +117,58 @@ export default class NodeConfigurator extends Component {
         key: column.name,
         type: { number: "number", boolean: "boolean" }[column.type] ?? "string",
       }));
+    }
+  }
+
+  async #populateSqlOutputFields() {
+    const node = this.args.model.node;
+    if (node.type !== "action:sql") {
+      return;
+    }
+
+    const workflowId = this.workflowsNodeTypes.workflowId;
+    if (!workflowId) {
+      return;
+    }
+
+    try {
+      const listResult = await ajax(
+        `/admin/plugins/discourse-workflows/workflows/${workflowId}/executions.json`
+      );
+      const executions = listResult.executions || [];
+      const lastSuccess = executions.find((e) => e.status === "success");
+      if (!lastSuccess) {
+        return;
+      }
+
+      const showResult = await ajax(
+        `/admin/plugins/discourse-workflows/executions/${lastSuccess.id}.json`
+      );
+      const steps = showResult.execution?.steps || [];
+      const step = steps.find(
+        (s) => s.node_id === node.clientId && s.status === "success"
+      );
+      if (!step?.output?.length) {
+        return;
+      }
+
+      const firstItem = step.output[0];
+      const json = firstItem?.json;
+      if (!json || typeof json !== "object") {
+        return;
+      }
+
+      const fields = Object.entries(json).map(([key, value]) => ({
+        key,
+        type: inferFieldType(value),
+      }));
+
+      if (fields.length) {
+        this.initialConfiguration.output_fields = fields;
+        this.parametersApi?.set("output_fields", fields);
+      }
+    } catch {
+      // Execution data unavailable — output fields stay empty
     }
   }
 
