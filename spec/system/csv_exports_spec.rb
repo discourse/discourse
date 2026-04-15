@@ -45,11 +45,7 @@ RSpec.describe "CSV Exports" do
         likes_received: 117,
       )
 
-      user.user_profile.update!(
-        location: "Tbilisi",
-        website: "https://www.discourse.org",
-        views: 5,
-      )
+      user.user_profile.update!(location: "Tbilisi", website: "https://www.discourse.org", views: 5)
     end
 
     it "exports data" do
@@ -269,15 +265,7 @@ RSpec.describe "CSV Exports" do
   end
 
   context "with screened urls" do
-    fab!(:screened_url) do
-      Fabricate(
-        :screened_url,
-        match_count: 5,
-        domain: "https://discourse.org",
-        last_match_at: Time.current,
-        created_at: Time.current,
-      )
-    end
+    fab!(:screened_url) { Fabricate(:screened_url, last_match_at: Time.current) }
 
     it "exports data" do
       visit "admin/logs/screened_urls"
