@@ -323,7 +323,11 @@ export default class ProsemirrorEditor extends Component {
       ])
     );
 
-    return schema.nodes[listType].create(null, listItems);
+    if (typeof listType === "string") {
+      listType = schema.nodes[listType];
+    }
+
+    return listType.create(null, listItems);
   }
 
   @bind
