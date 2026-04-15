@@ -508,14 +508,18 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     end
   end
 
-  describe "#delete_row" do
-    it "deletes a row and returns true" do
-      expect(facade.delete_row(row_1["id"])).to be(true)
+  describe "#delete_rows" do
+    it "deletes rows by ids and returns the affected count" do
+      expect(facade.delete_rows([row_1["id"]])).to eq(1)
       expect(find_data_table_row(data_table, row_1["id"])).to be_nil
     end
 
-    it "returns false for a non-existent id" do
-      expect(facade.delete_row(-1)).to be(false)
+    it "returns 0 for non-existent ids" do
+      expect(facade.delete_rows([-1])).to eq(0)
+    end
+
+    it "returns 0 for an empty array" do
+      expect(facade.delete_rows([])).to eq(0)
     end
   end
 
@@ -576,6 +580,22 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
 
       expect(result[:operation]).to eq("insert")
       expect(result[:row]["email"]).to eq("new@example.com")
+    end
+  end
+
+  describe "statement timeout" do
+    it "raises StatementTimeout when a query exceeds the limit" do
+      stub_const(
+        DiscourseWorkflows::DataTables::Storage,
+        :STATEMENT_TIMEOUT_MS,
+        100,
+      ) do
+        expect {
+          facade.send(:with_statement_timeout) do
+            ActiveRecord::Base.connection.execute("SELECT pg_sleep(1)")
+          end
+        }.to raise_error(described_class::StatementTimeout)
+      end
     end
   end
 

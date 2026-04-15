@@ -26,7 +26,7 @@ module DiscourseWorkflows
 
     only_if(:single_row_mode?) do
       model :row, :fetch_row
-      step :destroy_single_row
+      step :destroy_batch_rows
     end
 
     only_if(:batch_mode?) { step :destroy_batch_rows }
@@ -66,12 +66,9 @@ module DiscourseWorkflows
       facade.build_query(filter: params.filter)
     end
 
-    def destroy_single_row(facade:, params:)
-      context[:deleted_count] = facade.delete_row(params.row_id) ? 1 : 0
-    end
-
     def destroy_batch_rows(facade:, params:)
-      context[:deleted_count] = facade.delete_rows(params.row_ids)
+      ids = params.row_ids.presence || [params.row_id]
+      context[:deleted_count] = facade.delete_rows(ids)
     end
 
     def destroy_filtered_rows(facade:, query:)

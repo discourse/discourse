@@ -11,6 +11,7 @@ module DiscourseWorkflows
       }.freeze
 
       LOCK_TIMEOUT_MS = 5_000
+      STATEMENT_TIMEOUT_MS = 2_000
 
       RESERVED_COLUMN_NAMES = %w[id created_at updated_at].freeze
 

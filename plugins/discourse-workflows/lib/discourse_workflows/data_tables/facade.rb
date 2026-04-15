@@ -3,6 +3,9 @@
 module DiscourseWorkflows
   module DataTables
     class Facade
+      class StatementTimeout < StandardError
+      end
+
       class Query
         include ActiveModel::Validations
 
@@ -116,63 +119,66 @@ module DiscourseWorkflows
       end
 
       def query(query)
-        query_rows(query)
+        with_statement_timeout { query_rows(query) }
       end
 
       def find_row(row_id)
-        query = @table.project(Arel.star).where(@table[:id].eq(row_id))
-        connection.exec_query(query.to_sql).to_a.first&.then { |row| serialize_row(row) }
+        with_statement_timeout do
+          query = @table.project(Arel.star).where(@table[:id].eq(row_id))
+          connection.exec_query(query.to_sql).to_a.first&.then { |row| serialize_row(row) }
+        end
       end
 
       def count(query = nil)
-        count_rows(normalized_filter: query&.normalized_filter)
+        with_statement_timeout { count_rows(normalized_filter: query&.normalized_filter) }
       end
 
       def insert(row_input)
-        insert_row(row_input.columns)
+        with_statement_timeout { insert_row(row_input.columns) }
       end
 
       def update_row(row_id:, row_input:)
         return nil if row_input.columns.empty?
 
-        um = build_update_manager(row_input.columns)
-        um.where(@table[:id].eq(row_id))
-        connection
-          .exec_query("#{um.to_sql} RETURNING *")
-          .to_a
-          .first
-          &.then { |row| serialize_row(row) }
+        with_statement_timeout do
+          um = build_update_manager(row_input.columns)
+          um.where(@table[:id].eq(row_id))
+          connection
+            .exec_query("#{um.to_sql} RETURNING *")
+            .to_a
+            .first
+            &.then { |row| serialize_row(row) }
+        end
       end
 
       def update(query:, row_input:)
         return 0 if row_input.columns.empty?
 
-        um = build_update_manager(row_input.columns)
-        um = apply_filters(um, query.normalized_filter)
-        connection.exec_update(um.to_sql)
-      end
-
-      def delete_row(row_id)
-        dm = Arel::DeleteManager.new
-        dm.from(@table)
-        dm.where(@table[:id].eq(row_id))
-        connection.exec_query("#{dm.to_sql} RETURNING #{quoted_column("id")}").to_a.any?
+        with_statement_timeout do
+          um = build_update_manager(row_input.columns)
+          um = apply_filters(um, query.normalized_filter)
+          connection.exec_update(um.to_sql)
+        end
       end
 
       def delete(query:)
-        dm = Arel::DeleteManager.new
-        dm.from(@table)
-        dm = apply_filters(dm, query.normalized_filter)
-        connection.exec_delete(dm.to_sql)
+        with_statement_timeout do
+          dm = Arel::DeleteManager.new
+          dm.from(@table)
+          dm = apply_filters(dm, query.normalized_filter)
+          connection.exec_delete(dm.to_sql)
+        end
       end
 
       def delete_rows(row_ids)
         return 0 if row_ids.empty?
 
-        dm = Arel::DeleteManager.new
-        dm.from(@table)
-        dm.where(@table[:id].in(row_ids))
-        connection.exec_delete(dm.to_sql)
+        with_statement_timeout do
+          dm = Arel::DeleteManager.new
+          dm.from(@table)
+          dm.where(@table[:id].in(row_ids))
+          connection.exec_delete(dm.to_sql)
+        end
       end
 
       def upsert(query:, row_input:)
@@ -347,6 +353,15 @@ module DiscourseWorkflows
         yield
       rescue PG::LockNotAvailable
         raise
+      end
+
+      def with_statement_timeout
+        connection.transaction do
+          connection.execute("SET LOCAL statement_timeout = '#{Storage::STATEMENT_TIMEOUT_MS}ms'")
+          yield
+        end
+      rescue ActiveRecord::QueryCanceled
+        raise StatementTimeout
       end
     end
   end
