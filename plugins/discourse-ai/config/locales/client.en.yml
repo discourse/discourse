@@ -405,6 +405,11 @@ en:
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
+        theme_translations:
+          translate:
+            label: "Translate"
+            title: "Translate to all supported languages"
+            queued: "Translation queued"
         translations_menu:
           translate:
             label: "Translate post"
