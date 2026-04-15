@@ -386,6 +386,8 @@ export default class WorkflowsEditor extends Component {
         nodes,
         connections,
         triggerType: triggerNode?.type,
+        lastExecutionNodeOutputs:
+          this.args.workflow?.last_execution_node_outputs,
         onSave: (configuration, name) =>
           this.updateNodeConfiguration(clientId, configuration, name),
         onRemove: () => this.removeNodes([clientId]),

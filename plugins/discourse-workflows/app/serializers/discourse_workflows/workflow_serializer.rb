@@ -13,7 +13,8 @@ module DiscourseWorkflows
                :created_at,
                :updated_at,
                :last_execution_status,
-               :last_execution_at
+               :last_execution_at,
+               :last_execution_node_outputs
 
     attribute :created_by
     attribute :updated_by
@@ -51,6 +52,28 @@ module DiscourseWorkflows
     def last_execution_status
       return unless object.attributes.key?("last_execution_status_value")
       DiscourseWorkflows::Execution.statuses.key(object.attributes["last_execution_status_value"])
+    end
+
+    def last_execution_node_outputs
+      execution =
+        object
+          .executions
+          .includes(:execution_data)
+          .where(status: :success)
+          .order(created_at: :desc)
+          .first
+      return unless execution&.execution_data
+
+      entries = execution.execution_data.entries || {}
+      outputs = {}
+      entries.each do |node_id, steps|
+        step = Array(steps).find { |s| s["status"] == "success" }
+        next unless step
+        items = step["output"] || []
+        first_json = items.dig(0, "json")
+        outputs[node_id] = first_json if first_json.present?
+      end
+      outputs
     end
   end
 end
