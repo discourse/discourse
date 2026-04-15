@@ -1805,6 +1805,7 @@ nested_replies:
     default: false
     client: true
     area: "posts_and_topics"
+    hidden: true
   nested_replies_default:
     default: false
     client: true
@@ -1812,6 +1813,7 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
+    hidden: true
   nested_replies_default_sort:
     default: "top"
     client: true
@@ -1824,6 +1826,7 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
+    hidden: true
   nested_replies_max_depth:
     default: 10
     client: true
@@ -1834,6 +1837,7 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
+    hidden: true
   nested_replies_cap_nesting_depth:
     default: false
     client: true
@@ -1841,6 +1845,7 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
+    hidden: true
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
@@ -1857,6 +1862,7 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
+    hidden: true
 
 email:
   email_time_window_mins:
