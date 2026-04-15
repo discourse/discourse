@@ -29,29 +29,13 @@ module DiscourseWorkflows
               },
             },
             output_fields: {
-              type: :collection,
+              type: :array,
               required: false,
-              item_schema: {
-                key: {
-                  type: :string,
-                  required: true,
-                  ui: {
-                    expression: false,
-                  },
-                },
-                type: {
-                  type: :options,
-                  required: true,
-                  options: %w[string integer array boolean],
-                  default: "string",
-                },
+              ui: {
+                hidden: true,
               },
             },
           }
-        end
-
-        def self.output_schema
-          { result: :string }
         end
 
         def execute(exec_ctx)

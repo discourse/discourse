@@ -35,7 +35,8 @@ export default class OutputContext extends Component {
   }
 
   get needsExecutionDiscovery() {
-    return this.args.node?.type === "action:sql";
+    const type = this.args.node?.type;
+    return type === "action:sql" || type === "action:code";
   }
 
   <template>

@@ -118,9 +118,9 @@ export default class NodeConfigurator extends Component {
     }
   }
 
-  get sqlOutputFields() {
+  get executionOutputFields() {
     const node = this.args.model.node;
-    if (node.type !== "action:sql") {
+    if (node.type !== "action:sql" && node.type !== "action:code") {
       return null;
     }
 
@@ -213,9 +213,9 @@ export default class NodeConfigurator extends Component {
       }
     }
 
-    const sqlFields = this.sqlOutputFields;
-    if (sqlFields?.length) {
-      config.output_fields = sqlFields;
+    const executionFields = this.executionOutputFields;
+    if (executionFields?.length) {
+      config.output_fields = executionFields;
     }
 
     return config;
