@@ -61,7 +61,7 @@
   iframe.id = "discourse-embed-frame";
   iframe.width = "100%";
   iframe.frameBorder = "0";
-  iframe.scrolling = "no";
+  iframe.scrolling = DE.fullApp ? "yes" : "no";
   if (DE.fullApp) {
     iframe.style.height = DE.embedHeight || "600px";
   }
@@ -97,7 +97,7 @@
     }
 
     if (e.data) {
-      if (e.data.type === "discourse-resize" && e.data.height) {
+      if (e.data.type === "discourse-resize" && e.data.height && !DE.fullApp) {
         iframe.height = e.data.height + "px";
       }
 
