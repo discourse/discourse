@@ -23,6 +23,21 @@ RSpec.describe Jobs::GenerateTopicOgImage do
     described_class.new.execute(topic_id: topic.id)
   end
 
+  it "does nothing for personal messages" do
+    pm = Fabricate(:private_message_topic)
+    TopicOgImageGenerator.any_instance.expects(:generate).never
+    described_class.new.execute(topic_id: pm.id)
+    expect(pm.reload.og_image_upload_id).to be_nil
+  end
+
+  it "does nothing for topics in a read-restricted category" do
+    private_category = Fabricate(:private_category, group: Fabricate(:group))
+    topic.update!(category: private_category)
+    TopicOgImageGenerator.any_instance.expects(:generate).never
+    described_class.new.execute(topic_id: topic.id)
+    expect(topic.reload.og_image_upload_id).to be_nil
+  end
+
   it "generates an OG image for a topic without an image" do
     upload = Fabricate(:upload)
     TopicOgImageGenerator.any_instance.expects(:generate).returns(upload)

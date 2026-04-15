@@ -9,6 +9,15 @@ class Admin::Config::LogoController < Admin::AdminController
     topic = Topic.find_by(id: params[:topic_id])
     raise Discourse::NotFound if topic.nil?
 
+    if !TopicOgImageGenerator.eligible?(topic)
+      render json: {
+               error:
+                 "Cannot generate an OG image for personal messages or topics in private categories",
+             },
+             status: :unprocessable_entity
+      return
+    end
+
     png_bytes = TopicOgImageGenerator.new(topic).generate_bytes
 
     if png_bytes.blank?

@@ -14,6 +14,7 @@ module Jobs
       return if topic.nil?
       return if topic.image_upload_id.present?
       return if topic.og_image_upload_id.present?
+      return if !TopicOgImageGenerator.eligible?(topic)
 
       generator = TopicOgImageGenerator.new(topic)
       upload = generator.generate

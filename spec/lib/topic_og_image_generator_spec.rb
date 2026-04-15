@@ -31,6 +31,27 @@ RSpec.describe TopicOgImageGenerator do
     end
   end
 
+  describe ".eligible?" do
+    it "returns true for a public topic in a public category" do
+      expect(described_class.eligible?(topic)).to eq(true)
+    end
+
+    it "returns false when topic is nil" do
+      expect(described_class.eligible?(nil)).to eq(false)
+    end
+
+    it "returns false for a personal message" do
+      pm = Fabricate(:private_message_topic)
+      expect(described_class.eligible?(pm)).to eq(false)
+    end
+
+    it "returns false for a topic in a read-restricted category" do
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      topic.update!(category: private_category)
+      expect(described_class.eligible?(topic)).to eq(false)
+    end
+  end
+
   describe "#build_svg (via send)" do
     it "includes the topic title limited to two lines" do
       generator = described_class.new(topic)

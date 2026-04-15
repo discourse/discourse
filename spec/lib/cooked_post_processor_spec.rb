@@ -893,6 +893,23 @@ RSpec.describe CookedPostProcessor do
             Jobs::GenerateTopicOgImage.jobs.size
           }
         end
+
+        it "does not enqueue for personal messages" do
+          SiteSetting.generate_topic_og_image = true
+          pm_post = Fabricate(:private_message_post, user: user_with_auto_groups)
+          expect { CookedPostProcessor.new(pm_post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for topics in a read-restricted category" do
+          SiteSetting.generate_topic_og_image = true
+          private_category = Fabricate(:private_category, group: Fabricate(:group))
+          post.topic.update!(category: private_category)
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
       end
 
       it "prioritizes data-thumbnail images" do

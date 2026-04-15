@@ -169,7 +169,8 @@ class CookedPostProcessor
       if @post.is_first_post?
         topic = @post.topic
         topic.update_column(:image_upload_id, nil) if topic.image_upload_id
-        if SiteSetting.generate_topic_og_image && topic.og_image_upload_id.nil?
+        if SiteSetting.generate_topic_og_image && topic.og_image_upload_id.nil? &&
+             TopicOgImageGenerator.eligible?(topic)
           Jobs.enqueue(:generate_topic_og_image, topic_id: topic.id)
         end
       end

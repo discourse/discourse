@@ -39,6 +39,21 @@ RSpec.describe Admin::Config::LogoController do
         expect(response.status).to eq(422)
       end
 
+      it "returns 422 for personal messages without attempting to generate" do
+        pm = Fabricate(:private_message_topic)
+        TopicOgImageGenerator.any_instance.expects(:generate_bytes).never
+        get "/admin/config/logo/og-image-preview.json", params: { topic_id: pm.id }
+        expect(response.status).to eq(422)
+      end
+
+      it "returns 422 for topics in a read-restricted category" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        topic.update!(category: private_category)
+        TopicOgImageGenerator.any_instance.expects(:generate_bytes).never
+        get "/admin/config/logo/og-image-preview.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(422)
+      end
+
       it "does not persist an Upload" do
         expect {
           get "/admin/config/logo/og-image-preview.json", params: { topic_id: topic.id }

@@ -12,6 +12,16 @@ class TopicOgImageGenerator
   SIDE_MARGIN = 80
   FONT_FAMILY = "sans-serif"
 
+  # OG images are embedded in public topic pages for external crawlers and
+  # link previewers, so we must not generate them for content that is not
+  # publicly visible (PMs or topics in read-restricted categories).
+  def self.eligible?(topic)
+    return false if topic.nil?
+    return false if topic.private_message?
+    return false if topic.category&.read_restricted?
+    true
+  end
+
   def initialize(topic)
     @topic = topic
   end
