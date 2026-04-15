@@ -181,6 +181,18 @@ describe "Composer - ProseMirror - Oneboxing" do
     expect(composer).to have_value("Hey https://example.com/x and https://example.com/x")
   end
 
+  it "removes loading decoration when onebox fetch fails" do
+    stub_request(:get, "https://example.com/fail").to_return(status: 404)
+
+    cdp.allow_clipboard
+    open_composer
+    cdp.copy_paste("https://example.com/fail")
+    page.send_keys(:enter)
+
+    expect(rich).to have_no_css(".onebox-loading")
+    expect(rich).to have_css("a[href='https://example.com/fail']")
+  end
+
   context "with watched word links" do
     fab!(:topic) { Fabricate(:topic, user: current_user) }
     fab!(:post) do
