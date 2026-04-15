@@ -26,7 +26,9 @@ export default class AdminEmbeddingIndexController extends Controller {
     const fullAppLines = this.fullAppMode
       ? `
       fullApp: true,
-      embedHeight: '800px',`
+      embedHeight: '800px',
+      // lazyLoad: false, // disable lazy loading of the iframe
+      // lazyLoadMargin: '1000', // pixels before viewport to start loading`
       : "";
 
     const html = `<div id='discourse-comments'></div>
