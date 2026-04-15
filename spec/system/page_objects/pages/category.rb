@@ -13,6 +13,11 @@ module PageObjects
         self
       end
 
+      def visit_moderation(category)
+        page.visit("/c/#{category.slug}/edit/moderation")
+        self
+      end
+
       def visit_general(category, subcategory = nil)
         if subcategory
           page.visit("/c/#{category.slug}/#{subcategory.slug}/edit/general")
