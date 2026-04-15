@@ -3,13 +3,22 @@
 class UserSuspender
   attr_reader :user_history
 
-  def initialize(user, suspended_till:, reason:, by_user:, message: nil, post_id: nil)
+  def initialize(
+    user,
+    suspended_till:,
+    reason:,
+    by_user:,
+    message: nil,
+    post_id: nil,
+    reviewable: nil
+  )
     @user = user
     @suspended_till = suspended_till
     @reason = reason
     @by_user = by_user
     @message = message
     @post_id = post_id
+    @reviewable = reviewable
   end
 
   def suspend
@@ -22,7 +31,7 @@ class UserSuspender
       @user.save!
 
       @user_history =
-        StaffActionLogger.new(@by_user).log_user_suspend(
+        StaffActionLogger.new(@by_user, reviewable: @reviewable).log_user_suspend(
           @user,
           @reason,
           message: @message,

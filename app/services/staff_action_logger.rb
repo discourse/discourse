@@ -6,8 +6,9 @@ class StaffActionLogger
     %i[topic_id post_id category_id context subject ip_address previous_value new_value]
   end
 
-  def initialize(admin)
+  def initialize(admin, reviewable: nil)
     @admin = admin
+    @reviewable = reviewable
     raise Discourse::InvalidParameters.new(:admin) unless @admin && @admin.is_a?(User)
   end
 
@@ -42,6 +43,7 @@ class StaffActionLogger
     attrs[:acting_user_id] = @admin.id
     attrs[:action] = UserHistory.actions[:custom_staff]
     attrs[:custom_type] = custom_type
+    attrs[:reviewable_id] = @reviewable&.id
 
     UserHistory.create!(attrs)
   end
@@ -1185,7 +1187,12 @@ class StaffActionLogger
 
   def params(opts = nil)
     opts ||= {}
-    { acting_user_id: @admin.id, context: opts[:context], details: opts[:details] }
+    {
+      acting_user_id: @admin.id,
+      context: opts[:context],
+      details: opts[:details],
+      reviewable_id: @reviewable&.id,
+    }
   end
 
   def validate_category(category)

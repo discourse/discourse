@@ -5,13 +5,17 @@ class User::Action::SilenceAll < Service::ActionBase
   option :actor
   option :params
 
-  delegate :message, :post_id, :silenced_till, :reason, to: :params, private: true
+  delegate :message, :post_id, :silenced_till, :reason, :reviewable_id, to: :params, private: true
 
   def call
     silenced_users.first.try(:user_history).try(:details)
   end
 
   private
+
+  def reviewable
+    @reviewable ||= Reviewable.find_by(id: reviewable_id) if reviewable_id
+  end
 
   def silenced_users
     users.map do |user|
@@ -24,6 +28,7 @@ class User::Action::SilenceAll < Service::ActionBase
           silenced_till:,
           reason:,
           post_id:,
+          reviewable:,
         )
         .tap do |silencer|
           next unless silencer.silence

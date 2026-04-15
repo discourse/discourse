@@ -7987,6 +7987,7 @@ en:
         topic_id: "Topic ID"
         post_id: "Post ID"
         category_id: "Category ID"
+        reviewable_id: "Review"
         delete: "Delete"
         edit: "Edit"
         save: "Save"

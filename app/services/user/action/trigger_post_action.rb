@@ -5,7 +5,7 @@ class User::Action::TriggerPostAction < Service::ActionBase
   option :post
   option :params
 
-  delegate :post_action, to: :params, private: true
+  delegate :post_action, :reviewable_id, to: :params, private: true
   delegate :user, to: :guardian, private: true
 
   def call
@@ -16,14 +16,18 @@ class User::Action::TriggerPostAction < Service::ActionBase
 
   private
 
+  def reviewable
+    @reviewable ||= Reviewable.find_by(id: reviewable_id) if reviewable_id
+  end
+
   def delete
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.new(user, post).destroy
+    PostDestroyer.new(user, post, reviewable: reviewable).destroy
   end
 
   def delete_replies
     return unless guardian.can_delete_post_or_topic?(post)
-    PostDestroyer.delete_with_replies(user, post)
+    PostDestroyer.delete_with_replies(user, post, reviewable)
   end
 
   def edit

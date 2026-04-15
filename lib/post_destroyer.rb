@@ -203,18 +203,16 @@ class PostDestroyer
       remove_associated_notifications
 
       if @user.id != @post.user_id && !@opts[:skip_staff_log]
+        logger = StaffActionLogger.new(@user, reviewable: @opts[:reviewable])
+
         if @post.topic && @post.is_first_post?
-          StaffActionLogger.new(@user).log_topic_delete_recover(
+          logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
             @opts.slice(:context),
           )
         else
-          StaffActionLogger.new(@user).log_post_deletion(
-            @post,
-            **@opts.slice(:context),
-            permanent: permanent?,
-          )
+          logger.log_post_deletion(@post, **@opts.slice(:context), permanent: permanent?)
         end
       end
 

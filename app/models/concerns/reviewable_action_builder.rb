@@ -149,7 +149,7 @@ module ReviewableActionBuilder
   def delete_user(user, delete_options, performed_by)
     email = user.email
 
-    UserDestroyer.new(performed_by).destroy(user, delete_options)
+    UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable: self))
 
     message = UserNotifications.account_deleted(email, self)
     Email::Sender.new(message, :account_deleted).send
