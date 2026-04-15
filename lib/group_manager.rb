@@ -16,9 +16,6 @@ class GroupManager
     added_user_ids = bulk_add_transaction(user_ids)
     return [] if added_user_ids.blank?
 
-    grant_trust_level(added_user_ids)
-    GroupUser.bulk_set_category_notifications(@group, added_user_ids)
-    GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
     bulk_publish_category_updates(added_user_ids)
 
     User
@@ -50,7 +47,7 @@ class GroupManager
 
   def sync_add_side_effects(added_user_ids)
     update_title(added_user_ids)
-    set_primary_group(added_user_ids)
+    set_primary_group_and_update_flair(added_user_ids)
     grant_trust_level(added_user_ids)
     GroupUser.bulk_set_category_notifications(@group, added_user_ids)
     GroupUser.bulk_set_tag_notifications(@group, added_user_ids)
@@ -103,18 +100,7 @@ class GroupManager
 
       return added_user_ids if added_user_ids.blank?
 
-      if @group.primary_group?
-        User
-          .where(id: added_user_ids)
-          .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
-          .update_all(flair_group_id: @group.id)
-
-        set_primary_group(added_user_ids)
-      end
-
-      update_title(added_user_ids)
-
-      increase_group_user_count(added_user_ids)
+      sync_add_side_effects(added_user_ids)
     end
 
     added_user_ids
@@ -194,8 +180,13 @@ class GroupManager
     end
   end
 
-  def set_primary_group(added_user_ids)
+  def set_primary_group_and_update_flair(added_user_ids)
     return unless @group.primary_group?
+
+    User
+      .where(id: added_user_ids)
+      .where("flair_group_id IS NOT DISTINCT FROM primary_group_id")
+      .update_all(flair_group_id: @group.id)
 
     DB.exec(<<~SQL, user_ids: added_user_ids, new_title: @group.title)
         UPDATE users u
