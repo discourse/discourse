@@ -2013,6 +2013,26 @@ RSpec.describe SiteSettingExtension do
       end
     end
 
+    context "when admin opts out of the target setting after the override is active" do
+      before do
+        settings.provider.save(
+          :increase_suggested_topics_max_days_old_default,
+          true,
+          SiteSetting.types[:bool],
+        )
+        settings.refresh!
+      end
+
+      it "preserves the admin's explicit value across refresh, even when it equals the original default" do
+        expect(settings.suggested_topics_max_days_old).to eq(1000)
+
+        settings.provider.save(:suggested_topics_max_days_old, 365, SiteSetting.types[:integer])
+        settings.refresh!
+
+        expect(settings.suggested_topics_max_days_old).to eq(365)
+      end
+    end
+
     describe "all_settings effective default" do
       context "when the linked upcoming change is active" do
         before do
