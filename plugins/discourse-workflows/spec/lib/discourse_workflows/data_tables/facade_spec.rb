@@ -586,7 +586,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
   describe "statement timeout" do
     it "raises StatementTimeout when a query exceeds the limit" do
       stub_const(
-        DiscourseWorkflows::DataTables::Storage,
+        DiscourseWorkflows::DataTables::Facade,
         :STATEMENT_TIMEOUT_MS,
         100,
       ) do

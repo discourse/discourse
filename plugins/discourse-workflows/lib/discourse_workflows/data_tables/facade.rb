@@ -3,6 +3,9 @@
 module DiscourseWorkflows
   module DataTables
     class Facade
+      LOCK_TIMEOUT_MS = 5_000
+      STATEMENT_TIMEOUT_MS = 500
+
       class StatementTimeout < StandardError
       end
 
@@ -349,7 +352,7 @@ module DiscourseWorkflows
       end
 
       def with_lock_timeout
-        connection.execute("SET LOCAL lock_timeout = '#{Storage::LOCK_TIMEOUT_MS}ms'")
+        connection.execute("SET LOCAL lock_timeout = '#{LOCK_TIMEOUT_MS}ms'")
         yield
       rescue PG::LockNotAvailable
         raise
@@ -357,11 +360,11 @@ module DiscourseWorkflows
 
       def with_statement_timeout
         connection.transaction do
-          connection.execute("SET LOCAL statement_timeout = '#{Storage::STATEMENT_TIMEOUT_MS}ms'")
+          connection.execute("SET LOCAL statement_timeout = '#{STATEMENT_TIMEOUT_MS}ms'")
           yield
         end
       rescue ActiveRecord::QueryCanceled
-        raise StatementTimeout
+        raise StatementTimeout, "Data table query exceeded the maximum allowed execution time"
       end
     end
   end
