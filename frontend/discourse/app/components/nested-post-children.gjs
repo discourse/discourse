@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -235,7 +236,11 @@ export default class NestedPostChildren extends Component {
 
         {{#if this.hasMore}}
           <DButton
-            class="btn-flat nested-post-children__load-more"
+            class={{concatClass
+              "btn-flat"
+              "nested-post-children__load-more"
+              (if @parentLineHighlighted "--parent-line-highlighted")
+            }}
             @action={{this.loadMore}}
             @disabled={{this.loadingMore}}
             @translatedLabel={{this.loadMoreLabel}}

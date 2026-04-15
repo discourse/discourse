@@ -94,15 +94,11 @@ module PageObjects
       end
 
       def has_replies_toggle_for?(post)
-        has_css?(
-          "[data-post-number='#{post.post_number}'] .post-action-menu__nested-replies-expand",
-        )
+        has_css?("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
       end
 
       def has_no_replies_toggle_for?(post)
-        has_no_css?(
-          "[data-post-number='#{post.post_number}'] .post-action-menu__nested-replies-expand",
-        )
+        has_no_css?("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
       end
 
       def has_no_show_replies_button_for?(post)

@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
+import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -165,6 +166,10 @@ export default class NestedPost extends Component {
 
   get showDepthLine() {
     return this.hasReplies && (!this.atMaxDepth || this.showContinueThread);
+  }
+
+  get showExpandRepliesButton() {
+    return this.hasReplies && !this.expanded && !this.atMaxDepth;
   }
 
   get isOP() {
@@ -476,6 +481,12 @@ export default class NestedPost extends Component {
                         @showLogin={{this.showLogin}}
                       />
                     </section>
+                    {{#if this.showExpandRepliesButton}}
+                      <NestedRepliesExpandButton
+                        @replyCount={{this.replyCount}}
+                        @onClick={{this.toggleExpanded}}
+                      />
+                    {{/if}}
                     <PluginOutlet
                       @name="post-links"
                       @outletArgs={{postOutletArgs}}

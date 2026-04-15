@@ -8,7 +8,6 @@ import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
-import NestedRepliesExpandButton from "discourse/components/nested-replies-expand-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SmallUserList, {
   smallUserAttrs,
@@ -56,7 +55,6 @@ const buttonKeys = Object.freeze({
   REPLY: "reply",
   SHARE: "share",
   ADD_TRANSLATION: "addTranslation",
-  NESTED_REPLIES_EXPAND: "nested-replies-expand",
   SHOW_MORE: "showMore",
 });
 
@@ -73,7 +71,6 @@ const coreButtonComponents = new Map([
   [buttonKeys.REPLY, PostMenuReplyButton],
   [buttonKeys.SHARE, PostMenuShareButton],
   [buttonKeys.ADD_TRANSLATION, PostMenuAddTranslationButton],
-  [buttonKeys.NESTED_REPLIES_EXPAND, NestedRepliesExpandButton],
   [buttonKeys.SHOW_MORE, PostMenuShowMoreButton],
 ]);
 

@@ -155,15 +155,31 @@
     margin-top: 0.5em;
   }
 
-  &__op-menu,
-  &__menu {
+  &__op-menu {
+    margin: 0.25em 0;
+
     .post-action-menu__show-replies {
       display: none;
     }
-  }
 
-  &__op-menu {
-    margin: 0.25em 0;
+    // Left-align the post menu in nested view on desktop (mobile keeps the
+    // Core right-aligned layout). Compounded with .post-menu-area to beat
+    // the Core `.post-menu-area { padding-left: ... }` rule from
+    // desktop/topic.scss, which has equal specificity but loads later.
+    @include viewport.from(sm) {
+      &.post-menu-area {
+        padding-left: 0;
+        margin-top: 1em;
+      }
+
+      nav.post-controls {
+        justify-content: flex-start;
+
+        .actions {
+          margin-left: 0;
+        }
+      }
+    }
   }
 
   &__roots {
@@ -393,7 +409,7 @@
       position: absolute;
       left: calc(var(--nested-avatar-size) / 2);
       top: 6px;
-      bottom: -1em;
+      bottom: 0;
       width: 2px;
       border-radius: 1px;
       background: var(--primary-low);
@@ -432,7 +448,7 @@
     &--collapsed {
       &::after {
         left: calc(var(--nested-avatar-size) / 2);
-        bottom: 20px; // aligns L-bend with the "N replies" expand button
+        bottom: 14px; // aligns L-bend with the "N replies" expand button
         width: calc(var(--nested-avatar-size) / 2);
         transform: none;
         background: none;
@@ -465,20 +481,21 @@
   &__depth-line-icon {
     position: absolute;
     bottom: 0;
-    left: 50%;
+    left: calc(50% + 1px);
     transform: translateX(-50%);
     z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
+    padding: 1px;
     border-radius: 50%;
     background: var(--secondary);
 
     .d-icon {
-      width: 14px;
-      height: 14px;
+      width: 100%;
+      height: 100%;
       color: var(--primary-low);
       transition: color 0.15s ease;
     }
@@ -556,13 +573,36 @@
   &__menu {
     margin: 0.25em 0;
 
-    .post-action-menu__nested-replies-expand {
-      color: var(--tertiary);
-      font-size: var(--font-down-1);
+    .post-action-menu__show-replies {
+      display: none;
+    }
 
-      .d-icon {
-        color: var(--tertiary);
+    // Left-align the post menu in nested view on desktop (mobile keeps the
+    // Core right-aligned layout). Compounded with .post-menu-area to beat
+    // the Core `.post-menu-area { padding-left: ... }` rule from
+    // desktop/topic.scss, which has equal specificity but loads later.
+    @include viewport.from(sm) {
+      &.post-menu-area {
+        padding-left: 0;
+        margin-top: 0;
       }
+
+      nav.post-controls {
+        justify-content: flex-start;
+
+        .actions {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  &__expand-replies.btn {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--tertiary);
     }
   }
 
@@ -686,7 +726,8 @@
       content: "";
       position: absolute;
       left: calc(
-        -1 * var(--nested-line-offset) - var(--nested-load-more-left-adjust)
+        -1 * var(--nested-line-offset) - var(--nested-load-more-left-adjust) +
+          1px
       );
       top: -1em;
       height: calc(50% + 1em);
@@ -694,6 +735,13 @@
       border-left: 2px solid var(--primary-low);
       border-bottom: 2px solid var(--primary-low);
       border-radius: 0 0 0 12px;
+      transition: border-color 0.15s ease;
+    }
+
+    // When the parent's depth-line is hovered, highlight this hook to match
+    // the sibling continuation lines above it.
+    &.--parent-line-highlighted::before {
+      border-color: var(--tertiary);
     }
   }
 }
@@ -770,9 +818,6 @@
   // ── View-level overrides ──
   .nested-view {
     padding: 0.5em;
-
-    // Grey background shows through the gaps between thread cards
-    background: var(--primary-very-low);
     border-radius: 0;
   }
 
