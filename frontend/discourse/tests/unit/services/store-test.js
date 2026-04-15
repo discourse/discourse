@@ -265,8 +265,22 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("Spec incompliant embedded record name", async function (assert) {
+    pretender.get("/fruits/5", () =>
+      response({
+        __rest_serializer: "1",
+        fruit: {
+          id: 5,
+          name: "kiwi",
+          farmer_id: null,
+          color_ids: [1],
+          category_id: 5,
+          other_fruit_ids: { apple: 1, banana: 2 },
+        },
+      })
+    );
+
     const store = getOwner(this).lookup("service:store");
-    const fruit = await store.find("fruit", 4);
+    const fruit = await store.find("fruit", 5);
 
     assert.propContains(
       fruit.other_fruit_ids,
