@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import pretender, {
   fixturesByUrl,
   response,
@@ -265,6 +266,8 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("Spec incompliant embedded record name", async function (assert) {
+    const stub = sinon.stub(console, "warn");
+
     pretender.get("/fruits/5", () =>
       response({
         __rest_serializer: "1",
@@ -287,6 +290,13 @@ module("Unit | Service | store", function (hooks) {
       { apple: 1, banana: 2 },
       "embedded record remains unhydrated"
     );
+    assert.true(
+      stub.calledWith(
+        "WARNING: Expected an array of resource ids for fruit.other_fruit_ids"
+      )
+    );
+
+    stub.restore();
   });
 
   test("hydrateEmbedded", async function (assert) {
