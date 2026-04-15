@@ -43,24 +43,17 @@ export default {
         },
       });
 
-      api.modifyClass("component:composer-actions", {
-        pluginId: "discourse-post-voting",
+      api.registerValueTransformer(
+        "composer-actions-content",
+        ({ value, context }) => {
+          const { action, composerModel } = context;
 
-        togglePostVotingSelected(options, model) {
-          model.toggleProperty("createAsPostVoting");
-          model.notifyPropertyChange("replyOptions");
-          model.notifyPropertyChange("action");
-        },
-      });
-
-      api.modifySelectKit("composer-actions").appendContent((options) => {
-        if (options.action === CREATE_TOPIC) {
-          if (
-            options.composerModel.createAsPostVoting &&
-            !options.composerModel.onlyPostVotingInThisCategory
-          ) {
-            return [
-              {
+          if (action === CREATE_TOPIC) {
+            if (
+              composerModel.createAsPostVoting &&
+              !composerModel.onlyPostVotingInThisCategory
+            ) {
+              value.push({
                 name: i18n(
                   "composer.composer_actions.remove_as_post_voting.label"
                 ),
@@ -69,13 +62,9 @@ export default {
                 ),
                 icon: "plus",
                 id: "togglePostVoting",
-              },
-            ];
-          } else if (options.composerModel.onlyPostVotingInThisCategory) {
-            return [];
-          } else {
-            return [
-              {
+              });
+            } else if (!composerModel.onlyPostVotingInThisCategory) {
+              value.push({
                 name: i18n(
                   "composer.composer_actions.create_as_post_voting.label"
                 ),
@@ -84,13 +73,26 @@ export default {
                 ),
                 icon: "plus",
                 id: "togglePostVoting",
-              },
-            ];
+              });
+            }
           }
-        } else {
-          return [];
+
+          return value;
         }
-      });
+      );
+
+      api.registerBehaviorTransformer(
+        "composer-actions-on-select",
+        ({ context, next }) => {
+          if (context.actionId === "togglePostVoting") {
+            context.model.toggleProperty("createAsPostVoting");
+            context.model.notifyPropertyChange("replyOptions");
+            context.model.notifyPropertyChange("action");
+          } else {
+            next();
+          }
+        }
+      );
 
       api.modifyClass("model:composer", {
         pluginId: "discourse-post-voting",

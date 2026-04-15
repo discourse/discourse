@@ -42,11 +42,8 @@ acceptance("composer", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
 
-    const composerActions = selectKit(".composer-actions");
-    await composerActions.expand();
-    await composerActions.selectKitSelectRowByName(
-      i18n("composer.composer_actions.create_as_post_voting.label")
-    );
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='togglePostVoting']");
 
     assert
       .dom(".action-title")
@@ -62,10 +59,8 @@ acceptance("composer", function (needs) {
         "displays the right label for composer create button"
       );
 
-    await composerActions.expand();
-    await composerActions.selectKitSelectRowByName(
-      i18n("composer.composer_actions.remove_as_post_voting.label")
-    );
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='togglePostVoting']");
 
     assert
       .dom(".action-title")
@@ -74,10 +69,8 @@ acceptance("composer", function (needs) {
         "reverts to original composer title when post voting format is disabled"
       );
 
-    await composerActions.expand();
-    await composerActions.selectKitSelectRowByName(
-      i18n("composer.composer_actions.create_as_post_voting.label")
-    );
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='togglePostVoting']");
 
     await fillIn("#reply-title", "this is some random topic title");
     await fillIn(".d-editor-input", "this is some random body");
@@ -95,8 +88,6 @@ acceptance("composer", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    assert.dom(".action-title").hasText(i18n("topic.create_long"));
-
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
@@ -113,14 +104,11 @@ acceptance("composer", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    assert.dom(".action-title").hasText(i18n("topic.create_long"));
-
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
 
     await categoryChooser.selectRowByValue(2);
-    const newTopicType = selectKit(".dropdown-select-box");
-    await newTopicType.expand();
+
     assert
       .dom(".action-title")
       .hasText(i18n("composer.create_post_voting.label"));

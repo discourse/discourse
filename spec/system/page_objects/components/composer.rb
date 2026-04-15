@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def open_composer_actions
-        find(".composer-action-title .btn").click
+        find(".composer-actions-trigger").click
         self
       end
 
@@ -118,12 +118,12 @@ module PageObjects
         composer_popup.has_content?(content)
       end
 
-      def has_no_action?(action)
-        !actions.include?(action)
+      def has_no_action?(action_id)
+        !has_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
       end
 
-      def select_action(action)
-        find(action(action)).click
+      def select_action(action_id)
+        find(".composer-actions-dropdown [data-action-id='#{action_id}']").click
         self
       end
 
@@ -135,12 +135,12 @@ module PageObjects
         find("#{@composer_id} .btn-primary").click
       end
 
-      def action(action_title)
-        ".composer-action-title .select-kit-collection li[title='#{action_title}']"
+      def action(action_id)
+        ".composer-actions-dropdown [data-action-id='#{action_id}']"
       end
 
       def actions
-        all(".composer-action-title .select-kit-collection li").map { |el| el[:title] }
+        all(".composer-actions-dropdown [data-action-id]").map { |el| el["data-action-id"] }
       end
 
       def button_label

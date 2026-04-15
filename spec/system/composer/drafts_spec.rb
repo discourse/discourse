@@ -436,7 +436,7 @@ describe "Composer - Drafts" do
       end
 
       composer.open_composer_actions
-      composer.select_action(I18n.t("js.composer.composer_actions.reply_as_new_topic.label"))
+      composer.select_action("reply_as_new_topic")
 
       expect(composer).to be_opened
       composer.fill_title("This is a linked topic title for testing")

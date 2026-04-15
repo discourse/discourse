@@ -107,9 +107,8 @@ acceptance("Discourse Presence Plugin", function (needs) {
       "publishes reply presence when typing"
     );
 
-    const menu = selectKit(".composer-actions");
-    await menu.expand();
-    await menu.selectRowByValue("toggle_whisper");
+    await click(".composer-actions-trigger");
+    await click("[data-action-id='toggle_whisper']");
 
     assert.deepEqual(
       presentUserIds("/discourse-presence/reply/280"),
