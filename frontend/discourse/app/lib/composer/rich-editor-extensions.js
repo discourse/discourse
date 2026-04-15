@@ -23,6 +23,8 @@ import { waitForPromise } from "@ember/test-waiters";
  * @typedef {Object} EditorInstanceUtils
  * @property {(markdown: string) => import("prosemirror-model").Node} convertFromMarkdown
  * @property {(doc: import("prosemirror-model").Node) => string} convertToMarkdown
+ * @property {(text: string) => string[]} splitNonEmptyLines
+ * @property {(schema: import("prosemirror-model").Schema, listType: import("prosemirror-model").NodeType, lines: string[]) => import("prosemirror-model").Node} buildListNode
  * @property {() => void} toggleRichEditor
  */
 

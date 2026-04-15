@@ -277,7 +277,6 @@ describe "Category Localizations" do
 
             category_page.visit(category)
             category_page.click_edit_category
-            category_page.click_setting_tab("general")
 
             expect(find(".edit-category-tab-general input.category-name").value).to eq(
               category.name,

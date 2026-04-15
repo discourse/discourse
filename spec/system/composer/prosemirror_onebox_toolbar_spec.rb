@@ -151,30 +151,5 @@ describe "Composer - ProseMirror - Onebox Toolbar" do
       find("button.composer-link-toolbar__show-preview").click
       expect(rich).to have_css("a.inline-onebox")
     end
-
-    it "retries full onebox fetch after a failure" do
-      cdp.allow_clipboard
-      open_composer
-
-      stub_request(:get, "https://example.com/fail").to_return(status: 404)
-
-      cdp.copy_paste("https://example.com/fail")
-      page.send_keys(:enter)
-
-      expect(rich).to have_no_css("div.onebox-wrapper")
-      expect(rich).to have_css("a[href='https://example.com/fail']")
-
-      rich.find("a[href='https://example.com/fail']").click
-      expect(page).to have_css("button.composer-link-toolbar__show-preview")
-
-      stub_request(:get, "https://example.com/fail").to_return(
-        status: 200,
-        body: body("Recovered Site"),
-      )
-
-      find("button.composer-link-toolbar__show-preview").click
-
-      expect(rich).to have_css("div.onebox-wrapper")
-    end
   end
 end

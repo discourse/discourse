@@ -7,6 +7,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -24,6 +25,12 @@ export default class VoteBox extends Component {
 
   get buttonIcon() {
     return this.topic.user_voted ? "vote-up-filled" : "vote-up";
+  }
+
+  get isWatching() {
+    return (
+      this.topic.details?.notification_level === NotificationLevels.WATCHING
+    );
   }
 
   get limitsEnabled() {
@@ -119,6 +126,14 @@ export default class VoteBox extends Component {
   }
 
   @action
+  async toggleWatching() {
+    const newLevel = this.isWatching
+      ? NotificationLevels.REGULAR
+      : NotificationLevels.WATCHING;
+    await this.topic.details.updateNotifications(newLevel);
+  }
+
+  @action
   onRegisterApi(api) {
     this.dMenu = api;
   }
@@ -179,6 +194,14 @@ export default class VoteBox extends Component {
                   class="btn-transparent remove-vote topic-voting-menu__row-btn"
                 />
               </dropdown.item>
+              <dropdown.item class="topic-voting-menu__watch-toggle">
+                <DButton
+                  @translatedLabel={{i18n "topic_voting.watch_topic"}}
+                  @action={{this.toggleWatching}}
+                  @icon={{if this.isWatching "toggle-on" "toggle-off"}}
+                  class="btn-transparent topic-voting-menu__row-btn"
+                />
+              </dropdown.item>
             {{else if (eq this.currentUser.vote_limit 0)}}
               <dropdown.item class="topic-voting-menu__title --locked">
                 {{icon "lock"}}
@@ -219,6 +242,14 @@ export default class VoteBox extends Component {
                     @action={{this.removeVote}}
                     @icon="arrow-rotate-left"
                     class="btn-transparent remove-vote topic-voting-menu__row-btn"
+                  />
+                </dropdown.item>
+                <dropdown.item class="topic-voting-menu__watch-toggle">
+                  <DButton
+                    @translatedLabel={{i18n "topic_voting.watch_topic"}}
+                    @action={{this.toggleWatching}}
+                    @icon={{if this.isWatching "toggle-on" "toggle-off"}}
+                    class="btn-transparent topic-voting-menu__row-btn"
                   />
                 </dropdown.item>
               {{/if}}

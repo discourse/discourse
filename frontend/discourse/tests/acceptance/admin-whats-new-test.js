@@ -2,8 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-const RELEASE_NOTES_URL =
-  "https://meta.discourse.org/tags/c/announcements/67/release-notes";
+const RELEASE_SITE_URL = "https://releases.discourse.org/";
 
 acceptance("Admin - What's New", function (needs) {
   needs.user();
@@ -21,7 +20,7 @@ acceptance("Admin - What's New", function (needs) {
 
     assert.dom(".admin-config-area-empty-list").exists();
     assert
-      .dom(`.admin-config-area-empty-list a[href="${RELEASE_NOTES_URL}"]`)
+      .dom(`.admin-config-area-empty-list a[href="${RELEASE_SITE_URL}"]`)
       .exists();
   });
 });

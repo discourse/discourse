@@ -31,6 +31,7 @@ en:
         one: "Vote"
         other: "Votes"
       remove_vote: "Remove vote"
+      watch_topic: "Notify me about new posts"
       no_votes_yet: "No one has voted for this yet"
       and_more_voters: "and %{count} more..."
       show_voters: "Show who voted"
