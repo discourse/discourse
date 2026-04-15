@@ -6,6 +6,7 @@ import { click, render, waitFor } from "@ember/test-helpers";
 import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
+import sinon from "sinon";
 import AsyncContent from "discourse/components/async-content";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -231,6 +232,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
     });
 
     test("it does not display the block if the promise fails", async function (assert) {
+      const stub = sinon.stub(console, "error");
       const promise = Promise.reject("error");
 
       await render(
@@ -246,6 +248,9 @@ module("Integration | Component | AsyncContent", function (hooks) {
       );
 
       assert.dom(".content").doesNotExist();
+      assert.true(stub.calledWith("error"));
+
+      stub.restore();
     });
   });
 
@@ -305,6 +310,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
     });
 
     test("it does not display the block if the promise fails", async function (assert) {
+      const stub = sinon.stub(console, "error");
       const promise = Promise.reject("error");
 
       await render(
@@ -320,11 +326,15 @@ module("Integration | Component | AsyncContent", function (hooks) {
       );
 
       assert.dom(".empty").doesNotExist();
+      assert.true(stub.calledWith("error"));
+
+      stub.restore();
     });
   });
 
   module("<:error>", function () {
     test("it displays an inline error when the block is not provided", async function (assert) {
+      const stub = sinon.stub(console, "error");
       const promise = Promise.reject("error");
 
       await render(
@@ -333,9 +343,13 @@ module("Integration | Component | AsyncContent", function (hooks) {
 
       assert.dom(".alert-error").exists();
       assert.dom(".alert-error").hasText("Sorry, an error has occurred.");
+      assert.true(stub.calledWith("error"));
+
+      stub.restore();
     });
 
     test("it displays a popup error dialog when the block is not provided", async function (assert) {
+      const stub = sinon.stub(console, "error");
       const promise = Promise.reject("error");
 
       await render(
@@ -347,6 +361,9 @@ module("Integration | Component | AsyncContent", function (hooks) {
 
       assert.dom(".dialog-body").exists();
       assert.dom(".dialog-body").hasText("Sorry, an error has occurred.");
+      assert.true(stub.calledWith("error"));
+
+      stub.restore();
     });
 
     test("it displays the block when the promise is rejected", async function (assert) {
@@ -369,6 +386,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
     });
 
     test("it passes the inline error message as a component when the promise is rejected", async function (assert) {
+      const stub = sinon.stub(console, "error");
       const promise = Promise.reject("error");
 
       await render(
@@ -387,6 +405,9 @@ module("Integration | Component | AsyncContent", function (hooks) {
 
       assert.dom(".alert-error").exists();
       assert.dom(".alert-error").hasText("Sorry, an error has occurred.");
+      assert.true(stub.calledWith("error"));
+
+      stub.restore();
     });
 
     test("it does not display the block when the promise is resolved", async function (assert) {
