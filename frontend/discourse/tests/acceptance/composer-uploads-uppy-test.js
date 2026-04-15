@@ -498,6 +498,8 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
   });
 
   test("should show an error message for the failed upload", async function (assert) {
+    const consoleErrorStub = sinon.stub(console, "error");
+
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
@@ -512,8 +514,13 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
           "There was an error uploading the file, the gif was way too cool.",
           "shows the error message from the server"
         );
+      assert.true(
+        consoleErrorStub.calledWithMatch("[Uppy]"),
+        "Uppy logs the upload failure to the console"
+      );
 
       await click(".dialog-footer .btn-primary");
+      consoleErrorStub.restore();
       done();
     });
 
@@ -539,6 +546,8 @@ acceptance(
     });
 
     test("should show a consolidated message for multiple failed uploads", async function (assert) {
+      const consoleErrorStub = sinon.stub(console, "error");
+
       await visit("/");
       await click("#create-topic");
       const appEvents = getOwner(this).lookup("service:app-events");
@@ -556,8 +565,14 @@ acceptance(
               "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
               "it should show a consolidated error dialog"
             );
+          // eslint-disable-next-line qunit/no-conditional-assertions
+          assert.true(
+            consoleErrorStub.calledWithMatch("[Uppy]"),
+            "Uppy logs the upload failures to the console"
+          );
 
           await click(".dialog-footer .btn-primary");
+          consoleErrorStub.restore();
 
           done();
         }
