@@ -6,7 +6,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   requires_plugin DiscourseReactions::PLUGIN_NAME
 
-  before_action :ensure_logged_in, except: [:post_reactions_users]
+  before_action :ensure_logged_in, except: %i[post_reactions_users reactions_users_list]
 
   def toggle
     post = fetch_post_from_params
@@ -240,7 +240,138 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     render_json_dump(reaction_users: reaction_users)
   end
 
+  def reactions_users_list
+    post = fetch_post_from_params
+    page = [params[:page].to_i, 0].max
+    limit = params[:limit].present? ? [[params[:limit].to_i, 1].max, 50].min : 30
+    offset = page * limit
+    main_reaction = DiscourseReactions::Reaction.main_reaction_id
+    like_type = PostActionType::LIKE_POST_ACTION_ID
+    reaction_filter = params[:reaction_value]
+
+    rows, total =
+      fetch_reaction_rows(post, reaction_filter, main_reaction, like_type, limit, offset)
+
+    users =
+      rows.map do |row|
+        {
+          id: row.id,
+          username: row.username,
+          name: row.name,
+          avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+          reaction: row.reaction,
+        }
+      end
+
+    render_json_dump(users: users, total_rows: total)
+  end
+
   private
+
+  def plain_likes_scope(post, like_type)
+    PostAction
+      .where(post_id: post.id, post_action_type_id: like_type, deleted_at: nil)
+      .joins(
+        "LEFT JOIN discourse_reactions_reaction_users drru ON drru.post_id = post_actions.post_id AND drru.user_id = post_actions.user_id",
+      )
+      .where("drru.id IS NULL")
+  end
+
+  def fetch_reaction_rows(post, reaction_filter, main_reaction, like_type, limit, offset)
+    if reaction_filter.present? && reaction_filter != main_reaction
+      total =
+        DiscourseReactions::ReactionUser
+          .joins(:reaction)
+          .where(
+            post_id: post.id,
+            discourse_reactions_reactions: {
+              reaction_value: reaction_filter,
+            },
+          )
+          .count
+
+      rows =
+        DB.query(
+          <<~SQL,
+            SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
+                   dr.reaction_value AS reaction, drru.created_at
+            FROM discourse_reactions_reaction_users drru
+            INNER JOIN discourse_reactions_reactions dr ON dr.id = drru.reaction_id
+            INNER JOIN users u ON u.id = drru.user_id
+            WHERE drru.post_id = :post_id AND dr.reaction_value = :reaction_filter
+            ORDER BY drru.created_at ASC
+            LIMIT :limit OFFSET :offset
+          SQL
+          post_id: post.id,
+          reaction_filter: reaction_filter,
+          limit: limit,
+          offset: offset,
+        )
+    elsif reaction_filter == main_reaction
+      total = plain_likes_scope(post, like_type).count
+
+      rows =
+        DB.query(
+          <<~SQL,
+            SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
+                   :main_reaction AS reaction, pa.created_at
+            FROM post_actions pa
+            INNER JOIN users u ON u.id = pa.user_id
+            LEFT JOIN discourse_reactions_reaction_users drru
+              ON drru.post_id = pa.post_id AND drru.user_id = pa.user_id
+            WHERE pa.post_id = :post_id
+              AND pa.post_action_type_id = :like_type
+              AND pa.deleted_at IS NULL
+              AND drru.id IS NULL
+            ORDER BY pa.created_at ASC
+            LIMIT :limit OFFSET :offset
+          SQL
+          post_id: post.id,
+          like_type: like_type,
+          main_reaction: main_reaction,
+          limit: limit,
+          offset: offset,
+        )
+    else
+      reaction_user_count = DiscourseReactions::ReactionUser.where(post_id: post.id).count
+      plain_like_count = plain_likes_scope(post, like_type).count
+      total = reaction_user_count + plain_like_count
+
+      rows =
+        DB.query(
+          <<~SQL,
+            SELECT * FROM (
+              SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
+                     dr.reaction_value AS reaction, drru.created_at
+              FROM discourse_reactions_reaction_users drru
+              INNER JOIN discourse_reactions_reactions dr ON dr.id = drru.reaction_id
+              INNER JOIN users u ON u.id = drru.user_id
+              WHERE drru.post_id = :post_id
+              UNION ALL
+              SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
+                     :main_reaction AS reaction, pa.created_at
+              FROM post_actions pa
+              INNER JOIN users u ON u.id = pa.user_id
+              LEFT JOIN discourse_reactions_reaction_users drru
+                ON drru.post_id = pa.post_id AND drru.user_id = pa.user_id
+              WHERE pa.post_id = :post_id
+                AND pa.post_action_type_id = :like_type
+                AND pa.deleted_at IS NULL
+                AND drru.id IS NULL
+            ) combined
+            ORDER BY created_at ASC
+            LIMIT :limit OFFSET :offset
+          SQL
+          post_id: post.id,
+          like_type: like_type,
+          main_reaction: main_reaction,
+          limit: limit,
+          offset: offset,
+        )
+    end
+
+    [rows, total]
+  end
 
   def get_users(reaction)
     reaction

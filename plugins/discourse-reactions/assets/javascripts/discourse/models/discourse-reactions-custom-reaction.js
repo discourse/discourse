@@ -105,6 +105,17 @@ export default class CustomReaction extends RestModel {
     });
   }
 
+  static fetchReactionsUsersList(postId, page, limit, reactionValue) {
+    const data = { page, limit };
+    if (reactionValue) {
+      data.reaction_value = reactionValue;
+    }
+    return ajax(
+      `/discourse-reactions/posts/${postId}/reactions-users-list.json`,
+      { data }
+    );
+  }
+
   init() {
     super.init(...arguments);
     this.__type = "discourse-reactions-custom-reaction";

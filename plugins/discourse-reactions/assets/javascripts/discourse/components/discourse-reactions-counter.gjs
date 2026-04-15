@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { computePosition, flip, offset, shift } from "@floating-ui/dom";
 import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -12,11 +15,13 @@ import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
 import DiscourseReactionsStatePanel from "./discourse-reactions-state-panel";
+import DiscourseReactionsUsersPopup from "./discourse-reactions-users-popup";
 
 export default class DiscourseReactionsCounter extends Component {
   @service capabilities;
-  @service site;
   @service siteSettings;
+
+  @tracked usersPopupExpanded = false;
 
   reactionsUsers = trackedObject();
 
@@ -60,10 +65,16 @@ export default class DiscourseReactionsCounter extends Component {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       this.click(event);
-    } else if (event.key === "Escape" && this.args.statePanelExpanded) {
-      event.stopPropagation();
-      this.args.collapseStatePanel();
-      document.getElementById(this.elementId)?.focus();
+    } else if (event.key === "Escape") {
+      if (this.usersPopupExpanded) {
+        event.stopPropagation();
+        this.usersPopupExpanded = false;
+        document.getElementById(this.elementId)?.focus();
+      } else if (this.args.statePanelExpanded) {
+        event.stopPropagation();
+        this.args.collapseStatePanel();
+        document.getElementById(this.elementId)?.focus();
+      }
     }
   }
 
@@ -73,31 +84,35 @@ export default class DiscourseReactionsCounter extends Component {
       return;
     }
 
-    this.args.cancelCollapse();
+    if (event.target.closest(".reactions-users-popup")) {
+      return;
+    }
 
-    if (!this.capabilities.touch || this.site.desktopView) {
-      event.stopPropagation();
-      event.preventDefault();
+    event.stopPropagation();
+    event.preventDefault();
 
-      if (!this.args.statePanelExpanded) {
-        this.getUsers();
+    if (this.usersPopupExpanded) {
+      this.usersPopupExpanded = false;
+    } else {
+      if (this.args.statePanelExpanded) {
+        this.args.collapseStatePanel();
       }
-
-      this.toggleStatePanel(event);
+      this.usersPopupExpanded = true;
+      this.#positionPopup();
     }
   }
 
   @action
   clickOutside() {
-    if (this.args.statePanelExpanded) {
+    if (this.usersPopupExpanded) {
+      this.usersPopupExpanded = false;
+    } else if (this.args.statePanelExpanded) {
       this.args.collapseAllPanels();
     }
   }
 
   @action
   touchStart(event) {
-    this.args.cancelCollapse();
-
     if (
       event.target.classList.contains("show-users") ||
       event.target.classList.contains("avatar")
@@ -105,17 +120,23 @@ export default class DiscourseReactionsCounter extends Component {
       return true;
     }
 
-    if (this.args.statePanelExpanded) {
-      event.stopPropagation();
-      event.preventDefault();
-      return;
+    if (event.target.closest(".reactions-users-popup")) {
+      return true;
     }
 
     if (this.capabilities.touch) {
       event.stopPropagation();
       event.preventDefault();
-      this.getUsers();
-      this.toggleStatePanel(event);
+
+      if (this.usersPopupExpanded) {
+        this.usersPopupExpanded = false;
+      } else {
+        if (this.args.statePanelExpanded) {
+          this.args.collapseStatePanel();
+        }
+        this.usersPopupExpanded = true;
+        this.#positionPopup();
+      }
     }
   }
 
@@ -151,7 +172,7 @@ export default class DiscourseReactionsCounter extends Component {
 
   @action
   pointerOver(event) {
-    if (event.pointerType !== "mouse") {
+    if (event.pointerType !== "mouse" || this.usersPopupExpanded) {
       return;
     }
 
@@ -160,7 +181,7 @@ export default class DiscourseReactionsCounter extends Component {
 
   @action
   pointerOut(event) {
-    if (event.pointerType !== "mouse") {
+    if (event.pointerType !== "mouse" || this.usersPopupExpanded) {
       return;
     }
 
@@ -181,6 +202,44 @@ export default class DiscourseReactionsCounter extends Component {
       this.args.post.reactions[0].id ===
         this.siteSettings.discourse_reactions_reaction_for_like
     );
+  }
+
+  #positionPopup() {
+    schedule("afterRender", () => {
+      const counterEl = document.getElementById(this.elementId);
+      const popupEl = counterEl?.querySelector(".reactions-users-popup");
+      const arrowEl = popupEl?.querySelector(".reactions-users-popup__arrow");
+
+      if (!counterEl || !popupEl) {
+        return;
+      }
+
+      const middleware = [
+        offset(18),
+        flip({ padding: 10 }),
+        shift({ padding: 10 }),
+      ];
+
+      computePosition(counterEl, popupEl, {
+        placement: "bottom",
+        middleware,
+      }).then(({ x, y }) => {
+        Object.assign(popupEl.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+        });
+
+        if (arrowEl) {
+          const counterRect = counterEl.getBoundingClientRect();
+          const popupRect = popupEl.getBoundingClientRect();
+          const arrowX =
+            counterRect.left + counterRect.width / 2 - popupRect.left;
+          Object.assign(arrowEl.style, {
+            left: `${arrowX}px`,
+          });
+        }
+      });
+    });
   }
 
   <template>
@@ -230,6 +289,10 @@ export default class DiscourseReactionsCounter extends Component {
               @icon={{this.siteSettings.discourse_reactions_like_icon}}
             />
           </div>
+        {{/if}}
+
+        {{#if this.usersPopupExpanded}}
+          <DiscourseReactionsUsersPopup @post={{@post}} />
         {{/if}}
       {{/if}}
     </div>

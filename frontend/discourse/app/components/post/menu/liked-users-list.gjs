@@ -1,51 +1,30 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import PluginOutlet from "discourse/components/plugin-outlet";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
+import { computePosition, flip, offset, shift } from "@floating-ui/dom";
 import UserAvatar from "discourse/components/user-avatar";
-import DMenu from "discourse/float-kit/components/d-menu";
+import UserLink from "discourse/components/user-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import lazyHash from "discourse/helpers/lazy-hash";
+import { ajax } from "discourse/lib/ajax";
+import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { i18n } from "discourse-i18n";
 
-const LIKE_ACTION = 2; // The action type ID for "like" in Discourse
-const DISPLAY_MAX_USERS = 8; // will show X users, then a button to show one more row of X;
+const PAGE_SIZE = 30;
+const LIKE_ACTION = 2;
 
 export default class LikedUsersList extends Component {
-  @service store;
+  @tracked popupExpanded = false;
+  @tracked users = [];
+  @tracked loading = false;
+  @tracked canLoadMore = true;
 
-  @tracked likedUsers;
-  @tracked loadingLikedUsers = false;
-  @tracked slicedUsersVisible = false;
+  #page = 0;
 
-  @action
-  async fetchLikedUsers() {
-    if (this.loadingLikedUsers) {
-      return;
-    }
-
-    this.loadingLikedUsers = true;
-
-    try {
-      this.likedUsers = await this.store.find("post-action-user", {
-        id: this.args.post.id,
-        post_action_type_id: LIKE_ACTION,
-      });
-    } finally {
-      this.loadingLikedUsers = false;
-    }
-  }
-
-  @action
-  toggleSlicedUsersVisiblity() {
-    this.slicedUsersVisible = !this.slicedUsersVisible;
-  }
-
-  get icon() {
+  get buttonIcon() {
     if (!this.args.post.showLike) {
       return this.args.post.yours ? "d-liked" : "d-unliked";
     }
@@ -55,113 +34,198 @@ export default class LikedUsersList extends Component {
     }
   }
 
-  get truncatedUsers() {
-    return this.likedUsers?.content.slice(0, DISPLAY_MAX_USERS);
+  get elementId() {
+    return `post-like-users_${this.args.post.id}`;
   }
 
-  get slicedUsers() {
-    return this.likedUsers?.content.slice(
-      DISPLAY_MAX_USERS,
-      DISPLAY_MAX_USERS * 2
-    );
+  @action
+  togglePopup() {
+    if (this.popupExpanded) {
+      this.popupExpanded = false;
+    } else {
+      this.users = [];
+      this.#page = 0;
+      this.canLoadMore = true;
+      this.popupExpanded = true;
+      this.#positionPopup();
+    }
   }
 
-  get hiddenUserCount() {
-    return (
-      this.likedUsers?.length -
-      (this.truncatedUsers.length + this.slicedUsers.length)
-    );
+  @action
+  clickOutside() {
+    if (this.popupExpanded) {
+      this.popupExpanded = false;
+    }
   }
 
-  get toggleSlicedUsersVisiblityIcon() {
-    return this.slicedUsersVisible ? "angle-up" : "angle-down";
+  @action
+  keyDown(event) {
+    if (event.key === "Escape" && this.popupExpanded) {
+      event.stopPropagation();
+      this.popupExpanded = false;
+    }
+  }
+
+  @action
+  async loadInitial() {
+    await this.#loadMore();
+  }
+
+  @action
+  onScroll(event) {
+    const el = event.target;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
+      this.#loadMore();
+    }
+  }
+
+  @action
+  preventClose(event) {
+    event.stopPropagation();
+  }
+
+  async #loadMore() {
+    if (this.loading || !this.canLoadMore) {
+      return;
+    }
+
+    this.loading = true;
+
+    try {
+      const result = await ajax("/post_action_users", {
+        data: {
+          id: this.args.post.id,
+          post_action_type_id: LIKE_ACTION,
+          page: this.#page,
+          limit: PAGE_SIZE,
+        },
+      });
+
+      const newUsers = result.post_action_users || [];
+      this.users = [...this.users, ...newUsers];
+      this.#page++;
+
+      if (newUsers.length < PAGE_SIZE) {
+        this.canLoadMore = false;
+      } else if (result.total_rows_post_action_users) {
+        this.canLoadMore =
+          this.users.length < result.total_rows_post_action_users;
+      } else {
+        this.canLoadMore = false;
+      }
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  #positionPopup() {
+    schedule("afterRender", () => {
+      const container = document.getElementById(this.elementId);
+      const popupEl = container?.querySelector(".post-likes-popup");
+      const arrowEl = popupEl?.querySelector(".post-likes-popup__arrow");
+
+      if (!container || !popupEl) {
+        return;
+      }
+
+      computePosition(container, popupEl, {
+        strategy: "fixed",
+        placement: "bottom",
+        middleware: [offset(18), flip({ padding: 10 }), shift({ padding: 10 })],
+      }).then(({ x, y }) => {
+        Object.assign(popupEl.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+        });
+
+        if (arrowEl) {
+          const containerRect = container.getBoundingClientRect();
+          const popupRect = popupEl.getBoundingClientRect();
+          const arrowX =
+            containerRect.left + containerRect.width / 2 - popupRect.left;
+          Object.assign(arrowEl.style, {
+            left: `${arrowX}px`,
+          });
+        }
+      });
+    });
   }
 
   <template>
-    <DMenu
-      @modalForMobile={{true}}
-      @identifier="post-like-users_{{@post.id}}"
-      @onShow={{this.fetchLikedUsers}}
-      @triggerClass={{concatClass
-        "post-action-menu__like-count"
-        "like-count"
-        "btn-flat"
-        "button-count"
-        "highlight-action"
-        (if @post.yours "my-likes" "regular-likes")
-      }}
-      @icon={{if @post.yours "d-liked" ""}}
-      @placement="top"
-      label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
-      id="post-like-users_{{@post.id}}"
+    {{! template-lint-disable no-invalid-interactive no-pointer-down-event-binding }}
+    <div
+      id={{this.elementId}}
+      class="post-likes-popup-wrapper"
+      {{closeOnClickOutside this.clickOutside}}
+      {{on "keydown" this.keyDown}}
     >
-      <:trigger>
+      <button
+        type="button"
+        aria-label={{i18n
+          "post.sr_post_like_count_button"
+          count=@post.likeCount
+        }}
+        class={{concatClass
+          "btn btn-flat no-text"
+          "post-action-menu__like-count"
+          "like-count"
+          "button-count"
+          "highlight-action"
+          (if @post.yours "my-likes" "regular-likes")
+        }}
+        {{on "click" this.togglePopup}}
+      >
+        {{#if this.buttonIcon}}
+          {{icon this.buttonIcon}}
+        {{/if}}
         {{@post.likeCount}}
-      </:trigger>
-      <:content>
-        <ConditionalLoadingSpinner
-          @condition={{this.loadingLikedUsers}}
-          class="liked-users-list__container"
+      </button>
+
+      {{#if this.popupExpanded}}
+        <div
+          class="post-likes-popup"
+          {{on "click" this.preventClose}}
+          {{on "mousedown" this.preventClose}}
+          {{on "mouseup" this.preventClose}}
         >
-          <span class="liked-users-list__count">
-            {{icon "d-liked" class="liked-users-list__count-icon"}}
-            {{@post.likeCount}}
-          </span>
-          <div class="liked-users-list">
-            <ul class="liked-users-list__list">
-              {{#each this.truncatedUsers as |user|}}
-                <li class="liked-users-list__item">
-                  <PluginOutlet
-                    @name="liked-users-list-avatar"
-                    @outletArgs={{lazyHash user=user post=@post}}
+          <div class="post-likes-popup__arrow"></div>
+          <div
+            class="post-likes-popup__body"
+            {{on "scroll" this.onScroll}}
+            {{didInsert this.loadInitial}}
+          >
+            {{#each this.users as |user|}}
+              <div class="post-likes-popup__item">
+                <UserLink
+                  @username={{user.username}}
+                  class="post-likes-popup__avatar-link"
+                >
+                  <UserAvatar @user={{user}} @size="small" />
+                </UserLink>
+                <div class="post-likes-popup__user-info">
+                  <UserLink
+                    @username={{user.username}}
+                    class="post-likes-popup__name"
                   >
-                    <UserAvatar
-                      class="trigger-user-card"
-                      @user={{user}}
-                      @size="small"
-                    />
-                  </PluginOutlet>
-                </li>
-              {{/each}}
-              {{#if this.slicedUsers}}
-                <li class="liked-users-list__item">
-                  <DButton
-                    class="liked-users-list__more-button btn-flat"
-                    @icon={{this.toggleSlicedUsersVisiblityIcon}}
-                    @action={{this.toggleSlicedUsersVisiblity}}
-                  />
-                </li>
-              {{/if}}
-            </ul>
-            {{#if this.slicedUsersVisible}}
-              <ul class="liked-users-list__list">
-                {{#each this.slicedUsers as |user|}}
-                  <li class="liked-users-list__item">
-                    <PluginOutlet
-                      @name="liked-users-list-avatar"
-                      @outletArgs={{lazyHash user=user post=@post}}
-                    >
-                      <UserAvatar
-                        class="trigger-user-card"
-                        @user={{user}}
-                        @size="small"
-                      />
-                    </PluginOutlet>
-                  </li>
-                {{/each}}
-              </ul>
-              {{#if this.hiddenUserCount}}
-                <span class="liked-users-list__more">
-                  {{i18n
-                    "discourse_reactions.state_panel.more_users"
-                    count=this.hiddenUserCount
-                  }}
-                </span>
-              {{/if}}
+                    {{if user.name user.name user.username}}
+                  </UserLink>
+                  {{#if user.name}}
+                    <span class="post-likes-popup__username">
+                      @{{user.username}}
+                    </span>
+                  {{/if}}
+                </div>
+                {{icon "d-liked" class="post-likes-popup__reaction"}}
+              </div>
+            {{/each}}
+            {{#if this.loading}}
+              <div class="post-likes-popup__loading">
+                <div class="spinner small"></div>
+              </div>
             {{/if}}
           </div>
-        </ConditionalLoadingSpinner>
-      </:content>
-    </DMenu>
+        </div>
+      {{/if}}
+    </div>
   </template>
 }
