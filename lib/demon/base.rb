@@ -238,16 +238,19 @@ class Demon::Base
       sleep 10
       Process.kill "KILL", Process.pid
     end
-  rescue Exception => e
+  rescue => e
     log_error(e)
   end
 
   def log_error(e)
     log("URGENT monitoring thread had an exception #{e.class}: #{e.message}", level: :error)
-  rescue Exception
+  rescue => log_err
     # Fall back to STDERR if the logger is broken
     begin
-      $stderr.puts("[#{self.class}##{Process.pid}] monitor-parent: #{e.class}: #{e.message}")
+      $stderr.puts(
+        "[#{self.class}##{Process.pid}] monitor-parent: #{e.class}: #{e.message} " \
+          "(logger also failed: #{log_err.class}: #{log_err.message})",
+      )
     rescue StandardError
     end
   end
