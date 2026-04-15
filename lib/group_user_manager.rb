@@ -48,10 +48,6 @@ class GroupUserManager
     removed_user_ids
   end
 
-  # Original side effects:
-  # :update_title, :set_primary_group, :grant_trust_level
-  # :set_category_notifications, :set_tag_notifications
-  # :increase_group_user_count
   def sync_add_side_effects(added_user_ids)
     update_title(added_user_ids)
     set_primary_group(added_user_ids)
@@ -61,9 +57,6 @@ class GroupUserManager
     increase_group_user_count(added_user_ids)
   end
 
-  # Original side effects:
-  # :grant_other_available_title
-  # :remove_primary_and_flair_group, :recalculate_trust_level
   def sync_removal_side_effects(removed_user_ids)
     grant_other_available_title(removed_user_ids)
     remove_primary_and_flair_group(removed_user_ids)
