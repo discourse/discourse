@@ -136,7 +136,6 @@
       }
 
       &:hover,
-      &:focus,
       &:focus-visible {
         .discourse-no-touch & {
           background: var(--d-hover);

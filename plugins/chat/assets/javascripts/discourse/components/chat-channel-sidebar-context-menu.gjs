@@ -116,6 +116,7 @@ export default class ChatChannelSidebarContextMenu extends Component {
       component: ChatChannelSidebarContextNotificationSubmenu,
       modalForMobile: true,
       placement: "right-start",
+      offset: { mainAxis: 10, crossAxis: -5 },
       data: { channel: this.channel },
       onClose: () => this.args.close(),
     });

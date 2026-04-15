@@ -124,6 +124,8 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        admin_actions:
+          localization_settings: "Ρυθμίσεις τοπικοποίησης"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"

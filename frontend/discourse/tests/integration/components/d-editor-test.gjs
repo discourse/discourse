@@ -1480,6 +1480,20 @@ third line`
 module("Integration | Component | d-editor | rich editor", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("hides preview when rich editor is enabled", async function (assert) {
+    this.siteSettings.rich_editor = true;
+
+    await render(<template><DEditor /></template>);
+    await click(".composer-toggle-switch");
+
+    assert
+      .dom(".d-editor-container.--rich-editor-enabled")
+      .exists("rich editor is active");
+    assert
+      .dom(".d-editor-preview-wrapper")
+      .isNotVisible("preview is hidden in rich editor mode");
+  });
+
   test("replaceText escapes markdown symbols that could be regexp symbols", async function (assert) {
     this.siteSettings.rich_editor = true;
 

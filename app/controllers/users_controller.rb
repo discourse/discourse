@@ -1934,6 +1934,9 @@ class UsersController < ApplicationController
         end
       end
       format.ics do
+        @calendar_name =
+          I18n.t("calendar_subscriptions.bookmarks_feed_name", site_title: SiteSetting.title)
+
         bookmark_query = Bookmark.with_reminders.where(user_id: user.id)
 
         after_param = params[:after].presence || 3.months.ago.iso8601

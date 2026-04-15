@@ -481,7 +481,13 @@ en:
   delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
 
   action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
 
@@ -1253,6 +1259,7 @@ en:
 
   calendar_subscriptions:
     application_name: "Calendar Subscriptions"
+    bookmarks_feed_name: "%{site_title} - Bookmark reminders"
 
   user_api_key:
     title: 'Authorize "%{application_name}"'
@@ -1834,9 +1841,6 @@ en:
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
     github_onebox_access_tokens: "A mapping of a GitHub organisation or user to a GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
-    reddit_onebox_client_id: "Reddit API OAuth client ID used for authenticated Reddit oneboxes. Create a 'script' type app at reddit.com/prefs/apps to obtain credentials."
-    reddit_onebox_client_secret: "Reddit API OAuth client secret used for authenticated Reddit oneboxes. Found under the 'script' type app created at reddit.com/prefs/apps."
-
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
@@ -2140,6 +2144,8 @@ en:
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images, attachments, and backups."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images, attachments, and backups."
+    s3_role_arn: "The ARN of the IAM role to assume for S3 operations. When set alongside access keys, Discourse will use STS AssumeRole to obtain temporary credentials."
+    s3_role_session_name: "Optional session name used when assuming an IAM role for S3 operations. Appears in CloudTrail logs for auditing. Falls back to the server hostname if blank."
     s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     s3_use_cdn_url_for_all_uploads: "Use CDN URL for all the files uploaded to s3 instead of only for images."
@@ -2247,6 +2253,7 @@ en:
     here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    animated_topic_thumbnails: "Use the original animated image as the topic thumbnail instead of generating a static thumbnail."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
@@ -2731,7 +2738,7 @@ en:
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
-    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
+    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames during SSO and OAuth signup flows."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
@@ -5541,8 +5548,10 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
+      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
+      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'

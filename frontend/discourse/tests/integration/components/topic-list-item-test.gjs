@@ -61,6 +61,27 @@ module("Integration | Component | topic-list-item", function (hooks) {
       .doesNotHaveClass("bar");
   });
 
+  test("topic-list-item-class transformer receives category context", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "topic-list-item-class",
+        ({ value, context }) => {
+          value.push(`cat-${context.category?.id ?? "none"}`);
+          return value;
+        }
+      );
+    });
+
+    const store = this.owner.lookup("service:store");
+    this.owner.lookup("service:topic-tracking-state").filterCategory =
+      store.createRecord("category", { id: 42 });
+    const topics = [store.createRecord("topic", { id: 2024 })];
+
+    await render(<template><TopicList @topics={{topics}} /></template>);
+
+    assert.dom(".topic-list-item[data-topic-id='2024']").hasClass("cat-42");
+  });
+
   test("shows unread-by-group-member indicator", async function (assert) {
     const store = this.owner.lookup("service:store");
     const topics = [

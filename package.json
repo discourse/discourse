@@ -5,26 +5,26 @@
   "license": "GPL-2.0-only",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.29.0",
-    "@discourse/lint-configs": "^2.44.0",
+    "@discourse/lint-configs": "^2.45.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "7.2.0",
     "@glint/ember-tsc": "^1.2.3",
     "@glint/tsserver-plugin": "^2.2.4",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.15.21",
+    "@swc/core": "^1.15.24",
     "chrome-launcher": "^1.2.1",
     "chrome-remote-interface": "^0.34.0",
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
-    "esbuild": "^0.27.4",
+    "esbuild": "^0.28.0",
     "eslint": "9.39.2",
     "jsdoc": "^4.0.5",
-    "lefthook": "^2.1.4",
+    "lefthook": "^2.1.5",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.6.4",
     "lint-to-the-future-ember-template": "^4.1.0",
     "lint-to-the-future-eslint": "^3.3.0",
-    "playwright": "1.58.2",
+    "playwright": "1.59.1",
     "prettier": "3.8.1",
     "puppeteer-core": "^24.40.0",
     "stylelint": "17.4.0",
@@ -82,7 +82,8 @@
       ]
     },
     "overrides": {
-      "@ember/test-waiters": "4.1.1"
+      "@ember/test-waiters": "4.1.1",
+      "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
     }
   }
 }

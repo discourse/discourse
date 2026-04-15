@@ -565,8 +565,10 @@ tr_TR:
           other: "%{count} yıl önce oluşturuldu"
     bookmarked:
       title: "Yer İmi"
-      edit_bookmark: "Yer İmini Düzenle"
-      clear_bookmarks: "Yer İmlerini Temizle"
+      edit_bookmark:
+        one: "Yer imini düzenle"
+        other: "Yer imlerini düzenle"
+      delete_bookmarks: "Tüm yer imlerini sil"
       help:
         bookmark: "Bu konuyu yer imlerine eklemek için tıklayın"
         edit_bookmark: "Bu konuda hakkında bir gönderi üzerine yer imini düzenlemek için tıklayın"
@@ -585,12 +587,18 @@ tr_TR:
       clear_reminder: "Anımsatıcıyı temizle"
       edit: "Yer imini düzenle"
       not_bookmarked: "bu gönderiye yer imi ekle"
+      topic_bookmark: "Konu"
+      post_bookmark: "#%{post_number} numaralı gönderi"
+      jump_to_post: "#%{post_number} numaralı gönderiye git"
+      bookmark_topic: "Konuyu yer imlerine ekle"
+      edit_topic_bookmark: "Konu yer imini düzenle"
+      delete_topic_bookmark: "Konu yer imini sil"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
       created_with_reminder: "Bu gönderiyi %{date} tarihli bir anımsatıcı ile yer imlerine eklediniz. %{name}"
       created_with_reminder_generic: "Bunu %{date} tarihli bir anımsatıcıyla yer imlerine eklediniz. %{name}"
       delete: "Yer İmini Sil"
       confirm_delete: "Bu yer imini silmek istediğinizden emin misiniz? Anımsatıcı da silinir."
-      confirm_clear: "Bu konudaki tüm yer imlerinizi silmek istediğinize emin misiniz?"
+      confirm_clear: "Bu konudaki tüm yer imlerini silmek istediğinizden emin misiniz?"
       save: "Kaydet"
       no_timezone: 'Henüz saat dilimi belirlemediniz. Anımsatıcı ayarlayamazsınız. <a href="%{basePath}/my/preferences/profile">Profilinizde</a> bir saat dilimi belirleyin.'
       invalid_custom_datetime: "Sağladığınız tarih ve saat geçersiz, lütfen tekrar deneyin."
@@ -1614,6 +1622,7 @@ tr_TR:
       enable_smart_lists: "Bestecide yazarken akıllı listeleri etkinleştirin"
       enable_defer: "Konuları okunmadı olarak işaretlemeyi etkinleştir"
       enable_markdown_monospace_font: "Bestecinin Markdown modunda monospace yazı tipini kullanın"
+      show_original_content: "Çevrilmiş içerik yerine orijinal içeriği göster. Konu içinde de bu ayar değiştirilebilir."
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
@@ -2814,6 +2823,12 @@ tr_TR:
         filter_for_more: Daha fazlası için filtrele…
         categories_admin_dropdown:
           title: "Kategorileri yönetin"
+        tag_category_admin_dropdown:
+          title: "Kategori ve etiket ayarları"
+          edit_category: "Kategoriyi düzenle"
+          edit_category_description: "%{badge} ayarlarını düzenle"
+          edit_tag: "Etiketi düzenle"
+          edit_tag_description: "%{badge} ayarlarını düzenle"
         bulk_select_topics_dropdown:
           title: "Toplu Eylemler"
         bulk_select_bookmarks_dropdown:
@@ -2844,6 +2859,18 @@ tr_TR:
       medium_dark_tone: Orta koyu cilt tonu
       dark_tone: Koyu cilt tonu
       default: Özel emoji'ler
+    filter_input:
+      clear: "Filtreyi temizle"
+    d_icon_grid_picker:
+      select_icon: "Simgeyi seç"
+      search_placeholder: "Arama simgeleri..."
+      no_results: "Simge bulunamadı"
+      results_count:
+        one: "%{count} simge bulundu"
+        other: "%{count} simge bulundu"
+      favorites: "Favoriler"
+      selected_icon: "Seçilen simge: %{iconName}"
+      clear: "Simgeyi temizle"
     shared_drafts:
       title: "Paylaşılan Taslaklar"
       notice: "Bu konuyu yalnızca paylaşılan taslaklar yayınlayabilenler görebilir."
@@ -3562,19 +3589,19 @@ tr_TR:
         name: "Kapat"
       close_topics:
         name: "Kapat"
-        description: "Kapatılan konular yeni yanıtların eklenmesini engeller. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Daha fazla bilgi edinin</a>"
+        description: "Kapatılan konular yeni yanıtların eklenmesini engeller. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Daha fazla bilgi edinin</a>"
         note: "Bu konulara bir not ekleyin"
         optional: (isteğe bağlı)
       archive_topics:
         name: "Arşiv"
-        description: "Arşivlenen konular, arama sonuçlarında ve en son konular listesinde görünmez. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Daha fazla bilgi edinin</a>"
+        description: "Arşivlenen konular, arama sonuçlarında ve en son konular listesinde görünmez. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Daha fazla bilgi edinin</a>"
       archive_messages:
         name: "Arşive taşı"
       move_messages_to_inbox:
         name: "Gelen Kutusuna taşı"
       unlist_topics:
         name: "Listeden kaldır"
-        description: "Listelenmemiş konular konu listesinde görünmez, ancak doğrudan bağlantı yoluyla erişilebilir. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Daha fazla bilgi edinin</a>"
+        description: "Listelenmemiş konular konu listesinde görünmez, ancak doğrudan bağlantı yoluyla erişilebilir. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Daha fazla bilgi edinin</a>"
       relist_topics:
         name: "Yeniden listele"
       remove_tags:
@@ -4436,6 +4463,7 @@ tr_TR:
       validations:
         emoji_required: "Bir emoji seçin."
         icon_required: "Simge seçin."
+        groups_required: "Bu onay modu için en az bir grup seçin."
       name: "Kategori adı"
       untitled: "Başlıksız kategori"
       description: "Açıklama"
@@ -4448,6 +4476,7 @@ tr_TR:
       icon: "Simge"
       emoji: "Emoji"
       select_emoji: "Emoji seç"
+      select_icon: "Simgeyi seç"
       background_color: "Renk"
       foreground_color: "Metin rengi"
       color_validations:
@@ -4520,6 +4549,14 @@ tr_TR:
       review_group_name: "grup adı"
       require_topic_approval: "Tüm yeni konular için moderatör onayı gerektir"
       require_reply_approval: "Tüm yeni yanıtlar için moderatör onayı gerektir"
+      require_topic_approval_for: "...için yeni başlıkların moderatör onayı gerektirir"
+      require_reply_approval_for: "Şu durumlarda yeni yanıtların moderatör onayı gerektirsin..."
+      posting_review_modes:
+        no_one: "Hiç kimse"
+        everyone: "Herkes"
+        everyone_except: "Belirli gruplar hariç herkes"
+        no_one_except: "Seçilmiş gruplar dışında kimse"
+      posting_review_groups_placeholder: "Grupları seçin..."
       this_year: "bu yıl"
       position: "Kategoriler sayfasındaki pozisyon:"
       default_position: "Varsayılan Pozisyon"

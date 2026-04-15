@@ -898,6 +898,23 @@ RSpec.describe PostAction do
       expect(user_notifications.last.topic).to eq(topic)
     end
 
+    %i[agree_and_keep disagree ignore_and_do_nothing].each do |disposition|
+      it "should bump the topic when performing #{disposition}" do
+        SiteSetting.auto_respond_to_flag_actions = true
+        user = Fabricate(:user, refresh_auto_groups: true)
+        result = PostActionCreator.create(user, post, :spam, message: "WAT")
+        topic = result.post_action.related_post.topic
+
+        original_bumped_at = topic.reload.bumped_at
+
+        freeze_time 1.hour.from_now
+
+        result.reviewable.perform(admin, disposition)
+
+        expect(topic.reload.bumped_at).to be > original_bumped_at
+      end
+    end
+
     skip "should not add a moderator post when post is flagged via private message" do
       Jobs.run_immediately!
       user = Fabricate(:user)

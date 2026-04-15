@@ -602,8 +602,6 @@ cs:
           other: "Založeno před %{count} lety"
     bookmarked:
       title: "Záložka"
-      edit_bookmark: "Upravit záložku"
-      clear_bookmarks: "Odstranit záložky"
       help:
         bookmark: "Kliknutím přidáte toto téma do záložek"
         edit_bookmark: "Kliknutím upravíte záložku pro toto téma"
@@ -622,12 +620,12 @@ cs:
       clear_reminder: "Vymazat připomínku"
       edit: "Upravit záložku"
       not_bookmarked: "přidat záložku k příspěvku"
+      topic_bookmark: "Témata"
       remove_reminder_keep_bookmark: "Odebrat připomenutí a ponechat záložku"
       created_with_reminder: "Tento příspěvek jste označili záložkou s připomenutím %{date}. %{name}"
       created_with_reminder_generic: "Toto jste si přidali do záložek s připomenutím %{date}. %{name}"
       delete: "Smazat záložku"
       confirm_delete: "Opravdu chcete tuto záložku smazat? Připomenutí bude také smazáno."
-      confirm_clear: "Opravdu chcete odstranit všechny své záložky z tohoto tématu?"
       save: "Uložit"
       no_timezone: 'Zatím jste nenastavili časové pásmo. Nebudete moci nastavit připomenutí. Nastavte si ho <a href="%{basePath}/my/preferences/profile">ve svém profilu</a>.'
       invalid_custom_datetime: "Zadané datum a čas jsou neplatné, zkuste to prosím znovu."
@@ -3025,6 +3023,8 @@ cs:
       medium_dark_tone: Hnědá pleť
       dark_tone: Černá pleť
       default: Vlastní emoji
+    filter_input:
+      clear: "Vymazat filtr"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -4791,6 +4791,9 @@ cs:
       review_group_name: "název skupiny"
       require_topic_approval: "Požadovat schválení moderátorů pro všechna nová témata"
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
+      posting_review_modes:
+        no_one: "Nikdo"
+        everyone: "Všichni"
       this_year: "letos"
       position: "Pozice na stránce kategorií:"
       default_position: "Výchozí pozice"

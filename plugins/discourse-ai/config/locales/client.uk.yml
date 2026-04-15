@@ -791,6 +791,17 @@ uk:
         oauth_client_id: "ID клієнта OAuth"
         oauth_client_secret: "Секрет клієнта OAuth"
         oauth_scopes: "Області OAuth"
+        oauth_authorization_params: "Параметри авторизації OAuth"
+        oauth_authorization_params_help: "Необов'язковий об’єкт JSON влитий у запит авторизації. Використовуйте null для видалення типового параметру."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "Параметри токена OAuth"
+        oauth_token_params_help: "Необов'язковий JSON-об'єкт, об'єднаний у запити токенів. Використовуйте null, щоб видалити параметр за замовчуванням."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Потрібен токен оновлення"
+        oauth_require_refresh_token_help: "Збій OAuth-з’єднання, якщо постачальник не повертає токен оновлення."
+        oauth_json_object_required: "%{field} має бути об'єктом JSON."
+        oauth_show_advanced_options: "Показати розширені параметри"
+        oauth_hide_advanced_options: "Приховати розширені параметри"
         oauth_connection: "Підключення OAuth"
         oauth_status: "Статус OAuth"
         oauth_statuses:

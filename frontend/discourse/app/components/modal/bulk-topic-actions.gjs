@@ -10,6 +10,7 @@ import { Promise } from "rsvp";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
 import RadioButton from "discourse/components/radio-button";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { topicLevels } from "discourse/lib/notification-levels";
@@ -157,7 +158,7 @@ export default class BulkTopicActions extends Component {
   }
 
   @action
-  performAction() {
+  performAction(opts = {}) {
     this.loading = true;
     switch (this.model.action) {
       case "close":
@@ -199,6 +200,12 @@ export default class BulkTopicActions extends Component {
         this.forEachPerformed({ type: "relist" }, (t) =>
           t.set("unlisted", false)
         );
+        break;
+      case "unpin":
+        this.forEachPerformed({ type: "unpin" }, (t) => t.set("pinned", false));
+        break;
+      case "pin":
+        this.performAndRefresh({ type: "pin", ...opts });
         break;
       case "append-tags":
         this.performAndRefresh({
@@ -342,6 +349,10 @@ export default class BulkTopicActions extends Component {
 
   get isCloseAction() {
     return this.model.action === "close";
+  }
+
+  get isPinAction() {
+    return this.model.action === "pin";
   }
 
   @action
@@ -516,6 +527,13 @@ export default class BulkTopicActions extends Component {
               }}
             {{/if}}
 
+            {{#if this.isPinAction}}
+              <BulkPinOptions
+                @onPin={{this.performAction}}
+                @category={{this.soleCategory}}
+              />
+            {{/if}}
+
             {{#if this.isCloseAction}}
               <div class="bulk-close-note-section">
                 <label>
@@ -543,7 +561,7 @@ export default class BulkTopicActions extends Component {
             class="btn-primary"
             id="bulk-topics-close"
           />
-        {{else}}
+        {{else if @model.showFooter}}
           {{#if @model.allowSilent}}
             <div class="topic-bulk-actions-options">
               <label

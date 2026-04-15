@@ -760,6 +760,7 @@ export default class ChatChannel extends Component {
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
         @isVisible={{this.paneState.hasPendingContentBelow}}
+        @channel={{@channel}}
       />
 
       {{#if this.pane.selectingMessages}}

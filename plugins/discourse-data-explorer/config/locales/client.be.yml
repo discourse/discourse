@@ -10,6 +10,8 @@ be:
       default_query: "Прадвызначаная"
       or: "або"
       create: "стварыць"
+      ai:
+        generate: "згенераваць"
       types:
         bool:
           yes: "Так"

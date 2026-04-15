@@ -110,6 +110,7 @@ module SvgSprite
         ellipsis
         ellipsis-vertical
         envelope
+        expand
         eye
         eye-dropper
         eye-slash

@@ -10,6 +10,8 @@ bg:
       default_query: "По подразбиране"
       or: "или"
       create: "Създай"
+      ai:
+        generate: "Генраирай"
       import:
         label: "Импорт"
       help:

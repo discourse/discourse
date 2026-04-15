@@ -103,7 +103,15 @@ module DiscourseDataExplorer
       end
 
       return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
-      render_serialized @query, QueryDetailsSerializer, root: "query"
+
+      json = serialize_data(@query, QueryDetailsSerializer, root: nil)
+
+      unless params[:export]
+        cached = QueryRunner.cached_result(@query, params[:params])
+        json[:cached_result] = cached if cached
+      end
+
+      render_json_dump(query: json)
     end
 
     def groups
@@ -173,6 +181,8 @@ module DiscourseDataExplorer
     end
 
     def update
+      sql_changed = @query.sql != params.dig(:query, :sql)
+
       ActiveRecord::Base.transaction do
         @query.update!(
           params.require(:query).permit(:name, :sql, :description).merge(hidden: false),
@@ -182,6 +192,8 @@ module DiscourseDataExplorer
         QueryGroup.where.not(group_id: group_ids).where(query_id: @query.id).delete_all
         group_ids&.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
       end
+
+      QueryRunner.invalidate(@query.id) if sql_changed
 
       render_serialized @query, QueryDetailsSerializer, root: "query"
     rescue ValidationError => e
@@ -212,75 +224,28 @@ module DiscourseDataExplorer
     def run
       rate_limit_query_runs!
 
-      check_xhr unless params[:download]
-
       query = Query.find(params[:id].to_i)
       query.update!(last_run_at: Time.now)
 
-      response.sending_file = true if params[:download]
+      explain = params[:explain] == "true"
+      return run_download(query, explain:) if params[:download]
 
-      query_params = {}
-      if params[:params]
-        query_params =
-          params[:params].is_a?(String) ? MultiJson.load(params[:params]) : params[:params]
-      end
-
-      opts = { current_user: current_user }
-      opts[:explain] = true if params[:explain] == "true"
-
-      opts[:limit] = if params[:format] == "csv"
-        limit = params.fetch(:limit, QUERY_RESULT_MAX_LIMIT).to_i
-        limit = QUERY_RESULT_MAX_LIMIT if limit > QUERY_RESULT_MAX_LIMIT
-        limit
-      else
+      check_xhr
+      limit =
         fetch_limit_from_params(
           default: SiteSetting.data_explorer_query_result_limit,
           max: QUERY_RESULT_MAX_LIMIT,
         )
-      end
 
-      result = DataExplorer.run_query(query, query_params, opts)
+      result = QueryRunner.run(query, params[:params], current_user:, explain:, limit:)
 
       if result[:error]
-        err = result[:error]
-
-        # Pretty printing logic
-        err_class = err.class
-        err_msg = err.message
-        if err.is_a? ActiveRecord::StatementInvalid
-          err_class = err.original_exception.class
-          err_msg.gsub!("#{err_class}:", "")
-        else
-          err_msg = "#{err_class}: #{err_msg}"
-        end
-
-        render json: { success: false, errors: [err_msg] }, status: :unprocessable_entity
+        render json: format_query_error(result[:error]), status: :unprocessable_entity
       else
-        content_disposition =
-          "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"
-
-        respond_to do |format|
-          format.json do
-            response.headers["Content-Disposition"] = "#{content_disposition}.json" if params[
-              :download
-            ]
-
-            render json:
-                     ResultFormatConverter.convert(
-                       :json,
-                       result,
-                       query_params:,
-                       download: params[:download],
-                       explain: params[:explain] == "true",
-                     )
-          end
-          format.csv do
-            response.headers["Content-Disposition"] = "#{content_disposition}.csv"
-
-            render plain: ResultFormatConverter.convert(:csv, result)
-          end
-        end
+        render json: result
       end
+    rescue MultiJson::ParseError
+      render_invalid_json_params
     end
 
     private
@@ -299,6 +264,72 @@ module DiscourseDataExplorer
         Discourse.warn("Query run 10 second rate limit exceeded", query_id: params[:id])
       end
       raise e if GlobalSetting.max_data_explorer_api_req_mode.include?("block")
+    end
+
+    def run_download(query, explain:)
+      response.sending_file = true
+
+      format = params[:format] == "csv" ? :csv : :json
+      limit =
+        if format == :csv
+          csv_limit = params.fetch(:limit, QUERY_RESULT_MAX_LIMIT).to_i
+          [csv_limit, QUERY_RESULT_MAX_LIMIT].min
+        else
+          fetch_limit_from_params(
+            default: SiteSetting.data_explorer_query_result_limit,
+            max: QUERY_RESULT_MAX_LIMIT,
+          )
+        end
+
+      result =
+        QueryResultDownloader.download(
+          query,
+          params[:params],
+          current_user:,
+          explain:,
+          limit:,
+          format:,
+        )
+
+      if result[:error]
+        return render json: format_query_error(result[:error]), status: :unprocessable_entity
+      end
+
+      content_disposition =
+        "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"
+
+      respond_to do |f|
+        f.json do
+          response.headers["Content-Disposition"] = "#{content_disposition}.json"
+          render json: result[:data]
+        end
+        f.csv do
+          response.headers["Content-Disposition"] = "#{content_disposition}.csv"
+          render plain: result[:data]
+        end
+      end
+    rescue MultiJson::ParseError
+      render_invalid_json_params
+    end
+
+    def format_query_error(err)
+      err_class = err.class
+      err_msg = err.message
+      if err.is_a?(ActiveRecord::StatementInvalid)
+        err_class = err.original_exception.class
+        err_msg.gsub!("#{err_class}:", "")
+      else
+        err_msg = "#{err_class}: #{err_msg}"
+      end
+      { success: false, errors: [err_msg] }
+    end
+
+    def render_invalid_json_params
+      render json: {
+               success: false,
+               errors: ["Invalid JSON in params"],
+             },
+             status: :unprocessable_entity
     end
 
     def set_group

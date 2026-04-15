@@ -23,6 +23,8 @@ sk:
       create: "Vytvoriť"
       create_placeholder: "Názov dotazu..."
       description_placeholder: "Sem zadajte popis"
+      ai:
+        generate: "Generovať"
       import:
         label: "Import"
         unparseable_json: "Súbor JSON, ktorý sa nedá rozdeliť."

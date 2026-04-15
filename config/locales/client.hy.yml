@@ -382,8 +382,6 @@ hy:
           other: "Ստեղծվել է %{count} տարի առաջ"
     bookmarked:
       title: "Էջանշել"
-      edit_bookmark: "Խմբագրել Էջանիշը"
-      clear_bookmarks: "Ջնջել Էջանշանները"
       help:
         bookmark: "Սեղմեք այս թեման էջանշելու համար"
         edit_bookmark: "Սեղմեք՝ այս թեմայի գրառման էջանիշը խմբագրելու համար"
@@ -400,12 +398,12 @@ hy:
       create: "Ստեղծել էջանշան"
       edit: "Խմբագրել էջանշանը"
       not_bookmarked: "Էջանշել այս գրառումը"
+      topic_bookmark: "Թեմա"
       remove_reminder_keep_bookmark: "Հեռացնել հիշեցումը և պահել էջանիշը"
       created_with_reminder: "Դուք էջանշել եք այս գրառումը %{date} %{name} հիշեցմամբ"
       created_with_reminder_generic: "Դուք էջանշել եք սա %{date} %{name} հիշեցմամբ"
       delete: "Ջնջել Էջանշանը"
       confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս էջանշանը: Բոլոր կապակցված   հիշեցումները կջնջվեն: "
-      confirm_clear: "Դուք համոզվա՞ծ եք, որ ցանկանում եք հեռացնել այս թեմայի բոլոր էջանշանները:"
       save: "Պահպանել"
       no_timezone: 'Դուք դեռ չեք նշել ձեր ժամային գոտին: Դուք չեք կարողանա հիշեցումներ անել: Տեղադրեք <a href="%{basePath}/my/preferences/profile"> ձեր պրոֆիլում:'
       invalid_custom_datetime: "Ամսաթիվը և ժամանակը ճիշտ չէ նշված, կրկին փորձեք:"
@@ -3181,6 +3179,8 @@ hy:
       review_group_name: "խմբի անունը"
       require_topic_approval: "Բոլոր նոր թեմաների համար պահանջել մոդերատորի հաստատումը"
       require_reply_approval: "Բոլոր նոր պատասխանների համար պահանջել մոդերատորի հաստատումը "
+      posting_review_modes:
+        everyone: "Բոլորը"
       this_year: "այս տարի"
       position: "Դիրքը կատեգորիայի էջում."
       minimum_required_tags: "Թեմայում պահանջվող պիտակների նվազագույն քանակը՝"

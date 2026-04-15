@@ -553,6 +553,7 @@ class TopicView
         :reminder_at,
         :name,
         :auto_delete_preference,
+        "posts.post_number",
       )
   end
 

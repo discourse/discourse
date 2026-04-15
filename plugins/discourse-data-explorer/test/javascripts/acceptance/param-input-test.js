@@ -403,13 +403,13 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   test("creates input boxes if has parameters when save", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
-    await click(".query-edit .btn-edit-query");
+    await click(".query-run-actions .btn-edit-query");
     await fillIn(
       ".query-editor .ace_text-input",
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
     await click(".query-editor .ace_text-input"); // enables `Save Changes` button
-    await click(".query-edit .btn-save-query");
+    await click(".query-run-actions .btn-save-query");
     assert.dom(".query-params input").exists();
   });
 

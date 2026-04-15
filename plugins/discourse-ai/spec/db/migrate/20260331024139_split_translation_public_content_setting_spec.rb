@@ -27,6 +27,8 @@ RSpec.describe SplitTranslationPublicContentSetting do
   fab!(:public_category) { Fabricate(:category, read_restricted: false) }
   fab!(:private_category) { Fabricate(:category, read_restricted: true) }
 
+  around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
+
   before { enable_current_plugin }
 
   after do

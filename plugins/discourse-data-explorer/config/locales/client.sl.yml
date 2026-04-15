@@ -23,6 +23,8 @@ sl:
       create: "Ustvari"
       create_placeholder: "Ime poizvedbe..."
       description_placeholder: "Vnesite opis tukaj"
+      ai:
+        generate: "Ustvari"
       import:
         label: "Uvozi"
       help:

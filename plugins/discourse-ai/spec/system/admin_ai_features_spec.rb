@@ -74,6 +74,22 @@ RSpec.describe "Admin AI features configuration" do
     expect(page).to have_css(".form-kit__field")
   end
 
+  it "renders group_list settings as group selectors" do
+    SiteSetting.ai_bot_enabled = true
+    SiteSetting.ai_bot_allowed_groups = "#{group_1.id}|#{group_2.id}"
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::BOT_ID}/edit",
+    )
+
+    expect(page).to have_css(".ai-feature-editor")
+
+    field = form.field("ai_bot_allowed_groups")
+    expect(field.component).to have_css(".list-setting")
+    expect(field.component).to have_content(group_1.name)
+    expect(field.component).to have_content(group_2.name)
+  end
+
   it "displays LLM names in compact_list settings" do
     llm1 = Fabricate(:llm_model, display_name: "Test LLM Alpha")
     llm2 = Fabricate(:llm_model, display_name: "Test LLM Beta")

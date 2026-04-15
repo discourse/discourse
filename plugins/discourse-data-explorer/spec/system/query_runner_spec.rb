@@ -88,4 +88,74 @@ RSpec.describe "Data explorer query runner" do
       expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries")
     end
   end
+
+  describe "caching results with query params" do
+    fab!(:user_jan) { Fabricate(:user, created_at: Time.parse("2025-01-15")) }
+    fab!(:user_feb) { Fabricate(:user, created_at: Time.parse("2025-02-15")) }
+    fab!(:user_mar) { Fabricate(:user, created_at: Time.parse("2025-03-15")) }
+    fab!(:user_apr) { Fabricate(:user, created_at: Time.parse("2025-04-15")) }
+
+    fab!(:query) { Fabricate(:query, name: "Monthly signups", sql: <<~SQL, user: admin) }
+      -- [params]
+      -- date :start_date = 2025-01-01
+      -- date :end_date = 2025-04-30
+      SELECT
+        date_trunc('month', u.created_at)::date AS month,
+        COUNT(*) AS signups
+      FROM users u
+      WHERE u.created_at >= :start_date::date
+        AND u.created_at < :end_date::date
+      GROUP BY month
+      ORDER BY month
+    SQL
+
+    let(:query_runner) { PageObjects::Pages::DataExplorerQueryRunner.new }
+
+    before do
+      DiscourseDataExplorer::QueryRunner.invalidate(query.id)
+      SiteSetting.data_explorer_enabled = true
+      sign_in admin
+    end
+
+    it "caches results and shows them on reload" do
+      query_runner.visit_admin_query(query.id)
+      expect(query_runner).to have_no_result_header
+
+      query_runner.run_query
+
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_no_cached_result_notice
+      expect(query_runner).to have_result_row_count(4)
+
+      query_runner.visit_admin_query(
+        query.id,
+        params: {
+          start_date: "2025-01-01",
+          end_date: "2025-03-31",
+        },
+      )
+      expect(query_runner).to have_no_result_header
+
+      query_runner.run_query
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_row_count(3)
+      expect(query_runner).to have_no_cached_result_notice
+
+      query_runner.visit_admin_query(query.id)
+
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_row_count(4)
+      expect(query_runner).to have_cached_result_notice
+    end
+
+    it "forces fresh execution with ?run=1 even when cache exists" do
+      query_runner.visit_admin_query(query.id)
+      query_runner.run_query
+      expect(query_runner).to have_result_header
+
+      query_runner.visit_admin_query(query.id, query_string: "run=true")
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_no_cached_result_notice
+    end
+  end
 end

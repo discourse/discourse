@@ -493,8 +493,6 @@ fi:
           other: "Luotu %{count} vuotta sitten"
     bookmarked:
       title: "Kirjanmerkki"
-      edit_bookmark: "Muokkaa kirjanmerkkiä"
-      clear_bookmarks: "Tyhjennä kirjanmerkit"
       help:
         bookmark: "Lisää tämä ketju kirjanmerkkeihin klikkaamalla"
         edit_bookmark: "Muokkaa tämän ketjun viestin kirjanmerkkiä klikkaamalla"
@@ -513,12 +511,12 @@ fi:
       clear_reminder: "Tyhjennä muistutus"
       edit: "Muokkaa kirjanmerkkiä"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
+      topic_bookmark: "Ketju"
       remove_reminder_keep_bookmark: "Poista muistutus ja säilytä kirjanmerkki"
       created_with_reminder: "Olet kirjanmerkinnyt tämän viestin muistutuksen kera %{date}. %{name}"
       created_with_reminder_generic: "Olet lisännyt tämän kirjanmerkkeihin muistutuksella %{date}. %{name}"
       delete: "Poista kirjanmerkki"
       confirm_delete: "Oletko varma, että haluat poistaa tämän kirjanmerkin? Muistutus poistetaan myös."
-      confirm_clear: "Haluatko varmasti poistaa kaikki kirjanmerkkisi tästä ketjusta?"
       save: "Tallenna"
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
       invalid_custom_datetime: "Antamasi päivämäärä ja kellonaika ei kelpaa, yritä uudelleen."
@@ -2654,6 +2652,8 @@ fi:
       medium_dark_tone: Tummanruskea ihonväri
       dark_tone: Tumma ihonväri
       default: Mukautetut emojit
+    filter_input:
+      clear: "Tyhjennä suodatin"
     shared_drafts:
       title: "Jaetut luonnokset"
       notice: "Tämä ketju näkyy vain niille, jotka voivat julkaista jaettuja luonnoksia."
@@ -4130,6 +4130,9 @@ fi:
       review_group_name: "ryhmän nimi"
       require_topic_approval: "Edellytä valvojan hyväksyntää kaikille uusille ketjuille"
       require_reply_approval: "Edellytä valvojan hyväksyntää kaikille uusille vastauksille"
+      posting_review_modes:
+        everyone: "Kaikki"
+      posting_review_groups_placeholder: "Valitse ryhmät ..."
       this_year: "tänä vuonna"
       position: "Sijoitus aluesivulla:"
       position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Voit hallita alueiden järjestystä luetteloissa ottamalla käyttöön <a href='%{url}'>\"fixed category positions\"</a> -asetuksen."

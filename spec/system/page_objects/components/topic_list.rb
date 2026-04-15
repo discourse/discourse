@@ -132,6 +132,14 @@ module PageObjects
         find(".show-more.has-topics").click
       end
 
+      def has_pinned_status?(topic)
+        page.has_css?("#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned")
+      end
+
+      def has_no_pinned_status?(topic)
+        page.has_no_css?("#{topic_list_item_class(topic)} .topic-statuses .topic-status.--pinned")
+      end
+
       private
 
       def topic_list_item_closed(topic)

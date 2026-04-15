@@ -35,6 +35,32 @@ describe DiscourseAi::Translation::TopicCandidates do
       expect(DiscourseAi::Translation::TopicCandidates.get).not_to include(topic)
     end
 
+    it "returns banner topics even when older than max_age_days" do
+      banner_topic =
+        Fabricate(
+          :topic,
+          archetype: Archetype.banner,
+          created_at: SiteSetting.ai_translation_backfill_max_age_days.days.ago - 30.days,
+        )
+
+      expect(DiscourseAi::Translation::TopicCandidates.get).to include(banner_topic)
+    end
+
+    it "returns banner topics even when no target categories are set" do
+      SiteSetting.ai_translation_target_categories = ""
+      SiteSetting.ai_translation_personal_messages = "none"
+
+      banner_topic = Fabricate(:topic, archetype: Archetype.banner)
+
+      expect(DiscourseAi::Translation::TopicCandidates.get).to include(banner_topic)
+    end
+
+    it "does not return deleted banner topics" do
+      banner_topic = Fabricate(:topic, archetype: Archetype.banner, deleted_at: Time.now)
+
+      expect(DiscourseAi::Translation::TopicCandidates.get).not_to include(banner_topic)
+    end
+
     it "does not return deleted topics" do
       topic = Fabricate(:topic, deleted_at: Time.now)
       SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")

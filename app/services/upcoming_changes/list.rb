@@ -60,7 +60,8 @@ class UpcomingChanges::List
           :upcoming_change,
           :plugin,
         ).merge(
-          dependents: SiteSetting.type_supervisor.dependencies.dependents(setting[:setting].to_s),
+          dependents: UpcomingChanges.find_dependents_for_change(setting[:setting]),
+          related: UpcomingChanges.find_related_default_override_for_change(setting[:setting]),
         )
       end
   end

@@ -23,6 +23,8 @@ fr:
       create: "Créer"
       create_placeholder: "Nom de la requête…"
       description_placeholder: "Saisissez une description ici"
+      ai:
+        generate: "Générer"
       import:
         label: "Importer"
         unparseable_json: "Fichier JSON non analysable."

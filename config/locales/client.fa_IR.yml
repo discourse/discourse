@@ -425,8 +425,6 @@ fa_IR:
           other: "ایجاد شده در %{count} سال پیش"
     bookmarked:
       title: "نشانک"
-      edit_bookmark: "ویرایش نشانک"
-      clear_bookmarks: "پاک کردن نشانک‌ها"
       help:
         bookmark: "برای نشانک گذاری این موضوع کلیک کنید"
         edit_bookmark: "برای ویرایش نشانک یک پست در این موضوع کلیک کنید"
@@ -444,12 +442,12 @@ fa_IR:
       clear_reminder: "پاک کردن یادآور"
       edit: "ویرایش نشانک"
       not_bookmarked: "این نوشته را نشانک بزنید"
+      topic_bookmark: "موضوع"
       remove_reminder_keep_bookmark: "حذف یادآوری و نگه داشتن نشانک"
       created_with_reminder: "شما این نوشته را با یادآوری %{date} نشانک کردید. %{name}"
       created_with_reminder_generic: "شما این را با نشانه‌گذاری کردید و یک یادآور در %{date}. %{name} برای آن تنظیم کردید."
       delete: "حذف نشانک"
       confirm_delete: "آیا مطمئن هستید که می‌خواهید این نشانک را حذف کنید؟ یادآوری هم حذف خواهد شد."
-      confirm_clear: "آیا مطمئنید می‌خواهید همه‌ی نشانک‌های خود را از این موضوع پاک کنید؟"
       save: "ذخیره"
       no_timezone: 'شما هنوز منطقه زمانی مشخص نکرده اید. شما قادر به تنظیم کردن یادآوری نیستید. یکی را در <a href="%{basePath}/my/preferences/profile"> پروفایل تان </a> تنظیم کنید.'
       invalid_custom_datetime: "تاریخ و ساعت ارائه شده معتبر نیست، لطفا دوباره امتحان کنید."
@@ -2492,6 +2490,8 @@ fa_IR:
       medium_dark_tone: رنگ پوست روشن تیره
       dark_tone: رنگ پوست تیره
       default: ایموجی های مخصوص
+    filter_input:
+      clear: "حذف کردن فیلتر"
     shared_drafts:
       title: "پیش‌نویس‌های اشتراک‌گذاشته شده"
       notice: "این موضوع تنها برای کسانی قابل مشاهده است، که می‌توانند پیش‌نویس‌های اشتراک‌گذاشته شده را منتشر کنند."
@@ -3886,6 +3886,8 @@ fa_IR:
       review_group_name: "نام گروه"
       require_topic_approval: "نیازمند تاییدیه ناظر برای تمامی تاپیک‌های جدید"
       require_reply_approval: "نیازمند تاییدیه ناظر برای تمامی پاسخ‌های جدید"
+      posting_review_modes:
+        everyone: "همه"
       this_year: "امسال"
       position: "موقعیت در صفحه دسته‌بندی:"
       position_disabled: "دسته ها به ترتیب فعالیت نمایش داده می شوند. برای کنترل ترتیب دسته‌ها در فهرست‌ها، گزینه <a href='%{url}'>'fixed category positions'</a> را فعال کنید."

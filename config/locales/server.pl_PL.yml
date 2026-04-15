@@ -898,6 +898,7 @@ pl_PL:
       invalid_email_in: "'%{email}' nie jest poprawnym adresem e-mail."
       email_already_used_in_group: "'%{email}' jest już używany przez grupę '%{group_name}'."
       email_already_used_in_category: "'%{email}' jest już używany przez kategorię '%{category_name}'."
+      groups_required_for_mode: "Musisz wybrać co najmniej jedną grupę dla %{setting}."
       description_incomplete: "Wpis opisujący kategorię musi mieć przynajmniej jeden paragraf."
       description_too_long:
         one: "Opis jest zbyt długi (maksymalnie %{count} znak)."

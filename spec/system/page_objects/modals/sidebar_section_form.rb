@@ -10,10 +10,11 @@ module PageObjects
       def fill_link(name, url, icon = "link")
         fill_in("link-name", with: name, match: :first)
         fill_in("link-url", with: url, match: :first)
-        find(".sidebar-section-form-link .select-kit summary", match: :first).click
-        fill_in("filter-input-search", with: icon, match: :first)
-        page.execute_script("window.scrollBy(0,10000)") # this a workaround for subfolder where page UI is broken
-        find(".select-kit-row.is-highlighted", match: :first).click
+        first_link = find(".sidebar-section-form-link", match: :first)
+        icon_picker = PageObjects::Components::DIconGridPicker.new(first_link)
+        icon_picker.expand
+        icon_picker.filter(icon)
+        icon_picker.select_icon(icon)
       end
 
       def mark_as_public

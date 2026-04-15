@@ -563,8 +563,6 @@ hu:
           other: "Létrehozva %{count} éve"
     bookmarked:
       title: "Könyvjelző"
-      edit_bookmark: "Könyvjelző szerkesztése"
-      clear_bookmarks: "Könyvjelzők törlése"
       help:
         bookmark: "Kattintson a téma könyvjelzőzéséhez"
         edit_bookmark: "Kattintson a témában lévő hozzászólás könyvjelzőjének szerkesztéséhez."
@@ -583,12 +581,12 @@ hu:
       clear_reminder: "Emlékeztető törlése"
       edit: "Könyvjelző szerkesztése"
       not_bookmarked: "bejegyzés könyvjelzőzése"
+      topic_bookmark: "Téma"
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
       created_with_reminder: "Könyvjelzőzte ezt a bejegyzést, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
       created_with_reminder_generic: "Könyvjelzőzte ezt, és emlékeztetőt állított be ekkorra: %{date}. %{name}"
       delete: "Könyvjelző törlése"
       confirm_delete: "Biztos, hogy törli ezt a könyvjelzőt? Az emlékeztető is törlődni fog."
-      confirm_clear: "Biztos, hogy törli az összes könyvjelzőjét ebből a témából?"
       save: "Mentés"
       no_timezone: 'Még nem állított be időzónát, így nem állíthat be emlékeztetőket. Állítsa be az időzónáját a <a href="%{basePath}/my/preferences/profile">a profiljában</a>.'
       invalid_custom_datetime: "A megadott dátum és idő érvénytelen, próbálkozzon újra."
@@ -2798,6 +2796,8 @@ hu:
         filter_for_more: További szűrés...
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
+        tag_category_admin_dropdown:
+          edit_tag: "Címke szerkesztése"
         bulk_select_topics_dropdown:
           title: "Csoportos műveletek"
         bulk_select_bookmarks_dropdown:
@@ -2828,6 +2828,8 @@ hu:
       medium_dark_tone: Közepesen sötét bőrszín
       dark_tone: Sötét bőrszín
       default: Egyéni emodzsik
+    filter_input:
+      clear: "Szűrő kiürítése"
     shared_drafts:
       title: "Megosztott vázlatok"
       notice: "Ez a téma csak azok számára látható, akik megosztott vázlatokat tehetnek közzé."
@@ -4448,6 +4450,10 @@ hu:
       review_group_name: "csoport neve"
       require_topic_approval: "Minden új téma moderátori jóváhagyása szükséges"
       require_reply_approval: "Minden új válasz moderátori jóváhagyása szükséges"
+      posting_review_modes:
+        no_one: "Senki"
+        everyone: "Mindenki"
+      posting_review_groups_placeholder: "Csoportok kiválasztása..."
       this_year: "ez az év"
       position: "Kategóriák oldalon elfoglalt pozíció:"
       default_position: "Alapértelmezett pozíció"
