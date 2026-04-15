@@ -26,7 +26,7 @@
 }
 
 .voting.header-title-voting .voting-wrapper {
-  --primary-high: var(--header_primary-medium);
+  --primary-high: var(--header_primary-high);
 
   @include viewport.from(lg) {
     --secondary: var(--background-color);

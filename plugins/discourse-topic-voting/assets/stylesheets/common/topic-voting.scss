@@ -61,7 +61,7 @@
 }
 
 .voting-wrapper__count-text {
-  color: var(--primary-medium);
+  color: var(--primary-high);
 }
 
 .voting-wrapper__count {
@@ -109,7 +109,7 @@
 .header-title-voting {
   --secondary: var(--header_background);
   --primary-high: var(--header_primary-high);
-  --primary-medium: var(--header_primary-medium);
+  --primary-medium: var(--header_primary-high);
   --primary-low: var(--header_primary-low);
   margin-top: 0.15em; // vertical alignment tweak
   margin-right: var(--space-2);
