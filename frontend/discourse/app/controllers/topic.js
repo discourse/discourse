@@ -10,7 +10,7 @@ import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import PermanentlyDeleteConfirm from "discourse/components/dialog-messages/permanently-delete-confirm";
+import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
@@ -1016,17 +1016,15 @@ export default class TopicController extends Controller {
       ? i18n("post.controls.permanently_delete_topic_confirmation")
       : i18n("post.controls.permanently_delete_post_confirmation");
 
-    return this.dialog.confirm({
-      title: i18n("post.controls.permanently_delete_title"),
-      bodyComponent: PermanentlyDeleteConfirm,
-      bodyComponentModel: { message },
-      confirmButtonLabel: "post.controls.permanently_delete",
-      confirmButtonClass: "btn-danger",
-      confirmButtonDisabled: true,
-      didConfirm: () => {
-        this.send("deletePost", post, { force_destroy: true });
-      },
-    });
+    return this.dialog.confirm(
+      buildPermanentlyDeleteConfirmDialogArgs(
+        message,
+        i18n("post.controls.permanently_delete_confirm_phrase"),
+        () => {
+          this.send("deletePost", post, { force_destroy: true });
+        }
+      )
+    );
   }
 
   @action

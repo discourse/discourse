@@ -5,34 +5,55 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
+export function buildPermanentlyDeleteConfirmDialogArgs(
+  message,
+  confirmPhrase,
+  didConfirm,
+  overrideOpts = {}
+) {
+  return {
+    title: overrideOpts.title || i18n("permanently_delete.title"),
+    class: overrideOpts.class || "permanently-delete-confirm",
+    bodyComponent: PermanentlyDeleteConfirm,
+    bodyComponentModel: {
+      message,
+      confirmPhrase,
+    },
+    confirmButtonLabel:
+      overrideOpts.confirmButtonLabel || "permanently_delete.controls.delete",
+    confirmButtonClass: "btn-danger",
+    confirmButtonDisabled: true,
+    didConfirm,
+  };
+}
+
 export default class PermanentlyDeleteConfirm extends Component {
   @service dialog;
-
-  confirmPhrase = i18n("post.controls.permanently_delete_confirm_phrase");
 
   @action
   onInput(event) {
     this.dialog.set(
       "confirmButtonDisabled",
       event.target.value.trim().toLocaleLowerCase() !==
-        this.confirmPhrase.trim().toLocaleLowerCase()
+        this.args.model.confirmPhrase.trim().toLocaleLowerCase()
     );
   }
 
   <template>
-    <p>{{trustHTML @model.message}}</p>
+    <div class="permanently-delete-confirm__message">{{trustHTML
+        @model.message
+      }}</div>
     <div class="permanently-delete-confirm__instruction">
       <span>{{trustHTML
           (i18n
-            "post.controls.permanently_delete_confirm_instruction"
-            phrase=this.confirmPhrase
+            "permanently_delete.confirm_instruction" phrase=@model.confirmPhrase
           )
         }}</span>
       <input
         {{on "input" this.onInput}}
         type="text"
         class="confirmation-phrase"
-        placeholder={{this.confirmPhrase}}
+        placeholder={{@model.confirmPhrase}}
       />
     </div>
   </template>

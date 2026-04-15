@@ -84,14 +84,24 @@
   }
 }
 
-.permanently-delete-confirm__instruction {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
+.permanently-delete-confirm {
+  .dialog-content {
+    max-width: 400px;
+  }
 
-  .confirmation-phrase {
-    width: 100%;
-    margin: 0;
+  &__message {
+    margin-bottom: var(--space-4);
+  }
+
+  &__instruction {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    .confirmation-phrase {
+      width: 100%;
+      margin: 0;
+    }
   }
 }
 

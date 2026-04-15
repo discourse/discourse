@@ -322,6 +322,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
       bodyComponent: PermanentlyDeleteConfirm,
       bodyComponentModel: {
         message: "Are you sure?",
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
       },
       confirmButtonClass: "btn-danger",
       confirmButtonDisabled: true,

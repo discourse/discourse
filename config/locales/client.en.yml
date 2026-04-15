@@ -3658,6 +3658,11 @@ en:
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
     view_all: "view all %{tab}"
+    permanently_delete:
+      title: "Are you absolutely sure?"
+      confirm_instruction: "Please type <b>%{phrase}</b> below to confirm:"
+      controls:
+        delete: "I understand the consequences, permanently delete"
     user_menu:
       generic_no_items: "There are no items in this list."
       sr_menu_tabs: "User menu tabs"
@@ -4592,11 +4597,9 @@ en:
         admin: "post admin actions"
         admin_action: "Admin"
         permanently_delete: "Permanently delete"
-        permanently_delete_title: "Are you absolutely sure?"
-        permanently_delete_post_confirmation: "This action <b>cannot</b> be undone. This will permanently delete this post and remove it from the database."
-        permanently_delete_topic_confirmation: "This action <b>cannot</b> be undone. This will permanently delete this topic and remove it from the database."
+        permanently_delete_post_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this post and remove it from the database."
+        permanently_delete_topic_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this topic and remove it from the database."
         permanently_delete_confirm_phrase: "permanently delete"
-        permanently_delete_confirm_instruction: "Please type <b>%{phrase}</b> to confirm."
         wiki: "Make Wiki"
         unwiki: "Remove Wiki"
         convert_to_moderator: "Add Staff Color"
