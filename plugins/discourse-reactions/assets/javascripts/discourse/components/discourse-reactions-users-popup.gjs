@@ -3,34 +3,36 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { service } from "@ember/service";
-import UserAvatar from "discourse/components/user-avatar";
-import UserLink from "discourse/components/user-link";
+import PostUsersPopup from "discourse/components/post-users-popup";
 import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
-const PAGE_SIZE = 30;
-
 export default class DiscourseReactionsUsersPopup extends Component {
-  @service siteSettings;
-
-  @tracked users = [];
-  @tracked loading = false;
-  @tracked canLoadMore = true;
   @tracked activeFilter = null;
 
-  #page = 0;
+  fetchUsers = async (page, pageSize) => {
+    const result = await CustomReaction.fetchReactionsUsersList(
+      this.post.id,
+      page,
+      pageSize,
+      this.activeFilter
+    );
+
+    const loadedSoFar = page * pageSize + result.users.length;
+    return {
+      users: result.users,
+      canLoadMore: result.total_rows
+        ? loadedSoFar < result.total_rows
+        : result.users.length >= pageSize,
+    };
+  };
+  #resetCallback = null;
 
   get post() {
     return this.args.post;
-  }
-
-  get mainReaction() {
-    return this.siteSettings.discourse_reactions_reaction_for_like;
   }
 
   get reactions() {
@@ -41,48 +43,8 @@ export default class DiscourseReactionsUsersPopup extends Component {
     return this.reactions.length > 1;
   }
 
-  get totalCount() {
-    return this.post.reaction_users_count;
-  }
-
-  @action
-  async loadInitial() {
-    await this.#loadMore();
-  }
-
-  @action
-  onScroll(event) {
-    const el = event.target;
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
-      this.#loadMore();
-    }
-  }
-
-  async #loadMore() {
-    if (this.loading || !this.canLoadMore) {
-      return;
-    }
-
-    this.loading = true;
-
-    try {
-      const result = await CustomReaction.fetchReactionsUsersList(
-        this.post.id,
-        this.#page,
-        PAGE_SIZE,
-        this.activeFilter
-      );
-
-      this.users = [...this.users, ...result.users];
-      this.#page++;
-
-      const loadedSoFar = this.users.length;
-      this.canLoadMore = result.total_rows
-        ? loadedSoFar < result.total_rows
-        : result.users.length >= PAGE_SIZE;
-    } finally {
-      this.loading = false;
-    }
+  get referenceElement() {
+    return this.args.referenceElement;
   }
 
   @action
@@ -94,92 +56,49 @@ export default class DiscourseReactionsUsersPopup extends Component {
     }
 
     this.activeFilter = filterId;
-    this.users = [];
-    this.#page = 0;
-    this.canLoadMore = true;
-    this.#loadMore();
+    this.#resetCallback?.();
   }
 
   @action
-  preventClose(event) {
-    event.stopPropagation();
+  registerReset(resetFn) {
+    this.#resetCallback = resetFn;
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive no-pointer-down-event-binding }}
-    <div
-      class="reactions-users-popup"
-      {{on "click" this.preventClose}}
-      {{on "mousedown" this.preventClose}}
-      {{on "mouseup" this.preventClose}}
+    <PostUsersPopup
+      @referenceElement={{this.referenceElement}}
+      @fetchUsers={{this.fetchUsers}}
     >
-      <div class="reactions-users-popup__arrow"></div>
-      {{#if this.showFilters}}
-        <div class="reactions-users-popup__header">
-          <button
-            type="button"
-            class={{concatClass
-              "reactions-users-popup__filter"
-              (unless this.activeFilter "is-active")
-            }}
-            {{on "click" (fn this.selectFilter null)}}
-          >
-            {{i18n "discourse_reactions.users_popup.all"}}
-          </button>
-          {{#each this.reactions as |reaction|}}
+      <:header as |resetAndReload|>
+        {{this.registerReset resetAndReload}}
+        {{#if this.showFilters}}
+          <div class="post-users-popup__header">
             <button
               type="button"
               class={{concatClass
-                "reactions-users-popup__filter"
-                (if (eq reaction.id this.activeFilter) "is-active")
+                "post-users-popup__filter"
+                (unless this.activeFilter "is-active")
               }}
-              {{on "click" (fn this.selectFilter reaction.id)}}
+              {{on "click" (fn this.selectFilter null)}}
             >
-              {{emoji reaction.id skipTitle=true}}
-              <span>{{reaction.count}}</span>
+              {{i18n "discourse_reactions.users_popup.all"}}
             </button>
-          {{/each}}
-        </div>
-      {{/if}}
-      <div
-        class="reactions-users-popup__body"
-        {{on "scroll" this.onScroll}}
-        {{didInsert this.loadInitial}}
-      >
-        {{#each this.users as |user|}}
-          <div class="reactions-users-popup__item">
-            <UserLink
-              @username={{user.username}}
-              class="reactions-users-popup__avatar-link"
-            >
-              <UserAvatar @user={{user}} @size="small" />
-            </UserLink>
-            <div class="reactions-users-popup__user-info">
-              <UserLink
-                @username={{user.username}}
-                class="reactions-users-popup__name"
+            {{#each this.reactions as |reaction|}}
+              <button
+                type="button"
+                class={{concatClass
+                  "post-users-popup__filter"
+                  (if (eq reaction.id this.activeFilter) "is-active")
+                }}
+                {{on "click" (fn this.selectFilter reaction.id)}}
               >
-                {{if user.name user.name user.username}}
-              </UserLink>
-              {{#if user.name}}
-                <span class="reactions-users-popup__username">
-                  @{{user.username}}
-                </span>
-              {{/if}}
-            </div>
-            {{emoji
-              user.reaction
-              skipTitle=true
-              class="reactions-users-popup__reaction-icon"
-            }}
-          </div>
-        {{/each}}
-        {{#if this.loading}}
-          <div class="reactions-users-popup__loading">
-            <div class="spinner small"></div>
+                {{emoji reaction.id skipTitle=true}}
+                <span>{{reaction.count}}</span>
+              </button>
+            {{/each}}
           </div>
         {{/if}}
-      </div>
-    </div>
+      </:header>
+    </PostUsersPopup>
   </template>
 }

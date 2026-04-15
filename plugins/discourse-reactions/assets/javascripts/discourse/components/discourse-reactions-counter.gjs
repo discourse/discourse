@@ -3,9 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { computePosition, flip, offset, shift } from "@floating-ui/dom";
 import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
@@ -31,6 +29,10 @@ export default class DiscourseReactionsCounter extends Component {
     return `discourse-reactions-counter-${this.args.post.id}-${
       this.args.position || "right"
     }`;
+  }
+
+  get referenceElement() {
+    return document.getElementById(this.elementId);
   }
 
   reactionsChanged(data) {
@@ -70,7 +72,7 @@ export default class DiscourseReactionsCounter extends Component {
     } else if (event.key === "Escape") {
       if (this.usersPopupExpanded) {
         event.stopPropagation();
-        this.#closeUsersPopup();
+        this.#closePopup();
         document.getElementById(this.elementId)?.focus();
       } else if (this.args.statePanelExpanded) {
         event.stopPropagation();
@@ -86,7 +88,7 @@ export default class DiscourseReactionsCounter extends Component {
       return;
     }
 
-    if (event.target.closest(".reactions-users-popup")) {
+    if (event.target.closest(".post-users-popup")) {
       return;
     }
 
@@ -94,25 +96,16 @@ export default class DiscourseReactionsCounter extends Component {
     event.preventDefault();
 
     if (this.usersPopupExpanded) {
-      this.#closeUsersPopup();
+      this.#closePopup();
     } else {
-      if (this.args.statePanelExpanded) {
-        this.args.collapseStatePanel();
-      }
-      this.usersPopupExpanded = true;
-      this.#positionPopup();
-      this.#scrollHandler = () => this.#closeUsersPopup();
-      window.addEventListener("scroll", this.#scrollHandler, {
-        once: true,
-        passive: true,
-      });
+      this.#openPopup();
     }
   }
 
   @action
   clickOutside() {
     if (this.usersPopupExpanded) {
-      this.#closeUsersPopup();
+      this.#closePopup();
     } else if (this.args.statePanelExpanded) {
       this.args.collapseAllPanels();
     }
@@ -127,7 +120,7 @@ export default class DiscourseReactionsCounter extends Component {
       return true;
     }
 
-    if (event.target.closest(".reactions-users-popup")) {
+    if (event.target.closest(".post-users-popup")) {
       return true;
     }
 
@@ -136,18 +129,9 @@ export default class DiscourseReactionsCounter extends Component {
       event.preventDefault();
 
       if (this.usersPopupExpanded) {
-        this.#closeUsersPopup();
+        this.#closePopup();
       } else {
-        if (this.args.statePanelExpanded) {
-          this.args.collapseStatePanel();
-        }
-        this.usersPopupExpanded = true;
-        this.#positionPopup();
-        this.#scrollHandler = () => this.#closeUsersPopup();
-        window.addEventListener("scroll", this.#scrollHandler, {
-          once: true,
-          passive: true,
-        });
+        this.#openPopup();
       }
     }
   }
@@ -216,50 +200,24 @@ export default class DiscourseReactionsCounter extends Component {
     );
   }
 
-  #closeUsersPopup() {
+  #openPopup() {
+    if (this.args.statePanelExpanded) {
+      this.args.collapseStatePanel();
+    }
+    this.usersPopupExpanded = true;
+    this.#scrollHandler = () => this.#closePopup();
+    window.addEventListener("scroll", this.#scrollHandler, {
+      once: true,
+      passive: true,
+    });
+  }
+
+  #closePopup() {
     this.usersPopupExpanded = false;
     if (this.#scrollHandler) {
       window.removeEventListener("scroll", this.#scrollHandler);
       this.#scrollHandler = null;
     }
-  }
-
-  #positionPopup() {
-    schedule("afterRender", () => {
-      const counterEl = document.getElementById(this.elementId);
-      const popupEl = counterEl?.querySelector(".reactions-users-popup");
-      const arrowEl = popupEl?.querySelector(".reactions-users-popup__arrow");
-
-      if (!counterEl || !popupEl) {
-        return;
-      }
-
-      const middleware = [
-        offset(18),
-        flip({ padding: 10 }),
-        shift({ padding: 10 }),
-      ];
-
-      computePosition(counterEl, popupEl, {
-        placement: "bottom",
-        middleware,
-      }).then(({ x, y }) => {
-        Object.assign(popupEl.style, {
-          left: `${x}px`,
-          top: `${y}px`,
-        });
-
-        if (arrowEl) {
-          const counterRect = counterEl.getBoundingClientRect();
-          const popupRect = popupEl.getBoundingClientRect();
-          const arrowX =
-            counterRect.left + counterRect.width / 2 - popupRect.left;
-          Object.assign(arrowEl.style, {
-            left: `${arrowX}px`,
-          });
-        }
-      });
-    });
   }
 
   <template>
@@ -312,7 +270,10 @@ export default class DiscourseReactionsCounter extends Component {
         {{/if}}
 
         {{#if this.usersPopupExpanded}}
-          <DiscourseReactionsUsersPopup @post={{@post}} />
+          <DiscourseReactionsUsersPopup
+            @post={{@post}}
+            @referenceElement={{this.referenceElement}}
+          />
         {{/if}}
       {{/if}}
     </div>

@@ -2174,12 +2174,14 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 }
 
-.post-likes-popup {
+// Shared floating popup for displaying users who liked/reacted to a post.
+// Used by core liked-users-list and the discourse-reactions plugin.
+.post-users-popup {
   position: fixed;
   z-index: z("usercard") - 1;
   width: 300px;
   background: var(--secondary);
-  color: var(--primary) !important;
+  color: var(--primary);
   line-height: normal;
   border: 1px solid var(--primary-low);
   border-radius: 10px;
@@ -2197,12 +2199,61 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     z-index: 1;
   }
 
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    padding: 0.5em 0.65em;
+    border-bottom: 1px solid var(--primary-low);
+    border-radius: 10px 10px 0 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.3em 0.6em;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+
+    .emoji {
+      width: 1.15em;
+      height: 1.15em;
+    }
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+
+    &.is-active {
+      background: var(--tertiary-low);
+      color: var(--primary);
+      font-weight: 600;
+    }
+  }
+
   &__body {
     max-height: 340px;
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-top: 0.35em;
-    border-radius: 10px;
+    border-radius: 0 0 10px 10px;
+
+    &:first-child {
+      border-radius: 10px;
+    }
   }
 
   &__item {
@@ -2262,6 +2313,11 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     color: var(--danger);
     flex-shrink: 0;
     margin-left: auto;
+
+    .emoji {
+      width: 1.15em;
+      height: 1.15em;
+    }
   }
 
   &__loading {
@@ -2271,7 +2327,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 }
 
-.mobile-view .post-likes-popup {
+.mobile-view .post-users-popup {
   width: min(90vw, 300px);
 }
 
