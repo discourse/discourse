@@ -23,4 +23,13 @@ RSpec.describe DiscourseDataExplorer::Workflows::SqlAction do
       )
     end
   end
+
+  describe ".property_schema" do
+    it "includes output_fields" do
+      schema = described_class.property_schema
+      expect(schema).to have_key(:output_fields)
+      expect(schema[:output_fields][:type]).to eq(:array)
+      expect(schema[:output_fields][:ui][:hidden]).to eq(true)
+    end
+  end
 end

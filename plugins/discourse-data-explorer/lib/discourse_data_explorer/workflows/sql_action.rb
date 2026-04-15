@@ -42,6 +42,13 @@ module DiscourseDataExplorer
               lang: :sql,
             },
           },
+          output_fields: {
+            type: :array,
+            required: false,
+            ui: {
+              hidden: true,
+            },
+          },
         }
       end
 
