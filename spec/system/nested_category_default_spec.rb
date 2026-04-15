@@ -19,6 +19,7 @@ RSpec.describe "Nested view category default" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    SiteSetting.enable_simplified_category_creation = false
     nested_category.category_setting.update!(nested_replies_default: true)
     Fabricate(:nested_topic, topic: topic)
   end
