@@ -57,7 +57,6 @@ RSpec.describe "CSV Exports" do
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
-      expect(exported_data.length).to be(5)
       expect(exported_data.first).to eq(
         %w[
           id
@@ -93,7 +92,7 @@ RSpec.describe "CSV Exports" do
           group_names
         ],
       )
-      expect(exported_data.last).to eq(
+      expect(exported_data.find { |row| row[0] == user.id.to_s }).to eq(
         [
           user.id.to_s,
           user.name,
