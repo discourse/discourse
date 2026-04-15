@@ -244,6 +244,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   });
 
   test("cancelling uploads clears the placeholders out", async function (assert) {
+    const consoleErrorStub = sinon.stub(console, "error");
+
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
@@ -278,6 +280,13 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       appEvents.trigger("composer:add-files", [image, image2]);
     });
     await click("#cancel-file-upload");
+
+    assert.true(
+      consoleErrorStub.calledWithMatch("[Uppy]"),
+      "Uppy logs the cancelled uploads to the console"
+    );
+
+    consoleErrorStub.restore();
   });
 
   test("should insert a newline before and after an image when pasting in the end of the line", async function (assert) {
