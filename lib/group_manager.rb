@@ -5,7 +5,7 @@
 # so that we do not have multiple implementations to maintain.
 # It was also moved to this manager to make it obvious that updates should
 # be made here instead of on GroupUser
-class GroupUserManager
+class GroupManager
   def initialize(group)
     @group = group
   end

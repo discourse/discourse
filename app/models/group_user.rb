@@ -133,9 +133,9 @@ class GroupUser < ActiveRecord::Base
 
   def sync_via_manager
     if previously_new_record?
-      GroupUserManager.new(group).sync_add_side_effects([user.id])
+      GroupManager.new(group).sync_add_side_effects([user.id])
     else
-      group_user_manager = GroupUserManager.new(group)
+      group_user_manager = GroupManager.new(group)
       group_user_manager.decrease_group_user_count([user.id])
 
       return unless User.exists?(user.id)
