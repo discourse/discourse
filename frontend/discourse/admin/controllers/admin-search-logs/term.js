@@ -48,12 +48,14 @@ export default class AdminSearchLogsTermController extends Controller {
           },
         },
         scales: {
-          y: {
-            display: true,
-            ticks: {
-              stepSize: 1,
+          y: [
+            {
+              display: true,
+              ticks: {
+                stepSize: 1,
+              },
             },
-          },
+          ],
         },
       },
     };
