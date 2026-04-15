@@ -118,7 +118,9 @@ describe "Simplified Category Creation" do
       form.field("color").fill_in("GGGGGG")
       category_page.save_settings
 
-      expect(page).to have_content("Color is invalid")
+      expect(form.field("color")).to have_errors(
+        I18n.t("js.category.color_validations.non_hexdecimal"),
+      )
     end
 
     it "shows error when icon is missing" do
