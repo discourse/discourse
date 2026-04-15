@@ -120,7 +120,8 @@ export default class NodeConfigurator extends Component {
 
   get executionOutputFields() {
     const node = this.args.model.node;
-    if (node.type !== "action:sql" && node.type !== "action:code") {
+    const schema = this.propertySchema?.output_fields;
+    if (!schema?.ui?.hidden) {
       return null;
     }
 

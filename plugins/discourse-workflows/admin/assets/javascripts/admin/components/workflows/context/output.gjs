@@ -35,8 +35,10 @@ export default class OutputContext extends Component {
   }
 
   get needsExecutionDiscovery() {
-    const type = this.args.node?.type;
-    return type === "action:sql" || type === "action:code";
+    const nodeType = this.graph.nodeTypes.find(
+      (nt) => nt.identifier === this.args.node?.type
+    );
+    return !!nodeType?.property_schema?.output_fields?.ui?.hidden;
   }
 
   <template>
