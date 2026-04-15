@@ -226,11 +226,13 @@ html.composer-open:not(.has-full-page-chat) {
       border-color: var(--input-border-color);
     }
 
-    .composer-actions-trigger .d-button-label {
-      display: none;
+    @include viewport.until(sm) {
+      .composer-actions-trigger .d-button-label {
+        display: none;
 
-      + .d-icon {
-        margin-left: 0;
+        + .d-icon {
+          margin-left: 0;
+        }
       }
     }
 
