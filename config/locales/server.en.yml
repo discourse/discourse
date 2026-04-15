@@ -3126,8 +3126,11 @@ en:
       unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
 
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
-    omniauth_confirm_title: "Log in using %{provider}"
+    omniauth_confirm_title: "Log in with %{provider}"
     omniauth_confirm_button: "Continue"
+    omniauth_confirm_description: "You will be redirected to %{provider} to sign in"
+    omniauth_confirm_provider_description: "Secure authentication"
+    omniauth_confirm_footer_html: "You will be signed into %{site}"
     authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     new_registrations_disabled_discourse_connect: "New account registrations are only allowed through Discourse Connect."
