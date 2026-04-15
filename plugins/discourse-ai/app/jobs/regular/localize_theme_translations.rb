@@ -11,47 +11,75 @@ module Jobs
       theme = Theme.find_by(id: theme_id)
       return if theme.blank?
 
-      en_field = theme.theme_fields.find_by(target_id: Theme.targets[:translations], name: "en")
-      return if en_field.blank?
+      target_locales = SiteSetting.content_localization_supported_locales.to_s.split("|")
+      return if target_locales.empty?
 
-      en_data = en_field.raw_translation_data[:en] || {}
-      translations =
-        ThemeTranslationManager.list_from_hash(locale: "en", hash: en_data, theme: theme)
-      return if translations.blank?
+      source_locale = args[:source_locale].presence || "en"
+      non_en_source = source_locale != "en"
 
-      locales = SiteSetting.content_localization_supported_locales.to_s.split("|") - ["en"]
-      return if locales.empty?
+      source_overrides = non_en_source ? load_overrides(theme, source_locale) : {}
+      source_yaml = non_en_source ? load_yaml(theme, source_locale) : {}
+      en_overrides = load_overrides(theme, "en")
+      en_yaml = load_yaml(theme, "en")
 
-      locales.each do |locale|
-        translations.each do |tm|
-          begin
-            value =
-              DiscourseAi::Translation::ShortTextTranslator.new(
-                text: tm.default,
-                target_locale: locale,
-              ).translate
-            next if value.blank?
+      en_yaml.each_key do |key|
+        if (text = source_overrides[key].presence || source_yaml[key].presence)
+          effective_locale = source_locale
+        elsif (text = en_overrides[key].presence || en_yaml[key].presence)
+          effective_locale = "en"
+        else
+          next
+        end
 
-            ThemeTranslationOverride.upsert(
-              {
-                theme_id: theme.id,
-                locale: locale,
-                translation_key: tm.key,
-                value: value,
-                created_at: Time.now,
-                updated_at: Time.now,
-              },
-              unique_by: %i[theme_id locale translation_key],
-            )
-          rescue FinalDestination::SSRFDetector::LookupFailedError
-            # transient lookup failures
-          rescue => e
-            DiscourseAi::Translation::VerboseLogger.log(
-              "Failed to translate theme #{theme.id} key #{tm.key} to #{locale}: #{e.message}",
-            )
-          end
+        (target_locales - [effective_locale]).each do |locale|
+          translate_and_upsert(theme, key, text, locale)
         end
       end
+    end
+
+    private
+
+    def load_overrides(theme, locale)
+      ThemeTranslationOverride
+        .where(theme_id: theme.id, locale: locale)
+        .pluck(:translation_key, :value)
+        .to_h
+    end
+
+    def load_yaml(theme, locale)
+      field = theme.theme_fields.find_by(target_id: Theme.targets[:translations], name: locale)
+      return {} if field.blank?
+      data = field.raw_translation_data[locale.to_sym] || {}
+      ThemeTranslationManager
+        .list_from_hash(locale: locale, hash: data, theme: theme)
+        .each_with_object({}) { |tm, h| h[tm.key] = tm.default }
+    end
+
+    def translate_and_upsert(theme, key, text, locale)
+      value =
+        DiscourseAi::Translation::ShortTextTranslator.new(
+          text: text,
+          target_locale: locale,
+        ).translate
+      return if value.blank?
+
+      ThemeTranslationOverride.upsert(
+        {
+          theme_id: theme.id,
+          locale: locale,
+          translation_key: key,
+          value: value,
+          created_at: Time.now,
+          updated_at: Time.now,
+        },
+        unique_by: %i[theme_id locale translation_key],
+      )
+    rescue FinalDestination::SSRFDetector::LookupFailedError
+      # transient lookup failures
+    rescue => e
+      DiscourseAi::Translation::VerboseLogger.log(
+        "Failed to translate theme #{theme.id} key #{key} to #{locale}: #{e.message}",
+      )
     end
   end
 end

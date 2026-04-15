@@ -26,12 +26,12 @@ describe Jobs::LocalizeThemeTranslations do
   end
 
   it "does nothing when no target locales are configured" do
-    SiteSetting.content_localization_supported_locales = "en"
+    SiteSetting.content_localization_supported_locales = ""
     DiscourseAi::Translation::ShortTextTranslator.expects(:new).never
     job.execute(theme_id: theme.id)
   end
 
-  it "translates each key into every non-en locale and upserts overrides" do
+  it "translates each key into every non-source locale and upserts overrides" do
     translator = mock
     translator.stubs(:translate).returns("translated")
     DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
@@ -45,7 +45,7 @@ describe Jobs::LocalizeThemeTranslations do
   end
 
   it "only translates to locales in content_localization_supported_locales" do
-    SiteSetting.content_localization_supported_locales = "en|fr"
+    SiteSetting.content_localization_supported_locales = "fr"
     translator = mock
     translator.stubs(:translate).returns("translated")
     DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
@@ -65,5 +65,125 @@ describe Jobs::LocalizeThemeTranslations do
     job.execute(theme_id: theme.id)
 
     expect(ThemeTranslationOverride.where(theme_id: theme.id)).to be_empty
+  end
+
+  it "uses the en override value when present instead of the yaml default" do
+    ThemeTranslationOverride.create!(
+      theme_id: theme.id,
+      locale: "en",
+      translation_key: "greeting",
+      value: "Howdy",
+    )
+
+    translator = mock
+    translator.stubs(:translate).returns("translated")
+    DiscourseAi::Translation::ShortTextTranslator
+      .expects(:new)
+      .with(has_entries(text: "Howdy"))
+      .at_least_once
+      .returns(translator)
+
+    job.execute(theme_id: theme.id)
+  end
+
+  describe "with a non-en source locale" do
+    before do
+      theme.set_field(target: :translations, name: "fr", value: <<~YAML)
+        fr:
+          greeting: "Bonjour"
+      YAML
+      theme.save!
+    end
+
+    it "uses the source locale override when present" do
+      ThemeTranslationOverride.create!(
+        theme_id: theme.id,
+        locale: "fr",
+        translation_key: "greeting",
+        value: "Salut",
+      )
+
+      translator = mock
+      translator.stubs(:translate).returns("translated")
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+      DiscourseAi::Translation::ShortTextTranslator
+        .expects(:new)
+        .with(has_entries(text: "Salut", target_locale: "es"))
+        .returns(translator)
+
+      job.execute(theme_id: theme.id, source_locale: "fr")
+
+      expect(
+        ThemeTranslationOverride.where(theme_id: theme.id, value: "translated").pluck(:locale),
+      ).to contain_exactly("en", "es")
+    end
+
+    it "falls back to the source locale yaml when no source override exists" do
+      translator = mock
+      translator.stubs(:translate).returns("translated")
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+      DiscourseAi::Translation::ShortTextTranslator
+        .expects(:new)
+        .with(has_entries(text: "Bonjour", target_locale: "es"))
+        .returns(translator)
+
+      job.execute(theme_id: theme.id, source_locale: "fr")
+    end
+
+    it "falls back to en override, then en yaml, when source locale has neither and translates into the source locale too" do
+      theme.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr").destroy!
+      ThemeTranslationOverride.create!(
+        theme_id: theme.id,
+        locale: "en",
+        translation_key: "greeting",
+        value: "Howdy",
+      )
+
+      translator = mock
+      translator.stubs(:translate).returns("translated")
+      DiscourseAi::Translation::ShortTextTranslator
+        .expects(:new)
+        .with(has_entries(text: "Howdy", target_locale: "fr"))
+        .returns(translator)
+      DiscourseAi::Translation::ShortTextTranslator
+        .expects(:new)
+        .with(has_entries(text: "Howdy", target_locale: "es"))
+        .returns(translator)
+
+      job.execute(theme_id: theme.id, source_locale: "fr")
+    end
+
+    it "excludes only the effective source locale from target locales per key" do
+      theme.set_field(target: :translations, name: "en", value: <<~YAML)
+        en:
+          greeting: "Hello"
+          farewell: "Goodbye"
+      YAML
+      theme.save!
+
+      translator = mock
+      translator.stubs(:translate).returns("translated")
+      DiscourseAi::Translation::ShortTextTranslator.stubs(:new).returns(translator)
+
+      job.execute(theme_id: theme.id, source_locale: "fr")
+
+      greeting_locales =
+        ThemeTranslationOverride.where(
+          theme_id: theme.id,
+          translation_key: "greeting",
+          value: "translated",
+        ).pluck(:locale)
+      farewell_locales =
+        ThemeTranslationOverride.where(
+          theme_id: theme.id,
+          translation_key: "farewell",
+          value: "translated",
+        ).pluck(:locale)
+
+      # greeting has a fr yaml → effective source fr → targets en and es
+      expect(greeting_locales).to contain_exactly("en", "es")
+      # farewell has no fr anywhere → effective source en → targets fr and es
+      expect(farewell_locales).to contain_exactly("fr", "es")
+    end
   end
 end

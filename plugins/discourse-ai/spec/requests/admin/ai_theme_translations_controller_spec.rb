@@ -11,8 +11,14 @@ describe DiscourseAi::Admin::AiThemeTranslationsController do
     context "when logged in as admin" do
       before { sign_in(admin) }
 
-      it "enqueues the localize job with the theme id" do
-        expect_enqueued_with(job: :localize_theme_translations, args: { theme_id: theme.id }) do
+      it "enqueues the localize job with the theme id and defaults source_locale to en" do
+        expect_enqueued_with(
+          job: :localize_theme_translations,
+          args: {
+            theme_id: theme.id,
+            source_locale: "en",
+          },
+        ) do
           post "/admin/plugins/discourse-ai/ai-theme-translations.json",
                params: {
                  theme_id: theme.id,
@@ -20,6 +26,38 @@ describe DiscourseAi::Admin::AiThemeTranslationsController do
         end
 
         expect(response.status).to eq(204)
+      end
+
+      it "passes a valid locale through as source_locale" do
+        expect_enqueued_with(
+          job: :localize_theme_translations,
+          args: {
+            theme_id: theme.id,
+            source_locale: "fr",
+          },
+        ) do
+          post "/admin/plugins/discourse-ai/ai-theme-translations.json",
+               params: {
+                 theme_id: theme.id,
+                 locale: "fr",
+               }
+        end
+      end
+
+      it "defaults to en when locale is invalid" do
+        expect_enqueued_with(
+          job: :localize_theme_translations,
+          args: {
+            theme_id: theme.id,
+            source_locale: "en",
+          },
+        ) do
+          post "/admin/plugins/discourse-ai/ai-theme-translations.json",
+               params: {
+                 theme_id: theme.id,
+                 locale: "not-a-locale",
+               }
+        end
       end
 
       it "returns 404 when the theme does not exist" do

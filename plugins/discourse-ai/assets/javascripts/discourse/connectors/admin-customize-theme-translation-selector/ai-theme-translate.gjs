@@ -17,11 +17,11 @@ export default class AiThemeTranslate extends Component {
 
   @action
   async translate() {
-    const { theme } = this.args.outletArgs;
+    const { theme, locale } = this.args.outletArgs;
     try {
       await ajax("/admin/plugins/discourse-ai/ai-theme-translations", {
         type: "POST",
-        data: { theme_id: theme.id },
+        data: { theme_id: theme.id, locale },
       });
       this.toasts.success({
         duration: "short",

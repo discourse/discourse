@@ -408,7 +408,7 @@ en:
         theme_translations:
           translate:
             label: "Translate"
-            title: "Translate to all supported languages"
+            title: "Translate to all supported languages using the selected language as the source"
             queued: "Translation queued"
             failed: "Failed to queue translation"
         translations_menu:
