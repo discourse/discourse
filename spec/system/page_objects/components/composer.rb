@@ -119,7 +119,7 @@ module PageObjects
       end
 
       def has_no_action?(action_id)
-        has_no_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
+        !has_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
       end
 
       def select_action(action_id)

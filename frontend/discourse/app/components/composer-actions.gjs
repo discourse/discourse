@@ -6,6 +6,10 @@ import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -253,8 +257,11 @@ export default class ComposerActions extends Component {
     }
 
     // 2.5. Reply to Topic (reply_to_topic) - show when user is currently replying to a specific post
+    // Excludes CREATE_TOPIC and PRIVATE_MESSAGE modes which have their own reply_to_topic sections
     if (
       !this.isEditing &&
+      currentAction !== CREATE_TOPIC &&
+      currentAction !== PRIVATE_MESSAGE &&
       ((currentAction !== REPLY && currentTopic) ||
         (currentAction === REPLY &&
           currentTopic &&
@@ -272,7 +279,23 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    // 3. Toggle Topic Bump (toggle_topic_bump) - REPLY MODE ONLY
+    // 3. Toggle Whisper (toggle_whisper)
+    // if answered post is a whisper, we can only answer with a whisper so no need for toggle
+    if (
+      this.canWhisper &&
+      (!this.replyOptions?.postLink ||
+        !currentPost ||
+        currentPost.post_type !== this.site.post_types.whisper)
+    ) {
+      items.push({
+        name: i18n("composer.composer_actions.toggle_whisper.label"),
+        description: i18n("composer.composer_actions.toggle_whisper.desc"),
+        icon: "far-eye-slash",
+        id: "toggle_whisper",
+      });
+    }
+
+    // 4. Toggle Topic Bump (toggle_topic_bump) - REPLY MODE ONLY
     const showToggleTopicBump =
       this.currentUser?.staff || this.currentUser?.trust_level === 4;
     if (currentAction === REPLY && showToggleTopicBump) {
@@ -376,7 +399,12 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    return items;
+    return applyValueTransformer("composer-actions-content", items, {
+      action: currentAction,
+      topic: currentTopic,
+      post: currentPost,
+      composerModel: this.composerModel,
+    });
   }
 
   @action
@@ -388,18 +416,23 @@ export default class ComposerActions extends Component {
   async onSelectAction(actionId) {
     await this.dmenuApi?.close({ focusTrigger: true });
 
+    const options = this.composerModel.getProperties(
+      "draftKey",
+      "draftSequence",
+      "title",
+      "reply",
+      "disableScopedCategory"
+    );
+
     const composerAction = `${camelize(actionId)}Selected`;
     if (this[composerAction]) {
-      this[composerAction](
-        this.composerModel.getProperties(
-          "draftKey",
-          "draftSequence",
-          "title",
-          "reply",
-          "disableScopedCategory"
-        ),
-        this.composerModel
-      );
+      this[composerAction](options, this.composerModel);
+    } else {
+      applyBehaviorTransformer("composer-actions-on-select", () => {}, {
+        actionId,
+        options,
+        model: this.composerModel,
+      });
     }
   }
 
@@ -464,6 +497,10 @@ export default class ComposerActions extends Component {
     options.action = REPLY;
     options.topic = _topicSnapshot;
     this._openComposer(options);
+  }
+
+  toggleWhisperSelected(options, model) {
+    model.toggleProperty("whisper");
   }
 
   toggleTopicBumpSelected(options, model) {
