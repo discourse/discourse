@@ -5,13 +5,14 @@ describe Chat::MessageBookmarkable do
 
   fab!(:chatters, :group)
   fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
-  fab!(:guardian) { Guardian.new(user) }
   fab!(:other_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:category_channel) { Fabricate(:category_channel, chatable: other_category) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:channel, :category_channel)
   fab!(:direct_message)
   fab!(:direct_message_channel) { Fabricate(:direct_message_channel, chatable: direct_message) }
+
+  let(:guardian) { Guardian.new(user) }
 
   before do
     register_test_bookmarkable(described_class)

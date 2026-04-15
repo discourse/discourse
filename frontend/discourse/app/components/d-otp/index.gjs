@@ -17,6 +17,7 @@ const DEFAULT_SLOTS = 6;
 /**
  * @typedef DOTPSignature
  *
+ * @property {HTMLInputElement} Element
  * @property {object} Args
  *
  * @property {number} [Args.slots] - Number of OTP input slots to display (defaults to 6)
@@ -28,6 +29,10 @@ const DEFAULT_SLOTS = 6;
 
 /** @extends {Component<DOTPSignature>} */
 export default class DOTP extends Component {
+  /**
+   * @type {import("discourse/services/capabilities").Capabilities}
+   */
+  // @ts-ignore (incorrect no-initialization error)
   @service capabilities;
 
   @tracked isFocused = false;
@@ -51,9 +56,12 @@ export default class DOTP extends Component {
     return this.otp.join("");
   }
 
+  /**
+   * @param {InputEvent!} event
+   */
   @action
   onInput(event) {
-    const chars = event.target.value.split("");
+    const chars = /** @type(HTMLInputElement) */ (event.target).value.split("");
     const wasFilled = this.isFilled;
 
     if (wasFilled && chars.length >= this.otp.length) {
@@ -76,9 +84,12 @@ export default class DOTP extends Component {
     this.isAllSelected = false;
   }
 
+  /**
+   * @param {Event} event
+   */
   @action
   onSelect(event) {
-    const input = event.target;
+    const input = /** @type {HTMLInputElement} */ (event.target);
     const hasSelection = input.selectionStart !== input.selectionEnd;
     this.isAllSelected =
       hasSelection &&
@@ -98,6 +109,9 @@ export default class DOTP extends Component {
     this.isAllSelected = false;
   }
 
+  /**
+   * @param {KeyboardEvent} event
+   */
   @action
   onKeyDown(event) {
     // Disable arrow keys as you can only fill last unfilled or backspace
@@ -108,9 +122,12 @@ export default class DOTP extends Component {
     }
   }
 
+  /**
+   * @param {ClipboardEvent} event
+   */
   @action
   onPaste(event) {
-    const input = event.target;
+    const input = /** @type {HTMLInputElement} */ (event.target);
     event.preventDefault(); // Prevent the call to input as we manually call it later
 
     const { clipboardData } = event;
@@ -120,9 +137,13 @@ export default class DOTP extends Component {
 
     const pastedData = clipboardData.getData("text");
     input.value = pastedData.replace(/[^0-9]/g, "");
+    // @ts-ignore
     this.onInput({ target: input });
   }
 
+  /**
+   * @param {number} index
+   */
   @action
   isFocusedSlot(index) {
     if (!this.isFocused) {

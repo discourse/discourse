@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 describe ContentLocalization do
-  def create_scope(cookie: nil)
+  def create_scope(cookie: nil, user: nil)
     env = create_request_env.merge("HTTP_COOKIE" => cookie)
-    mock().tap { |m| m.stubs(:request).returns(ActionDispatch::Request.new(env)) }
+    mock().tap do |m|
+      m.stubs(:request).returns(ActionDispatch::Request.new(env))
+      m.stubs(:user).returns(user)
+    end
   end
 
-  describe ".show_original" do
+  describe ".show_original?" do
     it "returns true when cookie is present" do
       scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
 
@@ -17,6 +20,28 @@ describe ContentLocalization do
       scope = create_scope
 
       expect(ContentLocalization.show_original?(scope)).to be false
+    end
+
+    it "returns true when user preference is set" do
+      user = Fabricate(:user)
+      user.user_option.update!(show_original_content: true)
+      scope = create_scope(user: user)
+
+      expect(ContentLocalization.show_original?(scope)).to be true
+    end
+
+    it "returns false when user preference is not set and no cookie" do
+      user = Fabricate(:user)
+      scope = create_scope(user: user)
+
+      expect(ContentLocalization.show_original?(scope)).to be false
+    end
+
+    it "returns true when user preference is not set but cookie is present" do
+      user = Fabricate(:user)
+      scope = create_scope(user: user, cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
+
+      expect(ContentLocalization.show_original?(scope)).to be true
     end
   end
 

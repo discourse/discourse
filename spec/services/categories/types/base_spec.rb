@@ -240,6 +240,105 @@ RSpec.describe Categories::Types::Base do
       schema = described_class.send(:resolved_configuration_schema)
       expect(schema).to be_a(Hash)
     end
+
+    it "uses custom label from the hash config when present" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_labels
+
+          def self.configuration_schema
+            { site_settings: { title: { default: "My Forum", label: "Custom title label" } } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].first
+      expect(entry[:label]).to eq("Custom title label")
+    end
+
+    it "falls back to humanized_name when no label override exists" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_no_labels
+
+          def self.configuration_schema
+            { site_settings: { title: "My Forum" } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].first
+      expect(entry[:label]).to eq(SiteSetting.setting_metadata_hash(:title)[:humanized_name])
+    end
+
+    it "includes min and max when present in site setting metadata" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_min_max
+
+          def self.configuration_schema
+            { site_settings: { suggested_topics_unread_max_days_old: 7 } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].find { |e| e[:key] == "suggested_topics_unread_max_days_old" }
+
+      expect(entry[:min]).to eq(0)
+      expect(entry[:max]).to eq(36_500)
+    end
+
+    it "does not include min or max when absent from site setting metadata" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_no_min_max
+
+          def self.configuration_schema
+            { site_settings: { title: "My Forum" } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      entry = schema[:site_settings].find { |e| e[:key] == "title" }
+
+      expect(entry).not_to have_key(:min)
+      expect(entry).not_to have_key(:max)
+    end
+
+    it "infers depends_on from site setting metadata" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_depends_on
+
+          def self.configuration_schema
+            { site_settings: { title: "My Forum", set_locale_from_accept_language_header: true } }
+          end
+        end
+
+      schema = test_type.send(:resolved_configuration_schema)
+      title_entry = schema[:site_settings].find { |e| e[:key] == "title" }
+      dependent_entry =
+        schema[:site_settings].find { |e| e[:key] == "set_locale_from_accept_language_header" }
+
+      expect(title_entry).not_to have_key(:depends_on)
+      expect(dependent_entry[:depends_on]).to eq("allow_user_locale")
+    end
+  end
+
+  describe ".configure_site_settings" do
+    it "extracts default from hash config values" do
+      test_type =
+        Class.new(described_class) do
+          type_id :test_hash_config
+
+          def self.configuration_schema
+            { site_settings: { title: { default: "Hash Default" } } }
+          end
+        end
+
+      test_type.configure_site_settings(category, guardian: admin.guardian)
+      expect(SiteSetting.title).to eq("Hash Default")
+    end
   end
 
   describe "category_type_site_setting_names with empty schema" do

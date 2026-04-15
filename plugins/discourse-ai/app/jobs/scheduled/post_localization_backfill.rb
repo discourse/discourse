@@ -5,8 +5,13 @@ module Jobs
     every 5.minutes
     cluster_concurrency 1
 
+    REDIS_KEY = "discourse-ai:localize_posts:in_progress"
+
     def execute(args)
       return if !DiscourseAi::Translation.backfill_enabled?
+
+      # Skip if previous batch is still running
+      return if Discourse.redis.get(REDIS_KEY).to_i > 0
 
       post_raw_llm = find_llm_model_for_agent(SiteSetting.ai_translation_post_raw_translator_agent)
 
@@ -20,7 +25,15 @@ module Jobs
       limit = SiteSetting.ai_translation_backfill_hourly_rate / (60 / 5) # this job runs in 5-minute intervals
       return if limit == 0
 
-      Jobs.enqueue(:localize_posts, limit:)
+      parallel_jobs = SiteSetting.ai_translation_backfill_parallel_jobs
+      per_job_limit = (limit.to_f / parallel_jobs).ceil
+
+      # Set counter with 15-min TTL safety net (if a job crashes without decrementing)
+      Discourse.redis.setex(REDIS_KEY, 15.minutes.to_i, parallel_jobs)
+
+      parallel_jobs.times do |i|
+        Jobs.enqueue(:localize_posts, limit: per_job_limit, offset: i * per_job_limit)
+      end
     end
 
     private

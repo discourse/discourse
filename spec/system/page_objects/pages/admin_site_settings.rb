@@ -155,6 +155,15 @@ module PageObjects
           )
       end
 
+      def has_upcoming_change_default_warning?(setting_name, old_default:, new_default:)
+        find_setting(setting_name).find(".setting-upcoming-change-warning__text").has_text?(
+          "The default for this setting has changed from #{old_default} to #{new_default}",
+        ) &&
+          find_setting(setting_name).find(".setting-upcoming-change-warning__text").has_link?(
+            href: "/admin/config/upcoming-changes?changeNamesFilter=enable_upload_debug_mode",
+          )
+      end
+
       def has_disabled_input?(setting_name)
         find_setting(setting_name).has_css?("input[disabled]")
       end

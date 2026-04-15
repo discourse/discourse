@@ -26,6 +26,8 @@ de:
       create: "Erstellen"
       create_placeholder: "Name der Anfrage …"
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
+      ai:
+        generate: "Erzeugen"
       import:
         label: "Importieren"
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."

@@ -800,6 +800,7 @@ tr_TR:
       invalid_email_in: "\"%{email}\" geçerli bir e-posta adresi değil."
       email_already_used_in_group: "\"%{email}\" zaten \"%{group_name}\" grubu tarafından kullanılıyor."
       email_already_used_in_category: "\"%{email}\" zaten \"%{category_name}\" kategorisi tarafından kullanılıyor."
+      groups_required_for_mode: "%{setting} için en az bir grup seçmelisiniz."
       description_incomplete: "Kategori açıklama yazısında en az bir paragraf bulunmalıdır."
       description_too_long:
         one: "Açıklama çok uzun (maksimum %{count} karakter)."

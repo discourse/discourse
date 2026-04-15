@@ -537,6 +537,173 @@ describe DiscourseDataExplorer::QueryController do
         end
       end
     end
+
+    describe "result caching" do
+      def run_query(id, params = {})
+        params = Hash[params.map { |a| [a[0], a[1].to_s] }]
+        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
+             params: {
+               params: params.to_json,
+             }
+      end
+
+      it "caches results after running a query" do
+        query = make_query("SELECT 23 as my_value")
+
+        run_query query.id
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_present
+        expect(cached["rows"]).to eq([[23]])
+      end
+
+      it "returns cached results in show response" do
+        query = make_query("SELECT 23 as my_value")
+        run_query query.id
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_present
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[23]])
+        expect(response_json["query"]["cached_result"]["cached_at"]).to be_present
+      end
+
+      it "returns no cached_result on cache miss" do
+        query = make_query("SELECT 1")
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_nil
+      end
+
+      it "uses URL params for cache lookup" do
+        query = make_query("-- [params]\n-- int :val = 1\n\nSELECT :val as my_value")
+
+        run_query query.id, val: 5
+        run_query query.id, val: 10
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              params: { val: "5" }.to_json,
+            }
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[5]])
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              params: { val: "10" }.to_json,
+            }
+        expect(response_json["query"]["cached_result"]["rows"]).to eq([[10]])
+      end
+
+      it "does not cache results with explain" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               explain: "true",
+             }
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_nil
+      end
+
+      it "does not cache queries with internal params" do
+        query = make_query("-- [params]\n-- current_user_id :me\n\nSELECT :me as user_id")
+
+        run_query query.id
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_nil
+      end
+
+      it "invalidates cache when SQL changes" do
+        query = make_query("SELECT 1 as old_value")
+        run_query query.id
+
+        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: query.name,
+                sql: "SELECT 2 as new_value",
+                group_ids: [],
+              },
+            }
+        expect(response.status).to eq(200)
+
+        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_nil
+      end
+
+      it "does not invalidate cache when only name changes" do
+        query = make_query("SELECT 1")
+        run_query query.id
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                name: "New name",
+                sql: query.sql,
+                group_ids: [],
+              },
+            }
+        expect(response.status).to eq(200)
+
+        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+      end
+
+      it "returns cached result on reload when run with no explicit params" do
+        query = make_query("-- [params]\n-- int :val = 1\n\nSELECT :val as my_value")
+
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(200)
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response_json["query"]["cached_result"]).to be_present
+      end
+
+      it "does not cache results when a non-default limit is used" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               limit: 1,
+             }
+        expect(response.status).to eq(200)
+
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        expect(cached).to be_nil
+      end
+
+      it "handles malformed params in show without error" do
+        query = make_query("SELECT 1")
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              params: "not-valid-json",
+            }
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["id"]).to eq(query.id)
+      end
+
+      it "rejects malformed params in run" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               params: "not-valid-json",
+             }
+        expect(response.status).to eq(422)
+      end
+
+      it "rejects malformed params in download" do
+        query = make_query("SELECT 1")
+        post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json",
+             params: {
+               download: 1,
+               params: "not-valid-json",
+             }
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   describe "Non-Admin" do

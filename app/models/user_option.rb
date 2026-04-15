@@ -296,6 +296,7 @@ end
 #  notify_on_linked_posts           :boolean          default(TRUE), not null
 #  oldest_search_log_date           :datetime
 #  seen_popups                      :integer          is an Array
+#  show_original_content            :boolean          default(FALSE), not null
 #  sidebar_link_to_filtered_list    :boolean          default(FALSE), not null
 #  sidebar_show_count_of_new_items  :boolean          default(FALSE), not null
 #  skip_new_user_tips               :boolean          default(FALSE), not null

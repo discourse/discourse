@@ -498,8 +498,6 @@ fr:
           other: "Créé il y a %{count} ans"
     bookmarked:
       title: "Mettre un signet"
-      edit_bookmark: "Modifier le signet"
-      clear_bookmarks: "Retirer les signets"
       help:
         bookmark: "Cliquez pour mettre ce sujet en signet"
         edit_bookmark: "Cliquez pour modifier le signet d'une publication dans ce sujet."
@@ -518,12 +516,12 @@ fr:
       clear_reminder: "Effacer le rappel"
       edit: "Modifier le signet"
       not_bookmarked: "mettre un signet à ce message"
+      topic_bookmark: "Sujet"
       remove_reminder_keep_bookmark: "Supprimer le rappel et conserver le signet"
       created_with_reminder: "Vous avez mis un signet à ce message avec un rappel pour le %{date}. %{name}"
       created_with_reminder_generic: "Vous avez mis ceci en signet avec un rappel pour le %{date}. %{name}"
       delete: "Supprimer le signet"
       confirm_delete: "Voulez-vous vraiment supprimer ce signet ? Le rappel sera également supprimé."
-      confirm_clear: "Voulez-vous vraiment retirer tous les signets de ce sujet ?"
       save: "Enregistrer"
       no_timezone: 'Vous n''avez pas encore défini un fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       invalid_custom_datetime: "La date et l'heure sont invalides, veuillez réessayer."
@@ -2669,6 +2667,8 @@ fr:
       medium_dark_tone: Teint légèrement foncé
       dark_tone: Teint foncé
       default: Émojis personnalisés
+    filter_input:
+      clear: "Effacer le filtre"
     shared_drafts:
       title: "Brouillons partagés"
       notice: "Ce sujet n'est visible que par ceux qui peuvent publier des brouillons partagés."
@@ -4156,6 +4156,9 @@ fr:
       review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
+      posting_review_modes:
+        everyone: "Tout le monde"
+      posting_review_groups_placeholder: "Sélectionnez des groupes…"
       this_year: "cette année"
       position: "Position sur la page des catégories :"
       position_disabled: "Les catégories seront affichées par ordre d'activité. Pour contrôler l'ordre des catégories dans les listes, activez le paramètre <a href='%{url}'>« positions de catégorie fixes »</a> ."

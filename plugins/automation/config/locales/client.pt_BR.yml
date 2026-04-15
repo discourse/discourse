@@ -208,9 +208,6 @@ pt_BR:
               description: "Opcional, limitar o acionamento apenas a postagens com esses recursos"
           created: Criado(a)
           edited: Editado(a)
-          topics: Todos os tópicos
-          personal_messages: Mensagens pessoais
-          public_topics: Tópicos públicos (exceto todas as categorias protegidas)
           with_images: Imagens
           with_links: Links
           with_code: Código

@@ -112,10 +112,11 @@ export default class GlimmerSiteHeader extends Component {
     );
 
     // Tends to be zero, but is set higher when on iPad PWA with the 'footer-navigation' at top of screen
-    const headerCssTop = parseInt(
-      window.getComputedStyle(this._headerWrap).getPropertyValue("top"),
-      10
-    );
+    const headerCssTop =
+      parseInt(
+        window.getComputedStyle(this._headerWrap).getPropertyValue("top"),
+        10
+      ) || 0;
 
     let headerWrapBottom =
       this._headerWrap.getBoundingClientRect().bottom - overscrollPx;

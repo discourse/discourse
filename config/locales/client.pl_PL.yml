@@ -653,8 +653,12 @@ pl_PL:
           other: "Utworzono %{count} lat temu"
     bookmarked:
       title: "Zakładka"
-      edit_bookmark: "Edytuj zakładkę"
-      clear_bookmarks: "Wyczyść zakładki"
+      edit_bookmark:
+        one: "Edytuj zakładkę"
+        few: "Edytuj zakładki"
+        many: "Edytuj zakładki"
+        other: "Edytuj zakładki"
+      delete_bookmarks: "Usuń wszystkie zakładki"
       help:
         bookmark: "Kliknij, aby dodać ten temat do zakładek"
         edit_bookmark: "Kliknij, aby edytować zakładkę we wpisie tego tematu"
@@ -673,12 +677,18 @@ pl_PL:
       clear_reminder: "Wyczyść przypomnienie"
       edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
+      topic_bookmark: "Temat"
+      post_bookmark: "Wpis nr %{post_number}"
+      jump_to_post: "Przejdź do nr %{post_number}"
+      bookmark_topic: "Dodaj temat do zakładek"
+      edit_topic_bookmark: "Edytuj zakładkę tematu"
+      delete_topic_bookmark: "Usuń zakładkę tematu"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
       created_with_reminder: "Dodano wpis do zakładek z przypomnieniem %{date}. %{name}"
       created_with_reminder_generic: "Dodałeś to do zakładek z przypomnieniem %{date}. %{name}"
       delete: "Usuń zakładkę"
       confirm_delete: "Czy na pewno chcesz usunąć tę zakładkę? Przypomnienie również zostanie usunięte."
-      confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
+      confirm_clear: "Czy na pewno chcesz usunąć wszystkie zakładki z tego tematu?"
       save: "Zapisz"
       no_timezone: 'Nie ustawiłeś/łaś jeszcze strefy czasowej. Nie będziesz mógł/mogła ustawić przypomnień. Skonfiguruj jeden <a href="%{basePath}/my/preferences/profile">w swoim profilu</a> .'
       invalid_custom_datetime: "Podana data i godzina są nieprawidłowe, spróbuj ponownie."
@@ -1782,6 +1792,7 @@ pl_PL:
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       enable_markdown_monospace_font: "Użyj czcionki o stałej szerokości w trybie Markdown kompozytora"
+      show_original_content: "Pokaż oryginalną treść zamiast przetłumaczonej. Można to również przełączać w obrębie tematów."
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
@@ -3089,6 +3100,12 @@ pl_PL:
         filter_for_more: Filtruj po więcej...
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
+        tag_category_admin_dropdown:
+          title: "Ustawienia kategorii i tagów"
+          edit_category: "Edytuj kategorię"
+          edit_category_description: "Dostosuj ustawienia dla %{badge}"
+          edit_tag: "Edytuj tag"
+          edit_tag_description: "Dostosuj ustawienia dla %{badge}"
         bulk_select_topics_dropdown:
           title: "Operacje grupowe"
         bulk_select_bookmarks_dropdown:
@@ -3119,6 +3136,20 @@ pl_PL:
       medium_dark_tone: Średnio ciemny kolor skóry
       dark_tone: Ciemny kolor skóry
       default: Spersonalizowane emoji
+    filter_input:
+      clear: "Wyczyść filtr"
+    d_icon_grid_picker:
+      select_icon: "Wybierz ikonę"
+      search_placeholder: "Szukaj ikon..."
+      no_results: "Nie znaleziono ikon"
+      results_count:
+        one: "Znaleziono %{count} ikonę"
+        few: "Znaleziono %{count} ikony"
+        many: "Znaleziono %{count} ikon"
+        other: "Znaleziono %{count} ikon"
+      favorites: "Ulubione"
+      selected_icon: "Wybrana ikona: %{iconName}"
+      clear: "Wyczyść ikonę"
     shared_drafts:
       title: "Udostępnione szkice"
       notice: "Ten temat jest widoczny tylko dla osób, które mogą publikować współdzielone szkice postów."
@@ -3949,19 +3980,19 @@ pl_PL:
         name: "Odrzuć"
       close_topics:
         name: "Zamknij"
-        description: "Zamknięte tematy uniemożliwiają nowe odpowiedzi. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Dowiedz się więcej</a>"
+        description: "Zamknięte tematy uniemożliwiają nowe odpowiedzi. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
         note: "Dodaj notatkę do tych tematów"
         optional: (opcjonalne)
       archive_topics:
         name: "Archiwum"
-        description: "Zarchiwizowane tematy są ukryte w wynikach wyszukiwania i na liście najnowszych tematów. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Dowiedz się więcej</a>"
+        description: "Zarchiwizowane tematy są ukryte w wynikach wyszukiwania i na liście najnowszych tematów. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
       archive_messages:
         name: "Przenieś do archiwum"
       move_messages_to_inbox:
         name: "Przenieś do skrzynki odbiorczej"
       unlist_topics:
         name: "Zastrzeż"
-        description: "Tematy niewymienione na liście są ukryte, ale nadal można uzyskać do nich dostęp za pomocą bezpośredniego linku. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Dowiedz się więcej</a>"
+        description: "Tematy niewymienione na liście są ukryte, ale nadal można uzyskać do nich dostęp za pomocą bezpośredniego linku. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Dowiedz się więcej</a>"
       relist_topics:
         name: "Dodaj do listy"
       remove_tags:
@@ -4919,6 +4950,7 @@ pl_PL:
       validations:
         emoji_required: "Wybierz emoji."
         icon_required: "Wybierz ikonę."
+        groups_required: "Wybierz co najmniej jedną grupę dla tego trybu zatwierdzania."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -4931,6 +4963,7 @@ pl_PL:
       icon: "Ikona"
       emoji: "Emoji"
       select_emoji: "Wybierz emoji"
+      select_icon: "Wybierz ikonę"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -5003,6 +5036,14 @@ pl_PL:
       review_group_name: "nazwa grupy"
       require_topic_approval: "Wymagaj zatwierdzenia moderatora dla wszystkich nowych tematów"
       require_reply_approval: "Wymagaj zatwierdzenia moderatora dla wszystkich nowych odpowiedzi"
+      require_topic_approval_for: "Wymagaj zatwierdzenia nowych tematów przez moderatora..."
+      require_reply_approval_for: "Wymagaj zatwierdzenia nowych odpowiedzi przez moderatora..."
+      posting_review_modes:
+        no_one: "Nikt"
+        everyone: "Wszyscy"
+        everyone_except: "Wszyscy oprócz wybranych grup"
+        no_one_except: "Nikt oprócz wybranych grup"
+      posting_review_groups_placeholder: "Wybierz grupy..."
       this_year: "ten rok"
       position: "Pozycja na stronie kategorii:"
       default_position: "Domyślna pozycja"
@@ -6262,6 +6303,8 @@ pl_PL:
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
+        default_warning: "Domyślna wartość tego ustawienia została zmieniona z %{oldDefaultValue} na %{newDefaultValue} z powodu <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>nadchodzącej zmiany</a>."
+        default_warning_short: "Domyślna wartość tego ustawienia uległa zmianie. Więcej informacji na ten temat znajdziesz na stronie <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>nadchodzące zmiany</a>."
         enabled_for_options:
           no_one: "Nikt"
           everyone: "Wszyscy"
@@ -6301,6 +6344,7 @@ pl_PL:
           impact_type_all: "Wszystkie rodzaje uderzeń"
           impact_type_feature: "Funkcja"
           impact_type_other: "Inne"
+          impact_type_site_setting_default: "Ustawienie domyślne"
           status_all: "Wszystkie statusy"
           status_conceptual: "Konceptualny"
           status_experimental: "Eksperymentalne"

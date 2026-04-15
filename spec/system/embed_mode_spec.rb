@@ -28,6 +28,12 @@ describe "Embed mode" do
     expect(page).to have_no_css(".suggested-topics")
   end
 
+  it "shows the topic navigation widget" do
+    visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+    expect(page).to have_css(".topic-navigation")
+  end
+
   it "loads topic content without JS errors" do
     visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
@@ -95,6 +101,12 @@ describe "Embed mode" do
         expect(page).to have_no_css("#reply-control.open")
         expect(page).to have_no_css("#reply-control.fullscreen")
       end
+
+      it "does not show floating timeline button" do
+        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+
+        expect(topic_page).to have_no_floating_timeline_button
+      end
     end
 
     context "with a topic that has replies" do
@@ -112,6 +124,42 @@ describe "Embed mode" do
         topic_page.click_reply_button
 
         expect(page).to have_css("#reply-control.open")
+      end
+
+      context "with many replies" do
+        before { 15.times { Fabricate(:post, topic: topic) } }
+
+        it "shows floating action buttons when footer is not visible" do
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
+
+          expect(topic_page).to have_floating_reply_button
+          expect(topic_page).to have_floating_timeline_button
+        end
+
+        it "opens the composer when clicking the floating reply button" do
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
+
+          topic_page.click_floating_reply_button
+          expect(page).to have_css("#reply-control.open")
+        end
+
+        it "opens the timeline when clicking the floating timeline button" do
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
+
+          topic_page.click_floating_timeline_button
+          expect(page).to have_css(".timeline-fullscreen.show")
+        end
+
+        it "shows the topic progress bar at the bottom (not sticky)" do
+          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+          expect(topic_page).to have_post_number(2)
+
+          expect(page).to have_css("#topic-progress-wrapper", visible: :visible)
+          expect(page).to have_css(".topic-navigation.with-topic-progress", visible: :visible)
+        end
       end
 
       it "does not show 'be the first to reply' message" do

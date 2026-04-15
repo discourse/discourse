@@ -23,6 +23,8 @@ he:
       create: "יצירה"
       create_placeholder: "שם השאילתה…"
       description_placeholder: "יש להקליד תיאור כאן"
+      ai:
+        generate: "ייצר"
       import:
         label: "ייבוא"
         unparseable_json: "קובץ JSON שאינו ניתן לפענוח."

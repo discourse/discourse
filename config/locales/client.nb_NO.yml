@@ -362,8 +362,6 @@ nb_NO:
           other: "Opprettet %{count} år siden"
     bookmarked:
       title: "Bokmerke"
-      edit_bookmark: "Rediger bokmerke"
-      clear_bookmarks: "Fjern bokmerker"
       help:
         bookmark: "Klikk for å bokmerke dette emnet"
         edit_bookmark: "Klikk for å redigere bokmerket på et innlegg i dette emnet"
@@ -381,12 +379,12 @@ nb_NO:
       clear_reminder: "Fjern påminnelse"
       edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
+      topic_bookmark: "Emne"
       remove_reminder_keep_bookmark: "Fjern påminnelse og behold bokmerke"
       created_with_reminder: "Du har bokmerket dette innlegget med en påminnelse %{date} %{name}"
       created_with_reminder_generic: "Du har bokmerket dette med en påminnelse %{date} %{name}"
       delete: "Slett bokmerke"
       confirm_delete: "Er du sikker på at du vil slette denne bokmerket? Påminnelsen vil også bli slettet."
-      confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
       save: "Lagre"
       no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
       invalid_custom_datetime: "Dato og klokkeslett du oppga er ugyldig, prøv igjen."
@@ -3679,6 +3677,9 @@ nb_NO:
       review_group_name: "gruppenavn"
       require_topic_approval: "Krev godkjennelse fra en moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra en moderator for alle nye svar"
+      posting_review_modes:
+        everyone: "Alle"
+      posting_review_groups_placeholder: "Velg grupper..."
       this_year: "dette året"
       position: "Posisjon på kategorisiden:"
       position_disabled: "Kategoriene vises i aktivitetsrekkefølge. Hvis du vil kontrollere rekkefølgen på kategoriene i lister, aktiverer du innstillingen <a href='%{url}'>'faste kategoriposisjoner'</a>."

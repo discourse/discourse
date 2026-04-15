@@ -236,12 +236,11 @@ sw:
           today: "leo"
     bookmarked:
       title: "Alamisho"
-      clear_bookmarks: "Futa Maalamisho"
       help:
         unbookmark: "Bofya kuondoa mialamisho yote kwenye mada hii"
     bookmarks:
       not_bookmarked: "alamisha chapisho hili"
-      confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
+      topic_bookmark: "Mada"
       save: "hifadhi"
       search: "Tafuta"
       bookmark: "Alamisha"
@@ -1954,6 +1953,8 @@ sw:
       all_topics_wiki: "Hifadhi mada mpya kama chaguo msingi"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
       review_group_name: "jina la kikundi"
+      posting_review_modes:
+        everyone: "Kila Mtu"
       this_year: "mwaka huu"
       minimum_required_tags: "Kiwango cha chini cha lebo zinazohitajika kwenye mada:"
       none_subcategory_text: "Hakuna"

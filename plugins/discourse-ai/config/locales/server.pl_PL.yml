@@ -143,6 +143,7 @@ pl_PL:
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
     ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
+    ai_translation_backfill_parallel_jobs: "Liczba równoległych zadań postlokalizacyjnych uruchamianych w każdym cyklu uzupełniania. Wyższe wartości zwiększają przepustowość, ale zużywają więcej zasobów."
     ai_usage_rollup_after_days: "Liczba dni przechowywania statystyk użycia AI dla każdego żądania przed ich przekształceniem w dzienne agregaty. Ustaw na 0, aby wyłączyć agregacje."
     ai_audit_logs_purge_after_days: "Usuń dzienniki audytu API AI starsze niż podana liczba dni. Domyślnie około 6 miesięcy. Ustaw na 0, aby zachować je na czas nieokreślony."
   reviewables:

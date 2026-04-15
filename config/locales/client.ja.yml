@@ -461,8 +461,6 @@ ja:
           other: "%{count} 年前に作成"
     bookmarked:
       title: "ブックマーク"
-      edit_bookmark: "ブックマークを編集"
-      clear_bookmarks: "ブックマークをクリア"
       help:
         bookmark: "クリックしてこのトピックをブックマークします"
         edit_bookmark: "クリックしてこのトピックの投稿のブックマークを編集します"
@@ -481,12 +479,12 @@ ja:
       clear_reminder: "リマインダーをクリアする"
       edit: "ブックマークを編集"
       not_bookmarked: "この投稿をブックマークする"
+      topic_bookmark: "トピック"
       remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
       created_with_reminder: "%{date} のリマインダー付きでこの投稿をブックマークしました。%{name}"
       created_with_reminder_generic: "%{date} のリマインダー付きでこれをブックマークしました。%{name}"
       delete: "ブックマークを削除"
       confirm_delete: "このブックマークを削除してもよろしいですか？リマインダーも削除されます。"
-      confirm_clear: "このトピックのすべてのブックマークをクリアしてもよろしいですか?"
       save: "保存"
       no_timezone: 'まだタイムゾーンを設定していないためリマインダーを設定することはできません。<a href="%{basePath}/my/preferences/profile">プロファイル</a>で設定してください。'
       invalid_custom_datetime: "入力された日時が無効です。もう一度お試しください。"
@@ -2608,6 +2606,8 @@ ja:
       medium_dark_tone: ミディアムダークスキントーン
       dark_tone: ダークスキントーン
       default: カスタム絵文字
+    filter_input:
+      clear: "フィルタをクリア"
     shared_drafts:
       title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
@@ -4100,6 +4100,10 @@ ja:
       review_group_name: "グループ名"
       require_topic_approval: "すべての新しいトピックにモデレーターの承認を必要とする"
       require_reply_approval: "すべての新しい返信にモデレーターの承認を必要とする"
+      posting_review_modes:
+        no_one: "対象者なし"
+        everyone: "全員"
+      posting_review_groups_placeholder: "グループを選択..."
       this_year: "今年"
       position: "カテゴリページの位置:"
       default_position: "デフォルトの位置"

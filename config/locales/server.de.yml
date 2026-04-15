@@ -596,6 +596,7 @@ de:
         one: "Maximal %{count} Benutzer kann auf einmal hinzugefügt werden"
         other: "Maximal %{count} Benutzer können auf einmal hinzugefügt werden"
       usernames_or_emails_required: "Benutzernamen oder E-Mails müssen vorhanden sein"
+      cannot_add_emails: "Um Mitglieder zu dieser Gruppe hinzuzufügen, können nur Benutzernamen verwendet werden. Um per E-Mail einzuladen, verwende die Schaltfläche „Einladen“."
       counting_too_many_email_domains:
         one: "Maximal %{count} E-Mail-Domain kann auf einmal gezählt werden"
         other: "Maximal %{count} E-Mail-Domains können auf einmal gezählt werden"
@@ -818,9 +819,11 @@ de:
       topic_exists_no_oldest: "Diese Kategorie kann nicht gelöscht werden, da die Anzahl der Themen %{count} beträgt."
     uncategorized_description: "Themen, welche keine Kategorie benötigen oder in keine existierende Kategorie passen."
   category_types:
+    not_available: "Der Kategorietyp '%{type_name}' ist nicht verfügbar."
     discussion:
       name: "Diskussion"
       title: "Diskussion"
+      description: "Eine Standardkategorie mit allem, was man für eine Unterhaltung braucht."
   trust_levels:
     admin: "Administrator"
     staff: "Team"
@@ -1060,6 +1063,8 @@ de:
     connection_error: "Es gab ein Problem beim Verbinden mit dem Server, überprüfe den Servernamen und den Port und versuche es erneut."
     timeout_error: "Zeitüberschreitung bei der Verbindung zum Server, überprüfe den Servernamen und den Port und versuche es erneut."
     unhandled_error: "Unbehandelter Fehler beim Testen der E-Mail-Einstellungen. %{message}"
+    invalid_host: "Der angegebene Host wird zu einer unzulässigen IP-Adresse aufgelöst."
+    host_resolve_failed: "Der angegebene Host konnte nicht aufgelöst werden."
   webauthn:
     validation:
       invalid_type_error: "Der angegebene webauthn-Typ war ungültig. Gültige Typen sind webauthn.get und webauthn.create."
@@ -1307,6 +1312,7 @@ de:
       title: "TAB / MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
+      description: "Der Anteil der monatlich aktiven Mitglieder, die am Vortag zurückgekehrt sind. Dieser Prozentsatz zeigt, wie regelmäßig die Mitglieder wiederkommen; er wird auch als „Community-Bindung“ bezeichnet. Zielwert: > 20 %."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
@@ -2469,6 +2475,7 @@ de:
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     enable_auto_grid_images: "Schließt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Editor hochgeladen werden."
+    enable_new_checkbox_style: "Aktiviere den neu gestalteten Kontrollkästchen-Stil für FormKit-Checkboxes."
     impersonate_without_logout: "Erlaube Administratoren in die Rolle eines anderen Benutzers zu schlüpfen, ohne sich von ihrem Administratorkonto abmelden zu müssen."
     experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -2614,15 +2621,17 @@ de:
       exclude_tags_all: "Themen mit allen angegebenen Schlagwörtern ausschließen (durch Kommas getrennt)"
       tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe anzeigen"
       exclude_tag_group: "Themen mit Schlagwörtern aus einer bestimmten Schlagwortgruppe ausschließen"
-      activity_before: "Themen mit letzter Aktivität vor einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
-      activity_after: "Themen mit letzter Aktivität nach einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
+      activity_before: "Themen mit letzter Aktivität vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
+      activity_after: "Themen mit letzter Aktivität nach einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
+      bookmarked_before: "Themen anzeigen, die vor einem Datum (JJJJ-MM-TT oder vor Tagen) mit Lesezeichen versehen wurden"
+      bookmarked_after: "Themen anzeigen, die nach einem Datum (JJJJ-MM-TT oder vor Tagen) mit Lesezeichen versehen wurden"
       created_before: "Themen anzeigen, die vor einem bestimmten Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
-      created_after: "Themen anzeigen, die nach einem Datum erstellt wurden (JJJJ-MM-TT oder vor Tagen)"
+      created_after: "Themen anzeigen, die nach einem Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
       created_by: "Themen anzeigen, die von einem bestimmten Benutzer oder Mitgliedern einer Gruppe erstellt wurden"
       created_by_user: "Themen anzeigen, die von 'Benutzername' oder einem Mitglied aus 'Gruppe' erstellt wurden (ohne @)"
       created_by_multiple: "Themen anzeigen, die von einem der angegebenen Benutzer oder Gruppen erstellt wurden (durch Kommas getrennt)"
-      latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
-      latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
+      latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
+      latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum (JJJJ-MM-TT oder vor Tagen) anzeigen"
       likes_min: "Themen mit mindestens so vielen „Gefällt mir“-Angaben anzeigen"
       likes_max: "Themen mit höchstens so vielen „Gefällt mir“-Angaben anzeigen"
       likes_op_min: "Themen anzeigen, deren erster Beitrag mindestens so viele „Gefällt mir“-Angaben hat"
