@@ -29,7 +29,8 @@ body.embed-mode {
   .time-gap,
   .post-stream .gap,
   .container.posts:not(:has(.post-stream .topic-post ~ .topic-post))
-    ~ #topic-footer-buttons {
+    ~ #topic-footer-buttons,
+  .topic-post .post-notice.new-user {
     display: none !important;
   }
 
@@ -166,5 +167,7 @@ body.embed-mode {
     opacity: 0;
     height: 0;
     visibility: hidden;
+    position: absolute;
+    pointer-events: none;
   }
 }

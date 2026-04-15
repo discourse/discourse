@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "aws-sdk-s3"
+require "aws-sdk-sts"
 
 class S3Helper
   FIFTEEN_MEGABYTES = 15 * 1024 * 1024
@@ -297,12 +298,33 @@ class S3Helper
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
     opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
-    unless obj.s3_use_iam_profile
-      opts[:access_key_id] = obj.s3_access_key_id
-      opts[:secret_access_key] = obj.s3_secret_access_key
-    end
+    creds = s3_credentials(obj)
+    opts[:credentials] = creds if creds
 
     opts
+  end
+
+  def self.s3_credentials(obj, stub_responses: false)
+    return nil if obj.s3_use_iam_profile
+
+    if obj.s3_role_arn.present?
+      # RoleSessionName max 64 chars: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
+      session_name = obj.s3_role_session_name.presence || Discourse.os_hostname[0...64]
+      sts_client =
+        Aws::STS::Client.new(
+          region: obj.s3_region,
+          access_key_id: obj.s3_access_key_id,
+          secret_access_key: obj.s3_secret_access_key,
+          stub_responses: stub_responses,
+        )
+      Aws::AssumeRoleCredentials.new(
+        role_arn: obj.s3_role_arn,
+        role_session_name: session_name,
+        client: sts_client,
+      )
+    else
+      Aws::Credentials.new(obj.s3_access_key_id, obj.s3_secret_access_key)
+    end
   end
 
   def download_file(filename, destination_path, failure_message = nil)

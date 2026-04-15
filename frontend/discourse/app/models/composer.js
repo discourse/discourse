@@ -331,9 +331,13 @@ export default class Composer extends RestModel {
     return (this.title || "").trim() !== (this.originalTitle || "").trim();
   }
 
-  @computed("replyDirty", "titleDirty", "hasMetaData")
+  @computed("replyDirty", "titleDirty", "canEditTitle", "hasMetaData")
   get anyDirty() {
-    return this.replyDirty || this.titleDirty || this.hasMetaData;
+    return (
+      this.replyDirty ||
+      (this.canEditTitle && this.titleDirty) ||
+      this.hasMetaData
+    );
   }
 
   @dependentKeyCompat
@@ -701,7 +705,7 @@ export default class Composer extends RestModel {
 
   @computed("metaData")
   get hasMetaData() {
-    return this.metaData ? isEmpty(Object.keys(this.metaData)) : false;
+    return this.metaData ? !isEmpty(Object.keys(this.metaData)) : false;
   }
 
   @computed("minimumTitleLength", "titleLength")
@@ -1063,11 +1067,11 @@ export default class Composer extends RestModel {
           post,
           reply: post.raw,
           originalText: post.raw,
+          originalTitle: this.topic.title,
         });
 
         if (post.post_number === 1 && this.canEditTitle) {
           this.setProperties({
-            originalTitle: this.topic.title,
             originalTags: this.topic.tags,
           });
         }

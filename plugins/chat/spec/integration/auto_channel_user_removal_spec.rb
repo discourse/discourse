@@ -4,14 +4,14 @@ describe "Automatic user removal from channels" do
   fab!(:user_1) { Fabricate(:user, trust_level: 1) }
   fab!(:user_2) { Fabricate(:user, trust_level: 3) }
 
-  fab!(:user_1_guardian) { Guardian.new(user_1) }
-
   fab!(:secret_group, :group)
   fab!(:private_category) { Fabricate(:private_category, group: secret_group) }
 
   fab!(:public_channel, :chat_channel)
   fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
+
+  let(:user_1_guardian) { Guardian.new(user_1) }
 
   before do
     SiteSetting.chat_enabled = true
