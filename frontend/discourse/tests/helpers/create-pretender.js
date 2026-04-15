@@ -1019,7 +1019,7 @@ export function applyDefaultHandlers() {
     });
   });
 
-  pretender.get("/tag_groups.json", () => response(200, { tag_groups: [] }));
+  pretender.get("/tag_groups", () => response(200, { tag_groups: [] }));
 
   pretender.get("/admin/users/1.json", () => {
     return response(200, {
