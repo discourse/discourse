@@ -40,6 +40,9 @@ export default class PostUsersPopup extends Component {
 
   @action
   preventClose(event) {
+    if (event.target.closest("[data-user-card]")) {
+      return;
+    }
     event.stopPropagation();
   }
 

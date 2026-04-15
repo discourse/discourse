@@ -43,12 +43,14 @@ describe "Reactions | Post reaction user list" do
   end
 
   it "shows more info about reactions when clicking" do
+    sign_in(current_user)
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
-    reactions_list.click_reaction("heart")
 
-    expect(page).to have_css(".discourse-reactions-state-panel")
-    find(".discourse-reactions-state-panel [data-user-card=#{user_2.username}]").click
+    find(".discourse-reactions-counter").click
+
+    expect(page).to have_css(".post-users-popup")
+    find(".post-users-popup .post-users-popup__name[data-user-card=#{user_2.username}]").click
 
     expect(page).to have_css(".user-card.user-card-#{user_2.username}")
   end
