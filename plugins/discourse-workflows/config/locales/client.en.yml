@@ -65,6 +65,7 @@ en:
         no_input_context: "No input available."
         environment: "Environment"
         no_output_context: "Output will be determined at runtime."
+        no_output_context_run_to_discover: "Run the workflow to discover output fields."
       nodes:
         "trigger:topic_closed": "Topic closed"
         "trigger:post_created": "Post created"

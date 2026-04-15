@@ -34,6 +34,10 @@ export default class OutputContext extends Component {
     return processFields(fields, currentNode, this.graph);
   }
 
+  get needsExecutionDiscovery() {
+    return this.args.node?.type === "action:sql";
+  }
+
   <template>
     <div class="workflows-context-panel">
       <div class="workflows-context-panel__section">
@@ -49,6 +53,12 @@ export default class OutputContext extends Component {
               <SchemaField @field={{field}} />
             {{/each}}
           </ul>
+        {{else if this.needsExecutionDiscovery}}
+          <p class="workflows-context-panel__empty">
+            {{i18n
+              "discourse_workflows.configurator.no_output_context_run_to_discover"
+            }}
+          </p>
         {{else}}
           <p class="workflows-context-panel__empty">
             {{i18n "discourse_workflows.configurator.no_output_context"}}
