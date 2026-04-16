@@ -112,6 +112,7 @@ RSpec.describe "Users", type: :request do
         it "succeeds in registration" do
           post "/captcha/hcaptcha/create.json", params: { token: "token-from-hCaptcha" }
           post "/u.json", params: user_params
+
           expect(JSON.parse(response.body)["success"]).to be(true)
         end
       end
@@ -131,6 +132,7 @@ RSpec.describe "Users", type: :request do
         it "succeeds in registration" do
           post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
           post "/u.json", params: user_params
+
           expect(JSON.parse(response.body)["success"]).to be(true)
         end
       end
