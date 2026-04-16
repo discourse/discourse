@@ -3,6 +3,8 @@
 module DiscourseDataExplorer
   module Workflows
     class SqlAction < DiscourseWorkflows::NodeType
+      OPERATIONS = %w[queries raw].freeze
+
       def self.identifier
         "action:sql"
       end
@@ -17,10 +19,43 @@ module DiscourseDataExplorer
 
       def self.property_schema
         {
+          operation: {
+            type: :options,
+            required: true,
+            options: OPERATIONS,
+            default: "queries",
+          },
+          query_id: {
+            type: :integer,
+            required: true,
+            visible_if: {
+              operation: "queries",
+            },
+            ui: {
+              control: :combo_box,
+              options_source: "queries",
+              value_property: "id",
+              name_property: "name",
+              filterable: true,
+              resets: %w[query_params output_fields],
+            },
+          },
+          query_params: {
+            type: :object,
+            required: false,
+            visible_if: {
+              operation: "queries",
+            },
+            ui: {
+              control: :query_params,
+            },
+          },
           params: {
             type: :collection,
             required: false,
-            description: "Parameters can be used as :my_param in the SQL query.",
+            visible_if: {
+              operation: "raw",
+            },
             item_schema: {
               name: {
                 type: :string,
@@ -35,6 +70,9 @@ module DiscourseDataExplorer
           query: {
             type: :string,
             required: true,
+            visible_if: {
+              operation: "raw",
+            },
             ui: {
               control: :code,
               expression: false,
@@ -52,11 +90,53 @@ module DiscourseDataExplorer
         }
       end
 
+      def self.metadata
+        {
+          queries:
+            DiscourseDataExplorer::Query
+              .where(hidden: false)
+              .order(:name)
+              .map do |q|
+                { id: q.id, name: q.name, params: q.params.reject(&:internal?).map(&:to_hash) }
+              end,
+        }
+      end
+
       def execute(exec_ctx)
         item = exec_ctx.input_items.first || { "json" => {} }
         config = exec_ctx.get_parameters(item)
-        sql = config["query"].to_s
+        operation = config.fetch("operation") { "queries" }
 
+        if operation == "queries"
+          execute_saved_query(config)
+        else
+          execute_raw_sql(config)
+        end
+      end
+
+      private
+
+      def execute_saved_query(config)
+        query_id = config["query_id"]
+        raise ArgumentError, "No query selected" if query_id.blank?
+
+        query = DiscourseDataExplorer::Query.find(query_id)
+        raw_params = config.fetch("query_params") { {} }
+
+        result =
+          DiscourseDataExplorer::DataExplorer.run_query(
+            query,
+            raw_params,
+            { limit: SiteSetting.data_explorer_query_result_limit },
+          )
+
+        raise ArgumentError, result[:error].message if result[:error]
+
+        rows_to_items(result[:pg_result])
+      end
+
+      def execute_raw_sql(config)
+        sql = config["query"].to_s
         raise ArgumentError, "No SQL query provided" if sql.blank?
 
         req_params = {}
@@ -82,9 +162,11 @@ module DiscourseDataExplorer
 
         raise ArgumentError, result[:error].message if result[:error]
 
-        pg_result = result[:pg_result]
-        columns = pg_result.fields
+        rows_to_items(result[:pg_result])
+      end
 
+      def rows_to_items(pg_result)
+        columns = pg_result.fields
         items =
           pg_result.values.map do |row|
             json = {}
