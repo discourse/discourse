@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'legacy' && ' (legacy)' || '' }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -62,7 +62,7 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
-      ROLLUP_PLUGIN_COMPILER: ${{ matrix.plugin_compiler == 'rollup' && '1' || '0' }}
+      ROLLUP_PLUGIN_COMPILER: "1"
 
     strategy:
       fail-fast: false
