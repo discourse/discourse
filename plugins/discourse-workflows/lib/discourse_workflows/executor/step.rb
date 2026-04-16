@@ -8,6 +8,7 @@ module DiscourseWorkflows
       WAITING = "waiting"
       FILTERED = "filtered"
       RUNNING = "running"
+      SKIPPED = "skipped"
 
       attr_reader :node_id,
                   :node_name,
@@ -52,6 +53,7 @@ module DiscourseWorkflows
       def waiting? = status == WAITING
       def filtered? = status == FILTERED
       def running? = status == RUNNING
+      def skipped? = status == SKIPPED
 
       def succeed!(output:)
         @status = SUCCESS
@@ -73,6 +75,13 @@ module DiscourseWorkflows
 
       def mark_waiting!
         @status = WAITING
+      end
+
+      def skip!(output:, reason:)
+        @status = SKIPPED
+        @output = output
+        @error = reason
+        @finished_at = Time.current.iso8601(3)
       end
 
       def apply_updates!(updates)

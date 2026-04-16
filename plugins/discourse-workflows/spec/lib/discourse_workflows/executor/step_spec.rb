@@ -179,4 +179,42 @@ RSpec.describe DiscourseWorkflows::Executor::Step do
       expect(restored.to_h).to eq(original.to_h)
     end
   end
+
+  describe "SKIPPED status" do
+    it "has a SKIPPED constant" do
+      expect(described_class::SKIPPED).to eq("skipped")
+    end
+
+    it "supports skip! transition" do
+      step =
+        described_class.new(
+          node_id: "1",
+          node_name: "Test",
+          node_type: "action:test",
+          position: 0,
+          input: [],
+        )
+
+      step.skip!(output: [{ "json" => { "a" => 1 } }], reason: "Node unavailable")
+
+      expect(step.status).to eq("skipped")
+      expect(step.output).to eq([{ "json" => { "a" => 1 } }])
+      expect(step.error).to eq("Node unavailable")
+      expect(step.finished_at).to be_present
+    end
+
+    it "responds to skipped?" do
+      step =
+        described_class.new(
+          node_id: "1",
+          node_name: "Test",
+          node_type: "action:test",
+          position: 0,
+          input: [],
+          status: described_class::SKIPPED,
+        )
+
+      expect(step).to be_skipped
+    end
+  end
 end
