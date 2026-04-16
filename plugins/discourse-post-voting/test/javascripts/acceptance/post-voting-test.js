@@ -737,6 +737,25 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       .hasText("0", "does not render a button to show post voters");
   });
 
+  test("receiving user post voted message where upvotes and downvotes cancel out", async function (assert) {
+    await visit("/t/280");
+
+    publishToMessageBus("/topic/280", {
+      type: "post_voting_post_voted",
+      id: topicResponse.post_stream.posts[1].id,
+      post_voting_vote_count: 0,
+      post_voting_has_votes: true,
+      post_voting_user_voted_id: 123456,
+      post_voting_user_voted_direction: "up",
+    });
+
+    await settled();
+
+    assert
+      .dom("#post_2 .post-voting-post-toggle-voters")
+      .hasText("0", "displays 0 when upvotes and downvotes cancel out");
+  });
+
   test("receiving user post voted message where current user is not the one that voted", async function (assert) {
     await visit("/t/280");
 

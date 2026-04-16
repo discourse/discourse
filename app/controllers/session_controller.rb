@@ -700,8 +700,17 @@ class SessionController < ApplicationController
     # `redirect_url` might have been updated by a `before_session_destroy` listener
     redirect_url = data[:redirect_url]
 
+    push_subscription =
+      begin
+        if params[:push_subscription].is_a?(ActionController::Parameters)
+          params.require(:push_subscription).permit(:endpoint, keys: %i[p256dh auth])
+        end
+      rescue StandardError
+        nil # best-effort: malformed push_subscription should never block logout
+      end
+
     reset_session
-    log_off_user
+    log_off_user(push_subscription:)
 
     if request.xhr?
       render json: { redirect_url: }
