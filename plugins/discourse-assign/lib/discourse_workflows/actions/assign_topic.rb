@@ -35,6 +35,14 @@ if defined?(DiscourseWorkflows)
           "cyan"
         end
 
+        def self.available?
+          SiteSetting.assign_enabled
+        end
+
+        def self.unavailable_reason_key
+          "discourse_workflows.node_unavailable.requires_assign" unless available?
+        end
+
         def self.property_schema
           {
             operation: {

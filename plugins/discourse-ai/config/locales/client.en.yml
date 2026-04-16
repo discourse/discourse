@@ -47,6 +47,8 @@ en:
 
   js:
     discourse_workflows:
+      node_unavailable:
+        requires_ai: "Requires the AI plugin to be enabled"
       nodes:
         "action:ai_agent": "AI Agent"
       node_descriptions:

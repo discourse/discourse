@@ -16,6 +16,14 @@ if defined?(DiscourseWorkflows)
           "pink"
         end
 
+        def self.available?
+          SiteSetting.discourse_ai_enabled
+        end
+
+        def self.unavailable_reason_key
+          "discourse_workflows.node_unavailable.requires_ai" unless available?
+        end
+
         def self.group
           "ai"
         end

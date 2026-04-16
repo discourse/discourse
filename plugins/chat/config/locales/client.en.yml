@@ -837,6 +837,8 @@ en:
           label: "Chat"
 
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "Requires the Chat plugin to be enabled"
       nodes:
         "action:send_chat_message": "Send chat message"
       node_descriptions:

@@ -16,6 +16,14 @@ if defined?(DiscourseWorkflows)
           "teal"
         end
 
+        def self.available?
+          SiteSetting.chat_enabled
+        end
+
+        def self.unavailable_reason_key
+          "discourse_workflows.node_unavailable.requires_chat" unless available?
+        end
+
         def self.output_schema
           { channel_id: :integer, message: :string }
         end
