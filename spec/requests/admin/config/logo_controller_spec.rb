@@ -39,6 +39,13 @@ RSpec.describe Admin::Config::LogoController do
         expect(response.status).to eq(422)
       end
 
+      it "returns 422 when login_required is enabled" do
+        SiteSetting.login_required = true
+        TopicOgImageGenerator.any_instance.expects(:generate_bytes).never
+        get "/admin/config/logo/og-image-preview.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(422)
+      end
+
       it "returns 422 for personal messages without attempting to generate" do
         pm = Fabricate(:private_message_topic)
         TopicOgImageGenerator.any_instance.expects(:generate_bytes).never

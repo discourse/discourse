@@ -11,6 +11,13 @@ RSpec.describe Jobs::GenerateTopicOgImage do
     described_class.new.execute(topic_id: topic.id)
   end
 
+  it "does nothing when login_required is enabled" do
+    SiteSetting.login_required = true
+    TopicOgImageGenerator.any_instance.expects(:generate).never
+    described_class.new.execute(topic_id: topic.id)
+    expect(topic.reload.og_image_upload_id).to be_nil
+  end
+
   it "does nothing when topic has a user-uploaded image" do
     topic.update_column(:image_upload_id, Fabricate(:upload).id)
     TopicOgImageGenerator.any_instance.expects(:generate).never

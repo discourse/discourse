@@ -40,6 +40,11 @@ RSpec.describe TopicOgImageGenerator do
       expect(described_class.eligible?(nil)).to eq(false)
     end
 
+    it "returns false when login_required is enabled" do
+      SiteSetting.login_required = true
+      expect(described_class.eligible?(topic)).to eq(false)
+    end
+
     it "returns false for a personal message" do
       pm = Fabricate(:private_message_topic)
       expect(described_class.eligible?(pm)).to eq(false)
