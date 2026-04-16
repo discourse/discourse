@@ -29,6 +29,14 @@ module DiscourseWorkflows
       true
     end
 
+    def self.available?
+      true
+    end
+
+    def self.unavailable_reason_key
+      nil
+    end
+
     def self.inputs
       [:main]
     end

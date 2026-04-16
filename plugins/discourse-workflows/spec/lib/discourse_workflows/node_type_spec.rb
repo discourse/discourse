@@ -36,4 +36,26 @@ RSpec.describe DiscourseWorkflows::NodeType do
       expect { instance.execute(exec_ctx) }.to raise_error(NotImplementedError)
     end
   end
+
+  describe ".available?" do
+    it "defaults to true" do
+      expect(described_class.available?).to eq(true)
+    end
+
+    it "can be overridden by subclass" do
+      klass =
+        Class.new(described_class) do
+          def self.available?
+            false
+          end
+        end
+      expect(klass.available?).to eq(false)
+    end
+  end
+
+  describe ".unavailable_reason_key" do
+    it "defaults to nil" do
+      expect(described_class.unavailable_reason_key).to be_nil
+    end
+  end
 end
