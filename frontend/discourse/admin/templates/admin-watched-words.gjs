@@ -1,6 +1,6 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { LinkTo } from "@ember/routing";
+import AdminWatchedWordsActionNav from "discourse/admin/components/admin-watched-words-action-nav";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
@@ -27,11 +27,14 @@ export default <template>
     <div class="admin-controls">
       <div class="controls">
         <div class="inline-form">
-          <DButton
-            @action={{@controller.toggleMenu}}
-            @icon="bars"
-            class="menu-toggle"
-          />
+          {{#if @controller.showMenuToggle}}
+            <DButton
+              @action={{@controller.toggleMenu}}
+              @icon="bars"
+              class="btn-default menu-toggle"
+              {{didInsert @controller.registerMenuTrigger}}
+            />
+          {{/if}}
           <TextField
             @value={{@controller.filter}}
             @placeholderKey="admin.watched_words.search"
@@ -40,6 +43,7 @@ export default <template>
           <DButton
             @action={{@controller.clearFilter}}
             @label="admin.watched_words.clear_filter"
+            class="btn-default"
           />
         </div>
       </div>
@@ -50,24 +54,10 @@ export default <template>
       {{didInsert @controller.subscribe}}
       {{willDestroy @controller.unsubscribe}}
     >
-      <ul class="nav nav-stacked">
-        {{#each @controller.filteredWatchedWords as |watchedWordAction|}}
-          <li class={{watchedWordAction.nameKey}}>
-            <LinkTo
-              @route="adminWatchedWords.action"
-              @model={{watchedWordAction.nameKey}}
-            >
-              {{watchedWordAction.name}}
-              {{#if watchedWordAction.words}}<span
-                  class="count"
-                >({{watchedWordAction.words.length}})</span>{{/if}}
-            </LinkTo>
-          </li>
-        {{/each}}
-      </ul>
+      <AdminWatchedWordsActionNav @items={{@controller.filteredWatchedWords}} />
     </div>
 
-    <div class="admin-detail pull-left mobile-closed watched-words-detail">
+    <div class="admin-detail pull-left watched-words-detail">
       {{outlet}}
     </div>
 
