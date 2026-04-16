@@ -42,6 +42,8 @@
 
       <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>
       <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+      <%= discourse_stylesheet_link_tag(:admin) %>
+      <%= discourse_stylesheet_link_tag(:wizard) %>
 
       <%- Discourse.find_plugin_css_assets(include_disabled: true, only: @required_plugins, mobile_view: false, desktop_view: true, request: request).each do |file| %>
         <%= discourse_stylesheet_link_tag(file) %>
