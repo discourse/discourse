@@ -12,6 +12,41 @@ RSpec.describe GroupUser do
 
       expect do group_user.destroy! end.to change { group.reload.user_count }.from(1).to(0)
     end
+
+    it "grants group title to user without one" do
+      group.update!(title: "Cool Group")
+
+      Fabricate(:group_user, group: group, user: user)
+
+      expect(user.reload.title).to eq("Cool Group")
+    end
+
+    it "does not overwrite an existing title" do
+      user.update!(title: "Existing Title")
+      group.update!(title: "Cool Group")
+
+      Fabricate(:group_user, group: group, user: user)
+
+      expect(user.reload.title).to eq("Existing Title")
+    end
+
+    it "sets primary_group_id and flair_group_id for a primary group" do
+      group.update!(primary_group: true)
+
+      Fabricate(:group_user, group: group, user: user)
+
+      user.reload
+      expect(user.primary_group_id).to eq(group.id)
+      expect(user.flair_group_id).to eq(group.id)
+    end
+
+    it "grants trust level when group has grant_trust_level" do
+      group.update!(grant_trust_level: 3)
+
+      Fabricate(:group_user, group: group, user: user)
+
+      expect(user.reload.trust_level).to eq(3)
+    end
   end
 
   it "correctly sets notification level" do
@@ -312,6 +347,28 @@ RSpec.describe GroupUser do
         "trust_level_1",
         "trust_level_2",
       )
+    end
+
+    it "restores title from another group when removed from title group" do
+      other_group = Fabricate(:group, title: "Other Title")
+      Fabricate(:group_user, group: other_group, user: user)
+      group.update!(title: "Main Title")
+      group_user = Fabricate(:group_user, group: group, user: user)
+      user.update!(title: "Main Title")
+
+      group_user.destroy!
+
+      expect(user.reload.title).to eq("Other Title")
+    end
+
+    it "clears title when no other titled group exists" do
+      group.update!(title: "Only Title")
+      group_user = Fabricate(:group_user, group: group, user: user)
+      user.update!(title: "Only Title")
+
+      group_user.destroy!
+
+      expect(user.reload.title).to be_nil
     end
 
     it "protects user trust level if all requirements are met" do
