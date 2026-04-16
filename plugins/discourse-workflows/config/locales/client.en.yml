@@ -227,6 +227,10 @@ en:
         field_value: "Value"
         add_field: "Add field"
       code:
+        mode: "Mode"
+        mode_description: "Choose whether the code runs once per item or once for all items."
+        mode_run_once_for_each_item: "Run once for each item"
+        mode_run_once_for_all_items: "Run once for all items"
         code: "JavaScript code"
         code_description: "Access the previous step's output via $json. Return an object to pass data to the next step."
         hint: "Access the previous step's output via $json. Return an object to pass data to the next step."

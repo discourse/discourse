@@ -168,5 +168,44 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
     it "raises on invalid JavaScript" do
       expect { execute_code("this is not valid js {{{") }.to raise_error(MiniRacer::ParseError)
     end
+
+    context "with mode run_once_for_all_items" do
+      def execute_all(code, items:, **kwargs)
+        action =
+          described_class.new(configuration: { "code" => code, "mode" => "run_once_for_all_items" })
+        action.execute(build_exec_ctx(items, **kwargs))[0]
+      end
+
+      it "runs the code once and returns array results as items" do
+        items = [{ "json" => { "n" => 1 } }, { "json" => { "n" => 2 } }, { "json" => { "n" => 3 } }]
+        result =
+          execute_all(
+            "return $input.all().map(function(i) { return { doubled: i.json.n * 2 }; });",
+            items: items,
+          )
+
+        expect(result.map { |r| r["json"]["doubled"] }).to eq([2, 4, 6])
+      end
+
+      it "wraps a single object return into one item" do
+        items = [{ "json" => { "n" => 1 } }, { "json" => { "n" => 2 } }]
+        result =
+          execute_all(
+            "var sum = $input.all().reduce(function(s, i) { return s + i.json.n; }, 0); return { total: sum };",
+            items: items,
+          )
+
+        expect(result.length).to eq(1)
+        expect(result.first["json"]["total"]).to eq(3)
+      end
+
+      it "does not rebind $json per item" do
+        items = [{ "json" => { "a" => 1 } }, { "json" => { "b" => 2 } }]
+        result = execute_all("return { keys: Object.keys($json) };", items: items)
+
+        expect(result.length).to eq(1)
+        expect(result.first["json"]["keys"]).to eq([])
+      end
+    end
   end
 end

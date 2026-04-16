@@ -18,6 +18,14 @@ module DiscourseWorkflows
 
         def self.property_schema
           {
+            mode: {
+              type: :options,
+              default: "run_once_for_each_item",
+              options: %w[run_once_for_each_item run_once_for_all_items],
+              ui: {
+                expression: false,
+              },
+            },
             code: {
               type: :string,
               required: true,
@@ -40,22 +48,37 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           code = @configuration["code"].to_s
+          mode = @configuration["mode"] || "run_once_for_each_item"
           all_items_json = exec_ctx.input_items.map { |item| item.fetch("json") { {} } }
 
           items =
             exec_ctx.with_sandbox(capture_logs: true) do |sandbox|
               setup_code_sandbox!(sandbox, all_items_json)
-              exec_ctx.input_items.map do |item|
-                item_json = item.fetch("json") { {} }
-                sandbox.rebind_code_item(item_json)
-                raw = sandbox.eval("(function() { #{code} })()")
-                Item.new(normalize_code_result(raw)).to_h
+              if mode == "run_once_for_all_items"
+                execute_all_items(sandbox, code)
+              else
+                execute_per_item(sandbox, code, exec_ctx.input_items)
               end
             end
           [items]
         end
 
         private
+
+        def execute_per_item(sandbox, code, input_items)
+          input_items.map do |item|
+            item_json = item.fetch("json") { {} }
+            sandbox.rebind_code_item(item_json)
+            raw = sandbox.eval("(function() { #{code} })()")
+            Item.new(normalize_code_result(raw)).to_h
+          end
+        end
+
+        def execute_all_items(sandbox, code)
+          raw = sandbox.eval("(function() { #{code} })()")
+          results = raw.is_a?(Array) ? raw : [raw]
+          results.map { |r| Item.new(normalize_code_result(r)).to_h }
+        end
 
         def normalize_code_result(raw)
           result = raw.is_a?(Hash) ? raw : { "result" => raw.to_s }
