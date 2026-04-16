@@ -22,8 +22,8 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
       it "includes expected schema fields for each node type" do
         node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
-        expect(node_type).to include(:id, :identifier, :category, :property_schema)
-        expect(node_type[:category]).to eq("action")
+        expect(node_type).to include(:identifier, :kind, :property_schema)
+        expect(node_type[:kind]).to eq("action")
         expect(node_type[:property_schema].keys).to contain_exactly(
           :topic_id,
           :raw,

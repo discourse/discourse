@@ -5,6 +5,8 @@ RSpec.describe SiteSerializer do
   let(:guardian) { Guardian.new(admin) }
 
   describe "#topic_admin_button_workflows" do
+    before { DiscourseWorkflows::WorkflowDependency.clear_cache! }
+
     fab!(:workflow) do
       graph =
         build_workflow_graph do |g|
@@ -42,6 +44,7 @@ RSpec.describe SiteSerializer do
             end
           end,
       )
+      DiscourseWorkflows::WorkflowDependency.clear_cache!
 
       data = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
@@ -50,6 +53,7 @@ RSpec.describe SiteSerializer do
 
     it "excludes disabled workflows" do
       workflow.update!(enabled: false)
+      DiscourseWorkflows::WorkflowDependency.clear_cache!
 
       data = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 

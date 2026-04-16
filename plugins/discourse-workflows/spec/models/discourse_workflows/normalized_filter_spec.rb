@@ -92,8 +92,8 @@ RSpec.describe DiscourseWorkflows::NormalizedFilter do
       )
     end
 
-    it "wraps the value with wildcards" do
-      expect(model.value.dig("filters", 0, "value")).to eq("%alice%")
+    it "passes the value through without wrapping" do
+      expect(model.value.dig("filters", 0, "value")).to eq("alice")
     end
   end
 end

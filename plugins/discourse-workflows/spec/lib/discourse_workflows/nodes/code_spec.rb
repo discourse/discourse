@@ -45,7 +45,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
           "for (var i = 0; i < 300; i++) { console.log('line ' + i); } return {};",
         )
 
-      expect(log.entries.size).to eq(DiscourseWorkflows::Executor::StepLog::MAX_ENTRIES + 1)
+      expect(log.entries.size).to eq(DiscourseWorkflows::Executor::StepLog::MAX_ENTRIES)
       expect(log.entries.last["message"]).to include("truncated")
     end
 

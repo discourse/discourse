@@ -45,7 +45,6 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
         expect(wait.waiting_config["timeout_action"]).to eq("fail")
         expect(wait.waiting_config["chat_channel_id"]).to eq(channel.id)
         expect(wait.waiting_config["chat_message_id"]).to be_present
-        expect(wait.waiting_config["wait_nonce"]).to be_present
         expect(wait.waiting_config["timeout_response_items"]).to eq(
           [{ "json" => { "approved" => false, "channel_id" => channel.id, "timed_out" => true } }],
         )

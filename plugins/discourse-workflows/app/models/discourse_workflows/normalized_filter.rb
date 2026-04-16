@@ -107,7 +107,7 @@ module DiscourseWorkflows
       unless normalized.is_a?(String)
         raise ArgumentError, "#{condition.upcase} filter value must be a string"
       end
-      normalized.include?("%") ? normalized : "%#{normalized}%"
+      normalized
     end
 
     def validate_comparison_not_nil!(normalized, condition)

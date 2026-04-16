@@ -32,7 +32,7 @@ module DiscourseWorkflows
       cred_data =
         begin
           credential.decrypted_data
-        rescue ActiveSupport::MessageEncryptor::InvalidMessage
+        rescue ActiveSupport::MessageEncryptor::InvalidMessage, ArgumentError
           Rails.logger.warn(
             "Workflow credential decryption failed (id=#{config["credential_id"]}) for node #{node["id"]}",
           )

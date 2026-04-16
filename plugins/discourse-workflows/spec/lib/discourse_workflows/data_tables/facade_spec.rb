@@ -94,8 +94,10 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     it "returns all rows without a filter" do
       result = facade.query(build_query)
 
-      expect(result[:count]).to eq(3)
-      expect(result[:rows].map { |row| row["id"] }).to eq([row_1["id"], row_2["id"], row_3["id"]])
+      expect(result[:count]).to eq(4)
+      expect(result[:rows].map { |row| row["id"] }).to eq(
+        [row_1["id"], row_2["id"], row_3["id"], row_4["id"]],
+      )
     end
 
     it "supports filtering" do
@@ -123,7 +125,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     it "supports pagination with offset" do
       result = facade.query(build_query(limit: 1, offset: 1))
 
-      expect(result[:count]).to eq(3)
+      expect(result[:count]).to eq(4)
       expect(result[:rows].size).to eq(1)
       expect(result[:rows].first["id"]).to eq(row_2["id"])
     end
@@ -172,7 +174,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
             ),
           )
 
-        expect(result[:rows].map { |r| r["id"] }).to contain_exactly(row_2["id"], row_3["id"])
+        expect(result[:rows].map { |r| r["id"] }).to contain_exactly(
+          row_2["id"],
+          row_3["id"],
+          row_4["id"],
+        )
       end
 
       it "excludes nil values" do
@@ -186,7 +192,11 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
             ),
           )
 
-        expect(result[:rows].map { |r| r["id"] }).to contain_exactly(row_1["id"], row_2["id"])
+        expect(result[:rows].map { |r| r["id"] }).to contain_exactly(
+          row_1["id"],
+          row_2["id"],
+          row_4["id"],
+        )
       end
     end
 
@@ -230,7 +240,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
             ),
           )
 
-        expect(result[:rows].map { |r| r["id"] }).to eq([row_2["id"]])
+        expect(result[:rows].map { |r| r["id"] }).to contain_exactly(row_2["id"], row_4["id"])
       end
 
       it "lte includes equal values" do
@@ -244,7 +254,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
             ),
           )
 
-        expect(result[:rows].map { |r| r["id"] }).to eq([row_2["id"]])
+        expect(result[:rows].map { |r| r["id"] }).to contain_exactly(row_2["id"], row_4["id"])
       end
     end
 
@@ -256,7 +266,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
               filter: {
                 "type" => "and",
                 "filters" => [
-                  { "columnName" => "email", "condition" => "like", "value" => "%alice%" },
+                  { "columnName" => "email", "condition" => "like", "value" => "alice" },
                 ],
               },
             ),
@@ -272,7 +282,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
               filter: {
                 "type" => "and",
                 "filters" => [
-                  { "columnName" => "email", "condition" => "ilike", "value" => "%ALICE%" },
+                  { "columnName" => "email", "condition" => "ilike", "value" => "ALICE" },
                 ],
               },
             ),
@@ -288,7 +298,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
               filter: {
                 "type" => "and",
                 "filters" => [
-                  { "columnName" => "email", "condition" => "not_ilike", "value" => "%alice%" },
+                  { "columnName" => "email", "condition" => "not_ilike", "value" => "alice" },
                 ],
               },
             ),
@@ -304,7 +314,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
               filter: {
                 "type" => "and",
                 "filters" => [
-                  { "columnName" => "email", "condition" => "ilike", "value" => "%a_ice%" },
+                  { "columnName" => "email", "condition" => "ilike", "value" => "a_ice" },
                 ],
               },
             ),
@@ -320,7 +330,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
               filter: {
                 "type" => "and",
                 "filters" => [
-                  { "columnName" => "email", "condition" => "ilike", "value" => "%50%off%" },
+                  { "columnName" => "email", "condition" => "ilike", "value" => "50%off" },
                 ],
               },
             ),
@@ -371,14 +381,16 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     it "defaults to id ascending when sort_by is blank" do
       result = facade.query(build_query)
 
-      expect(result[:rows].map { |r| r["id"] }).to eq([row_1["id"], row_2["id"], row_3["id"]])
+      expect(result[:rows].map { |r| r["id"] }).to eq(
+        [row_1["id"], row_2["id"], row_3["id"], row_4["id"]],
+      )
     end
 
     it "sorts ascending with nulls last" do
       result = facade.query(build_query(sort_by: "score", sort_direction: "asc"))
       ids = result[:rows].map { |r| r["id"] }
 
-      expect(ids).to eq([row_2["id"], row_1["id"], row_3["id"]])
+      expect(ids).to eq([row_4["id"], row_2["id"], row_1["id"], row_3["id"]])
     end
 
     it "sorts descending with nulls last" do
@@ -393,7 +405,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
       result = facade.query(build_query(sort_by: "score", sort_direction: "invalid"))
       ids = result[:rows].map { |r| r["id"] }
 
-      expect(ids).to eq([row_2["id"], row_1["id"], row_3["id"]])
+      expect(ids).to eq([row_4["id"], row_2["id"], row_1["id"], row_3["id"]])
     end
 
     it "uses id as secondary sort for stability" do
@@ -444,7 +456,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     it "ignores zero limit" do
       result = facade.query(build_query(limit: 0))
 
-      expect(result[:rows].size).to eq(3)
+      expect(result[:rows].size).to eq(4)
     end
 
     it "ignores zero offset" do
@@ -471,7 +483,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
 
   describe "#count" do
     it "returns the total count without a filter" do
-      expect(facade.count).to eq(3)
+      expect(facade.count).to eq(4)
     end
   end
 
@@ -608,11 +620,7 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
 
   describe "statement timeout" do
     it "raises StatementTimeout when a query exceeds the limit" do
-      stub_const(
-        DiscourseWorkflows::DataTables::Facade,
-        :STATEMENT_TIMEOUT_MS,
-        100,
-      ) do
+      stub_const(DiscourseWorkflows::DataTables::Facade, :STATEMENT_TIMEOUT_MS, 100) do
         expect {
           facade.send(:with_statement_timeout) do
             ActiveRecord::Base.connection.execute("SELECT pg_sleep(1)")
