@@ -130,7 +130,7 @@
         if (DE.embedMaxHeight) {
           height = Math.min(height, parseInt(DE.embedMaxHeight, 10));
         }
-        iframe.height = height + "px";
+        iframe.style.height = height + "px";
       }
 
       if (e.data.type === "discourse-scroll" && e.data.top) {
