@@ -8,19 +8,15 @@ module DiscourseHcaptcha
     def check_captcha
       return unless SiteSetting.discourse_captcha_enabled
       captcha_provider = captcha_provider_selector
-      puts "DEBUG: Provider class=#{captcha_provider.class.name}" if captcha_provider
       return if captcha_provider.nil?
 
       captcha_token = captcha_provider.fetch_captcha_token(cookies)
-      puts "DEBUG: Token=#{captcha_token.inspect}"
       raise Discourse::InvalidAccess.new if captcha_token.blank?
 
       response = captcha_provider.send_captcha_verification(captcha_token)
-      puts "DEBUG: Response code=#{response.code}, body=#{response.body}"
 
       validate_captcha_response(response)
     rescue => e
-      puts "DEBUG: Exception=#{e.class}: #{e.message}"
       Rails.logger.warn("Error parsing Captcha response: #{e}")
       fail_with("captcha_verification_failed")
     end
