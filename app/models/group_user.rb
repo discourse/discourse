@@ -6,7 +6,8 @@ class GroupUser < ActiveRecord::Base
 
   before_create :set_notification_level
 
-  after_commit :sync_via_manager, on: %i[create destroy]
+  after_commit :sync_add_via_manager, on: :create
+  after_commit :sync_remove_via_manager, on: :destroy
 
   def self.notification_levels
     NotificationLevels.all
@@ -131,16 +132,16 @@ class GroupUser < ActiveRecord::Base
     TagUser.auto_track(user_ids: user_ids)
   end
 
-  def sync_via_manager
-    if previously_new_record?
-      GroupManager.new(group).sync_add_side_effects([user.id])
-    else
-      group_user_manager = GroupManager.new(group)
-      group_user_manager.decrease_group_user_count([user.id])
+  def sync_add_via_manager
+    GroupManager.new(group).sync_add_side_effects([user.id])
+  end
 
-      return unless User.exists?(user.id)
-      group_user_manager.sync_removal_side_effects([user.id])
-    end
+  def sync_remove_via_manager
+    manager = GroupManager.new(group)
+    manager.decrease_group_user_count([user.id])
+
+    return unless User.exists?(user.id)
+    manager.sync_removal_side_effects([user.id])
   end
 
   def self.semantically_higher_notification_level_sql(new_col, existing_col)
