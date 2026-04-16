@@ -90,7 +90,9 @@ RSpec.describe GroupUser do
     end
 
     it "doesn't change anything with no configured defaults" do
-      expect { group.add(user) }.to_not change { CategoryUser.count }
+      expect { Fabricate(:group_user, group: group, user: user) }.to_not change {
+        CategoryUser.count
+      }
     end
 
     it "adds new category notifications" do
@@ -100,7 +102,11 @@ RSpec.describe GroupUser do
       group.watching_category_ids = [category4.id]
       group.watching_first_post_category_ids = [category5.id]
       group.save!
-      expect { group.add(user) }.to change { CategoryUser.count }.by(5)
+
+      expect { Fabricate(:group_user, group: group, user: user) }.to change {
+        CategoryUser.count
+      }.by(5)
+
       h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:muted])
       expect(h[category2.id]).to eq(levels[:regular])
@@ -133,7 +139,9 @@ RSpec.describe GroupUser do
       group.regular_category_ids = [category1.id]
       group.watching_first_post_category_ids = [category2.id, category3.id, category4.id]
       group.save!
-      group.add(user)
+
+      Fabricate(:group_user, group: group, user: user)
+
       h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:regular])
       expect(h[category2.id]).to eq(levels[:watching_first_post])
@@ -160,7 +168,9 @@ RSpec.describe GroupUser do
       group.muted_category_ids = [category3.id]
       group.tracking_category_ids = [category4.id]
       group.save!
-      group.add(user)
+
+      Fabricate(:group_user, group: group, user: user)
+
       h = CategoryUser.notification_levels_for(user)
       expect(h[category1.id]).to eq(levels[:tracking])
       expect(h[category2.id]).to eq(levels[:watching])
@@ -184,7 +194,7 @@ RSpec.describe GroupUser do
     end
 
     it "doesn't change anything with no configured defaults" do
-      expect { group.add(user) }.to_not change { TagUser.count }
+      expect { Fabricate(:group_user, group: group, user: user) }.to_not change { TagUser.count }
     end
 
     it "adds new tag notifications" do
@@ -194,7 +204,9 @@ RSpec.describe GroupUser do
       group.watching_tags = [tag4.name]
       group.watching_first_post_tags = [tag5.name]
       group.save!
-      expect { group.add(user) }.to change { TagUser.count }.by(5)
+
+      expect { Fabricate(:group_user, group: group, user: user) }.to change { TagUser.count }.by(5)
+
       expect(TagUser.lookup(user, :muted).pluck(:tag_id)).to eq([tag1.id])
       expect(TagUser.lookup(user, :regular).pluck(:tag_id)).to eq([tag2.id])
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to eq([tag3.id])
@@ -210,7 +222,9 @@ RSpec.describe GroupUser do
       group.regular_tags = [tag1.name]
       group.watching_first_post_tags = [tag2.name, tag3.name, tag4.name]
       group.save!
-      group.add(user)
+
+      Fabricate(:group_user, group: group, user: user)
+
       expect(TagUser.lookup(user, :muted).pluck(:tag_id)).to be_empty
       expect(TagUser.lookup(user, :regular).pluck(:tag_id)).to eq([tag1.id])
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to be_empty
@@ -228,7 +242,9 @@ RSpec.describe GroupUser do
       group.muted_tags = [tag3.name]
       group.tracking_tags = [tag2.name]
       group.save!
-      group.add(user)
+
+      Fabricate(:group_user, group: group, user: user)
+
       expect(TagUser.lookup(user, :muted).pluck(:tag_id)).to eq([tag3.id])
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to eq([tag1.id])
       expect(TagUser.lookup(user, :watching).pluck(:tag_id)).to eq([tag2.id])
