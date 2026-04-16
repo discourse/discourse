@@ -91,14 +91,30 @@ module DiscourseDataExplorer
       end
 
       def self.metadata
+        persisted = DiscourseDataExplorer::Query.where(hidden: false).order(:name).to_a
+
+        persisted_ids = persisted.map(&:id).to_set
+
+        unpersisted_defaults =
+          DiscourseDataExplorer::Queries.default.filter_map do |_, attributes|
+            next if persisted_ids.include?(attributes[:id])
+            q =
+              DiscourseDataExplorer::Query.new(
+                id: attributes[:id],
+                name: attributes[:name],
+                sql: attributes[:sql],
+              )
+            q.user_id = Discourse::SYSTEM_USER_ID
+            q
+          end
+
+        all_queries = (persisted + unpersisted_defaults).sort_by(&:name)
+
         {
           queries:
-            DiscourseDataExplorer::Query
-              .where(hidden: false)
-              .order(:name)
-              .map do |q|
-                { id: q.id, name: q.name, params: q.params.reject(&:internal?).map(&:to_hash) }
-              end,
+            all_queries.map do |q|
+              { id: q.id, name: q.name, params: q.params.reject(&:internal?).map(&:to_hash) }
+            end,
         }
       end
 
