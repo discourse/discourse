@@ -368,7 +368,8 @@ module DiscourseWorkflows
         if @workflow.run_as_username.blank? || @workflow.run_as_username == "system"
           Discourse.system_user
         else
-          User.find_by(username: @workflow.run_as_username) || Discourse.system_user
+          User.find_by(username: @workflow.run_as_username) ||
+            raise("Couldn't run this workflow as user: #{@workflow.run_as_username}. User not found.")
         end
     end
   end

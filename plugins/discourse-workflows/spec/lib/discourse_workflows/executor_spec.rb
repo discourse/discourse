@@ -356,5 +356,35 @@ RSpec.describe DiscourseWorkflows::Executor do
         expect(second_execution.status).to eq("rate_limited")
       end
     end
+
+    it "raises when run_as_username references a non-existent user" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_closed"
+          g.node "action-1",
+                 "action:topic_tags",
+                 configuration: {
+                   "topic_id" => "={{ trigger.topic_id }}",
+                   "tag_names" => tag.name,
+                 }
+          g.chain "trigger-1", "action-1"
+        end
+      workflow =
+        Fabricate(
+          :discourse_workflows_workflow,
+          created_by: user,
+          enabled: true,
+          run_as_username: "nonexistent_user",
+          **graph,
+        )
+
+      trigger_data = { topic_id: topic.id, tags: [] }
+      execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+      expect(execution.status).to eq("error")
+      expect(execution.error).to include(
+        "Couldn't run this workflow as user: nonexistent_user. User not found.",
+      )
+    end
   end
 end
