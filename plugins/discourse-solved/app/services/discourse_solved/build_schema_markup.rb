@@ -37,7 +37,8 @@ class DiscourseSolved::BuildSchemaMarkup
 
   def fetch_accepted_answer(topic:)
     post = topic.solved&.answer_post
-    post if post.present? && Guardian.new.can_see_post?(post)
+    return unless post.present? && Guardian.new.can_see_post?(post)
+    post if post.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present?
   end
 
   def fetch_suggested_answers(params:, topic:, accepted_answer:)
