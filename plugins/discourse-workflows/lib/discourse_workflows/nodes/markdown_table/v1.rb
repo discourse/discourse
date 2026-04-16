@@ -77,13 +77,20 @@ module DiscourseWorkflows
         end
 
         def format_cell(value)
-          return "" if value.nil?
-          case value
-          when Hash, Array
-            JSON.generate(value)
-          else
-            value.to_s
-          end
+          raw =
+            if value.nil?
+              ""
+            elsif value.is_a?(Hash) || value.is_a?(Array)
+              JSON.generate(value)
+            else
+              value.to_s
+            end
+
+          sanitize_cell(raw)
+        end
+
+        def sanitize_cell(str)
+          str.gsub("|", "\\|").gsub(/\r\n|\n/, "<br>")
         end
       end
     end

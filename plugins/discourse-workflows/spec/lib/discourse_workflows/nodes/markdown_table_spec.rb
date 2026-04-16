@@ -107,5 +107,23 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
 
       expect(markdown.split("\n").last).to eq("|  | 42 | true |")
     end
+
+    it "escapes pipe characters in cell values" do
+      items = [{ "json" => { "text" => "a | b | c" } }]
+      config = { "columns" => [{ "header" => "Text", "value" => "={{ $json.text }}" }] }
+
+      markdown = execute(items, config)
+
+      expect(markdown.split("\n").last).to eq("| a \\| b \\| c |")
+    end
+
+    it "replaces newlines in cell values with <br>" do
+      items = [{ "json" => { "text" => "line1\nline2\r\nline3" } }]
+      config = { "columns" => [{ "header" => "Text", "value" => "={{ $json.text }}" }] }
+
+      markdown = execute(items, config)
+
+      expect(markdown.split("\n").last).to eq("| line1<br>line2<br>line3 |")
+    end
   end
 end
