@@ -68,6 +68,7 @@ class DiscourseSolved::BuildSchemaMarkup
           "@context" => "http://schema.org",
           "@type" => "QAPage",
           "name" => topic.title,
+          "datePublished" => topic.created_at,
           "mainEntity" => question_json,
         )
         .gsub("</", "<\\/")

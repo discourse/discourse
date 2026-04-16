@@ -47,7 +47,7 @@ module DiscourseSolved
 
     def self.post_schema(post, topic)
       return nil unless qa_page_schema?(topic)
-      return {} if post.is_first_post?
+      return { data: { qa_question: true } } if post.is_first_post?
       return { itemscope: true } if post.post_type == Post.types[:small_action]
       return {} unless eligible_answer?(post)
       if accepted_answer_visible?(topic) && topic.solved.answer_post_id == post.id
@@ -57,16 +57,19 @@ module DiscourseSolved
       end
     end
 
-    def self.post_upvote_count_meta(post, topic)
+    def self.post_answer_meta(post, topic)
       return unless post_schema(post, topic)&.[](:itemprop)
-      "<meta itemprop='upvoteCount' content='#{post.like_count}'>"
+      "<meta itemprop='upvoteCount' content='#{post.like_count}'>" \
+        "<meta itemprop='url' content='#{post.full_url}'>"
     end
 
     def self.main_entity_meta(topic, crawler_posts)
       return unless qa_page_schema?(topic)
-      "<meta itemprop='name' content='#{ERB::Util.html_escape(topic.title)}'>" \
+      first_post = topic.first_post
+      "<meta itemprop='answerCount' content='#{Array(crawler_posts).count { |p| eligible_answer?(p) }}'>" \
         "<meta itemprop='datePublished' content='#{topic.created_at.iso8601}'>" \
-        "<meta itemprop='answerCount' content='#{Array(crawler_posts).count { |p| eligible_answer?(p) }}'>"
+        "<meta itemprop='name' content='#{ERB::Util.html_escape(topic.title)}'>" \
+        "<meta itemprop='upvoteCount' content='#{first_post&.like_count || 0}'>"
     end
 
     private_class_method def self.accepted_answer_visible?(topic)

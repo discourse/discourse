@@ -18,6 +18,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(json["upvoteCount"]).to eq(2)
       expect(json["answerCount"]).to eq(0)
       expect(json["datePublished"]).to eq(topic.created_at)
+      expect(json["dateModified"]).to be_present
     end
 
     it "serializes the author" do
@@ -52,6 +53,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(accepted["@type"]).to eq("Answer")
       expect(accepted["text"]).to be_present
       expect(accepted["datePublished"]).to be_present
+      expect(accepted["dateModified"]).to be_present
       expect(accepted["upvoteCount"]).to eq(7)
       expect(accepted["author"]).to eq(
         { "@type" => "Person", "name" => answer_user.username, "url" => answer_user.full_url },
@@ -79,6 +81,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(suggested["@type"]).to eq("Answer")
       expect(suggested["text"]).to be_present
       expect(suggested["datePublished"]).to be_present
+      expect(suggested["dateModified"]).to be_present
       expect(suggested["upvoteCount"]).to eq(0)
     end
   end

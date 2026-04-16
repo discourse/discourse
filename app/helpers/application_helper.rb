@@ -774,8 +774,9 @@ module ApplicationHelper
   end
 
   def crawler_post_schema_overridden?(post, topic)
-    itemprop = crawler_post_schema_hash(post, topic)[:itemprop]
-    itemprop.present? && itemprop != "comment"
+    hash = crawler_post_schema_hash(post, topic)
+    itemprop = hash[:itemprop]
+    (itemprop.present? && itemprop != "comment") || hash[:data].present?
   end
 
   # If there is plugin HTML return that, otherwise yield to the template

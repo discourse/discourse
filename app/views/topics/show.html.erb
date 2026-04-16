@@ -74,7 +74,8 @@
           <div id='post_<%= post.post_number %>' <%= crawler_post_schema(post, @topic_view.topic) %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>
               <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
-                <a itemprop="url" rel='nofollow' href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+                <a rel='nofollow' href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+                <meta itemprop='url' content='<%= Discourse.base_url %>/u/<%= u.username %>'>
                 <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
                 <%
                   post_custom_fields = @topic_view.post_custom_fields[post.id] || {}

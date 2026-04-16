@@ -98,7 +98,7 @@ after_initialize do
 
   register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
     topic = controller.instance_variable_get(:@topic_view)&.topic
-    DiscourseSolved::SchemaUtils.post_upvote_count_meta(post, topic) if topic
+    DiscourseSolved::SchemaUtils.post_answer_meta(post, topic) if topic
   end
 
   register_html_builder("server:before-head-close-crawler") do |controller|
