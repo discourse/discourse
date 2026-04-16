@@ -24,18 +24,21 @@ module DiscourseWorkflows
     end
 
     def self.enabled_workflows_with_node_type(type)
-      workflow_ids =
-        joins(
-          "INNER JOIN discourse_workflows_workflows ON discourse_workflows_workflows.id = discourse_workflows_workflow_dependencies.workflow_id",
-        )
-          .where(dependency_type: "node_type", dependency_key: type)
-          .where("discourse_workflows_workflows.enabled = true")
-          .pluck(:workflow_id)
-          .uniq
+      workflows =
+        DiscourseWorkflows::Workflow
+          .joins(
+            "INNER JOIN discourse_workflows_workflow_dependencies ON discourse_workflows_workflow_dependencies.workflow_id = discourse_workflows_workflows.id",
+          )
+          .where(
+            discourse_workflows_workflow_dependencies: {
+              dependency_type: "node_type",
+              dependency_key: type,
+            },
+          )
+          .where(enabled: true)
+          .distinct
 
-      DiscourseWorkflows::Workflow
-        .where(id: workflow_ids)
-        .flat_map { |workflow| workflow.nodes_of_type(type).map { |node| [workflow, node] } }
+      workflows.flat_map { |workflow| workflow.nodes_of_type(type).map { |node| [workflow, node] } }
     end
 
     def self.enabled_trigger_entries(trigger_type)
