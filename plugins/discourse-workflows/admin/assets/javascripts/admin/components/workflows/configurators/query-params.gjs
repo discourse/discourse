@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import Field from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field";
+import Field from "./field";
 
 const PARAM_SCHEMA = { type: "string", ui: { expression: true } };
 

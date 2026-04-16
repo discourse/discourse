@@ -1,4 +1,3 @@
-import QueryParams from "discourse/plugins/discourse-data-explorer/admin/components/workflows/configurators/query-params";
 import BooleanControl from "../../components/workflows/configurators/boolean-control";
 import CategoryControl from "../../components/workflows/configurators/category-control";
 import CodeControl from "../../components/workflows/configurators/code-control";
@@ -13,6 +12,7 @@ import FilterQuery from "../../components/workflows/configurators/filter-query";
 import IconControl from "../../components/workflows/configurators/icon-control";
 import MultiComboBox from "../../components/workflows/configurators/multi-combo-box";
 import NoticeControl from "../../components/workflows/configurators/notice-control";
+import QueryParams from "../../components/workflows/configurators/query-params";
 import SelectControl from "../../components/workflows/configurators/select-control";
 import TagsControl from "../../components/workflows/configurators/tags-control";
 import UrlPreview from "../../components/workflows/configurators/url-preview";
