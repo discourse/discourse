@@ -779,6 +779,10 @@ module ApplicationHelper
     (itemprop.present? && itemprop != "comment") || hash[:data].present?
   end
 
+  def crawler_post_schema_skip?(post, topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_crawler_skip_post, false, post, topic)
+  end
+
   # If there is plugin HTML return that, otherwise yield to the template
   def replace_plugin_html(name)
     if (html = build_plugin_html(name)).present?

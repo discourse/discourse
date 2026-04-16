@@ -70,6 +70,7 @@
       <% end %>
 
       <% @topic_view.crawler_posts.each do |post| %>
+        <% next if crawler_post_schema_skip?(post, @topic_view.topic) %>
         <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
           <div id='post_<%= post.post_number %>' <%= crawler_post_schema(post, @topic_view.topic) %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>

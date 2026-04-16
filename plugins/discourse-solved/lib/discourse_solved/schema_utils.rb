@@ -48,7 +48,6 @@ module DiscourseSolved
     def self.post_schema(post, topic)
       return nil unless qa_page_schema?(topic)
       return { data: { qa_question: true } } if post.is_first_post?
-      return { itemscope: true } if post.post_type == Post.types[:small_action]
       return {} unless eligible_answer?(post)
       if accepted_answer_visible?(topic) && topic.solved.answer_post_id == post.id
         { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
