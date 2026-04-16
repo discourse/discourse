@@ -67,6 +67,14 @@ acceptance("User Routes", function (needs) {
       .hasClass("user-invites-page", "has the body class");
   });
 
+  test("Invites - non-staff user viewing own page sees invite tabs", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: false });
+    await visit("/u/eviltrout/invited/pending");
+    assert
+      .dom(".user-navigation.user-navigation-secondary")
+      .exists("renders the invite tabs navigation");
+  });
+
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
