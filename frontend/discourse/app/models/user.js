@@ -1532,7 +1532,9 @@ User.reopenClass({
     );
 
     if (!shouldCreate) {
-      return Promise.reject();
+      return Promise.reject(
+        new Error("Account creation blocked by plugin validation")
+      );
     }
 
     return ajax(userPath(), {

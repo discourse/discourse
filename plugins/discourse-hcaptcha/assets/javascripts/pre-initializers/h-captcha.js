@@ -11,7 +11,10 @@ function captchaSelector(siteSettings) {
 
 function initializeHCaptcha(api, container) {
   const siteSettings = container.lookup("service:site-settings");
-  if (!captchaSelector(siteSettings)) {
+  if (
+    siteSettings.discourse_captcha_enabled &&
+    !captchaSelector(siteSettings)
+  ) {
     return;
   }
 
@@ -32,7 +35,6 @@ function initializeHCaptcha(api, container) {
       });
       return true;
     } catch {
-      captchaService.failed = true;
       return false;
     } finally {
       captchaService.reset();

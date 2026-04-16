@@ -6,16 +6,21 @@ module DiscourseHcaptcha
     included { before_action :check_captcha, only: [:create] }
 
     def check_captcha
+      return unless SiteSetting.discourse_captcha_enabled
       captcha_provider = captcha_provider_selector
+      puts "DEBUG: Provider class=#{captcha_provider.class.name}" if captcha_provider
       return if captcha_provider.nil?
 
       captcha_token = captcha_provider.fetch_captcha_token(cookies)
+      puts "DEBUG: Token=#{captcha_token.inspect}"
       raise Discourse::InvalidAccess.new if captcha_token.blank?
 
       response = captcha_provider.send_captcha_verification(captcha_token)
+      puts "DEBUG: Response code=#{response.code}, body=#{response.body}"
 
       validate_captcha_response(response)
     rescue => e
+      puts "DEBUG: Exception=#{e.class}: #{e.message}"
       Rails.logger.warn("Error parsing Captcha response: #{e}")
       fail_with("captcha_verification_failed")
     end
@@ -23,12 +28,31 @@ module DiscourseHcaptcha
     private
 
     def captcha_provider_selector
-      if SiteSetting.discourse_hcaptcha_enabled && SiteSetting.hcaptcha_site_key.present? &&
-           SiteSetting.hcaptcha_secret_key.present?
+      hcaptcha_configured =
+        SiteSetting.discourse_hcaptcha_enabled && SiteSetting.hcaptcha_site_key.present? &&
+          SiteSetting.hcaptcha_secret_key.present?
+      recaptcha_configured =
+        SiteSetting.discourse_recaptcha_enabled && SiteSetting.recaptcha_site_key.present? &&
+          SiteSetting.recaptcha_secret_key.present?
+
+      if hcaptcha_configured && recaptcha_configured
+        Rails.logger.warn(
+          "Both hCaptcha and reCaptcha are enabled. Using hCaptcha as the captcha provider.",
+        )
+      end
+
+      if hcaptcha_configured
         DiscourseHcaptcha::HcaptchaProvider.new
-      elsif SiteSetting.discourse_recaptcha_enabled && SiteSetting.recaptcha_site_key.present? &&
-            SiteSetting.recaptcha_secret_key.present?
+      elsif recaptcha_configured
         DiscourseHcaptcha::RecaptchaProvider.new
+      else
+        if SiteSetting.discourse_captcha_enabled
+          Rails.logger.warn(
+            "Captcha plugin is enabled but no captcha provider is properly configured. " \
+              "Please configure either hCaptcha or reCaptcha in site settings.",
+          )
+        end
+        nil
       end
     end
 

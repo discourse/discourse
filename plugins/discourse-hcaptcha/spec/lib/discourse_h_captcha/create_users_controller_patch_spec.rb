@@ -5,8 +5,7 @@ RSpec.describe "Users", type: :request do
     let(:user_params) do
       honeypot_magic(
         {
-          name: "unicorn",
-          email: "awesomeunicorn@example.com",
+          email: "awesomeunicorn@discourse.org",
           username: "awesomeunicorn",
           password: "P4ssw0rd$$",
         },
@@ -14,11 +13,18 @@ RSpec.describe "Users", type: :request do
     end
 
     before do
-      SiteSetting.discourse_hcaptcha_enabled = true
+      SiteSetting.enable_local_logins = true
+      SiteSetting.discourse_captcha_enabled = true
+      SiteSetting.discourse_hcaptcha_enabled = false
       SiteSetting.discourse_recaptcha_enabled = false
+
       SiteSetting.same_site_cookies = "Lax"
+
       SiteSetting.hcaptcha_site_key = "site-key"
       SiteSetting.hcaptcha_secret_key = "secret-key"
+
+      SiteSetting.recaptcha_site_key = "site-key"
+      SiteSetting.recaptcha_secret_key = "secret-key"
 
       stub_request(:post, DiscourseHcaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
         body: {
@@ -31,6 +37,7 @@ RSpec.describe "Users", type: :request do
     context "when captcha verification fails" do
       context "when using hCaptcha" do
         before do
+          SiteSetting.discourse_hcaptcha_enabled = true
           stub_request(:post, DiscourseHcaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
               secret: SiteSetting.hcaptcha_secret_key,
@@ -49,9 +56,6 @@ RSpec.describe "Users", type: :request do
       context "when using reCaptcha" do
         before do
           SiteSetting.discourse_recaptcha_enabled = true
-          SiteSetting.discourse_hcaptcha_enabled = false
-          SiteSetting.recaptcha_site_key = "site-key"
-          SiteSetting.recaptcha_secret_key = "secret-key"
 
           stub_request(:post, DiscourseHcaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
@@ -71,10 +75,7 @@ RSpec.describe "Users", type: :request do
 
     context "when captcha token is missing" do
       context "when using hCaptcha" do
-        before do
-          SiteSetting.discourse_hcaptcha_enabled = true
-          SiteSetting.discourse_recaptcha_enabled = false
-        end
+        before { SiteSetting.discourse_hcaptcha_enabled = true }
 
         it "fails registration" do
           post "/u.json", params: user_params
@@ -83,12 +84,7 @@ RSpec.describe "Users", type: :request do
       end
 
       context "when using reCaptcha" do
-        before do
-          SiteSetting.discourse_recaptcha_enabled = true
-          SiteSetting.discourse_hcaptcha_enabled = false
-          SiteSetting.recaptcha_site_key = "site-key"
-          SiteSetting.recaptcha_secret_key = "secret-key"
-        end
+        before { SiteSetting.discourse_recaptcha_enabled = true }
 
         it "fails registration" do
           post "/u.json", params: user_params
@@ -101,7 +97,6 @@ RSpec.describe "Users", type: :request do
       context "when using hCaptcha" do
         before do
           SiteSetting.discourse_hcaptcha_enabled = true
-          SiteSetting.discourse_recaptcha_enabled = false
 
           stub_request(:post, DiscourseHcaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
@@ -114,16 +109,15 @@ RSpec.describe "Users", type: :request do
         it "succeeds in registration" do
           post "/captcha/hcaptcha/create.json", params: { token: "token-from-hCaptcha" }
           post "/u.json", params: user_params
+
           expect(JSON.parse(response.body)["success"]).to be(true)
         end
       end
 
       context "when using reCaptcha" do
         before do
-          SiteSetting.discourse_recaptcha_enabled = true
           SiteSetting.discourse_hcaptcha_enabled = false
-          SiteSetting.recaptcha_site_key = "site-key"
-          SiteSetting.recaptcha_secret_key = "secret-key"
+          SiteSetting.discourse_recaptcha_enabled = true
 
           stub_request(:post, DiscourseHcaptcha::RecaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
             body: {
@@ -136,16 +130,21 @@ RSpec.describe "Users", type: :request do
         it "succeeds in registration" do
           post "/captcha/recaptcha/create.json", params: { token: "token-from-reCaptcha" }
           post "/u.json", params: user_params
+
           expect(JSON.parse(response.body)["success"]).to be(true)
         end
       end
 
       context "when site is login-required" do
-        before { SiteSetting.login_required = true }
+        before do
+          SiteSetting.login_required = true
+          SiteSetting.discourse_hcaptcha_enabled = true
+        end
 
         it "succeeds in registration" do
           post "/captcha/hcaptcha/create.json", params: { token: "token-from-hCaptcha" }
           post "/u.json", params: user_params
+
           expect(JSON.parse(response.body)["success"]).to be(true)
         end
       end
@@ -153,6 +152,7 @@ RSpec.describe "Users", type: :request do
 
     context "when captcha is disabled" do
       before do
+        SiteSetting.discourse_captcha_enabled = false
         SiteSetting.discourse_hcaptcha_enabled = false
         SiteSetting.discourse_recaptcha_enabled = false
       end

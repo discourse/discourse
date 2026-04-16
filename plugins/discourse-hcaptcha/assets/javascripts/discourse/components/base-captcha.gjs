@@ -9,7 +9,7 @@ export default class BaseCaptcha extends Component {
   @service captchaService;
 
   @tracked widgetId;
-  @tracked configError = "";
+  @tracked captchaError = "";
 
   siteKey = this.args.siteKey;
   captchaApi;
@@ -44,7 +44,7 @@ export default class BaseCaptcha extends Component {
 
   renderCaptcha() {
     if (!this.isCaptchaLoaded || !this.siteKey) {
-      this.configError = i18n(this.configErrorKey);
+      this.captchaError = i18n(this.captchaErrorKey);
       return;
     }
 
@@ -63,14 +63,16 @@ export default class BaseCaptcha extends Component {
   }
 
   async loadCaptchaScript() {
+    throw new Error("Subclasses must implement 'loadCaptchaScript'");
+  }
+
+  get captchaErrorKey() {
     return "discourse_captcha.contact_system_administrator";
   }
 
-  get configErrorKey() {
-    return "discourse_captcha.contact_system_administrator";
+  get scriptUrl() {
+    throw new Error("Subclasses must implement 'scriptUrl'");
   }
-
-  get scriptUrl() {}
 
   get captchaApiName() {
     throw new Error("Subclasses must implement 'captchaApiName'");
@@ -87,9 +89,9 @@ export default class BaseCaptcha extends Component {
       data-sitekey={{@siteKey}}
     ></div>
 
-    {{#if this.configError}}
+    {{#if this.captchaError}}
       <div class="alert alert-error">
-        {{this.configError}}
+        {{this.captchaError}}
       </div>
     {{/if}}
 

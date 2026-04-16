@@ -10,10 +10,11 @@ en:
         discourse_hcaptcha: "hCaptcha Plugin"
 
   site_settings:
-    discourse_hcaptcha_enabled: "Enable the hCaptcha Plugin. Requires <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account."
+    discourse_captcha_enabled: "Enable captcha verification for new user registrations. Requires configuring either hCaptcha or reCaptcha below."
+    discourse_hcaptcha_enabled: "Enable the hCaptcha provider. Requires <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account."
     hcaptcha_site_key: "hCaptcha Site Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
     hcaptcha_secret_key: "hCaptcha Secret Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
-    discourse_recaptcha_enabled: "Enable captcha providing service reCaptcha"
+    discourse_recaptcha_enabled: "Enable the reCaptcha provider. Requires <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account."
     recaptcha_site_key: "ReCaptcha Site Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account"
     recaptcha_secret_key: "ReCaptcha Secret Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account"
 

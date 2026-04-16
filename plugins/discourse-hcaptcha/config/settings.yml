@@ -1,4 +1,7 @@
 discourse_hcaptcha:
+  discourse_captcha_enabled:
+    default: false
+    client: true
   discourse_hcaptcha_enabled:
     default: false
     client: true

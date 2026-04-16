@@ -10,14 +10,15 @@ export default class HCaptcha extends BaseCaptcha {
     return "h-captcha-field";
   }
 
-  get configErrorKey() {
-    return "discourse_captcha.contact_system_administrator";
-  }
-
   async loadCaptchaScript() {
-    await loadScript(this.scriptUrl);
-
-    this.captchaApi = window.hcaptcha;
-    this.renderCaptcha(this.siteKey);
+    try {
+      await loadScript(this.scriptUrl);
+      this.captchaApi = window.hcaptcha;
+      this.renderCaptcha(this.siteKey);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to load hCaptcha script:", error);
+      this.captchaError = this.captchaErrorKey;
+    }
   }
 }

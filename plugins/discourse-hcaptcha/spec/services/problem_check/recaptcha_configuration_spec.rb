@@ -16,7 +16,10 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
   end
 
   context "when discourse_recaptcha_enabled siteSetting is true" do
-    before { SiteSetting.discourse_recaptcha_enabled = true }
+    before do
+      SiteSetting.discourse_captcha_enabled = true
+      SiteSetting.discourse_recaptcha_enabled = true
+    end
 
     describe "`recaptcha_site_key` is not set" do
       before { SiteSetting.recaptcha_secret_key = "just a string" }

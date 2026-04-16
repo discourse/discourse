@@ -4,8 +4,10 @@ class ProblemCheck::RecaptchaConfiguration < ProblemCheck
   self.priority = "high"
 
   def call
-    return problem if SiteSetting.discourse_recaptcha_enabled && !recaptcha_credentials_present?
-
+    if SiteSetting.discourse_captcha_enabled && SiteSetting.discourse_recaptcha_enabled &&
+         !recaptcha_credentials_present?
+      return problem
+    end
     no_problem
   end
 
