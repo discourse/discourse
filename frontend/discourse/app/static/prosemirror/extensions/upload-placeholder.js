@@ -17,7 +17,7 @@ const extension = {
         return [
           "span",
           {
-            class: "upload-placeholder-file",
+            class: "upload-placeholder --file",
             "data-upload-id": node.attrs.fileId,
           },
           node.attrs.filename,

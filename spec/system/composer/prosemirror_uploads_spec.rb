@@ -52,7 +52,7 @@ describe "Composer - ProseMirror - Uploads" do
       attach_file("file-uploader", file_path, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_no_css(".upload-placeholder-file")
+      expect(rich).to have_no_css(".upload-placeholder.--file")
       expect(rich).to have_css("a[href]")
     end
 
@@ -76,8 +76,8 @@ describe "Composer - ProseMirror - Uploads" do
       cdp.with_slow_upload do
         attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
         expect(composer).to have_in_progress_uploads
-        expect(rich).to have_css(".upload-placeholder-image")
-        expect(rich).to have_css(".upload-placeholder-file")
+        expect(rich).to have_css(".upload-placeholder.--image")
+        expect(rich).to have_css(".upload-placeholder.--file")
       end
     end
   end
@@ -93,7 +93,7 @@ describe "Composer - ProseMirror - Uploads" do
         find("#cancel-file-upload").click
 
         expect(composer).to have_no_in_progress_uploads
-        expect(rich).to have_no_css(".upload-placeholder-image")
+        expect(rich).to have_no_css(".upload-placeholder.--image")
       end
     end
 
@@ -108,7 +108,7 @@ describe "Composer - ProseMirror - Uploads" do
         find("#cancel-file-upload").click
 
         expect(composer).to have_no_in_progress_uploads
-        expect(rich).to have_no_css(".upload-placeholder-file")
+        expect(rich).to have_no_css(".upload-placeholder.--file")
       end
     end
 
@@ -119,11 +119,11 @@ describe "Composer - ProseMirror - Uploads" do
       file_path = file_from_fixtures("large.pdf", "pdf").path
       cdp.with_slow_upload do
         attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder-file")
+        expect(rich).to have_css(".upload-placeholder.--file")
 
         find(".upload-placeholder__cancel").click
 
-        expect(rich).to have_no_css(".upload-placeholder-file")
+        expect(rich).to have_no_css(".upload-placeholder.--file")
       end
     end
 
@@ -133,11 +133,11 @@ describe "Composer - ProseMirror - Uploads" do
       file_path = file_from_fixtures("logo.png", "images").path
       cdp.with_slow_upload do
         attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder-image__overlay")
+        expect(rich).to have_css(".upload-placeholder__overlay")
 
-        find(".upload-placeholder-image__overlay .upload-placeholder__cancel").click
+        find(".upload-placeholder__overlay .upload-placeholder__cancel").click
 
-        expect(rich).to have_no_css(".upload-placeholder-image")
+        expect(rich).to have_no_css(".upload-placeholder.--image")
       end
     end
   end
@@ -149,7 +149,7 @@ describe "Composer - ProseMirror - Uploads" do
       file_path = file_from_fixtures("logo.png", "images").path
       cdp.with_slow_upload do
         attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder-image__overlay .upload-placeholder__progress")
+        expect(rich).to have_css(".upload-placeholder__overlay .upload-placeholder__progress")
       end
     end
 
@@ -160,7 +160,7 @@ describe "Composer - ProseMirror - Uploads" do
       file_path = file_from_fixtures("large.pdf", "pdf").path
       cdp.with_slow_upload do
         attach_file("file-uploader", file_path, make_visible: true)
-        expect(rich).to have_css(".upload-placeholder-file .upload-placeholder__progress")
+        expect(rich).to have_css(".upload-placeholder.--file .upload-placeholder__progress")
       end
     end
   end

@@ -14,7 +14,7 @@ export default class UploadPlaceholderNodeView extends Component {
 
   constructor() {
     super(...arguments);
-    this.args.dom?.classList.add("upload-placeholder-file");
+    this.args.dom?.classList.add("upload-placeholder", "--file");
     if (this.args.dom) {
       this.args.dom.dataset.uploadId = this.args.node.attrs.fileId;
     }

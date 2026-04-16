@@ -51,55 +51,55 @@
     font-size: var(--font-up-1-rem);
   }
 
-  .upload-placeholder-image {
-    position: relative;
-    display: inline-block;
-    vertical-align: bottom;
-
-    img {
-      max-width: 500px;
-
-      @include viewport.until(sm) {
-        max-width: 100%;
-      }
-      height: auto;
-      border-radius: var(--d-border-radius);
-      display: block;
-      animation: placeholder 1.5s infinite;
-    }
-  }
-
-  .upload-placeholder-image__overlay {
-    position: absolute;
-    bottom: var(--space-2);
-    right: var(--space-2);
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-1) 0 0.65em;
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    color: var(--primary-high);
-    font-size: var(--font-down-1-rem);
-  }
-
-  .upload-placeholder-file {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-1) 0 0.65em;
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    color: var(--primary-high);
-    font-size: var(--font-down-1-rem);
-
-    .d-icon {
-      fill: currentcolor;
-    }
-  }
-
   .upload-placeholder {
+    &.--image {
+      position: relative;
+      display: inline-block;
+      vertical-align: bottom;
+
+      img {
+        max-width: 500px;
+
+        @include viewport.until(sm) {
+          max-width: 100%;
+        }
+        height: auto;
+        border-radius: var(--d-border-radius);
+        display: block;
+        animation: placeholder 1.5s infinite;
+      }
+    }
+
+    &.--file {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0 var(--space-1) 0 0.65em;
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
+
+      .d-icon {
+        fill: currentcolor;
+      }
+    }
+
+    &__overlay {
+      position: absolute;
+      bottom: var(--space-2);
+      right: var(--space-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0 var(--space-1) 0 0.65em;
+      background: var(--primary-very-low);
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
+    }
+
     &__progress {
       color: var(--tertiary);
       font-weight: bold;

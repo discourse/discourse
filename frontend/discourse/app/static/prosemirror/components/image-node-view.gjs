@@ -15,7 +15,7 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input";
 
-const PLACEHOLDER_CLASS = "upload-placeholder-image";
+const PLACEHOLDER_CLASSES = ["upload-placeholder", "--image"];
 
 const MIN_SCALE = 50;
 const MAX_SCALE = 100;
@@ -106,7 +106,7 @@ export default class ImageNodeView extends Component {
 
     if (this.isPlaceholder) {
       const fileId = this.args.node.attrs.title;
-      this.args.dom.classList.add(PLACEHOLDER_CLASS);
+      this.args.dom.classList.add(...PLACEHOLDER_CLASSES);
       this.args.dom.dataset.uploadId = fileId;
       this.#progressEvent = `composer:upload-progress:${fileId}`;
       this.appEvents.on(this.#progressEvent, this, this.onUploadProgress);
@@ -647,7 +647,7 @@ export default class ImageNodeView extends Component {
       {{on "click" this.handleImageClick}}
     />
     {{#if this.isPlaceholder}}
-      <span class="upload-placeholder-image__overlay">
+      <span class="upload-placeholder__overlay">
         <span
           class="upload-placeholder__progress"
         >{{this.uploadProgress}}%</span>
