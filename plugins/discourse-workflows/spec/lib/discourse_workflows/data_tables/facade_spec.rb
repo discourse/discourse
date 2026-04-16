@@ -46,6 +46,13 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
     )
   end
 
+  let!(:row_4) do
+    insert_data_table_row(
+      data_table,
+      { "email" => "50%off@example.com", "score" => 50, "active" => true },
+    )
+  end
+
   def build_query(
     filter: nil,
     limit: nil,
@@ -304,6 +311,22 @@ RSpec.describe DiscourseWorkflows::DataTables::Facade do
           )
 
         expect(result[:rows]).to be_empty
+      end
+
+      it "escapes percent in like patterns" do
+        result =
+          facade.query(
+            build_query(
+              filter: {
+                "type" => "and",
+                "filters" => [
+                  { "columnName" => "email", "condition" => "ilike", "value" => "%50%off%" },
+                ],
+              },
+            ),
+          )
+
+        expect(result[:rows].map { |r| r["id"] }).to eq([row_4["id"]])
       end
     end
 

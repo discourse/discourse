@@ -330,7 +330,7 @@ module DiscourseWorkflows
       end
 
       def escape_like_specials(value)
-        value.to_s.gsub(/[!_]/) { |match| "!#{match}" }
+        ActiveRecord::Base.sanitize_sql_like(value.to_s, "!")
       end
 
       def quoted_column(name)
