@@ -57,7 +57,6 @@
     }
   }
 
-  iframe.src = src;
   iframe.id = "discourse-embed-frame";
   iframe.width = "100%";
   iframe.frameBorder = "0";
@@ -67,7 +66,29 @@
   }
   iframe.referrerPolicy =
     DE.discourseReferrerPolicy || "no-referrer-when-downgrade";
-  comments.appendChild(iframe);
+
+  var lazyLoad = DE.fullApp && DE.lazyLoad !== false;
+
+  if (lazyLoad && "IntersectionObserver" in window) {
+    var margin = parseInt(DE.lazyLoadMargin, 10);
+    if (isNaN(margin)) {
+      margin = 1000;
+    }
+    comments.appendChild(iframe);
+    var observer = new IntersectionObserver(
+      function (entries) {
+        if (entries[0].isIntersecting) {
+          iframe.src = src;
+          observer.disconnect();
+        }
+      },
+      { rootMargin: margin + "px" }
+    );
+    observer.observe(iframe);
+  } else {
+    iframe.src = src;
+    comments.appendChild(iframe);
+  }
 
   // Thanks http://amendsoft-javascript.blogspot.ca/2010/04/find-x-and-y-coordinate-of-html-control.html
   function findPosY(obj) {
@@ -97,8 +118,19 @@
     }
 
     if (e.data) {
-      if (e.data.type === "discourse-resize" && e.data.height && !DE.fullApp) {
-        iframe.height = e.data.height + "px";
+      if (e.data.type === "discourse-resize" && e.data.height) {
+        if (DE.fullApp && !DE.dynamicHeight) {
+          return;
+        }
+
+        var height = e.data.height;
+        if (DE.embedMinHeight) {
+          height = Math.max(height, parseInt(DE.embedMinHeight, 10));
+        }
+        if (DE.embedMaxHeight) {
+          height = Math.min(height, parseInt(DE.embedMaxHeight, 10));
+        }
+        iframe.height = height + "px";
       }
 
       if (e.data.type === "discourse-scroll" && e.data.top) {

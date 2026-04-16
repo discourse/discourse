@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DModal from "discourse/components/d-modal";
+import { buildPermanentlyDeleteConfirmDialogArgs } from "discourse/components/dialog-messages/permanently-delete-confirm";
 import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
@@ -336,14 +337,18 @@ export default class History extends Component {
 
   @action
   permanentlyDeleteVersions() {
-    this.dialog.yesNoConfirm({
-      message: i18n("post.revisions.controls.destroy_confirm"),
-      didConfirm: () => {
-        Post.permanentlyDeleteRevisions(this.postRevision?.post_id).then(() => {
-          this.args.closeModal();
-        });
-      },
-    });
+    const postId = this.postRevision?.post_id;
+    this.args.closeModal();
+
+    this.dialog.confirm(
+      buildPermanentlyDeleteConfirmDialogArgs(
+        i18n("post.revisions.controls.destroy_confirm"),
+        i18n("post.controls.permanently_delete_confirm_phrase"),
+        () => {
+          Post.permanentlyDeleteRevisions(postId);
+        }
+      )
+    );
   }
 
   @action

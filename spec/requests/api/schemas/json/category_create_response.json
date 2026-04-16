@@ -218,6 +218,12 @@
                 "null"
               ]
             },
+            "nested_replies_default": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
             "topic_posting_review_mode": {
               "type": "string"
             },

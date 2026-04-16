@@ -144,10 +144,16 @@ export default class SiteSetting extends EmberObject {
   }
 
   get requiresConfirmation() {
-    return (
-      this.requires_confirmation ===
-      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
-    );
+    switch (this.requires_confirmation) {
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple:
+        return true;
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple_on_enable: {
+        const val = this.buffered?.get("value");
+        return val === true || val === "true";
+      }
+      default:
+        return false;
+    }
   }
 
   get requiresReload() {

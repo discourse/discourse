@@ -5,6 +5,7 @@ import {
   trackNextAjaxAsTopicView,
 } from "discourse/lib/ajax";
 import { sendBeaconPageview } from "discourse/lib/beacon-pageview";
+import EmbedMode from "discourse/lib/embed-mode";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
@@ -41,11 +42,16 @@ export default {
 
     startPageTracking(router, appEvents, documentTitle);
 
+    const isEmbedded = EmbedMode.enabled;
+
     // Out of the box, Discourse tries to track google analytics
     // if it is present
     if (typeof window._gaq !== "undefined") {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
+          if (isEmbedded) {
+            window._gaq.push(["_setCustomVar", 1, "embed_mode", "true", 3]);
+          }
           window._gaq.push(["_set", "title", data.title]);
           window._gaq.push(["_trackPageview", data.url]);
         }
@@ -60,7 +66,11 @@ export default {
     ) {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
-          window.ga("send", "pageview", { page: data.url, title: data.title });
+          let gaFields = { page: data.url, title: data.title };
+          if (isEmbedded) {
+            gaFields.dimension1 = "embed";
+          }
+          window.ga("send", "pageview", gaFields);
         }
       });
     }
@@ -72,6 +82,7 @@ export default {
           window.gtag("event", "page_view", {
             page_location: data.url,
             page_title: data.title,
+            embed_mode: isEmbedded || undefined,
           });
         }
       });
@@ -81,6 +92,9 @@ export default {
     if (typeof window.dataLayer !== "undefined") {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
+          if (isEmbedded) {
+            data = Object.assign({}, data, { embed_mode: true });
+          }
           googleTagManagerPageChanged(data);
         }
       });

@@ -114,11 +114,11 @@ class Tags::Search
     context[:forbidden_message] = nil
   end
 
-  def append_disabled_tags(params:, tags:, guardian:)
+  def append_disabled_tags(params:, category:, tags:, guardian:)
     selected_ids = params.resolved_selected_tag_ids
     skip_ids = tags.map { |t| t[:id] } | selected_ids
 
-    excluded_tags =
+    candidate_tags =
       DiscourseTagging
         .filter_visible(
           Tag.where("position(LOWER(?) IN LOWER(tags.name)) <> 0", params.term),
@@ -126,6 +126,11 @@ class Tags::Search
         )
         .where.not(id: skip_ids)
         .limit(SiteSetting.max_tag_search_results)
+        .to_a
+
+    return if candidate_tags.empty?
+
+    excluded_tags = reject_allowed_tags(candidate_tags, params:, category:, tags:, guardian:)
 
     disabled =
       excluded_tags.map do |tag|
@@ -136,11 +141,12 @@ class Tags::Search
     context[:tags] = tags.concat(disabled) if disabled.present?
   end
 
-  def detect_forbidden_tag(params:, tags:, guardian:)
+  def detect_forbidden_tag(params:, category:, tags:, guardian:)
     return if tags.any? { |h| h[:name].downcase == params.term.downcase }
 
     tag = Tag.where_name(params.term).first
     return unless tag && guardian.can_see_tag?(tag)
+    return if reject_allowed_tags([tag], params:, category:, tags:, guardian:).empty?
 
     context[:forbidden] = params.q
     context[:forbidden_message] = explain_exclusion(
@@ -149,6 +155,23 @@ class Tags::Search
       params.resolved_selected_tag_ids,
       guardian,
     )
+  end
+
+  def reject_allowed_tags(candidates, params:, category:, tags:, guardian:)
+    return candidates unless params.capped_limit && tags.size >= params.capped_limit
+
+    only_tag_names = candidates.map(&:name)
+
+    allowed_names =
+      DiscourseTagging
+        .filter_allowed_tags(
+          guardian,
+          **params.filter_options.merge(category:, only_tag_names:, limit: nil),
+        )
+        .map(&:name)
+        .to_set
+
+    candidates.reject { |tag| allowed_names.include?(tag.name) }
   end
 
   def explain_exclusion(tag, params, selected_ids, guardian)

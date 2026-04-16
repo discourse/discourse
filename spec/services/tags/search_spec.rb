@@ -117,7 +117,7 @@ RSpec.describe(Tags::Search) do
       fab!(:parent_tag) { Fabricate(:tag, name: "parent") }
       fab!(:child_tag) { Fabricate(:tag, name: "childtag") }
       fab!(:tag_group) do
-        Fabricate(:tag_group, name: "Child Group", parent_tag: parent_tag, tags: [child_tag])
+        Fabricate(:tag_group, name: "Child Group", parent_tag:, tags: [child_tag])
       end
 
       let(:params) { { q: "childtag", filterForInput: true } }
@@ -139,7 +139,7 @@ RSpec.describe(Tags::Search) do
       fab!(:category)
       fab!(:restricted_tag) { Fabricate(:tag, name: "restricted") }
 
-      before { CategoryTag.create!(category: category, tag: restricted_tag) }
+      before { CategoryTag.create!(category:, tag: restricted_tag) }
 
       let(:params) { { q: "restricted", filterForInput: true } }
 
@@ -156,9 +156,34 @@ RSpec.describe(Tags::Search) do
       end
     end
 
+    context "when allowed tags are cut off by the limit" do
+      fab!(:tag_foo1) { Fabricate(:tag, name: "foomatch1") }
+      fab!(:tag_foo2) { Fabricate(:tag, name: "foomatch2") }
+
+      let(:params) { { q: "foomatch", filterForInput: true, limit: 1 } }
+
+      it "does not mislabel allowed tags as disabled" do
+        disabled = result[:tags].select { |t| t[:disabled] }
+        expect(disabled).to be_empty
+      end
+    end
+
+    context "when an exact-match allowed tag is cut off by the limit" do
+      fab!(:tag_exact) { Fabricate(:tag, name: "exacthit") }
+      fab!(:tag_noise1) { Fabricate(:tag, name: "aexacthit") }
+      fab!(:tag_noise2) { Fabricate(:tag, name: "bexacthit") }
+
+      let(:params) { { q: "exacthit", filterForInput: true, limit: 1 } }
+
+      it "does not mark an allowed tag as forbidden" do
+        expect(result[:forbidden]).to be_nil
+        expect(result[:forbidden_message]).to be_nil
+      end
+    end
+
     context "when a forbidden tag is detected" do
       fab!(:target_tag) { Fabricate(:tag, name: "maintag") }
-      fab!(:synonym_tag) { Fabricate(:tag, name: "syntag", target_tag: target_tag) }
+      fab!(:synonym_tag) { Fabricate(:tag, name: "syntag", target_tag:) }
 
       let(:params) { { q: "syntag", excludeSynonyms: true } }
 
