@@ -20,20 +20,16 @@ module DiscourseWorkflows
       stale_trigger_nodes.each do |workflow, node|
         hours = (node.dig("configuration", "hours") || 24).to_i.clamp(1..)
         threshold = hours.hours.ago
-        triggered_ids =
-          Set.new(DiscourseWorkflows::TriggerTracking.triggered_topic_ids(workflow, node["id"]))
+        tracked_ids = DiscourseWorkflows::TriggerTracking.triggered_topic_ids(workflow, node["id"])
 
-        current_stale_ids =
-          Topic
-            .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
-            .where(closed: false, archived: false, deleted_at: nil, visible: true)
-            .where("topics.archetype = ?", Archetype.default)
+        newly_stale_ids =
+          stale_topics_scope(threshold)
+            .where.not(id: tracked_ids)
+            .limit(MAX_TOPICS_PER_CYCLE)
             .pluck(:id)
 
-        newly_stale_ids = current_stale_ids.reject { |id| triggered_ids.include?(id) }
-
         Topic
-          .where(id: newly_stale_ids.first(MAX_TOPICS_PER_CYCLE))
+          .where(id: newly_stale_ids)
           .each do |topic|
             trigger = DiscourseWorkflows::Nodes::StaleTopic::V1.new(topic)
 
@@ -45,12 +41,26 @@ module DiscourseWorkflows
             )
           end
 
+        still_tracked =
+          if tracked_ids.any?
+            stale_topics_scope(threshold).where(id: tracked_ids).pluck(:id)
+          else
+            []
+          end
+
         DiscourseWorkflows::TriggerTracking.replace_triggered_topic_ids!(
           workflow,
           node["id"],
-          current_stale_ids,
+          still_tracked + newly_stale_ids,
         )
       end
+    end
+
+    def stale_topics_scope(threshold)
+      Topic
+        .where("GREATEST(topics.created_at, topics.last_posted_at) < ?", threshold)
+        .where(closed: false, archived: false, deleted_at: nil, visible: true)
+        .where("topics.archetype = ?", Archetype.default)
     end
   end
 end

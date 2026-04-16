@@ -125,5 +125,28 @@ RSpec.describe DiscourseWorkflows::Execution::CheckStaleTopics do
         expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(0)
       end
     end
+
+    context "when there are more stale topics than MAX_TOPICS_PER_CYCLE" do
+      fab!(:topic_2) { Fabricate(:topic, created_at: 48.hours.ago, last_posted_at: 48.hours.ago) }
+      fab!(:topic_3) { Fabricate(:topic, created_at: 48.hours.ago, last_posted_at: 48.hours.ago) }
+
+      it "only enqueues up to the limit and does not track the remainder" do
+        stub_const(described_class, "MAX_TOPICS_PER_CYCLE", 2) do
+          result
+
+          expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(2)
+
+          workflow.reload
+          tracked = DiscourseWorkflows::TriggerTracking.triggered_topic_ids(workflow, "trigger-1")
+          expect(tracked.size).to eq(2)
+
+          enqueued_ids =
+            Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |j|
+              j["args"].first["trigger_data"]["topic"]["id"]
+            end
+          expect(tracked).to match_array(enqueued_ids)
+        end
+      end
+    end
   end
 end
