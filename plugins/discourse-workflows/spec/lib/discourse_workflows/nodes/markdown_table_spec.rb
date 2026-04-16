@@ -37,10 +37,7 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
           expression: false,
         },
       )
-      expect(schema.dig(:columns, :item_schema, :value)).to include(
-        type: :string,
-        required: true,
-      )
+      expect(schema.dig(:columns, :item_schema, :value)).to include(type: :string, required: true)
     end
   end
 
@@ -86,15 +83,7 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
     end
 
     it "renders nil cells as empty and stringifies scalars" do
-      items = [
-        {
-          "json" => {
-            "maybe_nil" => nil,
-            "int_val" => 42,
-            "bool_val" => true,
-          },
-        },
-      ]
+      items = [{ "json" => { "maybe_nil" => nil, "int_val" => 42, "bool_val" => true } }]
       config = {
         "columns" => [
           { "header" => "Nil", "value" => "={{ $json.maybe_nil }}" },
