@@ -1,0 +1,204 @@
+.docked-composer {
+  --docked-composer-input-min-height: 2.5em;
+  --docked-composer-max-width: 100%;
+  --docked-composer-content-offset: 0;
+  --docked-composer-drag-offset: 0px;
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
+  background: var(--secondary);
+  padding: 0.75em 0 max(env(safe-area-inset-bottom), 0.75em);
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
+  // fade scrolling content into the sticky composer's solid background
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -2.5em;
+    height: 2.5em;
+    background: linear-gradient(to bottom, transparent, var(--secondary));
+    pointer-events: none;
+  }
+
+  html.keyboard-visible & {
+    padding-bottom: 0.5em;
+  }
+
+  &__resize-handle {
+    width: 100%;
+    max-width: var(--docked-composer-max-width);
+    padding-left: var(--docked-composer-content-offset);
+    margin: 0 auto;
+    box-sizing: border-box;
+    height: 0.5em;
+    cursor: ns-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+
+    &::after {
+      content: "";
+      width: 2em;
+      height: 3px;
+      background: var(--primary-low);
+      border-radius: 3px;
+      transition: background 0.15s ease-in-out;
+    }
+
+    &:hover::after,
+    &:active::after,
+    &:focus-visible::after {
+      background: var(--primary-medium);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__inner {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5em;
+    width: 100%;
+    max-width: var(--docked-composer-max-width);
+    padding-left: var(--docked-composer-content-offset);
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  &__editor {
+    flex: 1 1 auto;
+    min-width: 0;
+    position: relative;
+
+    .d-editor-container {
+      background: transparent;
+    }
+
+    .d-editor-textarea-column {
+      position: relative;
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-input-border-radius);
+      background: var(--d-input-bg-color);
+      transition: border-color 0.15s ease-in-out;
+
+      &:focus-within {
+        border-color: var(--tertiary);
+      }
+
+      &:has(.d-editor-input[disabled]) {
+        background: var(--d-input-bg-color--disabled);
+      }
+    }
+
+    // we deliberately don't show the preview in the docked composer — users
+    // can toggle to the rich editor via the toolbar's RTE switch for a
+    // live preview. `@processPreview={{false}}` on DEditor skips cooking,
+    // but DEditor still renders a wrapper element that we hide here.
+    .d-editor-preview-wrapper {
+      display: none;
+    }
+
+    .d-editor-textarea-wrapper {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .d-editor-input {
+      border: none;
+      background: transparent;
+      max-height: 70vh;
+      min-height: calc(
+        var(--docked-composer-input-min-height) +
+          var(--docked-composer-drag-offset, 0px)
+      );
+      resize: none;
+
+      // reserve room for the absolutely-positioned send button
+      padding-right: 3.5em;
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+
+  // submit button yielded into DEditor's textarea column, positioned in
+  // the bottom-right corner of the input box (ChatGPT-style) — icon only.
+  // Consumers overriding the `<:submit>` block should reuse this class so
+  // their buttons inherit positioning + chrome.
+  &__submit-btn.btn {
+    position: absolute;
+    right: 0.5em;
+    bottom: 0.5em;
+    z-index: 2;
+    min-width: auto;
+    min-height: auto;
+    padding: 0.35em 0.5em;
+    border-radius: var(--d-button-border-radius);
+    background: transparent !important;
+
+    .d-icon {
+      color: var(--tertiary) !important;
+      font-size: var(--font-up-1);
+    }
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background: var(--primary-very-low) !important;
+
+      .d-icon {
+        color: var(--tertiary-hover, var(--tertiary)) !important;
+      }
+    }
+
+    &:disabled,
+    &[disabled] {
+      cursor: not-allowed;
+
+      .d-icon {
+        color: var(--primary-low-mid) !important;
+      }
+    }
+  }
+
+  &__uploads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    width: 100%;
+    max-width: var(--docked-composer-max-width);
+    padding-left: var(--docked-composer-content-offset);
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  &__upload {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--primary-low);
+    border-radius: 10em;
+    padding-left: 0.75em;
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
+
+    &-progress {
+      margin-left: 0.5em;
+    }
+
+    &-remove:hover .d-icon,
+    &-cancel:hover .d-icon {
+      color: var(--danger);
+    }
+  }
+}
