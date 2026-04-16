@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -30,12 +31,30 @@ export function buildPermanentlyDeleteConfirmDialogArgs(
 export default class PermanentlyDeleteConfirm extends Component {
   @service dialog;
 
+  @tracked inputtedConfirmPhrase;
+
+  confirmPhrase = this.args.model.confirmPhrase.trim().toLocaleLowerCase();
+  originalDialogClass = this.dialog.class;
+
   @action
   onInput(event) {
+    this.inputtedConfirmPhrase = event.target.value.trim().toLocaleLowerCase();
+
     this.dialog.set(
       "confirmButtonDisabled",
-      event.target.value.trim().toLocaleLowerCase() !==
-        this.args.model.confirmPhrase.trim().toLocaleLowerCase()
+      this.inputtedConfirmPhrase !== this.confirmPhrase
+    );
+
+    if (this.showEasterEgg) {
+      this.dialog.set("class", this.dialog.class + " --fire-easter-egg-dialog");
+    } else {
+      this.dialog.set("class", this.originalDialogClass);
+    }
+  }
+
+  get showEasterEgg() {
+    return (
+      this.inputtedConfirmPhrase === this.confirmPhrase + " below to confirm"
     );
   }
 
@@ -51,10 +70,16 @@ export default class PermanentlyDeleteConfirm extends Component {
         }}</span>
       <input
         {{on "input" this.onInput}}
+        name="confirmationPhrase"
         type="text"
         class="confirmation-phrase"
         placeholder={{@model.confirmPhrase}}
       />
+
+      {{#if this.showEasterEgg}}
+        Comedian, eh?
+        <div class="fire-easter-egg"></div>
+      {{/if}}
     </div>
   </template>
 }
