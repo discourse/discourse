@@ -47,11 +47,7 @@ export default class Layout extends Component {
         <PluginOutlet
           @name="discovery-list-controls-above"
           @connectorTagName="div"
-          @outletArgs={{lazyHash
-            category=@model.category
-            tag=@model.tag
-            toggleTagInfo=@toggleTagInfo
-          }}
+          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
         />
         <div class="list-controls">
           <PluginOutlet

@@ -1,8 +1,17 @@
+@use "lib/viewport";
+
 .form-kit__field {
   .form-kit__container-content {
     align-items: flex-start;
     flex-direction: column;
     width: var(--form-kit-medium-input);
+  }
+
+  @include viewport.until(sm) {
+    .form-kit__container-content,
+    .form-kit__container {
+      width: 100% !important;
+    }
   }
 
   &.--full {

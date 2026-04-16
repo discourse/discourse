@@ -1,5 +1,6 @@
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { escapeMarkdownCharacters } from "discourse/lib/markdown-image-builder";
 import { humanizeList } from "discourse/lib/text";
 import { capabilities } from "discourse/services/capabilities";
 import I18n, { i18n } from "discourse-i18n";
@@ -284,7 +285,7 @@ function markdownNameFromFileName(fileName) {
     name = i18n("upload_selector.default_image_alt_text");
   }
 
-  return name.replace(/\[|\]|\|/g, "");
+  return escapeMarkdownCharacters(name);
 }
 
 function imageMarkdown(upload) {
@@ -300,7 +301,7 @@ function playableMediaMarkdown(upload, type) {
 }
 
 function attachmentMarkdown(upload) {
-  return `[${upload.original_filename}|attachment](${
+  return `[${escapeMarkdownCharacters(upload.original_filename)}|attachment](${
     upload.short_url
   }) (${I18n.toHumanSize(upload.filesize)})`;
 }

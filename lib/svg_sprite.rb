@@ -71,6 +71,7 @@ module SvgSprite
         cloud-arrow-down
         cloud-arrow-up
         code
+        code-branch
         comment
         compress
         copy
@@ -109,6 +110,7 @@ module SvgSprite
         ellipsis
         ellipsis-vertical
         envelope
+        expand
         eye
         eye-dropper
         eye-slash

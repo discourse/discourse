@@ -37,6 +37,16 @@ $github-hover: color.adjust($github, $lightness: 20%) !default;
 $discord: #7289da !default;
 $discord-hover: color.adjust($discord, $lightness: -10%) !default;
 
+// Discourse brand colors (used in wizard, omniauth confirm, etc.)
+$discourse-brand: #7b5fe2 !default;
+$discourse-brand-100: #f4f2fc !default;
+$discourse-brand-300: #b8a4ff !default;
+$discourse-brand-400: #8b6df8 !default;
+$discourse-brand-800: #3a275e !default;
+$discourse-brand-light: #e1d5ff !default;
+$discourse-bg-light: #f9f8fc !default;
+$discourse-bg-dark: #02030a !default;
+
 // Badge color variables
 // --------------------------------------------------
 

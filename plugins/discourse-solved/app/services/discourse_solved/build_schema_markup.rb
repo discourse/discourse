@@ -14,6 +14,7 @@ class DiscourseSolved::BuildSchemaMarkup
   policy :schema_markup_enabled
   model :accepted_answer, optional: true
   model :suggested_answers, optional: true
+  policy :has_answers
   model :html
 
   private
@@ -30,8 +31,13 @@ class DiscourseSolved::BuildSchemaMarkup
     DiscourseSolved::SchemaUtils.schema_markup_enabled?(topic)
   end
 
+  def has_answers(accepted_answer:, suggested_answers:)
+    accepted_answer.present? || suggested_answers.present?
+  end
+
   def fetch_accepted_answer(topic:)
-    topic.solved&.answer_post
+    post = topic.solved&.answer_post
+    post if post.present? && Guardian.new.can_see_post?(post)
   end
 
   def fetch_suggested_answers(params:, topic:, accepted_answer:)

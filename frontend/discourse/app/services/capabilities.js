@@ -13,7 +13,10 @@ const anyPointerCoarseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
 
 let siteInitialized = false;
 
-class Capabilities {
+/**
+ * @typedef {_Capabilities} Capabilities
+ */
+class _Capabilities {
   isAndroid = ua.includes("Android");
   isWinphone = ua.includes("Windows Phone");
   isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
@@ -135,7 +138,7 @@ class Capabilities {
   }
 }
 
-export const capabilities = new Capabilities();
+export const capabilities = new _Capabilities();
 
 export default class CapabilitiesServiceShim {
   static isServiceFactory = true;

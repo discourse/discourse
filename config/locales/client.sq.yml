@@ -388,8 +388,6 @@ sq:
           other: "Krijuar %{count} vite më parë"
     bookmarked:
       title: "Të preferuarat"
-      edit_bookmark: "Redakto Shënuesin"
-      clear_bookmarks: "Pastro të preferuarat"
       help:
         bookmark: "Klikoni për të ruajtur këtë temë"
         edit_bookmark: "Klikoni për të modifikuar faqeshënuesin në një postim në këtë temë"
@@ -406,12 +404,12 @@ sq:
       create: "Krijo faqeshënues"
       edit: "Redakto faqeshënuesin"
       not_bookmarked: "shto postimin tek të preferuarat"
+      topic_bookmark: "Topic"
       remove_reminder_keep_bookmark: "Hiqni rikujtuesin dhe mbani faqeshënuesin"
       created_with_reminder: "Ju e keni shënuar këtë postim me një rikujtues %{date}. %{name}"
       created_with_reminder_generic: "Ju e keni shënuar këtë me një rikujtues %{date}. %{name}"
       delete: "Fshini faqeshënuesin"
       confirm_delete: "A jeni të sigurt që dëshironi të fshini këtë faqeshënues? Rikujtuesi gjithashtu do të fshihet."
-      confirm_clear: "A jeni të sigurt që dëshironi të hiqni të gjithë faqeshënuesit tuaj nga kjo temë?"
       save: "Ruaj"
       no_timezone: 'Nuk keni vendosur ende një zonë kohore. Nuk do të mund të vendosni rikujtues. Vendosni një <a href="%{basePath}/my/preferences/profile">në profilin tuaj</a>.'
       invalid_custom_datetime: "Data dhe ora që keni dhënë është e pavlefshme, ju lutemi provoni përsëri."
@@ -3500,6 +3498,8 @@ sq:
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       review_group_name: "emri i grupit"
+      posting_review_modes:
+        everyone: "Të gjithë"
       this_year: "këtë vit"
       none_subcategory_text: "Asnjë"
       visibility:

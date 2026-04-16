@@ -30,6 +30,8 @@ class TopicsBulkAction
       relist
       dismiss_topics
       reset_bump_dates
+      pin
+      unpin
     ]
   end
 
@@ -227,6 +229,26 @@ class TopicsBulkAction
     if guardian.can_update_bumped_at?
       topics.each do |t|
         t.reset_bumped_at
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def pin
+    status = @operation[:pinned_globally] ? "pinned_globally" : "pinned"
+    topics.each do |t|
+      if guardian.can_moderate?(t)
+        t.update_status(status, true, @user, until: @operation[:pinned_until])
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def unpin
+    topics.each do |t|
+      if guardian.can_moderate?(t) && t.pinned_at
+        status = t.pinned_globally ? "pinned_globally" : "pinned"
+        t.update_status(status, false, @user)
         @changed_ids << t.id
       end
     end

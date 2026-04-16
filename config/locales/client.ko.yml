@@ -342,8 +342,6 @@ ko:
           other: "%{count}년 전에 생성됨"
     bookmarked:
       title: "북마크"
-      edit_bookmark: "북마크 편집"
-      clear_bookmarks: "북마크 지우기"
       help:
         bookmark: "이 글을 북마크하려면 클릭하세요"
         edit_bookmark: "이 글에 대한 북마크를 편집하려면 클릭하십시오."
@@ -362,11 +360,11 @@ ko:
       clear_reminder: "미리 알림 지우기"
       edit: "북마크 편집"
       not_bookmarked: "이 게시물 북마크하기"
+      topic_bookmark: "글"
       remove_reminder_keep_bookmark: "미리 알림 제거 및 북마크 유지"
       created_with_reminder: "%{date} 미리 알림과 함께 이 게시물을 북마크했습니다. %{name}"
       delete: "북마크 삭제"
       confirm_delete: "이 북마크를 삭제할까요? 미리 알림도 삭제됩니다."
-      confirm_clear: "이 글의 모든 북마크를 지우시겠습니까?"
       save: "저장"
       no_timezone: '아직 시간대를 설정하지 않아 미리 알림을 설정할 수 없습니다. <a href="%{basePath}/my/preferences/profile">프로필</a>에서 설정하세요.'
       invalid_custom_datetime: "입력한 날짜와 시간이 유효하지 않습니다. 다시 시도하세요."
@@ -3117,6 +3115,9 @@ ko:
       review_group_name: "그룹명"
       require_topic_approval: "모든 새 주제에 대해 운영자 승인 필요"
       require_reply_approval: "모든 새 댓글에 대해 운영자 승인 필요"
+      posting_review_modes:
+        everyone: "모두"
+      posting_review_groups_placeholder: "그룹 선택..."
       this_year: "올해"
       position: "카테고리 페이지에서의 위치:"
       minimum_required_tags: "주제에 필요한 최소 태그 수:"

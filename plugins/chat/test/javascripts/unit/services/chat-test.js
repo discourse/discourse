@@ -20,7 +20,7 @@ acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
     );
     sinon
       .stub(this.chatTrackingStateManager, "allChannelUrgentCount")
-      .get(() => 5);
+      .returns(5);
     sinon
       .stub(this.chatPanePendingManager, "totalPendingMessageCount")
       .get(() => 10);

@@ -285,17 +285,16 @@ et:
           all_time: "kogu aeg"
     bookmarked:
       title: "Järjehoidja"
-      clear_bookmarks: "Kustuta järjehoidjad"
       help:
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
       edit: "Muuda järjehoidjat"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
+      topic_bookmark: "Teema"
       created_with_reminder: "Olete selle postituse järjehoidjatesse lisanud meeldetuletusega %{date}. %{name}"
       delete: "Kustuta järjehoidja"
       confirm_delete: "Kas soovid selle järjehoidja kustutada? Kustutatakse ka meeldetuletus."
-      confirm_clear: "Kas soovid kindlasti sellest teemast kustutada kõik oma järjehoidjad?"
       save: "Salvesta"
       invalid_custom_datetime: "Sisestatud kuupäev ja kellaaeg on valed, palun proovi uuesti."
       list_permission_denied: "Sul pole õigusi selle kasutaja järjehoidjate vaatamiseks."
@@ -2241,6 +2240,8 @@ et:
       review_group_name: "rühma nimi"
       require_topic_approval: "Nõua moderaatori heakskiitu kõikidele uutele teemadele"
       require_reply_approval: "Nõua moderaatori heakskiitu kõikidele uutele vastustele"
+      posting_review_modes:
+        everyone: "Kõik"
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"

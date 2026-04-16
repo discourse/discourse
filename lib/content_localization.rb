@@ -6,6 +6,7 @@ class ContentLocalization
   # @param scope [Object] The serializer scope from which the method is called
   # @return [Boolean] if the cookie is set, false otherwise
   def self.show_original?(scope)
+    return true if scope&.user&.user_option&.show_original_content
     scope&.request&.cookies&.key?(SHOW_ORIGINAL_COOKIE)
   end
 

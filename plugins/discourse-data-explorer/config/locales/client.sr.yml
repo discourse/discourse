@@ -10,6 +10,8 @@ sr:
       default_query: "Подразумевано"
       or: "ili"
       create: "Kreiraj"
+      ai:
+        generate: "Generiši"
       types:
         bool:
           yes: "Da"

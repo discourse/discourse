@@ -898,6 +898,7 @@ pl_PL:
       invalid_email_in: "'%{email}' nie jest poprawnym adresem e-mail."
       email_already_used_in_group: "'%{email}' jest już używany przez grupę '%{group_name}'."
       email_already_used_in_category: "'%{email}' jest już używany przez kategorię '%{category_name}'."
+      groups_required_for_mode: "Musisz wybrać co najmniej jedną grupę dla %{setting}."
       description_incomplete: "Wpis opisujący kategorię musi mieć przynajmniej jeden paragraf."
       description_too_long:
         one: "Opis jest zbyt długi (maksymalnie %{count} znak)."
@@ -2467,6 +2468,7 @@ pl_PL:
     embed_support_markdown: "Obsługa formatowania Markdown dla osadzonych postów."
     allowed_embed_selectors: "Rozdzielana przecinkami lista elementów CSS, które są dozwolone w osadzaniu."
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
+    embed_full_app: "Włącz tryb pełnej aplikacji dla osadzonych komentarzy. Po włączeniu, osadzone komentarze załadują pełną aplikację Discourse w ramce iframe, umożliwiając użytkownikom bezpośrednią interakcję z tematami."
     embed_post_limit: "Maksymalna liczba wpisów do osadzenia."
     embed_username_required: "W celu stworzenia tematu potrzebna jest nazwa użytkownika."
     notify_about_reviewable_item_after: "Jeśli po tylu godzinach są elementy do przejrzenia, które jeszcze nie zostały sprawdzone, wyślij wiadomość do moderatorów. Ustaw na 0, aby wyłączyć."
@@ -2655,7 +2657,6 @@ pl_PL:
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
-    experimental_tag_settings_page: "Włącz dedykowaną stronę ustawień dla tagów w /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
     enable_custom_splash_screen: "Umożliwia dostosowanie ekranu powitalnego ładowania za pomocą własnego obrazu SVG. Prześlij obraz za pomocą ustawienia „obraz ekranu powitalnego”. Uwaga: może to negatywnie wpłynąć na wyniki LCP i indeksowanie Google."
     modernize_foundation_theme: "Zmiana ta wprowadza modyfikacje projektowe do motywu Foundation w Discourse."
@@ -3341,19 +3342,23 @@ pl_PL:
         Jeśli jednak post zostanie ukryty przez społeczność po raz drugi, pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject_edit_post: "Możesz edytować swój oryginalny wpis poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakieś pytania."
+    reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Możesz edytować swój oryginalny wpis poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany."
+    reviewable_queued_post_revise_and_reject_edit_topic: "Możesz edytować oryginalny wpis dotyczący Twojego tematu poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakieś pytania."
+    reviewable_queued_post_revise_and_reject_edit_topic_no_reply: "Możesz edytować oryginalny wpis dotyczący Twojego tematu poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany."
     reviewable_queued_post_revise_and_reject:
       title: "Informacje zwrotne na temat Twojego postu"
       subject_template: "Informacje zwrotne na temat Twojego postu w %{topic_title}"
       text_body_template: |
-        Cześć %{username},
+        Cześć, %{username},
 
-        Przejrzeliśmy Twój post w [%{topic_title}](%{topic_url}) i mamy dla Ciebie pewne uwagi.
+        Przejrzeliśmy Twój wpis w [%{topic_title}](%{topic_url}) i mamy dla Ciebie pewne uwagi.
 
         Powód: %{reason}
 
-        Informacja zwrotna: %{feedback}
+        Opinia: %{feedback}
 
-        Możesz edytować swój oryginalny post poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakiekolwiek pytania.
+        %{edit_instructions}
 
         --------
 
@@ -3362,20 +3367,20 @@ pl_PL:
         --------
 
         Dziękujemy,
-        moderatorzy %{site_name}
+        Moderatorzy %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Informacje zwrotne do Twojego tematu"
       subject_template: 'Opinia na temat nowego tematu zatytułowanego "%{topic_title}"'
       text_body_template: |
-        Cześć %{username},
+        Cześć, %{username},
 
-        Przejrzeliśmy Twój nowy temat zatytułowany "%{topic_title}" i mamy dla Ciebie pewne uwagi.
+        Przejrzeliśmy Twój nowy temat zatytułowany „%{topic_title}” i mamy dla Ciebie kilka uwag.
 
         Powód: %{reason}
 
         Opinia: %{feedback}
 
-        Możesz edytować oryginalny post dotyczący swojego tematu poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakiekolwiek pytania.
+        %{edit_instructions}
 
         --------
 

@@ -15,11 +15,15 @@ tr_TR:
       alt:
         solved:
           accepted_notification: "kabul edildi"
+          topic_solved_notification: "çözüldü"
     solutions: "Çözümler"
     solved:
       title: "Çözüldü"
+      notify_on_solved: "Takip ettiğim veya izlediğim bir konu çözüldüğünde bana bildirim gönder. Bu, çözüm eklenmesine izin verilen kategorilerdeki konular için geçerlidir."
       allow_accepted_answers: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
       solved_topics_auto_close_hours: "Konu çözüldü olarak işaretlendiğinde, son yanıttan (n) saat sonra otomatik olarak kapatılsın."
+      notify_on_staff_accept_solved: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
+      empty_box_on_unsolved: "Konu listesinde çözülmemiş konuların yanında boş bir onay kutusu göster"
       accept_answer: "Bu yanıtın sorunu çözüp çözmediğini seçin"
       accepted_description: "Bu, bu konu için kabul edilen çözümdür"
       has_no_accepted_answer: "Bu konunun çözümü yok"
@@ -56,8 +60,20 @@ tr_TR:
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "gönderiniz çözüm olarak işaretlendi"
+        topic_solved_title: "Konu çözüldü"
+      topic_notifications:
+        tracking:
+          description: "Birisi @adınızı etiketlediğinde, size yanıt verdiğinde veya konu çözüldüğünde bildirim alacaksınız. Bu konu için yeni yanıtların sayısı gösterilecektir."
+        watching:
+          description: "Bu konudaki her yeni yanıt ve konunun çözüldüğü zaman size bildirim gönderilecektir. Bu konu için yeni yanıtların sayısı gösterilecektir."
+      category_type_support:
+        title: "Destek"
+        not_support_type: "Dikkat! Bu kategoride gönderileri çözüm olarak işaretleme özelliğini devre dışı bıraktınız. Bu özelliği tekrar etkinleştirmek için Ayarlar sekmesinde ilgili ayarları bulabilirsiniz."
+        remove_support_type: "Destek türünü kaldır"
+        confirm_remove_support_type: "Bu kategorideki gönderileri çözüm olarak işaretleme özelliğini kaldırmak istediğinizden emin misiniz? Bu özelliği daha sonra Ayarlar sekmesinden yeniden etkinleştirebilirsiniz."
     topic_statuses:
       solved:
         help: "Bu konunun bir çözümü var"

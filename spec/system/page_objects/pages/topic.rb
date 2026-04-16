@@ -185,9 +185,21 @@ module PageObjects
           element_klass += " .grant-badge"
         when :change_owner
           element_klass += " .change-owner"
+        when :permanently_delete
+          element_klass += " .permanently-delete"
         end
 
         find(element_klass).click
+      end
+
+      def permanently_delete_post(post)
+        expand_post_actions(post)
+        expand_post_admin_actions(post)
+        click_post_admin_action_button(post, :permanently_delete)
+      end
+
+      def open_post_history(post)
+        post_by_number(post).find(".post-info.edits").click
       end
 
       def click_topic_bookmark_button
@@ -216,7 +228,7 @@ module PageObjects
 
       def has_topic_bookmarked?(topic)
         within_topic_footer_buttons do
-          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")
+          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit bookmark")
         end
       end
 
@@ -235,6 +247,31 @@ module PageObjects
       def click_reply_button
         within_topic_footer_buttons { find(".create").click }
         has_expanded_composer?
+      end
+
+      def click_floating_reply_button
+        find(".embed-floating-reply-button").click
+        has_expanded_composer?
+      end
+
+      def has_floating_reply_button?
+        has_css?(".embed-floating-reply-button")
+      end
+
+      def has_no_floating_reply_button?
+        has_no_css?(".embed-floating-reply-button")
+      end
+
+      def click_floating_timeline_button
+        find(".embed-floating-timeline-button").click
+      end
+
+      def has_floating_timeline_button?
+        has_css?(".embed-floating-timeline-button")
+      end
+
+      def has_no_floating_timeline_button?
+        has_no_css?(".embed-floating-timeline-button")
       end
 
       def has_expanded_composer?

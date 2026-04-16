@@ -213,11 +213,6 @@ export default class DiscoveryListController extends Controller {
   }
 
   @action
-  toggleTagInfo() {
-    this.toggleProperty("showTagInfo");
-  }
-
-  @action
   dismissRead(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
 

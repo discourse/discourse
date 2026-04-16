@@ -3,7 +3,6 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-//  A breadcrumb including category drop downs
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryVariables from "discourse/helpers/category-variables";
 import concatClass from "discourse/helpers/concat-class";

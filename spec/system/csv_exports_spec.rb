@@ -17,42 +17,38 @@ RSpec.describe "CSV Exports" do
       Fabricate(
         :user,
         title: "dr",
-        last_seen_at: Time.now,
-        last_posted_at: Time.now,
-        last_emailed_at: Time.now,
+        last_seen_at: Time.current,
+        last_posted_at: Time.current,
+        last_emailed_at: Time.current,
         approved: true,
-        suspended_at: Time.now,
-        suspended_till: Time.now,
-        silenced_till: Time.now,
+        suspended_at: Time.current,
+        suspended_till: Time.current,
+        silenced_till: Time.current,
         admin: true,
         moderator: true,
         staged: true,
         group_ids: [group1.id, group2.id],
       )
     end
-    let(:second_email) { "second_email@discourse.org" }
-    let(:third_email) { "third_email@discourse.org" }
 
     before do
-      user.user_emails.create!(email: second_email)
-      user.user_emails.create!(email: third_email)
+      user.user_emails.create!(email: "second_email@discourse.org")
+      user.user_emails.create!(email: "third_email@discourse.org")
 
-      user.user_stat.topics_entered = 111
-      user.user_stat.posts_read_count = 112
-      user.user_stat.time_read = 113
-      user.user_stat.topic_count = 114
-      user.user_stat.post_count = 115
-      user.user_stat.likes_given = 116
-      user.user_stat.likes_received = 117
-      user.user_stat.save!
+      user.user_stat.update!(
+        topics_entered: 111,
+        posts_read_count: 112,
+        time_read: 113,
+        topic_count: 114,
+        post_count: 115,
+        likes_given: 116,
+        likes_received: 117,
+      )
 
-      user.user_profile.location = "Tbilisi"
-      user.user_profile.website = "https://www.discourse.org"
-      user.user_profile.views = 5
-      user.user_profile.save!
+      user.user_profile.update!(location: "Tbilisi", website: "https://www.discourse.org", views: 5)
     end
 
-    xit "exports data" do
+    it "exports data" do
       visit "admin/users/list/active"
       click_button "Export"
 
@@ -61,7 +57,6 @@ RSpec.describe "CSV Exports" do
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
-      expect(exported_data.length).to be(5)
       expect(exported_data.first).to eq(
         %w[
           id
@@ -97,7 +92,7 @@ RSpec.describe "CSV Exports" do
           group_names
         ],
       )
-      expect(exported_data.last).to eq(
+      expect(exported_data.find { |row| row[0] == user.id.to_s }).to eq(
         [
           user.id.to_s,
           user.name,
@@ -118,7 +113,7 @@ RSpec.describe "CSV Exports" do
           user.moderator.to_s,
           user.ip_address.to_s,
           user.staged.to_s,
-          "#{second_email};#{third_email}",
+          "second_email@discourse.org;third_email@discourse.org",
           user.user_stat.topics_entered.to_s,
           user.user_stat.posts_read_count.to_s,
           user.user_stat.time_read.to_s,
@@ -137,7 +132,7 @@ RSpec.describe "CSV Exports" do
     end
   end
 
-  context "with stuff actions log" do
+  context "with staff actions log" do
     fab!(:user_history) do
       Fabricate(
         :user_history,
@@ -149,7 +144,7 @@ RSpec.describe "CSV Exports" do
       )
     end
 
-    xit "exports data" do
+    it "exports data" do
       visit "admin/logs/staff_action_logs"
       click_button "Export"
 
@@ -181,7 +176,7 @@ RSpec.describe "CSV Exports" do
       Fabricate(:bookmark)
     end
 
-    xit "exports the Bookmarks report" do
+    it "exports the Bookmarks report" do
       visit "admin/reports/bookmarks"
       click_button "Export"
 
@@ -192,7 +187,7 @@ RSpec.describe "CSV Exports" do
 
       expect(exported_data.length).to be(2)
       expect(exported_data.first).to eq(%w[Day Count])
-      expect(exported_data.second).to eq([Time.now.strftime("%Y-%m-%d"), "1"])
+      expect(exported_data.second).to eq([Time.current.strftime("%Y-%m-%d"), "1"])
     ensure
       csv_export_pm_page.clear_downloads
     end
@@ -202,7 +197,7 @@ RSpec.describe "CSV Exports" do
     fab!(:screened_email_1, :screened_email)
     fab!(:screened_email_2, :screened_email)
 
-    xit "exports data" do
+    it "exports data" do
       visit "admin/logs/screened_emails"
       click_button "Export"
 
@@ -215,13 +210,13 @@ RSpec.describe "CSV Exports" do
       expect(exported_data.first).to eq(
         %w[email action match_count last_match_at created_at ip_address],
       )
-      assert_export(exported_data.second, screened_email_2)
-      assert_export(exported_data.third, screened_email_1)
+      assert_exported_row(exported_data.second, screened_email_2)
+      assert_exported_row(exported_data.third, screened_email_1)
     ensure
       csv_export_pm_page.clear_downloads
     end
 
-    def assert_export(exported_email, email)
+    def assert_exported_row(exported_email, email)
       expect(exported_email).to eq(
         [
           email.email,
@@ -239,7 +234,7 @@ RSpec.describe "CSV Exports" do
     fab!(:screened_ip_1, :screened_ip_address)
     fab!(:screened_ip_2, :screened_ip_address)
 
-    xit "exports data" do
+    it "exports data" do
       visit "admin/logs/screened_ip_addresses"
       click_button "Export"
 
@@ -269,18 +264,9 @@ RSpec.describe "CSV Exports" do
   end
 
   context "with screened urls" do
-    fab!(:screened_url) do
-      Fabricate(
-        :screened_url,
-        action_type: ScreenedUrl.actions[:do_nothing],
-        match_count: 5,
-        domain: "https://discourse.org",
-        last_match_at: Time.now,
-        created_at: Time.now,
-      )
-    end
+    fab!(:screened_url) { Fabricate(:screened_url, last_match_at: Time.current) }
 
-    xit "exports data" do
+    it "exports data" do
       visit "admin/logs/screened_urls"
       click_button "Export"
 

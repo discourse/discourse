@@ -221,6 +221,22 @@ export function applyDefaultHandlers() {
     });
   });
 
+  pretender.get("/tag/:tag_id/info.json", (request) => {
+    return response({
+      tag_info: {
+        id: parseInt(request.params.tag_id, 10) || request.params.tag_id,
+        name: request.params.tag_id,
+        slug: request.params.tag_id,
+        topic_count: 0,
+        staff: false,
+        synonyms: [],
+        tag_group_names: [],
+        category_ids: [],
+      },
+      categories: [],
+    });
+  });
+
   pretender.delete("/bookmarks/:id", () => response({}));
 
   pretender.get("/tags/filter/search", (request) => {

@@ -1267,7 +1267,7 @@ el:
     backup_time_of_day: "Ώρα σε ζώνη UTC που το αντίγραφο ασφαλείας πρέπει να πραγματοποιηθεί."
     backup_with_uploads: "Συμπεριέλαβε τις μεταφορτώσεις στα αντίγραφα ασφαλείας. Απενεργοποιώντας το θα δημιουργηθούν αντίγραφα ασφαλείας μόνο για τη βάση δεδομένων."
     active_user_rate_limit_secs: "Πόσο συχνά ενημερώνουμε το 'last_seen_at' πεδίο, σε δευτερόλεπτα"
-    verbose_localization: "Εμφάνιζε εκτεταμένες συμβουλές τοπικής προσαρμογής στην διεπαφή χρήστη. "
+    verbose_localization: "Εμφάνιση εκτεταμένων συμβουλών τοπικοποίησης στη διεπαφή χρήστη"
     previous_visit_timeout_hours: "Πόσο διαρκεί μια επίσκεψη προτού τη θεωρήσουμε \"προηγούμενη\" επίσκεψη, σε ώρες"
     top_topics_formula_log_views_multiplier: "value of log views multiplier (n) in top topics formula: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "value of first post likes multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"

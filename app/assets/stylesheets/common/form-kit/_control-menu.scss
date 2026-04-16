@@ -1,18 +1,43 @@
-.form-kit__control-menu-trigger {
-  justify-content: space-between;
+@use "lib/viewport";
 
-  @include default-input;
-  width: auto;
-}
-
-.form-kit__control-menu-content {
-  .dropdown-menu {
-    min-width: 200px;
+.form-kit__control-menu {
+  @include viewport.until(sm) {
+    justify-content: space-between;
+    min-width: var(--form-kit-small-input);
   }
 
-  .dropdown-menu__item {
-    &:hover {
-      background: var(--d-hover);
+  &-trigger {
+    justify-content: space-between;
+
+    @include default-input;
+    width: auto;
+  }
+
+  &-content {
+    .dropdown-menu {
+      min-width: 200px;
+    }
+
+    .dropdown-menu__item {
+      &:hover {
+        background: var(--d-hover);
+      }
+    }
+  }
+
+  @include viewport.until(sm) {
+    &-item {
+      .btn:focus,
+      .btn:active {
+        .discourse-touch & {
+          color: var(--primary);
+          background: rgb(0, 0, 0, 0);
+        }
+      }
+
+      &:last-of-type .btn {
+        color: var(--tertiary);
+      }
     }
   }
 }

@@ -235,7 +235,8 @@ module Categories
         # This SHOULD NOT be overridden by category types.
         def configure_site_settings(category, guardian:, configuration_values: {})
           category_type_settings =
-            configuration_schema[:site_settings]&.map do |setting_name, default_value|
+            configuration_schema[:site_settings]&.map do |setting_name, config|
+              default_value = config.is_a?(Hash) ? config[:default] : config
               {
                 setting_name: setting_name.to_s,
                 value: configuration_values.fetch(setting_name.to_s, default_value),
@@ -299,18 +300,31 @@ module Categories
           end
 
           schema[:site_settings]&.each do |setting_name, target_value|
+            if target_value.is_a?(Hash)
+              default = target_value[:default]
+              custom_label = target_value[:label]
+            else
+              default = target_value
+              custom_label = nil
+            end
+
             meta = SiteSetting.setting_metadata_hash(setting_name)
-            entries[:site_settings] << {
+            depends_on = SiteSetting.type_supervisor.dependencies[setting_name.to_sym]&.first&.to_s
+            entry = {
               key: setting_name.to_s,
-              default: target_value,
+              default:,
               current: SiteSetting.public_send(setting_name),
               type: meta[:type],
-              label: meta[:humanized_name],
+              label: custom_label || meta[:humanized_name],
               description: meta[:description],
               required: false,
               show_on_create: true,
               show_on_edit: true,
             }
+            entry[:depends_on] = depends_on if depends_on
+            entry[:min] = meta[:min] if meta[:min]
+            entry[:max] = meta[:max] if meta[:max]
+            entries[:site_settings] << entry
           end
 
           schema[:category_settings]&.each do |field_name, config|

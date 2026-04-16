@@ -1,8 +1,8 @@
 import { Input } from "@ember/component";
 import { array, fn, hash } from "@ember/helper";
-import { action, set } from "@ember/object";
-import { and, empty } from "@ember/object/computed";
+import { action, computed, set } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
@@ -12,9 +12,20 @@ import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryTags extends buildCategoryPanel("tags") {
-  @empty("category.allowed_tags") allowedTagsEmpty;
-  @empty("category.allowed_tag_groups") allowedTagGroupsEmpty;
-  @and("allowedTagsEmpty", "allowedTagGroupsEmpty") disableAllowGlobalTags;
+  @computed("category.allowed_tags.length")
+  get allowedTagsEmpty() {
+    return isEmpty(this.category?.allowed_tags);
+  }
+
+  @computed("category.allowed_tag_groups.length")
+  get allowedTagGroupsEmpty() {
+    return isEmpty(this.category?.allowed_tag_groups);
+  }
+
+  @computed("allowedTagsEmpty", "allowedTagGroupsEmpty")
+  get disableAllowGlobalTags() {
+    return this.allowedTagsEmpty && this.allowedTagGroupsEmpty;
+  }
 
   @action
   onTagGroupChange(rtg, valueArray) {

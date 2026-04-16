@@ -61,16 +61,13 @@ RSpec.describe Admin::ImpersonateController do
         expect(session[:current_user_id]).to eq(admin.id)
       end
 
-      context "when using experimental impersonation feature" do
-        it "raises an invalid access error if admin is already impersonating someone" do
-          SiteSetting.impersonate_without_logout = true
-          User.any_instance.stubs(:is_impersonating).returns(true)
+      it "raises an invalid access error if admin is already impersonating someone" do
+        User.any_instance.stubs(:is_impersonating).returns(true)
 
-          post "/admin/impersonate.json", params: { username_or_email: user.username }
+        post "/admin/impersonate.json", params: { username_or_email: user.username }
 
-          expect(response.status).to eq(403)
-          expect(session[:current_user_id]).to eq(admin.id)
-        end
+        expect(response.status).to eq(403)
+        expect(session[:current_user_id]).to eq(admin.id)
       end
 
       context "with success" do
@@ -80,13 +77,15 @@ RSpec.describe Admin::ImpersonateController do
           end.to change { UserHistory.where(action: UserHistory.actions[:impersonate]).count }.by(1)
 
           expect(response.status).to eq(200)
-          expect(session[:current_user_id]).to eq(user.id)
+          expect(session[:current_user_id]).to eq(admin.id)
+          expect(admin.user_auth_tokens.last.impersonated_user_id).to eq(user.id)
         end
 
         it "also works with an email address" do
           post "/admin/impersonate.json", params: { username_or_email: user.email }
           expect(response.status).to eq(200)
-          expect(session[:current_user_id]).to eq(user.id)
+          expect(session[:current_user_id]).to eq(admin.id)
+          expect(admin.user_auth_tokens.last.impersonated_user_id).to eq(user.id)
         end
       end
     end
@@ -123,7 +122,6 @@ RSpec.describe Admin::ImpersonateController do
     before { sign_in(admin) }
 
     it "checks if experimental impersonation is allowed for the acting user" do
-      SiteSetting.impersonate_without_logout = true
       SiteSettingGroup.create!(name: "impersonate_without_logout", group_ids: "1|2")
       SiteSetting.refresh!
 
@@ -135,25 +133,13 @@ RSpec.describe Admin::ImpersonateController do
       expect(session[:current_user_id]).to eq(admin.id)
     end
 
-    it "raises a not found error when experimental impersonation is disabled" do
-      SiteSetting.impersonate_without_logout = false
-
-      delete "/admin/impersonate.json"
-
-      expect(response.status).to eq(404)
-    end
-
     it "does not pass routing constraint when current user is not impersonating" do
-      SiteSetting.impersonate_without_logout = true
-
       delete "/admin/impersonate.json"
 
       expect(response.status).to eq(404)
     end
 
     it "stops impersonating" do
-      SiteSetting.impersonate_without_logout = true
-
       post "/admin/impersonate.json", params: { username_or_email: user.username }
       delete "/admin/impersonate.json"
 

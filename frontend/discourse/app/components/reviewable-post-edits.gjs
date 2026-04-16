@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
@@ -14,7 +13,10 @@ import { i18n } from "discourse-i18n";
 export default class ReviewablePostEdits extends Component {
   @service modal;
 
-  @gt("reviewable.post_version", 1) hasEdits;
+  @computed("reviewable.post_version")
+  get hasEdits() {
+    return this.reviewable?.post_version > 1;
+  }
 
   @computed("reviewable.post_version")
   get editCount() {

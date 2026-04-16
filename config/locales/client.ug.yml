@@ -517,8 +517,6 @@ ug:
           other: "%{count} يىل ئىلگىرى قۇرۇلغان"
     bookmarked:
       title: "خەتكۈچ"
-      edit_bookmark: "خەتكۈچ تەھرىر"
-      clear_bookmarks: "خەتكۈچنى تازىلا"
       help:
         bookmark: "چېكىلسە بۇ تېمىنى خەتكۈچكە قوشىدۇ"
         edit_bookmark: "چېكىلسە بۇ تېمىدىكى يازمىنىڭ خەتكۈچىنى تەھرىرلەيدۇ"
@@ -537,12 +535,12 @@ ug:
       clear_reminder: "ئەسكەرتىشنى تازىلا"
       edit: "خەتكۈچ تەھرىر"
       not_bookmarked: "بۇ يازمىنى خەتكۈچكە قوش"
+      topic_bookmark: "تېما"
       remove_reminder_keep_bookmark: "ئەسكەرتىشنى چىقىرىۋېتىپ، خەتكۈچنى ساقلاپ قالىدۇخەتكۈچ"
       created_with_reminder: "سىز بۇ يازمىنى ئەسكەرتىشى %{date} بىلەن قوشۇپ خەتكۈچكە قوشتىڭىز. %{name}"
       created_with_reminder_generic: "سىز بۇنى ئەسكەرتىشى %{date} بىلەن قوشۇپ خەتكۈچكە قوشتىڭىز. %{name}"
       delete: "خەتكۈچنى ئۆچۈر"
       confirm_delete: "بۇ خەتكۈچنى راستىنلا ئۆچۈرەمسىز؟ بۇ ئەسكەرتىشمۇ قوشۇپ ئۆچۈرۈلىدۇ."
-      confirm_clear: "بۇ تېمىدىن بارلىق خەتكۈچلىرىڭىزنى راستىنلا تازىلامسىز؟"
       save: "ساقلا"
       no_timezone: 'سىز تېخى ۋاقىت رايونىنى تەڭشىمىدىڭىز. ئەسكەرتىشنى تەڭشىيەلمايسىز. <a href="%{basePath}/my/preferences/profile">تەرجىمىھالىڭىز</a>دا تەڭشەڭ.'
       invalid_custom_datetime: "سىز تەمىنلىگەن چېسلا ۋە ۋاقىت ئىناۋەتسىز، قايتا سىناڭ."
@@ -2756,6 +2754,8 @@ ug:
       medium_dark_tone: ئوتتۇراھال قېنىق تېرە رەڭگى
       dark_tone: قېنىق تېرە رەڭگى
       default: ئىختىيارى چىراي ئىپادە
+    filter_input:
+      clear: "سۈزگۈچنى تازىلا"
     shared_drafts:
       title: "دەسلەپكى نۇسخا ھەمبەھىر"
       notice: "بۇ تېما پەتقەت ھەمبەھىر دەسلەپكى نۇسخا يوللىيالايدىغانلارغىلا كۆرۈنىدۇ."
@@ -4319,6 +4319,9 @@ ug:
       review_group_name: "گۇرۇپپا ئىسمى:"
       require_topic_approval: "ھەممە يېڭى تېمىنى رىياسەتچى تەستىقلىشى كېرەك"
       require_reply_approval: "ھەممە يېڭى جاۋابنى رىياسەتچى تەستىقلىشى كېرەك"
+      posting_review_modes:
+        no_one: "ھېچكىم"
+        everyone: "ھەممەيلەن"
       this_year: "بۇ يىل"
       position: "سەھىپە بېتىدىكى ئورنى:"
       default_position: "كۆڭۈلدىكى ئىجازەت"

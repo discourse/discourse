@@ -416,6 +416,7 @@ uk:
       toggle_verbose_localization: "Увімкнути/вимкнути детальну локалізацію"
       toggle_mobile_view: "Переключити мобільний перегляд"
       disable_dev_tools: "Вимкнути інструменти для розробників"
+      toggle_upcoming_changes_debug: "Перемкнути налагодження майбутніх змін"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіо)"
@@ -656,8 +657,12 @@ uk:
           other: "Створено %{count} років тому"
     bookmarked:
       title: "Закладки"
-      edit_bookmark: "Редагувати закладку"
-      clear_bookmarks: "Очистити закладки"
+      edit_bookmark:
+        one: "Редагувати закладку"
+        few: "Редагувати закладки"
+        many: "Редагувати закладки"
+        other: "Редагувати закладки"
+      delete_bookmarks: "Видалити всі закладки"
       help:
         bookmark: "Натисніть, щоб додати цю тему до закладок"
         edit_bookmark: "Натисніть, щоб змінити закладку на повідомлення в цій темі"
@@ -676,12 +681,18 @@ uk:
       clear_reminder: "Очистити нагадування"
       edit: "Редагувати закладку"
       not_bookmarked: "Додати цей допис до закладок"
+      topic_bookmark: "Тема"
+      post_bookmark: "Повідомлення №%{post_number}"
+      jump_to_post: "Перейти до #%{post_number}"
+      bookmark_topic: "Додати тему в закладки"
+      edit_topic_bookmark: "Редагувати закладку теми"
+      delete_topic_bookmark: "Видалити закладку теми"
       remove_reminder_keep_bookmark: "Вилучити нагадування, але зберегти закладку"
       created_with_reminder: "Ви додали цей допис у закладку із нагадуванням %{date}. %{name}"
       created_with_reminder_generic: "Ви створили закладку із нагадуванням %{date}. %{name}"
       delete: "Видалити закладку"
       confirm_delete: "Ви впевнені, що хочете видалити цю закладку? Нагадування також буде видалено."
-      confirm_clear: "Ви впевнені, що хочете вилучити всі закладки з цієї теми?"
+      confirm_clear: "Ви впевнені, що хочете видалити всі свої закладки з цієї теми?"
       save: "Зберегти"
       no_timezone: 'Ви ще не встановили часовий пояс. Ви не зможете встановити нагадування. Налаштуйте його <a href="%{basePath}/my/preferences/profile">у своєму профілі</a>.'
       invalid_custom_datetime: "Дата й час, які ви вказали, недійсні, спробуйте ще раз."
@@ -1785,6 +1796,7 @@ uk:
       enable_smart_lists: "Увімкніть розумні списки під час запису в композитор"
       enable_defer: "Увімкнути позначення тем як непрочитані"
       enable_markdown_monospace_font: "Використовувати моноширинний шрифт у режимі Markdown редактора тексту"
+      show_original_content: "Показувати оригінальний контент замість перекладеного. Також можна вмикати/вимикати в межах тем."
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
@@ -3093,6 +3105,12 @@ uk:
         filter_for_more: Шукати ще…
         categories_admin_dropdown:
           title: "Керування розділами"
+        tag_category_admin_dropdown:
+          title: "Налаштування категорій та тегів"
+          edit_category: "Редагувати категорію"
+          edit_category_description: "Налаштуйте параметри для %{badge}"
+          edit_tag: "Редагувати тег"
+          edit_tag_description: "Налаштуйте параметри для %{badge}"
         bulk_select_topics_dropdown:
           title: "Масові дії"
         bulk_select_bookmarks_dropdown:
@@ -3123,6 +3141,20 @@ uk:
       medium_dark_tone: Помірно темний тон шкіри
       dark_tone: Темний тон шкіри
       default: Власні емодзі
+    filter_input:
+      clear: "Очистити фільтр"
+    d_icon_grid_picker:
+      select_icon: "Виберіть іконку"
+      search_placeholder: "Пошук значків..."
+      no_results: "Не знайдено піктограм"
+      results_count:
+        one: "%{count} іконку знайдено"
+        few: "%{count} іконки знайдено"
+        many: "%{count} іконок знайдено"
+        other: "%{count} іконок знайдено"
+      favorites: "Вибране"
+      selected_icon: "Обрана іконка: %{iconName}"
+      clear: "Очистити піктограму"
     shared_drafts:
       title: "Спільні чернетки"
       notice: "Цю тему бачать лише ті, хто може публікувати спільні чернетки."
@@ -3953,19 +3985,19 @@ uk:
         name: "Відкласти"
       close_topics:
         name: "Закрити"
-        description: "Закриті теми запобігають появі нових відповідей. <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>Дізнатися більше</a>"
+        description: "Закриті теми запобігають появі нових відповідей. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Дізнатися більше</a>"
         note: "Додати примітку до цих тем"
         optional: (опціонально)
       archive_topics:
         name: "Архів"
-        description: "Архівні теми приховані від пошуку та списку останніх тем. <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>Дізнатися більше</a>"
+        description: "Архівні теми приховані від пошуку та списку останніх тем. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Дізнатися більше</a>"
       archive_messages:
         name: "Перемістити до архіву"
       move_messages_to_inbox:
         name: "Перемістити у Вхідні"
       unlist_topics:
         name: "Вилучити зі списку"
-        description: "Непублічні теми приховані у списку тем, але до них все ще можна отримати доступ за прямим посиланням. <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>Дізнатися більше</a>"
+        description: "Непублічні теми приховані у списку тем, але до них все ще можна отримати доступ за прямим посиланням. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Дізнатися більше</a>"
       relist_topics:
         name: "Вставити повторно"
       remove_tags:
@@ -4923,6 +4955,7 @@ uk:
       validations:
         emoji_required: "Виберіть емодзі."
         icon_required: "Виберіть піктограму."
+        groups_required: "Виберіть принаймні одну групу для цього режиму затвердження."
       name: "Назва категорії"
       untitled: "Категорія без назви"
       description: "Опис"
@@ -4935,6 +4968,7 @@ uk:
       icon: "Іконка"
       emoji: "Смайли"
       select_emoji: "Виберіть емодзі"
+      select_icon: "Виберіть іконку"
       background_color: "Колір"
       foreground_color: "Колір тексту"
       color_validations:
@@ -5007,6 +5041,14 @@ uk:
       review_group_name: "назва групи"
       require_topic_approval: "Вимагати схвалення модератором усіх нових тем"
       require_reply_approval: "Вимагати схвалення модератором усіх нових відповідей"
+      require_topic_approval_for: "Вимагати схвалення модератором нових тем для..."
+      require_reply_approval_for: "Вимагати схвалення модератора для нових відповідей..."
+      posting_review_modes:
+        no_one: "Ніхто"
+        everyone: "Усі"
+        everyone_except: "Усі, крім вибраних груп"
+        no_one_except: "Ніхто, окрім обраних груп"
+      posting_review_groups_placeholder: "Виберіть групи…"
       this_year: "цього року"
       position: "Позиція на сторінці розділів:"
       default_position: "Позиція за замовчуванням"
@@ -7799,6 +7841,16 @@ uk:
           update_success: "Оновлення %{theme} завершено"
           up_to_date: "Стиль поточної версії, остання перевірка:"
           has_overwritten_history: "Поточна версія теми вже не існує, оскільки історія Git була перезаписана примусово."
+          change_source:
+            button: "Змінити джерело"
+            title: "Змінити джерело теми"
+            repository_url: "URL репозиторія"
+            branch: "Гілка (необов'язково)"
+            updating: "Оновлення джерела теми…"
+            update: "Джерело оновлення"
+            has_existing_key: "Ця тема має налаштований SSH-ключ."
+            generate_new_key: "Згенерувати новий SSH-ключ"
+            keep_existing_key: "Зберегти існуючий SSH-ключ"
           add: "Додати"
           theme_settings: "Користувацькі налаштування теми"
           theme_site_settings: "Налаштування, які тема може перевизначити"
@@ -9206,6 +9258,8 @@ uk:
         crawler_settings_saved: "Налаштування сканера збережено"
         back: "Повернутися до вставки"
         configuration_snippet: "Налаштування фрагмента (сніпету)"
+        full_app_mode: "Повний режим програми"
+        full_app_mode_description: "Завантажте повний додаток Discourse у вбудований iframe, що дозволить користувачам відповідати, ставити лайки, цитувати та взаємодіяти з темами безпосередньо."
         host_form:
           add_header: "Додати хост"
           edit_header: "Редагувати хост"

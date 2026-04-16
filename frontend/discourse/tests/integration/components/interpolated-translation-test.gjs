@@ -7,6 +7,7 @@ import {
   setupOnerror,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -79,6 +80,7 @@ module("Integration | Component | InterpolatedTranslation", function (hooks) {
   });
 
   test("throws an error on simple translation without placeholders", async function (assert) {
+    const stub = sinon.stub(console, "error");
     let errors = 0;
 
     setupOnerror((error) => {
@@ -95,10 +97,14 @@ module("Integration | Component | InterpolatedTranslation", function (hooks) {
     );
 
     assert.strictEqual(errors, 1);
+    assert.true(stub.calledWithMatch("Error occurred:"));
+
     resetOnerror();
+    stub.restore();
   });
 
   test("renders translation with string options only", async function (assert) {
+    const stub = sinon.stub(console, "error");
     let errors = 0;
 
     setupOnerror((error) => {
@@ -120,7 +126,10 @@ module("Integration | Component | InterpolatedTranslation", function (hooks) {
     );
 
     assert.strictEqual(errors, 1);
+    assert.true(stub.calledWithMatch("Error occurred:"));
+
     resetOnerror();
+    stub.restore();
   });
 
   test("renders translation with both string options and component placeholders", async function (assert) {
@@ -166,6 +175,7 @@ module("Integration | Component | InterpolatedTranslation", function (hooks) {
   });
 
   test("handles missing translation key gracefully", async function (assert) {
+    const stub = sinon.stub(console, "error");
     let errors = 0;
 
     setupOnerror((error) => {
@@ -185,10 +195,14 @@ module("Integration | Component | InterpolatedTranslation", function (hooks) {
     assert.dom().hasText("[fr.nonexistent_key]");
 
     assert.strictEqual(errors, 1);
+    assert.true(stub.calledWithMatch("Error occurred:"));
+
     resetOnerror();
+    stub.restore();
   });
 
   test("handles placeholder not provided in template", async function (assert) {
+    const stub = sinon.stub(console, "error");
     let errors = 0;
     setupOnerror((error) => {
       assert.true(error instanceof I18nMissingInterpolationArgument);
@@ -204,13 +218,17 @@ module("Integration | Component | InterpolatedTranslation", function (hooks) {
     await render(<template><InterpolatedTranslation @key="hello" /></template>);
 
     assert.strictEqual(errors, 1);
+    assert.true(stub.calledWithMatch("Error occurred:"));
+
     resetOnerror();
+    stub.restore();
 
     // Should render the placeholder string since no component was provided
     assert.dom().includesText("Bonjour, [missing %{username} placeholder]");
   });
 
   test("handles empty placeholder provided in template", async function (assert) {
+    const stub = sinon.stub(console, "error");
     let errors = 0;
     setupOnerror((error) => {
       assert.true(error instanceof Error);
@@ -230,7 +248,10 @@ module("Integration | Component | InterpolatedTranslation", function (hooks) {
     );
 
     assert.strictEqual(errors, 1);
+    assert.true(stub.calledWithMatch("Error occurred:"));
+
     resetOnerror();
+    stub.restore();
   });
 
   test("correctly re-renders when args change", async function (assert) {

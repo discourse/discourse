@@ -8,10 +8,10 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-topic-voting
 
 register_asset "stylesheets/common/topic-voting.scss"
-register_asset "stylesheets/desktop/topic-voting.scss", :desktop
-register_asset "stylesheets/mobile/topic-voting.scss", :mobile
 
 register_svg_icon "check-to-slot"
+register_svg_icon "vote-up"
+register_svg_icon "vote-up-filled"
 
 enabled_site_setting :topic_voting_enabled
 
@@ -30,6 +30,7 @@ require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
   reloadable_patch do
+    register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
     CategoriesController.prepend(DiscourseTopicVoting::CategoriesControllerExtension)
     Category.prepend(DiscourseTopicVoting::CategoryExtension)
     ListController.prepend(DiscourseTopicVoting::ListControllerExtension)
@@ -165,11 +166,9 @@ after_initialize do
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, max_votes: value)
   end
 
-  filter_order_votes = ->(scope, order_direction, _guardian) do
+  add_filter_custom_filter("order:votes") do |scope, order_direction, _guardian|
     DiscourseTopicVoting::TopicVotesFilter.apply(scope, order_direction:)
   end
-
-  add_filter_custom_filter("order:votes", &filter_order_votes)
 
   on(:topic_status_updated) do |topic, status, enabled|
     next if topic.trashed?

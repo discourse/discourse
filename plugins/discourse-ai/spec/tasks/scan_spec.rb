@@ -15,7 +15,7 @@ RSpec.describe "ai:spam rake tasks" do
         end_date = Time.now.to_s
 
         expect_enqueued_with(job: :ai_spam_scan, args: { post_id: post2.id }) do
-          Rake::Task["ai:spam:scan_posts"].invoke(start_date, end_date)
+          capture_stdout { Rake::Task["ai:spam:scan_posts"].invoke(start_date, end_date) }
         end
 
         expect_not_enqueued_with(job: :ai_spam_scan, args: { post_id: post1.id })
@@ -30,7 +30,7 @@ RSpec.describe "ai:spam rake tasks" do
         end_date = Time.now.to_s
 
         expect_enqueued_with(job: :ai_spam_scan, args: { post_id: topic2.first_post.id }) do
-          Rake::Task["ai:spam:scan_topics"].invoke(start_date, end_date)
+          capture_stdout { Rake::Task["ai:spam:scan_topics"].invoke(start_date, end_date) }
         end
 
         expect_not_enqueued_with(job: :ai_spam_scan, args: { post_id: topic1.first_post.id })

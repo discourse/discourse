@@ -559,4 +559,27 @@ module("Unit | Model | composer", function (hooks) {
       "shows category chooser when lazy_load_categories is enabled even with no categories loaded"
     );
   });
+
+  test("editPost rolls back state on save failure", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
+      id: 123,
+      post_number: 2,
+      cooked: "<p>original content</p>",
+    });
+
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      post,
+      reply: "this will 409",
+      topic: store.createRecord("topic", { id: 456 }),
+    });
+
+    await assert.rejects(composer.editPost({}));
+
+    assert.strictEqual(post.cooked, "<p>original content</p>");
+    assert.false(post.staged);
+    assert.strictEqual(composer.composeState, "open");
+    assert.true(composer.editConflict);
+  });
 });
