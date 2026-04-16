@@ -1,3 +1,4 @@
+import QueryParams from "discourse/plugins/discourse-data-explorer/admin/components/workflows/configurators/query-params";
 import BooleanControl from "../../components/workflows/configurators/boolean-control";
 import CategoryControl from "../../components/workflows/configurators/category-control";
 import CodeControl from "../../components/workflows/configurators/code-control";
@@ -27,6 +28,7 @@ const CONTROL_REGISTRY = {
     renderer: DataTableConditionBuilder,
   },
   data_table_columns: { kind: "standalone", renderer: DataTableColumns },
+  query_params: { kind: "standalone", renderer: QueryParams },
 
   code: { kind: "field", type: "code", renderer: CodeControl },
   combo_box: { kind: "field", type: "custom", renderer: ComboBox },

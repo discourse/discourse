@@ -140,6 +140,14 @@ en:
       node_descriptions:
         "action:sql": "Run a read-only SQL query against the database"
       sql:
+        operation: "Operation"
+        operation_description: "How to run the query"
+        queries: "Queries"
+        raw: "Raw SQL"
+        query_id: "Query"
+        query_id_description: "Select a saved query to run"
+        query_params: "Query parameters"
+        query_params_description: "Fill in the parameters for the selected query"
         query: "SQL query"
         query_description: "Write a read-only SQL query. Declare parameters with Data Explorer syntax and map their values below."
         params: "Query parameters"
