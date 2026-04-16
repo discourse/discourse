@@ -14,71 +14,52 @@ import { PROVIDER_LEARN_MORE_URLS } from "../../lib/utilities";
 import SlackProviderSetupForm from "../provider-setup-form/slack";
 import TelegramProviderSetupForm from "../provider-setup-form/telegram";
 
+const PROVIDER_CONFIG = {
+  slack: {
+    component: SlackProviderSetupForm,
+    primaryField: "chat_integration_slack_access_token",
+    primaryFieldTitleKey:
+      "chat_integration.setup_provider_modal.slack.access_token.title",
+  },
+  telegram: {
+    component: TelegramProviderSetupForm,
+    primaryField: "chat_integration_telegram_access_token",
+    primaryFieldTitleKey:
+      "chat_integration.setup_provider_modal.telegram.access_token.title",
+  },
+};
+
 export default class SetupProvider extends Component {
   @service toasts;
 
   @tracked formKitApi = null;
 
   get formComponent() {
-    switch (this.args.model.provider.name) {
-      case "slack":
-        return SlackProviderSetupForm;
-      case "telegram":
-        return TelegramProviderSetupForm;
-      default:
-        return null;
-    }
+    return PROVIDER_CONFIG[this.args.model.provider.name].component;
   }
 
   get additionalInstructions() {
-    switch (this.args.model.provider.name) {
-      case "slack":
-        return i18n(
-          "chat_integration.setup_provider_modal.slack.instructions",
-          {
-            learnMoreUrl: PROVIDER_LEARN_MORE_URLS.slack,
-          }
-        );
-      case "telegram":
-        return i18n(
-          "chat_integration.setup_provider_modal.telegram.instructions",
-          {
-            learnMoreUrl: PROVIDER_LEARN_MORE_URLS.telegram,
-          }
-        );
-      default:
-        return "";
-    }
+    return i18n(
+      `chat_integration.setup_provider_modal.${this.args.model.provider.name}.instructions`
+    );
+  }
+
+  get learnMoreUrl() {
+    return PROVIDER_LEARN_MORE_URLS[this.args.model.provider.name];
+  }
+
+  get primaryFieldName() {
+    return PROVIDER_CONFIG[this.args.model.provider.name].primaryField;
+  }
+
+  get primaryFieldTitleKey() {
+    return PROVIDER_CONFIG[this.args.model.provider.name].primaryFieldTitleKey;
   }
 
   @action
   validateForm(data, { addError, removeError }) {
     if (this.args.model.provider.name === "slack") {
       this.validateSlackForm(data, addError, removeError);
-    } else {
-      return;
-    }
-  }
-
-  get primaryFieldName() {
-    switch (this.args.model.provider.name) {
-      case "slack":
-        return "chat_integration_slack_access_token";
-      case "telegram":
-        return "chat_integration_telegram_access_token";
-      default:
-        return null;
-    }
-  }
-
-  get primaryFieldTitleKey() {
-    switch (this.args.model.provider.name) {
-      case "slack":
-        return "chat_integration.setup_provider_modal.slack.access_token.title";
-      case "telegram":
-        return "chat_integration.setup_provider_modal.telegram.access_token.title";
-      default:
-        return null;
     }
   }
 
@@ -184,13 +165,12 @@ export default class SetupProvider extends Component {
     >
       <:body>
         <p class="chat-integration-setup-provider-modal__instructions">
-          {{trustHTML
-            (i18n
-              "chat_integration.setup_provider_modal.setup_instructions"
-              provider=@model.provider.title
-              additionalInstructions=this.additionalInstructions
-            )
+          {{i18n
+            "chat_integration.setup_provider_modal.setup_instructions"
+            provider=@model.provider.title
+            additionalInstructions=this.additionalInstructions
           }}
+          {{trustHTML (i18n "learn_more_with_link" url=this.learnMoreUrl)}}
         </p>
         <Form
           @onSubmit={{this.save}}

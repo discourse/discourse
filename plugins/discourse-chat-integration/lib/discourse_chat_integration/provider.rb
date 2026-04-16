@@ -19,7 +19,7 @@ module DiscourseChatIntegration
       self.providers.select { |provider| self.is_enabled(provider) }
     end
 
-    def self.available_providers
+    def self.disabled_providers
       self
         .providers
         .reject { |provider| self.is_enabled(provider) }
@@ -52,8 +52,7 @@ module DiscourseChatIntegration
     end
 
     def self.setup(provider_klass, current_user, provider_site_settings)
-      if provider_klass.singleton_class.method_defined?(:setup) ||
-           provider_klass.singleton_class.private_method_defined?(:setup)
+      if provider_klass.respond_to?(:setup)
         provider_klass.setup(current_user, provider_site_settings)
       else
         SiteSetting.set_and_log(provider_klass::PROVIDER_ENABLED_SETTING, true, current_user)

@@ -29,8 +29,8 @@ class DiscourseChatIntegration::ChatController < ApplicationController
         }
       end
 
-    available_providers =
-      DiscourseChatIntegration::Provider.available_providers.map do |provider_klass|
+    disabled_providers =
+      DiscourseChatIntegration::Provider.disabled_providers.map do |provider_klass|
         {
           name: provider_klass::PROVIDER_NAME,
           id: provider_klass::PROVIDER_NAME,
@@ -43,33 +43,44 @@ class DiscourseChatIntegration::ChatController < ApplicationController
         }
       end
 
-    render json: { enabled_providers: providers, available_providers: }
+    render json: { enabled_providers: providers, disabled_providers: }
   end
 
   def setup_provider
     hash = params.require(:provider).permit(:name)
     name = hash[:name].to_s.strip
-    raise Discourse::InvalidParameters.new("provider not found") if name.blank?
+
+    if name.blank?
+      raise Discourse::InvalidParameters.new(
+              I18n.t("chat_integration.errors.provider_not_found", name: "unknown"),
+            )
+    end
 
     provider_klass = DiscourseChatIntegration::Provider.get_by_name(name)
-    raise Discourse::InvalidParameters.new("provider not found") if provider_klass.nil?
+    if provider_klass.nil?
+      raise Discourse::InvalidParameters.new(
+              I18n.t("chat_integration.errors.provider_not_found", name: name),
+            )
+    end
 
     if DiscourseChatIntegration::Provider.is_enabled(provider_klass)
-      raise Discourse::InvalidParameters.new("provider is already enabled")
+      raise Discourse::InvalidParameters.new(
+              I18n.t("chat_integration.errors.provider_already_enabled", name: name),
+            )
     end
 
     permitted_site_settings = permitted_provider_site_settings(name)
 
     DiscourseChatIntegration::Provider.setup(provider_klass, current_user, permitted_site_settings)
     render json: success_json
-  rescue Discourse::InvalidParameters => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
-  rescue DiscourseChatIntegration::ProviderError => e
-    if e.info[:error_key].present?
-      Rails.logger.error("Chat integration setup failed error_key=#{e.info[:error_key]}")
-      render json: { error_key: e.info[:error_key] }, status: :unprocessable_entity
+  rescue Discourse::InvalidParameters => err
+    render json: { errors: [err.message] }, status: :unprocessable_entity
+  rescue DiscourseChatIntegration::ProviderError => err
+    if err.info[:error_key].present?
+      Rails.logger.error("Chat integration setup failed error_key=#{err.info[:error_key]}")
+      render json: { error_key: err.info[:error_key] }, status: :unprocessable_entity
     else
-      render json: { errors: [e.message.presence || "error"] }, status: :unprocessable_entity
+      render json: { errors: [err.message.presence || "error"] }, status: :unprocessable_entity
     end
   end
 
@@ -88,14 +99,14 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       provider.trigger_notification(post, channel, nil)
 
       render json: success_json
-    rescue Discourse::InvalidParameters, ActiveRecord::RecordNotFound => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
-    rescue DiscourseChatIntegration::ProviderError => e
-      Rails.logger.error("Test provider failed #{e.info}")
-      if e.info.key?(:error_key) && !e.info[:error_key].nil?
-        render json: { error_key: e.info[:error_key] }, status: :unprocessable_entity
+    rescue Discourse::InvalidParameters, ActiveRecord::RecordNotFound => err
+      render json: { errors: [err.message] }, status: :unprocessable_entity
+    rescue DiscourseChatIntegration::ProviderError => err
+      Rails.logger.error("Test provider failed #{err.info}")
+      if err.info.key?(:error_key) && !err.info[:error_key].nil?
+        render json: { error_key: err.info[:error_key] }, status: :unprocessable_entity
       else
-        render json: { errors: [e.message] }, status: :unprocessable_entity
+        render json: { errors: [err.message] }, status: :unprocessable_entity
       end
     end
   end

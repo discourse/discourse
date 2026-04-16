@@ -59,6 +59,50 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     end
   end
 
+  describe ".valid_slack_incoming_webhook_url?" do
+    it "returns true for an incoming webhook URL under /services/" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(true)
+    end
+
+    it "returns true for a workflow webhook URL under /workflows/" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "https://hooks.slack.com/workflows/0000000000000/0000000000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(true)
+    end
+
+    it "returns false for http" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "http://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(false)
+    end
+
+    it "returns false when the host is not hooks.slack.com" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "https://evil.example.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(false)
+    end
+
+    it "returns false when the path is not /services/ or /workflows/" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?("https://hooks.slack.com/other/path"),
+      ).to eq(false)
+    end
+
+    it "returns false for an invalid URL" do
+      expect(described_class.valid_slack_incoming_webhook_url?("not a url")).to eq(false)
+    end
+  end
+
   describe ".trigger_notifications" do
     before do
       SiteSetting.chat_integration_slack_outbound_webhook_url =

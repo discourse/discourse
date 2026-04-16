@@ -46,19 +46,48 @@ module DiscourseChatIntegration::Provider::SlackProvider
             )
     end
 
+    settings = []
+
     if token.present?
-      SiteSetting.set_and_log(:chat_integration_slack_access_token, token, current_user)
+      settings.push({ setting_name: :chat_integration_slack_access_token, value: token })
     end
 
     if webhook_url.present?
-      SiteSetting.set_and_log(
-        :chat_integration_slack_outbound_webhook_url,
-        webhook_url,
-        current_user,
+      settings.push(
+        { setting_name: :chat_integration_slack_outbound_webhook_url, value: webhook_url },
       )
     end
 
-    SiteSetting.set_and_log(PROVIDER_ENABLED_SETTING, true, current_user)
+    setting_update_result =
+      SiteSetting::Update.call(params: { settings: }, guardian: current_user.guardian)
+
+    if !setting_update_result.success?
+      raise DiscourseChatIntegration::ProviderError.new(
+              info: {
+                error_key: "chat_integration.errors.setting_update_failed",
+                response_body: setting_update_result.errors,
+              },
+            )
+    end
+
+    # The enable setting update needs to be separate because we have a site
+    # setting validator that depends on the other settings being set.
+    setting_update_result =
+      SiteSetting::Update.call(
+        params: {
+          settings: [{ setting_name: PROVIDER_ENABLED_SETTING, value: true }],
+        },
+        guardian: current_user.guardian,
+      )
+
+    if !setting_update_result.success?
+      raise DiscourseChatIntegration::ProviderError.new(
+              info: {
+                error_key: "chat_integration.errors.setting_update_failed",
+                response_body: setting_update_result.errors,
+              },
+            )
+    end
   end
 
   def self.verify_slack_access_token!(token)

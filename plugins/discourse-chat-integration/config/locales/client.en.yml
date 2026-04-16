@@ -21,7 +21,7 @@ en:
         confirm_setup: "Confirm setup"
         success: "Provider %{provider} setup successfully"
         slack:
-          instructions: "Either access token or outbound webhook URL is required. <a href='%{learnMoreUrl}' target='_blank'>Learn more...</a>"
+          instructions: "Either access token or outbound webhook URL is required."
           at_least_one_required: "Enter an access token or outbound webhook URL."
           access_token:
             title: "Access token"
@@ -30,7 +30,7 @@ en:
             title: "Outbound webhook URL"
             description: "The Slack outbound webhook URL"
         telegram:
-          instructions: "<a href='%{learnMoreUrl}' target='_blank'>Learn more...</a>"
+          instructions: "Access token will be validated on save."
           access_token:
             title: "Access token"
             description: "The Telegram bot access token from BotFather"

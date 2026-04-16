@@ -27,9 +27,30 @@ module DiscourseChatIntegration
         new_secret = SecureRandom.hex
         setup_webhook(access_token, new_secret)
 
-        SiteSetting.set_and_log(:chat_integration_telegram_access_token, access_token, current_user)
-        SiteSetting.set_and_log(:chat_integration_telegram_secret, new_secret, current_user)
-        SiteSetting.set_and_log(PROVIDER_ENABLED_SETTING, true, current_user)
+        setting_update_result =
+          SiteSetting::Update.call(
+            params: {
+              settings: [
+                { setting_name: :chat_integration_telegram_access_token, value: access_token },
+                { setting_name: :chat_integration_telegram_secret, value: new_secret },
+                { setting_name: PROVIDER_ENABLED_SETTING, value: true },
+              ],
+            },
+            guardian: current_user.guardian,
+            options: {
+              allow_changing_hidden: [:chat_integration_telegram_secret],
+            },
+          )
+
+        if !setting_update_result.success?
+          self.do_api_request("deleteWebhook", {})
+          raise DiscourseChatIntegration::ProviderError.new(
+                  info: {
+                    error_key: "chat_integration.errors.setting_update_failed",
+                    response_body: setting_update_result.errors,
+                  },
+                )
+        end
       end
 
       def self.setup_webhook(access_token, new_secret)
@@ -47,11 +68,12 @@ module DiscourseChatIntegration
 
         if response["ok"] != true
           Rails.logger.error("Failed to setup telegram webhook. response=#{response.to_json}")
-          raise DiscourseChatIntegration::ProviderError.new info: {
-                                                              error_key:
-                                                                "chat_integration.provider.telegram.errors.webhook_setup_failed",
-                                                              response_body: response,
-                                                            }
+          raise DiscourseChatIntegration::ProviderError.new(
+                  info: {
+                    error_key: "chat_integration.provider.telegram.errors.webhook_setup_failed",
+                    response_body: response,
+                  },
+                )
         end
       end
 

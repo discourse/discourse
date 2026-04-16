@@ -8,7 +8,7 @@ export default class DiscourseChatIntegrationProviders extends DiscourseRoute {
     ).then((result) => {
       return {
         enabled_providers: result.enabled_providers,
-        available_providers: result.available_providers,
+        disabled_providers: result.disabled_providers,
       };
     });
   }

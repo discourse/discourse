@@ -24,30 +24,28 @@ export default class DiscourseChatIntegrationProviders extends Component {
     return this.currentProvider === providerName;
   };
 
+  constructor() {
+    super(...arguments);
+  }
+
   get currentProvider() {
     return this.router.currentRoute?.params?.provider;
+  }
+
+  // Sorted by popularity (number of customer sites using each provider)
+  get allProviders() {
+    const providers = (
+      this.args.controller.model.disabled_providers || []
+    ).concat(this.args.controller.model.enabled_providers || []);
+    return providers;
   }
 
   get enabledProviders() {
     return this.args.controller.model.enabled_providers || [];
   }
 
-  // Sorted by popularity (number of customer sites using each provider)
-  get allProviders() {
-    return (this.args.controller.model.available_providers || []).map(
-      (provider) => {
-        provider.settingsFilter = `chat_integration_${provider.name}`;
-        provider.title = i18n(
-          `chat_integration.provider.${provider.name}.title`
-        );
-        return provider;
-      }
-    );
-  }
-
   get disabledProviders() {
-    const enabledNames = this.enabledProviders.map((p) => p.name);
-    return this.allProviders.filter((p) => !enabledNames.includes(p.name));
+    return this.args.controller.model.disabled_providers || [];
   }
 
   get popularProviders() {
@@ -58,17 +56,22 @@ export default class DiscourseChatIntegrationProviders extends Component {
     return this.disabledProviders.slice(4);
   }
 
+  providerTitle(provider) {
+    return i18n(`chat_integration.provider.${provider.name}.title`);
+  }
+
   @action
-  async configureProvider(provider) {
+  async configureProvider(provider, menu = null) {
     const disabledProvider =
       this.disabledProviders.find((p) => p.name === provider.name) ?? provider;
 
     if (provider.additional_site_settings_required) {
       this.openProviderSetupModal(disabledProvider);
+      menu?.close();
     } else {
       this.dialog.confirm({
         message: i18n("chat_integration.confirm_setup_provider", {
-          provider: disabledProvider.title,
+          provider: this.providerTitle(disabledProvider),
         }),
         didConfirm: async () => {
           try {
@@ -86,7 +89,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
             this.toasts.success({
               data: {
                 message: i18n("chat_integration.setup_provider_modal.success", {
-                  provider: disabledProvider.title,
+                  provider: this.providerTitle(disabledProvider),
                 }),
               },
               duration: "short",
@@ -104,7 +107,9 @@ export default class DiscourseChatIntegrationProviders extends Component {
   async openProviderSetupModal(provider) {
     const closeData = await this.modal.show(SetupProvider, {
       model: {
-        provider,
+        provider: Object.assign({}, provider, {
+          title: this.providerTitle(provider),
+        }),
       },
     });
 
@@ -152,7 +157,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
               @label={{i18n "chat_integration.add_provider"}}
               class="btn-default btn-small"
             >
-              <:content>
+              <:content as |menu|>
                 <DropdownMenu as |dropdown|>
                   {{#each this.disabledProviders as |provider|}}
                     <dropdown.item>
@@ -162,7 +167,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
                             "chat_integration.provider." provider.name ".title"
                           )
                         }}
-                        @action={{fn this.configureProvider provider}}
+                        @action={{fn this.configureProvider provider menu}}
                         class={{concatClass
                           "btn-transparent"
                           "chat-integration-add-provider-button"
