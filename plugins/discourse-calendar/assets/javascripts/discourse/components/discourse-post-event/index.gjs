@@ -250,7 +250,7 @@ export default class DiscoursePostEvent extends Component {
 
                 {{#if this.withDescription}}
                   <Description
-                    @description={{event.description}}
+                    @descriptionHtml={{event.descriptionHtml}}
                     @clamp={{this.clampDescription}}
                   />
                 {{/if}}

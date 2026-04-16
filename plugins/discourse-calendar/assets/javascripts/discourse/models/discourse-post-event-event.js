@@ -35,6 +35,7 @@ export default class DiscoursePostEventEvent {
   @tracked location;
   @tracked url;
   @tracked description;
+  @tracked descriptionHtml;
   @tracked timezone;
   @tracked showLocalTime;
   @tracked status;
@@ -75,6 +76,7 @@ export default class DiscoursePostEventEvent {
     this.location = args.location;
     this.url = args.url;
     this.description = args.description;
+    this.descriptionHtml = args.description_html;
     this.timezone = args.timezone;
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
@@ -169,6 +171,7 @@ export default class DiscoursePostEventEvent {
     this.timezone = event.timezone;
     this.showLocalTime = event.showLocalTime;
     this.description = event.description;
+    this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
     this.isClosed = event.isClosed;

@@ -406,10 +406,6 @@ $show-interested: inherit;
       margin-top: 0.25em;
     }
 
-    .event-description__text {
-      text-align: justify;
-    }
-
     &.is-clamped .event-description__text {
       @include line-clamp(3);
     }
