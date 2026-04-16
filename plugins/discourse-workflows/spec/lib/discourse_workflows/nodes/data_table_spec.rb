@@ -16,6 +16,17 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     execute_node_result(configuration: configuration).primary_items(ports: described_class.ports)
   end
 
+  describe ".metadata" do
+    it "marks reserved columns" do
+      metadata = described_class.metadata
+      table_meta = metadata[:data_tables].find { |dt| dt[:id] == data_table.id }
+      column_names_reserved = table_meta[:columns].select { |c| c[:reserved] }.map { |c| c[:name] }
+
+      expect(column_names_reserved).to contain_exactly("id", "created_at", "updated_at")
+      expect(table_meta[:columns].find { |c| c[:name] == "email" }).not_to have_key(:reserved)
+    end
+  end
+
   describe "error handling" do
     it "raises when data table does not exist" do
       expect {

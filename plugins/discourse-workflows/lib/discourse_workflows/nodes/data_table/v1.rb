@@ -132,7 +132,14 @@ module DiscourseWorkflows
                   {
                     id: dt.id,
                     name: dt.name,
-                    columns: dt.columns.map { |c| { name: c["name"], type: c["type"] } },
+                    columns:
+                      dt.columns.map do |c|
+                        col = { name: c["name"], type: c["type"] }
+                        if DataTables::Storage::RESERVED_COLUMN_NAMES.include?(c["name"])
+                          col[:reserved] = true
+                        end
+                        col
+                      end,
                   }
                 end,
           }

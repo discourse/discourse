@@ -19,7 +19,7 @@ export default class DataTableColumns extends Component {
     const dataTable =
       this.args.metadata?.data_tables?.find((dt) => dt.id === id) || null;
 
-    return dataTable?.columns ?? [];
+    return (dataTable?.columns ?? []).filter((c) => !c.reserved);
   }
 
   get columnsConfiguration() {
