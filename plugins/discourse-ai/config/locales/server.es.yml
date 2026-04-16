@@ -105,88 +105,88 @@ es:
       xaxis: "Positivas(%)"
       yaxis: "Fecha"
     emotion_admiration:
-      title: "\U0001F929 Admiración"
+      title: "🤩 Admiración"
       description: "Publicaciones clasificadas con la emoción Admiración mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_amusement:
-      title: "\U0001F604 Diversión"
+      title: "😄 Diversión"
       description: "Publicaciones clasificadas con la emoción Diversión mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_anger:
-      title: "\U0001F620 Enfado"
+      title: "😠 Enfado"
       description: "Publicaciones clasificadas con la emoción Enfado mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_annoyance:
-      title: "\U0001F612 Molestia"
+      title: "😒 Molestia"
       description: "Publicaciones clasificadas con la emoción Molestia mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_approval:
-      title: "\U0001F44D Aprobación"
+      title: "👍 Aprobación"
       description: "Mensajes clasificados con la emoción Aprobación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_caring:
-      title: "\U0001F917 Cariño"
+      title: "🤗 Cariño"
       description: "Publicaciones clasificadas con la emoción Cariño mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_confusion:
-      title: "\U0001F615 Confusión"
+      title: "😕 Confusión"
       description: "Publicaciones clasificadas con la emoción Confusión mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_curiosity:
-      title: "\U0001F914 Curiosidad"
+      title: "🤔 Curiosidad"
       description: "Publicaciones clasificadas con la emoción Curiosidad mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_desire:
-      title: "\U0001F60D Deseo"
+      title: "😍 Deseo"
       description: "Publicaciones clasificadas con la emoción Deseo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disappointment:
-      title: "\U0001F61E Decepción"
+      title: "😞 Decepción"
       description: "Publicaciones clasificadas con la emoción Decepción mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disapproval:
-      title: "\U0001F44E Desaprobación"
+      title: "👎 Desaprobación"
       description: "Publicaciones clasificadas con la emoción Desaprobación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disgust:
-      title: "\U0001F922 Asco"
+      title: "🤢 Asco"
       description: "Publicaciones clasificadas con la emoción Asco mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_embarrassment:
-      title: "\U0001F633 Vergüenza"
+      title: "😳 Vergüenza"
       description: "Publicaciones clasificadas con la emoción Vergüenza mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_excitement:
-      title: "\U0001F92A Excitación"
+      title: "🤪 Excitación"
       description: "Publicaciones clasificadas con la emoción Excitación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_fear:
-      title: "\U0001F628 Miedo"
+      title: "😨 Miedo"
       description: "Publicaciones clasificadas con la emoción Miedo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_gratitude:
-      title: "\U0001F64F Gratitud"
+      title: "🙏 Gratitud"
       description: "Publicaciones clasificadas con la emoción Gratitud mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_grief:
-      title: "\U0001F622 Duelo"
+      title: "😢 Duelo"
       description: "Publicaciones clasificadas con la emoción Duelo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_joy:
-      title: "\U0001F60A Alegría"
+      title: "😊 Alegría"
       description: "Publicaciones clasificadas con la emoción Alegría mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_love:
       title: '❤️ Amor'
       description: "Publicaciones clasificadas con la emoción Amor mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_nervousness:
-      title: "\U0001F630 Nerviosismo"
+      title: "😰 Nerviosismo"
       description: "Publicaciones clasificadas con la emoción Nerviosismo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_neutral:
-      title: "\U0001F610 Neutro"
+      title: "😐 Neutro"
       description: "Publicaciones clasificadas con la emoción Neutro mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_optimism:
-      title: "\U0001F31F Optimismo"
+      title: "🌟 Optimismo"
       description: "Publicaciones clasificadas con la emoción Optimismo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_pride:
-      title: "\U0001F981 Orgullo"
+      title: "🦁 Orgullo"
       description: "Publicaciones clasificadas con la emoción Orgullo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_realization:
-      title: "\U0001F4A1 Realización"
+      title: "💡 Realización"
       description: "Mensajes clasificados con la emoción Realización mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_relief:
-      title: "\U0001F60C Alivio"
+      title: "😌 Alivio"
       description: "Publicaciones clasificadas con la emoción Alivio mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_remorse:
-      title: "\U0001F614 Remordimiento"
+      title: "😔 Remordimiento"
       description: "Publicaciones clasificadas con la emoción Remordimiento mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_sadness:
-      title: "\U0001F62D Tristeza"
+      title: "😭 Tristeza"
       description: "Publicaciones clasificadas con la emoción Tristeza mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_surprise:
-      title: "\U0001F632 Sorpresa"
+      title: "😲 Sorpresa"
       description: "Publicaciones clasificadas con la emoción Sorpresa mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
   discourse_ai:
     ai_artifact:
@@ -450,6 +450,9 @@ es:
         researcher: "Investigar información del foro usando el bot de IA"
       tool_description:
         read_artifact: "Se ha leído un artefacto web usando el bot de IA"
+        search_uploaded_documents:
+          one: "Se ha encontrado %{count} extracto de documento subido para «%{query}»"
+          other: "Se han encontrado %{count} extractos de documentos subidos para «%{query}»"
         update_artifact: "Se actualizó un artefacto web utilizando el bot de IA"
         create_artifact: "Artefacto web creado: %{name} - %{specification}"
         web_browser: "Leyendo <a href='%{url}'>%{url}</a>"
@@ -522,6 +525,10 @@ es:
       assign:
         errors:
           not_found: "Tema no encontrado."
+      list_reviewables:
+        found:
+          one: "Se ha encontrado %{count} elemento en la cola de revisión"
+          other: "Se han encontrado %{count} elementos en la cola de revisión"
     reviewables:
       ai_tool_action:
         approve:
@@ -538,13 +545,13 @@ es:
       reports:
         overall_sentiment: "Sentimiento general (positivo/negativo)"
         post_emotion:
-          sadness: "Tristeza \U0001F622"
-          surprise: "Sorpresa \U0001F631"
-          neutral: "Neutro \U0001F610"
-          fear: "Miedo \U0001F628"
-          anger: "Enfado \U0001F621"
-          joy: "Alegría \U0001F600"
-          disgust: "Asco \U0001F922"
+          sadness: "Tristeza 😢"
+          surprise: "Sorpresa 😱"
+          neutral: "Neutro 😐"
+          fear: "Miedo 😨"
+          anger: "Enfado 😡"
+          joy: "Alegría 😀"
+          disgust: "Asco 🤢"
         sentiment_analysis:
           positive: "Positivo"
           negative: "Negativo"

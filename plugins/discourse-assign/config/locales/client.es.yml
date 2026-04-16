@@ -136,6 +136,14 @@ es:
           unassigned: "están sin asignar"
         assigned:
           label: "Asignado a"
+    topics:
+      bulk:
+        confirm_assign_topics:
+          one: "Asginar %{count} tema"
+          other: "Asginar %{count} temas"
+        confirm_unassign_topics:
+          one: "Anular asignación de %{count} tema"
+          other: "Anular asignación de %{count} temas"
     discourse_automation:
       scriptables:
         random_assign:

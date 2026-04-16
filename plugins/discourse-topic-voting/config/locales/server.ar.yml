@@ -7,6 +7,7 @@
 ar:
   site_settings:
     topic_voting_enabled: 'هل تريد السماح للأعضاء بالتصويت على الموضوعات؟'
+    topic_voting_enable_vote_limits: 'تقييد عدد الأصوات لكل مستخدم بناءً على مستوى الثقة'
     topic_voting_tl0_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 0؟'
     topic_voting_tl1_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 1؟'
     topic_voting_tl2_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 2؟'

@@ -24,6 +24,7 @@ ar:
       voting_closed_title: "مغلق"
       voting_limit: "الحد"
       see_votes: "لديك %{count}/%{max} من الأصوات المتبقية"
+      see_all_votes: "عرض أصواتك"
       locked: "مغلق"
       locked_description: "زد مستوى الثقة لديك لتتمكن من التصويت"
       votes:

@@ -11,7 +11,7 @@ zh_CN:
         scopes:
           descriptions:
             automation:
-              trigger_automation: "通过 API 触发自动化流程"
+              trigger_automation: "通过 API 触发自动化"
   js:
     admin:
       logs:

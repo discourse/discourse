@@ -17,7 +17,7 @@ zh_CN:
           group_name: "日历活动"
           calendar_event_created: "日历活动已创建"
           calendar_event_updated: "日历活动已更新"
-          calendar_event_destroyed: "日历活动已删除"
+          calendar_event_destroyed: "日历活动已销毁"
   js:
     notifications:
       titles:
@@ -38,7 +38,7 @@ zh_CN:
         all_events: "Discourse 日历 - 所有事件"
         all_events_description: "所有论坛事件"
         my_events: "Discourse 日历 - 我的事件"
-        my_events_description: "你将要参加或感兴趣的事件"
+        my_events_description: "您将要参加或感兴趣的事件"
       on_holiday: "休假"
       disable_holiday: "禁用"
       enable_holiday: "启用"

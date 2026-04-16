@@ -1710,21 +1710,21 @@ zh_CN:
         upcoming_changes: "即将推出的更改"
         calendar_subscriptions: "日历"
       calendar_subscriptions:
-        description: "生成订阅链接，以便与您常用的日历应用（例如 Google 日历、Apple 日历、Outlook 等）同步。这些链接是您帐户中日历事件（例如书签提醒、日历事件等）的私有链接。您可以随时撤销或续订生成的订阅链接。"
+        description: "生成订阅链接，以便与您喜爱的日历应用（例如 Google 日历、Apple 日历、Outlook 等）同步。这些 URL 是您帐户中日历事件（例如书签提醒、日历事件等）的不公开链接。您可以随时撤销或续订生成的订阅链接。"
         generate: "生成订阅 URL"
         regenerate: "重新生成 URL"
-        regenerate_confirm: "这将使您现有的日历订阅 URL 失效。任何使用旧 URL 的日历应用都将无法收到更新。是否继续？"
+        regenerate_confirm: "这将使您现有的日历订阅 URL 失效。任何使用旧 URL 的日历应用都将停止接收更新。是否继续？"
         revoke: "撤销订阅"
         revoke_confirm: "这将撤销您现有的日历订阅 URL。任何使用这些 URL 的日历应用都将停止接收更新。是否继续？"
-        urls_warning: "订阅 URL 已准备就绪！点击下方按钮即可将其 URL 到您的日历应用。注意：这些 URL 仅显示一次。"
+        urls_warning: "订阅 URL 已准备就绪！点击下方按钮即可将其链接到您的日历应用。注意：这些 URL 仅显示一次。"
         bookmarks: "书签提醒"
-        bookmarks_description: "您的书签及提醒日期"
+        bookmarks_description: "您的书签与提醒日期"
         copy: "复制 URL"
         copied: "已复制！"
         add_to_google: "Google 日历"
-        add_to_outlook: "微软 Outlook"
+        add_to_outlook: "Microsoft Outlook"
         add_to_apple: "Apple 日历"
-        active_subscription: "您有一个活跃的日历订阅。"
+        active_subscription: "您有一个有效的日历订阅。"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -2991,12 +2991,12 @@ zh_CN:
           title: "即将推出的更改"
           description: "'%{changeName}' 可供预览"
           description_two: "'%{changeName1}' 和 '%{changeName2}' 可供预览"
-          description_many: "'%{changeName}' 和 %{otherChangeCount} ' 更多更改可供预览"
+          description_many: "'%{changeName}' 和其他 %{otherChangeCount} 项更改可供预览"
         automatically_promoted:
           title: "即将推出的更改"
           description: "'%{changeName}' 已自动启用"
           description_two: "'%{changeName1}' 和 '%{changeName2}' 已自动启用"
-          description_many: "'%{changeName}' 和 %{otherChangeCount} 的更多更改已自动启用"
+          description_many: "'%{changeName}' 和其他 %{otherChangeCount} 项更改已自动启用"
       dismiss_confirmation:
         body:
           default:
@@ -3304,20 +3304,20 @@ zh_CN:
         confirm_close_topics:
           other: "关闭 %{count} 个话题"
         confirm_archive_topics:
-          other: "存档 %{count} 个话题"
+          other: "归档 %{count} 个话题"
         confirm_unlist_topics:
           other: "关闭 %{count} 个话题"
         confirm_relist_topics:
-          other: "重新公开 %{count} 个主题"
+          other: "重新公开 %{count} 个话题"
         confirm_archive_messages:
-          other: "存档 %{count} 个消息"
+          other: "归档 %{count} 条消息"
         confirm_move_to_inbox:
-          other: "将 %{count} 个消息移至收件箱"
+          other: "将 %{count} 条消息移至收件箱"
         confirm_delete_topics:
           other: "删除 %{count} 个话题"
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
-        notify: "通知用户此变更"
+        notify: "将此更改通知用户"
         performing: "正在执行批量操作，请稍候…"
         completed: "批量操作成功完成！"
         completed_count:
@@ -3351,19 +3351,19 @@ zh_CN:
         name: "忽略"
       close_topics:
         name: "关闭"
-        description: "关闭的话题阻止新的回复。 <a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>了解更多</a>"
+        description: "关闭的话题会阻止新的回复。<a href='https://meta.discourse.org/t/what-is-a-closed-topic/68098' target='_blank'>了解详情</a>"
         note: "为这些话题添加注释"
         optional: '（可选）'
       archive_topics:
         name: "归档"
-        description: "已存档的话题列表在搜索和最新主题列表中被隐藏。 <a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>了解更多的</a>"
+        description: "已归档的话题会在搜索和最新话题列表中隐藏。<a href='https://meta.discourse.org/t/what-is-a-archived-topic/68092' target='_blank'>了解详情</a>"
       archive_messages:
         name: "移至归档"
       move_messages_to_inbox:
         name: "移至收件箱"
       unlist_topics:
         name: "取消公开"
-        description: "未公开的主题不会显示在话题列表中，但仍可通过直接链接访问。 <a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>了解更多</a>"
+        description: "取消公开的话题会在话题列表中隐藏，但仍可以通过直接链接访问。<a href='https://meta.discourse.org/t/what-is-an-unlisted-topic/68096' target='_blank'>了解详情</a>"
       relist_topics:
         name: "重新公开"
       remove_tags:
@@ -3371,19 +3371,19 @@ zh_CN:
         description: "从所选话题中移除所有标签。"
       append_tags:
         name: "添加标签"
-        description: "为选定的话题添加以下标签："
+        description: "为所选话题添加以下标签："
       replace_tags:
         name: "替换标签"
         description: "将所选话题的所有现有标签替换为以下内容："
       delete_topics:
         name: "删除"
-        description: "永久删除所选话题。此操作无法撤销。"
+        description: "永久删除所选话题。此操作无法撤消。"
       update_category:
         name: "更新类别"
-        description: "将所有选定的话题移至以下类别："
+        description: "将所有所选话题移至以下类别："
       reset_bump_dates:
         name: "重置顶帖日期"
-        description: "您是否想更新顶帖日期为帖子最后创建的日期？这可能会影响它们在话题列表列表中的排序。"
+        description: "是否要将顶帖日期更新为帖子最后创建的日期？这可能会影响它们在话题列表列表中的排序。"
       defer:
         name: "标记为未读"
       update_notifications:
@@ -3554,7 +3554,7 @@ zh_CN:
       auto_close_immediate:
         other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
       auto_delete_immediate:
-        other: "该话题中的最后一篇帖子已经存在 %{count} 小时，因此该话题将被立即删除。"
+        other: "话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即删除。"
       timeline:
         back: "返回"
         back_description: "返回上一个未读帖子"
@@ -4031,7 +4031,7 @@ zh_CN:
         confirm:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
-        diff_too_complex: "差异过于复杂，无法显示。请尝试查看各个较小的修改。"
+        diff_too_complex: "差异过于复杂，无法显示。请尝试查看各个较小的编辑。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
@@ -4107,7 +4107,7 @@ zh_CN:
         instructions: "分享此帖子的链接："
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
-      ai_translation_disclaimer: "AI 生成的翻译可能不准确。"
+      ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -4123,12 +4123,12 @@ zh_CN:
       show_advanced: "高级设置"
       topic_template: "模板"
       topic_title_placeholder: "类别话题标题占位符"
-      topic_title_placeholder_placeholder: "[可选] 此分类的自定义话题标题占位符"
+      topic_title_placeholder_placeholder: "[可选] 此类别的自定义话题标题占位符"
       tags: "标签"
       localizations: "本地化"
       localization:
         language: "类别语言"
-        language_description: "该类别名称和描述的主要语言。"
+        language_description: "此类别名称和描述的主要语言。"
         locale: "语言区域"
         name: "名称"
         description: "描述"
@@ -4150,17 +4150,17 @@ zh_CN:
         add: "添加所需标签组"
         placeholder: "选择标签群组…"
         min_count: "标签数"
-        tag_group: "标签组"
+        tag_group: "标签群组"
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
       create: "新建类别"
-      create_with_type: "新 %{typeName} 类别"
+      create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
-      settings_apply_to_all_of_type_warning: "以下更改将适用于此类型的所有类别"
+      settings_apply_to_all_of_type_warning: "以下更改将应用于此类型的所有类别"
       type_settings_schema:
         category_settings: "类别设置"
         category_custom_fields: "类别设置"
-        site_settings: "网站设置"
+        site_settings: "站点设置"
       choose_type:
         title: "选择类别类型"
         requires_plugin: "需要插件"
@@ -6769,7 +6769,7 @@ zh_CN:
           dark_color_scheme: "深色调色板"
           default_light_scheme: "浅色（默认）"
           color_scheme_select: "选择主题使用的颜色。"
-          only_theme_color_schemes: "该主题限制了可使用的调色板。"
+          only_theme_color_schemes: "此主题限制了可使用的调色板。"
           dark_color_scheme_select: "选择主题在深色模式下使用的颜色。"
           edit_colors: "编辑颜色"
           custom_sections: "自定义部分："
@@ -7903,7 +7903,7 @@ zh_CN:
         interpolation_keys: "可用的插值键："
         interpolation_key_insert: "点击插入"
         interpolation_key_used: "已使用"
-        interpolation_key_invalid: "未知密钥——将不会进行插值"
+        interpolation_key_invalid: "未知密钥 – 将不会进行插值"
         outdated:
           title: "此翻译已过时"
           description: "自此替换创建以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"
@@ -8012,17 +8012,17 @@ zh_CN:
             prompt: "更改此设置可能会对您的网站产生深远或意想不到的后果。确定要继续吗？"
             confirm: "是，我确定"
           min_password_length:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将修改密码政策。这将影响所有从现在起更改密码的用户。确定要继续吗？"
+            confirm: "是，更新密码政策"
           min_admin_password_length:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的管理员。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将修改密码政策。这将影响所有从现在起更改密码的管理员。确定要继续吗？"
+            confirm: "是，更新密码政策"
           password_unique_characters:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将更改密码政策。这将影响所有从现在起更改密码的用户。确定要继续吗？"
+            confirm: "是，更新密码政策"
           block_common_passwords:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将修改密码政策。这将影响所有从现在起更改密码的用户。确定要继续吗？"
+            confirm: "是，更新密码政策"
           clean_up_inactive_users_after_days:
             prompt: "将此值设置为 0 以外的任何值都会导致在该天数内不再活跃的用户被永久删除。确定要继续吗？"
             confirm: "是的，我明白除非我将此值设置为 0，否则不活跃用户将被永久删除。"

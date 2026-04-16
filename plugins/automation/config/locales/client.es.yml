@@ -450,6 +450,9 @@ es:
           runs_today: "%{count} hoy"
           runs_this_week: "%{count} esta semana"
           runs_this_month: "%{count} este mes"
+          recent_errors:
+            one: "%{count} error reciente"
+            other: "%{count} errores recientes"
           runs:
             label: Ejecuciones
           name:
