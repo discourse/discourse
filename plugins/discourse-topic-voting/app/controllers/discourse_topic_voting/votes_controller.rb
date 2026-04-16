@@ -15,60 +15,37 @@ module DiscourseTopicVoting
     end
 
     def vote
-      topic_id = params["topic_id"].to_i
-      topic = Topic.find_by(id: topic_id)
-
-      raise Discourse::InvalidAccess if !topic.can_vote? || topic.user_voted?(current_user)
-      guardian.ensure_can_see!(topic)
-
-      voted = false
-
-      if current_user.can_vote?
-        DiscourseTopicVoting::Vote.find_or_create_by(user: current_user, topic_id: topic_id)
-
-        topic.update_vote_count
-        voted = true
+      DiscourseTopicVoting::Votes::Cast.call(service_params) do
+        on_success do |topic:|
+          render json: voting_response(topic).merge(alert: current_user.alert_low_votes?)
+        end
+        on_failure { render json: failed_json, status: :unprocessable_entity }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_see_topic) { raise Discourse::InvalidAccess }
+        on_failed_policy(:topic_is_votable) { raise Discourse::InvalidAccess }
+        on_failed_policy(:topic_not_already_voted) { raise Discourse::InvalidAccess }
+        on_failed_policy(:current_user_can_vote) do |topic:|
+          render json: voting_response(topic).merge(alert: current_user.alert_low_votes?),
+                 status: :forbidden
+        end
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages),
+                 status: :bad_request
+        end
       end
-
-      obj = voting_response(topic)
-      obj[:alert] = current_user.alert_low_votes?
-
-      if WebHook.active_web_hooks(:topic_upvote).exists?
-        payload = {
-          topic_id: topic_id,
-          topic_slug: topic.slug,
-          voter_id: current_user.id,
-          vote_count: obj[:vote_count],
-        }
-        WebHook.enqueue_topic_voting_hooks(:topic_upvote, topic, payload.to_json)
-      end
-
-      render json: obj, status: voted ? 200 : 403
     end
 
     def unvote
-      topic_id = params["topic_id"].to_i
-      topic = Topic.find_by(id: topic_id)
-
-      guardian.ensure_can_see!(topic)
-
-      DiscourseTopicVoting::Vote.destroy_by(user: current_user, topic_id: topic_id)
-
-      topic.update_vote_count
-
-      obj = voting_response(topic)
-
-      if WebHook.active_web_hooks(:topic_unvote).exists?
-        payload = {
-          topic_id: topic_id,
-          topic_slug: topic.slug,
-          voter_id: current_user.id,
-          vote_count: obj[:vote_count],
-        }
-        WebHook.enqueue_topic_voting_hooks(:topic_unvote, topic, payload.to_json)
+      DiscourseTopicVoting::Votes::Remove.call(service_params) do
+        on_success { |topic:| render json: voting_response(topic) }
+        on_failure { render json: failed_json, status: :unprocessable_entity }
+        on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_policy(:can_see_topic) { raise Discourse::InvalidAccess }
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages),
+                 status: :bad_request
+        end
       end
-
-      render json: obj
     end
 
     protected
