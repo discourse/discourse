@@ -52,10 +52,12 @@ class GroupManager
   def sync_removal_side_effects(removed_user_ids)
     decrease_group_user_count(removed_user_ids)
 
-    return unless User.exists?(removed_user_ids.first)
+    removed_user_id = removed_user_ids.first
+    return unless User.exists?(removed_user_id)
+
     grant_other_available_title(removed_user_ids)
     remove_primary_and_flair_group(removed_user_ids)
-    sync_recalculate_trust_level(removed_user_ids)
+    sync_recalculate_trust_level(removed_user_id)
   end
 
   def decrease_group_user_count(removed_user_ids)
@@ -258,10 +260,10 @@ class GroupManager
     Jobs.enqueue(:bulk_grant_trust_level, user_ids: removed_user_ids, recalculate: true)
   end
 
-  def sync_recalculate_trust_level(removed_user_ids)
+  def sync_recalculate_trust_level(removed_user_id)
     return if @group.grant_trust_level.nil? || @group.grant_trust_level.zero?
 
-    user = User.find(removed_user_ids.first)
+    user = User.find(removed_user_id)
     Promotion.recalculate(user, use_previous_trust_level: true)
   end
 end
