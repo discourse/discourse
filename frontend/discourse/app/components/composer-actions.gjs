@@ -62,28 +62,12 @@ export default class ComposerActions extends Component {
     return this.args.post;
   }
 
-  get whisper() {
-    return this.args.whisper;
-  }
-
-  get noBump() {
-    return this.args.noBump;
-  }
-
   get composerModel() {
     return this.args.composerModel;
   }
 
   get replyOptions() {
     return this.args.replyOptions;
-  }
-
-  get canWhisper() {
-    return this.args.canWhisper;
-  }
-
-  get canUnlistTopic() {
-    return this.args.canUnlistTopic;
   }
 
   get isEditing() {
@@ -134,29 +118,15 @@ export default class ComposerActions extends Component {
 
   @cached
   get templateData() {
-    const {
-      action: currentAction,
-      whisper,
-      noBump,
-      isInSlowMode,
-      isEditing,
-    } = this;
+    const { action: currentAction, isInSlowMode, isEditing } = this;
 
     let iconName;
     if (currentAction === CREATE_TOPIC) {
-      if (this.canUnlistTopic && this.composerModel?.unlistTopic) {
-        iconName = "far-eye-slash";
-      } else {
-        iconName = "far-pen-to-square";
-      }
+      iconName = "far-pen-to-square";
     } else if (currentAction === PRIVATE_MESSAGE) {
       iconName = "envelope";
     } else if (currentAction === CREATE_SHARED_DRAFT) {
       iconName = "far-clipboard";
-    } else if (whisper) {
-      iconName = "far-eye-slash";
-    } else if (noBump) {
-      iconName = "anchor";
     } else if (isInSlowMode) {
       iconName = "hourglass-start";
     } else if (isEditing) {
@@ -167,11 +137,7 @@ export default class ComposerActions extends Component {
 
     let labelText;
     if (currentAction === CREATE_TOPIC) {
-      if (this.canUnlistTopic && this.composerModel?.unlistTopic) {
-        labelText = i18n("composer.composer_actions.create_unlisted_topic");
-      } else {
-        labelText = i18n("composer.composer_actions.create_topic.label");
-      }
+      labelText = i18n("composer.composer_actions.create_topic.label");
     } else if (currentAction === PRIVATE_MESSAGE) {
       labelText = i18n(
         "composer.composer_actions.create_personal_message.label"
@@ -179,11 +145,7 @@ export default class ComposerActions extends Component {
     } else if (currentAction === CREATE_SHARED_DRAFT) {
       labelText = i18n("composer.composer_actions.shared_draft.label");
     } else if (currentAction === REPLY) {
-      if (whisper) {
-        labelText = i18n("composer.composer_actions.toggle_whisper.label");
-      } else if (noBump) {
-        labelText = i18n("composer.composer_actions.toggle_topic_bump.label");
-      } else if (isInSlowMode) {
+      if (isInSlowMode) {
         labelText = i18n("composer.composer_actions.slow_mode_reply");
       } else {
         labelText = i18n(
@@ -276,39 +238,9 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    // 3. Toggle Whisper (toggle_whisper)
-    // if answered post is a whisper, we can only answer with a whisper so no need for toggle
-    if (
-      this.canWhisper &&
-      (!this.replyOptions?.postLink ||
-        !currentPost ||
-        currentPost.post_type !== this.site.post_types.whisper)
-    ) {
-      items.push({
-        name: i18n("composer.composer_actions.toggle_whisper.label"),
-        description: i18n("composer.composer_actions.toggle_whisper.desc"),
-        icon: "far-eye-slash",
-        id: "toggle_whisper",
-      });
-    }
-
-    // 4. Toggle Topic Bump (toggle_topic_bump) - REPLY MODE ONLY
-    const showToggleTopicBump =
-      this.currentUser?.staff || this.currentUser?.trust_level === 4;
-    if (currentAction === REPLY && showToggleTopicBump) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.toggle_topic_bump.label"),
-        description: i18n("composer.composer_actions.toggle_topic_bump.desc"),
-        icon: "anchor",
-        id: "toggle_topic_bump",
-      };
-
-      items.push(actionObj);
-    }
-
     // === CREATE_TOPIC MODE ACTIONS ===
 
-    // 4. Reply to Topic (when in CREATE_TOPIC mode, allow going back to REPLY)
+    // 3. Reply to Topic (when in CREATE_TOPIC mode, allow going back to REPLY)
     if (currentAction === CREATE_TOPIC && !this.isEditing && _topicSnapshot) {
       const actionObj = {
         name: i18n("composer.composer_actions.reply_to_topic.label"),
@@ -320,19 +252,7 @@ export default class ComposerActions extends Component {
       items.push(actionObj);
     }
 
-    // 5. Toggle Unlisted (for CREATE_TOPIC mode)
-    if (currentAction === CREATE_TOPIC && this.canUnlistTopic) {
-      const actionObj = {
-        name: i18n("composer.composer_actions.toggle_unlisted.label"),
-        description: i18n("composer.composer_actions.toggle_unlisted.desc"),
-        icon: "far-eye-slash",
-        id: "toggle_unlisted",
-      };
-
-      items.push(actionObj);
-    }
-
-    // 6. Shared Draft (shared_draft) - CREATE_TOPIC MODE ONLY
+    // 4. Shared Draft (shared_draft) - CREATE_TOPIC MODE ONLY
     if (currentAction === CREATE_TOPIC && this.site.shared_drafts_category_id) {
       const actionObj = {
         name: i18n("composer.composer_actions.shared_draft.label"),
@@ -508,18 +428,6 @@ export default class ComposerActions extends Component {
     options.action = REPLY;
     options.topic = _topicSnapshot;
     this._openComposer(options);
-  }
-
-  toggleWhisperSelected(options, model) {
-    model.toggleProperty("whisper");
-  }
-
-  toggleTopicBumpSelected(options, model) {
-    model.toggleProperty("noBump");
-  }
-
-  toggleUnlistedSelected(options, model) {
-    model.toggleProperty("unlistTopic");
   }
 
   _switchCreate(options, composerAction) {

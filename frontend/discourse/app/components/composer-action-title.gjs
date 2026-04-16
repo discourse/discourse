@@ -144,14 +144,10 @@ export default class ComposerActionTitle extends Component {
       <ComposerActions
         @composerModel={{this.model}}
         @replyOptions={{this.model.replyOptions}}
-        @canWhisper={{this.canWhisper}}
-        @canUnlistTopic={{this.canUnlistTopic}}
         @action={{this.model.action}}
         @tabindex={{this.tabindex}}
         @topic={{this.model.topic}}
         @post={{this.model.post}}
-        @whisper={{this.model.whisper}}
-        @noBump={{this.model.noBump}}
         @options={{hash mobilePlacementStrategy="fixed"}}
       />
 

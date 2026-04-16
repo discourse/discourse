@@ -3349,7 +3349,7 @@ en:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"
         toggle_topic_bump:
-          label: "Toggle topic bump"
+          label: "Do not bump"
           desc: "Reply without changing latest reply date"
         create_unlisted_topic: "Unlisted topic"
         toggle_unlisted:

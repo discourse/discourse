@@ -24,6 +24,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -743,19 +744,27 @@ acceptance(`Composer`, function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await click(".composer-actions-trigger");
-    await click("[data-action-id='toggle_whisper']");
+    await click(".d-combo-button .d-combo-button-menu");
 
     assert
-      .dom(".composer-actions-trigger svg.d-icon-far-eye-slash")
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle item is visible in dropdown");
+
+    await click(".composer-toggle-whisper");
+
+    assert
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
+      )
       .exists("sets the post type to whisper");
 
-    await click(".composer-actions-trigger");
-    await click("[data-action-id='toggle_whisper']");
+    await click(".composer-toggle-whisper");
 
     assert
-      .dom(".composer-actions-trigger svg.d-icon-far-eye-slash")
-      .doesNotExist("removes the whisper mode");
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='false']"
+      )
+      .exists("removes the whisper mode");
   });
 
   test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -854,15 +863,20 @@ acceptance(`Composer`, function (needs) {
   );
 
   test("Composer can toggle between reply and createTopic", async function (assert) {
+    updateCurrentUser({ admin: true });
     await visit("/t/this-is-a-test-topic/54081");
     await click(".topic-post[data-post-number='1'] button.reply");
 
-    await click(".composer-actions-trigger");
-    await click("[data-action-id='toggle_whisper']");
+    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-toggle-whisper");
 
     assert
-      .dom(".composer-actions-trigger svg.d-icon-far-eye-slash")
+      .dom(
+        ".composer-toggle-whisper .d-toggle-switch__checkbox[aria-checked='true']"
+      )
       .exists("sets the post type to whisper");
+    // close combo menu before navigating
+    await click(".d-combo-button .d-combo-button-menu");
 
     await visit("/");
     assert.dom("#create-topic").exists("the create topic button is visible");
@@ -872,11 +886,13 @@ acceptance(`Composer`, function (needs) {
       .dom(".reply-details .whisper .d-icon-far-eye-slash")
       .doesNotExist("should reset the state of the composer's model");
 
-    await click(".composer-actions-trigger");
-    await click("[data-action-id='toggle_unlisted']");
+    await click(".d-combo-button .d-combo-button-menu");
+    await click(".composer-toggle-unlisted");
 
     assert
-      .dom(".composer-actions-trigger svg.d-icon-far-eye-slash")
+      .dom(
+        ".composer-toggle-unlisted .d-toggle-switch__checkbox[aria-checked='true']"
+      )
       .exists("sets the topic to unlisted");
 
     await visit("/t/this-is-a-test-topic/9");
@@ -887,31 +903,37 @@ acceptance(`Composer`, function (needs) {
       .doesNotExist("should reset the state of the composer's model");
   });
 
-  test("Composer can toggle whisper when switching from reply to whisper to reply to topic", async function (assert) {
+  test("Composer whisper toggle not shown when replying to whisper", async function (assert) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post[data-post-number='3'] button.reply");
-    await click(".composer-actions-trigger");
+    await click(".d-combo-button .d-combo-button-menu");
     assert
-      .dom(".composer-actions-dropdown [data-action-id='toggle_whisper']")
-      .doesNotExist("toggle whisper is not available when reply to whisper");
+      .dom(".composer-toggle-whisper")
+      .doesNotExist("whisper toggle is not available when reply to whisper");
+    // close combo menu before interacting with other menus
+    await click(".d-combo-button .d-combo-button-menu");
+
+    await click(".composer-actions-trigger");
     await click("[data-action-id='reply_to_topic']");
-    await click(".composer-actions-trigger");
+
+    await click(".d-combo-button .d-combo-button-menu");
     assert
-      .dom(".composer-actions-dropdown [data-action-id='toggle_whisper']")
-      .exists("toggle whisper is available when reply to topic");
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle is available when reply to topic");
   });
 
-  test("Composer can toggle whisper when clicking reply to topic after reply to whisper", async function (assert) {
+  test("Composer whisper toggle available when replying to topic after whisper", async function (assert) {
     await visit("/t/topic-with-whisper/54081");
 
     await click(".topic-post[data-post-number='3'] button.reply");
     await click("#reply-control .discard-button");
     await click(".timeline-footer-controls button.create");
-    await click(".composer-actions-trigger");
+
+    await click(".d-combo-button .d-combo-button-menu");
     assert
-      .dom(".composer-actions-dropdown [data-action-id='toggle_whisper']")
-      .exists("toggle whisper is available when reply to topic");
+      .dom(".composer-toggle-whisper")
+      .exists("whisper toggle is available when reply to topic");
   });
 
   test("Composer restores whisper state from draft", async function (assert) {

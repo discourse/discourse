@@ -119,7 +119,7 @@ module PageObjects
       end
 
       def has_no_action?(action_id)
-        !has_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
+        has_no_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
       end
 
       def select_action(action_id)
@@ -128,11 +128,11 @@ module PageObjects
       end
 
       def reply_button_focused?
-        page.has_css?("#{@composer_id} .btn-primary:focus")
+        page.has_css?("#{@composer_id} .btn-primary.create:focus")
       end
 
       def create
-        find("#{@composer_id} .btn-primary").click
+        find("#{@composer_id} .btn-primary.create").click
       end
 
       def action(action_id)
@@ -144,7 +144,7 @@ module PageObjects
       end
 
       def button_label
-        find("#{@composer_id} .btn-primary .d-button-label")
+        find("#{@composer_id} .btn-primary.create .d-button-label")
       end
 
       def emoji_picker
