@@ -1,6 +1,8 @@
 en:
   js:
     discourse_workflows:
+      node_unavailable:
+        default: "This node is currently unavailable"
       admin:
         title: "Workflows"
       title: "Workflows"

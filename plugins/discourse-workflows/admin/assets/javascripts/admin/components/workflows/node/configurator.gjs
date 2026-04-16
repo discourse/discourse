@@ -11,7 +11,7 @@ import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { eq } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import {
   nodeTypeDescription,
@@ -157,6 +157,15 @@ export default class NodeConfigurator extends Component {
     return Object.keys(this.propertySchema).length > 0;
   }
 
+  get isUnavailable() {
+    const nodeType = this.resolvedNodeType;
+    return nodeType?.available === false;
+  }
+
+  get unavailableReasonKey() {
+    return this.resolvedNodeType?.unavailable_reason_key;
+  }
+
   @action
   switchTab(tab) {
     if (tab === "settings") {
@@ -270,7 +279,23 @@ export default class NodeConfigurator extends Component {
           />
         </div>
         <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-          <div class="workflows-configurator-modal__columns">
+          {{#if this.isUnavailable}}
+            <div class="workflows-configurator-modal__unavailable-banner">
+              {{icon "triangle-exclamation"}}
+              <span>{{i18n
+                  (or
+                    this.unavailableReasonKey
+                    "discourse_workflows.node_unavailable.default"
+                  )
+                }}</span>
+            </div>
+          {{/if}}
+          <div
+            class={{concatClass
+              "workflows-configurator-modal__columns"
+              (if this.isUnavailable "is-unavailable")
+            }}
+          >
             <div class="workflows-configurator-modal__column --left">
               <InputContext
                 @node={{@model.node}}
