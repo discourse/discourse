@@ -185,9 +185,21 @@ module PageObjects
           element_klass += " .grant-badge"
         when :change_owner
           element_klass += " .change-owner"
+        when :permanently_delete
+          element_klass += " .permanently-delete"
         end
 
         find(element_klass).click
+      end
+
+      def permanently_delete_post(post)
+        expand_post_actions(post)
+        expand_post_admin_actions(post)
+        click_post_admin_action_button(post, :permanently_delete)
+      end
+
+      def open_post_history(post)
+        post_by_number(post).find(".post-info.edits").click
       end
 
       def click_topic_bookmark_button

@@ -3741,12 +3741,12 @@ RSpec.describe Topic do
 
       PostDestroyer.new(admin, post).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload).destroy
       expect(topic.reload.cannot_permanently_delete_reason(Fabricate(:admin))).to eq(
-        I18n.t("post.cannot_permanently_delete.many_posts"),
+        I18n.t("post.cannot_permanently_delete.many_posts", count: 1),
       )
 
       PostDestroyer.new(admin, post_2.reload, force_destroy: true).destroy

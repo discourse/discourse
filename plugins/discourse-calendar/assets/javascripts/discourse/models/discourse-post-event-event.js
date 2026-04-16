@@ -7,10 +7,6 @@ import User from "discourse/models/user";
 import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
 import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
 
-const ChatChannel = optionalRequire(
-  "discourse/plugins/chat/discourse/models/chat-channel"
-);
-
 const DEFAULT_REMINDER = {
   type: "notification",
   value: 15,
@@ -62,6 +58,10 @@ export default class DiscoursePostEventEvent {
   @tracked _reminders;
 
   constructor(args = {}) {
+    const ChatChannel = optionalRequire(
+      "discourse/plugins/chat/discourse/models/chat-channel"
+    );
+
     this.id = args.id;
     this.rrule = args.rrule;
     this.name = args.name;
