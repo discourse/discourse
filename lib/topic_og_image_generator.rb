@@ -17,6 +17,7 @@ class TopicOgImageGenerator
   # publicly visible (PMs or topics in read-restricted categories).
   def self.eligible?(topic)
     return false if topic.nil?
+    return false if SiteSetting.login_required
     return false if topic.private_message?
     return false if topic.category&.read_restricted?
     true
@@ -51,7 +52,7 @@ class TopicOgImageGenerator
     posts_count = [@topic.posts_count - 1, 0].max
     read_time = calculate_read_time
     colors = fetch_colors
-    logo_upload = (SiteSetting.logo.presence || SiteSetting.logo_small)
+    logo_upload = (SiteSetting.logo_upload || SiteSetting.logo_small_upload)
     logo_data_uri = fetch_as_data_uri(logo_upload&.url)
 
     title_lines = word_wrap(title, TITLE_LINE_CHARS)
@@ -61,9 +62,9 @@ class TopicOgImageGenerator
       last = display_lines.last
       display_lines[-1] = (
         if last.length > TITLE_LINE_CHARS - 1
-          "#{last[0...TITLE_LINE_CHARS - 1]}…"
+          "#{last[0...TITLE_LINE_CHARS - 1]}���"
         else
-          "#{last}…"
+          "#{last}���"
         end
       )
     end
@@ -128,7 +129,7 @@ class TopicOgImageGenerator
     max_pill_width = OG_WIDTH - (2 * SIDE_MARGIN)
     pill_width = [name.length * 14.5 + (pill_padding * 2), max_pill_width].min
     max_name_chars = [((pill_width - (pill_padding * 2)) / 14.5).floor, 1].max
-    display_name = name.length > max_name_chars ? "#{name[0...[max_name_chars - 1, 1].max]}…" : name
+    display_name = name.length > max_name_chars ? "#{name[0...[max_name_chars - 1, 1].max]}���" : name
 
     <<~SVG
       <rect x="#{x}" y="#{y}" width="#{pill_width}" height="40" rx="6" fill="##{color}" fill-opacity="0.15"/>
@@ -160,7 +161,7 @@ class TopicOgImageGenerator
     text_y = y + (AVATAR_SIZE / 2) + 8
 
     author_text = username
-    author_text = "#{author_text}  ·  #{created_at}" if created_at.present?
+    author_text = "#{author_text}  ��  #{created_at}" if created_at.present?
 
     parts << %(<text x="#{text_x}" y="#{text_y}" font-family="#{FONT_FAMILY}" font-size="34" font-weight="400" fill="##{colors[:primary]}" opacity="0.6">#{escape_xml(author_text)}</text>)
 
@@ -196,7 +197,7 @@ class TopicOgImageGenerator
     items << "#{likes} #{likes == 1 ? "like" : "likes"}" if likes > 0
     return "" if items.empty?
 
-    text = items.join("  ·  ")
+    text = items.join("  ��  ")
     %(<text x="#{right_x}" y="#{y}" font-family="#{FONT_FAMILY}" font-size="30" font-weight="400" fill="##{colors[:primary]}" opacity="0.5" text-anchor="end">#{escape_xml(text)}</text>)
   end
 
@@ -219,7 +220,7 @@ class TopicOgImageGenerator
 
   def truncated_title
     title = @topic.title || ""
-    title.length > MAX_TITLE_LENGTH ? "#{title[0...MAX_TITLE_LENGTH - 1]}…" : title
+    title.length > MAX_TITLE_LENGTH ? "#{title[0...MAX_TITLE_LENGTH - 1]}���" : title
   end
 
   def word_wrap(text, max_chars)

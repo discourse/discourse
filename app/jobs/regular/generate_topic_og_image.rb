@@ -13,15 +13,16 @@ module Jobs
       topic = Topic.find_by(id: topic_id)
       return if topic.nil?
       return if topic.image_upload_id.present?
-      return if topic.og_image_upload_id.present?
       return if !TopicOgImageGenerator.eligible?(topic)
 
       generator = TopicOgImageGenerator.new(topic)
       upload = generator.generate
       return if upload.nil? || upload.errors.any?
 
+      old_upload_id = topic.og_image_upload_id
       topic.update_column(:og_image_upload_id, upload.id)
       UploadReference.ensure_exist!(upload_ids: [upload.id], target: topic)
+      UploadReference.where(target: topic, upload_id: old_upload_id).delete_all if old_upload_id
     end
   end
 end

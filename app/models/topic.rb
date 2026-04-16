@@ -312,6 +312,8 @@ class Topic < ActiveRecord::Base
   belongs_to :og_image_upload, class_name: "Upload"
   has_many :topic_thumbnails, through: :image_upload
 
+  after_save :regenerate_og_image
+
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :category_user_data
@@ -443,10 +445,11 @@ class Topic < ActiveRecord::Base
     elsif saved_changes[:category_id] && self.category&.read_restricted?
       UserProfile.remove_featured_topic_from_all_profiles(self)
     end
+  end
 
+  def regenerate_og_image
     if (saved_changes[:title] || saved_changes[:category_id]) && og_image_upload_id.present? &&
          SiteSetting.generate_topic_og_image
-      update_column(:og_image_upload_id, nil)
       Jobs.enqueue(:generate_topic_og_image, topic_id: id) if TopicOgImageGenerator.eligible?(self)
     end
   end
@@ -2220,7 +2223,7 @@ class Topic < ActiveRecord::Base
       end
 
       # Set the invited user to watch the PM so they receive notifications for new messages
-      # even if they haven’t opened the PM yet.
+      # even if they haven���t opened the PM yet.
       TopicUser.change(
         target_user,
         self,
