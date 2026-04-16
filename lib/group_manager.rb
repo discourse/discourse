@@ -50,6 +50,9 @@ class GroupManager
   end
 
   def sync_removal_side_effects(removed_user_ids)
+    decrease_group_user_count(removed_user_ids)
+
+    return unless User.exists?(removed_user_ids.first)
     grant_other_available_title(removed_user_ids)
     remove_primary_and_flair_group(removed_user_ids)
     sync_recalculate_trust_level(removed_user_ids)

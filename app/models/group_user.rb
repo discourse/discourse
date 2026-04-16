@@ -137,11 +137,7 @@ class GroupUser < ActiveRecord::Base
   end
 
   def sync_remove_via_manager
-    manager = GroupManager.new(group)
-    manager.decrease_group_user_count([user.id])
-
-    return unless User.exists?(user.id)
-    manager.sync_removal_side_effects([user.id])
+    GroupManager.new(group).sync_removal_side_effects([user.id])
   end
 
   def self.semantically_higher_notification_level_sql(new_col, existing_col)
