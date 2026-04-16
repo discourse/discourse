@@ -8,5 +8,22 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
       expect(described_class.color).to eq("green")
       expect(described_class.group).to eq("data")
     end
+
+    it "declares a columns collection with header and value fields" do
+      schema = described_class.property_schema
+
+      expect(schema[:columns]).to include(type: :collection, required: false)
+      expect(schema.dig(:columns, :item_schema, :header)).to include(
+        type: :string,
+        required: true,
+        ui: {
+          expression: false,
+        },
+      )
+      expect(schema.dig(:columns, :item_schema, :value)).to include(
+        type: :string,
+        required: true,
+      )
+    end
   end
 end

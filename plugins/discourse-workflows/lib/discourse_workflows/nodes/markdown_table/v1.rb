@@ -21,7 +21,25 @@ module DiscourseWorkflows
         end
 
         def self.property_schema
-          {}
+          {
+            columns: {
+              type: :collection,
+              required: false,
+              item_schema: {
+                header: {
+                  type: :string,
+                  required: true,
+                  ui: {
+                    expression: false,
+                  },
+                },
+                value: {
+                  type: :string,
+                  required: true,
+                },
+              },
+            },
+          }
         end
 
         def self.output_schema
