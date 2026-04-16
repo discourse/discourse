@@ -10,6 +10,8 @@ export default class CodeControl extends Component {
   }
 
   <template>
-    <@field.Control @height={{this.height}} @lang={{this.lang}} />
+    <div class="workflows-code-control">
+      <@field.Control @height={{this.height}} @lang={{this.lang}} />
+    </div>
   </template>
 }

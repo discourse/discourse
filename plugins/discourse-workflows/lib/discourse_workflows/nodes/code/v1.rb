@@ -4,6 +4,24 @@ module DiscourseWorkflows
   module Nodes
     module Code
       class V1 < NodeType
+        DEFAULT_CODE = <<~JS
+          // Available variables:
+          //   $input.item.json       - current item's JSON data
+          //   $input.all()           - array of all input items
+          //   $json                  - shortcut for $input.item.json
+          //   $("NodeName")          - access another node's output
+          //   $vars.KEY              - workflow variables
+          //   $site_settings.NAME    - site settings
+          //   $execution             - execution metadata (id, workflow_name, ...)
+          //   $current_user          - user running the workflow
+          //   console.log/warn/error - logging
+
+          // Example: add a new field called 'foo' to the current item
+          $input.item.json.foo = 1;
+
+          return $input.item;
+        JS
+
         def self.identifier
           "action:code"
         end
@@ -29,6 +47,7 @@ module DiscourseWorkflows
             code: {
               type: :string,
               required: true,
+              default: DEFAULT_CODE,
               ui: {
                 control: :code,
                 expression: false,
