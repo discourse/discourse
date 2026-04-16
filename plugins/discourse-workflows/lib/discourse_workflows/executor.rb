@@ -125,6 +125,10 @@ module DiscourseWorkflows
         DiscourseWorkflows::Registry.find_node_type(node.type, version: node.type_version)
       return handle_unknown_node(node, input_items) unless node_type_class
 
+      unless node_type_class.available?
+        return handle_unavailable_node(node, node_type_class, input_items)
+      end
+
       step = record_step(node, input_items)
       resolver_ctx = build_resolver_context(input_items)
       resolver = build_resolver(resolver_ctx)
@@ -194,6 +198,18 @@ module DiscourseWorkflows
           "in workflow #{@context.workflow.id}, skipping node '#{node.name}'",
       )
       record_step(node, input_items, status: Step::ERROR, error: "Unknown node type '#{node.type}'")
+    end
+
+    def handle_unavailable_node(node, node_type_class, input_items)
+      reason = node_type_class.unavailable_reason_key || "discourse_workflows.node_unavailable"
+      Rails.logger.warn(
+        "discourse-workflows: node type '#{node.type}' is unavailable " \
+          "in workflow #{@context.workflow.id}, passing through node '#{node.name}'",
+      )
+      step = record_step(node, input_items)
+      step.skip!(output: input_items, reason: reason)
+      @context.store_node_output(node, input_items)
+      enqueue_downstream(node, "main", input_items)
     end
 
     def build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
@@ -369,7 +385,9 @@ module DiscourseWorkflows
           Discourse.system_user
         else
           User.find_by(username: @workflow.run_as_username) ||
-            raise("Couldn't run this workflow as user: #{@workflow.run_as_username}. User not found.")
+            raise(
+              "Couldn't run this workflow as user: #{@workflow.run_as_username}. User not found.",
+            )
         end
     end
   end

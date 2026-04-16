@@ -386,5 +386,92 @@ RSpec.describe DiscourseWorkflows::Executor do
         "Couldn't run this workflow as user: nonexistent_user. User not found.",
       )
     end
+
+    context "with an unavailable node" do
+      let(:unavailable_node_class) do
+        Class.new(DiscourseWorkflows::NodeType) do
+          def self.identifier
+            "action:unavailable_test"
+          end
+
+          def self.name
+            "DiscourseWorkflows::NodeTypes::UnavailableTest"
+          end
+
+          def self.available?
+            false
+          end
+
+          def self.unavailable_reason_key
+            "discourse_workflows.unavailable_reasons.test_plugin_disabled"
+          end
+
+          def execute(_ctx)
+            raise "should never be called"
+          end
+        end
+      end
+
+      let(:plugin) do
+        p = Plugin::Instance.new
+        p.enabled_site_setting(:discourse_workflows_enabled)
+        p
+      end
+
+      before do
+        DiscoursePluginRegistry.register_discourse_workflows_node(unavailable_node_class, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      after do
+        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |h|
+          h[:value] == unavailable_node_class
+        end
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      it "passes data through and records a skipped step" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed", name: "Topic Closed"
+            g.node "unavailable-1", "action:unavailable_test", name: "Unavailable Node"
+            g.node "action-1",
+                   "action:topic_tags",
+                   name: "Topic Tags",
+                   configuration: {
+                     "topic_id" => "={{ trigger.topic_id }}",
+                     "tag_names" => tag.name,
+                   }
+            g.chain "trigger-1", "unavailable-1", "action-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+        trigger_data = { topic_id: topic.id, tags: topic.tags.pluck(:name) }
+        execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+        expect(execution.status).to eq("success")
+        expect(topic.reload.tags).to include(tag)
+
+        step = execution.execution_data.find_step(node_id: "unavailable-1")
+        expect(step["status"]).to eq("skipped")
+      end
+
+      it "does not execute the unavailable node" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed", name: "Topic Closed"
+            g.node "unavailable-1", "action:unavailable_test", name: "Unavailable Node"
+            g.chain "trigger-1", "unavailable-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+        trigger_data = { topic_id: topic.id, tags: [] }
+        execution = described_class.new(workflow, "trigger-1", trigger_data).run
+
+        expect(execution.status).to eq("success")
+      end
+    end
   end
 end
