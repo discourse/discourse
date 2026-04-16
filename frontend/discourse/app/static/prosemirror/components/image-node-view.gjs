@@ -8,6 +8,7 @@ import { trustHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
+import icon from "discourse/helpers/d-icon";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
@@ -650,14 +651,13 @@ export default class ImageNodeView extends Component {
         <span
           class="upload-placeholder__progress"
         >{{this.uploadProgress}}%</span>
-        <span
-          class="upload-placeholder__cancel"
+        <button
+          class="upload-placeholder__cancel btn-transparent no-text"
           title={{i18n "cancel"}}
           aria-label={{i18n "cancel"}}
-          role="button"
           contenteditable="false"
           {{on "click" this.cancelUpload}}
-        >&times;</span>
+        >{{icon "xmark"}}</button>
       </span>
     {{/if}}
   </template>

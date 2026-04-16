@@ -58,73 +58,60 @@
 
     img {
       max-width: 500px;
+
+      @include viewport.until(sm) {
+        max-width: 100%;
+      }
       height: auto;
-      border-radius: 6px;
-      filter: blur(1px);
-      opacity: 0.5;
+      border-radius: var(--d-border-radius);
       display: block;
+      animation: placeholder 1.5s infinite;
     }
   }
 
   .upload-placeholder-image__overlay {
     position: absolute;
-    bottom: 0.4em;
-    right: 0.4em;
-    display: inline-flex;
+    bottom: var(--space-2);
+    right: var(--space-2);
+    display: flex;
     align-items: center;
-    gap: 0.3em;
-    padding: 0.15em 0.45em;
+    gap: var(--space-2);
+    padding: 0 var(--space-1) 0 0.65em;
     background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
     color: var(--primary-high);
-    font-size: var(--font-down-1);
-
-    .upload-placeholder__progress {
-      font-size: inherit;
-      color: inherit;
-    }
-
-    .upload-placeholder__cancel {
-      cursor: pointer;
-      opacity: 0.7;
-
-      &:hover {
-        opacity: 1;
-      }
-    }
+    font-size: var(--font-down-1-rem);
   }
 
   .upload-placeholder-file {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-1) var(--space-1) var(--space-1) 0.65em;
+    padding: 0 var(--space-1) 0 0.65em;
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-border-radius);
     color: var(--primary-high);
-    animation: placeholder 1.5s infinite;
     font-size: var(--font-down-1-rem);
 
     .d-icon {
       fill: currentcolor;
     }
+  }
 
-    .upload-placeholder {
-      &__progress {
-        color: var(--tertiary);
-        font-weight: bold;
-      }
+  .upload-placeholder {
+    &__progress {
+      color: var(--tertiary);
+      font-weight: bold;
+    }
 
-      &__cancel {
-        padding: 0.5em 0.65em;
-      }
+    &__filename,
+    &__icon {
+      animation: placeholder 1.5s infinite;
+    }
 
-      &__icon {
-        padding: var(--space-half) var(--space-1);
-        background: var(--primary-low);
-        border-radius: var(--d-border-radius);
-      }
+    &__cancel {
+      padding: 0.5em 0.65em;
     }
   }
 
