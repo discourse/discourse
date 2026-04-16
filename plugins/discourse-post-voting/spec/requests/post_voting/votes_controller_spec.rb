@@ -191,6 +191,41 @@ RSpec.describe PostVoting::VotesController do
 
       expect(voters[1]["id"]).to eq(user_2.id)
       expect(voters[1]["direction"]).to eq(PostVotingVote.directions[:down])
+
+      expect(parsed["total_voters_count"]).to eq(2)
+    end
+
+    it "should return total_voters_count so the client can compute remaining voters correctly" do
+      sign_in(user)
+
+      user_2 = Fabricate(:user)
+      user_3 = Fabricate(:user)
+      user_4 = Fabricate(:user)
+
+      Fabricate(:post_voting_vote, votable: answer, user: user)
+      Fabricate(:post_voting_vote, votable: answer, user: user_2)
+      Fabricate(
+        :post_voting_vote,
+        votable: answer,
+        user: user_3,
+        direction: PostVotingVote.directions[:down],
+      )
+      Fabricate(
+        :post_voting_vote,
+        votable: answer,
+        user: user_4,
+        direction: PostVotingVote.directions[:down],
+      )
+
+      stub_const(PostVoting::VotesController, "VOTERS_LIMIT", 2) do
+        get "/post_voting/voters.json", params: { post_id: answer.id }
+      end
+
+      expect(response.status).to eq(200)
+
+      parsed = JSON.parse(response.body)
+
+      expect(parsed["total_voters_count"]).to eq(4)
     end
   end
 
