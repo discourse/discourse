@@ -84,6 +84,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "post-event-listener",
   "post-flag-available-flags",
   "post-flag-title",
+  "post-language-selector-priority",
   "post-menu-buttons",
   "post-menu-collapsed",
   "post-menu-like-button-icon",

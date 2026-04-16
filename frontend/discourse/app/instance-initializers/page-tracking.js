@@ -4,12 +4,15 @@ import {
   trackNextAjaxAsPageview,
   trackNextAjaxAsTopicView,
 } from "discourse/lib/ajax";
+import { sendBeaconPageview } from "discourse/lib/beacon-pageview";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
 import { sendDeferredPageview } from "./message-bus";
+
+let _preNavigationUrl = null;
 
 export default {
   after: "inject-objects",
@@ -27,6 +30,11 @@ export default {
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
+
+    const siteSettings = owner.lookup("service:site-settings");
+    if (siteSettings.use_beacon_for_browser_page_views) {
+      router.on("routeDidChange", this.handleRouteDidChange);
+    }
 
     let appEvents = owner.lookup("service:app-events");
     let documentTitle = owner.lookup("service:document-title");
@@ -79,6 +87,39 @@ export default {
     }
   },
 
+  handleRouteDidChange(transition) {
+    if (
+      transition.isAborted ||
+      (transition.urlMethod === "replace" && transition.queryParamsOnly)
+    ) {
+      return;
+    }
+
+    const trackingSessionId = document.querySelector(
+      "meta[name=discourse-track-view-session-id]"
+    )?.content;
+    const referrerUrl = transition.from
+      ? _preNavigationUrl
+      : document.referrer.length
+        ? document.referrer
+        : null;
+
+    let topicId;
+    if (
+      transition.to.name === "topic.fromParamsNear" ||
+      transition.to.name === "topic.fromParams"
+    ) {
+      topicId = transition.to.parent.params.id;
+    }
+
+    sendBeaconPageview({
+      sessionId: trackingSessionId,
+      url: window.location.href,
+      referrer: referrerUrl,
+      topicId,
+    });
+  },
+
   handleRouteWillChange(transition) {
     // transition.from will be null on initial boot transition, which is already tracked as a pageview via the HTML request
     if (!transition.from) {
@@ -116,6 +157,7 @@ export default {
       trackingUrl = new URL(path, window.location.origin).href;
       trackingReferrer = window.location.href;
     }
+    _preNavigationUrl = window.location.href;
     trackNextAjaxAsPageview(trackingSessionId, trackingUrl, trackingReferrer);
 
     if (

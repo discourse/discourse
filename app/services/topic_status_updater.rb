@@ -45,7 +45,8 @@ TopicStatusUpdater =
         result = false if rc == 0
       end
 
-      DiscourseEvent.trigger(:topic_closed, topic) if status.manually_closing_topic?
+      DiscourseEvent.trigger(:topic_closed, topic, :manually) if status.manually_closing_topic?
+      DiscourseEvent.trigger(:topic_closed, topic, :automatically) if status.auto_closing_topic?
 
       if status.visible? && status.disabled?
         UserProfile.remove_featured_topic_from_all_profiles(topic)
@@ -201,6 +202,10 @@ TopicStatusUpdater =
 
         def closing_topic?
           (closed? || autoclosed?) && enabled?
+        end
+
+        def auto_closing_topic?
+          autoclosed? && enabled?
         end
 
         def manually_closing_topic?

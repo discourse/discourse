@@ -3,7 +3,7 @@
 describe "fix query ids rake task" do
   before do
     Rake::Task.clear
-    Discourse::Application.load_tasks
+    silence_warnings { Discourse::Application.load_tasks }
   end
 
   let(:query_name) { "Awesome query" }

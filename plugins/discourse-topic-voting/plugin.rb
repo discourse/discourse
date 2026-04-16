@@ -8,10 +8,10 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-topic-voting
 
 register_asset "stylesheets/common/topic-voting.scss"
-register_asset "stylesheets/desktop/topic-voting.scss", :desktop
-register_asset "stylesheets/mobile/topic-voting.scss", :mobile
 
 register_svg_icon "check-to-slot"
+register_svg_icon "vote-up"
+register_svg_icon "vote-up-filled"
 
 enabled_site_setting :topic_voting_enabled
 

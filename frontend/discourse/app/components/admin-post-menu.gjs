@@ -70,6 +70,11 @@ export default class AdminPostMenu extends Component {
               "post.controls.revert_to_regular"
               "post.controls.convert_to_moderator"
             }}
+            @title={{if
+              @data.post.isModeratorAction
+              ""
+              "post.controls.convert_to_moderator_description"
+            }}
             @icon="shield-halved"
             class={{concatClass
               "btn btn-transparent toggle-post-type"
@@ -89,7 +94,7 @@ export default class AdminPostMenu extends Component {
               "post.controls.change_post_notice"
               "post.controls.add_post_notice"
             }}
-            @title="post.controls.unhide"
+            @title="post.controls.add_post_notice_description"
             class={{concatClass
               "btn btn-transparent"
               (if @data.post.notice "change-notice" "add-notice")
@@ -116,7 +121,6 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.change_owner"
             @icon="user"
-            @title="post.controls.lock_post_description"
             class="btn btn-transparent change-owner"
             @action={{fn this.topicAction "changePostOwner"}}
           />
@@ -189,6 +193,7 @@ export default class AdminPostMenu extends Component {
           <dropdown.item>
             <DButton
               @label="post.controls.wiki"
+              @title="post.controls.wiki_description"
               @icon="far-pen-to-square"
               class="btn btn-transparent wiki"
               @action={{fn this.topicAction "toggleWiki"}}
@@ -201,6 +206,7 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.publish_page"
+            @title="post.controls.publish_page_description"
             @icon="file"
             class="btn btn-transparent publish-page"
             @action={{fn this.topicAction "showPagePublish"}}
@@ -212,6 +218,7 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.rebake"
+            @title="post.controls.rebake_description"
             @icon="rotate"
             class="btn btn-transparent rebuild-html"
             @action={{fn this.topicAction "rebakePost"}}

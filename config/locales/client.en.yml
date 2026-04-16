@@ -3189,6 +3189,7 @@ en:
       title: "Or press %{modifier}Enter"
       save_and_close: "Save and close"
       discard: "Discard"
+      cancel_edit: "Cancel edit"
       draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
@@ -4522,8 +4523,9 @@ en:
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
         post_language_selector:
-          title: "Post Language"
-          none: "None"
+          title: "Post language"
+          header: "This post is in…"
+          none: "Not set"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
           action_original: "Edit original post"
@@ -4549,7 +4551,9 @@ en:
 
       cancel_composer:
         confirm: "Do you want to discard your post?"
+        confirm_edit: "Do you want to discard your changes?"
         discard: "Discard"
+        discard_edit: "Discard changes"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -4601,11 +4605,15 @@ en:
         permanently_delete_topic_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this topic and remove it from the database."
         permanently_delete_confirm_phrase: "permanently delete"
         wiki: "Make Wiki"
+        wiki_description: "let allowed groups edit this post"
         unwiki: "Remove Wiki"
         convert_to_moderator: "Add Staff Color"
+        convert_to_moderator_description: "highlight the content of this post"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
+        rebake_description: "reprocess this post to fix formatting or embeds"
         publish_page: "Page Publishing"
+        publish_page_description: "publish this topic as a standalone page"
         unhide: "Unhide"
         change_owner: "Change Ownership…"
         grant_badge: "Grant Badge…"
@@ -4613,6 +4621,7 @@ en:
         lock_post_description: "prevent the poster from editing this post"
         unlock_post: "Unlock Post"
         unlock_post_description: "allow the poster to edit this post"
+        add_post_notice_description: "add highlighted notice above this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
         delete_topic_confirm_modal:
@@ -4757,6 +4766,7 @@ en:
       back: "Back to category"
       general: "General"
       settings: "Settings"
+      moderation: "Moderation"
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
@@ -4903,11 +4913,15 @@ en:
       require_reply_approval: "Require moderator approval of all new replies"
       require_topic_approval_for: "Require moderator approval of new topics for..."
       require_reply_approval_for: "Require moderator approval of new replies for..."
+      new_topic_approval: "New topic approval"
+      new_reply_approval: "New reply approval"
       posting_review_modes:
         no_one: "No one"
         everyone: "Everyone"
         everyone_except: "Everyone except selected groups"
         no_one_except: "No one except selected groups"
+      posting_review_groups_require_approval: "Groups that require approval"
+      posting_review_groups_no_approval: "Groups that do not require approval"
       posting_review_groups_placeholder: "Select groups..."
       this_year: "this year"
       position: "Position on the categories page:"
@@ -6645,8 +6659,8 @@ en:
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
-          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
-          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
+          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
+          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
           learn_more: "Learn more..."
 
         last_checked: "Last checked"

@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import pretender, {
   fixturesByUrl,
   response,
@@ -265,14 +266,37 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("Spec incompliant embedded record name", async function (assert) {
+    const stub = sinon.stub(console, "warn");
+
+    pretender.get("/fruits/5", () =>
+      response({
+        __rest_serializer: "1",
+        fruit: {
+          id: 5,
+          name: "kiwi",
+          farmer_id: null,
+          color_ids: [1],
+          category_id: 5,
+          other_fruit_ids: { apple: 1, banana: 2 },
+        },
+      })
+    );
+
     const store = getOwner(this).lookup("service:store");
-    const fruit = await store.find("fruit", 4);
+    const fruit = await store.find("fruit", 5);
 
     assert.propContains(
       fruit.other_fruit_ids,
       { apple: 1, banana: 2 },
       "embedded record remains unhydrated"
     );
+    assert.true(
+      stub.calledWith(
+        "WARNING: Expected an array of resource ids for fruit.other_fruit_ids"
+      )
+    );
+
+    stub.restore();
   });
 
   test("hydrateEmbedded", async function (assert) {

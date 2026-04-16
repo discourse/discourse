@@ -760,6 +760,128 @@ RSpec.describe Middleware::RequestTracker do
     end
   end
 
+  describe "beacon pageview tracking via /srv/pv" do
+    before do
+      SiteSetting.use_beacon_for_browser_page_views = true
+      freeze_time
+      ApplicationRequest.clear_cache!
+    end
+
+    def beacon_env(body_hash, extra = {})
+      json_body = JSON.generate(body_hash)
+      env(
+        {
+          :path => "/srv/pv",
+          "REQUEST_METHOD" => "POST",
+          "CONTENT_TYPE" => "application/json",
+          "rack.input" => StringIO.new(json_body),
+        }.merge(extra),
+      )
+    end
+
+    it "returns 204 and does not call the app" do
+      app_called = false
+      middleware =
+        Middleware::RequestTracker.new(
+          lambda do |env|
+            app_called = true
+            [200, {}, ["OK"]]
+          end,
+        )
+      status, = middleware.call(beacon_env({}))
+
+      expect(status).to eq(204)
+      expect(app_called).to eq(false)
+    end
+
+    it "returns 204 for beacon requests in a subfolder setup" do
+      set_subfolder "/forum"
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, = middleware.call(beacon_env({}, { path: "/forum/srv/pv" }))
+
+      expect(status).to eq(204)
+    end
+
+    it "handles malformed JSON body gracefully" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, =
+        middleware.call(
+          env(
+            :path => "/srv/pv",
+            "REQUEST_METHOD" => "POST",
+            "CONTENT_TYPE" => "application/json",
+            "rack.input" => StringIO.new("not json"),
+          ),
+        )
+
+      expect(status).to eq(204)
+    end
+
+    it "increments beacon-specific counters and fires beacon event with correct data" do
+      SiteSetting.trigger_browser_pageview_events = true
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+
+      events =
+        DiscourseEvent.track_events(:beacon_browser_pageview) do
+          middleware.call(
+            beacon_env(
+              {
+                url: "https://test.com/t/topic/123",
+                referrer: "https://test.com/",
+                session_id: "abc123",
+                topic_id: 123,
+              },
+            ),
+          )
+        end
+
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon.first).to be_nil
+      expect(ApplicationRequest.page_view_anon_browser.first).to be_nil
+
+      event = events[0][:params].last
+      expect(event[:url]).to eq("https://test.com/t/topic/123")
+      expect(event[:referrer]).to eq("https://test.com/")
+      expect(event[:session_id]).to eq("abc123")
+      expect(event[:topic_id]).to eq(123)
+      expect(event[:user_agent]).to eq(
+        "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
+      )
+    end
+
+    it "increments legacy and BPV counters from non-beacon requests" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1"))
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
+
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    context "when SiteSetting.use_beacon_for_browser_page_views is false" do
+      before { SiteSetting.use_beacon_for_browser_page_views = false }
+
+      it "returns the app's response for beacon requests instead of 204" do
+        app_called = false
+        middleware =
+          Middleware::RequestTracker.new(
+            lambda do |env|
+              app_called = true
+              [404, {}, ["unknown app path"]]
+            end,
+          )
+        status, = middleware.call(beacon_env({}))
+
+        expect(status).to eq(404)
+        expect(app_called).to eq(true)
+      end
+    end
+  end
+
   describe "rate limiting" do
     let(:fake_logger) { FakeLogger.new }
 
