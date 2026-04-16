@@ -9,12 +9,18 @@ module DiscourseWorkflows
       validates :execution_ids, presence: true
     end
 
+    policy :can_manage_workflows
+
     transaction do
       step :clear_execution_data
       step :remove_executions
     end
 
     private
+
+    def can_manage_workflows(guardian:)
+      guardian.is_admin?
+    end
 
     def clear_execution_data(params:)
       DiscourseWorkflows::ExecutionData.where(execution_id: params.execution_ids).delete_all

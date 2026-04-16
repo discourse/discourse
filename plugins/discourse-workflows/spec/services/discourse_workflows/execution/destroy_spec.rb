@@ -6,17 +6,27 @@ RSpec.describe DiscourseWorkflows::Execution::Destroy do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:) }
+    subject(:result) { described_class.call(params:, guardian:) }
 
+    fab!(:admin)
     fab!(:workflow, :discourse_workflows_workflow)
     fab!(:execution) { Fabricate(:discourse_workflows_execution, workflow: workflow) }
 
     let(:params) { { execution_ids: [execution.id] } }
+    let(:guardian) { admin.guardian }
 
     context "when contract is not valid" do
       let(:params) { {} }
 
       it { is_expected.to fail_a_contract }
+    end
+
+    context "when user is not admin" do
+      fab!(:user)
+
+      let(:guardian) { user.guardian }
+
+      it { is_expected.to fail_a_policy(:can_manage_workflows) }
     end
 
     context "when everything's ok" do
