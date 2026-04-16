@@ -47,7 +47,37 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          [[]]
+          columns = @configuration.fetch("columns") { [] }
+          headers = columns.map { |c| c["header"].to_s }
+
+          return [[Item.new({ "markdown" => "" }).to_h]] if headers.empty?
+
+          rows =
+            exec_ctx.input_items.map do |item|
+              resolved = exec_ctx.get_parameters(item).fetch("columns") { [] }
+              resolved.map { |c| format_cell(c["value"]) }
+            end
+
+          markdown = render_table(headers, rows)
+          [[Item.new({ "markdown" => markdown }).to_h]]
+        end
+
+        private
+
+        def render_table(headers, rows)
+          lines = []
+          lines << row_line(headers)
+          lines << row_line(headers.map { "---" })
+          rows.each { |cells| lines << row_line(cells) }
+          lines.join("\n")
+        end
+
+        def row_line(cells)
+          "| #{cells.join(" | ")} |"
+        end
+
+        def format_cell(value)
+          value.to_s
         end
       end
     end
