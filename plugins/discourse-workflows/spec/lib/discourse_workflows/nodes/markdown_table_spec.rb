@@ -125,5 +125,31 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
 
       expect(markdown.split("\n").last).to eq("| line1<br>line2<br>line3 |")
     end
+
+    it "renders headers and separator only when input items are empty" do
+      items = []
+      config = {
+        "columns" => [
+          { "header" => "Name", "value" => "={{ $json.name }}" },
+          { "header" => "Age", "value" => "={{ $json.age }}" },
+        ],
+      }
+
+      markdown = execute(items, config)
+
+      expect(markdown).to eq(<<~MD.strip)
+        | Name | Age |
+        | --- | --- |
+      MD
+    end
+
+    it "returns an empty string when no columns are configured" do
+      items = [{ "json" => { "x" => 1 } }]
+      config = { "columns" => [] }
+
+      markdown = execute(items, config)
+
+      expect(markdown).to eq("")
+    end
   end
 end
