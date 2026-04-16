@@ -99,6 +99,7 @@ en:
         "action:form": "Form"
         "action:limit": "Limit"
         "action:log": "Log"
+        "action:markdown_table": "Markdown table"
         "action:respond_to_webhook": "Respond to Webhook"
         "trigger:topic_admin_button": "Topic admin button"
         "trigger:error": "Error trigger"
@@ -134,6 +135,7 @@ en:
         "action:form": "Adds a page to a multi-step form"
         "action:limit": "Keep only the first or last N items"
         "action:log": "Record key/value data to the execution log without affecting the workflow"
+        "action:markdown_table": "Build a markdown table from a list of items"
         "action:respond_to_webhook": "Send a custom HTTP response to the webhook caller"
         "trigger:topic_admin_button": "Adds a button to the topic admin menu that triggers this workflow"
         "trigger:error": "Fires when another workflow fails"
@@ -385,6 +387,11 @@ en:
         key: "Key"
         value: "Value"
         add_entry: "Add entry"
+      markdown_table:
+        columns: "Columns"
+        header: "Header"
+        value: "Value"
+        add_column: "Add column"
       chat_approval:
         message: "Message"
         approve_label: "Approve button label"
