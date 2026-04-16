@@ -68,6 +68,7 @@ module DiscourseWorkflows
 
     def clear_site_cache
       Site.clear_cache
+      DiscourseWorkflows::WorkflowDependency.clear_cache!
     end
 
     def workflow_enabled(workflow:)

@@ -4,6 +4,8 @@ module DiscourseWorkflows
   class WorkflowDependency < ActiveRecord::Base
     self.table_name = "discourse_workflows_workflow_dependencies"
 
+    CACHE_KEY = "topic_admin_buttons"
+
     belongs_to :workflow, class_name: "DiscourseWorkflows::Workflow"
 
     TYPES = %w[
@@ -18,6 +20,27 @@ module DiscourseWorkflows
     validates :dependency_type, inclusion: { in: TYPES }
 
     scope :of_type, ->(type) { where(dependency_type: type) }
+
+    def self.cache
+      @cache ||= DistributedCache.new("discourse_workflows_dependencies")
+    end
+
+    def self.clear_cache!
+      cache.clear
+    end
+
+    def self.cached_topic_admin_buttons
+      cache.defer_get_set(CACHE_KEY) do
+        enabled_workflows_with_node_type("trigger:topic_admin_button").map do |workflow, node|
+          {
+            trigger_node_id: node["id"],
+            workflow_id: workflow.id,
+            label: node.dig("configuration", "label"),
+            icon: node.dig("configuration", "icon"),
+          }
+        end
+      end
+    end
 
     def self.workflows_referencing(type, key)
       where(dependency_type: type, dependency_key: key.to_s).select(:workflow_id)

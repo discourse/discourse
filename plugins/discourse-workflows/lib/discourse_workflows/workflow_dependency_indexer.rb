@@ -41,6 +41,8 @@ module DiscourseWorkflows
         WorkflowDependency.where(workflow_id: @workflow.id).delete_all
         WorkflowDependency.insert_all(rows) if rows.present?
       end
+
+      WorkflowDependency.clear_cache!
     end
 
     private
