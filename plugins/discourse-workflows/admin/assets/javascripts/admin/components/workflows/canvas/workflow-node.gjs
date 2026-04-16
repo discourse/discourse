@@ -69,6 +69,14 @@ export default class WorkflowNode extends Component {
     return Object.keys(this.args.node.outputs);
   }
 
+  get isUnavailable() {
+    const nodeType = this.resolvedNodeType;
+    if (!nodeType || typeof nodeType === "string") {
+      return true;
+    }
+    return nodeType.available === false;
+  }
+
   get isManuallyTriggerable() {
     return nodeTypeIsManuallyTriggerable(this.resolvedNodeType);
   }
@@ -102,6 +110,7 @@ export default class WorkflowNode extends Component {
         (if this.isTrigger "is-trigger")
         (if this.isBranching "is-branching")
         (if @node.selected "is-selected")
+        (if this.isUnavailable "is-unavailable")
       }}
       data-client-id={{this.data.clientId}}
     >

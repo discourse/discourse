@@ -67,10 +67,16 @@ export default class NodePanel extends Component {
     return this.args.searchTerm?.trim().length > 0;
   }
 
+  get availableNodeTypes() {
+    return (this.args.nodeTypes || []).filter(
+      (nodeType) => nodeType.available !== false
+    );
+  }
+
   get categories() {
     const groups = new Map();
 
-    for (const nodeType of this.args.nodeTypes || []) {
+    for (const nodeType of this.availableNodeTypes) {
       const presenter = nodeTypePresenter(nodeType);
 
       if (!presenter.paletteGroup || groups.has(presenter.paletteGroup.id)) {
@@ -91,7 +97,7 @@ export default class NodePanel extends Component {
       return [];
     }
 
-    return (this.args.nodeTypes || []).filter(
+    return this.availableNodeTypes.filter(
       (nodeType) =>
         nodeTypePresenter(nodeType).paletteGroup?.id ===
         this.selectedCategory.id
@@ -167,7 +173,7 @@ export default class NodePanel extends Component {
   handleSearchKeyDown(event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      const firstNodeType = this.args.nodeTypes?.[0];
+      const firstNodeType = this.availableNodeTypes[0];
       if (this.isSearching && firstNodeType) {
         this.handleNodeItemClick(firstNodeType);
       }
@@ -274,7 +280,7 @@ export default class NodePanel extends Component {
             />
           {{/each}}
         {{else if this.showSearchResults}}
-          {{#each @nodeTypes as |nodeType|}}
+          {{#each this.availableNodeTypes as |nodeType|}}
             <NodeTypeItem
               @presenter={{nodeTypePresenter nodeType}}
               @onClick={{fn this.handleNodeItemClick nodeType}}

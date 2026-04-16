@@ -370,6 +370,14 @@
     color: var(--primary-medium);
     padding: 1px 3px;
   }
+
+  &.is-unavailable {
+    opacity: 0.5;
+
+    .workflow-rete-node__icon-block {
+      filter: grayscale(1);
+    }
+  }
 }
 
 .workflow-rete-node-view {
