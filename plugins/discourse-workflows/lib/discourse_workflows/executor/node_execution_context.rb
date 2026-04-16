@@ -9,7 +9,6 @@ module DiscourseWorkflows
                   :vars,
                   :expression_errors,
                   :condition_details,
-                  :resolved_config,
                   :log,
                   :execution_id,
                   :resume_token,
@@ -45,7 +44,6 @@ module DiscourseWorkflows
         @resolver_context = resolver_context || {}
         @expression_errors = []
         @condition_details = []
-        @resolved_config = nil
         @log = StepLog.new
       end
 
@@ -110,7 +108,7 @@ module DiscourseWorkflows
       end
 
       def resolve_all_parameters
-        @resolved_config ||= @resolver.resolve_hash(@configuration)
+        @resolver.resolve_hash(@configuration)
       end
     end
   end
