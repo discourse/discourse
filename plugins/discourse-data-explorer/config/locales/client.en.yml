@@ -135,6 +135,8 @@ en:
             data_explorer:
               run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
     discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "Requires the Data Explorer plugin to be enabled"
       nodes:
         "action:sql": "Data Explorer"
       node_descriptions:

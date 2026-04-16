@@ -17,6 +17,14 @@ module DiscourseDataExplorer
         "purple"
       end
 
+      def self.available?
+        SiteSetting.data_explorer_enabled
+      end
+
+      def self.unavailable_reason_key
+        "discourse_workflows.node_unavailable.requires_data_explorer" unless available?
+      end
+
       def self.property_schema
         {
           operation: {
