@@ -54,6 +54,10 @@ module DiscourseWorkflows
       DiscourseWorkflows::Execution.statuses.key(object.attributes["last_execution_status_value"])
     end
 
+    def include_last_execution_node_outputs?
+      !object.attributes.key?("last_execution_status_value")
+    end
+
     def last_execution_node_outputs
       execution =
         object
