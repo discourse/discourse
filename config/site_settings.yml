@@ -2804,7 +2804,7 @@ security:
   can_permanently_delete:
     default: false
     client: true
-    hidden: true
+    requires_confirmation: "simple_on_enable"
   suppress_secured_categories_from_admin:
     default: false
   include_secure_categories_in_tag_counts:
