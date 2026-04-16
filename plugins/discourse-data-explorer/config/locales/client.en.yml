@@ -136,7 +136,7 @@ en:
               run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
     discourse_workflows:
       nodes:
-        "action:sql": "SQL Query"
+        "action:sql": "Data Explorer"
       node_descriptions:
         "action:sql": "Run a read-only SQL query against the database"
       sql:
