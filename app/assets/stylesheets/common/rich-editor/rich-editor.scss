@@ -98,30 +98,33 @@
   .upload-placeholder-file {
     display: inline-flex;
     align-items: center;
-    gap: 0.3em;
-    padding: 0.15em 0.4em;
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-1) var(--space-1) 0.65em;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
     color: var(--primary-high);
     animation: placeholder 1.5s infinite;
+    font-size: var(--font-down-1-rem);
 
     .d-icon {
       fill: currentcolor;
     }
 
-    .upload-placeholder__progress {
-      font-size: var(--font-down-1);
-      color: var(--primary-medium);
-    }
-  }
+    .upload-placeholder {
+      &__progress {
+        color: var(--tertiary);
+        font-weight: bold;
+      }
 
-  .upload-placeholder__cancel {
-    cursor: pointer;
-    opacity: 0.6;
+      &__cancel {
+        padding: 0.5em 0.65em;
+      }
 
-    &:hover {
-      opacity: 1;
-      color: var(--danger);
+      &__icon {
+        padding: var(--space-half) var(--space-1);
+        background: var(--primary-low);
+        border-radius: var(--d-border-radius);
+      }
     }
   }
 
