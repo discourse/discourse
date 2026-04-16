@@ -17,7 +17,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
 
     entrypoints = {}
 
-    manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
+    manifest = JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
 
     manifest.each do |key, value|
       next unless value["isEntry"]
@@ -34,7 +34,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.route_bundles
-    manifest = JSON.parse(File.read("#{dist_dir}/manifest.json"))
+    manifest = JSON.parse(File.read("#{dist_dir}/manifest/manifest.json"))
 
     route_bundles = {}
 
@@ -90,12 +90,13 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.watch!
+    FileUtils.mkdir_p("#{dist_dir}/manifest")
     Listen
-      .to(dist_dir) do |modified, added, removed|
-        if [*modified, *added, *removed].any? { |path| path.end_with?("manifest.json") }
-          puts "refreshing"
-          MessageBus.publish("/file-change", ["refresh"])
-        end
+      .to("#{dist_dir}/manifest") do |modified, added, removed|
+        # if [*modified, *added, *removed].any? { |path| path.end_with?("manifest.json") }
+        puts "refreshing"
+        MessageBus.publish("/file-change", ["refresh"])
+        # end
       end
       .start
   end

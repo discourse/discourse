@@ -141,14 +141,15 @@ export function buildConfig({ devMode } = {}) {
 
           if (devMode) {
             // Workaround rolldown devEngine bug?
+            fs.mkdirSync("./dist/manifest", { recursive: true });
             fs.writeFileSync(
-              "./dist/manifest.json",
+              "./dist/manifest/manifest.json",
               JSON.stringify(manifest, null, 2)
             );
           } else {
             this.emitFile({
               type: "asset",
-              fileName: "manifest.json",
+              fileName: "manifest/manifest.json",
               source: JSON.stringify(manifest, null, 2),
             });
           }
