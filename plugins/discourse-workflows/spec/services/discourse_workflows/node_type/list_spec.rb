@@ -144,4 +144,46 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
     end
   end
+
+  describe "#fetch_node_types" do
+    it "includes unavailable node types with available: false" do
+      unavailable_class =
+        Class.new(DiscourseWorkflows::NodeType) do
+          def self.identifier
+            "action:unavailable_palette_test"
+          end
+
+          def self.name
+            "DiscourseWorkflows::Nodes::UnavailablePaletteTest"
+          end
+
+          def self.available?
+            false
+          end
+
+          def self.unavailable_reason_key
+            "discourse_workflows.node_unavailable.test_reason"
+          end
+        end
+
+      DiscoursePluginRegistry.register_discourse_workflows_node(
+        unavailable_class,
+        Plugin::Instance.new,
+      )
+      DiscourseWorkflows::Registry.reset_indexes!
+
+      result = described_class.call
+      unavailable =
+        result[:node_types].find { |nt| nt[:identifier] == "action:unavailable_palette_test" }
+
+      expect(unavailable).to be_present
+      expect(unavailable[:available]).to eq(false)
+      expect(unavailable[:unavailable_reason_key]).to eq(
+        "discourse_workflows.node_unavailable.test_reason",
+      )
+    ensure
+      DiscoursePluginRegistry.discourse_workflows_nodes.delete(unavailable_class)
+      DiscourseWorkflows::Registry.reset_indexes!
+    end
+  end
 end
