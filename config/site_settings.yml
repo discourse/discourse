@@ -3924,7 +3924,7 @@ uncategorized:
     area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "experimental"
+      status: "alpha"
       learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
 
 user_preferences:
