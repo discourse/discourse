@@ -77,7 +77,13 @@ module DiscourseWorkflows
         end
 
         def format_cell(value)
-          value.to_s
+          return "" if value.nil?
+          case value
+          when Hash, Array
+            JSON.generate(value)
+          else
+            value.to_s
+          end
         end
       end
     end

@@ -66,5 +66,46 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
         | Bob | 25 |
       MD
     end
+
+    it "JSON-encodes Hash cell values" do
+      items = [{ "json" => { "h" => { "a" => 1, "b" => 2 } } }]
+      config = { "columns" => [{ "header" => "H", "value" => "={{ $json.h }}" }] }
+
+      markdown = execute(items, config)
+
+      expect(markdown.split("\n").last).to eq('| {"a":1,"b":2} |')
+    end
+
+    it "JSON-encodes Array cell values" do
+      items = [{ "json" => { "arr" => [1, 2, 3] } }]
+      config = { "columns" => [{ "header" => "Arr", "value" => "={{ $json.arr }}" }] }
+
+      markdown = execute(items, config)
+
+      expect(markdown.split("\n").last).to eq("| [1,2,3] |")
+    end
+
+    it "renders nil cells as empty and stringifies scalars" do
+      items = [
+        {
+          "json" => {
+            "maybe_nil" => nil,
+            "int_val" => 42,
+            "bool_val" => true,
+          },
+        },
+      ]
+      config = {
+        "columns" => [
+          { "header" => "Nil", "value" => "={{ $json.maybe_nil }}" },
+          { "header" => "Int", "value" => "={{ $json.int_val }}" },
+          { "header" => "Bool", "value" => "={{ $json.bool_val }}" },
+        ],
+      }
+
+      markdown = execute(items, config)
+
+      expect(markdown.split("\n").last).to eq("|  | 42 | true |")
+    end
   end
 end
