@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-# This class exists to improve the performance of Group add/remove
-# members by using bulk SQL calls. Also unifies the bulk and solo paths
-# so that we do not have multiple implementations to maintain.
-# It was also moved to this manager to make it obvious that updates should
-# be made here instead of on GroupUser
 class GroupManager
   def initialize(group)
     @group = group
