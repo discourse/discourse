@@ -30,7 +30,7 @@ class QunitController < ApplicationController
     @required_plugins = []
     @testing_plugins = []
 
-    if target == "all" || target == "plugins"
+    if target == "plugins"
       @required_plugins.push(*Discourse.plugins.map(&:directory_name))
       @testing_plugins.push(*Discourse.plugins.map(&:directory_name))
     elsif target == "core"

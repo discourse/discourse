@@ -58,7 +58,7 @@ export async function startTests() {
   }
 
   let availableModules;
-  if (!hasThemeJs) {
+  if (testingCore) {
     availableModules = import.meta.glob("./**/*-test.{gjs,js}");
   }
 

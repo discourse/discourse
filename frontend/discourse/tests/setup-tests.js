@@ -128,7 +128,6 @@ function setupToolbar() {
     value: [
       "core",
       "plugins",
-      "all",
       "theme-qunit",
       "-----",
       ...(window._discourseQunitPluginNames || []),
@@ -155,8 +154,6 @@ function setupToolbar() {
     select.querySelector("option[value=-----]").disabled = true;
     select.querySelector("option[value=plugins]").innerText =
       "all plugins (not recommended)";
-    select.querySelector("option[value=all]").innerText =
-      "all (not recommended)";
   });
 
   // Abort tests when the qunit controls are clicked
