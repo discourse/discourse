@@ -520,7 +520,7 @@
   &__header {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    gap: 0.25em;
 
     // Hide the reply-to line, as the lines between posts already visually indicate the reply structure
     .reply-to-tab {
@@ -529,11 +529,18 @@
 
     .topic-meta-data {
       display: contents;
+
+      .names {
+        flex: none;
+        margin-right: 0;
+      }
     }
 
     .post-infos {
-      margin-left: auto;
       order: 1;
+      font-size: var(--font-down-2);
+      color: var(--primary-medium);
+      transform: translateY(1px); // optical alignment with username baseline
     }
 
     // Read state was all whacky, this makes it nice.
@@ -544,14 +551,18 @@
   }
 
   &__op-badge {
+    display: flex;
+    align-items: center;
     font-size: var(--font-down-2);
+    line-height: var(--line-height-small);
     font-weight: bold;
     color: var(--tertiary);
     background: var(--tertiary-very-low);
     border: 1px solid var(--tertiary-low);
     border-radius: var(--d-border-radius);
     padding: 0.1em 0.4em;
-    line-height: 1;
+    margin: 0.25em 0.25em 0.25em 0;
+    transform: translateY(1px);
   }
 
   &__pinned-badge {
