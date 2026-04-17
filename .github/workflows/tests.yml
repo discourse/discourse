@@ -69,15 +69,15 @@ jobs:
 
       matrix:
         #build_type: [backend, frontend, system]
-        build_type: frontend
+        build_type: [frontend]
         target: [core, plugins, themes]
         browser: [Chrome]
-        exclude:
-          - build_type: backend
-            target: themes
+        #exclude:
+          #- build_type: backend
+          #  target: themes
           # Exclude combined plugins from system tests - use split targets instead
-          - build_type: system
-            target: plugins
+          #- build_type: system
+          #  target: plugins
         #include:
           # Split plugin targets for system tests only
           #- build_type: system
