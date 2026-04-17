@@ -57,6 +57,7 @@ class SessionController < ApplicationController
       data = result.data
       if data[:logout]
         params[:return_url] = data[:return_sso_url]
+        PushNotificationPusher.clear_subscriptions(current_user) if current_user
         destroy
         return
       end
