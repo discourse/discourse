@@ -467,10 +467,10 @@ class TopicsController < ApplicationController
       end
     end
 
+    changes[:edit_reason] = params[:edit_reason] if params[:edit_reason].present?
     success = true
 
     if changes.length > 0
-      changes[:edit_reason] = params[:edit_reason] if params[:edit_reason].present?
       first_post = topic.ordered_posts.first
       success =
         PostRevisor.new(first_post, topic).revise!(

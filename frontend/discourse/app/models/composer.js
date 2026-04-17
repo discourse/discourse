@@ -1147,7 +1147,16 @@ export default class Composer extends RestModel {
 
     // skip post save when only topic metadata changed (title/tags/category),
     // since Topic.update() already handled that above
-    const skipPostSave = !this.replyDirty && post.post_number === 1;
+    const metadataDirty =
+      this.titleDirty || this.categoryDirty || this.tagsDirty;
+
+    const skipPostSave =
+      !this.replyDirty &&
+      post.post_number === 1 &&
+      metadataDirty &&
+      Object.keys(props).every((k) =>
+        ["raw", "cooked", "edit_reason"].includes(k)
+      );
 
     return promise
       .then(() => {
