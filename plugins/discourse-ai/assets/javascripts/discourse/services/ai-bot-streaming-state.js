@@ -12,6 +12,7 @@ const IDLE_TIMEOUT_MS = 15000;
 export default class AiBotStreamingState extends Service {
   @tracked streamingByTopic = new Map();
   #idleTimers = new Map();
+  #stopObservers = new Map();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -19,6 +20,10 @@ export default class AiBotStreamingState extends Service {
       clearTimeout(timer);
     }
     this.#idleTimers.clear();
+    for (const observer of this.#stopObservers.values()) {
+      observer.disconnect();
+    }
+    this.#stopObservers.clear();
   }
 
   isStreamingForTopic(topicId) {
@@ -50,8 +55,40 @@ export default class AiBotStreamingState extends Service {
     }
   }
 
+  // Defer markFinished until the post's `streaming` class is cleared,
+  // so the stop button flips in sync with the visual animation rather
+  // than ~40–80ms ahead of the progress handler's final tick.
+  markFinishedAfterRender(topicId, postId) {
+    if (!postId) {
+      this.markFinished(topicId);
+      return;
+    }
+    const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+    if (!postElement || !postElement.classList.contains("streaming")) {
+      this.markFinished(topicId);
+      return;
+    }
+
+    this.#stopObservers.get(topicId)?.disconnect();
+
+    const observer = new MutationObserver(() => {
+      if (!postElement.classList.contains("streaming")) {
+        observer.disconnect();
+        this.#stopObservers.delete(topicId);
+        this.markFinished(topicId);
+      }
+    });
+    observer.observe(postElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    this.#stopObservers.set(topicId, observer);
+  }
+
   markFinished(topicId) {
     this.#clearIdleTimer(topicId);
+    this.#stopObservers.get(topicId)?.disconnect();
+    this.#stopObservers.delete(topicId);
 
     if (!topicId || !this.streamingByTopic.has(topicId)) {
       return;
