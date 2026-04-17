@@ -267,8 +267,8 @@
   // Avatar size for the "small" PostAvatar used in nested posts.
   // Used to calculate horizontal connector positions.
   --nested-avatar-size: 24px;
-  --nested-column-gap: 8px;
-  --nested-connector-offset: 8px;
+  --nested-column-gap: var(--space-2);
+  --nested-connector-offset: var(--space-2);
   --nested-vertical-gap: 0.5em;
   --nested-hook-width: calc(var(--nested-avatar-size) / 2);
   --nested-line-offset: calc(
@@ -402,7 +402,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    min-height: 8px;
+    min-height: var(--space-2);
 
     &::after {
       content: "";
@@ -910,7 +910,7 @@
     // can resolve -1 to the end of the explicit grid (line 3).
     // Without this, -1 falls back to line 1 and the gutter only spans row 1.
     grid-template-rows: auto 1fr;
-    column-gap: 4px;
+    column-gap: var(--space-1);
 
     // Tighter vertical spacing between siblings
     --nested-vertical-gap: 0.25em;
