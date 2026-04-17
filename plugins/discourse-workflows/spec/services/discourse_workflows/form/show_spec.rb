@@ -236,7 +236,11 @@ RSpec.describe DiscourseWorkflows::Form::Show do
       end
 
       context "when execution wait_type is not form" do
-        before { execution.update!(waiting_config: { "wait_type" => "approval" }) }
+        before do
+          execution.update!(
+            waiting_config: execution.waiting_config.merge("wait_type" => "webhook"),
+          )
+        end
 
         it "falls back to initial form request path" do
           expect(result).to run_successfully
