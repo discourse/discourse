@@ -43,6 +43,18 @@ RSpec.describe DiscourseWorkflows::Credential::Create do
       it { is_expected.to fail_a_policy(:valid_credential_type) }
     end
 
+    context "when data is not a hash" do
+      let(:params) { super().merge(data: "not-a-hash") }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when data is an array" do
+      let(:params) { super().merge(data: %w[foo bar]) }
+
+      it { is_expected.to fail_a_contract }
+    end
+
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 

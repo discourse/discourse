@@ -11,6 +11,12 @@ module DiscourseWorkflows
 
       validates :credential_id, presence: true
       validates :name, presence: true
+      validate :data_must_be_hash
+
+      def data_must_be_hash
+        return if data.nil?
+        errors.add(:data, :invalid) unless data.is_a?(Hash)
+      end
     end
 
     model :credential
@@ -31,7 +37,7 @@ module DiscourseWorkflows
 
     def save_credential(credential:, params:)
       credential.name = params.name
-      credential.merge_data(params.data.to_h) if params.data.present?
+      credential.merge_data(params.data) if params.data.present?
       credential.save
       credential
     end

@@ -106,5 +106,44 @@ RSpec.describe DiscourseWorkflows::Credential::Update do
         expect(credential.decrypted_data).to eq({ "user" => "admin", "password" => "secret" })
       end
     end
+
+    context "when data is a partial payload omitting original keys" do
+      let(:params) do
+        { credential_id: credential.id, name: "New name", data: { password: "new_password" } }
+      end
+
+      it "preserves keys that were not sent" do
+        result
+        expect(credential.reload.decrypted_data).to eq(
+          "user" => "admin",
+          "password" => "new_password",
+        )
+      end
+    end
+
+    context "when data contains a new key not in the original" do
+      let(:params) { { credential_id: credential.id, name: "New name", data: { extra: "value" } } }
+
+      it "adds the new key while preserving originals" do
+        result
+        expect(credential.reload.decrypted_data).to eq(
+          "user" => "admin",
+          "password" => "secret",
+          "extra" => "value",
+        )
+      end
+    end
+
+    context "when data is not a hash" do
+      let(:params) { super().merge(data: "not-a-hash") }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when data is an array" do
+      let(:params) { super().merge(data: %w[foo bar]) }
+
+      it { is_expected.to fail_a_contract }
+    end
   end
 end

@@ -23,11 +23,9 @@ module DiscourseWorkflows
     def merge_data(incoming)
       original = decrypted_data
       merged =
-        incoming
-          .stringify_keys
-          .each_with_object({}) do |(key, value), hash|
-            hash[key] = value == REDACTED_VALUE ? original[key] : value
-          end
+        original.merge(incoming.stringify_keys) do |_key, orig_val, new_val|
+          new_val == REDACTED_VALUE ? orig_val : new_val
+        end
       self.decrypted_data = merged
     end
   end

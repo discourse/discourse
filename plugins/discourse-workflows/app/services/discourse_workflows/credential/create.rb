@@ -13,9 +13,15 @@ module DiscourseWorkflows
 
       validates :name, presence: true
       validates :credential_type, presence: true
+      validate :data_must_be_hash
+
+      def data_must_be_hash
+        return if data.nil?
+        errors.add(:data, :invalid) unless data.is_a?(Hash)
+      end
 
       def normalized_data
-        data.to_h.stringify_keys
+        (data || {}).stringify_keys
       end
     end
 
