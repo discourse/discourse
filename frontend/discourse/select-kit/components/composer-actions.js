@@ -186,7 +186,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       items.push({
         name: i18n("composer.composer_actions.reply_to_topic.label"),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_topic",
       });
     }
