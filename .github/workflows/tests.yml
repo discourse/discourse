@@ -71,7 +71,6 @@ jobs:
         build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
-        plugin_compiler: ["rollup"]
         exclude:
           - build_type: backend
             target: themes
