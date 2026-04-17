@@ -190,19 +190,23 @@ export default class DiscoursePostEvent extends Component {
                   </div>
                 </div>
 
-                <MoreMenu
-                  @event={{event}}
-                  @isStandaloneEvent={{this.isStandaloneEvent}}
-                  @composePrivateMessage={{routeAction "composePrivateMessage"}}
-                />
-
-                {{#if @onClose}}
-                  <DButton
-                    class="btn-default btn-small discourse-post-event-close"
-                    @icon="xmark"
-                    @action={{@onClose}}
+                <div class="event-header__controls">
+                  <MoreMenu
+                    @event={{event}}
+                    @isStandaloneEvent={{this.isStandaloneEvent}}
+                    @composePrivateMessage={{routeAction
+                      "composePrivateMessage"
+                    }}
                   />
-                {{/if}}
+
+                  {{#if @onClose}}
+                    <DButton
+                      class="btn-default btn-small discourse-post-event-close"
+                      @icon="xmark"
+                      @action={{@onClose}}
+                    />
+                  {{/if}}
+                </div>
               </header>
 
               <PluginOutlet

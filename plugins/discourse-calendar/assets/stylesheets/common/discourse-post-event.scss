@@ -101,7 +101,6 @@ $show-interested: inherit;
 
     .more-dropdown {
       margin-left: auto;
-      align-self: flex-start;
 
       &.has-no-actions {
         display: none;
@@ -125,6 +124,12 @@ $show-interested: inherit;
           }
         }
       }
+    }
+
+    &__controls {
+      display: flex;
+      gap: var(--space-2);
+      margin-left: auto;
     }
   }
 
@@ -341,7 +346,10 @@ $show-interested: inherit;
       .topic-invitee-avatar {
         position: relative;
         display: inline-block;
-        padding-right: 0.5em;
+
+        &:has(.avatar-flair) {
+          padding-right: var(--space-2);
+        }
 
         .avatar {
           width: 1.5rem;
