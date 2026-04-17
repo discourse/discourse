@@ -32,14 +32,22 @@ class SiteSetting::Action::SimpleEmailSubjectToggled
       .where(locale: SiteSetting.default_locale)
       .where.not("translation_key LIKE '%_improved'")
       .find_each do |override|
-        if I18n.exists?("#{override.translation_key}_improved")
-          TranslationOverride.upsert!(
-            SiteSetting.default_locale,
-            "#{override.translation_key}_improved",
-            override.value,
-          )
-        end
+        improved_key = improved_variant_of(override.translation_key)
+        next unless improved_key
+
+        TranslationOverride.upsert!(SiteSetting.default_locale, improved_key, override.value)
       end
+  end
+
+  def improved_variant_of(key)
+    return "#{key}_improved" if I18n.exists?("#{key}_improved")
+
+    # pluralized keys store suffix on the parent: "foo.one" maps to "foo_improved.one"
+    match = key.match(/\A(.+)\.(zero|one|two|few|many|other)\z/)
+    return nil unless match
+
+    pluralized = "#{match[1]}_improved.#{match[2]}"
+    I18n.exists?(pluralized) ? pluralized : nil
   end
 
   def request_refresh

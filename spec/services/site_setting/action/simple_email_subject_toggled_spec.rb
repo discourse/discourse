@@ -47,6 +47,27 @@ RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
         end
       end
 
+      context "when translation overrides exist for pluralized keys with _improved variants" do
+        let(:translation_key) { "user_notifications.chat_summary.subject.chat_dm_1.one" }
+        let(:improved_key) { "user_notifications.chat_summary.subject.chat_dm_1_improved.one" }
+        let(:custom_value) { "custom plural override" }
+
+        before do
+          TranslationOverride.upsert!(SiteSetting.default_locale, translation_key, custom_value)
+        end
+
+        it "copies the override to the pluralized _improved leaf" do
+          result
+          improved_override =
+            TranslationOverride.find_by(
+              locale: SiteSetting.default_locale,
+              translation_key: improved_key,
+            )
+          expect(improved_override).to be_present
+          expect(improved_override.value).to eq(custom_value)
+        end
+      end
+
       context "when a translation override key already ends with _improved" do
         let(:original_key) { "user_notifications.user_posted.subject_template" }
         let(:improved_key) { "user_notifications.user_posted.subject_template_improved" }
@@ -58,6 +79,26 @@ RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
         end
 
         it "does not try to copy the value" do
+          result
+          improved_override =
+            TranslationOverride.find_by(
+              locale: SiteSetting.default_locale,
+              translation_key: improved_key,
+            )
+          expect(improved_override).to be_present
+          expect(improved_override.value).to eq(improved_value)
+        end
+      end
+
+      context "when a pluralized translation override key already targets an _improved variant" do
+        let(:improved_key) { "user_notifications.chat_summary.subject.chat_dm_1_improved.one" }
+        let(:improved_value) { "custom improved plural" }
+
+        before do
+          TranslationOverride.upsert!(SiteSetting.default_locale, improved_key, improved_value)
+        end
+
+        it "does not overwrite the improved override" do
           result
           improved_override =
             TranslationOverride.find_by(
