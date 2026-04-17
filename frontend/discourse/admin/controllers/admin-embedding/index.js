@@ -27,8 +27,7 @@ export default class AdminEmbeddingIndexController extends Controller {
       ? `
       fullApp: true,
       embedHeight: '800px',
-      // lazyLoad: false, // disable lazy loading of the iframe
-      // lazyLoadMargin: '1000', // pixels before viewport to start loading
+      // lazyLoad: false, // disable native lazy loading of the iframe
       // dynamicHeight: true,
       // embedMinHeight: '400',
       // embedMaxHeight: '900',`

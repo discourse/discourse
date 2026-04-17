@@ -950,6 +950,7 @@ RSpec.configure do |config|
     Discourse.redis.flushdb
     Scheduler::Defer.do_all_work
     clear_mocked_upcoming_change_metadata
+    clear_mocked_upcoming_change_default_overrides
   end
 
   config.after(:each, type: :system) do |example|

@@ -52,6 +52,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-toggles-class",
   "create-topic-button-class",
   "create-topic-label",
+  "custom-homepage-model",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",
   "flag-button-render-decision",

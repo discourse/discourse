@@ -52,6 +52,7 @@
   .discourse-reactions-counter .reactions-counter,
   #topic-progress-wrapper {
     &:not(
+      .topic-voting-menu-trigger,
       .sidebar-footer-actions-button,
       #search-button,
       .btn-sidebar-toggle,
@@ -76,6 +77,7 @@
 
   .btn.no-text.btn-icon {
     &:not(
+      .topic-voting-menu-trigger,
       .user-menu-tab,
       .user-menu-tab-active,
       .composer-actions-btn,

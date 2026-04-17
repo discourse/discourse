@@ -5,13 +5,23 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsFilterControls extends Component {
+  @service capabilities;
+
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
-  @tracked isMenuOpen = false;
+
+  menuTrigger = null;
+
+  @action
+  registerMenuTrigger(element) {
+    this.menuTrigger = element;
+  }
 
   @action
   clearFilter() {
@@ -50,8 +60,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
 
   @action
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-    this.args.onToggleMenu();
+    this.args.onToggleMenu(this.menuTrigger);
   }
 
   <template>
@@ -62,11 +71,12 @@ export default class AdminSiteSettingsFilterControls extends Component {
     >
       <div class="controls">
         <div class="inline-form">
-          {{#if @showMenu}}
+          {{#if (and @showMenu (not this.capabilities.viewport.sm))}}
             <DButton
               @action={{this.toggleMenu}}
-              @icon={{if this.isMenuOpen "xmark" "bars"}}
-              class="menu-toggle"
+              @icon="bars"
+              class="btn-default menu-toggle"
+              {{didInsert this.registerMenuTrigger}}
             />
           {{/if}}
           <input

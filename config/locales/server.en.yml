@@ -5561,6 +5561,7 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
+      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
       synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
       one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'

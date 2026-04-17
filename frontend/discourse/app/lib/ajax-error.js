@@ -80,6 +80,8 @@ export function extractErrorInfo(
   return {
     html,
     message: parsedError || defaultMessage || i18n("generic_error"),
+    errorKey: parsedJSON?.error_key ?? null,
+    status: error.status ?? null,
   };
 }
 

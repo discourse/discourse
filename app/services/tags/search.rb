@@ -221,12 +221,23 @@ class Tags::Search
 
     if category_names.present?
       category_names.uniq!
-      I18n.t(
-        "tags.forbidden.restricted_to",
-        count: category_names.count,
-        tag_name: tag.name,
-        category_names: category_names.join(", "),
-      )
+      category_names.sort!
+
+      if category_names.size > 3
+        I18n.t(
+          "tags.forbidden.restricted_to_truncated",
+          tag_name: tag.name,
+          category_names: category_names.first(3).join(", "),
+          more_count: category_names.size - 3,
+        )
+      else
+        I18n.t(
+          "tags.forbidden.restricted_to",
+          count: category_names.count,
+          tag_name: tag.name,
+          category_names: category_names.join(", "),
+        )
+      end
     else
       I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
     end

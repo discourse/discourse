@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import AsyncContent from "discourse/components/async-content";
@@ -13,9 +14,11 @@ import { i18n } from "discourse-i18n";
 import { whoVoted } from "../lib/post-voting-utilities";
 
 export default class PostVotingWhoVotedList extends Component {
+  @tracked totalVotersCount = 0;
+
   @bind
   calcRemainingCount(voters) {
-    return this.args.post.post_voting_vote_count - voters.length;
+    return Math.max(0, this.totalVotersCount - voters.length);
   }
 
   @bind
@@ -37,6 +40,7 @@ export default class PostVotingWhoVotedList extends Component {
   @action
   async loadWhoVoted() {
     const result = await whoVoted({ post_id: this.args.post.id });
+    this.totalVotersCount = result.total_voters_count ?? 0;
 
     return result.voters?.map((voter) => {
       const userAttrs = smallUserAttrs(voter);
@@ -61,28 +65,26 @@ export default class PostVotingWhoVotedList extends Component {
           {{i18n "loading"}}
         </:loading>
         <:content as |voters|>
-          {{#if whoVoted}}
-            {{#let (this.splitUpAndDownLists voters) as |splitVoters|}}
-              <PostVotingSmallUserList
-                @list={{get splitVoters "up"}}
-                @direction="up"
-              />
-              <PostVotingSmallUserList
-                @list={{get splitVoters "down"}}
-                @direction="down"
-              />
-            {{/let}}
-            {{#let (this.calcRemainingCount voters) as |remainingCount|}}
-              {{#if remainingCount}}
-                <span>
-                  {{i18n
-                    "post_voting.topic.voters_count_diff"
-                    count=remainingCount
-                  }}
-                </span>
-              {{/if}}
-            {{/let}}
-          {{/if}}
+          {{#let (this.splitUpAndDownLists voters) as |splitVoters|}}
+            <PostVotingSmallUserList
+              @list={{get splitVoters "up"}}
+              @direction="up"
+            />
+            <PostVotingSmallUserList
+              @list={{get splitVoters "down"}}
+              @direction="down"
+            />
+          {{/let}}
+          {{#let (this.calcRemainingCount voters) as |remainingCount|}}
+            {{#if remainingCount}}
+              <span>
+                {{i18n
+                  "post_voting.topic.voters_count_diff"
+                  count=remainingCount
+                }}
+              </span>
+            {{/if}}
+          {{/let}}
         </:content>
       </AsyncContent>
     </div>

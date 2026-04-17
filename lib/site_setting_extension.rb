@@ -572,11 +572,23 @@ module SiteSettingExtension
         # store site settings. In this case, we should not consider this
         # setting to be modified.
         #
-        # The only exception is for upcoming changes, which have automatic
-        # promotion systems, and admins need to be able to manually opt out
-        # even if the default itself isn't changing.
+        # There are two exceptions, both tied to upcoming changes:
+        #
+        # 1. Upcoming change settings themselves — admins need to be able
+        #    to manually opt out of an auto-promoted change even when the
+        #    DB value matches the YAML default.
+        #
+        # 2. Target settings of an upcoming_change_default_override — the
+        #    "clean" defaults_view here is computed without overrides
+        #    applied, so it still reports the original YAML default.
+        #
+        #    When an override is active, the *effective* default is different,
+        #    and the admin's explicit DB value (even if it equals the
+        #    original default) is a deliberate opt-out that must survive
+        #    refresh!. Without this exception, the override loop below
+        #    would re-clobber the admin's choice.
         new_modified.reject! do |name, val|
-          if UpcomingChanges.exists?(name)
+          if UpcomingChanges.exists?(name) || upcoming_change_default_overrides.key?(name)
             false
           else
             val.to_s == defaults_view[name].to_s

@@ -74,7 +74,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
@@ -109,7 +109,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_temperature: {
@@ -140,7 +140,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
