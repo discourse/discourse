@@ -66,7 +66,7 @@ function initializeAIBotReplies(api) {
       const topicId = this.model.id;
 
       if (data?.done) {
-        streamingState?.markFinished(topicId);
+        streamingState?.markFinishedAfterRender(topicId, data?.post_id);
       } else {
         streamingState?.markStarted(topicId, data?.post_id);
       }
