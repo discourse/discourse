@@ -7,8 +7,8 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
-  scope :ignored, -> { where("ignored_at IS NULL") }
-  scope :watched, -> { where("ignored_at IS NOT NULL") }
+  scope :ignored, -> { where("ignored_at IS NOT NULL") }
+  scope :watched, -> { where("ignored_at IS NULL") }
 
   before_destroy :silence_the_alarm
 
@@ -65,12 +65,6 @@ class ProblemCheckTracker < ActiveRecord::Base
     silence_the_alarm
   end
 
-  def reset(next_run_at: nil)
-    now = Time.current
-
-    update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
-  end
-
   def check
     check = ProblemCheck[identifier]
 
@@ -83,6 +77,12 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   private
+
+  def reset(next_run_at: nil)
+    now = Time.current
+
+    update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
+  end
 
   def update_notice_details(details)
     admin_notice.where(identifier:).update_all(details: details.merge(target:))

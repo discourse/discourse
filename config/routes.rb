@@ -436,6 +436,8 @@ Discourse::Application.routes.draw do
           get "login-and-authentication/#{location}" => "site_settings#index"
         end
 
+        # Needed for back-end routing to work.
+        #
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -460,6 +462,7 @@ Discourse::Application.routes.draw do
         get "upcoming-changes" => "upcoming_changes#index"
         put "upcoming-changes/groups" => "upcoming_changes#update_groups"
         put "upcoming-changes/toggle" => "upcoming_changes#toggle_change"
+        get "problem-checks" => "problem_checks#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -509,7 +512,6 @@ Discourse::Application.routes.draw do
         put "ignore" => "problem_checks#ignore"
         put "watch" => "problem_checks#watch"
       end
-      get "problem-checks" => "problem_checks#index", :constraints => AdminConstraint.new
 
       delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace

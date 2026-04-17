@@ -43,7 +43,7 @@ RSpec.describe Admin::ProblemChecksController do
     context "when tracker exists" do
       before { sign_in(admin) }
 
-      it "returns a not found error" do
+      it "ignores the problem" do
         put "/admin/problem_checks/#{problem_check_tracker.id}/ignore.json"
         expect(response.status).to eq(200)
       end
@@ -72,7 +72,7 @@ RSpec.describe Admin::ProblemChecksController do
     context "when tracker exists" do
       before { sign_in(admin) }
 
-      it "returns a not found error" do
+      it "watches the problem" do
         put "/admin/problem_checks/#{problem_check_tracker.id}/watch.json"
         expect(response.status).to eq(200)
       end
