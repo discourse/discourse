@@ -24,10 +24,19 @@ RSpec.describe Jobs::GenerateTopicOgImage do
     described_class.new.execute(topic_id: topic.id)
   end
 
-  it "does nothing when topic already has a generated OG image" do
-    topic.update_column(:og_image_upload_id, Fabricate(:upload).id)
-    TopicOgImageGenerator.any_instance.expects(:generate).never
+  it "replaces an existing generated OG image and cleans up the old reference" do
+    old_upload = Fabricate(:upload)
+    topic.update_column(:og_image_upload_id, old_upload.id)
+    UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: topic)
+
+    new_upload = Fabricate(:upload)
+    TopicOgImageGenerator.any_instance.expects(:generate).returns(new_upload)
+
     described_class.new.execute(topic_id: topic.id)
+
+    expect(topic.reload.og_image_upload_id).to eq(new_upload.id)
+    expect(UploadReference.exists?(upload_id: new_upload.id, target: topic)).to eq(true)
+    expect(UploadReference.exists?(upload_id: old_upload.id, target: topic)).to eq(false)
   end
 
   it "does nothing for personal messages" do

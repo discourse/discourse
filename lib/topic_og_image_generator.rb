@@ -52,7 +52,7 @@ class TopicOgImageGenerator
     posts_count = [@topic.posts_count - 1, 0].max
     read_time = calculate_read_time
     colors = fetch_colors
-    logo_upload = (SiteSetting.logo_upload || SiteSetting.logo_small_upload)
+    logo_upload = (SiteSetting.logo.presence || SiteSetting.logo_small)
     logo_data_uri = fetch_as_data_uri(logo_upload&.url)
 
     title_lines = word_wrap(title, TITLE_LINE_CHARS)
@@ -223,24 +223,34 @@ class TopicOgImageGenerator
     title.length > MAX_TITLE_LENGTH ? "#{title[0...MAX_TITLE_LENGTH - 1]}…" : title
   end
 
+  # Wraps by whitespace when possible; falls back to grapheme-boundary splits
+  # for runs longer than max_chars (e.g. CJK titles with no spaces, long URLs)
+  # so the title doesn't overflow the canvas.
   def word_wrap(text, max_chars)
-    words = text.split
     lines = []
     current_line = +""
 
-    words.each do |word|
-      if current_line.empty?
-        current_line = word.dup
-      elsif (current_line.length + 1 + word.length) <= max_chars
-        current_line << " " << word
-      else
-        lines << current_line
-        current_line = word.dup
+    text.split.each do |word|
+      chunks = word.length > max_chars ? split_chunks(word, max_chars) : [word]
+
+      chunks.each do |chunk|
+        if current_line.empty?
+          current_line = chunk.dup
+        elsif (current_line.length + 1 + chunk.length) <= max_chars
+          current_line << " " << chunk
+        else
+          lines << current_line
+          current_line = chunk.dup
+        end
       end
     end
 
     lines << current_line if current_line.present?
     lines
+  end
+
+  def split_chunks(word, max_chars)
+    word.grapheme_clusters.each_slice(max_chars).map(&:join)
   end
 
   def fetch_colors

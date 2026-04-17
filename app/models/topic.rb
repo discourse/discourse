@@ -2223,7 +2223,7 @@ class Topic < ActiveRecord::Base
       end
 
       # Set the invited user to watch the PM so they receive notifications for new messages
-      # even if they haven���t opened the PM yet.
+      # even if they haven’t opened the PM yet.
       TopicUser.change(
         target_user,
         self,
