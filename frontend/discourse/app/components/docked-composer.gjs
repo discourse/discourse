@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -34,13 +35,13 @@ export default class DockedComposer extends Component {
   @service mediaOptimizationWorker;
   @service siteSettings;
 
+  @tracked dragOffset = 0;
   @tracked reply = "";
   @tracked uploads = trackedArray();
 
   textarea = null;
   uppyUpload = null;
   fileInputEl = null;
-  dragOffset = 0;
   #dragStart = null;
   #rootElement = null;
 
@@ -86,7 +87,9 @@ export default class DockedComposer extends Component {
   }
 
   get uploaderId() {
-    return this.args.uploaderId ?? "docked-composer-file-uploader";
+    return (
+      this.args.uploaderId ?? `docked-composer-file-uploader-${guidFor(this)}`
+    );
   }
 
   get uploadType() {
@@ -112,9 +115,11 @@ export default class DockedComposer extends Component {
     if (this.args.isSubmitting || this.args.disabled) {
       return false;
     }
+    if (this.inProgressUploads.length > 0) {
+      return false;
+    }
     return (
-      this.reply.trim().length >= this.minLength &&
-      this.inProgressUploads.length === 0
+      this.reply.trim().length >= this.minLength || this.uploads.length > 0
     );
   }
 
@@ -310,10 +315,10 @@ export default class DockedComposer extends Component {
         next = Math.max(0, this.dragOffset - STEP);
         break;
       case "Home":
-        next = MAX_OFFSET;
+        next = 0;
         break;
       case "End":
-        next = 0;
+        next = MAX_OFFSET;
         break;
       default:
         return;
