@@ -76,7 +76,7 @@ after_initialize do
 
   add_to_serializer :site,
                     :topic_admin_button_workflows,
-                    include_condition: -> { scope.is_staff? } do
+                    include_condition: -> { scope.is_admin? } do
     DiscourseWorkflows::WorkflowDependency.cached_topic_admin_buttons
   end
 
