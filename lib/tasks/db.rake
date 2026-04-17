@@ -133,68 +133,17 @@ task "multisite:migrate" => %w[
 
     puts "Running migrations and seeds for #{databases.join(", ")} database(s)"
 
-    migrate_database =
-      lambda do |db|
-        output = StringIO.new
-        error = nil
-
-        begin
-          $stdout = $stderr = output
-          RailsMultisite::ConnectionManagement.with_connection(db) do
-            puts "-" * 40
-            start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-            puts "Migrating #{db}"
-            execute_db_migration
-            puts "Migrating #{db} done (#{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)}s)"
-            puts "Completed"
-          end
-        rescue => e
-          error = e
-        ensure
-          $stdout = STDOUT
-          $stderr = STDERR
-        end
-
-        { db: db, output: output.string, error: error }
-      end
-
-    should_fork = concurrency > 1 && databases.length > 1
-
-    Discourse.before_fork if should_fork
-
-    results =
-      Parallel.map(
-        databases,
-        in_processes: should_fork ? concurrency : 0,
-        isolation: false,
-        finish_in_order: true,
-        finish:
-          lambda do |db, _index, result|
-            result[:output]&.lines&.each { |line| puts "[#{db}] #{line}" }
-          end,
-      ) do |db|
-        $after_fork_called ||= (Discourse.after_fork || true) if should_fork
+    MultisiteParallelRunner
+      .new(databases: databases, concurrency: concurrency)
+      .run do |db|
         ENV["RAISE_SEED_ERRORS"] = "1"
-        migrate_database.call(db)
+        puts "-" * 40
+        start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        puts "Migrating #{db}"
+        execute_db_migration
+        puts "Migrating #{db} done (#{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)}s)"
+        puts "Completed"
       end
-
-    errors = results.select { |r| r[:error] }
-
-    if errors.any?
-      $stderr.puts
-      $stderr.puts "-" * 80
-      $stderr.puts "#{errors.length} database(s) failed!"
-
-      errors.each do |result|
-        $stderr.puts
-        $stderr.puts "Failed to process #{result[:db]}"
-        $stderr.puts result[:error].inspect
-        $stderr.puts result[:error].backtrace
-        $stderr.puts
-      end
-
-      raise errors.first[:error]
-    end
 
     Rake::Task["db:_dump"].invoke
   end
