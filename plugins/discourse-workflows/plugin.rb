@@ -80,6 +80,13 @@ after_initialize do
     DiscourseWorkflows::WorkflowDependency.cached_topic_admin_buttons
   end
 
+  on(:site_setting_changed) do |name, old_value, new_value|
+    next if name != :discourse_workflows_enabled
+    next unless new_value && !old_value
+
+    DiscourseWorkflows::PluginEnableHandler.handle!
+  end
+
   on(:chat_message_interaction) do |interaction|
     next unless SiteSetting.discourse_workflows_enabled
 

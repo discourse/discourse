@@ -4,6 +4,8 @@ module Jobs
   module DiscourseWorkflows
     class ResumeWaitingExecution < ::Jobs::Base
       def execute(args)
+        return unless SiteSetting.discourse_workflows_enabled
+
         execution =
           ::DiscourseWorkflows::Execution
             .includes(:execution_data)

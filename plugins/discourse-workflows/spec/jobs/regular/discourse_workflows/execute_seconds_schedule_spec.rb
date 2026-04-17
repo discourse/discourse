@@ -66,6 +66,21 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteSecondsSchedule do
     expect(Jobs::DiscourseWorkflows::ExecuteSecondsSchedule.jobs.size).to eq(0)
   end
 
+  it "does not execute or reschedule when the plugin is disabled" do
+    workflow, token = create_seconds_workflow(seconds: 10)
+    SiteSetting.discourse_workflows_enabled = false
+
+    described_class.new.execute(
+      workflow_id: workflow.id,
+      trigger_node_id: "trigger-1",
+      rule_index: 0,
+      token: token,
+    )
+
+    expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size).to eq(0)
+    expect(Jobs::DiscourseWorkflows::ExecuteSecondsSchedule.jobs.size).to eq(0)
+  end
+
   it "stops chain when rule changes to non-seconds" do
     workflow, token = create_seconds_workflow(seconds: 10)
 

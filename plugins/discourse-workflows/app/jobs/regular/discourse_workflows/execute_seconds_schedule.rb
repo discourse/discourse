@@ -4,6 +4,8 @@ module Jobs
   module DiscourseWorkflows
     class ExecuteSecondsSchedule < ::Jobs::Base
       def execute(args)
+        return unless SiteSetting.discourse_workflows_enabled
+
         workflow_id = args[:workflow_id]
         node_id = args[:trigger_node_id]
         rule_index = args[:rule_index]
