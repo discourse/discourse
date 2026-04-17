@@ -70,7 +70,7 @@ describe "Embed mode" do
   end
 
   context "when logged in" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     before do
       SiteSetting.rich_editor = true
@@ -123,11 +123,12 @@ describe "Embed mode" do
       end
 
       it "submits a reply through the docked composer" do
+        user.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
         visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
         expect(topic_page).to have_docked_composer
-        find(".embed-mode-composer .d-editor-input").click
-        find(".embed-mode-composer .d-editor-input").send_keys("Hello from the docked composer")
+
+        find(".embed-mode-composer .d-editor-input").fill_in(with: "Hello from the docked composer")
         find(".embed-mode-composer .docked-composer__submit-btn").click
 
         expect(page).to have_css(".topic-post", text: "Hello from the docked composer")
