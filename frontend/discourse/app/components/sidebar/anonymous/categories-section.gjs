@@ -7,7 +7,17 @@ import Section from "../section";
 import SectionLink from "../section-link";
 
 export default class SidebarAnonymousCategoriesSection extends SidebarCommonCategoriesSection {
-  get #defaultCategoryIds() {
+  shouldSortCategoriesByDefault = this.#defaultCategoryIds().length > 0;
+
+  get categories() {
+    const ids = this.#defaultCategoryIds();
+    if (ids.length) {
+      return Category.findByIds(ids);
+    }
+    return this.topSiteCategories;
+  }
+
+  #defaultCategoryIds() {
     const raw = this.siteSettings.default_navigation_menu_categories;
     const initial = raw ? raw.split("|").map((id) => parseInt(id, 10)) : [];
 
@@ -15,18 +25,6 @@ export default class SidebarAnonymousCategoriesSection extends SidebarCommonCate
       "sidebar-anonymous-default-categories",
       initial
     );
-  }
-
-  get shouldSortCategoriesByDefault() {
-    return this.#defaultCategoryIds.length > 0;
-  }
-
-  get categories() {
-    const ids = this.#defaultCategoryIds;
-    if (ids.length) {
-      return Category.findByIds(ids);
-    }
-    return this.topSiteCategories;
   }
 
   <template>
