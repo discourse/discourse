@@ -30,7 +30,7 @@ class BulkImport::Generic < BulkImport::Base
 
     if MERGE_IMPORT
       row = @source_db.execute("SELECT value FROM config WHERE name = 'converting_from'").first
-      @import_prefix = row&.first
+      @import_prefix = row&.[]("value")
       unless @import_prefix
         raise "MERGE_IMPORT requires 'converting_from' in intermediate DB config table"
       end
