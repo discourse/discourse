@@ -721,6 +721,8 @@ en:
       allow_access: "Allow Access"
       continue_as_guest: "Continue as Guest"
       be_first_to_reply: "Be the first to reply!"
+      replying_to: "Replying to %{username}"
+      reply_placeholder: "Write a reply..."
 
     topic_count_all:
       one: "See %{count} new topic"

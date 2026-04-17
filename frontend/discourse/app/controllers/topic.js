@@ -28,6 +28,7 @@ import {
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { bind } from "discourse/lib/decorators";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
@@ -589,6 +590,15 @@ export default class TopicController extends Controller {
       : this.get("model.postStream").loadPost(postId);
 
     return promise.then(async (post) => {
+      if (EmbedMode.enabled) {
+        const quotedText = buildQuote(post, buffer, opts);
+        this.appEvents.trigger("embed-composer:reply-to-post", post);
+        if (quotedText?.trim()) {
+          this.appEvents.trigger("composer:insert-block", quotedText);
+        }
+        return;
+      }
+
       const composer = this.composer;
       const viewOpen = composer.get("model.viewOpen");
 
@@ -832,7 +842,6 @@ export default class TopicController extends Controller {
   // Post related methods
   @action
   async replyToPost(post) {
-    const composerController = this.composer;
     const topic = post ? post.get("topic") : this.model;
     const quoteState = this.quoteState;
     const postStream = this.get("model.postStream");
@@ -843,6 +852,23 @@ export default class TopicController extends Controller {
       return;
     }
 
+    if (EmbedMode.enabled) {
+      const quotedPost = postStream.findLoadedPost(quoteState.postId);
+      const quotedText = buildQuote(
+        quotedPost,
+        quoteState.buffer,
+        quoteState.opts
+      );
+      quoteState.clear();
+
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
+        this.appEvents.trigger("composer:insert-block", quotedText.trim());
+      }
+      return false;
+    }
+
+    const composerController = this.composer;
     const quotedPost = postStream.findLoadedPost(quoteState.postId);
     const quotedText = buildQuote(
       quotedPost,
