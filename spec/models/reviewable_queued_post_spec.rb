@@ -188,6 +188,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           draft_key = "#{Draft::EXISTING_TOPIC}#{reviewable.topic_id}"
           draft = Draft.find_by(user_id: reviewable.target_created_by.id, draft_key: draft_key)
           expect(draft).to be_present
+          expect(draft.sequence).to be > 0
           draft_data = JSON.parse(draft.data)
           expect(draft_data["reply"]).to eq(reviewable.payload["raw"])
           expect(draft_data["action"]).to eq("reply")
@@ -270,6 +271,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             draft =
               Draft.find_by(user_id: reviewable.target_created_by.id, draft_key: Draft::NEW_TOPIC)
             expect(draft).to be_present
+            expect(draft.sequence).to be > 0
             draft_data = JSON.parse(draft.data)
             expect(draft_data["reply"]).to eq(reviewable.payload["raw"])
             expect(draft_data["action"]).to eq("createTopic")
@@ -439,8 +441,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         end
       end
 
-      context "when status doesn’t change" do
-        it "doesn’t update user stats" do
+      context "when status doesn���t change" do
+        it "doesn���t update user stats" do
           user_stats.expects(:update_pending_posts).never
           reviewable.update!(score: 10)
         end

@@ -228,13 +228,22 @@ class ReviewableQueuedPost < Reviewable
       draft_data[:action] = "createTopic"
       draft_data[:title] = self.payload["title"]
       draft_data[:categoryId] = self.category_id
-      draft_data[:tags] = self.payload["tags"] if self.payload["tags"].present?
+      if self.payload["tags"].is_a?(Array)
+        draft_data[:tags] = self.payload["tags"].map { |t| t.is_a?(Hash) ? t["name"] : t }
+      end
     else
       draft_key = "#{Draft::EXISTING_TOPIC}#{self.topic_id}"
       draft_data[:action] = "reply"
     end
 
-    Draft.set(self.target_created_by, draft_key, 0, draft_data.to_json, nil, force_save: true)
+    Draft.set(
+      self.target_created_by,
+      draft_key,
+      DraftSequence.next(self.target_created_by, draft_key),
+      draft_data.to_json,
+      nil,
+      force_save: true,
+    )
   end
 
   def delete_opts
