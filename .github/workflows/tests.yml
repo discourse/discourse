@@ -108,7 +108,7 @@ jobs:
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
         run: |
-          echo "QUNIT_PARALLEL=8
+          echo "QUNIT_PARALLEL=8" >> $GITHUB_ENV
 
       - uses: actions/checkout@v6
         with:
