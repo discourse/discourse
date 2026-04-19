@@ -10,13 +10,25 @@ es:
     support:
       name: "Soporte"
       title: "soporte"
+      description: "Donde los miembros pueden hacer preguntas y marcar las respuestas como soluciones."
   discourse_solved:
     category_type:
       allow_accepted_answers:
-        label: "Permitir al propietario del tema y al staff marcar una respuesta como la solución"
+        label: "Permitir al propietario del tema y al personal marcar una respuesta como la solución"
+      solved_topics_auto_close_hours:
+        label: "Cierre automático de temas resueltos (horas)"
+        description: "Cierra automáticamente el tema después de este número de horas una vez marcado como resuelto. Establece en 0 para desactivarlo."
+      notify_on_staff_accept_solved:
+        label: "Notificar al creador del tema cuando el personal marque una solución"
+      empty_box_on_unsolved:
+        label: "Mostrar una casilla de verificación vacía junto a los temas sin resolver en la lista de temas"
+      solved_topics_auto_close_duration:
+        label: "Cierre automático de temas resueltos"
+        description: "Cierra automáticamente los temas resueltos transcurrido este tiempo desde la última respuesta. Establece en 0 para desactivar."
   site_settings:
     solved_enabled: "Activar el complemento de solución, que permite a los usuarios seleccionar soluciones para temas"
     allow_solved_on_all_topics: "Permitir que los usuarios seleccionen soluciones en todos los temas (si no lo marcas, puedes activarlo individualmente por categoría o etiqueta)"
+    allow_solved_in_groups: "Permitir marcar soluciones en los mensajes grupales para estos grupos."
     accept_all_solutions_trust_level: "Nivel de confianza mínimo requerido para aceptar soluciones en cualquier tema (incluso cuando no sea el publicador original)"
     accept_all_solutions_allowed_groups: "Grupos que pueden aceptar soluciones sobre cualquier tema (aunque no sean PO). Los administradores y moderadores siempre están autorizados."
     empty_box_on_unsolved: "Mostrar un cuadro vacío junto a los temas sin solución"
@@ -29,12 +41,14 @@ es:
     solved_add_schema_markup: "Añade el marcado del esquema de QAPage al HTML."
     enable_solved_tags: "Etiquetas que permitirán a los usuarios seleccionar soluciones."
     prioritize_solved_topics_in_search: "Prioriza los temas resueltos en los resultados de búsqueda."
+    enable_support_category_type_setup: "Activa la opción Apoyar tipo de categoría durante la configuración de la creación de categorías. Ten en cuenta que debe estar activada la opción «enable simplified category creation» para que esto tenga efecto."
     show_who_marked_solved: "Mostrar quién ha marcado el tema como resuelto. Esto se indica en la primera publicación del tema y en la publicación de respuesta en una descripción emergente."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
     accepted_solutions:
       title: "Soluciones aceptadas"
+      description: "¿Cuántos temas tuvieron una solución aceptada por día en un rango de fechas, con filtro de categoría opcional y un total de comparación de 30 días?"
       xaxis: "Día"
       yaxis: "Total"
   solved:

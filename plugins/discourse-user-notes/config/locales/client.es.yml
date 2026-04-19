@@ -15,3 +15,4 @@ es:
       delete_confirm: "¿Seguro que quieres eliminar este nota del usuario?"
       show_post: "Mostrar publicación"
       show_flag: "Mostrar denuncia"
+      copy_reviewable_note: "¿Copiar nota a «User Note» en el perfil de %{username}?"

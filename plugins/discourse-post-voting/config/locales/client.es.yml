@@ -30,8 +30,10 @@ es:
         label: "Crear tema de Votar publicación"
       composer_actions:
         create_as_post_voting:
+          label: "Activar/desactivar votación de publicación"
           desc: "El tema se creará con publicaciones votables"
         remove_as_post_voting:
+          label: "Eliminar votación de publicación"
           desc: "El tema se creará en el formato normal"
     vote:
       already_voted: "Solo puedes votar una vez por pregunta."
