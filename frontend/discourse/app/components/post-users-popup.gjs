@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { computePosition, flip, offset, shift } from "@floating-ui/dom";
 import UserAvatar from "discourse/components/user-avatar";
 import UserLink from "discourse/components/user-link";
@@ -13,6 +14,8 @@ import emoji from "discourse/helpers/emoji";
 const PAGE_SIZE = 30;
 
 export default class PostUsersPopup extends Component {
+  @service siteSettings;
+
   @tracked users = [];
   @tracked loading = false;
   @tracked canLoadMore = true;
@@ -22,6 +25,13 @@ export default class PostUsersPopup extends Component {
     this.#page = 0;
     this.canLoadMore = true;
     this.#loadMore();
+  };
+
+  displayName = (user) => {
+    if (user.name && !this.siteSettings.prioritize_username_in_ux) {
+      return user.name;
+    }
+    return user.username;
   };
   #page = 0;
 
@@ -132,13 +142,13 @@ export default class PostUsersPopup extends Component {
                 @username={{user.username}}
                 class="post-users-popup__name"
               >
-                {{if user.name user.name user.username}}
+                {{this.displayName user}}
               </UserLink>
-              {{#if user.name}}
+              {{#unless this.siteSettings.prioritize_username_in_ux}}
                 <span class="post-users-popup__username">
                   @{{user.username}}
                 </span>
-              {{/if}}
+              {{/unless}}
             </div>
             {{#if user.reaction}}
               {{emoji
