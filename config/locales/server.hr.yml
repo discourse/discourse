@@ -2462,8 +2462,15 @@ hr:
         Ovo je automatizirana poruka od %{site_name} koja vas obavještava da je [vaša objava] (%{base_url}%{post_url}) odobrena.
   page_not_found:
     page_title: "Stranica nije pronađena"
+    title: "Ups! Ta stranica ne postoji ili je privatna."
+    subtitle: "Tražili smo svugdje, ali nismo mogli pronaći stranicu koju tražite."
+    popular_topics: "Popularne teme"
+    recent_topics: "Nedavne teme"
     see_more: "Više"
+    search_title: "Možda da pokušate pretražiti?"
     search_button: "Pretraži"
+    home: "Odvedi me na naslovnicu"
+    placeholder: "Pretraživanje tema po naslovu ili ključnim riječima…"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."

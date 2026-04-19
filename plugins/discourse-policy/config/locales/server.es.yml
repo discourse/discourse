@@ -8,6 +8,7 @@ es:
   site_settings:
     policy_enabled: "¿Permitir políticas?"
     policy_restrict_to_staff_posts: "Las políticas solo pueden aparecer en las publicaciones del personal"
+    create_policy_allowed_groups: "Es necesario ser miembro de un grupo para añadir políticas a las publicaciones"
     policy_easy_revoke: "Mostrar los botones aceptar y revocar al mismo tiempo"
   discourse_policy:
     errors:
@@ -15,6 +16,8 @@ es:
       group_not_found: "Grupo no encontrado para la política"
       no_policy: "No existe ninguna política para la publicación"
       staff_only: "Es posible que las políticas solo se apliquen a las publicaciones del personal"
+      policy_group_inaccessible: "Esta política no se puede aceptar en este momento. Ponte en contacto con un administrador del sitio."
+      no_policy_permission: "No tienes permiso para modificar las políticas de esta publicación."
     error:
       no_permission: "Sin autorización"
   reports:

@@ -1045,7 +1045,7 @@ pl_PL:
         delimiter: "lub"
         something_else_wrong: "Czy jest coś nie tak z tym %{reviewable_type}?"
         approve_user: "Zatwierdzić tego użytkownika?"
-        suspect_user: "Czy to spam użytkownika?"
+        suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
       types:
