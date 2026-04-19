@@ -79,6 +79,7 @@ export default class DiscourseReactionsUsersPopup extends Component {
                 "post-users-popup__filter"
                 (unless this.activeFilter "is-active")
               }}
+              data-reaction-filter="all"
               {{on "click" (fn this.selectFilter null)}}
             >
               {{i18n "discourse_reactions.users_popup.all"}}
@@ -90,6 +91,7 @@ export default class DiscourseReactionsUsersPopup extends Component {
                   "post-users-popup__filter"
                   (if (eq reaction.id this.activeFilter) "is-active")
                 }}
+                data-reaction-filter={{reaction.id}}
                 {{on "click" (fn this.selectFilter reaction.id)}}
               >
                 {{emoji reaction.id skipTitle=true}}

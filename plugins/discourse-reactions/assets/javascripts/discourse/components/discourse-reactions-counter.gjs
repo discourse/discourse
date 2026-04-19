@@ -40,7 +40,11 @@ export default class DiscourseReactionsCounter extends Component {
   keyDown(event) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      this.click(event);
+      if (this.usersPopupExpanded) {
+        this.#closePopup();
+      } else {
+        this.#openPopup();
+      }
     } else if (event.key === "Escape" && this.usersPopupExpanded) {
       event.stopPropagation();
       this.#closePopup();

@@ -5,8 +5,12 @@ import emoji from "discourse/helpers/emoji";
 export default class DiscourseReactionsListEmoji extends Component {
   @service siteSettings;
 
+  get elementId() {
+    return `discourse-reactions-list-emoji-${this.args.post.id}-${this.args.reaction.id}`;
+  }
+
   <template>
-    <div class="discourse-reactions-list-emoji">
+    <div class="discourse-reactions-list-emoji" id={{this.elementId}}>
       {{#if @reaction.count}}
         {{emoji
           @reaction.id

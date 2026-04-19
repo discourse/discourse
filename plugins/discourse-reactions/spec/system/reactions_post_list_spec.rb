@@ -37,4 +37,30 @@ describe "Reactions | Post reaction user list" do
 
     expect(page).to have_css(".user-card.user-card-#{user_2.username}")
   end
+
+  it "filters the users popup by reaction" do
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
+
+    find(".discourse-reactions-counter").click
+    expect(page).to have_css(".post-users-popup")
+
+    within(".post-users-popup") do
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+
+      find("[data-reaction-filter=heart]").click
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+
+      find("[data-reaction-filter=clap]").click
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+
+      find("[data-reaction-filter=all]").click
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+    end
+  end
 end
