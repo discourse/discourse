@@ -40,13 +40,9 @@ export default class LikedUsersList extends Component {
   #scrollHandler = null;
 
   get buttonIcon() {
-    if (!this.args.post.showLike) {
-      return this.args.post.yours ? "d-liked" : "d-unliked";
-    }
-
-    if (this.args.post.yours) {
-      return "d-liked";
-    }
+    return this.args.post.liked || this.args.post.yours
+      ? "d-liked"
+      : "d-unliked";
   }
 
   get elementId() {
@@ -114,6 +110,7 @@ export default class LikedUsersList extends Component {
           "like-count"
           "button-count"
           "highlight-action"
+          (if @post.liked "has-liked")
           (if @post.yours "my-likes" "regular-likes")
         }}
         {{on "click" this.togglePopup}}
