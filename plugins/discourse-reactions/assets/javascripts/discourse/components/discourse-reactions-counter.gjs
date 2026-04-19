@@ -4,11 +4,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
@@ -192,14 +190,6 @@ export default class DiscourseReactionsCounter extends Component {
     });
   }
 
-  get onlyOneMainReaction() {
-    return (
-      this.args.post.reactions?.length === 1 &&
-      this.args.post.reactions[0].id ===
-        this.siteSettings.discourse_reactions_reaction_for_like
-    );
-  }
-
   #openPopup() {
     if (this.args.statePanelExpanded) {
       this.args.collapseStatePanel();
@@ -246,28 +236,16 @@ export default class DiscourseReactionsCounter extends Component {
           @cancelCollapse={{@cancelCollapse}}
         />
 
-        {{#unless this.onlyOneMainReaction}}
-          <DiscourseReactionsList
-            {{on "click" this.click}}
-            @post={{@post}}
-            @reactionsUsers={{this.reactionsUsers}}
-            @getUsers={{this.getUsers}}
-          />
-        {{/unless}}
+        <DiscourseReactionsList
+          {{on "click" this.click}}
+          @post={{@post}}
+          @reactionsUsers={{this.reactionsUsers}}
+          @getUsers={{this.getUsers}}
+        />
 
         <span class="reactions-counter" aria-hidden="true">
           {{@post.reaction_users_count}}
         </span>
-
-        {{#if (and @post.yours this.onlyOneMainReaction)}}
-          <div class="discourse-reactions-reaction-button my-likes">
-            <DButton
-              class="btn-toggle-reaction-like btn-flat btn-icon no-text reaction-button"
-              @translatedTitle={{this.counterAriaLabel}}
-              @icon={{this.siteSettings.discourse_reactions_like_icon}}
-            />
-          </div>
-        {{/if}}
 
         {{#if this.usersPopupExpanded}}
           <DiscourseReactionsUsersPopup

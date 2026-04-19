@@ -117,6 +117,7 @@ export default class LikedUsersList extends Component {
           (if @post.yours "my-likes" "regular-likes")
         }}
         {{on "click" this.togglePopup}}
+        ...attributes
       >
         {{#if this.buttonIcon}}
           {{icon this.buttonIcon}}

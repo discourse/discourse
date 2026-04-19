@@ -21,11 +21,10 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { emojiUrlFor } from "discourse/lib/text";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import { and, eq, not } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsCounter from "./discourse-reactions-counter";
-import DiscourseReactionsDoubleButton from "./discourse-reactions-double-button";
 import DiscourseReactionsPicker from "./discourse-reactions-picker";
 import DiscourseReactionsReactionButton from "./discourse-reactions-reaction-button";
 
@@ -122,7 +121,6 @@ export default class DiscourseReactionsActions extends Component {
   @service dialog;
   @service capabilities;
   @service siteSettings;
-  @service site;
   @service currentUser;
   @service appEvents;
 
@@ -528,18 +526,10 @@ export default class DiscourseReactionsActions extends Component {
     }
 
     let selector;
-    if (
-      this.data.reactions &&
-      this.data.reactions.length === 1 &&
-      this.data.reactions[0].id === mainReactionName
-    ) {
-      selector = `.discourse-reactions-double-button .discourse-reactions-reaction-button .d-icon`;
+    if (!attrs.reaction || attrs.reaction === mainReactionName) {
+      selector = `.discourse-reactions-reaction-button .d-icon`;
     } else {
-      if (!attrs.reaction || attrs.reaction === mainReactionName) {
-        selector = `.discourse-reactions-reaction-button .d-icon`;
-      } else {
-        selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
-      }
+      selector = `.discourse-reactions-reaction-button .reaction-button .btn-toggle-reaction-emoji`;
     }
 
     const mainReaction = this.containerElement?.querySelector(selector);
@@ -741,14 +731,6 @@ export default class DiscourseReactionsActions extends Component {
     }
   }
 
-  get onlyOneMainReaction() {
-    return (
-      this.data.reactions?.length === 1 &&
-      this.data.reactions[0].id ===
-        this.siteSettings.discourse_reactions_reaction_for_like
-    );
-  }
-
   get showReactionsPicker() {
     return (
       this.currentUser &&
@@ -818,21 +800,6 @@ export default class DiscourseReactionsActions extends Component {
 
         {{#if (eq @position "left")}}
           <components.counter />
-        {{else if this.onlyOneMainReaction}}
-          <DiscourseReactionsDoubleButton
-            @post={{this.data}}
-            @counterComponent={{components.counter}}
-            @buttonComponent={{components.button}}
-          />
-        {{else if this.site.mobileView}}
-          {{#if (not this.data.yours)}}
-            <components.counter />
-            <components.button />
-          {{else if
-            (and this.data.yours this.data.reactions this.data.reactions.length)
-          }}
-            <components.counter />
-          {{/if}}
         {{else if (not this.data.yours)}}
           <components.button />
         {{/if}}
