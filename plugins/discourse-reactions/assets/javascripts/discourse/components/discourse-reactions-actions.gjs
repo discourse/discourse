@@ -125,7 +125,6 @@ export default class DiscourseReactionsActions extends Component {
   @service appEvents;
 
   @tracked reactionsPickerExpanded = false;
-  @tracked statePanelExpanded = false;
   @tracked clickOutsideDisabled = false;
 
   containerElement = null;
@@ -184,11 +183,7 @@ export default class DiscourseReactionsActions extends Component {
   @action
   toggleReactions(event) {
     if (!this.reactionsPickerExpanded) {
-      if (this.statePanelExpanded) {
-        this.scheduleExpand("expandReactionsPicker");
-      } else {
-        this.expandReactionsPicker(event);
-      }
+      this.expandReactionsPicker(event);
     }
   }
 
@@ -604,7 +599,7 @@ export default class DiscourseReactionsActions extends Component {
     if (this.clickOutsideDisabled) {
       return;
     }
-    if (this.reactionsPickerExpanded || this.statePanelExpanded) {
+    if (this.reactionsPickerExpanded) {
       this.collapseAllPanels();
     }
   }
@@ -612,25 +607,8 @@ export default class DiscourseReactionsActions extends Component {
   expandReactionsPicker() {
     cancel(this._collapseHandler);
     activeReactionsComponent?.collapseAllPanels();
-    this.statePanelExpanded = false;
     this.reactionsPickerExpanded = true;
     this.updateReactionsPickerPopover();
-  }
-
-  @action
-  expandStatePanel() {
-    cancel(this._collapseHandler);
-    activeReactionsComponent?.collapseAllPanels();
-    this.statePanelExpanded = true;
-    this.reactionsPickerExpanded = false;
-    this.updateReactionsStatePanel();
-  }
-
-  @action
-  collapseStatePanel() {
-    cancel(this._collapseHandler);
-    this._collapseHandler = null;
-    this.statePanelExpanded = false;
   }
 
   collapseReactionsPicker() {
@@ -647,7 +625,6 @@ export default class DiscourseReactionsActions extends Component {
       false
     );
     this._collapseHandler = null;
-    this.statePanelExpanded = false;
     this.reactionsPickerExpanded = false;
   }
 
@@ -656,14 +633,6 @@ export default class DiscourseReactionsActions extends Component {
     this.showPopover(
       ".discourse-reactions-reaction-button",
       ".discourse-reactions-picker"
-    );
-  }
-
-  @action
-  updateReactionsStatePanel() {
-    this.showPopover(
-      ".discourse-reactions-counter",
-      ".discourse-reactions-state-panel"
     );
   }
 
@@ -758,18 +727,7 @@ export default class DiscourseReactionsActions extends Component {
         (hash
           counter=(curryComponent
             DiscourseReactionsCounter
-            (lazyHash
-              post=this.data
-              position=@position
-              reactionsPickerExpanded=this.reactionsPickerExpanded
-              statePanelExpanded=this.statePanelExpanded
-              expandStatePanel=this.expandStatePanel
-              collapseStatePanel=this.collapseStatePanel
-              cancelCollapse=this.cancelCollapse
-              scheduleCollapse=this.scheduleCollapse
-              updatePopover=this.updateReactionsStatePanel
-              collapseAllPanels=this.collapseAllPanels
-            )
+            (lazyHash post=this.data position=@position)
           )
           button=(curryComponent
             DiscourseReactionsReactionButton

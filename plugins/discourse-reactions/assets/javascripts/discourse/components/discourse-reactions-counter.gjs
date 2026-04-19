@@ -2,15 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { i18n } from "discourse-i18n";
-import CustomReaction from "../models/discourse-reactions-custom-reaction";
 import DiscourseReactionsList from "./discourse-reactions-list";
-import DiscourseReactionsStatePanel from "./discourse-reactions-state-panel";
 import DiscourseReactionsUsersPopup from "./discourse-reactions-users-popup";
 
 export default class DiscourseReactionsCounter extends Component {
@@ -18,8 +13,6 @@ export default class DiscourseReactionsCounter extends Component {
   @service siteSettings;
 
   @tracked usersPopupExpanded = false;
-
-  reactionsUsers = trackedObject();
 
   #scrollHandler = null;
 
@@ -31,25 +24,6 @@ export default class DiscourseReactionsCounter extends Component {
 
   get referenceElement() {
     return document.getElementById(this.elementId);
-  }
-
-  reactionsChanged(data) {
-    uniqueItemsFromArray(data.reactions).forEach((reaction) => {
-      this.getUsers(reaction);
-    });
-  }
-
-  @bind
-  async getUsers(reactionValue) {
-    const response = await CustomReaction.findReactionUsers(this.args.post.id, {
-      reactionValue,
-    });
-
-    response.reaction_users.forEach((reactionUser) => {
-      this.reactionsUsers[reactionUser.id] = reactionUser.users;
-    });
-
-    this.args.updatePopover();
   }
 
   @action
@@ -67,16 +41,10 @@ export default class DiscourseReactionsCounter extends Component {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       this.click(event);
-    } else if (event.key === "Escape") {
-      if (this.usersPopupExpanded) {
-        event.stopPropagation();
-        this.#closePopup();
-        document.getElementById(this.elementId)?.focus();
-      } else if (this.args.statePanelExpanded) {
-        event.stopPropagation();
-        this.args.collapseStatePanel();
-        document.getElementById(this.elementId)?.focus();
-      }
+    } else if (event.key === "Escape" && this.usersPopupExpanded) {
+      event.stopPropagation();
+      this.#closePopup();
+      document.getElementById(this.elementId)?.focus();
     }
   }
 
@@ -104,8 +72,6 @@ export default class DiscourseReactionsCounter extends Component {
   clickOutside() {
     if (this.usersPopupExpanded) {
       this.#closePopup();
-    } else if (this.args.statePanelExpanded) {
-      this.args.collapseAllPanels();
     }
   }
 
@@ -156,34 +122,6 @@ export default class DiscourseReactionsCounter extends Component {
     return classes.join(" ");
   }
 
-  toggleStatePanel() {
-    if (!this.args.statePanelExpanded) {
-      this.args.expandStatePanel();
-    } else {
-      this.args.collapseStatePanel();
-    }
-  }
-
-  @action
-  pointerOver(event) {
-    if (event.pointerType !== "mouse" || this.usersPopupExpanded) {
-      return;
-    }
-
-    this.args.cancelCollapse();
-  }
-
-  @action
-  pointerOut(event) {
-    if (event.pointerType !== "mouse" || this.usersPopupExpanded) {
-      return;
-    }
-
-    if (!event.relatedTarget?.closest(`#${this.elementId}`)) {
-      this.args.scheduleCollapse("collapseStatePanel");
-    }
-  }
-
   get counterAriaLabel() {
     return i18n("discourse_reactions.counter.aria_label", {
       count: this.args.post.reaction_users_count,
@@ -191,9 +129,6 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   #openPopup() {
-    if (this.args.statePanelExpanded) {
-      this.args.collapseStatePanel();
-    }
     this.usersPopupExpanded = true;
     this.#scrollHandler = () => this.#closePopup();
     window.addEventListener("scroll", this.#scrollHandler, {
@@ -222,26 +157,11 @@ export default class DiscourseReactionsCounter extends Component {
       {{on "mouseup" this.mouseUp}}
       {{closeOnClickOutside this.clickOutside}}
       {{on "touchstart" this.touchStart}}
-      {{on "pointerover" this.pointerOver}}
-      {{on "pointerout" this.pointerOut}}
       {{on "click" this.click}}
       {{on "keydown" this.keyDown}}
     >
       {{#if @post.reaction_users_count}}
-        <DiscourseReactionsStatePanel
-          @post={{@post}}
-          @reactionsUsers={{this.reactionsUsers}}
-          @statePanelExpanded={{@statePanelExpanded}}
-          @scheduleCollapse={{@scheduleCollapse}}
-          @cancelCollapse={{@cancelCollapse}}
-        />
-
-        <DiscourseReactionsList
-          {{on "click" this.click}}
-          @post={{@post}}
-          @reactionsUsers={{this.reactionsUsers}}
-          @getUsers={{this.getUsers}}
-        />
+        <DiscourseReactionsList {{on "click" this.click}} @post={{@post}} />
 
         <span class="reactions-counter" aria-hidden="true">
           {{@post.reaction_users_count}}
