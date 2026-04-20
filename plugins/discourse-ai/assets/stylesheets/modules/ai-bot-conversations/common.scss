@@ -48,10 +48,6 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
-  .sidebar-toggle-all-sections {
-    display: none;
-  }
-
   // topic elements
   #topic-footer-button-share-and-invite,
   body:not(.staff) #topic-footer-button-archive,
@@ -142,7 +138,7 @@ body.has-ai-conversations-sidebar {
     .agent-llm-selector {
       display: flex;
       gap: 0.5em;
-      justify-content: center;
+      align-self: flex-start;
 
       .select-kit-body {
         .select-kit-collection {
@@ -203,6 +199,12 @@ body.has-ai-conversations-sidebar {
       justify-content: center;
       flex: 1 1 auto;
       gap: 0.5em;
+      margin: 0 auto;
+
+      @include viewport.from(sm) {
+        width: 80%;
+        max-width: var(--input-max-width);
+      }
 
       .loading-container {
         display: contents;
@@ -243,11 +245,6 @@ body.has-ai-conversations-sidebar {
         .btn {
           pointer-events: none;
         }
-      }
-
-      @include viewport.from(sm) {
-        width: 80%;
-        max-width: var(--input-max-width);
       }
 
       &:focus-within {
@@ -619,32 +616,62 @@ body.has-ai-conversations-sidebar {
   }
 }
 
+// "Back to conversations" link shown above a bot PM's title
+.ai-bot-back-to-conversations {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: var(--font-down-1);
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: var(--space-2);
+
+  .d-icon,
+  span {
+    color: var(--primary);
+    font-size: var(--font-down-1);
+  }
+
+  .discourse-no-touch &:hover {
+    color: var(--tertiary);
+  }
+}
+
 // "Ask" button in the welcome banner search input
 .welcome-banner__search-menu {
-  .ai-ask-button {
+  .ai-ask-button.btn {
     position: absolute;
-    right: 1px;
-    top: 1px;
-    bottom: 1px;
+    right: var(--space-2);
+    top: var(--space-2);
+    bottom: var(--space-2);
     z-index: 2;
     display: flex;
     align-items: center;
-    gap: 0.35em;
-    padding: 0 0.75em 0 0.85em;
-    border-left: 1px solid var(--primary-low);
-    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
-    color: var(--tertiary);
-    font-weight: 600;
-    font-size: var(--font-0);
-    text-decoration: none;
+    background: transparent;
+    border: none;
+    border-radius: var(--d-border-radius);
+    color: var(--primary-medium);
     cursor: pointer;
 
-    .discourse-no-touch &:hover {
-      background: var(--tertiary-very-low);
+    .d-icon {
+      color: inherit;
     }
 
-    .d-icon {
-      font-size: var(--font-up-1);
+    &:hover,
+    &:focus-visible {
+      background: var(--primary-very-low);
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--tertiary-300);
+      color: var(--tertiary);
+
+      &:hover,
+      &:focus-visible {
+        background: var(--tertiary-400);
+        color: var(--tertiary-hover);
+      }
     }
   }
 

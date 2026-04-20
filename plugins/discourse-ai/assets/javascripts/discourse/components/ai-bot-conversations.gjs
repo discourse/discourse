@@ -7,7 +7,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { scheduleOnce } from "@ember/runloop";
+import { next, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
@@ -101,6 +101,7 @@ export default class AiBotConversations extends Component {
   init() {
     super.init(...arguments);
     this.#fetchRecentConversations();
+    scheduleOnce("afterRender", this, this.#maybeAutoSubmit);
 
     this.uppyUpload = new UppyUpload(getOwner(this), {
       id: "ai-bot-file-uploader",
@@ -361,6 +362,25 @@ export default class AiBotConversations extends Component {
     }
   }
 
+  #maybeAutoSubmit() {
+    const input = this.controller?.input;
+    if (!input) {
+      return;
+    }
+
+    this.aiBotConversationsHiddenSubmit.inputValue = input;
+    this.controller.input = null;
+
+    if (this.textarea) {
+      this.textarea.value = input;
+      this._autoExpandTextarea();
+    }
+
+    // Defer to next runloop so AiAgentLlmSelector's next() callbacks
+    // have set the default agentId, llmId, and targetUsername first.
+    next(() => this.prepareAndSubmitToBot());
+  }
+
   async #fetchRecentConversations() {
     try {
       const result = await ajax("/discourse-ai/ai-bot/conversations.json", {
@@ -390,6 +410,14 @@ export default class AiBotConversations extends Component {
   <template>
     <div class="ai-bot-conversations" ...attributes>
       {{bodyClass "ai-bot-conversations-page"}}
+      <AiAgentLlmSelector
+        @showLabels={{true}}
+        @setAgentId={{this.setAgentId}}
+        @setLlmId={{this.setLlmId}}
+        @setTargetRecipient={{this.setTargetRecipient}}
+        @agentName={{@controller.agent}}
+        @llmName={{@controller.llm}}
+      />
 
       <div class="ai-bot-conversations__content-wrapper">
         <div class="ai-bot-conversations__title">
@@ -444,15 +472,6 @@ export default class AiBotConversations extends Component {
             {{didInsert this.registerFileInput}}
           />
         </div>
-
-        <AiAgentLlmSelector
-          @showLabels={{true}}
-          @setAgentId={{this.setAgentId}}
-          @setLlmId={{this.setLlmId}}
-          @setTargetRecipient={{this.setTargetRecipient}}
-          @agentName={{@controller.agent}}
-          @llmName={{@controller.llm}}
-        />
 
         <p class="ai-disclaimer">
           {{i18n "discourse_ai.ai_bot.conversations.disclaimer"}}

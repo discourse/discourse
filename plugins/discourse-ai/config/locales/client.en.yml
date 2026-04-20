@@ -1239,6 +1239,7 @@ en:
           uploads_in_progress: "Cannot submit while uploads are in progress"
           recent_title: "Your recent conversations"
           view_all: "View all"
+          back_to_conversations: "Back to conversations"
       sentiments:
         dashboard:
           title: "Sentiment"

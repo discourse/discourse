@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
 
-const AGENT_SELECTOR_KEY = "ai_agent_selector_id";
-const LLM_SELECTOR_KEY = "ai_llm_selector_id";
+export const AGENT_SELECTOR_KEY = "ai_agent_selector_id";
+export const LLM_SELECTOR_KEY = "ai_llm_selector_id";
 
 export default class AiAgentLlmSelector extends Component {
   @service currentUser;

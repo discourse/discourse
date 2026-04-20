@@ -1,6 +1,4 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation";
-import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
 
 export default {
   name: "ai-conversations-sidebar",
@@ -12,52 +10,25 @@ export default {
         return;
       }
 
-      const aiConversationsSidebarManager = api.container.lookup(
-        "service:ai-conversations-sidebar-manager"
-      );
-      aiConversationsSidebarManager.api = api;
-
-      api.addSidebarPanel(
-        (BaseCustomSidebarPanel) =>
-          class AiConversationsSidebarPanel extends BaseCustomSidebarPanel {
-            key = AI_CONVERSATIONS_PANEL;
-            hidden = true;
-            displayHeader = false; // this would add a misplaced back to forum button
-            expandActiveSection = true;
-          }
-      );
-
-      api.renderInOutlet(
-        "before-sidebar-sections",
-        AiBotSidebarNewConversation
-      );
-
-      const setSidebarPanel = (transition) => {
-        if (transition?.to?.name === "discourse-ai-bot-conversations") {
-          if (transition.to.queryParams?.preserveSidebar) {
-            document.body.classList.add("has-ai-conversations-sidebar");
-            return;
-          }
-          return aiConversationsSidebarManager.forceCustomSidebar();
-        }
+      const setBodyClass = (transition) => {
+        const inConversationsRoute =
+          transition?.to?.name === "discourse-ai-bot-conversations";
 
         const topic = api.container.lookup("controller:topic").model;
-        // if the topic is not a private message, not created by the current user,
-        // or doesn't have a bot response, we don't need to override sidebar
-        if (
+        const inBotPm =
           topic?.archetype === "private_message" &&
           topic.user_id === currentUser.id &&
-          topic.is_bot_pm
-        ) {
-          return aiConversationsSidebarManager.forceCustomSidebar();
-        }
+          topic.is_bot_pm;
 
-        aiConversationsSidebarManager.stopForcingCustomSidebar();
+        if (inConversationsRoute || inBotPm) {
+          document.body.classList.add("has-ai-conversations-sidebar");
+        } else {
+          document.body.classList.remove("has-ai-conversations-sidebar");
+          document.body.classList.remove("has-empty-ai-conversations-sidebar");
+        }
       };
 
-      api.container
-        .lookup("service:router")
-        .on("routeDidChange", setSidebarPanel);
+      api.container.lookup("service:router").on("routeDidChange", setBodyClass);
     });
   },
 };
