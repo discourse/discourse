@@ -2346,7 +2346,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     }
   }
 
-  &__loading {
+  .loading-container {
     display: flex;
     justify-content: center;
     padding: var(--space-3);
