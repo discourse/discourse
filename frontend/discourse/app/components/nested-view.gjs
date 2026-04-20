@@ -101,9 +101,11 @@ export default class NestedView extends Component {
             @label="nested_replies.activity_log.link"
           />
           {{#if this.currentUser.can_toggle_nested_mode}}
-            <a href={{this.flatViewUrl}} class="nested-view__flat-link">{{i18n
-                "nested_replies.view_as_flat"
-              }}</a>
+            <DButton
+              class="btn-flat nested-view__flat-link"
+              @href={{this.flatViewUrl}}
+              @label="nested_replies.view_as_flat"
+            />
           {{/if}}
         </div>
       </div>
