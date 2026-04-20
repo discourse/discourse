@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import LoadMore from "discourse/components/load-more";
 import UserAvatar from "discourse/components/user-avatar";
 import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";
@@ -24,7 +24,6 @@ export default class PostUsersMenu extends Component {
     }
     return user.username;
   };
-
   resetAndReload = () => {
     this.users = [];
     this.#page = 0;
@@ -39,11 +38,8 @@ export default class PostUsersMenu extends Component {
   }
 
   @action
-  onScroll(event) {
-    const el = event.target;
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
-      this.#loadMore();
-    }
+  loadMore() {
+    return this.#loadMore();
   }
 
   async #loadMore() {
@@ -74,47 +70,50 @@ export default class PostUsersMenu extends Component {
 
       {{yield this.resetAndReload to="header"}}
 
-      <div
-        class="post-users-popup__body"
-        {{on "scroll" this.onScroll}}
-        {{didInsert this.loadInitial}}
-      >
-        {{#each this.users as |user|}}
-          <div class="post-users-popup__item">
-            <UserLink
-              @username={{user.username}}
-              class="post-users-popup__avatar-link"
-            >
-              <UserAvatar @user={{user}} @size="small" />
-            </UserLink>
-            <div class="post-users-popup__user-info">
+      <div class="post-users-popup__body" {{didInsert this.loadInitial}}>
+        <LoadMore
+          @action={{this.loadMore}}
+          @enabled={{this.canLoadMore}}
+          @isLoading={{this.loading}}
+          @rootMargin="100px"
+        >
+          {{#each this.users as |user|}}
+            <div class="post-users-popup__item">
               <UserLink
                 @username={{user.username}}
-                class="post-users-popup__name"
+                class="post-users-popup__avatar-link"
               >
-                {{this.displayName user}}
+                <UserAvatar @user={{user}} @size="small" />
               </UserLink>
-              {{#unless this.siteSettings.prioritize_username_in_ux}}
+              <div class="post-users-popup__user-info">
                 <UserLink
                   @username={{user.username}}
-                  class="post-users-popup__username"
+                  class="post-users-popup__name"
                 >
-                  @{{user.username}}
+                  {{this.displayName user}}
                 </UserLink>
-              {{/unless}}
+                {{#unless this.siteSettings.prioritize_username_in_ux}}
+                  <UserLink
+                    @username={{user.username}}
+                    class="post-users-popup__username"
+                  >
+                    @{{user.username}}
+                  </UserLink>
+                {{/unless}}
+              </div>
+              {{#if (has-block "reaction")}}
+                {{yield user to="reaction"}}
+              {{else}}
+                {{icon "d-liked" class="post-users-popup__reaction"}}
+              {{/if}}
             </div>
-            {{#if (has-block "reaction")}}
-              {{yield user to="reaction"}}
-            {{else}}
-              {{icon "d-liked" class="post-users-popup__reaction"}}
-            {{/if}}
-          </div>
-        {{/each}}
-        {{#if this.loading}}
-          <div class="post-users-popup__loading">
-            <div class="spinner small"></div>
-          </div>
-        {{/if}}
+          {{/each}}
+          {{#if this.loading}}
+            <div class="post-users-popup__loading">
+              <div class="spinner small"></div>
+            </div>
+          {{/if}}
+        </LoadMore>
       </div>
     </div>
   </template>

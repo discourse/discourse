@@ -2333,26 +2333,18 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     }
 
     .d-modal__body {
-      display: flex;
-      flex-direction: column;
       flex: 1;
       min-height: 0;
-      overflow: hidden;
     }
 
     .post-users-popup {
       width: 100%;
-      height: auto;
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
     }
 
     .post-users-popup__body {
-      flex: 1;
       height: auto;
-      min-height: 0;
+      overflow: visible;
+      overscroll-behavior: auto;
     }
   }
 }
