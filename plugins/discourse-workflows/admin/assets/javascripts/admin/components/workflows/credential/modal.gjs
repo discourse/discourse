@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
@@ -62,6 +63,7 @@ export default class CredentialModal extends Component {
     return { name: "", credential_type: "" };
   }
 
+  @action
   async handleSubmit(credentialTypes, data) {
     try {
       const schema = credentialTypeSchema(
