@@ -4527,6 +4527,11 @@ en:
       sr_post_like_count_button:
         one: "%{count} person liked this post."
         other: "%{count} people liked this post."
+
+      likes_popup:
+        title:
+          one: "%{count} like"
+          other: "%{count} likes"
       sr_post_read_count_button:
         one: "%{count} person read this post."
         other: "%{count} people read this post."

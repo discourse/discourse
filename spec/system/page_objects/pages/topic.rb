@@ -136,20 +136,13 @@ module PageObjects
       end
 
       def has_who_liked_on_post?(post, count: nil)
-        if count
-          return(
-            has_css?(
-              ".liked-users-list__container .liked-users-list__item a.trigger-user-card",
-              count: count,
-            )
-          )
-        end
+        return has_css?(".post-users-popup .post-users-popup__item", count: count) if count
 
-        within_post(post) { has_css?(".who-liked.--expanded") }
+        has_css?(".post-users-popup")
       end
 
       def has_no_who_liked_on_post?(post)
-        within_post(post) { has_no_css?(".who-liked.--expanded") }
+        has_no_css?(".post-users-popup")
       end
 
       def has_who_read_on_post?(post, count: nil)
