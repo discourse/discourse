@@ -31,7 +31,8 @@ module DiscourseWorkflows
         branching: capabilities[:branching],
         manually_triggerable: capabilities[:manually_triggerable],
         available: @latest_class.available?,
-        unavailable_reason_key: @latest_class.unavailable_reason_key,
+        unavailable_reason_key:
+          (@latest_class.unavailable_reason_key unless @latest_class.available?),
       }.compact
     end
 

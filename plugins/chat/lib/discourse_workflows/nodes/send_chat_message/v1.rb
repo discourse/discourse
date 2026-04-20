@@ -22,7 +22,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def self.unavailable_reason_key
-            "discourse_workflows.node_unavailable.requires_chat" unless available?
+            "discourse_workflows.node_unavailable.requires_chat"
           end
 
           def self.output_schema

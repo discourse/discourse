@@ -23,7 +23,7 @@ module DiscourseDataExplorer
         end
 
         def self.unavailable_reason_key
-          "discourse_workflows.node_unavailable.requires_data_explorer" unless available?
+          "discourse_workflows.node_unavailable.requires_data_explorer"
         end
 
         def self.property_schema

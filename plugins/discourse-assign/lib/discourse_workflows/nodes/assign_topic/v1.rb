@@ -41,7 +41,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def self.unavailable_reason_key
-            "discourse_workflows.node_unavailable.requires_assign" unless available?
+            "discourse_workflows.node_unavailable.requires_assign"
           end
 
           def self.property_schema
