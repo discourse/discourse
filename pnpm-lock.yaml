@@ -297,8 +297,8 @@ importers:
         specifier: ^2.3.1
         version: 2.3.1(@babel/core@7.29.0)
       diff:
-        specifier: ^8.0.4
-        version: 8.0.4
+        specifier: ^9.0.0
+        version: 9.0.0
       ember-curry-component:
         specifier: ^0.4.0
         version: 0.4.0(@babel/core@7.29.0)
@@ -4728,6 +4728,10 @@ packages:
 
   diff@8.0.4:
     resolution: {integrity: sha512-DPi0FmjiSU5EvQV0++GFDOJ9ASQUVFh5kD+OzOnYdi7n3Wpm9hWWGfB/O2blfHcMVTL5WkQXSnRiK9makhrcnw==}
+    engines: {node: '>=0.3.1'}
+
+  diff@9.0.0:
+    resolution: {integrity: sha512-svtcdpS8CgJyqAjEQIXdb3OjhFVVYjzGAPO8WGCmRbrml64SPw/jJD4GoE98aR7r25A0XcgrK3F02yw9R/vhQw==}
     engines: {node: '>=0.3.1'}
 
   docopt@0.6.2:
@@ -13812,6 +13816,8 @@ snapshots:
   diff@7.0.0: {}
 
   diff@8.0.4: {}
+
+  diff@9.0.0: {}
 
   docopt@0.6.2: {}
 

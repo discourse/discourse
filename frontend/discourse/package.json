@@ -44,7 +44,7 @@
     "chartjs-adapter-moment": "^1.0.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "decorator-transforms": "^2.3.1",
-    "diff": "^8.0.4",
+    "diff": "^9.0.0",
     "ember-curry-component": "^0.4.0",
     "ember-resolver": "^13.2.0",
     "ember-route-template": "^1.0.3",
