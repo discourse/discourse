@@ -2,6 +2,12 @@ export default class SiteSettingMatcher {
   constructor(filter, siteSetting) {
     this.filter = filter;
     this.siteSetting = siteSetting;
+    this.filters = filter.includes("|")
+      ? filter
+          .split("|")
+          .map((f) => f.trim())
+          .filter(Boolean)
+      : null;
     this.strippedQuery = filter.replace(/[^a-z0-9]/gi, "");
     this.fuzzyRegex = new RegExp(this.strippedQuery.split("").join(".*"), "i");
     this.fuzzyRegexGaps = new RegExp(
@@ -13,34 +19,45 @@ export default class SiteSettingMatcher {
 
   get isNameMatch() {
     const name = this.siteSetting.setting.toLowerCase();
+    const terms = this.filters || [this.filter];
 
-    return (
-      name.includes(this.filter) ||
-      name.replace(/_/g, " ").includes(this.filter)
+    return terms.some(
+      (term) => name.includes(term) || name.replace(/_/g, " ").includes(term)
     );
   }
 
   get isKeywordMatch() {
+    const terms = this.filters || [this.filter];
+
     return (this.siteSetting.keywords || []).some((keyword) =>
-      keyword
-        .replace(/_/g, " ")
-        .toLowerCase()
-        .includes(this.filter.replace(/_/g, " "))
+      terms.some((term) =>
+        keyword
+          .replace(/_/g, " ")
+          .toLowerCase()
+          .includes(term.replace(/_/g, " "))
+      )
     );
   }
 
   get isDescriptionMatch() {
-    return this.siteSetting.description.toLowerCase().includes(this.filter);
+    const desc = this.siteSetting.description.toLowerCase();
+    const terms = this.filters || [this.filter];
+
+    return terms.some((term) => desc.includes(term));
   }
 
   get isValueMatch() {
-    return (this.siteSetting.value || "")
-      .toString()
-      .toLowerCase()
-      .includes(this.filter);
+    const value = (this.siteSetting.value || "").toString().toLowerCase();
+    const terms = this.filters || [this.filter];
+
+    return terms.some((term) => value.includes(term));
   }
 
   get isFuzzyNameMatch() {
+    if (this.filters) {
+      return false;
+    }
+
     const name = this.siteSetting.setting.toLowerCase();
 
     if (this.strippedQuery.length < 3) {
