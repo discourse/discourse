@@ -159,8 +159,8 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   def reactions_users_list
     post = fetch_post_from_params
-    page = [params[:page].to_i, 0].max
-    limit = params[:limit].present? ? [[params[:limit].to_i, 1].max, 50].min : 30
+    page = params[:page].to_i.clamp(0..)
+    limit = params[:limit].present? ? params[:limit].to_i.clamp(1, 50) : 30
     offset = page * limit
     main_reaction = DiscourseReactions::Reaction.main_reaction_id
     like_type = PostActionType::LIKE_POST_ACTION_ID
