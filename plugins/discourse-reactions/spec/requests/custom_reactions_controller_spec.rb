@@ -458,6 +458,41 @@ describe DiscourseReactions::CustomReactionsController do
     end
   end
 
+  describe "#reactions_users_list" do
+    it "returns users who reacted or liked a post" do
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["users"].map { |u| u["username"] }
+      expect(usernames).to include(user_1.username, user_3.username, user_5.username)
+    end
+
+    it "filters by reaction_value" do
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json?reaction_value=hugs"
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+      expect(users.map { |u| u["username"] }).to eq([user_4.username])
+      expect(users.first["reaction"]).to eq("hugs")
+    end
+
+    it "404s for an unknown post id" do
+      get "/discourse-reactions/posts/0/reactions-users-list.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "does not expose users on PMs without permission" do
+      get "/discourse-reactions/posts/#{private_post.id}/reactions-users-list.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "exposes users on PMs to participants" do
+      sign_in(user_2)
+      get "/discourse-reactions/posts/#{private_post.id}/reactions-users-list.json"
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "positive notifications" do
     before { PostActionNotifier.enable }
 
