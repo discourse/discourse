@@ -451,6 +451,7 @@ after_initialize do
         start_date: report.start_date.to_date,
         end_date: report.end_date.to_date,
         like: PostActionType::LIKE_POST_ACTION_ID,
+        valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
       )
 
     (report.start_date.to_date..report.end_date.to_date).each do |date|

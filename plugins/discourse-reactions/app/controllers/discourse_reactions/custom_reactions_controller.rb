@@ -180,7 +180,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   def plain_likes_scope(post, like_type)
     PostAction.where(post_id: post.id).where(
-      DiscourseReactions::PostActionExtension.filter_reaction_likes_sql,
+      DiscourseReactions::PostActionExtension.strict_filter_reaction_likes_sql,
       like: like_type,
     )
   end
@@ -226,7 +226,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
             FROM post_actions
             INNER JOIN users u ON u.id = post_actions.user_id
             WHERE post_actions.post_id = :post_id
-              AND (#{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql})
+              AND (#{DiscourseReactions::PostActionExtension.strict_filter_reaction_likes_sql})
             ORDER BY post_actions.created_at ASC
             LIMIT :limit OFFSET :offset
           SQL
@@ -257,7 +257,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
               FROM post_actions
               INNER JOIN users u ON u.id = post_actions.user_id
               WHERE post_actions.post_id = :post_id
-                AND (#{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql})
+                AND (#{DiscourseReactions::PostActionExtension.strict_filter_reaction_likes_sql})
             ) combined
             ORDER BY created_at ASC
             LIMIT :limit OFFSET :offset

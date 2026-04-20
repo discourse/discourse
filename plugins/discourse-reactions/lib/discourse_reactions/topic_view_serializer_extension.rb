@@ -11,10 +11,17 @@ module DiscourseReactions::TopicViewSerializerExtension
       .where(post_id: post_ids)
       .where("post_actions.deleted_at IS NULL")
       .where(post_action_type_id: PostActionType::LIKE_POST_ACTION_ID)
-      .where(
-        "post_actions.post_id IN (#{DiscourseReactions::PostActionExtension.post_action_with_reaction_user_sql})",
-        valid_reactions: DiscourseReactions::Reaction.reactions_counting_as_like,
-      )
+      .where(<<~SQL, valid_reactions: DiscourseReactions::Reaction.reactions_counting_as_like)
+          post_actions.post_id IN (
+            SELECT discourse_reactions_reaction_users.post_id
+            FROM discourse_reactions_reaction_users
+            INNER JOIN discourse_reactions_reactions
+              ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id
+            WHERE discourse_reactions_reaction_users.user_id = post_actions.user_id
+              AND discourse_reactions_reaction_users.post_id = post_actions.post_id
+              AND discourse_reactions_reactions.reaction_value IN (:valid_reactions)
+          )
+        SQL
       .reduce({}) do |hash, post_action|
         hash[post_action.post_id] ||= {}
         hash[post_action.post_id][post_action.id] = post_action
