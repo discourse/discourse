@@ -2178,9 +2178,6 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 }
 
-// Shared popup contents for displaying users who liked/reacted to a post.
-// Rendered inside a float-kit menu (desktop) or modal (mobile).
-// Used by core liked-users-menu and the discourse-reactions plugin.
 .post-users-popup {
   width: 300px;
   background: var(--secondary);

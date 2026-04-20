@@ -186,12 +186,11 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   private
 
   def plain_likes_scope(post, like_type)
-    PostAction
-      .where(post_id: post.id, post_action_type_id: like_type, deleted_at: nil)
-      .joins(
-        "LEFT JOIN discourse_reactions_reaction_users drru ON drru.post_id = post_actions.post_id AND drru.user_id = post_actions.user_id",
-      )
-      .where("drru.id IS NULL")
+    PostAction.where(post_id: post.id).where(
+      DiscourseReactions::PostActionExtension.filter_reaction_likes_sql,
+      like: like_type,
+      valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
+    )
   end
 
   def fetch_reaction_rows(post, reaction_filter, main_reaction, like_type, limit, offset)
@@ -231,20 +230,17 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         DB.query(
           <<~SQL,
             SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
-                   :main_reaction AS reaction, pa.created_at
-            FROM post_actions pa
-            INNER JOIN users u ON u.id = pa.user_id
-            LEFT JOIN discourse_reactions_reaction_users drru
-              ON drru.post_id = pa.post_id AND drru.user_id = pa.user_id
-            WHERE pa.post_id = :post_id
-              AND pa.post_action_type_id = :like_type
-              AND pa.deleted_at IS NULL
-              AND drru.id IS NULL
-            ORDER BY pa.created_at ASC
+                   :main_reaction AS reaction, post_actions.created_at
+            FROM post_actions
+            INNER JOIN users u ON u.id = post_actions.user_id
+            WHERE post_actions.post_id = :post_id
+              AND (#{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql})
+            ORDER BY post_actions.created_at ASC
             LIMIT :limit OFFSET :offset
           SQL
           post_id: post.id,
-          like_type: like_type,
+          like: like_type,
+          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
           main_reaction: main_reaction,
           limit: limit,
           offset: offset,
@@ -266,21 +262,18 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
               WHERE drru.post_id = :post_id
               UNION ALL
               SELECT u.id, u.username, u.name, u.uploaded_avatar_id,
-                     :main_reaction AS reaction, pa.created_at
-              FROM post_actions pa
-              INNER JOIN users u ON u.id = pa.user_id
-              LEFT JOIN discourse_reactions_reaction_users drru
-                ON drru.post_id = pa.post_id AND drru.user_id = pa.user_id
-              WHERE pa.post_id = :post_id
-                AND pa.post_action_type_id = :like_type
-                AND pa.deleted_at IS NULL
-                AND drru.id IS NULL
+                     :main_reaction AS reaction, post_actions.created_at
+              FROM post_actions
+              INNER JOIN users u ON u.id = post_actions.user_id
+              WHERE post_actions.post_id = :post_id
+                AND (#{DiscourseReactions::PostActionExtension.filter_reaction_likes_sql})
             ) combined
             ORDER BY created_at ASC
             LIMIT :limit OFFSET :offset
           SQL
           post_id: post.id,
-          like_type: like_type,
+          like: like_type,
+          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
           main_reaction: main_reaction,
           limit: limit,
           offset: offset,
