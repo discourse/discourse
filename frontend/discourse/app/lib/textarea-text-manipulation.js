@@ -349,6 +349,15 @@ export default class TextareaTextManipulation {
     schedule("afterRender", this, this.blurAndFocus);
   }
 
+  applyLink(url) {
+    const sel = this.getSelected();
+    if (sel.start === sel.end) {
+      return;
+    }
+    this._insertAt(sel.start, sel.end, `[${sel.value}](${url})`);
+    this.blurAndFocus();
+  }
+
   addText(sel, text, options) {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
