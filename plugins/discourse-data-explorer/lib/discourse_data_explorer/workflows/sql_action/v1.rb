@@ -26,6 +26,13 @@ module DiscourseDataExplorer
           "discourse_workflows.node_unavailable.requires_data_explorer"
         end
 
+        def self.outputs
+          [
+            { key: "main", label_key: "discourse_workflows.sql.output.results" },
+            { key: "empty", label_key: "discourse_workflows.sql.output.no_results" },
+          ]
+        end
+
         def self.property_schema
           {
             operation: {
@@ -192,13 +199,16 @@ module DiscourseDataExplorer
 
         def rows_to_items(pg_result)
           columns = pg_result.fields
-          items =
+          rows =
             pg_result.values.map do |row|
               json = {}
               columns.each_with_index { |col, i| json[col] = row[i] }
               { "json" => json }
             end
-          [items]
+
+          return [], [{ "json" => {} }] if rows.empty?
+
+          [rows, []]
         end
       end
     end

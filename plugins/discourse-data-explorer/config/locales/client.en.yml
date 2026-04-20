@@ -157,6 +157,9 @@ en:
         add_param: "Add parameter"
         param_name: "Param"
         param_value: "Value"
+        output:
+          results: "Results"
+          no_results: "No results"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

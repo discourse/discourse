@@ -23,6 +23,37 @@ RSpec.describe DiscourseDataExplorer::Workflows::SqlAction::V1 do
           execute_node(configuration: { "operation" => "raw", "query" => "" })
         }.to raise_error(ArgumentError, "No SQL query provided")
       end
+
+      it "emits on the empty port when the query returns no rows" do
+        result =
+          execute_node_result(
+            configuration: {
+              "operation" => "raw",
+              "query" => "SELECT username FROM users WHERE 1=0",
+            },
+          )
+
+        rows, empty = result.output_arrays(ports: described_class.ports)
+        expect(rows).to be_empty
+        expect(empty.size).to eq(1)
+        expect(empty.first).to eq({ "json" => {} })
+      end
+
+      it "emits on the main port when the query returns rows" do
+        result =
+          execute_node_result(
+            configuration: {
+              "operation" => "raw",
+              "query" => "SELECT username FROM users WHERE id = :user_id",
+              "params" => [{ "name" => "user_id", "value" => user.id.to_s }],
+            },
+          )
+
+        rows, empty = result.output_arrays(ports: described_class.ports)
+        expect(empty).to be_empty
+        expect(rows.size).to eq(1)
+        expect(rows.first["json"]["username"]).to eq(user.username)
+      end
     end
 
     context "with queries operation" do
@@ -100,6 +131,13 @@ RSpec.describe DiscourseDataExplorer::Workflows::SqlAction::V1 do
       expect(schema).to have_key(:output_fields)
       expect(schema[:output_fields][:type]).to eq(:array)
       expect(schema[:output_fields][:ui][:hidden]).to eq(true)
+    end
+  end
+
+  describe ".outputs" do
+    it "declares main and empty output ports" do
+      keys = described_class.outputs.map { |port| port[:key].to_s }
+      expect(keys).to eq(%w[main empty])
     end
   end
 

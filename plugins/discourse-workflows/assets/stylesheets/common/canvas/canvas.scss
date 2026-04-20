@@ -364,11 +364,13 @@
     line-height: 1;
     white-space: nowrap;
     position: absolute;
-    left: 22px;
+    left: 14px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--primary-medium);
-    padding: 1px 3px;
+    padding: 2px 8px 2px 4px;
+    background: var(--primary-very-low);
+    border-radius: 3px;
   }
 
   &.is-unavailable {
