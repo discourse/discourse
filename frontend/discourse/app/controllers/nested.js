@@ -283,8 +283,7 @@ export default class NestedController extends Controller {
   }
 
   @action
-  showActivityLog(event) {
-    event?.preventDefault();
+  showActivityLog() {
     this.modal.show(NestedActivityLog, {
       model: { topic: this.topic },
     });

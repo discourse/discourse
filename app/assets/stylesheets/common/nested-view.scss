@@ -834,13 +834,13 @@
     flex-direction: column-reverse;
   }
 
-  .nested-activity-log__list {
+  &__list {
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .nested-activity-log__item {
+  &__item {
     display: flex;
     align-items: flex-start;
     gap: 0.5em;
@@ -851,31 +851,31 @@
     }
   }
 
-  .nested-activity-log__icon {
+  &__icon {
     flex-shrink: 0;
     color: var(--primary-medium);
     margin-top: 0.15em;
   }
 
-  .nested-activity-log__content {
+  &__content {
     flex: 1;
     min-width: 0;
   }
 
-  .nested-activity-log__desc {
+  &__desc {
     display: flex;
     align-items: center;
     gap: 0.35em;
     flex-wrap: wrap;
   }
 
-  .nested-activity-log__message {
+  &__message {
     margin-top: 0.35em;
     font-size: var(--font-down-1);
     color: var(--primary-high);
   }
 
-  .nested-activity-log__empty {
+  &__empty {
     color: var(--primary-medium);
     text-align: center;
     padding: 1em 0;

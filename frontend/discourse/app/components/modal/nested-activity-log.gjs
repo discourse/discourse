@@ -46,13 +46,13 @@ export default class NestedActivityLog extends Component {
       <:body>
         <ConditionalLoadingSpinner @condition={{this.loading}}>
           {{#if this.smallActions.length}}
-            <ul class="nested-activity-log__list">
+            <ul class="nested-activity-log-modal__list">
               {{#each this.smallActions as |sa|}}
                 <ActivityLogItem @action={{sa}} @topicId={{@model.topic.id}} />
               {{/each}}
             </ul>
           {{else}}
-            <p class="nested-activity-log__empty">
+            <p class="nested-activity-log-modal__empty">
               {{i18n "nested_replies.activity_log.empty"}}
             </p>
           {{/if}}
@@ -102,12 +102,12 @@ class ActivityLogItem extends Component {
   }
 
   <template>
-    <li class="nested-activity-log__item">
-      <span class="nested-activity-log__icon">
+    <li class="nested-activity-log-modal__item">
+      <span class="nested-activity-log-modal__icon" aria-hidden="true">
         {{icon this.iconName}}
       </span>
-      <div class="nested-activity-log__content">
-        <div class="nested-activity-log__desc">
+      <div class="nested-activity-log-modal__content">
+        <div class="nested-activity-log-modal__desc">
           {{#if this.user}}
             <UserAvatar
               @ariaHidden={{true}}
@@ -118,7 +118,7 @@ class ActivityLogItem extends Component {
           <span>{{this.description}}</span>
         </div>
         {{#if @action.cooked}}
-          <div class="nested-activity-log__message">
+          <div class="nested-activity-log-modal__message">
             {{trustHTML @action.cooked}}
           </div>
         {{/if}}
