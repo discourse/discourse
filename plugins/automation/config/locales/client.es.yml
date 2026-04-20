@@ -205,9 +205,6 @@ es:
               description: "Opcional, limita la activación solo a publicaciones con estas características"
           created: Creado
           edited: Editado
-          topics: Todos los temas
-          personal_messages: Mensajes personales
-          public_topics: Temas públicos (excluir todas las categorías seguras)
           with_images: Imágenes
           with_links: Enlaces
           with_code: Código

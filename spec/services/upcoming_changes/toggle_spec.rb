@@ -131,7 +131,7 @@ RSpec.describe UpcomingChanges::Toggle do
                 .track_events { result }
                 .select { |e| e[:event_name] == :upcoming_change_enabled }
 
-            expect(events.first[:params]).to eq([setting_name.to_s])
+            expect(events.first[:params]).to eq([setting_name])
           end
         end
 
@@ -172,7 +172,7 @@ RSpec.describe UpcomingChanges::Toggle do
                 .track_events { result }
                 .select { |e| e[:event_name] == :upcoming_change_disabled }
 
-            expect(events.first[:params]).to eq([setting_name.to_s])
+            expect(events.first[:params]).to eq([setting_name])
           end
         end
       end
@@ -208,7 +208,7 @@ RSpec.describe UpcomingChanges::Toggle do
                 .track_events { result }
                 .select { |e| e[:event_name] == :upcoming_change_enabled }
 
-            expect(events.first[:params]).to eq([setting_name.to_s])
+            expect(events.first[:params]).to eq([setting_name])
           end
         end
 
@@ -240,7 +240,7 @@ RSpec.describe UpcomingChanges::Toggle do
                 .track_events { result }
                 .select { |e| e[:event_name] == :upcoming_change_disabled }
 
-            expect(events.first[:params]).to eq([setting_name.to_s])
+            expect(events.first[:params]).to eq([setting_name])
           end
         end
       end

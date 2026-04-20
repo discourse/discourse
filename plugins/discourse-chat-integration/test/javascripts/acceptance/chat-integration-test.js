@@ -24,17 +24,20 @@ acceptance("Chat Integration", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/discourse-chat-integration/providers", () => {
-      return jsonResponse({
-        providers: [
-          {
-            name: "dummy",
-            id: "dummy",
-            channel_parameters: [{ key: "somekey", regex: "^\\S+$" }],
-          },
-        ],
-      });
-    });
+    server.get(
+      "/admin/plugins/discourse-chat-integration/providers.json",
+      () => {
+        return jsonResponse({
+          enabled_providers: [
+            {
+              name: "dummy",
+              id: "dummy",
+              channel_parameters: [{ key: "somekey", regex: "^\\S+$" }],
+            },
+          ],
+        });
+      }
+    );
 
     server.get("/admin/plugins/discourse-chat-integration/channels", () => {
       return jsonResponse({

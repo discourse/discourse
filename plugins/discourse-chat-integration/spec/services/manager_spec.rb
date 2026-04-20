@@ -20,7 +20,10 @@ RSpec.describe DiscourseChatIntegration::Manager do
     let(:chan2) { DiscourseChatIntegration::Channel.create!(provider: "dummy") }
     let(:chan3) { DiscourseChatIntegration::Channel.create!(provider: "dummy") }
 
-    before { SiteSetting.chat_integration_enabled = true }
+    before do
+      SiteSetting.chat_integration_enabled = true
+      SiteSetting.dummy_provider_enabled = true
+    end
 
     it "should fail gracefully when a provider throws an exception" do
       DiscourseChatIntegration::Rule.create!(
@@ -52,7 +55,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
     end
 
     it "should not send notifications when provider is disabled" do
-      SiteSetting.chat_integration_enabled = false
+      SiteSetting.dummy_provider_enabled = false
       DiscourseChatIntegration::Rule.create!(
         channel: chan1,
         filter: "watch",

@@ -21,6 +21,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_be_merged,
              :full_suspend_reason,
              :suspended_till,
+             :full_silence_reason,
              :silence_reason,
              :penalty_counts,
              :next_penalty,

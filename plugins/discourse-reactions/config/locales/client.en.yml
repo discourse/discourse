@@ -20,6 +20,11 @@ en:
         react_with: "React to this post with: %{reaction}"
         cant_remove_reaction: "You can no longer remove your reaction"
         remove_reaction: "Remove this %{reaction} reaction"
+      users_popup:
+        all: "All"
+        title:
+          one: "%{count} reaction"
+          other: "%{count} reactions"
       counter:
         aria_label:
           one: "%{count} reaction"

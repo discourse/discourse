@@ -105,7 +105,7 @@ class Middleware::RequestTracker
       end
     end
 
-    if data[:browser_page_view] && !data[:is_crawler]
+    if data[:browser_page_view] && !data[:is_crawler] && !data[:is_beacon]
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -124,6 +124,34 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
         trigger_browser_pageview_event(data)
+
+        if data[:topic_id].present?
+          TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
+        end
+      end
+    end
+
+    if data[:is_beacon] && !data[:is_crawler]
+      if data[:has_auth_cookie]
+        ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
+        if data[:is_mobile]
+          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile_beacon)
+        end
+
+        trigger_beacon_browser_pageview_event(data)
+
+        if data[:topic_id].present? && data[:current_user_id].present?
+          TopicsController.defer_topic_view(
+            data[:topic_id],
+            data[:request_remote_ip],
+            data[:current_user_id],
+          )
+        end
+      elsif !SiteSetting.login_required
+        ApplicationRequest.increment!(:page_view_anon_browser_beacon)
+        ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
+
+        trigger_beacon_browser_pageview_event(data)
 
         if data[:topic_id].present?
           TopicsController.defer_topic_view(data[:topic_id], data[:request_remote_ip])
@@ -312,6 +340,11 @@ class Middleware::RequestTracker
     end
 
     env["discourse.request_tracker"] = self
+
+    if self.class.is_beacon_tracking_request?(request)
+      result = [204, {}, []]
+      return result
+    end
 
     MethodProfiler.start
 
@@ -518,6 +551,8 @@ class Middleware::RequestTracker
     status ||= 200
     headers ||= {}
 
+    return extract_beacon_view_tracking_data(env) if is_beacon_tracking_request?(request)
+
     is_html_request = headers["Content-Type"]&.include?("text/html")
     is_ajax_request = request.xhr?
 
@@ -578,12 +613,56 @@ class Middleware::RequestTracker
     }
   end
 
+  def self.is_beacon_tracking_request?(request)
+    SiteSetting.use_beacon_for_browser_page_views && request.post? &&
+      request.path == Discourse.beacon_pv_tracking_path
+  end
+
+  def self.extract_beacon_view_tracking_data(env)
+    body = env["rack.input"]&.read
+    env["rack.input"]&.rewind
+    data =
+      begin
+        JSON.parse(body)
+      rescue JSON::ParserError
+        {}
+      end
+
+    topic_id = data["topic_id"]&.to_i
+    tracking_url = data["url"]&.slice(0, MAX_URL_LENGTH)
+    tracking_referrer = data["referrer"]&.slice(0, MAX_URL_LENGTH)
+    tracking_session_id = data["session_id"]&.slice(0, MAX_SESSION_ID_LENGTH)
+    user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
+
+    {
+      track_view: false,
+      explicit_track_view: false,
+      deferred_track_view: true,
+      implicit_track_view: false,
+      browser_page_view: true,
+      is_beacon: true,
+      topic_id: topic_id,
+      tracking_url: tracking_url,
+      tracking_referrer: tracking_referrer,
+      tracking_session_id: tracking_session_id,
+      user_agent: user_agent,
+    }
+  end
+  private_class_method :extract_beacon_view_tracking_data
+
   def self.trigger_browser_pageview_event(data)
     if SiteSetting.trigger_browser_pageview_events
       DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
     end
   end
   private_class_method :trigger_browser_pageview_event
+
+  def self.trigger_beacon_browser_pageview_event(data)
+    if SiteSetting.trigger_browser_pageview_events
+      DiscourseEvent.trigger(:beacon_browser_pageview, build_browser_pageview_event_payload(data))
+    end
+  end
+  private_class_method :trigger_beacon_browser_pageview_event
 
   def self.build_browser_pageview_event_payload(data)
     {

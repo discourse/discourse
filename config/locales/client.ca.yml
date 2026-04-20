@@ -350,8 +350,6 @@ ca:
           other: "Creat fa %{count} mesos"
     bookmarked:
       title: "Preferit"
-      edit_bookmark: "Edita el marcador"
-      clear_bookmarks: "Neteja preferits"
       help:
         edit_bookmark_for_topic: "Cliqueu per editar el marcador d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
@@ -361,11 +359,11 @@ ca:
       create: "Crea un marcador"
       edit: "Edita el marcador"
       not_bookmarked: "marca aquesta publicació com a preferit"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Elimina el recordatori i mantén el marcador"
       created_with_reminder: "Heu marcat aquesta publicació amb un recordatori de %{date}. %{name}"
       delete: "Suprimeix el marcador"
       confirm_delete: "Esteu segur que voleu suprimir aquest marcador? El recordatori també se suprimirà."
-      confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
       save: "Desa"
       no_timezone: 'Encara no heu establert una zona horària. No podreu establir recordatoris. Configureu una <a href="%{basePath}/my/preferences/profile">al vostre perfil</a>.'
       invalid_custom_datetime: "La data i l'hora que heu proporcionat no són vàlides, torneu-ho a provar."
@@ -2524,6 +2522,8 @@ ca:
       review_group_name: "nom del grup"
       require_topic_approval: "Requereix aprovació del moderador en tots els temes nous"
       require_reply_approval: "Requereix aprovació del moderador en totes les respostes noves"
+      posting_review_modes:
+        everyone: "Tothom"
       this_year: "enguany"
       position: "Posició en la pàgina de categories:"
       minimum_required_tags: "Nombre mínim d'etiquetes necessari en un tema:"

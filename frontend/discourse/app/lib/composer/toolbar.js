@@ -85,7 +85,9 @@ export class ToolbarBase {
     createdButton.condition ||= () => true;
 
     createdButton.action = async () => {
-      await waitForClosedKeyboard(this.capabilities, this.site);
+      if (buttonAttrs.popupMenu) {
+        await waitForClosedKeyboard(this.capabilities, this.site);
+      }
 
       const toolbarEvent = this.context.newToolbarEvent?.(
         buttonAttrs.trimLeading

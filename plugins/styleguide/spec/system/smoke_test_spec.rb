@@ -96,8 +96,8 @@ RSpec.describe "Styleguide Smoke Test" do
     end
   end
 
-  it "renders the index page correctly on a site with no default theme" do
-    SiteSetting.default_theme_id = nil
+  it "renders the index page correctly on a site with no default color schemes" do
+    SiteSetting.default_theme_id = Fabricate(:theme).id
     visit "/styleguide"
 
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")

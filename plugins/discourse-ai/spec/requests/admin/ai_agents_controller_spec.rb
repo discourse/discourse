@@ -20,9 +20,19 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response).to be_successful
 
       expect(response.parsed_body["ai_agents"].length).to eq(AiAgent.count)
-      expect(response.parsed_body["meta"]["tools"].length).to eq(
-        DiscourseAi::Agents::Agent.all_available_tools.length,
-      )
+
+      expected_tool_count =
+        DiscourseAi::Agents::Agent.all_available_tools.length +
+          DiscourseAi::Agents::Agent.external_tools.length
+      expect(response.parsed_body["meta"]["tools"].length).to eq(expected_tool_count)
+    end
+
+    it "includes external plugin tools in the tools list" do
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+      tools = response.parsed_body["meta"]["tools"]
+      tool_ids = tools.map { |t| t["id"] }
+      expect(tool_ids).to include("ValidateSql")
+      expect(tool_ids).to include("RunSql")
     end
 
     it "includes token_count for custom tools" do

@@ -20,7 +20,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :allowed_user_count,
              :participant_groups,
              :is_hot,
-             :topic_hot_score
+             :topic_hot_score,
+             :is_nested_view
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -154,6 +155,14 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def include_topic_hot_score?
     SiteSetting.include_topic_hot_score
+  end
+
+  def is_nested_view
+    object.nested_topic.present? || SiteSetting.nested_replies_default
+  end
+
+  def include_is_nested_view?
+    SiteSetting.nested_replies_enabled && !object.private_message?
   end
 
   private

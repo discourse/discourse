@@ -338,6 +338,15 @@ RSpec.configure do |config|
 
     Sidekiq.default_configuration.error_handlers.clear
 
+    # No-op handler to suppress Sidekiq's `p ["!!!!!", ex]` fallback.
+    Sidekiq.default_configuration.error_handlers << ->(_ex, _ctx, _config) {}
+
+    # Quiet seed-fu output produced by specs that call `Model.seed`.
+    SeedFu.quiet = true
+
+    # json-schema's MultiJSON support is deprecated.
+    JSON::Validator.use_multi_json = false
+
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
@@ -941,6 +950,7 @@ RSpec.configure do |config|
     Discourse.redis.flushdb
     Scheduler::Defer.do_all_work
     clear_mocked_upcoming_change_metadata
+    clear_mocked_upcoming_change_default_overrides
   end
 
   config.after(:each, type: :system) do |example|
@@ -1055,7 +1065,7 @@ RSpec.configure do |config|
       super
     end
 
-    def log_off_user(session, cookies)
+    def log_off_user(session, cookies, push_subscription: nil)
       # Try using the main session as `session` sometimes is a server session
       (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super

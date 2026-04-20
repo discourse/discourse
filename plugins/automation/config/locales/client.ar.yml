@@ -212,9 +212,6 @@ ar:
               description: "اختياري، يقتصر التفعيل على المنشورات التي تتضمن هذه الميزات فقط"
           created: تاريخ الإنشاء
           edited: تاريخ التحرير
-          topics: كل الموضوعات
-          personal_messages: الرسائل الشخصية
-          public_topics: الموضوعات العامة (استبعاد جميع الفئات الآمنة)
           with_images: الصور
           with_links: الروابط
           with_code: الرمز

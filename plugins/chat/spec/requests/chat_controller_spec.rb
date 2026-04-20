@@ -350,7 +350,7 @@ RSpec.describe Chat::ChatController do
     let(:message3) { Fabricate(:chat_message, user: user, chat_channel: channel, message: "aw :(") }
 
     it "returns a 403 if the user can't chat" do
-      SiteSetting.chat_allowed_groups = nil
+      SiteSetting.chat_allowed_groups = ""
       sign_in(user)
       post "/chat/#{channel.id}/quote.json",
            params: {

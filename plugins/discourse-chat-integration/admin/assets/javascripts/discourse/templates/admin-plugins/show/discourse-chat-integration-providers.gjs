@@ -8,49 +8,44 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import NavItem from "discourse/components/nav-item";
 import DMenu from "discourse/float-kit/components/d-menu";
+import concatClass from "discourse/helpers/concat-class";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import SetupProvider from "../../../components/modal/setup-provider";
 
 export default class DiscourseChatIntegrationProviders extends Component {
   @service router;
+  @service modal;
+  @service dialog;
+  @service toasts;
 
   isProviderActive = (providerName) => {
     return this.currentProvider === providerName;
   };
 
+  constructor() {
+    super(...arguments);
+  }
+
   get currentProvider() {
     return this.router.currentRoute?.params?.provider;
   }
 
-  get enabledProviders() {
-    return this.args.controller.model.content || [];
-  }
-
   // Sorted by popularity (number of customer sites using each provider)
   get allProviders() {
-    return [
-      "slack",
-      "discord",
-      "teams",
-      "telegram",
-      "google",
-      "matrix",
-      "zulip",
-      "mattermost",
-      "powerautomate",
-      "gitter",
-      "rocketchat",
-      "guilded",
-      "groupme",
-      "webex",
-    ].map((name) => ({
-      name,
-      settingsFilter: `chat_integration_${name}`,
-    }));
+    const providers = (
+      this.args.controller.model.disabled_providers || []
+    ).concat(this.args.controller.model.enabled_providers || []);
+    return providers;
+  }
+
+  get enabledProviders() {
+    return this.args.controller.model.enabled_providers || [];
   }
 
   get disabledProviders() {
-    const enabledNames = this.enabledProviders.map((p) => p.name);
-    return this.allProviders.filter((p) => !enabledNames.includes(p.name));
+    return this.args.controller.model.disabled_providers || [];
   }
 
   get popularProviders() {
@@ -61,11 +56,75 @@ export default class DiscourseChatIntegrationProviders extends Component {
     return this.disabledProviders.slice(4);
   }
 
+  providerTitle(provider) {
+    return i18n(`chat_integration.provider.${provider.name}.title`);
+  }
+
   @action
-  configureProvider(provider) {
-    this.router.transitionTo("adminPlugins.show.settings", {
-      queryParams: { filter: provider.settingsFilter },
+  async configureProvider(provider, menu = null) {
+    const disabledProvider =
+      this.disabledProviders.find((p) => p.name === provider.name) ?? provider;
+
+    if (provider.additional_site_settings_required) {
+      this.openProviderSetupModal(disabledProvider);
+      menu?.close();
+    } else {
+      this.dialog.confirm({
+        message: i18n("chat_integration.confirm_setup_provider", {
+          provider: this.providerTitle(disabledProvider),
+        }),
+        didConfirm: async () => {
+          try {
+            await ajax(
+              "/admin/plugins/discourse-chat-integration/setup-provider",
+              {
+                type: "POST",
+                data: {
+                  provider: {
+                    name: disabledProvider.name,
+                  },
+                },
+              }
+            );
+            this.toasts.success({
+              data: {
+                message: i18n("chat_integration.setup_provider_modal.success", {
+                  provider: this.providerTitle(disabledProvider),
+                }),
+              },
+              duration: "short",
+            });
+            this.navigateToProvider(disabledProvider);
+          } catch (error) {
+            popupAjaxError(error);
+          }
+        },
+      });
+    }
+  }
+
+  @action
+  async openProviderSetupModal(provider) {
+    const closeData = await this.modal.show(SetupProvider, {
+      model: {
+        provider: Object.assign({}, provider, {
+          title: this.providerTitle(provider),
+        }),
+      },
     });
+
+    if (closeData?.setupCompleted) {
+      await this.navigateToProvider(provider);
+    }
+  }
+
+  @action
+  async navigateToProvider(provider) {
+    await this.router.refresh();
+    this.router.transitionTo(
+      "adminPlugins.show.discourse-chat-integration-providers.show",
+      provider.name
+    );
   }
 
   <template>
@@ -98,7 +157,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
               @label={{i18n "chat_integration.add_provider"}}
               class="btn-default btn-small"
             >
-              <:content>
+              <:content as |menu|>
                 <DropdownMenu as |dropdown|>
                   {{#each this.disabledProviders as |provider|}}
                     <dropdown.item>
@@ -108,8 +167,12 @@ export default class DiscourseChatIntegrationProviders extends Component {
                             "chat_integration.provider." provider.name ".title"
                           )
                         }}
-                        @action={{fn this.configureProvider provider}}
-                        class="btn-transparent"
+                        @action={{fn this.configureProvider provider menu}}
+                        class={{concatClass
+                          "btn-transparent"
+                          "chat-integration-add-provider-button"
+                          (concat "--" provider.name)
+                        }}
                       />
                     </dropdown.item>
                   {{/each}}
@@ -134,7 +197,11 @@ export default class DiscourseChatIntegrationProviders extends Component {
                     (concat "chat_integration.provider." provider.name ".title")
                   }}
                   @action={{fn this.configureProvider provider}}
-                  class="btn-default"
+                  class={{concatClass
+                    "btn-default"
+                    "chat-integration-popular-provider-setup"
+                    (concat "--" provider.name)
+                  }}
                 />
               {{/each}}
               {{#if this.otherProviders.length}}
@@ -142,7 +209,7 @@ export default class DiscourseChatIntegrationProviders extends Component {
                   @identifier="chat-integration-more-providers"
                   @icon="ellipsis"
                   @label={{i18n "chat_integration.more_providers"}}
-                  class="btn-default"
+                  class="btn-default chat-integration-more-providers-setup"
                 >
                   <:content>
                     <DropdownMenu as |dropdown|>
@@ -157,7 +224,11 @@ export default class DiscourseChatIntegrationProviders extends Component {
                               )
                             }}
                             @action={{fn this.configureProvider provider}}
-                            class="btn-transparent"
+                            class={{concatClass
+                              "btn-transparent"
+                              "chat-integration-more-providers-setup"
+                              (concat "--" provider.name)
+                            }}
                           />
                         </dropdown.item>
                       {{/each}}

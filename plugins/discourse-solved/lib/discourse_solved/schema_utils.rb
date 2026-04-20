@@ -31,7 +31,7 @@ module DiscourseSolved
       end
       topic.instance_variable_set(
         :@qa_page_schema,
-        schema_markup_enabled?(topic) && has_eligible_answers?(topic),
+        schema_markup_enabled?(topic) && eligible_answers(topic).exists?,
       )
     end
 
@@ -47,8 +47,8 @@ module DiscourseSolved
 
     def self.post_schema(post, topic)
       return nil unless qa_page_schema?(topic)
-      return {} if post.is_first_post?
-      return { itemscope: true } if post.post_type == Post.types[:small_action]
+      return { data: { qa_question: true } } if post.is_first_post?
+      return {} unless eligible_answer?(post)
       if accepted_answer_visible?(topic) && topic.solved.answer_post_id == post.id
         { itemprop: "acceptedAnswer", itemscope: true, itemtype: "https://schema.org/Answer" }
       else
@@ -56,17 +56,33 @@ module DiscourseSolved
       end
     end
 
+    def self.post_answer_meta(post, topic)
+      return unless post_schema(post, topic)&.[](:itemprop)
+      "<meta itemprop='upvoteCount' content='#{post.like_count}'>" \
+        "<meta itemprop='url' content='#{post.full_url}'>"
+    end
+
+    def self.main_entity_meta(topic, crawler_posts)
+      return unless qa_page_schema?(topic)
+      first_post = topic.first_post
+      "<meta itemprop='answerCount' content='#{Array(crawler_posts).count { |p| eligible_answer?(p) }}'>" \
+        "<meta itemprop='datePublished' content='#{topic.created_at.iso8601}'>" \
+        "<meta itemprop='name' content='#{ERB::Util.html_escape(topic.title)}'>" \
+        "<meta itemprop='upvoteCount' content='#{first_post&.like_count || 0}'>"
+    end
+
     private_class_method def self.accepted_answer_visible?(topic)
       post = topic.solved&.answer_post
       post.present? && Guardian.new.can_see_post?(post)
     end
 
-    private_class_method def self.has_eligible_answers?(topic)
-      topic
-        .posts
-        .where.not(post_number: 1)
-        .where(post_type: Post.types[:regular], hidden: false)
-        .exists?
+    private_class_method def self.eligible_answers(topic)
+      topic.posts.where.not(post_number: 1).where(post_type: Post.types[:regular], hidden: false)
+    end
+
+    private_class_method def self.eligible_answer?(post)
+      !post.is_first_post? && post.post_type == Post.types[:regular] && !post.hidden &&
+        post.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present?
     end
   end
 end

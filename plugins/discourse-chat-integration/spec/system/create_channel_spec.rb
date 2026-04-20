@@ -14,6 +14,7 @@ RSpec.describe "Create channel" do
   before do
     SiteSetting.chat_integration_enabled = true
     SiteSetting.chat_integration_discord_enabled = true
+    SiteSetting.dummy_provider_enabled = true
     sign_in(admin)
   end
 

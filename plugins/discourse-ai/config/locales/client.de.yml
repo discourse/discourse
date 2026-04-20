@@ -654,6 +654,10 @@ de:
         auth_types:
           oauth: "OAuth"
         secret: "Anmeldedaten"
+        oauth_token_params_placeholder: "{}"
+        oauth_json_object_required: "%{field} muss ein JSON-Objekt sein."
+        oauth_show_advanced_options: "Erweiterte Optionen anzeigen"
+        oauth_hide_advanced_options: "Erweiterte Optionen ausblenden"
         oauth_statuses:
           connected: "Verbunden"
         oauth_connect: "Verbinden"

@@ -507,8 +507,6 @@ ur:
           other: "%{count} سالوں پہلے تخلیق کیا گیا"
     bookmarked:
       title: "بُک مارک"
-      edit_bookmark: "بک مارک میں ترمیم کریں"
-      clear_bookmarks: "بک مارکس ختم کریں"
       help:
         bookmark: "اس موضوع کو بک مارک کرنے کے لیے کلک کریں"
         edit_bookmark: "اس موضوع میں کسی دھاگہ کے بک مارک میں ترمیم کرنے کے لیے کلک کریں"
@@ -527,12 +525,12 @@ ur:
       clear_reminder: "یاد دہانی مٹائیں"
       edit: "بک مارک میں ترمیم کریں"
       not_bookmarked: "اس دھاگے کو بک مارک کریں"
+      topic_bookmark: "ٹاپک"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
       created_with_reminder: "آپ نے اس دھاگے کو ایک یاد دہانی %{date}, %{name} کے ساتھ بک مارک کیا ہے۔"
       created_with_reminder_generic: "آپ نے اسے ایک %{date} %{name} یاد دہانی کے ساتھ بک مارک کیا ہے"
       delete: "بک مارک حذف کریں"
       confirm_delete: "کیا آپ واقعی اس بک مارک کو حذف کرنا چاہتے ہیں؟ یاد دہانی بھی حذف کردی جائے گی۔"
-      confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس موضوع سے اپنے تمام بک مارکس ہٹانا چاہتے ہیں؟"
       save: "محفوظ کریں"
       no_timezone: 'آپ نے ابھی تک خطہ کے وقت کا تعین نہیں کیا۔ آپ یاد دہانیوں کا نظم نہیں کر پائیں گے۔ <a href="%{basePath}/my/preferences/profile">اپنے پروفائل میں</a> ایک سیٹ اپ کریں۔'
       invalid_custom_datetime: "آپ کی فراہم کردہ تاریخ اور وقت غلط ہے ، براہ کرم دوبارہ کوشش کریں۔"
@@ -4290,6 +4288,9 @@ ur:
       review_group_name: "گروپ نام"
       require_topic_approval: "تمام نئے موضوعات کیلئے نگرانوں کی منظوری لازمی کریں"
       require_reply_approval: "تمام نئے جوابات کیلئے نگرانوں کی منظوری لازمی کریں"
+      posting_review_modes:
+        everyone: "ہر کوئی"
+      posting_review_groups_placeholder: "گروپس منتخب کریں..."
       this_year: "اِس سال"
       position: "زمرہ جات کے صفحے پر پوزیشن:"
       position_disabled: "زمرہ جات کو سرگرمی کی ترتیب میں دکھایا جائے گا۔ فہرستوں میں زمرہ جات کی ترتیب کو کنٹرول کرنے کے لیے، <a href='%{url}'>'نسب شدہ زمرہ ترتیب'</a> سیٹنگ کو فعال کریں۔"

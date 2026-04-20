@@ -237,6 +237,7 @@ describe Chat::ChannelArchiveService do
 
         create_messages(3) && start_archive
         @channel_archive.update!(destination_topic_title: "Wow this is the new title :tada: :joy:")
+        Discourse.expects(:warn_exception).once
         described_class.new(@channel_archive).execute
         expect(@channel_archive.reload.complete?).to eq(false)
         expect(@channel_archive.reload.failed?).to eq(true)
@@ -420,6 +421,7 @@ describe Chat::ChannelArchiveService do
           .stubs(:create_post)
           .raises(FakeArchiveError.new("this is a test error"))
 
+        Discourse.expects(:warn_exception).once
         stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
           expect { described_class.new(@channel_archive).execute }.to raise_error(FakeArchiveError)
         end

@@ -463,8 +463,6 @@ lt:
           other: "Sukurta prieš %{count} metų"
     bookmarked:
       title: "Žymės"
-      edit_bookmark: "Redaguoti žymę"
-      clear_bookmarks: "Pašalinti žymes"
       help:
         bookmark: "Spustelėkite norėdami pažymėti šią temą"
         edit_bookmark: "Spustelėkite, jei norite redaguoti pažymėjimą šios įrašo šioje temoje"
@@ -483,12 +481,12 @@ lt:
       clear_reminder: "Išvalyti priminimą."
       edit: "Redaguoti žymę"
       not_bookmarked: "pažymėkite šį įrašą"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Pašalinkite priminimą ir išsaugokite žymę"
       created_with_reminder: "Jūs pažymėjote šį įrašą priminimu %{date}. %{name}"
       created_with_reminder_generic: "Jūs pažymėjote tai su priminimu %{date}. %{name}"
       delete: "Ištrinti žymę"
       confirm_delete: "Ar tikrai norite ištrinti šią žymę? Priminimas taip pat bus ištrintas."
-      confirm_clear: "Ar tikrai norite išvalyti visas savo žymes iš šios temos?"
       save: "Saugoti"
       no_timezone: 'Jūs dar nenustatėte laiko juostos. Negalėsite nustatyti priminimų. Nustatykite vieną iki <a href="%{basePath}/my/preferences/profile">savo profilyje</a>.'
       invalid_custom_datetime: "Pateikta data ir laikas yra neteisingi, bandykite dar kartą."
@@ -3448,6 +3446,9 @@ lt:
       review_group_name: "grupės pavadinimas"
       require_topic_approval: "Reikalauti, kad moderatorius patvirtintų visas naujas temas"
       require_reply_approval: "Reikalauti, kad moderatorius patvirtintų visus naujus atsakymus"
+      posting_review_modes:
+        everyone: "Visi"
+      posting_review_groups_placeholder: "Pasirinkite grupes..."
       this_year: "šiais metais"
       position: "Pozicija kategorijų puslapyje:"
       minimum_required_tags: "Minimalus temoje reikalingas žymų skaičius:"

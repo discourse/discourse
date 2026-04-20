@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import {
+  buildParams,
   removeEvent,
   replaceRaw,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
@@ -73,6 +74,44 @@ module("Unit | Lib | raw-event-helper", function () {
       ),
       '[event location="Berlin"]\n[/event]',
       "omits whitespace-only name parameter"
+    );
+  });
+
+  test("buildParams image handling", function (assert) {
+    const startsAt = "2024-06-15T10:00:00Z";
+    const siteSettings = { discourse_post_event_allowed_custom_fields: "" };
+
+    assert.strictEqual(
+      buildParams(
+        startsAt,
+        null,
+        {
+          imageUpload: {
+            short_url: "upload://abc123.png",
+            url: "/uploads/default/original/1X/abc123.png",
+          },
+        },
+        siteSettings
+      ).image,
+      "upload://abc123.png",
+      "prefers short_url when available"
+    );
+
+    assert.strictEqual(
+      buildParams(
+        startsAt,
+        null,
+        { imageUpload: { url: "/uploads/default/original/1X/abc123.png" } },
+        siteSettings
+      ).image,
+      "/uploads/default/original/1X/abc123.png",
+      "falls back to url when short_url is not set"
+    );
+
+    assert.strictEqual(
+      buildParams(startsAt, null, {}, siteSettings).image,
+      undefined,
+      "omits image when imageUpload is not set"
     );
   });
 });

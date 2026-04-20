@@ -6,6 +6,7 @@ import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
+import AdminWatchedWordsActionNav from "discourse/admin/components/admin-watched-words-action-nav";
 import WatchedWord from "discourse/admin/models/watched-word";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -16,13 +17,22 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 const MESSAGE_BUS_UPLOAD_PATH = "/watched_words/upload";
 
 export default class AdminWatchedWordsController extends Controller {
+  @service capabilities;
   @service messageBus;
+  @service menu;
 
   @tracked filter = null;
+  menuTrigger = null;
+
   @autoTrackedArray allWatchedWords;
+
   @autoTrackedArray filteredWatchedWords;
 
   showWords = false;
+
+  get showMenuToggle() {
+    return !this.capabilities.viewport.sm;
+  }
 
   @observes("allWatchedWords", "filter")
   filterContent() {
@@ -93,10 +103,19 @@ export default class AdminWatchedWordsController extends Controller {
   }
 
   @action
+  registerMenuTrigger(element) {
+    this.menuTrigger = element;
+  }
+
+  @action
   toggleMenu() {
-    const adminDetail = document.querySelector(".admin-detail");
-    ["mobile-closed", "mobile-open"].forEach((state) => {
-      adminDetail.classList.toggle(state);
+    this.menu.show(this.menuTrigger, {
+      identifier: "admin-watched-words-action-nav",
+      component: AdminWatchedWordsActionNav,
+      modalForMobile: true,
+      data: {
+        items: this.filteredWatchedWords,
+      },
     });
   }
 }

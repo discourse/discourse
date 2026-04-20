@@ -7,7 +7,7 @@ export default <template>
   <DPageHeader
     @titleLabel={{i18n "admin.config.whats_new.title"}}
     @descriptionLabel={{i18n "admin.config.whats_new.header_description"}}
-    @learnMoreUrl="https://meta.discourse.org/tags/c/announcements/67/release-notes"
+    @learnMoreUrl="https://releases.discourse.org/"
     @hideTabs={{true}}
   >
     <:breadcrumbs>

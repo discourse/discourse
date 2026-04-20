@@ -599,8 +599,6 @@ he:
           other: "נוצר לפני %{count} שנים"
     bookmarked:
       title: "סימנייה"
-      edit_bookmark: "עריכת סימנייה"
-      clear_bookmarks: "מחיקת סימניות"
       help:
         bookmark: "יש ללחוץ כדי להוסיף סימנייה לנושא הזה"
         edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפוסט בנושא זה"
@@ -619,12 +617,12 @@ he:
       clear_reminder: "פינוי התזכורת"
       edit: "עריכת סימנייה"
       not_bookmarked: "סימון פוסט זה בסימנייה"
+      topic_bookmark: "נושא"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
       created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
       delete: "מחיקת סימנייה"
       confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
-      confirm_clear: "לנקות את כל הסימניות מנושא זה?"
       save: "שמירה"
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
       invalid_custom_datetime: "התאריך והשעה שסיפקת שגויים, נא לנסות שוב."
@@ -2991,6 +2989,8 @@ he:
       medium_dark_tone: גוון עור כהה בינוני
       dark_tone: גוון עור כהה
       default: אמוג׳ים מותאמים
+    filter_input:
+      clear: "פינוי המסנן"
     shared_drafts:
       title: "טיוטות משותפות"
       notice: "הנושא הזה זמין לצפייה לאלו שיכולים לפרסם טיוטות שיתופיות."
@@ -4729,6 +4729,10 @@ he:
       review_group_name: "שם הקבוצה"
       require_topic_approval: "לדרוש אישור מפקח לכל הנושאים החדשים"
       require_reply_approval: "לדרוש אישור מפקח לכל התגובות החדשות"
+      posting_review_modes:
+        no_one: "אף אחד"
+        everyone: "כולם"
+      posting_review_groups_placeholder: "בחירת קבוצות…"
       this_year: "השנה"
       position: "מיקום בעמוד הקטגוריות:"
       default_position: "מקום ברירת מחדל"

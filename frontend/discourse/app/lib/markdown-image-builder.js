@@ -1,3 +1,7 @@
+export function escapeMarkdownCharacters(text) {
+  return text.replace(/[\\*_~`\[\]|]/g, "\\$&");
+}
+
 export function sanitizeAlt(text, options = {}) {
   const fallback = options.fallback ?? "";
 
@@ -10,7 +14,7 @@ export function sanitizeAlt(text, options = {}) {
     return fallback;
   }
 
-  return trimmed.replace(/\|/g, "&#124;").replace(/([\\\[\]])/g, "\\$1");
+  return escapeMarkdownCharacters(trimmed);
 }
 
 /**

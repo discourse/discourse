@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::RocketchatProvider
   PROVIDER_NAME = "rocketchat"
+  POPULARITY_SCORE = 50
 
   PROVIDER_ENABLED_SETTING = :chat_integration_rocketchat_enabled
   CHANNEL_IDENTIFIER_KEY = "identifier"

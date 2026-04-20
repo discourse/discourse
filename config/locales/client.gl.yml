@@ -279,7 +279,6 @@ gl:
           today: "hoxe"
     bookmarked:
       title: "Marcador"
-      clear_bookmarks: "Limpar marcadores"
       help:
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
@@ -287,10 +286,10 @@ gl:
       create: "Crear marcador"
       edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
+      topic_bookmark: "Tema"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
       delete: "Eliminar marcador"
       confirm_delete: "Confirma a eliminación deste marcador? O recordatorio tamén se eliminará."
-      confirm_clear: "Confirma o borrado de todos os marcadores deste tema?"
       save: "Gardar"
       no_timezone: 'Aínda non configurous ningunha zona horaria. Non poderá estabelecer recordatorios. Configure un <a href="%{basePath}/my/preferences/profile">no teu perfil</a>.'
       invalid_custom_datetime: "A data e hora que escribiu non é correcta, ténteo de novo."
@@ -2800,6 +2799,8 @@ gl:
       review_group_name: "nome do grupo"
       require_topic_approval: "Require a aprobación de todos os temas novos polo moderador"
       require_reply_approval: "Require a aprobación de todas as respostas novas polo moderador"
+      posting_review_modes:
+        everyone: "Todos"
       this_year: "este ano"
       position: "Posición na páxina de categorías:"
       minimum_required_tags: "Número mínimo de etiquetas requiridas nun tema:"

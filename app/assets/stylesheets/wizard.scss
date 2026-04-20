@@ -1,13 +1,19 @@
 @use "lib/viewport";
 
 :root {
-  --wizard-primary: #7b5fe2;
-  --wizard-primary-100: #f4f2fc;
-  --wizard-primary-300: #b8a4ff;
-  --wizard-primary-400: #8b6df8;
-  --wizard-primary-800: #3a275e;
-  --wizard-bg-color: light-dark(#f9f8fc, var(--background-color));
-  --wizard-bg-color-2: light-dark(#e1d5ff, var(--wizard-primary-800));
+  --wizard-primary: #{$discourse-brand};
+  --wizard-primary-100: #{$discourse-brand-100};
+  --wizard-primary-300: #{$discourse-brand-300};
+  --wizard-primary-400: #{$discourse-brand-400};
+  --wizard-primary-800: #{$discourse-brand-800};
+  --wizard-bg-color: light-dark(
+    #{$discourse-bg-light},
+    var(--background-color)
+  );
+  --wizard-bg-color-2: light-dark(
+    #{$discourse-brand-light},
+    var(--wizard-primary-800)
+  );
   --wizard-input-radius: 8px;
   --wizard-button-radius: 6.25em;
 }

@@ -84,6 +84,95 @@
   }
 }
 
+.permanently-delete-confirm {
+  .dialog-content {
+    min-width: 25vw;
+    width: 25vw;
+  }
+
+  &.--fire-easter-egg-dialog {
+    .dialog-content {
+      background-color: transparent;
+      color: white;
+
+      .confirmation-phrase {
+        z-index: 100000;
+      }
+    }
+  }
+
+  &__message {
+    margin-bottom: var(--space-4);
+  }
+
+  &__instruction {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    .confirmation-phrase {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  --glitter: url("/images/firenoise.png");
+
+  .fire-easter-egg::before,
+  .fire-easter-egg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .fire-easter-egg::before {
+    content: "";
+    background-image:
+      var(--glitter), var(--glitter),
+      linear-gradient(
+        0deg,
+        white 0,
+        #ff8951 5px,
+        #dcbc169c 30%,
+        transparent 70%
+      ),
+      radial-gradient(ellipse at bottom, transparent 30%, black 60%);
+    background-size:
+      350px 500px,
+      400px 650px,
+      100% 100%,
+      100% 100%;
+    background-blend-mode: hard-light, color-dodge, multiply;
+    background-position:
+      0 0,
+      0 0,
+      var(--gradientPos);
+    background-repeat: repeat, repeat, repeat, no-repeat;
+    mix-blend-mode: color-dodge;
+    filter: brightness(3.7) blur(7px) contrast(6);
+    animation: fire-easter-egg 1.75s linear infinite;
+    box-shadow: inset 0 -40px 50px -60px #63bbc5;
+  }
+
+  @keyframes fire-easter-egg {
+    0% {
+      background-position:
+        center 0,
+        center 0,
+        50% 100%,
+        center center;
+    }
+
+    100% {
+      background-position:
+        center -500px,
+        center -650px,
+        50% 100%,
+        center center;
+    }
+  }
+}
+
 .dialog-footer {
   display: flex;
   flex-wrap: wrap;

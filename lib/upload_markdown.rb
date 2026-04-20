@@ -17,14 +17,14 @@ class UploadMarkdown
 
   def image_markdown(display_name: nil)
     display_name ||= @upload.original_filename
-    "![#{display_name}|#{@upload.width}x#{@upload.height}](#{@upload.short_url})"
+    "![#{self.class.escape_markdown(display_name)}|#{@upload.width}x#{@upload.height}](#{@upload.short_url})"
   end
 
   def attachment_markdown(display_name: nil, with_filesize: true)
     human_filesize = with_filesize ? " (#{@upload.human_filesize})" : ""
     display_name ||= @upload.original_filename
 
-    "[#{display_name}|attachment](#{@upload.short_url})#{human_filesize}"
+    "[#{self.class.escape_markdown(display_name)}|attachment](#{@upload.short_url})#{human_filesize}"
   end
 
   def playable_media_markdown(display_name: nil)
@@ -36,6 +36,10 @@ class UploadMarkdown
       end
     return attachment_markdown if !type
     display_name ||= @upload.original_filename
-    "![#{display_name}|#{type}](#{@upload.short_url})"
+    "![#{self.class.escape_markdown(display_name)}|#{type}](#{@upload.short_url})"
+  end
+
+  def self.escape_markdown(text)
+    text.gsub(/[\\*_~`\[\]|]/) { |c| "\\#{c}" }
   end
 end

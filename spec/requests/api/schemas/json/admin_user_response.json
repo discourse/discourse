@@ -140,6 +140,9 @@
     "latest_export": {
       "type": ["object", "null"]
     },
+    "full_silence_reason": {
+      "type": ["string", "null"]
+    },
     "silence_reason": {
       "type": ["string", "null"]
     },

@@ -481,7 +481,13 @@ en:
   delete_topic_failed: "There was an error deleting that topic. Please contact the site's administrator."
 
   reading_time: "Reading time"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
 
   action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
 
@@ -876,6 +882,7 @@ en:
       invalid_email_in: "'%{email}' is not a valid email address."
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
+      groups_required_for_mode: "You must select at least one group for %{setting}."
       description_incomplete: "The category description post must have at least one paragraph."
       description_too_long:
         one: "Description is too long (maximum is %{count} character)."
@@ -920,7 +927,9 @@ en:
       one: "%{count} Like"
       other: "%{count} Likes"
     cannot_permanently_delete:
-      many_posts: "This topic has undeleted posts. Please permanently delete them before permanently deleting the topic."
+      many_posts:
+        one: "This topic still has %{count} post that needs to be permanently deleted before the topic itself can be permanently deleted."
+        other: "This topic still has %{count} posts that need to be permanently deleted before the topic itself can be permanently deleted."
       wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
@@ -1252,6 +1261,7 @@ en:
 
   calendar_subscriptions:
     application_name: "Calendar Subscriptions"
+    bookmarks_feed_name: "%{site_title} - Bookmark reminders"
 
   user_api_key:
     title: 'Authorize "%{application_name}"'
@@ -1834,9 +1844,6 @@ en:
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
     github_onebox_access_tokens: "A mapping of a GitHub organisation or user to a GitHub access token which is used to generate GitHub oneboxes for private repos, commits, pull requests, issues, and file contents. Without this, only public GitHub URLs will be oneboxed."
-    reddit_onebox_client_id: "Reddit API OAuth client ID used for authenticated Reddit oneboxes. Create a 'script' type app at reddit.com/prefs/apps to obtain credentials."
-    reddit_onebox_client_secret: "Reddit API OAuth client secret used for authenticated Reddit oneboxes. Found under the 'script' type app created at reddit.com/prefs/apps."
-
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
@@ -1945,6 +1952,7 @@ en:
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
+    can_permanently_delete: "Allow admins to permanently destroy posts, topics, and post revisions. Permanently deleted data is completely removed from the database and cannot be recovered."
     suppress_secured_categories_from_admin: "Suppress private topics and PMs in some parts of UI for admins. Content will still be visible in some places. This is not a security feature: admins can always access all content on the site."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
@@ -2140,6 +2148,8 @@ en:
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images, attachments, and backups."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images, attachments, and backups."
+    s3_role_arn: "The ARN of the IAM role to assume for S3 operations. When set alongside access keys, Discourse will use STS AssumeRole to obtain temporary credentials."
+    s3_role_session_name: "Optional session name used when assuming an IAM role for S3 operations. Appears in CloudTrail logs for auditing. Falls back to the server hostname if blank."
     s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
     s3_use_cdn_url_for_all_uploads: "Use CDN URL for all the files uploaded to s3 instead of only for images."
@@ -2247,6 +2257,7 @@ en:
     here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    animated_topic_thumbnails: "Use the original animated image as the topic thumbnail instead of generating a static thumbnail."
 
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
@@ -2731,7 +2742,7 @@ en:
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
-    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
+    use_name_for_username_suggestions: "Use a user's full name when suggesting usernames during SSO and OAuth signup flows."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
@@ -2776,6 +2787,13 @@ en:
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
     content_localization_use_default_locale_when_unsupported: "Serve localized content in the site's default locale to users whose preferred language is not listed in 'content localization supported locales'."
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
+    nested_replies_enabled: "Enable the nested replies view for topics."
+    nested_replies_default: "Use nested replies as the default view for all topics."
+    nested_replies_default_sort: "Default sort algorithm for nested replies view."
+    nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
+    nested_replies_toggle_mode_groups: "Groups that can toggle between nested and flat view."
+    nested_replies_backfill_batch_size: "Number of topics to backfill nested reply stats for per scheduled run."
+    nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
@@ -3119,8 +3137,11 @@ en:
       unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
 
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
-    omniauth_confirm_title: "Log in using %{provider}"
+    omniauth_confirm_title: "Log in with %{provider}"
     omniauth_confirm_button: "Continue"
+    omniauth_confirm_description: "You will be redirected to %{provider} to sign in"
+    omniauth_confirm_provider_description: "Secure authentication"
+    omniauth_confirm_footer_html: "You will be signed into %{site}"
     authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     new_registrations_disabled_discourse_connect: "New account registrations are only allowed through Discourse Connect."
@@ -5541,8 +5562,11 @@ en:
       restricted_to:
         one: '"%{tag_name}" is restricted to the "%{category_names}" category'
         other: '"%{tag_name}" is restricted to the following categories: %{category_names}'
-      synonym: 'Synonyms are not allowed. Use "%{tag_name}" instead.'
+      restricted_to_truncated: '"%{tag_name}" is restricted to the following categories: %{category_names}, and %{more_count} more'
+      synonym: 'This is a synonym for "%{tag_name}". Use "%{tag_name}" instead.'
       has_synonyms: '"%{tag_name}" cannot be used because it has synonyms.'
+      one_tag_per_topic_group: 'Only one tag from the "%{tag_group_name}" group is allowed per topic'
+      missing_parent_tag: 'Requires the "%{parent_tag_name}" tag to use tags from the "%{tag_group_name}" group'
       restricted_tags_cannot_be_used_in_category:
         one: 'The "%{tags}" tag cannot be used in the "%{category}" category. Please remove it.'
         other: 'The following tags cannot be used in the "%{category}" category: %{tags}. Please remove them.'

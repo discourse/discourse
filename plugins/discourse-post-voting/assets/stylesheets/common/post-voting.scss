@@ -236,6 +236,11 @@
   }
 }
 
+.topic-post:has(.post-voting-post-list) {
+  position: relative;
+  z-index: 3;
+}
+
 .post-voting-post {
   position: relative;
   display: flex;

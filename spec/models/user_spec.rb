@@ -3756,6 +3756,17 @@ RSpec.describe User do
   describe "#silence_reason" do
     before { user.update!(silenced_till: 1.day.from_now) }
 
+    it "returns only the first line when details contain a message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.silence_reason).to eq("short reason")
+    end
+
     it "returns sanitized silence reason" do
       Fabricate(
         :user_history,
@@ -3778,6 +3789,37 @@ RSpec.describe User do
       expect(user.silence_reason).to eq(
         "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
       )
+    end
+  end
+
+  describe "#full_silence_reason" do
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "returns the full silence reason including message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.full_silence_reason).to eq("short reason<br><br>private email body")
+    end
+
+    it "returns sanitized content" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.full_silence_reason).to eq("foo  bar")
+    end
+
+    it "returns nil when user is not silenced" do
+      user.update!(silenced_till: nil)
+      expect(user.full_silence_reason).to be_nil
     end
   end
 

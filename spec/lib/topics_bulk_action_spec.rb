@@ -503,6 +503,97 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
+  describe "#pin" do
+    fab!(:moderator)
+    fab!(:topic_2, :topic)
+
+    it "pins topics in category when user can moderate" do
+      topic_ids =
+        TopicsBulkAction.new(
+          moderator,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: false,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_at).to be_present
+      expect(topic.pinned_globally).to eq(false)
+      expect(topic_2.reload.pinned_at).to be_present
+      expect(topic_2.pinned_globally).to eq(false)
+    end
+
+    it "pins topics globally with pinned_until when provided" do
+      pinned_until = 3.days.from_now.beginning_of_minute.to_s
+
+      topic_ids =
+        TopicsBulkAction.new(
+          moderator,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: true,
+          pinned_until: pinned_until,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_globally).to eq(true)
+      expect(topic.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+      expect(topic_2.reload.pinned_globally).to eq(true)
+      expect(topic_2.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+    end
+
+    it "does not pin when user cannot moderate" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: false,
+        ).perform!
+
+      expect(topic_ids).to eq([])
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic_2.reload.pinned_at).to be_nil
+    end
+  end
+
+  describe "#unpin" do
+    fab!(:moderator)
+    fab!(:topic_2, :topic)
+
+    it "unpins multiple pinned topics and clears pinned_until when user can moderate" do
+      topic.update_pinned(true, false, 3.days.from_now.to_s)
+      topic_2.update_pinned(true, true, 5.days.from_now.to_s)
+
+      topic_ids = TopicsBulkAction.new(moderator, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic.pinned_until).to be_nil
+      expect(topic_2.reload.pinned_at).to be_nil
+      expect(topic_2.pinned_until).to be_nil
+    end
+
+    it "skips topics that are not pinned" do
+      topic.update_pinned(true, false)
+
+      topic_ids = TopicsBulkAction.new(moderator, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to eq([topic.id])
+    end
+
+    it "does not unpin when user cannot moderate" do
+      topic.update_pinned(true, false)
+      topic_2.update_pinned(true, false)
+
+      topic_ids = TopicsBulkAction.new(user, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to eq([])
+      expect(topic.reload.pinned_at).to be_present
+      expect(topic_2.reload.pinned_at).to be_present
+    end
+  end
+
   describe "change_tags" do
     fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)

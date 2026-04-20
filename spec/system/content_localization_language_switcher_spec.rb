@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 describe "Content localization language switcher" do
-  SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
-  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
+  let(:switcher_selector) { "button[data-identifier='language-switcher']" }
+  let(:toggle_localize_button_selector) { "button.btn-toggle-localized-content" }
 
   let(:topic_list) { PageObjects::Components::TopicList.new }
-  let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+  let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
 
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
 
@@ -55,7 +55,7 @@ describe "Content localization language switcher" do
     SiteSetting.content_localization_language_switcher = "anonymous"
 
     visit("/")
-    expect(page).to have_no_css(SWITCHER_SELECTOR)
+    expect(page).to have_no_css(switcher_selector)
 
     SiteSetting.content_localization_enabled = true
 
@@ -75,42 +75,42 @@ describe "Content localization language switcher" do
   it "only shows the language switcher if turned on for various types of users (anon, logged in)" do
     SiteSetting.content_localization_language_switcher = "none"
     visit("/")
-    expect(page).not_to have_css(SWITCHER_SELECTOR)
+    expect(page).not_to have_css(switcher_selector)
 
     SiteSetting.content_localization_language_switcher = "anonymous"
     visit("/")
-    expect(page).to have_css(SWITCHER_SELECTOR)
+    expect(page).to have_css(switcher_selector)
 
     SiteSetting.content_localization_language_switcher = "all"
     visit("/")
-    expect(page).to have_css(SWITCHER_SELECTOR)
+    expect(page).to have_css(switcher_selector)
 
     sign_in(japanese_user)
 
     SiteSetting.content_localization_language_switcher = "none"
     visit("/")
-    expect(page).not_to have_css(SWITCHER_SELECTOR)
+    expect(page).not_to have_css(switcher_selector)
 
     SiteSetting.content_localization_language_switcher = "anonymous"
     visit("/")
-    expect(page).not_to have_css(SWITCHER_SELECTOR)
+    expect(page).not_to have_css(switcher_selector)
 
     SiteSetting.content_localization_language_switcher = "all"
     visit("/")
-    expect(page).to have_css(SWITCHER_SELECTOR)
+    expect(page).to have_css(switcher_selector)
   end
 
   it "displays the current language code on the trigger button" do
     SiteSetting.content_localization_language_switcher = "all"
 
     visit("/")
-    expect(page.find(SWITCHER_SELECTOR)).to have_content("EN")
+    expect(page.find(switcher_selector)).to have_content("EN")
 
     select_language("ja")
-    expect(page.find(SWITCHER_SELECTOR)).to have_content("JA")
+    expect(page.find(switcher_selector)).to have_content("JA")
 
     select_language("es")
-    expect(page.find(SWITCHER_SELECTOR)).to have_content("ES")
+    expect(page.find(switcher_selector)).to have_content("ES")
   end
 
   it "shows localized content when switching languages (anon, logged in)" do
@@ -151,15 +151,15 @@ describe "Content localization language switcher" do
 
     expect(topic_list).to have_content("孫子兵法からの人生戦略")
     I18n.with_locale(:ja) do
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+      expect(page.find(toggle_localize_button_selector)["title"]).to eq(
         I18n.t("js.content_localization.toggle_localized.translated"),
       )
     end
 
-    page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+    page.find(toggle_localize_button_selector).click
     expect(topic_list).to have_content("Life strategies from The Art of War")
     I18n.with_locale(:ja) do
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+      expect(page.find(toggle_localize_button_selector)["title"]).to eq(
         I18n.t("js.content_localization.toggle_localized.not_translated"),
       )
     end
@@ -168,7 +168,7 @@ describe "Content localization language switcher" do
 
     expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
     I18n.with_locale("es") do
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+      expect(page.find(toggle_localize_button_selector)["title"]).to eq(
         I18n.t("js.content_localization.toggle_localized.translated"),
       )
     end

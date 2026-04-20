@@ -1,5 +1,4 @@
 import { computed } from "@ember/object";
-import { equal, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
@@ -85,18 +84,65 @@ export default class UserAction extends RestModel {
 
   @service currentUser;
 
-  @or("name", "username") presentName;
-  @or("target_name", "target_username") targetDisplayName;
-  @or("acting_name", "acting_username") actingDisplayName;
-  @equal("action_type", UserActionTypes.replies) replyType;
-  @equal("action_type", UserActionTypes.posts) postType;
-  @equal("action_type", UserActionTypes.topics) topicType;
-  @equal("action_type", UserActionTypes.bookmarks) bookmarkType;
-  @equal("action_type", UserActionTypes.messages_sent) messageSentType;
-  @equal("action_type", UserActionTypes.messages_received) messageReceivedType;
-  @equal("action_type", UserActionTypes.mentions) mentionType;
-  @or("messageSentType", "messageReceivedType") isPM;
-  @or("postType", "replyType") postReplyType;
+  @computed("name", "username")
+  get presentName() {
+    return this.name || this.username;
+  }
+
+  @computed("target_name", "target_username")
+  get targetDisplayName() {
+    return this.target_name || this.target_username;
+  }
+
+  @computed("acting_name", "acting_username")
+  get actingDisplayName() {
+    return this.acting_name || this.acting_username;
+  }
+
+  @computed("action_type")
+  get replyType() {
+    return this.action_type === UserActionTypes.replies;
+  }
+
+  @computed("action_type")
+  get postType() {
+    return this.action_type === UserActionTypes.posts;
+  }
+
+  @computed("action_type")
+  get topicType() {
+    return this.action_type === UserActionTypes.topics;
+  }
+
+  @computed("action_type")
+  get bookmarkType() {
+    return this.action_type === UserActionTypes.bookmarks;
+  }
+
+  @computed("action_type")
+  get messageSentType() {
+    return this.action_type === UserActionTypes.messages_sent;
+  }
+
+  @computed("action_type")
+  get messageReceivedType() {
+    return this.action_type === UserActionTypes.messages_received;
+  }
+
+  @computed("action_type")
+  get mentionType() {
+    return this.action_type === UserActionTypes.mentions;
+  }
+
+  @computed("messageSentType", "messageReceivedType")
+  get isPM() {
+    return this.messageSentType || this.messageReceivedType;
+  }
+
+  @computed("postType", "replyType")
+  get postReplyType() {
+    return this.postType || this.replyType;
+  }
 
   @computed("category_id")
   get category() {

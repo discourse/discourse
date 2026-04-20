@@ -4,7 +4,6 @@ import { service } from "@ember/service";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
 import AdminDashboard from "discourse/admin/models/admin-dashboard";
 import Report from "discourse/admin/models/report";
-import { setting } from "discourse/lib/computed";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
@@ -24,11 +23,14 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   isLoading = false;
   dashboardFetchedAt = null;
 
-  @setting("log_search_queries") logSearchQueriesEnabled;
-
   @staticReport("users_by_type") usersByTypeReport;
   @staticReport("users_by_trust_level") usersByTrustLevelReport;
   @staticReport("storage_report") storageReport;
+
+  @computed("siteSettings.log_search_queries")
+  get logSearchQueriesEnabled() {
+    return this.siteSettings.log_search_queries;
+  }
 
   get reportModes() {
     return REPORT_MODES;

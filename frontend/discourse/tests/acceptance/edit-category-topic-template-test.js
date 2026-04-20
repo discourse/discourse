@@ -45,8 +45,8 @@ acceptance(
             name: "bug",
             can_edit: true,
             category_type_site_settings: {},
-            permissions: [],
             ...putData,
+            permissions: [],
           },
         });
       });
@@ -150,8 +150,8 @@ acceptance("Admin - Legacy edit category topic template", function (needs) {
           name: "bug",
           can_edit: true,
           category_type_site_settings: {},
-          permissions: [],
           ...putData,
+          permissions: [],
         },
       });
     });
