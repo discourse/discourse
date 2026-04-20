@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { array, fn, hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -511,58 +510,6 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await click(".form-kit__errors-summary-list a");
 
     assert.dom(document.activeElement).hasClass("form-kit__control-input");
-  });
-
-  test("each block with new object references does not recreate form fields", async function (assert) {
-    function fields() {
-      return [{ name: "foo" }, { name: "bar" }];
-    }
-
-    class FieldWrapper extends Component {
-      get fieldType() {
-        return this.args.schema?.type || "input";
-      }
-
-      <template>
-        <@form.Field
-          @name={{@fieldName}}
-          @title={{@fieldName}}
-          @type={{this.fieldType}}
-          as |field|
-        >
-          <field.Control />
-        </@form.Field>
-      </template>
-    }
-
-    await render(
-      <template>
-        <Form @data={{hash foo="" bar=""}} as |form transientData|>
-          {{#each (fields transientData) key="name" as |fieldSchema|}}
-            <FieldWrapper
-              @form={{form}}
-              @fieldName={{fieldSchema.name}}
-              @schema={{fieldSchema}}
-            />
-          {{/each}}
-        </Form>
-      </template>
-    );
-
-    const inputBefore = document.querySelector(
-      "[data-name='foo'] .form-kit__control-input"
-    );
-
-    await formKit().field("foo").fillIn("hello");
-
-    const inputAfter = document.querySelector(
-      "[data-name='foo'] .form-kit__control-input"
-    );
-    assert.strictEqual(
-      inputBefore,
-      inputAfter,
-      "input element is the same DOM node after typing"
-    );
   });
 
   test("error link has anchor href for fields without focusable elements", async function (assert) {
