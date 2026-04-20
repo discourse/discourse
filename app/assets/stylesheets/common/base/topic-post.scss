@@ -2325,16 +2325,35 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 }
 
-.mobile-view .post-users-popup {
-  width: 100%;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
+.mobile-view {
+  .post-liked-users-menu-content,
+  .discourse-reactions-users-menu-content {
+    .d-modal__container {
+      height: min(80dvh, 560px);
+    }
 
-  .post-users-popup__body {
-    flex: 1;
-    height: auto;
-    min-height: 0;
+    .d-modal__body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .post-users-popup {
+      width: 100%;
+      height: auto;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .post-users-popup__body {
+      flex: 1;
+      height: auto;
+      min-height: 0;
+    }
   }
 }
 
