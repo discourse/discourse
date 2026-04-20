@@ -64,11 +64,13 @@ export default class PostUsersMenu extends Component {
 
   <template>
     <div class="post-users-popup">
-      {{#if this.site.mobileView}}
-        <div class="post-users-popup__title">{{@titleText}}</div>
-      {{/if}}
+      <div class="post-users-popup__sticky-header">
+        {{#if this.site.mobileView}}
+          <div class="post-users-popup__title">{{@titleText}}</div>
+        {{/if}}
 
-      {{yield this.resetAndReload to="header"}}
+        {{yield this.resetAndReload to="header"}}
+      </div>
 
       <div class="post-users-popup__body" {{didInsert this.loadInitial}}>
         <LoadMore

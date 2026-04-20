@@ -2335,10 +2335,19 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     .d-modal__body {
       flex: 1;
       min-height: 0;
+      padding: 0;
     }
 
     .post-users-popup {
       width: 100%;
+    }
+
+    .post-users-popup__sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding-top: 0.75em;
+      background: var(--secondary);
     }
 
     .post-users-popup__body {
