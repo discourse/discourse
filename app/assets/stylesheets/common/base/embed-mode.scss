@@ -161,6 +161,11 @@ body.embed-mode {
     .docked-composer {
       --docked-composer-input-min-height: 10em;
       margin-top: 0;
+
+      &::before {
+        left: -0.5em;
+        right: -0.5em;
+      }
     }
 
     .embed-floating-buttons {

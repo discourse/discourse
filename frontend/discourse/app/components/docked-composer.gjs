@@ -70,17 +70,29 @@ export default class DockedComposer extends Component {
   };
 
   #handleKeyDown = (event) => {
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.isComposing &&
-      !event.metaKey &&
-      !event.ctrlKey &&
-      !event.altKey
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.submit();
+    if (event.key !== "Enter" || event.isComposing) {
+      return;
+    }
+
+    const submitOnEnter = this.args.submitOnEnter ?? true;
+
+    if (submitOnEnter) {
+      if (
+        !event.shiftKey &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.submit();
+      }
+    } else {
+      if (event.metaKey || event.ctrlKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.submit();
+      }
     }
   };
 

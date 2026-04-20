@@ -216,6 +216,7 @@ export default class EmbedModeComposer extends Component {
           @resizable={{true}}
           @placeholder={{this.placeholder}}
           @draftKey={{this.draftKey}}
+          @submitOnEnter={{false}}
           @bodyClassName="embed-docked-composer-open"
           @class="embed-mode-composer__composer"
         />
