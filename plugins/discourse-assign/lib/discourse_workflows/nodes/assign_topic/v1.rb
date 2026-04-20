@@ -32,7 +32,7 @@ if defined?(DiscourseWorkflows)
             "user-plus"
           end
 
-          def self.color_key
+          def self.color
             "cyan"
           end
 

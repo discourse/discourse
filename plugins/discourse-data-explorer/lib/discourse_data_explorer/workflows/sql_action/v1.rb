@@ -14,7 +14,7 @@ module DiscourseDataExplorer
           "database"
         end
 
-        def self.color_key
+        def self.color
           "purple"
         end
 

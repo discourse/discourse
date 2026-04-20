@@ -13,7 +13,7 @@ if defined?(DiscourseWorkflows)
             "robot"
           end
 
-          def self.color_key
+          def self.color
             "pink"
           end
 
