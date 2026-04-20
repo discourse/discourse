@@ -241,6 +241,17 @@ module.exports = {
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      ...(process.env.CI
+        ? [
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--disable-background-networking",
+            "--disable-sync",
+            "--disable-default-apps",
+            "--disable-component-update",
+            "--metrics-recording-only",
+          ]
+        : []),
     ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
@@ -254,6 +265,17 @@ module.exports = {
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      ...(process.env.CI
+        ? [
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--disable-background-networking",
+            "--disable-sync",
+            "--disable-default-apps",
+            "--disable-component-update",
+            "--metrics-recording-only",
+          ]
+        : []),
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },
