@@ -3,7 +3,7 @@
 module DiscourseAi
   module Agents
     class ToolRunner
-      module Http
+      module HTTP
         def attach_http(mini_racer_context)
           mini_racer_context.attach(
             "_http_get",

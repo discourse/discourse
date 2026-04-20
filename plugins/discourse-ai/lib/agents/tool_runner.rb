@@ -28,7 +28,7 @@ module DiscourseAi
 
       CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
 
-      include Http
+      include HTTP
       include Llm
       include Index
       include Upload
