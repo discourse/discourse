@@ -16,6 +16,43 @@ class LlmModel < ActiveRecord::Base
     "text" => "txt",
   }.freeze
 
+  COST_COMPONENTS = {
+    input: {
+      tokens: :request_tokens,
+      cost: :input_cost,
+    },
+    output: {
+      tokens: :response_tokens,
+      cost: :output_cost,
+    },
+    cache_read: {
+      tokens: :cache_read_tokens,
+      cost: :cached_input_cost,
+    },
+    cache_write: {
+      tokens: :cache_write_tokens,
+      cost: :cache_write_cost,
+    },
+  }.freeze
+
+  def self.spending_component_sql(component, table)
+    info = COST_COMPONENTS.fetch(component)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.#{info[:tokens]}, 0) * COALESCE(llm_models.#{info[:cost]}, 0)"
+  end
+
+  def self.spending_sql(table)
+    COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
+  end
+
+  def spending_for(record)
+    total =
+      COST_COMPONENTS.values.sum do |info|
+        record.public_send(info[:tokens]).to_i * public_send(info[:cost]).to_f
+      end
+    (total / 1_000_000.0).round(6)
+  end
+
   has_many :llm_quotas, dependent: :destroy
   has_one :llm_credit_allocation, dependent: :destroy
   has_many :llm_feature_credit_costs, dependent: :destroy
