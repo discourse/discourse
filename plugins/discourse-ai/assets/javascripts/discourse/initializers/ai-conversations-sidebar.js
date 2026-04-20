@@ -34,6 +34,10 @@ export default {
 
       const setSidebarPanel = (transition) => {
         if (transition?.to?.name === "discourse-ai-bot-conversations") {
+          if (transition.to.queryParams?.preserveSidebar) {
+            document.body.classList.add("has-ai-conversations-sidebar");
+            return;
+          }
           return aiConversationsSidebarManager.forceCustomSidebar();
         }
 

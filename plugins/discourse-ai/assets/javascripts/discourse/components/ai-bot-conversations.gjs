@@ -15,9 +15,12 @@ import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
@@ -47,7 +50,7 @@ export default class AiBotConversations extends Component {
   @tracked creditStatus = null;
   @tracked selectedLlmId = null;
   @tracked uploads = trackedArray();
-  // Don't track this directly - we'll get it from uppyUpload
+  @tracked recentConversations = null;
 
   textarea = null;
   uppyUpload = null;
@@ -97,6 +100,7 @@ export default class AiBotConversations extends Component {
 
   init() {
     super.init(...arguments);
+    this.#fetchRecentConversations();
 
     this.uppyUpload = new UppyUpload(getOwner(this), {
       id: "ai-bot-file-uploader",
@@ -165,6 +169,10 @@ export default class AiBotConversations extends Component {
 
   get showUploadsContainer() {
     return this.uploads?.length > 0 || this.inProgressUploads?.length > 0;
+  }
+
+  get hasRecentConversations() {
+    return this.recentConversations?.length > 0;
   }
 
   get isSubmitDisabled() {
@@ -353,6 +361,17 @@ export default class AiBotConversations extends Component {
     }
   }
 
+  async #fetchRecentConversations() {
+    try {
+      const result = await ajax("/discourse-ai/ai-bot/conversations.json", {
+        data: { per_page: 5 },
+      });
+      this.recentConversations = result.conversations;
+    } catch {
+      this.recentConversations = [];
+    }
+  }
+
   _autoExpandTextarea() {
     this.textarea.style.height = "auto";
     this.textarea.style.height = this.textarea.scrollHeight + "px";
@@ -371,14 +390,6 @@ export default class AiBotConversations extends Component {
   <template>
     <div class="ai-bot-conversations" ...attributes>
       {{bodyClass "ai-bot-conversations-page"}}
-      <AiAgentLlmSelector
-        @showLabels={{true}}
-        @setAgentId={{this.setAgentId}}
-        @setLlmId={{this.setLlmId}}
-        @setTargetRecipient={{this.setTargetRecipient}}
-        @agentName={{@controller.agent}}
-        @llmName={{@controller.llm}}
-      />
 
       <div class="ai-bot-conversations__content-wrapper">
         <div class="ai-bot-conversations__title">
@@ -434,6 +445,15 @@ export default class AiBotConversations extends Component {
           />
         </div>
 
+        <AiAgentLlmSelector
+          @showLabels={{true}}
+          @setAgentId={{this.setAgentId}}
+          @setLlmId={{this.setLlmId}}
+          @setTargetRecipient={{this.setTargetRecipient}}
+          @agentName={{@controller.agent}}
+          @llmName={{@controller.llm}}
+        />
+
         <p class="ai-disclaimer">
           {{i18n "discourse_ai.ai_bot.conversations.disclaimer"}}
         </p>
@@ -469,6 +489,41 @@ export default class AiBotConversations extends Component {
           </div>
         {{/if}}
       </div>
+
+      {{#if this.hasRecentConversations}}
+        <div class="ai-bot-conversations__recent">
+          <div class="ai-bot-conversations__recent-header">
+            <h3 class="ai-bot-conversations__recent-title">
+              {{i18n "discourse_ai.ai_bot.conversations.recent_title"}}
+            </h3>
+            <a
+              href="/discourse-ai/ai-bot/conversations"
+              class="ai-bot-conversations__recent-view-all"
+            >
+              {{i18n "discourse_ai.ai_bot.conversations.view_all"}}
+            </a>
+          </div>
+          {{#each this.recentConversations as |conversation|}}
+            <a
+              href="/t/{{conversation.slug}}/{{conversation.id}}"
+              class="ai-bot-conversations__recent-row"
+            >
+              {{icon "robot"}}
+              <span class="ai-bot-conversations__recent-row-title">
+                {{conversation.title}}
+              </span>
+              {{#if conversation.ai_agent_name}}
+                <span class="ai-bot-conversations__recent-row-agent">
+                  {{conversation.ai_agent_name}}
+                </span>
+              {{/if}}
+              <span class="ai-bot-conversations__recent-row-date">
+                {{ageWithTooltip conversation.last_posted_at}}
+              </span>
+            </a>
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
   </template>
 }

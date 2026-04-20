@@ -1161,6 +1161,9 @@ en:
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
         shortcut_link: "AI bot"
+        ask_button:
+          label: "Ask"
+          title: "Ask Discourse AI"
         exit: "exit AI bot"
         share: "Copy AI conversation"
         conversation_shared: "Conversation copied"
@@ -1234,6 +1237,8 @@ en:
           last_30_days: "Last 30 days"
           upload_files: "Upload files"
           uploads_in_progress: "Cannot submit while uploads are in progress"
+          recent_title: "Your recent conversations"
+          view_all: "View all"
       sentiments:
         dashboard:
           title: "Sentiment"

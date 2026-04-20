@@ -237,6 +237,7 @@ export default class WelcomeBanner extends Component {
               @searchInputId="welcome-banner-search-input"
               @searchInputPlaceholder="welcome_banner.search_placeholder"
             />
+            <PluginOutlet @name="welcome-banner-search-actions" />
           </div>
           <PluginOutlet @name="welcome-banner-below-input" />
         </div>

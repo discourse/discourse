@@ -26,8 +26,37 @@ module DiscourseAi
         total = base_query.count
         pms = base_query.order(last_posted_at: :desc).offset(page * per_page).limit(per_page)
 
+        serialized = serialize_data(pms, ListableTopicSerializer)
+
+        agent_fields =
+          TopicCustomField.where(topic_id: pms.map(&:id), name: %w[ai_agent ai_agent_id]).pluck(
+            :topic_id,
+            :name,
+            :value,
+          )
+
+        agent_ids = agent_fields.filter_map { |_, n, v| v.to_i if n == "ai_agent_id" && v.present? }
+        agents_by_id =
+          if agent_ids.present?
+            AiAgent.where(id: agent_ids).pluck(:id, :name).to_h
+          else
+            {}
+          end
+
+        agent_names = {}
+        agent_fields.each do |topic_id, name, value|
+          next if agent_names[topic_id]
+          if name == "ai_agent_id" && value.present?
+            agent_names[topic_id] = agents_by_id[value.to_i]
+          elsif name == "ai_agent"
+            agent_names[topic_id] ||= value
+          end
+        end
+
+        serialized.each { |s| s[:ai_agent_name] = agent_names[s[:id]] }
+
         render json: {
-                 conversations: serialize_data(pms, ListableTopicSerializer),
+                 conversations: serialized,
                  meta: {
                    total: total,
                    page: page,

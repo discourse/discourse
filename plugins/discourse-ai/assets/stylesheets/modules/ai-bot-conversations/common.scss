@@ -137,12 +137,12 @@ body.has-ai-conversations-sidebar {
     --input-max-width: 46em;
     display: flex;
     flex-direction: column;
-    height: calc(100dvh - var(--header-offset) - 5em);
+    min-height: calc(100dvh - var(--header-offset) - 5em);
 
     .agent-llm-selector {
       display: flex;
       gap: 0.5em;
-      justify-content: flex-start;
+      justify-content: center;
 
       .select-kit-body {
         .select-kit-collection {
@@ -415,6 +415,84 @@ body.has-ai-conversations-sidebar {
         }
       }
     }
+
+    &__recent {
+      width: 100%;
+      max-width: var(--input-max-width);
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4) var(--space-8);
+      box-sizing: border-box;
+    }
+
+    &__recent-header {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      border-bottom: 1px solid var(--primary-low);
+      padding-bottom: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
+
+    &__recent-title {
+      margin: 0;
+      font-size: var(--font-down-1);
+      font-weight: 700;
+      flex: 1;
+    }
+
+    &__recent-view-all {
+      font-size: var(--font-down-1);
+      font-weight: 600;
+      color: var(--tertiary);
+    }
+
+    &__recent-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--primary-very-low);
+      border-radius: var(--d-border-radius);
+      margin-bottom: var(--space-2);
+      color: var(--primary);
+      text-decoration: none;
+      cursor: pointer;
+
+      .discourse-no-touch &:hover {
+        border-color: var(--primary-low);
+        background: var(--primary-very-low);
+      }
+
+      .d-icon {
+        color: var(--primary-medium);
+        flex-shrink: 0;
+      }
+    }
+
+    &__recent-row-title {
+      flex: 1;
+      font-size: var(--font-0);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__recent-row-agent {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      background: var(--primary-very-low);
+      padding: 0.15em 0.5em;
+      border-radius: 999px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    &__recent-row-date {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      flex-shrink: 0;
+    }
   }
 
   @include viewport.until(sm) {
@@ -538,5 +616,39 @@ body.has-ai-conversations-sidebar {
   .fk-d-tooltip__inner-content {
     // ensures errors with links displays correctly
     display: block;
+  }
+}
+
+// "Ask" button in the welcome banner search input
+.welcome-banner__search-menu {
+  .ai-ask-button {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    bottom: 1px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0 0.75em 0 0.85em;
+    border-left: 1px solid var(--primary-low);
+    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+    color: var(--tertiary);
+    font-weight: 600;
+    font-size: var(--font-0);
+    text-decoration: none;
+    cursor: pointer;
+
+    .discourse-no-touch &:hover {
+      background: var(--tertiary-very-low);
+    }
+
+    .d-icon {
+      font-size: var(--font-up-1);
+    }
+  }
+
+  .search-menu-container .search-input {
+    padding-right: 5.5em;
   }
 }
