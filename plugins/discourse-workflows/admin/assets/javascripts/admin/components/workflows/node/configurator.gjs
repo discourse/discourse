@@ -231,9 +231,17 @@ export default class NodeConfigurator extends Component {
     return config;
   }
 
+  get isDirty() {
+    const formDirty = this.parametersApi?.isDirty ?? false;
+    const nameDirty = this.nodeName !== (this.args.model.node.name || "");
+    return formDirty || nameDirty;
+  }
+
   @action
   handleClose() {
-    this.args.model.onSave(this.configuration, this.nodeName);
+    if (this.isDirty) {
+      this.args.model.onSave(this.configuration, this.nodeName);
+    }
     this.args.closeModal();
     this.workflowsNodeTypes.clearEditingContext();
   }

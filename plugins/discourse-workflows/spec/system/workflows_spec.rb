@@ -59,6 +59,62 @@ RSpec.describe "Discourse Workflows" do
     expect(workflows_page).to have_failed_workflow(workflow)
   end
 
+  context "when closing the node configurator" do
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
+
+    before do
+      workflow.update!(
+        nodes: [
+          {
+            "id" => "trigger-1",
+            "client_id" => "trigger-1",
+            "type" => "trigger:manual",
+            "type_version" => 1,
+            "name" => "Manual trigger",
+            "position" => {
+              "x" => 100,
+              "y" => 100,
+            },
+            "position_index" => 0,
+            "configuration" => {},
+          },
+        ],
+        connections: [],
+      )
+    end
+
+    def count_workflow_updates
+      count = 0
+      subscriber =
+        ActiveSupport::Notifications.subscribe("process_action.action_controller") do |*, payload|
+          if payload[:controller] == "DiscourseWorkflows::WorkflowsController" &&
+               payload[:action] == "update"
+            count += 1
+          end
+        end
+      begin
+        yield
+      ensure
+        ActiveSupport::Notifications.unsubscribe(subscriber)
+      end
+      count
+    end
+
+    it "does not save the workflow when nothing changed" do
+      updates =
+        count_workflow_updates do
+          editor_page.visit(workflow.id)
+          expect(editor_page).to have_node_count(1)
+          editor_page.double_click_node(0)
+          expect(editor_page).to have_node_configurator
+          editor_page.close_node_configurator
+          expect(editor_page).to have_no_node_configurator
+        end
+
+      expect(updates).to eq(0)
+    end
+  end
+
   it "does not show a warning icon when a newer run succeeded" do
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
 

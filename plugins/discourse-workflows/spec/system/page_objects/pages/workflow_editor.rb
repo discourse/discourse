@@ -8,6 +8,24 @@ module PageObjects
         self
       end
 
+      def visit(workflow_id)
+        page.visit("/admin/plugins/discourse-workflows/workflows/#{workflow_id}")
+        self
+      end
+
+      def close_node_configurator
+        find(".workflows-configurator-modal__close").click
+        self
+      end
+
+      def has_node_configurator?
+        page.has_css?(".workflows-configurator-modal")
+      end
+
+      def has_no_node_configurator?
+        page.has_no_css?(".workflows-configurator-modal")
+      end
+
       def edit_name(name)
         find(".workflows-editable-title__text").click
         find(".workflows-editable-title__input").fill_in(with: name)
