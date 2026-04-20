@@ -87,7 +87,6 @@ module DiscourseWorkflows
               result = process(config)
               Item.new(result).to_h
             end
-          ItemContract.validate_items!(items, source: self.class.identifier)
           [items]
         end
 
