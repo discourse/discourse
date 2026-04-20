@@ -2241,7 +2241,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 
   &__body {
-    max-height: 340px;
+    height: 340px;
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-top: 0.35em;
@@ -2336,8 +2336,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   .post-users-popup__body {
     flex: 1;
+    height: auto;
     min-height: 0;
-    max-height: none;
   }
 }
 
