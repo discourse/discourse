@@ -2298,11 +2298,16 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 
   &__username {
-    color: var(--primary-medium);
+    color: var(--primary-medium) !important;
     font-size: var(--font-down-2);
+    text-decoration: none;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &__reaction {
@@ -2325,9 +2330,14 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
 .mobile-view .post-users-popup {
   width: 100%;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
 
   .post-users-popup__body {
-    min-height: 340px;
+    flex: 1;
+    min-height: 0;
+    max-height: none;
   }
 }
 

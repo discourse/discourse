@@ -162,9 +162,12 @@ export default class DiscourseReactionsUsersMenu extends Component {
                 {{this.displayName user}}
               </UserLink>
               {{#unless this.siteSettings.prioritize_username_in_ux}}
-                <span class="post-users-popup__username">
+                <UserLink
+                  @username={{user.username}}
+                  class="post-users-popup__username"
+                >
                   @{{user.username}}
-                </span>
+                </UserLink>
               {{/unless}}
             </div>
             {{#if user.reaction}}
