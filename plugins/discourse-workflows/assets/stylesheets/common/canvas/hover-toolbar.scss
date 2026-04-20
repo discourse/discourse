@@ -45,10 +45,16 @@
 
     .d-icon {
       font-size: var(--font-down-3);
+      color: inherit;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       background: var(--primary-high);
+
+      .d-icon {
+        color: inherit;
+      }
     }
 
     &.--success {
