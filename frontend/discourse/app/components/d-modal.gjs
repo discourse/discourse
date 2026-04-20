@@ -71,7 +71,7 @@ export default class DModal extends Component {
   @action
   resetDocumentScrollOnIOS(visible) {
     // iOS scrolls the page to the focused input when the keyboard opens
-    // as a result when a dropdown is within a modal, the modal is scrolled out of view.
+    // as a result when an input is within a dropdown within a modal, the modal is scrolled out of view.
     // This forces the modal back to the correct visible position.
     if (!visible) {
       return;
