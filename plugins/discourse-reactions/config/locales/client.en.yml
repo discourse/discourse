@@ -22,6 +22,9 @@ en:
         remove_reaction: "Remove this %{reaction} reaction"
       users_popup:
         all: "All"
+        title:
+          one: "%{count} reaction"
+          other: "%{count} reactions"
       counter:
         aria_label:
           one: "%{count} reaction"

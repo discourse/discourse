@@ -1,31 +1,29 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { computePosition, flip, offset, shift } from "@floating-ui/dom";
 import UserAvatar from "discourse/components/user-avatar";
 import UserLink from "discourse/components/user-link";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import emoji from "discourse/helpers/emoji";
+import { eq } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
+import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
 const PAGE_SIZE = 30;
 
-export default class PostUsersPopup extends Component {
+export default class DiscourseReactionsUsersMenu extends Component {
   @service siteSettings;
+  @service site;
 
   @tracked users = [];
   @tracked loading = false;
   @tracked canLoadMore = true;
-
-  resetAndReload = () => {
-    this.users = [];
-    this.#page = 0;
-    this.canLoadMore = true;
-    this.#loadMore();
-  };
+  @tracked activeFilter = null;
 
   displayName = (user) => {
     if (user.name && !this.siteSettings.prioritize_username_in_ux) {
@@ -34,6 +32,24 @@ export default class PostUsersPopup extends Component {
     return user.username;
   };
   #page = 0;
+
+  get post() {
+    return this.args.data.post;
+  }
+
+  get reactions() {
+    return this.post.reactions || [];
+  }
+
+  get showFilters() {
+    return this.reactions.length > 1;
+  }
+
+  get titleText() {
+    return i18n("discourse_reactions.users_popup.title", {
+      count: this.post.reaction_users_count,
+    });
+  }
 
   @action
   async loadInitial() {
@@ -49,16 +65,18 @@ export default class PostUsersPopup extends Component {
   }
 
   @action
-  preventClose(event) {
-    if (event.target.closest("[data-user-card]")) {
+  async selectFilter(filterId, event) {
+    event.stopPropagation();
+    event.preventDefault();
+    if (this.activeFilter === filterId) {
       return;
     }
-    event.stopPropagation();
-  }
 
-  @action
-  didInsertPopup(element) {
-    this.#positionPopup(element);
+    this.activeFilter = filterId;
+    this.users = [];
+    this.#page = 0;
+    this.canLoadMore = true;
+    await this.#loadMore();
   }
 
   async #loadMore() {
@@ -69,61 +87,60 @@ export default class PostUsersPopup extends Component {
     this.loading = true;
 
     try {
-      const { users, canLoadMore } = await this.args.fetchUsers(
+      const result = await CustomReaction.fetchReactionsUsersList(
+        this.post.id,
         this.#page,
-        PAGE_SIZE
+        PAGE_SIZE,
+        this.activeFilter
       );
 
-      this.users = [...this.users, ...users];
+      const loadedSoFar = this.#page * PAGE_SIZE + (result.users?.length ?? 0);
+      this.users = [...this.users, ...(result.users ?? [])];
       this.#page++;
-      this.canLoadMore = canLoadMore;
+      this.canLoadMore = result.total_rows
+        ? loadedSoFar < result.total_rows
+        : (result.users?.length ?? 0) >= PAGE_SIZE;
     } finally {
       this.loading = false;
     }
   }
 
-  #positionPopup(popupEl) {
-    schedule("afterRender", () => {
-      const referenceEl = this.args.referenceElement;
-      const arrowEl = popupEl?.querySelector(".post-users-popup__arrow");
-
-      if (!referenceEl || !popupEl) {
-        return;
-      }
-
-      computePosition(referenceEl, popupEl, {
-        strategy: "fixed",
-        placement: "bottom",
-        middleware: [offset(18), flip({ padding: 10 }), shift({ padding: 10 })],
-      }).then(({ x, y }) => {
-        Object.assign(popupEl.style, {
-          left: `${x}px`,
-          top: `${y}px`,
-        });
-
-        if (arrowEl) {
-          const refRect = referenceEl.getBoundingClientRect();
-          const popupRect = popupEl.getBoundingClientRect();
-          const arrowX = refRect.left + refRect.width / 2 - popupRect.left;
-          Object.assign(arrowEl.style, {
-            left: `${arrowX}px`,
-          });
-        }
-      });
-    });
-  }
-
   <template>
-    {{! template-lint-disable no-invalid-interactive no-pointer-down-event-binding }}
-    <div
-      class="post-users-popup"
-      {{on "click" this.preventClose}}
-      {{on "mousedown" this.preventClose}}
-      {{on "mouseup" this.preventClose}}
-      {{didInsert this.didInsertPopup}}
-    >
-      <div class="post-users-popup__arrow"></div>
-      {{yield this.resetAndReload to="header"}}
+    <div class="post-users-popup">
+      {{#if this.site.mobileView}}
+        <div class="post-users-popup__title">{{this.titleText}}</div>
+      {{/if}}
+
+      {{#if this.showFilters}}
+        <div class="post-users-popup__header">
+          <button
+            type="button"
+            class={{concatClass
+              "post-users-popup__filter"
+              (unless this.activeFilter "is-active")
+            }}
+            data-reaction-filter="all"
+            {{on "click" (fn this.selectFilter null)}}
+          >
+            {{i18n "discourse_reactions.users_popup.all"}}
+          </button>
+          {{#each this.reactions as |reaction|}}
+            <button
+              type="button"
+              class={{concatClass
+                "post-users-popup__filter"
+                (if (eq reaction.id this.activeFilter) "is-active")
+              }}
+              data-reaction-filter={{reaction.id}}
+              {{on "click" (fn this.selectFilter reaction.id)}}
+            >
+              {{emoji reaction.id skipTitle=true}}
+              <span>{{reaction.count}}</span>
+            </button>
+          {{/each}}
+        </div>
+      {{/if}}
+
       <div
         class="post-users-popup__body"
         {{on "scroll" this.onScroll}}

@@ -2169,43 +2169,30 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 }
 
-.post-likes-popup-wrapper {
-  position: relative;
-  display: inline-flex;
+.post-action-menu__like-count {
+  color: var(--d-post-control-text-color) !important;
+  gap: var(--space-2);
 
-  > .button-count {
-    color: var(--d-post-control-text-color) !important;
-    gap: var(--space-2);
-
-    &.has-liked .d-icon {
-      color: var(--danger);
-    }
+  &.has-liked .d-icon {
+    color: var(--danger);
   }
 }
 
-// Shared floating popup for displaying users who liked/reacted to a post.
-// Used by core liked-users-list and the discourse-reactions plugin.
+// Shared popup contents for displaying users who liked/reacted to a post.
+// Rendered inside a float-kit menu (desktop) or modal (mobile).
+// Used by core liked-users-menu and the discourse-reactions plugin.
 .post-users-popup {
-  position: fixed;
-  z-index: z("usercard") - 1;
   width: 300px;
   background: var(--secondary);
   color: var(--primary);
   line-height: normal;
-  border: 1px solid var(--primary-low);
   border-radius: 10px;
-  box-shadow: var(--shadow-card);
 
-  &__arrow {
-    position: absolute;
-    top: -6px;
-    width: 12px;
-    height: 12px;
-    background: var(--secondary);
-    border-top: 1px solid var(--primary-low);
-    border-left: 1px solid var(--primary-low);
-    transform: translateX(-50%) rotate(45deg);
-    z-index: 1;
+  &__title {
+    padding: 0.25em 0.5em 0.75em;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-low);
   }
 
   &__header {
@@ -2337,7 +2324,11 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 }
 
 .mobile-view .post-users-popup {
-  width: min(90vw, 300px);
+  width: 100%;
+
+  .post-users-popup__body {
+    min-height: 340px;
+  }
 }
 
 .time-gap + .topic-post .topic-body,

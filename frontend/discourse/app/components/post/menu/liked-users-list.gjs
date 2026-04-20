@@ -1,43 +1,16 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import PostUsersPopup from "discourse/components/post-users-popup";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { ajax } from "discourse/lib/ajax";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { i18n } from "discourse-i18n";
+import PostLikedUsersMenu from "./liked-users-menu";
 
-const LIKE_ACTION = 2;
+const MENU_IDENTIFIER = "post-liked-users-menu";
 
 export default class LikedUsersList extends Component {
-  @tracked popupExpanded = false;
-
-  fetchUsers = async (page, pageSize) => {
-    const result = await ajax("/post_action_users", {
-      data: {
-        id: this.args.post.id,
-        post_action_type_id: LIKE_ACTION,
-        page,
-        limit: pageSize,
-      },
-    });
-
-    const newUsers = result.post_action_users || [];
-    let canLoadMore;
-
-    if (newUsers.length < pageSize) {
-      canLoadMore = false;
-    } else if (result.total_rows_post_action_users) {
-      canLoadMore = true;
-    } else {
-      canLoadMore = false;
-    }
-
-    return { users: newUsers, canLoadMore };
-  };
-  #scrollHandler = null;
+  @service menu;
 
   get buttonIcon() {
     return this.args.post.liked || this.args.post.yours
@@ -45,89 +18,39 @@ export default class LikedUsersList extends Component {
       : "d-unliked";
   }
 
-  get elementId() {
-    return `post-like-users_${this.args.post.id}`;
-  }
-
-  get referenceElement() {
-    return document.getElementById(this.elementId);
-  }
-
   @action
-  togglePopup() {
-    if (this.popupExpanded) {
-      this.#closePopup();
-    } else {
-      this.popupExpanded = true;
-      this.#scrollHandler = () => this.#closePopup();
-      window.addEventListener("scroll", this.#scrollHandler, {
-        once: true,
-        passive: true,
-      });
-    }
-  }
-
-  @action
-  clickOutside() {
-    if (this.popupExpanded) {
-      this.#closePopup();
-    }
-  }
-
-  @action
-  keyDown(event) {
-    if (event.key === "Escape" && this.popupExpanded) {
-      event.stopPropagation();
-      this.#closePopup();
-    }
-  }
-
-  #closePopup() {
-    this.popupExpanded = false;
-    if (this.#scrollHandler) {
-      window.removeEventListener("scroll", this.#scrollHandler);
-      this.#scrollHandler = null;
-    }
+  togglePopup(event) {
+    this.menu.show(event.currentTarget, {
+      identifier: MENU_IDENTIFIER,
+      component: PostLikedUsersMenu,
+      modalForMobile: true,
+      closeOnScroll: true,
+      placement: "bottom",
+      offset: 10,
+      data: { post: this.args.post },
+    });
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    <div
-      id={{this.elementId}}
-      class="post-likes-popup-wrapper"
-      {{closeOnClickOutside this.clickOutside}}
-      {{on "keydown" this.keyDown}}
+    <button
+      type="button"
+      aria-label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
+      class={{concatClass
+        "btn btn-flat no-text"
+        "post-action-menu__like-count"
+        "like-count"
+        "button-count"
+        "highlight-action"
+        (if @post.liked "has-liked")
+        (if @post.yours "my-likes" "regular-likes")
+      }}
+      {{on "click" this.togglePopup}}
+      ...attributes
     >
-      <button
-        type="button"
-        aria-label={{i18n
-          "post.sr_post_like_count_button"
-          count=@post.likeCount
-        }}
-        class={{concatClass
-          "btn btn-flat no-text"
-          "post-action-menu__like-count"
-          "like-count"
-          "button-count"
-          "highlight-action"
-          (if @post.liked "has-liked")
-          (if @post.yours "my-likes" "regular-likes")
-        }}
-        {{on "click" this.togglePopup}}
-        ...attributes
-      >
-        {{#if this.buttonIcon}}
-          {{icon this.buttonIcon}}
-        {{/if}}
-        {{@post.likeCount}}
-      </button>
-
-      {{#if this.popupExpanded}}
-        <PostUsersPopup
-          @referenceElement={{this.referenceElement}}
-          @fetchUsers={{this.fetchUsers}}
-        />
+      {{#if this.buttonIcon}}
+        {{icon this.buttonIcon}}
       {{/if}}
-    </div>
+      {{@post.likeCount}}
+    </button>
   </template>
 }
