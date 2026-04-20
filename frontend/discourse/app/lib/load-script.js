@@ -19,6 +19,54 @@ function loadWithTag(path, cb, errorCb) {
     s.onload = s.onreadystatechange = null;
     s.remove();
     WAITER.endAsync(token);
+
+    // TODO: Remove after diagnosing flaky loadScript failures
+    {
+      // eslint-disable-next-line no-console
+      const log = (...args) => console.error("[load-script diagnostic]", ...args);
+
+      // PerformanceResourceTiming for the failed <script> request
+      const entries = performance.getEntriesByName(
+        new URL(path, location.href).href,
+        "resource"
+      );
+      const entry = entries[entries.length - 1];
+      if (entry) {
+        log(`${path} resource timing:`, {
+          httpStatus: entry.responseStatus,
+          duration: `${Math.round(entry.duration)}ms`,
+          transferSize: entry.transferSize,
+          encodedBodySize: entry.encodedBodySize,
+          startTime: `${Math.round(entry.startTime)}ms`,
+          responseStart: entry.responseStart
+            ? `${Math.round(entry.responseStart)}ms`
+            : "none",
+          initiatorType: entry.initiatorType,
+        });
+      } else {
+        log(`${path} — no PerformanceResourceTiming entry (request may have been blocked before network)`);
+      }
+
+      log(
+        `total resources loaded: ${performance.getEntriesByType("resource").length},`,
+        `pending scripts in DOM: ${document.querySelectorAll("script[src]").length}`
+      );
+
+      // Follow-up fetch to see if the URL is actually reachable right now
+      fetch(path, { cache: "no-store" }).then(
+        (r) =>
+          r.text().then((body) =>
+            log(
+              `fetch probe: ${r.status} ${r.statusText},`,
+              `type=${r.headers.get("content-type")},`,
+              `length=${r.headers.get("content-length")},`,
+              `body=${body.slice(0, 200)}`
+            )
+          ),
+        (e) => log(`fetch probe also failed:`, e)
+      );
+    }
+
     if (errorCb) {
       run(null, errorCb);
     }
