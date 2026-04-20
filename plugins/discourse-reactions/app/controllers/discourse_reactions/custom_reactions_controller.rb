@@ -11,14 +11,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     post = fetch_post_from_params
     reaction = params[:reaction]
 
-    invalid_reaction =
-      if SiteSetting.discourse_reactions_allow_any_emoji
-        !Emoji.exists?(reaction)
-      else
-        DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
-      end
-
-    return render_json_error(post) if invalid_reaction
+    return render_json_error(post) unless DiscourseReactions::Reaction.valid?(reaction)
 
     begin
       manager =
@@ -189,7 +182,6 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     PostAction.where(post_id: post.id).where(
       DiscourseReactions::PostActionExtension.filter_reaction_likes_sql,
       like: like_type,
-      valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
     )
   end
 
@@ -240,7 +232,6 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           SQL
           post_id: post.id,
           like: like_type,
-          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
           main_reaction: main_reaction,
           limit: limit,
           offset: offset,
@@ -273,7 +264,6 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           SQL
           post_id: post.id,
           like: like_type,
-          valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
           main_reaction: main_reaction,
           limit: limit,
           offset: offset,
