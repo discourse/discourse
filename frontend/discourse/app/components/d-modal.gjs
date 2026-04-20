@@ -195,8 +195,15 @@ export default class DModal extends Component {
       return;
     }
 
-    // Prevent keyboard events from leaking to elements behind the modal
-    if (!this.wrapperElement.contains(document.activeElement)) {
+    // Prevent keyboard events from leaking to elements behind the modal.
+    // Allow events when focus is inside a float-kit portal (menu/tooltip)
+    // opened from this modal, since those render outside the modal DOM.
+    if (
+      !this.wrapperElement.contains(document.activeElement) &&
+      !document.activeElement?.closest(
+        ".fk-d-menu, .fk-d-menu-modal, .fk-d-tooltip"
+      )
+    ) {
       event.stopPropagation();
       event.preventDefault();
     }
