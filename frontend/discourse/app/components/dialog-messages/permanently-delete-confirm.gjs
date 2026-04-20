@@ -4,6 +4,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import discourseDebounce from "discourse/lib/debounce";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export function buildPermanentlyDeleteConfirmDialogArgs(
@@ -36,6 +38,8 @@ export default class PermanentlyDeleteConfirm extends Component {
   confirmPhrase = this.args.model.confirmPhrase.trim().toLocaleLowerCase();
   originalDialogClass = this.dialog.class;
 
+  #easterEggAudio;
+
   @action
   onInput(event) {
     this.inputtedConfirmPhrase = event.target.value.trim().toLocaleLowerCase();
@@ -50,6 +54,17 @@ export default class PermanentlyDeleteConfirm extends Component {
     } else {
       this.dialog.set("class", this.originalDialogClass);
     }
+
+    discourseDebounce(this, this.maybePlayEasterEggSound, 300);
+  }
+
+  maybePlayEasterEggSound() {
+    if (!this.showEasterEgg) {
+      return;
+    }
+    this.#easterEggAudio ??= new Audio(getURL("/audio/firelaugh.mp3"));
+    this.#easterEggAudio.currentTime = 0;
+    this.#easterEggAudio.play();
   }
 
   get showEasterEgg() {

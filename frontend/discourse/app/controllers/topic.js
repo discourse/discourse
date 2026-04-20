@@ -93,7 +93,12 @@ export default class TopicController extends Controller {
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];
 
-  queryParams = ["filter", "username_filters", "replies_to_post_number"];
+  queryParams = [
+    "filter",
+    "username_filters",
+    "replies_to_post_number",
+    "flat",
+  ];
 
   editingTopic = false;
   enteredAt = null;
@@ -103,6 +108,7 @@ export default class TopicController extends Controller {
   username_filters = null;
   replies_to_post_number = null;
   filter = null;
+  flat = null;
   quoteState = new QuoteState();
   currentPostId = null;
   userLastReadPostNumber = null;

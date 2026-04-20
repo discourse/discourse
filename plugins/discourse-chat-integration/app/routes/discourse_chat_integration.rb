@@ -7,6 +7,7 @@ module DiscourseChatIntegration
     get "" => "chat#respond"
     get "/providers" => "chat#list_providers"
     get "/providers/:provider" => "chat#respond"
+    post "/setup-provider" => "chat#setup_provider"
     post "/test" => "chat#test"
 
     get "/channels" => "chat#list_channels"

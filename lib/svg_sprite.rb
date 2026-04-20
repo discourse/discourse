@@ -213,6 +213,9 @@ module SvgSprite
         minus
         mobile-screen-button
         moon
+        nested-circle-minus
+        nested-circle-plus
+        nested-thread
         paintbrush
         palette
         paper-plane

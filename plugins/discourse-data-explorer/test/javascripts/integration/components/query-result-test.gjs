@@ -324,6 +324,46 @@ module(
       assert.dom("table").doesNotExist("table stays hidden");
     });
 
+    test("persists toggle state per query in localStorage", async function (assert) {
+      const query = { id: 42 };
+      const content = {
+        colrender: [],
+        result_count: 2,
+        columns: ["user_name", "like_count"],
+        rows: [
+          ["user1", 10],
+          ["user2", 20],
+        ],
+      };
+
+      await render(
+        <template>
+          <QueryResult @content={{content}} @query={{query}} />
+        </template>
+      );
+
+      assert.dom(".query-results-chart").exists("chart is visible by default");
+      assert.dom(".query-results-table").exists("table is visible by default");
+
+      await click(".btn-toggle-chart");
+      assert
+        .dom(".query-results-chart")
+        .doesNotExist("chart is hidden after toggle");
+
+      await render(
+        <template>
+          <QueryResult @content={{content}} @query={{query}} />
+        </template>
+      );
+
+      assert
+        .dom(".query-results-chart")
+        .doesNotExist("chart state is restored from localStorage");
+      assert
+        .dom(".query-results-table")
+        .exists("table state is restored from localStorage");
+    });
+
     test("toggle buttons are not shown for non-chartable data", async function (assert) {
       const content = {
         colrender: [],

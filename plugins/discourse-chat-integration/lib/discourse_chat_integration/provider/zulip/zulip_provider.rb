@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module ZulipProvider
       PROVIDER_NAME = "zulip"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_zulip_enabled
       CHANNEL_IDENTIFIER_KEY = "stream"
       CHANNEL_PARAMETERS = [

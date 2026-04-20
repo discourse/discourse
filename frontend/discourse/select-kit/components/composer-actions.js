@@ -70,7 +70,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     } else if (this.isEditing) {
       return "pencil";
     } else {
-      return "share";
+      return "reply";
     }
   }
 
@@ -169,7 +169,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
           postUsername: _postSnapshot.username,
         }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_post",
       });
     }
@@ -186,7 +186,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       items.push({
         name: i18n("composer.composer_actions.reply_to_topic.label"),
         description: i18n("composer.composer_actions.reply_to_topic.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_topic",
       });
     }

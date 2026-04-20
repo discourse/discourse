@@ -395,8 +395,6 @@ RSpec.describe UpcomingChanges do
     context "when the setting has no row in the database (admin has not saved it)" do
       before { SiteSetting.remove_override!(setting_name) }
 
-      after { clear_mocked_upcoming_change_metadata }
-
       it "returns the yaml default when the change is below promote_upcoming_changes_on_status" do
         mock_upcoming_change_metadata(
           {
@@ -431,8 +429,6 @@ RSpec.describe UpcomingChanges do
     end
 
     context "when an admin has saved a value to the database" do
-      after { clear_mocked_upcoming_change_metadata }
-
       it "returns the stored value when true" do
         SiteSetting.enable_upload_debug_mode = true
 
@@ -470,8 +466,6 @@ RSpec.describe UpcomingChanges do
           },
         )
       end
-
-      after { clear_mocked_upcoming_change_metadata }
 
       it "returns true even when the database value is false" do
         SiteSetting.enable_upload_debug_mode = false

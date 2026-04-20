@@ -306,6 +306,7 @@ export default class AdminUser extends User {
       .then((result) => {
         this.setProperties({
           silence_reason: result.unsilence.silence_reason,
+          full_silence_reason: result.unsilence.full_silence_reason,
           silenced_at: result.unsilence.silence_at,
           silenced_till: result.unsilence.silence_till,
         });
@@ -323,6 +324,7 @@ export default class AdminUser extends User {
       .then((result) => {
         this.setProperties({
           silence_reason: result.silence.silence_reason,
+          full_silence_reason: result.silence.full_silence_reason,
           silenced_at: result.silence.silenced_at,
           silenced_by: result.silence.silenced_by,
           silenced_till: result.silence.silenced_till,
