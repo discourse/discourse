@@ -169,6 +169,15 @@ jobs:
         if: (matrix.target == 'official-plugins' || matrix.target == 'plugins') && (github.ref_name != 'main' && github.base_ref != 'main')
         run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
+      # TODO
+      - name: Patch discourse-algolia to use RSVP Promise
+        if: matrix.target == 'official-plugins' || matrix.target == 'plugins'
+        run: |
+          FILE="plugins/discourse-algolia/assets/javascripts/discourse/api-initializers/discourse-algolia.gjs"
+          if [ -f "$FILE" ] && ! grep -q 'from "rsvp"' "$FILE"; then
+            sed -i '1a import { Promise } from "rsvp";' "$FILE"
+          fi
+
       - name: Checkout official themes
         if: matrix.target == 'themes'
         run: bin/rake themes:clone_all_official themes:pull_compatible_all
