@@ -33,27 +33,18 @@ function loadWithTag(path, cb, errorCb) {
       if (entry) {
         log(
           `${path} timing: status=${entry.responseStatus} transfer=${entry.transferSize} ` +
-            `encoded=${entry.encodedBodySize} duration=${Math.round(entry.duration)}ms ` +
-            `responseStart=${Math.round(entry.responseStart)}ms type=${entry.initiatorType}`
+            `duration=${Math.round(entry.duration)}ms startTime=${Math.round(entry.startTime)}ms ` +
+            `fetchStart=${Math.round(entry.fetchStart)}ms connectEnd=${Math.round(entry.connectEnd)}ms ` +
+            `responseStart=${Math.round(entry.responseStart)}ms nextHop=${entry.nextHopProtocol}`
         );
       } else {
         log(`${path} — no resource timing entry`);
       }
 
-      // Discourse-Script header lets the request pass through Pretender
-      fetch(path, {
-        cache: "no-store",
-        headers: { "Discourse-Script": "true" },
-      }).then(
-        (r) =>
-          r.text().then((body) =>
-            log(
-              `${path} fetch probe: ${r.status} type=${r.headers.get("content-type")} ` +
-                `length=${r.headers.get("content-length")} body=${body.slice(0, 200)}`
-            )
-          ),
-        (e) => log(`${path} fetch probe failed: ${e.message || e}`)
+      const csp = document.querySelector(
+        'meta[http-equiv="Content-Security-Policy"]'
       );
+      log(`CSP meta: ${csp ? csp.content : "none"}`);
     }
 
     if (errorCb) {
