@@ -98,9 +98,9 @@ after_initialize do
   register_reviewable_type Chat::ReviewableMessage
 
   if defined?(DiscourseWorkflows)
-    require_relative "lib/discourse_workflows/actions/send_chat_message"
+    require_relative "lib/discourse_workflows/nodes/send_chat_message/v1"
     DiscoursePluginRegistry.register_discourse_workflows_node(
-      DiscourseWorkflows::Nodes::SendChatMessage,
+      DiscourseWorkflows::Nodes::SendChatMessage::V1,
       self,
     )
   end

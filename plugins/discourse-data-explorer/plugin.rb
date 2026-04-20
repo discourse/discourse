@@ -44,10 +44,10 @@ after_initialize do
   GlobalSetting.add_default(:max_data_explorer_api_req_mode, "warn")
 
   if defined?(DiscourseWorkflows)
-    require_relative "lib/discourse_data_explorer/workflows/sql_action"
+    require_relative "lib/discourse_data_explorer/workflows/sql_action/v1"
     register_svg_icon "database"
     DiscoursePluginRegistry.register_discourse_workflows_node(
-      DiscourseDataExplorer::Workflows::SqlAction,
+      DiscourseDataExplorer::Workflows::SqlAction::V1,
       self,
     )
   end

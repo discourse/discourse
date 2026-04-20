@@ -102,9 +102,9 @@ after_initialize do
   require_relative "discourse_automation/llm_tagger"
 
   if defined?(DiscourseWorkflows)
-    require_relative "discourse_workflows/actions/ai_agent"
+    require_relative "discourse_workflows/nodes/ai_agent/v1"
     DiscoursePluginRegistry.register_discourse_workflows_node(
-      DiscourseWorkflows::Nodes::AiAgent,
+      DiscourseWorkflows::Nodes::AiAgent::V1,
       self,
     )
   end

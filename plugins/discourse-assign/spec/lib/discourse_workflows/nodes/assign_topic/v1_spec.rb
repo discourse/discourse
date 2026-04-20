@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::Nodes::AssignTopic do
+RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
   fab!(:post)
   fab!(:topic) { post.topic }
   fab!(:user, :moderator)

@@ -23,9 +23,9 @@ require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
   if defined?(DiscourseWorkflows)
-    require_relative "lib/discourse_workflows/actions/assign_topic"
+    require_relative "lib/discourse_workflows/nodes/assign_topic/v1"
     DiscoursePluginRegistry.register_discourse_workflows_node(
-      DiscourseWorkflows::Nodes::AssignTopic,
+      DiscourseWorkflows::Nodes::AssignTopic::V1,
       self,
     )
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseDataExplorer::Workflows::SqlAction do
+RSpec.describe DiscourseDataExplorer::Workflows::SqlAction::V1 do
   fab!(:user)
 
   describe "#execute" do
