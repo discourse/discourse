@@ -62,7 +62,7 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       AC: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QU: 1
-      RO: 1
+      # RO: 1
 
     strategy:
       fail-fast: true
