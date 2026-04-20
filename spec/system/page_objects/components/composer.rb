@@ -105,7 +105,13 @@ module PageObjects
       end
 
       def has_value?(value)
-        within(@composer_id) { has_field?(class: "d-editor-input", with: value) }
+        within(@composer_id) do
+          if value.nil?
+            has_no_field?(class: "d-editor-input")
+          else
+            has_field?(class: "d-editor-input", with: value)
+          end
+        end
       end
 
       def has_popup_content?(content)
