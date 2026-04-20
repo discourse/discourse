@@ -29,6 +29,8 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
+  @service appEvents;
+  @service capabilities;
   @service modal;
   @service site;
 
@@ -46,10 +48,37 @@ export default class DModal extends Component {
 
     lock(el);
 
+    if (this.capabilities.isIOS) {
+      this.lockedScrollY = window.scrollY;
+      this.appEvents.on(
+        "keyboard-visibility-change",
+        this,
+        this.resetDocumentScrollOnIOS
+      );
+    }
+
     return () => {
       unlock(el);
+
+      this.appEvents.off(
+        "keyboard-visibility-change",
+        this,
+        this.resetDocumentScrollOnIOS
+      );
     };
   });
+
+  @action
+  resetDocumentScrollOnIOS(visible) {
+    // iOS scrolls the page to the focused input when the keyboard opens
+    // as a result when a dropdown is within a modal, the modal is scrolled out of view.
+    // This forces the modal back to the correct visible position.
+    if (!visible) {
+      return;
+    }
+
+    window.scrollTo(0, this.lockedScrollY ?? 0);
+  }
 
   @action
   async setupModal(el) {
