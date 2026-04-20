@@ -97,13 +97,13 @@ module DiscourseWorkflows
 
         class Insert < Base
           def execute(config)
-            [Item.new(@facade.insert(build_row_input(config))).to_h]
+            [Item.wrap(@facade.insert(build_row_input(config)))]
           end
         end
 
         class Get < Base
           def execute(config)
-            Item.wrap_array(@facade.query(build_query(config, optional_filter: true))[:rows])
+            Item.wrap(@facade.query(build_query(config, optional_filter: true))[:rows])
           end
         end
 
@@ -114,14 +114,14 @@ module DiscourseWorkflows
                 query: build_query(config, optional_filter: true),
                 row_input: build_row_input(config),
               )
-            [Item.new("updated_count" => updated_count).to_h]
+            [Item.wrap("updated_count" => updated_count)]
           end
         end
 
         class Delete < Base
           def execute(config)
             count = @facade.delete(query: build_query(config, optional_filter: true))
-            [Item.new("deleted_count" => count).to_h]
+            [Item.wrap("deleted_count" => count)]
           end
         end
 
@@ -132,7 +132,7 @@ module DiscourseWorkflows
 
             if query.normalized_filter.nil?
               row = @facade.insert(row_input)
-              return [Item.new({ "operation" => "insert" }.merge(row)).to_h]
+              return [Item.wrap({ "operation" => "insert" }.merge(row))]
             end
 
             result = @facade.upsert(query: query, row_input: row_input)
@@ -143,7 +143,7 @@ module DiscourseWorkflows
               else
                 { "operation" => "insert" }.merge(result[:row])
               end
-            [Item.new(output).to_h]
+            [Item.wrap(output)]
           end
         end
 

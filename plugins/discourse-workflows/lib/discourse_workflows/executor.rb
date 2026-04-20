@@ -66,7 +66,7 @@ module DiscourseWorkflows
         trigger_node = @snapshot.find_node(@trigger_node_id)
         raise "Trigger node #{@trigger_node_id} not found in workflow snapshot" if trigger_node.nil?
 
-        trigger_items = [Item.new(@trigger_data).to_h]
+        trigger_items = [Item.wrap(@trigger_data)]
         ItemContract.validate_items!(trigger_items, source: "trigger:#{trigger_node.type}")
         record_step(trigger_node, [], output: trigger_items, status: Step::SUCCESS)
         @context.store_node_output(trigger_node, trigger_items)

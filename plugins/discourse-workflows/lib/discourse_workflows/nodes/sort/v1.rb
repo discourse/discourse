@@ -160,7 +160,7 @@ module DiscourseWorkflows
               sandbox.eval("(function() { return __items.sort(function(a, b) { #{code} }); })()")
             end
 
-          sorted.map { |item| Item.new(item.fetch("json") { {} }).to_h }
+          sorted.map { |item| wrap(item.fetch("json") { {} }) }
         end
       end
     end

@@ -106,9 +106,8 @@ if defined?(DiscourseWorkflows)
               exec_ctx.input_items.map do |item|
                 config = exec_ctx.get_parameters(item)
                 result = process(run_as_user, config)
-                Item.new(result).to_h
+                wrap(result)
               end
-            ItemContract.validate_items!(items, source: self.class.identifier)
             [items]
           end
 

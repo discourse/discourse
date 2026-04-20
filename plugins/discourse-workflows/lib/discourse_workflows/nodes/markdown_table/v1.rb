@@ -50,7 +50,7 @@ module DiscourseWorkflows
           columns = @configuration.fetch("columns") { [] }
           headers = columns.map { |c| c["header"].to_s }
 
-          return [[Item.new({ "markdown" => "" }).to_h]] if headers.empty?
+          return [[wrap({ "markdown" => "" })]] if headers.empty?
 
           rows =
             exec_ctx.input_items.map do |item|
@@ -59,7 +59,7 @@ module DiscourseWorkflows
             end
 
           markdown = render_table(headers, rows)
-          [[Item.new({ "markdown" => markdown }).to_h]]
+          [[wrap({ "markdown" => markdown })]]
         end
 
         private

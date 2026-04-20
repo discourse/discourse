@@ -151,7 +151,7 @@ module DiscourseWorkflows
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
               result = process(config, exec_ctx.log)
-              Item.new(result).to_h
+              wrap(result)
             end
           [items]
         end

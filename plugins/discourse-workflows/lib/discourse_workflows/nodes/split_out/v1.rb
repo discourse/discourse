@@ -120,7 +120,7 @@ module DiscourseWorkflows
             entry = build_split_entry(i, field_names, arrays, dest_names)
             entry =
               apply_include_mode(entry, item_json, include_mode, field_names, fields_to_include)
-            Item.new(entry).to_h
+            wrap(entry)
           end
         end
 

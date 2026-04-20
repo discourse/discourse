@@ -54,8 +54,7 @@ module DiscourseWorkflows
           topic_query = TopicQuery.new(exec_ctx.run_as_user, q: query, per_page: limit)
           topic_list = topic_query.list_filter
 
-          items =
-            topic_list.topics.map { |topic| Item.new(topic: Schemas::Topic.resolve(topic)).to_h }
+          items = topic_list.topics.map { |topic| wrap(topic: Schemas::Topic.resolve(topic)) }
           [items]
         end
       end

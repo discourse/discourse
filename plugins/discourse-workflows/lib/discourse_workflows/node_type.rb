@@ -92,6 +92,10 @@ module DiscourseWorkflows
 
     private
 
+    def wrap(data)
+      Item.wrap(data)
+    end
+
     def skip_workflows?(opts)
       opts.is_a?(Hash) && opts.with_indifferent_access[:skip_workflows]
     end

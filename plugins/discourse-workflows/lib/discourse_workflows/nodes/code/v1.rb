@@ -89,14 +89,14 @@ module DiscourseWorkflows
             item_json = item.fetch("json") { {} }
             sandbox.rebind_code_item(item_json)
             raw = sandbox.eval("(function() { #{code} })()")
-            Item.new(normalize_code_result(raw)).to_h
+            wrap(normalize_code_result(raw))
           end
         end
 
         def execute_all_items(sandbox, code)
           raw = sandbox.eval("(function() { #{code} })()")
           results = raw.is_a?(Array) ? raw : [raw]
-          results.map { |r| Item.new(normalize_code_result(r)).to_h }
+          results.map { |r| wrap(normalize_code_result(r)) }
         end
 
         def normalize_code_result(raw)

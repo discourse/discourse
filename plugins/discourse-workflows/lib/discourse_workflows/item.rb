@@ -1,30 +1,16 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class Item
-    attr_reader :json
-
-    def initialize(json)
-      @json = json.deep_stringify_keys.freeze
-    end
-
-    def to_h
-      { "json" => @json }
-    end
-
+  module Item
     def self.wrap(data)
       case data
-      when Item
-        data
+      when Array
+        data.map { |d| wrap(d) }
       when Hash
-        new(data.key?("json") ? data["json"] : data)
+        { "json" => data.deep_stringify_keys.freeze }
       else
-        new({})
+        raise ArgumentError, "Item.wrap expects Hash or Array<Hash>, got #{data.class}"
       end
-    end
-
-    def self.wrap_array(items)
-      Array(items).map { |i| wrap(i).to_h }
     end
   end
 end
