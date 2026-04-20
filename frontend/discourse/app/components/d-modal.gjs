@@ -60,11 +60,13 @@ export default class DModal extends Component {
     return () => {
       unlock(el);
 
-      this.appEvents.off(
-        "keyboard-visibility-change",
-        this,
-        this.resetDocumentScrollOnIOS
-      );
+      if (this.capabilities.isIOS) {
+        this.appEvents.off(
+          "keyboard-visibility-change",
+          this,
+          this.resetDocumentScrollOnIOS
+        );
+      }
     };
   });
 
