@@ -216,11 +216,58 @@ export default function setupTests(config) {
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
 
+  // Diagnostic for the rare `Attempting to inject an unknown injection:
+  // 'service:currentUser'` error. Captures the current + recently-completed
+  // test names and full stack so we can attribute the leaked async work.
+  const recentTestHistory = [];
+  window.__recentTestHistory = recentTestHistory;
+
+  const logInjectionDiagnostic = (source, message, error, extras = {}) => {
+    if (!message?.includes("unknown injection")) {
+      return;
+    }
+    // eslint-disable-next-line no-console
+    console.error(
+      `[injection-diagnostic:${source}]`,
+      JSON.stringify(
+        {
+          message,
+          currentTest: QUnit.config.current?.testName ?? null,
+          recentTestHistory: recentTestHistory.slice(),
+          stack: error?.stack ?? null,
+          ...extras,
+        },
+        null,
+        2
+      )
+    );
+  };
+
+  window.addEventListener("error", (event) => {
+    logInjectionDiagnostic(
+      "error",
+      event.error?.message || event.message || "",
+      event.error,
+      {
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      }
+    );
+  });
+
   window.onunhandledrejection = (event) => {
+    const reason = event.reason;
+    logInjectionDiagnostic(
+      "unhandledrejection",
+      reason?.message || String(reason),
+      reason
+    );
+
     // reports test boot failures to testem, so the browser doesn't hang forever
     window.Testem?.emit(
       "top-level-error",
-      String(event.reason),
+      String(reason),
       window.location.href,
       "0"
     );
@@ -318,7 +365,12 @@ export default function setupTests(config) {
     disableLoadMoreObserver();
   });
 
-  QUnit.testDone(function () {
+  QUnit.testDone(function (details) {
+    recentTestHistory.push(`${details.module} > ${details.name}`);
+    if (recentTestHistory.length > 20) {
+      recentTestHistory.shift();
+    }
+
     testCleanup(getOwner(app), app);
 
     sinon.restore();
