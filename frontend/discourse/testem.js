@@ -327,6 +327,18 @@ if (themeTestPages) {
 
   module.exports.middleware = [
     function (app) {
+      if (process.env.CI) {
+        app.use(function (req, res, next) {
+          const start = Date.now();
+          res.on("finish", () => {
+            // eslint-disable-next-line no-console
+            console.log(
+              `[testem-req] ${new Date().toISOString()} ${req.method} ${req.url} -> ${res.statusCode} (${Date.now() - start}ms)`
+            );
+          });
+          next();
+        });
+      }
       // Make the testem.js file available under /assets
       // so it's within the app's CSP
       app.get("/assets/testem.js", function (req, res, next) {
