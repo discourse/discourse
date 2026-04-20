@@ -52,7 +52,7 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
-      MINIO_RUNNER_LOG_LEVEL: WARN
+      # MINIO_RUNNER_LOG_LEVEL: WARN
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
@@ -60,9 +60,9 @@ jobs:
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
-      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
-      QUNIT_REUSE_BUILD: 1
-      ROLLUP_PLUGIN_COMPILER_ADDING_MORE_AND_MORE_TO_THE_STRING_TO_MAKE_IT_LONGER: 123
+      # ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
+      # QUNIT_REUSE_BUILD: 1
+      # ROLLUP_PLUGIN_COMPILER: 1
 
     strategy:
       fail-fast: true
