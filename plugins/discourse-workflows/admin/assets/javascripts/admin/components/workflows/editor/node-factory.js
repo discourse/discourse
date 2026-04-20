@@ -8,7 +8,9 @@ const NODE_DEFAULTS = {
     http_method: "GET",
   }),
   "trigger:schedule": () => ({
-    cron: "0 * * * *",
+    rules: [
+      { interval: "hours", hours_between_triggers: 1, trigger_at_minute: 0 },
+    ],
   }),
 };
 

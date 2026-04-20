@@ -60,7 +60,9 @@ module("Unit | lib | discourse-workflows | node-factory", function (hooks) {
 
   test("createNode applies built-in defaults for schedule trigger", function (assert) {
     const node = createNode("trigger:schedule", []);
-    assert.true("cron" in node.configuration);
+    assert.deepEqual(node.configuration.rules, [
+      { interval: "hours", hours_between_triggers: 1, trigger_at_minute: 0 },
+    ]);
   });
 
   test("createNode merges configOverrides over defaults", function (assert) {
