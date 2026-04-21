@@ -287,10 +287,21 @@ jobs:
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
         run: script/assemble_ember_build.rb
 
+      - name: Diagnose core dump setup
+        if: matrix.build_type == 'frontend'
+        run: |
+          echo "=== core_pattern (host kernel setting) ==="
+          cat /proc/sys/kernel/core_pattern || true
+          echo "=== core soft limit ==="
+          ulimit -c
+          mkdir -p /tmp/chrome-crashes
+          chmod 777 /tmp/chrome-crashes
+
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: |
           ulimit -s ${{ matrix.ulimit_stack }}
+          ulimit -c unlimited
           QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
       - name: Asset Processor Tests
@@ -307,13 +318,37 @@ jobs:
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: |
           ulimit -s ${{ matrix.ulimit_stack }}
+          ulimit -c unlimited
           bin/rake 'plugin:qunit[*]'
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: |
           ulimit -s ${{ matrix.ulimit_stack }}
+          ulimit -c unlimited
           DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+
+      - name: Collect crash artifacts
+        if: always() && matrix.build_type == 'frontend'
+        run: |
+          mkdir -p /tmp/crash-artifacts
+          # Chrome minidumps from crashpad
+          if [ -d /tmp/chrome-crashes ]; then
+            cp -r /tmp/chrome-crashes /tmp/crash-artifacts/ 2>/dev/null || true
+          fi
+          # Any core files that landed in common spots
+          find /tmp / -maxdepth 3 -name 'core.*' -type f 2>/dev/null | head -20 | while read f; do
+            cp "$f" /tmp/crash-artifacts/ 2>/dev/null || true
+          done
+          ls -la /tmp/crash-artifacts/ || true
+
+      - name: Upload crash artifacts
+        if: always() && matrix.build_type == 'frontend'
+        uses: actions/upload-artifact@v7
+        with:
+          name: crash-artifacts-${{ matrix.target }}-stack${{ matrix.ulimit_stack }}
+          path: /tmp/crash-artifacts
+          if-no-files-found: ignore
 
       - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend'

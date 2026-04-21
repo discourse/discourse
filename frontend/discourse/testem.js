@@ -244,6 +244,8 @@ module.exports = {
       "--enable-logging=stderr",
       "--v=1",
       "--no-zygote",
+      "--enable-crash-reporter-for-testing",
+      "--crash-dumps-dir=/tmp/chrome-crashes",
       ...(process.env.CI
         ? [
             "--no-first-run",
@@ -271,6 +273,8 @@ module.exports = {
       "--enable-logging=stderr",
       "--v=1",
       "--no-zygote",
+      "--enable-crash-reporter-for-testing",
+      "--crash-dumps-dir=/tmp/chrome-crashes",
       ...(process.env.CI
         ? [
             "--no-first-run",
