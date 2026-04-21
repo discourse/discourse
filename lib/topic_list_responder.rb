@@ -23,6 +23,8 @@ module TopicListResponder
 
   def localize_topic_list_content(list)
     return if list.topics.blank? || !SiteSetting.content_localization_enabled
+    return if cookies.key?(ContentLocalization::SHOW_ORIGINAL_COOKIE)
+    return if current_user&.user_option&.show_original_content
     crawl_locale = I18n.locale
 
     list.topics.each do |topic|
