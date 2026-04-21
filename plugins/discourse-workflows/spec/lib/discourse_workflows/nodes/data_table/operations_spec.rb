@@ -58,6 +58,12 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::Operations do
       expect(items.length).to eq(1)
       expect(items.first["json"]["email"]).to eq("b@test.com")
     end
+
+    it "raises when sort_column references an unknown column" do
+      expect {
+        build_operation("get").execute("sort_column" => "bogus")
+      }.to raise_error(ArgumentError, /Unknown column name/)
+    end
   end
 
   describe "Update" do

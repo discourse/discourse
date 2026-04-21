@@ -43,4 +43,17 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::ColumnsResolver do
       )
     end
   end
+
+  describe "#validate_column!" do
+    it "returns nil for known columns" do
+      expect(resolver.validate_column!("email")).to be_nil
+    end
+
+    it "raises for unknown column names" do
+      expect { resolver.validate_column!("unknown") }.to raise_error(
+        ArgumentError,
+        /Unknown column name/,
+      )
+    end
+  end
 end

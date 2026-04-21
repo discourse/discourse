@@ -10,12 +10,14 @@ module DiscourseWorkflows
 
         def resolve(fields)
           normalize_fields(fields).each_with_object({}) do |(column_name, value), result|
-            if @column_names.exclude?(column_name)
-              raise ArgumentError, "Unknown column name '#{column_name}'"
-            end
-
+            validate_column!(column_name)
             result[column_name] = value
           end
+        end
+
+        def validate_column!(column_name)
+          return if @column_names.include?(column_name)
+          raise ArgumentError, "Unknown column name '#{column_name}'"
         end
 
         private
