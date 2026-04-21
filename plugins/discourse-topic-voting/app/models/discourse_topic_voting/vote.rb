@@ -6,6 +6,8 @@ module DiscourseTopicVoting
 
     belongs_to :user
     belongs_to :topic
+
+    alias_attribute :archived, :archive
   end
 end
 
