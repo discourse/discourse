@@ -1,5 +1,4 @@
 import { on } from "@ember/modifier";
-import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -19,93 +18,97 @@ export default <template>
 
     {{#if @controller.aiQueriesEnabled}}
       <div class="query-new query-new--ai-first">
-        <div class="query-new__ai-section">
-          <label class="query-new__ai-label">
-            <span>{{i18n "explorer.ai.description_title"}}</span>
-            {{icon "discourse-sparkles"}}
-          </label>
-
-          <p class="query-new__ai-hint">
-            {{i18n "explorer.ai.description_hint"}}
-          </p>
-
-          <DTextarea
-            @value={{@controller.aiDescription}}
-            {{on "input" @controller.updateAiDescription}}
-            {{on "keydown" @controller.handleKeydown}}
-            placeholder={{i18n "explorer.ai.description_placeholder"}}
-            class="query-new__ai-textarea"
-            disabled={{@controller.aiGenerating}}
-          />
-
-          <div class="query-new__ai-actions">
-            {{#if @controller.hasGenerated}}
-              <DButton
-                @action={{@controller.regenerate}}
-                @icon="discourse-sparkles"
-                @label="explorer.ai.regenerate"
-                @disabled={{@controller.aiGenerating}}
-                class="btn-default query-new__regenerate-btn"
-              />
-            {{else}}
-              <DButton
-                @action={{@controller.generate}}
-                @label="explorer.ai.generate"
-                @disabled={{@controller.aiGenerating}}
-                class="btn-primary query-new__generate-btn"
-              />
-              <DButton
-                @action={{@controller.toggleManualForm}}
-                @label="explorer.ai.write_manually"
-                class="btn-transparent query-new__manual-link"
-              />
-            {{/if}}
-          </div>
-        </div>
-
-        {{#if @controller.aiGenerating}}
-          <div class="query-ai-generating">
-            <ConditionalLoadingSpinner @condition={{true}} @size="small" />
-            <span>{{i18n "explorer.ai.generating"}}</span>
-          </div>
-        {{/if}}
-
-        {{#if @controller.hasGenerated}}
-          <hr class="query-new__divider" />
-
-          <div class="query-new__editor-section">
-            <label class="query-new__field-label">
-              {{i18n "explorer.ai.sql_label"}}
+        {{#unless @controller.showManualForm}}
+          <div class="query-new__ai-section">
+            <label class="query-new__ai-label">
+              <span>{{i18n "explorer.ai.description_title"}}</span>
+              {{icon "discourse-sparkles"}}
             </label>
-            <div class="query-new__sql-editor">
-              <AceEditor
-                @content={{@controller.generatedSql}}
-                @onChange={{@controller.updateSql}}
-                @mode="sql"
-                @disabled={{@controller.aiGenerating}}
+
+            <p class="query-new__ai-hint">
+              {{i18n "explorer.ai.description_hint"}}
+            </p>
+
+            <DTextarea
+              @value={{@controller.aiDescription}}
+              {{on "input" @controller.updateAiDescription}}
+              {{on "keydown" @controller.handleKeydown}}
+              placeholder={{i18n "explorer.ai.description_placeholder"}}
+              class="query-new__ai-textarea"
+              disabled={{@controller.aiGenerating}}
+            />
+
+            <div class="query-new__ai-actions">
+              {{#if @controller.hasGenerated}}
+                <DButton
+                  @action={{@controller.regenerate}}
+                  @icon="discourse-sparkles"
+                  @label="explorer.ai.regenerate"
+                  @disabled={{@controller.aiGenerating}}
+                  class="btn-default query-new__regenerate-btn"
+                />
+              {{else}}
+                <DButton
+                  @action={{@controller.generate}}
+                  @label="explorer.ai.generate"
+                  @disabled={{@controller.aiGenerating}}
+                  class="btn-primary query-new__generate-btn"
+                />
+                <DButton
+                  @action={{@controller.toggleManualForm}}
+                  @label="explorer.ai.write_manually"
+                  class="btn-transparent query-new__toggle-link"
+                />
+              {{/if}}
+
+              {{#if @controller.aiGenerating}}
+                <span class="query-new__generating-indicator">
+                  <ConditionalLoadingSpinner
+                    @condition={{true}}
+                    @size="small"
+                  />
+                  <span>{{i18n "explorer.ai.generating"}}</span>
+                </span>
+              {{/if}}
+            </div>
+          </div>
+
+          {{#if @controller.hasGenerated}}
+            <hr class="query-new__divider" />
+
+            <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+
+            <QueryResultsWrapper
+              @results={{@controller.results}}
+              @showResults={{@controller.showResults}}
+              @content={{@controller.results}}
+              @showDownloads={{false}}
+              @sql={{@controller.generatedSql}}
+              @onSqlChange={{@controller.updateSql}}
+            />
+
+            <div class="query-new__fields">
+              <label class="query-new__field-label">
+                {{i18n "explorer.query_name"}}
+              </label>
+              <TextField
+                @value={{@controller.generatedName}}
+                @onChange={{@controller.updateName}}
+                class="query-new__name-input"
+              />
+
+              <label class="query-new__field-label">
+                {{i18n "explorer.description_placeholder"}}
+                <span class="query-new__optional">
+                  ({{i18n "explorer.ai.optional"}})
+                </span>
+              </label>
+              <DTextarea
+                @value={{@controller.generatedDescription}}
+                {{on "input" @controller.updateDescription}}
+                class="query-new__description-input"
               />
             </div>
-
-            <label class="query-new__field-label">
-              {{i18n "explorer.query_name"}}
-            </label>
-            <TextField
-              @value={{@controller.generatedName}}
-              @onChange={{@controller.updateName}}
-              class="query-new__name-input"
-            />
-
-            <label class="query-new__field-label">
-              {{i18n "explorer.description_placeholder"}}
-              <span class="query-new__optional">
-                ({{i18n "explorer.ai.optional"}})
-              </span>
-            </label>
-            <DTextarea
-              @value={{@controller.generatedDescription}}
-              {{on "input" @controller.updateDescription}}
-              class="query-new__description-input"
-            />
 
             <div class="query-new__actions">
               <DButton
@@ -122,21 +125,10 @@ export default <template>
                 class="btn-default"
               />
             </div>
-          </div>
-
-          <ConditionalLoadingSpinner @condition={{@controller.loading}} />
-
-          <QueryResultsWrapper
-            @results={{@controller.results}}
-            @showResults={{@controller.showResults}}
-            @content={{@controller.results}}
-            @showDownloads={{false}}
-          />
-        {{/if}}
+          {{/if}}
+        {{/unless}}
 
         {{#if @controller.showManualForm}}
-          <hr class="query-new__divider" />
-
           <Form
             @data={{@controller.model}}
             @onSubmit={{@controller.create}}
@@ -164,6 +156,12 @@ export default <template>
             </form.Field>
             <form.Actions>
               <form.Submit @label="explorer.create" @icon="plus" />
+              <DButton
+                @action={{@controller.toggleAiForm}}
+                @icon="discourse-sparkles"
+                @label="explorer.ai.description_title"
+                class="btn-transparent query-new__toggle-link"
+              />
             </form.Actions>
           </Form>
         {{/if}}

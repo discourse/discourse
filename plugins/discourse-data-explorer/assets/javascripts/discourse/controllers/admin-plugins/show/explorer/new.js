@@ -54,6 +54,11 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
+  toggleAiForm() {
+    this.showManualForm = false;
+  }
+
+  @action
   async create({ name, description }) {
     try {
       this.loading = true;
@@ -236,9 +241,17 @@ export default class AdminPluginsExplorerNew extends Controller {
       this.generatedSql = data.sql;
       this.generatedName = data.name;
       this.generatedDescription = data.description;
+
       this.hasGenerated = true;
       this.aiGenerating = false;
       this._teardownMessageBus();
+
+      if (data.results) {
+        this.results = data.results;
+        this.showResults = data.results.success !== false;
+      } else {
+        this.run();
+      }
     } else if (data.status === "error") {
       this.aiGenerating = false;
       this._teardownMessageBus();
@@ -273,6 +286,7 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.results = null;
     this.showResults = false;
     this.showManualForm = false;
+    this.activeTab = "results";
     this.loading = false;
   }
 }

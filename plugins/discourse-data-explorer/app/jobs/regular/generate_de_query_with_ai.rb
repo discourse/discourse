@@ -53,12 +53,13 @@ module Jobs
         return(publish_error(user, I18n.t("discourse_data_explorer.ai.error_no_sql_returned")))
       end
 
-      publish_complete(
-        user,
-        sql: parsed[:sql].chomp(";").strip,
-        name: parsed[:name].presence || args[:ai_description].to_s.truncate(60, separator: " "),
-        description: parsed[:description].presence || args[:ai_description],
-      )
+      sql = parsed[:sql].chomp(";").strip
+      name = parsed[:name].presence || args[:ai_description].to_s.truncate(60, separator: " ")
+      description = parsed[:description].presence || args[:ai_description]
+
+      query_results = run_generated_query(sql, user)
+
+      publish_complete(user, sql: sql, name: name, description: description, results: query_results)
     rescue => e
       publish_error(user, e.message) if user
     ensure
@@ -88,16 +89,38 @@ module Jobs
       { sql: text.strip, name: nil, description: nil }
     end
 
-    def publish_complete(user, sql:, name:, description:)
+    def run_generated_query(sql, user)
+      query = DiscourseDataExplorer::Query.new(sql: sql)
+      result =
+        DiscourseDataExplorer::DataExplorer.run_query(
+          query,
+          {},
+          current_user: user,
+          limit: SiteSetting.data_explorer_query_result_limit,
+        )
+      return nil if result[:error]
+      json = DiscourseDataExplorer::ResultFormatConverter.convert(:json, result)
+      # serialize relations for MessageBus transport
+      json[:relations] = json[:relations]&.transform_values { |v| v.as_json }
+      json
+    rescue StandardError => e
+      Rails.logger.warn("Data Explorer: failed to run generated query: #{e.message}")
+      nil
+    end
+
+    def publish_complete(user, sql:, name:, description:, results: nil)
+      payload = {
+        status: "complete",
+        generation_id: @generation_id,
+        sql: sql,
+        name: name,
+        description: description,
+      }
+      payload[:results] = results if results
+
       MessageBus.publish(
         "#{CHANNEL_PREFIX}/#{@generation_id}",
-        {
-          status: "complete",
-          generation_id: @generation_id,
-          sql: sql,
-          name: name,
-          description: description,
-        },
+        payload,
         user_ids: [user.id],
         max_backlog_age: DiscourseDataExplorer::AiQueryEnqueuer::REDIS_TTL,
       )

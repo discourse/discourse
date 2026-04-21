@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import moment from "moment";
+import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import KeyValueStore from "discourse/lib/key-value-store";
@@ -49,6 +50,7 @@ export default class QueryResult extends Component {
 
   @tracked showChart;
   @tracked showTable;
+  @tracked showSql = false;
 
   constructor() {
     super(...arguments);
@@ -78,6 +80,11 @@ export default class QueryResult extends Component {
     if (queryId) {
       store.set({ key: `showTable_${queryId}`, value: this.showTable });
     }
+  }
+
+  @action
+  toggleSql() {
+    this.showSql = !this.showSql;
   }
 
   get chartVisible() {
@@ -360,8 +367,16 @@ export default class QueryResult extends Component {
       </div>
 
       <section>
-        {{#if this.canShowChart}}
-          <div class="query-results-modes">
+        <div class="query-results-modes">
+          {{#if @sql}}
+            <DButton
+              @action={{this.toggleSql}}
+              @icon="code"
+              @translatedTitle={{i18n "explorer.ai.sql_label"}}
+              class={{if this.showSql "btn-primary" "btn-default"}}
+            />
+          {{/if}}
+          {{#if this.canShowChart}}
             <DButton
               @action={{this.toggleChart}}
               @icon="signal"
@@ -369,12 +384,22 @@ export default class QueryResult extends Component {
               class="btn-toggle-chart
                 {{if this.showChart 'btn-primary' 'btn-default'}}"
             />
-            <DButton
-              @action={{this.toggleTable}}
-              @icon="table"
-              @translatedTitle={{i18n "explorer.show_table"}}
-              class="btn-toggle-table
-                {{if this.showTable 'btn-primary' 'btn-default'}}"
+          {{/if}}
+          <DButton
+            @action={{this.toggleTable}}
+            @icon="table"
+            @translatedTitle={{i18n "explorer.show_table"}}
+            class="btn-toggle-table
+              {{if this.showTable 'btn-primary' 'btn-default'}}"
+          />
+        </div>
+
+        {{#if this.showSql}}
+          <div class="query-results-sql">
+            <AceEditor
+              @content={{@sql}}
+              @onChange={{@onSqlChange}}
+              @mode="sql"
             />
           </div>
         {{/if}}
@@ -425,6 +450,7 @@ export default class QueryResult extends Component {
             </table>
           </div>
         {{/if}}
+
       </section>
     </article>
   </template>

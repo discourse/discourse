@@ -9,6 +9,8 @@ const QueryResultsWrapper = <template>
           @content={{@results}}
           @cachedAt={{@cachedAt}}
           @showDownloads={{@showDownloads}}
+          @sql={{@sql}}
+          @onSqlChange={{@onSqlChange}}
         />
       {{else}}
         {{#each @results.errors as |err|}}
