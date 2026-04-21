@@ -332,15 +332,25 @@ jobs:
         if: always() && matrix.build_type == 'frontend'
         run: |
           mkdir -p /tmp/crash-artifacts
-          # Chrome minidumps from crashpad
+          # Chrome minidumps from --crash-dumps-dir flag
           if [ -d /tmp/chrome-crashes ]; then
             cp -r /tmp/chrome-crashes /tmp/crash-artifacts/ 2>/dev/null || true
           fi
-          # Any core files that landed in common spots
-          find /tmp / -maxdepth 3 -name 'core.*' -type f 2>/dev/null | head -20 | while read f; do
-            cp "$f" /tmp/crash-artifacts/ 2>/dev/null || true
+          # Kernel cores (core_pattern=core on GHA runners, land in crashing proc's cwd)
+          echo "=== Searching for core files ==="
+          find "$GITHUB_WORKSPACE" /tmp /var/tmp /home -maxdepth 8 \
+            \( -name 'core' -o -name 'core.*' \) -type f 2>/dev/null | while read f; do
+            size=$(stat -c%s "$f" 2>/dev/null || echo 0)
+            echo "Found: $f ($size bytes)"
+            # Only grab files > 1MB (actual cores); skip the /proc/sys/kernel/core file etc.
+            if [ "$size" -gt 1000000 ]; then
+              dest="/tmp/crash-artifacts/$(echo "$f" | sed 's|^/||;s|/|_|g')"
+              cp "$f" "$dest" 2>/dev/null || true
+            fi
           done
-          ls -la /tmp/crash-artifacts/ || true
+          echo "=== Contents of /tmp/crash-artifacts ==="
+          ls -la /tmp/crash-artifacts/ 2>/dev/null || true
+          du -sh /tmp/crash-artifacts/* 2>/dev/null || true
 
       - name: Upload crash artifacts
         if: always() && matrix.build_type == 'frontend'
