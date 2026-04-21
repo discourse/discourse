@@ -114,7 +114,14 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("cancelling in progress upload", async function (assert) {
-    sinon.stub(console, "error");
+    const consoleErrorStub = sinon
+      .stub(console, "error")
+      .callsFake((...args) => {
+        if (typeof args[0] === "string" && args[0].includes("[Uppy]")) {
+          return;
+        }
+        consoleErrorStub.wrappedMethod.apply(console, args);
+      });
     setupUploadPretender();
 
     this.set("changedUploads", null);

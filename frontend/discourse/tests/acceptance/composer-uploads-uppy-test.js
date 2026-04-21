@@ -245,7 +245,14 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   });
 
   test("cancelling uploads clears the placeholders out", async function (assert) {
-    const consoleErrorStub = sinon.stub(console, "error");
+    const consoleErrorStub = sinon
+      .stub(console, "error")
+      .callsFake((...args) => {
+        if (typeof args[0] === "string" && args[0].includes("[Uppy]")) {
+          return;
+        }
+        consoleErrorStub.wrappedMethod.apply(console, args);
+      });
 
     await visit("/");
     await click("#create-topic");
@@ -551,7 +558,14 @@ acceptance(
     });
 
     test("should show a consolidated message for multiple failed uploads", async function (assert) {
-      const consoleErrorStub = sinon.stub(console, "error");
+      const consoleErrorStub = sinon
+        .stub(console, "error")
+        .callsFake((...args) => {
+          if (typeof args[0] === "string" && args[0].includes("[Uppy]")) {
+            return;
+          }
+          consoleErrorStub.wrappedMethod.apply(console, args);
+        });
 
       await visit("/");
       await click("#create-topic");
