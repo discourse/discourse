@@ -38,6 +38,16 @@ module DiscourseWorkflows
       resolver&.dispose
     end
 
+    def self.resolve_segments(template, context: {}, user: nil)
+      resolver = new(context, user: user)
+      resolver.resolve_segments(template)
+    rescue MiniRacer::Error => e
+      Rails.logger.warn("Expression evaluation failed: #{e.message}")
+      []
+    ensure
+      resolver&.dispose
+    end
+
     def initialize(context, user: nil, sandbox: nil, **_)
       @context = context
       @user = user

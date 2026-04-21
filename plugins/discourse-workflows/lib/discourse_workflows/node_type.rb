@@ -4,6 +4,16 @@ module DiscourseWorkflows
   class NodeType
     extend NodeTypeDescriptor
 
+    TYPE_EXEMPLARS = {
+      string: "",
+      integer: 0,
+      number: 0,
+      boolean: false,
+      array: [],
+      object: {
+      },
+    }.freeze
+
     def self.inherited(subclass)
       super
       DiscourseWorkflows::NodeType.registered_nodes << subclass
@@ -63,6 +73,20 @@ module DiscourseWorkflows
 
     def self.output_schema
       {}
+    end
+
+    def self.output_exemplar
+      exemplar_from_schema(output_schema)
+    end
+
+    def self.exemplar_from_schema(schema)
+      schema.each_with_object({}) do |(key, value), hash|
+        hash[key.to_s] = if value.is_a?(Hash)
+          exemplar_from_schema(value)
+        else
+          TYPE_EXEMPLARS.fetch(value, "")
+        end
+      end
     end
 
     def self.schema_extensions

@@ -95,4 +95,87 @@ RSpec.describe DiscourseWorkflows::Workflow do
       expect(DiscourseWorkflows::Execution.count).to eq(0)
     end
   end
+
+  describe "#upstream_node_of" do
+    fab!(:workflow) do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:topic_created"
+          g.node "action-1", "action:topic_tags"
+          g.chain "trigger-1", "action-1"
+        end
+      Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+    end
+
+    it "returns the upstream node for a node_id" do
+      upstream = workflow.upstream_node_of("action-1")
+      expect(upstream).to include("id" => "trigger-1", "type" => "trigger:topic_created")
+    end
+
+    it "coerces integer node ids to strings" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "1", "trigger:topic_created"
+          g.node "2", "action:topic_tags"
+          g.chain "1", "2"
+        end
+      numeric_workflow = Fabricate(:discourse_workflows_workflow, created_by: user, **graph)
+
+      expect(numeric_workflow.upstream_node_of(2)).to include("id" => "1")
+    end
+
+    it "returns nil when node_id is blank" do
+      expect(workflow.upstream_node_of(nil)).to be_nil
+      expect(workflow.upstream_node_of("")).to be_nil
+    end
+
+    it "returns nil when the node has no incoming connection" do
+      expect(workflow.upstream_node_of("trigger-1")).to be_nil
+    end
+
+    it "returns nil when no connection targets the given node" do
+      expect(workflow.upstream_node_of("missing")).to be_nil
+    end
+  end
+
+  describe "#last_successful_execution" do
+    fab!(:workflow, :discourse_workflows_workflow)
+
+    it "returns nil when there are no executions" do
+      expect(workflow.last_successful_execution).to be_nil
+    end
+
+    it "returns nil when no execution is successful" do
+      Fabricate(:discourse_workflows_execution, workflow: workflow, status: :error)
+      Fabricate(:discourse_workflows_execution, workflow: workflow, status: :pending)
+
+      expect(workflow.last_successful_execution).to be_nil
+    end
+
+    it "returns the most recent successful execution" do
+      Fabricate(
+        :discourse_workflows_execution,
+        workflow: workflow,
+        status: :success,
+        created_at: 2.days.ago,
+      )
+      latest =
+        Fabricate(
+          :discourse_workflows_execution,
+          workflow: workflow,
+          status: :success,
+          created_at: 1.minute.ago,
+        )
+      Fabricate(:discourse_workflows_execution, workflow: workflow, status: :error)
+
+      expect(workflow.last_successful_execution).to eq(latest)
+    end
+
+    it "eager-loads execution_data" do
+      execution = Fabricate(:discourse_workflows_execution, workflow: workflow, status: :success)
+      Fabricate(:discourse_workflows_execution_data, execution: execution)
+
+      expect(workflow.last_successful_execution.association(:execution_data)).to be_loaded
+    end
+  end
 end

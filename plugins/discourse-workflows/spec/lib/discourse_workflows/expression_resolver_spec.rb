@@ -371,4 +371,51 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(result).to eq({ "id" => 42, "fixed" => "hello" })
     end
   end
+
+  describe ".resolve_segments" do
+    fab!(:user)
+
+    it "returns segments for a valid template" do
+      segments =
+        described_class.resolve_segments(
+          "id: {{ $json.topic_id }}",
+          context: {
+            "$json" => {
+              "topic_id" => 42,
+            },
+          },
+        )
+
+      expect(segments.size).to eq(2)
+      expect(segments[0]).to eq({ kind: "plaintext", text: "id: " })
+      expect(segments[1]).to include(kind: "resolved", state: "valid", text: "42")
+    end
+
+    it "passes user through to the resolver" do
+      segments =
+        described_class.resolve_segments("{{ $current_user.username }}", context: {}, user: user)
+
+      expect(segments.first[:text]).to eq(user.username)
+    end
+
+    it "disposes the resolver after a successful run" do
+      fake_resolver = instance_double(described_class, resolve_segments: [], dispose: nil)
+      allow(described_class).to receive(:new).and_return(fake_resolver)
+
+      described_class.resolve_segments("anything", context: {})
+
+      expect(fake_resolver).to have_received(:dispose)
+    end
+
+    it "returns an empty array and logs a warning on MiniRacer::Error" do
+      fake_resolver = instance_double(described_class)
+      allow(fake_resolver).to receive(:resolve_segments).and_raise(MiniRacer::Error.new("boom"))
+      allow(fake_resolver).to receive(:dispose)
+      allow(described_class).to receive(:new).and_return(fake_resolver)
+      allow(Rails.logger).to receive(:warn)
+
+      expect(described_class.resolve_segments("{{ x }}", context: {})).to eq([])
+      expect(Rails.logger).to have_received(:warn).with(/Expression evaluation failed: boom/)
+    end
+  end
 end

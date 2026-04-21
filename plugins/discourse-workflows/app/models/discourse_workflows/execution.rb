@@ -17,6 +17,7 @@ module DiscourseWorkflows
 
     scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id: workflow_id) : all }
     scope :recent, ->(period = 7.days) { where("created_at >= ?", period.ago) }
+    scope :successful, -> { where(status: :success) }
     scope :with_duration,
           -> { where.not(started_at: nil, finished_at: nil).where(status: %i[success error]) }
 

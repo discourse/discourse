@@ -95,6 +95,18 @@ module DiscourseWorkflows
       parsed_connections.select { |c| c["source_node_id"] == node_id_str }
     end
 
+    def upstream_node_of(node_id)
+      return if node_id.blank?
+      node_id_str = node_id.to_s
+      conn = parsed_connections.find { |c| c["target_node_id"] == node_id_str }
+      return unless conn
+      parsed_nodes.find { |n| n["id"] == conn["source_node_id"] }
+    end
+
+    def last_successful_execution
+      executions.successful.includes(:execution_data).order(created_at: :desc).first
+    end
+
     def node_has_reachable_downstream_of_type?(node_id, type)
       node_by_id = parsed_nodes.index_by { |n| n["id"] }
       visited = Set.new
