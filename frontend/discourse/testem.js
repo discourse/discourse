@@ -4,6 +4,8 @@ if (typeof module !== "undefined") {
   const displayUtils = require("testem/lib/utils/displayutils");
   const colors = require("@colors/colors/safe");
 
+  require("./patch-testem-output")();
+
   const SANDBOX_DISABLE_VALUES = ["1", "true"];
   const sandboxDisabled =
     process.env.CI ||
