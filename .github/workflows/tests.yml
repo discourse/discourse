@@ -82,15 +82,21 @@ jobs:
           #  target: plugins
         #include:
           # Split plugin targets for system tests only
-          #- build_type: system
-          #  target: core-plugins
-          #  browser: Chrome
-          #- build_type: system
-          #  target: official-plugins
-          #  browser: Chrome
-          #- build_type: system
-          #  target: chat
-          #  browser: Chrome
+          # - build_type: system
+          #   target: core-plugins
+          #   browser: Chrome
+          #   plugin_compiler: rollup
+          # - build_type: system
+          #   target: official-plugins
+          #   browser: Chrome
+          #   plugin_compiler: rollup
+          # - build_type: system
+          #   target: chat
+          #   browser: Chrome
+          #   plugin_compiler: rollup
+          # - build_type: frontend
+          #   target: plugins
+          #   plugin_compiler: "legacy"
           # - build_type: frontend
           #   target: core
           #   browser: Firefox Evergreen

@@ -205,6 +205,22 @@ RSpec.describe "Topic voting" do
       find(".title-voting .voting-wrapper__count").click
       expect(page).to have_css(".voting-voters__empty")
     end
+
+    it "uses the topic vote count for overflow text while only loading preview rows" do
+      stub_const(DiscourseTopicVoting, "VOTER_PREVIEW_LIMIT", 10) do
+        Fabricate
+          .times(11, :user)
+          .each { |user| DiscourseTopicVoting::Vote.create!(user: user, topic: voting_topic1) }
+        voting_topic1.update_vote_count
+
+        sign_in(admin)
+        visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+        find(".title-voting .voting-wrapper__count").click
+        expect(page).to have_css(".voting-voters__avatar", count: 10)
+        expect(page).to have_css(".voting-voters__overflow", text: "and 2 more...")
+      end
+    end
   end
 
   context "when viewing navigation tooltips" do

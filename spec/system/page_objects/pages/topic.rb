@@ -244,7 +244,6 @@ module PageObjects
 
       def click_floating_reply_button
         find(".embed-floating-reply-button").click
-        has_expanded_composer?
       end
 
       def has_floating_reply_button?
@@ -265,6 +264,19 @@ module PageObjects
 
       def has_no_floating_timeline_button?
         has_no_css?(".embed-floating-timeline-button")
+      end
+
+      def has_docked_composer?
+        has_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def has_no_docked_composer?
+        has_no_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def click_embed_reply_button
+        within_topic_footer_buttons { find(".create").click }
+        self
       end
 
       def has_expanded_composer?

@@ -2318,23 +2318,43 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     }
   }
 
-  &__loading {
+  .loading-container {
     display: flex;
     justify-content: center;
     padding: 0.75em;
   }
 }
 
-.mobile-view .post-users-popup {
-  width: 100%;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
+.mobile-view {
+  .post-liked-users-menu-content,
+  .discourse-reactions-users-menu-content {
+    .d-modal__container {
+      height: min(80dvh, 560px);
+    }
 
-  .post-users-popup__body {
-    flex: 1;
-    height: auto;
-    min-height: 0;
+    .d-modal__body {
+      flex: 1;
+      min-height: 0;
+      padding: 0;
+    }
+
+    .post-users-popup {
+      width: 100%;
+    }
+
+    .post-users-popup__sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding-top: 0.75em;
+      background: var(--secondary);
+    }
+
+    .post-users-popup__body {
+      height: auto;
+      overflow: visible;
+      overscroll-behavior: auto;
+    }
   }
 }
 

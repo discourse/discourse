@@ -11,7 +11,7 @@ module DiscourseTopicVoting
       topic = Topic.find(params[:topic_id].to_i)
       guardian.ensure_can_see!(topic)
 
-      render json: MultiJson.dump(who_voted(topic))
+      render json: MultiJson.dump(who_voted(topic, limit: who_voted_limit))
     end
 
     def vote
@@ -83,14 +83,21 @@ module DiscourseTopicVoting
       }
     end
 
-    def who_voted(topic)
+    def who_voted(topic, limit: DiscourseTopicVoting::VOTER_PREVIEW_LIMIT)
       return nil unless SiteSetting.topic_voting_show_who_voted
 
       ActiveModel::ArraySerializer.new(
-        topic.who_voted,
+        topic.who_voted(limit:),
         scope: guardian,
         each_serializer: BasicUserSerializer,
       )
+    end
+
+    def who_voted_limit
+      limit = params[:limit].presence&.to_i
+      return DiscourseTopicVoting::VOTER_PREVIEW_LIMIT if limit.blank? || limit <= 0
+
+      [limit, DiscourseTopicVoting::VOTER_PREVIEW_LIMIT].min
     end
   end
 end

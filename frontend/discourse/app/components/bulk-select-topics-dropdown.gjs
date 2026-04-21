@@ -125,6 +125,20 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
       },
       {
+        id: "convert-to-public-topic",
+        icon: "comments",
+        name: i18n("topic_bulk_actions.convert_to_public_topic.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => t.isPrivateMessage),
+      },
+      {
+        id: "convert-to-private-message",
+        icon: "envelope",
+        name: i18n("topic_bulk_actions.convert_to_private_message.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => !t.isPrivateMessage),
+      },
+      {
         id: "unlist-topics",
         icon: "far-eye-slash",
         name: i18n("topic_bulk_actions.unlist_topics.name"),
@@ -295,6 +309,15 @@ export default class BulkSelectTopicsDropdown extends Component {
             confirmButtonTranslationKey: "topics.bulk.confirm_move_to_inbox",
           }
         );
+        break;
+      case "convert-to-public-topic":
+      case "convert-to-private-message":
+        const actionName = actionId.replaceAll("-", "_");
+        this.showBulkTopicActionsModal(actionId, actionName, {
+          allowSilent: true,
+          description: i18n(`topic_bulk_actions.${actionName}.description`),
+          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+        });
         break;
       case "unlist-topics":
         this.showBulkTopicActionsModal("unlist", "unlist_topics", {

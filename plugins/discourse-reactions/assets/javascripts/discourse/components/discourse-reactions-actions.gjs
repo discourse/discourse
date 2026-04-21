@@ -467,8 +467,9 @@ export default class DiscourseReactionsActions extends Component {
     }
     // Trigger re-render for anything autotracking reactions.
     // In future, we should make reactions a deeply-trackable structure.
-    // eslint-disable-next-line no-self-assign
-    this.data.reactions = this.data.reactions;
+    // A new array reference is required because Ember's native trackedObject
+    // skips dirtying when Object.is(oldValue, newValue) is true.
+    this.data.reactions = [...this.data.reactions];
   }
 
   @action
