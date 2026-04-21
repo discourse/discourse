@@ -62,6 +62,7 @@ jobs:
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
+      LD_PRELOAD: /usr/lib/libjemalloc.so
 
     strategy:
       fail-fast: false
