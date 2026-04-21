@@ -1,0 +1,18 @@
+diff --git a/lib/utils/process.js b/lib/utils/process.js
+index 87e2c5a974566315b8b47adc550644a840eedd58..9f881074eaf092180ee70569d44224d60bbde189 100644
+--- a/lib/utils/process.js
++++ b/lib/utils/process.js
+@@ -28,7 +28,12 @@ module.exports = class Process extends EventEmitter {
+       this.stderr += chunk;
+     });
+ 
+-    this.process.on('close', this.onClose.bind(this));
++    this.process.on('close', (code, signal) => {
++      if (signal) {
++        log.warn(this.name + ' killed by signal ' + signal);
++      }
++      this.onClose(code);
++    });
+     this.process.on('exit', code => {
+       this.exitAt = Date.now();
+       this.exitCode = code;

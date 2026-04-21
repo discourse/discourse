@@ -243,6 +243,7 @@ module.exports = {
       "--js-flags=--max_old_space_size=4096",
       "--enable-logging=stderr",
       "--v=1",
+      "--no-zygote",
       ...(process.env.CI
         ? [
             "--no-first-run",
@@ -269,6 +270,7 @@ module.exports = {
       "--js-flags=--max_old_space_size=4096",
       "--enable-logging=stderr",
       "--v=1",
+      "--no-zygote",
       ...(process.env.CI
         ? [
             "--no-first-run",
