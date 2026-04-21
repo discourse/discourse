@@ -50,6 +50,12 @@ document.addEventListener("discourse-init", async () => {
   setupTests(config.APP);
   let loader = loadEmberExam();
 
+  if (window.Testem && target && target !== "core") {
+    window.Testem.on("test-result", (t) => {
+      t.name = `Target: ${target} - ${t.name}`;
+    });
+  }
+
   if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam
     // handle randomization.
