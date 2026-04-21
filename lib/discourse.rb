@@ -653,9 +653,9 @@ module Discourse
     result = +"#{current_hostname}"
     if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
       result << ":#{SiteSetting.port}"
-    elsif Rails.env.local? && SiteSetting.port.blank?
-      result << ":#{ENV["DISCOURSE_PORT"] || ENV["UNICORN_PORT"] || 3000}"
     end
+
+    result << ":#{ENV["UNICORN_PORT"] || 3000}" if Rails.env.development? && SiteSetting.port.blank?
 
     result
   end

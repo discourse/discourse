@@ -281,7 +281,7 @@ class Stylesheet::Manager
 
   def stylesheet_details(target = :desktop, media = "all")
     target = target.to_sym
-    current_hostname = Discourse.current_hostname_with_port
+    current_hostname = Discourse.current_hostname
     relative_url_root = GlobalSetting.relative_url_root
     is_theme_target = !!(target.to_s =~ THEME_REGEX)
 
