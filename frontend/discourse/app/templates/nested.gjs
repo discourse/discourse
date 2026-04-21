@@ -1,5 +1,5 @@
-import NestedContextView from "discourse/components/nested-context-view";
-import NestedView from "discourse/components/nested-view";
+import Nested from "discourse/components/nested";
+import NestedContextView from "discourse/components/nested/context-view";
 import PostTextSelection from "discourse/components/post-text-selection";
 
 export default <template>
@@ -44,7 +44,7 @@ export default <template>
       @scrollAnchor={{@controller.scrollAnchor}}
     />
   {{else}}
-    <NestedView
+    <Nested
       @topic={{@controller.topic}}
       @opPost={{@controller.opPost}}
       @rootNodes={{@controller.rootNodes}}

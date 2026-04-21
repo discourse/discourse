@@ -26,8 +26,8 @@ import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import nestedPostUrl from "../lib/nested-post-url";
-import NestedPostChildren from "./nested-post-children";
+import nestedPostUrl from "../../lib/nested-post-url";
+import NestedPostChildren from "./post-children";
 
 export default class NestedPost extends Component {
   @service appEvents;

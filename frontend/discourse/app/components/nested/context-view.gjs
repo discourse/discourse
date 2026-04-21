@@ -10,11 +10,11 @@ import getURL from "discourse/lib/get-url";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import NestedFloatingActions from "./nested-floating-actions";
-import NestedOp from "./nested-op";
-import NestedPost from "./nested-post";
-import NestedSortSelector from "./nested-sort-selector";
-import NestedViewHeader from "./nested-view-header";
+import NestedFloatingActions from "./floating-actions";
+import NestedHeader from "./header";
+import NestedOp from "./op";
+import NestedPost from "./post";
+import NestedSortSelector from "./sort-selector";
 
 export default class NestedContextView extends Component {
   @service currentUser;
@@ -100,7 +100,7 @@ export default class NestedContextView extends Component {
         topicId=@topic.id
       }}
     >
-      <NestedViewHeader
+      <NestedHeader
         @topic={{@topic}}
         @editingTopic={{@editingTopic}}
         @buffered={{@buffered}}
