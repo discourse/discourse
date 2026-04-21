@@ -207,7 +207,7 @@ function setupPostVoting(needs) {
   });
 }
 
-acceptance(`Discourse Post Voting - anon user`, function (needs) {
+acceptance("anon user", function (needs) {
   setupPostVoting(needs);
 
   test("Viewing comments", async function (assert) {
@@ -262,7 +262,7 @@ acceptance(`Discourse Post Voting - anon user`, function (needs) {
   });
 });
 
-acceptance(`Discourse Post Voting - logged in user`, function (needs) {
+acceptance("logged in user", function (needs) {
   setupPostVoting(needs);
   needs.user();
 

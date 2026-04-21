@@ -2,7 +2,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
+acceptance("Unit | Service | chat", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(function () {

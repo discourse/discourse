@@ -41,7 +41,7 @@ function setupUploadPretender() {
   );
 }
 
-module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
+module("Component | chat-composer-uploads", function (hooks) {
   setupRenderingTest(hooks);
 
   test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {

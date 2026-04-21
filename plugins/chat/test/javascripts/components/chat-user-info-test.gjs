@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 
-module("Discourse Chat | Component | chat-user-info", function (hooks) {
+module("Component | chat-user-info", function (hooks) {
   setupRenderingTest(hooks);
 
   test("avatar and name", async function (assert) {

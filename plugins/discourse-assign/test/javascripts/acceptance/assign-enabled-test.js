@@ -12,7 +12,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance(`Discourse Assign | Assign mobile`, function (needs) {
+acceptance("Assign mobile", function (needs) {
   needs.user();
   needs.mobileView();
   needs.settings({
@@ -47,7 +47,7 @@ acceptance(`Discourse Assign | Assign mobile`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Assign desktop`, function (needs) {
+acceptance("Assign desktop", function (needs) {
   needs.user({ can_assign: true });
   needs.settings({
     assign_enabled: true,
@@ -120,7 +120,7 @@ acceptance(`Discourse Assign | Assign desktop`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Assign Status enabled`, function (needs) {
+acceptance("Assign Status enabled", function (needs) {
   needs.user({
     can_assign: true,
   });
@@ -182,7 +182,7 @@ acceptance(`Discourse Assign | Assign Status enabled`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Assign Status disabled`, function (needs) {
+acceptance("Assign Status disabled", function (needs) {
   needs.user({
     can_assign: true,
   });
@@ -244,7 +244,7 @@ const remindersFrequency = [
   },
 ];
 
-acceptance("Discourse Assign | User preferences", function (needs) {
+acceptance("User preferences", function (needs) {
   needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
   needs.settings({
     assign_enabled: true,
@@ -289,7 +289,7 @@ acceptance("Discourse Assign | User preferences", function (needs) {
 });
 
 acceptance(
-  "Discourse Assign | User preferences | Pre-selected reminder frequency",
+  "User preferences | Pre-selected reminder frequency",
   function (needs) {
     needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
     needs.settings({
