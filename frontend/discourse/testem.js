@@ -240,7 +240,9 @@ module.exports = {
       process.env.CI ? null : "--remote-debugging-port=4201",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096 --stack-size=2048",
+      "--js-flags=--max_old_space_size=4096",
+      "--enable-logging=stderr",
+      "--v=1",
       ...(process.env.CI
         ? [
             "--no-first-run",
@@ -264,7 +266,9 @@ module.exports = {
       process.env.CI ? null : "--remote-debugging-port=4201",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096 --stack-size=2048",
+      "--js-flags=--max_old_space_size=4096",
+      "--enable-logging=stderr",
+      "--v=1",
       ...(process.env.CI
         ? [
             "--no-first-run",
