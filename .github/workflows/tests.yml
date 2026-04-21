@@ -96,26 +96,17 @@ jobs:
           #   browser: Firefox ESR
 
     steps:
-      - name: Debug jemalloc preload
-        env:
-          LD_PRELOAD: ""
+      - name: Debug jemalloc preload (job-level LD_PRELOAD active)
         run: |
-          echo "--- whoami / id ---"
-          id
-          echo "--- /usr/lib/libjemalloc* ---"
-          ls -la /usr/lib/libjemalloc* || true
-          echo "--- readlink ---"
-          readlink -f /usr/lib/libjemalloc.so || true
-          readlink -f /usr/lib/libjemalloc.so.1 || true
-          echo "--- stat symlink vs target ---"
-          stat /usr/lib/libjemalloc.so || true
-          stat /usr/lib/libjemalloc.so.1 || true
-          echo "--- try preload (symlink) ---"
-          LD_PRELOAD=/usr/lib/libjemalloc.so /bin/true && echo "OK (symlink)" || echo "FAILED (symlink)"
-          echo "--- try preload (versioned) ---"
-          LD_PRELOAD=/usr/lib/libjemalloc.so.1 /bin/true && echo "OK (versioned)" || echo "FAILED (versioned)"
-          echo "--- ruby allocator check ---"
-          LD_PRELOAD=/usr/lib/libjemalloc.so.1 ruby -e 'require "fiddle"; puts Fiddle::Handle.new.sym("mallctl") ? "jemalloc loaded" : "NOT loaded"' 2>&1 || true
+          echo "--- env ---"
+          echo "LD_PRELOAD=$LD_PRELOAD"
+          echo "--- bash /proc/self/maps ---"
+          grep -i jemalloc /proc/self/maps && echo "BASH: jemalloc mapped" || echo "BASH: jemalloc NOT mapped"
+          echo "--- child sh /proc/self/maps ---"
+          sh -c 'grep -i jemalloc /proc/self/maps && echo "SH: jemalloc mapped" || echo "SH: jemalloc NOT mapped"'
+          echo "--- ruby /proc/self/maps ---"
+          ruby -e 'puts File.read("/proc/self/maps").lines.grep(/jemalloc/i)'
+          ruby -e 'puts File.read("/proc/self/maps").lines.grep(/jemalloc/i).any? ? "RUBY: jemalloc mapped" : "RUBY: jemalloc NOT mapped"'
 
       - name: Set working directory owner
         run: chown root:root .
