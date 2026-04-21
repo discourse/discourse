@@ -173,6 +173,13 @@ module DiscourseDataExplorer
 
     def generate_with_ai
       raise Discourse::NotFound unless AiQueryEnqueuer.enabled?
+      RateLimiter.new(
+        current_user,
+        "data-explorer-ai-generate",
+        10,
+        1.minute,
+        apply_limit_to_staff: true,
+      ).performed!
 
       ai_description = params.require(:ai_description).strip
       if ai_description.length > 2000

@@ -1062,6 +1062,20 @@ describe DiscourseDataExplorer::QueryController do
 
         expect(response.status).to eq(200)
       end
+
+      it "rate limits requests" do
+        RateLimiter.enable
+
+        11.times do
+          post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+               params: {
+                 ai_description: "show me users",
+                 generation_id: SecureRandom.uuid,
+               }
+        end
+
+        expect(response.status).to eq(429)
+      end
     end
   end
 end
