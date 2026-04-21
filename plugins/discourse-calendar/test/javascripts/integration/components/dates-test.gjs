@@ -1,5 +1,5 @@
 import { render } from "@ember/test-helpers";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import Dates from "../../discourse/components/discourse-post-event/dates";
@@ -40,7 +40,9 @@ module("Integration | Component | Dates", function (hooks) {
       },
       endsSameDay: {
         ...starts,
-        endsAt: "2025-10-06T01:00:00Z",
+        startsAt: "2025-10-05T14:00:00Z",
+        endsAt: "2025-10-05T15:00:00Z",
+        timezone: "Australia/Brisbane",
       },
       endsSameWeek: {
         ...starts,
@@ -181,13 +183,12 @@ module("Integration | Component | Dates", function (hooks) {
       assert
         .dom(".event-dates")
         .hasText(
-          "Today 6:00 PM → 7:00 PM (Brisbane)",
+          "Today 6:00 PM → 7:00 PM",
           "`endsAt` should show from today time to time only"
         );
     });
 
-    // this test goest against the current implementation in local-dates
-    skip("formats same day range", async function (assert) {
+    test("formats same day range", async function (assert) {
       await render(
         <template><Dates @event={{events.currentYear.endsSameDay}} /></template>
       );

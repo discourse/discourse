@@ -1,5 +1,5 @@
 import { visit } from "@ember/test-helpers";
-import { skip } from "qunit";
+import { test } from "qunit";
 import { acceptance, fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import eventTopicFixture from "../helpers/event-topic-fixture";
 import getEventByText from "../helpers/get-event-by-text";
@@ -23,7 +23,7 @@ acceptance("Topic Calendar Events", function (needs) {
     });
   });
 
-  skip("renders calendar events with fullDay='false'", async (assert) => {
+  test("renders calendar events with fullDay='true'", async function (assert) {
     await visit("/t/-/252");
 
     assert.dom(getEventByText("Event 1")).exists();
