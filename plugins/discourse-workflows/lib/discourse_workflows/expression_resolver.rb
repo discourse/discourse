@@ -79,36 +79,22 @@ module DiscourseWorkflows
 
     def resolve_segments(template)
       segments = []
-      pos = 0
 
-      while pos < template.length
-        open = template.index("{{", pos)
-
-        if open.nil?
-          segments << { kind: "plaintext", text: template[pos..] } if pos < template.length
-          break
+      scan_template(template) do |kind, content, from, to|
+        if kind == :plaintext
+          segments << { kind: "plaintext", text: content }
+          next
         end
 
-        segments << { kind: "plaintext", text: template[pos...open] } if open > pos
+        segment = { kind: "resolved", from:, to: }
 
-        close = self.class.find_matching_close(template, open + 2)
-
-        unless close
-          segments << { kind: "plaintext", text: template[open..] }
-          break
-        end
-
-        expression = template[(open + 2)...close].strip
-        segment = { kind: "resolved", from: open, to: close + 2 }
-
-        if expression.empty?
+        if content.empty?
           segment.merge!(text: "", state: "empty")
         else
-          segment.merge!(classify_eval_result(evaluate_expression(expression)))
+          segment.merge!(classify_eval_result(evaluate_expression(content)))
         end
 
         segments << segment
-        pos = close + 2
       end
 
       segments
@@ -156,35 +142,41 @@ module DiscourseWorkflows
 
     def render_template(template)
       result = +""
-      pos = 0
 
-      while pos < template.length
-        open = template.index("{{", pos)
-
-        if open.nil?
-          result << template[pos..]
-          break
-        end
-
-        result << template[pos...open] if open > pos
-
-        close = find_matching_close(template, open + 2)
-
-        if close
-          expression = template[(open + 2)...close].strip
-          result << format_value(js_evaluator.evaluate(expression))
-          pos = close + 2
+      scan_template(template) do |kind, content, _from, _to|
+        if kind == :expression
+          result << format_value(js_evaluator.evaluate(content))
         else
-          result << template[open..]
-          break
+          result << content
         end
       end
 
       result
     end
 
-    def find_matching_close(template, start)
-      self.class.find_matching_close(template, start)
+    def scan_template(template)
+      pos = 0
+
+      while pos < template.length
+        open = template.index("{{", pos)
+
+        if open.nil?
+          yield :plaintext, template[pos..], pos, template.length if pos < template.length
+          break
+        end
+
+        yield :plaintext, template[pos...open], pos, open if open > pos
+
+        close = self.class.find_matching_close(template, open + 2)
+
+        unless close
+          yield :plaintext, template[open..], open, template.length
+          break
+        end
+
+        yield :expression, template[(open + 2)...close].strip, open, close + 2
+        pos = close + 2
+      end
     end
 
     def js_evaluator
