@@ -108,7 +108,8 @@
 
     @include viewport.from(sm) {
       overscroll-behavior: contain;
-      height: 320px;
+      height: auto;
+      max-height: 320px;
     }
   }
 
