@@ -16,7 +16,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::Operations do
   let(:columns_resolver) { DiscourseWorkflows::Nodes::DataTable::ColumnsResolver.new(data_table) }
 
   def build_operation(name)
-    described_class.for(name).new(facade, columns_resolver, data_table)
+    described_class.for(name).new(facade, columns_resolver)
   end
 
   describe ".for" do
@@ -60,9 +60,10 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::Operations do
     end
 
     it "raises when sort_column references an unknown column" do
-      expect {
-        build_operation("get").execute("sort_column" => "bogus")
-      }.to raise_error(ArgumentError, /Unknown column name/)
+      expect { build_operation("get").execute("sort_column" => "bogus") }.to raise_error(
+        ArgumentError,
+        /Unknown column name/,
+      )
     end
   end
 
@@ -72,7 +73,9 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::Operations do
     it "updates matching rows and returns count" do
       items =
         build_operation("update").execute(
-          "filter" => [{ "columnName" => "email", "condition" => "equals", "value" => "up@test.com" }],
+          "filter" => [
+            { "columnName" => "email", "condition" => "equals", "value" => "up@test.com" },
+          ],
           "columns" => {
             "score" => "99",
           },

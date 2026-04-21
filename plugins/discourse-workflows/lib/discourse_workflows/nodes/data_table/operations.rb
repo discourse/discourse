@@ -31,10 +31,9 @@ module DiscourseWorkflows
             },
           }.freeze
 
-          def initialize(facade, columns_resolver, data_table)
+          def initialize(facade, columns_resolver)
             @facade = facade
             @columns_resolver = columns_resolver
-            @column_names = data_table.columns.map { |c| c["name"] }.to_set
           end
 
           private
@@ -86,11 +85,7 @@ module DiscourseWorkflows
 
           def resolve_sort_column_name(column_name)
             return if column_name.blank?
-
-            if @column_names.exclude?(column_name)
-              raise ArgumentError, "Unknown column name '#{column_name}'"
-            end
-
+            @columns_resolver.validate_column!(column_name)
             column_name
           end
         end

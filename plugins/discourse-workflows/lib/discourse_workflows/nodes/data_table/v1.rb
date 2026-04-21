@@ -168,8 +168,7 @@ module DiscourseWorkflows
           operation_name = config.fetch("operation") { "insert" }
           validate_storage_limit! unless operation_name == "get"
 
-          result =
-            Operations.for(operation_name).new(facade, columns_resolver, data_table).execute(config)
+          result = Operations.for(operation_name).new(facade, columns_resolver).execute(config)
           result
         end
 
