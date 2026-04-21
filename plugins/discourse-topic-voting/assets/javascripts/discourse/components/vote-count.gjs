@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
-import { eq, gt } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import VoteCountTrigger from "./vote-count-trigger";
 
@@ -20,8 +20,6 @@ export default class VoteCount extends Component {
   @tracked lastVoteCount = null;
   @tracked totalVoters = 0;
   @tracked isLoading = false;
-
-  maxDisplayedVoters = 104;
 
   get showVoterMenu() {
     return this.siteSettings.topic_voting_show_who_voted && this.currentUser;
@@ -37,7 +35,11 @@ export default class VoteCount extends Component {
   }
 
   get remainingVoters() {
-    return this.totalVoters - this.maxDisplayedVoters;
+    return Math.max(this.totalVoters - (this.voters?.length || 0), 0);
+  }
+
+  get hasOverflowVoters() {
+    return this.remainingVoters > 0;
   }
 
   @bind
@@ -63,8 +65,8 @@ export default class VoteCount extends Component {
         data: { topic_id: this.args.topic.id },
       });
 
-      this.totalVoters = users.length;
-      this.voters = users.slice(0, this.maxDisplayedVoters).map((user) => ({
+      this.totalVoters = this.args.topic.vote_count;
+      this.voters = users.map((user) => ({
         template: user.avatar_template,
         username: user.username,
         url: getURL("/u/") + user.username.toLowerCase(),
@@ -112,7 +114,7 @@ export default class VoteCount extends Component {
                   {{avatar voter.template "small"}}
                 </a>
               {{/each}}
-              {{#if (gt this.totalVoters this.maxDisplayedVoters)}}
+              {{#if this.hasOverflowVoters}}
                 <div class="voting-voters__overflow">
                   {{i18n
                     "topic_voting.and_more_voters"
