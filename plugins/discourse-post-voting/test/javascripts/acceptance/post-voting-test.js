@@ -228,10 +228,10 @@ acceptance(`Discourse Post Voting - anon user`, function (needs) {
       );
 
     assert
-      .dom("#post_2 .post-voting-comment-action")
-      .doesNotExist("does not display comment action to anon users");
+      .dom("#post_2 .post-voting-comment__actions")
+      .doesNotExist("does not display comment actions to anon users");
 
-    await click(".post-voting-comments-menu-show-more-link");
+    await click(".post-voting-comments-menu__show-more-link");
 
     assert
       .dom("#post_2 .post-voting-comment")
@@ -242,21 +242,21 @@ acceptance(`Discourse Post Voting - anon user`, function (needs) {
 
     assert
       .dom(
-        "#post_2 .post-voting-comments #post-voting-comment-6 .post-voting-comment-info-username"
+        "#post_2 .post-voting-comments #post-voting-comment-6 .post-voting-comment__info-username"
       )
       .hasText(i18n("post_voting.post.post_voting_comment.user.deleted"));
   });
 
   test("adding a comment", async function (assert) {
     await visit("/t/280");
-    await click(".post-voting-comment-add-link");
+    await click(".post-voting-comments-menu__add-link");
 
     assert.dom("#login-form").exists("displays the login screen");
   });
 
   test("voting a comment", async function (assert) {
     await visit("/t/280");
-    await click("#post_2 #post-voting-comment-2 .post-voting-button-upvote");
+    await click("#post_2 #post-voting-comment-2 .post-voting-button.--upvote");
 
     assert.dom("#login-form").exists("displays the login screen");
   });
@@ -302,6 +302,10 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       .doesNotHaveClass(
         "post-voting-topic",
         "does not append Post Voting specific class on body tag"
+      )
+      .doesNotHaveClass(
+        "--sort-by-activity",
+        "does not append sort-by-activity modifier on body tag"
       );
   });
 
@@ -320,7 +324,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
 
     assert
-      .dom(".post-voting-answers-headers-sort-votes")
+      .dom(".post-voting-answers-header__sort-votes")
       .isDisabled("sort by votes button is disabled by default");
 
     assert
@@ -330,7 +334,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "appends the right class to body when loading Post Voting topic"
       );
 
-    await click(".post-voting-answers-headers-sort-activity");
+    await click(".post-voting-answers-header__sort-activity");
 
     assert.true(
       filteredByActivity,
@@ -340,25 +344,29 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     assert
       .dom(document.body)
       .hasClass(
-        "post-voting-topic-sort-by-activity",
-        "appends the right class to body when topic is filtered by activity"
+        "--sort-by-activity",
+        "appends the sort-by-activity modifier on body when topic is filtered by activity"
       );
 
     assert
-      .dom(".post-voting-answers-headers-sort-activity")
+      .dom(".post-voting-answers-header__sort-activity")
       .isDisabled("disabled sort by activity button");
 
-    await click(".post-voting-answers-headers-sort-votes");
+    await click(".post-voting-answers-header__sort-votes");
 
     assert
-      .dom(".post-voting-answers-headers-sort-votes")
+      .dom(".post-voting-answers-header__sort-votes")
       .isDisabled("disables sort by votes button");
 
     assert
       .dom(document.body)
       .hasClass(
         "post-voting-topic",
-        "appends the right class to body when topic is filtered by votes"
+        "keeps the topic class on body when filtered by votes"
+      )
+      .doesNotHaveClass(
+        "--sort-by-activity",
+        "removes the sort-by-activity modifier from body"
       );
 
     assert.false(
@@ -393,11 +401,11 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
   test("validations for comment length", async function (assert) {
     await visit("/t/280");
-    await click("#post_1 .post-voting-comment-add-link");
+    await click("#post_1 .post-voting-comments-menu__add-link");
 
-    await fillIn(".post-voting-comment-composer-textarea", "a".repeat(4));
+    await fillIn(".post-voting-comment-composer__textarea", "a".repeat(4));
 
-    assert.dom(".post-voting-comment-composer-flash").hasText(
+    assert.dom(".post-voting-comment-composer__flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_short", {
         count: 5,
       }),
@@ -405,12 +413,12 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     );
 
     assert
-      .dom(".post-voting-comments-menu-composer-submit")
+      .dom(".post-voting-comments-menu-composer__submit")
       .isDisabled("submit comment button is disabled");
 
-    await fillIn(".post-voting-comment-composer-textarea", "a".repeat(6));
+    await fillIn(".post-voting-comment-composer__textarea", "a".repeat(6));
 
-    assert.dom(".post-voting-comment-composer-flash").hasText(
+    assert.dom(".post-voting-comment-composer__flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.length_ok", {
         count: 44,
       }),
@@ -418,12 +426,12 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     );
 
     assert
-      .dom(".post-voting-comments-menu-composer-submit")
+      .dom(".post-voting-comments-menu-composer__submit")
       .isEnabled("submit comment button is enabled");
 
-    await fillIn(".post-voting-comment-composer-textarea", "a".repeat(51));
+    await fillIn(".post-voting-comment-composer__textarea", "a".repeat(51));
 
-    assert.dom(".post-voting-comment-composer-flash").hasText(
+    assert.dom(".post-voting-comment-composer__flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_long", {
         count: 50,
       }),
@@ -431,7 +439,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     );
 
     assert
-      .dom(".post-voting-comments-menu-composer-submit")
+      .dom(".post-voting-comments-menu-composer__submit")
       .isDisabled("submit comment button is disabled");
   });
 
@@ -445,17 +453,17 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "displays the right number of comments for the first post"
       );
 
-    await click("#post_1 .post-voting-comment-add-link");
+    await click("#post_1 .post-voting-comments-menu__add-link");
 
     assert
       .dom("#post_1 .post-voting-comment")
       .exists({ count: 2 }, "loads all comments when composer is expanded");
 
     await fillIn(
-      ".post-voting-comment-composer-textarea",
+      ".post-voting-comment-composer__textarea",
       "this is some comment"
     );
-    await click(".post-voting-comments-menu-composer-submit");
+    await click(".post-voting-comments-menu-composer__submit");
 
     assert
       .dom("#post_1 .post-voting-comment")
@@ -464,19 +472,19 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
   test("adding a comment with keyboard shortcut", async function (assert) {
     await visit("/t/280");
-    await click("#post_1 .post-voting-comment-add-link");
+    await click("#post_1 .post-voting-comments-menu__add-link");
 
     assert
       .dom("#post_1 .post-voting-comment")
       .exists({ count: 2 }, "loads all comments when composer is expanded");
 
     await fillIn(
-      ".post-voting-comment-composer-textarea",
+      ".post-voting-comment-composer__textarea",
       "this is a new test comment"
     );
 
     await triggerEvent(
-      ".post-voting-comments-menu-composer-submit",
+      ".post-voting-comments-menu-composer__submit",
       "keydown",
       {
         key: "Enter",
@@ -495,7 +503,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
 
     assert
-      .dom("#post_2 .post-voting-comment-actions")
+      .dom("#post_2 .post-voting-comment__actions")
       .doesNotExist("does not display edit link on other people's comments");
   });
 
@@ -505,7 +513,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
 
     assert
-      .dom("#post_2 .post-voting-comment-actions")
+      .dom("#post_2 .post-voting-comment__actions")
       .exists({ count: 5 }, "displays edit link on other people's comments");
   });
 
@@ -515,7 +523,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
 
     assert
-      .dom("#post_2 .post-voting-comment-actions")
+      .dom("#post_2 .post-voting-comment__actions")
       .exists({ count: 5 }, "displays edit link on other people's comments");
   });
 
@@ -525,17 +533,17 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
 
     assert
-      .dom("#post_1 .post-voting-comment-cooked")
+      .dom("#post_1 .post-voting-comment__cooked")
       .hasText(
         "Test comment 1",
         "displays the right content for the given comment"
       );
 
-    await click("#post_1 .post-voting-comment-actions-edit-link");
+    await click("#post_1 .post-voting-comment__actions-edit-link");
 
-    await fillIn(".post-voting-comment-composer-textarea", "a".repeat(4));
+    await fillIn(".post-voting-comment-composer__textarea", "a".repeat(4));
 
-    assert.dom(".post-voting-comment-composer-flash").hasText(
+    assert.dom(".post-voting-comment-composer__flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_short", {
         count: 5,
       }),
@@ -543,15 +551,15 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     );
 
     assert
-      .dom(".post-voting-comment-editor-submit")
+      .dom(".post-voting-comment__editor-submit")
       .isDisabled("submit comment button is disabled");
 
     await fillIn(
-      "#post_1 .post-voting-comment-editor-1 textarea",
+      "#post_1 .post-voting-comment__editor-1 textarea",
       "editing this"
     );
 
-    assert.dom(".post-voting-comment-composer-flash").hasText(
+    assert.dom(".post-voting-comment-composer__flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.length_ok", {
         count: 38,
       }),
@@ -559,22 +567,22 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     );
 
     assert
-      .dom(".post-voting-comment-editor-submit")
+      .dom(".post-voting-comment__editor-submit")
       .isEnabled("submit comment button is enabled");
 
     await click(
-      "#post_1 .post-voting-comment-editor-1 .post-voting-comment-editor-submit"
+      "#post_1 .post-voting-comment__editor-1 .post-voting-comment__editor-submit"
     );
 
     assert
-      .dom("#post_1 .post-voting-comment-cooked")
+      .dom("#post_1 .post-voting-comment__cooked")
       .hasText(
         "editing this",
         "displays the right content after comment has been edited"
       );
 
     assert
-      .dom("#post_1 .post-voting-comment-editor-1")
+      .dom("#post_1 .post-voting-comment__editor-1")
       .doesNotExist("hides editor after comment has been edited");
   });
 
@@ -590,15 +598,12 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "displays the right number of comments for the first post"
       );
 
-    await click("#post_1 .post-voting-comment-actions-delete-link");
+    await click("#post_1 .post-voting-comment__actions-delete-link");
     await click("button.btn-danger");
 
     assert
       .dom("#post_1 #post-voting-comment-1")
-      .hasClass(
-        "post-voting-comment-deleted",
-        "adds the right class to deleted comment"
-      );
+      .hasClass("--deleted", "adds the right modifier to deleted comment");
   });
 
   test("deleting a comment after more comments have been loaded", async function (assert) {
@@ -613,31 +618,28 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "displays the right number of comments for the second post"
       );
 
-    await click("#post_2 .post-voting-comments-menu-show-more-link");
+    await click("#post_2 .post-voting-comments-menu__show-more-link");
 
     assert
       .dom("#post_2 .post-voting-comment")
       .exists({ count: 6 }, "appends the loaded comments");
 
     const comments = document.querySelectorAll(
-      "#post_2 .post-voting-comment-actions-delete-link"
+      "#post_2 .post-voting-comment__actions-delete-link"
     );
 
     await click(comments[comments.length - 1]);
     await click("button.btn-danger");
 
     assert
-      .dom("#post_2 .post-voting-comments-menu-show-more-link")
+      .dom("#post_2 .post-voting-comments-menu__show-more-link")
       .doesNotExist(
         "updates the comment count such that show more link is not displayed"
       );
 
     assert
       .dom("#post_2 #post-voting-comment-7")
-      .hasClass(
-        "post-voting-comment-deleted",
-        "adds the right class to deleted comment"
-      );
+      .hasClass("--deleted", "adds the right modifier to deleted comment");
   });
 
   test("vote count display", async function (assert) {
@@ -645,13 +647,13 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
     assert
       .dom(
-        "#post_2 #post-voting-comment-2 .post-voting-comment-actions-vote-count"
+        "#post_2 #post-voting-comment-2 .post-voting-comment__actions-vote-count"
       )
       .doesNotExist("does not display element if vote count is zero");
 
     assert
       .dom(
-        "#post_2 #post-voting-comment-3 .post-voting-comment-actions-vote-count"
+        "#post_2 #post-voting-comment-3 .post-voting-comment__actions-vote-count"
       )
       .hasText("3", "displays the right vote count");
   });
@@ -659,19 +661,19 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
   test("voting on a comment and removing vote", async function (assert) {
     await visit("/t/280");
 
-    await click("#post_2 #post-voting-comment-2 .post-voting-button-upvote");
+    await click("#post_2 #post-voting-comment-2 .post-voting-button.--upvote");
 
     assert
       .dom(
-        "#post_2 #post-voting-comment-2 .post-voting-comment-actions-vote-count"
+        "#post_2 #post-voting-comment-2 .post-voting-comment__actions-vote-count"
       )
       .hasText("1", "updates the comment vote count correctly");
 
-    await click("#post_2 #post-voting-comment-2 .post-voting-button-upvote");
+    await click("#post_2 #post-voting-comment-2 .post-voting-button.--upvote");
 
     assert
       .dom(
-        "#post_2 #post-voting-comment-2 .post-voting-comment-actions-vote-count"
+        "#post_2 #post-voting-comment-2 .post-voting-comment__actions-vote-count"
       )
       .doesNotExist("updates the comment vote count correctly");
   });
@@ -707,15 +709,12 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_2 span.post-voting-post-toggle-voters")
+      .dom("#post_2 span.post-voting-post__toggle-voters")
       .hasText("0", "displays the right count");
 
     assert
-      .dom("#post_2 .post-voting-button-upvote")
-      .doesNotHaveClass(
-        "post-voting-button-voted",
-        "does not highlight the upvote button"
-      );
+      .dom("#post_2 .post-voting-button.--upvote")
+      .doesNotHaveClass("--voted", "does not highlight the upvote button");
   });
 
   test("receiving user post voted message where post no longer has votes", async function (assert) {
@@ -733,7 +732,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_2 span.post-voting-post-toggle-voters")
+      .dom("#post_2 span.post-voting-post__toggle-voters")
       .hasText("0", "does not render a button to show post voters");
   });
 
@@ -752,7 +751,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_2 .post-voting-post-toggle-voters")
+      .dom("#post_2 .post-voting-post__toggle-voters")
       .hasText("0", "displays 0 when upvotes and downvotes cancel out");
   });
 
@@ -771,20 +770,17 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_2 .post-voting-post-toggle-voters")
+      .dom("#post_2 .post-voting-post__toggle-voters")
       .hasText("5", "displays the right post vote count");
 
     assert
-      .dom("#post_2 .post-voting-button-upvote")
-      .hasClass(
-        "post-voting-button-voted",
-        "highlights the upvote button for the current user"
-      );
+      .dom("#post_2 .post-voting-button.--upvote")
+      .hasClass("--voted", "highlights the upvote button for the current user");
 
     assert
-      .dom("#post_2 .post-voting-button-downvote")
+      .dom("#post_2 .post-voting-button.--downvote")
       .doesNotHaveClass(
-        "post-voting-button-voted",
+        "--voted",
         "does not highlight the downvote button for the current user"
       );
   });
@@ -804,15 +800,12 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_2 .post-voting-post-toggle-voters")
+      .dom("#post_2 .post-voting-post__toggle-voters")
       .hasText("5", "displays the right post vote count");
 
     assert
-      .dom("#post_2 .post-voting-button-upvote")
-      .hasClass(
-        "post-voting-button-voted",
-        "highlights the upvote button for the current user"
-      );
+      .dom("#post_2 .post-voting-button.--upvote")
+      .hasClass("--voted", "highlights the upvote button for the current user");
   });
 
   test("receiving post commented message when comment has already been loaded", async function (assert) {
@@ -910,7 +903,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       );
 
     assert
-      .dom("#post_2 .post-voting-comments-menu-show-more-link")
+      .dom("#post_2 .post-voting-comments-menu__show-more-link")
       .exists("updates the comments count to reflect the new comment");
   });
 
@@ -927,7 +920,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_2 .post-voting-comments-menu-show-more-link")
+      .dom("#post_2 .post-voting-comments-menu__show-more-link")
       .doesNotExist("removes the show more comments link");
   });
 
@@ -945,10 +938,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
     assert
       .dom("#post_2 #post-voting-comment-2")
-      .hasClass(
-        "post-voting-comment-deleted",
-        "adds the right class to the comment"
-      );
+      .hasClass("--deleted", "adds the right modifier to the comment");
   });
 
   test("receiving post comment edited message for a comment that has been loaded", async function (assert) {
@@ -965,14 +955,14 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_1 #post-voting-comment-1 .post-voting-comment-cooked")
+      .dom("#post_1 #post-voting-comment-1 .post-voting-comment__cooked")
       .hasText(
         "this is a new comment cooked",
         "updates the content of the comment"
       );
 
     await click(
-      "#post_1 #post-voting-comment-1 .post-voting-comment-actions-edit-link"
+      "#post_1 #post-voting-comment-1 .post-voting-comment__actions-edit-link"
     );
 
     assert

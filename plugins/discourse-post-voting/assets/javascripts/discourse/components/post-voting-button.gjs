@@ -6,13 +6,10 @@ import concatClass from "discourse/helpers/concat-class";
 
 export default class PostVotingButton extends Component {
   get buttonClasses() {
-    let classes =
-      this.args.direction === "up"
-        ? "post-voting-button-upvote"
-        : "post-voting-button-downvote";
+    let classes = this.args.direction === "up" ? "--upvote" : "--downvote";
 
     if (this.args.voted) {
-      classes += " post-voting-button-voted";
+      classes += " --voted";
     }
 
     return classes;
@@ -44,7 +41,10 @@ export default class PostVotingButton extends Component {
       {{on "click" this.onClick}}
       @disabled={{this.disabled}}
       @icon={{this.iconName}}
-      class={{concatClass "btn-flat post-voting-button" this.buttonClasses}}
+      class={{concatClass
+        "btn-transparent post-voting-button"
+        this.buttonClasses
+      }}
     />
   </template>
 }

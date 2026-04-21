@@ -1,5 +1,6 @@
-.post-voting-topic,
-.post-voting-topic-sort-by-activity {
+@use "lib/viewport";
+
+.post-voting-topic {
   .time-gap,
   .topic-post-visited-line,
   .timeline-date-wrapper,
@@ -19,6 +20,28 @@
   .posts-filtered-notice:empty {
     display: none;
   }
+
+  @include viewport.until(sm) {
+    .post-voting-answers-header {
+      width: unset;
+      padding: 0;
+      padding-bottom: 1em;
+      border-top: none;
+      border-bottom: 1px solid var(--primary-low);
+      margin-bottom: 1em;
+    }
+
+    .topic-avatar {
+      position: relative;
+    }
+
+    // TODO: avoid using magic values here
+    // and in .post-voting-post below
+    .topic-body .cooked {
+      margin-left: 55px;
+      min-height: 55px;
+    }
+  }
 }
 
 .post-voting-answers-header {
@@ -27,11 +50,15 @@
   flex-direction: row;
   padding: 0.5em;
 
-  .post-voting-answers-headers-count {
+  @include viewport.from(sm) {
+    width: 100%;
+  }
+
+  &__count {
     font-size: var(--font-up-1);
   }
 
-  .post-voting-answers-headers-sort {
+  &__sort {
     margin-left: auto;
 
     .btn {
@@ -60,8 +87,8 @@
   }
 }
 
-.rtl .qa-answers-header {
-  .qa-answers-headers-sort {
+.rtl .post-voting-answers-header {
+  &__sort {
     margin-left: unset;
     margin-right: auto;
 
@@ -93,87 +120,80 @@
   padding: 0.7em 0;
   word-break: break-word;
 
-  &.post-voting-comment-deleted {
+  &.--deleted {
     background-color: var(--danger-low-mid);
   }
 
-  .post-voting-comment-actions-vote {
+  &__actions-vote {
     margin-right: 0.5em;
     display: inline-grid;
     grid-auto-flow: column;
     align-items: flex-start;
+  }
 
-    .post-voting-comment-actions-vote-count {
-      text-align: center;
-      width: auto;
-      min-width: 16px;
-      padding: 0.1em 0;
-      color: var(--primary-low-mid-or-secondary-high);
-    }
+  &__actions-vote-count {
+    text-align: center;
+    width: auto;
+    min-width: 16px;
+    padding: 0.1em 0;
+    color: var(--primary-low-mid-or-secondary-high);
+  }
 
-    .btn {
-      font-size: var(--font-up-3);
-      background: none;
-      padding: 0;
+  &__actions-vote .btn {
+    font-size: var(--font-up-3);
+    background: none;
+    padding: 0;
 
-      &.post-voting-button-voted {
-        .d-icon {
-          color: var(--success);
-        }
+    &.--voted {
+      .d-icon {
+        color: var(--success);
       }
     }
   }
 
-  .post-voting-comment-post {
-    .post-voting-comment-cooked {
+  &__post {
+    .post-voting-comment__cooked {
       p {
         display: inline;
       }
     }
+  }
 
-    .post-voting-comment-info-separator {
-      margin: 0 0.3em;
-    }
+  &__info-separator {
+    margin: 0 0.3em;
+  }
 
-    .post-voting-comment-info-username {
-      display: inline;
-      margin-right: 0.3em;
-    }
+  &__info-username {
+    display: inline;
+    margin-right: 0.3em;
 
-    .post-voting-comment-info-created,
-    .post-voting-comment-info-username-deleted {
+    &.--deleted {
       color: var(--primary-med-or-secondary-med);
-    }
-
-    .post-voting-comment-actions {
-      display: none;
-      margin-left: 0.3em;
-
-      .post-voting-comment-actions-edit-link {
-        color: var(--primary-med-or-secondary-med);
-        margin-right: 0.25em;
-      }
-
-      .post-voting-comment-actions-delete-link {
-        color: var(--primary-med-or-secondary-med);
-        margin-right: 0.25em;
-      }
-
-      .post-voting-comment-actions-delete-link:hover {
-        color: var(--danger);
-      }
-
-      .post-voting-comment-actions-flag-link {
-        color: var(--primary-med-or-secondary-med);
-      }
-
-      .post-voting-comment-actions-flag-link:hover {
-        color: var(--danger);
-      }
     }
   }
 
-  .post-voting-comment-editor {
+  &__info-created {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  &__actions {
+    display: none;
+    margin-left: 0.3em;
+  }
+
+  &__actions-edit-link,
+  &__actions-delete-link,
+  &__actions-flag-link {
+    color: var(--primary-med-or-secondary-med);
+    margin-right: 0.25em;
+  }
+
+  &__actions-delete-link:hover,
+  &__actions-flag-link:hover {
+    color: var(--danger);
+  }
+
+  &__editor {
     margin: 0.5em 0;
     width: 100%;
 
@@ -181,14 +201,14 @@
       width: 100%;
       margin-bottom: 0;
     }
+  }
 
-    .post-voting-comment-editor-cancel {
-      margin-left: 0.5em;
-    }
+  &__editor-cancel {
+    margin-left: 0.5em;
   }
 
   &:hover {
-    .post-voting-comment-actions {
+    .post-voting-comment__actions {
       display: inline-block;
     }
   }
@@ -197,19 +217,19 @@
 .post-voting-comment-composer {
   width: 100%;
 
-  .post-voting-comment-composer-textarea {
+  &__textarea {
     width: 100%;
     margin: 0.5em 0;
   }
 
-  .post-voting-comment-composer-flash {
+  &__flash {
     width: 100%;
     color: var(--primary-med-or-secondary-med);
+    margin-bottom: 0.5em;
 
-    &.error {
+    &.--error {
       color: var(--danger-hover);
     }
-    margin-bottom: 0.5em;
   }
 }
 
@@ -217,11 +237,11 @@
   font-size: var(--font-down-1);
   margin: 0;
 
-  .post-voting-comments-menu-composer-cancel {
+  &__composer-cancel {
     margin-left: 0.5em;
   }
 
-  .post-voting-comments-menu-separator {
+  &__separator {
     margin: 0 0.8em;
     display: inline;
 
@@ -230,8 +250,8 @@
     }
   }
 
-  .post-voting-comments-menu-show-more,
-  .post-voting-comments-menu-add-link {
+  &__show-more,
+  &__add-link {
     display: inline;
   }
 }
@@ -249,19 +269,29 @@
   min-width: 2.5em;
   margin-top: 0.5em;
 
+  @include viewport.until(sm) {
+    position: absolute;
+    left: 0;
+    top: 45px;
+    width: 45px;
+
+    .post-voting-post-list {
+      left: -5px;
+    }
+  }
+
   .post-voting-button {
     background: var(--secondary);
-    border: 1px solid var(--content-border-color);
+    border: 0;
     border-radius: 0;
-    padding: var(--space-1) var(--space-3);
+    padding: var(--space-half) var(--space-1);
 
-    &.post-voting-button-upvote {
+    &.--upvote {
       border-radius: var(--d-button-border-radius) var(--d-button-border-radius)
         0 0;
     }
 
-    &.post-voting-button-downvote {
-      border-top: 0;
+    &.--downvote {
       border-radius: 0 0 var(--d-button-border-radius)
         var(--d-button-border-radius);
 
@@ -272,32 +302,20 @@
 
     &:focus-visible,
     .discourse-no-touch &:hover {
-      background: var(--primary-low);
-
       .d-icon {
         color: var(--primary-high);
       }
     }
 
-    &.post-voting-button-voted {
+    &.--voted {
       .d-icon {
         color: var(--success);
-      }
-
-      &:focus-visible,
-      .discourse-no-touch &:hover {
-        background: var(--primary-low);
-
-        .d-icon {
-          color: var(--success);
-        }
       }
     }
   }
 
-  .post-voting-post-toggle-voters {
+  &__toggle-voters {
     background: var(--secondary);
-    border-inline: 1px solid var(--content-border-color);
     border-radius: 0;
     font-size: var(--font-down-2);
     padding: var(--space-half) var(--space-2);
@@ -305,30 +323,30 @@
     color: var(--primary-medium);
   }
 
-  span.post-voting-post-toggle-voters {
+  span.post-voting-post__toggle-voters {
     display: block;
   }
+}
 
-  .post-voting-post-list {
-    position: absolute;
-    z-index: 2;
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-low);
-    box-shadow: var(--shadow-card);
+.post-voting-post-list {
+  position: absolute;
+  z-index: 2;
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  top: 100%;
+  padding: 0.5em;
+  max-width: 90vw;
+  overflow: auto;
+
+  &__voters-wrapper {
     display: flex;
-    flex-direction: column;
-    top: 100%;
-    padding: 0.5em;
-    max-width: 90vw;
-    overflow: auto;
-
-    .post-voting-post-list-voters-wrapper {
-      display: flex;
-      flex-direction: row;
-    }
+    flex-direction: row;
   }
 
-  .post-voting-post-list-voters {
+  &__voters {
     display: flex;
 
     a {
@@ -337,8 +355,8 @@
     }
   }
 
-  .post-voting-post-list-count,
-  .post-voting-post-list-icon {
+  &__count,
+  &__icon {
     margin: 0.15em 0.25em 0 0.25em;
     font-size: var(--font-up-1);
     color: var(--primary-low-mid);

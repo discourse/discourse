@@ -41,7 +41,7 @@ export default class PostVotingCommentComposer extends Component {
   <template>
     <div class="post-voting-comment-composer">
       <textarea
-        class="post-voting-comment-composer-textarea"
+        class="post-voting-comment-composer__textarea"
         value={{this.value}}
         {{on "input" this.onInput}}
         {{on "keydown" @onKeyDown}}
@@ -49,11 +49,11 @@ export default class PostVotingCommentComposer extends Component {
 
       {{#if this.value.length}}
         {{#if this.errorMessage}}
-          <div class="post-voting-comment-composer-flash error">
+          <div class="post-voting-comment-composer__flash --error">
             {{this.errorMessage}}
           </div>
         {{else}}
-          <div class="post-voting-comment-composer-flash">
+          <div class="post-voting-comment-composer__flash">
             {{i18n
               "post_voting.post.post_voting_comment.composer.length_ok"
               count=this.remainingCharacters

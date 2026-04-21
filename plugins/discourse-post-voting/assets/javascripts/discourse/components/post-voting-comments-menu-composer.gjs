@@ -58,14 +58,14 @@ export default class PostVotingCommentsMenuComposer extends Component {
         @disabled={{this.submitDisabled}}
         @icon="reply"
         @label="post_voting.post.post_voting_comment.submit"
-        class="btn-primary post-voting-comments-menu-composer-submit"
+        class="btn-primary post-voting-comments-menu-composer__submit"
       />
 
       <DButton
         @display="link"
         @action={{@onCancel}}
         @label="post_voting.post.post_voting_comment.cancel"
-        class="post-voting-comments-menu-composer-cancel"
+        class="post-voting-comments-menu-composer__cancel"
       />
     </div>
   </template>

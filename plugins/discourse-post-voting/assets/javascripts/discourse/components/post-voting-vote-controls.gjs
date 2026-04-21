@@ -119,7 +119,7 @@ export default class PostVotingVoteControls extends Component {
 
       {{#if this.hasVotes}}
         <DButton
-          class="post-voting-post-toggle-voters btn-flat"
+          class="post-voting-post__toggle-voters btn-flat"
           @action={{this.toggleWhoVoted}}
           @translatedLabel={{concat @post.post_voting_vote_count}}
         />
@@ -130,7 +130,7 @@ export default class PostVotingVoteControls extends Component {
           />
         {{/if}}
       {{else}}
-        <span class="post-voting-post-toggle-voters">
+        <span class="post-voting-post__toggle-voters">
           {{this.count}}
         </span>
       {{/if}}

@@ -70,23 +70,23 @@ export default class PostVotingCommentActions extends Component {
 
   <template>
     {{#if this.canEdit}}
-      <span class="post-voting-comment-actions">
+      <span class="post-voting-comment__actions">
         <DButton
           @display="link"
-          class="post-voting-comment-actions-edit-link"
+          class="post-voting-comment__actions-edit-link"
           @action={{@updateComment}}
           @icon="pencil"
         />
         <DButton
           @display="link"
-          class="post-voting-comment-actions-delete-link"
+          class="post-voting-comment__actions-delete-link"
           @action={{this.deleteConfirm}}
           @icon="far-trash-can"
         />
         {{#if this.canFlag}}
           <DButton
             @display="link"
-            class="post-voting-comment-actions-flag-link"
+            class="post-voting-comment__actions-flag-link"
             @action={{this.showFlag}}
             @icon="flag"
           />

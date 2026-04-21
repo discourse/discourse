@@ -56,16 +56,16 @@ export default class PostVotingAnswerHeader extends Component {
 
   <template>
     <div class="post-voting-answers-header small-action">
-      <span class="post-voting-answers-headers-count">
+      <span class="post-voting-answers-header__count">
         {{i18n "post_voting.topic.answer_count" count=this.answersCount}}
       </span>
-      <span class="post-voting-answers-headers-sort">
+      <span class="post-voting-answers-header__sort">
         <span>
           {{i18n "post_voting.topic.activity"}}
         </span>
         <DButton
           class={{concatClass
-            "post-voting-answers-headers-sort-votes"
+            "post-voting-answers-header__sort-votes"
             (unless this.sortedByActivity "active")
           }}
           @disabled={{not this.sortedByActivity}}
@@ -74,7 +74,7 @@ export default class PostVotingAnswerHeader extends Component {
         />
         <DButton
           class={{concatClass
-            "post-voting-answers-headers-sort-activity"
+            "post-voting-answers-header__sort-activity"
             (if this.sortedByActivity "active")
           }}
           @disabled={{this.sortedByActivity}}

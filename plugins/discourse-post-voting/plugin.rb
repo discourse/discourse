@@ -7,9 +7,7 @@
 # authors: Alan Tan
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-post-voting
 
-%i[common mobile desktop].each do |type|
-  register_asset "stylesheets/#{type}/post-voting.scss", type
-end
+register_asset "stylesheets/common/post-voting.scss"
 register_asset "stylesheets/common/post-voting-crawler.scss"
 
 enabled_site_setting :post_voting_enabled

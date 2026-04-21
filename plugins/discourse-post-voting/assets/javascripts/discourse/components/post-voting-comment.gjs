@@ -94,8 +94,7 @@ export default class PostVotingComment extends Component {
   <template>
     <div
       id={{this.anchorId}}
-      class="post-voting-comment
-        {{if @comment.deleted 'post-voting-comment-deleted'}}"
+      class="post-voting-comment {{if @comment.deleted '--deleted'}}"
     >
       {{#if this.isEditing}}
         <PostVotingCommentEditor
@@ -105,10 +104,10 @@ export default class PostVotingComment extends Component {
           @onCancel={{this.onCancel}}
         />
       {{else}}
-        <div class="post-voting-comment-actions-vote">
+        <div class="post-voting-comment__actions-vote">
           {{#if @comment.post_voting_vote_count}}
             <span
-              class="post-voting-comment-actions-vote-count"
+              class="post-voting-comment__actions-vote-count"
             >{{@comment.post_voting_vote_count}}</span>
           {{/if}}
 
@@ -122,30 +121,28 @@ export default class PostVotingComment extends Component {
           />
         </div>
 
-        <div class="post-voting-comment-post">
-          <span class="post-voting-comment-cooked">{{trustHTML
+        <div class="post-voting-comment__post">
+          <span class="post-voting-comment__cooked">{{trustHTML
               @comment.cooked
             }}</span>
 
-          <span class="post-voting-comment-info-separator">–</span>
+          <span class="post-voting-comment__info-separator">–</span>
 
           {{#if @comment.username}}
             <a
               href={{userPath @comment.username}}
-              class="post-voting-comment-info-username"
+              class="post-voting-comment__info-username"
               data-user-card={{@comment.username}}
             >
               {{formatUsername @comment.username}}
             </a>
           {{else}}
-            <span
-              class="post-voting-comment-info-username post-voting-comment-info-username-deleted"
-            >
+            <span class="post-voting-comment__info-username --deleted">
               {{i18n "post_voting.post.post_voting_comment.user.deleted"}}
             </span>
           {{/if}}
 
-          <span class="post-voting-comment-info-created">
+          <span class="post-voting-comment__info-created">
             {{formatDate @comment.created_at}}
           </span>
 
