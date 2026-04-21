@@ -6,19 +6,19 @@ body > noscript {
 
   .post-voting-comments {
     padding-top: 15px;
-  }
 
-  .post-voting-comment {
-    display: flex;
-    border-top: 1px solid var(--primary-low);
-    padding: 5px 0 5px 0;
+    &__comment {
+      display: flex;
+      border-top: 1px solid var(--primary-low);
+      padding: 5px 0 5px 0;
+    }
 
-    &__cooked p,
-    &__creator {
+    &__comment-cooked p,
+    &__comment-creator {
       display: inline;
     }
 
-    &__info-separator {
+    &__comment-info-separator {
       display: inline;
       margin: 0 0.3em;
     }

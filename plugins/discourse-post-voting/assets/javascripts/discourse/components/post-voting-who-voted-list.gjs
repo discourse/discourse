@@ -51,11 +51,11 @@ export default class PostVotingWhoVotedList extends Component {
 
   <template>
     <div
-      class="post-voting-post-list"
+      class="post-voting-post__list"
       {{closeOnClickOutside
         @onClickOutside
         (hash
-          targetSelector=".post-voting-post-list"
+          targetSelector=".post-voting-post__list"
           secondaryTargetSelector=".post-voting-post__toggle-voters"
         )
       }}
@@ -93,12 +93,12 @@ export default class PostVotingWhoVotedList extends Component {
 
 const PostVotingSmallUserList = <template>
   {{#if @list}}
-    <div class="post-voting-post-list__voters-wrapper">
-      <span class="post-voting-post-list__icon">
+    <div class="post-voting-post__list-voters-wrapper">
+      <span class="post-voting-post__list-icon">
         {{icon (if (eq @direction "up") "angle-up" "angle-down")}}
       </span>
-      <span class="post-voting-post-list__count">{{@list.length}}</span>
-      <SmallUserList class="post-voting-post-list__voters" @users={{@list}} />
+      <span class="post-voting-post__list-count">{{@list.length}}</span>
+      <SmallUserList class="post-voting-post__list-voters" @users={{@list}} />
     </div>
   {{/if}}
 </template>;

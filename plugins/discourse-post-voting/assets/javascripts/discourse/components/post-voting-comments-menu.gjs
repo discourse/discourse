@@ -33,7 +33,7 @@ export default class PostVotingCommentsMenu extends Component {
     this.fetchComments().then(() => {
       schedule("afterRender", () => {
         const textArea = document.querySelector(
-          `#post_${this.args.postNumber} .post-voting-comment-composer .post-voting-comment-composer__textarea`
+          `#post_${this.args.postNumber} .post-voting-comments__comment-composer .post-voting-comments__comment-composer-textarea`
         );
         textArea.focus();
         textArea.select();
@@ -70,7 +70,7 @@ export default class PostVotingCommentsMenu extends Component {
   }
 
   <template>
-    <div class="post-voting-comments-menu">
+    <div class="post-voting-comments__menu">
       {{#if this.expanded}}
         <PostVotingCommentsMenuComposer
           @id={{@id}}
@@ -86,16 +86,16 @@ export default class PostVotingCommentsMenu extends Component {
             (routeAction "showLogin")
           }}
           @label="post_voting.post.post_voting_comment.add"
-          class="post-voting-comments-menu__add-link"
+          class="post-voting-comments__menu-add-link"
         />
       {{/if}}
 
       {{#if this.hasMoreComments}}
         {{#unless this.expanded}}
-          <span class="post-voting-comments-menu__separator"></span>
+          <span class="post-voting-comments__menu-separator"></span>
         {{/unless}}
 
-        <div class="post-voting-comments-menu__show-more">
+        <div class="post-voting-comments__menu-show-more">
           <DButton
             @display="link"
             @action={{this.fetchComments}}
@@ -103,7 +103,7 @@ export default class PostVotingCommentsMenu extends Component {
               "post_voting.post.post_voting_comment.show"
               count=@moreCommentCount
             }}
-            class="post-voting-comments-menu__show-more-link"
+            class="post-voting-comments__menu-show-more-link"
           />
         </div>
       {{/if}}

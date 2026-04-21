@@ -3,12 +3,12 @@
 module PageObjects
   module Pages
     class PostVotingTopic < PageObjects::Pages::Topic
-      COMMENT_VOTE_BUTTON = ".post-voting-comment__actions-vote button"
+      COMMENT_VOTE_BUTTON = ".post-voting-comments__comment-actions-vote button"
       POST_VOTE_BUTTON = ".post-voting-post button"
-      COMMENT_ACTIONS = ".post-voting-comment__actions"
+      COMMENT_ACTIONS = ".post-voting-comments__comment-actions"
 
       def has_no_comment_menu?
-        has_no_css?(".post-voting-comments-menu")
+        has_no_css?(".post-voting-comments__menu")
       end
 
       def click_vote_count(post)
