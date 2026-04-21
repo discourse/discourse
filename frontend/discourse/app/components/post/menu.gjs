@@ -40,7 +40,6 @@ import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
 
-const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const buttonKeys = Object.freeze({
@@ -96,9 +95,7 @@ export default class PostMenu extends Component {
     true,
     this.#prepareStaticMethodsState({ collapsed: true })
   );
-  @tracked isWhoLikedVisible = false;
-  @tracked likedUsers = [];
-  @tracked totalLikedUsers;
+
   @tracked isWhoReadVisible = false;
   @tracked readers = [];
   @tracked totalReaders;
