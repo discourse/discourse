@@ -25,10 +25,10 @@
     .post-voting-answers-header {
       width: unset;
       padding: 0;
-      padding-bottom: 1em;
+      padding-bottom: var(--space-4);
       border-top: none;
       border-bottom: 1px solid var(--primary-low);
-      margin-bottom: 1em;
+      margin-bottom: var(--space-4);
     }
 
     .topic-avatar {
@@ -48,7 +48,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  padding: 0.5em;
+  padding: var(--space-2);
 
   @include viewport.from(sm) {
     width: 100%;
@@ -70,11 +70,11 @@
       }
 
       + .btn {
-        margin-left: 0.3em;
+        margin-left: var(--space-1);
       }
 
       &:first-of-type {
-        margin-left: 0.5em;
+        margin-left: var(--space-2);
       }
     }
 
@@ -95,12 +95,12 @@
     .btn {
       + .btn {
         margin-left: 0;
-        margin-right: 0.3em;
+        margin-right: var(--space-1);
       }
 
       &:first-of-type {
         margin-left: 0;
-        margin-right: 0.5em;
+        margin-right: var(--space-2);
       }
     }
   }
@@ -108,7 +108,7 @@
 
 .post-voting-comments {
   width: 100%;
-  padding-top: 5px;
+  padding-top: var(--space-1);
 
   &__comment {
     font-size: var(--font-down-1);
@@ -116,7 +116,7 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 0.7em 0;
+    padding: var(--space-3) 0;
     word-break: break-word;
 
     &.--deleted {
@@ -131,7 +131,7 @@
   }
 
   &__comment-actions-vote {
-    margin-right: 0.5em;
+    margin-right: var(--space-2);
     display: inline-grid;
     grid-auto-flow: column;
     align-items: flex-start;
@@ -152,8 +152,8 @@
   &__comment-actions-vote-count {
     text-align: center;
     width: auto;
-    min-width: 16px;
-    padding: 0.1em 0;
+    min-width: var(--space-4);
+    padding: var(--space-half) 0;
     color: var(--primary-low-mid-or-secondary-high);
   }
 
@@ -166,12 +166,12 @@
   }
 
   &__comment-info-separator {
-    margin: 0 0.3em;
+    margin: 0 var(--space-1);
   }
 
   &__comment-info-username {
     display: inline;
-    margin-right: 0.3em;
+    margin-right: var(--space-1);
 
     &.--deleted {
       color: var(--primary-med-or-secondary-med);
@@ -184,14 +184,14 @@
 
   &__comment-actions {
     display: none;
-    margin-left: 0.3em;
+    margin-left: var(--space-1);
   }
 
   &__comment-actions-edit-link,
   &__comment-actions-delete-link,
   &__comment-actions-flag-link {
     color: var(--primary-med-or-secondary-med);
-    margin-right: 0.25em;
+    margin-right: var(--space-1);
   }
 
   &__comment-actions-delete-link:hover,
@@ -200,7 +200,7 @@
   }
 
   &__comment-editor {
-    margin: 0.5em 0;
+    margin: var(--space-2) 0;
     width: 100%;
 
     textarea {
@@ -210,7 +210,7 @@
   }
 
   &__comment-editor-cancel {
-    margin-left: 0.5em;
+    margin-left: var(--space-2);
   }
 
   &__comment-composer {
@@ -219,13 +219,13 @@
 
   &__comment-composer-textarea {
     width: 100%;
-    margin: 0.5em 0;
+    margin: var(--space-2) 0;
   }
 
   &__comment-composer-flash {
     width: 100%;
     color: var(--primary-med-or-secondary-med);
-    margin-bottom: 0.5em;
+    margin-bottom: var(--space-2);
 
     &.--error {
       color: var(--danger-hover);
@@ -238,7 +238,7 @@
   }
 
   &__menu-separator {
-    margin: 0 0.8em;
+    margin: 0 var(--space-3);
     display: inline;
 
     &::after {
@@ -252,7 +252,7 @@
   }
 
   &__menu-composer-cancel {
-    margin-left: 0.5em;
+    margin-left: var(--space-2);
   }
 }
 
@@ -266,17 +266,17 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  min-width: 2.5em;
-  margin-top: 0.5em;
+  min-width: var(--space-10);
+  margin-top: var(--space-2);
 
   @include viewport.until(sm) {
     position: absolute;
     left: 0;
-    top: 45px;
-    width: 45px;
+    top: var(--space-11);
+    width: var(--space-11);
 
     .post-voting-post__list {
-      left: -5px;
+      left: calc(-1 * var(--space-1));
     }
   }
 
@@ -336,7 +336,7 @@
     display: flex;
     flex-direction: column;
     top: 100%;
-    padding: 0.5em;
+    padding: var(--space-2);
     max-width: 90vw;
     overflow: auto;
   }
@@ -350,14 +350,14 @@
     display: flex;
 
     a {
-      margin-left: 0.25em;
-      margin-bottom: 0.25em;
+      margin-left: var(--space-1);
+      margin-bottom: var(--space-1);
     }
   }
 
   &__list-count,
   &__list-icon {
-    margin: 0.15em 0.25em 0 0.25em;
+    margin: var(--space-half) var(--space-1) 0 var(--space-1);
     font-size: var(--font-up-1);
     color: var(--primary-low-mid);
   }
