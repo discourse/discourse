@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} (stack=${{ matrix.ulimit_stack }})
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -65,13 +65,14 @@ jobs:
       # ROLLUP_PLUGIN_COMPILER: 1
 
     strategy:
-      fail-fast: true
+      fail-fast: false
 
       matrix:
         #build_type: [backend, frontend, system]
         build_type: [frontend]
         target: [core, plugins, themes]
         browser: [Chrome]
+        ulimit_stack: [9216, 10240, 16384]
         #exclude:
           #- build_type: backend
           #  target: themes
@@ -289,7 +290,7 @@ jobs:
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: |
-          ulimit -s unlimited
+          ulimit -s ${{ matrix.ulimit_stack }}
           QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
       - name: Asset Processor Tests
@@ -305,13 +306,13 @@ jobs:
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: |
-          ulimit -s unlimited
+          ulimit -s ${{ matrix.ulimit_stack }}
           bin/rake 'plugin:qunit[*]'
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: |
-          ulimit -s unlimited
+          ulimit -s ${{ matrix.ulimit_stack }}
           DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
