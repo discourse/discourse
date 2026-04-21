@@ -37,7 +37,8 @@ class DiscourseSolved::BuildSchemaMarkup
 
   def fetch_accepted_answer(topic:)
     post = topic.solved&.answer_post
-    post if post.present? && Guardian.new.can_see_post?(post)
+    return unless post.present? && Guardian.new.can_see_post?(post)
+    post if post.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present?
   end
 
   def fetch_suggested_answers(params:, topic:, accepted_answer:)
@@ -45,7 +46,11 @@ class DiscourseSolved::BuildSchemaMarkup
     excluded_ids << accepted_answer.id if accepted_answer.present?
     scope = topic.posts.where.not(id: excluded_ids)
     scope = scope.where(id: params.post_ids) if params.post_ids.present?
-    scope.where(post_type: Post.types[:regular], hidden: false).order(:post_number).to_a
+    scope
+      .where(post_type: Post.types[:regular], hidden: false)
+      .order(:post_number)
+      .to_a
+      .select { |p| p.excerpt(nil, keep_onebox_body: true, keep_quotes: true).present? }
   end
 
   def fetch_html(topic:, accepted_answer:, suggested_answers:)
@@ -63,6 +68,7 @@ class DiscourseSolved::BuildSchemaMarkup
           "@context" => "http://schema.org",
           "@type" => "QAPage",
           "name" => topic.title,
+          "datePublished" => topic.created_at,
           "mainEntity" => question_json,
         )
         .gsub("</", "<\\/")

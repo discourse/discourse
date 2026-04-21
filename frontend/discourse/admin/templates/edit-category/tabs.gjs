@@ -10,6 +10,7 @@ import EditCategoryTags from "discourse/admin/components/edit-category-tags";
 import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
 import UpsertCategoryAppearance from "discourse/admin/components/upsert-category/appearance";
 import UpsertCategoryGeneral from "discourse/admin/components/upsert-category/general";
+import UpsertCategoryModeration from "discourse/admin/components/upsert-category/moderation";
 import UpsertCategorySecurity from "discourse/admin/components/upsert-category/security";
 import UpsertCategorySettings from "discourse/admin/components/upsert-category/settings";
 import UpsertCategoryTags from "discourse/admin/components/upsert-category/tags";
@@ -35,6 +36,7 @@ const TAB_COMPONENTS_V2 = {
   general: UpsertCategoryGeneral,
   security: UpsertCategorySecurity,
   settings: UpsertCategorySettings,
+  moderation: UpsertCategoryModeration,
   images: UpsertCategoryAppearance,
   "topic-template": EditCategoryTopicTemplate,
   tags: UpsertCategoryTags,

@@ -8,10 +8,10 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-topic-voting
 
 register_asset "stylesheets/common/topic-voting.scss"
-register_asset "stylesheets/desktop/topic-voting.scss", :desktop
-register_asset "stylesheets/mobile/topic-voting.scss", :mobile
 
 register_svg_icon "check-to-slot"
+register_svg_icon "vote-up"
+register_svg_icon "vote-up-filled"
 
 enabled_site_setting :topic_voting_enabled
 
@@ -23,6 +23,7 @@ Discourse.anonymous_filters.push(:votes)
 module ::DiscourseTopicVoting
   PLUGIN_NAME = "discourse-topic-voting"
   ENABLE_TOPIC_VOTING_SETTING = "enable_topic_voting"
+  VOTER_PREVIEW_LIMIT = 104
 end
 
 require_relative "lib/discourse_topic_voting/engine"
@@ -64,7 +65,7 @@ after_initialize do
       if options[:state] == "my_votes"
         result =
           result.joins(
-            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id}",
+            "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id AND topic_voting_votes.user_id = #{user.id} AND topic_voting_votes.archive = FALSE",
           )
       end
     end

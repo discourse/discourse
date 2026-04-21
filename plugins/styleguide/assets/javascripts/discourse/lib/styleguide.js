@@ -34,6 +34,7 @@ import topicFooterButtons from "../components/sections/organisms/04-topic-footer
 import topicList from "../components/sections/organisms/05-topic-list";
 import basicTopicList from "../components/sections/organisms/basic-topic-list";
 import categoriesList from "../components/sections/organisms/categories-list";
+import dockedComposer from "../components/sections/organisms/docked-composer";
 import modal from "../components/sections/organisms/modal";
 import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
@@ -115,6 +116,7 @@ const SECTIONS = [
   },
   { component: basicTopicList, category: "organisms", id: "basic-topic-list" },
   { component: categoriesList, category: "organisms", id: "categories-list" },
+  { component: dockedComposer, category: "organisms", id: "docked-composer" },
   { component: modal, category: "organisms", id: "modal" },
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },

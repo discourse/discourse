@@ -75,18 +75,42 @@ RSpec.describe TopicStatusUpdater do
     expect(last_post.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_minutes", count: 0))
   end
 
-  it "triggers a DiscourseEvent on close" do
+  it "triggers a DiscourseEvent with :manually when manually closing a topic" do
     topic = create_topic
 
-    called = false
-    updater = ->(_) { called = true }
+    closure_type = nil
+    captured_topic = nil
+    updater = ->(t, type) do
+      captured_topic = t
+      closure_type = type
+    end
 
     DiscourseEvent.on(:topic_closed, &updater)
     TopicStatusUpdater.new(topic, admin).update!("closed", true)
     DiscourseEvent.off(:topic_closed, &updater)
 
     expect(topic).to be_closed
-    expect(called).to eq(true)
+    expect(captured_topic).to eq(topic)
+    expect(closure_type).to eq(:manually)
+  end
+
+  it "triggers a DiscourseEvent with :automatically when auto-closing a topic" do
+    topic = create_topic
+
+    closure_type = nil
+    captured_topic = nil
+    updater = ->(t, type) do
+      captured_topic = t
+      closure_type = type
+    end
+
+    DiscourseEvent.on(:topic_closed, &updater)
+    TopicStatusUpdater.new(topic, admin).update!("autoclosed", true)
+    DiscourseEvent.off(:topic_closed, &updater)
+
+    expect(topic).to be_closed
+    expect(captured_topic).to eq(topic)
+    expect(closure_type).to eq(:automatically)
   end
 
   it "adds an autoclosed message based on last post" do

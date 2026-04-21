@@ -107,7 +107,11 @@ module DiscoursePostEvent
         end
 
       return if date.blank?
-      Jobs.enqueue(:discourse_post_event_bump_topic, topic_id: self.post.topic_id, date: date)
+      Jobs.enqueue(
+        :discourse_post_event_bump_topic,
+        topic_id: self.post.topic_id,
+        date: date.iso8601,
+      )
     end
 
     def validate_reminder_unit(input)

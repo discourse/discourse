@@ -155,8 +155,43 @@ span.onebox-ai-llm-title {
   }
 }
 
-.ai-debug-modal__tokens__count {
-  display: block;
+.ai-debug-modal__stats {
+  margin-bottom: 1em;
+  font-size: var(--font-down-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.ai-debug-modal__stats-line {
+  margin: 0 0 0.25em;
+
+  &__label {
+    color: var(--primary-high);
+    margin-right: 0.25em;
+  }
+
+  &__cache {
+    color: var(--primary-high);
+    margin-left: 0.25em;
+  }
+}
+
+.ai-debug-modal__just-copied {
+  font-size: var(--font-down-1);
+  color: var(--success);
+  margin-left: auto;
+  align-self: center;
+}
+
+.ai-debug-modal__preview {
+  background-color: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  padding: 0.75em 1em;
+  max-height: 60vh;
+  overflow: auto;
+  font-family: var(--d-font-family--monospace);
+  font-size: var(--font-down-1);
+  line-height: 1.45;
 }
 
 .d-modal ul.ai-debug-modal__nav {

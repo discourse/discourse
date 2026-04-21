@@ -124,6 +124,73 @@ export default class DebugAiModal extends Component {
     e.preventDefault();
   }
 
+  get formattedSpending() {
+    return this.formatCost(this.info?.spending);
+  }
+
+  get formattedConversationSpending() {
+    return this.formatCost(this.info?.conversation_spending);
+  }
+
+  get turnCacheLabel() {
+    return this.cacheLabel(
+      this.info?.cache_read_tokens,
+      this.info?.cache_write_tokens
+    );
+  }
+
+  get conversationCacheLabel() {
+    return this.cacheLabel(
+      this.info?.conversation_cache_read_tokens,
+      this.info?.conversation_cache_write_tokens
+    );
+  }
+
+  get showConversationLine() {
+    if (!this.info) {
+      return false;
+    }
+
+    return (
+      this.info.conversation_spending != null ||
+      this.info.conversation_request_tokens > 0 ||
+      this.info.conversation_response_tokens > 0 ||
+      this.info.conversation_cache_read_tokens > 0 ||
+      this.info.conversation_cache_write_tokens > 0
+    );
+  }
+
+  cacheLabel(read, write) {
+    const hasRead = read && read > 0;
+    const hasWrite = write && write > 0;
+
+    if (hasRead && hasWrite) {
+      return i18n("discourse_ai.ai_bot.debug_ai_modal.cache_both", {
+        read,
+        write,
+      });
+    }
+    if (hasRead) {
+      return i18n("discourse_ai.ai_bot.debug_ai_modal.cache_read_only", {
+        read,
+      });
+    }
+    if (hasWrite) {
+      return i18n("discourse_ai.ai_bot.debug_ai_modal.cache_write_only", {
+        write,
+      });
+    }
+    return null;
+  }
+
+  formatCost(value) {
+    if (value == null || Number(value) === 0) {
+      return null;
+    }
+
+    return `$${Number(value).toFixed(4)}`;
+  }
+
   <template>
     <DModal
       class="ai-debug-modal"
@@ -143,29 +210,49 @@ export default class DebugAiModal extends Component {
               {{on "click" this.responseClicked}}
             >{{i18n "discourse_ai.ai_bot.debug_ai_modal.response"}}</a></li>
         </ul>
-        <div class="ai-debug-modal__tokens">
-          <span class="ai-debug-modal__tokens__count">
-            {{i18n "discourse_ai.ai_bot.debug_ai_modal.request_tokens"}}
-            {{this.info.request_tokens}}
-          </span>
-          <span class="ai-debug-modal__tokens__count">
-            {{i18n "discourse_ai.ai_bot.debug_ai_modal.response_tokens"}}
-            {{this.info.response_tokens}}
-          </span>
-          {{#if this.info.cache_read_tokens}}
-            <span class="ai-debug-modal__tokens__count">
-              {{i18n "discourse_ai.ai_bot.debug_ai_modal.cache_read_tokens"}}
-              {{this.info.cache_read_tokens}}
-            </span>
-          {{/if}}
-          {{#if this.info.cache_write_tokens}}
-            <span class="ai-debug-modal__tokens__count">
-              {{i18n "discourse_ai.ai_bot.debug_ai_modal.cache_write_tokens"}}
-              {{this.info.cache_write_tokens}}
-            </span>
+        <div class="ai-debug-modal__stats">
+          <p class="ai-debug-modal__stats-line">
+            <strong class="ai-debug-modal__stats-line__label">
+              {{i18n "discourse_ai.ai_bot.debug_ai_modal.this_turn"}}
+            </strong>
+            {{i18n
+              "discourse_ai.ai_bot.debug_ai_modal.tokens_summary"
+              request_tokens=this.info.request_tokens
+              response_tokens=this.info.response_tokens
+            }}
+            {{#if this.turnCacheLabel}}
+              <span
+                class="ai-debug-modal__stats-line__cache"
+              >{{this.turnCacheLabel}}</span>
+            {{/if}}
+            {{#if this.formattedSpending}}
+              <span class="ai-debug-modal__stats-line__cost">:
+                {{this.formattedSpending}}</span>
+            {{/if}}
+          </p>
+          {{#if this.showConversationLine}}
+            <p class="ai-debug-modal__stats-line">
+              <strong class="ai-debug-modal__stats-line__label">
+                {{i18n "discourse_ai.ai_bot.debug_ai_modal.whole_conversation"}}
+              </strong>
+              {{i18n
+                "discourse_ai.ai_bot.debug_ai_modal.tokens_summary"
+                request_tokens=this.info.conversation_request_tokens
+                response_tokens=this.info.conversation_response_tokens
+              }}
+              {{#if this.conversationCacheLabel}}
+                <span
+                  class="ai-debug-modal__stats-line__cache"
+                >{{this.conversationCacheLabel}}</span>
+              {{/if}}
+              {{#if this.formattedConversationSpending}}
+                <span class="ai-debug-modal__stats-line__cost">:
+                  {{this.formattedConversationSpending}}</span>
+              {{/if}}
+            </p>
           {{/if}}
         </div>
-        <div class="debug-ai-modal__preview">
+        <div class="ai-debug-modal__preview">
           {{this.htmlContext}}
         </div>
       </:body>
@@ -199,7 +286,7 @@ export default class DebugAiModal extends Component {
             @label="discourse_ai.ai_bot.debug_ai_modal.next_log"
           />
         {{/if}}
-        <span class="ai-debut-modal__just-copied">{{this.justCopiedText}}</span>
+        <span class="ai-debug-modal__just-copied">{{this.justCopiedText}}</span>
       </:footer>
     </DModal>
   </template>

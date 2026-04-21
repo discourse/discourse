@@ -88,24 +88,11 @@ class Admin::EmailController < Admin::AdminController
       raise ActionController::ParameterMissing.new("email_encoded or email")
     end
 
-    retry_count = 0
+    # If it isn't valid UTF-8, reinterpret as ISO-8859-1 so it can be serialized to JSON.
+    email_raw = email_raw.dup.force_encoding("UTF-8")
+    email_raw = email_raw.encode("UTF-8", "ISO-8859-1") if !email_raw.valid_encoding?
 
-    begin
-      Jobs.enqueue(
-        :process_email,
-        mail: email_raw,
-        retry_on_rate_limit: true,
-        source: "handle_mail",
-      )
-    rescue JSON::GeneratorError, Encoding::UndefinedConversionError => e
-      if retry_count == 0
-        email_raw = email_raw.force_encoding("iso-8859-1").encode("UTF-8")
-        retry_count += 1
-        retry
-      else
-        raise e
-      end
-    end
+    Jobs.enqueue(:process_email, mail: email_raw, retry_on_rate_limit: true, source: "handle_mail")
 
     if deprecated_email_param_used
       warning =

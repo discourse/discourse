@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="nested-circle-plus" viewBox="0 0 20 20">
+    <path fill-rule="evenodd" d="M10 1A9 9 0 0 1 10 19A9 9 0 0 1 10 1ZM10 3A7 7 0 0 1 10 17A7 7 0 0 1 10 3Z"/>
+    <path d="M6 9h8v2H6zM9 6h2v8H9z"/>
+  </symbol>
+  <symbol id="nested-circle-minus" viewBox="0 0 20 20">
+    <path fill-rule="evenodd" d="M10 1A9 9 0 0 1 10 19A9 9 0 0 1 10 1ZM10 3A7 7 0 0 1 10 17A7 7 0 0 1 10 3Z"/>
+    <path d="M6 9h8v2H6z"/>
+  </symbol>
+  <symbol id="nested-thread" viewBox="0 0 16 15" fill-rule="evenodd" clip-rule="evenodd">
+    <path d="M5 0L4.57143 3H1V5H4.28571L3.71429 9H0V11H3.42857L3 14L4.9799 14.2828L5.44888 11H9.16317L8.59173 14.2828L10.5714 14.5657L11.1429 11H15V9H11.4286L12.0602 5H16V3H12.3459L12.9799 0.282843L11 0L10.4286 3H6.59173L6.9799 0.282843L5 0ZM6.30602 5L5.73459 9H9.44888L10.0204 5H6.30602Z"/>
+  </symbol>
+</svg>

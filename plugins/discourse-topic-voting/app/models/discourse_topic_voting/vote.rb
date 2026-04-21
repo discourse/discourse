@@ -5,7 +5,10 @@ module DiscourseTopicVoting
     self.table_name = "topic_voting_votes"
 
     belongs_to :user
-    belongs_to :topic
+    belongs_to :topic, -> { with_deleted }
+
+    scope :active, -> { where(archive: false) }
+    scope :archived, -> { where(archive: true) }
   end
 end
 

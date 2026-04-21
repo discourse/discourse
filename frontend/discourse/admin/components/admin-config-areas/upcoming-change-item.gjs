@@ -97,6 +97,13 @@ export default class UpcomingChangeItem extends Component {
     return this.savingEnabledFor;
   }
 
+  get showPermanentSoonNotice() {
+    return (
+      this.args.change.upcoming_change.status === "stable" &&
+      this.args.change.upcoming_change.impact_type !== "site_setting_default"
+    );
+  }
+
   get showDependentSettingsLink() {
     return (
       this.args.change.dependents.length && this.bufferedEnabledFor !== "no_one"
@@ -327,7 +334,7 @@ export default class UpcomingChangeItem extends Component {
           </div>
         {{/if}}
 
-        {{#if (eq @change.upcoming_change.status "stable")}}
+        {{#if this.showPermanentSoonNotice}}
           <div class="upcoming-change__status-notice">
             {{icon "triangle-exclamation"}}
             {{i18n "admin.upcoming_changes.permanent_soon_notice"}}

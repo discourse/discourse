@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -120,7 +121,7 @@ export default class PostVotingVoteControls extends Component {
         <DButton
           class="post-voting-post-toggle-voters btn-flat"
           @action={{this.toggleWhoVoted}}
-          @translatedLabel={{@post.post_voting_vote_count}}
+          @translatedLabel={{concat @post.post_voting_vote_count}}
         />
         {{#if this.showWhoVoted}}
           <PostVotingWhoVotedList

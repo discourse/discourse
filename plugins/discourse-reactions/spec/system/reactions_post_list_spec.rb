@@ -25,58 +25,74 @@ describe "Reactions | Post reaction user list" do
     ).toggle!
   end
 
-  it "shows a list of users who have reacted to a post on hover for likes and each reaction" do
+  it "shows more info about reactions when clicking" do
     sign_in(current_user)
     visit(post.url)
-
     expect(reactions_list).to have_reaction("heart")
-    expect(reactions_list).to have_reaction("clap")
 
-    reactions_list.hover_over_reaction("heart")
-    expect(reactions_list).to have_users_for_reaction("heart", [user_2.username])
+    find(".discourse-reactions-counter").click
 
-    # hover on something else to clear the current hover
-    page.find("#site-logo").hover
-
-    reactions_list.hover_over_reaction("clap")
-    expect(reactions_list).to have_users_for_reaction("clap", [user_3.username])
-  end
-
-  it "shows more info about reactions when clicking" do
-    visit(post.url)
-    expect(reactions_list).to have_reaction("heart")
-    reactions_list.click_reaction("heart")
-
-    expect(page).to have_css(".discourse-reactions-state-panel")
-    find(".discourse-reactions-state-panel [data-user-card=#{user_2.username}]").click
+    expect(page).to have_css(".post-users-popup")
+    find(".post-users-popup .post-users-popup__name[data-user-card=#{user_2.username}]").click
 
     expect(page).to have_css(".user-card.user-card-#{user_2.username}")
   end
 
-  context "when the site allows anonymous users to like posts" do
-    before do
-      SiteSetting.allow_anonymous_mode = true
-      SiteSetting.allow_likes_in_anonymous_mode = true
-    end
+  it "shows the user's name as primary when prioritize_username_in_ux is false" do
+    SiteSetting.prioritize_username_in_ux = false
 
-    it "shows a list of users who have liked a post on hover for unauthenticated users" do
-      visit(post.url)
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
 
-      expect(reactions_list).to have_reaction("heart")
+    find(".discourse-reactions-counter").click
 
-      reactions_list.hover_over_reaction("heart")
-      expect(reactions_list).to have_users_for_reaction("heart", [user_2.username])
-    end
+    expect(page).to have_css(
+      ".post-users-popup__name[data-user-card=#{user_2.username}]",
+      text: user_2.name,
+    )
+    expect(page).to have_css(".post-users-popup__username", text: "@#{user_2.username}")
+  end
 
-    it "shows a list of users who have liked a post on hover for authenticated users posting anonymously" do
-      anonymous_user = Fabricate(:anonymous)
-      sign_in(anonymous_user)
-      visit(post.url)
+  it "shows the user's username as primary when prioritize_username_in_ux is true" do
+    SiteSetting.prioritize_username_in_ux = true
 
-      expect(reactions_list).to have_reaction("heart")
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
 
-      reactions_list.hover_over_reaction("heart")
-      expect(reactions_list).to have_users_for_reaction("heart", [user_2.username])
+    find(".discourse-reactions-counter").click
+
+    expect(page).to have_css(
+      ".post-users-popup__name[data-user-card=#{user_2.username}]",
+      text: user_2.username,
+    )
+    expect(page).to have_no_css(".post-users-popup__username")
+  end
+
+  it "filters the users popup by reaction" do
+    sign_in(current_user)
+    visit(post.url)
+    expect(reactions_list).to have_reaction("heart")
+
+    find(".discourse-reactions-counter").click
+    expect(page).to have_css(".post-users-popup")
+
+    within(".post-users-popup") do
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+
+      find("[data-reaction-filter=heart]").click
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+
+      find("[data-reaction-filter=clap]").click
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
+      expect(page).to have_no_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+
+      find("[data-reaction-filter=all]").click
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_2.username}]")
+      expect(page).to have_css(".post-users-popup__name[data-user-card=#{user_3.username}]")
     end
   end
 end

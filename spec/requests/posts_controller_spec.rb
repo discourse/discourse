@@ -2675,6 +2675,69 @@ RSpec.describe PostsController do
     end
   end
 
+  describe "#permanently_delete_check" do
+    fab!(:post)
+
+    before { SiteSetting.can_permanently_delete = true }
+
+    it "returns 404 for anonymous users" do
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for regular users" do
+      sign_in(user)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+      get "/posts/#{post.id}/permanently_delete_check.json"
+      expect(response.status).to eq(404)
+    end
+
+    context "when logged in as admin" do
+      before { sign_in(admin) }
+
+      it "returns can_permanently_delete true when allowed" do
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(true)
+        expect(json["reason"]).to be_nil
+      end
+
+      it "returns the reason when the same admin must wait" do
+        PostDestroyer.new(admin, post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(
+          I18n.t("post.cannot_permanently_delete.wait_or_different_admin", time_left: "5 minutes"),
+        )
+      end
+
+      it "returns the reason when topic has undeleted posts" do
+        Fabricate(:post, topic: post.topic)
+        PostDestroyer.new(Fabricate(:admin), post).destroy
+
+        get "/posts/#{post.id}/permanently_delete_check.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["can_permanently_delete"]).to eq(false)
+        expect(json["reason"]).to eq(I18n.t("post.cannot_permanently_delete.many_posts", count: 1))
+      end
+    end
+  end
+
   describe "#permanently_delete_revisions" do
     before { SiteSetting.can_permanently_delete = true }
 
