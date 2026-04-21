@@ -96,22 +96,24 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
     it "creates a workflow" do
       post "/admin/plugins/discourse-workflows/workflows.json",
            params: {
-             name: "My Workflow",
-             nodes: [
-               { client_id: "t1", type: "trigger:topic_closed", name: "Topic Closed" },
-               {
-                 client_id: "a1",
-                 type: "action:topic_tags",
-                 name: "Topic Tags",
-                 configuration: {
-                   topic_id: "={{ trigger.topic_id }}",
-                   tag_names: tag.name,
+             workflow: {
+               name: "My Workflow",
+               nodes: [
+                 { client_id: "t1", type: "trigger:topic_closed", name: "Topic Closed" },
+                 {
+                   client_id: "a1",
+                   type: "action:topic_tags",
+                   name: "Topic Tags",
+                   configuration: {
+                     topic_id: "={{ trigger.topic_id }}",
+                     tag_names: tag.name,
+                   },
                  },
-               },
-             ],
-             connections: [
-               { source_client_id: "t1", target_client_id: "a1", source_output: "main" },
-             ],
+               ],
+               connections: [
+                 { source_client_id: "t1", target_client_id: "a1", source_output: "main" },
+               ],
+             },
            }
 
       expect(response.status).to eq(200)
@@ -122,25 +124,32 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
     end
 
     it "returns 400 when name is missing" do
-      post "/admin/plugins/discourse-workflows/workflows.json", params: { nodes: [] }
+      post "/admin/plugins/discourse-workflows/workflows.json",
+           params: {
+             workflow: {
+               nodes: [],
+             },
+           }
       expect(response.status).to eq(400)
     end
 
     it "returns 422 when node validation fails" do
       post "/admin/plugins/discourse-workflows/workflows.json",
            params: {
-             name: "Invalid Schedule",
-             nodes: [
-               {
-                 client_id: "t1",
-                 type: "trigger:schedule",
-                 name: "Schedule",
-                 configuration: {
-                   cron: "invalid",
+             workflow: {
+               name: "Invalid Schedule",
+               nodes: [
+                 {
+                   client_id: "t1",
+                   type: "trigger:schedule",
+                   name: "Schedule",
+                   configuration: {
+                     cron: "invalid",
+                   },
                  },
-               },
-             ],
-             connections: [],
+               ],
+               connections: [],
+             },
            }
 
       expect(response.status).to eq(422)
@@ -153,10 +162,12 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
 
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
-            name: "Updated Name",
-            enabled: true,
-            nodes: [{ client_id: "t1", type: "trigger:topic_closed", name: "Topic Closed" }],
-            connections: [],
+            workflow: {
+              name: "Updated Name",
+              enabled: true,
+              nodes: [{ client_id: "t1", type: "trigger:topic_closed", name: "Topic Closed" }],
+              connections: [],
+            },
           }
 
       expect(response.status).to eq(200)
@@ -172,8 +183,10 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
 
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
-            name: workflow.name,
-            error_workflow_id: error_wf.id,
+            workflow: {
+              name: workflow.name,
+              error_workflow_id: error_wf.id,
+            },
           }
 
       expect(response.status).to eq(200)
@@ -188,8 +201,10 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
 
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
-            name: workflow.name,
-            error_workflow_id: nil,
+            workflow: {
+              name: workflow.name,
+              error_workflow_id: nil,
+            },
           }
 
       expect(response.status).to eq(200)
@@ -200,13 +215,23 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
     it "returns 400 when name is missing" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
 
-      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json", params: { nodes: [] }
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            workflow: {
+              nodes: [],
+            },
+          }
 
       expect(response.status).to eq(400)
     end
 
     it "returns 404 when workflow does not exist" do
-      put "/admin/plugins/discourse-workflows/workflows/-1.json", params: { name: "Test" }
+      put "/admin/plugins/discourse-workflows/workflows/-1.json",
+          params: {
+            workflow: {
+              name: "Test",
+            },
+          }
 
       expect(response.status).to eq(404)
     end
@@ -216,18 +241,20 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
 
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
-            name: "Updated",
-            nodes: [
-              {
-                client_id: "t1",
-                type: "trigger:schedule",
-                name: "Schedule",
-                configuration: {
-                  cron: "invalid",
+            workflow: {
+              name: "Updated",
+              nodes: [
+                {
+                  client_id: "t1",
+                  type: "trigger:schedule",
+                  name: "Schedule",
+                  configuration: {
+                    cron: "invalid",
+                  },
                 },
-              },
-            ],
-            connections: [],
+              ],
+              connections: [],
+            },
           }
 
       expect(response.status).to eq(422)

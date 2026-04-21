@@ -82,8 +82,10 @@ export default class WorkflowCanvas extends Component {
         {
           type: "PUT",
           data: {
-            name: this.args.workflowName,
-            enabled: newValue,
+            workflow: {
+              name: this.args.workflowName,
+              enabled: newValue,
+            },
           },
         }
       );

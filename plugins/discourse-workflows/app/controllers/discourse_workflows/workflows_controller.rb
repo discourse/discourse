@@ -113,9 +113,7 @@ module DiscourseWorkflows
     private
 
     def workflow_params
-      value = params[:workflow]
-      return {} unless value.is_a?(ActionController::Parameters)
-      value.to_unsafe_h
+      params.require(:workflow).to_unsafe_h
     end
   end
 end
