@@ -62,7 +62,6 @@ jobs:
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
-      LD_PRELOAD: /usr/lib/libjemalloc.so.1
 
     strategy:
       fail-fast: false
@@ -96,17 +95,12 @@ jobs:
           #   browser: Firefox ESR
 
     steps:
-      - name: Debug jemalloc preload (job-level LD_PRELOAD active)
+      - name: Enable jemalloc via /etc/ld.so.preload
+        run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
+
+      - name: Verify jemalloc is loaded into Ruby
         run: |
-          echo "--- env ---"
-          echo "LD_PRELOAD=$LD_PRELOAD"
-          echo "--- bash /proc/self/maps ---"
-          grep -i jemalloc /proc/self/maps && echo "BASH: jemalloc mapped" || echo "BASH: jemalloc NOT mapped"
-          echo "--- child sh /proc/self/maps ---"
-          sh -c 'grep -i jemalloc /proc/self/maps && echo "SH: jemalloc mapped" || echo "SH: jemalloc NOT mapped"'
-          echo "--- ruby /proc/self/maps ---"
-          ruby -e 'puts File.read("/proc/self/maps").lines.grep(/jemalloc/i)'
-          ruby -e 'puts File.read("/proc/self/maps").lines.grep(/jemalloc/i).any? ? "RUBY: jemalloc mapped" : "RUBY: jemalloc NOT mapped"'
+          ruby -e 'abort "jemalloc not loaded" unless File.read("/proc/self/maps").include?("libjemalloc")'
 
       - name: Set working directory owner
         run: chown root:root .
