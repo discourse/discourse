@@ -288,7 +288,9 @@ jobs:
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        run: |
+          ulimit -s unlimited
+          QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
       - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
@@ -302,11 +304,15 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake 'plugin:qunit[*]'
+        run: |
+          ulimit -s unlimited
+          bin/rake 'plugin:qunit[*]'
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+        run: |
+          ulimit -s unlimited
+          DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend'
