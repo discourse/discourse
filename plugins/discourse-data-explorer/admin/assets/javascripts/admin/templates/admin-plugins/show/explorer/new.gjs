@@ -1,4 +1,5 @@
 import { on } from "@ember/modifier";
+import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -7,7 +8,6 @@ import Form from "discourse/components/form";
 import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import QueryResultsWrapper from "discourse/plugins/discourse-data-explorer/discourse/components/query-results-wrapper";
 
 export default <template>
   <div class="admin-detail">
@@ -76,16 +76,16 @@ export default <template>
           {{#if @controller.hasGenerated}}
             <hr class="query-new__divider" />
 
-            <ConditionalLoadingSpinner @condition={{@controller.loading}} />
-
-            <QueryResultsWrapper
-              @results={{@controller.results}}
-              @showResults={{@controller.showResults}}
-              @content={{@controller.results}}
-              @showDownloads={{false}}
-              @sql={{@controller.generatedSql}}
-              @onSqlChange={{@controller.updateSql}}
-            />
+            <label class="query-new__field-label">
+              {{i18n "explorer.ai.sql_label"}}
+            </label>
+            <div class="query-new__sql-editor">
+              <AceEditor
+                @content={{@controller.generatedSql}}
+                @onChange={{@controller.updateSql}}
+                @mode="sql"
+              />
+            </div>
 
             <div class="query-new__fields">
               <label class="query-new__field-label">
@@ -111,13 +111,6 @@ export default <template>
             </div>
 
             <div class="query-new__actions">
-              <DButton
-                @action={{@controller.run}}
-                @icon="play"
-                @label="explorer.run"
-                @disabled={{@controller.aiGenerating}}
-                class="btn-primary"
-              />
               <DButton
                 @action={{@controller.saveQuery}}
                 @label="explorer.ai.save_query"

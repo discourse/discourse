@@ -416,6 +416,26 @@ table.group-reports {
     border-top: 1px solid var(--primary-low-mid);
   }
 
+  .query-new__sql-editor {
+    height: 200px;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+
+    .ace-wrapper {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
   .query-new__field-label {
     display: block;
     font-weight: 700;
@@ -519,28 +539,6 @@ table.group-reports {
   .query-results-table-wrapper {
     overflow: auto;
     max-height: 300px;
-  }
-
-  .query-results-sql {
-    height: 200px;
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    margin-top: 0.5em;
-    margin-bottom: 1em;
-
-    .ace-wrapper {
-      position: relative;
-      height: 100%;
-      width: 100%;
-    }
-
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
   }
 
   .query-results-modes {

@@ -977,50 +977,6 @@ describe DiscourseDataExplorer::QueryController do
       SiteSetting.data_explorer_enabled = true
     end
 
-    describe "#run_draft" do
-      it "runs valid SQL and returns results" do
-        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
-             params: {
-               sql: "SELECT 42 AS answer",
-             }
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-        expect(json["success"]).to eq(true)
-        expect(json["columns"]).to eq(["answer"])
-        expect(json["rows"]).to eq([[42]])
-      end
-
-      it "rejects SQL with semicolons" do
-        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
-             params: {
-               sql: "SELECT 1; DROP TABLE users",
-             }
-        expect(response.status).to eq(422)
-      end
-
-      it "returns error for invalid SQL" do
-        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
-             params: {
-               sql: "SELEKT invalid_syntax",
-             }
-        expect(response.status).to eq(422)
-      end
-
-      it "requires sql parameter" do
-        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json"
-        expect(response.status).to eq(400)
-      end
-
-      it "requires admin access" do
-        sign_in(Fabricate(:user))
-        post "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
-             params: {
-               sql: "SELECT 1",
-             }
-        expect(response.status).to eq(403)
-      end
-    end
-
     describe "#generate_with_ai" do
       before { SiteSetting.data_explorer_ai_queries_enabled = true }
 

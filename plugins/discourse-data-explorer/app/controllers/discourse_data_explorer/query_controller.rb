@@ -192,31 +192,6 @@ module DiscourseDataExplorer
       render json: { generation_id: generation_id, status: "generating" }
     end
 
-    def run_draft
-      rate_limit_query_runs!
-      check_xhr
-
-      sql = params.require(:sql)
-      query = Query.new(sql: sql)
-
-      limit =
-        fetch_limit_from_params(
-          default: SiteSetting.data_explorer_query_result_limit,
-          max: QUERY_RESULT_MAX_LIMIT,
-        )
-
-      query_params = QueryRunner.parse_params(params[:params])
-      result = DataExplorer.run_query(query, query_params, current_user: current_user, limit: limit)
-
-      if result[:error]
-        render json: format_query_error(result[:error]), status: :unprocessable_entity
-      else
-        render json: ResultFormatConverter.convert(:json, result, query_params: query_params)
-      end
-    rescue MultiJson::ParseError
-      render_invalid_json_params
-    end
-
     def update
       sql_changed = @query.sql != params.dig(:query, :sql)
 

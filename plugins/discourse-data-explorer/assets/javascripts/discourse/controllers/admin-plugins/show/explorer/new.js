@@ -25,8 +25,6 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedSql = "";
   @tracked generatedName = "";
   @tracked generatedDescription = "";
-  @tracked results = null;
-  @tracked showResults = false;
   @tracked showManualForm = false;
 
   currentGenerationId = null;
@@ -90,8 +88,6 @@ export default class AdminPluginsExplorerNew extends Controller {
 
     this.currentGenerationId = crypto.randomUUID();
     this.aiGenerating = true;
-    this.results = null;
-    this.showResults = false;
 
     try {
       await ajax(
@@ -168,37 +164,6 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
-  async run() {
-    if (!this.generatedSql.trim()) {
-      return;
-    }
-
-    this.loading = true;
-    this.showResults = false;
-
-    try {
-      const result = await ajax(
-        "/admin/plugins/discourse-data-explorer/queries/run_draft.json",
-        {
-          type: "POST",
-          data: { sql: this.generatedSql },
-        }
-      );
-      this.results = result;
-      this.showResults = result.success !== false;
-    } catch (err) {
-      this.showResults = false;
-      if (err.jqXHR?.status === 422 && err.jqXHR.responseJSON) {
-        this.results = err.jqXHR.responseJSON;
-      } else {
-        popupAjaxError(err);
-      }
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  @action
   updateAiDescription(event) {
     this.aiDescription = event.target.value;
   }
@@ -241,17 +206,9 @@ export default class AdminPluginsExplorerNew extends Controller {
       this.generatedSql = data.sql;
       this.generatedName = data.name;
       this.generatedDescription = data.description;
-
       this.hasGenerated = true;
       this.aiGenerating = false;
       this._teardownMessageBus();
-
-      if (data.results) {
-        this.results = data.results;
-        this.showResults = data.results.success !== false;
-      } else {
-        this.run();
-      }
     } else if (data.status === "error") {
       this.aiGenerating = false;
       this._teardownMessageBus();
@@ -283,10 +240,7 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedSql = "";
     this.generatedName = "";
     this.generatedDescription = "";
-    this.results = null;
-    this.showResults = false;
     this.showManualForm = false;
-    this.activeTab = "results";
     this.loading = false;
   }
 }
