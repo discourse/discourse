@@ -129,6 +129,40 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     assert.deepEqual(received, [1, 3]);
   });
 
+  test("sidebar-anonymous-default-categories value transformer appends a category to the ids received from default_navigation_menu_categories", async function (assert) {
+    this.siteSettings.default_navigation_menu_categories = "1";
+
+    let received;
+
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "sidebar-anonymous-default-categories",
+        ({ value }) => {
+          received = value;
+          return [...value, 3];
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert.deepEqual(
+      received,
+      [1],
+      "transformer receives the ids parsed from the site setting"
+    );
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id='1']"
+      )
+      .exists("category 1 (from the original setting) is in the sidebar");
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id='3']"
+      )
+      .exists("category 3 (appended by the transformer) is in the sidebar");
+  });
+
   test("sidebar-anonymous-default-categories value transformer can fall back to top site categories by returning an empty array", async function (assert) {
     this.siteSettings.default_navigation_menu_categories = "1|3";
 
