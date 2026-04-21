@@ -318,7 +318,7 @@ jobs:
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
-        if: always() && matrix.build_type == 'frontend'
+        if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
@@ -359,21 +359,12 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
-      - name: Check for failed system test artifacts
-        id: check-failed-system-test-artifacts
-        if: always() && matrix.build_type == 'system'
-        run: |
-          if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
-        if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
+        if: always() && matrix.build_type == 'system'
         with:
           name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
+          if-no-files-found: ignore
           path: |
             tmp/capybara/*.png
             tmp/capybara/*.zip
