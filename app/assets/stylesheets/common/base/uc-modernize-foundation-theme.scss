@@ -3,8 +3,7 @@
 .uc-modernize-foundation-theme {
   --main-outlet-padding-top: var(--space-4);
   --d-nav-underline-height: var(--space-half);
-  --input-border-color: var(--primary-200);
-  --d-content-background: var(--secondary);
+  --input-border-color: light-dark(var(--primary-200), var(--primary-300));
 
   // Sidebar
   --sidebar-section-wrapper-padding: var(--main-outlet-padding-top)
@@ -239,7 +238,6 @@
   .select-kit .select-kit-header:not(.composer-actions-btn),
   .d-date-input .date-picker {
     height: var(--d-control-height);
-    border: var(--d-button-default-border);
   }
 
   .select-kit.is-expanded .select-kit-filter.is-expanded {
@@ -256,7 +254,7 @@
   }
 
   .list-controls .combo-box .combo-box-header {
-    border: var(--d-button-default-border);
+    // border: var(--d-button-default-border);
     height: var(--d-control-height);
 
     &:hover {
