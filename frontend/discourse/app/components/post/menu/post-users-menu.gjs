@@ -111,10 +111,12 @@ export default class PostUsersMenu extends Component {
               {{/if}}
             </div>
           {{/each}}
-          <ConditionalLoadingSpinner
-            @condition={{this.loading}}
-            @size="small"
-          />
+          {{#if this.loading}}
+            <ConditionalLoadingSpinner
+              @condition={{this.loading}}
+              @size="small"
+            />
+          {{/if}}
         </LoadMore>
       </div>
     </div>

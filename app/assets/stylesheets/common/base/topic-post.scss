@@ -2238,7 +2238,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   }
 
   &__body {
-    height: 320px;
+    height: auto;
+    max-height: 320px;
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-top: 0.35em;
