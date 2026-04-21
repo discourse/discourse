@@ -44,6 +44,13 @@
 
       <style>
         <%= File.read("#{Rails.root}/frontend/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
+
+        #ember-testing * {
+          -webkit-transition: none !important;
+          -moz-transition: none !important;
+          -o-transition: none !important;
+          transition: none !important;
+        }
       </style>
 
       <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>
