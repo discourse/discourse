@@ -22,7 +22,7 @@ module Jobs
           return
         end
 
-        node = workflow.parsed_nodes.find { |n| n["id"] == node_id }
+        node = workflow.nodes.find { |n| n["id"] == node_id }
         return if node.nil?
 
         rules =

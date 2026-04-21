@@ -124,12 +124,7 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
     end
 
     it "returns 400 when name is missing" do
-      post "/admin/plugins/discourse-workflows/workflows.json",
-           params: {
-             workflow: {
-               nodes: [],
-             },
-           }
+      post "/admin/plugins/discourse-workflows/workflows.json", params: { workflow: { nodes: [] } }
       expect(response.status).to eq(400)
     end
 

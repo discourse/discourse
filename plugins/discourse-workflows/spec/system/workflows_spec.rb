@@ -76,7 +76,8 @@ RSpec.describe "Discourse Workflows" do
               "y" => 100,
             },
             "position_index" => 0,
-            "configuration" => {},
+            "configuration" => {
+            },
           },
         ],
         connections: [],

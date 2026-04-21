@@ -15,7 +15,7 @@ module DiscourseWorkflows
     private
 
     def build_node_map
-      existing_nodes = workflow.parsed_nodes.index_by { |n| n["id"] }
+      existing_nodes = workflow.nodes.index_by { |n| n["id"] }
       node_map = {}
 
       normalized_nodes_data.each_with_index do |node_data, index|
@@ -53,7 +53,7 @@ module DiscourseWorkflows
       new_connections = build_connections(node_map)
       attributes = { nodes: new_nodes, connections: new_connections }
 
-      existing_node_ids = workflow.parsed_nodes.map { |n| n["id"] }.to_set
+      existing_node_ids = workflow.nodes.map { |n| n["id"] }.to_set
       received_ids = new_nodes.map { |n| n["id"] }.to_set
       removed_ids = existing_node_ids - received_ids
 
@@ -66,7 +66,7 @@ module DiscourseWorkflows
     end
 
     def validate_nodes
-      existing_nodes_index = workflow.parsed_nodes.index_by { |n| n["id"] }
+      existing_nodes_index = workflow.nodes.index_by { |n| n["id"] }
 
       normalized_nodes_data.each do |node_data|
         existing = existing_nodes_index[node_data[:client_id].to_s]

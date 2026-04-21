@@ -57,9 +57,9 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
 
     context "when the form requires a logged-in user" do
       before do
-        trigger_node = workflow.parsed_nodes.find { |n| n["type"] == "trigger:form" }
+        trigger_node = workflow.nodes.find { |n| n["type"] == "trigger:form" }
         trigger_node["configuration"]["authentication"] = "login_required"
-        workflow.update!(nodes: workflow.parsed_nodes)
+        workflow.update!(nodes: workflow.nodes)
         DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
       end
 
@@ -149,10 +149,7 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
               g.node "form-action-1", "action:form", configuration: { "form_fields" => [] }
               g.chain "trigger-1", "action-1", "form-action-1"
             end
-          workflow.update!(
-            nodes: workflow.parsed_nodes + extra[:nodes],
-            connections: extra[:connections],
-          )
+          workflow.update!(nodes: workflow.nodes + extra[:nodes], connections: extra[:connections])
           DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
         end
 

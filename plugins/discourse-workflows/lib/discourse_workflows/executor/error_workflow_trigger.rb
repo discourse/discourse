@@ -19,7 +19,7 @@ module DiscourseWorkflows
         error_workflow = @workflow.error_workflow
         return unless eligible?(error_workflow)
 
-        trigger_node = error_workflow.parsed_nodes.find { |n| n["type"] == "trigger:error" }
+        trigger_node = error_workflow.nodes.find { |n| n["type"] == "trigger:error" }
         return unless trigger_node
 
         Jobs.enqueue(

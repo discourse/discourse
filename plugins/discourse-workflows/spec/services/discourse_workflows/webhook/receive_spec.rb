@@ -220,7 +220,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         before do
           workflow.update!(
             nodes:
-              workflow.parsed_nodes.map do |n|
+              workflow.nodes.map do |n|
                 if n["id"] == "webhook-1"
                   n.merge(
                     "configuration" => {
@@ -276,7 +276,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
           before do
             workflow.update!(
               nodes:
-                workflow.parsed_nodes.map do |n|
+                workflow.nodes.map do |n|
                   if n["id"] == "webhook-1"
                     n.merge(
                       "configuration" =>
@@ -322,7 +322,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         before do
           workflow.update!(
             nodes:
-              workflow.parsed_nodes.map do |n|
+              workflow.nodes.map do |n|
                 if n["id"] == "webhook-1"
                   n.merge(
                     "configuration" => {
@@ -373,7 +373,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         before do
           workflow.update!(
             nodes:
-              workflow.parsed_nodes.map do |n|
+              workflow.nodes.map do |n|
                 if n["id"] == "webhook-1"
                   n.merge(
                     "configuration" =>

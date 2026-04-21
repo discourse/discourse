@@ -141,7 +141,7 @@ module DiscourseWorkflows
       def nodes_by_name
         @nodes_by_name ||=
           workflow
-            .parsed_nodes
+            .nodes
             .each_with_object({}) do |node, by_name|
               name = node["name"].to_s
               next if name.blank?

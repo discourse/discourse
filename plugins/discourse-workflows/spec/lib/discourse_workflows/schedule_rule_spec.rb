@@ -232,7 +232,7 @@ RSpec.describe DiscourseWorkflows::ScheduleRule do
       Fabricate(:discourse_workflows_workflow, enabled: true, created_by: user, **graph)
     end
 
-    let(:node) { schedule_workflow.parsed_nodes.first }
+    let(:node) { schedule_workflow.nodes.first }
 
     it "enqueues a workflow execution job when a rule matches" do
       freeze_time Time.utc(2026, 3, 18, 9, 0)
@@ -293,7 +293,7 @@ RSpec.describe DiscourseWorkflows::ScheduleRule do
       Fabricate(:discourse_workflows_workflow, enabled: true, created_by: user, **graph)
     end
 
-    let(:node) { seconds_workflow.parsed_nodes.first }
+    let(:node) { seconds_workflow.nodes.first }
 
     it "starts a seconds chain when no recent trigger exists" do
       freeze_time Time.utc(2026, 3, 18, 9, 0)

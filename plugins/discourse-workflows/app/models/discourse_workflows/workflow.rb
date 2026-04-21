@@ -50,24 +50,16 @@ module DiscourseWorkflows
     end
 
     def nodes_of_type(type)
-      parsed_nodes.select { |n| n["type"] == type }
+      nodes.select { |n| n["type"] == type }
     end
 
     def find_node(node_id)
       node_id_str = node_id.to_s
-      parsed_nodes.find { |n| n["id"] == node_id_str }
+      nodes.find { |n| n["id"] == node_id_str }
     end
 
     def trigger_node
-      parsed_nodes.find { |n| n["type"]&.start_with?("trigger:") }
-    end
-
-    def parsed_nodes
-      nodes
-    end
-
-    def parsed_connections
-      connections
+      nodes.find { |n| n["type"]&.start_with?("trigger:") }
     end
 
     def node_static_data(node_id)
@@ -79,7 +71,7 @@ module DiscourseWorkflows
     end
 
     def each_seconds_schedule_rule
-      parsed_nodes.each do |node|
+      nodes.each do |node|
         next unless node["type"] == "trigger:schedule"
 
         rules = ScheduleRule.rules_from_configuration(node["configuration"] || {})
@@ -92,15 +84,15 @@ module DiscourseWorkflows
 
     def connections_from_node(node_id)
       node_id_str = node_id.to_s
-      parsed_connections.select { |c| c["source_node_id"] == node_id_str }
+      connections.select { |c| c["source_node_id"] == node_id_str }
     end
 
     def upstream_node_of(node_id)
       return if node_id.blank?
       node_id_str = node_id.to_s
-      conn = parsed_connections.find { |c| c["target_node_id"] == node_id_str }
+      conn = connections.find { |c| c["target_node_id"] == node_id_str }
       return unless conn
-      parsed_nodes.find { |n| n["id"] == conn["source_node_id"] }
+      nodes.find { |n| n["id"] == conn["source_node_id"] }
     end
 
     def last_successful_execution
@@ -108,7 +100,7 @@ module DiscourseWorkflows
     end
 
     def node_has_reachable_downstream_of_type?(node_id, type)
-      node_by_id = parsed_nodes.index_by { |n| n["id"] }
+      node_by_id = nodes.index_by { |n| n["id"] }
       visited = Set.new
       queue = [node_id.to_s]
 

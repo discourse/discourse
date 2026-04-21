@@ -57,7 +57,7 @@ module DiscourseWorkflows
     end
 
     def self.snapshot(workflow)
-      { "nodes" => workflow.parsed_nodes, "connections" => workflow.parsed_connections }
+      { "nodes" => workflow.nodes, "connections" => workflow.connections }
     end
   end
 end

@@ -25,7 +25,7 @@ module DiscourseWorkflows
     end
 
     def populate_schema_exemplars(context)
-      workflow.parsed_nodes.each { |node| apply_node_exemplar(context, node) }
+      workflow.nodes.each { |node| apply_node_exemplar(context, node) }
       apply_upstream_exemplar(context) if node_id
     end
 

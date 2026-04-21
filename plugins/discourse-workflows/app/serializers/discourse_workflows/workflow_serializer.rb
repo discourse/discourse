@@ -20,11 +20,11 @@ module DiscourseWorkflows
     attribute :updated_by
 
     def nodes
-      (object.parsed_nodes || []).sort_by { |n| n["position_index"] || 0 }
+      (object.nodes || []).sort_by { |n| n["position_index"] || 0 }
     end
 
     def connections
-      object.parsed_connections || []
+      object.connections || []
     end
 
     def created_by

@@ -53,9 +53,9 @@ RSpec.describe DiscourseWorkflows::Form::Show do
 
     context "when the form requires a logged-in user" do
       before do
-        trigger_node = workflow.parsed_nodes.find { |n| n["type"] == "trigger:form" }
+        trigger_node = workflow.nodes.find { |n| n["type"] == "trigger:form" }
         trigger_node["configuration"]["authentication"] = "login_required"
-        workflow.update!(nodes: workflow.parsed_nodes)
+        workflow.update!(nodes: workflow.nodes)
         DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
       end
 
@@ -96,9 +96,9 @@ RSpec.describe DiscourseWorkflows::Form::Show do
 
     context "when form_description references $execution.resume_url" do
       before do
-        trigger_node = workflow.parsed_nodes.find { |n| n["type"] == "trigger:form" }
+        trigger_node = workflow.nodes.find { |n| n["type"] == "trigger:form" }
         trigger_node["configuration"]["form_description"] = "={{ $execution.resume_url }}"
-        workflow.update!(nodes: workflow.parsed_nodes)
+        workflow.update!(nodes: workflow.nodes)
         DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
       end
 
@@ -129,10 +129,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
             g.node "form-action-1", "action:form", configuration: { "form_fields" => [] }
             g.chain "trigger-1", "action-1", "form-action-1"
           end
-        workflow.update!(
-          nodes: workflow.parsed_nodes + extra[:nodes],
-          connections: extra[:connections],
-        )
+        workflow.update!(nodes: workflow.nodes + extra[:nodes], connections: extra[:connections])
         DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
       end
 
@@ -155,7 +152,7 @@ RSpec.describe DiscourseWorkflows::Form::Show do
                      ],
                    }
           end
-        workflow.update!(nodes: workflow.parsed_nodes + extra[:nodes])
+        workflow.update!(nodes: workflow.nodes + extra[:nodes])
       end
 
       let(:resume_token) { SecureRandom.uuid }
@@ -216,8 +213,8 @@ RSpec.describe DiscourseWorkflows::Form::Show do
               g.connect "form-action-1", "form-action-2"
             end
           workflow.update!(
-            nodes: workflow.parsed_nodes + extra[:nodes],
-            connections: (workflow.parsed_connections || []) + extra[:connections],
+            nodes: workflow.nodes + extra[:nodes],
+            connections: (workflow.connections || []) + extra[:connections],
           )
         end
 
@@ -235,8 +232,8 @@ RSpec.describe DiscourseWorkflows::Form::Show do
               g.chain "form-action-1", "action-between", "form-action-2"
             end
           workflow.update!(
-            nodes: workflow.parsed_nodes + extra[:nodes],
-            connections: (workflow.parsed_connections || []) + extra[:connections],
+            nodes: workflow.nodes + extra[:nodes],
+            connections: (workflow.connections || []) + extra[:connections],
           )
         end
 

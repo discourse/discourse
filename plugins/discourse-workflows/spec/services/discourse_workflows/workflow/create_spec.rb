@@ -73,8 +73,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Create do
       it "populates the workflow graph" do
         result
         workflow = result[:workflow].reload
-        expect(workflow.parsed_nodes.size).to eq(2)
-        expect(workflow.parsed_connections.size).to eq(1)
+        expect(workflow.nodes.size).to eq(2)
+        expect(workflow.connections.size).to eq(1)
       end
 
       it "logs a staff action" do

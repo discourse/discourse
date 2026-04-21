@@ -13,7 +13,7 @@ module DiscourseWorkflows
     def call
       rows = []
 
-      @workflow.parsed_nodes.each do |node|
+      @workflow.nodes.each do |node|
         node_id = node["id"]
         node_type = node["type"]
         config = node["configuration"] || {}

@@ -58,7 +58,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         )
 
         workflow.reload
-        nodes = workflow.parsed_nodes.sort_by { |n| n["position_index"] }
+        nodes = workflow.nodes.sort_by { |n| n["position_index"] }
         expect(nodes.size).to eq(3)
 
         expect(nodes[0]).to include(
@@ -93,8 +93,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         )
 
         workflow.reload
-        nodes = workflow.parsed_nodes.sort_by { |n| n["position_index"] }
-        connections = workflow.parsed_connections
+        nodes = workflow.nodes.sort_by { |n| n["position_index"] }
+        connections = workflow.connections
         expect(connections.size).to eq(2)
 
         expect(connections[0]).to include(
@@ -129,8 +129,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         )
 
         workflow.reload
-        expect(workflow.parsed_nodes.map { |n| n["name"] }).to eq(["New Node"])
-        expect(workflow.parsed_connections).to be_empty
+        expect(workflow.nodes.map { |n| n["name"] }).to eq(["New Node"])
+        expect(workflow.connections).to be_empty
       end
 
       it "preserves the existing node's id and type_version" do
@@ -149,7 +149,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           connections_data: [],
         )
 
-        node = workflow.reload.parsed_nodes.first
+        node = workflow.reload.nodes.first
         expect(node["id"]).to eq("existing-1")
         expect(node["type_version"]).to eq("1.0")
         expect(node["name"]).to eq("Updated Name")
@@ -202,8 +202,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         )
 
         workflow.reload
-        expect(workflow.parsed_nodes.size).to eq(1)
-        expect(workflow.parsed_connections).to be_empty
+        expect(workflow.nodes.size).to eq(1)
+        expect(workflow.connections).to be_empty
       end
     end
 
@@ -216,7 +216,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         )
 
         workflow.reload
-        expect(workflow.parsed_nodes.first.dig("configuration", "uuid")).to be_present
+        expect(workflow.nodes.first.dig("configuration", "uuid")).to be_present
       end
     end
 
@@ -237,7 +237,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           connections_data: [],
         )
 
-        expect(workflow.reload.parsed_nodes.first.dig("configuration", "uuid")).to eq(
+        expect(workflow.reload.nodes.first.dig("configuration", "uuid")).to eq(
           "existing-uuid",
         )
       end
@@ -268,7 +268,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           connections_data: [],
         )
 
-        node = workflow.reload.parsed_nodes.first
+        node = workflow.reload.nodes.first
         expect(node.dig("configuration", "uuid")).to eq("original-uuid")
         expect(node.dig("configuration", "some_field")).to eq("value")
       end

@@ -88,7 +88,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
     it "handles different HTTP methods" do
       workflow.update!(
         nodes:
-          workflow.parsed_nodes.map do |n|
+          workflow.nodes.map do |n|
             if n["id"] == "webhook-1"
               n.merge("configuration" => { "path" => "my-hook", "http_method" => "PUT" })
             else
@@ -157,7 +157,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
             g.chain "webhook-1", "wait-1"
           end
         workflow.update!(
-          nodes: workflow.parsed_nodes + extra[:nodes],
+          nodes: workflow.nodes + extra[:nodes],
           connections: extra[:connections],
         )
       end
@@ -226,8 +226,8 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
             g.connect "wait-1", "respond-1"
           end
         workflow.update!(
-          nodes: workflow.parsed_nodes + extra[:nodes],
-          connections: workflow.parsed_connections + extra[:connections],
+          nodes: workflow.nodes + extra[:nodes],
+          connections: workflow.connections + extra[:connections],
         )
 
         waiting_execution.execution_data.update!(
@@ -254,7 +254,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       def setup_webhook_with_response(response_mode:, target_node_id:, extra:, webhook_config: {})
         workflow.update!(
           nodes:
-            workflow.parsed_nodes.map do |n|
+            workflow.nodes.map do |n|
               if n["id"] == "webhook-1"
                 n.merge(
                   "configuration" => {
@@ -427,7 +427,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       before do
         workflow.update!(
           nodes:
-            workflow.parsed_nodes.map do |n|
+            workflow.nodes.map do |n|
               if n["id"] == "webhook-1"
                 n.merge(
                   "configuration" => {
