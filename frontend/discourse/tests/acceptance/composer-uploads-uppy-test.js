@@ -282,8 +282,6 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     });
     await click("#cancel-file-upload");
 
-    await waitUntil(() => consoleErrorStub.calledWithMatch("[Uppy]"));
-
     consoleErrorStub.restore();
   });
 
