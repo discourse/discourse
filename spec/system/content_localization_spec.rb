@@ -201,6 +201,37 @@ describe "Content Localization" do
         expect(topic_page.topic_title).to have_content("織田信長の生涯")
       end
 
+      fab!(:ja_topic) do
+        topic = Fabricate(:topic, title: "日本語で書かれたトピック", locale: "ja", user: admin)
+        Fabricate(:post, topic:, locale: "ja", raw: "日本語の投稿です")
+        topic
+      end
+      fab!(:ja_topic_en_localization) do
+        Fabricate(
+          :topic_localization,
+          topic: ja_topic,
+          locale: "en",
+          fancy_title: "A topic written in Japanese",
+        )
+      end
+
+      it "shows original title on topic list for anonymous users when topic locale matches browsing locale" do
+        visit("/?tl=ja")
+        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
+        expect(page).to have_no_css(
+          ".topic-list-body .raw-topic-link",
+          text: "A topic written in Japanese",
+        )
+
+        # navigate away and come back — locale should persist via cookie
+        visit("/")
+        expect(page).to have_css(".topic-list-body .raw-topic-link", text: "日本語で書かれたトピック")
+        expect(page).to have_no_css(
+          ".topic-list-body .raw-topic-link",
+          text: "A topic written in Japanese",
+        )
+      end
+
       it "ignores tl parameter for logged-in users" do
         sign_in(site_local_user)
         visit("/t/#{topic.id}?tl=ja")

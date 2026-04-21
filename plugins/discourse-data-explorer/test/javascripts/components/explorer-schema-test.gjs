@@ -36,7 +36,7 @@ const schema = {
   ],
 };
 
-module("Data Explorer Plugin | Component | explorer-schema", function (hooks) {
+module("Component | explorer-schema", function (hooks) {
   setupRenderingTest(hooks);
 
   test("will automatically convert to lowercase", async function (assert) {

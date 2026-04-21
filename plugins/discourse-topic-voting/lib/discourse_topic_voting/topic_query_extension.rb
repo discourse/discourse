@@ -14,7 +14,7 @@ module DiscourseTopicVoting
       create_list(:user_topics) do |topics|
         topics.joins(
           "INNER JOIN topic_voting_votes ON topic_voting_votes.topic_id = topics.id",
-        ).where("topic_voting_votes.user_id = ?", user.id)
+        ).where("topic_voting_votes.user_id = ? AND topic_voting_votes.archive = FALSE", user.id)
       end
     end
 

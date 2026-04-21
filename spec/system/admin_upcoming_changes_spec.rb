@@ -62,6 +62,34 @@ describe "Admin upcoming changes" do
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
+  it "shows the permanent soon notice for stable changes but not for site_setting_default types" do
+    mock_upcoming_change_metadata(
+      {
+        about_page_extra_groups_show_description: {
+          impact: "feature,all_members",
+          status: :stable,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+        enable_upload_debug_mode: {
+          impact: "site_setting_default,all_members",
+          status: :stable,
+          impact_type: "site_setting_default",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+
+    expect(
+      upcoming_changes_page.change_item(:about_page_extra_groups_show_description),
+    ).to have_permanent_soon_notice
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to have_no_permanent_soon_notice
+  end
+
   it "does not show permanent upcoming changes" do
     mock_upcoming_change_metadata(
       {

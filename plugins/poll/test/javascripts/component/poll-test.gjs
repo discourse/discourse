@@ -9,7 +9,7 @@ import Poll from "discourse/plugins/poll/discourse/components/poll";
 
 let requests = 0;
 
-module("Poll | Component | poll", function (hooks) {
+module("Component | poll", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

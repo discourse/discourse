@@ -22,6 +22,13 @@ describe TopicQuery do
   end
 
   it "returns topics voted by user" do
+    archived_topic = Fabricate(:topic, category: category1)
+    DiscourseTopicVoting::Vote.create!(
+      topic_id: archived_topic.id,
+      user_id: user0.id,
+      archive: true,
+    )
+
     expect(TopicQuery.new(user0, { state: "my_votes" }).list_latest.topics.map(&:id)).to eq(
       [topic1.id],
     )

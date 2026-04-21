@@ -176,6 +176,18 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_section_link("Faq", target: "_self", href: "/faq#someheading")
   end
 
+  it "allows typing in the icon picker filter input" do
+    sign_in user
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    picker = section_modal.first_link_icon_picker
+    picker.expand.type_filter("globe")
+
+    expect(picker.filter_input.value).to eq("globe")
+    expect(picker).to have_icon("globe")
+  end
+
   it "accessibility - when new row is added in custom section, first new input is focused" do
     sign_in user
     visit("/latest")

@@ -55,7 +55,7 @@ const PRELOADEDVOTERS = {
   ],
 };
 
-module("Poll | Component | poll-results-tabs", function (hooks) {
+module("Component | poll-results-tabs", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders one tab for non-ranked-choice poll", async function (assert) {

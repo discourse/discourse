@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatThreadHeading from "discourse/plugins/chat/discourse/components/chat-thread-heading";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-thread-heading", function (hooks) {
+module("Component | chat-thread-heading", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders the title", async function (assert) {

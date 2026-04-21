@@ -25,8 +25,9 @@ export default class LikedUsersList extends Component {
       component: PostLikedUsersMenu,
       modalForMobile: true,
       closeOnScroll: true,
+      arrow: true,
       placement: "bottom",
-      offset: 10,
+      offset: 15,
       data: { post: this.args.post },
     });
   }
