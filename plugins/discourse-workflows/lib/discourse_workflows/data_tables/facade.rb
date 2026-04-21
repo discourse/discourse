@@ -333,10 +333,6 @@ module DiscourseWorkflows
         "%#{ActiveRecord::Base.sanitize_sql_like(value.to_s, "!")}%"
       end
 
-      def quoted_column(name)
-        Storage.quoted_column(name)
-      end
-
       def connection
         ActiveRecord::Base.connection
       end
