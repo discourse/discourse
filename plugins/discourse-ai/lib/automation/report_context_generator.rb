@@ -102,7 +102,7 @@ module DiscourseAi
         buffer = []
         buffer << ""
         buffer << "post_number: #{post.post_number}"
-        buffer << "solution: true" if @solutions[post.topic_id] == post.id
+        buffer << "solution: true" if @solutions[post.topic_id]&.include?(post.id)
         buffer << post.created_at.strftime("%Y-%m-%d %H:%M")
         buffer << "user: #{post.user&.username}"
         buffer << "likes: #{post.like_count}"

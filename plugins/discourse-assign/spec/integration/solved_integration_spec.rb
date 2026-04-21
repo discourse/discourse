@@ -30,7 +30,7 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       DiscourseSolved::AcceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
       topic.reload
 
-      expect(topic.solved.answer_post_id).to eq(post.id)
+      expect(topic.solved.topic_answers[0].answer_post_id).to eq(post.id)
       expect(topic.assignment.reload.status).to eq("Done")
     end
 

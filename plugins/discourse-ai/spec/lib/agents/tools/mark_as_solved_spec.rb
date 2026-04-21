@@ -29,7 +29,7 @@ RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
 
     expect(result[:status]).to eq("success")
     expect(topic.reload.solved).to be_present
-    expect(topic.solved.answer_post).to eq(reply)
+    expect(topic.solved.topic_answers[0].post).to eq(reply)
   end
 
   it "unmarks a post as the accepted solution" do
