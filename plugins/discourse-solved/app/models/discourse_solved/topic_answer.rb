@@ -19,13 +19,14 @@ end
 # Table name: discourse_solved_topic_answers
 #
 #  id               :bigint           not null, primary key
-#  solved_topic_id  :integer          not null
-#  answer_post_id   :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  accepter_user_id :integer          not null
+#  answer_post_id   :integer          not null
+#  solved_topic_id  :integer          not null
 #
 # Indexes
 #
+#  index_discourse_solved_topic_answers_on_answer_post_id   (answer_post_id) UNIQUE
 #  index_discourse_solved_topic_answers_on_solved_topic_id  (solved_topic_id)
-#  index_discourse_solved_topic_answers_on_answer_post_id  (answer_post_id) UNIQUE
 #
