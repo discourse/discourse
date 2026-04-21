@@ -6,6 +6,7 @@ import {
   focus,
   settled,
   visit,
+  waitUntil,
 } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
@@ -281,10 +282,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     });
     await click("#cancel-file-upload");
 
-    assert.true(
-      consoleErrorStub.calledWithMatch("[Uppy]"),
-      "Uppy logs the cancelled uploads to the console"
-    );
+    await waitUntil(() => consoleErrorStub.calledWithMatch("[Uppy]"));
 
     consoleErrorStub.restore();
   });
@@ -523,10 +521,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
           "There was an error uploading the file, the gif was way too cool.",
           "shows the error message from the server"
         );
-      assert.true(
-        consoleErrorStub.calledWithMatch("[Uppy]"),
-        "Uppy logs the upload failure to the console"
-      );
+      await waitUntil(() => consoleErrorStub.calledWithMatch("[Uppy]"));
 
       await click(".dialog-footer .btn-primary");
       consoleErrorStub.restore();
@@ -574,11 +569,7 @@ acceptance(
               "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
               "it should show a consolidated error dialog"
             );
-          // eslint-disable-next-line qunit/no-conditional-assertions
-          assert.true(
-            consoleErrorStub.calledWithMatch("[Uppy]"),
-            "Uppy logs the upload failures to the console"
-          );
+          await waitUntil(() => consoleErrorStub.calledWithMatch("[Uppy]"));
 
           await click(".dialog-footer .btn-primary");
           consoleErrorStub.restore();
