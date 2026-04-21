@@ -28,7 +28,7 @@ document.addEventListener("discourse-init", async () => {
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
   const themeName = document.querySelector(
     "link[rel=modulepreload][data-theme-name]"
-  ).dataset.themeName;
+  )?.dataset.themeName;
   const hasThemeJs = !!themeName;
 
   document.body.insertAdjacentHTML(
