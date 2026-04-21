@@ -35,7 +35,12 @@
       <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
       <meta property="og:title" content="">
       <meta property="og:url" content="">
+      <meta name="twitter:title" content="">
+      <meta name="twitter:url" content="/">
       <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
+      <meta name="theme-color" content="#ffffff">
+
+      <link rel="canonical" href="/">
 
       <style>
         <%= File.read("#{Rails.root}/frontend/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
