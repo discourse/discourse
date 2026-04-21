@@ -15,13 +15,13 @@ module(
     test("storing and retrieving message", async function (assert) {
       const message1 = new ChatFabricators(getOwner(this)).message();
 
-      await this.subject.add(message1, message1.channel.id);
+      await this.subject.add(message1, message1.channel.id, null, false);
 
       assert.strictEqual(this.subject.get(message1.channel.id), message1);
 
       const message2 = new ChatFabricators(getOwner(this)).message();
 
-      await this.subject.add(message2, message2.channel.id);
+      await this.subject.add(message2, message2.channel.id, null, false);
 
       assert.strictEqual(this.subject.get(message2.channel.id), message2);
     });
@@ -29,7 +29,7 @@ module(
     test("#reset", async function (assert) {
       const message = new ChatFabricators(getOwner(this)).message();
 
-      await this.subject.add(message, message.channel.id);
+      await this.subject.add(message, message.channel.id, null, false);
 
       assert.strictEqual(Object.keys(this.subject.drafts).length, 1);
 

@@ -57,6 +57,8 @@ acceptance("Discourse Chat - Channel Reactions", function (needs) {
         meta: { can_delete_self: true },
       })
     );
+
+    pretender.post(`/chat/api/channels/11/drafts`, () => response({}));
   });
 
   test("shows the reaction button with the count", async function (assert) {
