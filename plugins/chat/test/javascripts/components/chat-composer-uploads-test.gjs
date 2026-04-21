@@ -1,5 +1,6 @@
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
@@ -113,6 +114,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("cancelling in progress upload", async function (assert) {
+    sinon.stub(console, "error");
     setupUploadPretender();
 
     this.set("changedUploads", null);
