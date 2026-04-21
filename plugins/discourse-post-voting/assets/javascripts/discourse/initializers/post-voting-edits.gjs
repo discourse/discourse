@@ -57,12 +57,12 @@ function customizePost(api) {
         orderStreamByActivity() {
           this.cancelFilter();
           this.set("filter", ORDER_BY_ACTIVITY_FILTER);
-          return this.refreshAndJumpToSecondVisible();
+          return this.refresh({ refreshInPlace: true });
         }
 
         orderStreamByVotes() {
           this.cancelFilter();
-          return this.refreshAndJumpToSecondVisible();
+          return this.refresh({ refreshInPlace: true });
         }
       }
   );

@@ -324,8 +324,8 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
 
     assert
-      .dom(".post-voting-answers-header__sort-votes")
-      .isDisabled("sort by votes button is disabled by default");
+      .dom(".post-voting-answers-header__sort .--votes")
+      .hasClass("active", "sort by votes is active by default");
 
     assert
       .dom(document.body)
@@ -334,7 +334,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "appends the right class to body when loading Post Voting topic"
       );
 
-    await click(".post-voting-answers-header__sort-activity");
+    await click(".post-voting-answers-header__sort .--activity");
 
     assert.true(
       filteredByActivity,
@@ -349,14 +349,14 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       );
 
     assert
-      .dom(".post-voting-answers-header__sort-activity")
-      .isDisabled("disabled sort by activity button");
+      .dom(".post-voting-answers-header__sort .--activity")
+      .hasClass("active", "marks sort by activity as active");
 
-    await click(".post-voting-answers-header__sort-votes");
+    await click(".post-voting-answers-header__sort .--votes");
 
     assert
-      .dom(".post-voting-answers-header__sort-votes")
-      .isDisabled("disables sort by votes button");
+      .dom(".post-voting-answers-header__sort .--votes")
+      .hasClass("active", "marks sort by votes as active");
 
     assert
       .dom(document.body)
@@ -658,15 +658,11 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
 
     assert
-      .dom(
-        "#post_2 #post-voting-comment-2 .post-voting-comments__comment-actions-vote-count"
-      )
+      .dom("#post_2 #post-voting-comment-2 .post-voting-comments__vote-count")
       .doesNotExist("does not display element if vote count is zero");
 
     assert
-      .dom(
-        "#post_2 #post-voting-comment-3 .post-voting-comments__comment-actions-vote-count"
-      )
+      .dom("#post_2 #post-voting-comment-3 .post-voting-comments__vote-count")
       .hasText("3", "displays the right vote count");
   });
 
@@ -676,17 +672,13 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await click("#post_2 #post-voting-comment-2 .post-voting-button.--upvote");
 
     assert
-      .dom(
-        "#post_2 #post-voting-comment-2 .post-voting-comments__comment-actions-vote-count"
-      )
+      .dom("#post_2 #post-voting-comment-2 .post-voting-comments__vote-count")
       .hasText("1", "updates the comment vote count correctly");
 
     await click("#post_2 #post-voting-comment-2 .post-voting-button.--upvote");
 
     assert
-      .dom(
-        "#post_2 #post-voting-comment-2 .post-voting-comments__comment-actions-vote-count"
-      )
+      .dom("#post_2 #post-voting-comment-2 .post-voting-comments__vote-count")
       .doesNotExist("updates the comment vote count correctly");
   });
 
