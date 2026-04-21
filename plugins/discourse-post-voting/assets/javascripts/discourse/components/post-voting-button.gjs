@@ -23,6 +23,18 @@ export default class PostVotingButton extends Component {
     return this.args.voted ? "vote-up-filled" : "vote-up";
   }
 
+  get ariaLabel() {
+    if (this.args.direction === "up") {
+      return this.args.voted
+        ? "post_voting.vote.button.remove_upvote"
+        : "post_voting.vote.button.upvote";
+    }
+
+    return this.args.voted
+      ? "post_voting.vote.button.remove_downvote"
+      : "post_voting.vote.button.downvote";
+  }
+
   @action
   onClick() {
     if (this.args.loading) {
@@ -41,6 +53,8 @@ export default class PostVotingButton extends Component {
       {{on "click" this.onClick}}
       @disabled={{this.disabled}}
       @icon={{this.iconName}}
+      @title={{this.ariaLabel}}
+      @ariaLabel={{this.ariaLabel}}
       class={{concatClass
         "btn-transparent post-voting-button"
         this.buttonClasses

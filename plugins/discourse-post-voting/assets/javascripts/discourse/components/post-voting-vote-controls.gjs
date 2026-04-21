@@ -119,9 +119,12 @@ export default class PostVotingVoteControls extends Component {
 
       {{#if this.hasVotes}}
         <DButton
-          class="post-voting-post__toggle-voters btn-flat"
+          class="post-voting-post__toggle-voters btn-transparent"
           @action={{this.toggleWhoVoted}}
           @translatedLabel={{concat @post.post_voting_vote_count}}
+          @title="post_voting.vote.toggle_voters"
+          @ariaLabel="post_voting.vote.toggle_voters"
+          @ariaExpanded={{this.showWhoVoted}}
         />
         {{#if this.showWhoVoted}}
           <PostVotingWhoVotedList

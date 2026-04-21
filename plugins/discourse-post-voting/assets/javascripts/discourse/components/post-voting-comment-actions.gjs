@@ -76,12 +76,16 @@ export default class PostVotingCommentActions extends Component {
           class="post-voting-comments__comment-actions-edit-link"
           @action={{@updateComment}}
           @icon="pencil"
+          @title="post_voting.post.post_voting_comment.actions.edit"
+          @ariaLabel="post_voting.post.post_voting_comment.actions.edit"
         />
         <DButton
           @display="link"
           class="post-voting-comments__comment-actions-delete-link"
           @action={{this.deleteConfirm}}
           @icon="far-trash-can"
+          @title="post_voting.post.post_voting_comment.actions.delete"
+          @ariaLabel="post_voting.post.post_voting_comment.actions.delete"
         />
         {{#if this.canFlag}}
           <DButton
@@ -89,6 +93,8 @@ export default class PostVotingCommentActions extends Component {
             class="post-voting-comments__comment-actions-flag-link"
             @action={{this.showFlag}}
             @icon="flag"
+            @title="post_voting.post.post_voting_comment.actions.flag"
+            @ariaLabel="post_voting.post.post_voting_comment.actions.flag"
           />
         {{/if}}
       </span>
