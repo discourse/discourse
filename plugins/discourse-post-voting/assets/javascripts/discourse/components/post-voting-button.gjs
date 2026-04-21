@@ -23,7 +23,7 @@ export default class PostVotingButton extends Component {
   }
 
   get iconName() {
-    return this.args.direction === "up" ? "angle-up" : "angle-down";
+    return this.args.voted ? "vote-up-filled" : "vote-up";
   }
 
   @action

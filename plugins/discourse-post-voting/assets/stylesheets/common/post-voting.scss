@@ -245,14 +245,68 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  min-width: 2.5em;
   margin-top: 0.5em;
 
   .post-voting-button {
-    padding-top: 0.1em;
-    padding-bottom: 0.1em;
-    font-size: var(--font-up-5);
+    background: var(--secondary);
+    border: 1px solid var(--content-border-color);
+    border-radius: 0;
+    padding: var(--space-1) var(--space-3);
+
+    &.post-voting-button-upvote {
+      border-radius: var(--d-button-border-radius) var(--d-button-border-radius)
+        0 0;
+    }
+
+    &.post-voting-button-downvote {
+      border-top: 0;
+      border-radius: 0 0 var(--d-button-border-radius)
+        var(--d-button-border-radius);
+
+      .d-icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    &:focus-visible,
+    .discourse-no-touch &:hover {
+      background: var(--primary-low);
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+
+    &.post-voting-button-voted {
+      .d-icon {
+        color: var(--success);
+      }
+
+      &:focus-visible,
+      .discourse-no-touch &:hover {
+        background: var(--primary-low);
+
+        .d-icon {
+          color: var(--success);
+        }
+      }
+    }
+  }
+
+  .post-voting-post-toggle-voters {
+    background: var(--secondary);
+    border-inline: 1px solid var(--content-border-color);
+    border-radius: 0;
+    font-size: var(--font-down-2);
+    padding: var(--space-half) var(--space-2);
+    text-align: center;
+    color: var(--primary-medium);
+  }
+
+  span.post-voting-post-toggle-voters {
+    display: block;
   }
 
   .post-voting-post-list {
@@ -263,7 +317,7 @@
     box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
-    top: 4em;
+    top: 100%;
     padding: 0.5em;
     max-width: 90vw;
     overflow: auto;
@@ -288,16 +342,5 @@
     margin: 0.15em 0.25em 0 0.25em;
     font-size: var(--font-up-1);
     color: var(--primary-low-mid);
-  }
-
-  .post-voting-button-voted {
-    .d-icon {
-      color: var(--success);
-    }
-  }
-
-  .post-voting-post-toggle-voters {
-    padding-top: 0;
-    padding-bottom: 0;
   }
 }

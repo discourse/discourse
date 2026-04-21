@@ -43,7 +43,8 @@ after_initialize do
   require_relative "app/serializers/reviewable_post_voting_comments_serializer"
   require_relative "config/routes"
 
-  register_svg_icon "angle-up"
+  register_svg_icon "vote-up"
+  register_svg_icon "vote-up-filled"
   register_svg_icon "info"
 
   register_post_custom_field_type("vote_history", :json)
