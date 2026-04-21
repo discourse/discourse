@@ -47,7 +47,8 @@ function customizePost(api) {
   api.addTrackedPostProperties(
     "comments_count",
     "post_voting_user_voted_direction",
-    "post_voting_has_votes"
+    "post_voting_has_votes",
+    "post_voting_vote_count"
   );
 
   api.modifyClass(

@@ -201,6 +201,14 @@ function setupPostVoting(needs) {
       return helper.response({});
     });
 
+    server.post("/post_voting/vote", () => {
+      return helper.response({});
+    });
+
+    server.delete("/post_voting/vote", () => {
+      return helper.response({});
+    });
+
     server.get("/latest.json", () => {
       return helper.response(postVotingTopicListResponse());
     });
@@ -674,6 +682,37 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "#post_2 #post-voting-comment-2 .post-voting-comment-actions-vote-count"
       )
       .doesNotExist("updates the comment vote count correctly");
+  });
+
+  test("voting on a post and removing vote updates the count reactively", async function (assert) {
+    await visit("/t/280");
+
+    assert
+      .dom("#post_2 .post-voting-post-toggle-voters")
+      .hasText("2", "displays the initial post vote count");
+
+    await click("#post_2 .post-voting-button-upvote");
+
+    assert
+      .dom("#post_2 .post-voting-post-toggle-voters")
+      .hasText("1", "decrements the post vote count after removing upvote");
+
+    assert
+      .dom("#post_2 .post-voting-button-upvote")
+      .doesNotHaveClass(
+        "post-voting-button-voted",
+        "unhighlights the upvote button"
+      );
+
+    await click("#post_2 .post-voting-button-downvote");
+
+    assert
+      .dom("#post_2 .post-voting-post-toggle-voters")
+      .hasText("0", "decrements the post vote count after downvoting");
+
+    assert
+      .dom("#post_2 .post-voting-button-downvote")
+      .hasClass("post-voting-button-voted", "highlights the downvote button");
   });
 
   test("topic list link overrides work", async function (assert) {
