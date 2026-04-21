@@ -2,9 +2,9 @@
 class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
   def up
     create_table :discourse_solved_topic_answers do |t|
-      t.integer :solved_topic_id, null: false
-      t.integer :answer_post_id, null: false
-      t.integer :accepter_user_id, null: false
+      t.bigint :solved_topic_id, null: false
+      t.bigint :answer_post_id, null: false
+      t.bigint :accepter_user_id, null: false
       t.timestamps null: false
     end
 
@@ -19,14 +19,19 @@ class AddDiscourseSolvedTopicAnswers < ActiveRecord::Migration[8.0]
        WHERE answer_post_id IS NOT NULL
     SQL
 
+    change_column :discourse_solved_solved_topics, :topic_id, :bigint
+
     # Allow null until post deploy migration when columns are removed
     change_column_null :discourse_solved_solved_topics, :answer_post_id, true
     change_column_null :discourse_solved_solved_topics, :accepter_user_id, true
   end
 
   def down
+    change_column :discourse_solved_solved_topics, :topic_id, :bigint
+
     change_column_null :discourse_solved_solved_topics, :accepter_user_id, false
     change_column_null :discourse_solved_solved_topics, :answer_post_id, false
+
     drop_table :discourse_solved_topic_answers
   end
 end

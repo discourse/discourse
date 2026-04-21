@@ -21,9 +21,9 @@ end
 #  id               :bigint           not null, primary key
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  accepter_user_id :integer          not null
-#  answer_post_id   :integer          not null
-#  solved_topic_id  :integer          not null
+#  accepter_user_id :bigint           not null
+#  answer_post_id   :bigint           not null
+#  solved_topic_id  :bigint           not null
 #
 # Indexes
 #
