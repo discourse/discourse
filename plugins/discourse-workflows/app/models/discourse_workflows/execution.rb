@@ -56,6 +56,7 @@ module DiscourseWorkflows
     def self.step_field(step, key)
       step.is_a?(Hash) ? step[key.to_s] : step.public_send(key)
     end
+    private_class_method :step_field
 
     def fail_with_timeout!
       message = I18n.t("discourse_workflows.errors.approval_timed_out")
