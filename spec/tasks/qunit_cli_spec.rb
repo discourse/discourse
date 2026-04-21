@@ -41,8 +41,6 @@ describe "bin/qunit" do
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
-        "--test-page",
-        "tests",
       ],
     )
     expect(result.env).to match(
@@ -70,8 +68,6 @@ describe "bin/qunit" do
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
-        "--test-page",
-        "tests",
       ],
     )
     expect(result.env).to match(
@@ -97,8 +93,6 @@ describe "bin/qunit" do
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
-        "--test-page",
-        "tests",
       ],
     )
     expect(result.env).to match(
@@ -125,8 +119,6 @@ describe "bin/qunit" do
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
-        "--test-page",
-        "tests",
       ],
     )
     expect(result.env).to match(
@@ -158,8 +150,6 @@ describe "bin/qunit" do
         a_string_matching(/\A[a-zA-Z0-9]{8}\z/),
         "--path",
         "dist",
-        "--test-page",
-        "tests",
       ],
     )
     expect(result.env).to match(
