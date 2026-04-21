@@ -22,6 +22,12 @@ module DiscourseWorkflows
 
         def self.property_schema
           {
+            auto_columns_hint: {
+              type: :notice,
+              visible_if: {
+                columns: "$empty",
+              },
+            },
             columns: {
               type: :collection,
               required: false,

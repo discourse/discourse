@@ -391,6 +391,7 @@ en:
         header: "Header"
         value: "Value"
         add_column: "Add column"
+        auto_columns_hint_description: "Leave columns empty to build the table automatically from the keys of each input item."
       chat_approval:
         message: "Message"
         approve_label: "Approve button label"

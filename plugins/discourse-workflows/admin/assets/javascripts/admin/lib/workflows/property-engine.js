@@ -236,7 +236,21 @@ export function fieldVisible(schema = {}, configuration = {}) {
   }
 
   return Object.entries(rules).every(([fieldName, expected]) => {
+    const value = configuration[fieldName];
+    if (expected === "$empty") {
+      return isEmptyValue(value);
+    }
     const allowedValues = Array.isArray(expected) ? expected : [expected];
-    return allowedValues.includes(configuration[fieldName]);
+    return allowedValues.includes(value);
   });
+}
+
+function isEmptyValue(value) {
+  if (value == null || value === "") {
+    return true;
+  }
+  if (Array.isArray(value)) {
+    return value.length === 0;
+  }
+  return false;
 }

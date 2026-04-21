@@ -141,6 +141,20 @@ module("Unit | Utility | workflows property engine", function () {
     assert.false(fieldVisible({ type: "string", ui: { hidden: true } }, {}));
   });
 
+  test("supports the $empty sentinel to show a field when another one is empty", function (assert) {
+    const schema = {
+      type: "notice",
+      visible_if: { columns: "$empty" },
+    };
+
+    assert.true(fieldVisible(schema, {}));
+    assert.true(fieldVisible(schema, { columns: null }));
+    assert.true(fieldVisible(schema, { columns: [] }));
+    assert.true(fieldVisible(schema, { columns: "" }));
+    assert.false(fieldVisible(schema, { columns: [{ header: "A" }] }));
+    assert.false(fieldVisible(schema, { columns: "value" }));
+  });
+
   test("reuses field-specific add labels before falling back to a generic one", function (assert) {
     assert.strictEqual(
       collectionAddLabel("action:http_request", "headers"),
