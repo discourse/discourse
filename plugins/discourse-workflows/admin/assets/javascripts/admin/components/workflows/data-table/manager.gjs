@@ -30,7 +30,11 @@ export default class DataTablesManager extends CrudManager {
       model: {
         dataTable: null,
         onSave: async (data) => {
-          const result = await ajax(this.apiUrl, { type: "POST", data });
+          const result = await ajax(this.apiUrl, {
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+          });
           this.router.transitionTo(
             "adminPlugins.show.discourse-workflows-data-tables.show",
             result.data_table.id

@@ -96,7 +96,8 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
            params: {
              name: "users",
              columns: [{ "name" => "email", "type" => "string" }],
-           }
+           },
+           as: :json
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["data_table"]["name"]).to eq("users")

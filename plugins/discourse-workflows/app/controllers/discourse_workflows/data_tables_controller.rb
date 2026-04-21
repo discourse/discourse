@@ -37,9 +37,7 @@ module DiscourseWorkflows
     end
 
     def create
-      DiscourseWorkflows::DataTable::Create.call(
-        service_params.deep_merge(params: create_data_table_params),
-      ) do |result|
+      DiscourseWorkflows::DataTable::Create.call(service_params) do |result|
         on_success do |data_table:|
           render_serialized(data_table, DiscourseWorkflows::DataTableSerializer, root: "data_table")
         end
@@ -61,9 +59,7 @@ module DiscourseWorkflows
 
     def update
       DiscourseWorkflows::DataTable::Update.call(
-        service_params.deep_merge(
-          params: update_data_table_params.merge(data_table_id: params[:id]),
-        ),
+        service_params.deep_merge(params: { data_table_id: params[:id] }),
       ) do |result|
         on_success do |data_table:|
           render_serialized(data_table, DiscourseWorkflows::DataTableSerializer, root: "data_table")
@@ -106,30 +102,6 @@ module DiscourseWorkflows
         end
         on_model_not_found(:data_table) { raise Discourse::NotFound }
       end
-    end
-
-    private
-
-    def create_data_table_params
-      p = unsafe_params(:name)
-      cols = params[:columns]
-      cols = cols.values if cols.is_a?(ActionController::Parameters)
-      p["columns"] = Array(cols)
-        .select { |c| c.is_a?(Hash) || c.is_a?(ActionController::Parameters) }
-        .map { |c| unsafe_hash(c) }
-      p
-    end
-
-    def update_data_table_params
-      unsafe_params(:name)
-    end
-
-    def unsafe_params(*keys)
-      unsafe_hash(params.slice(*keys))
-    end
-
-    def unsafe_hash(value)
-      value.respond_to?(:to_unsafe_h) ? value.to_unsafe_h : value.to_h
     end
   end
 end
