@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTable::Show
     include Service::Base
+    include Concerns::DataTableServiceHelpers
 
     params do
       attribute :data_table_id, :integer
@@ -11,11 +12,5 @@ module DiscourseWorkflows
     end
 
     model :data_table
-
-    private
-
-    def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
-    end
   end
 end
