@@ -83,12 +83,15 @@ jobs:
           - build_type: system
             target: core-plugins
             browser: Chrome
+            plugin_compiler: rollup
           - build_type: system
             target: official-plugins
             browser: Chrome
+            plugin_compiler: rollup
           - build_type: system
             target: chat
             browser: Chrome
+            plugin_compiler: rollup
           - build_type: frontend
             target: plugins
             plugin_compiler: "legacy"
