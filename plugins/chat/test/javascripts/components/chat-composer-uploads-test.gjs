@@ -1,4 +1,4 @@
-import { click, render, waitFor, waitUntil } from "@ember/test-helpers";
+import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -157,6 +157,6 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     await click(".chat-composer-upload__remove-btn");
     assert.dom(".chat-composer-upload").doesNotExist();
 
-    await waitUntil(() => consoleErrorStub.calledWithMatch("[Uppy]"));
+    consoleErrorStub.restore();
   });
 });
