@@ -49,6 +49,15 @@ module DiscourseWorkflows
               },
             },
             form_fields: Schemas::FormFields::SCHEMA,
+            authentication: {
+              type: :options,
+              required: true,
+              default: "none",
+              options: %w[none login_required],
+              ui: {
+                expression: false,
+              },
+            },
             response_mode: {
               type: :options,
               required: true,

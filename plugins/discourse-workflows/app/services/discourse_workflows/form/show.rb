@@ -22,6 +22,7 @@ module DiscourseWorkflows
     only_if(:initial_request?) do
       model :workflow, :fetch_workflow_by_uuid
       model :form_node, :fetch_form_node_from_workflow
+      policy :authenticated_if_required
       model :form_data, :build_form_data_from_config
     end
 
@@ -33,6 +34,11 @@ module DiscourseWorkflows
 
     def initial_request?(waiting_execution:)
       waiting_execution.blank?
+    end
+
+    def authenticated_if_required(form_node:, guardian:)
+      return true if form_node.dig("configuration", "authentication") != "login_required"
+      guardian.authenticated?
     end
 
     def fetch_waiting_execution(params:)

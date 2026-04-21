@@ -21,11 +21,17 @@ module DiscourseWorkflows
 
     model :workflow
     model :trigger_node
+    policy :authenticated_if_required
     step :validate_required_form_fields
     model :execution, :run_workflow
     model :response_metadata, :build_response_metadata
 
     private
+
+    def authenticated_if_required(trigger_node:, guardian:)
+      return true if trigger_node.dig("configuration", "authentication") != "login_required"
+      guardian.authenticated?
+    end
 
     def validate_required_form_fields(trigger_node:, params:)
       missing = Workflow.missing_required_form_fields(trigger_node, params.form_data)

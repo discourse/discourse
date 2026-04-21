@@ -16,6 +16,7 @@ module DiscourseWorkflows
       if request.format.json?
         DiscourseWorkflows::Form::Show.call(service_params) do
           on_success { |form_data:| render json: form_data }
+          on_failed_policy(:authenticated_if_required) { raise Discourse::NotLoggedIn }
           on_failure { render(json: failed_json, status: :unprocessable_entity) }
           on_model_not_found(:workflow) { raise Discourse::NotFound }
           on_model_not_found(:form_node) { raise Discourse::NotFound }
@@ -37,6 +38,7 @@ module DiscourseWorkflows
                      DiscourseWorkflows::Executor.form_channel(execution&.id, resume_token),
                  }
         end
+        on_failed_policy(:authenticated_if_required) { raise Discourse::NotLoggedIn }
         on_failed_step(:validate_required_form_fields) do |missing_fields:|
           render json: { errors: missing_fields }, status: :unprocessable_entity
         end

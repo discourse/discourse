@@ -39,6 +39,26 @@ RSpec.describe DiscourseWorkflows::FormsController do
       get "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json"
       expect(response.status).to eq(404)
     end
+
+    context "when the form requires a logged-in user" do
+      before do
+        trigger_node = workflow.parsed_nodes.find { |n| n["type"] == "trigger:form" }
+        trigger_node["configuration"]["authentication"] = "login_required"
+        workflow.update!(nodes: workflow.parsed_nodes)
+        DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+      end
+
+      it "returns 403 for anonymous users" do
+        get "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "returns form schema for logged-in users" do
+        sign_in(Fabricate(:user))
+        get "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json"
+        expect(response.status).to eq(200)
+      end
+    end
   end
 
   describe "POST /workflows/form/:uuid.json" do
@@ -69,6 +89,38 @@ RSpec.describe DiscourseWorkflows::FormsController do
            headers: origin_headers
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to eq(["Name"])
+    end
+
+    context "when the form requires a logged-in user" do
+      before do
+        trigger_node = workflow.parsed_nodes.find { |n| n["type"] == "trigger:form" }
+        trigger_node["configuration"]["authentication"] = "login_required"
+        workflow.update!(nodes: workflow.parsed_nodes)
+        DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+      end
+
+      it "returns 403 for anonymous users" do
+        post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+             params: {
+               form_data: {
+                 name: "Test User",
+               },
+             },
+             headers: origin_headers
+        expect(response.status).to eq(403)
+      end
+
+      it "executes workflow for logged-in users" do
+        sign_in(Fabricate(:user))
+        post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+             params: {
+               form_data: {
+                 name: "Test User",
+               },
+             },
+             headers: origin_headers
+        expect(response.status).to eq(200)
+      end
     end
   end
 

@@ -55,6 +55,25 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
       it { is_expected.to fail_to_find_a_model(:workflow) }
     end
 
+    context "when the form requires a logged-in user" do
+      before do
+        trigger_node = workflow.parsed_nodes.find { |n| n["type"] == "trigger:form" }
+        trigger_node["configuration"]["authentication"] = "login_required"
+        workflow.update!(nodes: workflow.parsed_nodes)
+        DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
+      end
+
+      context "without a current user" do
+        let(:dependencies) { { guardian: Guardian.new } }
+
+        it { is_expected.to fail_a_policy(:authenticated_if_required) }
+      end
+
+      context "with a current user" do
+        it { is_expected.to run_successfully }
+      end
+    end
+
     context "when required form fields are missing" do
       let(:form_data) { {} }
 
