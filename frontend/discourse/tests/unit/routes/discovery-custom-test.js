@@ -11,12 +11,12 @@ module("Unit | Route | discovery-custom", function (hooks) {
     assert.strictEqual(await route.model({}), null);
   });
 
-  test("custom-homepage-model value transformer can provide the model", async function (assert) {
+  test("custom-homepage-model behavior transformer can provide the model", async function (assert) {
     const route = this.owner.lookup("route:discovery.custom");
     const homepageModel = { latest: [{ id: 1 }], hot: [{ id: 2 }] };
 
     withPluginApi((api) => {
-      api.registerValueTransformer(
+      api.registerBehaviorTransformer(
         "custom-homepage-model",
         () => homepageModel
       );
@@ -25,12 +25,12 @@ module("Unit | Route | discovery-custom", function (hooks) {
     assert.strictEqual(await route.model({}), homepageModel);
   });
 
-  test("custom-homepage-model value transformer can be async", async function (assert) {
+  test("custom-homepage-model behavior transformer can be async", async function (assert) {
     const route = this.owner.lookup("route:discovery.custom");
     const homepageModel = { leaderboard: { users: [] } };
 
     withPluginApi((api) => {
-      api.registerValueTransformer(
+      api.registerBehaviorTransformer(
         "custom-homepage-model",
         async () => homepageModel
       );
@@ -39,15 +39,18 @@ module("Unit | Route | discovery-custom", function (hooks) {
     assert.strictEqual(await route.model({}), homepageModel);
   });
 
-  test("custom-homepage-model value transformer receives queryParams in context", async function (assert) {
+  test("custom-homepage-model behavior transformer receives queryParams in context", async function (assert) {
     const route = this.owner.lookup("route:discovery.custom");
     let receivedContext;
 
     withPluginApi((api) => {
-      api.registerValueTransformer("custom-homepage-model", ({ context }) => {
-        receivedContext = context;
-        return null;
-      });
+      api.registerBehaviorTransformer(
+        "custom-homepage-model",
+        ({ context }) => {
+          receivedContext = context;
+          return null;
+        }
+      );
     });
 
     await route.model({ q: "search term" });
@@ -55,17 +58,22 @@ module("Unit | Route | discovery-custom", function (hooks) {
     assert.deepEqual(receivedContext.queryParams, { q: "search term" });
   });
 
-  test("multiple value transformers compose, each receiving the previous value", async function (assert) {
+  test("custom-homepage-model behavior transformer can delegate via next()", async function (assert) {
     const route = this.owner.lookup("route:discovery.custom");
 
     withPluginApi((api) => {
-      api.registerValueTransformer("custom-homepage-model", () => ({ a: 1 }));
-      api.registerValueTransformer("custom-homepage-model", ({ value }) => ({
-        ...value,
-        b: 2,
+      api.registerBehaviorTransformer(
+        "custom-homepage-model",
+        async ({ next }) => {
+          const value = await next();
+          return { ...value, wrapped: true };
+        }
+      );
+      api.registerBehaviorTransformer("custom-homepage-model", () => ({
+        a: 1,
       }));
     });
 
-    assert.deepEqual(await route.model({}), { a: 1, b: 2 });
+    assert.deepEqual(await route.model({}), { a: 1, wrapped: true });
   });
 });
