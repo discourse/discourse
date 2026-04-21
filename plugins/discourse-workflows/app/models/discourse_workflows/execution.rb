@@ -42,19 +42,19 @@ module DiscourseWorkflows
     def self.compute_run_time_ms(steps)
       timed =
         steps.select do |s|
-          started = s.is_a?(Hash) ? s["started_at"] : s.started_at
-          finished = s.is_a?(Hash) ? s["finished_at"] : s.finished_at
-          node_type = s.is_a?(Hash) ? s["node_type"] : s.node_type
-          started && finished && WAITING_NODE_TYPES.exclude?(node_type)
+          step_field(s, :started_at) && step_field(s, :finished_at) &&
+            WAITING_NODE_TYPES.exclude?(step_field(s, :node_type))
         end
       return if timed.empty?
       total =
         timed.sum do |s|
-          started = s.is_a?(Hash) ? s["started_at"] : s.started_at
-          finished = s.is_a?(Hash) ? s["finished_at"] : s.finished_at
-          Time.parse(finished.to_s) - Time.parse(started.to_s)
+          Time.parse(step_field(s, :finished_at).to_s) - Time.parse(step_field(s, :started_at).to_s)
         end
       (total * 1000).round
+    end
+
+    def self.step_field(step, key)
+      step.is_a?(Hash) ? step[key.to_s] : step.public_send(key)
     end
 
     def fail_with_timeout!
