@@ -25,9 +25,10 @@ export async function startTests() {
 
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target") || "core";
-  const hasThemeJs = !!document.querySelector(
-    "link[rel=modulepreload][data-theme-id]"
-  );
+  const themeName = document.querySelector(
+    "link[rel=modulepreload][data-theme-name]"
+  )?.dataset.themeName;
+  const hasThemeJs = !!themeName;
 
   document.body.insertAdjacentHTML(
     "afterbegin",
@@ -47,6 +48,12 @@ export async function startTests() {
 
   setup(QUnit.assert);
   setupTests(config.APP);
+
+  if (window.Testem && (hasThemeJs || target !== "core")) {
+    window.Testem.on("test-result", (t) => {
+      t.name = `${themeName || target} - ${t.name}`;
+    });
+  }
 
   if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam

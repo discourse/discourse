@@ -3776,6 +3776,8 @@ en:
         archive_topics: "Archive topics"
         move_messages_to_inbox: "Move to Inbox"
         archive_messages: "Move to Archive"
+        convert_to_public_topic: "Make public topics"
+        convert_to_private_message: "Make personal messages"
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
@@ -3894,6 +3896,12 @@ en:
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"
+      convert_to_public_topic:
+        name: "Make Public Topic…"
+        description: "Move the selected personal messages into a public topic in the following category:"
+      convert_to_private_message:
+        name: "Make Personal Message"
+        description: "Convert the selected public topics into personal messages."
       reset_bump_dates:
         name: "Reset Bump Dates"
         description: "Do you want to update the bump dates to the last created post date? This may impact their ordering in the topic list."
