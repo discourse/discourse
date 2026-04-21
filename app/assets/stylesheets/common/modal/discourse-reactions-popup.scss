@@ -193,6 +193,9 @@
   .loading-container {
     display: flex;
     justify-content: center;
-    padding: var(--space-3);
+
+    .spinner {
+      margin: var(--space-3);
+    }
   }
 }
