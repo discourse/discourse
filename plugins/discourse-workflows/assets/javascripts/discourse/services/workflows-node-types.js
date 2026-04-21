@@ -18,7 +18,7 @@ export default class WorkflowsNodeTypes extends Service {
   @tracked workflowId = null;
   @tracked lastExecutionNodeOutputs = null;
 
-  _nodeTypeMap = new Map();
+  nodeTypeMap = new Map();
 
   async load() {
     if (this.nodeTypes) {
@@ -32,7 +32,7 @@ export default class WorkflowsNodeTypes extends Service {
       this.nodeTypes = result.node_types || [];
       this.credentialTypes = result.credential_types || [];
       this.expressionContext = result.expression_context || {};
-      this._nodeTypeMap = new Map(
+      this.nodeTypeMap = new Map(
         this.nodeTypes.map((nt) => [nt.identifier, nt])
       );
       return this.nodeTypes;
@@ -43,7 +43,7 @@ export default class WorkflowsNodeTypes extends Service {
   }
 
   findNodeType(identifier) {
-    return this._nodeTypeMap.get(identifier) || null;
+    return this.nodeTypeMap.get(identifier) || null;
   }
 
   setEditingContext(node, nodes, connections, { workflowId } = {}) {
@@ -85,7 +85,7 @@ export default class WorkflowsNodeTypes extends Service {
     this.nodeTypes = null;
     this.credentialTypes = null;
     this.expressionContext = {};
-    this._nodeTypeMap = new Map();
+    this.nodeTypeMap = new Map();
     this.invalidateWorkflowVars();
     this.workflowId = null;
     this.lastExecutionNodeOutputs = null;

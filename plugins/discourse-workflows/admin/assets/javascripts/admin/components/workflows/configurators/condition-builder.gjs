@@ -97,7 +97,7 @@ function operationSchema(item) {
 }
 
 export default class ConditionBuilder extends Component {
-  @tracked _conditionSchemas = (
+  @tracked conditionSchemas = (
     this.args.formApi?.get(this.args.fieldName) || []
   ).map((item) => this.#buildConditionSchema(item));
 
@@ -110,9 +110,9 @@ export default class ConditionBuilder extends Component {
   }
 
   #updateSchemaAtIndex(index, schema) {
-    const newSchemas = [...this._conditionSchemas];
+    const newSchemas = [...this.conditionSchemas];
     newSchemas[index] = schema;
-    this._conditionSchemas = newSchemas;
+    this.conditionSchemas = newSchemas;
   }
 
   get fieldOptions() {
@@ -149,17 +149,17 @@ export default class ConditionBuilder extends Component {
 
   @action
   onConditionAdded(item) {
-    this._conditionSchemas = [
-      ...this._conditionSchemas,
+    this.conditionSchemas = [
+      ...this.conditionSchemas,
       this.#buildConditionSchema(item),
     ];
   }
 
   @action
   removeCondition(index) {
-    const newSchemas = [...this._conditionSchemas];
+    const newSchemas = [...this.conditionSchemas];
     newSchemas.splice(index, 1);
-    this._conditionSchemas = newSchemas;
+    this.conditionSchemas = newSchemas;
   }
 
   @action
@@ -205,7 +205,7 @@ export default class ConditionBuilder extends Component {
     );
 
     this.#updateSchemaAtIndex(index, {
-      ...this._conditionSchemas[index],
+      ...this.conditionSchemas[index],
       singleValue: isSingleValueOperator(value),
     });
   }
@@ -235,7 +235,7 @@ export default class ConditionBuilder extends Component {
         @onSet={{fn this.handleLeftValueSet ctx.index}}
       />
 
-      {{#let (get this._conditionSchemas ctx.index) as |schemas|}}
+      {{#let (get this.conditionSchemas ctx.index) as |schemas|}}
         <ctx.object.Object @name="operator" as |operator|>
           <Field
             @form={{operator}}

@@ -45,18 +45,18 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
       this.connectionUpdateFrame = null;
       this.graphIndex = buildWorkflowGraphIndex([], []);
 
-      this._measureSvg = document.createElementNS(
+      this.measureSvg = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "svg"
       );
-      this._measurePath = document.createElementNS(
+      this.measurePath = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "path"
       );
-      this._measureSvg.appendChild(this._measurePath);
-      this._measureSvg.style.cssText =
+      this.measureSvg.appendChild(this.measurePath);
+      this.measureSvg.style.cssText =
         "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none";
-      document.body.appendChild(this._measureSvg);
+      document.body.appendChild(this.measureSvg);
 
       this.addPipe(async (context) => {
         switch (context.type) {
@@ -133,17 +133,17 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
 
     scheduleConnectionUpdate(nodeId) {
       if (nodeId) {
-        this._dirtyNodeIds ??= new Set();
-        this._dirtyNodeIds.add(nodeId);
+        this.dirtyNodeIds ??= new Set();
+        this.dirtyNodeIds.add(nodeId);
       } else {
-        this._dirtyNodeIds = null;
+        this.dirtyNodeIds = null;
       }
 
       if (!this.connectionUpdateFrame) {
         this.connectionUpdateFrame = requestAnimationFrame(async () => {
           this.connectionUpdateFrame = null;
-          const dirtyNodes = this._dirtyNodeIds;
-          this._dirtyNodeIds = null;
+          const dirtyNodes = this.dirtyNodeIds;
+          this.dirtyNodeIds = null;
           await this.updateConnections(dirtyNodes);
         });
       }
@@ -223,19 +223,19 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
     }
 
     computeArrowLayout(pathD) {
-      this._measurePath.setAttribute("d", pathD);
-      const len = this._measurePath.getTotalLength();
+      this.measurePath.setAttribute("d", pathD);
+      const len = this.measurePath.getTotalLength();
 
       const socketRadius = 6;
       const arrowLen = 10;
-      const tip = this._measurePath.getPointAtLength(len - socketRadius);
-      const base = this._measurePath.getPointAtLength(
+      const tip = this.measurePath.getPointAtLength(len - socketRadius);
+      const base = this.measurePath.getPointAtLength(
         len - socketRadius - arrowLen
       );
       const angle =
         Math.atan2(tip.y - base.y, tip.x - base.x) * (180 / Math.PI);
 
-      const mid = this._measurePath.getPointAtLength(len / 2);
+      const mid = this.measurePath.getPointAtLength(len / 2);
 
       return {
         arrowTransform: `translate(${tip.x}, ${tip.y}) rotate(${angle})`,
@@ -245,7 +245,7 @@ export function createCustomRenderer(Scope, getElementCenter, classicPath) {
     }
 
     destroyMeasureSvg() {
-      this._measureSvg?.remove();
+      this.measureSvg?.remove();
     }
 
     #updateConnectionEntry(id, updates) {

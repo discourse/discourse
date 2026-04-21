@@ -45,37 +45,34 @@ export default class WorkflowCanvas extends Component {
   @tracked isLoading = true;
   @tracked rete = null;
   @tracked areaTransform = { x: 0, y: 0, k: 1 };
+  @tracked workflowEnabledOverride = null;
+  @tracked selectionVersion = 0;
+  copiedEntities = { nodes: [], stickyNotes: [] };
+  isFirstSync = true;
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
-  @tracked _workflowEnabled = null;
-
-  @tracked _selectionVersion = 0;
-
-  _copiedEntities = { nodes: [], stickyNotes: [] };
-
-  _isFirstSync = true;
 
   willDestroy() {
     super.willDestroy();
     this.rete?.destroy();
-    this._keyboard?.teardown();
+    this.keyboard?.teardown();
   }
 
   get workflowEnabled() {
-    return this._workflowEnabled ?? this.args.workflowEnabled;
+    return this.workflowEnabledOverride ?? this.args.workflowEnabled;
   }
 
   @action
   isStickyNoteSelected(clientId) {
-    this._selectionVersion;
+    this.selectionVersion;
     return this.rete?.isStickyNoteSelected(clientId) ?? false;
   }
 
   @action
   async toggleEnabled() {
     const newValue = !this.workflowEnabled;
-    this._workflowEnabled = newValue;
+    this.workflowEnabledOverride = newValue;
     try {
       await ajax(
         `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}.json`,
@@ -93,7 +90,7 @@ export default class WorkflowCanvas extends Component {
         this.args.workflow.enabled = newValue;
       }
     } catch {
-      this._workflowEnabled = !newValue;
+      this.workflowEnabledOverride = !newValue;
     }
   }
 
@@ -104,7 +101,7 @@ export default class WorkflowCanvas extends Component {
 
   @action
   async setupCanvas(element) {
-    this._keyboard = setupCanvasKeyboard(
+    this.keyboard = setupCanvasKeyboard(
       this.keyboardShortcuts,
       {
         onUndo: () => this.args.onUndo?.(),
@@ -113,9 +110,9 @@ export default class WorkflowCanvas extends Component {
         onPaste: () => this.#paste(),
         onDelete: () => this.deleteSelected(),
         onEscape: () => {
-          this._contextMenuApi?.close();
+          this.contextMenuApi?.close();
           this.rete?.selector.unselectAll();
-          this._selectionVersion++;
+          this.selectionVersion++;
         },
         onZoomIn: () => this.zoomIn(),
         onZoomOut: () => this.zoomOut(),
@@ -133,10 +130,10 @@ export default class WorkflowCanvas extends Component {
       nodeTypes,
       callbacks: {
         onNodeDragged: (...a) => this.args.onUpdateNodePosition?.(...a),
-        onNodePicked: () => this._selectionVersion++,
+        onNodePicked: () => this.selectionVersion++,
         onCanvasPointerDown: () => {
-          this._selectionVersion++;
-          this._contextMenuApi?.close();
+          this.selectionVersion++;
+          this.contextMenuApi?.close();
           this.menu.close("workflows-canvas-menu");
           this.args.onCloseNodePanel?.();
         },
@@ -219,8 +216,8 @@ export default class WorkflowCanvas extends Component {
       this.args.connections || []
     );
 
-    if (this._isFirstSync || this.rete.nodeCount !== prevNodeCount) {
-      this._isFirstSync = false;
+    if (this.isFirstSync || this.rete.nodeCount !== prevNodeCount) {
+      this.isFirstSync = false;
       await this.rete.fitToView(computeStickyNoteRects(this.args.stickyNotes));
     }
   }
@@ -281,19 +278,19 @@ export default class WorkflowCanvas extends Component {
 
   @action
   registerContextMenu(api) {
-    this._contextMenuApi = api;
+    this.contextMenuApi = api;
   }
 
   @action
   handleContextMenu(event) {
-    this._contextMenuApi?.open(event);
+    this.contextMenuApi?.open(event);
   }
 
   #invokeAtViewportCenter(callback) {
     if (!this.rete || !this.containerElement) {
       return;
     }
-    this._contextMenuApi?.close();
+    this.contextMenuApi?.close();
     callback?.(this.rete.viewportCenter());
   }
 
@@ -310,10 +307,10 @@ export default class WorkflowCanvas extends Component {
         this.args.onStickyNoteMove
       ),
       onStickyNoteUnselect: () => {
-        this._selectionVersion++;
+        this.selectionVersion++;
       },
     });
-    this._selectionVersion++;
+    this.selectionVersion++;
   }
 
   #copy() {
@@ -327,16 +324,16 @@ export default class WorkflowCanvas extends Component {
     const nodes = cloneMatching(this.args.nodes, nodeIds);
     const stickyNotes = cloneMatching(this.args.stickyNotes, stickyNoteIds);
     if (nodes.length > 0 || stickyNotes.length > 0) {
-      this._copiedEntities = { nodes, stickyNotes };
+      this.copiedEntities = { nodes, stickyNotes };
     }
   }
 
   #paste() {
-    const { nodes, stickyNotes } = this._copiedEntities;
+    const { nodes, stickyNotes } = this.copiedEntities;
     if (nodes.length === 0 && stickyNotes.length === 0) {
       return;
     }
-    this.args.onPasteEntities?.(this._copiedEntities);
+    this.args.onPasteEntities?.(this.copiedEntities);
     for (const { position: p } of [...nodes, ...stickyNotes]) {
       if (p) {
         p.x += 20;
@@ -357,7 +354,7 @@ export default class WorkflowCanvas extends Component {
       nodeIds: [],
       stickyNoteIds: [clientId],
     });
-    this._selectionVersion++;
+    this.selectionVersion++;
   }
 
   @action
@@ -383,7 +380,7 @@ export default class WorkflowCanvas extends Component {
         stickyNoteIds: [...stickyNoteIds],
       });
       this.rete?.selector.unselectAll();
-      this._selectionVersion++;
+      this.selectionVersion++;
     }
   }
 
@@ -440,12 +437,12 @@ export default class WorkflowCanvas extends Component {
   @action
   openImportDialog(closeFn) {
     closeFn();
-    this._fileInput?.click();
+    this.fileInput?.click();
   }
 
   @action
   registerFileInput(element) {
-    this._fileInput = element;
+    this.fileInput = element;
   }
 
   #showImportError(key = "import_error") {

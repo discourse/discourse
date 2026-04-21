@@ -43,7 +43,7 @@ export default class WorkflowsEditor extends Component {
     connections: this.#mapServerConnections(),
     stickyNotes: this.#initStickyNotes(),
   };
-  _isUndoRedo = false;
+  isUndoRedo = false;
 
   constructor() {
     super(...arguments);
@@ -63,8 +63,8 @@ export default class WorkflowsEditor extends Component {
     if (!workflowId) {
       return;
     }
-    this._executionChannel = `/discourse-workflows/workflow/${workflowId}`;
-    this.messageBus.subscribe(this._executionChannel, (message) => {
+    this.executionChannel = `/discourse-workflows/workflow/${workflowId}`;
+    this.messageBus.subscribe(this.executionChannel, (message) => {
       if (message.type === "execution_completed") {
         this.workflowsNodeTypes.lastExecutionNodeOutputs =
           message.last_execution_node_outputs;
@@ -73,9 +73,9 @@ export default class WorkflowsEditor extends Component {
   }
 
   #unsubscribeFromExecutions() {
-    if (this._executionChannel) {
-      this.messageBus.unsubscribe(this._executionChannel);
-      this._executionChannel = null;
+    if (this.executionChannel) {
+      this.messageBus.unsubscribe(this.executionChannel);
+      this.executionChannel = null;
     }
   }
 
@@ -174,7 +174,7 @@ export default class WorkflowsEditor extends Component {
 
   @action
   applySnapshot({ nodes, connections, stickyNotes }) {
-    this._isUndoRedo = true;
+    this.isUndoRedo = true;
     this.formApi.set("nodes", nodes);
     this.formApi.set("connections", connections);
     if (stickyNotes) {
@@ -885,12 +885,12 @@ export default class WorkflowsEditor extends Component {
 
   @action
   async handleSubmit() {
-    if (this._saving) {
-      this._pendingSave = true;
+    if (this.saving) {
+      this.pendingSave = true;
       return;
     }
 
-    this._saving = true;
+    this.saving = true;
     try {
       const name = this.formApi.get("name");
       const nodes = this.formApi.get("nodes");
@@ -907,10 +907,10 @@ export default class WorkflowsEditor extends Component {
       await this.args.workflow.save();
       this.#syncFromServer();
 
-      if (!this._isUndoRedo) {
+      if (!this.isUndoRedo) {
         this.undoManager.commitAction(this.#captureGraphSnapshot());
       }
-      this._isUndoRedo = false;
+      this.isUndoRedo = false;
       this.#refreshUndoState();
 
       if (this.args.isNew) {
@@ -922,9 +922,9 @@ export default class WorkflowsEditor extends Component {
     } catch (e) {
       popupAjaxError(e);
     } finally {
-      this._saving = false;
-      if (this._pendingSave) {
-        this._pendingSave = false;
+      this.saving = false;
+      if (this.pendingSave) {
+        this.pendingSave = false;
         this.handleSubmit();
       }
     }

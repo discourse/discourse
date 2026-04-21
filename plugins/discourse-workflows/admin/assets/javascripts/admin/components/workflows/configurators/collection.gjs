@@ -50,9 +50,9 @@ function hasNonDefaultValue(item, field) {
 }
 
 export default class Collection extends Component {
-  @tracked _activeAttrs = new Map();
+  @tracked activeAttrs = new Map();
   @tracked
-  _itemCount = (this.args.formApi?.get(this.args.fieldName) || []).length;
+  itemCount = (this.args.formApi?.get(this.args.fieldName) || []).length;
 
   get addLabel() {
     return (
@@ -106,7 +106,7 @@ export default class Collection extends Component {
   }
 
   get showEmptyState() {
-    return this.args.emptyStateDescription && this._itemCount === 0;
+    return this.args.emptyStateDescription && this.itemCount === 0;
   }
 
   @action
@@ -114,7 +114,7 @@ export default class Collection extends Component {
     const item = this.args.emptyItem ? this.args.emptyItem() : this.emptyItem;
     this.args.form.addItemToCollection(this.args.fieldName, item);
     this.args.onAdd?.(item);
-    this._itemCount++;
+    this.itemCount++;
   }
 
   @action
@@ -125,22 +125,22 @@ export default class Collection extends Component {
   @action
   removeItem(removeFn, index) {
     this.args.onRemove?.(index);
-    const newMap = new Map(this._activeAttrs);
+    const newMap = new Map(this.activeAttrs);
     newMap.delete(index);
-    this._activeAttrs = newMap;
+    this.activeAttrs = newMap;
     removeFn(index);
-    this._itemCount--;
+    this.itemCount--;
   }
 
   @action
   isAttrActive(index, field, item) {
-    return isExtraFieldShown(field, item, this._activeAttrs, index);
+    return isExtraFieldShown(field, item, this.activeAttrs, index);
   }
 
   @action
   toggleAttr(index, field, item) {
     const active = this.isAttrActive(index, field, item);
-    const newMap = new Map(this._activeAttrs);
+    const newMap = new Map(this.activeAttrs);
     const set = new Set(newMap.get(index) || []);
 
     if (active) {
@@ -156,7 +156,7 @@ export default class Collection extends Component {
     }
 
     newMap.set(index, set);
-    this._activeAttrs = newMap;
+    this.activeAttrs = newMap;
   }
 
   @action
@@ -221,7 +221,7 @@ export default class Collection extends Component {
 
               {{#each this.extraItemFields key="name" as |extraField|}}
                 {{#if
-                  (isExtraFieldShown extraField item this._activeAttrs index)
+                  (isExtraFieldShown extraField item this.activeAttrs index)
                 }}
                   {{#if (isCollection extraField)}}
                     <div class="workflows-property-engine__nested-collection">

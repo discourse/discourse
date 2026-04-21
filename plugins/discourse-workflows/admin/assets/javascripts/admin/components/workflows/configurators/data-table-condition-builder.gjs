@@ -33,7 +33,7 @@ function conditionSchema(type) {
 }
 
 export default class DataTableConditionBuilder extends Component {
-  @tracked _schemas = this.#initSchemas();
+  @tracked schemas = this.#initSchemas();
 
   get dataTable() {
     const id = parseInt(this.args.configuration?.data_table_id, 10);
@@ -75,9 +75,9 @@ export default class DataTableConditionBuilder extends Component {
   }
 
   #updateSchemaAt(index, schema) {
-    const updated = [...this._schemas];
+    const updated = [...this.schemas];
     updated[index] = schema;
-    this._schemas = updated;
+    this.schemas = updated;
   }
 
   @action
@@ -87,14 +87,14 @@ export default class DataTableConditionBuilder extends Component {
 
   @action
   onItemAdded(item) {
-    this._schemas = [...this._schemas, this.#buildSchema(item)];
+    this.schemas = [...this.schemas, this.#buildSchema(item)];
   }
 
   @action
   onItemRemoved(index) {
-    const updated = [...this._schemas];
+    const updated = [...this.schemas];
     updated.splice(index, 1);
-    this._schemas = updated;
+    this.schemas = updated;
   }
 
   @action
@@ -123,7 +123,7 @@ export default class DataTableConditionBuilder extends Component {
     }
 
     this.#updateSchemaAt(index, {
-      ...this._schemas[index],
+      ...this.schemas[index],
       singleValue: isSingleValueOperator(value),
     });
   }
@@ -154,7 +154,7 @@ export default class DataTableConditionBuilder extends Component {
           @onSet={{fn this.handleColumnChange ctx.index}}
         />
 
-        {{#let (get this._schemas ctx.index) as |schemas|}}
+        {{#let (get this.schemas ctx.index) as |schemas|}}
           {{#if schemas}}
             <Field
               @form={{ctx.object}}

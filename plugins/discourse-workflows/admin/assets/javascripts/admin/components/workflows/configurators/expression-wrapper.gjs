@@ -30,13 +30,13 @@ export default class ExpressionWrapper extends Component {
   @service workflowsNodeTypes;
 
   @tracked isDragOver = false;
-  _dragEndHandler = null;
+  dragEndHandler = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this._dragEndHandler) {
-      document.removeEventListener("dragend", this._dragEndHandler);
-      this._dragEndHandler = null;
+    if (this.dragEndHandler) {
+      document.removeEventListener("dragend", this.dragEndHandler);
+      this.dragEndHandler = null;
     }
   }
 
@@ -77,13 +77,13 @@ export default class ExpressionWrapper extends Component {
     this.isDragOver = true;
 
     // Safety: clear on next dragend in case dragleave doesn't fire
-    if (!this._dragEndHandler) {
-      this._dragEndHandler = () => {
+    if (!this.dragEndHandler) {
+      this.dragEndHandler = () => {
         this.isDragOver = false;
-        document.removeEventListener("dragend", this._dragEndHandler);
-        this._dragEndHandler = null;
+        document.removeEventListener("dragend", this.dragEndHandler);
+        this.dragEndHandler = null;
       };
-      document.addEventListener("dragend", this._dragEndHandler, {
+      document.addEventListener("dragend", this.dragEndHandler, {
         once: true,
       });
     }

@@ -30,10 +30,9 @@ export default class WorkflowsForm extends Component {
   @tracked state = "form";
   @tracked errorMessage = null;
   @tracked completionData = null;
+  @tracked formSchemaOverride = null;
   resumeToken = null;
-  @tracked _formSchema = null;
-
-  _channel = null;
+  channel = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -41,11 +40,11 @@ export default class WorkflowsForm extends Component {
   }
 
   get formSchema() {
-    return this._formSchema ?? this.args.model;
+    return this.formSchemaOverride ?? this.args.model;
   }
 
   set formSchema(value) {
-    this._formSchema = value;
+    this.formSchemaOverride = value;
   }
 
   get formData() {
@@ -113,9 +112,9 @@ export default class WorkflowsForm extends Component {
 
   #subscribe(channel) {
     this.#unsubscribe();
-    this._channel = channel;
+    this.channel = channel;
     this.messageBus.subscribe(
-      this._channel,
+      this.channel,
       (message) => {
         this.#handleMessage(message);
       },
@@ -124,9 +123,9 @@ export default class WorkflowsForm extends Component {
   }
 
   #unsubscribe() {
-    if (this._channel) {
-      this.messageBus.unsubscribe(this._channel);
-      this._channel = null;
+    if (this.channel) {
+      this.messageBus.unsubscribe(this.channel);
+      this.channel = null;
     }
   }
 

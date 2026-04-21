@@ -162,12 +162,12 @@ export class ReteEditorBridge {
     });
 
     renderer.onNodeDelete = (clientId) => {
-      if (!bridge._isSyncing) {
+      if (!bridge.isSyncing) {
         callbacks.onNodeDelete?.(clientId);
       }
     };
 
-    bridge._setupPipes();
+    bridge.setupPipes();
     return bridge;
   }
 
@@ -192,74 +192,74 @@ export class ReteEditorBridge {
     this.renderer = renderer;
     this.selector = selector;
     this.selectableNodes = selectableNodes;
-    this._connectionPlugin = connectionPlugin;
-    this._arrange = arrange;
-    this._container = container;
-    this._callbacks = callbacks;
-    this._accumulating = accumulating;
-    this._shiftAbort = shiftAbort;
-    this._WorkflowNode = WorkflowNode;
-    this._ClassicPreset = ClassicPreset;
-    this._AreaExtensions = AreaExtensions;
-    this._isSyncing = false;
-    this._wasDragging = false;
-    this._lastPickedId = null;
-    this._lastPickedTime = 0;
+    this.connectionPlugin = connectionPlugin;
+    this.arrange = arrange;
+    this.container = container;
+    this.callbacks = callbacks;
+    this.accumulating = accumulating;
+    this.shiftAbort = shiftAbort;
+    this.WorkflowNode = WorkflowNode;
+    this.ClassicPreset = ClassicPreset;
+    this.AreaExtensions = AreaExtensions;
+    this.isSyncing = false;
+    this.wasDragging = false;
+    this.lastPickedId = null;
+    this.lastPickedTime = 0;
   }
 
-  _setupPipes() {
+  setupPipes() {
     this.area.addPipe((context) => {
-      if (this._isSyncing) {
+      if (this.isSyncing) {
         return context;
       }
 
       switch (context.type) {
         case "nodetranslated":
-          this._callbacks.onNodeDragged?.(
+          this.callbacks.onNodeDragged?.(
             context.data.id,
             context.data.position
           );
-          if (!this._wasDragging) {
-            this._container.classList.add("is-dragging");
+          if (!this.wasDragging) {
+            this.container.classList.add("is-dragging");
           }
-          this._wasDragging = true;
+          this.wasDragging = true;
         // falls through to emit transform
         case "translated":
         case "zoomed": {
           const { x, y, k } = this.area.area.transform;
-          this._callbacks.onTransformChanged?.({ x, y, k });
+          this.callbacks.onTransformChanged?.({ x, y, k });
           break;
         }
 
         case "nodepicked": {
-          this._callbacks.onNodePicked?.();
+          this.callbacks.onNodePicked?.();
           const now = Date.now();
           const pickedId = context.data.id;
           if (
-            pickedId === this._lastPickedId &&
-            now - this._lastPickedTime < 500
+            pickedId === this.lastPickedId &&
+            now - this.lastPickedTime < 500
           ) {
-            this._callbacks.onNodeDoubleClick?.(pickedId);
-            this._lastPickedId = null;
+            this.callbacks.onNodeDoubleClick?.(pickedId);
+            this.lastPickedId = null;
           } else {
-            this._lastPickedId = pickedId;
+            this.lastPickedId = pickedId;
           }
-          this._lastPickedTime = now;
+          this.lastPickedTime = now;
           break;
         }
 
         case "pointerup":
-          if (this._wasDragging) {
-            this._wasDragging = false;
-            this._container.classList.remove("is-dragging");
-            this._callbacks.onNodeDragEnd?.();
+          if (this.wasDragging) {
+            this.wasDragging = false;
+            this.container.classList.remove("is-dragging");
+            this.callbacks.onNodeDragEnd?.();
           }
           break;
 
         case "pointerdown": {
           const target = context.data.event.target;
           if (!target?.closest?.(".workflow-rete-node")) {
-            this._callbacks.onCanvasPointerDown?.(context.data.event);
+            this.callbacks.onCanvasPointerDown?.(context.data.event);
           }
           break;
         }
@@ -269,7 +269,7 @@ export class ReteEditorBridge {
     });
 
     this.editor.addPipe((context) => {
-      if (this._isSyncing) {
+      if (this.isSyncing) {
         return context;
       }
 
@@ -277,12 +277,12 @@ export class ReteEditorBridge {
         context.type === "connectioncreated" ||
         context.type === "connectionremoved"
       ) {
-        this._updateRendererGraphIndex();
+        this.updateRendererGraphIndex();
         this.renderer.scheduleConnectionUpdate();
 
         if (context.type === "connectioncreated") {
           const conn = context.data;
-          this._callbacks.onConnectionCreated?.(
+          this.callbacks.onConnectionCreated?.(
             conn.source,
             conn.sourceOutput,
             conn.target
@@ -308,7 +308,7 @@ export class ReteEditorBridge {
   }
 
   async selectStickyNote(clientId, stickyCallbacks) {
-    const accumulate = this._accumulating.active();
+    const accumulate = this.accumulating.active();
     const entityKey = `sticky-note_${clientId}`;
 
     if (this.selector.entities.has(entityKey)) {
@@ -345,7 +345,7 @@ export class ReteEditorBridge {
     }
   }
 
-  _connectionKeyFromClientIds(connection) {
+  connectionKeyFromClientIds(connection) {
     return graphConnectionKey({
       source: connection.sourceClientId,
       sourceOutput: connection.sourceOutput,
@@ -353,7 +353,7 @@ export class ReteEditorBridge {
     });
   }
 
-  _buildDesiredGraphConnections(connections) {
+  buildDesiredGraphConnections(connections) {
     const graphConnections = [];
     const seen = new Set();
 
@@ -365,7 +365,7 @@ export class ReteEditorBridge {
         continue;
       }
 
-      const key = this._connectionKeyFromClientIds(connection);
+      const key = this.connectionKeyFromClientIds(connection);
       if (seen.has(key)) {
         continue;
       }
@@ -381,7 +381,7 @@ export class ReteEditorBridge {
     return graphConnections;
   }
 
-  _updateRendererGraphIndex(connections = this.editor.getConnections()) {
+  updateRendererGraphIndex(connections = this.editor.getConnections()) {
     this.renderer.graphIndex = buildWorkflowGraphIndex(
       this.editor.getNodes().map((node) => ({
         id: node.id,
@@ -391,8 +391,8 @@ export class ReteEditorBridge {
     );
   }
 
-  async _addNode(data) {
-    const node = new this._WorkflowNode(data);
+  async addNode(data) {
+    const node = new this.WorkflowNode(data);
     await this.editor.addNode(node);
     if (data.position) {
       await this.area.translate(node.id, data.position);
@@ -400,7 +400,7 @@ export class ReteEditorBridge {
     return node;
   }
 
-  async _removeNode(clientId) {
+  async removeNode(clientId) {
     if (!this.editor.getNode(clientId)) {
       return;
     }
@@ -414,7 +414,7 @@ export class ReteEditorBridge {
     await this.editor.removeNode(clientId);
   }
 
-  async _addConnection(sourceClientId, sourceOutput, targetClientId) {
+  async addConnection(sourceClientId, sourceOutput, targetClientId) {
     const sourceNode = this.editor.getNode(sourceClientId);
     const targetNode = this.editor.getNode(targetClientId);
     if (!sourceNode || !targetNode) {
@@ -422,7 +422,7 @@ export class ReteEditorBridge {
     }
 
     await this.editor.addConnection(
-      new this._ClassicPreset.Connection(
+      new this.ClassicPreset.Connection(
         sourceNode,
         normalizeSourceOutput(sourceOutput),
         targetNode,
@@ -432,13 +432,13 @@ export class ReteEditorBridge {
   }
 
   async syncState(nodes, connections) {
-    this._isSyncing = true;
+    this.isSyncing = true;
     try {
       const targetClientIds = new Set(nodes.map((n) => n.clientId));
 
       for (const node of [...this.editor.getNodes()]) {
         if (!targetClientIds.has(node.id)) {
-          await this._removeNode(node.id);
+          await this.removeNode(node.id);
         }
       }
 
@@ -446,17 +446,17 @@ export class ReteEditorBridge {
         const reteNode = this.editor.getNode(nodeData.clientId);
 
         if (!reteNode) {
-          await this._addNode(nodeData);
+          await this.addNode(nodeData);
           continue;
         }
 
         if (reteNode.workflowData.type !== nodeData.type) {
-          await this._removeNode(nodeData.clientId);
-          await this._addNode(nodeData);
+          await this.removeNode(nodeData.clientId);
+          await this.addNode(nodeData);
           continue;
         }
 
-        if (nodeData.position && !this._wasDragging) {
+        if (nodeData.position && !this.wasDragging) {
           const view = this.area.nodeViews.get(nodeData.clientId);
           if (view) {
             const pos = view.position;
@@ -478,17 +478,17 @@ export class ReteEditorBridge {
         reteNode.workflowData = nodeData;
         reteNode.label = newLabel;
 
-        if (needsUpdate && !this._wasDragging) {
+        if (needsUpdate && !this.wasDragging) {
           this.area.update("node", reteNode.id);
         }
       }
 
       const desiredGraphConnections =
-        this._buildDesiredGraphConnections(connections);
-      this._updateRendererGraphIndex(desiredGraphConnections);
+        this.buildDesiredGraphConnections(connections);
+      this.updateRendererGraphIndex(desiredGraphConnections);
 
       const desiredConnectionKeys = new Set(
-        connections.map((c) => this._connectionKeyFromClientIds(c))
+        connections.map((c) => this.connectionKeyFromClientIds(c))
       );
       const existingConnections = this.editor.getConnections();
       const existingConnectionKeys = new Map();
@@ -505,13 +505,13 @@ export class ReteEditorBridge {
       }
 
       for (const connection of connections) {
-        const key = this._connectionKeyFromClientIds(connection);
+        const key = this.connectionKeyFromClientIds(connection);
 
         if (existingConnectionKeys.has(key)) {
           continue;
         }
 
-        await this._addConnection(
+        await this.addConnection(
           connection.sourceClientId,
           normalizeSourceOutput(connection.sourceOutput),
           connection.targetClientId
@@ -519,7 +519,7 @@ export class ReteEditorBridge {
         existingConnectionKeys.set(key, true);
       }
     } finally {
-      this._isSyncing = false;
+      this.isSyncing = false;
     }
 
     this.renderer.scheduleConnectionUpdate();
@@ -531,7 +531,7 @@ export class ReteEditorBridge {
       return;
     }
 
-    const bbox = this._AreaExtensions.getBoundingBox(this.area, nodes);
+    const bbox = this.AreaExtensions.getBoundingBox(this.area, nodes);
     let { left: minX, top: minY, right: maxX, bottom: maxY } = bbox;
 
     const connectedOutputs = buildConnectedOutputsIndex(
@@ -567,8 +567,8 @@ export class ReteEditorBridge {
 
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY) / 2;
-    const w = this._container.clientWidth;
-    const h = this._container.clientHeight;
+    const w = this.container.clientWidth;
+    const h = this.container.clientHeight;
 
     const padding = 0.9;
     const kw = bw > 0 ? w / bw : 1;
@@ -582,8 +582,8 @@ export class ReteEditorBridge {
 
   async zoomAtViewportCenter(newK) {
     const t = this.area.area.transform;
-    const cx = this._container.clientWidth / 2;
-    const cy = this._container.clientHeight / 2;
+    const cx = this.container.clientWidth / 2;
+    const cy = this.container.clientHeight / 2;
     const ox = (cx - t.x) * (1 - newK / t.k);
     const oy = (cy - t.y) * (1 - newK / t.k);
     await this.area.area.zoom(newK, ox, oy);
@@ -607,7 +607,7 @@ export class ReteEditorBridge {
       await this.editor.removeConnection(conn.id);
     }
 
-    await this._arrange.layout({
+    await this.arrange.layout({
       options: {
         "elk.algorithm": "layered",
         "elk.direction": "RIGHT",
@@ -690,12 +690,12 @@ export class ReteEditorBridge {
   }
 
   viewportCenter() {
-    const rect = this._container.getBoundingClientRect();
+    const rect = this.container.getBoundingClientRect();
     return this.containerToCanvas(rect.width / 2, rect.height / 2);
   }
 
   destroy() {
-    this._shiftAbort?.abort();
+    this.shiftAbort?.abort();
     this.renderer.cancelScheduledConnectionUpdate();
     this.renderer.destroyMeasureSvg();
     this.area.destroy();
