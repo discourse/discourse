@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTableColumn::Create
     include Service::Base
+    include Concerns::DataTableServiceHelpers
 
     VALID_COLUMN_TYPES = %w[string number boolean date].freeze
     MAX_COLUMNS = 30
@@ -41,10 +42,6 @@ module DiscourseWorkflows
 
     def column_limit_not_reached(data_table:)
       data_table.columns.size < MAX_COLUMNS
-    end
-
-    def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
     end
 
     def add_storage_column(data_table:, params:)

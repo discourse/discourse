@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTableRow::Update
     include Service::Base
+    include Concerns::DataTableServiceHelpers
 
     params do
       attribute :data_table_id, :integer
@@ -20,18 +21,6 @@ module DiscourseWorkflows
     step :update_matching_rows
 
     private
-
-    def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
-    end
-
-    def build_facade(data_table:)
-      DataTables::Facade.new(data_table)
-    end
-
-    def within_storage_limit
-      DataTables::Facade.within_storage_limit?
-    end
 
     def build_query(facade:, params:)
       facade.build_query(filter: params.filter)

@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTable::Destroy
     include Service::Base
+    include Concerns::DataTableServiceHelpers
 
     params do
       attribute :data_table_id, :integer
@@ -16,10 +17,6 @@ module DiscourseWorkflows
     step :log_staff_action
 
     private
-
-    def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
-    end
 
     def data_table_not_in_use(data_table:)
       workflow_ids =

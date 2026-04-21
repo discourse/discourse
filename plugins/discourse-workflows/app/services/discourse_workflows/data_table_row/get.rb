@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTableRow::Get
     include Service::Base
+    include Concerns::DataTableServiceHelpers
 
     DEFAULT_LIMIT = 25
     MAX_LIMIT = 100
@@ -26,14 +27,6 @@ module DiscourseWorkflows
     model :query_result, :execute_query
 
     private
-
-    def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
-    end
-
-    def build_facade(data_table:)
-      DataTables::Facade.new(data_table)
-    end
 
     def build_query(facade:, params:)
       facade.build_query(

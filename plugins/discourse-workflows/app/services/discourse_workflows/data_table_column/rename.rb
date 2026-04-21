@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTableColumn::Rename
     include Service::Base
+    include Concerns::DataTableServiceHelpers
 
     MAX_COLUMN_NAME_LENGTH = 63
 
@@ -39,10 +40,6 @@ module DiscourseWorkflows
     step :log
 
     private
-
-    def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
-    end
 
     def column_exists(data_table:, params:)
       data_table.columns.any? { |c| c["name"] == params.column_name }

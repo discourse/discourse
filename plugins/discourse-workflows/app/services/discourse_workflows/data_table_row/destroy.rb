@@ -3,6 +3,7 @@
 module DiscourseWorkflows
   class DataTableRow::Destroy
     include Service::Base
+    include Concerns::DataTableServiceHelpers
 
     params do
       attribute :data_table_id, :integer
@@ -48,14 +49,6 @@ module DiscourseWorkflows
 
     def filter_mode?(params:)
       !params.filter.nil?
-    end
-
-    def fetch_data_table(params:)
-      DiscourseWorkflows::DataTable.find_by(id: params.data_table_id)
-    end
-
-    def build_facade(data_table:)
-      DataTables::Facade.new(data_table)
     end
 
     def fetch_row(facade:, params:)
