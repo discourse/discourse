@@ -104,11 +104,13 @@ export default class PostVotingComment extends Component {
           @onCancel={{this.onCancel}}
         />
       {{else}}
-        <div class="post-voting-comments__comment-actions-vote">
+        <div class="post-voting-comments__vote">
           {{#if @comment.post_voting_vote_count}}
             <span
-              class="post-voting-comments__comment-actions-vote-count"
+              class="post-voting-comments__vote-count"
             >{{@comment.post_voting_vote_count}}</span>
+          {{else}}
+            <span class="post-voting-comments__vote-count --none">0</span>
           {{/if}}
 
           <PostVotingButton
@@ -126,23 +128,23 @@ export default class PostVotingComment extends Component {
               @comment.cooked
             }}</span>
 
-          <span class="post-voting-comments__comment-info-separator">–</span>
+          <span class="post-voting-comments__separator">–</span>
 
           {{#if @comment.username}}
             <a
               href={{userPath @comment.username}}
-              class="post-voting-comments__comment-info-username"
+              class="post-voting-comments__username"
               data-user-card={{@comment.username}}
             >
               {{formatUsername @comment.username}}
             </a>
           {{else}}
-            <span class="post-voting-comments__comment-info-username --deleted">
+            <span class="post-voting-comments__username --deleted">
               {{i18n "post_voting.post.post_voting_comment.user.deleted"}}
             </span>
           {{/if}}
 
-          <span class="post-voting-comments__comment-info-created">
+          <span class="post-voting-comments__created">
             {{formatDate @comment.created_at}}
           </span>
 

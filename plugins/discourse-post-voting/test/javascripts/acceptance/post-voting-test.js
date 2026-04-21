@@ -242,7 +242,7 @@ acceptance(`Discourse Post Voting - anon user`, function (needs) {
 
     assert
       .dom(
-        "#post_2 .post-voting-comments #post-voting-comment-6 .post-voting-comments__comment-info-username"
+        "#post_2 .post-voting-comments #post-voting-comment-6 .post-voting-comments__username"
       )
       .hasText(i18n("post_voting.post.post_voting_comment.user.deleted"));
   });
@@ -403,10 +403,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await visit("/t/280");
     await click("#post_1 .post-voting-comments__menu-add-link");
 
-    await fillIn(
-      ".post-voting-comments__comment-composer-textarea",
-      "a".repeat(4)
-    );
+    await fillIn(".post-voting-comments__composer-textarea", "a".repeat(4));
 
     assert.dom(".post-voting-comments__comment-composer-flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_short", {
@@ -419,10 +416,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       .dom(".post-voting-comments__menu-composer-submit")
       .isDisabled("submit comment button is disabled");
 
-    await fillIn(
-      ".post-voting-comments__comment-composer-textarea",
-      "a".repeat(6)
-    );
+    await fillIn(".post-voting-comments__composer-textarea", "a".repeat(6));
 
     assert.dom(".post-voting-comments__comment-composer-flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.length_ok", {
@@ -435,10 +429,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       .dom(".post-voting-comments__menu-composer-submit")
       .isEnabled("submit comment button is enabled");
 
-    await fillIn(
-      ".post-voting-comments__comment-composer-textarea",
-      "a".repeat(51)
-    );
+    await fillIn(".post-voting-comments__composer-textarea", "a".repeat(51));
 
     assert.dom(".post-voting-comments__comment-composer-flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_long", {
@@ -469,7 +460,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       .exists({ count: 2 }, "loads all comments when composer is expanded");
 
     await fillIn(
-      ".post-voting-comments__comment-composer-textarea",
+      ".post-voting-comments__composer-textarea",
       "this is some comment"
     );
     await click(".post-voting-comments__menu-composer-submit");
@@ -488,7 +479,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       .exists({ count: 2 }, "loads all comments when composer is expanded");
 
     await fillIn(
-      ".post-voting-comments__comment-composer-textarea",
+      ".post-voting-comments__composer-textarea",
       "this is a new test comment"
     );
 
@@ -550,10 +541,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
     await click("#post_1 .post-voting-comments__comment-actions-edit-link");
 
-    await fillIn(
-      ".post-voting-comments__comment-composer-textarea",
-      "a".repeat(4)
-    );
+    await fillIn(".post-voting-comments__composer-textarea", "a".repeat(4));
 
     assert.dom(".post-voting-comments__comment-composer-flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_short", {
@@ -973,7 +961,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
     assert
       .dom(
-        "#post_1 #post-voting-comment-1 .post-voting-comments__comment-composer textarea"
+        "#post_1 #post-voting-comment-1 .post-voting-comments__composer textarea"
       )
       .hasValue(
         "this is a new comment raw",
