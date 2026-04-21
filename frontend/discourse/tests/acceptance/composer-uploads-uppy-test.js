@@ -6,7 +6,7 @@ import {
   focus,
   settled,
   visit,
-  waitUntil,
+  waitFor,
 } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
@@ -509,20 +509,28 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
     const appEvents = getOwner(this).lookup("service:app-events");
+    const done = assert.async();
+
+    appEvents.on("composer:upload-error", async () => {
+      await settled();
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          "There was an error uploading the file, the gif was way too cool.",
+          "shows the error message from the server"
+        );
+      assert.true(
+        consoleErrorStub.calledWithMatch("[Uppy]"),
+        "Uppy logs the upload failure to the console"
+      );
+
+      await click(".dialog-footer .btn-primary");
+      consoleErrorStub.restore();
+      done();
+    });
+
     const image = createFile("avatar.png");
     appEvents.trigger("composer:add-files", image);
-
-    await waitUntil(() => find(".dialog-body"));
-    assert
-      .dom(".dialog-body")
-      .hasText(
-        "There was an error uploading the file, the gif was way too cool.",
-        "shows the error message from the server"
-      );
-    await waitUntil(() => consoleErrorStub.calledWithMatch("[Uppy]"));
-
-    await click(".dialog-footer .btn-primary");
-    consoleErrorStub.restore();
   });
 });
 
@@ -553,14 +561,17 @@ acceptance(
 
       appEvents.trigger("composer:add-files", [image, image1]);
 
-      await waitUntil(() => find(".dialog-body"));
+      await waitFor(".dialog-body");
       assert
         .dom(".dialog-body")
         .hasText(
           "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
           "it should show a consolidated error dialog"
         );
-      await waitUntil(() => consoleErrorStub.calledWithMatch("[Uppy]"));
+      assert.true(
+        consoleErrorStub.calledWithMatch("[Uppy]"),
+        "Uppy logs the upload failures to the console"
+      );
 
       await click(".dialog-footer .btn-primary");
       consoleErrorStub.restore();

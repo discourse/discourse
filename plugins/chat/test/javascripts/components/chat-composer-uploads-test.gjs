@@ -1,6 +1,5 @@
 import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
@@ -114,7 +113,6 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("cancelling in progress upload", async function (assert) {
-    const consoleErrorStub = sinon.stub(console, "error");
     setupUploadPretender();
 
     this.set("changedUploads", null);
@@ -156,7 +154,5 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
 
     await click(".chat-composer-upload__remove-btn");
     assert.dom(".chat-composer-upload").doesNotExist();
-
-    consoleErrorStub.restore();
   });
 });
