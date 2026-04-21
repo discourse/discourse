@@ -144,6 +144,8 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
 
   describe "DELETE /admin/plugins/discourse-workflows/data-tables/:id/rows" do
     fab!(:row) { insert_data_table_row(data_table, "email" => "del@test.com") }
+    fab!(:row_1) { insert_data_table_row(data_table, "email" => "one@test.com") }
+    fab!(:row_2) { insert_data_table_row(data_table, "email" => "two@test.com") }
 
     include_examples "requires admin",
                      :delete,
@@ -151,7 +153,7 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
                        "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json"
                      end
 
-    it "deletes matching rows" do
+    it "deletes matching rows by filter" do
       row_id = row["id"]
       delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json",
              params: {
@@ -163,6 +165,32 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["deleted_count"]).to eq(1)
       expect(find_data_table_row(data_table, row_id)).to be_nil
+    end
+
+    it "bulk deletes rows by ids" do
+      id_1 = row_1["id"]
+      id_2 = row_2["id"]
+      delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json",
+             params: {
+               row_ids: [id_1, id_2],
+             }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["deleted_count"]).to eq(2)
+      expect(find_data_table_row(data_table, id_1)).to be_nil
+      expect(find_data_table_row(data_table, id_2)).to be_nil
+    end
+
+    it "returns 404 for non-existent data table" do
+      delete "/admin/plugins/discourse-workflows/data-tables/999999/rows.json",
+             params: {
+               row_ids: [row_1["id"]],
+             }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 400 when no target is provided" do
+      delete "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows.json", params: {}
+      expect(response.status).to eq(400)
     end
   end
 
@@ -233,46 +261,6 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
     it "returns 404 for non-existent data table" do
       delete "/admin/plugins/discourse-workflows/data-tables/999999/rows/#{row["id"]}.json"
       expect(response.status).to eq(404)
-    end
-  end
-
-  describe "POST /admin/plugins/discourse-workflows/data-tables/:id/rows/batch-destroy" do
-    fab!(:row_1) { insert_data_table_row(data_table, "email" => "one@test.com") }
-    fab!(:row_2) { insert_data_table_row(data_table, "email" => "two@test.com") }
-
-    include_examples "requires admin",
-                     :post,
-                     -> do
-                       "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows/batch-destroy.json"
-                     end,
-                     -> { { row_ids: [row_1["id"], row_2["id"]] } }
-
-    it "bulk deletes rows by ids" do
-      id_1 = row_1["id"]
-      id_2 = row_2["id"]
-      post "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows/batch-destroy.json",
-           params: {
-             row_ids: [id_1, id_2],
-           }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["deleted_count"]).to eq(2)
-      expect(find_data_table_row(data_table, id_1)).to be_nil
-      expect(find_data_table_row(data_table, id_2)).to be_nil
-    end
-
-    it "returns 404 for non-existent data table" do
-      post "/admin/plugins/discourse-workflows/data-tables/999999/rows/batch-destroy.json",
-           params: {
-             row_ids: [row_1["id"]],
-           }
-      expect(response.status).to eq(404)
-    end
-
-    it "returns 400 for missing row_ids" do
-      post "/admin/plugins/discourse-workflows/data-tables/#{data_table.id}/rows/batch-destroy.json",
-           params: {
-           }
-      expect(response.status).to eq(400)
     end
   end
 end

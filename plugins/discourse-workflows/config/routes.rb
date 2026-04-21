@@ -62,7 +62,6 @@ DiscourseWorkflows::Engine.routes.draw do
       put "/data-tables/:data_table_id/rows/:id" => "data_table_rows#update"
       delete "/data-tables/:data_table_id/rows/:id" => "data_table_rows#destroy"
       delete "/data-tables/:data_table_id/rows" => "data_table_rows#destroy_bulk"
-      post "/data-tables/:data_table_id/rows/batch-destroy" => "data_table_rows#destroy_batch"
     end
   end
 

@@ -123,22 +123,6 @@ module DiscourseWorkflows
       end
     end
 
-    def destroy_batch
-      DiscourseWorkflows::DataTableRow::Destroy.call(
-        service_params.deep_merge(params: { data_table_id: params[:data_table_id] }),
-      ) do |result|
-        on_success { |deleted_count:| render json: { deleted_count: deleted_count } }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
-        on_failed_contract do |contract|
-          render(
-            json: failed_json.merge(errors: contract.errors.full_messages),
-            status: :bad_request,
-          )
-        end
-        on_model_not_found(:data_table) { raise Discourse::NotFound }
-      end
-    end
-
     private
 
     def render_storage_limit_exceeded

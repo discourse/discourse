@@ -167,8 +167,8 @@ export default class DataTableViewer extends Component {
       }),
       didConfirm: async () => {
         try {
-          await ajax(`${this.apiBasePath}/rows/batch-destroy.json`, {
-            type: "POST",
+          await ajax(`${this.apiBasePath}/rows.json`, {
+            type: "DELETE",
             data: { row_ids: [...this.selectedRowIds] },
           });
           this.selectedRowIds = new Set();
