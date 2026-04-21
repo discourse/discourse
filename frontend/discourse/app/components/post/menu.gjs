@@ -476,10 +476,6 @@ export default class PostMenu extends Component {
         }
 
         await this.args.toggleLike();
-
-        if (!this.collapsed) {
-          await this.#fetchWhoLiked();
-        }
       },
       this.staticMethodsArgs
     );
@@ -526,23 +522,12 @@ export default class PostMenu extends Component {
     this.collapsed = false;
 
     const fetchData = [
-      !this.isWhoLikedVisible && this.#fetchWhoLiked(),
       !this.isWhoReadVisible &&
         this.args.showReadIndicator &&
         this.#fetchWhoRead(),
     ].filter(Boolean);
 
     await Promise.all(fetchData);
-  }
-
-  @action
-  toggleWhoLiked() {
-    if (this.isWhoLikedVisible) {
-      this.isWhoLikedVisible = false;
-      return;
-    }
-
-    this.#fetchWhoLiked();
   }
 
   @action
@@ -569,17 +554,6 @@ export default class PostMenu extends Component {
         (itemKey) =>
           !this.args.post.bookmarked || itemKey !== buttonKeys.BOOKMARK
       );
-  }
-
-  async #fetchWhoLiked() {
-    const users = await this.store.find("post-action-user", {
-      id: this.args.post.id,
-      post_action_type_id: LIKE_ACTION,
-    });
-
-    this.likedUsers = users.content.map(smallUserAttrs);
-    this.totalLikedUsers = users.totalRows;
-    this.isWhoLikedVisible = true;
   }
 
   async #fetchWhoRead() {
