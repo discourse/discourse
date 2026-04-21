@@ -184,7 +184,7 @@
     padding: var(--space-half) var(--space-2) 0 var(--space-2);
     margin-block: var(--space-4);
 
-    > div {
+    > div:not(.composer-image-gallery__mode-buttons) {
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-2);

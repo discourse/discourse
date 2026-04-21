@@ -51,6 +51,8 @@ export default class TopicLocalizedContentToggle extends Component {
       ? "content_localization.toggle_localized.translations_enabled"
       : "content_localization.toggle_localized.translations_disabled";
 
+    this.showingOriginal = newValue;
+
     const postStream = this.args.topic?.postStream;
     if (postStream) {
       const currentURL = this.router.currentURL;

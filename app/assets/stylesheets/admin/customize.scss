@@ -254,6 +254,13 @@
           width: auto;
           margin-left: auto;
         }
+
+        .translation-selector-controls {
+          display: flex;
+          align-items: center;
+          gap: 0.5em;
+          margin-left: auto;
+        }
       }
 
       &.remote-theme-metadata {

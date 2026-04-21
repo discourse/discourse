@@ -1341,8 +1341,18 @@ class User < ActiveRecord::Base
     user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
+  def full_silence_reason
+    text = silenced_record.try(:details) if silenced?
+    return text if text.blank?
+    PrettyText.cleanup(text.gsub("\n", "<br>"))
+  end
+
   def silence_reason
-    PrettyText.cleanup(silenced_record.try(:details)) if silenced?
+    if details = full_silence_reason
+      return details.split("<br>")[0]
+    end
+
+    nil
   end
 
   def silenced_at

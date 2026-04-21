@@ -297,13 +297,13 @@ describe "Simplified Category Creation" do
     end
   end
 
-  describe "Settings Tab" do
+  describe "Moderation Tab" do
     it "creates a category with a group-based posting review mode" do
       category_page.visit_new_category
 
       form.field("name").fill_in("Review Test")
       category_page.toggle_advanced_settings
-      find(".edit-category-settings a").click
+      find(".edit-category-moderation a").click
 
       category_page.topic_posting_review_mode_chooser(simplified: true).expand
       category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
@@ -322,13 +322,13 @@ describe "Simplified Category Creation" do
       expect(category_page).to have_no_posting_review_groups_error
 
       created_category = Category.find_by(name: "Review Test")
-      category_page.visit_settings(created_category)
+      category_page.visit_moderation(created_category)
       expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
       expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
     end
 
     it "allows selecting 'everyone' mode" do
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
 
       category_page.topic_posting_review_mode_chooser(simplified: true).expand
       category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
@@ -336,12 +336,12 @@ describe "Simplified Category Creation" do
       )
       category_page.save_settings
 
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
       expect(category_page).to have_topic_posting_review_mode("everyone", simplified: true)
     end
 
     it "allows selecting 'everyone_except' mode with groups" do
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
 
       category_page.topic_posting_review_mode_chooser(simplified: true).expand
       category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
@@ -358,7 +358,7 @@ describe "Simplified Category Creation" do
 
       category_page.save_settings
 
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
       expect(category_page).to have_no_posting_review_groups_error
       expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
       expect(category_page).to have_topic_posting_review_groups(group, simplified: true)

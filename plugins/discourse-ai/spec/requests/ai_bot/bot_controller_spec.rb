@@ -83,6 +83,128 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["id"]).to eq(log1.id)
     end
+
+    context "with conversation totals and spending" do
+      fab!(:llm_model) do
+        Fabricate(
+          :llm_model,
+          input_cost: 3.0,
+          output_cost: 6.0,
+          cached_input_cost: 1.0,
+          cache_write_cost: 2.0,
+        )
+      end
+
+      fab!(:other_llm_model) do
+        Fabricate(
+          :llm_model,
+          name: "other-model",
+          input_cost: 10.0,
+          output_cost: 20.0,
+          cached_input_cost: 5.0,
+          cache_write_cost: 8.0,
+        )
+      end
+
+      let(:allowed_user) { pm_topic.topic_allowed_users.first.user }
+
+      before do
+        sign_in(allowed_user)
+        Group.refresh_automatic_groups!
+        SiteSetting.ai_bot_debugging_allowed_groups = allowed_user.groups.first.id.to_s
+      end
+
+      it "computes per-turn spending and conversation totals across multiple models" do
+        log_a =
+          AiApiAuditLog.create!(
+            post_id: pm_post.id,
+            provider_id: 1,
+            topic_id: pm_topic.id,
+            llm_id: llm_model.id,
+            raw_request_payload: "req",
+            raw_response_payload: "res",
+            request_tokens: 1_000_000,
+            response_tokens: 500_000,
+            cache_read_tokens: 200_000,
+            cache_write_tokens: 100_000,
+          )
+
+        AiApiAuditLog.create!(
+          post_id: pm_post2.id,
+          provider_id: 1,
+          topic_id: pm_topic.id,
+          llm_id: other_llm_model.id,
+          raw_request_payload: "req",
+          raw_response_payload: "res",
+          request_tokens: 2_000_000,
+          response_tokens: 1_000_000,
+        )
+
+        get "/discourse-ai/ai-bot/show-debug-info/#{log_a.id}"
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expected_turn_spending =
+          (1_000_000 * 3.0 + 500_000 * 6.0 + 200_000 * 1.0 + 100_000 * 2.0) / 1_000_000.0
+        expect(body["spending"]).to be_within(0.000001).of(expected_turn_spending)
+
+        expect(body["conversation_request_tokens"]).to eq(3_000_000)
+        expect(body["conversation_response_tokens"]).to eq(1_500_000)
+        expect(body["conversation_cache_read_tokens"]).to eq(200_000)
+        expect(body["conversation_cache_write_tokens"]).to eq(100_000)
+
+        expected_conversation_spending =
+          expected_turn_spending + (2_000_000 * 10.0 + 1_000_000 * 20.0) / 1_000_000.0
+        expect(body["conversation_spending"]).to be_within(0.000001).of(
+          expected_conversation_spending,
+        )
+      end
+
+      it "returns nil spending when the log has no llm_model" do
+        log_a =
+          AiApiAuditLog.create!(
+            post_id: pm_post.id,
+            provider_id: 1,
+            topic_id: pm_topic.id,
+            raw_request_payload: "req",
+            raw_response_payload: "res",
+            request_tokens: 100,
+            response_tokens: 200,
+          )
+
+        get "/discourse-ai/ai-bot/show-debug-info/#{log_a.id}"
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["spending"]).to be_nil
+        expect(body["conversation_request_tokens"]).to eq(100)
+        expect(body["conversation_response_tokens"]).to eq(200)
+        expect(body["conversation_spending"]).to be_nil
+      end
+
+      it "returns nil conversation fields when topic_id is absent" do
+        log_a =
+          AiApiAuditLog.create!(
+            provider_id: 1,
+            llm_id: llm_model.id,
+            raw_request_payload: "req",
+            raw_response_payload: "res",
+            request_tokens: 100,
+            response_tokens: 200,
+          )
+        SiteSetting.ai_bot_debugging_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+        sign_in(Fabricate(:admin))
+
+        get "/discourse-ai/ai-bot/show-debug-info/#{log_a.id}"
+        # no topic means the endpoint 404s, so assert via serializer directly
+        serialized = AiApiAuditLogSerializer.new(log_a, root: false).as_json
+        expect(serialized[:conversation_request_tokens]).to be_nil
+        expect(serialized[:conversation_response_tokens]).to be_nil
+        expect(serialized[:conversation_cache_read_tokens]).to be_nil
+        expect(serialized[:conversation_cache_write_tokens]).to be_nil
+        expect(serialized[:conversation_spending]).to be_nil
+      end
+    end
   end
 
   describe "#stop_streaming_response" do

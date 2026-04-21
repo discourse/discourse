@@ -6,6 +6,7 @@ import { capitalize } from "@ember/string";
 import moment from "moment";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import KeyValueStore from "discourse/lib/key-value-store";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
 import I18n, { i18n } from "discourse-i18n";
@@ -26,6 +27,8 @@ import TopicViewComponent from "./result-types/topic";
 import UrlViewComponent from "./result-types/url";
 import UserViewComponent from "./result-types/user";
 
+const store = new KeyValueStore("discourse_data_explorer_");
+
 const VIEW_COMPONENTS = {
   topic: TopicViewComponent,
   text: TextViewComponent,
@@ -44,17 +47,37 @@ const VIEW_COMPONENTS = {
 export default class QueryResult extends Component {
   @service site;
 
-  @tracked showChart = true;
-  @tracked showTable = true;
+  @tracked showChart;
+  @tracked showTable;
+
+  constructor() {
+    super(...arguments);
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      this.showChart = store.get(`showChart_${queryId}`) !== "false";
+      this.showTable = store.get(`showTable_${queryId}`) !== "false";
+    } else {
+      this.showChart = true;
+      this.showTable = true;
+    }
+  }
 
   @action
   toggleChart() {
     this.showChart = !this.showChart;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      store.set({ key: `showChart_${queryId}`, value: this.showChart });
+    }
   }
 
   @action
   toggleTable() {
     this.showTable = !this.showTable;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      store.set({ key: `showTable_${queryId}`, value: this.showTable });
+    }
   }
 
   get chartVisible() {
@@ -343,13 +366,15 @@ export default class QueryResult extends Component {
               @action={{this.toggleChart}}
               @icon="signal"
               @translatedTitle={{i18n "explorer.show_graph"}}
-              class={{if this.showChart "btn-primary" "btn-default"}}
+              class="btn-toggle-chart
+                {{if this.showChart 'btn-primary' 'btn-default'}}"
             />
             <DButton
               @action={{this.toggleTable}}
               @icon="table"
               @translatedTitle={{i18n "explorer.show_table"}}
-              class={{if this.showTable "btn-primary" "btn-default"}}
+              class="btn-toggle-table
+                {{if this.showTable 'btn-primary' 'btn-default'}}"
             />
           </div>
         {{/if}}

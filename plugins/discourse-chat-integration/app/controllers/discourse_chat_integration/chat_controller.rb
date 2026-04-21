@@ -3,21 +3,85 @@
 class DiscourseChatIntegration::ChatController < ApplicationController
   requires_plugin DiscourseChatIntegration::PLUGIN_NAME
 
+  SETUP_PROVIDER_SITE_SETTING_KEYS = {
+    "slack" => %i[chat_integration_slack_access_token chat_integration_slack_outbound_webhook_url],
+    "telegram" => %i[chat_integration_telegram_access_token],
+  }.freeze
+
   def respond
     render
   end
 
   def list_providers
     providers =
-      DiscourseChatIntegration::Provider.enabled_providers.map do |x|
+      DiscourseChatIntegration::Provider.enabled_providers.map do |provider_klass|
         {
-          name: x::PROVIDER_NAME,
-          id: x::PROVIDER_NAME,
-          channel_parameters: (defined?(x::CHANNEL_PARAMETERS)) ? x::CHANNEL_PARAMETERS : [],
+          name: provider_klass::PROVIDER_NAME,
+          id: provider_klass::PROVIDER_NAME,
+          channel_parameters:
+            (
+              if (defined?(provider_klass::CHANNEL_PARAMETERS))
+                provider_klass::CHANNEL_PARAMETERS
+              else
+                []
+              end
+            ),
         }
       end
 
-    render json: providers, root: "providers"
+    disabled_providers =
+      DiscourseChatIntegration::Provider.disabled_providers.map do |provider_klass|
+        {
+          name: provider_klass::PROVIDER_NAME,
+          id: provider_klass::PROVIDER_NAME,
+          additional_site_settings_required:
+            if defined?(provider_klass::ADDITIONAL_SITE_SETTINGS_REQUIRED)
+              provider_klass::ADDITIONAL_SITE_SETTINGS_REQUIRED
+            else
+              false
+            end,
+        }
+      end
+
+    render json: { enabled_providers: providers, disabled_providers: }
+  end
+
+  def setup_provider
+    hash = params.require(:provider).permit(:name)
+    name = hash[:name].to_s.strip
+
+    if name.blank?
+      raise Discourse::InvalidParameters.new(
+              I18n.t("chat_integration.errors.provider_not_found", name: "unknown"),
+            )
+    end
+
+    provider_klass = DiscourseChatIntegration::Provider.get_by_name(name)
+    if provider_klass.nil?
+      raise Discourse::InvalidParameters.new(
+              I18n.t("chat_integration.errors.provider_not_found", name: name),
+            )
+    end
+
+    if DiscourseChatIntegration::Provider.is_enabled(provider_klass)
+      raise Discourse::InvalidParameters.new(
+              I18n.t("chat_integration.errors.provider_already_enabled", name: name),
+            )
+    end
+
+    permitted_site_settings = permitted_provider_site_settings(name)
+
+    DiscourseChatIntegration::Provider.setup(provider_klass, current_user, permitted_site_settings)
+    render json: success_json
+  rescue Discourse::InvalidParameters => err
+    render json: { errors: [err.message] }, status: :unprocessable_entity
+  rescue DiscourseChatIntegration::ProviderError => err
+    if err.info[:error_key].present?
+      Rails.logger.error("Chat integration setup failed error_key=#{err.info[:error_key]}")
+      render json: { error_key: err.info[:error_key] }, status: :unprocessable_entity
+    else
+      render json: { errors: [err.message.presence || "error"] }, status: :unprocessable_entity
+    end
   end
 
   def test
@@ -35,14 +99,14 @@ class DiscourseChatIntegration::ChatController < ApplicationController
       provider.trigger_notification(post, channel, nil)
 
       render json: success_json
-    rescue Discourse::InvalidParameters, ActiveRecord::RecordNotFound => e
-      render json: { errors: [e.message] }, status: :unprocessable_entity
-    rescue DiscourseChatIntegration::ProviderError => e
-      Rails.logger.error("Test provider failed #{e.info}")
-      if e.info.key?(:error_key) && !e.info[:error_key].nil?
-        render json: { error_key: e.info[:error_key] }, status: :unprocessable_entity
+    rescue Discourse::InvalidParameters, ActiveRecord::RecordNotFound => err
+      render json: { errors: [err.message] }, status: :unprocessable_entity
+    rescue DiscourseChatIntegration::ProviderError => err
+      Rails.logger.error("Test provider failed #{err.info}")
+      if err.info.key?(:error_key) && !err.info[:error_key].nil?
+        render json: { error_key: err.info[:error_key] }, status: :unprocessable_entity
       else
-        render json: { errors: [e.message] }, status: :unprocessable_entity
+        render json: { errors: [err.message] }, status: :unprocessable_entity
       end
     end
   end
@@ -149,5 +213,15 @@ class DiscourseChatIntegration::ChatController < ApplicationController
     rule.destroy!
 
     render json: success_json
+  end
+
+  private
+
+  def permitted_provider_site_settings(provider_name)
+    keys = SETUP_PROVIDER_SITE_SETTING_KEYS[provider_name]
+    return {} unless keys
+    return {} if params[:provider_site_settings].blank?
+
+    params[:provider_site_settings].permit(*keys).to_h.with_indifferent_access
   end
 end

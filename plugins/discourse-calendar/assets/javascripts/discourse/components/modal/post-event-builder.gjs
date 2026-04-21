@@ -689,7 +689,7 @@ export default class PostEventBuilder extends Component {
                       <DButton
                         @action={{fn @model.event.removeReminder reminder}}
                         @icon="xmark"
-                        class="remove-reminder"
+                        class="btn-default remove-reminder"
                       />
                     </div>
                   {{/each}}
@@ -700,7 +700,7 @@ export default class PostEventBuilder extends Component {
                   @icon="plus"
                   @label="discourse_post_event.builder_modal.add_reminder"
                   @action={{@model.event.addReminder}}
-                  class="add-reminder"
+                  class="btn-default add-reminder"
                 />
               </EventField>
 

@@ -10,7 +10,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import getTagName from "../../lib/get-tag-name";
+import getTagName from "../../lib/utilities";
 import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {

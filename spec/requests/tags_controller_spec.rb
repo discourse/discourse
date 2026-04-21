@@ -1455,6 +1455,52 @@ RSpec.describe TagsController do
           expect(result["disabled"]).to eq(true)
         end
 
+        it "truncates category names when tag is restricted to many categories" do
+          categories = [category] + (1..4).map { |i| Fabricate(:category, tags: [yup]) }
+
+          get "/tags/filter/search.json",
+              params: {
+                q: yup.name,
+                filterForInput: true,
+                categoryId: Fabricate(:category).id,
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == yup.name }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+
+          sorted_names = categories.map(&:name).sort
+          expect(result["title"]).to eq(
+            I18n.t(
+              "tags.forbidden.restricted_to_truncated",
+              tag_name: yup.name,
+              category_names: sorted_names.first(3).join(", "),
+              more_count: 2,
+            ),
+          )
+        end
+
+        it "truncates category names in forbidden_message when restricted to many categories" do
+          categories = [category] + (1..4).map { |i| Fabricate(:category, tags: [yup]) }
+
+          get "/tags/filter/search.json",
+              params: {
+                q: yup.name,
+                categoryId: Fabricate(:category).id,
+              }
+
+          sorted_names = categories.map(&:name).sort
+          expect(response.parsed_body["forbidden_message"]).to eq(
+            I18n.t(
+              "tags.forbidden.restricted_to_truncated",
+              tag_name: yup.name,
+              category_names: sorted_names.first(3).join(", "),
+              more_count: 2,
+            ),
+          )
+        end
+
         it "can filter on category without q param" do
           Fabricate(:tag, name: "nope")
           get "/tags/filter/search.json", params: { categoryId: category.id }

@@ -219,8 +219,6 @@ mock_upcoming_change_metadata(
 )
 ```
 
-Always clean up with `clear_mocked_upcoming_change_metadata` in an `after` block (or the helper handles it automatically depending on context). The helper is defined in `spec/support/helpers.rb`.
-
 ### Mocking Default Overrides
 
 Use `mock_upcoming_change_default_overrides` to set up override metadata in tests — never modify `site_settings.yml`:

@@ -332,11 +332,6 @@ describe "Admin upcoming changes" do
       SiteSetting.refresh!
     end
 
-    after do
-      clear_mocked_upcoming_change_metadata
-      clear_mocked_upcoming_change_default_overrides
-    end
-
     it "shows information about the default override in the site settings UI" do
       settings_page.visit("suggested_topics_max_days_old")
       expect(settings_page).to have_upcoming_change_default_warning(
@@ -344,6 +339,82 @@ describe "Admin upcoming changes" do
         old_default: 365,
         new_default: 1000,
       )
+    end
+  end
+
+  context "when the upcoming change has a boolean default override and the admin opts out" do
+    let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "site_setting_default,all_members",
+            status: :experimental,
+            impact_type: "site_setting_default",
+            impact_role: "all_members",
+          },
+        },
+      )
+      mock_upcoming_change_default_overrides(
+        {
+          limit_suggested_to_category: {
+            upcoming_change: :enable_upload_debug_mode,
+            new_default: true,
+          },
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+      SiteSetting.refresh!
+    end
+
+    after do
+      clear_mocked_upcoming_change_metadata
+      clear_mocked_upcoming_change_default_overrides
+    end
+
+    it "preserves the admin's opt-out across page reload while still showing the override warning" do
+      settings_page.visit("limit_suggested_to_category")
+
+      expect(settings_page).to have_upcoming_change_default_warning(
+        :limit_suggested_to_category,
+        old_default: false,
+        new_default: true,
+      )
+      expect(
+        settings_page.find_setting(:limit_suggested_to_category).find(
+          ".setting-value input[type=checkbox]",
+        ),
+      ).to be_checked
+
+      settings_page.toggle_setting(:limit_suggested_to_category)
+
+      # Wait for the save to land in the DB before forcing the in-process
+      # SiteSetting refresh below — the .overridden class only appears once
+      # the value has been persisted.
+      expect(
+        settings_page.find_setting(:limit_suggested_to_category, overridden: true),
+      ).to be_present
+
+      # Production reproduces the bug because each unicorn worker re-runs
+      # SiteSetting.refresh! via the MessageBus subscriber after another
+      # worker persists a setting change. In a single-process system spec
+      # that subscriber doesn't fire, so we trigger the refresh explicitly
+      # to mirror what happens on the next request in a real deployment.
+      SiteSetting.refresh!
+
+      page.refresh
+
+      expect(settings_page).to have_upcoming_change_default_warning(
+        :limit_suggested_to_category,
+        old_default: false,
+        new_default: true,
+      )
+      expect(
+        settings_page.find_setting(:limit_suggested_to_category).find(
+          ".setting-value input[type=checkbox]",
+        ),
+      ).not_to be_checked
     end
   end
 end
