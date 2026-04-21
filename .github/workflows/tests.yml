@@ -62,7 +62,7 @@ jobs:
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
-      LD_PRELOAD: /usr/lib/libjemalloc.so
+      LD_PRELOAD: /usr/lib/libjemalloc.so.1
 
     strategy:
       fail-fast: false
@@ -96,6 +96,27 @@ jobs:
           #   browser: Firefox ESR
 
     steps:
+      - name: Debug jemalloc preload
+        env:
+          LD_PRELOAD: ""
+        run: |
+          echo "--- whoami / id ---"
+          id
+          echo "--- /usr/lib/libjemalloc* ---"
+          ls -la /usr/lib/libjemalloc* || true
+          echo "--- readlink ---"
+          readlink -f /usr/lib/libjemalloc.so || true
+          readlink -f /usr/lib/libjemalloc.so.1 || true
+          echo "--- stat symlink vs target ---"
+          stat /usr/lib/libjemalloc.so || true
+          stat /usr/lib/libjemalloc.so.1 || true
+          echo "--- try preload (symlink) ---"
+          LD_PRELOAD=/usr/lib/libjemalloc.so /bin/true && echo "OK (symlink)" || echo "FAILED (symlink)"
+          echo "--- try preload (versioned) ---"
+          LD_PRELOAD=/usr/lib/libjemalloc.so.1 /bin/true && echo "OK (versioned)" || echo "FAILED (versioned)"
+          echo "--- ruby allocator check ---"
+          LD_PRELOAD=/usr/lib/libjemalloc.so.1 ruby -e 'require "fiddle"; puts Fiddle::Handle.new.sym("mallctl") ? "jemalloc loaded" : "NOT loaded"' 2>&1 || true
+
       - name: Set working directory owner
         run: chown root:root .
 
