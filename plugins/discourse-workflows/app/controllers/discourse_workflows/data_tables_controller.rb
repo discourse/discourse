@@ -85,71 +85,6 @@ module DiscourseWorkflows
       end
     end
 
-    def create_column
-      DiscourseWorkflows::DataTableColumn::Create.call(
-        service_params.deep_merge(
-          params: column_create_params.merge(data_table_id: params[:data_table_id]),
-        ),
-      ) do |result|
-        on_success do |data_table:|
-          render_serialized(data_table, DiscourseWorkflows::DataTableSerializer, root: "data_table")
-        end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
-        on_failed_contract do |contract|
-          render(
-            json: failed_json.merge(errors: contract.errors.full_messages),
-            status: :bad_request,
-          )
-        end
-        on_model_not_found(:data_table) { raise Discourse::NotFound }
-      end
-    end
-
-    def rename_column
-      DiscourseWorkflows::DataTableColumn::Rename.call(
-        service_params.deep_merge(
-          params:
-            column_rename_params.merge(
-              data_table_id: params[:data_table_id],
-              column_name: params[:column_name],
-            ),
-        ),
-      ) do |result|
-        on_success do |data_table:|
-          render_serialized(data_table, DiscourseWorkflows::DataTableSerializer, root: "data_table")
-        end
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
-        on_failed_contract do |contract|
-          render(
-            json: failed_json.merge(errors: contract.errors.full_messages),
-            status: :bad_request,
-          )
-        end
-        on_model_not_found(:data_table) { raise Discourse::NotFound }
-      end
-    end
-
-    def destroy_column
-      DiscourseWorkflows::DataTableColumn::Destroy.call(
-        service_params.deep_merge(
-          params: {
-            data_table_id: params[:data_table_id],
-            column_name: params[:column_name],
-          },
-        ),
-      ) do |result|
-        on_success { head :no_content }
-        on_failure { render(json: failed_json, status: :unprocessable_entity) }
-        on_failed_contract do |contract|
-          render(
-            json: failed_json.merge(errors: contract.errors.full_messages),
-            status: :bad_request,
-          )
-        end
-        on_model_not_found(:data_table) { raise Discourse::NotFound }
-      end
-    end
-
     def destroy
       DiscourseWorkflows::DataTable::Destroy.call(
         service_params.deep_merge(params: { data_table_id: params[:id] }),
@@ -186,14 +121,6 @@ module DiscourseWorkflows
     end
 
     def update_data_table_params
-      unsafe_params(:name)
-    end
-
-    def column_create_params
-      unsafe_params(:name, :column_type)
-    end
-
-    def column_rename_params
       unsafe_params(:name)
     end
 

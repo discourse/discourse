@@ -53,9 +53,9 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/data-tables/:id" => "data_tables#show", :constraints => { id: /\d+/ }
       put "/data-tables/:id" => "data_tables#update"
       delete "/data-tables/:id" => "data_tables#destroy"
-      post "/data-tables/:data_table_id/columns" => "data_tables#create_column"
-      patch "/data-tables/:data_table_id/columns/:column_name/rename" => "data_tables#rename_column"
-      delete "/data-tables/:data_table_id/columns/:column_name" => "data_tables#destroy_column"
+      post "/data-tables/:data_table_id/columns" => "data_table_columns#create"
+      patch "/data-tables/:data_table_id/columns/:column_name/rename" => "data_table_columns#rename"
+      delete "/data-tables/:data_table_id/columns/:column_name" => "data_table_columns#destroy"
       get "/data-tables/:data_table_id/rows" => "data_table_rows#index"
       post "/data-tables/:data_table_id/rows" => "data_table_rows#create"
       put "/data-tables/:data_table_id/rows" => "data_table_rows#update_bulk"
