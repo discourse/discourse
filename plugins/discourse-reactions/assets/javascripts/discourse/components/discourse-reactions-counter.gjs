@@ -85,8 +85,9 @@ export default class DiscourseReactionsCounter extends Component {
       component: DiscourseReactionsUsersMenu,
       modalForMobile: true,
       closeOnScroll: true,
+      arrow: true,
       placement: "bottom",
-      offset: 10,
+      offset: 15,
       data: { post: this.args.post },
     });
   }
