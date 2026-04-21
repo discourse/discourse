@@ -52,7 +52,7 @@ document.addEventListener("discourse-init", async () => {
 
   if (window.Testem && target && target !== "core") {
     window.Testem.on("test-result", (t) => {
-      t.name = `Target: ${target} - ${t.name}`;
+      t.name = `${target} - ${t.name}`;
     });
   }
 
