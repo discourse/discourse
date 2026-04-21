@@ -775,8 +775,11 @@ RSpec.describe SiteSettingExtension do
           settings.refresh!
         end
 
-        it "is not present in all_settings" do
-          expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).to be_blank
+        it "is still present in all_settings so the UI can reactively hide/disable it" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_image }
+          expect(setting).not_to be_blank
+          expect(setting[:depends_on]).to eq([:enable_cool_thing])
+          expect(setting[:depends_behavior]).to eq(:hidden)
         end
       end
 
@@ -791,8 +794,8 @@ RSpec.describe SiteSettingExtension do
           settings.refresh!
         end
 
-        it "is not present in all_settings" do
-          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).to be_blank
+        it "is still present in all_settings (visibility handled client-side)" do
+          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).not_to be_blank
         end
       end
 

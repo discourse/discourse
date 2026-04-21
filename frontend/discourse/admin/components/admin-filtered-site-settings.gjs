@@ -6,13 +6,15 @@ import { isEmpty } from "@ember/utils";
 import AdminSiteSettingsFilterControls from "discourse/admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "discourse/admin/components/site-setting";
 import SiteSettingFilter from "discourse/admin/lib/site-setting-filter";
+import { isSettingVisible } from "discourse/admin/services/site-setting-store";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 
 export default class AdminFilteredSiteSettings extends Component {
-  @tracked visibleSettings;
+  @tracked matchedSettings;
+  @tracked activeFilter = "";
   @tracked loading = true;
 
   siteSettingFilter = new SiteSettingFilter(this.args.settings);
@@ -25,6 +27,12 @@ export default class AdminFilteredSiteSettings extends Component {
   @action
   filterChanged(filterData) {
     this._debouncedOnChangeFilter(filterData);
+  }
+
+  get visibleSettings() {
+    return this.matchedSettings?.filter((s) =>
+      isSettingVisible(s, this.activeFilter)
+    );
   }
 
   get noResults() {
@@ -43,7 +51,8 @@ export default class AdminFilteredSiteSettings extends Component {
 
   filterSettings(filterData) {
     this.args.onFilterChanged(filterData);
-    this.visibleSettings = this.siteSettingFilter.filterSettings(
+    this.activeFilter = filterData.filter ?? "";
+    this.matchedSettings = this.siteSettingFilter.filterSettings(
       filterData.filter,
       {
         includeAllCategory: false,

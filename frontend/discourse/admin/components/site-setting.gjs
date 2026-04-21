@@ -63,6 +63,7 @@ export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
   @service siteSettingChangeTracker;
+  @service siteSettingStore;
   @service messageBus;
   @service site;
 
@@ -337,7 +338,23 @@ export default class SiteSettingComponent extends Component {
   }
 
   get isDisabled() {
-    return this.setting.themeable || this.setting.disabled;
+    return (
+      this.setting.themeable ||
+      this.setting.disabled ||
+      this.isDisabledByDependency
+    );
+  }
+
+  get isDisabledByDependency() {
+    if (this.setting.depends_behavior !== "hidden") {
+      return false;
+    }
+    return (
+      this.setting.depends_on?.some((name) => {
+        const parent = this.siteSettingStore.get(name);
+        return parent && String(parent.buffered.get("value")) !== "true";
+      }) ?? false
+    );
   }
 
   get canUpdate() {
@@ -409,6 +426,9 @@ export default class SiteSettingComponent extends Component {
   @action
   changeValueCallback(value) {
     this.buffered.set("value", value);
+    if (String(value) === "true") {
+      this.siteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   @action
@@ -426,6 +446,9 @@ export default class SiteSettingComponent extends Component {
   resetDefault() {
     this.buffered.set("value", this.setting.default);
     this.setting.validationMessage = null;
+    if (String(this.setting.default) === "true") {
+      this.siteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   @action
@@ -469,7 +492,8 @@ export default class SiteSettingComponent extends Component {
       class="row setting
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
-        {{if this.isDisabled 'disabled'}}"
+        {{if this.isDisabled 'disabled'}}
+        {{if this.isDisabledByDependency 'disabled-by-dependency'}}"
       ...attributes
     >
       <div class="setting-label">

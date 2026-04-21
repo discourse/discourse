@@ -719,3 +719,102 @@ module(
     });
   }
 );
+
+module(
+  "Integration | Component | SiteSetting | depends_behavior: hidden",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.store = this.container.lookup("service:site-setting-store");
+      this.parent = SiteSetting.create({
+        setting: "parent_flag",
+        value: "false",
+        default: "false",
+        type: "bool",
+      });
+      this.child = SiteSetting.create({
+        setting: "child_value",
+        value: "5",
+        default: "5",
+        type: "integer",
+        depends_on: ["parent_flag"],
+        depends_behavior: "hidden",
+      });
+    });
+
+    test("child renders disabled when parent is falsy", async function (assert) {
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.child}} /></template>
+      );
+
+      assert
+        .dom("[data-setting='child_value']")
+        .hasClass("disabled-by-dependency");
+      assert.dom(".input-setting-integer").hasAttribute("disabled");
+    });
+
+    test("child renders enabled when parent is truthy", async function (assert) {
+      this.parent.value = "true";
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.child}} /></template>
+      );
+
+      assert
+        .dom("[data-setting='child_value']")
+        .hasNoClass("disabled-by-dependency");
+      assert.dom(".input-setting-integer").doesNotHaveAttribute("disabled");
+    });
+
+    test("toggling parent reactively flips child disabled and latches revealed", async function (assert) {
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template>
+          <SiteSettingComponent @setting={{this.parent}} />
+          <SiteSettingComponent @setting={{this.child}} />
+        </template>
+      );
+
+      assert.false(this.child.revealed);
+      assert
+        .dom("[data-setting='child_value']")
+        .hasClass("disabled-by-dependency");
+
+      await click("[data-setting='parent_flag'] input[type=checkbox]");
+      assert.true(this.child.revealed, "revealed latched on toggle-on");
+      assert
+        .dom("[data-setting='child_value']")
+        .hasNoClass("disabled-by-dependency");
+
+      await click("[data-setting='parent_flag'] input[type=checkbox]");
+      assert.true(this.child.revealed, "revealed stays latched");
+      assert
+        .dom("[data-setting='child_value']")
+        .hasClass("disabled-by-dependency", "disabled again, not re-hidden");
+    });
+
+    test("resetting parent to a truthy default latches revealed", async function (assert) {
+      this.parent.default = "true";
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template>
+          <SiteSettingComponent @setting={{this.parent}} />
+          <SiteSettingComponent @setting={{this.child}} />
+        </template>
+      );
+
+      await click("[data-setting='parent_flag'] .setting-controls__undo");
+
+      assert.true(this.child.revealed);
+      assert
+        .dom("[data-setting='child_value']")
+        .hasNoClass("disabled-by-dependency");
+    });
+  }
+);
