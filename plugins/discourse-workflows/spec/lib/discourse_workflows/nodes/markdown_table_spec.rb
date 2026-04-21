@@ -132,13 +132,52 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
       MD
     end
 
-    it "returns an empty string when no columns are configured" do
-      items = [{ "json" => { "x" => 1 } }]
-      config = { "columns" => [] }
-
-      markdown = execute(items, config)
+    it "returns an empty string when no columns are configured and no input items" do
+      markdown = execute([], { "columns" => [] })
 
       expect(markdown).to eq("")
+    end
+
+    context "when no columns are configured" do
+      it "derives headers from the keys of input items" do
+        items = [
+          { "json" => { "name" => "Alice", "age" => 30 } },
+          { "json" => { "name" => "Bob", "age" => 25 } },
+        ]
+
+        markdown = execute(items, { "columns" => [] })
+
+        expect(markdown).to eq(<<~MD.strip)
+          | name | age |
+          | --- | --- |
+          | Alice | 30 |
+          | Bob | 25 |
+        MD
+      end
+
+      it "unions keys across items preserving first-appearance order" do
+        items = [
+          { "json" => { "name" => "Alice", "age" => 30 } },
+          { "json" => { "name" => "Bob", "city" => "Paris" } },
+        ]
+
+        markdown = execute(items, { "columns" => [] })
+
+        expect(markdown).to eq(<<~MD.strip)
+          | name | age | city |
+          | --- | --- | --- |
+          | Alice | 30 |  |
+          | Bob |  | Paris |
+        MD
+      end
+
+      it "JSON-encodes Hash and Array values" do
+        items = [{ "json" => { "h" => { "a" => 1 }, "arr" => [1, 2] } }]
+
+        markdown = execute(items, { "columns" => [] })
+
+        expect(markdown.split("\n").last).to eq('| {"a":1} | [1,2] |')
+      end
     end
   end
 end

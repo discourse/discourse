@@ -48,21 +48,39 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           columns = @configuration.fetch("columns") { [] }
-          headers = columns.map { |c| c["header"].to_s }
+          headers, rows =
+            if columns.empty?
+              auto_table(exec_ctx.input_items)
+            else
+              configured_table(exec_ctx, columns)
+            end
 
           return [[wrap({ "markdown" => "" })]] if headers.empty?
 
+          [[wrap({ "markdown" => render_table(headers, rows) })]]
+        end
+
+        private
+
+        def auto_table(input_items)
+          headers = input_items.flat_map { |item| (item["json"] || {}).keys }.uniq
+          rows =
+            input_items.map do |item|
+              json = item["json"] || {}
+              headers.map { |key| format_cell(json[key]) }
+            end
+          [headers, rows]
+        end
+
+        def configured_table(exec_ctx, columns)
+          headers = columns.map { |c| c["header"].to_s }
           rows =
             exec_ctx.input_items.map do |item|
               resolved = exec_ctx.get_parameters(item).fetch("columns") { [] }
               resolved.map { |c| format_cell(c["value"]) }
             end
-
-          markdown = render_table(headers, rows)
-          [[wrap({ "markdown" => markdown })]]
+          [headers, rows]
         end
-
-        private
 
         def render_table(headers, rows)
           lines = []
