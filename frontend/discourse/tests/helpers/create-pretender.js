@@ -92,6 +92,12 @@ export function applyDefaultHandlers() {
     eager: true,
   });
 
+  Object.keys(requirejs.entries).forEach((entry) => {
+    if (/^discourse\/plugins\/.*helpers\/[a-z-]+\-pretender$/.test(entry)) {
+      pretenderModules[entry] = requirejs(entry);
+    }
+  });
+
   for (const module of Object.values(pretenderModules)) {
     module.default.call(pretender, helpers);
   }
