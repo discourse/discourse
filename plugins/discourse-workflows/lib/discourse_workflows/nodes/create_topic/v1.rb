@@ -37,6 +37,9 @@ module DiscourseWorkflows
             category_id: {
               type: :integer,
               required: false,
+              ui: {
+                control: :category,
+              },
             },
             tag_names: {
               type: :string,
