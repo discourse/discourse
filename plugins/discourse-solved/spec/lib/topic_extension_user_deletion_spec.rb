@@ -8,20 +8,22 @@ RSpec.describe DiscourseSolved::TopicExtension do
   fab!(:accepter, :user)
 
   describe "#accepted_answer_post_info" do
-    let(:topic_answer) { Fabricate(:topic_answer, answer_post:, accepter:) }
-    let(:solved_topic) { Fabricate(:solved_topic, topic:, topic_answer:) }
+    let(:solved_topic) { Fabricate(:solved_topic, topic:) }
+    let(:topic_answer) { Fabricate(:topic_answer, solved_topic:, post: answer_post, accepter:) }
 
     context "when users are deleted" do
       it "does not crash when accepter is deleted" do
         solved_topic
+        topic_answer
         accepter.destroy!
 
         expect { topic.reload.accepted_answers_post_info }.not_to raise_error
-        expect(topic.accepted_answers_post_info).to be_present
+        expect(topic.accepted_answers_post_info).not_to be_empty
       end
 
       it "does not crash when answer post user is deleted" do
         solved_topic
+        topic_answer
         answer_post.user.destroy!
 
         expect { topic.reload.accepted_answers_post_info }.not_to raise_error
@@ -33,6 +35,7 @@ RSpec.describe DiscourseSolved::TopicExtension do
       it "falls back to system user when both accepter and topic author are deleted" do
         SiteSetting.show_who_marked_solved = true
         solved_topic
+        topic_answer
         accepter.destroy!
         topic.user.destroy!
 

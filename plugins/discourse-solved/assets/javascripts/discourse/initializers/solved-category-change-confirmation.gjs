@@ -45,7 +45,11 @@ export default {
 
             solvedStateChanged = oldAllowed !== newAllowed;
 
-            if (model.accepted_answer && oldAllowed && !newAllowed) {
+            if (
+              model.accepted_answers?.length > 0 &&
+              oldAllowed &&
+              !newAllowed
+            ) {
               const showConfirmation =
                 localStorage.getItem(STORAGE_KEY) !== "true";
 

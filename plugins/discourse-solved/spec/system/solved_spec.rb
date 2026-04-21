@@ -51,7 +51,8 @@ describe "Solved" do
   end
 
   it "shows the solved post in user activity at /my/activity/solved" do
-    Fabricate(:solved_topic, topic:, answer_post: solver_post, accepter:)
+    solved_topic = Fabricate(:solved_topic, topic:)
+    Fabricate(:topic_answer, solved_topic:, post: solver_post, accepter:)
     sign_in(solver)
     visit "/my/activity/solved"
     expect(page.find(".post-list")).to have_content(solver_post.cooked)
@@ -71,8 +72,8 @@ describe "Solved" do
         Hope this helps!
       RAW
       code_solution_post = Fabricate(:post, topic:, user: admin, raw:)
-      Fabricate(:solved_topic, topic:, answer_post: code_solution_post, accepter:)
-
+      solved_topic = Fabricate(:solved_topic, topic:)
+      Fabricate(:topic_answer, solved_topic:, post: code_solution_post, accepter:)
       sign_in(accepter)
       topic_page.visit_topic(topic)
 
@@ -87,7 +88,8 @@ describe "Solved" do
       upload = Fabricate(:upload)
       raw = "Check this image: ![test image](#{upload.short_url})"
       image_solution_post = Fabricate(:post, topic:, user: admin, raw:)
-      Fabricate(:solved_topic, topic:, answer_post: image_solution_post, accepter:)
+      solved_topic = Fabricate(:solved_topic, topic:)
+      Fabricate(:topic_answer, solved_topic:, post: image_solution_post, accepter:)
 
       sign_in(accepter)
       topic_page.visit_topic(topic)

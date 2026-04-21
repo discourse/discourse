@@ -14,9 +14,11 @@ acceptance("Post Menu | Accept and Unaccept", function (needs) {
 
   needs.pretender((server, helper) => {
     server.post("/solution/accept", () =>
-      helper.response(postStreamWithAcceptedAnswerExcerpt(null).accepted_answer)
+      helper.response(
+        postStreamWithAcceptedAnswerExcerpt(null).accepted_answers
+      )
     );
-    server.post("/solution/unaccept", () => helper.response({ success: "OK" }));
+    server.post("/solution/unaccept", () => helper.response([]));
 
     server.get("/t/12.json", () =>
       helper.response(postStreamWithAcceptedAnswerExcerpt(null))

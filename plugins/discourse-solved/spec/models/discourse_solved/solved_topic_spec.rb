@@ -9,20 +9,18 @@ RSpec.describe DiscourseSolved::SolvedTopic do
 
   describe "Associations" do
     it { is_expected.to belong_to(:topic) }
-    it { is_expected.to belong_to(:answer_post) }
-    it { is_expected.to belong_to(:accepter) }
+    it { is_expected.to have_many(:topic_answers) }
+    it { is_expected.to have_many(:answer_posts) }
     it { is_expected.to belong_to(:topic_timer).dependent(:destroy) }
   end
 
   describe "Validations" do
     it { is_expected.to validate_presence_of(:topic_id) }
-    it { is_expected.to validate_presence_of(:answer_post_id) }
-    it { is_expected.to validate_presence_of(:accepter_user_id) }
   end
 
   describe "Callbacks" do
     describe "#auto_close_topic_timer" do
-      subject(:solved) { described_class.create(topic:, answer_post: post, accepter: user) }
+      subject(:solved) { described_class.create(topic:) }
 
       context "when auto close hours is greater than zero" do
         before { SiteSetting.solved_topics_auto_close_hours = 2 }

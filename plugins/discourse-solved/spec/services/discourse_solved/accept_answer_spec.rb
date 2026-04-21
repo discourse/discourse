@@ -66,8 +66,14 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       it { is_expected.to run_successfully }
 
       context "when a previous answer was already accepted" do
-        fab!(:existing_solved) do
-          Fabricate(:solved_topic, topic:, answer_post: post_1, accepter: acting_user)
+        fab!(:existing_solved) { Fabricate(:solved_topic, topic:) }
+        fab!(:existing_topic_answer) do
+          Fabricate(
+            :topic_answer,
+            solved_topic: existing_solved,
+            post: post_1,
+            accepter: acting_user,
+          )
         end
         fab!(:previous_user_action) do
           UserAction.log_action!(
@@ -84,7 +90,9 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
 
         it "replaces the accepted answer" do
-          expect { result }.to change { topic.reload.solved.answer_post }.from(post_1).to(post)
+          expect { result }.to change { topic.reload.solved.topic_answers[0].post }.from(post_1).to(
+            post,
+          )
         end
 
         it "revokes the previous answer's solved credit" do
@@ -101,9 +109,10 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       it "marks the topic as solved" do
-        expect(result[:solved]).to have_attributes(
-          topic: topic,
-          answer_post: post,
+        expect(result[:solved_topic]).to have_attributes(topic: topic)
+        expect(result[:topic_answer]).to have_attributes(
+          solved_topic_id: result[:solved_topic].id,
+          post: post,
           accepter: acting_user,
         )
       end

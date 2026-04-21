@@ -261,23 +261,25 @@ after_initialize do
      WHERE di.period_type = :period_type AND di.solutions IS NOT NULL;
 
     WITH x AS (
-      SELECT p.user_id, COUNT(DISTINCT st.id) AS solutions
+    SELECT p.user_id, COUNT(DISTINCT sta.id) AS solutions
       FROM discourse_solved_solved_topics AS st
+      JOIN discourse_solved_topic_answers AS sta
+        ON sta.solved_topic_id = st.id
+       AND COALESCE(sta.created_at, :since) > :since
       JOIN posts AS p
-         ON p.id = st.answer_post_id
-        AND COALESCE(st.created_at, :since) > :since
-        AND p.deleted_at IS NULL
+        ON p.id = sta.answer_post_id
+       AND p.deleted_at IS NULL
       JOIN topics AS t
-         ON t.id = st.topic_id
-        AND t.archetype <> 'private_message'
-        AND t.deleted_at IS NULL
+        ON t.id = st.topic_id
+       AND t.archetype <> 'private_message'
+       AND t.deleted_at IS NULL
       JOIN users AS u
-         ON u.id = p.user_id
-      WHERE u.id > 0
-        AND u.active
-        AND u.silenced_till IS NULL
-        AND u.suspended_till IS NULL
-      GROUP BY p.user_id
+        ON u.id = p.user_id
+     WHERE u.id > 0
+       AND u.active
+       AND u.silenced_till IS NULL
+       AND u.suspended_till IS NULL
+     GROUP BY p.user_id
     )
     UPDATE directory_items di
        SET solutions = x.solutions

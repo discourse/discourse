@@ -11,7 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import setAcceptedSolution from "../lib/set-accepted-solutions";
+import setAcceptedSolutions from "../lib/set-accepted-solutions";
 
 export default class SolvedUnacceptAnswerButton extends Component {
   @service appEvents;
@@ -36,10 +36,8 @@ export default class SolvedUnacceptAnswerButton extends Component {
   }
 
   get answerInfo() {
-    return (
-      this.args.post.topic.accepted_answers?.find(
-        (a) => a.post_number === this.args.post.post_number
-      ) ?? null
+    return this.args.post.topic.accepted_answers?.find(
+      (a) => a.post_number === this.args.post.post_number
     );
   }
 
@@ -122,12 +120,12 @@ async function unacceptPost(post) {
   const topic = post.topic;
 
   try {
-    await ajax("/solution/unaccept", {
+    const remainingAcceptedAnswers = await ajax("/solution/unaccept", {
       type: "POST",
       data: { id: post.id },
     });
 
-    setAcceptedSolution(topic, undefined);
+    setAcceptedSolutions(topic, remainingAcceptedAnswers);
   } catch (e) {
     popupAjaxError(e);
   }

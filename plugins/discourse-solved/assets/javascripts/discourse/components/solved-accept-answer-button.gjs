@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import setAcceptedSolution from "../lib/set-accepted-solutions";
+import setAcceptedSolutions from "../lib/set-accepted-solutions";
 
 export default class SolvedAcceptAnswerButton extends Component {
   static hidden(args, context) {
@@ -61,12 +61,12 @@ async function acceptPost(post) {
   const topic = post.topic;
 
   try {
-    const acceptedAnswer = await ajax("/solution/accept", {
+    const acceptedAnswers = await ajax("/solution/accept", {
       type: "POST",
       data: { id: post.id },
     });
 
-    setAcceptedSolution(topic, acceptedAnswer);
+    setAcceptedSolutions(topic, acceptedAnswers);
   } catch (e) {
     popupAjaxError(e);
   }

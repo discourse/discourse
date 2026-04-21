@@ -53,7 +53,7 @@ RSpec.describe DiscourseSolved::AnswerController do
 
         post "/solution/accept.json", params: { id: solution_post.id }
         expect(response.status).to eq(200)
-        post "/solution/accept.json", params: { id: solution_post.id }
+        post "/solution/unaccept.json", params: { id: solution_post.id }
         expect(response.status).to eq(200)
 
         # Unregister the modifier using DiscoursePluginRegistry

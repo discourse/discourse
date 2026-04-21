@@ -26,7 +26,7 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
   def unaccept
     DiscourseSolved::UnacceptAnswer.call(params: { post_id: params[:id] }, guardian:) do
-      on_success { render json: success_json }
+      on_success { |topic:| render_json_dump(topic.reload.accepted_answers_post_info) }
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }
       on_failed_policy(:can_unaccept_answer) { raise Discourse::InvalidAccess }

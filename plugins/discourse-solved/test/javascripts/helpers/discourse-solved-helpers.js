@@ -197,13 +197,15 @@ export const postStreamWithAcceptedAnswerExcerpt = (excerpt) => ({
   featured_link: null,
   topic_timer: null,
   message_bus_last_id: 0,
-  accepted_answer: {
-    post_number: 2,
-    username: "kzh",
-    excerpt: excerpt ? `<p>${excerpt}</p>` : excerpt,
-    accepter_username: "tomtom",
-    accepter_name: "Tomtom",
-  },
+  accepted_answers: [
+    {
+      post_number: 2,
+      username: "kzh",
+      excerpt: excerpt ? `<p>${excerpt}</p>` : excerpt,
+      accepter_username: "tomtom",
+      accepter_name: "Tomtom",
+    },
+  ],
 });
 
 export function topicWithNoAnswer(currentUserId) {
@@ -255,7 +257,7 @@ export function topicWithNoAnswer(currentUserId) {
     draft: null,
     draft_key: "topic_100",
     draft_sequence: 0,
-    accepted_answer: null,
+    accepted_answers: [],
     details: {
       created_by: {
         id: currentUserId,

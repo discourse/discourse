@@ -79,7 +79,8 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
     end
 
     context "when the post is the accepted answer" do
-      fab!(:solved_topic) { Fabricate(:solved_topic, topic:, answer_post: post, accepter: user) }
+      fab!(:solved_topic) { Fabricate(:solved_topic, topic:) }
+      fab!(:topic_answer) { Fabricate(:topic_answer, solved_topic:, post: post, accepter: user) }
 
       let(:messages) { MessageBus.track_publish("/topic/#{topic.id}") { result } }
       let(:events) { DiscourseEvent.track_events(:unaccepted_solution) { result } }
@@ -182,7 +183,7 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
       end
 
       context "when a different post is the accepted answer" do
-        before { solved_topic.update!(answer_post: post_1) }
+        before { solved_topic.topic_answers[0].update!(post: post_1) }
 
         it "does not mark the topic as unsolved" do
           expect { result }.not_to change { DiscourseSolved::SolvedTopic.count }

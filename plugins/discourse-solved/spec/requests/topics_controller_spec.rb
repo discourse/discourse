@@ -66,25 +66,27 @@ RSpec.describe TopicsController do
       SiteSetting.display_name_on_posts = true
       SiteSetting.show_who_marked_solved = true
       accepter = Fabricate(:user)
-      Fabricate(:solved_topic, topic:, answer_post: p2, accepter:)
+      Fabricate(:solved_topic, topic:, topic_answer: Fabricate(:topic_answer, post: p2, accepter:))
 
       get "/t/#{topic.slug}/#{topic.id}.json"
 
-      expect(response.parsed_body["accepted_answer"]["name"]).to eq(p2.user.name)
-      expect(response.parsed_body["accepted_answer"]["username"]).to eq(p2.user.username)
-      expect(response.parsed_body["accepted_answer"]["accepter_name"]).to eq(accepter.name)
-      expect(response.parsed_body["accepted_answer"]["accepter_username"]).to eq(accepter.username)
+      expect(response.parsed_body["accepted_answers"][0]["name"]).to eq(p2.user.name)
+      expect(response.parsed_body["accepted_answers"][0]["username"]).to eq(p2.user.username)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_name"]).to eq(accepter.name)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_username"]).to eq(
+        accepter.username,
+      )
 
       SiteSetting.show_who_marked_solved = false
       get "/t/#{topic.slug}/#{topic.id}.json"
-      expect(response.parsed_body["accepted_answer"]["accepter_name"]).to eq(nil)
-      expect(response.parsed_body["accepted_answer"]["accepter_username"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_username"]).to eq(nil)
 
       # enable_names is default ON, this ensures disabling it also disables names here
       SiteSetting.enable_names = false
       get "/t/#{topic.slug}/#{topic.id}.json"
-      expect(response.parsed_body["accepted_answer"]["name"]).to eq(nil)
-      expect(response.parsed_body["accepted_answer"]["accepter_name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_name"]).to eq(nil)
     end
 
     it "should not include user name when site setting is disabled" do
@@ -93,8 +95,8 @@ RSpec.describe TopicsController do
 
       get "/t/#{topic.slug}/#{topic.id}.json"
 
-      expect(response.parsed_body["accepted_answer"]["name"]).to eq(nil)
-      expect(response.parsed_body["accepted_answer"]["username"]).to eq(p2.user.username)
+      expect(response.parsed_body["accepted_answers"][0]["name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["username"]).to eq(p2.user.username)
     end
   end
 
