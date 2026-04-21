@@ -566,7 +566,7 @@ acceptance(
         .dom(".dialog-body")
         .hasText(
           "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
-          "it should show a consolidated error dialog"
+          "shows a consolidated error dialog"
         );
       assert.true(
         consoleErrorStub.calledWithMatch("[Uppy]"),
