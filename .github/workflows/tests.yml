@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -57,8 +57,6 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
@@ -67,9 +65,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system]
         target: [core, plugins, themes]
-        browser: [Chrome]
+        build_type: [backend, frontend, system]
         exclude:
           - build_type: backend
             target: themes
@@ -80,19 +77,10 @@ jobs:
           # Split plugin targets for system tests only
           - build_type: system
             target: core-plugins
-            browser: Chrome
           - build_type: system
             target: official-plugins
-            browser: Chrome
           - build_type: system
             target: chat
-            browser: Chrome
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox Evergreen
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox ESR
 
     steps:
       - name: Set working directory owner
