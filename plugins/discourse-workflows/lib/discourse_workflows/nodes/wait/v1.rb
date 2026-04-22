@@ -19,6 +19,10 @@ module DiscourseWorkflows
           "salmon"
         end
 
+        def self.waits_for_resume?
+          true
+        end
+
         def self.output_schema
           Schemas::Webhook::OUTPUT_FIELDS.transform_values do |type|
             { type: type, visible_if: { resume: "webhook" } }

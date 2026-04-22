@@ -103,6 +103,42 @@ after_initialize do
       DiscourseWorkflows::Nodes::SendChatMessage::V1,
       self,
     )
+
+    require_relative "lib/discourse_workflows/nodes/chat_approval/v1"
+    DiscoursePluginRegistry.register_discourse_workflows_node(
+      DiscourseWorkflows::Nodes::ChatApproval::V1,
+      self,
+    )
+
+    on(:chat_message_interaction) do |interaction|
+      next unless SiteSetting.discourse_workflows_enabled
+
+      token = interaction.action&.dig("action_id").to_s
+      next if token.blank?
+
+      execution =
+        DiscourseWorkflows::Execution
+          .waiting_with_type("chat_approval")
+          .where(
+            "waiting_config->>'approve_token' = :token OR waiting_config->>'deny_token' = :token",
+            token: token,
+          )
+          .first
+      next unless execution
+
+      approved =
+        ActiveSupport::SecurityUtils.secure_compare(
+          execution.waiting_config["approve_token"].to_s,
+          token,
+        )
+
+      Jobs.enqueue(
+        Jobs::Chat::ResumeWorkflowApproval,
+        execution_id: execution.id,
+        approved: approved,
+        action_token: token,
+      )
+    end
   end
 
   reloadable_patch do |plugin|

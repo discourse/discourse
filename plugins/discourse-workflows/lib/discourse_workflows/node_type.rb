@@ -23,6 +23,14 @@ module DiscourseWorkflows
       @registered_nodes ||= []
     end
 
+    def self.waiting_identifiers
+      registered_nodes.select(&:waits_for_resume?).map(&:identifier)
+    end
+
+    def self.waits_for_resume?
+      false
+    end
+
     def self.identifier
       raise NotImplementedError
     end

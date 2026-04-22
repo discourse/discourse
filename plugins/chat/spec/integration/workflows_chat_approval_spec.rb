@@ -55,8 +55,8 @@ RSpec.describe "Wait for Approval end-to-end" do
 
     DiscourseEvent.trigger(:chat_message_interaction, interaction)
 
-    job_args = Jobs::DiscourseWorkflows::ResumeChatApproval.jobs.last&.dig("args", 0)
-    Jobs::DiscourseWorkflows::ResumeChatApproval.new.execute(job_args.symbolize_keys) if job_args
+    job_args = Jobs::Chat::ResumeWorkflowApproval.jobs.last&.dig("args", 0)
+    Jobs::Chat::ResumeWorkflowApproval.new.execute(job_args.symbolize_keys) if job_args
 
     execution.reload
     expect(execution.status).to eq("success")
@@ -82,14 +82,12 @@ RSpec.describe "Wait for Approval end-to-end" do
 
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
-    # First visit to the approval node
     execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
     expect(execution.status).to eq("waiting")
 
     first_message = Chat::Message.where(chat_channel_id: channel.id).last
     stale_action_id = first_message.blocks.first["elements"].first["action_id"]
 
-    # Approve via the first button — execution completes
     interaction =
       Chat::MessageInteraction.new(
         user: approver,
@@ -100,12 +98,11 @@ RSpec.describe "Wait for Approval end-to-end" do
         },
       )
     DiscourseEvent.trigger(:chat_message_interaction, interaction)
-    job_args = Jobs::DiscourseWorkflows::ResumeChatApproval.jobs.last&.dig("args", 0)
-    Jobs::DiscourseWorkflows::ResumeChatApproval.new.execute(job_args.symbolize_keys) if job_args
+    job_args = Jobs::Chat::ResumeWorkflowApproval.jobs.last&.dig("args", 0)
+    Jobs::Chat::ResumeWorkflowApproval.new.execute(job_args.symbolize_keys) if job_args
 
     expect(execution.reload.status).to eq("success")
 
-    # Simulate the same execution re-entering the approval node (e.g. via a loop)
     execution.update!(
       status: :waiting,
       waiting_node_id: "wait-1",
@@ -117,7 +114,6 @@ RSpec.describe "Wait for Approval end-to-end" do
       },
     )
 
-    # Replay the stale button — should be rejected because the tokens changed
     stale_interaction =
       Chat::MessageInteraction.new(
         user: approver,
@@ -129,12 +125,9 @@ RSpec.describe "Wait for Approval end-to-end" do
       )
     DiscourseEvent.trigger(:chat_message_interaction, stale_interaction)
 
-    stale_job_args = Jobs::DiscourseWorkflows::ResumeChatApproval.jobs.last&.dig("args", 0)
-    if stale_job_args
-      Jobs::DiscourseWorkflows::ResumeChatApproval.new.execute(stale_job_args.symbolize_keys)
-    end
+    stale_job_args = Jobs::Chat::ResumeWorkflowApproval.jobs.last&.dig("args", 0)
+    Jobs::Chat::ResumeWorkflowApproval.new.execute(stale_job_args.symbolize_keys) if stale_job_args
 
-    # Execution should still be waiting — stale button was rejected
     expect(execution.reload.status).to eq("waiting")
   end
 end

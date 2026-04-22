@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseWorkflows::ChatApproval::Resume do
+RSpec.describe Chat::Workflows::ApprovalResume do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:execution_id) }
     it { is_expected.to validate_presence_of(:action_token) }

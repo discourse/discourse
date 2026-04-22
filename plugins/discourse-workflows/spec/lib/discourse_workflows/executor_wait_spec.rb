@@ -2,24 +2,16 @@
 
 RSpec.describe DiscourseWorkflows::Executor do
   fab!(:user)
-  fab!(:channel, :chat_channel)
-
-  before { SiteSetting.chat_enabled = true }
 
   describe "pause on wait request" do
-    it "pauses execution and sends a chat message with approval buttons" do
+    it "pauses execution and stores the waiting node id when a node returns WaitForResume" do
       graph =
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:manual"
-          g.node "wait-1",
-                 "action:chat_approval",
-                 configuration: {
-                   "message" => "Please approve",
-                   "channel_id" => channel.id.to_s,
-                 }
+          g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
           g.node "after-1",
                  "action:set_fields",
-                 name: "After Approval",
+                 name: "After",
                  configuration: {
                    "mode" => "json",
                    "include_input" => true,
@@ -40,58 +32,18 @@ RSpec.describe DiscourseWorkflows::Executor do
       waiting_step = execution.execution_data.find_step(node_id: "wait-1")
       expect(waiting_step["status"]).to eq("waiting")
 
-      expect(execution.execution_data.context_data).not_to have_key("After Approval")
-
-      chat_message = Chat::Message.where(chat_channel_id: channel.id).last
-      expect(chat_message).to be_present
-      expect(chat_message).to have_attributes(message: "Please approve", blocks: be_present)
-      expect(chat_message.blocks.first["elements"].size).to eq(2)
-
-      approve_action_id = chat_message.blocks.first["elements"].first["action_id"]
-      expect(approve_action_id).to start_with("dwf:")
-    end
-
-    it "stores timeout config when timeout_minutes is set" do
-      graph =
-        build_workflow_graph do |g|
-          g.node "trigger-1", "trigger:manual"
-          g.node "wait-1",
-                 "action:chat_approval",
-                 configuration: {
-                   "message" => "Approve?",
-                   "channel_id" => channel.id.to_s,
-                   "timeout_minutes" => "60",
-                   "timeout_action" => "fail",
-                 }
-          g.chain "trigger-1", "wait-1"
-        end
-      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
-
-      freeze_time do
-        execution = described_class.new(workflow, "trigger-1", {}).run
-
-        expect(execution).to have_attributes(
-          status: "waiting",
-          waiting_until: eq_time(60.minutes.from_now),
-        )
-        expect(execution.waiting_config).to include("timeout_action" => "fail")
-      end
+      expect(execution.execution_data.context_data).not_to have_key("After")
     end
   end
 
   describe ".resume" do
     fab!(:completed_execution) { Fabricate(:discourse_workflows_execution, status: :success) }
 
-    it "resumes a waiting execution with approved response" do
+    it "resumes a waiting execution and continues to downstream nodes" do
       graph =
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:manual"
-          g.node "wait-1",
-                 "action:chat_approval",
-                 configuration: {
-                   "message" => "Approve?",
-                   "channel_id" => channel.id.to_s,
-                 }
+          g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
           g.node "after-1",
                  "action:set_fields",
                  name: "After",

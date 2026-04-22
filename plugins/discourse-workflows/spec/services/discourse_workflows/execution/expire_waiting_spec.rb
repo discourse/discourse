@@ -5,28 +5,29 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
     subject(:result) { described_class.call }
 
     fab!(:user)
-    fab!(:channel, :chat_channel)
 
-    before { SiteSetting.chat_enabled = true }
-
-    def create_waiting_execution(timeout_minutes:, timeout_action:)
+    def create_waiting_execution(timeout_minutes:, timeout_action:, timeout_response_items: nil)
       graph =
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:manual", name: "Manual"
           g.node "wait-1",
-                 "action:chat_approval",
+                 "flow:wait",
                  name: "Wait",
                  configuration: {
-                   "message" => "Approve?",
-                   "channel_id" => channel.id.to_s,
-                   "timeout_minutes" => timeout_minutes.to_s,
-                   "timeout_action" => timeout_action,
+                   "resume" => "webhook",
+                   "limit_wait_time" => true,
+                   "timeout_amount" => timeout_minutes,
+                   "timeout_unit" => "minutes",
                  }
           g.chain "trigger-1", "wait-1"
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
-      DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+      execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
+      extras = { "timeout_action" => timeout_action }
+      extras["timeout_response_items"] = timeout_response_items if timeout_response_items
+      execution.update!(waiting_config: execution.waiting_config.merge(extras))
+      execution
     end
 
     context "when plugin is disabled" do
@@ -56,10 +57,15 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
     end
 
     context "when timeout_action is deny" do
-      it "resumes the expired execution as denied" do
+      it "resumes the expired execution with timeout_response_items" do
         freeze_time
 
-        execution = create_waiting_execution(timeout_minutes: 30, timeout_action: "deny")
+        execution =
+          create_waiting_execution(
+            timeout_minutes: 30,
+            timeout_action: "deny",
+            timeout_response_items: [{ "json" => { "approved" => false, "timed_out" => true } }],
+          )
         expect(execution.status).to eq("waiting")
 
         freeze_time(31.minutes.from_now)

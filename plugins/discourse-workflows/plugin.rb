@@ -86,37 +86,4 @@ after_initialize do
 
     DiscourseWorkflows::PluginEnableHandler.handle!
   end
-
-  on(:chat_message_interaction) do |interaction|
-    next unless SiteSetting.discourse_workflows_enabled
-
-    action_id = interaction.action&.dig("action_id")
-    next unless action_id&.start_with?("dwf:")
-
-    token = action_id.delete_prefix("dwf:")
-    next if token.blank?
-
-    execution =
-      DiscourseWorkflows::Execution
-        .where(status: :waiting)
-        .where(
-          "waiting_config->>'approve_token' = :token OR waiting_config->>'deny_token' = :token",
-          token: token,
-        )
-        .first
-    next unless execution
-
-    approved =
-      ActiveSupport::SecurityUtils.secure_compare(
-        execution.waiting_config["approve_token"].to_s,
-        token,
-      )
-
-    Jobs.enqueue(
-      Jobs::DiscourseWorkflows::ResumeChatApproval,
-      execution_id: execution.id,
-      approved: approved,
-      action_token: token,
-    )
-  end
 end

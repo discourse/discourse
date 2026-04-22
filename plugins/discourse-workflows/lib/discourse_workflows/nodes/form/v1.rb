@@ -20,6 +20,10 @@ module DiscourseWorkflows
           "human_review"
         end
 
+        def self.waits_for_resume?
+          true
+        end
+
         def self.output_schema
           Schemas::FormFields::OUTPUT_SCHEMA
         end

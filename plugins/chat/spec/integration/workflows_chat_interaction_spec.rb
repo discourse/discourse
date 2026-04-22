@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:disable RSpec/DescribeClass
+RSpec.describe "Chat interaction listener for workflow approvals" do
   fab!(:user)
   fab!(:channel, :chat_channel)
   fab!(:chat_message) { Fabricate(:chat_message, chat_channel: channel) }
 
   before { SiteSetting.chat_enabled = true }
 
-  it "enqueues ResumeChatApproval when an approve button is clicked" do
+  it "enqueues ResumeWorkflowApproval when an approve button is clicked" do
     graph =
       build_workflow_graph do |g|
         g.node "trigger-1", "trigger:manual"
@@ -25,20 +25,19 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
     expect(execution.status).to eq("waiting")
 
     approve_token = execution.waiting_config["approve_token"]
-    action_id = "dwf:#{approve_token}"
 
     interaction =
       Chat::MessageInteraction.new(
         user: user,
         message: Chat::Message.last,
         action: {
-          "action_id" => action_id,
+          "action_id" => approve_token,
           "value" => "approve",
         },
       )
 
     expect_enqueued_with(
-      job: Jobs::DiscourseWorkflows::ResumeChatApproval,
+      job: Jobs::Chat::ResumeWorkflowApproval,
       args: {
         execution_id: execution.id,
         approved: true,
@@ -47,36 +46,18 @@ RSpec.describe "Chat interaction listener for workflow approvals" do # rubocop:d
     ) { DiscourseEvent.trigger(:chat_message_interaction, interaction) }
   end
 
-  it "ignores interactions with invalid tokens" do
-    action_id = "dwf:invalidtoken1234"
-
+  it "ignores interactions whose action_id does not match any waiting execution" do
     interaction =
       Chat::MessageInteraction.new(
         user: user,
         message: chat_message,
         action: {
-          "action_id" => action_id,
+          "action_id" => "unknown_action_id",
         },
       )
 
     expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change(
-      Jobs::DiscourseWorkflows::ResumeChatApproval.jobs,
-      :size,
-    )
-  end
-
-  it "ignores non-workflow interactions" do
-    interaction =
-      Chat::MessageInteraction.new(
-        user: user,
-        message: chat_message,
-        action: {
-          "action_id" => "some_other_action",
-        },
-      )
-
-    expect { DiscourseEvent.trigger(:chat_message_interaction, interaction) }.not_to change(
-      Jobs::DiscourseWorkflows::ResumeChatApproval.jobs,
+      Jobs::Chat::ResumeWorkflowApproval.jobs,
       :size,
     )
   end

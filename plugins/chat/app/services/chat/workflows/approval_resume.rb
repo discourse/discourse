@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module DiscourseWorkflows
-  module ChatApproval
-    class Resume
+module Chat
+  module Workflows
+    class ApprovalResume
       include Service::Base
 
-      policy :workflows_enabled, class_name: DiscourseWorkflows::Policy::WorkflowsEnabled
+      policy :workflows_enabled
 
       params do
         attribute :execution_id, :integer
@@ -21,9 +21,13 @@ module DiscourseWorkflows
 
       private
 
+      def workflows_enabled
+        SiteSetting.discourse_workflows_enabled
+      end
+
       def fetch_execution(params:)
         execution =
-          DiscourseWorkflows::Execution
+          ::DiscourseWorkflows::Execution
             .waiting_with_type("chat_approval")
             .where(id: params.execution_id)
             .lock("FOR UPDATE SKIP LOCKED")
@@ -52,7 +56,7 @@ module DiscourseWorkflows
             },
           },
         ]
-        DiscourseWorkflows::Executor.resume(execution, response_items)
+        ::DiscourseWorkflows::Executor.resume(execution, response_items)
       end
     end
   end

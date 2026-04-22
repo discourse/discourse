@@ -73,10 +73,10 @@ module("Unit | Utility | workflows property engine", function () {
 
     assert.deepEqual(options, [{ value: "GET" }, { value: "deny" }]);
     assert.strictEqual(
-      propertyOptionLabel("action:chat_approval", "timeout_action", {
-        value: "deny",
+      propertyOptionLabel("flow:wait", "resume", {
+        value: "webhook",
       }),
-      "Resume as denied"
+      "On webhook call"
     );
     assert.strictEqual(
       propertyOptionLabel("action:http_request", "method", { value: "GET" }),

@@ -37,13 +37,12 @@ module DiscourseWorkflows
             where(status: :waiting).where("waiting_config->>'resume_token' = ?", token.to_s)
           end
 
-    WAITING_NODE_TYPES = %w[action:chat_approval action:form flow:wait].freeze
-
     def self.compute_run_time_ms(steps)
+      waiting_types = NodeType.waiting_identifiers
       timed =
         steps.select do |s|
           step_field(s, :started_at) && step_field(s, :finished_at) &&
-            WAITING_NODE_TYPES.exclude?(step_field(s, :node_type))
+            waiting_types.exclude?(step_field(s, :node_type))
         end
       return if timed.empty?
       total =

@@ -78,7 +78,6 @@ module PageObjects
         "action:split_out" => "Split Out",
         "action:http_request" => "HTTP Request",
         "action:data_table" => "Data Table",
-        "action:chat_approval" => "Chat Approval",
         "flow:loop_over_items" => "Loop Over Items",
       }.freeze
 
