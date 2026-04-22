@@ -1,17 +1,17 @@
-@keyframes artifact-remove {
+@keyframes web-artifact-remove {
   to {
     height: 0;
     overflow: hidden;
   }
 }
 
-@keyframes artifact-fade {
+@keyframes web-artifact-fade {
   to {
     opacity: 0;
   }
 }
 
-.ai-artifact__wrapper {
+.web-artifact__wrapper {
   height: 500px;
   padding-bottom: 2em;
 
@@ -20,7 +20,7 @@
     height: calc(100% - 2em);
   }
 
-  &.ai-artifact__seamless {
+  &.--seamless {
     padding-bottom: 1em;
 
     iframe {
@@ -28,14 +28,14 @@
     }
   }
 
-  &:not(.ai-artifact__expanded, .ai-artifact__seamless) {
+  &:not(.--expanded, .--seamless) {
     iframe {
       box-shadow: var(--shadow-card);
     }
   }
 }
 
-.ai-artifact__click-to-run {
+.web-artifact__click-to-run {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,20 +43,20 @@
   background: var(--primary-very-low);
 }
 
-.ai-artifact__panel {
+.web-artifact__panel {
   display: none;
 }
 
-html.ai-artifact-expanded {
+html.web-artifact-expanded {
   overflow: hidden;
 }
 
-.ai-artifact__footer {
+.web-artifact__footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  .ai-artifact__expand-button {
+  .web-artifact__expand-button {
     margin-left: auto;
     padding-right: 0;
 
@@ -66,12 +66,12 @@ html.ai-artifact-expanded {
   }
 }
 
-.ai-artifact__panel--wrapper {
+.web-artifact__panel-wrapper {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
 }
 
-.ai-artifact__expanded {
+.web-artifact__wrapper.--expanded {
   position: fixed;
   top: 0;
   left: 0;
@@ -80,11 +80,11 @@ html.ai-artifact-expanded {
   z-index: z("fullscreen");
   background-color: var(--secondary);
 
-  .ai-artifact__footer {
+  .web-artifact__footer {
     display: none;
   }
 
-  .ai-artifact__panel--wrapper {
+  .web-artifact__panel-wrapper {
     position: absolute;
     top: 2em;
     left: 2em;
@@ -96,12 +96,12 @@ html.ai-artifact-expanded {
     opacity: 1;
   }
 
-  .ai-artifact__panel {
+  .web-artifact__panel {
     display: block;
     position: absolute;
     animation:
-      artifact-fade 0.75s forwards,
-      artifact-remove 1s forwards;
+      web-artifact-fade 0.75s forwards,
+      web-artifact-remove 1s forwards;
     animation-delay: 4s;
     background-color: var(--primary);
     opacity: 0.9;
@@ -143,9 +143,25 @@ html.ai-artifact-expanded {
   }
 }
 
-.ai-share-full-topic-modal__body {
-  .ai-artifact-controls {
-    display: flex;
-    justify-content: space-between;
+.web-artifact-builder-modal {
+  .web-artifact-builder__field {
+    margin-bottom: 0.75em;
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.25em;
+    }
+  }
+
+  .web-artifact-builder__name-input {
+    width: 100%;
+  }
+
+  .web-artifact-builder__code-input {
+    width: 100%;
+    min-height: 100px;
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
   }
 }

@@ -41,7 +41,7 @@ module DiscourseAi
           # we inject the current artifact content into the last user message
           if topic_id = context.topic_id
             posts = Post.where(topic_id: topic_id)
-            artifact = AiArtifact.order("id desc").where(post: posts).first
+            artifact = WebArtifact.order("id desc").where(post: posts).first
             if artifact
               latest_version = artifact.versions.order(version_number: :desc).first
               current = latest_version || artifact
@@ -111,7 +111,7 @@ module DiscourseAi
           post = Post.find_by(id: context.post_id)
           return error_response("No post context found") unless post
 
-          artifact = AiArtifact.find_by(id: parameters[:artifact_id])
+          artifact = WebArtifact.find_by(id: parameters[:artifact_id])
           return error_response("Artifact not found") unless artifact
 
           artifact_version = nil

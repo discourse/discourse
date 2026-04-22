@@ -215,7 +215,7 @@ module DiscourseAi
         end
 
         def create_artifact(post, code)
-          AiArtifact.new(
+          WebArtifact.new(
             user_id: bot_user.id,
             post_id: post.id,
             name: parameters[:name].to_s[0...255],
@@ -242,7 +242,7 @@ module DiscourseAi
                - JavaScript: Clean, working code
             4. NEVER USE SHORTCUTS - generate complete code for each section. No placeholders.
             5. If you need to source ANY 3rd party libraries, use the following CDNs:
-            #{AiArtifact::ALLOWED_CDN_SOURCES.join("\n")}
+            #{WebArtifact::ALLOWED_CDN_SOURCES.join("\n")}
 
             6. When sourcing libraries, include them in the [HTML] section, for example: <script src="https://cdn.jsdelivr.net/...."></script>
 

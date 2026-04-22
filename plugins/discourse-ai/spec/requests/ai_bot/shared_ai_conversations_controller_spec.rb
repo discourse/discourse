@@ -85,13 +85,13 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
       end
 
       context "when ai artifacts are in lax mode" do
-        before { SiteSetting.ai_artifact_security = "lax" }
+        before { SiteSetting.web_artifact_security = "lax" }
 
         it "properly shares artifacts" do
           first_post = user_pm_share.posts.first
 
           artifact_not_allowed =
-            AiArtifact.create!(
+            WebArtifact.create!(
               user: bot_user,
               post: Fabricate(:private_message_post),
               name: "test",
@@ -99,7 +99,7 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
             )
 
           artifact =
-            AiArtifact.create!(
+            WebArtifact.create!(
               user: bot_user,
               post: first_post,
               name: "test",

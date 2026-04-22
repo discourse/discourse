@@ -55,7 +55,7 @@ module DiscourseAi
         end
 
         def discourse_artifact?(uri)
-          uri.path.include?("/discourse-ai/ai-bot/artifacts/")
+          uri.path.include?("/discourse-ai/ai-bot/artifacts/") || uri.path.match?(%r{^/w/\d+})
         end
 
         def post
@@ -63,7 +63,7 @@ module DiscourseAi
         end
 
         def handle_discourse_artifact(uri)
-          if uri.path =~ %r{/discourse-ai/ai-bot/artifacts/(\d+)(?:/(\d+))?}
+          if uri.path =~ %r{(?:/discourse-ai/ai-bot/artifacts|/w)/(\d+)(?:/(\d+))?}
             artifact_id = $1.to_i
             version = $2&.to_i
           else
@@ -71,7 +71,7 @@ module DiscourseAi
           end
 
           if uri.host == Discourse.current_hostname
-            source_artifact = AiArtifact.find_by(id: artifact_id)
+            source_artifact = WebArtifact.find_by(id: artifact_id)
             return error_response("Artifact not found") if !source_artifact
 
             if !source_artifact.public? && !Guardian.new(post.user).can_see?(source_artifact.post)
@@ -162,7 +162,7 @@ module DiscourseAi
           source_version = version ? source.versions.find_by(version_number: version) : nil
           content = source_version || source
 
-          AiArtifact.create!(
+          WebArtifact.create!(
             user: post.user,
             post: post,
             name: source.name,
@@ -177,7 +177,7 @@ module DiscourseAi
         end
 
         def create_artifact_from_web(html:, css:, js:, name:)
-          AiArtifact.create(
+          WebArtifact.create(
             user: post.user,
             post: post,
             name: name,

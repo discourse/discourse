@@ -3265,6 +3265,27 @@ navigation:
       - "bottom"
     area: "navigation"
 
+web_artifacts:
+  web_artifact_security:
+    client: true
+    type: enum
+    default: "strict"
+    choices:
+      - "disabled"
+      - "lax"
+      - "hybrid"
+      - "strict"
+  web_artifact_allowed_groups:
+    type: group_list
+    default: "1"
+    allow_any: false
+  web_artifact_kv_value_max_length:
+    hidden: true
+    default: 5000
+  web_artifact_max_keys_per_user_per_artifact:
+    hidden: true
+    default: 100
+
 embedding:
   embed_full_app:
     default: false

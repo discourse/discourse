@@ -85,7 +85,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_see_ip,
              :is_impersonating,
              :can_change_post_owner,
-             :show_site_owner_onboarding
+             :show_site_owner_onboarding,
+             :can_create_web_artifact
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -155,6 +156,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_create_group?
     scope.can_create_group?
+  end
+
+  def can_create_web_artifact
+    true
+  end
+
+  def include_can_create_web_artifact?
+    scope.can_create_web_artifact?
   end
 
   def can_send_private_email_messages

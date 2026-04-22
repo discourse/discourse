@@ -5,7 +5,7 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
   fab!(:post)
   fab!(:artifact) do
-    AiArtifact.create!(
+    WebArtifact.create!(
       user: Fabricate(:user),
       post: post,
       name: "Test Artifact",

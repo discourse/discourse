@@ -19,6 +19,7 @@ import * as table from "./table";
 import * as textPostProcess from "./text-post-process";
 import * as uploadProtocol from "./upload-protocol";
 import * as watchedWords from "./watched-words";
+import * as webArtifact from "./web-artifact";
 
 export default [
   feature("watched-words", watchedWords),
@@ -42,6 +43,7 @@ export default [
   feature("bbcode-inline", bbcodeInline),
   feature("bbcode-block", bbcodeBlock),
   feature("anchor", anchor),
+  feature("web-artifact", webArtifact),
 ];
 
 function feature(id, { setup, priority = 0 }) {

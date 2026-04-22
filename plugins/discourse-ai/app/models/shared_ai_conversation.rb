@@ -38,7 +38,7 @@ class SharedAiConversation < ActiveRecord::Base
 
     maybe_topic = conversation.target
     if maybe_topic.is_a?(Topic)
-      AiArtifact.where(post: maybe_topic.posts).update_all(
+      WebArtifact.where(post: maybe_topic.posts).update_all(
         "metadata = jsonb_set(COALESCE(metadata, '{}'), '{public}', 'false')",
       )
     end
@@ -186,18 +186,18 @@ class SharedAiConversation < ActiveRecord::Base
 
   def self.cook_artifacts(post, publish: false)
     html = post.cooked
-    return html if !%w[lax hybrid strict].include?(SiteSetting.ai_artifact_security)
+    return html if !%w[lax hybrid strict].include?(SiteSetting.web_artifact_security)
 
     doc = Nokogiri::HTML5.fragment(html)
     doc
-      .css("div.ai-artifact")
+      .css("div.ai-artifact, div.web-artifact")
       .each do |node|
-        id = node["data-ai-artifact-id"].to_i
-        version = node["data-ai-artifact-version"]
+        id = (node["data-ai-artifact-id"] || node["data-web-artifact-id"]).to_i
+        version = node["data-ai-artifact-version"] || node["data-web-artifact-version"]
         version_number = version.to_i if version
         if id > 0
-          AiArtifact.share_publicly(id: id, post: post) if publish
-          node.replace(AiArtifact.iframe_for(id, version_number))
+          WebArtifact.share_publicly(id: id, post: post) if publish
+          node.replace(WebArtifact.iframe_for(id, version_number))
         end
       end
 

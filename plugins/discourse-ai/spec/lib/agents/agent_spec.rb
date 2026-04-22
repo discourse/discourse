@@ -272,7 +272,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
 
       # omits agents if key is missing
       SiteSetting.ai_google_custom_search_api_key = ""
-      SiteSetting.ai_artifact_security = "disabled"
+      SiteSetting.web_artifact_security = "disabled"
 
       # Filter to only system agents with specific agent classes (not the base Agent class)
       # The base Agent class appears for agents that don't have required tools available

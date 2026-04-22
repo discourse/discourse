@@ -7,39 +7,42 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
 
-export default class AiArtifactComponent extends Component {
+export default class WebArtifactComponent extends Component {
   @service siteSettings;
 
   @tracked expanded = false;
   @tracked showingArtifact = false;
 
+  #popStateHandler;
+
+  #keydownHandler;
+
   constructor() {
     super(...arguments);
-    this.keydownHandler = this.handleKeydown.bind(this);
-    this.popStateHandler = this.handlePopState.bind(this);
-    window.addEventListener("popstate", this.popStateHandler);
+    this.#popStateHandler = this.#handlePopState.bind(this);
+    this.#keydownHandler = this.#handleKeydown.bind(this);
+    window.addEventListener("popstate", this.#popStateHandler);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    window.removeEventListener("keydown", this.keydownHandler);
-    window.removeEventListener("popstate", this.popStateHandler);
+    window.removeEventListener("keydown", this.#keydownHandler);
+    window.removeEventListener("popstate", this.#popStateHandler);
   }
 
-  @action
-  handleKeydown(event) {
+  #handleKeydown(event) {
     if (event.key === "Escape" || event.key === "Esc") {
       history.back();
     }
   }
 
-  @action
-  handlePopState(event) {
+  #handlePopState(event) {
     const state = event.state;
     this.expanded = state?.artifactId === this.args.artifactId;
     if (!this.expanded) {
-      window.removeEventListener("keydown", this.keydownHandler);
+      window.removeEventListener("keydown", this.#keydownHandler);
     }
   }
 
@@ -48,11 +51,11 @@ export default class AiArtifactComponent extends Component {
       return false;
     }
 
-    if (this.siteSettings.ai_artifact_security === "strict") {
+    if (this.siteSettings.web_artifact_security === "strict") {
       return true;
     }
 
-    if (this.siteSettings.ai_artifact_security === "hybrid") {
+    if (this.siteSettings.web_artifact_security === "hybrid") {
       const shouldAutorun =
         this.args.autorun === "true" ||
         this.args.autorun === true ||
@@ -61,11 +64,11 @@ export default class AiArtifactComponent extends Component {
       return !shouldAutorun;
     }
 
-    return this.siteSettings.ai_artifact_security !== "lax";
+    return this.siteSettings.web_artifact_security !== "lax";
   }
 
   get artifactUrl() {
-    let url = getURL(`/discourse-ai/ai-bot/artifacts/${this.args.artifactId}`);
+    let url = getURL(`/w/${this.args.artifactId}`);
 
     if (this.args.artifactVersion) {
       url = `${url}/${this.args.artifactVersion}`;
@@ -86,7 +89,7 @@ export default class AiArtifactComponent extends Component {
         "",
         window.location.href + "#artifact-fullscreen"
       );
-      window.addEventListener("keydown", this.keydownHandler);
+      window.addEventListener("keydown", this.#keydownHandler);
     } else {
       history.back();
     }
@@ -94,9 +97,9 @@ export default class AiArtifactComponent extends Component {
   }
 
   get wrapperClasses() {
-    return `ai-artifact__wrapper ${
-      this.expanded ? "ai-artifact__expanded" : ""
-    } ${this.seamless ? "ai-artifact__seamless" : ""}`;
+    return `web-artifact__wrapper ${
+      this.expanded ? "--expanded" : ""
+    } ${this.seamless ? "--seamless" : ""}`;
   }
 
   @action
@@ -112,11 +115,11 @@ export default class AiArtifactComponent extends Component {
     if (this.args.artifactHeight) {
       let height = parseInt(this.args.artifactHeight, 10);
       if (isNaN(height) || height <= 0) {
-        height = 500; // default height if the provided value is invalid
+        height = 500;
       }
 
       if (height > 2000) {
-        height = 2000; // cap the height to a maximum of 2000px
+        height = 2000;
       }
 
       return trustHTML(`height: ${height}px;`);
@@ -137,31 +140,31 @@ export default class AiArtifactComponent extends Component {
 
   <template>
     {{#if this.expanded}}
-      {{htmlClass "ai-artifact-expanded"}}
+      {{htmlClass "web-artifact-expanded"}}
     {{/if}}
     <div class={{this.wrapperClasses}} style={{this.heightStyle}}>
-      <div class="ai-artifact__panel--wrapper">
-        <div class="ai-artifact__panel">
+      <div class="web-artifact__panel-wrapper">
+        <div class="web-artifact__panel">
           <DButton
             class="btn-flat btn-icon-text"
             @icon="discourse-compress"
-            @label="discourse_ai.ai_artifact.collapse_view_label"
+            @label={{i18n "web_artifact.collapse_view_label"}}
             @action={{this.toggleView}}
           />
         </div>
       </div>
       {{#if this.requireClickToRun}}
-        <div class="ai-artifact__click-to-run">
+        <div class="web-artifact__click-to-run">
           <DButton
             class="btn btn-primary"
             @icon="play"
-            @label="discourse_ai.ai_artifact.click_to_run_label"
+            @label={{i18n "web_artifact.click_to_run_label"}}
             @action={{this.showArtifact}}
           />
         </div>
       {{else}}
         <iframe
-          title="AI Artifact"
+          title="Web Artifact"
           src={{this.artifactUrl}}
           width="100%"
           frameborder="0"
@@ -169,11 +172,11 @@ export default class AiArtifactComponent extends Component {
         ></iframe>
       {{/if}}
       {{#if this.showFooter}}
-        <div class="ai-artifact__footer">
+        <div class="web-artifact__footer">
           <DButton
-            class="btn-transparent btn-icon-text ai-artifact__expand-button"
+            class="btn-transparent btn-icon-text web-artifact__expand-button"
             @icon="discourse-expand"
-            @label="discourse_ai.ai_artifact.expand_view_label"
+            @label={{i18n "web_artifact.expand_view_label"}}
             @action={{this.toggleView}}
           />
         </div>

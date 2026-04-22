@@ -6,7 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
   fab!(:post)
   fab!(:post2) { Fabricate(:post, user: post.user) }
   fab!(:artifact) do
-    AiArtifact.create!(
+    WebArtifact.create!(
       user: post.user,
       post: post,
       name: "Test Artifact",
@@ -34,7 +34,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       result = tool.invoke {}
       expect(result[:status]).to eq("success")
 
-      new_artifact = AiArtifact.last
+      new_artifact = WebArtifact.last
       expect(new_artifact.html).to eq(artifact.html)
       expect(new_artifact.css).to eq(artifact.css)
       expect(new_artifact.js).to eq(artifact.js)
@@ -100,7 +100,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       result = tool.invoke {}
       expect(result[:status]).to eq("success")
 
-      new_artifact = AiArtifact.last
+      new_artifact = WebArtifact.last
       expect(new_artifact.html).to include("<div>External Content</div>")
       expect(new_artifact.css).to include(".external { color: red; }")
       expect(new_artifact.js).to include("console.log('test');")
@@ -129,7 +129,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
       result = tool.invoke {}
       expect(result[:status]).to eq("success")
 
-      new_artifact = AiArtifact.last
+      new_artifact = WebArtifact.last
       expect(new_artifact.html.length).to be <= described_class::MAX_HTML_SIZE
     end
   end

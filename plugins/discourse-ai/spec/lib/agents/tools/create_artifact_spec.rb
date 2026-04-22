@@ -45,7 +45,7 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateArtifact do
         tool.invoke {}
       end
 
-      artifact_id = AiArtifact.order("id desc").limit(1).pluck(:id).first
+      artifact_id = WebArtifact.order("id desc").limit(1).pluck(:id).first
 
       expected = <<~MD
         [details="View Source"]

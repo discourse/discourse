@@ -55,8 +55,6 @@ register_asset "stylesheets/modules/llms/common/ai-credit-bar.scss"
 
 register_asset "stylesheets/modules/ai-bot/common/ai-tools.scss"
 
-register_asset "stylesheets/modules/ai-bot/common/ai-artifact.scss"
-
 module ::DiscourseAi
   PLUGIN_NAME = "discourse-ai"
 
@@ -82,10 +80,6 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
-  if defined?(Rack::MiniProfiler)
-    Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
-  end
-
   # do not autoload this cause we may have no namespace
   require_relative "discourse_automation/llm_triage"
   require_relative "discourse_automation/llm_report"
@@ -142,21 +136,6 @@ after_initialize do
   end
 
   add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
-
-  add_api_key_scope(
-    :ai,
-    {
-      manage_artifacts: {
-        actions: %w[
-          discourse_ai/admin/ai_artifacts#index
-          discourse_ai/admin/ai_artifacts#show
-          discourse_ai/admin/ai_artifacts#create
-          discourse_ai/admin/ai_artifacts#update
-          discourse_ai/admin/ai_artifacts#destroy
-        ],
-      },
-    },
-  )
 
   plugin_icons = %w[
     chart-column

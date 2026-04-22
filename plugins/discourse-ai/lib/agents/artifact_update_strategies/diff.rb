@@ -184,7 +184,7 @@ module DiscourseAi
             WARNING: Never nest search/replace blocks. Each change must be a complete sequence.
 
             JavaScript libraries must be sourced from the following CDNs, otherwise CSP will reject it:
-            #{AiArtifact::ALLOWED_CDN_SOURCES.join("\n")}
+            #{WebArtifact::ALLOWED_CDN_SOURCES.join("\n")}
 
             #{storage_api}
 

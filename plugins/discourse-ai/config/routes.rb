@@ -48,18 +48,6 @@ DiscourseAi::Engine.routes.draw do
     get "/" => "conversations#index"
   end
 
-  scope module: :ai_bot, path: "/ai-bot/artifacts" do
-    get "/:id" => "artifacts#show"
-    get "/:id/:version" => "artifacts#show"
-  end
-
-  scope module: :ai_bot, path: "/ai-bot/artifact-key-values/:artifact_id" do
-    get "/" => "artifact_key_values#index"
-    post "/" => "artifact_key_values#set"
-    delete "/:key" => "artifact_key_values#destroy"
-    delete "/" => "artifact_key_values#destroy"
-  end
-
   scope module: :summarization, path: "/summarization", defaults: { format: :json } do
     get "/t/:topic_id" => "summary#show", :constraints => { topic_id: /\d+/ }
     put "/regen_gist" => "summary#regen_gist"
@@ -84,6 +72,21 @@ end
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
+  # Redirect old artifact URLs to new core routes
+  get "discourse-ai/ai-bot/artifacts/:id(/:version)" => redirect("/w/%{id}/%{version}"),
+      :constraints => {
+        version: /\d+/,
+      }
+  get "discourse-ai/ai-bot/artifacts/:id" => redirect("/w/%{id}")
+
+  # Redirect old KV endpoints to new core routes
+  get "discourse-ai/ai-bot/artifact-key-values/:artifact_id" =>
+        redirect("/web-artifact-key-values/%{artifact_id}")
+  post "discourse-ai/ai-bot/artifact-key-values/:artifact_id" =>
+         redirect("/web-artifact-key-values/%{artifact_id}")
+  delete "discourse-ai/ai-bot/artifact-key-values/:artifact_id(/:key)" =>
+           redirect("/web-artifact-key-values/%{artifact_id}")
+
   get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
       :constraints => StaffConstraint.new
 
@@ -91,14 +94,6 @@ Discourse::Application.routes.draw do
     get "/ai-personas", to: redirect("/admin/plugins/discourse-ai/ai-agents")
     get "/ai-personas/new", to: redirect("/admin/plugins/discourse-ai/ai-agents/new")
     get "/ai-personas/:id/edit", to: redirect("/admin/plugins/discourse-ai/ai-agents/%{id}/edit")
-
-    resources :ai_artifacts,
-              only: %i[index show create update destroy],
-              path: "ai-artifacts",
-              controller: "discourse_ai/admin/ai_artifacts",
-              defaults: {
-                format: :json,
-              }
 
     resources :ai_agents,
               only: %i[index new create edit update destroy],

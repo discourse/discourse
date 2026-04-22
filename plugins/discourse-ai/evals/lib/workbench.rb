@@ -624,7 +624,7 @@ module DiscourseAi
         html = File.read(html_path)
         instructions = File.read(instructions_path)
         artifact =
-          AiArtifact.create!(
+          WebArtifact.create!(
             css: css,
             js: js,
             html: html,

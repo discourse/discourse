@@ -74,7 +74,7 @@ module DiscourseAi
             8. HTML should not include <html>, <head>, or <body> tags, it is injected into a template
 
             JavaScript libraries must be sourced from the following CDNs, otherwise CSP will reject it:
-            #{AiArtifact::ALLOWED_CDN_SOURCES.join("\n")}
+            #{WebArtifact::ALLOWED_CDN_SOURCES.join("\n")}
 
             #{storage_api}
 

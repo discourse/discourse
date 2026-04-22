@@ -47,6 +47,7 @@ class CookedPostProcessor
       enforce_nofollow
       grant_badges
       @post.link_post_uploads(fragments: @doc)
+      WebArtifact.link_artifacts_from_cooked(@doc, @post)
       DiscourseEvent.trigger(:post_process_cooked, @doc, @post)
       nil
     end

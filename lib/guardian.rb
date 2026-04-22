@@ -14,6 +14,7 @@ require "guardian/staff_action_log_guardian"
 require "guardian/tag_guardian"
 require "guardian/topic_guardian"
 require "guardian/user_guardian"
+require "guardian/web_artifact_guardian"
 require "guardian/localization_guardian"
 
 # The guardian is responsible for confirming access to various site resources and operations
@@ -33,6 +34,7 @@ class Guardian
   include TagGuardian
   include TopicGuardian
   include UserGuardian
+  include WebArtifactGuardian
 
   class AnonymousUser
     def blank?

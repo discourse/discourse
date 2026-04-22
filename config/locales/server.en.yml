@@ -2605,6 +2605,11 @@ en:
     disable_watched_word_checking_in_user_fields: "disable watched word checking in user fields"
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
+    web_artifact_security: "Controls how web artifacts (sandboxed HTML/CSS/JS) are displayed in posts. 'strict' requires click-to-run, 'hybrid' respects per-artifact autorun settings, 'lax' auto-runs all artifacts, 'disabled' hides all artifacts."
+    web_artifact_allowed_groups: "Groups that are allowed to create web artifacts via the composer."
+    web_artifact_kv_value_max_length: "Maximum length for web artifact key-value storage values."
+    web_artifact_max_keys_per_user_per_artifact: "Maximum number of key-value pairs a user can store per web artifact."
+
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
     old_post_notice_days: "The number of days after which the new-user and returning-user post notices will be hidden. The official post notice will always remain visible."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
@@ -6017,6 +6022,14 @@ en:
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
       invalid_tag_group: "has invalid tag group: %{tag_group_name}"
+
+  web_artifact:
+    link: "Open artifact"
+    copy_embed: "Copy embed code"
+    errors:
+      max_keys_exceeded:
+        one: "You can only have %{count} key in the artifact."
+        other: "You can only have %{count} keys in the artifact."
 
   discourse_id:
     already_registered: "This site is already registered with Discourse ID"

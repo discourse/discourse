@@ -2,15 +2,6 @@ discourse_ai:
   discourse_ai_enabled:
     default: false
     client: true
-  ai_artifact_security:
-    client: true
-    type: enum
-    default: "strict"
-    choices:
-      - "disabled"
-      - "lax"
-      - "hybrid"
-      - "strict"
   ai_default_llm_model:
     default: ""
     type: enum
@@ -547,13 +538,6 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/inference"
-  ai_artifact_kv_value_max_length:
-    default: 5000
-    hidden: true
-  ai_artifact_max_keys_per_user_per_artifact:
-    default: 100
-    hidden: true
-
   ai_usage_rollup_after_days:
     default: 7
     min: 0
