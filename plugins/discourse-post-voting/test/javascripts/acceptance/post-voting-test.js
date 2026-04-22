@@ -675,31 +675,28 @@ acceptance("logged in user", function (needs) {
     await visit("/t/280");
 
     assert
-      .dom("#post_2 .post-voting-post-toggle-voters")
+      .dom("#post_2 .post-voting-post__toggle-voters")
       .hasText("2", "displays the initial post vote count");
 
-    await click("#post_2 .post-voting-button-upvote");
+    await click("#post_2 .post-voting-button.--upvote");
 
     assert
-      .dom("#post_2 .post-voting-post-toggle-voters")
+      .dom("#post_2 .post-voting-post__toggle-voters")
       .hasText("1", "decrements the post vote count after removing upvote");
 
     assert
-      .dom("#post_2 .post-voting-button-upvote")
-      .doesNotHaveClass(
-        "post-voting-button-voted",
-        "unhighlights the upvote button"
-      );
+      .dom("#post_2 .post-voting-button.--upvote")
+      .doesNotHaveClass("--voted", "unhighlights the upvote button");
 
-    await click("#post_2 .post-voting-button-downvote");
+    await click("#post_2 .post-voting-button.--downvote");
 
     assert
-      .dom("#post_2 .post-voting-post-toggle-voters")
+      .dom("#post_2 .post-voting-post__toggle-voters")
       .hasText("0", "decrements the post vote count after downvoting");
 
     assert
-      .dom("#post_2 .post-voting-button-downvote")
-      .hasClass("post-voting-button-voted", "highlights the downvote button");
+      .dom("#post_2 .post-voting-button.--downvote")
+      .hasClass("--voted", "highlights the downvote button");
   });
 
   test("topic list link overrides work", async function (assert) {
