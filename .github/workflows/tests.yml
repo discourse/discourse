@@ -95,7 +95,7 @@ jobs:
           #   browser: Firefox ESR
 
     steps:
-      - name: Enable jemalloc via /etc/ld.so.preload
+      - name: Enable jemalloc
         run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
 
       - name: Verify jemalloc is loaded into Ruby
