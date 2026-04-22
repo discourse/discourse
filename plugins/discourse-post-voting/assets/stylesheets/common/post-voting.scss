@@ -236,10 +236,6 @@
     left: 0;
     top: var(--space-11);
     width: var(--space-11);
-
-    .post-voting-post__list {
-      left: calc(-1 * var(--space-1));
-    }
   }
 
   .post-voting-button {
@@ -267,6 +263,12 @@
       .d-icon {
         color: var(--success);
       }
+
+      &.--downvote {
+        .d-icon {
+          color: var(--danger);
+        }
+      }
     }
   }
 
@@ -277,38 +279,51 @@
     color: var(--primary-high);
   }
 
-  &__list {
-    position: absolute;
-    z-index: z("dropdown");
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-low);
-    box-shadow: var(--shadow-card);
+  &__list .fk-d-menu__inner-content {
     display: flex;
     flex-direction: column;
-    top: 100%;
     padding: var(--space-2) var(--space-3);
+    width: max-content;
     max-width: 90vw;
-    overflow: auto;
   }
 
   &__list-voters-wrapper {
     display: flex;
     flex-direction: row;
-  }
+    gap: var(--space-3);
 
-  &__list-voters {
-    display: flex;
-
-    a {
-      margin-left: var(--space-1);
-      margin-bottom: var(--space-1);
+    // &:first-child {
+    //   padding-bottom: var(--space-2);
+    // }
+    &:nth-child(2) {
+      border-top: 1px solid var(--primary-low);
+      padding-top: var(--space-2);
+      margin-top: var(--space-2);
     }
   }
 
-  &__list-count,
+  &__list-voters {
+    .small-user-list-content {
+      gap: var(--space-1);
+    }
+  }
+
+  &__list-count {
+    color: var(--primary-high);
+  }
+
   &__list-icon {
-    margin: var(--space-half) var(--space-1) 0 var(--space-1);
-    font-size: var(--font-up-1);
-    color: var(--primary-low-mid);
+    &.--upvote {
+      .d-icon {
+        color: var(--success);
+      }
+    }
+
+    &.--downvote {
+      .d-icon {
+        color: var(--danger);
+        transform: rotate(180deg);
+      }
+    }
   }
 }
