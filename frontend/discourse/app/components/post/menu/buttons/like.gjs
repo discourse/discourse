@@ -9,27 +9,16 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import LikedUsersList from "../liked-users-list";
 
 export default class PostMenuLikeButton extends Component {
-  static shouldRender(args, _context, owner) {
-    const siteSettings = owner?.lookup("service:site-settings");
-    const newMenuEnabled = !!siteSettings?.enable_new_post_reactions_menu;
-
-    const show = newMenuEnabled
-      ? args.post.showLike
-      : args.post.showLike || args.post.likeCount > 0;
-
+  static shouldRender(args) {
+    const show = args.post.showLike || args.post.likeCount > 0;
     return applyValueTransformer("like-button-render-decision", show, {
       post: args.post,
     });
   }
 
   @service currentUser;
-  @service siteSettings;
 
   @tracked isAnimated = false;
-
-  get useNewMenu() {
-    return this.siteSettings.enable_new_post_reactions_menu;
-  }
 
   get disabled() {
     return this.currentUser && !this.args.post.canToggleLike;
@@ -70,25 +59,7 @@ export default class PostMenuLikeButton extends Component {
   }
 
   <template>
-    {{#if this.useNewMenu}}
-      <DButton
-        class={{concatClass
-          "post-action-menu__like"
-          "toggle-like"
-          "btn-icon"
-          (if this.isAnimated "heart-animation")
-          (if @post.liked "has-like" "like")
-        }}
-        ...attributes
-        data-post-id={{@post.id}}
-        disabled={{this.disabled}}
-        @action={{this.toggleLike}}
-        @icon={{this.likeButtonIcon}}
-        @label={{if @showLabel "post.controls.like_action"}}
-        @title={{this.title}}
-        @ariaLabel={{this.title}}
-      />
-    {{else if @post.showLike}}
+    {{#if @post.showLike}}
       <div
         class={{concatClass
           "double-button"

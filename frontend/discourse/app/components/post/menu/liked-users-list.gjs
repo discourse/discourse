@@ -32,9 +32,7 @@ export default class LikedUsersList extends Component {
   }
 
   get buttonIcon() {
-    return this.args.post.liked || this.args.post.yours
-      ? "d-liked"
-      : "d-unliked";
+    return this.args.post.yours ? "d-liked" : null;
   }
 
   @action

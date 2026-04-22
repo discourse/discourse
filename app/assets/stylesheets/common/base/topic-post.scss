@@ -584,8 +584,6 @@ nav.post-controls {
     }
   }
 
-  // Outside `.actions` because the like-count button is registered with
-  // `extraControls = true` and renders in the post-controls nav directly.
   .post-action-menu__like-count {
     display: inline-flex;
     align-items: center;

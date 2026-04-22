@@ -33,7 +33,6 @@ import PostMenuDeleteButton from "./menu/buttons/delete";
 import PostMenuEditButton from "./menu/buttons/edit";
 import PostMenuFlagButton from "./menu/buttons/flag";
 import PostMenuLikeButton from "./menu/buttons/like";
-import PostMenuLikeCountButton from "./menu/buttons/like-count";
 import PostMenuReadButton from "./menu/buttons/read";
 import PostMenuRepliesButton from "./menu/buttons/replies";
 import PostMenuReplyButton from "./menu/buttons/reply";
@@ -51,7 +50,6 @@ const buttonKeys = Object.freeze({
   EDIT: "edit",
   FLAG: "flag",
   LIKE: "like",
-  LIKE_COUNT: "likeCount",
   READ: "read",
   REPLIES: "replies",
   REPLY: "reply",
@@ -68,7 +66,6 @@ const coreButtonComponents = new Map([
   [buttonKeys.EDIT, PostMenuEditButton],
   [buttonKeys.FLAG, PostMenuFlagButton],
   [buttonKeys.LIKE, PostMenuLikeButton],
-  [buttonKeys.LIKE_COUNT, PostMenuLikeCountButton],
   [buttonKeys.READ, PostMenuReadButton],
   [buttonKeys.REPLIES, PostMenuRepliesButton],
   [buttonKeys.REPLY, PostMenuReplyButton],
