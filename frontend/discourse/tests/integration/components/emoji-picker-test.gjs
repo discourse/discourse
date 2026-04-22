@@ -120,6 +120,11 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
   test("When navigating sections", async function (assert) {
     await render(<template><Content /></template>);
+
+    // Force all sections to render
+    await click(`.emoji-picker__section-btn[data-section="objects"]`);
+
+    document.querySelector(".filter-input").focus();
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
 
     assert
