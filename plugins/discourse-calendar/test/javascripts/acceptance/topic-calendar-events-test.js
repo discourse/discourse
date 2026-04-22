@@ -1,8 +1,19 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance, fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import eventTopicFixture from "../helpers/event-topic-fixture";
 import getEventByText from "../helpers/get-event-by-text";
+
+function fixtureWithFullDay(fullDay) {
+  const fixture = JSON.parse(JSON.stringify(eventTopicFixture));
+  const post = fixture.post_stream.posts[0];
+  post.cooked = post.cooked.replace(
+    /data-calendar-full-day="(true|false)"/,
+    `data-calendar-full-day="${fullDay}"`
+  );
+  return fixture;
+}
 
 acceptance("Topic Calendar Events", function (needs) {
   needs.hooks.beforeEach(function () {
@@ -13,17 +24,20 @@ acceptance("Topic Calendar Events", function (needs) {
     this.clock.restore();
   });
 
-  needs.settings({
-    calendar_enabled: true,
-  });
-
-  needs.pretender((server, helper) => {
-    server.get("/t/252.json", () => {
-      return helper.response(eventTopicFixture);
-    });
-  });
+  needs.settings({ calendar_enabled: true });
 
   test("renders calendar events with fullDay='true'", async function (assert) {
+    pretender.get("/t/252.json", () => response(fixtureWithFullDay("true")));
+
+    await visit("/t/-/252");
+
+    assert.dom(getEventByText("Event 1")).exists();
+    assert.dom(getEventByText("Event 2")).exists();
+  });
+
+  test("renders calendar events with fullDay='false'", async function (assert) {
+    pretender.get("/t/252.json", () => response(fixtureWithFullDay("false")));
+
     await visit("/t/-/252");
 
     assert.dom(getEventByText("Event 1")).exists();
