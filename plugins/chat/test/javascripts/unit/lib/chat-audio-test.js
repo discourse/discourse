@@ -5,7 +5,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import chatAudioInitializer from "discourse/plugins/chat/discourse/initializers/chat-audio";
 
-module("Discourse Chat | Unit | chat-audio", function (hooks) {
+module("Unit | chat-audio", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

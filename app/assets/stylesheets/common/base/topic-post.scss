@@ -415,11 +415,26 @@ nav.post-controls {
       gap: var(--space-1);
     }
 
-    .post-action-menu__double-button {
-      .discourse-no-touch & {
-        &:not(.has-liked):hover {
-          --d-post-control-background--hover: var(--love-low);
-          --d-button-flat-icon-color--hover: var(--love);
+    .post-action-menu {
+      &__like {
+        &.has-like .d-icon {
+          color: var(--love);
+        }
+
+        .discourse-no-touch & {
+          &:not(.has-like):hover {
+            --d-post-control-background--hover: var(--love-low);
+            --d-button-flat-icon-color--hover: var(--love);
+          }
+        }
+      }
+
+      &__like-count {
+        color: var(--d-post-control-text-color) !important;
+        gap: var(--space-2);
+
+        &.has-liked .d-icon {
+          color: var(--danger);
         }
       }
     }

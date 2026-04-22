@@ -158,6 +158,31 @@ RSpec.describe CrawlerDetection do
     end
   end
 
+  describe ".crawler_ip?" do
+    it "returns false when the IP is blank" do
+      expect(CrawlerDetection.crawler_ip?(nil)).to eq(false)
+      expect(CrawlerDetection.crawler_ip?("")).to eq(false)
+    end
+
+    it "returns false when the resolved ASN is not in CRAWLER_ASNS" do
+      DiscourseIpInfo.stubs(:get).with("1.2.3.4").returns({ asn: 1 })
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
+    end
+
+    it "returns false when the resolved ASN is missing" do
+      DiscourseIpInfo.stubs(:get).with("1.2.3.4").returns({})
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
+    end
+
+    it "returns true when the resolved ASN is in CRAWLER_ASNS" do
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("1.2.3.4")
+        .returns({ asn: CrawlerDetection::CRAWLER_ASNS.first })
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(true)
+    end
+  end
+
   describe ".is_blocked_crawler?" do
     it "is false if user agent is a crawler and no allowlist or blocklist is defined" do
       expect(CrawlerDetection.is_blocked_crawler?("Twitterbot")).to eq(false)

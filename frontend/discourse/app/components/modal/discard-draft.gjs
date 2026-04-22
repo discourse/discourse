@@ -25,14 +25,14 @@ export default class DiscardDraftModal extends Component {
     >
       <:body>
         <div class="instructions" role="heading" aria-level="1">
-          {{i18n "post.cancel_composer.confirm"}}
+          {{i18n @model.confirmMessageKey}}
         </div>
       </:body>
 
       <:footer>
         <DButton
           @icon="trash-can"
-          @label="post.cancel_composer.discard"
+          @label={{@model.discardButtonKey}}
           @action={{this.discardDraft}}
           class="btn-danger discard-draft-modal__discard-btn"
         />

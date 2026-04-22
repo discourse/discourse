@@ -215,12 +215,7 @@ module DiscourseAi
           feature_context: feature_context,
         )
       rescue => e
-        if Rails.env.test?
-          p e
-          puts e.backtrace[0..10]
-        else
-          raise e
-        end
+        raise e
       end
 
       def initialize(bot)

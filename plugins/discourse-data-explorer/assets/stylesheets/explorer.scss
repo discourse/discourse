@@ -363,30 +363,110 @@ table.group-reports {
   margin: 10px 0;
 }
 
-.query-new__or-divider {
-  display: flex;
-  align-items: center;
-  gap: 1em;
-  width: var(--form-kit-large-input);
-  margin: 1.5em 0;
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+.query-new--ai-first {
+  max-width: 720px;
 
-  &::before,
-  &::after {
-    content: "";
-    flex: 1;
+  .query-new__ai-section {
+    margin-bottom: 1em;
+  }
+
+  .query-new__ai-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    font-weight: 700;
+    margin-bottom: 0.25em;
+  }
+
+  .query-new__ai-hint {
+    color: var(--primary-medium);
+    margin-bottom: 0.75em;
+  }
+
+  .query-new__ai-textarea {
+    width: 100%;
+    min-height: 3em;
+    margin-bottom: 0.75em;
+  }
+
+  .query-new__ai-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .query-new__generating-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .query-new__toggle-link {
+    color: var(--tertiary);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  .query-new__divider {
+    margin: 1.5em 0;
     border-top: 1px solid var(--primary-low-mid);
   }
-}
 
-.query-new__ai-label {
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
-  font-weight: 700;
+  .query-new__sql-editor {
+    height: 200px;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+
+    .ace-wrapper {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  .query-new__field-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.35em;
+    margin-top: 1em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .query-new__optional {
+      font-weight: 400;
+      color: var(--primary-medium);
+    }
+  }
+
+  .query-new__name-input {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .query-new__description-input {
+    width: 100%;
+    min-height: 60px;
+  }
+
+  .query-new__actions {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 1em;
+  }
 }
 
 .query-ai-generating {
@@ -458,7 +538,7 @@ table.group-reports {
 
   .query-results-table-wrapper {
     overflow: auto;
-    max-height: 1000px;
+    max-height: 300px;
   }
 
   .query-results-modes {

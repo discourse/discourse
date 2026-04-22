@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
-acceptance(`Discourse Reactions - Archived topic`, function (needs) {
+acceptance("Archived topic", function (needs) {
   needs.user();
 
   needs.settings({

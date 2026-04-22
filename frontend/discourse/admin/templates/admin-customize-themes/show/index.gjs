@@ -409,14 +409,23 @@ export default <template>
         <span class="mini-title">
           {{i18n "admin.customize.theme.theme_translations"}}
         </span>
-        <ComboBox
-          @valueProperty="value"
-          @content={{@controller.availableLocales}}
-          @value={{@controller.locale}}
-          @onChange={{@controller.updateLocale}}
-          @options={{hash filterable=true}}
-          class="translation-selector"
-        />
+        <div class="translation-selector-controls">
+          <PluginOutlet
+            @name="admin-customize-theme-translation-selector"
+            @outletArgs={{lazyHash
+              theme=@controller.model
+              locale=@controller.locale
+            }}
+          />
+          <ComboBox
+            @valueProperty="value"
+            @content={{@controller.availableLocales}}
+            @value={{@controller.locale}}
+            @onChange={{@controller.updateLocale}}
+            @options={{hash filterable=true}}
+            class="translation-selector"
+          />
+        </div>
       </div>
       <ConditionalLoadingSpinner
         @condition={{@controller.model.loadingTranslations}}

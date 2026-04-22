@@ -95,14 +95,6 @@ $mobile-breakpoint: 700px;
   .row::after {
     clear: both;
   }
-
-  &.admin-site-settings-category {
-    overflow: hidden;
-
-    @media (width <= 500px) {
-      background-color: var(--primary-very-low);
-    }
-  }
 }
 
 .admin-contents table {
@@ -702,6 +694,7 @@ $mobile-breakpoint: 700px;
 .admin-controls {
   display: flex;
   align-items: center;
+  border-bottom: 1px solid var(--content-border-color);
 
   .admin-actions {
     margin-left: auto;
@@ -790,10 +783,6 @@ $mobile-breakpoint: 700px;
       }
     }
 
-    @include viewport.until(sm) {
-      margin: 0 -10px;
-    }
-
     input {
       @include viewport.until(md) {
         max-width: 150px;
@@ -813,21 +802,6 @@ $mobile-breakpoint: 700px;
           margin-right: 0.5em;
         }
       }
-    }
-  }
-
-  .menu-toggle {
-    border-color: var(--primary-medium);
-    border-radius: 3px;
-    background: transparent;
-    color: var(--primary);
-
-    &:hover {
-      background-color: var(--primary-low-mid);
-    }
-
-    .not-mobile-device & {
-      display: none;
     }
   }
 
@@ -881,16 +855,9 @@ $mobile-breakpoint: 700px;
 .admin-nav {
   width: 18%;
   box-sizing: border-box;
-  position: relative; // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
 
-  @media (max-width: $mobile-breakpoint) {
-    position: absolute;
-    z-index: z("base") - 1;
-    width: 250px;
-  }
-
-  @media (width <= 500px) {
-    width: 50%;
+  @include viewport.until(sm) {
+    display: none;
   }
 
   .nav-stacked {
@@ -914,29 +881,55 @@ $mobile-breakpoint: 700px;
   width: 82%;
   box-sizing: border-box;
 
-  @media (max-width: $mobile-breakpoint) {
+  @include viewport.until(sm) {
     width: 100%;
     border: none;
-  }
-}
-
-.admin-detail.mobile-open {
-  @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: translateX(250px);
-  }
-
-  @media (width <= 500px) {
-    transition: transform 0.3s ease;
-    transform: translateX(50%);
-  }
-}
-
-.admin-detail.mobile-closed {
-  @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: translateX(0);
     padding: 30px 20px;
+  }
+}
+
+.fk-d-menu-modal.admin-site-settings-category-nav-content,
+.fk-d-menu-modal.admin-watched-words-action-nav-content {
+  justify-content: flex-start;
+
+  .d-modal__container {
+    width: 80vw;
+    max-width: 300px;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+
+    &.is-entering {
+      animation: admin-nav-slide-in 250ms ease;
+    }
+
+    &.is-exiting {
+      animation: admin-nav-slide-out 250ms ease;
+    }
+  }
+
+  .fk-d-menu-modal__grip {
+    display: none;
+  }
+}
+
+@keyframes admin-nav-slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes admin-nav-slide-out {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
   }
 }
 

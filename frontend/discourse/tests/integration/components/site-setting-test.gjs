@@ -406,6 +406,56 @@ module(
 
       assert.dom(".setting-theme-warning__text").includesHtml(expectedText);
     });
+
+    test("shows notice for settings that depend on another setting", async function (assert) {
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "dependent_setting",
+          value: "1",
+          type: "integer",
+          depends_on: ["parent_setting"],
+          depends_on_humanized_names: ["Parent setting"],
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
+      );
+
+      assert
+        .dom(".setting-depends-on-notice")
+        .exists("notice wrapper is displayed");
+      assert
+        .dom(".setting-depends-on-notice__text")
+        .includesText(
+          "This setting is only applied when Parent setting is enabled"
+        );
+      assert
+        .dom(".setting-depends-on-notice__text a")
+        .hasAttribute(
+          "href",
+          "/admin/site_settings/category/all_results?filter=parent_setting"
+        )
+        .hasText("Parent setting");
+    });
+
+    test("does not show the depends_on notice when setting has no dependencies", async function (assert) {
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "plain_setting",
+          value: "1",
+          type: "integer",
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
+      );
+
+      assert.dom(".setting-depends-on-notice").doesNotExist();
+    });
   }
 );
 

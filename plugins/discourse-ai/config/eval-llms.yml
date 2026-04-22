@@ -128,3 +128,13 @@ llms:
     url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview
     max_prompt_tokens: 1000000
     vision_enabled: true
+
+  gemini-3.1-flash-lite:
+    display_name: Gemini 3.1 Flash Lite
+    name: gemini-3.1-flash-lite
+    tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer
+    api_key_env: GEMINI_API_KEY
+    provider: google
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview
+    max_prompt_tokens: 1000000
+    vision_enabled: true

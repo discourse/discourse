@@ -167,7 +167,9 @@ export default class SelectKitRow extends Component {
   click(event) {
     event.preventDefault();
     event.stopPropagation();
-    this.selectKit.select(this.rowValue, this.item);
+    if (!this.rowDisabled) {
+      this.selectKit.select(this.rowValue, this.item);
+    }
     return false;
   }
 
@@ -201,10 +203,12 @@ export default class SelectKitRow extends Component {
       } else if (event.key === "Enter") {
         event.stopImmediatePropagation();
 
-        this.selectKit.select(
-          this.getValue(this.selectKit.highlighted),
-          this.selectKit.highlighted
-        );
+        if (!this.rowDisabled) {
+          this.selectKit.select(
+            this.getValue(this.selectKit.highlighted),
+            this.selectKit.highlighted
+          );
+        }
         return false;
       } else if (event.key === "Escape") {
         this.selectKit.close(event);

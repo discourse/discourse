@@ -168,7 +168,11 @@ module DiscourseUpdates
 
     def new_features_response_json
       response =
-        Excon.new(new_features_endpoint).request(expects: [200], method: :Get, read_timeout: 5)
+        Excon.new(new_features_full_endpoint_url).request(
+          expects: [200],
+          method: :Get,
+          read_timeout: 5,
+        )
       response.body
     end
 
@@ -302,9 +306,19 @@ module DiscourseUpdates
       )
     end
 
+    def new_features_full_endpoint_url
+      "#{new_features_endpoint}#{new_features_endpoint_query_params}"
+    end
+
     def new_features_endpoint
       return "https://meta.discourse.org/new-features.json" if Rails.env.production?
       ENV["DISCOURSE_NEW_FEATURES_ENDPOINT"] || "http://localhost:4200/new-features.json"
+    end
+
+    # We no longer delete new features on Meta, so we need to filter out old ones.
+    # Maybe in future we can show even older ones in a separate Archived tab.
+    def new_features_endpoint_query_params
+      "?released_after=#{5.months.ago.end_of_month.to_date}"
     end
 
     private

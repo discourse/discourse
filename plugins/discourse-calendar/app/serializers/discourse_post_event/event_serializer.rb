@@ -25,6 +25,7 @@ module DiscoursePostEvent
     attributes :status
     attributes :url
     attributes :description
+    attributes :description_html
     attributes :location
     attributes :watching_invitee
     attributes :chat_enabled
@@ -123,6 +124,11 @@ module DiscoursePostEvent
 
     def include_url?
       object.url.present?
+    end
+
+    def description_html
+      return if object.description.blank?
+      EventParser.linkify_description(object.description, post: object.post)
     end
   end
 end

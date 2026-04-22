@@ -8,6 +8,9 @@ export default apiInitializer((api) => {
     return;
   }
 
+  // When AI translation is enabled, deprioritize the manual language selector since language is auto-detected
+  api.registerValueTransformer("post-language-selector-priority", () => "last");
+
   api.registerCustomPostMessageCallback(
     "localized",
     (topicController, data) => {

@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import EmbedMode from "discourse/lib/embed-mode";
 import discourseLater from "discourse/lib/later";
 import {
   onPresenceChange,
@@ -40,7 +41,7 @@ export default class Chat extends Service {
   init() {
     super.init(...arguments);
 
-    if (this.userCanChat) {
+    if (this.userCanChat && !EmbedMode.enabled) {
       this.presenceChannel = this.presence.getChannel("/chat/online");
 
       onPresenceChange({
@@ -54,7 +55,7 @@ export default class Chat extends Service {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    if (this.userCanChat) {
+    if (this.userCanChat && !EmbedMode.enabled) {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
       removeOnPresenceChange(this.onPresenceChangeCallback);
     }

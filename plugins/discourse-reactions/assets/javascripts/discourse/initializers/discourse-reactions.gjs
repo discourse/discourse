@@ -162,6 +162,7 @@ function customizePostMenu(api) {
     "post-menu-buttons",
     ({ value: dag, context: { buttonKeys } }) => {
       dag.replace(buttonKeys.LIKE, ReactionsActionButton);
+      dag.delete(buttonKeys.LIKE_COUNT);
       dag.add("discourse-reactions-actions", ReactionsActionSummary, {
         after: buttonKeys.REPLIES,
       });

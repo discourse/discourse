@@ -48,6 +48,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/organisms/basic-topic-list", title: "Basic Topic List" },
       { href: "/organisms/categories-list", title: "Categories List" },
       { href: "/organisms/chat", title: "Chat" },
+      { href: "/organisms/docked-composer", title: "Docked Composer" },
       { href: "/organisms/modal", title: "Modal" },
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },

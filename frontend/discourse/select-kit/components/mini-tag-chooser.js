@@ -169,6 +169,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
 
     if (!this.selectKit.options.everyTag) {
       data.filterForInput = true;
+      data.excludeSynonyms = true;
     }
 
     return this.tagUtils.searchTags(

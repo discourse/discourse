@@ -243,7 +243,7 @@ after_initialize do
 
   on(:post_created) do |post|
     DiscoursePostEvent::Event.update_from_raw(post)
-    post.reload
+    post.association(:event).reload
     if SiteSetting.discourse_post_event_enabled && post.event
       WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
     end
@@ -253,7 +253,7 @@ after_initialize do
     event_before = post.event
     had_image_before = event_before&.image_upload_id.present?
     DiscoursePostEvent::Event.update_from_raw(post)
-    post.reload
+    post.association(:event).reload
 
     if SiteSetting.discourse_post_event_enabled
       if post.event&.image_upload_id
