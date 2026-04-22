@@ -2,7 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import UserAvatar from "discourse/components/user-avatar";
@@ -18,6 +20,7 @@ export default class PostUsersMenu extends Component {
   @tracked users = [];
   @tracked loading = false;
   @tracked canLoadMore = true;
+  @tracked bodyMinHeight = null;
 
   displayName = (user) => {
     if (user.name && !this.siteSettings.prioritize_username_in_ux) {
@@ -33,9 +36,22 @@ export default class PostUsersMenu extends Component {
   };
   #page = 0;
 
+  get bodyStyle() {
+    if (this.bodyMinHeight) {
+      return trustHTML(`min-height: ${this.bodyMinHeight}px`);
+    }
+    return null;
+  }
+
   @action
-  async loadInitial() {
+  async loadInitial(element) {
     await this.#loadMore();
+    if (this.site.mobileView) {
+      return;
+    }
+    schedule("afterRender", () => {
+      this.bodyMinHeight = element.offsetHeight;
+    });
   }
 
   @action
@@ -73,7 +89,11 @@ export default class PostUsersMenu extends Component {
         {{yield this.resetAndReload to="header"}}
       </div>
 
-      <div class="post-users-popup__body" {{didInsert this.loadInitial}}>
+      <div
+        class="post-users-popup__body"
+        style={{this.bodyStyle}}
+        {{didInsert this.loadInitial}}
+      >
         <LoadMore
           @action={{this.loadMore}}
           @enabled={{this.canLoadMore}}

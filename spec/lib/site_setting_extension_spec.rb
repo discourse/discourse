@@ -767,6 +767,12 @@ RSpec.describe SiteSettingExtension do
             settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
           ).not_to be_blank
         end
+
+        it "serializes depends_on and the matching humanized names" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_image }
+          expect(setting[:depends_on]).to eq([:enable_cool_thing])
+          expect(setting[:depends_on_humanized_names]).to eq(["Enable cool thing"])
+        end
       end
 
       context "when the depends_on setting is false" do

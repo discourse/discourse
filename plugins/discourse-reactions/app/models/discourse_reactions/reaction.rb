@@ -24,6 +24,16 @@ module DiscourseReactions
       ]
     end
 
+    def self.valid?(reaction_value)
+      return false if reaction_value.blank?
+
+      if SiteSetting.discourse_reactions_allow_any_emoji
+        Emoji.exists?(reaction_value)
+      else
+        valid_reactions.include?(reaction_value)
+      end
+    end
+
     def self.main_reaction_id
       SiteSetting.discourse_reactions_reaction_for_like.gsub("-", "")
     end

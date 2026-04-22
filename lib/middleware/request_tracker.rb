@@ -147,7 +147,7 @@ class Middleware::RequestTracker
             data[:current_user_id],
           )
         end
-      elsif !SiteSetting.login_required
+      elsif !SiteSetting.login_required && !CrawlerDetection.crawler_ip?(data[:request_remote_ip])
         ApplicationRequest.increment!(:page_view_anon_browser_beacon)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
 

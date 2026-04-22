@@ -17,7 +17,7 @@ import {
 
 const GROUP_NAME = "group1";
 
-acceptance("Discourse Chat - Composer", function (needs) {
+acceptance("Composer", function (needs) {
   needs.user({ has_chat_enabled: true });
   needs.settings({
     chat_enabled: true,
@@ -72,7 +72,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
 });
 
 let sendAttempt = 0;
-acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
+acceptance("Composer - unreliable network", function (needs) {
   needs.user({ id: 1, has_chat_enabled: true });
   needs.settings({
     chat_enabled: true,

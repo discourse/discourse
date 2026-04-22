@@ -11,6 +11,7 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
+  "custom-homepage-model",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
   "post-menu-toggle-like-action",
@@ -52,7 +53,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-toggles-class",
   "create-topic-button-class",
   "create-topic-label",
-  "custom-homepage-model",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",
   "flag-button-render-decision",
@@ -102,6 +102,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "poster-name-user-title",
   "preferences-save-attributes",
   "quote-params",
+  "sidebar-anonymous-default-categories",
   "small-user-attrs",
   "tag-separator",
   "topic-list-class",

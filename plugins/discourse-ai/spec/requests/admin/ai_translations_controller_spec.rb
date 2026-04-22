@@ -223,6 +223,28 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(response.parsed_body["backfill_enabled"]).to eq(false)
       end
 
+      it "returns target_category_ids from ai_translation_target_categories" do
+        other_category = Fabricate(:category)
+        SiteSetting.ai_translation_target_categories = "#{target_category.id}|#{other_category.id}"
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["target_category_ids"]).to contain_exactly(
+          target_category.id,
+          other_category.id,
+        )
+      end
+
+      it "returns an empty array when no target categories are configured" do
+        SiteSetting.ai_translation_target_categories = ""
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["target_category_ids"]).to eq([])
+      end
+
       it "correctly indicates if feature is enabled" do
         SiteSetting.ai_translation_backfill_max_age_days = 30
 

@@ -3917,16 +3917,6 @@ uncategorized:
     default: "top_menu_pages"
     area: "interface"
 
-  modernize_foundation_theme:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      impact: "feature,all_members"
-      status: "alpha"
-      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
-
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -4307,7 +4297,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
       disallow_enabled_for_groups: true
@@ -4326,7 +4316,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
@@ -4397,3 +4387,12 @@ experimental:
   experimental_topic_category_change_notification:
     default: false
     hidden: true
+  modernize_foundation_theme:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "beta"
+      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
