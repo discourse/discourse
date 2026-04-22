@@ -4,7 +4,8 @@ class ProblemCheck::HcaptchaConfiguration < ProblemCheck
   self.priority = "high"
 
   def call
-    if SiteSetting.discourse_captcha_enabled && SiteSetting.discourse_hcaptcha_enabled &&
+    if SiteSetting.discourse_captcha_enabled &&
+         SiteSetting.discourse_captcha_provider == DiscourseHcaptcha::CaptchaProvider::HCAPTCHA &&
          !hcaptcha_credentials_present?
       return problem
     end

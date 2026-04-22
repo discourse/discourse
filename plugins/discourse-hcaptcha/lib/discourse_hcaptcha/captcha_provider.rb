@@ -2,6 +2,10 @@
 
 module DiscourseHcaptcha
   class CaptchaProvider
+    HCAPTCHA = "hcaptcha"
+    RECAPTCHA = "recaptcha"
+    NONE = "none"
+
     def fetch_captcha_token
       raise NotImplementedError
     end

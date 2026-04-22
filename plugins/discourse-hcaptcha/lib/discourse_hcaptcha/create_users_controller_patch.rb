@@ -25,17 +25,11 @@ module DiscourseHcaptcha
 
     def captcha_provider_selector
       hcaptcha_configured =
-        SiteSetting.discourse_hcaptcha_enabled && SiteSetting.hcaptcha_site_key.present? &&
-          SiteSetting.hcaptcha_secret_key.present?
+        SiteSetting.discourse_captcha_provider == CaptchaProvider::HCAPTCHA &&
+          SiteSetting.hcaptcha_site_key.present? && SiteSetting.hcaptcha_secret_key.present?
       recaptcha_configured =
-        SiteSetting.discourse_recaptcha_enabled && SiteSetting.recaptcha_site_key.present? &&
-          SiteSetting.recaptcha_secret_key.present?
-
-      if hcaptcha_configured && recaptcha_configured
-        Rails.logger.warn(
-          "Both hCaptcha and reCaptcha are enabled. Using hCaptcha as the captcha provider.",
-        )
-      end
+        SiteSetting.discourse_captcha_provider == CaptchaProvider::RECAPTCHA &&
+          SiteSetting.recaptcha_site_key.present? && SiteSetting.recaptcha_secret_key.present?
 
       if hcaptcha_configured
         DiscourseHcaptcha::HcaptchaProvider.new

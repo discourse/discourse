@@ -48,7 +48,7 @@ export default class BaseCaptcha extends Component {
       return;
     }
 
-    this.widgetId = this.captchaApi.render(this.containerId, {
+    const renderOptions = {
       sitekey: this.siteKey,
       callback: (response) => {
         this.captchaService.token = response;
@@ -57,9 +57,16 @@ export default class BaseCaptcha extends Component {
       "expired-callback": () => {
         this.captchaService.invalid = true;
       },
-    });
+      ...this.additionalRenderOptions(),
+    };
+
+    this.widgetId = this.captchaApi.render(this.containerId, renderOptions);
 
     this.captchaService.registerWidget(this.captchaApi, this.widgetId);
+  }
+
+  additionalRenderOptions() {
+    return {};
   }
 
   async loadCaptchaScript() {

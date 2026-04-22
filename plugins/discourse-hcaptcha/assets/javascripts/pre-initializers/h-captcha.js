@@ -2,9 +2,9 @@ import { ajax } from "discourse/lib/ajax";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function captchaSelector(siteSettings) {
-  if (siteSettings.discourse_hcaptcha_enabled) {
+  if (siteSettings.discourse_captcha_provider === "hcaptcha") {
     return "hcaptcha";
-  } else if (siteSettings.discourse_recaptcha_enabled) {
+  } else if (siteSettings.discourse_captcha_provider === "recaptcha") {
     return "recaptcha";
   }
 }

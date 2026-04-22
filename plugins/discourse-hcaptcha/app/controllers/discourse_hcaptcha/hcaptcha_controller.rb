@@ -7,7 +7,7 @@ module DiscourseHcaptcha
     private
 
     def ensure_config
-      raise "not enabled" unless SiteSetting.discourse_hcaptcha_enabled
+      raise "not enabled" unless SiteSetting.discourse_captcha_provider == CaptchaProvider::HCAPTCHA
       raise "token is missing" if params[:token].blank?
     end
 

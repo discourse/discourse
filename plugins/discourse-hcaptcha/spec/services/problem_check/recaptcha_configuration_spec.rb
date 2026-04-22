@@ -15,10 +15,10 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
     it { expect(check).to be_chill_about_it }
   end
 
-  context "when discourse_recaptcha_enabled siteSetting is true" do
+  context "when discourse_captcha_provider siteSetting is ReCaptcha" do
     before do
       SiteSetting.discourse_captcha_enabled = true
-      SiteSetting.discourse_recaptcha_enabled = true
+      SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
     end
 
     describe "`recaptcha_site_key` is not set" do
@@ -46,8 +46,8 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
     end
   end
 
-  context "when discourse_recaptcha_enabled siteSetting is false" do
-    before { SiteSetting.discourse_recaptcha_enabled = false }
+  context "when discourse_captcha_provider siteSetting is none" do
+    before { SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::NONE }
 
     describe "`recaptcha_site_key` is not set" do
       before { SiteSetting.recaptcha_secret_key = "just a string" }
