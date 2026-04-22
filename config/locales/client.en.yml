@@ -6277,7 +6277,7 @@ en:
               description: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
             og_image_preview:
               title: "Generated OG image preview"
-              description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID or leave blank to use the most popular topic."
+              description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID to test."
               generate: "Generate"
               topic_id_label: "Topic ID"
               topic_id_placeholder: "auto"

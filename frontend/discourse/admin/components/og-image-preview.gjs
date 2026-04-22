@@ -10,9 +10,7 @@ export default class OgImagePreview extends Component {
   @tracked loading = false;
   @tracked error = false;
 
-  get formData() {
-    return { topic_id: "" };
-  }
+  formData = { topic_id: "" };
 
   @action
   async generate(data) {
@@ -57,6 +55,7 @@ export default class OgImagePreview extends Component {
             @title={{i18n
               "admin.config.logo.form.og_image_preview.topic_id_label"
             }}
+            @format="small"
             @type="input"
             as |field|
           >

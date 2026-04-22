@@ -206,10 +206,6 @@
     .form-kit__field {
       margin-bottom: 0;
     }
-
-    .form-kit__container {
-      width: 120px !important;
-    }
   }
 
   &__frame {
@@ -224,13 +220,6 @@
     display: block;
     width: 100%;
     height: auto;
-  }
-
-  &__topic-title {
-    display: block;
-    margin-top: 0.5em;
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
   }
 
   &__loading,
