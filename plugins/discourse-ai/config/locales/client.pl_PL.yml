@@ -173,7 +173,7 @@ pl_PL:
               description: "Oflaguj post (jako spam lub do sprawdzenia)"
             notify_author_pm:
               label: "Powiadom autora przez PW"
-              description: "Wyślij osobistą wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
+              description: "Wyślij prywatną wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
             notify_author_pm_user:
               label: "Nadawca PW"
               description: "Użytkownik, który wyśle PW (domyślnie system)"
@@ -181,7 +181,7 @@ pl_PL:
               label: "Treść PW"
               description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
-              label: "Dołącz osobiste wiadomości"
+              label: "Dołącz prywatne wiadomości"
               description: "Skanuj i sortuj również wiadomości prywatne"
             whisper:
               label: "Odpowiedz szeptem"
@@ -579,8 +579,8 @@ pl_PL:
         allow_chat_direct_messages_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup będą mogli wysyłać wiadomości bezpośrednie do tego agenta."
         allow_chat_channel_mentions: "Zezwalaj na wzmianki na kanale czatu"
         allow_chat_channel_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tym agencie na kanałach czatu."
-        allow_personal_messages: "Zezwalaj na wiadomości osobiste"
-        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać osobiste wiadomości do tego agenta."
+        allow_personal_messages: "Zezwalaj na prywatne wiadomości"
+        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać prywatne wiadomości do tego agenta."
         allow_topic_mentions: "Zezwalaj na wzmianki o temacie"
         allow_topic_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wspominać o tym agencie w tematach."
         require_approval: "Wymagaj zatwierdzenia narzędzi moderacyjnych"

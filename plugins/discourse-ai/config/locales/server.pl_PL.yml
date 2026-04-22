@@ -101,7 +101,7 @@ pl_PL:
     ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
-    ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
+    ai_embeddings_generate_for_pms: "Generuj osadzenia dla prywatnych wiadomości."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
     ai_embeddings_semantic_related_topics: "Maksymalna liczba tematów do wyświetlenia w sekcji powiązanych tematów."
     ai_embeddings_backfill_batch_size: "Liczba osadzań do uzupełnienia co 15 minut."
@@ -348,8 +348,8 @@ pl_PL:
       title: "%{title} - Rozmowa AI - %{site_name}"
       errors:
         not_allowed: "Nie masz uprawnień do udostępniania tego tematu"
-        other_people_in_pm: "Wiadomości osobiste przekazywane innym osobom nie mogą być udostępniane publicznie"
-        other_content_in_pm: "Wiadomości osobiste zawierające wpisy innych osób nie mogą być udostępniane publicznie"
+        other_people_in_pm: "Prywatne wiadomości przekazywane innym osobom nie mogą być udostępniane publicznie"
+        other_content_in_pm: "Prywatne wiadomości zawierające wpisy innych osób nie mogą być udostępniane publicznie"
         failed_to_share: "Nie udało się udostępnić konwersacji"
         conversation_deleted: "Udostępniona konwersacja została pomyślnie usunięta"
     spam_detection:
