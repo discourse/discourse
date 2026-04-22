@@ -232,6 +232,10 @@ class PostsController < ApplicationController
       locale: params[:post][:locale],
     }
 
+    if params[:post].key?(:reply_to_post_number)
+      changes[:reply_to_post_number] = params[:post][:reply_to_post_number]
+    end
+
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
     # keep `raw_old` for backwards compatibility

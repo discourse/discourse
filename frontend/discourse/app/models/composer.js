@@ -81,6 +81,7 @@ const CLOSED = "closed",
     topic_id: "topic.id",
     original_text: "originalText",
     locale: "locale",
+    reply_to_post_number: "reply_to_post_number",
   },
   _edit_topic_serializer = {
     title: "topic.title",
@@ -210,6 +211,8 @@ export default class Composer extends RestModel {
   @tracked post;
   @tracked reply;
   @tracked whisper;
+  @tracked reply_to_post_number = null;
+  @tracked reply_to_user = null;
   @tracked
   locale = this.siteSettings.content_localization_enabled
     ? this.post?.locale
@@ -533,7 +536,7 @@ export default class Composer extends RestModel {
     return this.category?.topic_title_placeholder || null;
   }
 
-  @computed("action", "post", "topic", "topic.title")
+  @computed("action", "post", "topic", "topic.title", "reply_to_user")
   get replyOptions() {
     const options = {
       userLink: null,
@@ -560,10 +563,8 @@ export default class Composer extends RestModel {
       options.userAvatar = tinyAvatar(avatarTemplate);
 
       if (this.site.desktopView) {
-        const originalUserName = this.post.get("reply_to_user.username");
-        const originalUserAvatar = this.post.get(
-          "reply_to_user.avatar_template"
-        );
+        const originalUserName = this.reply_to_user?.username;
+        const originalUserAvatar = this.reply_to_user?.avatar_template;
         if (originalUserName && originalUserAvatar && isEdit(this.action)) {
           options.originalUser = {
             username: originalUserName,
@@ -1068,6 +1069,8 @@ export default class Composer extends RestModel {
           reply: post.raw,
           originalText: post.raw,
           originalTitle: this.topic.title,
+          reply_to_post_number: post.reply_to_post_number ?? null,
+          reply_to_user: post.reply_to_user ?? null,
         });
 
         if (post.post_number === 1 && this.canEditTitle) {
@@ -1143,6 +1146,15 @@ export default class Composer extends RestModel {
       featuredLink: null,
       noBump: false,
       editConflict: false,
+      reply_to_post_number: null,
+      reply_to_user: null,
+    });
+  }
+
+  setReplyTo(postNumber, user) {
+    this.setProperties({
+      reply_to_post_number: postNumber ?? null,
+      reply_to_user: postNumber ? (user ?? null) : null,
     });
   }
 

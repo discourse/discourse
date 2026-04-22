@@ -1,9 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { computed, set } from "@ember/object";
+import { action, computed, set } from "@ember/object";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
+import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -31,6 +34,8 @@ export default class ComposerActionTitle extends Component {
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
 
+  @service modal;
+
   @computed("model.replyOptions")
   get options() {
     return this.model?.replyOptions;
@@ -47,6 +52,40 @@ export default class ComposerActionTitle extends Component {
 
   set action(value) {
     set(this, "model.action", value);
+  }
+
+  @computed("action", "model.post.can_edit", "model.topic")
+  get canEditReplyTo() {
+    return (
+      this.action === EDIT &&
+      !!this.model?.post?.can_edit &&
+      !!this.model?.topic
+    );
+  }
+
+  @action
+  removeReplyTo() {
+    this.model?.setReplyTo(null, null);
+  }
+
+  @action
+  openChangeReplyToModal() {
+    const model = this.model;
+    this.modal.show(ChangeReplyTo, {
+      model: {
+        topic: model.topic,
+        editingPostNumber: model.post?.post_number,
+        currentPostNumber: model.reply_to_post_number,
+        onSelect: (post) => {
+          model.setReplyTo(post.post_number, {
+            id: post.user_id,
+            username: post.username,
+            name: post.name,
+            avatar_template: post.avatar_template,
+          });
+        },
+      },
+    });
   }
 
   @computed("options", "action", "model.tags", "model.category")
@@ -140,6 +179,24 @@ export default class ComposerActionTitle extends Component {
         {{this.actionTitle}}
       </span>
 
+      {{#if this.canEditReplyTo}}
+        <span class="composer-edit-reply-to">
+          <DButton
+            @icon="pencil"
+            @action={{this.openChangeReplyToModal}}
+            @title="composer.change_reply_to.open"
+            class="btn-flat composer-edit-reply-to__change"
+          />
+          {{#if this.model.reply_to_post_number}}
+            <DButton
+              @icon="xmark"
+              @action={{this.removeReplyTo}}
+              @title="composer.change_reply_to.remove"
+              class="btn-flat composer-edit-reply-to__remove"
+            />
+          {{/if}}
+        </span>
+      {{/if}}
     </div>
   </template>
 }

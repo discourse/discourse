@@ -917,6 +917,8 @@ en:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
 
   post:
+    errors:
+      invalid_reply_to: "The selected post isn't a valid reply target. It must be an earlier post in the same topic."
     image_placeholder:
       broken: "This image is broken"
       blocked_hotlinked_title: "Image hosted on another site. Click to open in a new tab."
