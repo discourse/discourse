@@ -9,7 +9,7 @@ import ExpressionWrapper from "./expression-wrapper";
 
 export default class MultiComboBox extends Component {
   get options() {
-    const optionFormat = this.args.schema?.ui?.option_format;
+    const optionFormat = this.args.schema?.control_options?.option_format;
     return normalizeOptions(this.args.schema.options).map((option) => ({
       id: option.value,
       name: optionFormat

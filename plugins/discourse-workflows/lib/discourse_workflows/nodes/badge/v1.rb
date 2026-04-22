@@ -46,6 +46,8 @@ module DiscourseWorkflows
               options_source: "badges",
               ui: {
                 control: :combo_box,
+              },
+              control_options: {
                 value_property: "id",
                 name_property: "name",
                 filterable: true,

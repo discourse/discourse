@@ -44,7 +44,6 @@ if defined?(DiscourseWorkflows)
                 required: true,
                 ui: {
                   control: :textarea,
-                  rows: 4,
                 },
               },
               approve_label: {

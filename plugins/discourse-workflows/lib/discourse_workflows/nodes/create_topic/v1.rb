@@ -31,7 +31,6 @@ module DiscourseWorkflows
               required: true,
               ui: {
                 control: :textarea,
-                rows: 8,
               },
             },
             category_id: {

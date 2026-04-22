@@ -44,6 +44,8 @@ module DiscourseWorkflows
               options_source: "data_tables",
               ui: {
                 control: :combo_box,
+              },
+              control_options: {
                 value_property: "id",
                 name_property: "name",
                 filterable: true,
@@ -101,6 +103,8 @@ module DiscourseWorkflows
               ui: {
                 control: :data_table_column_select,
                 format: :full,
+              },
+              control_options: {
                 none: "discourse_workflows.data_table_node.sort_column_placeholder",
               },
             },

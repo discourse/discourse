@@ -322,6 +322,8 @@ module("Integration | Component | workflows property engine", function (hooks) {
           ui: {
             control: "combo_box",
             expression: false,
+          },
+          control_options: {
             filterable: true,
             name_property: "name",
             none: "discourse_ai.discourse_workflows.ai_agent.select_agent",

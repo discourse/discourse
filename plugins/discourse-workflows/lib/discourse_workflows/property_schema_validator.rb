@@ -31,6 +31,7 @@ module DiscourseWorkflows
       item_schema
       extra_item_schema
       ui
+      control_options
     ].freeze
 
     TYPE_SPECIFIC_KEYS = { credential: %i[credential_type] }.freeze
@@ -38,21 +39,23 @@ module DiscourseWorkflows
     KNOWN_UI_KEYS = %i[
       control
       expression
-      filterable
       flat
       format
-      height
       hidden
+      show_description
+      show_label
+      singular_name
+    ].freeze
+
+    KNOWN_CONTROL_OPTIONS_KEYS = %i[
+      filterable
+      height
       lang
       name_property
       none
       option_format
       patch_from_option
       resets
-      rows
-      show_description
-      show_label
-      singular_name
       value_property
     ].freeze
 
@@ -146,6 +149,7 @@ module DiscourseWorkflows
       validate_field_type(field, path: field_path)
       validate_field_options(field, path: field_path)
       validate_ui(field, path: field_path)
+      validate_control_options(field, path: field_path)
       validate_visibility(field, path: field_path, sibling_keys: sibling_keys)
       validate_item_schemas(field, path: field_path)
     end
@@ -189,6 +193,22 @@ module DiscourseWorkflows
       control = ui[:control]
       return if control.nil? || KNOWN_UI_CONTROLS.include?(control)
       add_error(ui_path + [:control], "unknown control: #{control.inspect}")
+    end
+
+    def validate_control_options(field, path:)
+      options = field[:control_options]
+      return if options.nil?
+
+      options_path = path + [:control_options]
+
+      unless options.is_a?(Hash)
+        add_error(options_path, "expected Hash, got #{options.class}")
+        return
+      end
+
+      unknown = options.keys - KNOWN_CONTROL_OPTIONS_KEYS
+      return if unknown.empty?
+      add_error(options_path, "unknown control_options key(s): #{unknown.sort.inspect}")
     end
 
     def validate_visibility(field, path:, sibling_keys:)

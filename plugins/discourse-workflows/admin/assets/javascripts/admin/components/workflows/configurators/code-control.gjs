@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 
 export default class CodeControl extends Component {
   get height() {
-    return this.args.schema?.ui?.height;
+    return this.args.schema?.control_options?.height;
   }
 
   get lang() {
-    return this.args.schema?.ui?.lang || "text";
+    return this.args.schema?.control_options?.lang || "text";
   }
 
   <template>

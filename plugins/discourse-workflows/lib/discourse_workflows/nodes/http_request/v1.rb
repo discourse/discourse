@@ -92,7 +92,6 @@ module DiscourseWorkflows
               },
               ui: {
                 control: :textarea,
-                rows: 6,
               },
             },
             body_raw: {
@@ -104,7 +103,6 @@ module DiscourseWorkflows
               },
               ui: {
                 control: :textarea,
-                rows: 6,
               },
             },
             body_form: {

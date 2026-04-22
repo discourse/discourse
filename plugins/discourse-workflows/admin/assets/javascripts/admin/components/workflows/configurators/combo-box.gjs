@@ -25,31 +25,35 @@ export default class ComboBoxField extends Component {
     return source ? this.args.metadata?.[source] || [] : null;
   }
 
+  get controlOptions() {
+    return this.args.schema?.control_options || {};
+  }
+
   get none() {
     return (
-      this.args.schema?.ui?.none ||
+      this.controlOptions.none ||
       propertySelectNoneKey(this.args.nodeDefinition, this.args.fieldName)
     );
   }
 
   get filterable() {
-    return Boolean(this.args.schema?.ui?.filterable);
+    return Boolean(this.controlOptions.filterable);
   }
 
   get valueProperty() {
-    return this.args.schema?.ui?.value_property || "id";
+    return this.controlOptions.value_property || "id";
   }
 
   get nameProperty() {
-    return this.args.schema?.ui?.name_property || "name";
+    return this.controlOptions.name_property || "name";
   }
 
   get patchFromOption() {
-    return this.args.schema?.ui?.patch_from_option || {};
+    return this.controlOptions.patch_from_option || {};
   }
 
   get resets() {
-    return this.args.schema?.ui?.resets || [];
+    return this.controlOptions.resets || [];
   }
 
   get options() {
@@ -63,7 +67,7 @@ export default class ComboBoxField extends Component {
       }));
     }
 
-    const optionFormat = this.args.schema?.ui?.option_format;
+    const optionFormat = this.controlOptions.option_format;
     return normalizeOptions(this.args.schema.options).map((option) => ({
       id: option.value,
       name: optionFormat

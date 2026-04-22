@@ -124,7 +124,7 @@ module DiscourseWorkflows
                   visible_if: {
                     interval: %w[weeks],
                   },
-                  ui: {
+                  control_options: {
                     option_format: :weekday,
                   },
                 },
@@ -149,8 +149,10 @@ module DiscourseWorkflows
                   },
                   ui: {
                     control: :combo_box,
-                    option_format: :hour_of_day,
                     expression: false,
+                  },
+                  control_options: {
+                    option_format: :hour_of_day,
                   },
                 },
                 trigger_at_minute: {

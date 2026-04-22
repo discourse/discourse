@@ -51,7 +51,6 @@ module DiscourseWorkflows
               },
               ui: {
                 control: :textarea,
-                rows: 6,
               },
             },
             headers: {

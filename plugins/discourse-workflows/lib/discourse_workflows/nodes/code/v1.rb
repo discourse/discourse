@@ -51,6 +51,8 @@ module DiscourseWorkflows
               ui: {
                 control: :code,
                 expression: false,
+              },
+              control_options: {
                 height: 300,
                 lang: :javascript,
               },

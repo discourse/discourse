@@ -51,6 +51,29 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
       expect(errors.first).to include(":neon")
     end
 
+    it "accepts control_options with known keys" do
+      schema = {
+        picker: {
+          type: :integer,
+          ui: {
+            control: :combo_box,
+          },
+          control_options: {
+            filterable: true,
+            value_property: "id",
+            name_property: "name",
+          },
+        },
+      }
+      expect(validate(schema)).to eq([])
+    end
+
+    it "flags unknown control_options keys" do
+      errors = validate(picker: { type: :integer, control_options: { rowz: 3 } })
+      expect(errors.first).to include("picker.control_options")
+      expect(errors.first).to include(":rowz")
+    end
+
     it "requires :options for option-typed fields" do
       errors = validate(choice: { type: :options, default: "a" })
       expect(errors.first).to include("type :options requires")

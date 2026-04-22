@@ -51,7 +51,6 @@ module DiscourseWorkflows
               },
               ui: {
                 control: :textarea,
-                rows: 3,
               },
             },
             form_fields: Schemas::FormFields::SCHEMA.merge(visible_if: { page_type: %w[page] }),
@@ -81,7 +80,6 @@ module DiscourseWorkflows
               },
               ui: {
                 control: :textarea,
-                rows: 4,
               },
             },
             redirect_url: {
@@ -99,7 +97,6 @@ module DiscourseWorkflows
               },
               ui: {
                 control: :textarea,
-                rows: 6,
               },
             },
           }

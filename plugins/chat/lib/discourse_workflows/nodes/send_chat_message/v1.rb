@@ -40,7 +40,6 @@ if defined?(DiscourseWorkflows)
                 required: true,
                 ui: {
                   control: :textarea,
-                  rows: 6,
                 },
               },
             }

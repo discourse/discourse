@@ -56,7 +56,6 @@ if defined?(DiscourseWorkflows)
                 type: :string,
                 ui: {
                   control: :textarea,
-                  rows: 6,
                 },
               },
             }

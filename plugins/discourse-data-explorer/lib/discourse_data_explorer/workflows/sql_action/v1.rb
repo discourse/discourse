@@ -50,6 +50,8 @@ module DiscourseDataExplorer
               },
               ui: {
                 control: :combo_box,
+              },
+              control_options: {
                 value_property: "id",
                 name_property: "name",
                 filterable: true,
@@ -92,6 +94,8 @@ module DiscourseDataExplorer
               ui: {
                 control: :code,
                 expression: false,
+              },
+              control_options: {
                 height: 200,
                 lang: :sql,
               },

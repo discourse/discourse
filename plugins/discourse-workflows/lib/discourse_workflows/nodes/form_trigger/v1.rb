@@ -45,7 +45,6 @@ module DiscourseWorkflows
               type: :string,
               ui: {
                 control: :textarea,
-                rows: 3,
               },
             },
             form_fields: Schemas::FormFields::SCHEMA,

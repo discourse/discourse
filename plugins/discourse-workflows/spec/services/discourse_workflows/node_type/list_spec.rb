@@ -35,7 +35,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       it "returns UI hints for schema-driven configurators" do
         node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
 
-        expect(node_type.dig(:property_schema, :raw, :ui)).to eq(control: :textarea, rows: 8)
+        expect(node_type.dig(:property_schema, :raw, :ui)).to eq(control: :textarea)
       end
 
       it "includes specialized property-engine controls in node schemas" do
