@@ -574,10 +574,18 @@ class PostRevisor
 
     @post.extract_quoted_post_numbers
 
+    previous_reply_to_post_number = @post.reply_to_post_number_was
+
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.link_post_uploads
-    @post.save_reply_relationships
-    cleanup_previous_reply_to_relationship if @post_successfully_saved
+
+    if @post_successfully_saved
+      @post.save_reply_relationships
+      cleanup_previous_reply_to_relationship
+      if @post.saved_change_to_reply_to_post_number?
+        @post.nested_replies_apply_reparent(previous_reply_to_post_number)
+      end
+    end
 
     # we don't want to increment post count on user merge
     if @post_successfully_saved && @editor.id != Discourse::SYSTEM_USER_ID
@@ -904,6 +912,7 @@ class PostRevisor
     return false if parent.deleted_at.present?
     return false if parent.id == @post.id
     return false if @post.post_number.present? && parent.post_number >= @post.post_number
+    return false unless guardian.can_see?(parent)
     true
   end
 
