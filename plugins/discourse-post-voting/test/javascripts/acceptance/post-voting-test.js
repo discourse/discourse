@@ -231,7 +231,7 @@ acceptance(`Discourse Post Voting - anon user`, function (needs) {
       .dom("#post_2 .post-voting-comments__comment-actions")
       .doesNotExist("does not display comment actions to anon users");
 
-    await click(".post-voting-comments__menu-show-more-link");
+    await click(".post-voting-comments__actions-show-more");
 
     assert
       .dom("#post_2 .post-voting-comments__comment")
@@ -249,7 +249,7 @@ acceptance(`Discourse Post Voting - anon user`, function (needs) {
 
   test("adding a comment", async function (assert) {
     await visit("/t/280");
-    await click(".post-voting-comments__menu-add-link");
+    await click(".post-voting-comments__actions-add");
 
     assert.dom("#login-form").exists("displays the login screen");
   });
@@ -401,11 +401,11 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
   test("validations for comment length", async function (assert) {
     await visit("/t/280");
-    await click("#post_1 .post-voting-comments__menu-add-link");
+    await click("#post_1 .post-voting-comments__actions-add");
 
     await fillIn(".post-voting-comments__composer-textarea", "a".repeat(4));
 
-    assert.dom(".post-voting-comments__comment-composer-flash").hasText(
+    assert.dom(".post-voting-comments__composer-flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_short", {
         count: 5,
       }),
@@ -413,34 +413,29 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     );
 
     assert
-      .dom(".post-voting-comments__menu-composer-submit")
+      .dom(".post-voting-comments__composer-submit")
       .isDisabled("submit comment button is disabled");
 
     await fillIn(".post-voting-comments__composer-textarea", "a".repeat(6));
 
-    assert.dom(".post-voting-comments__comment-composer-flash").hasText(
-      i18n("post_voting.post.post_voting_comment.composer.length_ok", {
-        count: 44,
-      }),
-      "displays the right message about raw length when it is OK"
-    );
+    assert
+      .dom(".post-voting-comments__composer-flash")
+      .hasText(
+        "6/50",
+        "displays current/max character count when length is OK"
+      );
 
     assert
-      .dom(".post-voting-comments__menu-composer-submit")
+      .dom(".post-voting-comments__composer-submit")
       .isEnabled("submit comment button is enabled");
 
-    await fillIn(".post-voting-comments__composer-textarea", "a".repeat(51));
-
-    assert.dom(".post-voting-comments__comment-composer-flash").hasText(
-      i18n("post_voting.post.post_voting_comment.composer.too_long", {
-        count: 50,
-      }),
-      "displays the right message about raw length when it is too long"
-    );
-
     assert
-      .dom(".post-voting-comments__menu-composer-submit")
-      .isDisabled("submit comment button is disabled");
+      .dom(".post-voting-comments__composer-textarea")
+      .hasAttribute(
+        "maxlength",
+        "50",
+        "enforces the comment length limit via maxlength"
+      );
   });
 
   test("adding a comment", async function (assert) {
@@ -453,7 +448,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "displays the right number of comments for the first post"
       );
 
-    await click("#post_1 .post-voting-comments__menu-add-link");
+    await click("#post_1 .post-voting-comments__actions-add");
 
     assert
       .dom("#post_1 .post-voting-comments__comment")
@@ -463,7 +458,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       ".post-voting-comments__composer-textarea",
       "this is some comment"
     );
-    await click(".post-voting-comments__menu-composer-submit");
+    await click(".post-voting-comments__composer-submit");
 
     assert
       .dom("#post_1 .post-voting-comments__comment")
@@ -472,7 +467,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
   test("adding a comment with keyboard shortcut", async function (assert) {
     await visit("/t/280");
-    await click("#post_1 .post-voting-comments__menu-add-link");
+    await click("#post_1 .post-voting-comments__actions-add");
 
     assert
       .dom("#post_1 .post-voting-comments__comment")
@@ -483,14 +478,10 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       "this is a new test comment"
     );
 
-    await triggerEvent(
-      ".post-voting-comments__menu-composer-submit",
-      "keydown",
-      {
-        key: "Enter",
-        ctrlKey: true,
-      }
-    );
+    await triggerEvent(".post-voting-comments__composer-submit", "keydown", {
+      key: "Enter",
+      ctrlKey: true,
+    });
 
     assert
       .dom("#post_1 .post-voting-comments__comment")
@@ -543,7 +534,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
     await fillIn(".post-voting-comments__composer-textarea", "a".repeat(4));
 
-    assert.dom(".post-voting-comments__comment-composer-flash").hasText(
+    assert.dom(".post-voting-comments__composer-flash").hasText(
       i18n("post_voting.post.post_voting_comment.composer.too_short", {
         count: 5,
       }),
@@ -559,12 +550,12 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       "editing this"
     );
 
-    assert.dom(".post-voting-comments__comment-composer-flash").hasText(
-      i18n("post_voting.post.post_voting_comment.composer.length_ok", {
-        count: 38,
-      }),
-      "displays the right message when comment length is OK"
-    );
+    assert
+      .dom(".post-voting-comments__composer-flash")
+      .hasText(
+        "12/50",
+        "displays current/max character count when comment length is OK"
+      );
 
     assert
       .dom(".post-voting-comments__comment-editor-submit")
@@ -618,7 +609,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
         "displays the right number of comments for the second post"
       );
 
-    await click("#post_2 .post-voting-comments__menu-show-more-link");
+    await click("#post_2 .post-voting-comments__actions-show-more");
 
     assert
       .dom("#post_2 .post-voting-comments__comment")
@@ -632,7 +623,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await click("button.btn-danger");
 
     assert
-      .dom("#post_2 .post-voting-comments__menu-show-more-link")
+      .dom("#post_2 .post-voting-comments__actions-show-more")
       .doesNotExist(
         "updates the comment count such that show more link is not displayed"
       );
@@ -647,7 +638,8 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
     assert
       .dom("#post_2 #post-voting-comment-2 .post-voting-comments__vote-count")
-      .doesNotExist("does not display element if vote count is zero");
+      .hasClass("--none", "marks zero vote count with --none modifier")
+      .hasText("0", "displays 0 when vote count is zero");
 
     assert
       .dom("#post_2 #post-voting-comment-3 .post-voting-comments__vote-count")
@@ -667,7 +659,8 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
 
     assert
       .dom("#post_2 #post-voting-comment-2 .post-voting-comments__vote-count")
-      .doesNotExist("updates the comment vote count correctly");
+      .hasClass("--none", "reverts to --none modifier when vote is removed")
+      .hasText("0", "displays 0 after vote is removed");
   });
 
   test("topic list link overrides work", async function (assert) {
@@ -895,7 +888,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
       );
 
     assert
-      .dom("#post_2 .post-voting-comments__menu-show-more-link")
+      .dom("#post_2 .post-voting-comments__actions-show-more")
       .exists("updates the comments count to reflect the new comment");
   });
 
@@ -912,7 +905,7 @@ acceptance(`Discourse Post Voting - logged in user`, function (needs) {
     await settled();
 
     assert
-      .dom("#post_2 .post-voting-comments__menu-show-more-link")
+      .dom("#post_2 .post-voting-comments__actions-show-more")
       .doesNotExist("removes the show more comments link");
   });
 
