@@ -65,22 +65,27 @@ jobs:
       fail-fast: false
 
       matrix:
-        target: [core, plugins, themes]
-        build_type: [backend, frontend, system]
-        exclude:
-          - build_type: backend
-            target: themes
-          # Exclude combined plugins from system tests - use split targets instead
-          - build_type: system
-            target: plugins
         include:
-          # Split plugin targets for system tests only
-          - build_type: system
-            target: core-plugins
-          - build_type: system
-            target: chat
-          - build_type: system
-            target: official-plugins
+          - target: core
+            build_type: backend
+          - target: core
+            build_type: frontend
+          - target: core
+            build_type: system
+          - target: plugins
+            build_type: backend
+          - target: plugins
+            build_type: frontend
+          - target: core-plugins
+            build_type: system
+          - target: chat
+            build_type: system
+          - target: official-plugins
+            build_type: system
+          - target: themes
+            build_type: frontend
+          - target: themes
+            build_type: system
 
     steps:
       - name: Set working directory owner
