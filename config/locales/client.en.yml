@@ -6245,6 +6245,10 @@ en:
           staff: "Staff"
           all_members: "All members"
           developers: "Developers"
+        impact_types:
+          feature_type: "Feature"
+          other_type: "Other"
+          site_setting_default_type: "Setting default"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
