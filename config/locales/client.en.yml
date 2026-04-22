@@ -8995,7 +8995,7 @@ en:
             confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
           can_permanently_delete:
             prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
-            confirm: "Yes, I understand permanently deleted data cannot be recovered"
+            confirm: "I understand"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

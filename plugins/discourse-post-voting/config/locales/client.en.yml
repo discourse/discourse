@@ -37,6 +37,14 @@ en:
       already_voted: "You can only vote once per question."
       user_over_limit: "You cannot exceed the number of votes for your trust level."
       one_vote_per_post: "You can only vote once for each post."
+      button:
+        upvote: "Upvote"
+        remove_upvote: "Remove upvote"
+        downvote: "Downvote"
+        remove_downvote: "Remove downvote"
+      toggle_voters: "Show who voted"
+      upvotes: "Upvotes"
+      downvotes: "Downvotes"
 
     last_answer_lowercase: last answer
     answer_lowercase:
@@ -59,6 +67,10 @@ en:
           edit: "edit"
           cancel: "cancel"
           add: "Add a comment"
+          actions:
+            edit: "Edit comment"
+            delete: "Delete comment"
+            flag: "Flag comment"
           show:
             one: Show %{count} more comment
             other: Show %{count} more comments

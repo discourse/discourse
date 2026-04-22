@@ -989,6 +989,11 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
 
+    .btn,
+    .ai-post-helper {
+      border-radius: 0;
+    }
+
     @media screen and (width <= 420px) {
       flex-direction: column;
       align-items: flex-start;

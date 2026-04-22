@@ -14,7 +14,7 @@
 }
 
 .post-users-popup {
-  width: 300px;
+  width: 250px;
   background: var(--secondary);
   color: var(--primary);
   line-height: normal;
@@ -163,7 +163,7 @@
 
   &__username {
     color: var(--primary-medium) !important;
-    font-size: var(--font-down-2);
+    font-size: var(--font-down-1);
     text-decoration: none;
     overflow: hidden;
     text-overflow: ellipsis;

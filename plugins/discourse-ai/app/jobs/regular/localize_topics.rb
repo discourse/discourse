@@ -27,40 +27,61 @@ module Jobs
       locales = DiscourseAi::Translation.locales
       return if locales.blank?
 
-      locales.each do |locale|
-        base_locale = locale.split("_").first
-        topics =
-          DiscourseAi::Translation::TopicCandidates
-            .get
-            .joins(
-              "LEFT JOIN topic_localizations tl ON tl.topic_id = topics.id AND tl.locale LIKE '#{base_locale}%'",
-            )
-            .where.not(locale: nil)
-            .where("topics.locale NOT LIKE '#{base_locale}%'")
-            .where("tl.id IS NULL")
-            .order(updated_at: :desc)
-            .limit(limit)
+      locale_pairs = locales.map { |l| [l.split("_").first, l] }
 
-        next if topics.empty?
+      topics =
+        DiscourseAi::Translation::TopicCandidates
+          .get
+          .where.not(locale: nil)
+          .order(updated_at: :desc)
+          .limit(limit)
 
-        topics.each do |topic|
+      return if topics.empty?
+
+      existing =
+        TopicLocalization
+          .where(topic_id: topics.map(&:id))
+          .pluck(:topic_id, :locale)
+          .group_by(&:first)
+
+      existing_base_locales =
+        existing.transform_values { |pairs| pairs.map { |_, loc| loc.split("_").first }.to_set }
+
+      budget = limit
+      translated_counts = Hash.new(0)
+
+      topics.each do |topic|
+        break if budget <= 0
+        topic_base = topic.locale.split("_").first
+
+        locale_pairs.each do |base_locale, target_locale|
+          break if budget <= 0
+          next if topic_base == base_locale
+          next if existing_base_locales.dig(topic.id)&.include?(base_locale)
+
           begin
             DiscourseAi::Translation::TopicLocalizer.localize(
               topic,
-              locale,
+              target_locale,
               topic_title_llm_model:,
               post_raw_llm_model:,
             )
+            translated_counts[target_locale] += 1
+            budget -= 1
           rescue FinalDestination::SSRFDetector::LookupFailedError
             # do nothing, there are too many sporadic lookup failures
           rescue => e
             DiscourseAi::Translation::VerboseLogger.log(
-              "Failed to translate topic #{topic.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+              "Failed to translate topic #{topic.id} to #{target_locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
             )
           end
         end
+      end
 
-        DiscourseAi::Translation::VerboseLogger.log("Translated #{topics.size} topics to #{locale}")
+      translated_counts.each do |target_locale, count|
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Translated #{count} topics to #{target_locale}",
+        )
       end
     end
 

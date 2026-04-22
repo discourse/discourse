@@ -437,7 +437,7 @@ RSpec.configure do |config|
     module IgnoreServerCapturedErrors
       def raise_server_error!
         super
-      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
+      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN
         # Ignore these exceptions - caused by client. Handled by the app server in dev/prod
       end
     end
@@ -497,7 +497,6 @@ RSpec.configure do |config|
         example_file_path = example.metadata[:rerun_file_path]
 
         if example_file_path
-          expanded_example_file_path = Pathname.new(example_file_path).expand_path
           match =
             example_file_path.to_s.match(
               %r{^#{Regexp.escape(Rails.root.to_s)}/(plugins|themes|spec)/([^/]+)/},

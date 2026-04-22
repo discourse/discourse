@@ -5,29 +5,29 @@ body > noscript {
   }
 
   .post-voting-comments {
-    padding-top: 15px;
+    padding-top: var(--space-4);
 
-    .post-voting-comment-row {
+    &__comment {
       display: flex;
       border-top: 1px solid var(--primary-low);
-      padding: 5px 0 5px 0;
+      padding: var(--space-1) 0;
+    }
 
-      .post-voting-comment-cooked p,
-      .post-voting-comment-creator {
-        display: inline;
-      }
+    &__comment-cooked p,
+    &__comment-creator {
+      display: inline;
+    }
 
-      .post-voting-comment-info-separator {
-        display: inline;
-        margin: 0 0.3em;
-      }
+    &__separator {
+      display: inline;
+      margin: 0 var(--space-1);
     }
   }
 
   .post-voting-answer-count {
-    padding-top: 20px;
+    padding-top: var(--space-5);
 
-    .post-voting-answer-count-span {
+    &__value {
       display: none;
     }
   }
