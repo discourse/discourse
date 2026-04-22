@@ -60,7 +60,7 @@
         hljs.highlightElement(el);
       });
 
-      document.querySelectorAll('.ai-artifact-controls .copy-embed').forEach((el) => {
+      document.querySelectorAll('.ai-artifact-controls .copy-embed, .web-artifact-controls .copy-embed').forEach((el) => {
         el.addEventListener('click', (e) => {
           e.preventDefault();
           const url = el.dataset.url;

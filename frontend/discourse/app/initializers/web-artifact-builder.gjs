@@ -17,7 +17,7 @@ function initializeWebArtifactBuilder(api) {
       return (
         siteSettings.web_artifact_security !== "disabled" &&
         currentUser &&
-        (currentUser.staff || currentUser.can_create_web_artifact)
+        currentUser.can_create_web_artifact
       );
     },
   });

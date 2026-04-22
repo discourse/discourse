@@ -687,12 +687,14 @@ aside.onebox h3 {
   transition: opacity 0.25s ease-in-out;
 }
 
-.ai-artifact iframe {
+.ai-artifact iframe,
+.web-artifact iframe {
   height: 600px;
   max-height: 600px;
 }
 
-.ai-artifact-controls {
+.ai-artifact-controls,
+.web-artifact-controls {
   display: flex;
   justify-content: space-between;
 }

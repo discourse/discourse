@@ -79,6 +79,13 @@ RSpec.describe WebArtifactsController do
       expect(response.status).to eq(403)
     end
 
+    it "denies moderators with default allowed groups" do
+      moderator = Fabricate(:moderator)
+      sign_in(moderator)
+      post "/web-artifacts.json", params: { name: "test", html: "<p>hi</p>" }
+      expect(response.status).to eq(403)
+    end
+
     it "creates artifact for admin" do
       sign_in(admin)
       post "/web-artifacts.json",

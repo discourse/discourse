@@ -2,7 +2,7 @@
 
 module WebArtifactGuardian
   def can_create_web_artifact?
-    is_staff? || @user&.in_any_groups?(SiteSetting.web_artifact_allowed_groups_map)
+    is_admin? || @user&.in_any_groups?(SiteSetting.web_artifact_allowed_groups_map)
   end
 
   def can_view_web_artifact?(artifact)
