@@ -3,6 +3,7 @@
 module CrawlerDetection
   WAYBACK_MACHINE_URL = "archive.org"
 
+  # Source: https://ipinfo.io/tags/crawler
   CRAWLER_ASNS =
     Set.new(
       [
