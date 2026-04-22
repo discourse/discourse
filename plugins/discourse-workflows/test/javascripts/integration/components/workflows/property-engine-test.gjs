@@ -1,4 +1,4 @@
-import { click, fillIn, findAll, render } from "@ember/test-helpers";
+import { click, fillIn, findAll, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -11,7 +11,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
 
   hooks.beforeEach(function () {
     pretender.get("/svg-sprite/picker-search", () =>
-      response(200, [{ id: "bolt", name: "bolt" }])
+      response(200, [
+        { id: "gear", symbol: '<symbol id="gear"></symbol>' },
+        { id: "bolt", symbol: '<symbol id="bolt"></symbol>' },
+      ])
+    );
+    pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
+      response(200, { variables: [] })
     );
   });
 
@@ -243,18 +249,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
 
     assert.dom(".form-kit__control-icon").exists();
-    assert.strictEqual(
-      selectKit(".form-kit__control-icon").header().value(),
-      "gear"
-    );
+    assert.dom(".form-kit__control-icon").hasAttribute("data-value", "gear");
 
-    await selectKit(".form-kit__control-icon").expand();
-    await selectKit(".form-kit__control-icon").selectRowByValue("bolt");
+    await click(".form-kit__control-icon .d-icon-grid-picker-trigger");
+    await waitFor(".d-icon-grid-picker__icon");
+    await click('[data-icon-id="bolt"]');
 
-    assert.strictEqual(
-      selectKit(".form-kit__control-icon").header().value(),
-      "bolt"
-    );
+    assert.dom(".form-kit__control-icon").hasAttribute("data-value", "bolt");
 
     await click(
       '.workflows-property-engine__mode-control input[value="dynamic"]'

@@ -2,10 +2,17 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import BooleanControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/boolean-control";
 
 module("Integration | Component | workflows boolean control", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
+      response(200, { variables: [] })
+    );
+  });
 
   test("renders toggle in plain mode", async function (assert) {
     this.setProperties({
