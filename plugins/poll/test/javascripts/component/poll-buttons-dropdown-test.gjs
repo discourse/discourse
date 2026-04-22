@@ -4,7 +4,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import PollButtonsDropdown from "discourse/plugins/poll/discourse/components/poll-buttons-dropdown";
 
-module("Poll | Component | poll-buttons-dropdown", function (hooks) {
+module("Component | poll-buttons-dropdown", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders a clickable dropdown menu with a close option", async function (assert) {

@@ -69,10 +69,13 @@ RSpec.describe "Admin AI translations" do
   end
 
   describe "when translations are disabled" do
+    fab!(:category)
+
     before do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr|es"
+      SiteSetting.ai_translation_target_categories = category.id.to_s
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
       visit "/admin/plugins/discourse-ai/ai-translations"
@@ -86,6 +89,11 @@ RSpec.describe "Admin AI translations" do
 
     it "shows localization settings button" do
       expect(page).to have_css(".ai-localization-settings-button")
+    end
+
+    it "keeps language and category selectors visible" do
+      expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
+      expect(page).to have_css(".ai-translations__category-input-row .category-selector")
     end
   end
 
@@ -105,18 +113,52 @@ RSpec.describe "Admin AI translations" do
       expect(page).to have_css(".multi-select")
     end
 
+    it "displays the category selector alongside the locale selector" do
+      expect(page).to have_css(".alert.alert-info")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.translatable_categories"))
+      expect(page).to have_css(".category-selector")
+    end
+
     it "allows adding and saving languages" do
-      find(".multi-select").click
+      within(".ai-translations__locale-input-row") do
+        find(".multi-select").click
+        find(".select-kit-row[data-value='en']").click
+        find(".setting-controls__ok").click
+      end
 
-      find(".select-kit-row[data-value='en']").click
-
-      expect(page).to have_css(".setting-controls__ok")
-
-      find(".setting-controls__ok").click
-
-      expect(page).to have_no_css(".setting-controls__ok")
+      expect(page).to have_no_css(".ai-translations__locale-input-row .setting-controls__ok")
 
       expect(SiteSetting.content_localization_supported_locales).to eq("en")
+    end
+  end
+
+  describe "when categories are not configured" do
+    fab!(:category)
+
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_supported_locales = "en|fr"
+      SiteSetting.ai_translation_target_categories = ""
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+
+      visit "/admin/plugins/discourse-ai/ai-translations"
+    end
+
+    it "displays the setup alert with the category selector" do
+      expect(page).to have_css(".alert.alert-info")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.translatable_categories"))
+      expect(page).to have_css(".category-selector")
+    end
+
+    it "allows adding and saving translatable categories" do
+      find(".category-selector").click
+      find(".category-row[data-value='#{category.id}']").click
+
+      within(".ai-translations__category-input-row") { find(".setting-controls__ok").click }
+
+      expect(page).to have_no_css(".ai-translations__category-input-row .setting-controls__ok")
+      expect(SiteSetting.ai_translation_target_categories).to eq(category.id.to_s)
     end
   end
 

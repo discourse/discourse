@@ -491,6 +491,17 @@ describe DiscourseReactions::CustomReactionsController do
       get "/discourse-reactions/posts/#{private_post.id}/reactions-users-list.json"
       expect(response.status).to eq(200)
     end
+
+    it "does not duplicate a user whose reaction value is no longer in enabled_reactions" do
+      SiteSetting.discourse_reactions_enabled_reactions = "laughing|open_mouth"
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+      expect(response.status).to eq(200)
+      user_4_rows = response.parsed_body["users"].select { |u| u["username"] == user_4.username }
+      expect(user_4_rows.size).to eq(1)
+      expect(user_4_rows.first["reaction"]).to eq("hugs")
+    end
   end
 
   describe "positive notifications" do

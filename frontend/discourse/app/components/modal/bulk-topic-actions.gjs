@@ -243,6 +243,15 @@ export default class BulkTopicActions extends Component {
           (t) => t.set("category_id", this.categoryId)
         );
         break;
+      case "convert-to-public-topic":
+        this.performAndRefresh({
+          type: "convert_to_public_topic",
+          category_id: this.categoryId,
+        });
+        break;
+      case "convert-to-private-message":
+        this.performAndRefresh({ type: "convert_to_private_message" });
+        break;
       default:
         // Plugins can register their own custom actions via onRegisterAction
         // when the activeComponent is rendered.
@@ -344,7 +353,10 @@ export default class BulkTopicActions extends Component {
   }
 
   get isCategoryAction() {
-    return this.model.action === "update-category";
+    return (
+      this.model.action === "update-category" ||
+      this.model.action === "convert-to-public-topic"
+    );
   }
 
   get isCloseAction() {

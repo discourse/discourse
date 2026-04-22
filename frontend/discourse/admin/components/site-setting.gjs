@@ -153,6 +153,30 @@ export default class SiteSettingComponent extends Component {
     return this.setting.upcoming_change_default_override_metadata;
   }
 
+  get showDependsOnNotice() {
+    return this.setting.depends_on?.length > 0;
+  }
+
+  get dependsOnNoticeText() {
+    const path = basePath();
+    const links = this.setting.depends_on
+      .map((name, index) => {
+        const label = sanitize(
+          this.setting.depends_on_humanized_names?.[index] ||
+            name.replaceAll("_", " ")
+        );
+        return `<a href="${path}/admin/site_settings/category/all_results?filter=${encodeURIComponent(name)}">${label}</a>`;
+      })
+      .join(", ");
+
+    return trustHTML(
+      i18n("admin.site_settings.depends_on_notice", {
+        count: this.setting.depends_on.length,
+        dependencyLinks: links,
+      })
+    );
+  }
+
   get themeSiteSettingWarningText() {
     return trustHTML(
       i18n("admin.theme_site_settings.site_setting_warning", {
@@ -553,6 +577,14 @@ export default class SiteSettingComponent extends Component {
               <p class="setting-upcoming-change-warning__text">
                 {{icon "flask"}}
                 {{this.upcomingChangeDefaultWarningText}}
+              </p>
+            </div>
+          {{/if}}
+          {{#if this.showDependsOnNotice}}
+            <div class="setting-override-warning setting-depends-on-notice">
+              <p class="setting-depends-on-notice__text">
+                {{icon "link"}}
+                {{this.dependsOnNoticeText}}
               </p>
             </div>
           {{/if}}

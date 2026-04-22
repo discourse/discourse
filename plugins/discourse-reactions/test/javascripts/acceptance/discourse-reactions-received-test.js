@@ -2,7 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Reactions - Reactions Received Page", function (needs) {
+acceptance("Reactions Received Page", function (needs) {
   needs.user();
 
   needs.settings({

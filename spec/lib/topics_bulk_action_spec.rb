@@ -833,4 +833,77 @@ RSpec.describe TopicsBulkAction do
       end.to not_change { Notification.where(user: topic_watcher).count }
     end
   end
+
+  describe "convert_to_public_topic" do
+    fab!(:admin)
+    fab!(:category)
+    fab!(:pm, :private_message_topic)
+    fab!(:pm_post) { Fabricate(:post, topic: pm, user: pm.user) }
+
+    it "converts PMs and skips non-PMs" do
+      regular = Fabricate(:post).topic
+
+      changed =
+        TopicsBulkAction.new(
+          admin,
+          [pm.id, regular.id],
+          type: "convert_to_public_topic",
+          category_id: category.id,
+        ).perform!
+
+      expect(changed).to eq([pm.id])
+      expect(pm.reload.archetype).to eq(Archetype.default)
+      expect(pm.category_id).to eq(category.id)
+    end
+
+    it "is silent by default" do
+      Jobs.run_immediately!
+      bumped_at = pm.bumped_at
+
+      expect do
+        TopicsBulkAction.new(
+          admin,
+          [pm.id],
+          type: "convert_to_public_topic",
+          category_id: category.id,
+        ).perform!
+      end.to not_change { PostRevision.count }
+
+      expect(pm.reload.bumped_at).to be_within(1.second).of(bumped_at)
+      expect(pm.posts.where(post_type: Post.types[:small_action])).to be_empty
+    end
+  end
+
+  describe "convert_to_private_message" do
+    fab!(:admin)
+    fab!(:public_topic, :topic)
+    fab!(:public_first_post) { Fabricate(:post, topic: public_topic, user: public_topic.user) }
+
+    it "converts public topics and skips PMs" do
+      pm = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: pm, user: pm.user)
+
+      changed =
+        TopicsBulkAction.new(
+          admin,
+          [public_topic.id, pm.id],
+          type: "convert_to_private_message",
+        ).perform!
+
+      expect(changed).to eq([public_topic.id])
+      expect(public_topic.reload.archetype).to eq(Archetype.private_message)
+    end
+
+    it "surfaces errors and does not mark topic as changed when cap is exceeded" do
+      SiteSetting.max_allowed_message_recipients = 1
+      Fabricate(:post, topic: public_topic)
+
+      operator = TopicsBulkAction.new(admin, [public_topic.id], type: "convert_to_private_message")
+      changed = operator.perform!
+
+      expect(changed).to be_empty
+      expect(public_topic.reload.archetype).to eq(Archetype.default)
+      expect(operator.errors).to be_present
+    end
+  end
 end

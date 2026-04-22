@@ -5,7 +5,7 @@ import {
   normalizeProviderParams,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 
-module("Discourse AI | Unit | Lib | llm-provider-param-helpers", function () {
+module("Unit | Lib | llm-provider-param-helpers", function () {
   module("isParamActive", function () {
     test("returns false for null, undefined, and false", function (assert) {
       assert.false(isParamActive(null));

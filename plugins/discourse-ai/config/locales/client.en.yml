@@ -381,6 +381,8 @@ en:
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
         supported_locales_description: "This site setting also allows visitors to contribute post translations."
+        translatable_categories: "Translatable categories"
+        translatable_categories_description: "Only content in the selected categories will be translated. Subcategories must be added separately."
         admin_actions:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"

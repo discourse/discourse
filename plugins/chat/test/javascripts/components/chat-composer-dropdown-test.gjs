@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
 
-module("Discourse Chat | Component | chat-composer-dropdown", function (hooks) {
+module("Component | chat-composer-dropdown", function (hooks) {
   setupRenderingTest(hooks);
 
   test("buttons", async function (assert) {

@@ -142,7 +142,41 @@
  *      const apiKey = secrets.get("openai_api_key");
  *
  * 7. discourse
- *    Interacts with Discourse specific features. Access is generally performed as the SystemUser.
+ *    Interacts with Discourse specific features.
+ *
+ *    Security model — read before writing tools that are invoked by non-admins:
+ *
+ *    Tools are authored by admins but can be triggered by any user who mentions
+ *    the agent. The runner intentionally grants admin-level power to the script.
+ *    Know these non-obvious defaults:
+ *
+ *    - Read ops (`getPost`, `getTopic`, `getUser`, `getAgent`, `search`) use the
+ *      SystemUser scope. Results may include PMs, user emails, IP addresses,
+ *      staff-category content, and other staff-only serializer fields. Do not
+ *      return this data verbatim to the invoking user unless you've verified
+ *      they're authorized to see it.
+ *
+ *    - Write ops (`createTopic`, `createPost`, `editPost`, `editTopic`,
+ *      `createChatMessage`) enforce permissions via the Guardian of the user
+ *      named by the `username` parameter — *except* when that user is staged,
+ *      in which case the action runs with SystemUser privileges. This is
+ *      intentional: it supports content-seeding patterns (create a staged
+ *      user, then author content as them in categories they couldn't normally
+ *      write to). The consequence: any staged username is effectively a
+ *      privileged identity. Treat untrusted usernames as privilege-relevant.
+ *
+ *    - `createStagedUser` itself has no permission check (admin power). A
+ *      tool can spawn a staged user and then write as SystemUser via the rule
+ *      above.
+ *
+ *    - `updateAgent` can modify any agent on the site, including its
+ *      `system_prompt`. A tool attached to agent A can permanently rewrite
+ *      agent B's instructions.
+ *
+ *    - `getCustomField` / `setCustomField` have no key allowlist and operate
+ *      on posts, topics, and users. Some custom fields are security-sensitive
+ *      (plugin metadata, tokens, flags). Be deliberate about which keys your
+ *      tool reads or writes.
  *
  *    discourse.baseUrl: The base URL of the Discourse site (e.g., "https://meta.discourse.org").
  *
@@ -290,6 +324,70 @@
  *        // Mark as processed to prevent re-running
  *        discourse.setCustomField("post", context.post_id, "ai_processed", Date.now().toString());
  *        return { success: true };
+ *      }
+ *
+ * 9. crypto
+ *    Provides cryptographic hashing, HMAC, signing, and encoding utilities.
+ *    These bridge to Ruby's OpenSSL — not the Web Crypto API.
+ *    All functions are synchronous. Inputs accept strings or Uint8Array (binary
+ *    values are sent across the bridge as raw bytes). Functions suffixed with
+ *    `Bytes` return Uint8Array, which is preferable when chaining crypto ops.
+ *    Input size is limited to 10MB per call.
+ *
+ *    HMAC Functions:
+ *
+ *    crypto.hmacSha256(key, data): HMAC-SHA256, hex output.
+ *    crypto.hmacSha1(key, data): HMAC-SHA1, hex output.
+ *    crypto.hmacSha256Base64(key, data): HMAC-SHA256, base64 output.
+ *    crypto.hmacSha1Base64(key, data): HMAC-SHA1, base64 output.
+ *    crypto.hmacSha256Bytes(key, data): HMAC-SHA256, Uint8Array output.
+ *    crypto.hmacSha1Bytes(key, data): HMAC-SHA1, Uint8Array output.
+ *
+ *    Hash Functions:
+ *
+ *    crypto.sha256(data), crypto.sha1(data), crypto.md5(data): hex output.
+ *    crypto.sha256Base64(data), crypto.sha1Base64(data), crypto.md5Base64(data): base64 output.
+ *    crypto.sha256Bytes(data), crypto.sha1Bytes(data): Uint8Array output.
+ *
+ *    RSA Signing (PKCS1v15):
+ *
+ *    crypto.signRsaSha256(pemPrivateKey, data): RSA-SHA256 signature.
+ *    crypto.signRsaSha1(pemPrivateKey, data): RSA-SHA1 signature.
+ *    Parameters:
+ *      pemPrivateKey (string): PEM-encoded RSA private key (PKCS8 or PKCS1).
+ *      data (string | Uint8Array): The data to sign.
+ *    Returns: Uint8Array (raw signature bytes — for RS256 on 2048-bit keys, 256 bytes)
+ *    Throws: Error if the key is not a valid RSA private key.
+ *
+ *    Encoding Utilities:
+ *
+ *    crypto.base64Encode(text): Base64-encode (equivalent to btoa, absent in V8).
+ *    crypto.base64Decode(base64): Decode standard base64. Returns string.
+ *    crypto.base64UrlEncode(text): URL-safe base64 encode, no padding (JWT-style).
+ *    crypto.base64UrlDecode(base64): URL-safe base64 decode. Returns Uint8Array
+ *                                    (accepts input with or without padding).
+ *
+ *    Random:
+ *
+ *    crypto.randomBytes(length): Cryptographically secure random bytes.
+ *    Parameters:
+ *      length (number): Number of bytes, 1–1024.
+ *    Returns: Uint8Array
+ *
+ *    Example - Webhook signature verification:
+ *      function invoke(params) {
+ *        const secret = secrets.get("webhook_secret");
+ *        const signature = crypto.hmacSha256(secret, params.payload);
+ *        return { valid: signature === params.expected_signature };
+ *      }
+ *
+ *    Example - Signing a JWT (RS256) for a Google service account:
+ *      function signJwt(privateKeyPem, claims) {
+ *        const header = crypto.base64UrlEncode(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+ *        const payload = crypto.base64UrlEncode(JSON.stringify(claims));
+ *        const signingInput = header + "." + payload;
+ *        const sig = crypto.signRsaSha256(privateKeyPem, signingInput);
+ *        return signingInput + "." + crypto.base64UrlEncode(sig);
  *      }
  *
  * Constraints

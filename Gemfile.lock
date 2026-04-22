@@ -302,9 +302,9 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2026.0407)
+    mime-types-data (3.2026.0414)
     mini_mime (1.1.5)
-    mini_racer (0.20.0)
+    mini_racer (0.21.0)
       libv8-node (~> 24.12.0.1)
     mini_scheduler (0.18.0)
       sidekiq (>= 6.5, < 8.0)
@@ -312,7 +312,7 @@ GEM
     mini_suffix (0.3.3)
       ffi (~> 1.9)
     minio_runner (1.0.0)
-    minitest (6.0.3)
+    minitest (6.0.5)
       drb (~> 2.0)
       prism (~> 1.5)
     mocha (3.1.0)
@@ -488,7 +488,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     raindrops (0.20.1)
-    rake (13.3.1)
+    rake (13.4.1)
     rake-compiler-dock (1.11.0)
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
@@ -1079,14 +1079,14 @@ CHECKSUMS
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
-  mime-types-data (3.2026.0407) sha256=909395cf029731355136527aa11bf58ea0655ee782359ccbf32c66238a8cadb3
+  mime-types-data (3.2026.0414) sha256=461c4c655373a44bd6c5fe54bcf5b7776026ea96e808144b1ec465c4b99148cc
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  mini_racer (0.20.0) sha256=860e944c20894413c0e4921f8531166b22180d988e75a5dc152be9505da91ff2
+  mini_racer (0.21.0) sha256=caacdfe0713dc611452f83e2d5a5250a4607da409050bbaf5dca0f5104ee4c59
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7
   minio_runner (1.0.0) sha256=ca0fc56a90c63b65a26cda632938c9075046835d41f4b9d1e165b0550eae0538
-  minitest (6.0.3) sha256=88ac8a1de36c00692420e7cb3cc11a0773bbcb126aee1c249f320160a7d11411
+  minitest (6.0.5) sha256=f007d7246bf4feea549502842cd7c6aba8851cdc9c90ba06de9c476c0d01155c
   mocha (3.1.0) sha256=75f42d69ebfb1f10b32489dff8f8431d37a418120ecdfc07afe3bc183d4e1d56
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
   multi_json (1.19.1) sha256=7aefeff8f2c854bf739931a238e4aea64592845e0c0395c8a7d2eea7fdd631b7
@@ -1162,7 +1162,7 @@ CHECKSUMS
   railties (8.0.5) sha256=ad98c6e9a096b7e8cf63c70872b60ec6c1d4152be2a4ffa63483ec02a837a9d5
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
-  rake (13.3.1) sha256=8c9e89d09f66a26a01264e7e3480ec0607f0c497a861ef16063604b1b08eb19c
+  rake (13.4.1) sha256=b4e81bd6a748308a6799619d824ec6a23cd1acd07d9ec41e5f2ebfb2294447c8
   rake-compiler-dock (1.11.0) sha256=eab51f2cd533eb35cea6b624a75281f047123e70a64c58b607471bb49428f8c2
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
