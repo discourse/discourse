@@ -26,11 +26,29 @@ describe TopicViewSerializer do
     it "returns nil when the accepted answer post does not exist" do
       weird_topic = Fabricate(:solved_topic)
       Fabricate(:topic_answer, solved_topic: weird_topic)
-      weird_topic.topic_answers[0].update!(answer_post_id: 19_238_319)
+      weird_topic.topic_answers.first.update!(answer_post_id: 19_238_319)
       serializer =
         TopicViewSerializer.new(TopicView.new(weird_topic.topic), scope: Guardian.new(user))
       serialized = serializer.as_json
       expect(serialized[:accepted_answers]).to be_nil
+    end
+
+    describe "with multiple solutions enabled" do
+      fab!(:post3) { Fabricate(:post, topic:, user:) }
+      fab!(:solved_topic) { Fabricate(:solved_topic, topic:) }
+      before do
+        SiteSetting.solved_allow_multiple_solutions = true
+        Fabricate(:topic_answer, solved_topic:, post: post2)
+        Fabricate(:topic_answer, solved_topic:, post: post3)
+      end
+
+      it "returns all answer posts when the topic has accepted answers" do
+        serializer = TopicViewSerializer.new(TopicView.new(topic), scope: Guardian.new(user))
+        serialized = serializer.as_json
+        expect(serialized[:topic_view][:accepted_answers].length).to eq(2)
+        expect(serialized[:topic_view][:accepted_answers][0][:post_number]).to eq(post2.post_number)
+        expect(serialized[:topic_view][:accepted_answers][1][:post_number]).to eq(post3.post_number)
+      end
     end
   end
 end

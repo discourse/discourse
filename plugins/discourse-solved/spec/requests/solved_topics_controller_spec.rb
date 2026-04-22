@@ -64,6 +64,25 @@ describe DiscourseSolved::SolvedTopicsController do
         result = response.parsed_body
         expect(result["user_solved_posts"].length).to eq(1)
       end
+
+      describe "with multiple solutions enabled" do
+        fab!(:answer_post2) { Fabricate(:post, topic:, user:) }
+        fab!(:topic_answer2) { Fabricate(:topic_answer, solved_topic:, post: answer_post2) }
+        before { SiteSetting.solved_allow_multiple_solutions = true }
+
+        it "returns multiple solved posts from the same topic for the specified user" do
+          sign_in(admin)
+
+          get "/solution/by_user.json", params: { username: user.username }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["user_solved_posts"]).to be_present
+          expect(result["user_solved_posts"].length).to eq(2)
+          expect(result["user_solved_posts"][0]["post_id"]).to eq(answer_post2.id)
+          expect(result["user_solved_posts"][1]["post_id"]).to eq(answer_post.id)
+        end
+      end
     end
 
     context "when accessing without username" do

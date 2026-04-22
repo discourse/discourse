@@ -1023,6 +1023,8 @@ after_initialize do
 
     on(:unaccepted_solution) do |post|
       next if SiteSetting.assignment_status_on_unsolve.blank?
+      next if SiteSetting.solved_allow_multiple_solutions && post.topic.reload.solved.present?
+
       assignments = Assignment.includes(:target).where(topic: post.topic)
       assignments.each do |assignment|
         assigned_user = User.find_by(id: assignment.assigned_to_id)

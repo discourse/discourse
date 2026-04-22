@@ -74,7 +74,7 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
       it { is_expected.to run_successfully }
 
       it "does not mark the topic as unsolved" do
-        expect { result }.not_to change { DiscourseSolved::SolvedTopic.count }
+        expect { result }.not_to change { DiscourseSolved::TopicAnswer.count }
       end
     end
 
@@ -178,15 +178,49 @@ RSpec.describe DiscourseSolved::UnacceptAnswer do
         before { post.trash! }
 
         it "still marks the topic as unsolved" do
-          expect { result }.to change { DiscourseSolved::SolvedTopic.count }.by(-1)
+          expect { result }.to change { DiscourseSolved::TopicAnswer.count }.by(-1)
         end
       end
 
       context "when a different post is the accepted answer" do
-        before { solved_topic.topic_answers[0].update!(post: post_1) }
+        before { solved_topic.topic_answers.first.update!(post: post_1) }
+
+        it "does not mark the topic as unsolved" do
+          expect { result }.not_to change { DiscourseSolved::TopicAnswer.count }
+        end
+      end
+
+      describe "with multiple solutions enabled and another existing solution" do
+        fab!(:post2) { Fabricate(:post, topic:) }
+        fab!(:topic_answer2) do
+          Fabricate(:topic_answer, solved_topic:, post: post2, accepter: user)
+        end
+
+        before { SiteSetting.solved_allow_multiple_solutions = true }
+
+        it "revokes the post author's solved credit" do
+          expect { result }.to change {
+            UserAction.where(action_type: UserAction::SOLVED, target_post: post).count
+          }.by(-1)
+        end
+
+        it "removes the accepted answer notification" do
+          expect { result }.to change {
+            Notification.where(
+              notification_type: Notification.types[:custom],
+              user: post.user,
+              topic: post.topic,
+              post_number: post.post_number,
+            ).count
+          }.by(-1)
+        end
 
         it "does not mark the topic as unsolved" do
           expect { result }.not_to change { DiscourseSolved::SolvedTopic.count }
+        end
+
+        it "removes one TopicAnswer" do
+          expect { result }.to change { DiscourseSolved::TopicAnswer.count }.by(-1)
         end
       end
     end

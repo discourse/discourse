@@ -86,19 +86,40 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
         end
 
         it "keeps only one solution per topic" do
-          expect { result }.not_to change { DiscourseSolved::SolvedTopic.count }
+          expect { result }.not_to change { DiscourseSolved::TopicAnswer.count }
         end
 
         it "replaces the accepted answer" do
-          expect { result }.to change { topic.reload.solved.topic_answers[0].post }.from(post_1).to(
-            post,
-          )
+          expect { result }.to change { topic.reload.solved.topic_answers.first.post }.from(
+            post_1,
+          ).to(post)
         end
 
         it "revokes the previous answer's solved credit" do
           expect { result }.to change {
             UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count
           }.by(-1)
+        end
+
+        describe "with multiple solutions enabled" do
+          before { SiteSetting.solved_allow_multiple_solutions = true }
+          it "keeps both solutions" do
+            expect { result }.to change { DiscourseSolved::TopicAnswer.count }.by(1)
+          end
+
+          it "does not replace the accepted answer" do
+            expect { result }.not_to change { topic.reload.solved.topic_answers[0].post }
+            expect(topic.solved.topic_answers[0].post).to eq(post_1)
+            expect(topic.solved.topic_answers[1].post).to eq(post)
+          end
+
+          it "does not revoke the previous answer's solved credit" do
+            expect { result }.to not_change {
+              UserAction.where(action_type: UserAction::SOLVED, target_post: post_1).count
+            }.and change {
+                    UserAction.where(action_type: UserAction::SOLVED, target_post: post).count
+                  }.by(1)
+          end
         end
       end
 
@@ -109,6 +130,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       it "marks the topic as solved" do
+        expect { result }.to change { DiscourseSolved::SolvedTopic.count }.by(1)
         expect(result[:solved_topic]).to have_attributes(topic: topic)
         expect(result[:topic_answer]).to have_attributes(
           solved_topic_id: result[:solved_topic].id,

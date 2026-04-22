@@ -33,6 +33,33 @@ acceptance(`Discourse Solved Plugin`, function (needs) {
     assert.dom(".quote.accepted-answer blockquote").doesNotExist();
   });
 
+  test("A topic with multiple accepted answers shows an excerpt for each", async function (assert) {
+    pretender.get("/t/11.json", () => {
+      let postStreamWithMultipleAcceptedAnswers =
+        postStreamWithAcceptedAnswerExcerpt("this is an excerpt");
+
+      postStreamWithMultipleAcceptedAnswers.accepted_answers.push({
+        post_number: 3,
+        username: "kzh",
+        excerpt: `<p>another excerpt</p>`,
+        accepter_username: "tomtom",
+        accepter_name: "Tomtom",
+      });
+
+      return response(postStreamWithMultipleAcceptedAnswers);
+    });
+
+    await visit("/t/with-excerpt/11");
+
+    assert.dom(".quote.accepted-answer blockquote").exists({ count: 2 });
+    assert
+      .dom("aside.quote.accepted-answer[data-post='2'] blockquote")
+      .hasText("this is an excerpt");
+    assert
+      .dom("aside.quote.accepted-answer[data-post='3'] blockquote")
+      .hasText("another excerpt");
+  });
+
   test("Full page search displays solved status", async function (assert) {
     pretender.get("/search", () => {
       const fixtures = cloneJSON(fixturesByUrl["/search.json"]);

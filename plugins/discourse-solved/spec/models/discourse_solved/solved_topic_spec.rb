@@ -65,6 +65,25 @@ RSpec.describe DiscourseSolved::SolvedTopic do
           expect(solved.topic_timer).to have_attributes(duration_minutes: 300)
         end
       end
+
+      describe "with multiple solutions enabled" do
+        fab!(:post2) { Fabricate(:post, topic: topic) }
+        before { SiteSetting.solved_allow_multiple_solutions = true }
+
+        it "only creates one timer" do
+          expect(solved.topic_timer).to have_attributes(
+            topic:,
+            status_type: TopicTimer.types[:silent_close],
+            based_on_last_post: true,
+            duration_minutes: 120,
+          )
+
+          topic_timer_id = solved.topic_timer.id
+          Fabricate(:topic_answer, solved_topic: solved, post: post2)
+
+          expect(solved.reload.topic_timer.id).to eq(topic_timer_id)
+        end
+      end
     end
   end
 end

@@ -19,8 +19,7 @@ describe UserSummarySerializer do
     it "returns the correct count" do
       expect(serializer.as_json[:solved_count]).to eq(0)
 
-      topic = Fabricate(:topic)
-      Fabricate(:post, topic:)
+      topic = Fabricate(:topic_with_op)
       post = Fabricate(:post, topic:, user:)
       DiscourseSolved::AcceptAnswer.call!(
         params: {
@@ -30,6 +29,47 @@ describe UserSummarySerializer do
       )
 
       expect(serializer.as_json[:solved_count]).to eq(1)
+    end
+
+    describe "with multiple solutions enabled" do
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      it "returns the correct count" do
+        expect(serializer.as_json[:solved_count]).to eq(0)
+
+        topic = Fabricate(:topic_with_op)
+        post = Fabricate(:post, topic:, user:)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        expect(serializer.as_json[:solved_count]).to eq(1)
+
+        post2 = Fabricate(:post, topic:, user:)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post2.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        # still only one topic solved since post2 was in the same topic
+        expect(serializer.as_json[:solved_count]).to eq(1)
+
+        topic2 = Fabricate(:topic_with_op)
+        post3 = Fabricate(:post, topic: topic2, user:)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post3.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        expect(serializer.as_json[:solved_count]).to eq(2)
+      end
     end
   end
 end

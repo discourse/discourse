@@ -10,7 +10,7 @@ module DiscourseSolved::TopicExtension
     hours.zero? ? SiteSetting.solved_topics_auto_close_hours : hours
   end
 
-  def accepted_answers_post_info # renamed plural
+  def accepted_answers_post_info
     return [] unless solved
 
     solved
