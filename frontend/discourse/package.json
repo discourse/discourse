@@ -145,7 +145,7 @@
     "message-bus-client": "^4.4.1",
     "pretender": "^3.4.7",
     "qunit": "^2.25.0",
-    "qunit-dom": "^3.5.0",
+    "qunit-dom": "^3.5.1",
     "sinon": "^21.1.2",
     "source-map": "^0.7.6",
     "terser": "^5.46.1",
