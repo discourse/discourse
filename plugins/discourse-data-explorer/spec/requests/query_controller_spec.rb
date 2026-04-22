@@ -985,24 +985,12 @@ describe DiscourseDataExplorer::QueryController do
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
              params: {
                ai_description: "show me users",
-               generation_id: SecureRandom.uuid,
              }
         expect(response.status).to eq(404)
       end
 
       it "requires ai_description parameter" do
-        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
-             params: {
-               generation_id: SecureRandom.uuid,
-             }
-        expect(response.status).to eq(400)
-      end
-
-      it "requires generation_id parameter" do
-        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
-             params: {
-               ai_description: "show me users",
-             }
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json"
         expect(response.status).to eq(400)
       end
 
@@ -1010,57 +998,39 @@ describe DiscourseDataExplorer::QueryController do
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
              params: {
                ai_description: "a" * 2001,
-               generation_id: SecureRandom.uuid,
              }
         expect(response.status).to eq(400)
       end
 
       it "enqueues a generation job and returns generation_id" do
-        generation_id = SecureRandom.uuid
-
-        expect_enqueued_with(
-          job: :generate_de_query_with_ai,
-          args: {
-            generation_id: generation_id,
-            user_id: admin.id,
-            ai_description: "show me users",
-            existing_sql: nil,
-          },
-        ) do
-          post "/admin/plugins/discourse-data-explorer/queries/generate.json",
-               params: {
-                 ai_description: "show me users",
-                 generation_id: generation_id,
-               }
-        end
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "show me users",
+             }
 
         expect(response.status).to eq(200)
         json = response.parsed_body
-        expect(json["generation_id"]).to eq(generation_id)
+        generation_id = json["generation_id"]
+        expect(generation_id).to be_present
         expect(json["status"]).to eq("generating")
+
+        job = Jobs::GenerateDeQueryWithAi.jobs.last
+        expect(job["args"].first["generation_id"]).to eq(generation_id)
+        expect(job["args"].first["user_id"]).to eq(admin.id)
+        expect(job["args"].first["ai_description"]).to eq("show me users")
       end
 
       it "passes existing_sql when provided" do
-        generation_id = SecureRandom.uuid
-
-        expect_enqueued_with(
-          job: :generate_de_query_with_ai,
-          args: {
-            generation_id: generation_id,
-            user_id: admin.id,
-            ai_description: "refine this query",
-            existing_sql: "SELECT 1",
-          },
-        ) do
-          post "/admin/plugins/discourse-data-explorer/queries/generate.json",
-               params: {
-                 ai_description: "refine this query",
-                 generation_id: generation_id,
-                 existing_sql: "SELECT 1",
-               }
-        end
+        post "/admin/plugins/discourse-data-explorer/queries/generate.json",
+             params: {
+               ai_description: "refine this query",
+               existing_sql: "SELECT 1",
+             }
 
         expect(response.status).to eq(200)
+
+        job = Jobs::GenerateDeQueryWithAi.jobs.last
+        expect(job["args"].first["existing_sql"]).to eq("SELECT 1")
       end
 
       it "rate limits requests" do
@@ -1070,7 +1040,6 @@ describe DiscourseDataExplorer::QueryController do
           post "/admin/plugins/discourse-data-explorer/queries/generate.json",
                params: {
                  ai_description: "show me users",
-                 generation_id: SecureRandom.uuid,
                }
         end
 

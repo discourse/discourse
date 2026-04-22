@@ -41,7 +41,7 @@ export default <template>
             <div class="query-new__ai-actions">
               {{#if @controller.hasGenerated}}
                 <DButton
-                  @action={{@controller.regenerate}}
+                  @action={{@controller.generate}}
                   @icon="discourse-sparkles"
                   @label="explorer.ai.regenerate"
                   @disabled={{@controller.aiGenerating}}

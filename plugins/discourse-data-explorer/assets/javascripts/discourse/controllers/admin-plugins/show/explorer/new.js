@@ -38,11 +38,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   handleKeydown(event) {
     if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
       event.preventDefault();
-      if (this.hasGenerated) {
-        this.regenerate();
-      } else {
-        this.generate();
-      }
+      this.generate();
     }
   }
 
@@ -86,51 +82,22 @@ export default class AdminPluginsExplorerNew extends Controller {
       return;
     }
 
-    this.currentGenerationId = crypto.randomUUID();
-    this.aiGenerating = true;
-
-    try {
-      await ajax(
-        "/admin/plugins/discourse-data-explorer/queries/generate.json",
-        {
-          type: "POST",
-          data: {
-            ai_description: this.aiDescription.trim(),
-            generation_id: this.currentGenerationId,
-          },
-        }
-      );
-
-      this._subscribeToGeneration(this.currentGenerationId);
-    } catch (error) {
-      this.aiGenerating = false;
-      popupAjaxError(error);
-    }
-  }
-
-  @action
-  async regenerate() {
-    if (this.aiGenerating || !this.aiDescription.trim()) {
-      return;
-    }
-
     this._teardownMessageBus();
-    this.currentGenerationId = crypto.randomUUID();
     this.aiGenerating = true;
 
     try {
-      await ajax(
+      const response = await ajax(
         "/admin/plugins/discourse-data-explorer/queries/generate.json",
         {
           type: "POST",
           data: {
             ai_description: this.aiDescription.trim(),
-            generation_id: this.currentGenerationId,
             existing_sql: this.generatedSql || undefined,
           },
         }
       );
 
+      this.currentGenerationId = response.generation_id;
       this._subscribeToGeneration(this.currentGenerationId);
     } catch (error) {
       this.aiGenerating = false;

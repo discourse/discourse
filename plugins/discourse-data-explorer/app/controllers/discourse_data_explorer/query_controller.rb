@@ -186,7 +186,7 @@ module DiscourseDataExplorer
         raise Discourse::InvalidParameters.new("ai_description is too long (max 2000 characters)")
       end
 
-      generation_id = params.require(:generation_id)
+      generation_id = SecureRandom.hex
       existing_sql = params[:existing_sql]&.strip.presence
 
       AiQueryEnqueuer.enqueue(
