@@ -49,6 +49,11 @@ export default class WorkflowCanvas extends Component {
   @tracked selectionVersion = 0;
   copiedEntities = { nodes: [], stickyNotes: [] };
   isFirstSync = true;
+  lastAutoArrangeRequest = 0;
+  didHydrateInitialAutoLayout = false;
+  #hasSetupStarted = false;
+  #pendingSync = false;
+  #syncTask = null;
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
@@ -95,131 +100,225 @@ export default class WorkflowCanvas extends Component {
   }
 
   @action
+  registerCanvas(element) {
+    this.canvasElement = element;
+    this.#maybeSetupCanvas();
+  }
+
+  @action
   registerContainer(element) {
     this.containerElement = element;
+    this.#maybeSetupCanvas();
   }
 
-  @action
-  async setupCanvas(element) {
-    this.keyboard = setupCanvasKeyboard(
-      this.keyboardShortcuts,
-      {
-        onUndo: () => this.args.onUndo?.(),
-        onRedo: () => this.args.onRedo?.(),
-        onCopy: () => this.#copy(),
-        onPaste: () => this.#paste(),
-        onDelete: () => this.deleteSelected(),
-        onEscape: () => {
-          this.contextMenuApi?.close();
-          this.rete?.selector.unselectAll();
-          this.selectionVersion++;
-        },
-        onZoomIn: () => this.zoomIn(),
-        onZoomOut: () => this.zoomOut(),
-        onFitToView: () => this.fitToView(),
-        onAutoLayout: () => this.autoLayout(),
+  #keyboardActions() {
+    return {
+      onUndo: () => this.args.onUndo?.(),
+      onRedo: () => this.args.onRedo?.(),
+      onCopy: () => this.#copy(),
+      onPaste: () => this.#paste(),
+      onDelete: () => this.deleteSelected(),
+      onEscape: () => {
+        this.contextMenuApi?.close();
+        this.rete?.selector.unselectAll();
+        this.selectionVersion++;
       },
-      element
+      onZoomIn: () => this.zoomIn(),
+      onZoomOut: () => this.zoomOut(),
+      onFitToView: () => this.fitToView(),
+      onAutoLayout: () => this.autoLayout(),
+    };
+  }
+
+  async #handleManualTrigger(clientId) {
+    const node = this.#nodes().find((n) => n.clientId === clientId);
+
+    if (node?.type === "trigger:form" && node.configuration?.uuid) {
+      window.open(
+        getAbsoluteURL(`/workflows/form/${node.configuration.uuid}`),
+        "_blank"
+      );
+      return;
+    }
+
+    if (node?.type === "trigger:webhook" && node.configuration?.path) {
+      window.open(
+        getAbsoluteURL(`/workflows/webhooks/${node.configuration.path}`),
+        "_blank"
+      );
+      return;
+    }
+
+    const result = await ajax(
+      `/admin/plugins/discourse-workflows/executions.json`,
+      {
+        type: "POST",
+        data: { trigger_node_id: clientId },
+      }
     );
-
-    this.canvasElement = element;
-
-    const nodeTypes = await this.workflowsNodeTypes.load();
-
-    this.rete = await createReteEditor(this.containerElement, {
-      nodeTypes,
-      callbacks: {
-        onNodeDragged: (...a) => this.args.onUpdateNodePosition?.(...a),
-        onNodePicked: () => this.selectionVersion++,
-        onCanvasPointerDown: () => {
-          this.selectionVersion++;
-          this.contextMenuApi?.close();
-          this.menu.close("workflows-canvas-menu");
-          this.args.onCloseNodePanel?.();
-        },
-        onNodeDragEnd: () => this.args.onNodeDragEnd?.(),
-        onConnectionCreated: (...a) => this.args.onCreateConnection?.(...a),
-        onNodeDelete: (clientId) => this.args.onRemoveNodes?.([clientId]),
-        onManualTrigger: async (clientId) => {
-          const node = (this.args.nodes || []).find(
-            (n) => n.clientId === clientId
-          );
-
-          if (node?.type === "trigger:form" && node.configuration?.uuid) {
-            window.open(
-              getAbsoluteURL(`/workflows/form/${node.configuration.uuid}`),
-              "_blank"
-            );
-            return;
-          }
-
-          if (node?.type === "trigger:webhook" && node.configuration?.path) {
-            window.open(
-              getAbsoluteURL(`/workflows/webhooks/${node.configuration.path}`),
-              "_blank"
-            );
-            return;
-          }
-
-          const result = await ajax(
-            `/admin/plugins/discourse-workflows/executions.json`,
-            {
-              type: "POST",
-              data: { trigger_node_id: clientId },
-            }
-          );
-          const { workflow_id, id } = result.execution;
-          this.toasts.success({
-            data: {
-              message: i18n("discourse_workflows.manual_trigger.triggered"),
-              actions: [
-                {
-                  label: i18n(
-                    "discourse_workflows.manual_trigger.view_execution"
-                  ),
-                  class: "btn-primary btn-small",
-                  action: ({ close }) => {
-                    close();
-                    this.router.transitionTo(
-                      "adminPlugins.show.discourse-workflows.show.executions.show",
-                      workflow_id,
-                      id
-                    );
-                  },
-                },
-              ],
+    const { workflow_id, id } = result.execution;
+    this.toasts.success({
+      data: {
+        message: i18n("discourse_workflows.manual_trigger.triggered"),
+        actions: [
+          {
+            label: i18n("discourse_workflows.manual_trigger.view_execution"),
+            class: "btn-primary btn-small",
+            action: ({ close }) => {
+              close();
+              this.router.transitionTo(
+                "adminPlugins.show.discourse-workflows.show.executions.show",
+                workflow_id,
+                id
+              );
             },
-          });
-        },
-        onNodeDoubleClick: (clientId) => this.args.onEditNode?.(clientId),
-        onTransformChanged: (t) => (this.areaTransform = t),
+          },
+        ],
       },
     });
-
-    this.args.onAreaReady?.(this.rete.area);
-
-    this.isLoading = false;
-    await this.syncToRete();
-    element.focus();
   }
 
-  @action
-  async syncToRete() {
+  #reteCallbacks() {
+    return {
+      onNodeDragged: (...a) => this.args.onUpdateNodePosition?.(...a),
+      onNodePicked: () => this.selectionVersion++,
+      onCanvasPointerDown: () => {
+        this.selectionVersion++;
+        this.contextMenuApi?.close();
+        this.menu.close("workflows-canvas-menu");
+        this.args.onCloseNodePanel?.();
+      },
+      onNodeDragEnd: () => this.args.onNodeDragEnd?.(),
+      onConnectionCreated: (...a) => this.args.onCreateConnection?.(...a),
+      onNodeDelete: (clientId) => this.args.onRemoveNodes?.([clientId]),
+      onManualTrigger: (clientId) => this.#handleManualTrigger(clientId),
+      onNodeDoubleClick: (clientId) => this.args.onEditNode?.(clientId),
+      onTransformChanged: (t) => (this.areaTransform = t),
+    };
+  }
+
+  #nodes() {
+    return this.args.nodes || [];
+  }
+
+  #connections() {
+    return this.args.connections || [];
+  }
+
+  #stickyNoteRects() {
+    return computeStickyNoteRects(this.args.stickyNotes);
+  }
+
+  #shouldHydrateInitialAutoLayout() {
+    return (
+      !this.didHydrateInitialAutoLayout &&
+      this.#nodes().some((node) => !node.position)
+    );
+  }
+
+  #consumeAutoArrangeRequest() {
+    const autoArrangeRequest = this.args.autoArrangeRequest || 0;
+    if (autoArrangeRequest <= this.lastAutoArrangeRequest) {
+      return false;
+    }
+
+    this.lastAutoArrangeRequest = autoArrangeRequest;
+    return true;
+  }
+
+  async #applyAutoArrange(callback) {
+    const positions = await this.rete.autoArrange();
+    callback?.(positions);
+  }
+
+  async #syncViewport(prevNodeCount) {
+    if (this.isFirstSync || this.rete.nodeCount !== prevNodeCount) {
+      this.isFirstSync = false;
+      await this.rete.fitToView(this.#stickyNoteRects());
+    }
+  }
+
+  async #performSync() {
+    const prevNodeCount = this.rete.nodeCount;
+
+    await this.rete.syncState(this.#nodes(), this.#connections());
+
+    if (this.#shouldHydrateInitialAutoLayout()) {
+      this.didHydrateInitialAutoLayout = true;
+      await this.#applyAutoArrange(this.args.onHydrateAutoLayout);
+    }
+
+    if (this.#consumeAutoArrangeRequest()) {
+      await this.#applyAutoArrange(this.args.onSyncAutoLayout);
+    }
+
+    await this.#syncViewport(prevNodeCount);
+  }
+
+  async #flushSyncQueue() {
+    try {
+      while (this.#pendingSync) {
+        this.#pendingSync = false;
+        await this.#performSync();
+      }
+    } finally {
+      this.#syncTask = null;
+    }
+  }
+
+  async #queueSync() {
     if (!this.rete) {
       return;
     }
 
-    const prevNodeCount = this.rete.nodeCount;
+    this.#pendingSync = true;
 
-    await this.rete.syncState(
-      this.args.nodes || [],
-      this.args.connections || []
-    );
-
-    if (this.isFirstSync || this.rete.nodeCount !== prevNodeCount) {
-      this.isFirstSync = false;
-      await this.rete.fitToView(computeStickyNoteRects(this.args.stickyNotes));
+    if (!this.#syncTask) {
+      this.#syncTask = this.#flushSyncQueue();
     }
+
+    await this.#syncTask;
+  }
+
+  async #maybeSetupCanvas() {
+    if (
+      this.#hasSetupStarted ||
+      !this.canvasElement ||
+      !this.containerElement
+    ) {
+      return;
+    }
+
+    this.#hasSetupStarted = true;
+    try {
+      const element = this.canvasElement;
+      this.keyboard = setupCanvasKeyboard(
+        this.keyboardShortcuts,
+        this.#keyboardActions(),
+        element
+      );
+
+      const nodeTypes = await this.workflowsNodeTypes.load();
+
+      this.rete = await createReteEditor(this.containerElement, {
+        nodeTypes,
+        callbacks: this.#reteCallbacks(),
+      });
+
+      this.args.onAreaReady?.(this.rete.area);
+
+      await this.#queueSync();
+      this.isLoading = false;
+      element.focus();
+    } catch (error) {
+      this.#hasSetupStarted = false;
+      throw error;
+    }
+  }
+
+  @action
+  async syncToRete() {
+    await this.#queueSync();
   }
 
   get nodeEntries() {
@@ -411,7 +510,7 @@ export default class WorkflowCanvas extends Component {
     if (!this.rete) {
       return;
     }
-    await this.rete.fitToView(computeStickyNoteRects(this.args.stickyNotes));
+    await this.rete.fitToView(this.#stickyNoteRects());
   }
 
   @action
@@ -421,7 +520,7 @@ export default class WorkflowCanvas extends Component {
     }
     const positions = await this.rete.autoArrange();
     this.args.onAutoLayout?.(positions);
-    await this.rete.fitToView(computeStickyNoteRects(this.args.stickyNotes));
+    await this.rete.fitToView(this.#stickyNoteRects());
   }
 
   @action
@@ -483,8 +582,8 @@ export default class WorkflowCanvas extends Component {
       class="workflows-canvas"
       tabindex="0"
       {{on "contextmenu" this.handleContextMenu}}
-      {{didInsert this.setupCanvas}}
-      {{didUpdate this.syncToRete @nodes @connections}}
+      {{didInsert this.registerCanvas}}
+      {{didUpdate this.syncToRete @nodes @connections @autoArrangeRequest}}
     >
       {{#if this.isLoading}}
         <div class="workflows-canvas__spinner-overlay">

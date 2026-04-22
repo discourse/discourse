@@ -8,6 +8,13 @@ const NODE_TYPES = [
     ports: [{ key: "main", primary: true }],
   },
   {
+    identifier: "action:data_table",
+    ports: [
+      { key: "results", primary: true, label: "Results" },
+      { key: "no_results", label: "No results" },
+    ],
+  },
+  {
     identifier: "action:http_request",
     ports: [{ key: "main", primary: true }],
   },
@@ -233,6 +240,74 @@ module("Unit | Canvas Bridge", function (hooks) {
     assert.true(positions.has("n2"));
     assert.strictEqual(typeof positions.get("n1").x, "number");
     assert.strictEqual(typeof positions.get("n1").y, "number");
+
+    bridge.destroy();
+  });
+
+  test("autoArrange is stable across a save-and-reload round trip", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    const nodes = [
+      {
+        clientId: "trigger",
+        type: "trigger:manual",
+        position: { x: 0, y: 0 },
+      },
+      {
+        clientId: "branch",
+        type: "action:data_table",
+        position: { x: 0, y: 0 },
+      },
+      {
+        clientId: "results",
+        type: "action:http_request",
+        position: { x: 0, y: 0 },
+      },
+      {
+        clientId: "empty",
+        type: "action:http_request",
+        position: { x: 0, y: 0 },
+      },
+    ];
+    const connections = [
+      {
+        sourceClientId: "trigger",
+        sourceOutput: "main",
+        targetClientId: "branch",
+      },
+      {
+        sourceClientId: "branch",
+        sourceOutput: "results",
+        targetClientId: "results",
+      },
+      {
+        sourceClientId: "branch",
+        sourceOutput: "no_results",
+        targetClientId: "empty",
+      },
+    ];
+
+    await bridge.syncState(nodes, connections);
+
+    const firstPositions = await bridge.autoArrange();
+
+    await bridge.syncState(
+      nodes.map((node) => ({
+        ...node,
+        position: firstPositions.get(node.clientId),
+      })),
+      connections
+    );
+
+    const secondPositions = await bridge.autoArrange();
+
+    assert.deepEqual(
+      Object.fromEntries(secondPositions),
+      Object.fromEntries(firstPositions)
+    );
 
     bridge.destroy();
   });

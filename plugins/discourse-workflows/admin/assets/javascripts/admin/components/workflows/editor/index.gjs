@@ -15,7 +15,6 @@ import WorkflowNode from "../../../models/workflow-node";
 import WorkflowCanvas from "../canvas";
 import NodePanel from "../canvas/node-panel";
 import NodeConfigurator from "../node/configurator";
-import autoLayout from "./auto-layout";
 import { LOOP_NODE_TYPE, removeNodesFromGraph } from "./graph-utils";
 import { createNode, generateNodeName } from "./node-factory";
 import UndoManager from "./undo-manager";
@@ -31,6 +30,7 @@ export default class WorkflowsEditor extends Component {
   @tracked nodePanelContext = null;
   @tracked nodePanelNodeTypes = null;
   @tracked nodePanelSearchTerm = "";
+  @tracked autoArrangeRequest = 0;
   formApi = null;
   ignoreDirty = () => false;
   undoManager = new UndoManager();
@@ -86,8 +86,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   #initNodes() {
-    const allNodes = this.args.workflow.nodes || [];
-    const rawNodes = allNodes
+    return (this.args.workflow.nodes || [])
       .filter((node) => node.type !== STICKY_NOTE_TYPE)
       .map((node) =>
         WorkflowNode.create({
@@ -95,14 +94,6 @@ export default class WorkflowsEditor extends Component {
           position: this.#parsePosition(node.position),
         })
       );
-
-    const connections = this.#mapServerConnections();
-
-    const needsLayout = rawNodes.some((n) => !n.position);
-    if (needsLayout && rawNodes.length > 0) {
-      return autoLayout(rawNodes, connections);
-    }
-    return rawNodes;
   }
 
   #initStickyNotes() {
@@ -262,13 +253,10 @@ export default class WorkflowsEditor extends Component {
     this.formApi.set("connections", connections);
 
     if (shouldAutoLayout) {
-      this.formApi.set(
-        "nodes",
-        autoLayout(this.formApi.get("nodes"), this.formApi.get("connections"))
-      );
+      this.autoArrangeRequest++;
+    } else {
+      this.handleSubmit();
     }
-
-    this.handleSubmit();
   }
 
   @action
@@ -680,13 +668,23 @@ export default class WorkflowsEditor extends Component {
   @action
   autoLayout(positions) {
     this.#captureUndo();
+    this.#applyNodePositions(positions);
+    this.handleSubmit();
+  }
+
+  @action
+  hydrateAutoLayout(positions) {
+    this.#applyNodePositions(positions);
+    this.handleSubmit();
+  }
+
+  #applyNodePositions(positions) {
     const nodes = this.formApi.get("nodes");
     const updatedNodes = nodes.map((node) => {
       const pos = positions.get(node.clientId);
       return pos ? { ...node, position: pos } : node;
     });
     this.formApi.set("nodes", updatedNodes);
-    this.handleSubmit();
   }
 
   // Sticky notes
@@ -946,6 +944,7 @@ export default class WorkflowsEditor extends Component {
           @stickyNotes={{transientData.stickyNotes}}
           @workflowId={{@workflow.id}}
           @workflowName={{@workflow.name}}
+          @autoArrangeRequest={{this.autoArrangeRequest}}
           @onUpdateNodePosition={{this.updateNodePosition}}
           @onEditNode={{this.editNode}}
           @onRemoveNodes={{this.removeNodes}}
@@ -961,6 +960,8 @@ export default class WorkflowsEditor extends Component {
           @canUndo={{this.canUndo}}
           @canRedo={{this.canRedo}}
           @onAutoLayout={{this.autoLayout}}
+          @onHydrateAutoLayout={{this.hydrateAutoLayout}}
+          @onSyncAutoLayout={{this.hydrateAutoLayout}}
           @onOpenNodePanel={{this.openNodePanel}}
           @onCloseNodePanel={{this.closeNodePanel}}
           @onImportNodes={{this.importNodes}}

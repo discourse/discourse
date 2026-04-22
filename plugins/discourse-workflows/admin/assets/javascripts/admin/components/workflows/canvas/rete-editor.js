@@ -12,6 +12,7 @@ import {
   NODE_WIDTH,
   nodeHeight,
   nodeLabel,
+  nodeWidth,
 } from "../../../lib/workflows/node-utils";
 import { createCustomRenderer } from "./custom-renderer";
 
@@ -36,14 +37,19 @@ export class ReteEditorBridge {
     const nodeTypesByIdentifier = new Map(
       (nodeTypes || []).map((nodeType) => [nodeType.identifier, nodeType])
     );
+    const getNodeWidth = (data) =>
+      nodeWidth(data, {
+        nodeType: nodeTypesByIdentifier.get(data.type),
+      });
+    const getNodeHeight = (data) => nodeHeight(data);
 
     class WorkflowNode extends ClassicPreset.Node {
       constructor(data) {
         super(nodeLabel(data) || data.name || "Node");
         this.id = data.clientId;
         this.workflowData = data;
-        this.width = NODE_WIDTH;
-        this.height = nodeHeight(data);
+        this.width = getNodeWidth(data);
+        this.height = getNodeHeight(data);
 
         if (!data.type?.startsWith("trigger:")) {
           this.addInput(
@@ -159,6 +165,8 @@ export class ReteEditorBridge {
       AreaExtensions,
       accumulating,
       shiftAbort,
+      getNodeWidth,
+      getNodeHeight,
     });
 
     renderer.onNodeDelete = (clientId) => {
@@ -186,6 +194,8 @@ export class ReteEditorBridge {
     AreaExtensions,
     accumulating,
     shiftAbort,
+    getNodeWidth,
+    getNodeHeight,
   }) {
     this.editor = editor;
     this.area = area;
@@ -201,6 +211,8 @@ export class ReteEditorBridge {
     this.WorkflowNode = WorkflowNode;
     this.ClassicPreset = ClassicPreset;
     this.AreaExtensions = AreaExtensions;
+    this.getNodeWidth = getNodeWidth;
+    this.getNodeHeight = getNodeHeight;
     this.isSyncing = false;
     this.wasDragging = false;
     this.lastPickedId = null;
@@ -470,13 +482,19 @@ export class ReteEditorBridge {
         }
 
         const newLabel = nodeLabel(nodeData) || nodeData.name || reteNode.label;
+        const newWidth = this.getNodeWidth(nodeData);
+        const newHeight = this.getNodeHeight(nodeData);
         const needsUpdate =
           reteNode.label !== newLabel ||
+          reteNode.width !== newWidth ||
+          reteNode.height !== newHeight ||
           JSON.stringify(reteNode.workflowData.configuration) !==
             JSON.stringify(nodeData.configuration);
 
         reteNode.workflowData = nodeData;
         reteNode.label = newLabel;
+        reteNode.width = newWidth;
+        reteNode.height = newHeight;
 
         if (needsUpdate && !this.wasDragging) {
           this.area.update("node", reteNode.id);
@@ -651,13 +669,23 @@ export class ReteEditorBridge {
       }
 
       ordered.reverse();
-      const totalWidth = ordered.length * 180 - 50;
-      const startX = loopView.position.x - totalWidth / 2 + 65;
-      for (let i = 0; i < ordered.length; i++) {
-        const bodyView = this.area.nodeViews.get(ordered[i]);
+      const orderedNodes = ordered
+        .map((id) => this.editor.getNode(id))
+        .filter(Boolean);
+      const totalWidth =
+        orderedNodes.reduce(
+          (width, node) => width + (node.width || NODE_WIDTH),
+          0
+        ) +
+        Math.max(0, orderedNodes.length - 1) * 50;
+      let currentX = loopView.position.x + (NODE_WIDTH - totalWidth) / 2;
+
+      for (const bodyNode of orderedNodes) {
+        const bodyView = this.area.nodeViews.get(bodyNode.id);
         if (bodyView) {
-          await bodyView.translate(startX + i * 180, loopView.position.y + 160);
+          await bodyView.translate(currentX, loopView.position.y + 160);
         }
+        currentX += (bodyNode.width || NODE_WIDTH) + 50;
       }
     }
 

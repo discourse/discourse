@@ -11,4 +11,19 @@ module("Unit | Component | workflows canvas", function (hooks) {
       "autoLayout action exists"
     );
   });
+
+  test("sync lifecycle entrypoints are defined on the prototype", function (assert) {
+    assert.true(
+      "registerCanvas" in WorkflowCanvas.prototype,
+      "registerCanvas action exists"
+    );
+    assert.true(
+      "registerContainer" in WorkflowCanvas.prototype,
+      "registerContainer action exists"
+    );
+    assert.true(
+      "syncToRete" in WorkflowCanvas.prototype,
+      "syncToRete action exists"
+    );
+  });
 });
