@@ -149,6 +149,7 @@ Discourse::Application.routes.draw do
     post "/ai-spam/fix-errors", to: "discourse_ai/admin/ai_spam#fix_errors"
 
     get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
+    get "/ai-translations/progress", to: "discourse_ai/admin/ai_translations#progress"
     post "/ai-theme-translations", to: "discourse_ai/admin/ai_theme_translations#create"
 
     resources :ai_llms,
