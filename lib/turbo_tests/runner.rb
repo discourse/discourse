@@ -12,8 +12,6 @@ module TurboTests
       use_runtime_info = opts.fetch(:use_runtime_info, false)
       retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
 
-      STDOUT.puts "VERBOSE" if verbose
-
       reporter =
         Reporter.from_config(
           formatters,

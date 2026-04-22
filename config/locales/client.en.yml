@@ -6245,6 +6245,10 @@ en:
           staff: "Staff"
           all_members: "All members"
           developers: "Developers"
+        impact_types:
+          feature_type: "Feature"
+          other_type: "Other"
+          site_setting_default_type: "Setting default"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
@@ -8876,6 +8880,9 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        depends_on_notice:
+          one: "This setting is only applied when %{dependencyLinks} is enabled."
+          other: "This setting is only applied when %{dependencyLinks} are enabled."
         discard:
           one: "Discard change"
           other: "Discard changes"
