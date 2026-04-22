@@ -1000,62 +1000,68 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_present
       end
 
-      shared_examples "for a passed user" do
-        it "deletes reviewable" do
-          api_key = Fabricate(:api_key).key
-          queued_post = Fabricate(:reviewable_queued_post, target_created_by: recipient)
+      describe "via API" do
+        it "admin can target another user with `username` param" do
+          api_key = Fabricate(:api_key, user: admin).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
+
           delete "/review/#{queued_post.id}.json",
                  params: {
-                   username: recipient.username,
+                   username: user.username,
                  },
                  headers: {
-                   HTTP_API_USERNAME: caller.username,
+                   HTTP_API_USERNAME: admin.username,
                    HTTP_API_KEY: api_key,
                  }
 
-          expect(response.status).to eq(response_code)
-
-          if reviewable_deleted
-            expect(queued_post.reload).to be_deleted
-          else
-            expect(queued_post.reload).to be_present
-          end
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
-      end
 
-      describe "api called by admin" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:admin) }
-          let(:recipient) { user }
-          let(:response_code) { 200 }
-          let(:reviewable_deleted) { true }
+        it "admin acts on self when `username` param is absent" do
+          api_key = Fabricate(:api_key, user: admin).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: admin)
+
+          delete "/review/#{queued_post.id}.json",
+                 headers: {
+                   HTTP_API_USERNAME: admin.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
-      end
 
-      describe "api called by tl4 user" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:trust_level_4) }
-          let(:recipient) { user }
-          let(:response_code) { 403 }
-          let(:reviewable_deleted) { false }
+        it "non-admin ignores `username` param and acts on self" do
+          other_user = Fabricate(:user)
+          api_key = Fabricate(:api_key, user: user).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: other_user)
+
+          delete "/review/#{queued_post.id}.json",
+                 params: {
+                   username: other_user.username,
+                 },
+                 headers: {
+                   HTTP_API_USERNAME: user.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(404)
+          expect(queued_post.reload).to be_present
         end
-      end
 
-      describe "api called by regular user" do
-        include_examples "for a passed user" do
-          let(:caller) { user }
-          let(:recipient) { Fabricate(:user) }
-          let(:response_code) { 403 }
-          let(:reviewable_deleted) { false }
-        end
-      end
+        it "non-admin acts on self when `username` param is absent" do
+          api_key = Fabricate(:api_key, user: user).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
 
-      describe "api called by admin for another admin" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:admin) }
-          let(:recipient) { Fabricate(:admin) }
-          let(:response_code) { 200 }
-          let(:reviewable_deleted) { true }
+          delete "/review/#{queued_post.id}.json",
+                 headers: {
+                   HTTP_API_USERNAME: user.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
       end
     end

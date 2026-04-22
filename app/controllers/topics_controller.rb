@@ -942,13 +942,7 @@ class TopicsController < ApplicationController
   end
 
   def set_notifications
-    user =
-      if is_api? && @guardian.is_admin? &&
-           (params[:username].present? || params[:external_id].present?)
-        fetch_user_from_params
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     topic = Topic.find(params[:topic_id].to_i)
     guardian.ensure_can_see!(topic)

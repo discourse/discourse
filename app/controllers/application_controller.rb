@@ -576,6 +576,15 @@ class ApplicationController < ActionController::Base
     user
   end
 
+  def fetch_target_user
+    if is_api? && guardian.is_admin? &&
+         (params[:username].present? || params[:external_id].present?)
+      fetch_user_from_params
+    else
+      current_user
+    end
+  end
+
   def post_ids_including_replies
     post_ids = params[:post_ids].map(&:to_i)
     post_ids |= PostReply.where(post_id: params[:reply_post_ids]).pluck(:reply_post_id) if params[
