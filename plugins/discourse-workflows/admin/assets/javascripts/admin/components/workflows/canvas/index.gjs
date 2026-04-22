@@ -13,11 +13,11 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
-import { getAbsoluteURL } from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import CanvasContextMenu from "./canvas-context-menu";
 import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io";
 import { setupCanvasKeyboard } from "./canvas-keyboard";
+import { runManualTrigger } from "./canvas-manual-trigger";
 import {
   buildStickyNoteTranslateHandler,
   computeStickyNoteRects,
@@ -48,6 +48,7 @@ export default class WorkflowCanvas extends Component {
   @tracked workflowEnabledOverride = null;
   @tracked selectionVersion = 0;
   copiedEntities = { nodes: [], stickyNotes: [] };
+  pasteOffset = 0;
   isFirstSync = true;
   lastAutoArrangeRequest = 0;
   didHydrateInitialAutoLayout = false;
@@ -131,50 +132,11 @@ export default class WorkflowCanvas extends Component {
   }
 
   async #handleManualTrigger(clientId) {
-    const node = this.#nodes().find((n) => n.clientId === clientId);
-
-    if (node?.type === "trigger:form" && node.configuration?.uuid) {
-      window.open(
-        getAbsoluteURL(`/workflows/form/${node.configuration.uuid}`),
-        "_blank"
-      );
-      return;
-    }
-
-    if (node?.type === "trigger:webhook" && node.configuration?.path) {
-      window.open(
-        getAbsoluteURL(`/workflows/webhooks/${node.configuration.path}`),
-        "_blank"
-      );
-      return;
-    }
-
-    const result = await ajax(
-      `/admin/plugins/discourse-workflows/executions.json`,
-      {
-        type: "POST",
-        data: { trigger_node_id: clientId },
-      }
-    );
-    const { workflow_id, id } = result.execution;
-    this.toasts.success({
-      data: {
-        message: i18n("discourse_workflows.manual_trigger.triggered"),
-        actions: [
-          {
-            label: i18n("discourse_workflows.manual_trigger.view_execution"),
-            class: "btn-primary btn-small",
-            action: ({ close }) => {
-              close();
-              this.router.transitionTo(
-                "adminPlugins.show.discourse-workflows.show.executions.show",
-                workflow_id,
-                id
-              );
-            },
-          },
-        ],
-      },
+    await runManualTrigger({
+      node: this.#nodes().find((n) => n.clientId === clientId),
+      clientId,
+      toasts: this.toasts,
+      router: this.router,
     });
   }
 
@@ -209,15 +171,13 @@ export default class WorkflowCanvas extends Component {
     return computeStickyNoteRects(this.args.stickyNotes);
   }
 
-  #shouldHydrateInitialAutoLayout() {
+  #shouldHydrateInitialAutoLayout(nodes) {
     return (
-      !this.didHydrateInitialAutoLayout &&
-      this.#nodes().some((node) => !node.position)
+      !this.didHydrateInitialAutoLayout && nodes.some((node) => !node.position)
     );
   }
 
-  #consumeAutoArrangeRequest() {
-    const autoArrangeRequest = this.args.autoArrangeRequest || 0;
+  #consumeAutoArrangeRequest(autoArrangeRequest) {
     if (autoArrangeRequest <= this.lastAutoArrangeRequest) {
       return false;
     }
@@ -231,28 +191,34 @@ export default class WorkflowCanvas extends Component {
     callback?.(positions);
   }
 
-  async #syncViewport(prevNodeCount) {
+  async #syncViewport(prevNodeCount, stickyNoteRects) {
     if (this.isFirstSync || this.rete.nodeCount !== prevNodeCount) {
       this.isFirstSync = false;
-      await this.rete.fitToView(this.#stickyNoteRects());
+      await this.rete.fitToView(stickyNoteRects);
     }
   }
 
   async #performSync() {
+    const snapshot = {
+      nodes: this.#nodes(),
+      connections: this.#connections(),
+      stickyNoteRects: this.#stickyNoteRects(),
+      autoArrangeRequest: this.args.autoArrangeRequest || 0,
+    };
     const prevNodeCount = this.rete.nodeCount;
 
-    await this.rete.syncState(this.#nodes(), this.#connections());
+    await this.rete.syncState(snapshot.nodes, snapshot.connections);
 
-    if (this.#shouldHydrateInitialAutoLayout()) {
+    if (this.#shouldHydrateInitialAutoLayout(snapshot.nodes)) {
       this.didHydrateInitialAutoLayout = true;
       await this.#applyAutoArrange(this.args.onHydrateAutoLayout);
     }
 
-    if (this.#consumeAutoArrangeRequest()) {
+    if (this.#consumeAutoArrangeRequest(snapshot.autoArrangeRequest)) {
       await this.#applyAutoArrange(this.args.onSyncAutoLayout);
     }
 
-    await this.#syncViewport(prevNodeCount);
+    await this.#syncViewport(prevNodeCount, snapshot.stickyNoteRects);
   }
 
   async #flushSyncQueue() {
@@ -290,30 +256,25 @@ export default class WorkflowCanvas extends Component {
     }
 
     this.#hasSetupStarted = true;
-    try {
-      const element = this.canvasElement;
-      this.keyboard = setupCanvasKeyboard(
-        this.keyboardShortcuts,
-        this.#keyboardActions(),
-        element
-      );
+    const element = this.canvasElement;
+    this.keyboard = setupCanvasKeyboard(
+      this.keyboardShortcuts,
+      this.#keyboardActions(),
+      element
+    );
 
-      const nodeTypes = await this.workflowsNodeTypes.load();
+    const nodeTypes = await this.workflowsNodeTypes.load();
 
-      this.rete = await createReteEditor(this.containerElement, {
-        nodeTypes,
-        callbacks: this.#reteCallbacks(),
-      });
+    this.rete = await createReteEditor(this.containerElement, {
+      nodeTypes,
+      callbacks: this.#reteCallbacks(),
+    });
 
-      this.args.onAreaReady?.(this.rete.area);
+    this.args.onAreaReady?.(this.rete.area);
 
-      await this.#queueSync();
-      this.isLoading = false;
-      element.focus();
-    } catch (error) {
-      this.#hasSetupStarted = false;
-      throw error;
-    }
+    await this.#queueSync();
+    this.isLoading = false;
+    element.focus();
   }
 
   @action
@@ -424,6 +385,7 @@ export default class WorkflowCanvas extends Component {
     const stickyNotes = cloneMatching(this.args.stickyNotes, stickyNoteIds);
     if (nodes.length > 0 || stickyNotes.length > 0) {
       this.copiedEntities = { nodes, stickyNotes };
+      this.pasteOffset = 0;
     }
   }
 
@@ -432,13 +394,19 @@ export default class WorkflowCanvas extends Component {
     if (nodes.length === 0 && stickyNotes.length === 0) {
       return;
     }
-    this.args.onPasteEntities?.(this.copiedEntities);
-    for (const { position: p } of [...nodes, ...stickyNotes]) {
-      if (p) {
-        p.x += 20;
-        p.y += 20;
-      }
-    }
+    this.pasteOffset += 20;
+    const offset = this.pasteOffset;
+    const shift = (items) =>
+      items.map((item) => ({
+        ...item,
+        position: item.position
+          ? { x: item.position.x + offset, y: item.position.y + offset }
+          : null,
+      }));
+    this.args.onPasteEntities?.({
+      nodes: shift(nodes),
+      stickyNotes: shift(stickyNotes),
+    });
   }
 
   @action

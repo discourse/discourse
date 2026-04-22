@@ -744,25 +744,20 @@ export default class WorkflowsEditor extends Component {
   @action
   pasteEntities({ nodes, stickyNotes }) {
     this.#captureUndo();
-    const offset = 20;
 
     if (nodes.length > 0) {
       const existingNodes = this.formApi.get("nodes");
-      const newNodes = nodes.map((copiedNode) => {
-        const position = copiedNode.position
-          ? {
-              x: copiedNode.position.x + offset,
-              y: copiedNode.position.y + offset,
-            }
-          : null;
-        return WorkflowNode.create({
+      const newNodes = nodes.map((copiedNode) =>
+        WorkflowNode.create({
           type: copiedNode.type,
           type_version: copiedNode.type_version,
           name: generateNodeName(copiedNode.type, existingNodes),
           configuration: structuredClone(copiedNode.configuration || {}),
-          position,
-        });
-      });
+          position: copiedNode.position
+            ? { x: copiedNode.position.x, y: copiedNode.position.y }
+            : null,
+        })
+      );
       this.formApi.set("nodes", [...existingNodes, ...newNodes]);
     }
 
@@ -770,8 +765,8 @@ export default class WorkflowsEditor extends Component {
       const newNotes = stickyNotes.map((copiedNote) =>
         StickyNote.create({
           position: {
-            x: (copiedNote.position?.x ?? 0) + offset,
-            y: (copiedNote.position?.y ?? 0) + offset,
+            x: copiedNote.position?.x ?? 0,
+            y: copiedNote.position?.y ?? 0,
           },
           size: copiedNote.size,
           color: copiedNote.color,
