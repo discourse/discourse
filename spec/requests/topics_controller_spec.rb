@@ -7154,23 +7154,29 @@ RSpec.describe TopicsController do
   describe ".defer_topic_view" do
     fab!(:topic)
     fab!(:user)
+    let(:deferred_blocks) { [] }
 
-    before do
-      Jobs.run_immediately!
-      Scheduler::Defer.async = true
-      Scheduler::Defer.timeout = 0.1
+    before { Jobs.run_immediately! }
+
+    around do |example|
+      captured = deferred_blocks
+      Scheduler::Defer.define_singleton_method(:later) { |*_args, **_kwargs, &blk| captured << blk }
+      begin
+        example.run
+      ensure
+        Scheduler::Defer.singleton_class.remove_method(:later)
+      end
     end
 
-    after do
-      Scheduler::Defer.async = false
-      Scheduler::Defer.timeout = Scheduler::Deferrable::DEFAULT_TIMEOUT
+    def run_deferred
+      deferred_blocks.shift.call until deferred_blocks.empty?
     end
 
     it "does nothing if topic does not exist" do
       topic.destroy!
       expect {
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        run_deferred
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7178,7 +7184,7 @@ RSpec.describe TopicsController do
       user.destroy!
       expect {
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        run_deferred
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7187,7 +7193,7 @@ RSpec.describe TopicsController do
 
       expect {
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        run_deferred
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7196,14 +7202,14 @@ RSpec.describe TopicsController do
 
       expect {
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        run_deferred
       }.not_to change { TopicViewItem.count }
     end
 
     it "creates a topic view" do
       expect {
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        run_deferred
       }.to change { TopicViewItem.count }
     end
   end
