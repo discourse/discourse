@@ -43,6 +43,8 @@ en:
         downvote: "Downvote"
         remove_downvote: "Remove downvote"
       toggle_voters: "Show who voted"
+      upvotes: "Upvotes"
+      downvotes: "Downvotes"
 
     last_answer_lowercase: last answer
     answer_lowercase:

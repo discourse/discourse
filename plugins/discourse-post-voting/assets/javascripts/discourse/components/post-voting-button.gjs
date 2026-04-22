@@ -26,13 +26,13 @@ export default class PostVotingButton extends Component {
   get ariaLabel() {
     if (this.args.direction === "up") {
       return this.args.voted
-        ? "post_voting.vote.button.remove_upvote"
-        : "post_voting.vote.button.upvote";
+        ? "vote.button.remove_upvote"
+        : "vote.button.upvote";
     }
 
     return this.args.voted
-      ? "post_voting.vote.button.remove_downvote"
-      : "post_voting.vote.button.downvote";
+      ? "vote.button.remove_downvote"
+      : "vote.button.downvote";
   }
 
   @action

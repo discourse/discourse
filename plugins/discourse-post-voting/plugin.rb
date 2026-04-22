@@ -115,6 +115,12 @@ after_initialize do
   TopicView.on_preload do |topic_view|
     next if !topic_view.topic.is_post_voting?
 
+    topic_view.comments = {}
+    topic_view.comments_counts = {}
+    topic_view.posts_user_voted = {}
+    topic_view.comments_user_voted = {}
+    topic_view.posts_voted_on = []
+
     post_ids = topic_view.posts.pluck(:id)
     next if post_ids.blank?
 
@@ -141,7 +147,6 @@ after_initialize do
     AND post_voting_comments.deleted_at IS NULL
     SQL
 
-    topic_view.comments = {}
     PostVotingComment
       .includes(:user)
       .where("id IN (#{comment_ids_sql})")
@@ -152,9 +157,6 @@ after_initialize do
       end
 
     topic_view.comments_counts = PostVotingComment.where(post_id: post_ids).group(:post_id).count
-
-    topic_view.posts_user_voted = {}
-    topic_view.comments_user_voted = {}
 
     if topic_view.guardian.user
       PostVotingVote

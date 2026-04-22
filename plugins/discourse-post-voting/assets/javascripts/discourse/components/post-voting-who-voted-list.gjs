@@ -87,6 +87,9 @@ const PostVotingSmallUserList = <template>
           "post-voting-popup-content__icon"
           (if (eq @direction "up") "--upvote" "--downvote")
         }}
+        aria-label={{i18n
+          (if (eq @direction "up") "vote.upvotes" "vote.downvotes")
+        }}
       >
         {{icon "vote-up-filled"}}
       </span>
