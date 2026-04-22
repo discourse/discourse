@@ -81,17 +81,20 @@ export default class PostVotingWhoVotedList extends Component {
 
 const PostVotingSmallUserList = <template>
   {{#if @list}}
-    <div class="post-voting-post__list-voters-wrapper">
+    <div class="post-voting-popup-content__wrapper">
       <span
         class={{concatClass
-          "post-voting-post__list-icon"
+          "post-voting-popup-content__icon"
           (if (eq @direction "up") "--upvote" "--downvote")
         }}
       >
         {{icon "vote-up-filled"}}
       </span>
-      <span class="post-voting-post__list-count">{{@list.length}}</span>
-      <SmallUserList class="post-voting-post__list-voters" @users={{@list}} />
+      <span class="post-voting-popup-content__count">{{@list.length}}</span>
+      <SmallUserList
+        class="post-voting-popup-content__voters"
+        @users={{@list}}
+      />
     </div>
   {{/if}}
 </template>;

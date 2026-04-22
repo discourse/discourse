@@ -29,8 +29,7 @@
     // TODO: avoid using magic values here
     // and in .post-voting-post below
     .topic-body .cooked {
-      margin-left: 55px;
-      min-height: 55px;
+      margin-left: calc(48px + var(--space-2));
     }
   }
 }
@@ -42,9 +41,6 @@
   margin-top: var(--space-4);
 
   @include viewport.until(sm) {
-    padding-bottom: var(--space-4);
-    border-top: none;
-    border-bottom: 1px solid var(--primary-low);
     margin-bottom: var(--space-4);
   }
 
@@ -278,8 +274,11 @@
     text-align: center;
     color: var(--primary-high);
   }
+}
 
-  &__list .fk-d-menu__inner-content {
+// DMenu
+.post-voting-popup-content {
+  .fk-d-menu__inner-content {
     display: flex;
     flex-direction: column;
     padding: var(--space-2) var(--space-3);
@@ -287,7 +286,7 @@
     max-width: 90vw;
   }
 
-  &__list-voters-wrapper {
+  &__wrapper {
     display: flex;
     flex-direction: row;
     gap: var(--space-3);
@@ -302,17 +301,18 @@
     }
   }
 
-  &__list-voters {
+  &__voters {
     .small-user-list-content {
       gap: var(--space-1);
+      justify-content: flex-start;
     }
   }
 
-  &__list-count {
+  &__count {
     color: var(--primary-high);
   }
 
-  &__list-icon {
+  &__icon {
     &.--upvote {
       .d-icon {
         color: var(--success);
