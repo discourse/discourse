@@ -5,6 +5,7 @@ module DiscourseWorkflows
     module DataTable
       class V1 < NodeType
         OPERATIONS = %w[insert get update delete upsert].freeze
+        MAPPING_MODES = %w[manual auto].freeze
 
         def self.identifier
           "action:data_table"
@@ -53,6 +54,25 @@ module DiscourseWorkflows
                 resets: %w[filter columns sort_column output_fields],
               },
             },
+            mapping_mode: {
+              type: :options,
+              required: true,
+              options: MAPPING_MODES,
+              default: "manual",
+              visible_if: {
+                operation: "insert",
+              },
+              ui: {
+                expression: false,
+              },
+            },
+            columns_case_sensitive_hint: {
+              type: :notice,
+              visible_if: {
+                operation: "insert",
+                mapping_mode: "manual",
+              },
+            },
             columns: {
               type: :object,
               required: false,
@@ -60,6 +80,9 @@ module DiscourseWorkflows
               },
               visible_if: {
                 operation: %w[insert update upsert],
+              },
+              visible_unless: {
+                mapping_mode: "auto",
               },
               ui: {
                 control: :data_table_columns,
@@ -158,13 +181,13 @@ module DiscourseWorkflows
           item = exec_ctx.input_items.first || { "json" => {} }
           config = exec_ctx.get_parameters(item)
 
-          result = execute_with_config(config)
+          result = execute_with_config(config, item)
           [result]
         end
 
         private
 
-        def execute_with_config(config)
+        def execute_with_config(config, item)
           data_table = DiscourseWorkflows::DataTable.find(Integer(config.fetch("data_table_id")))
           facade = DiscourseWorkflows::DataTables::Facade.new(data_table)
           columns_resolver = ColumnsResolver.new(data_table)
@@ -172,8 +195,22 @@ module DiscourseWorkflows
           operation_name = config.fetch("operation") { "insert" }
           validate_storage_limit! unless operation_name == "get"
 
-          result = Operations.for(operation_name).new(facade, columns_resolver).execute(config)
-          result
+          config = auto_mapped_config(config, item, data_table) if auto_mapping?(
+            config,
+            operation_name,
+          )
+
+          Operations.for(operation_name).new(facade, columns_resolver).execute(config)
+        end
+
+        def auto_mapping?(config, operation_name)
+          operation_name == "insert" && config["mapping_mode"] == "auto"
+        end
+
+        def auto_mapped_config(config, item, data_table)
+          json = item["json"] || {}
+          column_names = data_table.columns.map { |c| c["name"] }
+          config.merge("columns" => json.slice(*column_names))
         end
 
         def validate_storage_limit!

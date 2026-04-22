@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
   def execute(input_items, configuration = {})
-    config = { "columns" => [] }.merge(configuration)
+    config = { "mapping_mode" => "manual", "columns" => [] }.merge(configuration)
     instance = described_class.new(configuration: config)
     resolver_context = { "$json" => input_items.first&.dig("json") || {} }
     resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context)
@@ -138,14 +138,14 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
       expect(markdown).to eq("")
     end
 
-    context "when no columns are configured" do
+    context "when mapping_mode is auto" do
       it "derives headers from the keys of input items" do
         items = [
           { "json" => { "name" => "Alice", "age" => 30 } },
           { "json" => { "name" => "Bob", "age" => 25 } },
         ]
 
-        markdown = execute(items, { "columns" => [] })
+        markdown = execute(items, { "mapping_mode" => "auto" })
 
         expect(markdown).to eq(<<~MD.strip)
           | name | age |
@@ -161,7 +161,7 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
           { "json" => { "name" => "Bob", "city" => "Paris" } },
         ]
 
-        markdown = execute(items, { "columns" => [] })
+        markdown = execute(items, { "mapping_mode" => "auto" })
 
         expect(markdown).to eq(<<~MD.strip)
           | name | age | city |
@@ -174,7 +174,7 @@ RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
       it "JSON-encodes Hash and Array values" do
         items = [{ "json" => { "h" => { "a" => 1 }, "arr" => [1, 2] } }]
 
-        markdown = execute(items, { "columns" => [] })
+        markdown = execute(items, { "mapping_mode" => "auto" })
 
         expect(markdown.split("\n").last).to eq('| {"a":1} | [1,2] |')
       end

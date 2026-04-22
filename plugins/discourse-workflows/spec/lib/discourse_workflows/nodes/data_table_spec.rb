@@ -16,6 +16,12 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
     execute_node_result(configuration: configuration).primary_items(ports: described_class.ports)
   end
 
+  def execute_data_table_with_item(configuration, item)
+    execute_node_result(configuration: configuration, item: item).primary_items(
+      ports: described_class.ports,
+    )
+  end
+
   describe ".metadata" do
     it "marks reserved columns" do
       metadata = described_class.metadata
@@ -91,6 +97,44 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
           },
         )
       }.to raise_error(ArgumentError, "Data table storage limit exceeded")
+    end
+
+    context "when mapping_mode is auto" do
+      it "picks matching keys from the incoming item JSON" do
+        items =
+          execute_data_table_with_item(
+            {
+              "operation" => "insert",
+              "data_table_id" => data_table.id.to_s,
+              "mapping_mode" => "auto",
+            },
+            {
+              "json" => {
+                "email" => "auto@example.com",
+                "score" => 7,
+                "ignored" => "value",
+              },
+            },
+          )
+
+        expect(items[0]["json"]).to include("email" => "auto@example.com", "score" => 7)
+        expect(count_data_table_rows(data_table)).to eq(1)
+      end
+
+      it "ignores keys whose case does not match a column name" do
+        items =
+          execute_data_table_with_item(
+            {
+              "operation" => "insert",
+              "data_table_id" => data_table.id.to_s,
+              "mapping_mode" => "auto",
+            },
+            { "json" => { "Email" => "mismatch@example.com", "email" => "ok@example.com" } },
+          )
+
+        expect(items[0]["json"]).to include("email" => "ok@example.com")
+        expect(items[0]["json"]).not_to have_key("Email")
+      end
     end
   end
 

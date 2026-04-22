@@ -20,17 +20,25 @@ module DiscourseWorkflows
           "data"
         end
 
+        MAPPING_MODES = %w[manual auto].freeze
+
         def self.property_schema
           {
-            auto_columns_hint: {
-              type: :notice,
-              visible_if: {
-                columns: "$empty",
+            mapping_mode: {
+              type: :options,
+              required: true,
+              options: MAPPING_MODES,
+              default: "manual",
+              ui: {
+                expression: false,
               },
             },
             columns: {
               type: :collection,
               required: false,
+              visible_if: {
+                mapping_mode: "manual",
+              },
               item_schema: {
                 header: {
                   type: :string,
@@ -53,12 +61,11 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          columns = @configuration.fetch("columns") { [] }
           headers, rows =
-            if columns.empty?
+            if @configuration["mapping_mode"] == "auto"
               auto_table(exec_ctx.input_items)
             else
-              configured_table(exec_ctx, columns)
+              configured_table(exec_ctx, @configuration.fetch("columns") { [] })
             end
 
           return [[wrap({ "markdown" => "" })]] if headers.empty?
