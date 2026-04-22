@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
-import { alias, match } from "@ember/object/computed";
+import { computed, set } from "@ember/object";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
@@ -10,7 +10,11 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 
-const DEFAULT_SELECTORS = ["#main-outlet", "#d-menu-portals"];
+const DEFAULT_SELECTORS = [
+  "#main-outlet",
+  "#d-menu-portals",
+  ".modal-container",
+];
 const AVATAR_OVERFLOW_SIZE = 44;
 const MOBILE_SCROLL_EVENT = "scroll.mobile-card-cloak";
 
@@ -41,10 +45,21 @@ export default class CardContentsBase extends Component {
   post = null;
   isDocked = false;
 
-  @alias("topic.postStream") postStream;
-  @match("router.currentRouteName", /^topic\./) viewingTopic;
-
   _menuInstance = null;
+
+  @computed("topic.postStream")
+  get postStream() {
+    return this.topic?.postStream;
+  }
+
+  set postStream(value) {
+    set(this, "topic.postStream", value);
+  }
+
+  @computed("router.currentRouteName")
+  get viewingTopic() {
+    return /^topic\./.test(this.router?.currentRouteName);
+  }
 
   _show(username, target, event) {
     // No user card for anon

@@ -59,6 +59,20 @@ module DiscourseAi
           posts = posts.where.not(topics: { archetype: Archetype.private_message })
         end
 
+        # Always include posts from banner topics regardless of age or category filters
+        banner_posts =
+          Post
+            .where(deleted_at: nil)
+            .where.not(raw: [nil, ""])
+            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
+            .joins(:topic)
+            .where(topics: { archetype: Archetype.banner, deleted_at: nil })
+        banner_posts =
+          banner_posts.where(
+            "posts.user_id > 0",
+          ) unless SiteSetting.ai_translation_include_bot_content
+        posts = posts.or(banner_posts)
+
         posts
       end
 

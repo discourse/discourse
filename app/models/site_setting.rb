@@ -136,6 +136,13 @@ class SiteSetting < ActiveRecord::Base
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
       load_settings(file, plugin: file.split("/")[-3])
     end
+
+    # Sometimes plugins need to define their own fake site settings for testing
+    if Rails.env.test?
+      Dir[
+        File.join(Rails.root, "plugins", "*", "spec", "support", "dummy_plugin_site_settings.yml")
+      ].each { |file| load_settings(file, plugin: file.split("/")[-4]) }
+    end
   end
 
   setup_deprecated_methods

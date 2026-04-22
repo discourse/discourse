@@ -721,6 +721,8 @@ en:
       allow_access: "Allow Access"
       continue_as_guest: "Continue as Guest"
       be_first_to_reply: "Be the first to reply!"
+      replying_to: "Replying to %{username}"
+      reply_placeholder: "Write a reply..."
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -3189,6 +3191,7 @@ en:
       title: "Or press %{modifier}Enter"
       save_and_close: "Save and close"
       discard: "Discard"
+      cancel_edit: "Cancel edit"
       draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
@@ -3209,6 +3212,7 @@ en:
       uploading: "Uploading…"
       show_preview: "show preview"
       hide_preview: "hide preview"
+      resize: "Resize composer"
 
       switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
       switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
@@ -3253,6 +3257,8 @@ en:
         name_label: "Wrap name"
         attributes_label: "Attributes"
         add_attribute: "Add attribute"
+        attribute_key: "Key"
+        attribute_value: "Value"
         remove_attribute: "Remove attribute"
         apply: "Apply"
         unwrap: "Unwrap"
@@ -3351,6 +3357,14 @@ en:
         copy: "Copy link"
         remove: "Remove link"
         visit: "Open link in external tab"
+        link_copied: "Link copied!"
+        load_preview: "Load preview"
+        preview_failed: "Could not load preview"
+
+      onebox_toolbar:
+        copy: "Copy link"
+        visit: "Open link"
+        remove_preview: "Remove preview"
         link_copied: "Link copied!"
 
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
@@ -3648,6 +3662,11 @@ en:
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
     view_all: "view all %{tab}"
+    permanently_delete:
+      title: "Are you absolutely sure?"
+      confirm_instruction: "Please type <b>%{phrase}</b> below to confirm:"
+      controls:
+        delete: "I understand the consequences, permanently delete"
     user_menu:
       generic_no_items: "There are no items in this list."
       sr_menu_tabs: "User menu tabs"
@@ -3757,6 +3776,8 @@ en:
         archive_topics: "Archive topics"
         move_messages_to_inbox: "Move to Inbox"
         archive_messages: "Move to Archive"
+        convert_to_public_topic: "Make public topics"
+        convert_to_private_message: "Make personal messages"
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
@@ -3875,6 +3896,12 @@ en:
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"
+      convert_to_public_topic:
+        name: "Make Public Topic…"
+        description: "Move the selected personal messages into a public topic in the following category:"
+      convert_to_private_message:
+        name: "Make Personal Message"
+        description: "Convert the selected public topics into personal messages."
       reset_bump_dates:
         name: "Reset Bump Dates"
         description: "Do you want to update the bump dates to the last created post date? This may impact their ordering in the topic list."
@@ -3889,6 +3916,44 @@ en:
         name: "Un-pin"
         description: "Un-pin all the selected topics that are pinned to a category or pinned globally"
 
+    nested_replies:
+      nested_view: "Nested view"
+      flat_view: "Flat view"
+      view_as_nested: "View as nested"
+      view_as_flat: "View as flat"
+      sort:
+        label: "Sort by"
+        top: "Top"
+        new: "New"
+        old: "Old"
+      load_more_children:
+        one: "%{count} more reply"
+        other: "%{count} more replies"
+      load_more_children_generic: "More replies"
+      continue_thread: "Continue this thread"
+      new_replies:
+        one: "%{count} new reply"
+        other: "%{count} new replies"
+      collapsed_replies:
+        one: "%{count} reply"
+        other: "%{count} replies"
+      collapse: "Collapse"
+      collapse_parent: "Collapse parent thread"
+      category_settings:
+        default_nested_view: "Use nested view as default for topics in this category"
+      no_replies: "No replies yet."
+      deleted_post_placeholder: "[deleted]"
+      op_badge: "OP"
+      pinned_reply: "Pinned"
+      pin_reply: "Pin to top"
+      unpin_reply: "Unpin"
+      topic_admin_menu:
+        enable_nested_replies: "Enable nested replies"
+        disable_nested_replies: "Disable nested replies"
+      context:
+        banner: "You are viewing a single thread from this topic."
+        view_full_topic: "View full topic"
+        view_parent_context: "View parent context"
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -4473,6 +4538,11 @@ en:
       sr_post_like_count_button:
         one: "%{count} person liked this post."
         other: "%{count} people liked this post."
+
+      likes_popup:
+        title:
+          one: "%{count} like"
+          other: "%{count} likes"
       sr_post_read_count_button:
         one: "%{count} person read this post."
         other: "%{count} people read this post."
@@ -4507,8 +4577,9 @@ en:
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
         post_language_selector:
-          title: "Post Language"
-          none: "None"
+          title: "Post language"
+          header: "This post is in…"
+          none: "Not set"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
           action_original: "Edit original post"
@@ -4534,7 +4605,9 @@ en:
 
       cancel_composer:
         confirm: "Do you want to discard your post?"
+        confirm_edit: "Do you want to discard your changes?"
         discard: "Discard"
+        discard_edit: "Discard changes"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -4564,6 +4637,7 @@ en:
         delete: "delete this post"
         undelete_action: "Undelete post"
         undelete: "undelete this post"
+        view_deleted: "view deleted post content"
         share_action: "Share"
         share: "share a link to this post"
         copy_action: "Copy link"
@@ -4581,14 +4655,20 @@ en:
           just_the_post: "No, just this post"
         admin: "post admin actions"
         admin_action: "Admin"
-        permanently_delete: "Permanently Delete"
-        permanently_delete_confirmation: "Are you sure you permanently want to delete this post? You will not be able to recover it."
+        permanently_delete: "Permanently delete"
+        permanently_delete_post_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this post and remove it from the database."
+        permanently_delete_topic_confirmation: "This action <b>cannot</b> be undone. This will <b>permanently delete</b> this topic and remove it from the database."
+        permanently_delete_confirm_phrase: "permanently delete"
         wiki: "Make Wiki"
+        wiki_description: "let allowed groups edit this post"
         unwiki: "Remove Wiki"
         convert_to_moderator: "Add Staff Color"
+        convert_to_moderator_description: "highlight the content of this post"
         revert_to_regular: "Remove Staff Color"
         rebake: "Rebuild HTML"
+        rebake_description: "reprocess this post to fix formatting or embeds"
         publish_page: "Page Publishing"
+        publish_page_description: "publish this topic as a standalone page"
         unhide: "Unhide"
         change_owner: "Change Ownership…"
         grant_badge: "Grant Badge…"
@@ -4596,6 +4676,7 @@ en:
         lock_post_description: "prevent the poster from editing this post"
         unlock_post: "Unlock Post"
         unlock_post_description: "allow the poster to edit this post"
+        add_post_notice_description: "add highlighted notice above this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
         delete_topic_confirm_modal:
@@ -4740,6 +4821,7 @@ en:
       back: "Back to category"
       general: "General"
       settings: "Settings"
+      moderation: "Moderation"
       advanced: "Advanced"
       show_advanced: "Advanced settings"
       topic_template: "Template"
@@ -4886,11 +4968,15 @@ en:
       require_reply_approval: "Require moderator approval of all new replies"
       require_topic_approval_for: "Require moderator approval of new topics for..."
       require_reply_approval_for: "Require moderator approval of new replies for..."
+      new_topic_approval: "New topic approval"
+      new_reply_approval: "New reply approval"
       posting_review_modes:
         no_one: "No one"
         everyone: "Everyone"
         everyone_except: "Everyone except selected groups"
         no_one_except: "No one except selected groups"
+      posting_review_groups_require_approval: "Groups that require approval"
+      posting_review_groups_no_approval: "Groups that do not require approval"
       posting_review_groups_placeholder: "Select groups..."
       this_year: "this year"
       position: "Position on the categories page:"
@@ -6159,6 +6245,10 @@ en:
           staff: "Staff"
           all_members: "All members"
           developers: "Developers"
+        impact_types:
+          feature_type: "Feature"
+          other_type: "Other"
+          site_setting_default_type: "Setting default"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
@@ -6192,7 +6282,7 @@ en:
           header_description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
         developer:
           title: "Developer"
-          header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
+          header_description: "Developer settings to control safe mode and other advanced features"
         experimental:
           title: "Experimental"
           header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
@@ -6628,8 +6718,8 @@ en:
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
-          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
-          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
+          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
+          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Releases site</a>."
           learn_more: "Learn more..."
 
         last_checked: "Last checked"
@@ -7662,7 +7752,7 @@ en:
             button: "Change source"
             title: "Change Theme Source"
             repository_url: "Repository URL"
-            branch: "Branch (optional)"
+            branch: "Branch"
             updating: "Updating theme source…"
             update: "Update Source"
             has_existing_key: "This theme has an existing SSH key configured."
@@ -8790,6 +8880,9 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        depends_on_notice:
+          one: "This setting is only applied when %{dependencyLinks} is enabled."
+          other: "This setting is only applied when %{dependencyLinks} are enabled."
         discard:
           one: "Discard change"
           other: "Discard changes"
@@ -8857,6 +8950,7 @@ en:
           groups: "Groups"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          nested_replies: "Nested replies"
           experimental: "Experimental"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
@@ -8899,6 +8993,9 @@ en:
           clean_up_inactive_users_after_days:
             prompt: "Setting this value to anything other than 0 will cause users who are no longer active for that many days to be permanently deleted. Are you sure you want to proceed?"
             confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
+          can_permanently_delete:
+            prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
+            confirm: "Yes, I understand permanently deleted data cannot be recovered"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

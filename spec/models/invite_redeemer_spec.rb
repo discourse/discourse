@@ -445,6 +445,8 @@ RSpec.describe InviteRedeemer do
             password: password,
           ).redeem
 
+        user.reload
+
         expect(user.group_users.count).to eq(4)
         expect(user.trust_level).to eq(2)
       end

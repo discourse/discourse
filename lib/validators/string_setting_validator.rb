@@ -27,7 +27,7 @@ class StringSettingValidator
     # but ideally we should validate against the schema
     begin
       JSON.parse(json)
-    rescue JSON::ParserError => e
+    rescue JSON::ParserError
       @json_fail = true
       return false
     end

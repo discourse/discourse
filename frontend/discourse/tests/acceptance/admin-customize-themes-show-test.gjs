@@ -67,7 +67,13 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
             child_themes: [],
             parent_themes: [],
             remote_theme: null,
-            translations: [],
+            translations: [
+              {
+                key: "theme_metadata.description",
+                value: "The classic Discourse theme...",
+                default: "The classic Discourse theme...",
+              },
+            ],
           },
         ],
       });
@@ -103,6 +109,27 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
       )
       .hasText(
         "This is a custom element that replaces the included components setting."
+      );
+  });
+
+  test("admin-customize-theme-translation-selector plugin outlet exposes the theme", async function (assert) {
+    withPluginApi((api) => {
+      api.renderInOutlet(
+        "admin-customize-theme-translation-selector",
+        <template>
+          <span class="theme-translation-outlet-test">
+            theme:{{@outletArgs.theme.id}}
+          </span>
+        </template>
+      );
+    });
+
+    await visit("/admin/customize/themes/-1");
+    assert
+      .dom(".translation-selector-container .theme-translation-outlet-test")
+      .hasText(
+        "theme:-1",
+        "the theme id is exposed via outletArgs on the translation selector outlet"
       );
   });
 });

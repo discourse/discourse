@@ -8,7 +8,7 @@ import { i18n } from "discourse-i18n";
 import ChatNotices from "discourse/plugins/chat/discourse/components/chat-notices";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-notice", function (hooks) {
+module("Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays all notices for a channel", async function (assert) {

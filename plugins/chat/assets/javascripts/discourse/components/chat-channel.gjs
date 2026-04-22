@@ -499,7 +499,9 @@ export default class ChatChannel extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.paneState.clearPendingMessages();
+      if (this.paneState.userIsPresent) {
+        this.paneState.clearPendingMessages();
+      }
       this.fetchMoreMessages({ direction: FUTURE });
       this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {

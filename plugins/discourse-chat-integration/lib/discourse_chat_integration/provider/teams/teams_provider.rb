@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::TeamsProvider
   PROVIDER_NAME = "teams"
+  POPULARITY_SCORE = 100
   PROVIDER_ENABLED_SETTING = :chat_integration_teams_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [

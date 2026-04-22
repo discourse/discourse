@@ -1753,6 +1753,40 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expect(parsed_body.dig(:output_config, :effort)).to eq("max")
     end
 
+    it "includes effort in output_config when set to xhigh" do
+      model.update!(provider_params: { effort: "xhigh" })
+
+      parsed_body = nil
+      stub_request(:post, url).with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+        headers: {
+          "Content-Type" => "application/json",
+          "X-Api-Key" => "123",
+          "Anthropic-Version" => "2023-06-01",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          id: "msg_123",
+          type: "message",
+          role: "assistant",
+          content: [{ type: "text", text: "test response" }],
+          model: "claude-3-opus-20240229",
+          usage: {
+            input_tokens: 10,
+            output_tokens: 5,
+          },
+        }.to_json,
+      )
+
+      llm.generate(prompt, user: Discourse.system_user)
+      expect(parsed_body.dig(:output_config, :effort)).to eq("xhigh")
+    end
+
     it "includes effort in output_config when set to low, medium, or high" do
       model.update!(provider_params: { effort: "high" })
 

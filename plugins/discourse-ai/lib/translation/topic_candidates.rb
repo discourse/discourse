@@ -45,6 +45,10 @@ module DiscourseAi
           topics = topics.where.not(archetype: Archetype.private_message)
         end
 
+        # Always include banner topics regardless of age or category filters
+        banner_topics = Topic.where(archetype: Archetype.banner, deleted_at: nil)
+        topics = topics.or(banner_topics)
+
         topics
       end
 

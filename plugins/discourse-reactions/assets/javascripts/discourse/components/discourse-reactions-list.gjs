@@ -1,4 +1,3 @@
-import { get } from "@ember/helper";
 import DiscourseReactionsListEmoji from "./discourse-reactions-list-emoji";
 
 const DiscourseReactionsList = <template>
@@ -6,12 +5,7 @@ const DiscourseReactionsList = <template>
     {{#if @post.reaction_users_count}}
       <div class="reactions">
         {{#each @post.reactions as |reaction|}}
-          <DiscourseReactionsListEmoji
-            @reaction={{reaction}}
-            @users={{get @reactionsUsers reaction.id}}
-            @post={{@post}}
-            @getUsers={{@getUsers}}
-          />
+          <DiscourseReactionsListEmoji @reaction={{reaction}} @post={{@post}} />
         {{/each}}
       </div>
     {{/if}}

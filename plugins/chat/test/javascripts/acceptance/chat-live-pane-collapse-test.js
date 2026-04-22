@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { skip } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
+acceptance("Chat live pane collapse", function (needs) {
   needs.user({
     username: "eviltrout",
     id: 1,

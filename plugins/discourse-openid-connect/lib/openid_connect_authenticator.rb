@@ -31,6 +31,29 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     end
   end
 
+  def provides_groups?
+    SiteSetting.openid_connect_groups_claim.present?
+  end
+
+  def after_authenticate(auth_token, existing_account: nil)
+    result = super
+
+    if provides_groups?
+      claim = SiteSetting.openid_connect_groups_claim
+      groups = auth_token.extra&.dig(:raw_info, claim)
+
+      if groups.is_a?(Array)
+        result.associated_groups = groups.map { |group_name| { id: group_name, name: group_name } }
+      elsif groups.present?
+        oidc_log("groups claim '#{claim}' is not an array: #{groups.class}", error: true)
+      else
+        oidc_log("groups claim '#{claim}' not found in auth token")
+      end
+    end
+
+    result
+  end
+
   def always_update_user_email?
     SiteSetting.openid_connect_overrides_email
   end

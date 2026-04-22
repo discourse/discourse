@@ -23,14 +23,11 @@ module("Unit | Lib | markdown-image-builder", function () {
       assert.strictEqual(sanitizeAlt("   ", { fallback: "image" }), "image");
     });
 
-    test("escapes pipes for markdown", function (assert) {
+    test("escapes markdown special characters", function (assert) {
       assert.strictEqual(
         sanitizeAlt("alt|text|with|pipes"),
-        "alt&#124;text&#124;with&#124;pipes"
+        "alt\\|text\\|with\\|pipes"
       );
-    });
-
-    test("escapes backslashes, brackets", function (assert) {
       assert.strictEqual(
         sanitizeAlt("text\\with\\slashes"),
         "text\\\\with\\\\slashes"
@@ -38,6 +35,14 @@ module("Unit | Lib | markdown-image-builder", function () {
       assert.strictEqual(
         sanitizeAlt("text[with]brackets"),
         "text\\[with\\]brackets"
+      );
+      assert.strictEqual(
+        sanitizeAlt("_underscores_ and *stars*"),
+        "\\_underscores\\_ and \\*stars\\*"
+      );
+      assert.strictEqual(
+        sanitizeAlt("~~strike~~ and `code`"),
+        "\\~\\~strike\\~\\~ and \\`code\\`"
       );
     });
 
@@ -137,7 +142,7 @@ module("Unit | Lib | markdown-image-builder", function () {
           src: "/uploads/image.png",
           alt: "text|with|pipes",
         }),
-        "![text&#124;with&#124;pipes](/uploads/image.png)"
+        "![text\\|with\\|pipes](/uploads/image.png)"
       );
     });
 

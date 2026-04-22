@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
 
-acceptance(`Discourse Reactions - Post`, function (needs) {
+acceptance("Post", function (needs) {
   needs.user();
 
   needs.settings({
@@ -46,17 +46,18 @@ acceptance(`Discourse Reactions - Post`, function (needs) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
     assert
-      .dom("#post_3 .discourse-reactions-double-button")
-      .exists("displays the reaction count beside the reaction button");
+      .dom("#post_3 .discourse-reactions-counter .reactions-counter")
+      .hasText("2", "displays the like count in the counter");
   });
 
   test("Post has likes and reactions", async function (assert) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
     assert
-      .dom("#post_1 .discourse-reactions-double-button")
-      .doesNotExist(
-        "does not display the reaction count beside the reaction button"
+      .dom("#post_1 .discourse-reactions-list .discourse-reactions-list-emoji")
+      .exists(
+        { count: 8 },
+        "renders an emoji for each reaction in the counter list"
       );
   });
 

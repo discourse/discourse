@@ -3,7 +3,7 @@
 describe "Data Explorer rake tasks" do
   before do
     Rake::Task.clear
-    Discourse::Application.load_tasks
+    silence_warnings { Discourse::Application.load_tasks }
   end
 
   def make_query(sql, opts = {}, group_ids = [])

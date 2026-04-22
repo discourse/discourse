@@ -9,6 +9,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
+import PermanentlyDeleteConfirm from "discourse/components/dialog-messages/permanently-delete-confirm";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -307,6 +308,40 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await fillIn("#confirm-phrase", "Disable");
     assert.dom(".btn-danger").isEnabled();
     await fillIn("#confirm-phrase", "disable");
+    assert.dom(".btn-danger").isEnabled();
+  });
+
+  test("permanently delete confirm with typed confirmation phrase", async function (assert) {
+    await render(<template><DialogHolder /></template>);
+
+    const confirmPhrase = i18n(
+      "post.controls.permanently_delete_confirm_phrase"
+    );
+
+    this.dialog.confirm({
+      bodyComponent: PermanentlyDeleteConfirm,
+      bodyComponentModel: {
+        message: "Are you sure?",
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+      },
+      confirmButtonClass: "btn-danger",
+      confirmButtonDisabled: true,
+    });
+    await settled();
+
+    assert.dom(".dialog-body").includesText("Are you sure?");
+    assert.dom(".btn-danger").isDisabled();
+
+    await fillIn("input.confirmation-phrase", "wrong");
+    assert.dom(".btn-danger").isDisabled();
+
+    await fillIn("input.confirmation-phrase", confirmPhrase);
+    assert.dom(".btn-danger").isEnabled();
+
+    await fillIn("input.confirmation-phrase", confirmPhrase.toUpperCase());
+    assert.dom(".btn-danger").isEnabled();
+
+    await fillIn("input.confirmation-phrase", ` ${confirmPhrase} `);
     assert.dom(".btn-danger").isEnabled();
   });
 

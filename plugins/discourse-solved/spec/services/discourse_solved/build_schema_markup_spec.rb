@@ -108,6 +108,38 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
       end
     end
 
+    context "when the accepted answer has no text content" do
+      fab!(:answer_post) do
+        Fabricate(
+          :post,
+          topic:,
+          raw: "https://www.youtube.com/watch?v=test",
+          cooked:
+            '<div class="onebox video-onebox"><iframe src="https://youtube.com/embed/test"></iframe></div>',
+        )
+      end
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic:, answer_post:)
+      end
+
+      context "when there are other visible replies" do
+        fab!(:visible_reply) { Fabricate(:post, topic:) }
+
+        it "excludes the text-less accepted answer but includes suggested answers" do
+          html = result[:html]
+          expect(html).not_to include('"acceptedAnswer"')
+          expect(html).to include('"suggestedAnswer"')
+          expect(html).to include('"answerCount":1')
+        end
+      end
+
+      context "when there are no other replies" do
+        it { is_expected.to fail_a_policy(:has_answers) }
+      end
+    end
+
     context "when the accepted answer is hidden but there are other visible replies" do
       fab!(:answer_user, :user)
       fab!(:answer_post) { Fabricate(:post, topic:, user: answer_user, like_count: 3) }
