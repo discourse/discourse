@@ -51,7 +51,6 @@ class MetadataController < ApplicationController
     end
 
     scheme_id = view_context.scheme_id
-    primary_color = ColorScheme.hex_for_name("primary", scheme_id)
 
     manifest = {
       name: SiteSetting.title,
