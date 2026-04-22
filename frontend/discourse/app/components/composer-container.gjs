@@ -30,11 +30,11 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
-import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import resizableNode from "../modifiers/resizable-node";
 
 export default class ComposerContainer extends Component {
