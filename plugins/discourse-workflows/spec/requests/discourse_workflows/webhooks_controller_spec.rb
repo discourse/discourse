@@ -156,10 +156,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
             g.node "wait-1", "action:wait"
             g.chain "webhook-1", "wait-1"
           end
-        workflow.update!(
-          nodes: workflow.nodes + extra[:nodes],
-          connections: extra[:connections],
-        )
+        workflow.update!(nodes: workflow.nodes + extra[:nodes], connections: extra[:connections])
       end
 
       fab!(:waiting_execution) do

@@ -237,9 +237,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           connections_data: [],
         )
 
-        expect(workflow.reload.nodes.first.dig("configuration", "uuid")).to eq(
-          "existing-uuid",
-        )
+        expect(workflow.reload.nodes.first.dig("configuration", "uuid")).to eq("existing-uuid")
       end
     end
 

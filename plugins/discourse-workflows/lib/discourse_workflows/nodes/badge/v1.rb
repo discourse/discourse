@@ -43,9 +43,9 @@ module DiscourseWorkflows
             badge_id: {
               type: :integer,
               required: true,
+              options_source: "badges",
               ui: {
                 control: :combo_box,
-                options_source: "badges",
                 value_property: "id",
                 name_property: "name",
                 filterable: true,

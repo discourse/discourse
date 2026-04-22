@@ -57,7 +57,11 @@ export default class Collection extends Component {
   get addLabel() {
     return (
       this.args.addLabel ||
-      collectionAddLabel(this.nodeDefinition, this.args.fieldName)
+      collectionAddLabel(
+        this.nodeDefinition,
+        this.args.fieldName,
+        this.args.schema
+      )
     );
   }
 

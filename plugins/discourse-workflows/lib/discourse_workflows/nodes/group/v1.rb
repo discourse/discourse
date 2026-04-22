@@ -46,9 +46,9 @@ module DiscourseWorkflows
             group_id: {
               type: :integer,
               required: true,
+              options_source: "groups",
               ui: {
                 control: :combo_box,
-                options_source: "groups",
                 value_property: "id",
                 name_property: "name",
                 filterable: true,

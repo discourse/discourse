@@ -21,7 +21,7 @@ function optionName(option, nameProperty) {
 
 export default class ComboBoxField extends Component {
   get metadataOptions() {
-    const source = this.args.schema?.ui?.options_source;
+    const source = this.args.schema?.options_source;
     return source ? this.args.metadata?.[source] || [] : null;
   }
 

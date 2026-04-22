@@ -318,13 +318,13 @@ module("Integration | Component | workflows property engine", function (hooks) {
         agent_id: {
           type: "integer",
           required: true,
+          options_source: "agents",
           ui: {
             control: "combo_box",
             expression: false,
             filterable: true,
             name_property: "name",
             none: "discourse_ai.discourse_workflows.ai_agent.select_agent",
-            options_source: "agents",
             patch_from_option: {
               agent_name: "name",
             },

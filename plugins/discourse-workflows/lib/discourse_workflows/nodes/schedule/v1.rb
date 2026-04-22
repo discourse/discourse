@@ -118,16 +118,14 @@ module DiscourseWorkflows
                   },
                 },
                 trigger_on_weekdays: {
-                  type: :options,
+                  type: :multi_options,
                   default: [0],
                   options: WEEKDAY_OPTIONS,
                   visible_if: {
                     interval: %w[weeks],
                   },
                   ui: {
-                    control: :multi_combo_box,
                     option_format: :weekday,
-                    expression: false,
                   },
                 },
                 trigger_at_day_of_month: {

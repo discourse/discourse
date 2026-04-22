@@ -27,6 +27,7 @@ function fallbackValueForType(type) {
       return false;
     case "collection":
     case "array":
+    case "multi_options":
       return [];
     default:
       return "";
@@ -115,8 +116,14 @@ export function propertySelectNoneKey(nodeDefinitionOrType, fieldName) {
   ]);
 }
 
-export function collectionAddLabel(nodeDefinitionOrType, fieldName) {
-  const singular = fieldName.endsWith("s") ? fieldName.slice(0, -1) : fieldName;
+export function collectionAddLabel(
+  nodeDefinitionOrType,
+  fieldName,
+  schema = {}
+) {
+  const override = fieldUi(schema).singular_name;
+  const singular =
+    override || (fieldName.endsWith("s") ? fieldName.slice(0, -1) : fieldName);
 
   return (
     translatedOrNull(`${i18nBase(nodeDefinitionOrType)}.add_${singular}`) ||
@@ -160,6 +167,7 @@ const TYPE_TO_CONTROL = {
   boolean: "boolean",
   icon: "icon",
   options: "select",
+  multi_options: "multi_combo_box",
   collection: "collection",
   notice: "notice",
   credential: "credential",
@@ -176,10 +184,6 @@ export function fieldSupportsExpression(schema = {}) {
 
   if (Object.hasOwn(ui, "expression")) {
     return Boolean(ui.expression);
-  }
-
-  if (Object.hasOwn(schema, "expression")) {
-    return Boolean(schema.expression);
   }
 
   return ["string", "integer", "icon"].includes(fieldType(schema));
@@ -229,20 +233,46 @@ export function fieldVisible(schema = {}, configuration = {}) {
     return false;
   }
 
-  const rules = schema.visible_if || fieldUi(schema).visible_if;
-
-  if (!rules) {
-    return true;
+  if (schema.visible_if && !matchesRules(schema.visible_if, configuration)) {
+    return false;
   }
 
-  return Object.entries(rules).every(([fieldName, expected]) => {
-    const value = configuration[fieldName];
-    if (expected === "$empty") {
-      return isEmptyValue(value);
+  if (
+    schema.visible_unless &&
+    matchesRules(schema.visible_unless, configuration)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function matchesRules(rules, configuration) {
+  return Object.entries(rules).every(([fieldName, expected]) =>
+    matchesRule(expected, configuration[fieldName])
+  );
+}
+
+function matchesRule(expected, value) {
+  if (expected === "$empty") {
+    return isEmptyValue(value);
+  }
+
+  if (expected && typeof expected === "object" && !Array.isArray(expected)) {
+    if (Object.hasOwn(expected, "empty")) {
+      return expected.empty ? isEmptyValue(value) : !isEmptyValue(value);
     }
-    const allowedValues = Array.isArray(expected) ? expected : [expected];
-    return allowedValues.includes(value);
-  });
+    if (Object.hasOwn(expected, "not")) {
+      const notValues = Array.isArray(expected.not)
+        ? expected.not
+        : [expected.not];
+      return !notValues.includes(value);
+    }
+    return false;
+  }
+
+  const allowedValues = Array.isArray(expected) ? expected : [expected];
+  return allowedValues.includes(value);
 }
 
 function isEmptyValue(value) {

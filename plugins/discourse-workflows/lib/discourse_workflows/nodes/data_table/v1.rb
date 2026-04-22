@@ -41,9 +41,9 @@ module DiscourseWorkflows
             data_table_id: {
               type: :integer,
               required: true,
+              options_source: "data_tables",
               ui: {
                 control: :combo_box,
-                options_source: "data_tables",
                 value_property: "id",
                 name_property: "name",
                 filterable: true,
