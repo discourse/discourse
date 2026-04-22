@@ -338,11 +338,16 @@ class TopicOgImageGenerator
         "-size",
         "#{OG_WIDTH}x#{OG_HEIGHT}",
         svg_path,
+        "-depth",
+        "8",
+        "-define",
+        "png:compression-level=9",
         png_path,
         timeout: 20_000,
       )
 
       return nil unless File.exist?(png_path)
+      FileHelper.optimize_image!(png_path)
       File.binread(png_path)
     end
   end
