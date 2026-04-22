@@ -73,7 +73,7 @@ module("Integration | Component | workflows/context/input", function (hooks) {
     const sections = this.element.querySelectorAll(
       ".workflows-context-panel__section"
     );
-    const envSection = sections[1];
+    const envSection = sections[0];
     const fieldKeys = [
       ...envSection.querySelectorAll(".workflows-schema-field__key"),
     ].map((el) => el.textContent.trim());
@@ -164,6 +164,83 @@ module("Integration | Component | workflows/context/input", function (hooks) {
     assert.false(allKeys.includes("resume_url"));
   });
 
+  test("uses previous node name as the input heading", async function (assert) {
+    const triggerNode = {
+      clientId: "t1",
+      type: "trigger:webhook",
+      name: "Webhook",
+    };
+    const step1 = {
+      clientId: "s1",
+      type: "action:http_request",
+      name: "First Step",
+      configuration: {
+        output_fields: [{ key: "result", type: "string" }],
+      },
+    };
+    const currentNode = {
+      clientId: "c1",
+      type: "action:http_request",
+      name: "Current",
+    };
+    const nodes = makeNodes(triggerNode, step1, currentNode);
+    const connections = [
+      { sourceClientId: "t1", targetClientId: "s1" },
+      { sourceClientId: "s1", targetClientId: "c1" },
+    ];
+
+    await render(
+      <template>
+        <InputContext
+          @node={{currentNode}}
+          @nodes={{nodes}}
+          @connections={{connections}}
+          @nodeTypes={{(Array)}}
+        />
+      </template>
+    );
+
+    const firstTitle = this.element
+      .querySelector(
+        ".workflows-context-panel__section .workflows-context-panel__title"
+      )
+      .textContent.trim();
+
+    assert.strictEqual(firstTitle, "First Step");
+  });
+
+  test("hides the input section when there is no previous node", async function (assert) {
+    const node = {
+      clientId: "n1",
+      type: "action:http_request",
+      name: "HTTP",
+    };
+    const nodes = makeNodes(node);
+
+    await render(
+      <template>
+        <InputContext
+          @node={{node}}
+          @nodes={{nodes}}
+          @connections={{(Array)}}
+          @nodeTypes={{(Array)}}
+        />
+      </template>
+    );
+
+    const firstTitle = this.element
+      .querySelector(
+        ".workflows-context-panel__section .workflows-context-panel__title"
+      )
+      .textContent.trim();
+
+    assert.strictEqual(
+      firstTitle,
+      "Environment",
+      "first section is Environment, input section is hidden"
+    );
+  });
+
   test("renders ancestor nodes with $() expression format", async function (assert) {
     const triggerNode = {
       clientId: "t1",
@@ -251,7 +328,7 @@ module("Integration | Component | workflows/context/input", function (hooks) {
     const sections = this.element.querySelectorAll(
       ".workflows-context-panel__section"
     );
-    const envSection = sections[1];
+    const envSection = sections[0];
     const fieldKeys = [
       ...envSection.querySelectorAll(
         ":scope > .workflows-schema-field-list > .workflows-schema-field"

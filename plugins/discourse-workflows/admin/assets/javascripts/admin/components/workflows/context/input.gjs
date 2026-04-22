@@ -1,12 +1,14 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import processFields from "../../../lib/workflows/field-processors";
 import {
+  findPreviousNode,
   resolveAllAncestors,
-  resolvePreviousOutput,
+  resolveFieldsForNode,
 } from "../../../lib/workflows/graph-traversal";
 import { nodeTypeColor, nodeTypeIcon } from "../../../lib/workflows/node-types";
 import DragDropHint from "./drag-drop-hint";
@@ -98,8 +100,16 @@ export default class InputContext extends Component {
     };
   }
 
+  @cached
+  get previousNode() {
+    return findPreviousNode(this.args.node, this.graph, new Set());
+  }
+
   get fields() {
-    const fields = resolvePreviousOutput(this.args.node, this.graph);
+    if (!this.previousNode) {
+      return [];
+    }
+    const fields = resolveFieldsForNode(this.previousNode, this.graph) || [];
     return processFields(fields, this.args.node, this.graph);
   }
 
@@ -112,18 +122,19 @@ export default class InputContext extends Component {
   }
 
   get ancestorNodes() {
-    const allAncestors = resolveAllAncestors(this.args.node, this.graph);
-
-    return allAncestors.slice(1).map((ancestor) => ({
-      name: ancestor.node.name,
-      type:
-        this.workflowsNodeTypes.findNodeType(ancestor.node.type) ||
-        ancestor.node.type,
-      fields: ancestor.fields.map((field) => ({
-        ...field,
-        id: `$('${ancestor.node.name}').item.json.${field.key}`,
-      })),
-    }));
+    const previous = this.previousNode;
+    return resolveAllAncestors(this.args.node, this.graph)
+      .filter((ancestor) => ancestor.node !== previous)
+      .map((ancestor) => ({
+        name: ancestor.node.name,
+        type:
+          this.workflowsNodeTypes.findNodeType(ancestor.node.type) ||
+          ancestor.node.type,
+        fields: ancestor.fields.map((field) => ({
+          ...field,
+          id: `$('${ancestor.node.name}').item.json.${field.key}`,
+        })),
+      }));
   }
 
   <template>
@@ -132,24 +143,26 @@ export default class InputContext extends Component {
         <DragDropHint />
       {{/if}}
 
-      <div class="workflows-context-panel__section">
-        <h3 class="workflows-context-panel__title">
-          {{icon "right-to-bracket"}}
-          {{i18n "discourse_workflows.configurator.input_context"}}
-        </h3>
+      {{#if this.previousNode}}
+        <div class="workflows-context-panel__section">
+          <h3 class="workflows-context-panel__title">
+            {{icon "right-to-bracket"}}
+            {{this.previousNode.name}}
+          </h3>
 
-        {{#if this.fields.length}}
-          <ul class="workflows-schema-field-list">
-            {{#each this.fields as |field|}}
-              <SchemaField @field={{field}} @draggable={{true}} />
-            {{/each}}
-          </ul>
-        {{else}}
-          <p class="workflows-context-panel__empty">
-            {{i18n "discourse_workflows.configurator.no_input_context"}}
-          </p>
-        {{/if}}
-      </div>
+          {{#if this.fields.length}}
+            <ul class="workflows-schema-field-list">
+              {{#each this.fields as |field|}}
+                <SchemaField @field={{field}} @draggable={{true}} />
+              {{/each}}
+            </ul>
+          {{else}}
+            <p class="workflows-context-panel__empty">
+              {{i18n "discourse_workflows.configurator.no_input_context"}}
+            </p>
+          {{/if}}
+        </div>
+      {{/if}}
 
       <div class="workflows-context-panel__section">
         <h3 class="workflows-context-panel__title">

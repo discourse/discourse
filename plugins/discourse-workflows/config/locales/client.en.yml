@@ -60,7 +60,6 @@ en:
         tabs:
           parameters: "Parameters"
           settings: "Settings"
-        input_context: "Input"
         drag_drop_hint_title: "Tip"
         drag_drop_hint: "Drag and drop a property from this panel into a field."
         output_context: "Output"
