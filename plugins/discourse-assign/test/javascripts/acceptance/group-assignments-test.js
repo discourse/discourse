@@ -4,7 +4,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import AssignedTopics from "../fixtures/assigned-group-assignments-fixtures";
 import GroupMembers from "../fixtures/group-members-fixtures";
 
-acceptance("Discourse Assign | GroupAssignments", function (needs) {
+acceptance("GroupAssignments", function (needs) {
   needs.user();
   needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
   needs.pretender((server, helper) => {

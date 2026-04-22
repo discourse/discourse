@@ -13,6 +13,8 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
 
@@ -40,14 +42,25 @@ export default class AiTranslations extends Component {
     ? this.siteSettings.content_localization_supported_locales.split("|")
     : [];
   @tracked isSavingLocales = false;
+  @tracked isSavingCategories = false;
   @tracked isTogglingTranslation = false;
   @tracked hourlyRate = this.args.model?.hourly_rate || 0;
   @tracked creditStatus = null;
   @tracked creditCheckComplete = false;
+  @tracked selectedCategories = [];
+  @tracked originalCategoryIds = this.args.model?.target_category_ids || [];
 
   constructor() {
     super(...arguments);
     this._checkCredits();
+    this._loadTargetCategories();
+  }
+
+  async _loadTargetCategories() {
+    const ids = this.args.model?.target_category_ids || [];
+    if (ids.length) {
+      this.selectedCategories = await Category.asyncFindByIds(ids);
+    }
   }
 
   async _checkCredits() {
@@ -90,14 +103,15 @@ export default class AiTranslations extends Component {
   }
 
   get showLocaleSelector() {
-    const noLocales =
-      this.args.model?.no_locales_configured ||
-      this.originalLocales.length === 0;
-    return noLocales && !this.translationEnabled;
+    return !this.translationEnabled;
   }
 
-  get showLocalizationSettingsButton() {
-    return this.enabled || !this.showLocaleSelector;
+  get categoriesChanged() {
+    const current = [...this.selectedCategories.map((c) => c.id)]
+      .sort()
+      .join("|");
+    const original = [...this.originalCategoryIds].sort().join("|");
+    return current !== original;
   }
 
   get isToggleDisabled() {
@@ -182,6 +196,42 @@ export default class AiTranslations extends Component {
   @action
   resetLocales() {
     this.selectedLocales = [];
+  }
+
+  @action
+  updateSelectedCategories(categories) {
+    this.selectedCategories = categories;
+  }
+
+  @action
+  async saveCategories() {
+    this.isSavingCategories = true;
+    try {
+      const ids = this.selectedCategories.map((c) => c.id);
+      await ajax("/admin/site_settings/ai_translation_target_categories", {
+        type: "PUT",
+        data: {
+          ai_translation_target_categories: ids.join("|"),
+        },
+      });
+      this.originalCategoryIds = ids;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.isSavingCategories = false;
+    }
+  }
+
+  @action
+  async cancelCategories() {
+    this.selectedCategories = await Category.asyncFindByIds(
+      this.originalCategoryIds
+    );
+  }
+
+  @action
+  resetCategories() {
+    this.selectedCategories = [];
   }
 
   @action
@@ -439,21 +489,17 @@ export default class AiTranslations extends Component {
         @learnMoreUrl="https://meta.discourse.org/t/-/370969"
       >
         <:actions as |actions|>
-          {{#if this.enabled}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.translation_settings"
-              @route="adminPlugins.show.discourse-ai-features.edit"
-              @routeModels={{@model.translation_id}}
-              class="ai-translation-settings-button"
-            />
-          {{/if}}
-          {{#if this.showLocalizationSettingsButton}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.localization_settings"
-              @route="adminConfig.localization.settings"
-              class="ai-localization-settings-button"
-            />
-          {{/if}}
+          <actions.Default
+            @label="discourse_ai.translations.admin_actions.translation_settings"
+            @route="adminPlugins.show.discourse-ai-features.edit"
+            @routeModels={{@model.translation_id}}
+            class="ai-translation-settings-button"
+          />
+          <actions.Default
+            @label="discourse_ai.translations.admin_actions.localization_settings"
+            @route="adminConfig.localization.settings"
+            class="ai-localization-settings-button"
+          />
         </:actions>
       </DPageSubheader>
 
@@ -511,6 +557,49 @@ export default class AiTranslations extends Component {
                 </div>
                 <div class="desc">{{i18n
                     "discourse_ai.translations.supported_locales_description"
+                  }}</div>
+              </div>
+            </div>
+            <div class="setting">
+              <div class="setting-label">
+                <label>{{i18n
+                    "discourse_ai.translations.translatable_categories"
+                  }}</label>
+              </div>
+              <div class="setting-value">
+                <div class="ai-translations__category-input-row">
+                  <CategorySelector
+                    @categories={{this.selectedCategories}}
+                    @onChange={{this.updateSelectedCategories}}
+                  />
+                  {{#if this.categoriesChanged}}
+                    <div class="setting-controls">
+                      <DButton
+                        @action={{this.saveCategories}}
+                        @icon="check"
+                        @isLoading={{this.isSavingCategories}}
+                        @ariaLabel="save"
+                        class="ok setting-controls__ok"
+                      />
+                      <DButton
+                        @action={{this.cancelCategories}}
+                        @icon="xmark"
+                        @isLoading={{this.isSavingCategories}}
+                        @ariaLabel="cancel"
+                        class="cancel setting-controls__cancel"
+                      />
+                    </div>
+                  {{else if this.selectedCategories.length}}
+                    <DButton
+                      @action={{this.resetCategories}}
+                      @icon="arrow-rotate-left"
+                      @label="admin.settings.reset"
+                      class="undo setting-controls__undo"
+                    />
+                  {{/if}}
+                </div>
+                <div class="desc">{{i18n
+                    "discourse_ai.translations.translatable_categories_description"
                   }}</div>
               </div>
             </div>

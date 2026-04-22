@@ -5,7 +5,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { topicWithNoAnswer } from "../helpers/discourse-solved-helpers";
 
-acceptance("Discourse Solved - No Answer Prompt", function (needs) {
+acceptance("No Answer Prompt", function (needs) {
   needs.user({ id: 1 });
   needs.settings({
     solved_enabled: true,

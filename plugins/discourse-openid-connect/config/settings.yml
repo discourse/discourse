@@ -53,6 +53,9 @@ discourse_openid_connect:
   openid_connect_match_by_email:
     default: true
     area: "oidc"
+  openid_connect_groups_claim:
+    default: ""
+    area: "oidc"
   openid_connect_use_pkce:
     default: false
     area: "oidc"

@@ -300,8 +300,6 @@ module HasCustomFields
           if descriptor.array_type? || (field_type != :json && Array === value)
             value = Array(value || [])
             value.compact!
-            sub_type = field_type[0]
-
             value.map! { |v| descriptor.serialize(v) }
 
             unless value == fields.map(&:value)

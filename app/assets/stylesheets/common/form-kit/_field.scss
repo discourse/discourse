@@ -87,6 +87,7 @@
 
     &.--full {
       width: 100% !important;
+      min-width: var(--form-kit-small-input);
     }
   }
 }

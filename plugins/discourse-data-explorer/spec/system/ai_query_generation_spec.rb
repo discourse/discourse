@@ -8,51 +8,40 @@ RSpec.describe "Data Explorer AI query generation" do
     sign_in admin
   end
 
-  # background job publishes this when generation completes.
-  # it's internals, but allows us to test re-enablement of the buttons
-  def simulate_finish_generating(query, user)
-    MessageBus.publish(
-      "/discourse-data-explorer/queries/ai-generation/#{query.id}",
-      { status: "complete", sql: "SELECT 1", name: "Test Query", description: "A test" },
-      user_ids: [user.id],
-    )
-  end
-
   context "when ai queries setting is disabled" do
     before { SiteSetting.data_explorer_ai_queries_enabled = false }
 
-    it "does not show the AI description field in the create form" do
+    it "does not show the AI section" do
       visit("/admin/plugins/discourse-data-explorer/queries/new")
 
       expect(page).to have_css(".query-new")
-      expect(page).to have_no_field("Generate with AI")
+      expect(page).to have_no_css(".query-new--ai-first")
     end
   end
 
   context "when ai queries setting is enabled" do
     before { SiteSetting.data_explorer_ai_queries_enabled = true }
 
-    it "shows the AI description field and creates a query with generating state" do
+    it "shows the AI-first form with generate button" do
       visit("/admin/plugins/discourse-data-explorer/queries/new")
 
-      expect(page).to have_css(".query-new--ai")
+      expect(page).to have_css(".query-new--ai-first")
+      expect(page).to have_css(".query-new__ai-label", text: "Generate with AI")
+      expect(page).to have_css(".query-new__ai-textarea")
+      expect(page).to have_button("Generate")
+      expect(page).to have_button("Write SQL manually")
+    end
 
-      find(".query-new--ai textarea[name='ai_description']").fill_in(
-        with: "show me users who signed up in the last 7 days",
-      )
+    it "toggles between AI and manual forms" do
+      visit("/admin/plugins/discourse-data-explorer/queries/new")
 
-      find(".query-new--ai .form-kit__actions .btn-primary").click
+      find(".query-new__toggle-link", text: "Write SQL manually").click
+      expect(page).to have_css(".query-new__manual-form")
+      expect(page).to have_no_css(".query-new__ai-section")
 
-      expect(page).to have_current_path(%r{/admin/plugins/discourse-data-explorer/queries/\d+})
-      expect(page).to have_css(".query-ai-generating")
-      expect(page).to have_button("Run", disabled: true)
-      expect(page).to have_button("Delete", disabled: true)
-
-      simulate_finish_generating(DiscourseDataExplorer::Query.last, admin)
-
-      expect(page).to have_no_css(".query-ai-generating")
-      expect(page).to have_button("Run", disabled: false)
-      expect(page).to have_button("Delete", disabled: false)
+      find(".query-new__toggle-link", text: "Generate with AI").click
+      expect(page).to have_css(".query-new__ai-section")
+      expect(page).to have_no_css(".query-new__manual-form")
     end
   end
 end

@@ -187,6 +187,22 @@ describe Jobs::LocalizeTopics do
     end
   end
 
+  it "enforces a budget across all locales" do
+    SiteSetting.content_localization_supported_locales = "en|ja|de"
+    topic.update!(locale: "es")
+
+    call_count = 0
+    DiscourseAi::Translation::TopicLocalizer
+      .stubs(:localize)
+      .with do
+        call_count += 1
+        true
+      end
+
+    job.execute({ limit: 2 })
+    expect(call_count).to eq(2)
+  end
+
   describe "with target categories" do
     fab!(:target_category, :category)
     fab!(:non_target_category, :category)

@@ -862,6 +862,24 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
     end
 
+    it "skips beacon page view when the remote IP resolves to a crawler ASN" do
+      DiscourseIpInfo.stubs(:get).returns({ asn: CrawlerDetection::CRAWLER_ASNS.first })
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      middleware.call(beacon_env({}, { "action_dispatch.remote_ip" => "1.2.3.4" }))
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first).to be_nil
+    end
+
+    it "counts beacon page view when the remote IP is not a crawler ASN" do
+      DiscourseIpInfo.stubs(:get).returns({ asn: 1 })
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      middleware.call(beacon_env({}, { "action_dispatch.remote_ip" => "1.2.3.4" }))
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon_browser_beacon.first.count).to eq(1)
+    end
+
     context "when SiteSetting.use_beacon_for_browser_page_views is false" do
       before { SiteSetting.use_beacon_for_browser_page_views = false }
 

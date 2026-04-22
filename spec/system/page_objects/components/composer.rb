@@ -67,7 +67,7 @@ module PageObjects
       end
 
       def has_input_title?(value)
-        expect(find("#{@composer_id} input#reply-title").value).to eq(value)
+        has_field?("reply-title", with: value)
       end
 
       def fill_content(content)
@@ -105,7 +105,13 @@ module PageObjects
       end
 
       def has_value?(value)
-        expect(composer_input.value).to eq(value)
+        within(@composer_id) do
+          if value.nil?
+            has_no_field?(class: "d-editor-input")
+          else
+            has_field?(class: "d-editor-input", with: value)
+          end
+        end
       end
 
       def has_popup_content?(content)

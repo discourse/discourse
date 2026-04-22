@@ -578,6 +578,18 @@ export function firefoxTest(name, testCase) {
   conditionalTest(name, navigator.userAgent.includes("Firefox"), testCase);
 }
 
+export function silenceConsoleErrorsMatching(substring) {
+  const stub = sinon.stub(console, "error").callsFake((...args) => {
+    if (typeof args[0] === "string" && args[0].includes(substring)) {
+      return;
+    }
+
+    stub.wrappedMethod.apply(console, args);
+  });
+
+  return stub;
+}
+
 export function createFile(name, type = "image/png", blobData = null) {
   // the blob content doesn't matter at all, just want it to be random-ish
   blobData = blobData || (Math.random() + 1).toString(36).substring(2);

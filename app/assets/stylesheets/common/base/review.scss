@@ -1,6 +1,7 @@
 @use "lib/viewport";
 
 .review-item {
+  --review-item-padding: var(--space-4);
   display: flex;
   flex-wrap: nowrap;
   gap: var(--space-4) 0;
@@ -8,12 +9,14 @@
   margin-bottom: var(--space-8);
   position: relative;
   z-index: z("base");
+  border-radius: var(--d-border-radius);
 
   &:has(.select-kit.is-expanded) {
     z-index: z("dropdown");
   }
 
   @include viewport.until(sm) {
+    --review-item-padding: var(--space-2);
     border: 1px solid var(--content-border-color);
     flex-direction: column;
   }
@@ -39,13 +42,21 @@
     align-self: baseline;
     padding-block: var(--space-1);
     line-height: var(--line-height-small);
+
+    @include viewport.until(sm) {
+      justify-self: end;
+      padding-inline: 0.15em;
+    }
   }
 
   .reviewable-permalink-copy {
     position: relative;
     right: calc(var(--space-2) * -1);
     padding-block: 0.15em;
-    align-self: center;
+
+    @include viewport.until(sm) {
+      justify-self: end;
+    }
 
     .post-action-feedback-alert {
       top: -0.95rem;
@@ -130,8 +141,20 @@
     gap: var(--space-2);
     align-items: start;
     background-color: var(--primary);
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-3) var(--review-item-padding);
     color: var(--secondary);
+    border-radius: calc(var(--d-border-radius) - 1px)
+      calc(var(--d-border-radius) - 1px) 0 0;
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-template-rows: auto auto;
+
+      .post-action-feedback-button {
+        height: auto;
+      }
+    }
   }
 
   &__label-badges {
@@ -139,6 +162,7 @@
     gap: var(--space-1);
     align-items: baseline;
     flex-wrap: wrap;
+    line-height: var(--line-height-small);
   }
 
   &__flag-label,
@@ -174,10 +198,14 @@
 
   &__meta-content {
     display: grid;
-    row-gap: var(--space-4);
-    column-gap: var(--space-4);
-    padding: var(--space-4);
+    gap: var(--space-4);
+    padding: var(--review-item-padding);
     grid-template-columns: auto 1fr;
+
+    @include viewport.until(sm) {
+      gap: var(--space-2);
+      grid-template-columns: auto;
+    }
 
     .reviewable-user & {
       grid-template-columns: 1fr;
@@ -214,7 +242,7 @@
 
   &__post {
     display: flex;
-    padding: var(--space-4);
+    padding: var(--review-item-padding);
 
     &-content-wrapper {
       width: 100%;
@@ -233,7 +261,7 @@
       transition: scrollbar-color 0.25s ease-in-out;
       transition-delay: 0.5s;
       background: var(--primary-very-low);
-      padding: var(--space-4);
+      padding: var(--review-item-padding);
       border-radius: var(--d-border-radius);
 
       .lightbox-wrapper img {
@@ -290,7 +318,7 @@
   }
 
   &__insights {
-    padding-inline: var(--space-4);
+    padding-inline: var(--review-item-padding);
 
     .nav-pills.action-list {
       margin-bottom: 0;
@@ -339,7 +367,7 @@
 
   .editable-fields {
     box-sizing: border-box;
-    padding: var(--space-4);
+    padding: var(--review-item-padding);
 
     .d-editor-button-bar {
       flex: 1 0 auto;
@@ -366,6 +394,10 @@
   line-height: 1;
   background-color: var(--secondary-high);
   color: var(--primary);
+
+  @include viewport.until(sm) {
+    justify-self: start;
+  }
 
   &.--pending {
     background: var(--secondary-low);
@@ -431,6 +463,7 @@
   &__description {
     font-size: var(--font-down-1);
     color: var(--primary-high);
+    overflow-wrap: anywhere;
   }
 
   .reviewable-ip-lookup {
@@ -514,6 +547,10 @@
       padding-left: var(--space-2);
       padding-top: 0.2em;
       color: var(--primary-medium);
+
+      @include viewport.until(sm) {
+        width: 1rem;
+      }
     }
 
     &__content {
@@ -547,6 +584,7 @@
     &__description {
       color: var(--primary-high);
       font-size: var(--font-down-1);
+      overflow-wrap: anywhere;
 
       :first-child {
         margin-top: 0;

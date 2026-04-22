@@ -2975,6 +2975,37 @@ RSpec.describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
+    it "redirects to nested view when nested_replies_default is enabled" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}"
+
+      expect(response).to redirect_to("/n/#{topic.slug}/#{topic.id}")
+    end
+
+    it "does not redirect crawlers to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+
+      get "/t/#{topic.slug}/#{topic.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag(:body, with: { class: "crawler" })
+    end
+
+    it "does not redirect private messages to nested view" do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_default = true
+      pm = Fabricate(:private_message_topic, user: user)
+      Fabricate(:post, topic: pm, user: user)
+
+      sign_in(user)
+      get "/t/#{pm.slug}/#{pm.id}"
+
+      expect(response).not_to redirect_to("/n/#{pm.slug}/#{pm.id}")
+    end
+
     it "returns 404 when an invalid slug is given and no id" do
       get "/t/nope-nope.json"
 
@@ -7124,30 +7155,23 @@ RSpec.describe TopicsController do
     fab!(:topic)
     fab!(:user)
 
-    before do
-      Jobs.run_immediately!
-      Scheduler::Defer.async = true
-      Scheduler::Defer.timeout = 0.1
-    end
-
-    after do
-      Scheduler::Defer.async = false
-      Scheduler::Defer.timeout = Scheduler::Deferrable::DEFAULT_TIMEOUT
-    end
+    before { Jobs.run_immediately! }
 
     it "does nothing if topic does not exist" do
       topic.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "does nothing if user from ID does not exist" do
       user.destroy!
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7155,8 +7179,9 @@ RSpec.describe TopicsController do
       topic.shared_draft = Fabricate(:shared_draft)
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
@@ -7164,15 +7189,17 @@ RSpec.describe TopicsController do
       topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
 
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.not_to change { TopicViewItem.count }
     end
 
     it "creates a topic view" do
       expect {
-        TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
-        Scheduler::Defer.do_all_work
+        Scheduler::Defer.capture_later do
+          TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
+        end
       }.to change { TopicViewItem.count }
     end
   end

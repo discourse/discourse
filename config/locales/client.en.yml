@@ -721,6 +721,8 @@ en:
       allow_access: "Allow Access"
       continue_as_guest: "Continue as Guest"
       be_first_to_reply: "Be the first to reply!"
+      replying_to: "Replying to %{username}"
+      reply_placeholder: "Write a reply..."
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -3210,6 +3212,7 @@ en:
       uploading: "Uploading…"
       show_preview: "show preview"
       hide_preview: "hide preview"
+      resize: "Resize composer"
 
       switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
       switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
@@ -3773,6 +3776,8 @@ en:
         archive_topics: "Archive topics"
         move_messages_to_inbox: "Move to Inbox"
         archive_messages: "Move to Archive"
+        convert_to_public_topic: "Make public topics"
+        convert_to_private_message: "Make personal messages"
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
@@ -3891,6 +3896,12 @@ en:
       update_category:
         name: "Update Category"
         description: "Move all selected topics to the following category:"
+      convert_to_public_topic:
+        name: "Make Public Topic…"
+        description: "Move the selected personal messages into a public topic in the following category:"
+      convert_to_private_message:
+        name: "Make Personal Message"
+        description: "Convert the selected public topics into personal messages."
       reset_bump_dates:
         name: "Reset Bump Dates"
         description: "Do you want to update the bump dates to the last created post date? This may impact their ordering in the topic list."
@@ -3905,6 +3916,44 @@ en:
         name: "Un-pin"
         description: "Un-pin all the selected topics that are pinned to a category or pinned globally"
 
+    nested_replies:
+      nested_view: "Nested view"
+      flat_view: "Flat view"
+      view_as_nested: "View as nested"
+      view_as_flat: "View as flat"
+      sort:
+        label: "Sort by"
+        top: "Top"
+        new: "New"
+        old: "Old"
+      load_more_children:
+        one: "%{count} more reply"
+        other: "%{count} more replies"
+      load_more_children_generic: "More replies"
+      continue_thread: "Continue this thread"
+      new_replies:
+        one: "%{count} new reply"
+        other: "%{count} new replies"
+      collapsed_replies:
+        one: "%{count} reply"
+        other: "%{count} replies"
+      collapse: "Collapse"
+      collapse_parent: "Collapse parent thread"
+      category_settings:
+        default_nested_view: "Use nested view as default for topics in this category"
+      no_replies: "No replies yet."
+      deleted_post_placeholder: "[deleted]"
+      op_badge: "OP"
+      pinned_reply: "Pinned"
+      pin_reply: "Pin to top"
+      unpin_reply: "Unpin"
+      topic_admin_menu:
+        enable_nested_replies: "Enable nested replies"
+        disable_nested_replies: "Disable nested replies"
+      context:
+        banner: "You are viewing a single thread from this topic."
+        view_full_topic: "View full topic"
+        view_parent_context: "View parent context"
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -4489,6 +4538,11 @@ en:
       sr_post_like_count_button:
         one: "%{count} person liked this post."
         other: "%{count} people liked this post."
+
+      likes_popup:
+        title:
+          one: "%{count} like"
+          other: "%{count} likes"
       sr_post_read_count_button:
         one: "%{count} person read this post."
         other: "%{count} people read this post."
@@ -4583,6 +4637,7 @@ en:
         delete: "delete this post"
         undelete_action: "Undelete post"
         undelete: "undelete this post"
+        view_deleted: "view deleted post content"
         share_action: "Share"
         share: "share a link to this post"
         copy_action: "Copy link"
@@ -6190,6 +6245,10 @@ en:
           staff: "Staff"
           all_members: "All members"
           developers: "Developers"
+        impact_types:
+          feature_type: "Feature"
+          other_type: "Other"
+          site_setting_default_type: "Setting default"
         filter:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
@@ -8821,6 +8880,9 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        depends_on_notice:
+          one: "This setting is only applied when %{dependencyLinks} is enabled."
+          other: "This setting is only applied when %{dependencyLinks} are enabled."
         discard:
           one: "Discard change"
           other: "Discard changes"
@@ -8888,6 +8950,7 @@ en:
           groups: "Groups"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          nested_replies: "Nested replies"
           experimental: "Experimental"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
@@ -8932,7 +8995,7 @@ en:
             confirm: "Yes, I understand that inactive users will be permanently deleted unless I set this value to 0"
           can_permanently_delete:
             prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
-            confirm: "Yes, I understand permanently deleted data cannot be recovered"
+            confirm: "I understand"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

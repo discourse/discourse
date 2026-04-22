@@ -70,11 +70,13 @@
       <% end %>
 
       <% @topic_view.crawler_posts.each do |post| %>
+        <% next if crawler_post_schema_skip?(post, @topic_view.topic) %>
         <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
           <div id='post_<%= post.post_number %>' <%= crawler_post_schema(post, @topic_view.topic) %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>
               <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
-                <a itemprop="url" rel='nofollow' href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+                <a rel='nofollow' href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+                <meta itemprop='url' content='<%= Discourse.base_url %>/u/<%= u.username %>'>
                 <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
                 <%
                   post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
@@ -110,11 +112,13 @@
               <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
             </div>
 
-            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
-              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
-              <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
-              <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
-            </div>
+            <% unless crawler_post_schema_overridden?(post, @topic_view.topic) %>
+              <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+                <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+                <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
+                <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
+              </div>
+            <% end %>
 
               <% if (linkbacks = @topic_view.linkbacks_for(post)).present? %>
                 <div class='crawler-linkback-list'>

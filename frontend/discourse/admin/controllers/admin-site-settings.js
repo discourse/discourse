@@ -1,11 +1,13 @@
 import Controller from "@ember/controller";
 import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
+import AdminSiteSettingsCategoryNav from "discourse/admin/components/admin-site-settings-category-nav";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;
+  @service menu;
 
   @computed("model.filteredSettings")
   get visibleSiteSettings() {
@@ -53,10 +55,15 @@ export default class AdminSiteSettingsController extends Controller {
   }
 
   @action
-  toggleMenu() {
-    const adminDetail = document.querySelector(".admin-detail");
-    ["mobile-closed", "mobile-open"].forEach((state) => {
-      adminDetail.classList.toggle(state);
+  toggleMenu(triggerEl) {
+    this.menu.show(triggerEl, {
+      identifier: "admin-site-settings-category-nav",
+      component: AdminSiteSettingsCategoryNav,
+      modalForMobile: true,
+      data: {
+        categories: this.visibleSiteSettings,
+        filtersApplied: this.filtersApplied,
+      },
     });
   }
 }

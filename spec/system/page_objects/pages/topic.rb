@@ -136,20 +136,13 @@ module PageObjects
       end
 
       def has_who_liked_on_post?(post, count: nil)
-        if count
-          return(
-            has_css?(
-              ".liked-users-list__container .liked-users-list__item a.trigger-user-card",
-              count: count,
-            )
-          )
-        end
+        return has_css?(".post-users-popup .post-users-popup__item", count: count) if count
 
-        within_post(post) { has_css?(".who-liked.--expanded") }
+        has_css?(".post-users-popup")
       end
 
       def has_no_who_liked_on_post?(post)
-        within_post(post) { has_no_css?(".who-liked.--expanded") }
+        has_no_css?(".post-users-popup")
       end
 
       def has_who_read_on_post?(post, count: nil)
@@ -251,7 +244,6 @@ module PageObjects
 
       def click_floating_reply_button
         find(".embed-floating-reply-button").click
-        has_expanded_composer?
       end
 
       def has_floating_reply_button?
@@ -272,6 +264,19 @@ module PageObjects
 
       def has_no_floating_timeline_button?
         has_no_css?(".embed-floating-timeline-button")
+      end
+
+      def has_docked_composer?
+        has_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def has_no_docked_composer?
+        has_no_css?(".embed-mode-composer .docked-composer")
+      end
+
+      def click_embed_reply_button
+        within_topic_footer_buttons { find(".create").click }
+        self
       end
 
       def has_expanded_composer?

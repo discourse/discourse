@@ -11,7 +11,6 @@ import Collection from "../lib/collection";
  * @implements {@ember/service}
  */
 export default class ChatApi extends Service {
-  @service chat;
   @service chatChannelsManager;
 
   channel(channelId) {
@@ -442,17 +441,9 @@ export default class ChatApi extends Service {
         data,
       },
       ignoreUnsent: false,
-    })
-      .then(() => {
-        this.chat.markNetworkAsReliable();
-      })
-      .catch((error) => {
-        // we ignore a draft which can't be saved because it's too big
-        // and only deal with network error for now
-        if (!error.jqXHR?.responseJSON?.errors?.length) {
-          this.chat.markNetworkAsUnreliable();
-        }
-      });
+    }).catch(() => {
+      // we ignore a draft which can't be saved because it's too big
+    });
   }
 
   /**

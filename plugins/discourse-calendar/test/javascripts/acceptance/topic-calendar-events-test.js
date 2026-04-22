@@ -4,7 +4,7 @@ import { acceptance, fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import eventTopicFixture from "../helpers/event-topic-fixture";
 import getEventByText from "../helpers/get-event-by-text";
 
-acceptance("Discourse Calendar - Topic Calendar Events", function (needs) {
+acceptance("Topic Calendar Events", function (needs) {
   needs.hooks.beforeEach(function () {
     this.clock = fakeTime("2023-09-10T00:00:00", "Europe/Lisbon", true);
   });

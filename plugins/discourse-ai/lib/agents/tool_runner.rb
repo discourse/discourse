@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "tool_runner/http"
+require_relative "tool_runner/llm"
+require_relative "tool_runner/index"
+require_relative "tool_runner/upload"
+require_relative "tool_runner/discourse"
+require_relative "tool_runner/crypto"
+
 module DiscourseAi
   module Agents
     class ToolRunner
@@ -20,6 +27,13 @@ module DiscourseAi
       MAX_CUSTOM_FIELD_VALUE_LENGTH = 1024
 
       CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
+
+      include HTTP
+      include Llm
+      include Index
+      include Upload
+      include Discourse
+      include Crypto
 
       def initialize(
         parameters:,
@@ -50,34 +64,7 @@ module DiscourseAi
       end
 
       def system_guardian
-        @system_guardian ||= Guardian.new(Discourse.system_user)
-      end
-
-      def resolve_user(username)
-        if username.present?
-          User.find_by(username: username)
-        else
-          @bot_user || Discourse.system_user
-        end
-      end
-
-      def resolve_guardian(username)
-        user = resolve_user(username)
-        return nil, nil if user.nil?
-        guardian = user.staged? ? system_guardian : Guardian.new(user)
-        [user, guardian]
-      end
-
-      def resolve_category(category_id_or_name)
-        if category_id_or_name.is_a?(Integer) ||
-             category_id_or_name.to_i.to_s == category_id_or_name.to_s
-          Category.find_by(id: category_id_or_name.to_i)
-        else
-          Category
-            .where(name: category_id_or_name)
-            .or(Category.where(slug: category_id_or_name))
-            .first
-        end
+        @system_guardian ||= Guardian.new(::Discourse.system_user)
       end
 
       def mini_racer_context
@@ -94,6 +81,7 @@ module DiscourseAi
             attach_upload(ctx)
             attach_chain(ctx)
             attach_secrets(ctx)
+            attach_crypto(ctx)
             attach_sleep(ctx)
             attach_discourse(ctx)
             ctx.eval(framework_script)
@@ -151,8 +139,74 @@ module DiscourseAi
           },
         };
 
+        const crypto = {
+          hmacSha256: function(key, data) {
+            return _crypto_hmac_sha256_hex(key, data);
+          },
+          hmacSha1: function(key, data) {
+            return _crypto_hmac_sha1_hex(key, data);
+          },
+          hmacSha256Base64: function(key, data) {
+            return _crypto_hmac_sha256_base64(key, data);
+          },
+          hmacSha1Base64: function(key, data) {
+            return _crypto_hmac_sha1_base64(key, data);
+          },
+          hmacSha256Bytes: function(key, data) {
+            return _crypto_hmac_sha256_bytes(key, data);
+          },
+          hmacSha1Bytes: function(key, data) {
+            return _crypto_hmac_sha1_bytes(key, data);
+          },
+          sha256: function(data) {
+            return _crypto_sha256_hex(data);
+          },
+          sha1: function(data) {
+            return _crypto_sha1_hex(data);
+          },
+          md5: function(data) {
+            return _crypto_md5_hex(data);
+          },
+          sha256Base64: function(data) {
+            return _crypto_sha256_base64(data);
+          },
+          sha1Base64: function(data) {
+            return _crypto_sha1_base64(data);
+          },
+          md5Base64: function(data) {
+            return _crypto_md5_base64(data);
+          },
+          sha256Bytes: function(data) {
+            return _crypto_sha256_bytes(data);
+          },
+          sha1Bytes: function(data) {
+            return _crypto_sha1_bytes(data);
+          },
+          base64Encode: function(text) {
+            return _crypto_base64_encode(text);
+          },
+          base64Decode: function(base64) {
+            return _crypto_base64_decode(base64);
+          },
+          base64UrlEncode: function(text) {
+            return _crypto_base64_url_encode(text);
+          },
+          base64UrlDecode: function(base64) {
+            return _crypto_base64_url_decode(base64);
+          },
+          signRsaSha256: function(pemPrivateKey, data) {
+            return _crypto_sign_rsa_sha256(pemPrivateKey, data);
+          },
+          signRsaSha1: function(pemPrivateKey, data) {
+            return _crypto_sign_rsa_sha1(pemPrivateKey, data);
+          },
+          randomBytes: function(length) {
+            return _crypto_random_bytes(length);
+          },
+        };
+
         const discourse = {
-          baseUrl: #{Discourse.base_url.to_json},
+          baseUrl: #{::Discourse.base_url.to_json},
           search: function(params) {
             return _discourse_search(params);
           },
@@ -305,7 +359,7 @@ module DiscourseAi
         source_bindings = @secret_bindings || tool.secret_bindings
         missing_aliases = tool.missing_secret_aliases(bindings: source_bindings)
         if missing_aliases.present?
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t(
                     "discourse_ai.tools.secret_runtime.missing_required_aliases",
                     aliases: missing_aliases.join(", "),
@@ -374,106 +428,6 @@ module DiscourseAi
         @secrets_cache = secret_ids.present? ? AiSecret.where(id: secret_ids).index_by(&:id) : {}
       end
 
-      def rag_search(query, filenames: nil, limit: 10)
-        RagDocumentFragment
-          .search(
-            target_id: tool.id,
-            target_type: "AiTool",
-            query: query,
-            filenames: filenames,
-            limit: limit,
-          )
-          .map { |fragment| { fragment: fragment[:fragment], metadata: fragment[:metadata] } }
-      end
-
-      def rag_get_file(filename)
-        RagDocumentFragment.read_file(target_id: tool.id, target_type: "AiTool", filename: filename)
-      end
-
-      def attach_truncate(mini_racer_context)
-        mini_racer_context.attach(
-          "_llm_truncate",
-          ->(text, length) do
-            @llm.tokenizer.truncate(text, length, strict: SiteSetting.ai_strict_token_counting)
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_llm_generate",
-          ->(prompt, options) do
-            in_attached_function do
-              options ||= {}
-              response_format = options["response_format"]
-
-              response_format = { "type" => "json_object" } if options["json"]
-
-              if response_format && !response_format.is_a?(Hash)
-                raise Discourse::InvalidParameters.new("response_format must be a hash")
-              end
-              @llm.generate(
-                convert_js_prompt_to_ruby(prompt),
-                user: llm_user,
-                feature_name: "custom_tool_#{tool.name}",
-                response_format: response_format,
-                temperature: options["temperature"],
-                top_p: options["top_p"],
-                max_tokens: options["max_tokens"],
-                stop_sequences: options["stop_sequences"],
-              )
-            end
-          end,
-        )
-      end
-
-      def convert_js_prompt_to_ruby(prompt)
-        if prompt.is_a?(String)
-          prompt
-        elsif prompt.is_a?(Hash)
-          messages = prompt["messages"]
-          if messages.blank? || !messages.is_a?(Array)
-            raise Discourse::InvalidParameters.new("Prompt must have messages")
-          end
-          messages.each(&:symbolize_keys!)
-          messages.each { |message| message[:type] = message[:type].to_sym }
-          DiscourseAi::Completions::Prompt.new(messages: prompt["messages"])
-        else
-          raise Discourse::InvalidParameters.new("Prompt must be a string or a hash")
-        end
-      end
-
-      def llm_user
-        @llm_user ||=
-          begin
-            post&.user || @bot_user
-          end
-      end
-
-      def post
-        return @post if defined?(@post)
-        post_id = @context.post_id
-        @post = post_id && Post.find_by(id: post_id)
-      end
-
-      def attach_index(mini_racer_context)
-        mini_racer_context.attach(
-          "_index_search",
-          ->(*params) do
-            in_attached_function do
-              query, options = params
-              self.running_attached_function = true
-              options ||= {}
-              options = options.symbolize_keys
-              self.rag_search(query, **options)
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_index_get_file",
-          ->(filename) { in_attached_function { rag_get_file(filename) } },
-        )
-      end
-
       def attach_chain(mini_racer_context)
         mini_racer_context.attach("_chain_set_custom_raw", ->(raw) { self.custom_raw = raw })
         mini_racer_context.attach(
@@ -519,721 +473,6 @@ module DiscourseAi
         )
       end
 
-      def attach_discourse(mini_racer_context)
-        mini_racer_context.attach(
-          "_discourse_get_post",
-          ->(post_id) do
-            in_attached_function do
-              post = Post.find_by(id: post_id)
-              return nil if post.nil?
-              obj =
-                recursive_as_json(
-                  PostSerializer.new(post, scope: system_guardian, root: false, add_raw: true),
-                )
-              topic_obj =
-                recursive_as_json(
-                  ListableTopicSerializer.new(post.topic, scope: system_guardian, root: false),
-                )
-              obj["topic"] = topic_obj
-              obj
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_get_topic",
-          ->(topic_id) do
-            in_attached_function do
-              topic = Topic.find_by(id: topic_id)
-              return nil if topic.nil?
-              data =
-                recursive_as_json(
-                  ListableTopicSerializer.new(topic, scope: system_guardian, root: false),
-                )
-              data["tags"] = topic.tags.pluck(:name)
-              data["first_post_id"] = topic.first_post&.id
-              data["category_id"] = topic.category_id
-              data["category_name"] = topic.category&.name
-              data["category_slug"] = topic.category&.slug
-              data
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_get_user",
-          ->(user_id_or_username) do
-            in_attached_function do
-              user = nil
-
-              if user_id_or_username.is_a?(Integer) ||
-                   user_id_or_username.to_i.to_s == user_id_or_username
-                user = User.find_by(id: user_id_or_username.to_i)
-              else
-                user = User.find_by(username: user_id_or_username)
-              end
-
-              return nil if user.nil?
-
-              recursive_as_json(UserSerializer.new(user, scope: system_guardian, root: false))
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_respond_to_agent",
-          ->(agent_name, params) do
-            in_attached_function do
-              # if we have 1000s of agents this can be slow ... we may need to optimize
-              agent_class = AiAgent.all_agents.find { |agent| agent.name == agent_name }
-              return { error: "Agent not found" } if agent_class.nil?
-
-              agent = agent_class.new
-              bot = DiscourseAi::Agents::Bot.as(@bot_user || agent.user, agent: agent)
-              playground = DiscourseAi::AiBot::Playground.new(bot)
-
-              if @context.post_id
-                post = Post.find_by(id: @context.post_id)
-                return { error: "Post not found" } if post.nil?
-
-                reply_post =
-                  playground.reply_to(
-                    post,
-                    custom_instructions: params["instructions"],
-                    whisper: params["whisper"],
-                  )
-
-                if reply_post
-                  return(
-                    { success: true, post_id: reply_post.id, post_number: reply_post.post_number }
-                  )
-                else
-                  return { error: "Failed to create reply" }
-                end
-              elsif @context.message_id && @context.channel_id
-                message = Chat::Message.find_by(id: @context.message_id)
-                channel = Chat::Channel.find_by(id: @context.channel_id)
-                return { error: "Message or channel not found" } if message.nil? || channel.nil?
-
-                reply =
-                  playground.reply_to_chat_message(message, channel, @context.context_post_ids)
-
-                if reply
-                  return { success: true, message_id: reply.id }
-                else
-                  return { error: "Failed to create chat reply" }
-                end
-              else
-                return { error: "No valid context for response" }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_create_chat_message",
-          ->(params) do
-            in_attached_function do
-              params = params.symbolize_keys
-              channel_name = params[:channel_name]
-              username = params[:username]
-              message = params[:message]
-
-              return { error: "Missing required parameter: channel_name" } if channel_name.blank?
-              return { error: "Missing required parameter: message" } if message.blank?
-
-              user, guardian = resolve_guardian(username)
-              return { error: "User not found: #{username}" } if user.nil?
-
-              channel = Chat::Channel.find_by(name: channel_name)
-              channel ||= Chat::Channel.find_by(slug: channel_name.parameterize)
-              return { error: "Channel not found: #{channel_name}" } if channel.nil?
-
-              begin
-                message =
-                  ChatSDK::Message.create(
-                    raw: message,
-                    channel_id: channel.id,
-                    guardian: guardian,
-                    enforce_membership: !channel.direct_message_channel?,
-                  )
-
-                {
-                  success: true,
-                  message_id: message.id,
-                  message: message.message,
-                  created_at: message.created_at.iso8601,
-                }
-              rescue => e
-                { error: "Failed to create chat message: #{e.message}" }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_create_staged_user",
-          ->(params) do
-            in_attached_function do
-              params = params.symbolize_keys
-              email = params[:email]
-              username = params[:username]
-              name = params[:name]
-
-              # Validate parameters
-              return { error: "Missing required parameter: email" } if email.blank?
-              return { error: "Missing required parameter: username" } if username.blank?
-
-              # Check if user already exists
-              existing_user = User.find_by_email(email) || User.find_by_username(username)
-              return { error: "User already exists", user_id: existing_user.id } if existing_user
-
-              begin
-                user =
-                  User.create!(
-                    email: email,
-                    username: username,
-                    name: name || username,
-                    staged: true,
-                    approved: true,
-                    trust_level: TrustLevel[0],
-                  )
-
-                { success: true, user_id: user.id, username: user.username, email: user.email }
-              rescue => e
-                { error: "Failed to create staged user: #{e.message}" }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_create_topic",
-          ->(params) do
-            in_attached_function do
-              params = params.symbolize_keys
-              category_name = params[:category_name]
-              category_id = params[:category_id]
-              title = params[:title]
-              raw = params[:raw]
-              username = params[:username]
-              tags = params[:tags]
-
-              if category_id.blank? && category_name.blank?
-                return { error: "Missing required parameter: category_id or category_name" }
-              end
-              return { error: "Missing required parameter: title" } if title.blank?
-              return { error: "Missing required parameter: raw" } if raw.blank?
-
-              user, guardian = resolve_guardian(username)
-              return { error: "User not found: #{username}" } if user.nil?
-
-              category = resolve_category(category_id.presence || category_name)
-              return { error: "Category not found" } if category.nil?
-              return { error: "Permission denied" } unless guardian.can_create?(Topic, category)
-
-              begin
-                post_creator =
-                  PostCreator.new(
-                    user,
-                    title: title,
-                    raw: raw,
-                    category: category.id,
-                    tags: tags,
-                    skip_validations: true,
-                    guardian: guardian,
-                  )
-
-                post = post_creator.create
-
-                if post_creator.errors.present?
-                  return { error: post_creator.errors.full_messages.join(", ") }
-                end
-
-                {
-                  success: true,
-                  topic_id: post.topic_id,
-                  post_id: post.id,
-                  topic_slug: post.topic.slug,
-                  topic_url: post.topic.url,
-                }
-              rescue => e
-                { error: "Failed to create topic: #{e.message}" }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_create_post",
-          ->(params) do
-            in_attached_function do
-              params = params.symbolize_keys
-              topic_id = params[:topic_id]
-              raw = params[:raw]
-              username = params[:username]
-              reply_to_post_number = params[:reply_to_post_number]
-
-              # Validate parameters
-              return { error: "Missing required parameter: topic_id" } if topic_id.blank?
-              return { error: "Missing required parameter: raw" } if raw.blank?
-
-              user, guardian = resolve_guardian(username)
-              return { error: "User not found: #{username}" } if user.nil?
-
-              topic = Topic.find_by(id: topic_id)
-              return { error: "Topic not found" } if topic.nil?
-              return { error: "Permission denied" } unless guardian.can_create?(Post, topic)
-
-              begin
-                post_creator =
-                  PostCreator.new(
-                    user,
-                    raw: raw,
-                    topic_id: topic_id,
-                    reply_to_post_number: reply_to_post_number,
-                    skip_validations: true,
-                    guardian: guardian,
-                  )
-
-                post = post_creator.create
-
-                if post_creator.errors.present?
-                  return { error: post_creator.errors.full_messages.join(", ") }
-                end
-
-                {
-                  success: true,
-                  post_id: post.id,
-                  post_number: post.post_number,
-                  cooked: post.cooked,
-                }
-              rescue => e
-                { error: "Failed to create post: #{e.message}" }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_search",
-          ->(params) do
-            in_attached_function do
-              search_params = params.symbolize_keys
-              if search_params.delete(:with_private)
-                search_params[:current_user] = Discourse.system_user
-              end
-              search_params[:result_style] = :detailed
-              results = DiscourseAi::Utils::Search.perform_search(**search_params)
-              recursive_as_json(results)
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_get_agent",
-          ->(agent_name) do
-            in_attached_function do
-              agent = AiAgent.find_by(name: agent_name)
-
-              return { error: "Agent not found" } if agent.nil?
-
-              # Return a subset of relevant agent attributes
-              {
-                agent:
-                  agent.attributes.slice(
-                    "id",
-                    "name",
-                    "description",
-                    "enabled",
-                    "system_prompt",
-                    "temperature",
-                    "top_p",
-                    "vision_enabled",
-                    "tools",
-                    "max_context_posts",
-                    "allow_chat_channel_mentions",
-                    "allow_chat_direct_messages",
-                    "allow_topic_mentions",
-                    "allow_personal_messages",
-                  ),
-              }
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_update_agent",
-          ->(agent_id_or_name, updates) do
-            in_attached_function do
-              # Find agent by ID or name
-              agent = nil
-              if agent_id_or_name.is_a?(Integer) || agent_id_or_name.to_i.to_s == agent_id_or_name
-                agent = AiAgent.find_by(id: agent_id_or_name.to_i)
-              else
-                agent = AiAgent.find_by(name: agent_id_or_name)
-              end
-
-              return { error: "Agent not found" } if agent.nil?
-
-              allowed_updates = {}
-
-              if updates["system_prompt"].present?
-                allowed_updates[:system_prompt] = updates["system_prompt"]
-              end
-
-              if updates["temperature"].is_a?(Numeric)
-                allowed_updates[:temperature] = updates["temperature"]
-              end
-
-              allowed_updates[:top_p] = updates["top_p"] if updates["top_p"].is_a?(Numeric)
-
-              if updates["description"].present?
-                allowed_updates[:description] = updates["description"]
-              end
-
-              allowed_updates[:enabled] = updates["enabled"] if updates["enabled"].is_a?(
-                TrueClass,
-              ) || updates["enabled"].is_a?(FalseClass)
-
-              if agent.update(allowed_updates)
-                return(
-                  {
-                    success: true,
-                    agent:
-                      agent.attributes.slice(
-                        "id",
-                        "name",
-                        "description",
-                        "enabled",
-                        "system_prompt",
-                        "temperature",
-                        "top_p",
-                      ),
-                  }
-                )
-              else
-                return { error: agent.errors.full_messages.join(", ") }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_edit_post",
-          ->(post_id, raw, options) do
-            in_attached_function do
-              post = Post.find_by(id: post_id)
-              return { error: "Post not found" } if post.nil?
-
-              options ||= {}
-              edit_reason = options["edit_reason"]
-
-              user, guardian = resolve_guardian(options["username"])
-              return { error: "User not found: #{options["username"]}" } if user.nil?
-              return { error: "Permission denied" } unless guardian.can_edit?(post)
-
-              revisor = PostRevisor.new(post)
-              if revisor.revise!(user, { raw: raw, edit_reason: edit_reason })
-                { success: true, post_id: post.id }
-              else
-                { error: post.errors.full_messages.join(", ") }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_edit_topic",
-          ->(topic_id, updates, options) do
-            in_attached_function do
-              topic = Topic.find_by(id: topic_id)
-              return { error: "Topic not found" } if topic.nil?
-
-              updates ||= {}
-              options ||= {}
-
-              user, guardian = resolve_guardian(options["username"])
-              return { error: "User not found: #{options["username"]}" } if user.nil?
-              return { error: "Permission denied" } unless guardian.can_see?(topic)
-
-              # Handle category change
-              if updates.key?("category")
-                if topic.private_message?
-                  return { error: "Cannot change category of private messages" }
-                end
-
-                category = resolve_category(updates["category"])
-                return { error: "Category not found" } if category.nil?
-
-                unless guardian.can_move_topic_to_category?(category.id)
-                  return { error: "Permission denied" }
-                end
-
-                unless topic.change_category_to_id(category.id, silent: !!options["silent"])
-                  return { error: "Failed to change category", details: topic.errors.full_messages }
-                end
-              end
-
-              # Handle visibility change
-              if updates.key?("visible")
-                unless guardian.can_toggle_topic_visibility?(topic)
-                  return { error: "Permission denied" }
-                end
-
-                visibility_reason =
-                  Topic.visibility_reasons[
-                    updates["visible"] ? :manually_relisted : :manually_unlisted
-                  ]
-
-                topic.update_status(
-                  "visible",
-                  updates["visible"],
-                  user,
-                  { visibility_reason_id: visibility_reason },
-                )
-              end
-
-              # Handle tags change
-              if updates.key?("tags")
-                unless DiscourseTagging.tag_topic_by_names(
-                         topic,
-                         guardian,
-                         updates["tags"],
-                         append: !!options["append"],
-                       )
-                  return { error: "Failed to apply tags", details: topic.errors.full_messages }
-                end
-                topic.first_post&.publish_change_to_clients!(:revised)
-              end
-
-              {
-                success: true,
-                topic: {
-                  id: topic.id,
-                  category_id: topic.category_id,
-                  category_name: topic.category&.name,
-                  category_slug: topic.category&.slug,
-                  tags: topic.tags.pluck(:name),
-                  visible: topic.visible,
-                  visibility_reason_id: topic.visibility_reason_id,
-                },
-              }
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_get_custom_field",
-          ->(type, id, key) do
-            in_attached_function do
-              return { error: "Invalid type: #{type}" } unless CUSTOM_FIELD_MODELS.key?(type)
-              model = find_model_by_type(type, id)
-              return nil if model.nil?
-              model.custom_fields[key]
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_discourse_set_custom_field",
-          ->(type, id, key, value) do
-            in_attached_function do
-              return { error: "Invalid type: #{type}" } unless CUSTOM_FIELD_MODELS.key?(type)
-              return { error: "Key is required" } if key.blank?
-              if key.to_s.length > MAX_CUSTOM_FIELD_KEY_LENGTH
-                return { error: "Key too long (max #{MAX_CUSTOM_FIELD_KEY_LENGTH} characters)" }
-              end
-              if value.to_s.length > MAX_CUSTOM_FIELD_VALUE_LENGTH
-                return { error: "Value too long (max #{MAX_CUSTOM_FIELD_VALUE_LENGTH} characters)" }
-              end
-
-              model = find_model_by_type(type, id)
-              return { error: "#{type.capitalize} not found: #{id}" } if model.nil?
-
-              model.custom_fields[key] = value
-              model.save_custom_fields
-
-              { success: true, key: key, value: model.custom_fields[key] }
-            end
-          end,
-        )
-      end
-
-      def attach_upload(mini_racer_context)
-        mini_racer_context.attach(
-          "_upload_get_base64",
-          ->(upload_id_or_url, max_pixels) do
-            in_attached_function do
-              return nil if upload_id_or_url.blank?
-
-              upload = nil
-
-              # Handle both upload ID and short URL
-              if upload_id_or_url.to_s.start_with?("upload://")
-                # Handle short URL format
-                sha1 = Upload.sha1_from_short_url(upload_id_or_url)
-                return nil if sha1.blank?
-                upload = Upload.find_by(sha1: sha1)
-              else
-                # Handle numeric ID
-                upload_id = upload_id_or_url.to_i
-                return nil if upload_id <= 0
-                upload = Upload.find_by(id: upload_id)
-              end
-
-              return nil if upload.nil?
-
-              max_pixels = max_pixels&.to_i
-              max_pixels = nil if max_pixels && max_pixels <= 0
-
-              encoded_uploads =
-                DiscourseAi::Completions::UploadEncoder.encode(
-                  upload_ids: [upload.id],
-                  max_pixels: max_pixels || 10_000_000, # Default to 10M pixels if not specified
-                )
-
-              encoded_uploads.first&.dig(:base64)
-            end
-          end,
-        )
-        mini_racer_context.attach(
-          "_upload_get_url",
-          ->(short_url) do
-            in_attached_function do
-              return nil if short_url.blank?
-
-              sha1 = Upload.sha1_from_short_url(short_url)
-              return nil if sha1.blank?
-
-              upload = Upload.find_by(sha1: sha1)
-              return nil if upload.nil?
-              # TODO we may need to introduce an API to unsecure, secure uploads
-              return nil if upload.secure?
-
-              GlobalPath.full_cdn_url(upload.url)
-            end
-          end,
-        )
-        mini_racer_context.attach(
-          "_upload_create",
-          ->(filename, base_64_content) do
-            begin
-              in_attached_function do
-                # protect against misuse
-                filename = File.basename(filename)
-
-                Tempfile.create(filename) do |file|
-                  file.binmode
-                  file.write(Base64.decode64(base_64_content))
-                  file.rewind
-
-                  upload =
-                    UploadCreator.new(
-                      file,
-                      filename,
-                      for_private_message: @context.private_message,
-                    ).create_for(@bot_user.id)
-
-                  if upload&.persisted?
-                    { "id" => upload.id, "short_url" => upload.short_url, "url" => upload.url }
-                  else
-                    error_msg =
-                      upload&.errors&.full_messages&.join(", ") || "Upload creation failed"
-                    { "error" => error_msg }
-                  end
-                end
-              end
-            rescue => e
-              { "error" => e.message }
-            end
-          end,
-        )
-      end
-
-      def attach_http(mini_racer_context)
-        mini_racer_context.attach(
-          "_http_get",
-          ->(url, options) do
-            begin
-              @http_requests_made += 1
-              if @http_requests_made > MAX_HTTP_REQUESTS
-                raise TooManyRequestsError.new("Tool made too many HTTP requests")
-              end
-
-              in_attached_function do
-                headers = (options && options["headers"]) || {}
-                base64_encode = options && options["base64Encode"]
-
-                result = {}
-                DiscourseAi::Agents::Tools::Tool.send_http_request(
-                  url,
-                  headers: headers,
-                ) do |response|
-                  if base64_encode
-                    result[:body] = Base64.strict_encode64(response.body)
-                  else
-                    result[:body] = response.body
-                  end
-                  result[:status] = response.code.to_i
-                end
-
-                result
-              end
-            end
-          end,
-        )
-
-        %i[post put patch delete].each do |method|
-          mini_racer_context.attach(
-            "_http_#{method}",
-            ->(url, options) do
-              begin
-                @http_requests_made += 1
-                if @http_requests_made > MAX_HTTP_REQUESTS
-                  raise TooManyRequestsError.new("Tool made too many HTTP requests")
-                end
-
-                in_attached_function do
-                  headers = (options && options["headers"]) || {}
-                  body = options && options["body"]
-                  base64_encode = options && options["base64Encode"]
-
-                  result = {}
-                  DiscourseAi::Agents::Tools::Tool.send_http_request(
-                    url,
-                    method: method,
-                    headers: headers,
-                    body: body,
-                  ) do |response|
-                    if base64_encode
-                      result[:body] = Base64.strict_encode64(response.body)
-                    else
-                      result[:body] = response.body
-                    end
-                    result[:status] = response.code.to_i
-                  end
-
-                  result
-                rescue => e
-                  if Rails.env.development?
-                    p url
-                    p options
-                    p e
-                    puts e.backtrace
-                  end
-                  raise e
-                end
-              end
-            end,
-          )
-        end
-      end
-
-      def find_model_by_type(type, id)
-        CUSTOM_FIELD_MODELS[type]&.find_by(id: id)
-      end
-
       def resolve_tool_secret!(alias_name)
         value, error =
           tool.resolve_secret(
@@ -1246,19 +485,19 @@ module DiscourseAi
         when nil
           value
         when :alias_not_declared
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.alias_not_declared", alias: alias_name),
                 )
         when :missing_binding
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.missing_binding", alias: alias_name),
                 )
         when :secret_not_found
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.secret_not_found", alias: alias_name),
                 )
         else
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.unknown_error"),
                 )
         end

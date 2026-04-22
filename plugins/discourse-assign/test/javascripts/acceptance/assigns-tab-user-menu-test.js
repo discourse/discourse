@@ -47,43 +47,37 @@ const USER_MENU_ASSIGN_RESPONSE = {
   ],
 };
 
-acceptance(
-  "Discourse Assign | user menu | user cannot assign",
-  function (needs) {
-    needs.user({
-      can_assign: false,
-    });
-    needs.settings({
-      assign_enabled: true,
-    });
+acceptance("user menu | user cannot assign", function (needs) {
+  needs.user({
+    can_assign: false,
+  });
+  needs.settings({
+    assign_enabled: true,
+  });
 
-    test("the assigns tab is not shown", async function (assert) {
-      await visit("/");
-      await click(".d-header-icons .current-user button");
-      assert.dom("#user-menu-button-assign-list").doesNotExist();
-    });
-  }
-);
+  test("the assigns tab is not shown", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    assert.dom("#user-menu-button-assign-list").doesNotExist();
+  });
+});
 
-acceptance(
-  "Discourse Assign | user menu | assign_enabled setting is disabled",
-  function (needs) {
-    needs.user({
-      can_assign: false,
-    });
-    needs.settings({
-      assign_enabled: false,
-    });
+acceptance("user menu | assign_enabled setting is disabled", function (needs) {
+  needs.user({
+    can_assign: false,
+  });
+  needs.settings({
+    assign_enabled: false,
+  });
 
-    test("the assigns tab is not shown", async function (assert) {
-      await visit("/");
-      await click(".d-header-icons .current-user button");
-      assert.dom("#user-menu-button-assign-list").doesNotExist();
-    });
-  }
-);
+  test("the assigns tab is not shown", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    assert.dom("#user-menu-button-assign-list").doesNotExist();
+  });
+});
 
-acceptance("Discourse Assign | user menu", function (needs) {
+acceptance("user menu", function (needs) {
   needs.user({
     can_assign: true,
     grouped_unread_notifications: {

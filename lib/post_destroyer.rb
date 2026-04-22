@@ -84,6 +84,8 @@ class PostDestroyer
       mark_for_deletion(delete_removed_posts_after)
     end
 
+    resolve_reviewables_for_author_deletion if @user.id == @post.user_id
+
     UserActionManager.post_destroyed(@post)
 
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
@@ -278,7 +280,6 @@ class PostDestroyer
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
         @post.topic.update_column(:closed, true) if @post.is_first_post?
-        resolve_reviewables_for_author_deletion
       end
     end
   end

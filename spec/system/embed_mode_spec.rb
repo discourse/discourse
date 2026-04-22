@@ -70,8 +70,7 @@ describe "Embed mode" do
   end
 
   context "when logged in" do
-    fab!(:user)
-    let(:composer) { PageObjects::Components::Composer.new }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     before do
       SiteSetting.rich_editor = true
@@ -82,24 +81,16 @@ describe "Embed mode" do
       fab!(:no_reply_topic, :topic)
       fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }
 
-      it "auto-opens the composer" do
+      it "shows the docked composer" do
         visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
 
-        expect(page).to have_css("#reply-control.open")
+        expect(topic_page).to have_docked_composer
       end
 
-      it "uses the rich text editor" do
-        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
-
-        expect(page).to have_css("#reply-control.open")
-        expect(composer).to have_rich_editor
-      end
-
-      it "does not auto-open the composer outside embed mode" do
+      it "does not show the docked composer outside embed mode" do
         visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}")
 
-        expect(page).to have_no_css("#reply-control.open")
-        expect(page).to have_no_css("#reply-control.fullscreen")
+        expect(topic_page).to have_no_docked_composer
       end
 
       it "does not show floating timeline button" do
@@ -107,42 +98,51 @@ describe "Embed mode" do
 
         expect(topic_page).to have_no_floating_timeline_button
       end
+
+      it "hides the standard composer" do
+        visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
+
+        expect(page).to have_no_css("#reply-control.open")
+      end
     end
 
     context "with a topic that has replies" do
       fab!(:reply) { Fabricate(:post, topic: topic) }
 
-      it "does not auto-open the composer" do
+      it "shows the docked composer" do
         visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
-        expect(page).to have_no_css("#reply-control.open")
-        expect(page).to have_no_css("#reply-control.fullscreen")
+        expect(topic_page).to have_docked_composer
       end
 
-      it "opens the composer when clicking reply" do
+      it "focuses the docked composer when clicking reply" do
         visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-        topic_page.click_reply_button
+        topic_page.click_embed_reply_button
 
-        expect(page).to have_css("#reply-control.open")
+        expect(page).to have_css(".embed-mode-composer .d-editor-input:focus")
+      end
+
+      it "submits a reply through the docked composer" do
+        user.user_option.update!(composition_mode: UserOption.composition_mode_types[:markdown])
+        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+        expect(topic_page).to have_docked_composer
+
+        find(".embed-mode-composer .d-editor-input").fill_in(with: "Hello from the docked composer")
+        find(".embed-mode-composer .docked-composer__submit-btn").click
+
+        expect(page).to have_css(".topic-post", text: "Hello from the docked composer")
       end
 
       context "with many replies" do
         before { 15.times { Fabricate(:post, topic: topic) } }
 
-        it "shows floating action buttons when footer is not visible" do
+        it "shows floating timeline button when footer is not visible" do
           visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
           expect(topic_page).to have_post_number(2)
 
-          expect(topic_page).to have_floating_reply_button
           expect(topic_page).to have_floating_timeline_button
-        end
-
-        it "opens the composer when clicking the floating reply button" do
-          visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
-          expect(topic_page).to have_post_number(2)
-
-          topic_page.click_floating_reply_button
-          expect(page).to have_css("#reply-control.open")
+          expect(topic_page).to have_no_floating_reply_button
         end
 
         it "opens the timeline when clicking the floating timeline button" do
@@ -181,11 +181,10 @@ describe "Embed mode" do
     fab!(:no_reply_topic, :topic)
     fab!(:no_reply_post) { Fabricate(:post, topic: no_reply_topic) }
 
-    it "does not auto-open the composer" do
+    it "does not show the docked composer" do
       visit("/t/#{no_reply_topic.slug}/#{no_reply_topic.id}?embed_mode=true")
 
-      expect(page).to have_no_css("#reply-control.open")
-      expect(page).to have_no_css("#reply-control.fullscreen")
+      expect(topic_page).to have_no_docked_composer
     end
 
     it "shows login label on the embed first-reply footer" do

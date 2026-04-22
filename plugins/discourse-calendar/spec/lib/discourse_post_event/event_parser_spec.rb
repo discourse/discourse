@@ -123,6 +123,50 @@ describe DiscoursePostEvent::EventParser do
     expect(events[0][:image]).to eq("upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg")
   end
 
+  it "extracts description as plain text" do
+    post_event = build_post user, <<~TXT
+      [event start="2020"]
+      Check out https://example.com for details
+      [/event]
+    TXT
+
+    events = parser.extract_events(post_event)
+    expect(events[0][:description]).to eq("Check out https://example.com for details")
+  end
+
+  describe ".linkify_description" do
+    it "wraps URLs in anchor tags" do
+      expect(parser.linkify_description("Visit https://example.com for info")).to eq(
+        'Visit <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a> for info',
+      )
+    end
+
+    it "handles multiple URLs" do
+      expect(parser.linkify_description("See https://a.com and https://b.com")).to eq(
+        'See <a href="https://a.com" rel="noopener nofollow ugc">https://a.com</a> and <a href="https://b.com" rel="noopener nofollow ugc">https://b.com</a>',
+      )
+    end
+
+    it "leaves text without URLs unchanged" do
+      expect(parser.linkify_description("No links here")).to eq("No links here")
+    end
+
+    it "escapes HTML in description text" do
+      expect(parser.linkify_description("Use <b>bold</b> & more at https://example.com")).to eq(
+        'Use &lt;b&gt;bold&lt;/b&gt; &amp; more at <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a>',
+      )
+    end
+
+    it "omits nofollow for staff posts" do
+      staff_user = Fabricate(:admin)
+      post = Fabricate(:post, user: staff_user)
+
+      expect(parser.linkify_description("See https://example.com", post: post)).to eq(
+        'See <a href="https://example.com">https://example.com</a>',
+      )
+    end
+  end
+
   context "with custom fields" do
     before { SiteSetting.discourse_post_event_allowed_custom_fields = "foo-bar|bar" }
 
