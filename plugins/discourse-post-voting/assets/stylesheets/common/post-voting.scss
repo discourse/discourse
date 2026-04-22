@@ -22,12 +22,6 @@
   }
 
   @include viewport.until(sm) {
-    .topic-avatar {
-      position: relative;
-    }
-
-    // TODO: avoid using magic values here
-    // and in .post-voting-post below
     .topic-body .cooked {
       margin-left: calc(48px + var(--space-2));
     }
