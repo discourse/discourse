@@ -301,9 +301,6 @@ export default class LocalDateBuilder {
   }
 
   _timeOnlyFormat(localTime, displayedTimezone) {
-    if (this._isEqualZones(displayedTimezone, this.localTimezone)) {
-      return localTime.datetimeWithZone(displayedTimezone).format("LT");
-    }
     return this._formatWithZone(localTime, displayedTimezone, "LT");
   }
 }

@@ -49,7 +49,7 @@ module("Unit | discourse-local-dates", function (hooks) {
         });
 
         assert.dom(".relative-time", from).hasText("Yesterday 5:21 PM");
-        assert.dom(".relative-time", to).hasText("10:22 PM");
+        assert.dom(".relative-time", to).hasText("10:22 PM (Singapore)");
       }
     );
   });

@@ -95,21 +95,8 @@ module("Unit | Library | local-date-builder", function () {
         localTimezone: SINGAPORE,
         sameLocalDayAsFrom: true,
       },
-      { formatted: "12:22 PM" },
-      "displays the time only, without redundant zone, when the to-part renders in the user's timezone"
-    );
-
-    assert.buildsCorrectDate(
-      {
-        time: "12:22:00",
-        date: "2022-10-07",
-        timezone: SINGAPORE,
-        displayedTimezone: SINGAPORE,
-        localTimezone: PARIS,
-        sameLocalDayAsFrom: true,
-      },
       { formatted: "12:22 PM (Singapore)" },
-      "keeps the zone on the to-part when it renders in a timezone other than the user's"
+      "it displays the time only as the date is the same local day as 'from'"
     );
   });
 
