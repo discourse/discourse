@@ -37,8 +37,9 @@ export default class LikedUsersList extends Component {
 
   @action
   togglePopup(event) {
+    const target = event.currentTarget;
     const virtualElement = {
-      getBoundingClientRect: () => event.currentTarget.getBoundingClientRect(),
+      getBoundingClientRect: () => target.getBoundingClientRect(),
     };
 
     this.menu.show(virtualElement, {
