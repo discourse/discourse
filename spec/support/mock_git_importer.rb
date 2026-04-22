@@ -27,7 +27,7 @@ class MockGitImporter < ThemeStore::GitImporter
     end
 
     def reset!
-      repos = nil
+      @repos = nil
     end
 
     private

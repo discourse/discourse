@@ -1432,7 +1432,6 @@ class TopicsController < ApplicationController
 
   def track_visit_to_topic
     topic_id = @topic_view.topic.id
-    ip = request.remote_ip
     user_id = (current_user.id if current_user)
 
     if !request.format.json?

@@ -421,7 +421,7 @@ class Upload < ActiveRecord::Base
           raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
 
           color
-        rescue Discourse::Utils::CommandError => e
+        rescue Discourse::Utils::CommandError
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation

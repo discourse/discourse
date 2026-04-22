@@ -138,7 +138,7 @@ module DiscourseSubscriptions
         },
       }
 
-      plan = ::Stripe::Price.create(price_object, stripe_request_opts)
+      ::Stripe::Price.create(price_object, stripe_request_opts)
     end
 
     def get_one_time_payments(product_ids)

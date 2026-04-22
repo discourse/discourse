@@ -48,7 +48,7 @@ module DiscourseChatIntegration
               ),
           )
 
-        data = { type: "stream", to: stream, subject: subject, content: message }
+        { type: "stream", to: stream, subject: subject, content: message }
       end
 
       def self.trigger_notification(post, channel, rule)
