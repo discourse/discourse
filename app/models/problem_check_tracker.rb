@@ -7,8 +7,8 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
-  scope :ignored, -> { where("ignored_at IS NOT NULL") }
-  scope :watched, -> { where("ignored_at IS NULL") }
+  scope :ignored, -> { where.not(ignored_at: nil) }
+  scope :watched, -> { where(ignored_at: nil) }
 
   before_destroy :silence_the_alarm
 
@@ -46,7 +46,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   def watch!
     return if watched?
 
-    update(ignored_at: nil)
+    update!(ignored_at: nil)
     sound_the_alarm if sound_the_alarm?
   end
 

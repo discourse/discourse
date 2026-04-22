@@ -45,7 +45,7 @@ RSpec.describe Admin::ProblemChecksController do
 
       it "ignores the problem" do
         put "/admin/problem_checks/#{problem_check_tracker.id}/ignore.json"
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
       end
     end
 
@@ -74,7 +74,7 @@ RSpec.describe Admin::ProblemChecksController do
 
       it "watches the problem" do
         put "/admin/problem_checks/#{problem_check_tracker.id}/watch.json"
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
       end
     end
 

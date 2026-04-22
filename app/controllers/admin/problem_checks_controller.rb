@@ -11,7 +11,7 @@ class Admin::ProblemChecksController < Admin::AdminController
 
     tracker.ignore!
 
-    render json: success_json
+    head :no_content
   end
 
   def watch
@@ -19,6 +19,6 @@ class Admin::ProblemChecksController < Admin::AdminController
 
     tracker.watch!
 
-    render json: success_json
+    head :no_content
   end
 end
