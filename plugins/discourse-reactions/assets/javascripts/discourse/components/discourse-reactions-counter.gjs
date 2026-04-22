@@ -223,7 +223,11 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   #toggleMenu(trigger) {
-    this.menu.show(trigger, {
+    const virtualElement = {
+      getBoundingClientRect: () => trigger.getBoundingClientRect(),
+    };
+
+    this.menu.show(virtualElement, {
       identifier: MENU_IDENTIFIER,
       component: DiscourseReactionsUsersMenu,
       modalForMobile: true,

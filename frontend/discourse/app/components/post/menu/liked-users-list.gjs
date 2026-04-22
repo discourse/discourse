@@ -37,7 +37,11 @@ export default class LikedUsersList extends Component {
 
   @action
   togglePopup(event) {
-    this.menu.show(event.currentTarget, {
+    const virtualElement = {
+      getBoundingClientRect: () => event.currentTarget.getBoundingClientRect(),
+    };
+
+    this.menu.show(virtualElement, {
       identifier: MENU_IDENTIFIER,
       component: PostLikedUsersMenu,
       modalForMobile: true,
