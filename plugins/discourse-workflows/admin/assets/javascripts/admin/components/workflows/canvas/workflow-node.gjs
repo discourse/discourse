@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
@@ -102,6 +103,12 @@ export default class WorkflowNode extends Component {
     return nodeTypeStyle(this.resolvedNodeType);
   }
 
+  get dimensionsStyle() {
+    return trustHTML(
+      `width: ${this.args.node.width}px; height: ${this.args.node.height}px;`
+    );
+  }
+
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     <div
@@ -112,6 +119,7 @@ export default class WorkflowNode extends Component {
         (if @node.selected "is-selected")
         (if this.isUnavailable "is-unavailable")
       }}
+      style={{this.dimensionsStyle}}
       data-client-id={{this.data.clientId}}
     >
       <div class="workflow-rete-node__icon-row">

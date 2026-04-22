@@ -37,6 +37,9 @@ export function setupCanvasKeyboard(
   };
 
   const handler = (event) => {
+    if (event.repeat) {
+      return;
+    }
     if (isInputElement(event.target)) {
       return;
     }

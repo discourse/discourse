@@ -214,6 +214,7 @@ export class ReteEditorBridge {
     this.getNodeWidth = getNodeWidth;
     this.getNodeHeight = getNodeHeight;
     this.isSyncing = false;
+    this.isAutoArranging = false;
     this.wasDragging = false;
     this.lastPickedId = null;
     this.lastPickedTime = 0;
@@ -221,7 +222,7 @@ export class ReteEditorBridge {
 
   setupPipes() {
     this.area.addPipe((context) => {
-      if (this.isSyncing) {
+      if (this.isSyncing || this.isAutoArranging) {
         return context;
       }
 
@@ -608,95 +609,101 @@ export class ReteEditorBridge {
   }
 
   async autoArrange() {
-    const allConns = this.editor.getConnections();
-    const outgoing = buildOutgoingIndex(allConns, "source");
-    const loopBodyIds = new Set(
-      this.renderer.graphIndex.loopOwnerByNodeId.keys()
-    );
+    this.isAutoArranging = true;
+    try {
+      const allConns = this.editor.getConnections();
+      const outgoing = buildOutgoingIndex(allConns, "source");
+      const loopBodyIds = new Set(
+        this.renderer.graphIndex.loopOwnerByNodeId.keys()
+      );
 
-    const removedConns = allConns.filter(
-      (c) =>
-        c.source === c.target ||
-        loopBodyIds.has(c.source) ||
-        loopBodyIds.has(c.target) ||
-        (c.sourceOutput === LOOP_OUTPUT && c.source !== c.target)
-    );
-    for (const conn of removedConns) {
-      await this.editor.removeConnection(conn.id);
-    }
-
-    await this.arrange.layout({
-      options: {
-        "elk.algorithm": "layered",
-        "elk.direction": "RIGHT",
-        "elk.spacing.nodeNode": "30",
-        "elk.layered.spacing.nodeNodeBetweenLayers": "20",
-      },
-    });
-
-    for (const conn of removedConns) {
-      await this.editor.addConnection(conn);
-    }
-
-    const loopBodies = new Map();
-    for (const [nodeId, owner] of this.renderer.graphIndex.loopOwnerByNodeId) {
-      if (!loopBodies.has(owner)) {
-        loopBodies.set(owner, new Set());
-      }
-      loopBodies.get(owner).add(nodeId);
-    }
-
-    for (const [loopId, bodyIds] of loopBodies) {
-      const loopView = this.area.nodeViews.get(loopId);
-      if (!loopView) {
-        continue;
-      }
-
-      const ordered = [];
-      const visited = new Set();
-      let current = allConns.find(
+      const removedConns = allConns.filter(
         (c) =>
-          c.source === loopId &&
-          c.sourceOutput === LOOP_OUTPUT &&
-          c.target !== loopId
-      )?.target;
-      while (current && bodyIds.has(current) && !visited.has(current)) {
-        ordered.push(current);
-        visited.add(current);
-        current = outgoing
-          .get(current)
-          ?.find((c) => c.target !== loopId)?.target;
+          c.source === c.target ||
+          loopBodyIds.has(c.source) ||
+          loopBodyIds.has(c.target) ||
+          (c.sourceOutput === LOOP_OUTPUT && c.source !== c.target)
+      );
+      for (const conn of removedConns) {
+        await this.editor.removeConnection(conn.id);
       }
 
-      ordered.reverse();
-      const orderedNodes = ordered
-        .map((id) => this.editor.getNode(id))
-        .filter(Boolean);
-      const totalWidth =
-        orderedNodes.reduce(
-          (width, node) => width + (node.width || NODE_WIDTH),
-          0
-        ) +
-        Math.max(0, orderedNodes.length - 1) * 50;
-      let currentX = loopView.position.x + (NODE_WIDTH - totalWidth) / 2;
+      await this.arrange.layout({
+        options: {
+          "elk.algorithm": "layered",
+          "elk.direction": "RIGHT",
+          "elk.spacing.nodeNode": "30",
+          "elk.layered.spacing.nodeNodeBetweenLayers": "20",
+        },
+      });
 
-      for (const bodyNode of orderedNodes) {
-        const bodyView = this.area.nodeViews.get(bodyNode.id);
-        if (bodyView) {
-          await bodyView.translate(currentX, loopView.position.y + 160);
+      for (const conn of removedConns) {
+        await this.editor.addConnection(conn);
+      }
+
+      const loopBodies = new Map();
+      for (const [nodeId, owner] of this.renderer.graphIndex
+        .loopOwnerByNodeId) {
+        if (!loopBodies.has(owner)) {
+          loopBodies.set(owner, new Set());
         }
-        currentX += (bodyNode.width || NODE_WIDTH) + 50;
+        loopBodies.get(owner).add(nodeId);
       }
-    }
 
-    const positions = new Map();
-    for (const node of this.editor.getNodes()) {
-      const view = this.area.nodeViews.get(node.id);
-      if (view) {
-        positions.set(node.id, { x: view.position.x, y: view.position.y });
+      for (const [loopId, bodyIds] of loopBodies) {
+        const loopView = this.area.nodeViews.get(loopId);
+        if (!loopView) {
+          continue;
+        }
+
+        const ordered = [];
+        const visited = new Set();
+        let current = allConns.find(
+          (c) =>
+            c.source === loopId &&
+            c.sourceOutput === LOOP_OUTPUT &&
+            c.target !== loopId
+        )?.target;
+        while (current && bodyIds.has(current) && !visited.has(current)) {
+          ordered.push(current);
+          visited.add(current);
+          current = outgoing
+            .get(current)
+            ?.find((c) => c.target !== loopId)?.target;
+        }
+
+        ordered.reverse();
+        const orderedNodes = ordered
+          .map((id) => this.editor.getNode(id))
+          .filter(Boolean);
+        const totalWidth =
+          orderedNodes.reduce(
+            (width, node) => width + (node.width || NODE_WIDTH),
+            0
+          ) +
+          Math.max(0, orderedNodes.length - 1) * 50;
+        let currentX = loopView.position.x + (NODE_WIDTH - totalWidth) / 2;
+
+        for (const bodyNode of orderedNodes) {
+          const bodyView = this.area.nodeViews.get(bodyNode.id);
+          if (bodyView) {
+            await bodyView.translate(currentX, loopView.position.y + 160);
+          }
+          currentX += (bodyNode.width || NODE_WIDTH) + 50;
+        }
       }
+
+      const positions = new Map();
+      for (const node of this.editor.getNodes()) {
+        const view = this.area.nodeViews.get(node.id);
+        if (view) {
+          positions.set(node.id, { x: view.position.x, y: view.position.y });
+        }
+      }
+      return positions;
+    } finally {
+      this.isAutoArranging = false;
     }
-    return positions;
   }
 
   get areaContentElement() {
