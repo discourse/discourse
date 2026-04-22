@@ -62,7 +62,6 @@ module DiscourseWorkflows
               type: :options,
               required: true,
               default: "on_received",
-              expression: true,
               options: %w[on_received workflow_finishes],
               ui: {
                 expression: false,

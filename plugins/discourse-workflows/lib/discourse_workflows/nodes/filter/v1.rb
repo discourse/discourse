@@ -40,8 +40,7 @@ module DiscourseWorkflows
               },
             },
             options: {
-              caseSensitive: :boolean,
-              typeValidation: :string,
+              type: :object,
               ui: {
                 hidden: true,
               },

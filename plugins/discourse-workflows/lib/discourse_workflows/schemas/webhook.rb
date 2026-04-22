@@ -34,7 +34,9 @@ module DiscourseWorkflows
         required: true,
         default: "GET",
         options: HTTP_METHODS,
-        expression: true,
+        ui: {
+          expression: true,
+        },
       },
       response_mode: {
         type: :options,

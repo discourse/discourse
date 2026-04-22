@@ -44,12 +44,12 @@ module DiscourseDataExplorer
             query_id: {
               type: :integer,
               required: true,
+              options_source: "queries",
               visible_if: {
                 operation: "queries",
               },
               ui: {
                 control: :combo_box,
-                options_source: "queries",
                 value_property: "id",
                 name_property: "name",
                 filterable: true,

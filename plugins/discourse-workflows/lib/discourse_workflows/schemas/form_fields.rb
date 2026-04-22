@@ -12,8 +12,10 @@ module DiscourseWorkflows
           type: :options,
           required: true,
           default: "text",
-          expression: true,
           options: %w[text textarea number checkbox dropdown],
+          ui: {
+            expression: true,
+          },
         },
       }.freeze
 

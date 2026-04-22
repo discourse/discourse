@@ -62,20 +62,18 @@ if defined?(DiscourseWorkflows)
               assignee: {
                 type: :string,
                 required: true,
+                visible_if: {
+                  operation: "assign",
+                },
                 ui: {
                   control: :user_or_group,
-                  visible_if: {
-                    operation: "assign",
-                  },
                 },
               },
               replace_existing: {
                 type: :boolean,
                 default: true,
-                ui: {
-                  visible_if: {
-                    operation: "assign",
-                  },
+                visible_if: {
+                  operation: "assign",
                 },
               },
             }
