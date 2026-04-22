@@ -31,7 +31,7 @@
     "memfs": "^4.39.0",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.10",
     "postcss-js": "^5.1.0",
     "postcss-media-minmax": "^5.0.0",
     "postcss-nesting": "^14.0.0",
