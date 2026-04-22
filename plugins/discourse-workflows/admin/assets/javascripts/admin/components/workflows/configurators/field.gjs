@@ -106,7 +106,17 @@ export default class Field extends Component {
   }
 
   get validation() {
-    return this.args.schema?.required ? "required" : undefined;
+    const schema = this.args.schema ?? {};
+    const rules = [];
+    if (schema.required) {
+      rules.push("required");
+    }
+    if (schema.min != null || schema.max != null) {
+      const min = schema.min ?? Number.MIN_SAFE_INTEGER;
+      const max = schema.max ?? Number.MAX_SAFE_INTEGER;
+      rules.push(`between:${min},${max}`);
+    }
+    return rules.length > 0 ? rules.join("|") : undefined;
   }
 
   get customValidation() {

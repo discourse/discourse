@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::NodeType do
+  around do |example|
+    nodes_before = described_class.registered_nodes.dup
+    example.run
+    described_class.registered_nodes.replace(nodes_before)
+  end
+
   describe ".inputs" do
     it "defaults to [:main]" do
       expect(described_class.inputs).to eq([:main])
@@ -116,6 +122,57 @@ RSpec.describe DiscourseWorkflows::NodeType do
 
     it "defaults unknown types to an empty string" do
       expect(described_class.exemplar_from_schema(unknown: :not_a_type)).to eq("unknown" => "")
+    end
+
+    it "treats hashes with :type as field definitions, not nested schemas" do
+      schema = {
+        body: {
+          type: :object,
+          visible_if: {
+            resume: "webhook",
+          },
+        },
+        method: {
+          type: :string,
+          visible_if: {
+            resume: "webhook",
+          },
+        },
+      }
+
+      expect(described_class.exemplar_from_schema(schema)).to eq("body" => {}, "method" => "")
+    end
+
+    it "expands :object field definitions with :fields" do
+      schema = {
+        user: {
+          type: :object,
+          fields: {
+            id: :integer,
+            email: :string,
+          },
+          visible_if: {
+            operation: "assign",
+          },
+        },
+      }
+
+      expect(described_class.exemplar_from_schema(schema)).to eq(
+        "user" => {
+          "id" => 0,
+          "email" => "",
+        },
+      )
+    end
+  end
+
+  describe "Wait.output_exemplar" do
+    it "does not leak schema metadata into the exemplar" do
+      exemplar = DiscourseWorkflows::Nodes::Wait::V1.output_exemplar
+      expect(exemplar.keys).to match_array(%w[body headers query method webhook_url])
+      expect(exemplar).not_to have_key("visible_if")
+      expect(exemplar["method"]).to eq("")
+      expect(exemplar["body"]).to eq({})
     end
   end
 end

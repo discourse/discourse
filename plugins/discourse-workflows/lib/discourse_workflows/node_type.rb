@@ -88,12 +88,21 @@ module DiscourseWorkflows
     end
 
     def self.exemplar_from_schema(schema)
-      schema.each_with_object({}) do |(key, value), hash|
-        hash[key.to_s] = if value.is_a?(Hash)
-          exemplar_from_schema(value)
+      schema.each_with_object({}) { |(key, value), hash| hash[key.to_s] = exemplar_value(value) }
+    end
+
+    def self.exemplar_value(value)
+      return TYPE_EXEMPLARS.fetch(value, "") unless value.is_a?(Hash)
+
+      if value.key?(:type)
+        type = value[:type]
+        if type == :object && value[:fields].is_a?(Hash)
+          exemplar_from_schema(value[:fields])
         else
-          TYPE_EXEMPLARS.fetch(value, "")
+          TYPE_EXEMPLARS.fetch(type, "")
         end
+      else
+        exemplar_from_schema(value)
       end
     end
 
