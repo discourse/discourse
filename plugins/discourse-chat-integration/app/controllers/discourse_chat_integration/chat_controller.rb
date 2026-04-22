@@ -77,7 +77,6 @@ class DiscourseChatIntegration::ChatController < ApplicationController
     render json: { errors: [err.message] }, status: :unprocessable_entity
   rescue DiscourseChatIntegration::ProviderError => err
     if err.info[:error_key].present?
-      Rails.logger.error("Chat integration setup failed error_key=#{err.info[:error_key]}")
       render json: { error_key: err.info[:error_key] }, status: :unprocessable_entity
     else
       render json: { errors: [err.message.presence || "error"] }, status: :unprocessable_entity
