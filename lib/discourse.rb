@@ -184,7 +184,22 @@ module Discourse
   end
 
   def self.deprecated_columns
-    DEPRECATED_COLUMNS
+    DEPRECATED_COLUMNS.concat(ignored_columns)
+  end
+
+  def self.ignored_columns
+    ActiveRecord::Base.descendants.filter_map do |model|
+      model
+        .ignored_columns
+        .map do |column_name|
+          HasDeprecatedColumns::DeprecatedColumn.new(
+            model.table_name,
+            column_name,
+            "column `#{column_name}` is deprecated.",
+          )
+        end
+        .presence
+    end
   end
 
   def self.job_exception_stats
