@@ -18,3 +18,4 @@ en:
     recaptcha_secret_key: "ReCaptcha Secret Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account"
 
   captcha_verification_failed: "Captcha verification failed"
+  captcha_not_configured: "Captcha is enabled but not properly configured. Please contact the site administrator."

@@ -161,6 +161,45 @@ RSpec.describe "Users", type: :request do
       end
     end
 
+    context "when captcha provider is set to none" do
+      before { SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::NONE }
+
+      it "succeeds in registration without captcha" do
+        post "/u.json", params: user_params
+        expect(JSON.parse(response.body)["success"]).to be(true)
+      end
+    end
+
+    context "when captcha is misconfigured" do
+      context "when hCaptcha is selected but keys are missing" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::HCAPTCHA
+          SiteSetting.hcaptcha_site_key = ""
+          SiteSetting.hcaptcha_secret_key = ""
+        end
+
+        it "blocks registration" do
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+          expect(JSON.parse(response.body)["message"]).to include("not properly configured")
+        end
+      end
+
+      context "when reCaptcha is selected but keys are missing" do
+        before do
+          SiteSetting.discourse_captcha_provider = DiscourseHcaptcha::CaptchaProvider::RECAPTCHA
+          SiteSetting.recaptcha_site_key = ""
+          SiteSetting.recaptcha_secret_key = ""
+        end
+
+        it "blocks registration" do
+          post "/u.json", params: user_params
+          expect(JSON.parse(response.body)["success"]).to be(false)
+          expect(JSON.parse(response.body)["message"]).to include("not properly configured")
+        end
+      end
+    end
+
     private
 
     def honeypot_magic(params)
