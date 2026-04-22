@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
+import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMap from "discourse/components/topic-map";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -164,11 +165,21 @@ export default class NestedView extends Component {
         @outletArgs={{lazyHash model=@topic}}
       />
 
-      <PluginOutlet
-        @name="topic-above-suggested"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash model=@topic}}
-      />
+      {{#unless @hasMoreRoots}}
+        <PluginOutlet
+          @name="topic-above-suggested"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash model=@topic}}
+        />
+
+        <MoreTopics @topic={{@topic}} />
+
+        <PluginOutlet
+          @name="topic-below-suggested"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash model=@topic}}
+        />
+      {{/unless}}
 
       <PluginOutlet
         @name="topic-navigation-bottom"
