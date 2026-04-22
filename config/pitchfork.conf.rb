@@ -123,7 +123,7 @@ before_service_worker_ready do |server, service_worker|
     demon_class.start(1, logger: server.logger)
   end
 
-  Demon::PluginJsWatcher.start(verbose: true) if Rails.env.development?
+  Demon::PluginJsWatcher.start(verbose: true) if Rails.env.development? && !ENV["CI"]
 
   Thread.new do
     while true

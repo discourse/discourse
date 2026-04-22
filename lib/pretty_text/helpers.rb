@@ -64,9 +64,9 @@ module PrettyText
 
         Upload
           .where(sha1: map.values)
-          .pluck(:sha1, :url, :extension, :original_filename, :secure)
+          .pluck(:sha1, :url, :extension, :secure)
           .each do |row|
-            sha1, url, extension, original_filename, secure = row
+            sha1, url, extension, secure = row
 
             if short_urls = reverse_map[sha1]
               secure_uploads = SiteSetting.secure_uploads? && secure

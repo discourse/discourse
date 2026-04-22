@@ -215,7 +215,6 @@ class SiteSettings::TypeSupervisor
   def type_hash(name)
     name = name.to_sym
     type = get_type(name)
-    list_type = get_list_type(name)
     result = { type: type.to_s }
 
     if type == :enum || (type == :list && get_enum_class(name))

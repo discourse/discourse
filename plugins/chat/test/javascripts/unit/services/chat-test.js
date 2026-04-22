@@ -26,7 +26,7 @@ acceptance("Unit | Service | chat", function (needs) {
       .get(() => 10);
   });
 
-  test("getDocumentTitleCount returns urget count when title_count_mode is 'notifications'", function (assert) {
+  test("getDocumentTitleCount returns urgent count when title_count_mode is 'notifications'", function (assert) {
     this.currentUser.user_option.title_count_mode = "notifications";
 
     const count = this.chat.getDocumentTitleCount();

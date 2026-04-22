@@ -48,7 +48,6 @@ module DiscourseAi
         end
 
         def as_llm_messages(contents)
-          resource_path = "#{Discourse.base_path}/t/-/#{target.id}"
           content_title = target.title
           category_name = target.category&.name
           # Only include public tags in summaries since summaries are cached and shared across users

@@ -154,7 +154,6 @@ module DiscourseNarrativeBot
     end
 
     def reset_data(user, additional_data = {})
-      old_data = get_data(user)
       new_data = additional_data
       set_data(user, new_data)
       new_data
