@@ -87,6 +87,9 @@ class MoveWebArtifactsToCore < ActiveRecord::Migration[8.0]
     execute "UPDATE site_settings SET name = 'web_artifact_security' WHERE name = 'ai_artifact_security'"
     execute "UPDATE site_settings SET name = 'web_artifact_kv_value_max_length' WHERE name = 'ai_artifact_kv_value_max_length'"
     execute "UPDATE site_settings SET name = 'web_artifact_max_keys_per_user_per_artifact' WHERE name = 'ai_artifact_max_keys_per_user_per_artifact'"
+
+    # Clean up orphaned API key scopes for the removed admin artifact endpoints
+    execute "DELETE FROM api_key_scopes WHERE resource = 'ai' AND action = 'manage_artifacts'"
   end
 
   def down
