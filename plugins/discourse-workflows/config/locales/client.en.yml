@@ -213,10 +213,8 @@ en:
         raw: "Body"
         raw_description: "Raw content for the first post."
         category_id: "Category ID"
-        category_id_description: "Leave blank to rely on normal category validation."
         tag_names: "Tags"
-        user_id: "Author User ID"
-        user_id_description: "Leave blank to use the system user."
+        username: "Author username"
       set_fields:
         include_input: "Include input data"
         mode: "Mode"

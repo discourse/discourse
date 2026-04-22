@@ -19,7 +19,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
               "title" => "Workflow topic",
               "raw" => "First post body",
               "category_id" => category.id.to_s,
-              "user_id" => admin.id.to_s,
+              "username" => admin.username,
             },
             item: item,
           )
@@ -44,11 +44,12 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
       expect(result).to include("post_id" => topic.first_post.id, "post_number" => 1)
     end
 
-    it "falls back to the system user when no user is configured" do
+    it "creates a topic as the system user when the username is 'system'" do
       execute_node(
         configuration: {
           "title" => "System topic",
           "raw" => "Created by workflows",
+          "username" => "system",
         },
         item: item,
       )
@@ -62,6 +63,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
           "title" => "Tagged topic",
           "raw" => "With tags",
           "tag_names" => ["alpha", " beta "],
+          "username" => "system",
         },
         item: item,
       )
@@ -75,7 +77,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
           configuration: {
             "title" => "Workflow topic",
             "raw" => "First post body",
-            "user_id" => -999,
+            "username" => "nonexistent_user",
           },
           item: item,
         )
@@ -84,7 +86,14 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateTopic::V1 do
 
     it "raises when topic creation fails validation" do
       expect do
-        execute_node(configuration: { "title" => "", "raw" => "" }, item: item)
+        execute_node(
+          configuration: {
+            "title" => "",
+            "raw" => "",
+            "username" => "system",
+          },
+          item: item,
+        )
       end.to raise_error(RuntimeError)
     end
   end

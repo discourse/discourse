@@ -19,7 +19,7 @@ RSpec.describe DiscourseWorkflows::Executor do
                    "raw" => "={{ trigger.raw }}",
                    "category_id" => "={{ trigger.category_id }}",
                    "tag_names" => "={{ trigger.tags }}",
-                   "user_id" => "={{ trigger.user_id }}",
+                   "username" => "={{ trigger.username }}",
                  }
           g.chain "trigger-1", "action-1"
         end
@@ -30,7 +30,7 @@ RSpec.describe DiscourseWorkflows::Executor do
         raw: "Generated body",
         category_id: category.id,
         tags: %w[alpha beta],
-        user_id: admin.id,
+        username: admin.username,
       }
 
       execution = described_class.new(workflow, "trigger-1", trigger_data).run

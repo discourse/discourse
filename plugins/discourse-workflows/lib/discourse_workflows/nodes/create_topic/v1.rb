@@ -47,9 +47,13 @@ module DiscourseWorkflows
                 control: :tags,
               },
             },
-            user_id: {
-              type: :integer,
-              required: false,
+            username: {
+              type: :string,
+              required: true,
+              default: "system",
+              ui: {
+                control: :user,
+              },
             },
           }
         end
@@ -59,11 +63,10 @@ module DiscourseWorkflows
         end
 
         def execute(exec_ctx)
-          run_as_user = exec_ctx.run_as_user
           items =
             exec_ctx.input_items.map do |item|
               config = exec_ctx.get_parameters(item)
-              result = process(run_as_user, config)
+              result = process(config)
               wrap(result)
             end
           [items]
@@ -71,8 +74,8 @@ module DiscourseWorkflows
 
         private
 
-        def process(run_as_user, config)
-          author = config["user_id"].present? ? User.find(config["user_id"]) : run_as_user
+        def process(config)
+          author = User.find_by!(username: config["username"])
           tag_names = normalize_tag_names(config["tag_names"])
 
           DiscourseTools::CreateTopic.call(
