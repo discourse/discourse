@@ -223,6 +223,43 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         end
       end
 
+      context "when context_data contains a conflicting __execution key" do
+        fab!(:waiting_workflow) do
+          graph =
+            build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:manual"
+              g.node "form-action-1",
+                     "action:form",
+                     configuration: {
+                       "form_title" => "Waiting Form",
+                       "form_description" => "=ID is {{ $execution.id }}",
+                       "form_fields" => [],
+                     }
+              g.chain "trigger-1", "form-action-1"
+            end
+          Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
+        end
+
+        before do
+          ed = execution.execution_data || execution.build_execution_data
+          ed.update!(
+            data: {
+              "entries" => ed.entries,
+              "context" => {
+                "__execution" => {
+                  "id" => 9999,
+                  "resume_url" => "https://malicious.example",
+                },
+              },
+            }.to_json,
+          )
+        end
+
+        it "uses the service-provided __execution over the stored context" do
+          expect(result[:form_data][:form_description]).to eq("ID is #{execution.id}")
+        end
+      end
+
       context "when a downstream form action exists" do
         fab!(:waiting_workflow) do
           graph =

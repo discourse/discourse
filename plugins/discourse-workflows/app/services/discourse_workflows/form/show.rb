@@ -90,15 +90,16 @@ module DiscourseWorkflows
       resume_token = waiting_execution.resume_token
       context_data = waiting_execution.execution_data&.context_data || {}
 
-      exec_context = {
-        "__execution" => {
-          "id" => waiting_execution.id,
-          "workflow_id" => workflow.id,
-          "workflow_name" => workflow.name,
-          "resume_url" =>
-            "#{Discourse.base_url}/workflows/webhooks/#{waiting_execution.id}?token=#{resume_token}",
-        },
-      }.merge(context_data)
+      exec_context =
+        context_data.merge(
+          "__execution" => {
+            "id" => waiting_execution.id,
+            "workflow_id" => workflow.id,
+            "workflow_name" => workflow.name,
+            "resume_url" =>
+              "#{Discourse.base_url}/workflows/webhooks/#{waiting_execution.id}?token=#{resume_token}",
+          },
+        )
 
       config = form_node["configuration"] || {}
 
