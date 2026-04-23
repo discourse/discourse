@@ -17,10 +17,19 @@
 #   SCREENSHOTS_DEVICES — comma-separated devices (default: desktop,mobile). Mobile
 #                         uses the Playwright WebKit driver with an iPhone UA so
 #                         Discourse's server-side mobile detection kicks in.
-THEMES = [
+#   SCREENSHOTS_THEMES  — comma-separated theme names to capture (default: foundation,horizon)
+ALL_THEMES = [
   { name: "foundation", id: Theme::CORE_THEMES["foundation"] },
   { name: "horizon", id: Theme::CORE_THEMES["horizon"] },
 ].freeze
+
+THEMES =
+  if ENV["SCREENSHOTS_THEMES"].present?
+    requested = ENV["SCREENSHOTS_THEMES"].split(",").map { |n| n.downcase.strip }
+    ALL_THEMES.select { |t| requested.include?(t[:name]) }
+  else
+    ALL_THEMES
+  end.freeze
 
 DEVICES = (ENV["SCREENSHOTS_DEVICES"] || "desktop,mobile").split(",").map(&:strip).freeze
 
