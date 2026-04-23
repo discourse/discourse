@@ -21,13 +21,6 @@ module DiscourseAi
           return(render json: { translation_progress: [], total: 0, posts_with_detected_locale: 0 })
         end
 
-        supported_locales =
-          SiteSetting.content_localization_supported_locales.presence&.split("|") || []
-
-        if supported_locales.empty?
-          return(render json: { translation_progress: [], total: 0, posts_with_detected_locale: 0 })
-        end
-
         data = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
 
         render json: data

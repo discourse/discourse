@@ -31,7 +31,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         json = response.parsed_body
 
         expect(json["translation_id"]).to eq(DiscourseAi::Configuration::Module::TRANSLATION_ID)
-        expect(json["enabled"]).to be_in([true, false])
+        expect(json["enabled"]).to eq(true)
         expect(json["translation_enabled"]).to eq(true)
         expect(json["hourly_rate"]).to eq(100)
         expect(json["backfill_enabled"]).to be_in([true, false])

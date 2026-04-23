@@ -19,14 +19,6 @@ module PageObjects
         page.has_css?(".d-toggle-switch__checkbox[disabled]")
       end
 
-      def has_loading_spinner?
-        page.has_css?(".ai-translations .loading-container .spinner")
-      end
-
-      def has_no_loading_spinner?
-        page.has_no_css?(".ai-translations .loading-container .spinner")
-      end
-
       def has_chart?
         page.has_css?(".ai-translations__chart")
       end
