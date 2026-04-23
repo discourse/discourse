@@ -101,6 +101,90 @@ describe DiscourseAi::Translation::PostCandidates do
     end
   end
 
+  describe ".needs_localization" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.ai_translation_backfill_max_age_days = 100
+      SiteSetting.content_localization_supported_locales = "en|ja|de"
+      SiteSetting.ai_translation_target_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "returns [post_id, target_locale] pairs for posts needing localization" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to include([post.id, "en"])
+      expect(pairs).to include([post.id, "ja"])
+      expect(pairs).to include([post.id, "de"])
+    end
+
+    it "excludes posts without a detected locale" do
+      Fabricate(:post, locale: nil, topic: Fabricate(:topic, category: target_category))
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to be_empty
+    end
+
+    it "excludes fully translated posts" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: post, locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja")
+      Fabricate(:post_localization, post: post, locale: "de")
+
+      pairs = described_class.needs_localization(limit: 10)
+      post_ids = pairs.map(&:first)
+      expect(post_ids).not_to include(post.id)
+    end
+
+    it "returns only missing locale pairs for partially translated posts" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: post, locale: "en")
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).not_to include([post.id, "en"])
+      expect(pairs).to include([post.id, "ja"])
+      expect(pairs).to include([post.id, "de"])
+    end
+
+    it "excludes posts whose locale matches all target base locales" do
+      SiteSetting.content_localization_supported_locales = "en"
+      post = Fabricate(:post, locale: "en", topic: Fabricate(:topic, category: target_category))
+
+      pairs = described_class.needs_localization(limit: 10)
+      post_ids = pairs.map(&:first)
+      expect(post_ids).not_to include(post.id)
+    end
+
+    it "handles base-locale deduplication (ja_JP localization covers ja target)" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: post, locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja_JP")
+      Fabricate(:post_localization, post: post, locale: "de_DE")
+
+      pairs = described_class.needs_localization(limit: 10)
+      post_ids = pairs.map(&:first)
+      expect(post_ids).not_to include(post.id)
+    end
+
+    it "respects the limit parameter" do
+      3.times do
+        Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      end
+
+      pairs = described_class.needs_localization(limit: 2)
+      expect(pairs.size).to eq(2)
+    end
+
+    it "returns empty when no locales are configured" do
+      SiteSetting.content_localization_supported_locales = ""
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to be_empty
+    end
+  end
+
   describe ".get_completion_all_locales" do
     fab!(:target_category, :category)
 

@@ -11,6 +11,34 @@ module DiscourseAi
         completion_all_locales
       end
 
+      def self.needs_localization(limit:)
+        locales = DiscourseAi::Translation.locales
+        return [] if locales.blank?
+
+        locale_map = {}
+        locales.each { |l| locale_map[l.split("_").first] ||= l }
+
+        target_locale_values = locale_map.map { |base, full| "('#{base}', '#{full}')" }.join(", ")
+
+        base_sql = get.where.not(locale: nil).to_sql
+
+        sql = <<~SQL
+          SELECT ep.id AS post_id, target.target_locale
+          FROM (#{base_sql}) ep
+          JOIN (VALUES #{target_locale_values}) AS target(base_locale, target_locale)
+            ON target.base_locale != split_part(ep.locale, '_', 1)
+          WHERE NOT EXISTS (
+            SELECT 1 FROM post_localizations pl
+            WHERE pl.post_id = ep.id
+              AND split_part(pl.locale, '_', 1) = target.base_locale
+          )
+          ORDER BY ep.updated_at DESC, target.target_locale
+          LIMIT #{limit.to_i}
+        SQL
+
+        DB.query(sql).map { |r| [r.post_id, r.target_locale] }
+      end
+
       private
 
       # all posts that are eligible for translation based on site settings,
