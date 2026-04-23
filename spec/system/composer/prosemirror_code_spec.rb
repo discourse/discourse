@@ -237,7 +237,7 @@ describe "Composer - ProseMirror - Code formatting" do
       composer.type_content("`code mark`")
       expect(rich).to have_css("code", text: "code mark")
       # before the code mark
-      composer.send_keys(:home)
+      composer.send_keys(SystemHelpers::LINE_START_KEY)
       composer.send_keys(:left)
       composer.type_content("..")
       # within the code mark
