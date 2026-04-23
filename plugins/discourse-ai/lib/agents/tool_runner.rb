@@ -219,6 +219,13 @@ module DiscourseAi
           },
           getPost: _discourse_get_post,
           getTopic: _discourse_get_topic,
+          filterTopics: function(params) {
+            const result = _discourse_filter_topics(params || {});
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
           getUser: _discourse_get_user,
           getAgent: function(name) {
             const agentDetails = _discourse_get_agent(name);

@@ -59,6 +59,9 @@ uk:
     chat_integration_webex_excerpt_length: "Довжина уривку публікації Webex Team"
     chat_integration_google_enabled: "Увімкнути постачальника інтеграції чату «Google Chat»"
     chat_integration_google_excerpt_length: "Довжина уривку допису в Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "У деяких каналах інтеграції чату є помилки. Відвідайте <a href='%{base_path}/admin/plugins/discourse-chat-integration'>розділ інтеграції чату</a> , щоб дізнатися більше."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -75,6 +78,10 @@ uk:
       added_and_removed: "Додано %{added} і видалено %{removed}"
       added: "Додано %{added}"
       removed: "Видалено %{removed}"
+    errors:
+      provider_already_enabled: "Постачальника '%{name}' вже ввімкнено"
+      provider_not_found: "Постачальника '%{name}' не знайдено"
+      setting_update_failed: "Не вдалося оновити налаштування: %{errors}"
     provider:
       slack:
         status:

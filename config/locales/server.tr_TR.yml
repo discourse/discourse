@@ -424,6 +424,8 @@ tr_TR:
   not_logged_in: "Bunu yapmak için giriş yapmanız gerekiyor."
   not_found: "İstenen URL veya kaynak bulunamadı."
   invalid_access: "İstenen kaynağı görüntüleme izniniz yok."
+  topic_converter:
+    too_many_recipients: "Dönüştürülemiyor: Bu konudaki katılımcı sayısı izin verilen maksimum sayıyı (%{max}) aşıyor."
   authenticator_not_found: "Kimlik doğrulama yöntemi mevcut değil veya devre dışı bırakılmış."
   authenticator_no_connect: "Bu kimlik doğrulama sağlayıcısı mevcut bir forum hesabına bağlantıya izin vermiyor."
   invalid_api_credentials: "İstenen kaynağı görüntüleme izniniz yok. API kullanıcı adı veya anahtarı geçersiz."
@@ -441,7 +443,13 @@ tr_TR:
   deleted_topic: "Hay aksi! Bu konu silinmiş ve artık mevcut değil."
   delete_topic_failed: "Bu konuyu silerken bir hata oluştu. Lütfen site yöneticisiyle iletişime geçin."
   reading_time: "Okuma süresi"
+  reading_time_minutes:
+    one: "%{count} dk 🕑"
+    other: "%{count} dk 🕑"
   likes: "Beğeniler"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Hay aksi! Bu eylemi zaten gerçekleştirdiniz. Sayfayı yenilemeyi deneyebilir misiniz?"
   too_many_replies:
     one: "Üzgünüz, ancak yeni kullanıcılar geçici olarak aynı konuya %{count} yanıt verebilir."
@@ -842,7 +850,9 @@ tr_TR:
       one: "%{count} Beğeni"
       other: "%{count} Beğeni"
     cannot_permanently_delete:
-      many_posts: "Bu konuda silinmemiş gönderiler var. Lütfen konuyu kalıcı olarak silmeden önce onları kalıcı olarak silin."
+      many_posts:
+        one: "Bu başlık, başlığın kendisi kalıcı olarak silinebilmesi için önce %{count} adet gönderinin kalıcı olarak silinmesi gerekiyor."
+        other: "Bu başlık, başlığın kendisi kalıcı olarak silinebilmesi için önce %{count} adet gönderinin kalıcı olarak silinmesi gerekiyor."
       wait_or_different_admin: "Bu gönderiyi kalıcı olarak silmeden önce %{time_left} beklemelisiniz veya bunu farklı bir yönetici yapmalı."
   rate_limiter:
     slow_down: "Bu eylemi çok fazla gerçekleştirdiniz, lütfen daha sonra tekrar deneyin."
@@ -1152,6 +1162,7 @@ tr_TR:
       every_six_months: "altı ayda bir"
   calendar_subscriptions:
     application_name: "Takvim Abonelikleri"
+    bookmarks_feed_name: "%{site_title} - Yer imi hatırlatıcıları"
   user_api_key:
     title: '"%{application_name}" için yetkilendirme'
     authorize: "Yetkilendir"
@@ -1728,8 +1739,6 @@ tr_TR:
     max_oneboxes_per_post: "Tek bir gönderiye dâhil edilebilecek maksimum onebox sayısını ayarlayın. Onebox'lar gönderi içindeki bağlantılı içeriğin ön izlemesini sağlar."
     facebook_app_access_token: "Facebook uygulama kimliğinizden ve gizli dizinizden oluşturulan bir belirteç. Instagram onebox'ları oluşturmak için kullanılır."
     github_onebox_access_tokens: "Bir GitHub kuruluşunun veya kullanıcısının, özel depolar, taahhütler, çekme istekleri, sorunlar ve dosya içerikleri için GitHub onebox'ları oluşturma amacıyla kullanılan bir GitHub erişim belirteciyle eşleştirilmesi. Bu olmadan, yalnızca genel GitHub URL'leri onebox'lanır."
-    reddit_onebox_client_id: "Kimlik doğrulaması yapılmış Reddit onebox'lar için kullanılan Reddit API OAuth istemci kimliği. Kimlik bilgilerini almak için reddit.com/prefs/apps adresinde 'script' türünde bir uygulama oluşturun."
-    reddit_onebox_client_secret: "Reddit API OAuth istemci gizli anahtarı, kimliği doğrulanmış Reddit onebox'lar için kullanılır. reddit.com/prefs/apps adresinde oluşturulan 'script' türü uygulama altında bulunur."
     logo: "Sitenizin sol üst köşesindeki logo görüntüsü. Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir görüntü kullanın. Boş bırakılırsa site başlığı metni gösterilecektir."
     logo_small: "Sitenizin sol üst köşesinde, aşağı kaydırırken görülen küçük logo görüntüsü. 120 × 120 boyutlarında kare bir görüntü kullanın. Boş bırakılırsa bir ana sayfa glifi gösterilecektir."
     digest_logo: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Geniş bir dikdörtgen görüntü kullanın. SVG görüntüsü kullanmayın. Boş bırakılırsa \"logo\" ayarındaki görüntü kullanılır."
@@ -1829,6 +1838,7 @@ tr_TR:
     content_security_policy_frame_ancestors: "CSP aracılığıyla bu siteyi iframe'lere kimlerin yerleştirebileceğini kısıtlayın. <a href='%{base_path}/admin/customize/embedding'>Gömme</a> bölümünde izin verilen sunucuları kontrol edin"
     content_security_policy_script_src: "İzin verilen ek komut dosyası kaynakları. Geçerli sunucu ve İTA varsayılan olarak dâhil edilir. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>İçerik Güvenliği İlkesi ile XSS Saldırılarını Azaltma.</a> (CSP). Diğer sunucu kaynakları, strict-dynamic etkinleştirildiği için yok sayılır."
     invalidate_inactive_admin_email_after_days: "Bu kadar gün içinde siteyi ziyaret etmemiş olan yönetici hesaplarının oturum açmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
+    can_permanently_delete: "Yöneticilerin gönderileri, konuları ve gönderi revizyonlarını kalıcı olarak silmesine izin verin. Kalıcı olarak silinen veriler veritabanından tamamen kaldırılır ve geri yüklenemez."
     suppress_secured_categories_from_admin: "Yöneticiler için kullanıcı arayüzünün bazı bölümlerinde özel konuları ve kişisel mesajları bastırın. İçerik bazı yerlerde hâlâ görünür olur. Bu bir güvenlik özelliği değildir: Yöneticiler sitedeki tüm içeriğe her zaman erişebilir."
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
@@ -1994,6 +2004,8 @@ tr_TR:
     s3_upload_bucket: "Dosyaların yükleneceği Amazon S3 kova adı. UYARI: Küçük harf, nokta ve alt çizgi olmamalıdır."
     s3_access_key_id: "Görüntüleri, ekleri ve yedeklemeleri yüklemek için kullanılacak Amazon S3 erişim anahtarı kimliği."
     s3_secret_access_key: "Görüntüleri, ekleri ve yedeklemeleri yüklemek için kullanılacak Amazon S3 gizli erişim anahtarı."
+    s3_role_arn: "S3 işlemleri için üstlenilecek IAM rolünün ARN'si. Erişim anahtarlarıyla birlikte ayarlandığında, Discourse geçici kimlik bilgilerini almak için STS AssumeRole işlevini kullanacaktır."
+    s3_role_session_name: "S3 işlemleri için bir IAM rolü üstlenilirken kullanılan isteğe bağlı oturum adı. Denetim amacıyla CloudTrail günlüklerinde görünür. Boş bırakılırsa sunucu ana adıyla varsayılan olarak doldurulur."
     s3_region: "Görüntüleri ve yedeklemeleri yüklemek için kullanılacak Amazon S3 bölge adı."
     s3_cdn_url: "Tüm s3 varlıkları için kullanılacak CDN URL'si (örneğin: https://cdn.somewhere.com). UYARI: Bu ayarı değiştirdikten sonra tüm eski gönderileri yeniden oluşturmanız gerekir."
     s3_use_cdn_url_for_all_uploads: "CDN URL'sini yalnızca resimler için değil, s3'e yüklenen tüm dosyalar için kullanın."
@@ -2080,6 +2092,7 @@ tr_TR:
     max_here_mentioned: "@Burada bahsedilen maksimum kişi sayısı."
     here_mention_allowed_groups: "@Buradan bahsetmesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman @buradan bahsedebilir."
     create_thumbnails: "Bir gönderiye sığmayacak kadar büyük küçük resimler ve ışık kutusu görüntüleri oluşturun."
+    animated_topic_thumbnails: "Statik bir küçük resim oluşturmak yerine, orijinal animasyonlu görüntüyü konu küçük resmi olarak kullanın."
     email_time_window_mins: "Kullanıcılara gönderilerini düzenleme ve son haline getirme şansı tanımak için herhangi bir bildirim e-postası göndermeden önce (n) dakika bekleyin."
     personal_email_time_window_seconds: "Kullanıcılara mesajlarını düzenleme ve son haline getirme şansı tanımak için herhangi bir kişisel mesaj bildirim e-postası göndermeden önce (n) saniye bekleyin."
     email_posts_context: "Bildirim e-postalarına bağlam olarak kaç tane önceki yanıtın dâhil edileceği."
@@ -2456,7 +2469,7 @@ tr_TR:
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluşturun."
     allow_changing_staged_user_tracking: "Aşamalı bir kullanıcının kategori ve etiket bildirim tercihlerinin bir yönetici kullanıcı tarafından değiştirilmesine izin verin."
     use_email_for_username_and_name_suggestions: "Kullanıcı ismi ve isim önerileri için e-posta adreslerinin ilk kısmını kullanın. Uyarı: Bu ayar, kötü niyetli kişilerin üyelerinizin e-posta adresini keşfetmesini kolaylaştırabilir (çünkü birçok kişi `gmail.com` gibi yaygın e-posta sağlayıcılarını kullanır)."
-    use_name_for_username_suggestions: "Kullanıcı adı önerirken kullanıcının tam adını kullanın."
+    use_name_for_username_suggestions: "SSO ve OAuth kayıt süreçleri sırasında kullanıcı adı önerirken kullanıcının tam adını kullanın."
     suggest_weekends_in_date_pickers: "Tarih seçici önerilerine hafta sonlarını (cumartesi ve pazar) dahil edin (Discourse'u yalnızca hafta içi, pazartesiden cumaya kadar kullanıyorsanız bunu devre dışı bırakın)."
     show_bottom_topic_map: "Konuya 10 veya daha fazla yanıt geldiğinde konu haritasını konunun altında gösterir."
     show_topic_map_in_topics_without_replies: "Konuya yanıt gelmese bile konu haritasını gösterir."
@@ -2500,6 +2513,13 @@ tr_TR:
     content_localization_crawler_param: "'İçerik yerelleştirme etkin' ve ‘parametreden yerel ayarları belirle’ seçenekleri etkinleştirildiğinde, web tarayıcılarına yerelleştirilmiş içerik sunun. Desteklenen yerel ayarların listesi ‘içerik yerelleştirme desteklenen yerel ayarlar’ bölümünde tanımlanmıştır."
     content_localization_use_default_locale_when_unsupported: "Tercih edilen dili “içerik yerelleştirme desteklenen yerel ayarlar” listesinde bulunmayan kullanıcılara, sitenin varsayılan yerel ayarlarında yerelleştirilmiş içerik sunun."
     content_localization_allow_author_localization: "Yazarların, yazı menüsü aracılığıyla kendi konularının ve yazılarının yerelleştirmelerini güncellemesine izin verin."
+    nested_replies_enabled: "Konular için iç içe geçmiş yanıtlar görünümünü etkinleştirin."
+    nested_replies_default: "Tüm konular için varsayılan görünüm olarak iç içe geçmiş yanıtları kullan."
+    nested_replies_default_sort: "İç içe geçmiş yanıtlar görünümü için varsayılan sıralama algoritması."
+    nested_replies_max_depth: "İzleme dizisi içindeki yanıtlar için maksimum görüntüleme derinliği. Bu derinliği aşan gönderilerde \"Bu izleme dizisine devam et\" bağlantısı görüntülenir."
+    nested_replies_toggle_mode_groups: "İç içe geçmiş ve düz görünüm arasında geçiş yapabilen gruplar."
+    nested_replies_backfill_batch_size: "Zamanlanmış her çalıştırma için iç içe geçmiş yanıt istatistiklerini doldurmak üzere kullanılacak konu sayısı."
+    nested_replies_cap_nesting_depth: "Yanıtların iç içe geçmesini maksimum görsel derinlikte sınırla. Bu özellik etkinleştirildiğinde, en alt düzeydeki yanıtlar alt öğeler yerine eş düzey öğeler olarak yeniden sınıflandırılır."
     fake_upcoming_change: "Bu, test amaçlı sahte bir değişikliktir. Bu dizeyi çevirmenize gerek yoktur."
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     rename_faq_to_guidelines: "Bu değişiklikle SSS sayfası, Kılavuzlar olarak yeniden adlandırılmıştır. SSS sayfası hala /faq adresinde erişilebilir olacaktır. ‘faq url’ ayarı eskisi gibi çalışmaya devam edecektir."
@@ -2825,8 +2845,11 @@ tr_TR:
       invalid_iat: "Üzgünüz, sunucu saati farklılıkları nedeniyle yetkilendirme token'ını doğrulayamıyoruz. Lütfen tekrar deneyin."
       unauthorized: "Üzgünüz, oturum açma sağlayıcısı isteğinizi onaylamadı. Lütfen tekrar deneyin veya bir yöneticiyle iletişime geçin."
     omniauth_error_unknown: "Girişiniz işlenirken bir sorun oluştu, lütfen tekrar deneyin."
-    omniauth_confirm_title: "%{provider} kullanarak giriş yapın"
+    omniauth_confirm_title: "%{provider} ile giriş yap"
     omniauth_confirm_button: "Devam et"
+    omniauth_confirm_description: "Giriş yapmak için %{provider} adresine yönlendirileceksiniz"
+    omniauth_confirm_provider_description: "Güvenli kimlik doğrulama"
+    omniauth_confirm_footer_html: "%{site} sitesine giriş yapacaksınız"
     authenticator_error_no_valid_email: "%{account} ile ilişkili hiçbir e-posta adresine izin verilmiyor. Hesabınızı farklı bir e-posta adresiyle yapılandırmanız gerekebilir."
     new_registrations_disabled: "Şu anda yeni hesap kayıtlarına izin verilmiyor."
     new_registrations_disabled_discourse_connect: "Yeni hesap kayıtlarına yalnızca Discourse Connect üzerinden izin verilir."
@@ -5027,8 +5050,11 @@ tr_TR:
       restricted_to:
         one: '"%{tag_name}", "%{category_names}" kategorisiyle sınırlıdır'
         other: '"%{tag_name}" şu kategorilerle sınırlıdır: %{category_names}'
-      synonym: 'Eş anlamlı kelimelere izin verilmiyor. Bunun yerine "%{tag_name}" etiketini kullanın.'
+      restricted_to_truncated: '"%{tag_name}" yalnızca şu kategorilerle sınırlıdır: %{category_names} ve %{more_count} tane daha'
+      synonym: 'Bu, "%{tag_name}" ifadesinin eşanlamlısıdır. Bunun yerine "%{tag_name}" ifadesini kullanın.'
       has_synonyms: '"%{tag_name}" eş anlamlıları olduğu için kullanılamıyor.'
+      one_tag_per_topic_group: 'Her konu için "%{tag_group_name}" grubundan yalnızca bir etiket kullanılmasına izin verilir'
+      missing_parent_tag: '"%{parent_tag_name}" etiketinin "%{tag_group_name}" grubundaki etiketleri kullanması gerekir'
       restricted_tags_cannot_be_used_in_category:
         one: '"%{tags}" etiketi "%{category}" kategorisinde kullanılamaz. Lütfen kaldırın.'
         other: 'Şu etiketler "%{category}" kategorisinde kullanılamaz: %{tags}. Lütfen kaldırın.'

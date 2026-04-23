@@ -71,7 +71,7 @@ class PrivateMessageTopicTrackingState
         TopicTrackingState.new_filter_sql
       end
 
-    sql = +<<~SQL
+    +<<~SQL
       SELECT
         DISTINCT topics.id AS topic_id,
         u.id AS user_id,

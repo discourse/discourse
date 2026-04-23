@@ -17,7 +17,7 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
     if version = Discourse.find_compatible_git_resource(temp_folder)
       begin
         execute "git", "cat-file", "-e", version
-      rescue RuntimeError => e
+      rescue RuntimeError
         tracking_ref =
           execute "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
         remote_name = tracking_ref.split("/", 2)[0]

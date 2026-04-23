@@ -441,7 +441,13 @@ hu:
   deleted_topic: "Hoppá! Ezt a témát törölték, és már nem elérhető."
   delete_topic_failed: "Hiba történt a téma törlésekor. Kérjük, forduljon a webhely adminisztrátorához."
   reading_time: "Olvasási Idő"
+  reading_time_minutes:
+    one: "%{count} perc 🕑"
+    other: "%{count} perc 🕑"
   likes: "Kedvelések"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Hoppá! Ön már végrehajtotta ezt a műveletet. Megpróbálnád frissíteni az oldalt?"
   too_many_replies:
     one: "Sajnáljuk, de az új felhasználók ideiglenesen csak %{count} választ küldhetnek ugyanabba a témába."
@@ -838,7 +844,6 @@ hu:
       one: "%{count} kedvelés"
       other: "%{count} kedvelés"
     cannot_permanently_delete:
-      many_posts: "Ebben a témában vannak nem törölt bejegyzések. Kérjük, törölje őket a téma végleges törlése előtt."
       wait_or_different_admin: "Meg kell várnia %{time_left} mielőtt véglegesen törli ezt a hozzászólást, vagy egy másik adminisztrátornak kell ezt megtennie."
   rate_limiter:
     slow_down: "Túl sokszor hajtotta végre ezt a műveletet, próbálja újra később."
@@ -1716,8 +1721,6 @@ hu:
     max_oneboxes_per_post: "Állítsa be az egyetlen bejegyzésben megjeleníthető oneboxok maximális számát. A oneboxok a bejegyzésen belül előnézetet biztosítanak a linkelt tartalomról."
     facebook_app_access_token: "Egy token, amelyet a Facebook alkalmazás azonosítójából és titkos kulcsából generáltak. Az Instagram oneboxok generálására használják."
     github_onebox_access_tokens: "Egy GitHub szervezet vagy felhasználó hozzárendelése egy GitHub hozzáférési tokenhez, amelyet privát repók, kommitok, pull requestek, issue-k és fájltartalmak GitHub oneboxainak generálására használnak. Enélkül csak nyilvános GitHub URL-ek lesznek oneboxolva."
-    reddit_onebox_client_id: "Reddit API OAuth ügyfél-azonosító (client ID) a hitelesített Reddit-oneboxok használatához. A hitelesítő adatok beszerzéséhez hozzon létre egy 'script' típusú alkalmazást a reddit.com/prefs/apps oldalon."
-    reddit_onebox_client_secret: "Reddit API OAuth ügyfél-titok a hitelesített Reddit-oneboxokhoz. Megtalálható a reddit.com/prefs/apps oldalon létrehozott 'script' típusú alkalmazás adatai között."
     logo: "A webhelye bal felső sarkában megjelenő logó kép. Használjon széles, téglalap alakú képet 120 pixel magassággal és 3:1-nél nagyobb képaránnyal. Ha üresen hagyja, a webhely címének szövege fog megjelenni."
     logo_small: "A webhelye bal felső sarkában megjelenő kis logó kép, amely görgetéskor látható. Használjon 120 × 120 pixeles négyzet alakú képet. Ha üresen hagyja, egy házikó ikon fog megjelenni."
     digest_logo: "A webhelye e-mailes összefoglalójának tetején használt alternatív logó kép. Használjon széles, téglalap alakú képet. Ne használjon SVG képet. Ha üresen hagyja, a logo beállításból származó kép lesz használva."
@@ -2441,7 +2444,6 @@ hu:
     create_revision_on_bulk_topic_moves: "Hozzon létre egy revíziót az első bejegyzésekhez, amikor a témákat tömegesen áthelyezik egy új kategóriába."
     allow_changing_staged_user_tracking: "Egy átmeneti felhasználó kategória- és címke értesítési beállításainak módosításának engedélyezése adminisztrátor által."
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét felhasználónév- és névjavaslatokhoz. Figyelmeztetés: Ez megkönnyítheti a rossz szereplők számára, hogy felfedezzék tagjaid e-mail-címét (mert sokan olyan általános e-mail-szolgáltatókat használnak, mint a \"gmail.com\")."
-    use_name_for_username_suggestions: "Használja a felhasználó teljes nevét, amikor felhasználóneveket javasol."
     suggest_weekends_in_date_pickers: "Tartalmazza a hétvégéket (szombat és vasárnap) a dátumválasztó javaslatai között (tiltsa le ezt, ha a Discourse-t csak hétköznap, hétfőtől péntekig használja)."
     show_bottom_topic_map: "Megjeleníti a téma térképét a téma alján, ha az legalább 10 választ tartalmaz."
     show_topic_map_in_topics_without_replies: "Megjeleníti a téma térképét akkor is, ha a témában nincsenek válaszok."
@@ -2806,7 +2808,6 @@ hu:
       invalid_iat: "Sajnáljuk, a szerver órajelének eltérései miatt nem tudjuk ellenőrizni az engedélyezési tokent. Kérjük, próbálja újra."
       unauthorized: "Sajnáljuk, a bejelentkezési szolgáltató nem engedélyezte a kérését. Kérjük, próbálja újra, vagy forduljon egy adminisztrátorhoz."
     omniauth_error_unknown: "Hiba történt a bejelentkezési adatok feldolgozásakor. Kérjük, próbálja újra."
-    omniauth_confirm_title: "Jelentkezzen be a %{provider} használatával"
     omniauth_confirm_button: "Folytatás"
     authenticator_error_no_valid_email: "A %{account} fiókhoz társított e-mail címek egyike sem engedélyezett. Lehet, hogy másik e-mail címmel kell konfigurálnia a fiókját."
     new_registrations_disabled: "Az új fiókok létrehozása jelenleg nem engedélyezett."
@@ -4920,7 +4921,6 @@ hu:
       restricted_to:
         one: 'A(z) „%{tag_name}” címke a(z) „%{category_names}” kategóriára korlátozott'
         other: 'A(z) „%{tag_name}” címke a következő kategóriákra korlátozott: %{category_names}'
-      synonym: 'A szinonimák nem engedélyezettek. Használja helyette a "%{tag_name}" címkét.'
       has_synonyms: '"%{tag_name}" nem használható, mert szinonimái vannak.'
       restricted_tags_cannot_be_used_in_category:
         one: '"%{tags}" címke nem használható ebben a kategóriában: "%{category}". Kérjük távolítsa el.'

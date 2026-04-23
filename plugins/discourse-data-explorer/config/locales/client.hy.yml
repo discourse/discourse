@@ -24,6 +24,7 @@ hy:
       description_placeholder: "Մուտքագրեք նկարագրություն այստեղ"
       ai:
         generate: "Գեներացնել"
+        optional: "ընտրովի"
       import:
         label: "Ներմուծել"
       help:

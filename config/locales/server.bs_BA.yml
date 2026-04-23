@@ -124,6 +124,10 @@ bs_BA:
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   not_in_group:
     join_group: "Pridruži se grupi"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    few: "%{count} min 🕑"
+    other: "%{count} minuta 🕑"
   likes: "Sviđanja"
   embed:
     start_discussion: "Pokreni raspravu"

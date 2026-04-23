@@ -2912,6 +2912,8 @@ ug:
         name_label: "ئوراش ئىسمى"
         attributes_label: "خاسلىق"
         add_attribute: "خاسلىق قوش"
+        attribute_key: "ئاچقۇچ"
+        attribute_value: "قىممەت"
         remove_attribute: "خاسلىق چىقىرىۋەت"
         apply: "قوللان"
         unwrap: "ئوراشنى سۆك"
@@ -3000,6 +3002,9 @@ ug:
         copy: "ئۇلانما كۆچۈر"
         remove: "ئۇلانمىنى چىقىرىۋەت"
         visit: "ئۇلانمىنى سىرتقى بەتكۈچتە ئاچ"
+        link_copied: "ئۇلانما كۆچۈرۈلدى!"
+      onebox_toolbar:
+        copy: "ئۇلانما كۆچۈر"
         link_copied: "ئۇلانما كۆچۈرۈلدى!"
       unsupported_token: "مول تېكىست تەھرىرلىگۈچ بۇ يازمىدا ئىشلىتىلگەن بارلىق ئىقتىدارنى قوللىمايدۇ؛ Markdown تەھرىرلىگۈچكە ئالماشتۇرىدۇ."
     notifications:
@@ -3436,12 +3441,30 @@ ug:
         name: "ئۆچۈر"
       update_category:
         name: "سەھىپىنى يېڭىلا"
+      convert_to_public_topic:
+        name: "ئاشكارا تېما قىلىپ تەڭشە…"
+      convert_to_private_message:
+        name: "شەخسىي ئۇچۇر دەپ تەڭشە"
       reset_bump_dates:
         name: "چوققىلىغان چېسلانى ئەسلىگە قايتۇر"
       defer:
         name: "ئوقۇلمىغان بەلگىسى سال"
       update_notifications:
         name: "ئوقتۇرۇش يېڭىلا"
+    nested_replies:
+      sort:
+        label: "تەرتىپى"
+        top: "قىزغىن"
+        new: "يېڭى"
+      load_more_children:
+        one: "باشقا %{count} جاۋاب"
+        other: "باشقا %{count} جاۋاب"
+      collapsed_replies:
+        one: "%{count} جاۋاب"
+        other: "%{count} جاۋاب"
+      collapse: "يىغ"
+      no_replies: "تېخى جاۋاب يوق."
+      pinned_reply: "چوققىلاندى"
     topic:
       filter_to:
         one: "تېمىدىكى %{count} يازما"
@@ -3961,6 +3984,10 @@ ug:
       sr_post_like_count_button:
         one: "بۇ يازمىنى %{count} كىشى ياقتۇردى."
         other: "بۇ يازمىنى %{count} كىشى ياقتۇردى."
+      likes_popup:
+        title:
+          one: "%{count} ياقتۇرۇش"
+          other: "%{count} ياقتۇرۇش"
       sr_post_read_count_button:
         one: "بۇ يازمىنى %{count} كىشى ئوقۇدى."
         other: "بۇ يازمىنى %{count} كىشى ئوقۇدى."
@@ -3991,7 +4018,7 @@ ug:
           confirm_delete: "«%{languageCode}» نىڭ تەرجىمىسىنى راستتىنلا ئۆچۈرەمسىز؟"
         success: "تەرجىمە مۇۋەپپەقىيەتلىك يېڭىلاندى"
         post_language_selector:
-          none: "يوق"
+          none: "تەڭشەلمىدى"
         edit_warning:
           message: "بۇ تەرجىمە قىلىنغان يازما. <br><br>سىز %{language} دىكى ئەسلى يازمىنى تەھرىرلەمسىز ياكى بۇ تەرجىمىنى تەھرىرلەمسىز؟"
           action_original: "ئەسلى يازمىنى تەھرىرلە"
@@ -4016,6 +4043,7 @@ ug:
       cancel_composer:
         confirm: "يازمىڭىزنى تاشلىۋېتەمسىز؟"
         discard: "تاشلىۋەت"
+        discard_edit: "ئۆزگەرتىشنى تاشلىۋەت"
       via_email: "بۇ يازما ئېلخەتتە كەلگەن"
       via_auto_generated_email: "بۇ يازما ئۆزلۈكىدىن ھاسىللانغان ئېلخەتتە كەلگەن"
       whisper: "بۇ يازما رىياسەتچىلەرگە قىلىنغان شەخسىي پىچىر"
@@ -4059,7 +4087,7 @@ ug:
         admin: "يازما باشقۇرۇش مەشغۇلاتى"
         admin_action: "باشقۇرغۇچى"
         permanently_delete: "مەڭگۈلۈك ئۆچۈر"
-        permanently_delete_confirmation: "بۇ يازمىنى راستتىنلا مەڭگۈلۈك ئۆچۈرەمسىز؟ ئۇ ئەسلىگە قايتۇرالمايسىز."
+        permanently_delete_confirm_phrase: "مەڭگۈلۈك ئۆچۈر"
         wiki: "ۋىكى ياسا"
         unwiki: "ۋىكىنى چىقىرىۋەت"
         convert_to_moderator: "باشقۇرغۇچى رەڭگىنى قوش"
@@ -4205,6 +4233,7 @@ ug:
       back: "سەھىپىگە قايت"
       general: "ئادەتتىكى"
       settings: "تەڭشەك"
+      moderation: "رىياسەتچىلىك"
       advanced: "ئالىي"
       topic_template: "قېلىپ"
       tags: "بەلگە"
@@ -5463,6 +5492,9 @@ ug:
           staff: "باشقۇرغۇچى خادىم"
           all_members: "بارلىق ئەزا"
           developers: "ئىجادكار"
+        impact_types:
+          feature_type: "ئىقتىدار"
+          other_type: "باشقا"
         filter:
           search_placeholder: "ئات، چۈشەندۈرۈش ياكى قىستۇرما بويىچە سۈزىدۇ…"
           all: "ھەممىسى"
@@ -5487,7 +5519,6 @@ ug:
           header_description: "بۇ يەردە مەزكۇر تور بېكەت ۋە قوشۇنىڭىز ھەققىدىكى ئۇچۇرلار تەمىنلىنىدۇ، شۇنداق بولغاندا كىشىلەر جامائىتىڭىز ۋە ئۇلارنىڭ ئارقىسىدىكىلەر ھەققىدىكى ئۇچۇرلارنى ھەمدە مەسىلە چىقسا سىز بىلەن قانداق ئالاقىلىشالايدىغانلىقىنى بىلەلەيدۇ. تور بېكىتىڭىزنىڭ <a href='%{basePath}/about'>ھەققىدە بېتى</a>دە كۆرۈنىدۇ."
         developer:
           title: "ئىجادكار"
-          header_description: "نىسبەت چەكلىمىسى، كۆپەيتمىسى ۋە ھېسابلاش، بىخەتەر ھالەت ۋە باشقا ئالىي ئىقتىدارلارنىڭ ئىجادكارلار تەڭشىكى"
         experimental:
           title: "تەجرىبە"
           header_description: "تور بېكىتىڭىزنىڭ تەجرىبە خاراكتېرلىك ئىقتىدارىنى ئېچىپ ياكى تاقايدۇ، بۇلارنىڭ كۆپىچىسىنى گۇرۇپپا ئاساسىدا تىزگىنلىگىلى بولىدۇ."
@@ -5704,6 +5735,12 @@ ug:
             logs:
               title: "خاتىرە"
               header_description: "زاپاسلاش، ئەسلىگە كەلتۈرۈش ۋە يۈكلەش خاتىرىسىنى كۆرسىتىپ ۋە باشقۇرىدۇ"
+        problem_checks:
+          status: "ھالەت"
+          last_run_at: "ئاخىرقى ئىجرا"
+          ignore: "پەرۋا قىلما"
+          more_options:
+            title: "تېخىمۇ كۆپ تاللانما"
         reports:
           title: "دوكلات"
           header_description: "دوكلات تور بېكىتىڭىزدە نېمە ئىش يۈز بەرگەنلىكىنى بىلىشىڭىزگە ياردەم بېرىدىغان كۈچلۈك قورال. ئۇلار سىزنىڭ ۋەزىيەتنى بىلىش، مەسىلە بايقاش ۋە سانلىق مەلۇماتقا ئاساسەن قارار چىقىرىشىڭىزغا ياردەم بېرىدۇ."

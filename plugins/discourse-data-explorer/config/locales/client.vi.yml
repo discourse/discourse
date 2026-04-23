@@ -12,6 +12,7 @@ vi:
       create: "Tạo"
       ai:
         generate: "Khởi tạo"
+        optional: "tùy chọn"
       import:
         label: "Nhập"
       help:

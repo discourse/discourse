@@ -25,6 +25,7 @@ he:
       description_placeholder: "יש להקליד תיאור כאן"
       ai:
         generate: "ייצר"
+        optional: "רשות"
       import:
         label: "ייבוא"
         unparseable_json: "קובץ JSON שאינו ניתן לפענוח."

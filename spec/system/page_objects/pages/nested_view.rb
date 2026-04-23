@@ -435,6 +435,20 @@ module PageObjects
           has_css?("[data-post-number='#{post.post_number}']")
       end
 
+      # ── Suggested topics ──────────────────────────────────────────
+
+      def has_suggested_topics?
+        has_css?("#suggested-topics")
+      end
+
+      def has_no_suggested_topics?
+        has_no_css?("#suggested-topics")
+      end
+
+      def has_suggested_topic?(topic)
+        has_css?("#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']")
+      end
+
       private
 
       def post_container(post)

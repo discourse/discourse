@@ -23,7 +23,10 @@ module Jobs
       limit = SiteSetting.ai_translation_backfill_hourly_rate / (60 / 5) # this job runs in 5-minute intervals
       return if limit == 0
 
-      Jobs.enqueue(:localize_topics, limit:)
+      pairs = DiscourseAi::Translation::TopicCandidates.needs_localization(limit: limit)
+      return if pairs.empty?
+
+      Jobs.enqueue(:localize_topics, pairs: pairs)
     end
 
     private

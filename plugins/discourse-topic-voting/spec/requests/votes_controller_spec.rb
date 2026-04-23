@@ -19,6 +19,13 @@ describe DiscourseTopicVoting::VotesController do
     expect(response.status).to eq(404)
   end
 
+  it "returns not found for a stale topic id when voting" do
+    topic.destroy
+    post "/voting/vote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(404)
+  end
+
   it "can correctly show deal with voting workflow" do
     SiteSetting.public_send "topic_voting_tl#{user.trust_level}_vote_limit=", 2
 
@@ -42,6 +49,29 @@ describe DiscourseTopicVoting::VotesController do
 
     expect(topic.reload.vote_count).to eq(0)
     expect(user.reload.vote_count).to eq(0)
+  end
+
+  it "returns 403 when the user already voted" do
+    DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+
+    post "/voting/vote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(403)
+  end
+
+  it "returns 403 with voting payload when the user reached the vote limit" do
+    SiteSetting.public_send("topic_voting_tl#{user.trust_level}_vote_limit=", 0)
+
+    post "/voting/vote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(403)
+
+    json = response.parsed_body
+    expect(json["can_vote"]).to eq(false)
+    expect(json["vote_limit"]).to eq(0)
+    expect(json["vote_count"]).to eq(0)
+    expect(json["votes_left"]).to eq(0)
+    expect(json["alert"]).to eq(true)
   end
 
   context "when vote limits are disabled" do
@@ -88,6 +118,9 @@ describe DiscourseTopicVoting::VotesController do
   end
 
   it "triggers a topic_unvote webhook when unvoting" do
+    DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+    topic.update_vote_count
+
     Fabricate(:topic_voting_web_hook)
     post "/voting/unvote.json", params: { topic_id: topic.id }
     expect(response.status).to eq(200)
@@ -98,6 +131,24 @@ describe DiscourseTopicVoting::VotesController do
     expect(payload["topic_slug"]).to eq(topic.slug)
     expect(payload["voter_id"]).to eq(user.id)
     expect(payload["vote_count"]).to eq(0)
+  end
+
+  it "does not remove an archived vote when unvoting" do
+    DiscourseTopicVoting::Vote.create!(user: user, topic: topic, archive: true)
+    topic.update_vote_count
+
+    post "/voting/unvote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(200)
+    expect(DiscourseTopicVoting::Vote.where(user: user, topic: topic, archive: true).count).to eq(1)
+    expect(topic.reload.vote_count).to eq(1)
+  end
+
+  it "returns 200 when there is no active vote to remove" do
+    post "/voting/unvote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["vote_count"]).to eq(0)
   end
 
   it "limits who-voted previews to VOTE_PREVIEW_LIMIT users by default" do

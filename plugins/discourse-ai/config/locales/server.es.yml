@@ -8,21 +8,52 @@ es:
   activerecord:
     attributes:
       llm_model:
+        name: "ID del modelo"
         max_prompt_tokens: "Ventana de contexto"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> requiere atención. En la última hora, no respondió %{failed_calls} de %{total_calls} vez."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> requiere atención. En las últimas %{count} horas, no respondió %{failed_calls} de %{total_calls} veces."
+      ai_credit_soft_limit: "A %{model_name} solo le quedan %{percentage_remaining}% créditos. Los créditos se restablecerán el %{reset_date}. <a href='%{url}'>Ver modelos de IA</a>."
+      ai_credit_hard_limit: "Te has quedado sin créditos de IA para %{model_name}. Las características de IA no estarán disponibles hasta el %{reset_date}. <a href='%{url}'>Ver modelos de IA</a>."
   discourse_automation:
     ai:
       flag_types:
         review: "Añadir publicación a la cola de revisión"
         review_hide: "Añadir publicación a la cola de revisión y ocultar publicación"
+        review_delete: "Añadir publicación a la cola de revisión y eliminarla"
+        review_delete_silence: "Añadir publicación a la cola de revisión, eliminar entrada y silenciar usuario"
         spam: "Marcar como spam y ocultar publicación"
         spam_silence: "Marcar como spam, ocultar publicación y silenciar al usuario"
     scriptables:
+      ai_tool_action:
+        title: Acción de herramienta de IA
+        description: Ejecuta una herramienta de IA cuando se active la automatización
+      llm_agent_triage:
+        title: Triaje de publicaciones usando agentes de IA
+        description: "Responde a publicaciones usando un agente de IA específico"
       llm_triage:
         title: Triaje de publicaciones mediante IA
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
+        flagged_post: |
+          <div>Respuesta del modelo:</div>
+          <p>%{llm_response}</p>
+          <b>Activada por la regla <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
+        notify_author_pm:
+          subject: "Tu publicación se ha eliminado temporalmente para revisarse"
+          body: |
+            Hola, @%{username}:
+
+            Tu publicación en «%{topic_title}» se ha eliminado temporalmente y se ha puesto en nuestra cola de revisión para que un moderador la revise. Si se aprueba, se restaurará automáticamente.
+
+            Referencia: %{post_url}
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"
+      llm_tagger:
+        title: Etiquetar temas usando IA
+        description: "Etiquetar temas automáticamente usando IA"
   site_settings:
     discourse_ai_enabled: "Activar el plugin de IA de Discourse."
     ai_default_llm_model: "El modelo LLM predeterminado que se utilizará para todas las funciones de IA"
@@ -55,6 +86,8 @@ es:
     ai_nsfw_flag_threshold_sexy: "Umbral para que una imagen clasificada como sexy se considere NSFW."
     ai_nsfw_models: "Modelos que se utilizarán para la inferencia NSFW."
     ai_spam_detection_enabled: "Activa el módulo de detección de spam mediante IA"
+    ai_spam_detection_max_post_count: "Número máximo de publicaciones que un usuario puede tener antes de que ya no se analicen en busca de spam"
+    ai_spam_detection_max_trust_level: "Nivel máximo de confianza de los usuarios para escanear en busca de spam"
     ai_openai_api_key: "Clave API para la API de OpenAI. Solo se utiliza para creación y edición de imágenes. Para GPT utiliza la pestaña de configuración de LLM."
     ai_helper_enabled: "Activar el ayudante de IA."
     composer_ai_helper_allowed_groups: "Los usuarios de estos grupos verán el botón del asistente de IA en el compositor."
@@ -63,6 +96,8 @@ es:
     ai_helper_automatic_chat_thread_title: "Establecer automáticamente los títulos de los hilos del chat en función de su contenido."
     ai_helper_enabled_features: "Selecciona las funciones que quieres activar en el ayudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuarios autorizados a acceder a las funciones del ayudante de IA en las publicaciones"
+    ai_helper_post_illustrator_agent: "El agente que se utilizará para la característica de ilustrar publicación del ayudante de IA. Nota: También debes crear una herramienta de generación de imágenes (Administración > Plugins > Discourse AI > Herramientas) para que esta característica funcione."
+    ai_helper_chat_thread_title_agent: "El agente que se utilizará para generar los títulos de los hilos de chat."
     ai_embeddings_selected_model: "Utiliza el modelo seleccionado para generar incrustaciones."
     ai_embeddings_generate_for_pms: "Generar incrustaciones para mensajes personales."
     ai_embeddings_semantic_related_topics_enabled: "Utilizar la Búsqueda semántica para temas relacionados."
@@ -72,24 +107,43 @@ es:
     ai_embeddings_semantic_search_use_hyde: "Usa HyDE para la búsqueda semántica en pantalla completa. Usa un LLM para crear una publicación hipotética a partir del término de búsqueda del usuario para facilitar las coincidencias."
     ai_embeddings_semantic_quick_search_enabled: "Activa la opción de búsqueda semántica en el menú emergente de búsqueda."
     ai_embeddings_semantic_related_include_closed_topics: "Incluir temas cerrados en los resultados de la búsqueda semántica"
+    ai_embeddings_semantic_related_age_penalty: "Aplica una penalización exponencial por antigüedad a los temas en los resultados de la búsqueda semántica. 0.0 = sin penalización; 0.3 = sesgo ligero hacia el contenido activo recientemente; +1.0 = fuerte sesgo de recencia."
+    ai_embeddings_semantic_related_age_time_scale: "Escala de tiempo en días para el cálculo de la penalización por antigüedad. Los temas inactivos durante esta cantidad de días reciben ~50 % de penalización con penalización=1.0. Utiliza 365 para la escala anual y 90 para la escala trimestral."
     ai_embeddings_per_post_enabled: Generar incrustaciones para cada publicación
     ai_summarization_enabled: "Activa la función de resumen"
+    ai_summarization_agent: "Agente que se utilizará para la característica de resumen"
     ai_pm_summarization_allowed_groups: "Grupos autorizados a crear y ver resúmenes en MP."
     ai_summary_gists_enabled: "Genera automáticamente breves resúmenes de las últimas respuestas en los temas"
     ai_summary_backfill_maximum_topics_per_hour: "Número de resúmenes de temas a completar por hora."
     ai_bot_enabled: "Activar el módulo Bot de IA."
+    ai_bot_enabled_llms: "LLM disponibles para seleccionar para conversaciones con bots de IA"
+    ai_bot_enable_chat_warning: "Muestra una advertencia cuando se inicia el chat de MP. Se puede anular editando la cadena de traducción: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Cuando el Bot GPT tenga acceso al MP, responderá a los miembros de estos grupos."
     ai_bot_debugging_allowed_groups: "Permitir que estos grupos vean un botón de depuración en las publicaciones que muestre la solicitud y la respuesta sin procesar de la IA."
     ai_bot_public_sharing_allowed_groups: "Permitir que estos grupos compartan mensajes personales de IA con el público a través de un enlace único disponible públicamente. Nota: Si tu sitio requiere inicio de sesión, los mensajes compartidos también requerirán inicio de sesión."
+    ai_bot_add_to_header: "Mostrar un botón en el encabezado para iniciar un MP con un bot de IA"
+    ai_bot_add_to_community_section: "Muestra un enlace en la sección de la comunidad de la barra lateral para iniciar un MP con un bot de IA."
     ai_bot_github_access_token: "Token de acceso a GitHub para utilizarlo con las herramientas de IA de GitHub (necesario para la compatibilidad con búsquedas)"
+    ai_discover_enabled: "Activar la función de búsqueda de Discord"
+    ai_discover_agent: "Agente que se utilizará para la característica de búsqueda de descubrimiento"
     ai_google_custom_search_api_key: "Clave API para la API de búsqueda personalizada de Google, consulta: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX para la API de búsqueda personalizada de Google"
     ai_discord_search_enabled: "Activa la función de búsqueda de Discord"
     ai_discord_app_id: "El ID de la aplicación Discord a la que deseas vincular la búsqueda de Discord"
     ai_discord_app_public_key: "La clave pública de la aplicación Discord a la que deseas vincular la búsqueda de Discord"
     ai_discord_search_mode: "Selecciona el modo de búsqueda que se utilizará para la búsqueda de Discord"
+    ai_discord_search_agent: "El agente que se usará para la búsqueda de Discord."
     ai_discord_allowed_guilds: "Gremios (servidores) de Discord en los que el bot puede buscar"
+    ai_translation_enabled: "Activar la función de traducción de IA"
+    ai_translation_target_categories: "Solo se traducirá el contenido de las categorías seleccionadas. Las subcategorías deben añadirse por separado. Déjalo vacío para desactivar la traducción de los temas de las categorías."
+    ai_translation_personal_messages: "Controla qué mensajes personales se traducen. «none» desactiva la traducción de MP. «group» traduce solo los MP de grupo. «all» traduce todos los MP."
+    ai_translation_include_bot_content: "Si está activada, el contenido escrito por bots (ID de usuario inferiores a 0) también se enviará para su traducción."
+    ai_translation_max_post_length: "El número máximo de caracteres de una publicación para traducir. Las publicaciones más largas no se traducirán."
     ai_translation_backfill_max_age_days: "La antigüedad máxima de una publicación y tema que se traducirá. Las publicaciones y temas más antiguos no se traducirán. 0 desactiva el relleno, pero no desactivará la traducción de publicaciones nuevas."
+    ai_translation_backfill_hourly_rate: "El número de publicaciones y temas para traducir por hora durante las operaciones de relleno. Déjalo en 0 para desactivar el relleno automático de las traducciones para el contenido existente."
+    ai_translation_backfill_parallel_jobs: "El número de trabajos paralelos de postlocalización que se deben ejecutar por ciclo de relleno. Los valores más altos aumentan el rendimiento, pero consumen más recursos."
+    ai_usage_rollup_after_days: "Número de días que se conservarán las estadísticas de uso de IA por solicitud antes de incluirlas en los agregados diarios. Deja el valor en 0 para desactivar la agregación."
+    ai_audit_logs_purge_after_days: "Elimina los registros de auditoría de la API de IA que tengan más de esta cantidad de días. Por defecto es de unos 6 meses. Déjalo en 0 para mantener indefinidamente."
   reviewables:
     reasons:
       flagged_by_toxicity: El plugin de IA lo denunció tras clasificarlo como tóxico.
@@ -104,88 +158,88 @@ es:
       xaxis: "Positivas(%)"
       yaxis: "Fecha"
     emotion_admiration:
-      title: "\U0001F929 Admiración"
+      title: "🤩 Admiración"
       description: "Publicaciones clasificadas con la emoción Admiración mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_amusement:
-      title: "\U0001F604 Diversión"
+      title: "😄 Diversión"
       description: "Publicaciones clasificadas con la emoción Diversión mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_anger:
-      title: "\U0001F620 Enfado"
+      title: "😠 Enfado"
       description: "Publicaciones clasificadas con la emoción Enfado mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_annoyance:
-      title: "\U0001F612 Molestia"
+      title: "😒 Molestia"
       description: "Publicaciones clasificadas con la emoción Molestia mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_approval:
-      title: "\U0001F44D Aprobación"
+      title: "👍 Aprobación"
       description: "Mensajes clasificados con la emoción Aprobación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_caring:
-      title: "\U0001F917 Cariño"
+      title: "🤗 Cariño"
       description: "Publicaciones clasificadas con la emoción Cariño mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_confusion:
-      title: "\U0001F615 Confusión"
+      title: "😕 Confusión"
       description: "Publicaciones clasificadas con la emoción Confusión mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_curiosity:
-      title: "\U0001F914 Curiosidad"
+      title: "🤔 Curiosidad"
       description: "Publicaciones clasificadas con la emoción Curiosidad mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_desire:
-      title: "\U0001F60D Deseo"
+      title: "😍 Deseo"
       description: "Publicaciones clasificadas con la emoción Deseo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disappointment:
-      title: "\U0001F61E Decepción"
+      title: "😞 Decepción"
       description: "Publicaciones clasificadas con la emoción Decepción mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disapproval:
-      title: "\U0001F44E Desaprobación"
+      title: "👎 Desaprobación"
       description: "Publicaciones clasificadas con la emoción Desaprobación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_disgust:
-      title: "\U0001F922 Asco"
+      title: "🤢 Asco"
       description: "Publicaciones clasificadas con la emoción Asco mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_embarrassment:
-      title: "\U0001F633 Vergüenza"
+      title: "😳 Vergüenza"
       description: "Publicaciones clasificadas con la emoción Vergüenza mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_excitement:
-      title: "\U0001F92A Excitación"
+      title: "🤪 Excitación"
       description: "Publicaciones clasificadas con la emoción Excitación mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_fear:
-      title: "\U0001F628 Miedo"
+      title: "😨 Miedo"
       description: "Publicaciones clasificadas con la emoción Miedo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_gratitude:
-      title: "\U0001F64F Gratitud"
+      title: "🙏 Gratitud"
       description: "Publicaciones clasificadas con la emoción Gratitud mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_grief:
-      title: "\U0001F622 Duelo"
+      title: "😢 Duelo"
       description: "Publicaciones clasificadas con la emoción Duelo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_joy:
-      title: "\U0001F60A Alegría"
+      title: "😊 Alegría"
       description: "Publicaciones clasificadas con la emoción Alegría mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_love:
       title: '❤️ Amor'
       description: "Publicaciones clasificadas con la emoción Amor mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_nervousness:
-      title: "\U0001F630 Nerviosismo"
+      title: "😰 Nerviosismo"
       description: "Publicaciones clasificadas con la emoción Nerviosismo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_neutral:
-      title: "\U0001F610 Neutro"
+      title: "😐 Neutro"
       description: "Publicaciones clasificadas con la emoción Neutro mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_optimism:
-      title: "\U0001F31F Optimismo"
+      title: "🌟 Optimismo"
       description: "Publicaciones clasificadas con la emoción Optimismo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_pride:
-      title: "\U0001F981 Orgullo"
+      title: "🦁 Orgullo"
       description: "Publicaciones clasificadas con la emoción Orgullo mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_realization:
-      title: "\U0001F4A1 Realización"
+      title: "💡 Realización"
       description: "Mensajes clasificados con la emoción Realización mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_relief:
-      title: "\U0001F60C Alivio"
+      title: "😌 Alivio"
       description: "Publicaciones clasificadas con la emoción Alivio mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_remorse:
-      title: "\U0001F614 Remordimiento"
+      title: "😔 Remordimiento"
       description: "Publicaciones clasificadas con la emoción Remordimiento mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_sadness:
-      title: "\U0001F62D Tristeza"
+      title: "😭 Tristeza"
       description: "Publicaciones clasificadas con la emoción Tristeza mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
     emotion_surprise:
-      title: "\U0001F632 Sorpresa"
+      title: "😲 Sorpresa"
       description: "Publicaciones clasificadas con la emoción Sorpresa mediante IA, utilizando el modelo «SamLowe/roberta-base-go_emotions»."
   discourse_ai:
     ai_artifact:
@@ -209,17 +263,77 @@ es:
           name: "Tipo de cambio"
         stock_quote:
           name: "Cotización de acciones (AlphaVantage)"
+        image_generation_category:
+          name: "Generación de imagen..."
         image_generation_custom:
           name: "Personalizado"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Empieza desde cero..."
       name:
         characters: "debe incluir únicamente números, letras, guiones y guiones bajos"
+      secret_contracts:
+        invalid_payload: "Los contratos secretos deben ser una matriz."
+        invalid_contract: "El contrato secreto en el índice %{index} no es válido."
+        alias_required: "El contrato secreto en el índice %{index} debe incluir un alias."
+        alias_too_long: "El alias secreto «%{alias}» es demasiado largo."
+        alias_invalid: "El alias secreto «%{alias}» solo debe incluir números, letras y guiones bajos."
+        alias_not_unique: "El alias secreto «%{alias}» está duplicado."
+      secret_bindings:
+        invalid_payload: "Las vinculaciones secretas deben ser una matriz."
+        secret_not_found: "La credencial seleccionada no existe."
+        alias_not_declared: "El alias «%{alias}» no está declarado en esta herramienta."
+      secret_runtime:
+        alias_not_declared: "El alias de credencial «%{alias}» no está declarado para esta herramienta."
+        missing_binding: "El alias de credencial «%{alias}» es obligatorio pero no está vinculado."
+        missing_required_aliases: "Faltan vinculaciones de credenciales necesarias para los alias: %{aliases}."
+        secret_not_found: "El alias de credencial «%{alias}» está vinculado a una credencial que falta."
+        unknown_error: "No se ha podido resolver la credencial solicitada."
+    mcp_servers:
+      secret_not_found: "La credencial seleccionada no existe."
+      invalid_url_not_https: "debe ser una URL HTTPS válida"
+      invalid_url_not_reachable: "debe resolverse en una dirección de acceso público"
+      oauth_client_id_required: "Se requiere un ID de cliente OAuth para el registro manual del cliente."
+      errors:
+        invalid_response: "El servidor MCP devolvió una respuesta no válida."
+        request_failed: "La solicitud del servidor MCP ha fallado con el estado %{status}."
+        session_expired: "La sesión MCP ha caducado."
+        timeout: "La solicitud del servidor MCP ha caducado."
+        oauth_authorization_required: "Se requiere autorización OAuth antes de poder utilizar este servidor MCP. Conéctalo a %{issuer} desde la interfaz de usuario de administración."
+        oauth_discovery_failed: "No se han podido descubrir los detalles de autorización de OAuth para este servidor MCP."
+        oauth_discovery_failed_with_status: "El descubrimiento de OAuth ha fallado con el estado %{status}."
+        oauth_not_configured: "OAuth no está configurado para este servidor MCP."
+        oauth_refresh_token_missing: "Falta el token de actualización OAuth. Vuelve a conectar este servidor MCP."
+        oauth_save_before_connect: "Guarda el servidor MCP antes de probar la conexión OAuth."
+        oauth_state_invalid: "El estado de autorización OAuth no es válido o ha caducado. Vuelve a iniciar la conexión."
+        oauth_token_exchange_failed: "El intercambio de tokens OAuth ha fallado con el estado %{status}."
+        oauth_https_required: "OAuth requiere que tu sitio se sirva a través de HTTPS."
+        oauth_callback_failed: "Error en la conexión OAuth: %{message}"
+        oauth_refresh_token_required: "El servidor de autorización OAuth no devolvió un token de actualización. Ajusta las opciones avanzadas de OAuth y vuelve a conectar este servidor MCP."
+        oauth_client_metadata_public_https_required: "El registro del documento de metadatos del cliente requiere una URL HTTPS pública del sitio. URL actual de los metadatos del cliente: %{url}"
+        oauth_registration_endpoint_missing: "El servidor de autorización OAuth no anuncia un terminal de registro."
+        oauth_manual_client_registration_required: "El servidor de autorización OAuth %{issuer} no anuncia el registro dinámico de clientes. Cambia este servidor MCP a Credenciales de cliente manuales y proporciona un ID de cliente OAuth registrado."
+        oauth_client_secret_required: "El servidor de autorización OAuth %{issuer} requiere autenticación del cliente de terminal del token (%{methods}). Configura manualmente las credenciales del cliente con un secreto del cliente."
+        oauth_token_endpoint_auth_method_unsupported: "El servidor de autorización OAuth %{issuer} solo anuncia métodos de autenticación del cliente de terminal del token no compatibles (%{methods}). Este servidor MCP actualmente admite none, client_secret_basic y client_secret_post."
+        oauth_client_registration_failed: "El registro dinámico del cliente ha fallado con el estado %{status}."
+        oauth_client_registration_failed_no_id: "El registro dinámico del cliente se ha realizado correctamente, pero no se ha devuelto ningún client_id."
+      oauth_authorization_params_invalid: "Los parámetros de autorización OAuth deben ser un objeto JSON."
+      oauth_token_params_invalid: "Los parámetros de token OAuth deben ser un objeto JSON."
     ai_helper:
       errors:
         completion_request_failed: "Algo ha ido mal al intentar proporcionar sugerencias. Inténtalo de nuevo."
+        no_illustrator_agent: "El agente de ilustrador de publicaciones no está configurado. Revisa los ajustes de tu sitio."
+        no_image_generation_tool: "El agente de ilustrador de publicaciones debe tener adjunta una herramienta de generación de imágenes. Configura una herramienta de generación de imágenes para este agente en el panel de administración."
+        no_image_generated: "Error al generar la imagen. Inténtalo de nuevo o comprueba la configuración de tu herramienta."
+        llm_model_not_configured: "No hay ningún modelo de idioma configurado para la generación de imágenes. Configura un modelo de idioma por defecto en los ajustes de tu sitio."
+        unknown_error: "Se ha producido un error inesperado al generar las miniaturas. Inténtalo de nuevo."
       prompts:
         translate: Traducir a %{language}
         generate_titles: Sugerir títulos de temas
@@ -246,14 +360,19 @@ es:
       flag_reason: "Marcado como spam por <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Usuario silenciado automáticamente por <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Tipo de error no válido proporcionado"
+      unexpected: "Se ha producido un error inesperado"
       bot_user_update_failed: "Error al actualizar el usuario bot de escaneo de spam"
       configuration_missing: "Falta la configuración de detección de spam de IA. Añade la configuración en «Administración > Plugins > Discourse AI > Spam» antes de activarla."
       logging_subject: "Detección de spam"
     ai_bot:
       reply_error: "Lo sentimos, parece que nuestro sistema ha encontrado un problema inesperado al intentar responder.\n\n[details='Detalles del error']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA sin título]"
+      thinking: "Pensando"
+      tool_pending_approval: "Esta acción requiere la aprobación del moderador antes de poder ejecutarse."
       agents:
         default_llm_required: "Se requiere el modelo LLM predeterminado antes de activar el Chat"
+        cannot_delete_system_agent: "Los agentes del sistema no se pueden eliminar, desactívalos en su lugar"
+        cannot_edit_system_agent: "Los agentes del sistema solo se pueden renombrar, no puedes editar las herramientas ni el prompt del sistema, en su lugar deshabilita y haz una copia"
         cannot_have_duplicate_tools: "No se pueden tener herramientas duplicadas"
         github_helper:
           name: "Asistente de GitHub"
@@ -293,8 +412,10 @@ es:
           description: "Bot de IA especializado en crear artefactos web interactivos"
         summarizer:
           name: "Escritor de resumen"
+          description: "Agente por defecto utilizado para impulsar los resúmenes de IA"
         short_summarizer:
           name: "Editor de resumen (forma abreviada)"
+          description: "Agente por defecto utilizado para impulsar resúmenes breves de IA para elementos de listas de temas"
         concept_finder:
           name: "Buscador de conceptos"
           description: "Bot de IA especializado en identificar conceptos y temas en el contenido"
@@ -306,22 +427,31 @@ es:
           description: "Bot de IA especializado en deduplicar conceptos"
         custom_prompt:
           name: "Instrucción personalizada"
+          description: "Agente por defecto que impulsa la característica de prompt personalizado del ayudante"
         smart_dates:
           name: "Fechas inteligentes"
+          description: "Agente por defecto que impulsa la característica de fechas inteligentes del ayudante"
         markdown_table_generator:
           name: "Generador de tablas de Markdown"
+          description: "Agente por defecto que impulsa la característica de generar tabla Markdown del ayudante"
         post_illustrator:
           name: "Ilustrador de publicaciones"
+          description: "Genera imágenes para ilustrar publicaciones utilizando las herramientas de generación de imágenes disponibles"
         proofreader:
           name: "Corrector"
+          description: "Agente por defecto que impulsa la característica de corregir texto del ayudante"
         titles_generator:
           name: "Generador de títulos"
+          description: "Agente por defecto que impulsa la característica sugerir títulos de temas del ayudante"
         tutor:
           name: "Tutor"
+          description: "Agente por defecto que impulsa la característica explicar del ayudante"
         translator:
           name: "Traductor"
+          description: "Agente por defecto que impulsa la característica de traductor del ayudante"
         image_captioner:
           name: "Pies de foto"
+          description: "Agente por defecto que impulsa la característica pie de foto del ayudante"
         locale_detector:
           name: "Detector de idioma local"
           description: "Impulsa la característica de traducción al detectar el idioma local de un texto determinado (publicaciones, títulos, etc.)"
@@ -336,10 +466,19 @@ es:
           description: "Impulsa la característica de traducción como un traductor de texto genérico, utilizado para textos cortos como nombres de categorías o etiquetas"
         spam_detector:
           name: "Detector de spam"
+          description: "Agente por defecto que impulsa nuestra característica de detención de spam"
         content_creator:
           name: "Creador de contenido"
+          description: "Agente por defecto que impulsa la búsqueda de HyDE"
         report_runner:
           name: "Ejecutor de informes"
+          description: "Agente por defecto utilizado en el script de automatización de informes"
+        discover:
+          name: "Descubrir"
+          description: "Agente predeterminado utilizado en la característica de descubrimientos (búsqueda complementaria)"
+        chat_thread_titler:
+          name: "Titulador de los hilos de chat"
+          description: "Agente por defecto que impulsa la generación automática de títulos de hilos de chat"
       topic_not_found: "¡Resumen no disponible, tema no encontrado!"
       summarizing: "Resumiendo tema"
       searching: "Buscando: '%{query}'"
@@ -347,6 +486,7 @@ es:
         researcher:
           researcher_llm:
             name: "LLM"
+            description: "Modelo de lenguaje que se usa para investigación (por defecto para LLM del agente actual)"
           max_tokens_per_batch:
             name: "Máximo de tokens por lote"
             description: "Número máximo de tokens que se pueden utilizar en cada lote de la investigación"
@@ -391,18 +531,38 @@ es:
           base_query:
             name: "Consulta de búsqueda básica"
             description: "Consulta básica a utilizar en la búsqueda. Ejemplo: «#urgente» antepondrá «#urgente» a la consulta de búsqueda y solo incluirá temas con la categoría o etiqueta urgente."
+        flag_post:
+          flag_type:
+            name: "Tipo de denuncia"
+            description: "Controla si la publicación se revisa, se oculta, se elimina o se trata como spam."
       tool_summary:
         read_artifact: "Leer un artefacto web"
+        search_uploaded_documents: "Buscar documentos subidos"
         update_artifact: "Actualizar un artefacto web"
         create_artifact: "Crear artefacto web"
         web_browser: "Navegar por Internet"
         github_search_files: "Archivos de búsqueda de GitHub"
         github_search_code: "Búsqueda de código en GitHub"
         github_file_content: "Contenido del archivo de GitHub"
+        github_diff: "Diferencia de GitHub"
         random_picker: "Selector aleatorio"
         categories: "Lista de categorías"
         flag_post: "Denunciar publicación"
+        close_topic: "Cerrar tema"
+        unlist_topic: "Eliminar tema de la lista"
+        lock_post: "Bloquear publicación"
+        delete_topic: "Eliminar tema"
         edit_post: "Editar publicación"
+        edit_tags: "Editar etiquetas"
+        edit_category: "Editar categoría"
+        set_topic_timer: "Editar temporizador de tema"
+        set_slow_mode: "Establecer modo lento"
+        move_posts: "Mover publicaciones"
+        grant_badge: "Conceder insignia"
+        list_reviewables: "Cola de revisión de la lista"
+        perform_reviewable_action: "Revisar la acción de la cola"
+        assign: "Asignar tema"
+        mark_as_solved: "Marcar como resuelto"
         search: "Buscar"
         tags: "Listar etiquetas"
         time: "Hora"
@@ -422,15 +582,32 @@ es:
         researcher_dry_run: "Preparando investigación"
       tool_help:
         read_artifact: "Se ha leído un artefacto web usando el bot de IA"
+        search_uploaded_documents: "Buscar documentos subidos a este agente"
         update_artifact: "Actualizar un artefacto web usando el bot de IA"
         create_artifact: "Crear un artefacto web usando el bot de IA"
         web_browser: "Navegar por la página web utilizando el bot de IA"
         github_search_code: "Buscar código en un repositorio de GitHub"
         github_search_files: "Buscar archivos en un repositorio de GitHub"
         github_file_content: "Recuperar el contenido de los archivos de un repositorio de GitHub"
+        github_diff: "Recuperar un pull request o commit diff de GitHub"
         random_picker: "Elige un número aleatorio o un elemento aleatorio de una lista"
         categories: "Listar todas las categorías visibles públicamente en el foro"
+        flag_post: "Denunciar la publicación actual para que el personal la revise"
+        close_topic: "Cerrar o abrir un tema"
+        unlist_topic: "Incluir o eliminar un tema de la lista"
+        lock_post: "Bloquear o desbloquear una publicación"
         delete_topic: "Eliminar un tema"
+        edit_post: "Editar el contenido de una publicación"
+        edit_tags: "Editar las etiquetas de un tema"
+        edit_category: "Mover un tema a una categoría diferente"
+        set_topic_timer: "Establecer un temporizador en un tema para cerrarlo, abrirlo, eliminarlo o reflotarlo"
+        set_slow_mode: "Activar o desactivar el modo lento en un tema"
+        move_posts: "Mover publicaciones a un tema nuevo o existente"
+        grant_badge: "Asignar insignias a los usuarios"
+        list_reviewables: "Listar elementos pendientes de la cola de revisión con filtrado opcional"
+        perform_reviewable_action: "Realizar una acción en un elemento de la cola de revisión"
+        assign: "Asignar o anular asignación de un tema a un usuario o grupo"
+        mark_as_solved: "Marcar o desmarcar una publicación como solución aceptada"
         search: "Buscar todos los temas públicos en el foro."
         tags: "Listar todas las etiquetas en el foro"
         time: "Encontrar hora en varias zonas horarias"
@@ -449,6 +626,9 @@ es:
         researcher: "Investigar información del foro usando el bot de IA"
       tool_description:
         read_artifact: "Se ha leído un artefacto web usando el bot de IA"
+        search_uploaded_documents:
+          one: "Se ha encontrado %{count} extracto de documento subido para «%{query}»"
+          other: "Se han encontrado %{count} extractos de documentos subidos para «%{query}»"
         update_artifact: "Se actualizó un artefacto web utilizando el bot de IA"
         create_artifact: "Artefacto web creado: %{name} - %{specification}"
         web_browser: "Leyendo <a href='%{url}'>%{url}</a>"
@@ -457,6 +637,22 @@ es:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Contenido recuperado de %{file_paths} de %{repo_name}@%{branch}"
         random_picker: "Escogiendo entre %{options}, escogido: %{result}"
+        flag_post: "Denunciando publicación %{post_id} (flag_post: %{flag_post})"
+        close_topic: "Cerrando tema %{topic_id} (cerrado: %{closed})"
+        unlist_topic: "Quitando tema %{topic_id} de la lista (unlisted: %{unlisted})"
+        lock_post: "Bloqueando publicación %{post_id} (bloqueada: %{locked})"
+        delete_topic: "Eliminando tema %{topic_id} (eliminado: %{deleted})"
+        edit_post: "Editando publicación %{post_id}"
+        edit_tags: "Editando etiquetas en el tema %{topic_id}: %{tags}"
+        edit_category: "Moviendo tema %{topic_id} a la categoría %{category_id}"
+        set_topic_timer: "Configurando el temporizador %{timer_type} en el tema %{topic_id} (%{duration_hours} h)"
+        set_slow_mode: "Configurando el modo lento en el tema %{topic_id} (%{slow_mode_seconds} s)"
+        move_posts: "Moviendo las publicaciones %{post_ids} del tema %{topic_id}"
+        grant_badge: "Otorgando la insignia «%{badge_name}» a %{username}"
+        list_reviewables: "Listando elementos de la cola de revisión (tipo: %{type})"
+        perform_reviewable_action: "Realizando %{action} en %{reviewable_id} revisable."
+        assign: "Asignando tema %{topic_id} (asignado: %{assigned})"
+        mark_as_solved: "Marcando la publicación %{post_id} como resuelta (resuelta: %{solved})"
         read: "Leyendo: <a href='%{url}'>%{title}</a>"
         time: "La hora en %{timezone} es %{time}"
         summarize: "Resumido <a href='%{url}'>%{title}</a>"
@@ -494,39 +690,137 @@ es:
         continue_conversation:
           title: "Conversación de Discovery: busca %{query}"
           raw: "En mi búsqueda de %{query}, me mostraste la siguiente información:\n\n%{context}\n\nContinuemos la conversación."
+      flag_post:
+        errors:
+          no_context: "No hay contexto disponible para denunciar la publicación."
+          no_reason: "Se requiere un motivo para denunciar una publicación."
+          invalid_flag_type: "Tipo de denuncia no válido."
+        skipped: "El veredicto ha sido falso; no se ha generado ninguna denuncia."
+        already_flagged: "La publicación ya está denunciada para revisión."
+        flagged: "Publicación denunciada para revisión."
+        reason: "El bot de IA ha denunciado esta publicación.\n\nMotivo: %{reason}"
       close_topic:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para abrir o cerrar este tema."
+          no_reason: "Se requiere un motivo para abrir o cerrar un tema."
+        success: "Tema actualizado correctamente."
       unlist_topic:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para listar u ocultar este tema."
+          no_reason: "Se requiere un motivo para listar u ocultar un tema."
+        success: "Tema actualizado correctamente."
+      lock_post:
+        errors:
+          not_found: "Publicación no encontrada."
+          not_allowed: "No tienes permiso para bloquear o desbloquear esta publicación."
+          no_reason: "Se requiere un motivo para bloquear o desbloquear una publicación."
+        success: "Publicación actualizada correctamente."
       delete_topic:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para eliminar ni recuperar este tema."
+          no_reason: "Se requiere un motivo para eliminar o recuperar un tema."
+        success: "Tema actualizado correctamente."
+      edit_post:
+        errors:
+          not_found: "Publicación no encontrada."
+          not_allowed: "No tienes permiso para editar esta publicación."
+          nothing_to_edit: "Debe proporcionarse el texto sin procesar o el título."
+          no_reason: "Se requiere un motivo de edición."
+          revision_failed: "Error al revisar la publicación."
+        success: "Publicación editada correctamente."
       edit_tags:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para editar etiquetas en este tema."
+          no_reason: "Se requiere un motivo para editar etiquetas."
+          tagging_disabled: "La opción de añadir etiquetas no está activada en este sitio."
+        success: "Etiquetas actualizadas correctamente."
       edit_category:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para mover este tema."
+          category_not_found: "Categoría no encontrada."
+          no_reason: "Se requiere un motivo para mover un tema."
+          revision_failed: "Error al mover el tema."
+        success: "Tema movido correctamente."
       set_topic_timer:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para configurar un temporizador para este tema."
+          no_reason: "Se requiere un motivo para configurar un temporizador de tema."
+          invalid_timer_type: "Tipo de temporizador no válido. Debe ser uno de los siguientes: close, open, delete, silent_close, bump."
+        success: "Temporizador de tema actualizado correctamente."
       set_slow_mode:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para configurar el modo lento en este tema."
+          no_reason: "Se requiere un motivo para configurar el modo lento."
+        success: "Modo lento actualizado correctamente."
       move_posts:
         errors:
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para mover publicaciones en este tema."
+          no_reason: "Se requiere un motivo para mover publicaciones."
+          no_posts: "No se han proporcionado ID de publicaciones."
+          no_destination: "Se debe proporcionar destination_topic_id o new_title."
+          move_failed: "Error al mover las publicaciones."
+        success: "Las publicaciones se han movido correctamente."
+      grant_badge:
+        errors:
+          user_not_found: "Usuario no encontrado."
+          badge_not_found: "Insignia no encontrada."
+          not_allowed: "No tienes permiso para conceder insignias."
+          no_reason: "Se requiere un motivo para denunciar una insignia."
+          badge_disabled: "La insignia no está activada."
+          grant_failed: "Error al conceder la insignia."
+        success: "Insignia concedida con éxito."
       assign:
         errors:
+          plugin_not_installed: "El plugin discourse-assign no está instalado."
           not_found: "Tema no encontrado."
+          not_allowed: "No tienes permiso para asignar este tema."
+          no_reason: "Se requiere un motivo para asignar o anular la asignación de un tema."
+          assignee_not_found: "No se ha encontrado el usuario o el grupo."
+          assign_failed: "No se ha podido asignar el tema."
+        success: "La asignación del tema se ha actualizado correctamente."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "El plugin discourse-solved no está instalado."
+          no_reason: "Es necesario indicar el motivo para marcar o desmarcar una publicación como resuelta."
+          action_failed: "Error al actualizar el estado resuelto."
+        success: "El estado de la resolución se ha actualizado correctamente."
+      list_reviewables:
+        errors:
+          not_allowed: "No tienes permiso para ver la cola de revisión"
+          invalid_type: "Tipo revisable no válido"
+          invalid_status: "Estado no válido. Debe ser uno de los siguientes: pendiente, aprobado, rechazado, ignorado, eliminado, revisado, todo."
+        empty: "No se han encontrado elementos en la cola de revisión que coincidan con los filtros seleccionados"
+        found:
+          one: "Se ha encontrado %{count} elemento en la cola de revisión"
+          other: "Se han encontrado %{count} elementos en la cola de revisión"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "No tienes permiso para acceder a la cola de revisión"
+          not_found: "No se ha encontrado el elemento en la cola de revisión"
+          no_reason: "Se requiere un motivo para realizar una acción sobre un elemento de la cola de revisión"
+          invalid_action: "Acción no válida «%{action}». Acciones disponibles: %{available}"
+          conflict: "Otra persona ha actualizado este elemento de la cola de revisión. Inténtalo de nuevo."
+          action_failed: "Error al realizar la acción"
+        success: "Se ha realizado correctamente «%{action}» en el elemento de la cola de revisión %{reviewable_id}."
     reviewables:
       ai_tool_action:
+        title: "Acción de herramienta de IA"
         approve:
           title: "Aprobar"
         reject:
           title: "Rechazar"
+        target_missing: "El objetivo de la acción de la herramienta ya no existe."
+        tool_not_found: "La herramienta «%{tool_name}» ya no está disponible."
+        bot_user_missing: "El usuario bot ya no existe."
+        execution_error: "Error al ejecutar la herramienta: %{error}"
     summarization:
       configuration_hint:
         one: "Configura primero el ajuste «%{setting}»."
@@ -537,13 +831,13 @@ es:
       reports:
         overall_sentiment: "Sentimiento general (positivo/negativo)"
         post_emotion:
-          sadness: "Tristeza \U0001F622"
-          surprise: "Sorpresa \U0001F631"
-          neutral: "Neutro \U0001F610"
-          fear: "Miedo \U0001F628"
-          anger: "Enfado \U0001F621"
-          joy: "Alegría \U0001F600"
-          disgust: "Asco \U0001F922"
+          sadness: "Tristeza 😢"
+          surprise: "Sorpresa 😱"
+          neutral: "Neutro 😐"
+          fear: "Miedo 😨"
+          anger: "Enfado 😡"
+          joy: "Alegría 😀"
+          disgust: "Asco 🤢"
         sentiment_analysis:
           positive: "Positivo"
           negative: "Negativo"
@@ -555,7 +849,9 @@ es:
         set_llm_first: "Establecer primero %{setting}"
         model_unreachable: "No hemos podido obtener una respuesta de este modelo. Comprueba primero los ajustes."
         invalid_seeded_model: "No puedes utilizar este modelo con esta característica"
+        invalid_agent_response_format: "El agente seleccionado debe tener un formato de respuesta con un nombre de campo booleano «spam»"
         must_select_model: "Primero debes seleccionar un LLM"
+        invalid_llm_id: "El modelo LLM seleccionado no es válido"
       endpoints:
         not_configured: "%{display_name} (no configurado)"
         configuration_hint:
@@ -570,24 +866,66 @@ es:
     embeddings:
       delete_failed: "Este modelo está actualmente en uso. Actualiza primero el «ai embeddings selected model»."
       cannot_edit_builtin: "No puedes editar un modelo integrado."
+      secret_required: "Se debe seleccionar una credencial"
+      secret_not_found: "La credencial seleccionada no existe"
       configuration:
         disable_embeddings: "Tienes que desactivar primero «ai embeddings enabled»."
         choose_model: "Establece primero «ai embeddings selected model»."
+        model_test_failed: "No hemos podido generar una prueba de incrustación con este modelo. Comprueba que esté configurada correctamente."
+    secrets:
+      delete_failed_in_use: "Esta credencial está siendo utilizada actualmente por uno o más LLM, incrustaciones o herramientas y no puede eliminarse."
     llm_models:
       missing_provider_param: "%{param} no puede estar en blanco"
+      secret_required: "Se debe seleccionar una credencial"
+      secret_not_found: "La credencial seleccionada no existe"
       bedrock_invalid_url: "Rellena todos los campos para utilizar este modelo."
+      bedrock_missing_auth: "AWS Bedrock requiere que se configure el ID de la clave de acceso o el ARN de rol"
     ai_staff_action_logger:
       updated: "actualizado"
       set: "configurado"
       removed: "eliminado"
+    translation:
+      errors:
+        disabled: "La función de traducción de IA no está totalmente configurada."
+        all_posts_translated: "Ya están traducidas todas las publicaciones de este tema."
+    llm_credit_allocation:
+      limit_exceeded_user: "Esta comunidad ha alcanzado el límite de créditos de la IA para hoy. Inténtalo de nuevo en %{reset_time} o ponte en contacto con el administrador de tu sitio para obtener más información."
+      limit_exceeded_admin: "Has alcanzado tu límite de créditos de IA. Vuelve a intentarlo en %{reset_time}."
     errors:
       quota_exceeded: "Has superado la cuota para este modelo. Inténtalo de nuevo en %{relative_time}."
       quota_required: "Debes especificar los tokens o usos máximos para este modelo"
       no_query_specified: El parámetro de consulta es obligatorio, especifícalo.
+      no_user_for_agent: El agente especificado no tiene ningún usuario asociado.
+      agent_not_found: "El agente especificado no existe. Comprueba los parámetros agent_name o agent_id (anteriormente: agent_name o agent_id)."
       no_user_specified: El nombre de usuario o user_unique_id es obligatorio, por favor, especifícalo.
       user_not_found: El usuario especificado no existe. Comprueba el parámetro username.
+      agent_disabled: "El agente especificado está desactivado. Comprueba los parámetros agent_name o agent_id (anteriormente: agent_name o agent_id)."
+      no_default_llm: El agente debe tener un default_llm definido.
       user_not_allowed: El usuario no está autorizado a participar en el tema.
+      invalid_stream_resume_token: El resume_token no es válido o ha caducado.
+      no_tool_results_specified: El parámetro tool_results es necesario al reanudar una transmisión.
+      invalid_custom_tools: "El parámetro custom_tools no es válido: %{details}"
+      duplicate_custom_tools: "El parámetro custom_tools contiene nombres de herramientas duplicados: %{names}"
+      too_many_custom_tools: "El parámetro custom_tools puede incluir como máximo %{max} herramientas."
+      custom_tool_definition_too_large: "Cada definición de herramienta personalizada debe tener como máximo %{max} bytes."
+      invalid_stream_param: "El parámetro %{key} no es válido: %{details}"
+      expected_array: "esperaba una matriz"
+      expected_object: "esperaba un objeto"
+      ambiguous_tool_results: "Especifica tool_results o tool_result, no ambos."
+      invalid_tool_results: "El parámetro tool_results no es válido: %{details}"
+      too_many_tool_results: "El parámetro tool_results puede incluir como máximo %{max} elementos."
+      no_pending_tool_calls: No hay llamadas de herramientas pendientes para este token de reanudación.
+      missing_tool_results: "Faltan resultados de herramientas para tool_call_id(s): %{ids}"
+      unexpected_tool_results: "Resultados de herramienta inesperados para tool_call_id(s): %{ids}"
+      invalid_tool_result_content: "El resultado de la herramienta para %{id} debe incluir contenido"
+      tool_result_content_too_large: "Cada carga útil de contenido de resultado de la herramienta debe tener como máximo %{max} bytes."
+      stream_reply_max_resume_rounds_reached: Se ha alcanzado el número máximo de rondas de reanudación con herramientas personalizadas (%{max}).
+      stream_reply_state_too_large: "El estado de la transmisión es demasiado grande para persistir (máx. %{max} bytes)."
+      stream_reply_unexpected_error: Se ha producido un error inesperado al transmitir la respuesta.
       prompt_message_length: El mensaje %{idx} supera el límite de 1000 caracteres.
+      agent_already_exists: Ya existe un agente con el nombre %{name}.
       custom_tool_exists:
         one: "Ya existe una herramienta personalizada con el nombre %{names}."
         other: "Ya existen herramientas personalizadas con los nombres %{names}."
+      mcp_server_missing: "Los siguientes servidores MCP no están configurados en este sitio: %{names}."
+      mcp_server_tools_not_found: "No hay herramientas que coincidan en el servidor MCP %{name} disponibles en este sitio."

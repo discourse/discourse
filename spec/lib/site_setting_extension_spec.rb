@@ -767,6 +767,12 @@ RSpec.describe SiteSettingExtension do
             settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
           ).not_to be_blank
         end
+
+        it "serializes depends_on and the matching humanized names" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_image }
+          expect(setting[:depends_on]).to eq([:enable_cool_thing])
+          expect(setting[:depends_on_humanized_names]).to eq(["Enable cool thing"])
+        end
       end
 
       context "when the depends_on setting is false" do
@@ -775,8 +781,11 @@ RSpec.describe SiteSettingExtension do
           settings.refresh!
         end
 
-        it "is not present in all_settings" do
-          expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).to be_blank
+        it "is still present in all_settings so the UI can reactively hide/disable it" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_image }
+          expect(setting).not_to be_blank
+          expect(setting[:depends_on]).to eq([:enable_cool_thing])
+          expect(setting[:depends_behavior]).to eq(:hidden)
         end
       end
 
@@ -791,8 +800,8 @@ RSpec.describe SiteSettingExtension do
           settings.refresh!
         end
 
-        it "is not present in all_settings" do
-          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).to be_blank
+        it "is still present in all_settings (visibility handled client-side)" do
+          expect(settings.all_settings.find { |s| s[:setting] == :orphan_setting }).not_to be_blank
         end
       end
 

@@ -11,8 +11,8 @@ module PageObjects
         end
 
         def has_loaded?
-          component.has_css?(".spinner", wait: 0)
-          component.has_no_css?(".spinner")
+          component.has_no_css?(".spinner") &&
+            component.has_css?(".chat-thread-list-item, .chat-thread-list__no-threads")
         end
 
         def open_thread(thread)

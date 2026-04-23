@@ -15,17 +15,13 @@ ru:
           name: "Генератор запросов Data Explorer"
           description: "Генерирует SQL-запросы для Data Explorer на основе естественного языка."
       tool_help:
-        validate_sql: "Проверяет SQL-запрос для использования в обозревателе данных."
         run_sql: "Выполняет SQL-запрос и возвращает результаты."
       tool_summary:
-        validate_sql: "Проверка SQL-запроса"
         run_sql: "Выполнение SQL-запроса"
       tool_description:
-        validate_sql: "Проверка SQL-запроса"
         run_sql: "Выполнен SQL-запрос"
   discourse_data_explorer:
     ai:
-      generating_name: "Генерация..."
       error_agent_not_configured: "Агент ИИ не настроен. Пожалуйста, проверьте настройки функций ИИ."
       error_no_sql_returned: "Искусственный интеллект не вернул корректный SQL-запрос. Пожалуйста, попробуйте еще раз или напишите запрос вручную."
   discourse_automation:

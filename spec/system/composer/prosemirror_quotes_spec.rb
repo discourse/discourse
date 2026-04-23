@@ -22,7 +22,7 @@ describe "Composer - ProseMirror - Quotes" do
     composer.type_content("[quote]Text")
     expect(rich).to have_css("aside.quote blockquote p", text: "Text")
 
-    composer.send_keys(:home)
+    composer.send_keys(SystemHelpers::LINE_START_KEY)
     composer.send_keys(:backspace)
 
     expect(rich).to have_no_css("aside.quote")

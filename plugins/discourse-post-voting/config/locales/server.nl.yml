@@ -35,8 +35,6 @@ nl:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Geen actie"
         agree_and_keep_comment:
           title: "Reactie behouden"
           description: "Ga akkoord met de markering en laat de reactie ongewijzigd."

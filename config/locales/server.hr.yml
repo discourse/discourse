@@ -264,7 +264,15 @@ hr:
   deleted_topic: "Ups! Ova je tema izbrisana i više nije dostupna."
   delete_topic_failed: "Došlo je do pogreške prilikom brisanja te teme. Molimo kontaktirajte administratora stranice."
   reading_time: "Vrijeme čitanja"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    few: "%{count} mins 🕑"
+    other: "%{count} minuta 🕑"
   likes: "Like-ova"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Žao nam je, ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
     few: "Žao nam je, ali novi korisnici su privremeno ograničeni na %{count} odgovora u istoj temi."
@@ -554,7 +562,6 @@ hr:
       few: "%{count} lajka"
       other: "%{count} lajkova"
     cannot_permanently_delete:
-      many_posts: "Ova tema ima poništene postove. Molimo vas da ih trajno izbrišete prije trajnog brisanja teme."
       wait_or_different_admin: "Morate pričekati %{time_left} prije trajnog brisanja ove objave ili to mora učiniti drugi administrator."
   rate_limiter:
     slow_down: "Izveli ste ovu radnju previše puta, pokušajte ponovno kasnije."
@@ -1473,7 +1480,6 @@ hr:
     share_quote_visibility: "Odredite kada prikazati gumbe za dijeljenje ponuda: nikada, samo anonimnim korisnicima ili svim korisnicima. "
     create_revision_on_bulk_topic_moves: "Napravite reviziju za prve postove kada se teme skupno premještaju u novu kategoriju."
     allow_changing_staged_user_tracking: "Dopustite korisniku administratoru da promijeni postavke obavijesti o kategorijama i oznakama postupnog korisnika."
-    use_name_for_username_suggestions: "Koristite puno ime korisnika kada predlažete korisnička imena."
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
     errors:
@@ -2425,8 +2431,15 @@ hr:
         Ovo je automatizirana poruka od %{site_name} koja vas obavještava da je [vaša objava] (%{base_url}%{post_url}) odobrena.
   page_not_found:
     page_title: "Stranica nije pronađena"
+    title: "Ups! Ta stranica ne postoji ili je privatna."
+    subtitle: "Tražili smo svugdje, ali nismo mogli pronaći stranicu koju tražite."
+    popular_topics: "Popularne teme"
+    recent_topics: "Nedavne teme"
     see_more: "Više"
+    search_title: "Možda da pokušate pretražiti?"
     search_button: "Pretraži"
+    home: "Odvedi me na naslovnicu"
+    placeholder: "Pretraživanje tema po naslovu ili ključnim riječima…"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."

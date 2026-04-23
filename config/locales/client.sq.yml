@@ -2524,6 +2524,7 @@ sq:
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       list_item: "Element liste"
       wrap_modal:
+        attribute_value: "Vlera"
         apply: "Apliko"
       help: "Ndihmë mbi Markdown"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
@@ -2579,6 +2580,9 @@ sq:
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
       link_toolbar:
+        copy: "Kopjoni lidhjen"
+        link_copied: "Lidhja u kopjua!"
+      onebox_toolbar:
         copy: "Kopjoni lidhjen"
         link_copied: "Lidhja u kopjua!"
     notifications:
@@ -2988,12 +2992,30 @@ sq:
         name: "Fshij"
       update_category:
         name: "Përditëso kategorinë"
+      convert_to_public_topic:
+        name: "Bëni temën publike…"
+      convert_to_private_message:
+        name: "Bëni një mesazh personal"
       reset_bump_dates:
         name: "Rivendos datat e përplasjes"
       defer:
         name: "Shënoni të palexuar"
       update_notifications:
         name: "Përditëso Njoftimet"
+    nested_replies:
+      sort:
+        label: "Rendit sipas"
+        top: "Popullore"
+        new: "I Ri"
+      load_more_children:
+        one: "edhe %{count} përgjigje "
+        other: "janë %{count} përgjigje"
+      collapsed_replies:
+        one: "%{count} përgjigje"
+        other: "%{count} përgjigje"
+      collapse: "Zvogëloni"
+      no_replies: "Nuk ka ende përgjigje."
+      pinned_reply: "E përzgjedhur"
     topic:
       filter_to:
         one: "%{count} postim në temë"
@@ -3369,7 +3391,7 @@ sq:
           edit: "Redaktoni"
           delete: "Fshij"
         post_language_selector:
-          none: "Asnjë"
+          none: "Nuk është vendosur"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3969,6 +3991,8 @@ sq:
           admins: "Administratorët"
           moderators: "Moderatorë"
           staff: "Stafi"
+        impact_types:
+          other_type: "Të tjerë"
         filter:
           all: "Të gjitha"
           enabled: "Aktivizuar"
@@ -4032,6 +4056,11 @@ sq:
           sub_pages:
             logs:
               title: "Ditari"
+        problem_checks:
+          status: "Status"
+          ignore: "Injoroni"
+          more_options:
+            title: "Më shumë mundësi"
         reports:
           sub_pages:
             settings:
@@ -4085,7 +4114,7 @@ sq:
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
         latest_version: "Të fundit"
-        dismiss_notice: "Hiqe"
+        dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
         last_checked: "Verifikimi i fundit"

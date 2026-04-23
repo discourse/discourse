@@ -35,11 +35,6 @@ el:
   discourse_post_voting:
     reviewables:
       actions:
-        comment_actions:
-          bundle_title: "Τι θέλετε να κάνετε με το σχόλιο;"
-        no_action_comment:
-          title: "Καμία ενέργεια"
-          description: "Αφήστε το σχόλιο ως έχει."
         agree_and_keep_comment:
           title: "Διατήρηση σχολίου"
           description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου χωρίς αλλαγή."
