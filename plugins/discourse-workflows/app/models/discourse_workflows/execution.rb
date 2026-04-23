@@ -21,13 +21,7 @@ module DiscourseWorkflows
     scope :with_duration,
           -> { where.not(started_at: nil, finished_at: nil).where(status: %i[success error]) }
 
-    scope :expired_waiting,
-          -> do
-            where(status: :waiting).where(
-              "waiting_until IS NOT NULL AND waiting_until < ?",
-              Time.current,
-            )
-          end
+    scope :expired_waiting, -> { where(status: :waiting).where("waiting_until < ?", Time.current) }
 
     scope :waiting_with_type,
           ->(type) { where(status: :waiting).where("waiting_config->>'wait_type' = ?", type.to_s) }

@@ -5,7 +5,6 @@ module DiscourseWorkflows
     module Wait
       class V1 < NodeType
         WAIT_UNITS = %w[seconds minutes hours days].freeze
-        MAX_WAIT_DURATION_SECONDS = 30.days.to_i
 
         def self.identifier
           "flow:wait"
@@ -119,8 +118,7 @@ module DiscourseWorkflows
               end
             end
 
-            timeout_seconds =
-              timeout_amount&.public_send(timeout_unit)&.to_i&.clamp(..MAX_WAIT_DURATION_SECONDS)
+            timeout_seconds = timeout_amount&.public_send(timeout_unit)&.to_i
 
             Executor::WaitForResume.new(
               waiting_until: timeout_seconds&.seconds&.from_now,
@@ -140,7 +138,7 @@ module DiscourseWorkflows
             raise ArgumentError, "Wait amount must be greater than 0" if amount <= 0
             raise ArgumentError, "Invalid wait unit: #{unit}" if WAIT_UNITS.exclude?(unit)
 
-            duration_seconds = [amount.public_send(unit).to_i, MAX_WAIT_DURATION_SECONDS].min
+            duration_seconds = amount.public_send(unit).to_i
 
             Executor::WaitForResume.new(
               waiting_until: duration_seconds.seconds.from_now,

@@ -5,6 +5,7 @@ module DiscourseWorkflows
     include FormExecutionChannel
 
     MAX_ITERATIONS = 1000
+    MAX_WAIT_DURATION_SECONDS = 30.days.to_i
 
     class WaitRequested < StandardError
       attr_reader :wait_request
@@ -301,22 +302,26 @@ module DiscourseWorkflows
     # --- Wait handling ---
 
     def begin_wait!(wait_request)
+      waiting_until =
+        wait_request.resolved_waiting_until(
+          now: Time.current,
+          max_wait_duration_seconds: MAX_WAIT_DURATION_SECONDS,
+        )
+
       execution =
         @store.pause_waiting_execution!(
           node: @waiting_node,
-          waiting_until: wait_request.waiting_until,
+          waiting_until: waiting_until,
           waiting_config: wait_request.waiting_config,
           steps: @steps,
         )
 
-      if wait_request.waiting_until.present?
-        duration = [wait_request.waiting_until - Time.current, 0].max
-        Jobs.enqueue_in(
-          duration,
-          Jobs::DiscourseWorkflows::ResumeWaitingExecution,
-          execution_id: @store.execution.id,
-        )
-      end
+      duration = [waiting_until - Time.current, 0].max
+      Jobs.enqueue_in(
+        duration,
+        Jobs::DiscourseWorkflows::ResumeWaitingExecution,
+        execution_id: @store.execution.id,
+      )
 
       execution
     rescue => e

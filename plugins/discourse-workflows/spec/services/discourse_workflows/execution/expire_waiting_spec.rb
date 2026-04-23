@@ -6,25 +6,29 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
 
     fab!(:user)
 
-    def create_waiting_execution(timeout_minutes:, timeout_action:, timeout_response_items: nil)
+    def create_waiting_execution(
+      timeout_minutes: nil,
+      timeout_action: nil,
+      timeout_response_items: nil,
+      limit_wait_time: true
+    )
+      configuration = { "resume" => "webhook", "limit_wait_time" => limit_wait_time }
+      if limit_wait_time
+        configuration["timeout_amount"] = timeout_minutes
+        configuration["timeout_unit"] = "minutes"
+      end
+
       graph =
         build_workflow_graph do |g|
           g.node "trigger-1", "trigger:manual", name: "Manual"
-          g.node "wait-1",
-                 "flow:wait",
-                 name: "Wait",
-                 configuration: {
-                   "resume" => "webhook",
-                   "limit_wait_time" => true,
-                   "timeout_amount" => timeout_minutes,
-                   "timeout_unit" => "minutes",
-                 }
+          g.node "wait-1", "flow:wait", name: "Wait", configuration: configuration
           g.chain "trigger-1", "wait-1"
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
-      extras = { "timeout_action" => timeout_action }
+      extras = {}
+      extras["timeout_action"] = timeout_action if timeout_action
       extras["timeout_response_items"] = timeout_response_items if timeout_response_items
       execution.update!(waiting_config: execution.waiting_config.merge(extras))
       execution
@@ -114,12 +118,22 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
       end
     end
 
-    context "when execution has no timeout" do
-      it "does not expire the execution" do
-        execution = Fabricate(:discourse_workflows_execution, status: :waiting, waiting_until: nil)
+    context "when execution uses the default wait ceiling" do
+      it "expires after the executor timeout" do
+        freeze_time
 
+        execution = create_waiting_execution(limit_wait_time: false)
+
+        expect(execution.waiting_until).to eq(
+          DiscourseWorkflows::Executor::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
+        )
+
+        freeze_time(
+          DiscourseWorkflows::Executor::MAX_WAIT_DURATION_SECONDS.seconds.from_now + 1.second,
+        )
         result
-        expect(execution.reload.status).to eq("waiting")
+
+        expect(execution.reload.status).to eq("success")
       end
     end
   end

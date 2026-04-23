@@ -21,18 +21,100 @@ RSpec.describe DiscourseWorkflows::Executor do
         end
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
-      execution = described_class.new(workflow, "trigger-1", {}).run
+      freeze_time do
+        execution = described_class.new(workflow, "trigger-1", {}).run
 
-      expect(execution).to have_attributes(
-        status: "waiting",
-        waiting_node_id: "wait-1",
-        finished_at: nil,
-      )
+        expect(execution).to have_attributes(
+          status: "waiting",
+          waiting_node_id: "wait-1",
+          finished_at: nil,
+        )
+        expect(execution.waiting_until).to eq(
+          described_class::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
+        )
 
-      waiting_step = execution.execution_data.find_step(node_id: "wait-1")
-      expect(waiting_step["status"]).to eq("waiting")
+        waiting_step = execution.execution_data.find_step(node_id: "wait-1")
+        expect(waiting_step["status"]).to eq("waiting")
 
-      expect(execution.execution_data.context_data).not_to have_key("After")
+        expect(execution.execution_data.context_data).not_to have_key("After")
+      end
+    end
+
+    it "applies the default wait ceiling to form waits" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "form-1",
+                 "action:form",
+                 configuration: {
+                   "form_title" => "Approval",
+                   "form_fields" => [{ "field_label" => "Reason", "field_type" => "text" }],
+                 }
+          g.chain "trigger-1", "form-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+      allow(MessageBus).to receive(:publish)
+
+      freeze_time do
+        execution = described_class.new(workflow, "trigger-1", {}).run
+
+        expect(execution).to have_attributes(status: "waiting", waiting_node_id: "form-1")
+        expect(execution.waiting_until).to eq(
+          described_class::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
+        )
+      end
+    end
+
+    it "caps explicit timer waits at the executor ceiling" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "wait-1",
+                 "flow:wait",
+                 configuration: {
+                   "resume" => "time_interval",
+                   "wait_amount" => 60,
+                   "wait_unit" => "days",
+                 }
+          g.chain "trigger-1", "wait-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+      freeze_time do
+        execution = described_class.new(workflow, "trigger-1", {}).run
+
+        expect(execution).to have_attributes(status: "waiting", waiting_node_id: "wait-1")
+        expect(execution.waiting_until).to eq(
+          described_class::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
+        )
+      end
+    end
+
+    it "caps explicit webhook waits at the executor ceiling" do
+      graph =
+        build_workflow_graph do |g|
+          g.node "trigger-1", "trigger:manual"
+          g.node "wait-1",
+                 "flow:wait",
+                 configuration: {
+                   "resume" => "webhook",
+                   "limit_wait_time" => true,
+                   "timeout_amount" => 60,
+                   "timeout_unit" => "days",
+                 }
+          g.chain "trigger-1", "wait-1"
+        end
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+      freeze_time do
+        execution = described_class.new(workflow, "trigger-1", {}).run
+
+        expect(execution).to have_attributes(status: "waiting", waiting_node_id: "wait-1")
+        expect(execution.waiting_until).to eq(
+          described_class::MAX_WAIT_DURATION_SECONDS.seconds.from_now,
+        )
+      end
     end
   end
 
