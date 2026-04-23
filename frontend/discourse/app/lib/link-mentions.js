@@ -53,17 +53,18 @@ function replaceSpan(element, name, opts) {
 function updateFound(mentions, names) {
   mentions.forEach((mention, index) => {
     const name = names[index];
-    if (foundUsers[name.toLowerCase()]) {
+    const lower = name.toLowerCase();
+    if (foundUsers[lower]) {
       replaceSpan(mention, name, {
-        reason: userReasons[name],
+        reason: userReasons[lower],
       });
-    } else if (foundGroups[name]) {
+    } else if (foundGroups[lower]) {
       replaceSpan(mention, name, {
         group: true,
-        details: foundGroups[name],
-        reason: groupReasons[name],
+        details: foundGroups[lower],
+        reason: groupReasons[lower],
       });
-    } else if (checked[name]) {
+    } else if (checked[lower]) {
       mention.classList.add("mention-tested");
     }
   });
@@ -82,7 +83,9 @@ export function linkSeenMentions(element, siteSettings) {
   updateFound(mentions, names);
 
   return uniqueItemsFromArray(names).filter(
-    (name) => !checked[name] && name.length >= siteSettings.min_username_length
+    (name) =>
+      !checked[name.toLowerCase()] &&
+      name.length >= siteSettings.min_username_length
   );
 }
 
@@ -91,16 +94,18 @@ export async function fetchUnseenMentions({ names, topicId, allowedNames }) {
     data: { names, topic_id: topicId, allowed_names: allowedNames },
   });
 
-  names.forEach((name) => (checked[name] = true));
-  response.users.forEach((username) => (foundUsers[username] = true));
+  names.forEach((name) => (checked[name.toLowerCase()] = true));
+  response.users.forEach(
+    (username) => (foundUsers[username.toLowerCase()] = true)
+  );
   Object.entries(response.user_reasons).forEach(
-    ([username, reason]) => (userReasons[username] = reason)
+    ([username, reason]) => (userReasons[username.toLowerCase()] = reason)
   );
   Object.entries(response.groups).forEach(
-    ([name, details]) => (foundGroups[name] = details)
+    ([name, details]) => (foundGroups[name.toLowerCase()] = details)
   );
   Object.entries(response.group_reasons).forEach(
-    ([name, reason]) => (groupReasons[name] = reason)
+    ([name, reason]) => (groupReasons[name.toLowerCase()] = reason)
   );
   maxGroupMention = response.max_users_notified_per_group_mention;
 
