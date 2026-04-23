@@ -142,7 +142,7 @@ GEM
     diffy (3.4.4)
     digest (3.2.1)
     digest-xxhash (0.2.9)
-    discourse-emojis (1.0.45)
+    discourse-emojis (1.0.46)
     discourse-fonts (0.0.19)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -989,7 +989,7 @@ CHECKSUMS
   diffy (3.4.4) sha256=79384ab5ca82d0e115b2771f0961e27c164c456074bd2ec46b637ebf7b6e47e3
   digest (3.2.1) sha256=ab3312b4e272d7d5dc41c564c86a25861a1f34ac5153374199a0b74861395947
   digest-xxhash (0.2.9) sha256=a989d8309c03c4136a4bea9981ec0a146a2750de7f3dfb7b5624a3038aa598d7
-  discourse-emojis (1.0.45) sha256=d4b512eb140475eb67fddc8c1f089d4bcd00a43517ead77758a7384713019bcf
+  discourse-emojis (1.0.46) sha256=e986526ec835eb8de1640da6a853767272a3fc15b756666f072ab95103f3c93c
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
   discourse_ai-tokenizers (0.4.2) sha256=61c2f254582a3ae69255115b2b072904361003612b5b0f52aa64773817aae413
