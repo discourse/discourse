@@ -5,7 +5,8 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     it "resolves $json expressions against the item passed in, not a cached first item" do
       config = { "value" => "={{ $json.x }}" }
       schema = { value: { type: :string } }
-      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
+      sandbox = DiscourseWorkflows::JsSandbox.new({ "$json" => {} })
+      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }, sandbox: sandbox)
 
       ctx =
         described_class.new(
@@ -20,6 +21,9 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
 
       expect(first).to eq("value" => "ITEM_ONE")
       expect(second).to eq("value" => "ITEM_TWO")
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
     end
   end
 

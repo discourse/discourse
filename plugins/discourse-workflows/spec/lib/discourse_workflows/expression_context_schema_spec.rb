@@ -9,9 +9,22 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(schema).to have_key(:item_prefix)
     end
 
-    it "declares $site_settings, $vars, $current_user, $execution as environment symbols" do
+    it "declares current-input and execution environment symbols" do
       symbols = described_class.environment_symbols.keys
-      expect(symbols).to contain_exactly("$site_settings", "$vars", "$current_user", "$execution")
+      expect(symbols).to contain_exactly(
+        "$input",
+        "$itemIndex",
+        "$site_settings",
+        "$vars",
+        "$current_user",
+        "$execution",
+      )
+    end
+
+    it "declares $input fields for item, params, and context" do
+      fields = described_class.environment_symbols["$input"][:fields]
+      expect(fields.keys).to contain_exactly("item", "params", "context")
+      expect(fields.dig("item", :fields)&.keys).to contain_exactly("json")
     end
 
     it "declares $current_user fields matching JsSandbox#build_current_user" do
@@ -96,7 +109,8 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
         },
       }
 
-      resolver = DiscourseWorkflows::ExpressionResolver.new(context, user: user)
+      sandbox = DiscourseWorkflows::JsSandbox.new(context, user: user)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(context, user: user, sandbox: sandbox)
 
       item_json = resolver.resolve("={{ $('Test Node').item.json.data }}")
       expect(item_json).to eq(1)
@@ -105,6 +119,7 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(node_context).to eq(true)
     ensure
       resolver&.dispose
+      sandbox&.dispose
     end
 
     it "ExpressionResolver exposes $execution" do
@@ -121,14 +136,50 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
         )
       context.reset!(resume_token: SecureRandom.uuid)
 
-      resolver_ctx = context.resolver_context
-      resolver =
-        DiscourseWorkflows::ExpressionResolver.new(resolver_ctx.merge("$json" => {}), user: user)
+      resolver_ctx = context.resolver_context.merge("$json" => {})
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_ctx, user: user)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_ctx, user: user, sandbox: sandbox)
 
       result = resolver.resolve("={{ $execution.workflow_id }}")
       expect(result).to eq(execution.workflow.id)
     ensure
       resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "ExpressionResolver exposes current-input helpers" do
+      context = {
+        "$json" => {
+          "name" => "current",
+        },
+        "__input_item" => {
+          "json" => {
+            "name" => "current",
+          },
+        },
+        "__input_items" => [
+          { "json" => { "name" => "first" } },
+          { "json" => { "name" => "last" } },
+        ],
+        "__input_params" => {
+          "mode" => "test",
+        },
+        "__input_context" => {
+          "noItemsLeft" => true,
+        },
+        "$itemIndex" => 1,
+      }
+      sandbox = DiscourseWorkflows::JsSandbox.new(context, user: user)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(context, user: user, sandbox: sandbox)
+
+      expect(resolver.resolve("={{ $input.first().json.name }}")).to eq("first")
+      expect(resolver.resolve("={{ $input.last().json.name }}")).to eq("last")
+      expect(resolver.resolve("={{ $input.params.mode }}")).to eq("test")
+      expect(resolver.resolve("={{ $input.context.noItemsLeft }}")).to eq(true)
+      expect(resolver.resolve("={{ $itemIndex }}")).to eq(1)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
     end
   end
 end

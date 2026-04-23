@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
+  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
+  after { sandbox.dispose }
+
   def build_exec_ctx(items, resolver_context: nil, **kwargs)
     resolver_context ||= { "$json" => items.first&.dig("json") || {} }
-    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context)
+    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: items,
       resolver: resolver,
@@ -94,6 +97,58 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
       result = execute_code("return { count: $input.all().length };", items: items)
 
       expect(result.first["json"]["count"]).to eq(2)
+    end
+
+    it "keeps $json aliased to $input.item.json" do
+      result = execute_code(<<~JS)
+          var sameRef = $json === $input.item.json;
+          $input.item.json.foo = 1;
+          $json.bar = 2;
+          return { sameRef: sameRef, foo: $json.foo, bar: $input.item.json.bar };
+        JS
+
+      expect(result.first["json"]).to include("sameRef" => true, "foo" => 1, "bar" => 2)
+    end
+
+    it "provides $input.first() and $input.last()" do
+      items = [{ "json" => { "a" => 1 } }, { "json" => { "b" => 2 } }]
+      result =
+        execute_code(
+          "return { first: $input.first().json.a, last: $input.last().json.b };",
+          items: items,
+        )
+
+      expect(result.first["json"]).to include("first" => 1, "last" => 2)
+    end
+
+    it "exposes $input.params for the current code node" do
+      action =
+        described_class.new(
+          configuration: {
+            "code" => "return { mode: $input.params.mode };",
+            "mode" => "run_once_for_each_item",
+          },
+        )
+      result = action.execute(build_exec_ctx([{ "json" => {} }]))[0]
+
+      expect(result.first["json"]["mode"]).to eq("run_once_for_each_item")
+    end
+
+    it "exposes $itemIndex for each input item" do
+      items = [{ "json" => { "a" => 1 } }, { "json" => { "b" => 2 } }]
+      result = execute_code("return { itemIndex: $itemIndex };", items: items)
+
+      expect(result.map { |r| r["json"]["itemIndex"] }).to eq([0, 1])
+    end
+
+    it "raises when $input.all() exceeds the sandbox payload limit" do
+      items = [
+        { "json" => { "data" => "x" * DiscourseWorkflows::JsSandbox::MAX_INJECTED_JSON_BYTES } },
+      ]
+
+      expect {
+        execute_code("return { count: $input.all().length };", items: items)
+      }.to raise_error(DiscourseWorkflows::JsSandbox::PayloadTooLargeError, /__allInputItems/)
     end
 
     context "with workflow variables" do

@@ -123,25 +123,25 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
         "reply_to_post_number" => "={{ trigger.reply_to_post_number }}",
         "user_id" => "={{ trigger.user_id }}",
       }
+      resolver_context = {
+        "$json" => {
+          "name" => "Ada",
+        },
+        "trigger" => {
+          "topic_id" => topic.id,
+          "reply_to_post_number" => first_post.post_number,
+          "user_id" => admin.id,
+        },
+      }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
       result =
         described_class.new(configuration: config).execute(
           DiscourseWorkflows::Executor::NodeExecutionContext.new(
             input_items: [{ "json" => { "name" => "Ada" } }],
             node_context: {
             },
-            resolver:
-              DiscourseWorkflows::ExpressionResolver.new(
-                {
-                  "$json" => {
-                    "name" => "Ada",
-                  },
-                  "trigger" => {
-                    "topic_id" => topic.id,
-                    "reply_to_post_number" => first_post.post_number,
-                    "user_id" => admin.id,
-                  },
-                },
-              ),
+            resolver: resolver,
             configuration: config,
             property_schema: described_class.property_schema,
           ),
@@ -159,6 +159,9 @@ RSpec.describe DiscourseWorkflows::Nodes::CreatePost::V1 do
         "post_number" => reply.post_number,
         "raw" => "Hello Ada",
       )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
     end
   end
 end

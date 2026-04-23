@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
+  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({ "$json" => {} }) }
+  after { sandbox.dispose }
+
   def build_exec_ctx(configuration, resume_token: nil)
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: [{ "json" => {} }],
@@ -8,7 +11,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
       property_schema: described_class.property_schema,
       node_context: {
       },
-      resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }),
+      resolver: DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }, sandbox: sandbox),
       resume_token: resume_token,
     )
   end

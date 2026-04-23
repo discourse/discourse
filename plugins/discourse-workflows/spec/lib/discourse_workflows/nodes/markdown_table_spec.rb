@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::MarkdownTable::V1 do
+  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
+  after { sandbox.dispose }
+
   def execute(input_items, configuration = {})
     config = { "mapping_mode" => "manual", "columns" => [] }.merge(configuration)
     instance = described_class.new(configuration: config)
     resolver_context = { "$json" => input_items.first&.dig("json") || {} }
-    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context)
+    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
     exec_ctx =
       DiscourseWorkflows::Executor::NodeExecutionContext.new(
         input_items: input_items,

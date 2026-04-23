@@ -25,33 +25,33 @@ module DiscourseWorkflows
     end
 
     def self.resolve(value, context: {}, user: nil)
-      resolver = new(context, user: user)
-      resolver.resolve(value)
-    ensure
-      resolver&.dispose
+      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve(value) }
     end
 
     def self.resolve_hash(hash, context: {}, user: nil)
-      resolver = new(context, user: user)
-      resolver.resolve_hash(hash)
-    ensure
-      resolver&.dispose
+      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_hash(hash) }
     end
 
     def self.resolve_segments(template, context: {}, user: nil)
-      resolver = new(context, user: user)
-      resolver.resolve_segments(template)
+      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_segments(template) }
     rescue MiniRacer::Error => e
       Rails.logger.warn("Expression evaluation failed: #{e.message}")
       []
-    ensure
-      resolver&.dispose
     end
 
-    def initialize(context, user: nil, sandbox: nil, **_)
+    def self.with_owned_sandbox(context, user: nil)
+      sandbox = JsSandbox.new(context, user: user)
+      resolver = new(context, user: user, sandbox: sandbox)
+      yield resolver
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    def initialize(context, sandbox:, user: nil, **_)
       @context = context
       @user = user
-      @shared_sandbox = sandbox
+      @sandbox = sandbox
     end
 
     def resolve(value)
@@ -110,17 +110,45 @@ module DiscourseWorkflows
       segments
     end
 
-    def with_item(item_json)
+    def with_item(item, item_index: 0)
+      input_item = normalize_input_item(item)
       previous_json = @context["$json"]
-      @context["$json"] = item_json
-      js_evaluator.rebind_json(item_json)
+      previous_input_item = @context["__input_item"]
+      previous_item_index = @context["$itemIndex"]
+
+      @context["$json"] = input_item.fetch("json") { {} }
+      @context["__input_item"] = input_item
+      @context["$itemIndex"] = item_index
+      @js_evaluator&.rebind_input_item(input_item, item_index:)
       yield
     ensure
-      @context["$json"] = previous_json
-      js_evaluator.rebind_json(previous_json || {})
+      restore_context_value("$json", previous_json)
+      restore_context_value("__input_item", previous_input_item)
+      restore_context_value("$itemIndex", previous_item_index)
+      @js_evaluator&.rebind_input_item(
+        previous_input_item || { "json" => previous_json || {} },
+        item_index: previous_item_index || 0,
+      )
     end
 
     private
+
+    def normalize_input_item(item)
+      if item.is_a?(Hash)
+        stringified_item = item.deep_stringify_keys
+        return stringified_item if stringified_item.key?("json")
+      end
+
+      { "json" => item.deep_stringify_keys }
+    end
+
+    def restore_context_value(key, value)
+      if value.nil?
+        @context.delete(key)
+      else
+        @context[key] = value
+      end
+    end
 
     def classify_eval_result(eval_result)
       if eval_result[:error]
@@ -190,7 +218,7 @@ module DiscourseWorkflows
     end
 
     def js_evaluator
-      @js_evaluator ||= JsEvaluator.new(@context, user: @user, sandbox: @shared_sandbox)
+      @js_evaluator ||= JsEvaluator.new(@context, user: @user, sandbox: @sandbox)
     end
 
     def format_value(value)
@@ -199,19 +227,18 @@ module DiscourseWorkflows
     end
 
     class JsEvaluator
-      def initialize(context, user: nil, sandbox: nil)
+      def initialize(context, sandbox:, user: nil)
         @context = context
         @user = user
-        @shared_sandbox = sandbox
-        @sandbox = nil
-        @owned = false
+        @sandbox = sandbox
+        @initialized = false
         @expression_errors = []
       end
 
       attr_reader :expression_errors
 
       def evaluate(expression)
-        ensure_sandbox!
+        ensure_initialized!
         @sandbox.eval(expression)
       rescue MiniRacer::Error => e
         # Bare objects like { a: 1 } fail as blocks — retry wrapped in parens
@@ -235,32 +262,27 @@ module DiscourseWorkflows
       end
 
       def dispose
-        @sandbox&.dispose if @owned
         @sandbox = nil
       end
 
-      def rebind_json(new_json)
-        ensure_sandbox!
-        @sandbox.rebind_json(new_json)
+      def rebind_input_item(item, item_index: 0)
+        ensure_initialized!
+        @sandbox.rebind_expression_item(item, item_index:)
       end
 
       private
 
-      def ensure_sandbox!
-        return if @sandbox
-        if @shared_sandbox
-          @sandbox = @shared_sandbox
-        else
-          @sandbox = JsSandbox.new(@context, user: @user)
-          @owned = true
-        end
+      def ensure_initialized!
+        return if @initialized
         inject_expression_data!
+        @initialized = true
       end
 
       def inject_expression_data!
         data = build_expression_data
         @sandbox.attach("__fetchExprNode", method(:fetch_node_for_expression))
-        @sandbox.eval("var __data = #{data.to_json};")
+        @sandbox.attach("__fetchInputItems", method(:fetch_input_items))
+        @sandbox.declare_json("__data", data)
         @sandbox.eval(expression_setup_js)
       end
 
@@ -269,6 +291,11 @@ module DiscourseWorkflows
           "$json" => @context.fetch("$json") { {} },
           "trigger" => @context.fetch("trigger") { {} },
           "$execution" => @context.fetch("__execution") { {} },
+          "$itemIndex" => @context.fetch("$itemIndex") { 0 },
+          "__inputItem" =>
+            @context.fetch("__input_item") { { "json" => @context.fetch("$json") { {} } } },
+          "__inputParams" => @context.fetch("__input_params") { {} },
+          "__inputContext" => @context.fetch("__input_context") { {} },
           "__node_contexts" => @context.fetch("__node_contexts") { {} },
         }
       end
@@ -278,9 +305,39 @@ module DiscourseWorkflows
         JsSandbox.extract_item_json(@context[name]).to_json
       end
 
+      def fetch_input_items
+        JsSandbox.serialize_json_payload(
+          @context.fetch("__input_items") { [] },
+          label: "$input.all()",
+        )
+      end
+
       def expression_setup_js
         <<~JS
-          var $json = __data["$json"];
+          var $input = {
+            item: __data["__inputItem"],
+            all: function() { return JSON.parse(__fetchInputItems()); },
+            first: function() { return $input.all()[0] || { json: {} }; },
+            last: function() {
+              var items = $input.all();
+              return items[items.length - 1] || { json: {} };
+            },
+            params: __data["__inputParams"],
+            context: __data["__inputContext"]
+          };
+          Object.defineProperty(this, '$json', {
+            get: function() { return $input.item.json; },
+            set: function(value) {
+              $input.item.json = value;
+              __data["$json"] = value;
+            },
+            configurable: true
+          });
+          Object.defineProperty(this, '$itemIndex', {
+            get: function() { return __data["$itemIndex"]; },
+            set: function(value) { __data["$itemIndex"] = value; },
+            configurable: true
+          });
           var trigger = __data["trigger"];
           var $execution = __data["$execution"];
           var __nodeCache = {};

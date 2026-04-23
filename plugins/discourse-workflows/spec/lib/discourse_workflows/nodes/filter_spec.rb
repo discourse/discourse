@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::Filter::V1 do
+  let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
+  after { sandbox.dispose }
+
   def build_exec_ctx(items, configuration: {})
     resolver =
-      DiscourseWorkflows::ExpressionResolver.new({ "$json" => items.first&.dig("json") || {} })
+      DiscourseWorkflows::ExpressionResolver.new(
+        { "$json" => items.first&.dig("json") || {} },
+        sandbox: sandbox,
+      )
     DiscourseWorkflows::Executor::NodeExecutionContext.new(
       input_items: items,
       configuration: configuration,

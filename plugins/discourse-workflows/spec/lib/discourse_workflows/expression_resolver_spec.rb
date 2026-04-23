@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::ExpressionResolver do
-  subject(:resolver) { described_class.new(context.merge("$json" => context["trigger"])) }
+  subject(:resolver) { build_resolver(context.merge("$json" => context["trigger"])) }
 
   fab!(:api_url_variable) do
     Fabricate(:discourse_workflows_variable, key: "API_URL", value: "https://example.com")
@@ -10,7 +10,23 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
   let(:context) { { "trigger" => { "topic_id" => 42, "tags" => %w[bug help] } } }
 
-  after { resolver.dispose }
+  before do
+    @resolvers_under_test = []
+    @sandboxes_under_test = []
+  end
+
+  after do
+    @resolvers_under_test.each(&:dispose)
+    @sandboxes_under_test.each(&:dispose)
+  end
+
+  def build_resolver(ctx, **kwargs)
+    sandbox = DiscourseWorkflows::JsSandbox.new(ctx)
+    @sandboxes_under_test << sandbox
+    resolver = described_class.new(ctx, sandbox: sandbox, **kwargs)
+    @resolvers_under_test << resolver
+    resolver
+  end
 
   describe "#resolve" do
     it "returns non-string values as-is" do
@@ -31,6 +47,10 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(resolver.resolve("={{ $json.topic_id }}")).to eq(42)
     end
 
+    it "exposes $input.item as the current input item" do
+      expect(resolver.resolve("={{ $input.item.json.topic_id }}")).to eq(42)
+    end
+
     it "resolves $site_settings expressions" do
       SiteSetting.title = "My Forum"
       expect(resolver.resolve("={{ $site_settings.title }}")).to eq("My Forum")
@@ -49,15 +69,14 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
         "Previous Step" => [{ "json" => { "topic_id" => 99, "tags" => %w[dev ops] } }],
       }
 
-      node_resolver = described_class.new(node_context.merge("$json" => context["trigger"]))
+      node_resolver = build_resolver(node_context.merge("$json" => context["trigger"]))
 
       expect(node_resolver.resolve("={{ $('Previous Step').item.json.topic_id }}")).to eq(99)
     end
 
     it "resolves node context references preserving type" do
       node_context = { "__node_contexts" => { "Approval" => { "approved" => true } } }
-      node_resolver =
-        described_class.new(context.merge(node_context, "$json" => context["trigger"]))
+      node_resolver = build_resolver(context.merge(node_context, "$json" => context["trigger"]))
 
       expect(node_resolver.resolve('={{ $("Approval").context["approved"] }}')).to be(true)
     end
@@ -80,13 +99,13 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
     end
 
     it "returns nil for missing node output paths" do
-      node_resolver = described_class.new(context.merge("$json" => context["trigger"]))
+      node_resolver = build_resolver(context.merge("$json" => context["trigger"]))
 
       expect(node_resolver.resolve("={{ $('Missing Step').item.json.topic_id }}")).to be_nil
     end
 
     it "returns nil for missing node context paths" do
-      node_resolver = described_class.new(context.merge("$json" => context["trigger"]))
+      node_resolver = build_resolver(context.merge("$json" => context["trigger"]))
 
       expect(node_resolver.resolve('={{ $("Missing Step").context["approved"] }}')).to be_nil
     end
@@ -147,13 +166,13 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
     it "evaluates .toUpperCase() on strings" do
       ctx = { "trigger" => { "name" => "hello" }, "$json" => { "name" => "hello" } }
-      r = described_class.new(ctx)
+      r = build_resolver(ctx)
       expect(r.resolve("={{ $json.name.toUpperCase() }}")).to eq("HELLO")
     end
 
     it "evaluates parseInt and parseFloat" do
       ctx = { "$json" => { "val" => "42.5" } }
-      r = described_class.new(ctx)
+      r = build_resolver(ctx)
       expect(r.resolve("={{ parseInt($json.val) }}")).to eq(42)
       expect(r.resolve("={{ parseFloat($json.val) }}")).to eq(42.5)
     end
@@ -168,7 +187,7 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
     it "evaluates node output references with JS methods" do
       node_context = { "Previous Step" => [{ "json" => { "items" => %w[a b c] } }] }
-      r = described_class.new(node_context.merge("$json" => context["trigger"]))
+      r = build_resolver(node_context.merge("$json" => context["trigger"]))
       expect(r.resolve("={{ $('Previous Step').item.json.items.join('-') }}")).to eq("a-b-c")
     end
   end
@@ -204,60 +223,82 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
   describe "#with_item" do
     it "rebinds $json for the duration of the block" do
-      resolver = described_class.new(context.merge("$json" => context["trigger"]))
-      begin
-        result_inside = nil
-        result_outside_before = resolver.resolve("={{ $json.topic_id }}")
+      resolver = build_resolver(context.merge("$json" => context["trigger"]))
+      result_inside = nil
+      result_outside_before = resolver.resolve("={{ $json.topic_id }}")
 
-        resolver.with_item({ "topic_id" => 999 }) do
-          result_inside = resolver.resolve("={{ $json.topic_id }}")
-        end
-
-        result_outside_after = resolver.resolve("={{ $json.topic_id }}")
-
-        expect(result_outside_before).to eq(42)
-        expect(result_inside).to eq(999)
-        expect(result_outside_after).to eq(42)
-      ensure
-        resolver.dispose
+      resolver.with_item({ "topic_id" => 999 }) do
+        result_inside = resolver.resolve("={{ $json.topic_id }}")
       end
+
+      result_outside_after = resolver.resolve("={{ $json.topic_id }}")
+
+      expect(result_outside_before).to eq(42)
+      expect(result_inside).to eq(999)
+      expect(result_outside_after).to eq(42)
+    end
+
+    it "keeps $input.item and $itemIndex in sync for the duration of the block" do
+      resolver =
+        build_resolver(
+          context.merge(
+            "$json" => context["trigger"],
+            "__input_item" => {
+              "json" => context["trigger"],
+            },
+            "__input_items" => [
+              { "json" => context["trigger"] },
+              { "json" => { "topic_id" => 999 } },
+            ],
+            "__input_params" => {
+              "operation" => "test",
+            },
+          ),
+        )
+      result_inside = nil
+
+      resolver.with_item({ "json" => { "topic_id" => 999 } }, item_index: 1) do
+        result_inside =
+          resolver.resolve(
+            "={{ [$json.topic_id, $input.item.json.topic_id, $input.first().json.topic_id, $input.last().json.topic_id, $input.params.operation, $itemIndex] }}",
+          )
+      end
+
+      expect(result_inside).to eq([999, 999, 42, 999, "test", 1])
+    end
+
+    it "accepts symbol-keyed input items that already include json" do
+      resolver = build_resolver(context.merge("$json" => context["trigger"]))
+      result_inside = nil
+
+      resolver.with_item({ json: { topic_id: 999 } }) do
+        result_inside = resolver.resolve("={{ $json.topic_id }}")
+      end
+
+      expect(result_inside).to eq(999)
     end
 
     it "restores $json even if the block raises" do
-      resolver = described_class.new(context.merge("$json" => context["trigger"]))
-      begin
-        expect { resolver.with_item({ "topic_id" => 999 }) { raise "boom" } }.to raise_error("boom")
+      resolver = build_resolver(context.merge("$json" => context["trigger"]))
+      expect { resolver.with_item({ "topic_id" => 999 }) { raise "boom" } }.to raise_error("boom")
 
-        expect(resolver.resolve("={{ $json.topic_id }}")).to eq(42)
-      ensure
-        resolver.dispose
-      end
+      expect(resolver.resolve("={{ $json.topic_id }}")).to eq(42)
     end
   end
 
   describe "#expression_errors" do
     it "captures JS expression errors" do
-      resolver = described_class.new({ "$json" => {} })
-      begin
-        resolver.resolve("={{ $json.nonexistent.toUpperCase() }}")
-        expect(resolver.expression_errors.size).to eq(1)
-        expect(resolver.expression_errors.first[:expression]).to eq(
-          "$json.nonexistent.toUpperCase()",
-        )
-        expect(resolver.expression_errors.first[:error]).to be_present
-      ensure
-        resolver.dispose
-      end
+      resolver = build_resolver({ "$json" => {} })
+      resolver.resolve("={{ $json.nonexistent.toUpperCase() }}")
+      expect(resolver.expression_errors.size).to eq(1)
+      expect(resolver.expression_errors.first[:expression]).to eq("$json.nonexistent.toUpperCase()")
+      expect(resolver.expression_errors.first[:error]).to be_present
     end
 
     it "is empty when no errors occur" do
-      resolver = described_class.new({ "$json" => { "name" => "test" } })
-      begin
-        resolver.resolve("={{ $json.name }}")
-        expect(resolver.expression_errors).to be_empty
-      ensure
-        resolver.dispose
-      end
+      resolver = build_resolver({ "$json" => { "name" => "test" } })
+      resolver.resolve("={{ $json.name }}")
+      expect(resolver.expression_errors).to be_empty
     end
   end
 
@@ -275,6 +316,24 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
       expect(sandbox.js_context).not_to be_nil
     ensure
+      sandbox&.dispose
+    end
+
+    it "propagates workflow budget errors from the shared sandbox" do
+      sandbox =
+        DiscourseWorkflows::JsSandbox.new(
+          {},
+          budget_tracker: DiscourseWorkflows::SandboxBudget.new({}, budget_ms: 10),
+        )
+      resolver = described_class.new({ "$json" => { "a" => 1 } }, sandbox: sandbox)
+
+      Process.stubs(:clock_gettime).with(Process::CLOCK_MONOTONIC).returns(0.0, 0.02)
+
+      expect { resolver.resolve("={{ $json.a }}") }.to raise_error(
+        DiscourseWorkflows::JsSandbox::BudgetExceededError,
+      )
+    ensure
+      resolver&.dispose
       sandbox&.dispose
     end
   end

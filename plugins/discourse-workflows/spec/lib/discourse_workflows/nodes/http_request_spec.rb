@@ -159,7 +159,8 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
       }
 
       action = described_class.new(configuration: config)
-      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} })
+      sandbox = DiscourseWorkflows::JsSandbox.new({ "$json" => {} })
+      resolver = DiscourseWorkflows::ExpressionResolver.new({ "$json" => {} }, sandbox: sandbox)
       exec_ctx =
         DiscourseWorkflows::Executor::NodeExecutionContext.new(
           input_items: [item],
@@ -179,6 +180,9 @@ RSpec.describe DiscourseWorkflows::Nodes::HttpRequest::V1 do
         ],
       )
       expect(exec_ctx.log.entries).to all(include("level" => "info"))
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
     end
 
     it "raises when URL is blank" do
