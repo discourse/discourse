@@ -61,10 +61,8 @@ export default class UpsertCategoryGeneral extends Component {
 
   constructor() {
     super(...arguments);
-    this.#discussionType = this.args.category.category_types.discussion;
-    this.selectedTypes.push(
-      ...Object.values(this.args.category.category_types)
-    );
+    this.#discussionType = this.args.category.categoryTypes.discussion;
+    this.selectedTypes.push(...Object.values(this.args.category.categoryTypes));
   }
 
   @action
@@ -392,6 +390,10 @@ export default class UpsertCategoryGeneral extends Component {
     }
 
     this.selectedTypes = nextTypes;
+    this.args.form.set(
+      "category_types",
+      nextTypes.map((type) => type.id)
+    );
   }
 
   @action

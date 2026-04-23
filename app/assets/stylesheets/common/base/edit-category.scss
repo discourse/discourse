@@ -406,7 +406,6 @@ div.edit-category {
   }
 
   &__result {
-    // Dim parts only (not the whole row): parent opacity would fade the result badge.
     &.--unavailable {
       .category-type-selector__icon {
         opacity: 0.5;
