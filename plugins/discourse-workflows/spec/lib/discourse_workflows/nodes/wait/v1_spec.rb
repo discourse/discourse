@@ -14,47 +14,64 @@ RSpec.describe DiscourseWorkflows::Nodes::Wait::V1 do
   end
 
   describe "#execute" do
-    it "returns a timer wait request for interval waits" do
+    it "requests a timer wait for interval mode" do
       config = { "resume" => "time_interval", "wait_amount" => 2, "wait_unit" => "hours" }
+      exec_ctx = build_exec_ctx(config)
 
       freeze_time do
-        wait = described_class.new(configuration: config).execute(build_exec_ctx(config))
+        result = described_class.new(configuration: config).execute(exec_ctx)
 
-        expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
-        expect(wait.waiting_config["wait_type"]).to eq("timer")
-        expect(wait.waiting_config["wait_amount"]).to eq(2)
-        expect(wait.waiting_config["wait_unit"]).to eq("hours")
-        expect(wait.waiting_until).to eq(2.hours.from_now)
+        expect(exec_ctx).to be_waiting
+        expect(exec_ctx.waiting_until).to eq(2.hours.from_now)
+        expect(result).to eq([exec_ctx.input_items])
       end
     end
 
-    it "returns a webhook wait request for webhook waits" do
+    it "requests an indefinite webhook wait when limit_wait_time is false" do
+      config = { "resume" => "webhook" }
+      exec_ctx = build_exec_ctx(config, resume_token: "tok-abc")
+
+      described_class.new(configuration: config).execute(exec_ctx)
+
+      expect(exec_ctx).to be_waiting
+      expect(exec_ctx.waiting_until).to be_nil
+    end
+
+    it "requests a bounded webhook wait when limit_wait_time is true" do
       config = {
         "resume" => "webhook",
-        "http_method" => "POST",
-        "response_mode" => "immediately",
-        "response_code" => "202",
-        "webhook_suffix" => "after-approval",
         "limit_wait_time" => true,
         "timeout_amount" => 3,
         "timeout_unit" => "hours",
       }
+      exec_ctx = build_exec_ctx(config, resume_token: "tok-abc")
 
       freeze_time do
-        wait =
-          described_class.new(configuration: config).execute(
-            build_exec_ctx(config, resume_token: "tok-abc"),
-          )
+        described_class.new(configuration: config).execute(exec_ctx)
 
-        expect(wait).to be_a(DiscourseWorkflows::Executor::WaitForResume)
-        expect(wait.waiting_config["wait_type"]).to eq("webhook")
-        expect(wait.waiting_config["resume_token"]).to eq("tok-abc")
-        expect(wait.waiting_config["http_method"]).to eq("POST")
-        expect(wait.waiting_config["response_mode"]).to eq("immediately")
-        expect(wait.waiting_config["response_code"]).to eq("202")
-        expect(wait.waiting_config["webhook_suffix"]).to eq("after-approval")
-        expect(wait.waiting_until).to eq(3.hours.from_now)
+        expect(exec_ctx).to be_waiting
+        expect(exec_ctx.waiting_until).to eq(3.hours.from_now)
       end
+    end
+
+    it "raises on a non-positive wait amount" do
+      config = { "resume" => "time_interval", "wait_amount" => 0, "wait_unit" => "hours" }
+      exec_ctx = build_exec_ctx(config)
+
+      expect { described_class.new(configuration: config).execute(exec_ctx) }.to raise_error(
+        ArgumentError,
+        /Wait amount/,
+      )
+    end
+
+    it "raises on an invalid wait unit" do
+      config = { "resume" => "time_interval", "wait_amount" => 1, "wait_unit" => "weeks" }
+      exec_ctx = build_exec_ctx(config)
+
+      expect { described_class.new(configuration: config).execute(exec_ctx) }.to raise_error(
+        ArgumentError,
+        /Invalid wait unit/,
+      )
     end
   end
 end

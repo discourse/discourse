@@ -104,33 +104,7 @@ module DiscourseWorkflows
           resume_mode = @configuration.fetch("resume")
 
           if resume_mode == "webhook"
-            timeout_amount = nil
-            timeout_unit = "hours"
-
-            if @configuration["limit_wait_time"]
-              timeout_amount = @configuration["timeout_amount"].presence&.to_i
-              timeout_unit = @configuration["timeout_unit"].presence || "hours"
-              if WAIT_UNITS.exclude?(timeout_unit)
-                raise ArgumentError, "Invalid timeout unit: #{timeout_unit}"
-              end
-              if timeout_amount && timeout_amount <= 0
-                raise ArgumentError, "Timeout amount must be greater than 0"
-              end
-            end
-
-            timeout_seconds = timeout_amount&.public_send(timeout_unit)&.to_i
-
-            Executor::WaitForResume.new(
-              waiting_until: timeout_seconds&.seconds&.from_now,
-              waiting_config: {
-                "wait_type" => "webhook",
-                "resume_token" => exec_ctx.resume_token,
-                "http_method" => @configuration.fetch("http_method") { "GET" },
-                "response_mode" => @configuration.fetch("response_mode") { "immediately" },
-                "response_code" => @configuration.fetch("response_code") { "200" },
-                "webhook_suffix" => @configuration["webhook_suffix"].presence,
-              }.compact,
-            )
+            waiting_until = webhook_waiting_until
           else
             amount = @configuration.fetch("wait_amount") { 1 }.to_i
             unit = @configuration.fetch("wait_unit") { "hours" }
@@ -138,17 +112,29 @@ module DiscourseWorkflows
             raise ArgumentError, "Wait amount must be greater than 0" if amount <= 0
             raise ArgumentError, "Invalid wait unit: #{unit}" if WAIT_UNITS.exclude?(unit)
 
-            duration_seconds = amount.public_send(unit).to_i
-
-            Executor::WaitForResume.new(
-              waiting_until: duration_seconds.seconds.from_now,
-              waiting_config: {
-                "wait_type" => "timer",
-                "wait_amount" => amount,
-                "wait_unit" => unit,
-              },
-            )
+            waiting_until = amount.public_send(unit).from_now
           end
+
+          exec_ctx.put_execution_to_wait(waiting_until)
+          [exec_ctx.input_items]
+        end
+
+        private
+
+        def webhook_waiting_until
+          return nil unless @configuration["limit_wait_time"]
+
+          timeout_amount = @configuration["timeout_amount"].presence&.to_i
+          timeout_unit = @configuration["timeout_unit"].presence || "hours"
+
+          if WAIT_UNITS.exclude?(timeout_unit)
+            raise ArgumentError, "Invalid timeout unit: #{timeout_unit}"
+          end
+          if timeout_amount && timeout_amount <= 0
+            raise ArgumentError, "Timeout amount must be greater than 0"
+          end
+
+          timeout_amount&.public_send(timeout_unit)&.from_now
         end
       end
     end
