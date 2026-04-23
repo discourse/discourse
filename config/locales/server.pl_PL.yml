@@ -744,7 +744,7 @@ pl_PL:
       few: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
       many: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
       other: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
-    dont_feed_the_trolls: Ten post został oznaczony do uwagi moderatora. Odpowiadanie na negatywną treść może zachęcać do bardziej negatywnego zachowania - czy na pewno chcesz kontynuować?
+    dont_feed_the_trolls: Ten wpis został oflagowany do uwagi moderatora. Odpowiadanie na negatywną treść może zachęcać do bardziej negatywnego zachowania. Czy na pewno chcesz kontynuować?
     too_many_replies: |
       Nowi użytkownicy są tymczasowo ograniczeni do %{newuser_max_replies_per_topic} odpowiedzi w tym samym temacie. Prosimy o odwiedzenie innych tematów, aby nadal poznawać społeczność.
   activerecord:
@@ -1854,7 +1854,7 @@ pl_PL:
     tl2_post_edit_time_limit: "Autor tl2 + może edytować swój wpis przez (n) minut po opublikowaniu. Ustaw na zawsze na 0."
     edit_history_visible_to_public: "Pozwól wszystkim zobaczyć poprzednie wersje edytowanego posta. Gdy wyłączone, tylko członkowie personelu mogą je przeglądać."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
-    notify_users_after_responses_deleted_on_flagged_post: "Gdy post zostanie oznaczony, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
+    notify_users_after_responses_deleted_on_flagged_post: "Gdy wpis zostanie oflagowany, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
     max_image_width: "Maksymalna szerokość miniatur obrazów w poście. Obrazy o większej szerokości zostaną przeskalowane i podświetlone."
     max_image_height: "Maksymalna wysokość miniatur obrazów w poście. Obrazy o większej wysokości zostaną przeskalowane i podświetlone."
     responsive_post_image_sizes: "Zmień rozmiar podglądu lightbox, aby umożliwić wyświetlanie ekranów o wysokiej rozdzielczości DPI o następujących proporcjach pikseli. Usuń wszystkie wartości, aby wyłączyć responsywne obrazy."
@@ -3288,18 +3288,18 @@ pl_PL:
 
       %{notes}
   flag_reasons:
-    off_topic: "Twój wpis został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."
-    inappropriate: "Twój post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
-    illegal: "Twój post został oznaczony jako **nielegalny**: społeczność uważa, że może on łamać prawo."
-    spam: "Twój wpis został oznaczony jako **spam**: społeczność czuje, że jest to reklama, czyli coś nadmiernie promującego, a nie użytecznego czy odnoszącego się do tematu."
-    notify_moderators: "Twój wpis został oznaczony jako **do uwagi moderatora**: społeczność czuje, że wpis wymaga ręcznej interwencji członka personelu."
-    needs_approval: "Twój wpis został oznaczony **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
+    off_topic: "Twój wpis został oflagowany jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."
+    inappropriate: "Twój wpis został oflagowany jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
+    illegal: "Twój wpis został oflagowany jako **nielegalny**: społeczność uważa, że może on łamać prawo."
+    spam: "Twój wpis został oflagowany jako **spam**: społeczność czuje, że jest to reklama, czyli coś nadmiernie promującego, a nie użytecznego czy odnoszącego się do tematu."
+    notify_moderators: "Twój wpis został oflagowany jako **do uwagi moderatora**: społeczność czuje, że wpis wymaga ręcznej interwencji członka personelu."
+    needs_approval: "Twój wpis został oflagowany **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
     responder:
-      off_topic: "Post został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje on do tematu, który obecnie określa tytuł i pierwszy post."
-      inappropriate: "Post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
-      spam: "Post został oznaczony jako **spam**: społeczność uważa, że jest to reklama, lub coś, co ma charakter nadmiernie promocyjny, a nie jest przydatne lub związane z tematem zgodnie z oczekiwaniami."
-      notify_moderators: "Post został oznaczony **w celu zwrócenia uwagi moderatora**: społeczność uważa, że coś w tym poście wymaga ręcznej interwencji członka personelu."
-      needs_approval: "Wpis został oznaczony **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
+      off_topic: "Wpis został oflagowany jako **nie na temat**: społeczność uważa, że nie pasuje on do tematu, który obecnie określa tytuł i pierwszy wpis."
+      inappropriate: "Wpis został oflagowany jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
+      spam: "Wpis został oflagowany jako **spam**: społeczność uważa, że jest to reklama, lub coś, co ma charakter nadmiernie promocyjny, a nie jest przydatne lub związane z tematem zgodnie z oczekiwaniami."
+      notify_moderators: "Wpis został oflagowany jako **w celu zwrócenia uwagi moderatora**: społeczność uważa, że coś w tym poście wymaga ręcznej interwencji członka personelu."
+      needs_approval: "Wpis został oflagowany jako **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
   flags_dispositions:
     agreed: "Dziękujemy za zwrócenie uwagi. Zgadzamy się, że jest to problem i przyjrzymy się temu. "
     agreed_and_deleted: "Dziękujemy za zwrócenie uwagi. Zgadzamy się, że jest to problem i wpis został usunięty. "
