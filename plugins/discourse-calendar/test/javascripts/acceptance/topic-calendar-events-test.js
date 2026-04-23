@@ -31,6 +31,7 @@ acceptance("Topic Calendar Events", function (needs) {
     pretender.get("/t/252.json", () => fixtureWithFullDay("true"));
     await visit("/t/-/252");
 
+    assert.dom(".fc-daygrid-day").exists("the calendar rendered");
     assert.dom(getEventByText("Event 1")).exists();
     assert.dom(getEventByText("Event 2")).exists();
   });
@@ -39,6 +40,7 @@ acceptance("Topic Calendar Events", function (needs) {
     pretender.get("/t/252.json", () => fixtureWithFullDay("false"));
     await visit("/t/-/252");
 
+    assert.dom(".fc-daygrid-day").exists("the calendar rendered");
     assert.dom(getEventByText("Event 1")).exists();
     assert.dom(getEventByText("Event 2")).exists();
   });
