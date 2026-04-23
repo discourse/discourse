@@ -3855,7 +3855,7 @@ uncategorized:
     area: "interface"
     upcoming_change:
       status: "stable"
-      impact: "feature,all_members"
+      impact: "other,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/395100"
 
   splash_screen_image:
@@ -4308,7 +4308,7 @@ experimental:
     area: "experimental"
     upcoming_change:
       status: "stable"
-      impact: "feature,all_members"
+      impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
   enable_new_checkbox_style:
     default: false
