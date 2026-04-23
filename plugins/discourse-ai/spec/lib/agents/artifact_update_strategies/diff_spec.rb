@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Agents::ArtifactUpdateStrategies::Diff do
   fab!(:user)
   fab!(:post)
-  fab!(:artifact, :ai_artifact)
+  fab!(:artifact, :web_artifact)
   fab!(:llm_model)
 
   let(:llm) { llm_model.to_llm }

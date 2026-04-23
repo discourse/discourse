@@ -73,10 +73,9 @@ RSpec.describe SharedAiConversation, type: :model do
     end
 
     it "shares artifacts publicly when conversation is shared" do
-      # Create a post with an AI artifact
       artifact =
         Fabricate(
-          :ai_artifact,
+          :web_artifact,
           post: post1,
           user: user,
           metadata: {

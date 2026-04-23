@@ -6,7 +6,7 @@ RSpec.describe "AI Artifact Key-Value API" do
   fab!(:private_message_post) { Fabricate(:post, topic: private_message_topic, user: user) }
   fab!(:artifact) do
     Fabricate(
-      :ai_artifact,
+      :web_artifact,
       post: private_message_post,
       metadata: {
         public: true,
