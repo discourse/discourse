@@ -1,7 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Composer - Reply target picker", function (needs) {
   needs.user({ id: 5, username: "kris" });
@@ -20,9 +19,7 @@ acceptance("Composer - Reply target picker", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     await click(".topic-post[data-post-number='6'] button.edit");
-
-    const popup = selectKit(".toolbar-popup-menu-options");
-    await popup.expand();
+    await click(".d-editor-button-bar .fk-d-menu__trigger");
 
     assert
       .dom("[data-name='change-reply-to']")
