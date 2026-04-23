@@ -32,8 +32,15 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
     end
 
     let(:uuid) { "a1b2c3d4-e5f6-7890-abcd-ef0123456789" }
+    let(:resume_token) do
+      DiscourseWorkflows::FormTriggerToken.generate(
+        workflow_id: workflow.id,
+        trigger_node_id: "trigger-1",
+        uuid: uuid,
+      )
+    end
     let(:form_data) { { "name" => "Test User" } }
-    let(:params) { { uuid: uuid, form_data: form_data } }
+    let(:params) { { uuid: uuid, resume_token: resume_token, form_data: form_data } }
 
     before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
 
@@ -88,6 +95,18 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
       let(:form_data) { { "name" => "" } }
 
       it { is_expected.to fail_a_step(:validate_required_form_fields) }
+    end
+
+    context "when the initial submission token is missing" do
+      let(:resume_token) { nil }
+
+      it { is_expected.to fail_a_step(:validate_initial_submission_token) }
+    end
+
+    context "when the initial submission token is invalid" do
+      let(:resume_token) { "invalid-token" }
+
+      it { is_expected.to fail_a_step(:validate_initial_submission_token) }
     end
 
     context "when resume_token from a waiting form_trigger execution is provided" do

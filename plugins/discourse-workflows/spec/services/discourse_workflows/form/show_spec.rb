@@ -92,6 +92,20 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         expect(form_data[:response_mode]).to eq("on_received")
         expect(form_data[:has_downstream_form]).to be(false)
       end
+
+      it "returns a signed submission token without creating a waiting execution" do
+        expect { result }.not_to change { DiscourseWorkflows::Execution.waiting.count }
+
+        expect(result[:form_data][:resume_token]).to be_present
+        expect(
+          DiscourseWorkflows::FormTriggerToken.valid?(
+            result[:form_data][:resume_token],
+            workflow_id: workflow.id,
+            trigger_node_id: "trigger-1",
+            uuid: uuid,
+          ),
+        ).to be(true)
+      end
     end
 
     context "when form_description references $execution.resume_url" do
@@ -102,22 +116,14 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow)
       end
 
-      it "resolves $execution.resume_url to a valid webhook URL" do
+      it "resolves $execution.resume_url without materializing an execution" do
         expect(result).to run_successfully
-        description = result[:form_data][:form_description]
-        expect(description).to match(%r{/workflows/webhooks/\d+\?token=[a-f0-9-]+})
+        expect(result[:form_data][:form_description]).to eq("")
       end
 
       it "returns resume_token in the response" do
         expect(result).to run_successfully
         expect(result[:form_data][:resume_token]).to be_present
-      end
-
-      it "creates a waiting execution for the form trigger" do
-        expect { result }.to change { DiscourseWorkflows::Execution.waiting.count }.by(1)
-        execution = DiscourseWorkflows::Execution.waiting.last
-        expect(execution.waiting_config["wait_type"]).to eq("form_trigger")
-        expect(execution.waiting_until).to be_within(5.seconds).of(1.hour.from_now)
       end
     end
 

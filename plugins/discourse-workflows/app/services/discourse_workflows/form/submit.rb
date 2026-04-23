@@ -21,7 +21,9 @@ module DiscourseWorkflows
 
     model :workflow
     model :trigger_node
+    model :trigger_execution, :fetch_trigger_execution, optional: true
     policy :authenticated_if_required
+    step :validate_initial_submission_token
     step :validate_required_form_fields
     model :execution, :run_workflow
     model :response_metadata, :build_response_metadata
@@ -57,24 +59,46 @@ module DiscourseWorkflows
         .find { |node| node.dig("configuration", "uuid") == params.uuid }
     end
 
-    def run_workflow(workflow:, trigger_node:, params:, guardian:)
+    def fetch_trigger_execution(workflow:, params:)
+      return if params.resume_token.blank?
+
+      DiscourseWorkflows::Execution
+        .where(status: :waiting, workflow: workflow)
+        .where("waiting_config->>'resume_token' = ?", params.resume_token)
+        .where("waiting_config->>'wait_type' = ?", "form_trigger")
+        .first
+    end
+
+    def validate_initial_submission_token(workflow:, trigger_node:, trigger_execution:, params:)
+      return if trigger_execution.present?
+      if params.resume_token.present? &&
+           DiscourseWorkflows::FormTriggerToken.valid?(
+             params.resume_token,
+             workflow_id: workflow.id,
+             trigger_node_id: trigger_node["id"],
+             uuid: params.uuid,
+           )
+        return
+      end
+
+      fail!(I18n.t("discourse_workflows.errors.invalid_form_token"))
+    end
+
+    def run_workflow(workflow:, trigger_node:, trigger_execution:, params:, guardian:)
       form_data = DiscourseWorkflows::Workflow.form_data_from(trigger_node, params.form_data)
       form_data.transform_values! { |v| v.is_a?(String) ? v.truncate(MAX_FIELD_VALUE_LENGTH) : v }
       trigger_data = { "form_data" => form_data, "submitted_at" => Time.current.utc.iso8601 }
       response_items = [{ "json" => trigger_data }]
 
-      if params.resume_token.present?
-        execution =
-          DiscourseWorkflows::Execution
-            .where(status: :waiting, workflow: workflow)
-            .where("waiting_config->>'resume_token' = ?", params.resume_token)
-            .where("waiting_config->>'wait_type' = ?", "form_trigger")
-            .first
-
-        if execution
-          execution.update!(trigger_data: trigger_data)
-          return DiscourseWorkflows::Executor.resume(execution, response_items, user: guardian.user)
-        end
+      if trigger_execution
+        trigger_execution.update!(trigger_data: trigger_data)
+        return(
+          DiscourseWorkflows::Executor.resume(
+            trigger_execution,
+            response_items,
+            user: guardian.user,
+          )
+        )
       end
 
       options = DiscourseWorkflows::Executor::ExecutionOptions.new(user: guardian.user)

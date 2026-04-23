@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::FormsController do
+  form_uuid = "a1b2c3d4-e5f6-7890-abcd-ef0123456789"
+
+  let(:uuid) { form_uuid }
+  let(:form_path) { "/workflows/form/#{uuid}.json" }
+
   fab!(:workflow) do
     graph =
       build_workflow_graph do |g|
         g.node "trigger-1",
                "trigger:form",
                configuration: {
-                 "uuid" => "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+                 "uuid" => form_uuid,
                  "form_title" => "Test Form",
                  "form_fields" => [
                    { "field_label" => "Name", "field_type" => "text", "required" => true },
@@ -19,14 +24,21 @@ RSpec.describe DiscourseWorkflows::FormsController do
   end
 
   let(:origin_headers) { { "Origin" => "http://#{Discourse.current_hostname}" } }
+  let(:initial_resume_token) do
+    get form_path
+    expect(response.status).to eq(200)
+    response.parsed_body["resume_token"]
+  end
 
   describe "GET /workflows/form/:uuid.json" do
     it "returns form schema" do
-      get "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json"
+      expect { get form_path }.not_to change { DiscourseWorkflows::Execution.count }
+
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["form_title"]).to eq("Test Form")
       expect(json["form_fields"].length).to eq(1)
+      expect(json["resume_token"]).to be_present
     end
 
     it "returns 404 for unknown uuid" do
@@ -36,8 +48,16 @@ RSpec.describe DiscourseWorkflows::FormsController do
 
     it "returns 404 for disabled workflow" do
       workflow.update!(enabled: false)
-      get "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json"
+      get form_path
       expect(response.status).to eq(404)
+    end
+
+    it "rate limits repeated show requests" do
+      RateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
+
+      get form_path
+
+      expect(response.status).to eq(429)
     end
 
     context "when the form requires a logged-in user" do
@@ -49,13 +69,13 @@ RSpec.describe DiscourseWorkflows::FormsController do
       end
 
       it "returns 403 for anonymous users" do
-        get "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json"
+        get form_path
         expect(response.status).to eq(403)
       end
 
       it "returns form schema for logged-in users" do
         sign_in(Fabricate(:user))
-        get "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json"
+        get form_path
         expect(response.status).to eq(200)
       end
     end
@@ -63,8 +83,9 @@ RSpec.describe DiscourseWorkflows::FormsController do
 
   describe "POST /workflows/form/:uuid.json" do
     it "executes workflow and returns resume token" do
-      post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+      post form_path,
            params: {
+             resume_token: initial_resume_token,
              form_data: {
                name: "Test User",
              },
@@ -80,9 +101,16 @@ RSpec.describe DiscourseWorkflows::FormsController do
       expect(execution.execution_data.context_data["__resume_token"]).to eq(json["resume_token"])
     end
 
+    it "returns 422 when the initial submission token is missing" do
+      post form_path, params: { form_data: { name: "Test User" } }, headers: origin_headers
+
+      expect(response.status).to eq(422)
+    end
+
     it "returns 422 with missing field labels when required fields are omitted" do
-      post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+      post form_path,
            params: {
+             resume_token: initial_resume_token,
              form_data: {
              },
            },
@@ -100,20 +128,15 @@ RSpec.describe DiscourseWorkflows::FormsController do
       end
 
       it "returns 403 for anonymous users" do
-        post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
-             params: {
-               form_data: {
-                 name: "Test User",
-               },
-             },
-             headers: origin_headers
+        post form_path, params: { form_data: { name: "Test User" } }, headers: origin_headers
         expect(response.status).to eq(403)
       end
 
       it "executes workflow for logged-in users" do
         sign_in(Fabricate(:user))
-        post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+        post form_path,
              params: {
+               resume_token: initial_resume_token,
                form_data: {
                  name: "Test User",
                },
@@ -126,21 +149,12 @@ RSpec.describe DiscourseWorkflows::FormsController do
 
   describe "PUT /workflows/form/:uuid.json" do
     it "returns 404 when no waiting execution matches the resume token" do
-      put "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
-          params: {
-            resume_token: "nonexistent-token",
-          },
-          headers: origin_headers
+      put form_path, params: { resume_token: "nonexistent-token" }, headers: origin_headers
       expect(response.status).to eq(404)
     end
 
     it "returns 422 when resume_token is missing" do
-      put "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
-          params: {
-            form_data: {
-            },
-          },
-          headers: origin_headers
+      put form_path, params: { form_data: {} }, headers: origin_headers
       expect(response.status).to eq(422)
     end
 
@@ -185,8 +199,9 @@ RSpec.describe DiscourseWorkflows::FormsController do
       end
 
       it "resumes a waiting execution and returns a new resume token" do
-        post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+        post form_path,
              params: {
+               resume_token: initial_resume_token,
                form_data: {
                  name: "Test User",
                },
@@ -201,7 +216,7 @@ RSpec.describe DiscourseWorkflows::FormsController do
         expect(execution.status).to eq("waiting")
         expect(execution.waiting_node_id).to eq("form-action-1")
 
-        put "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+        put form_path,
             params: {
               resume_token: resume_token,
               form_data: {
@@ -216,8 +231,9 @@ RSpec.describe DiscourseWorkflows::FormsController do
       end
 
       it "returns 404 when execution has already been resumed" do
-        post "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+        post form_path,
              params: {
+               resume_token: initial_resume_token,
                form_data: {
                  name: "Test User",
                },
@@ -225,7 +241,7 @@ RSpec.describe DiscourseWorkflows::FormsController do
              headers: origin_headers
         resume_token = response.parsed_body["resume_token"]
 
-        put "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+        put form_path,
             params: {
               resume_token: resume_token,
               form_data: {
@@ -235,7 +251,7 @@ RSpec.describe DiscourseWorkflows::FormsController do
             headers: origin_headers
         expect(response.status).to eq(200)
 
-        put "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
+        put form_path,
             params: {
               resume_token: resume_token,
               form_data: {

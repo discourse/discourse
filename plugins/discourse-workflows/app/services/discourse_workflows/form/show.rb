@@ -116,19 +116,18 @@ module DiscourseWorkflows
     end
 
     def build_form_data_from_config(workflow:, form_node:, params:, guardian:)
-      execution, resume_token =
-        DiscourseWorkflows::Executor::ExecutionStore.create_waiting_for_trigger(
-          workflow: workflow,
+      resume_token =
+        DiscourseWorkflows::FormTriggerToken.generate(
+          workflow_id: workflow.id,
           trigger_node_id: form_node["id"],
+          uuid: params.uuid,
         )
 
       exec_context = {
         "__execution" => {
-          "id" => execution.id,
           "workflow_id" => workflow.id,
           "workflow_name" => workflow.name,
-          "resume_url" =>
-            "#{Discourse.base_url}/workflows/webhooks/#{execution.id}?token=#{resume_token}",
+          "resume_url" => "",
         },
       }
 

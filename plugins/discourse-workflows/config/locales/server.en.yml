@@ -7,6 +7,7 @@ en:
       invalid_schedule_rule: "One or more schedule rules are invalid."
       not_enabled: "The discourse-workflows plugin is not enabled."
       missing_required_fields: "Required fields are missing."
+      invalid_form_token: "The form token is invalid or has expired."
       storage_limit_exceeded: "Data table storage limit exceeded."
       create_post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."

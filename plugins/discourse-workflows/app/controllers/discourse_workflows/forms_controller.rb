@@ -4,10 +4,14 @@ module DiscourseWorkflows
   class FormsController < ::ApplicationController
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
+    FORM_SHOW_RATE_LIMIT = 30
+    FORM_SHOW_RATE_PERIOD = 60
+
     skip_before_action :verify_authenticity_token
     skip_before_action :redirect_to_login_if_required
     skip_before_action :check_xhr
 
+    before_action :check_form_show_rate_limit, only: :show
     before_action :check_form_submit_rate_limit, only: :create
     before_action :check_form_resume_rate_limit, only: :update
     before_action :verify_request_origin, only: %i[create update]
@@ -65,6 +69,15 @@ module DiscourseWorkflows
     end
 
     private
+
+    def check_form_show_rate_limit
+      RateLimiter.new(
+        nil,
+        "workflow_form_show:#{request.remote_ip}",
+        FORM_SHOW_RATE_LIMIT,
+        FORM_SHOW_RATE_PERIOD,
+      ).performed!
+    end
 
     def check_form_submit_rate_limit
       RateLimiter.new(current_user, "workflow_form_submit:#{request.remote_ip}", 10, 60).performed!
