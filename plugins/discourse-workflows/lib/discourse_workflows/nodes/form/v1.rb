@@ -123,15 +123,8 @@ module DiscourseWorkflows
             DiscourseWorkflows::Executor.form_channel(exec_ctx.execution_id, exec_ctx.resume_token)
           MessageBus.publish(channel, { status: "waiting_for_form" })
 
-          Executor::WaitForResume.new(
-            waiting_config: {
-              "wait_type" => "form",
-              "resume_token" => exec_ctx.resume_token,
-              "form_title" => config["form_title"],
-              "form_description" => config["form_description"],
-              "form_fields" => config["form_fields"],
-            },
-          )
+          exec_ctx.put_execution_to_wait(nil)
+          [exec_ctx.input_items]
         end
       end
     end
