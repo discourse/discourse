@@ -4741,6 +4741,8 @@ en:
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
+        reply_to:
+          none: "No reply target"
         controls:
           first: "First revision"
           previous: "Previous revision"
