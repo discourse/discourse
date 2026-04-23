@@ -153,7 +153,14 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
       before do
         extra =
           build_workflow_graph do |g|
-            g.node "wait-1", "action:wait"
+            g.node "wait-1",
+                   "action:wait",
+                   configuration: {
+                     "wait_type" => "webhook",
+                     "http_method" => "POST",
+                     "response_mode" => "immediately",
+                     "webhook_suffix" => "after-approval",
+                   }
             g.chain "webhook-1", "wait-1"
           end
         workflow.update!(nodes: workflow.nodes + extra[:nodes], connections: extra[:connections])
@@ -166,13 +173,7 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
           status: :waiting,
           trigger_node_id: "webhook-1",
           waiting_node_id: "wait-1",
-          waiting_config: {
-            "resume_token" => "resume-token",
-            "wait_type" => "webhook",
-            "http_method" => "POST",
-            "response_mode" => "immediately",
-            "webhook_suffix" => "after-approval",
-          },
+          resume_token: "resume-token",
         )
       end
 
@@ -222,18 +223,24 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
                    }
             g.connect "wait-1", "respond-1"
           end
+        updated_nodes =
+          (workflow.nodes + extra[:nodes]).map do |n|
+            if n["id"] == "wait-1"
+              n.merge(
+                "configuration" =>
+                  (n["configuration"] || {}).merge("response_mode" => "respond_to_webhook"),
+              )
+            else
+              n
+            end
+          end
         workflow.update!(
-          nodes: workflow.nodes + extra[:nodes],
+          nodes: updated_nodes,
           connections: workflow.connections + extra[:connections],
         )
 
         waiting_execution.execution_data.update!(
           workflow_data: DiscourseWorkflows::WorkflowSnapshot.snapshot(workflow),
-        )
-
-        waiting_execution.update!(
-          waiting_config:
-            waiting_execution.waiting_config.merge("response_mode" => "respond_to_webhook"),
         )
 
         post "/workflows/webhooks/#{waiting_execution.id}/after-approval.json?token=#{resume_token}",

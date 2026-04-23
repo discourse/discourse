@@ -8,8 +8,6 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
       workflow: workflow,
       status: :waiting,
       waiting_until: 1.minute.ago,
-      waiting_config: {
-      },
     )
   end
 

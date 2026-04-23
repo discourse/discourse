@@ -3,13 +3,7 @@
 RSpec.describe Jobs::DiscourseWorkflows::ResumeWebhookWaiting do
   fab!(:workflow) { Fabricate(:discourse_workflows_workflow, enabled: true) }
   fab!(:execution) do
-    Fabricate(
-      :discourse_workflows_execution,
-      workflow: workflow,
-      status: :waiting,
-      waiting_config: {
-      },
-    )
+    Fabricate(:discourse_workflows_execution, workflow: workflow, status: :waiting)
   end
 
   it "does not resume when the plugin is disabled" do
