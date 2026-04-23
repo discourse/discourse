@@ -106,7 +106,11 @@ export default class PostUsersMenu extends Component {
                 @username={{user.username}}
                 class="post-users-popup__avatar-link"
               >
-                <UserAvatar @user={{user}} @size="small" />
+                {{#if (has-block "avatar")}}
+                  {{yield user to="avatar"}}
+                {{else}}
+                  <UserAvatar @user={{user}} @size="small" />
+                {{/if}}
               </UserLink>
               <div class="post-users-popup__user-info">
                 <UserLink
