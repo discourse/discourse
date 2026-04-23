@@ -38,7 +38,7 @@ pl_PL:
       delete_channel: "Usuń"
       test_channel: "Sprawdź"
       edit_channel: "Edytuj"
-      channel_delete_confirm: "Jesteś pewien, że chcesz usunąć ten kanał? Wszystkie połączone reguły zostaną usunięte."
+      channel_delete_confirm: "Czy na pewno chcesz usunąć ten kanał? Wszystkie powiązane reguły zostaną usunięte."
       test_modal:
         title: "Wyślij wiadomość testową"
         topic: "Temat"

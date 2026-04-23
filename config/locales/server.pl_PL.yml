@@ -740,10 +740,10 @@ pl_PL:
       Aby uzyskać więcej wskazówek i porad dotyczących uczestnictwa w naszej społeczności, [sprawdź nasze wytyczne społeczności](%{base_path}/guidelines).
     dominating_topic: Dużo napisałeś w tym temacie! Rozważ danie innym również możliwości wzięcia udziału.
     get_a_room:
-      one: Odpowiedziałeś na @%{reply_username} raz. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-      few: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-      many: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-      other: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
+      one: Odpowiedziałeś na @%{reply_username} raz. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
+      few: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
+      many: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
+      other: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
     dont_feed_the_trolls: Ten post został oznaczony do uwagi moderatora. Odpowiadanie na negatywną treść może zachęcać do bardziej negatywnego zachowania - czy na pewno chcesz kontynuować?
     too_many_replies: |
       Nowi użytkownicy są tymczasowo ograniczeni do %{newuser_max_replies_per_topic} odpowiedzi w tym samym temacie. Prosimy o odwiedzenie innych tematów, aby nadal poznawać społeczność.
@@ -1374,7 +1374,7 @@ pl_PL:
         post_count: Napisanych wpisów
         pm_count: Napisanych PW
         revision_count: Wersji
-      description: Lista działań moderatora, w tym sprawdzone flagi, czas czytania, utworzone tematy, utworzone wpisy, utworzone wiadomości osobiste i poprawki.
+      description: Lista działań moderatora, w tym sprawdzone flagi, czas czytania, utworzone tematy, utworzone wpisy, utworzone prywatne wiadomości i poprawki.
     flags_status:
       title: "Status flag"
       values:
@@ -1534,17 +1534,17 @@ pl_PL:
       title: "Użytkownik dla użytkownika (z wyłączeniem odpowiedzi)"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba nowo zainicjowanych wiadomości osobistych."
+      description: "Liczba nowo zainicjowanych wiadomości prywatnych."
     user_to_user_private_messages_with_replies:
       title: "Użytkownik dla użytkownika (z odpowiedziami)"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba wszystkich nowych osobistych wiadomości i odpowiedzi."
+      description: "Liczba wszystkich nowych wiadomości prywatnych i odpowiedzi."
     system_private_messages:
       title: "System"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba wiadomości osobistych wysyłanych automatycznie przez system."
+      description: "Liczba prywatnych wiadomości wysyłanych automatycznie przez system."
     moderator_warning_private_messages:
       title: "Ostrzeżenia moderatorów"
       xaxis: "Dzień"
@@ -1559,7 +1559,7 @@ pl_PL:
       title: "Powiadom użytkownika"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba użytkowników, do których wysłano osobiste wiadomości za pomocą okna dialogowego flag."
+      description: "Liczba użytkowników, do których wysłano prywatne wiadomości za pomocą okna dialogowego flag."
     top_referrers:
       title: "Najczęstszy referrerzy"
       xaxis: "Użytkownik"
@@ -1805,7 +1805,7 @@ pl_PL:
     set_locale_from_param: "Umożliwia ustawienie ustawień regionalnych anonimowego użytkownika za pomocą parametru adresu URL „tl”, np. ?tl=es"
     support_mixed_text_direction: "Wspieraj mieszane kierunki tekstu od lewej do prawej i od prawej do lewej strony"
     min_post_length: "Minimalna dozwolona długość postu w znakach (z wyłączeniem wiadomości osobistych)"
-    min_first_post_length: "Minimalna dozwolona długość pierwszego postu (treści tematu) (z wyłączeniem wiadomości osobistych)"
+    min_first_post_length: "Minimalna dozwolona długość pierwszego postu (treści tematu) (z wyłączeniem prywatnych wiadomości)"
     prevent_uploads_only_posts: "Nie licz przesłanego kodu markdown podczas sprawdzania minimalnej długości posta"
     min_personal_message_post_length: "Minimalna dozwolona długość postu w znakach dla wiadomości (zarówno pierwszego posta, jak i odpowiedzi)"
     max_post_length: "Maksymalna długość wpisu, w znakach"
@@ -1814,7 +1814,7 @@ pl_PL:
     min_topic_views_for_delete_confirm: "Minimalna liczba wyświetleń tematu, aby podczas jego usuwania pojawiło się okienko z potwierdzeniem."
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
-    min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
+    min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości"
     max_emojis_in_title: "Maksymalna dozwolona liczba emoji w tytule tematu. Jeśli ustawiona wartość wynosi zero, uniemożliwia to użycie jakichkolwiek emoji w tytułach tematów."
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
     search_tokenize_chinese: "Wymuś na wyszukiwarce tokenizację języka chińskiego nawet na stronach, które nie są chińskie"
@@ -1909,8 +1909,8 @@ pl_PL:
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
     summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
     enable_personal_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Zezwalaj użytkownikom na poziomie zaufania 1 (konfigurowalnym za pomocą minimalnego zaufania do wysyłania wiadomości) na tworzenie wiadomości i odpowiadanie na wiadomości. Pamiętaj, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
-    personal_message_enabled_groups: "Zezwól użytkownikom w tych grupach na TWORZENIE wiadomości osobistych. WAŻNE: 1) Wszyscy użytkownicy mogą ODPOWIADAĆ na wiadomości. 2) Administratorzy i moderatorzy mogą TWORZYĆ wiadomości do dowolnego użytkownika. 3) Grupy poziomu zaufania obejmują wyższe poziomy; wybierz trust_level_1, aby zezwolić na TL1, TL2, TL3, TL4, ale nie zezwalać na TL0. 4) Ustawienia interakcji grupy zastępują to ustawienie w przypadku wysyłania wiadomości do określonych grup."
-    enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
+    personal_message_enabled_groups: "Zezwól użytkownikom w tych grupach na TWORZENIE prywatnych wiadomości. WAŻNE: 1) Wszyscy użytkownicy mogą ODPOWIADAĆ na wiadomości. 2) Administratorzy i moderatorzy mogą TWORZYĆ wiadomości do dowolnego użytkownika. 3) Grupy poziomu zaufania obejmują wyższe poziomy; wybierz trust_level_1, aby zezwolić na TL1, TL2, TL3, TL4, ale nie zezwalać na TL0. 4) Ustawienia interakcji grupy zastępują to ustawienie w przypadku wysyłania wiadomości do określonych grup."
+    enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli prywatne wiadomości są wyłączone"
     enable_chunked_encoding: "Włącz odpowiedzi fragmentaryczne serwera. Ta funkcja działa w większości konfiguracji, jednak niektóre serwery proxy mogą buforować odpowiedzi, powodując opóźnienia."
     long_polling_base_url: "Podstawowy URL używany dla long polling (kiedy CDN dostarcza dynamicznych treści, upewnij się że ustawiłeś/łaś to w origin pull) np.: http://origin.site.com"
     polling_interval: "Kiedy nie long polling, jak często zalogowani klienci powinni poll w milisekundach"
@@ -1982,14 +1982,14 @@ pl_PL:
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     suppress_secured_categories_from_admin: "Ogranicz prywatne tematy i prywatne wiadomości w niektórych częściach interfejsu użytkownika dla administratorów. Treść nadal będzie widoczna w niektórych miejscach. To nie jest funkcja bezpieczeństwa: administratorzy zawsze mają dostęp do całej zawartości na stronie."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
-    display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
+    display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba prywatnych wiadomości oznaczonych danym tagiem."
     top_menu: "Określ, które elementy pojawiają się w nawigacji na stronie głównej i w jakiej kolejności."
     post_menu: "Skonfiguruj widoczność i kolejność domyślnych elementów menu postów. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     post_menu_hidden_items: "Elementy menu, które mają być domyślnie ukrywane w menu posta, chyba że zostanie kliknięty wielokropek. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     allow_username_in_share_links: "Zezwalaj na umieszczanie nazw użytkowników w linkach do udostępniania. Jest to przydatne, aby nagradzać odznaki na podstawie unikalnych odwiedzających."
     site_contact_username: "Nazwa użytkownika, spod której wysyłane będą automatyczne wiadomości. Jeśli pusta, użyte będzie domyślne konto System."
-    site_contact_group_name: "Prawidłowa nazwa grupy, która jest zapraszana do wszystkich automatycznie wysyłanych wiadomości osobistych."
+    site_contact_group_name: "Prawidłowa nazwa grupy, która zostaje zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości."
     send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
     send_tl1_welcome_message: "Wyślij wiadomość powitalną do nowych użytkowników poziomu zaufania 1."
     send_tl2_promotion_message: "Wyślij nowym użytkownikom poziomu zaufania 2 wiadomość o promocji."
@@ -2119,7 +2119,7 @@ pl_PL:
     max_bookmarks_per_day: "Maksymalna liczba zakładek per użytkownik per dzień."
     max_edits_per_day: "Maksymalna liczba edycji per użytkownik per dzień."
     max_topics_per_day: "Maksymalna liczba tematów jakie użytkownik może stworzyć jednego dnia."
-    max_personal_messages_per_day: "Maksymalna liczba nowych wiadomości osobistych, które użytkownik może utworzyć dziennie."
+    max_personal_messages_per_day: "Maksymalna liczba nowych prywatnych wiadomości, które użytkownik może utworzyć dziennie."
     max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
     max_topic_invitations_per_day: "Maksymalna dzienna liczba zaproszeń do tematu, jakie może wysłać użytkownik."
     max_topic_invitations_per_minute: "Maksymalna liczba zaproszeń do tematów, które użytkownik może wysłać na minutę."
@@ -2209,8 +2209,8 @@ pl_PL:
     edit_wiki_post_allowed_groups: "Grupy, które mogą edytować posty oznaczone jako wiki. Administratorzy i moderatorzy zawsze mogą edytować posty oznaczone jako wiki."
     edit_post_allowed_groups: "Grupy, które mogą edytować posty. Administratorzy i moderatorzy zawsze mogą edytować posty."
     self_wiki_allowed_groups: "Pozwól użytkownikom w tych grupach tworzyć własne posty wiki. Administratorzy i moderatorzy zawsze mogą tworzyć własne posty wiki."
-    min_trust_to_send_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Minimalny poziom zaufania wymagany do tworzenia nowych wiadomości osobistych."
-    send_email_messages_allowed_groups: "Grupy, które mogą wysyłać osobiste wiadomości e-mail. Administratorzy i moderatorzy zawsze mogą wysyłać osobiste wiadomości e-mail."
+    min_trust_to_send_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Minimalny poziom zaufania wymagany do tworzenia nowych prywatnych wiadomości."
+    send_email_messages_allowed_groups: "Grupy, które mogą wysyłać prywatne wiadomości e-mail. Administratorzy i moderatorzy zawsze mogą wysyłać osobiste wiadomości e-mail."
     flag_post_allowed_groups: "Grupy, które mogą flagować posty. Administratorzy i moderatorzy zawsze mogą oznaczać posty flagami."
     post_links_allowed_groups: "Grupy, które mogą zawierać linki w postach. Administratorzy i moderatorzy zawsze mogą publikować linki."
     embedded_media_post_allowed_groups: "Użytkownicy w tych grupach mogą osadzać elementy multimedialne w postach. Administratorzy i moderatorzy zawsze mogą osadzać elementy multimedialne."
@@ -2408,7 +2408,7 @@ pl_PL:
     show_inactive_accounts: "Pozwól zalogowanym użytkownikom przeglądać profile nieaktywnych kont."
     hide_silencing_reasons: "Nie wyświetlaj publicznie powodów wyciszenia na profilach użytkowników."
     hide_suspension_reasons: "Nie wyświetlaj publicznie powodów zawieszenia na profilach użytkowników."
-    log_personal_messages_views: "Rejestruj wyświetlenia wiadomości osobistych przez administratora dla innych użytkowników/grup."
+    log_personal_messages_views: "Rejestruj wyświetlenia prywatnych wiadomości przez administratora dla innych użytkowników/grup."
     ignored_users_count_message_threshold: "Powiadom moderatorów, jeśli dany użytkownik jest ignorowany przez wielu innych użytkowników."
     ignored_users_message_gap_days: "Ile trzeba czekać, zanim ponownie powiadomimy moderatorów o użytkowniku, który został zignorowany przez wielu członków społeczność."
     clean_up_inactive_users_after_days: "Liczba dni do usunięcia nieaktywnego użytkownika (poziom zaufania 0 bez żadnych postów). Aby wyłączyć czyszczenie, ustaw na 0."
@@ -2570,7 +2570,7 @@ pl_PL:
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
     tag_style: "Zdefiniuj wygląd znaczników tagów w witrynie. To ustawienie pozwala dostosować sposób wizualnej reprezentacji tagów we wszystkich obszarach witryny, zwiększając spójność układu i dostępność dla użytkownika."
-    pm_tags_allowed_for_groups: "Zezwalaj członkom dołączonych grup na tagowanie dowolnych wiadomości osobistych."
+    pm_tags_allowed_for_groups: "Zezwalaj członkom dołączonych grup na tagowanie dowolnych prywatnych wiadomości."
     tag_topic_allowed_groups: "Grupy, które mogą tagować tematy. Administratorzy i moderatorzy zawsze mogą tagować tematy."
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
@@ -5025,7 +5025,7 @@ pl_PL:
         Ta odznaka jest przyznawana za zdobycie 1. poziomu zaufania. Dziękujemy, że jesteś z nami i czytasz różne tematy, aby poznać naszą społeczność. Ograniczenia nałożone na Ciebie jako na nowego użytkownika / nową użytkowniczkę zostały zniesione i otrzymujesz dostęp do wszystkich niezbędnych funkcji społecznościowych, takich jak wysyłanie wiadomości prywatnych, flagowanie wpisów, edytowanie wiki czy możliwość dodawania wielu obrazków i linków we wpisach.
     member:
       name: Uczestnik
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a>możliwość zapraszania, wysyłania wiadomości grupowych, więcej polubień
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a> możliwość zapraszania, wysyłania wiadomości grupowych, więcej polubień
       long_description: |
         Ta odznaka jest przyznawana za zdobycie 2. poziomu zaufania. Dziękujemy za prawdziwe włączenie się w naszą społeczeność poprzez udzielanie się przez ostatnich kilka tygodni. Możesz teraz wysyłać zaproszenia ze swojej strony użytkownika lub z tematów, tworzyć konwersacje grupowe i otrzymywać dziennie więcej polubień.
     regular:
@@ -5428,7 +5428,7 @@ pl_PL:
       quoted: '%{username} cytuje cie w "%{topic}" - %{site_title}'
       replied: '%{username} odpowiada na twój wpis w "%{topic}" - %{site_title}'
       posted: '%{username} pisze w "%{topic}" - %{site_title}'
-      private_message: '%{username} wysłał Ci osobistą wiadomość w „%{topic}” - %{site_title}'
+      private_message: '%{username} wysłał Ci prywatną wiadomość w „%{topic}” - %{site_title}'
       linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
       watching_first_post: '%{username} utworzył(a) nowy temat „%{topic}” - %{site_title}'
       confirm_title: "Powiadomienia włączone - %{site_title}"
