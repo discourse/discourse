@@ -1,14 +1,41 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Reply target picker", function (needs) {
   needs.user({ id: 5, username: "kris" });
 
-  test("the reply indicator in the edit title is a clickable button", async function (assert) {
-    await visit("/t/internationalization-localization/280");
+  // The topic fixture caches post 6 without `raw`, so the edit flow's
+  // `store.find("post", ...)` has to fetch it fresh — mock that response
+  // with a reply target set.
+  needs.pretender((server, helper) => {
+    server.get("/posts/3654", () =>
+      helper.response({
+        id: 3654,
+        post_number: 6,
+        topic_id: 280,
+        raw: "Yes, I really like the concept of fuzzy matching for localization.",
+        reply_to_post_number: 5,
+        reply_to_user: {
+          username: "pekka",
+          name: "Pekka",
+          avatar_template: "/images/avatar.png",
+        },
+        can_edit: true,
+        version: 1,
+        locale: null,
+      })
+    );
+  });
 
-    await click(".topic-post[data-post-number='6'] button.edit");
+  async function openEditForReplyPost() {
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_6 button.edit");
+    await waitFor(".d-editor-input");
+  }
+
+  test("the reply indicator in the edit title is a clickable button", async function (assert) {
+    await openEditForReplyPost();
 
     assert
       .dom("button.composer-edit-reply-to")
@@ -16,9 +43,7 @@ acceptance("Composer - Reply target picker", function (needs) {
   });
 
   test("the toolbar options menu exposes a 'Reply to another post' entry", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    await click(".topic-post[data-post-number='6'] button.edit");
+    await openEditForReplyPost();
     await click(".d-editor-button-bar .fk-d-menu__trigger");
 
     assert
