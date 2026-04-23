@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -30,6 +30,7 @@ acceptance("Topic Calendar Events", function (needs) {
   test("renders calendar events with fullDay='true'", async function (assert) {
     pretender.get("/t/252.json", () => fixtureWithFullDay("true"));
     await visit("/t/-/252");
+    await waitFor(".fc-daygrid-event-harness");
 
     assert.dom(".fc-daygrid-day").exists("the calendar rendered");
     assert.dom(getEventByText("Event 1")).exists();
@@ -39,6 +40,7 @@ acceptance("Topic Calendar Events", function (needs) {
   test("renders calendar events with fullDay='false'", async function (assert) {
     pretender.get("/t/252.json", () => fixtureWithFullDay("false"));
     await visit("/t/-/252");
+    await waitFor(".fc-daygrid-event-harness");
 
     assert.dom(".fc-daygrid-day").exists("the calendar rendered");
     assert.dom(getEventByText("Event 1")).exists();
