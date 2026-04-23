@@ -67,18 +67,10 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
         ),
       ]
       store.finish!(steps: steps)
-      store.execution.update!(
-        status: :waiting,
-        waiting_node_id: "1",
-        waiting_config: {
-          "node_contexts" => {
-            "node_a" => {
-              "counter" => 1,
-            },
-          },
-          "step_position" => 1,
-        },
-      )
+      existing_data = JSON.parse(store.execution.execution_data.data)
+      existing_data["node_contexts"] = { "node_a" => { "counter" => 1 } }
+      store.execution.execution_data.update!(data: existing_data.to_json)
+      store.execution.update!(status: :waiting, waiting_node_id: "1")
 
       restored_context =
         DiscourseWorkflows::Executor::ExecutionContext.new(

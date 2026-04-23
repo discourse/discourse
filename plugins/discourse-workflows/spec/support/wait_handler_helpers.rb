@@ -26,12 +26,12 @@ module WaitHandlerHelpers
       instance_double(DiscourseWorkflows::Executor::ExecutionStore, execution: execution)
     allow(persistence).to receive(
       :pause_waiting_execution!,
-    ) do |node:, waiting_until: nil, extra_config: {}, steps: []|
+    ) do |node:, waiting_until: nil, steps: []|
       execution.update!(
         status: :waiting,
         waiting_node_id: node.id,
         waiting_until: waiting_until,
-        waiting_config: { "node_contexts" => {}, "step_position" => 0 }.merge(extra_config),
+        resume_token: context["__resume_token"],
       )
       execution
     end
