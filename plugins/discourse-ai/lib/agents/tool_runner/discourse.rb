@@ -63,16 +63,7 @@ module DiscourseAi
               in_attached_function do
                 topic = Topic.find_by(id: topic_id)
                 return nil if topic.nil?
-                data =
-                  recursive_as_json(
-                    ListableTopicSerializer.new(topic, scope: system_guardian, root: false),
-                  )
-                data["tags"] = topic.tags.pluck(:name)
-                data["first_post_id"] = topic.first_post&.id
-                data["category_id"] = topic.category_id
-                data["category_name"] = topic.category&.name
-                data["category_slug"] = topic.category&.slug
-                data
+                serialize_topic_for_tool(topic, scope: system_guardian)
               end
             end,
           )
@@ -87,29 +78,25 @@ module DiscourseAi
                 query = params[:q].to_s
                 return { error: "Missing required parameter: q" } if query.blank?
 
-                limit = params[:limit].to_i
-                limit = TopicQuery::DEFAULT_PER_PAGE_COUNT if limit <= 0
-
                 page = params[:page].to_i
                 return { error: "page must be greater than or equal to 0" } if page.negative?
 
                 with_private = ActiveModel::Type::Boolean.new.cast(params[:with_private])
                 guardian = with_private ? system_guardian : Guardian.new
 
-                topic_list =
-                  TopicQuery.new(
-                    nil,
-                    guardian: guardian,
-                    q: query,
-                    page: page,
-                    per_page: limit,
-                  ).list_filter
+                query_options = { guardian: guardian, q: query, page: page }
+                query_options[:per_page] = params[:limit].to_i if params.key?(:limit)
+
+                topic_list = TopicQuery.new(nil, **query_options).list_filter
 
                 {
                   query: query,
                   page: page,
                   limit: topic_list.per_page,
-                  topics: topic_list.topics.map { |topic| serialize_filtered_topic(topic) },
+                  topics:
+                    topic_list.topics.map do |topic|
+                      serialize_topic_for_tool(topic, scope: guardian)
+                    end,
                 }
               end
             end,
@@ -652,23 +639,17 @@ module DiscourseAi
           end
         end
 
-        def serialize_filtered_topic(topic)
-          {
-            id: topic.id,
-            title: topic.title,
-            url: topic.relative_url,
-            excerpt: topic.excerpt,
-            tags: topic.tags.map(&:name),
-            first_post_id: topic.first_post&.id,
-            category_id: topic.category_id,
-            category_name: topic.category&.name,
-            category_slug: topic.category&.slug,
-            created_at: topic.created_at&.iso8601,
-            bumped_at: topic.bumped_at&.iso8601,
-            posts_count: topic.posts_count,
-            like_count: topic.like_count,
-            views: topic.views,
-          }
+        def serialize_topic_for_tool(topic, scope:)
+          data = recursive_as_json(ListableTopicSerializer.new(topic, scope: scope, root: false))
+          data["url"] = topic.relative_url
+          data["tags"] = topic.tags.map(&:name)
+          data["first_post_id"] = topic.first_post&.id
+          data["category_id"] = topic.category_id
+          data["category_name"] = topic.category&.name
+          data["category_slug"] = topic.category&.slug
+          data["views"] = topic.views
+          data["like_count"] = topic.like_count
+          data
         end
 
         def find_model_by_type(type, id)

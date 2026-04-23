@@ -193,16 +193,16 @@
  *    discourse.filterTopics(params): Filters topics using Discourse topic filter syntax.
  *    Parameters:
  *      params (Object): { q: string, limit?: number, page?: number, with_private?: boolean }
- *                       `q` uses Discourse topic filter syntax (for example: "category:support in:not-category-definition order:title-asc").
+ *                       `q` uses Discourse topic filter syntax (for example: "category:support order:created").
  *                       By default this only returns topics visible publicly. Pass `with_private: true` to elevate to the
  *                       SystemUser scope.
  *    Returns: Object { query, page, limit, topics }
  *      query (string): The filter query that was executed.
  *      page (number): The page number used.
  *      limit (number): The effective per-page limit used.
- *      topics (Array<Object>): Topic summaries including `id`, `title`, `url`, `excerpt`, `tags`, `first_post_id`,
- *                              `category_id`, `category_name`, `category_slug`, `created_at`, `bumped_at`, `posts_count`,
- *                              `like_count`, and `views`.
+ *      topics (Array<Object>): Topic summaries — same shape as `getTopic` (ListableTopicSerializer plus
+ *                              `url`, `tags`, `first_post_id`, `category_id`, `category_name`,
+ *                              `category_slug`, `views`, `like_count`).
  *
  *    discourse.getPost(post_id): Retrieves details for a specific post.
  *    Parameters:
@@ -212,8 +212,9 @@
  *    discourse.getTopic(topic_id): Retrieves details for a specific topic.
  *    Parameters:
  *      topic_id (number): The ID of the topic.
- *    Returns: Object (Topic details using ListableTopicSerializer structure, plus `tags`, `first_post_id`,
- *             `category_id`, `category_name`, `category_slug`) or null if not found/accessible.
+ *    Returns: Object (Topic details using ListableTopicSerializer structure, plus `url`, `tags`,
+ *             `first_post_id`, `category_id`, `category_name`, `category_slug`, `views`, `like_count`)
+ *             or null if not found/accessible.
  *
  *    discourse.getUser(user_id_or_username): Retrieves details for a specific user.
  *    Parameters:
