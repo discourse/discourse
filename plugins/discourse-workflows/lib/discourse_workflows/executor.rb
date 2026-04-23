@@ -8,10 +8,10 @@ module DiscourseWorkflows
     MAX_WAIT_DURATION_SECONDS = 30.days.to_i
 
     class WaitRequested < StandardError
-      attr_reader :wait_request
+      attr_reader :waiting_until
 
-      def initialize(wait_request)
-        @wait_request = wait_request
+      def initialize(waiting_until)
+        @waiting_until = waiting_until
         super("Wait requested")
       end
     end
@@ -100,7 +100,7 @@ module DiscourseWorkflows
       process_queue
       @store.finish!(steps: @steps)
     rescue WaitRequested => e
-      begin_wait!(e.wait_request)
+      begin_wait!(e.waiting_until)
     rescue => e
       @store.fail!(error: e, steps: @steps)
     ensure
@@ -144,14 +144,7 @@ module DiscourseWorkflows
           step.mark_waiting!
           @waiting_node = node
           @waiting_step = step
-          raise WaitRequested, WaitForResume.new(waiting_until: exec_ctx.waiting_until)
-        end
-
-        if result.is_a?(WaitForResume)
-          step.mark_waiting!
-          @waiting_node = node
-          @waiting_step = step
-          raise WaitRequested, result
+          raise WaitRequested, exec_ctx.waiting_until
         end
 
         step_log = collect_step_log(exec_ctx)
@@ -308,22 +301,21 @@ module DiscourseWorkflows
 
     # --- Wait handling ---
 
-    def begin_wait!(wait_request)
-      waiting_until =
-        wait_request.resolved_waiting_until(
-          now: Time.current,
-          max_wait_duration_seconds: MAX_WAIT_DURATION_SECONDS,
-        )
+    def begin_wait!(waiting_until)
+      now = Time.current
+      ceiling = now + MAX_WAIT_DURATION_SECONDS
+      resolved = waiting_until.blank? ? ceiling : [waiting_until, ceiling].min
 
       execution =
         @store.pause_waiting_execution!(
           node: @waiting_node,
-          waiting_until: waiting_until,
-          waiting_config: wait_request.waiting_config,
+          waiting_until: resolved,
+          waiting_config: {
+          },
           steps: @steps,
         )
 
-      duration = [waiting_until - Time.current, 0].max
+      duration = [resolved - now, 0].max
       Jobs.enqueue_in(
         duration,
         Jobs::DiscourseWorkflows::ResumeWaitingExecution,
