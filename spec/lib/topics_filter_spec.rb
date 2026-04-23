@@ -54,6 +54,12 @@ RSpec.describe TopicsFilter do
       user_specific_options.each { |option| expect(logged_in_option_names).to include(option) }
     end
 
+    it "should include category definition filters for anonymous users" do
+      anon_option_names = TopicsFilter.option_info(Guardian.new).map { |o| o[:name] }
+
+      expect(anon_option_names).to include("in:category-definition", "in:not-category-definition")
+    end
+
     it "should apply the topics_filter_options modifier for authenticated users" do
       plugin_instance = Plugin::Instance.new
       DiscoursePluginRegistry.register_modifier(
@@ -325,6 +331,40 @@ RSpec.describe TopicsFilter do
                 .pluck(:id),
             ).to eq([])
           end
+        end
+      end
+
+      describe "category definition operators" do
+        fab!(:category_with_definition) do
+          Fabricate(:category_with_definition, slug: "legal-kb-with-definition")
+        end
+        fab!(:topic_in_category_with_definition) do
+          Fabricate(
+            :topic,
+            category: category_with_definition,
+            title: "Vendor diligence checklist topic",
+          )
+        end
+
+        it "in:category-definition returns only category definition topics" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("in:category-definition")
+              .pluck(:id)
+
+          expect(ids).to contain_exactly(category_with_definition.topic_id)
+        end
+
+        it "in:not-category-definition excludes category definition topics" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("in:not-category-definition")
+              .pluck(:id)
+
+          expect(ids).to include(topic.id, topic_in_category_with_definition.id)
+          expect(ids).not_to include(category_with_definition.topic_id)
         end
       end
 

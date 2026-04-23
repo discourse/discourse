@@ -277,6 +277,14 @@ class TopicsFilter
       { name: "status:unlisted", description: I18n.t("filter.description.status_unlisted") },
       { name: "status:deleted", description: I18n.t("filter.description.status_deleted") },
       { name: "status:public", description: I18n.t("filter.description.status_public") },
+      {
+        name: "in:category-definition",
+        description: I18n.t("filter.description.in_category_definition"),
+      },
+      {
+        name: "in:not-category-definition",
+        description: I18n.t("filter.description.in_not_category_definition"),
+      },
       { name: "order:", description: I18n.t("filter.description.order"), priority: 1 },
       { name: "order:activity", description: I18n.t("filter.description.order_activity") },
       { name: "order:activity-asc", description: I18n.t("filter.description.order_activity_asc") },
@@ -807,6 +815,31 @@ class TopicsFilter
           "topics.pinned_at IS NOT NULL AND topics.pinned_until > topics.pinned_at AND ? < topics.pinned_until",
           Time.zone.now,
         )
+    end
+
+    has_category_definition =
+      values.delete("category-definition") || values.delete("category_definition")
+    has_not_category_definition =
+      values.delete("not-category-definition") || values.delete("not_category_definition")
+
+    return @scope = @scope.none if has_category_definition && has_not_category_definition
+
+    if has_category_definition
+      @scope = @scope.where(<<~SQL)
+          EXISTS (
+            SELECT 1
+            FROM categories
+            WHERE categories.id = topics.category_id AND categories.topic_id = topics.id
+          )
+        SQL
+    elsif has_not_category_definition
+      @scope = @scope.where(<<~SQL)
+          NOT EXISTS (
+            SELECT 1
+            FROM categories
+            WHERE categories.id = topics.category_id AND categories.topic_id = topics.id
+          )
+        SQL
     end
 
     @scope = apply_custom_filter!(scope: @scope, filter_name: "in", values:)

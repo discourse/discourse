@@ -12,11 +12,12 @@ module DiscourseAi
       # to the script. Three non-obvious behaviors to preserve or explicitly
       # revisit if you change them:
       #
-      # 1. Read bindings (`getPost`, `getTopic`, `getUser`, `getAgent`, `search`)
-      #    serialize with `system_guardian`. They return staff-visible data
-      #    including PMs and staff-only fields (emails, IPs). Existing tools
-      #    rely on this — don't tighten without a corresponding preamble doc
-      #    change and a migration plan.
+      # 1. Read bindings (`getPost`, `getTopic`, `getUser`, `getAgent`) serialize
+      #    with `system_guardian` and can return staff-visible data including PMs
+      #    and staff-only fields (emails, IPs). `search` and `filterTopics`
+      #    default to public visibility and only elevate when `with_private: true`
+      #    is passed. Existing tools rely on these contracts — don't tighten or
+      #    widen without a corresponding preamble doc change and migration plan.
       #
       # 2. `resolve_guardian` elevates staged users to `system_guardian`. This
       #    supports a seeding pattern exercised by the "can seed a category
@@ -72,6 +73,44 @@ module DiscourseAi
                 data["category_name"] = topic.category&.name
                 data["category_slug"] = topic.category&.slug
                 data
+              end
+            end,
+          )
+
+          mini_racer_context.attach(
+            "_discourse_filter_topics",
+            ->(params) do
+              in_attached_function do
+                return { error: "params must be an object" } if !params.respond_to?(:symbolize_keys)
+
+                params = (params || {}).symbolize_keys
+                query = params[:q].to_s
+                return { error: "Missing required parameter: q" } if query.blank?
+
+                limit = params[:limit].to_i
+                limit = TopicQuery::DEFAULT_PER_PAGE_COUNT if limit <= 0
+
+                page = params[:page].to_i
+                return { error: "page must be greater than or equal to 0" } if page.negative?
+
+                with_private = ActiveModel::Type::Boolean.new.cast(params[:with_private])
+                guardian = with_private ? system_guardian : Guardian.new
+
+                topic_list =
+                  TopicQuery.new(
+                    nil,
+                    guardian: guardian,
+                    q: query,
+                    page: page,
+                    per_page: limit,
+                  ).list_filter
+
+                {
+                  query: query,
+                  page: page,
+                  limit: topic_list.per_page,
+                  topics: topic_list.topics.map { |topic| serialize_filtered_topic(topic) },
+                }
               end
             end,
           )
@@ -611,6 +650,25 @@ module DiscourseAi
               .or(Category.where(slug: category_id_or_name))
               .first
           end
+        end
+
+        def serialize_filtered_topic(topic)
+          {
+            id: topic.id,
+            title: topic.title,
+            url: topic.relative_url,
+            excerpt: topic.excerpt,
+            tags: topic.tags.map(&:name),
+            first_post_id: topic.first_post&.id,
+            category_id: topic.category_id,
+            category_name: topic.category&.name,
+            category_slug: topic.category&.slug,
+            created_at: topic.created_at&.iso8601,
+            bumped_at: topic.bumped_at&.iso8601,
+            posts_count: topic.posts_count,
+            like_count: topic.like_count,
+            views: topic.views,
+          }
         end
 
         def find_model_by_type(type, id)
