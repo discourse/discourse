@@ -25,15 +25,16 @@ module Jobs
       limit = SiteSetting.ai_translation_backfill_hourly_rate / (60 / 5) # this job runs in 5-minute intervals
       return if limit == 0
 
+      pairs = DiscourseAi::Translation::PostCandidates.needs_localization(limit: limit)
+      return if pairs.empty?
+
       parallel_jobs = SiteSetting.ai_translation_backfill_parallel_jobs
-      per_job_limit = (limit.to_f / parallel_jobs).ceil
+      chunks = pairs.each_slice((pairs.size.to_f / parallel_jobs).ceil).to_a
 
       # Set counter with 15-min TTL safety net (if a job crashes without decrementing)
-      Discourse.redis.setex(REDIS_KEY, 15.minutes.to_i, parallel_jobs)
+      Discourse.redis.setex(REDIS_KEY, 15.minutes.to_i, chunks.size)
 
-      parallel_jobs.times do |i|
-        Jobs.enqueue(:localize_posts, limit: per_job_limit, offset: i * per_job_limit)
-      end
+      chunks.each { |chunk| Jobs.enqueue(:localize_posts, pairs: chunk) }
     end
 
     private

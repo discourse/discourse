@@ -12,6 +12,7 @@ lt:
       create: "Sukurti"
       ai:
         generate: "Generuoti"
+        optional: "pasirinktinai"
       import:
         label: "Importuoti"
       help:

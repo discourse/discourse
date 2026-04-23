@@ -12,6 +12,7 @@ ro:
       create: "Creează"
       ai:
         generate: "Generare"
+        optional: "opțional"
       import:
         label: "Importă"
       help:

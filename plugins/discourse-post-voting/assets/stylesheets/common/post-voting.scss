@@ -1,5 +1,6 @@
-.post-voting-topic,
-.post-voting-topic-sort-by-activity {
+@use "lib/viewport";
+
+.post-voting-topic {
   .time-gap,
   .topic-post-visited-line,
   .timeline-date-wrapper,
@@ -19,285 +20,305 @@
   .posts-filtered-notice:empty {
     display: none;
   }
+
+  @include viewport.until(sm) {
+    .topic-body .cooked {
+      margin-left: calc(48px + var(--space-2));
+    }
+  }
 }
 
 .post-voting-answers-header {
   box-sizing: border-box;
   display: flex;
-  flex-direction: row;
-  padding: 0.5em;
+  align-items: center;
+  margin-top: var(--space-4);
 
-  .post-voting-answers-headers-count {
-    font-size: var(--font-up-1);
+  @include viewport.until(sm) {
+    margin-bottom: var(--space-4);
   }
 
-  .post-voting-answers-headers-sort {
+  @include viewport.from(sm) {
+    width: 100%;
+  }
+
+  &__count {
+    margin: 0;
+    font-size: var(--font-0);
+  }
+
+  &__sort {
+    margin: 0;
     margin-left: auto;
 
-    .btn {
-      color: var(--primary-high);
-      border: 1px solid var(--primary-low-mid);
-
-      &:hover {
-        background-color: var(--primary-very-low);
-      }
-
-      + .btn {
-        margin-left: 0.3em;
-      }
-
-      &:first-of-type {
-        margin-left: 0.5em;
-      }
-    }
-
-    .btn.active[disabled] {
-      background-color: var(--primary-low);
-      color: var(--primary);
-      opacity: 1;
-      cursor: default;
+    .rtl & {
+      margin-right: auto;
     }
   }
-}
 
-.rtl .qa-answers-header {
-  .qa-answers-headers-sort {
-    margin-left: unset;
-    margin-right: auto;
-
-    .btn {
-      + .btn {
-        margin-left: 0;
-        margin-right: 0.3em;
-      }
-
-      &:first-of-type {
-        margin-left: 0;
-        margin-right: 0.5em;
-      }
-    }
+  .--votes,
+  .--activity {
+    font-size: var(--font-down-1-rem);
   }
 }
 
 .post-voting-comments {
-  width: 100%;
-  padding-top: 5px;
-}
+  margin-top: var(--space-1);
 
-.post-voting-comment {
-  font-size: var(--font-down-1);
-  border-top: 1px solid var(--primary-low);
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0.7em 0;
-  word-break: break-word;
-
-  &.post-voting-comment-deleted {
-    background-color: var(--danger-low-mid);
-  }
-
-  .post-voting-comment-actions-vote {
-    margin-right: 0.5em;
-    display: inline-grid;
-    grid-auto-flow: column;
+  &__comment {
+    font-size: var(--font-down-1-rem);
+    border-top: 1px solid var(--primary-low);
+    display: flex;
     align-items: flex-start;
+    padding: var(--space-3) 0;
+    word-break: break-word;
 
-    .post-voting-comment-actions-vote-count {
-      text-align: center;
-      width: auto;
-      min-width: 16px;
-      padding: 0.1em 0;
-      color: var(--primary-low-mid-or-secondary-high);
+    &.--deleted {
+      background-color: var(--danger-low);
     }
 
-    .btn {
-      font-size: var(--font-up-3);
-      background: none;
+    &:hover:not(.--deleted) .post-voting-comments__comment-actions {
+      display: inline-block;
+    }
+  }
+
+  &__comment-cooked {
+    p {
+      display: inline;
+    }
+  }
+
+  &__vote {
+    margin-right: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+
+    .post-voting-button {
+      font-size: var(--font-up-1);
       padding: 0;
 
-      &.post-voting-button-voted {
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+
+      &.--voted {
         .d-icon {
           color: var(--success);
+        }
+      }
+
+      &:focus-visible,
+      .discourse-no-touch &:hover {
+        .d-icon {
+          color: var(--primary-high);
         }
       }
     }
   }
 
-  .post-voting-comment-post {
-    .post-voting-comment-cooked {
-      p {
-        display: inline;
-      }
-    }
+  &__vote-count {
+    color: var(--primary-high);
+    min-width: 3ch;
+    text-align: center;
 
-    .post-voting-comment-info-separator {
-      margin: 0 0.3em;
-    }
-
-    .post-voting-comment-info-username {
-      display: inline;
-      margin-right: 0.3em;
-    }
-
-    .post-voting-comment-info-created,
-    .post-voting-comment-info-username-deleted {
-      color: var(--primary-med-or-secondary-med);
-    }
-
-    .post-voting-comment-actions {
-      display: none;
-      margin-left: 0.3em;
-
-      .post-voting-comment-actions-edit-link {
-        color: var(--primary-med-or-secondary-med);
-        margin-right: 0.25em;
-      }
-
-      .post-voting-comment-actions-delete-link {
-        color: var(--primary-med-or-secondary-med);
-        margin-right: 0.25em;
-      }
-
-      .post-voting-comment-actions-delete-link:hover {
-        color: var(--danger);
-      }
-
-      .post-voting-comment-actions-flag-link {
-        color: var(--primary-med-or-secondary-med);
-      }
-
-      .post-voting-comment-actions-flag-link:hover {
-        color: var(--danger);
-      }
+    &.--none {
+      color: var(--primary-low-mid);
     }
   }
 
-  .post-voting-comment-editor {
-    margin: 0.5em 0;
+  &__separator {
+    margin: 0 var(--space-1);
+  }
+
+  &__username {
+    display: inline;
+    margin-right: var(--space-1);
+
+    &.--deleted {
+      color: var(--primary-med-or-secondary-med);
+    }
+  }
+
+  &__created {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  &__comment-actions {
+    display: none;
+    margin-left: var(--space-1);
+  }
+
+  &__comment-actions-edit-link,
+  &__comment-actions-delete-link,
+  &__comment-actions-flag-link {
+    padding: 0 var(--space-1);
+    height: 100%;
+  }
+
+  &__comment-actions-delete-link:hover,
+  &__comment-actions-flag-link:hover {
+    .discourse-no-touch & {
+      color: var(--danger) !important;
+    }
+  }
+
+  &__comment-editor {
+    margin: var(--space-2) 0;
     width: 100%;
 
     textarea {
       width: 100%;
       margin-bottom: 0;
-    }
-
-    .post-voting-comment-editor-cancel {
-      margin-left: 0.5em;
+      font-size: var(--font-down-1-rem);
     }
   }
 
-  &:hover {
-    .post-voting-comment-actions {
-      display: inline-block;
-    }
+  &__comment-editor-cancel {
+    margin-left: var(--space-2);
   }
-}
 
-.post-voting-comment-composer {
-  width: 100%;
-
-  .post-voting-comment-composer-textarea {
+  &__composer {
     width: 100%;
-    margin: 0.5em 0;
+    position: relative;
   }
 
-  .post-voting-comment-composer-flash {
+  &__composer-textarea {
     width: 100%;
-    color: var(--primary-med-or-secondary-med);
-
-    &.error {
-      color: var(--danger-hover);
-    }
-    margin-bottom: 0.5em;
-  }
-}
-
-.post-voting-comments-menu {
-  font-size: var(--font-down-1);
-  margin: 0;
-
-  .post-voting-comments-menu-composer-cancel {
-    margin-left: 0.5em;
+    margin: var(--space-2) 0;
   }
 
-  .post-voting-comments-menu-separator {
-    margin: 0 0.8em;
-    display: inline;
+  &__composer-flash {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    transform: translateY(+50%);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
 
-    &::after {
-      content: "|";
+    &.has-error {
+      color: var(--danger);
     }
   }
 
-  .post-voting-comments-menu-show-more,
-  .post-voting-comments-menu-add-link {
-    display: inline;
+  &__composer-add {
+    font-size: var(--font-down-1);
+    margin: 0;
   }
-}
 
-.topic-post:has(.post-voting-post-list) {
-  position: relative;
-  z-index: 3;
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .post-voting-post {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 0.5em;
+  align-items: stretch;
+  margin-top: var(--space-2);
+
+  @include viewport.until(sm) {
+    position: absolute;
+    left: 0;
+    top: var(--space-11);
+    width: var(--space-11);
+  }
 
   .post-voting-button {
-    padding-top: 0.1em;
-    padding-bottom: 0.1em;
-    font-size: var(--font-up-5);
+    padding: var(--space-half) var(--space-1);
+    color: var(--primary-low-mid);
+
+    .d-icon {
+      color: inherit;
+    }
+
+    &.--downvote {
+      .d-icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    &:focus-visible,
+    .discourse-no-touch &:hover {
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+
+    &.--voted {
+      .d-icon {
+        color: var(--success);
+      }
+
+      &.--downvote {
+        .d-icon {
+          color: var(--danger);
+        }
+      }
+    }
   }
 
-  .post-voting-post-list {
-    position: absolute;
-    z-index: 2;
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-low);
-    box-shadow: var(--shadow-card);
+  &__toggle-voters {
+    font-size: var(--font-down-1);
+    padding: var(--space-half) var(--space-2);
+    text-align: center;
+    color: var(--primary-high);
+  }
+}
+
+// DMenu
+.post-voting-popup-content {
+  .fk-d-menu__inner-content {
     display: flex;
     flex-direction: column;
-    top: 4em;
-    padding: 0.5em;
+    padding: var(--space-2) var(--space-3);
+    width: max-content;
     max-width: 90vw;
-    overflow: auto;
-
-    .post-voting-post-list-voters-wrapper {
-      display: flex;
-      flex-direction: row;
-    }
   }
 
-  .post-voting-post-list-voters {
+  &__wrapper {
     display: flex;
+    flex-direction: row;
+    gap: var(--space-3);
 
-    a {
-      margin-left: 0.25em;
-      margin-bottom: 0.25em;
+    // &:first-child {
+    //   padding-bottom: var(--space-2);
+    // }
+    &:nth-child(2) {
+      border-top: 1px solid var(--primary-low);
+      padding-top: var(--space-2);
+      margin-top: var(--space-2);
     }
   }
 
-  .post-voting-post-list-count,
-  .post-voting-post-list-icon {
-    margin: 0.15em 0.25em 0 0.25em;
-    font-size: var(--font-up-1);
-    color: var(--primary-low-mid);
-  }
-
-  .post-voting-button-voted {
-    .d-icon {
-      color: var(--success);
+  &__voters {
+    .small-user-list-content {
+      gap: var(--space-1);
+      justify-content: flex-start;
     }
   }
 
-  .post-voting-post-toggle-voters {
-    padding-top: 0;
-    padding-bottom: 0;
+  &__count {
+    color: var(--primary-high);
+  }
+
+  &__icon {
+    &.--upvote {
+      .d-icon {
+        color: var(--success);
+      }
+    }
+
+    &.--downvote {
+      .d-icon {
+        color: var(--danger);
+        transform: rotate(180deg);
+      }
+    }
   }
 }

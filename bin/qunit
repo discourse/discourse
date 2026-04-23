@@ -370,15 +370,24 @@ class QunitRunner
     @rails_port = next_available_port(60_098)
     server_env = build_server_environment(@rails_port)
     server_pid = nil
+    log_path = File.join(rails_root, "tmp", "test_server_#{@rails_port}.log")
 
     begin
       if @dry_run
         puts "[dry-run] skipping server startup"
       else
         server_pid =
-          Process.spawn(server_env, File.join(rails_root, "bin", "pitchfork"), pgroup: true)
+          Process.spawn(
+            server_env,
+            File.join(rails_root, "bin", "pitchfork"),
+            pgroup: true,
+            out: log_path,
+            err: %i[child out],
+          )
       end
-      wait_for_rails_server(@rails_port)
+
+      wait_for_rails_server(@rails_port, log_path)
+
       yield
     ensure
       stop_server(server_pid, server_env["UNICORN_PID_PATH"]) if server_pid
@@ -446,7 +455,7 @@ class QunitRunner
     env
   end
 
-  def wait_for_rails_server(port)
+  def wait_for_rails_server(port, log_path)
     if @dry_run
       puts "[dry-run] skipping Rails server warm-up"
       return
@@ -468,6 +477,7 @@ class QunitRunner
       end
 
       puts "Timed out. Cannot connect to forked server!"
+      puts File.read(log_path) if File.exist?(log_path)
       exit 1
     end
 

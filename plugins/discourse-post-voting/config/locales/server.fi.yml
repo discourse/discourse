@@ -35,8 +35,6 @@ fi:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Ei toimintaa"
         agree_and_keep_comment:
           title: "Pidä kommentti"
           description: "Hyväksy liputus ja pidä kommentti ennallaan."

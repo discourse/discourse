@@ -12,11 +12,12 @@ module DiscourseAi
       # to the script. Three non-obvious behaviors to preserve or explicitly
       # revisit if you change them:
       #
-      # 1. Read bindings (`getPost`, `getTopic`, `getUser`, `getAgent`, `search`)
-      #    serialize with `system_guardian`. They return staff-visible data
-      #    including PMs and staff-only fields (emails, IPs). Existing tools
-      #    rely on this — don't tighten without a corresponding preamble doc
-      #    change and a migration plan.
+      # 1. Read bindings (`getPost`, `getTopic`, `getUser`, `getAgent`) serialize
+      #    with `system_guardian` and can return staff-visible data including PMs
+      #    and staff-only fields (emails, IPs). `search` and `filterTopics`
+      #    default to public visibility and only elevate when `with_private: true`
+      #    is passed. Existing tools rely on these contracts — don't tighten or
+      #    widen without a corresponding preamble doc change and migration plan.
       #
       # 2. `resolve_guardian` elevates staged users to `system_guardian`. This
       #    supports a seeding pattern exercised by the "can seed a category
@@ -62,16 +63,41 @@ module DiscourseAi
               in_attached_function do
                 topic = Topic.find_by(id: topic_id)
                 return nil if topic.nil?
-                data =
-                  recursive_as_json(
-                    ListableTopicSerializer.new(topic, scope: system_guardian, root: false),
-                  )
-                data["tags"] = topic.tags.pluck(:name)
-                data["first_post_id"] = topic.first_post&.id
-                data["category_id"] = topic.category_id
-                data["category_name"] = topic.category&.name
-                data["category_slug"] = topic.category&.slug
-                data
+                serialize_topic_for_tool(topic, scope: system_guardian)
+              end
+            end,
+          )
+
+          mini_racer_context.attach(
+            "_discourse_filter_topics",
+            ->(params) do
+              in_attached_function do
+                return { error: "params must be an object" } if !params.respond_to?(:symbolize_keys)
+
+                params = (params || {}).symbolize_keys
+                query = params[:q].to_s
+                return { error: "Missing required parameter: q" } if query.blank?
+
+                page = params[:page].to_i
+                return { error: "page must be greater than or equal to 0" } if page.negative?
+
+                with_private = ActiveModel::Type::Boolean.new.cast(params[:with_private])
+                guardian = with_private ? system_guardian : Guardian.new
+
+                query_options = { guardian: guardian, q: query, page: page }
+                query_options[:per_page] = params[:limit].to_i if params.key?(:limit)
+
+                topic_list = TopicQuery.new(nil, **query_options).list_filter
+
+                {
+                  query: query,
+                  page: page,
+                  limit: topic_list.per_page,
+                  topics:
+                    topic_list.topics.map do |topic|
+                      serialize_topic_for_tool(topic, scope: guardian)
+                    end,
+                }
               end
             end,
           )
@@ -611,6 +637,19 @@ module DiscourseAi
               .or(Category.where(slug: category_id_or_name))
               .first
           end
+        end
+
+        def serialize_topic_for_tool(topic, scope:)
+          data = recursive_as_json(ListableTopicSerializer.new(topic, scope: scope, root: false))
+          data["url"] = topic.relative_url
+          data["tags"] = topic.tags.map(&:name)
+          data["first_post_id"] = topic.first_post&.id
+          data["category_id"] = topic.category_id
+          data["category_name"] = topic.category&.name
+          data["category_slug"] = topic.category&.slug
+          data["views"] = topic.views
+          data["like_count"] = topic.like_count
+          data
         end
 
         def find_model_by_type(type, id)

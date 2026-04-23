@@ -25,6 +25,7 @@ sk:
       description_placeholder: "Sem zadajte popis"
       ai:
         generate: "Generovať"
+        optional: "voliteľné"
       import:
         label: "Import"
         unparseable_json: "Súbor JSON, ktorý sa nedá rozdeliť."

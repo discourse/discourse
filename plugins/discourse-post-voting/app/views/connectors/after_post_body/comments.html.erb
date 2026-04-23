@@ -1,12 +1,12 @@
 <% if @topic_view.topic.is_post_voting? %>
   <div class="post-voting-comments">
     <% @topic_view.comments[post.id]&.each_with_index do |comment, i| %>
-      <div class="post-voting-comment-row">
-        <span class="post-voting-comment-cooked" itemprop="comment"><%= comment.cooked.html_safe %></span>
-        <span class="post-voting-comment-info-separator">–</span>
-        <span class="post-voting-comment-creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <div class="post-voting-comments__comment">
+        <span class="post-voting-comments__comment-cooked" itemprop="comment"><%= comment.cooked.html_safe %></span>
+        <span class="post-voting-comments__separator">–</span>
+        <span class="post-voting-comments__comment-creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <a itemprop="url" href='<%= Discourse.base_url %>/u/<%= comment.user.username %>'><span itemprop="name"><%= comment.user.username %></span></a>
-          <time itemprop='datePublished' datetime='<%= comment.created_at.to_formatted_s(:iso8601) %>' class="post-voting-comment-time">
+          <time itemprop='datePublished' datetime='<%= comment.created_at.to_formatted_s(:iso8601) %>' class="post-voting-comments__comment-time">
             (<%= l comment.created_at, format: :long %>)
           </time>
         </span>
@@ -20,7 +20,7 @@
   %>
     <div class="post-voting-answer-count">
       <h3><%= t('topic.post-voting.answer_count', count: reply_count) %></h3>
-      <span class="post-voting-answer-count-span" itemprop="answerCount"><%= reply_count %></span>
+      <span class="post-voting-answer-count__value" itemprop="answerCount"><%= reply_count %></span>
     </div>
   <% end %>
 <% end %>

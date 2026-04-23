@@ -482,6 +482,8 @@ pl_PL:
   not_logged_in: "Aby to zrobić musisz się zalogować."
   not_found: "Żądany URL lub źródło nie mógł/mogła zostać znaleziony."
   invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
+  topic_converter:
+    too_many_recipients: "Nie można przekonwertować: ten temat ma więcej uczestników niż maksymalna dozwolona liczba (%{max})."
   authenticator_not_found: "Metoda uwierzytelnienia nie istnieje albo została zablokowana."
   authenticator_no_connect: "Ten dostawca uwierzytelniania nie zezwala na połączenie z istniejącym kontem forum."
   invalid_api_credentials: "Nie masz dostępu do żądanego zasobu. Nazwa użytkownika lub klucz API jest nieprawidłowy."
@@ -499,7 +501,17 @@ pl_PL:
   deleted_topic: "Ups! Ten temat został usunięty i nie jest już dostępny."
   delete_topic_failed: "Podczas usuwania tego tematu wystąpił błąd. Skontaktuj się z administratorem strony."
   reading_time: "Czas odczytu"
+  reading_time_minutes:
+    one: "%{count} minuta 🕑"
+    few: "%{count} minuty 🕑"
+    many: "%{count} minut 🕑"
+    other: "%{count} minut 🕑"
   likes: "Polubienia"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Ups! Wykonałeś już tę czynność. Czy możesz spróbować odświeżyć stronę?"
   too_many_replies:
     one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach jednego tematu."
@@ -740,11 +752,11 @@ pl_PL:
       Aby uzyskać więcej wskazówek i porad dotyczących uczestnictwa w naszej społeczności, [sprawdź nasze wytyczne społeczności](%{base_path}/guidelines).
     dominating_topic: Dużo napisałeś w tym temacie! Rozważ danie innym również możliwości wzięcia udziału.
     get_a_room:
-      one: Odpowiedziałeś na @%{reply_username} raz. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-      few: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-      many: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-      other: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-    dont_feed_the_trolls: Ten post został oznaczony do uwagi moderatora. Odpowiadanie na negatywną treść może zachęcać do bardziej negatywnego zachowania - czy na pewno chcesz kontynuować?
+      one: Odpowiedziałeś na @%{reply_username} raz. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
+      few: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
+      many: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
+      other: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że zamiast tego możesz wysłać prywatną wiadomość?
+    dont_feed_the_trolls: Ten wpis został oflagowany do uwagi moderatora. Odpowiadanie na negatywną treść może zachęcać do bardziej negatywnego zachowania. Czy na pewno chcesz kontynuować?
     too_many_replies: |
       Nowi użytkownicy są tymczasowo ograniczeni do %{newuser_max_replies_per_topic} odpowiedzi w tym samym temacie. Prosimy o odwiedzenie innych tematów, aby nadal poznawać społeczność.
   activerecord:
@@ -946,7 +958,11 @@ pl_PL:
       many: "%{count} polubień"
       other: "%{count} polubień"
     cannot_permanently_delete:
-      many_posts: "Ten temat zawiera nieusunięte posty. Usuń je trwale przed trwałym usunięciem tematu."
+      many_posts:
+        one: "Ten temat nadal zawiera %{count} wpis, który musi zostać trwale usunięty, zanim sam temat zostanie trwale usunięty."
+        few: "Ten temat nadal zawiera %{count} wpisy, które muszą zostać trwale usunięte, zanim sam temat zostanie trwale usunięty."
+        many: "Ten temat nadal zawiera %{count} wpisów, które muszą zostać trwale usunięte, zanim sam temat zostanie trwale usunięty."
+        other: "Ten temat nadal zawiera %{count} wpisów, które muszą zostać trwale usunięte, zanim sam temat zostanie trwale usunięty."
       wait_or_different_admin: "Musisz odczekać %{time_left} przed trwałym usunięciem tego posta lub musi to zrobić inny administrator."
   rate_limiter:
     slow_down: "Wykonałeś/łaś tę akcję zbyt wiele razy, spróbuj ponownie później."
@@ -1304,6 +1320,7 @@ pl_PL:
       every_six_months: "co 6 miesięcy"
   calendar_subscriptions:
     application_name: "Subskrypcje kalendarza"
+    bookmarks_feed_name: "%{site_title} - Przypomnienia w zakładkach"
   user_api_key:
     title: 'Autoryzuj "%{application_name}"'
     authorize: "Autoryzuj"
@@ -1377,7 +1394,7 @@ pl_PL:
         post_count: Napisanych wpisów
         pm_count: Napisanych PW
         revision_count: Wersji
-      description: Lista działań moderatora, w tym sprawdzone flagi, czas czytania, utworzone tematy, utworzone wpisy, utworzone wiadomości osobiste i poprawki.
+      description: Lista działań moderatora, w tym sprawdzone flagi, czas czytania, utworzone tematy, utworzone wpisy, utworzone prywatne wiadomości i poprawki.
     flags_status:
       title: "Status flag"
       values:
@@ -1537,17 +1554,17 @@ pl_PL:
       title: "Użytkownik dla użytkownika (z wyłączeniem odpowiedzi)"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba nowo zainicjowanych wiadomości osobistych."
+      description: "Liczba nowo zainicjowanych wiadomości prywatnych."
     user_to_user_private_messages_with_replies:
       title: "Użytkownik dla użytkownika (z odpowiedziami)"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba wszystkich nowych osobistych wiadomości i odpowiedzi."
+      description: "Liczba wszystkich nowych wiadomości prywatnych i odpowiedzi."
     system_private_messages:
       title: "System"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba wiadomości osobistych wysyłanych automatycznie przez system."
+      description: "Liczba prywatnych wiadomości wysyłanych automatycznie przez system."
     moderator_warning_private_messages:
       title: "Ostrzeżenia moderatorów"
       xaxis: "Dzień"
@@ -1562,7 +1579,7 @@ pl_PL:
       title: "Powiadom użytkownika"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
-      description: "Liczba użytkowników, do których wysłano osobiste wiadomości za pomocą okna dialogowego flag."
+      description: "Liczba użytkowników, do których wysłano prywatne wiadomości za pomocą okna dialogowego flag."
     top_referrers:
       title: "Najczęstszy referrerzy"
       xaxis: "Użytkownik"
@@ -1808,7 +1825,7 @@ pl_PL:
     set_locale_from_param: "Umożliwia ustawienie ustawień regionalnych anonimowego użytkownika za pomocą parametru adresu URL „tl”, np. ?tl=es"
     support_mixed_text_direction: "Wspieraj mieszane kierunki tekstu od lewej do prawej i od prawej do lewej strony"
     min_post_length: "Minimalna dozwolona długość postu w znakach (z wyłączeniem wiadomości osobistych)"
-    min_first_post_length: "Minimalna dozwolona długość pierwszego postu (treści tematu) (z wyłączeniem wiadomości osobistych)"
+    min_first_post_length: "Minimalna dozwolona długość pierwszego postu (treści tematu) (z wyłączeniem prywatnych wiadomości)"
     prevent_uploads_only_posts: "Nie licz przesłanego kodu markdown podczas sprawdzania minimalnej długości posta"
     min_personal_message_post_length: "Minimalna dozwolona długość postu w znakach dla wiadomości (zarówno pierwszego posta, jak i odpowiedzi)"
     max_post_length: "Maksymalna długość wpisu, w znakach"
@@ -1817,7 +1834,7 @@ pl_PL:
     min_topic_views_for_delete_confirm: "Minimalna liczba wyświetleń tematu, aby podczas jego usuwania pojawiło się okienko z potwierdzeniem."
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
-    min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
+    min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości"
     max_emojis_in_title: "Maksymalna dozwolona liczba emoji w tytule tematu. Jeśli ustawiona wartość wynosi zero, uniemożliwia to użycie jakichkolwiek emoji w tytułach tematów."
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
     search_tokenize_chinese: "Wymuś na wyszukiwarce tokenizację języka chińskiego nawet na stronach, które nie są chińskie"
@@ -1857,7 +1874,7 @@ pl_PL:
     tl2_post_edit_time_limit: "Autor tl2 + może edytować swój wpis przez (n) minut po opublikowaniu. Ustaw na zawsze na 0."
     edit_history_visible_to_public: "Pozwól wszystkim zobaczyć poprzednie wersje edytowanego posta. Gdy wyłączone, tylko członkowie personelu mogą je przeglądać."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
-    notify_users_after_responses_deleted_on_flagged_post: "Gdy post zostanie oznaczony, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
+    notify_users_after_responses_deleted_on_flagged_post: "Gdy wpis zostanie oflagowany, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
     max_image_width: "Maksymalna szerokość miniatur obrazów w poście. Obrazy o większej szerokości zostaną przeskalowane i podświetlone."
     max_image_height: "Maksymalna wysokość miniatur obrazów w poście. Obrazy o większej wysokości zostaną przeskalowane i podświetlone."
     responsive_post_image_sizes: "Zmień rozmiar podglądu lightbox, aby umożliwić wyświetlanie ekranów o wysokiej rozdzielczości DPI o następujących proporcjach pikseli. Usuń wszystkie wartości, aby wyłączyć responsywne obrazy."
@@ -1882,8 +1899,6 @@ pl_PL:
     max_oneboxes_per_post: "Ustaw maksymalną liczbę oneboxów, które można umieścić w jednym poście. Oneboxy zapewniają podgląd powiązanej treści bezpośrednio w poście."
     facebook_app_access_token: "Token wygenerowany z Twojego identyfikatora aplikacji Facebook i sekret. Używany do generowania osadzonych oneboxów z serwisu Instagram."
     github_onebox_access_tokens: "Mapowanie organizacji lub użytkownika GitHub na token dostępu GitHub, który jest używany do generowania oneboxów GitHub dla prywatnych repozytoriów, commitów, pull requestów, zgłoszeń i zawartości plików. Bez tego tylko publiczne adresy URL GitHub będą miały onebox."
-    reddit_onebox_client_id: "Identyfikator klienta OAuth API Reddit używany do uwierzytelniania skrzynek Reddit. Utwórz aplikację typu „skrypt” na stronie reddit.com/prefs/apps, aby uzyskać dane uwierzytelniające."
-    reddit_onebox_client_secret: "Klucz klienta OAuth API Reddit używany do uwierzytelniania skrzynek OneBox w Reddit. Znajduje się w aplikacji typu „skrypt” utworzonej na stronie reddit.com/prefs/apps."
     logo: "Obraz logo w lewym górnym rogu witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku kształtu większym niż 3: 1. Jeśli pole pozostanie puste, wyświetlony zostanie tekst tytułu witryny."
     logo_small: "Mały obraz logo w lewym górnym rogu witryny, widoczny podczas przewijania w dół. Użyj kwadratowego obrazu 120 × 120. Jeśli pole pozostanie puste, wyświetlony zostanie glif domowy."
     digest_logo: "Alternatywne logo użyte w górnej części podsumowania e-mail witryny. Użyj szerokiego obrazu prostokąta. Nie używaj obrazu SVG. Jeśli pole pozostanie puste, zostanie użyty obraz z ustawienia „logo”."
@@ -1912,8 +1927,8 @@ pl_PL:
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
     summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
     enable_personal_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Zezwalaj użytkownikom na poziomie zaufania 1 (konfigurowalnym za pomocą minimalnego zaufania do wysyłania wiadomości) na tworzenie wiadomości i odpowiadanie na wiadomości. Pamiętaj, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
-    personal_message_enabled_groups: "Zezwól użytkownikom w tych grupach na TWORZENIE wiadomości osobistych. WAŻNE: 1) Wszyscy użytkownicy mogą ODPOWIADAĆ na wiadomości. 2) Administratorzy i moderatorzy mogą TWORZYĆ wiadomości do dowolnego użytkownika. 3) Grupy poziomu zaufania obejmują wyższe poziomy; wybierz trust_level_1, aby zezwolić na TL1, TL2, TL3, TL4, ale nie zezwalać na TL0. 4) Ustawienia interakcji grupy zastępują to ustawienie w przypadku wysyłania wiadomości do określonych grup."
-    enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
+    personal_message_enabled_groups: "Zezwól użytkownikom w tych grupach na TWORZENIE prywatnych wiadomości. WAŻNE: 1) Wszyscy użytkownicy mogą ODPOWIADAĆ na wiadomości. 2) Administratorzy i moderatorzy mogą TWORZYĆ wiadomości do dowolnego użytkownika. 3) Grupy poziomu zaufania obejmują wyższe poziomy; wybierz trust_level_1, aby zezwolić na TL1, TL2, TL3, TL4, ale nie zezwalać na TL0. 4) Ustawienia interakcji grupy zastępują to ustawienie w przypadku wysyłania wiadomości do określonych grup."
+    enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli prywatne wiadomości są wyłączone"
     enable_chunked_encoding: "Włącz odpowiedzi fragmentaryczne serwera. Ta funkcja działa w większości konfiguracji, jednak niektóre serwery proxy mogą buforować odpowiedzi, powodując opóźnienia."
     long_polling_base_url: "Podstawowy URL używany dla long polling (kiedy CDN dostarcza dynamicznych treści, upewnij się że ustawiłeś/łaś to w origin pull) np.: http://origin.site.com"
     polling_interval: "Kiedy nie long polling, jak często zalogowani klienci powinni poll w milisekundach"
@@ -1983,16 +1998,17 @@ pl_PL:
     content_security_policy_frame_ancestors: "Określ, kto może osadzić tę witrynę w ramkach iframe za pośrednictwem CSP. Kontroluj dozwolone hosty w <a href='%{base_path}/admin/customize/embedding'>ustawieniach osadzania</a>"
     content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględnione. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Ograniczanie ataków XSS za pomocą polityki bezpieczeństwa treści.</a> (CSP). Inne źródła hosta są ignorowane, ponieważ włączona jest funkcja strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
+    can_permanently_delete: "Zezwól administratorom na trwałe usuwanie wpisów, tematów i wersji wpisów. Trwale usunięte dane są całkowicie usuwane z bazy danych i nie można ich odzyskać."
     suppress_secured_categories_from_admin: "Ogranicz prywatne tematy i prywatne wiadomości w niektórych częściach interfejsu użytkownika dla administratorów. Treść nadal będzie widoczna w niektórych miejscach. To nie jest funkcja bezpieczeństwa: administratorzy zawsze mają dostęp do całej zawartości na stronie."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
-    display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
+    display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba prywatnych wiadomości oznaczonych danym tagiem."
     top_menu: "Określ, które elementy pojawiają się w nawigacji na stronie głównej i w jakiej kolejności."
     post_menu: "Skonfiguruj widoczność i kolejność domyślnych elementów menu postów. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     post_menu_hidden_items: "Elementy menu, które mają być domyślnie ukrywane w menu posta, chyba że zostanie kliknięty wielokropek. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     allow_username_in_share_links: "Zezwalaj na umieszczanie nazw użytkowników w linkach do udostępniania. Jest to przydatne, aby nagradzać odznaki na podstawie unikalnych odwiedzających."
     site_contact_username: "Nazwa użytkownika, spod której wysyłane będą automatyczne wiadomości. Jeśli pusta, użyte będzie domyślne konto System."
-    site_contact_group_name: "Prawidłowa nazwa grupy, która jest zapraszana do wszystkich automatycznie wysyłanych wiadomości osobistych."
+    site_contact_group_name: "Prawidłowa nazwa grupy, która zostaje zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości."
     send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
     send_tl1_welcome_message: "Wyślij wiadomość powitalną do nowych użytkowników poziomu zaufania 1."
     send_tl2_promotion_message: "Wyślij nowym użytkownikom poziomu zaufania 2 wiadomość o promocji."
@@ -2122,7 +2138,7 @@ pl_PL:
     max_bookmarks_per_day: "Maksymalna liczba zakładek per użytkownik per dzień."
     max_edits_per_day: "Maksymalna liczba edycji per użytkownik per dzień."
     max_topics_per_day: "Maksymalna liczba tematów jakie użytkownik może stworzyć jednego dnia."
-    max_personal_messages_per_day: "Maksymalna liczba nowych wiadomości osobistych, które użytkownik może utworzyć dziennie."
+    max_personal_messages_per_day: "Maksymalna liczba nowych prywatnych wiadomości, które użytkownik może utworzyć dziennie."
     max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
     max_topic_invitations_per_day: "Maksymalna dzienna liczba zaproszeń do tematu, jakie może wysłać użytkownik."
     max_topic_invitations_per_minute: "Maksymalna liczba zaproszeń do tematów, które użytkownik może wysłać na minutę."
@@ -2148,6 +2164,8 @@ pl_PL:
     s3_upload_bucket: "Nazwa koszyka Amazon S3, do którego zostaną przesłane pliki. Ostrzeżenie: bez wielkich liter, kropek czy podkreślenia."
     s3_access_key_id: "Identyfikator klucza dostępu Amazon S3, który będzie używany do przesyłania zdjęć, załączników i kopii zapasowych."
     s3_secret_access_key: "Tajny klucz dostępu Amazon S3, który będzie używany do przesyłania zdjęć, załączników i kopii zapasowych."
+    s3_role_arn: "ARN roli IAM, którą należy przyjąć w operacjach S3. Po ustawieniu jej obok kluczy dostępu, Discourse użyje funkcji STS AssumeRole do uzyskania tymczasowych uprawnień."
+    s3_role_session_name: "Opcjonalna nazwa sesji używana podczas przyjmowania roli IAM dla operacji S3. Pojawia się w logach CloudTrail na potrzeby audytu. W przypadku braku pola, wraca do nazwy hosta serwera."
     s3_region: "Nazwa regionu Amazon S3, która będzie używana do przesyłania zdjęć i kopii zapasowych."
     s3_cdn_url: "URL CDN używany dla wszystkich aktywów s3 (na przykład : https://cdn.somewhere.com). Ostrzeżenie: po zmianie tego ustawienia musisz ponownie przywrócić stare wpisy."
     s3_use_cdn_url_for_all_uploads: "Użyj adresu URL CDN dla wszystkich plików przesłanych do s3, a nie tylko dla obrazów."
@@ -2212,8 +2230,8 @@ pl_PL:
     edit_wiki_post_allowed_groups: "Grupy, które mogą edytować posty oznaczone jako wiki. Administratorzy i moderatorzy zawsze mogą edytować posty oznaczone jako wiki."
     edit_post_allowed_groups: "Grupy, które mogą edytować posty. Administratorzy i moderatorzy zawsze mogą edytować posty."
     self_wiki_allowed_groups: "Pozwól użytkownikom w tych grupach tworzyć własne posty wiki. Administratorzy i moderatorzy zawsze mogą tworzyć własne posty wiki."
-    min_trust_to_send_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Minimalny poziom zaufania wymagany do tworzenia nowych wiadomości osobistych."
-    send_email_messages_allowed_groups: "Grupy, które mogą wysyłać osobiste wiadomości e-mail. Administratorzy i moderatorzy zawsze mogą wysyłać osobiste wiadomości e-mail."
+    min_trust_to_send_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Minimalny poziom zaufania wymagany do tworzenia nowych prywatnych wiadomości."
+    send_email_messages_allowed_groups: "Grupy, które mogą wysyłać prywatne wiadomości e-mail. Administratorzy i moderatorzy zawsze mogą wysyłać osobiste wiadomości e-mail."
     flag_post_allowed_groups: "Grupy, które mogą flagować posty. Administratorzy i moderatorzy zawsze mogą oznaczać posty flagami."
     post_links_allowed_groups: "Grupy, które mogą zawierać linki w postach. Administratorzy i moderatorzy zawsze mogą publikować linki."
     embedded_media_post_allowed_groups: "Użytkownicy w tych grupach mogą osadzać elementy multimedialne w postach. Administratorzy i moderatorzy zawsze mogą osadzać elementy multimedialne."
@@ -2234,6 +2252,7 @@ pl_PL:
     max_here_mentioned: "Maksymalna liczba osób oznaczonych przez @here."
     here_mention_allowed_groups: "Grupy, które mogą wspominać @here. Administratorzy i moderatorzy zawsze mogą wspomnieć @here."
     create_thumbnails: "Stwórz miniatury i obrazy lightbox, które są za duże, aby pasować do wpisu."
+    animated_topic_thumbnails: "Zamiast generować statyczną miniaturę, użyj oryginalnego obrazu animowanego jako miniatury tematycznej."
     email_time_window_mins: "Odczekaj (n) minut przed wysłaniem e-maila z powiadomieniem, aby dać użytkownikom szansę na edytowanie i ukończenie wpisów."
     personal_email_time_window_seconds: "Poczekaj (n) sekund przed wysłaniem powiadomienia na e-mail o prywatnej wiadomości, by użytkownicy mogli edytować i dokończyć swoje wiadomości."
     email_posts_context: "Jak wiele poprzednich wiadomości zawrzeć jako kontekst i emailu powiadamiającym."
@@ -2411,7 +2430,7 @@ pl_PL:
     show_inactive_accounts: "Pozwól zalogowanym użytkownikom przeglądać profile nieaktywnych kont."
     hide_silencing_reasons: "Nie wyświetlaj publicznie powodów wyciszenia na profilach użytkowników."
     hide_suspension_reasons: "Nie wyświetlaj publicznie powodów zawieszenia na profilach użytkowników."
-    log_personal_messages_views: "Rejestruj wyświetlenia wiadomości osobistych przez administratora dla innych użytkowników/grup."
+    log_personal_messages_views: "Rejestruj wyświetlenia prywatnych wiadomości przez administratora dla innych użytkowników/grup."
     ignored_users_count_message_threshold: "Powiadom moderatorów, jeśli dany użytkownik jest ignorowany przez wielu innych użytkowników."
     ignored_users_message_gap_days: "Ile trzeba czekać, zanim ponownie powiadomimy moderatorów o użytkowniku, który został zignorowany przez wielu członków społeczność."
     clean_up_inactive_users_after_days: "Liczba dni do usunięcia nieaktywnego użytkownika (poziom zaufania 0 bez żadnych postów). Aby wyłączyć czyszczenie, ustaw na 0."
@@ -2574,7 +2593,7 @@ pl_PL:
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
     tag_style: "Zdefiniuj wygląd znaczników tagów w witrynie. To ustawienie pozwala dostosować sposób wizualnej reprezentacji tagów we wszystkich obszarach witryny, zwiększając spójność układu i dostępność dla użytkownika."
-    pm_tags_allowed_for_groups: "Zezwalaj członkom dołączonych grup na tagowanie dowolnych wiadomości osobistych."
+    pm_tags_allowed_for_groups: "Zezwalaj członkom dołączonych grup na tagowanie dowolnych prywatnych wiadomości."
     tag_topic_allowed_groups: "Grupy, które mogą tagować tematy. Administratorzy i moderatorzy zawsze mogą tagować tematy."
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
@@ -2610,7 +2629,7 @@ pl_PL:
     create_revision_on_bulk_topic_moves: "Utwórz rewizję dla pierwszych postów, gdy tematy zostaną przeniesione do nowej kategorii zbiorczo."
     allow_changing_staged_user_tracking: "Zezwalaj na zmianę preferencji powiadomień o kategoriach i tagach użytkownika etapowego przez administratora."
     use_email_for_username_and_name_suggestions: "Użyj pierwszej części adresów e-mail do sugestii nazw użytkowników i nazw. Ostrzeżenie: Może to ułatwić złośliwym użytkownikom odkrycie adresów e-mail twoich członków (ponieważ wiele osób korzysta z popularnych dostawców poczty, takich jak `gmail.com`)."
-    use_name_for_username_suggestions: "Proponując nazwy użytkownika, używaj imienia i nazwiska użytkownika."
+    use_name_for_username_suggestions: "Podczas sugerowania nazw użytkowników podczas rejestracji SSO i OAuth należy używać imienia i nazwiska użytkownika."
     suggest_weekends_in_date_pickers: "Uwzględnij weekendy (sobota i niedziela) w sugestiach selektora dat (wyłącz tę opcję, jeśli używasz Discourse tylko w dni powszednie, od poniedziałku do piątku)."
     show_bottom_topic_map: "Wyświetla mapę tematu u dołu tematu, gdy ma on 10 lub więcej odpowiedzi."
     show_topic_map_in_topics_without_replies: "Wyświetla mapę tematu, nawet jeśli temat nie ma odpowiedzi."
@@ -2654,6 +2673,13 @@ pl_PL:
     content_localization_crawler_param: "Wyświetlaj zlokalizowaną treść robotom indeksującym sieć, gdy włączona jest opcja „lokalizacja treści” i „ustaw ustawienia regionalne z parametrów”. Lista obsługiwanych ustawień regionalnych jest zdefiniowana w sekcji „Obsługiwane ustawienia regionalne lokalizacji treści”."
     content_localization_use_default_locale_when_unsupported: "Wyświetlaj zlokalizowaną treść w domyślnych ustawieniach regionalnych witryny użytkownikom, których preferowany język nie znajduje się na liście „ustawień regionalnych obsługiwanych przez lokalizację treści”."
     content_localization_allow_author_localization: "Zezwól autorom na aktualizowanie lokalizacji własnych tematów i wpisów poprzez menu wpisów."
+    nested_replies_enabled: "Włącz widok zagnieżdżonych odpowiedzi dla tematów."
+    nested_replies_default: "Użyj zagnieżdżonych odpowiedzi jako domyślnego widoku dla wszystkich tematów."
+    nested_replies_default_sort: "Domyślny algorytm sortowania dla widoku zagnieżdżonych odpowiedzi."
+    nested_replies_max_depth: "Maksymalna głębokość wizualnego zagnieżdżenia dla odpowiedzi w wątkach. Wpisy o większej głębokości wyświetlają link „Kontynuuj ten wątek”."
+    nested_replies_toggle_mode_groups: "Grupy, które mogą przełączać się między widokiem zagnieżdżonym i płaskim."
+    nested_replies_backfill_batch_size: "Liczba tematów, dla których należy uzupełnić statystyki zagnieżdżonych odpowiedzi na każde zaplanowane uruchomienie."
+    nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
@@ -3025,6 +3051,9 @@ pl_PL:
     omniauth_error_unknown: "Coś poszło nie tak podczas przetwarzania logowania, spróbuj ponownie."
     omniauth_confirm_title: "Zaloguj się za pomocą %{provider}"
     omniauth_confirm_button: "Kontynuuj"
+    omniauth_confirm_description: "Nastąpi przekierowanie do %{provider} , aby się zalogować"
+    omniauth_confirm_provider_description: "Bezpieczne uwierzytelnianie"
+    omniauth_confirm_footer_html: "Nastąpi zalogowanie do %{site}"
     authenticator_error_no_valid_email: "Adresy e-mail powiązane z %{account} są niedozwolone. Musisz użyć innego adresu."
     new_registrations_disabled: "Aktualnie nie jest możliwe zarejestrowanie nowego konta."
     new_registrations_disabled_discourse_connect: "Rejestracje nowych kont są dozwolone tylko za pośrednictwem Discourse Connect."
@@ -3291,18 +3320,18 @@ pl_PL:
 
       %{notes}
   flag_reasons:
-    off_topic: "Twój wpis został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."
-    inappropriate: "Twój post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
-    illegal: "Twój post został oznaczony jako **nielegalny**: społeczność uważa, że może on łamać prawo."
-    spam: "Twój wpis został oznaczony jako **spam**: społeczność czuje, że jest to reklama, czyli coś nadmiernie promującego, a nie użytecznego czy odnoszącego się do tematu."
-    notify_moderators: "Twój wpis został oznaczony jako **do uwagi moderatora**: społeczność czuje, że wpis wymaga ręcznej interwencji członka personelu."
-    needs_approval: "Twój wpis został oznaczony **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
+    off_topic: "Twój wpis został oflagowany jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."
+    inappropriate: "Twój wpis został oflagowany jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
+    illegal: "Twój wpis został oflagowany jako **nielegalny**: społeczność uważa, że może on łamać prawo."
+    spam: "Twój wpis został oflagowany jako **spam**: społeczność czuje, że jest to reklama, czyli coś nadmiernie promującego, a nie użytecznego czy odnoszącego się do tematu."
+    notify_moderators: "Twój wpis został oflagowany jako **do uwagi moderatora**: społeczność czuje, że wpis wymaga ręcznej interwencji członka personelu."
+    needs_approval: "Twój wpis został oflagowany **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
     responder:
-      off_topic: "Post został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje on do tematu, który obecnie określa tytuł i pierwszy post."
-      inappropriate: "Post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
-      spam: "Post został oznaczony jako **spam**: społeczność uważa, że jest to reklama, lub coś, co ma charakter nadmiernie promocyjny, a nie jest przydatne lub związane z tematem zgodnie z oczekiwaniami."
-      notify_moderators: "Post został oznaczony **w celu zwrócenia uwagi moderatora**: społeczność uważa, że coś w tym poście wymaga ręcznej interwencji członka personelu."
-      needs_approval: "Wpis został oznaczony **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
+      off_topic: "Wpis został oflagowany jako **nie na temat**: społeczność uważa, że nie pasuje on do tematu, który obecnie określa tytuł i pierwszy wpis."
+      inappropriate: "Wpis został oflagowany jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
+      spam: "Wpis został oflagowany jako **spam**: społeczność uważa, że jest to reklama, lub coś, co ma charakter nadmiernie promocyjny, a nie jest przydatne lub związane z tematem zgodnie z oczekiwaniami."
+      notify_moderators: "Wpis został oflagowany jako **w celu zwrócenia uwagi moderatora**: społeczność uważa, że coś w tym poście wymaga ręcznej interwencji członka personelu."
+      needs_approval: "Wpis został oflagowany jako **do zatwierdzenia**: został automatycznie umieszczony w kolejce do sprawdzenia przez członka zespołu w celu sprawdzenia, czy spełnia [nasze wytyczne społeczności](%{base_path}/guidelines)."
   flags_dispositions:
     agreed: "Dziękujemy za zwrócenie uwagi. Zgadzamy się, że jest to problem i przyjrzymy się temu. "
     agreed_and_deleted: "Dziękujemy za zwrócenie uwagi. Zgadzamy się, że jest to problem i wpis został usunięty. "
@@ -5032,7 +5061,7 @@ pl_PL:
         Ta odznaka jest przyznawana za zdobycie 1. poziomu zaufania. Dziękujemy, że jesteś z nami i czytasz różne tematy, aby poznać naszą społeczność. Ograniczenia nałożone na Ciebie jako na nowego użytkownika / nową użytkowniczkę zostały zniesione i otrzymujesz dostęp do wszystkich niezbędnych funkcji społecznościowych, takich jak wysyłanie wiadomości prywatnych, flagowanie wpisów, edytowanie wiki czy możliwość dodawania wielu obrazków i linków we wpisach.
     member:
       name: Uczestnik
-      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a>możliwość zapraszania, wysyłania wiadomości grupowych, więcej polubień
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a> możliwość zapraszania, wysyłania wiadomości grupowych, więcej polubień
       long_description: |
         Ta odznaka jest przyznawana za zdobycie 2. poziomu zaufania. Dziękujemy za prawdziwe włączenie się w naszą społeczeność poprzez udzielanie się przez ostatnich kilka tygodni. Możesz teraz wysyłać zaproszenia ze swojej strony użytkownika lub z tematów, tworzyć konwersacje grupowe i otrzymywać dziennie więcej polubień.
     regular:
@@ -5300,8 +5329,11 @@ pl_PL:
         few: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
         many: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
         other: '"%{tag_name}" jest ograniczony do kategorii "%{category_names}"'
-      synonym: 'Synonimy nie są dozwolone. Zamiast tego użyj "%{tag_name}".'
+      restricted_to_truncated: '„%{tag_name}” jest ograniczony do następujących kategorii: %{category_names} i %{more_count} więcej'
+      synonym: 'To synonim „%{tag_name}”. Zamiast tego użyj „%{tag_name}”.'
       has_synonyms: 'Nie można użyć "%{tag_name}", ponieważ zawiera synonimy.'
+      one_tag_per_topic_group: 'W jednym temacie dozwolony jest tylko jeden tag z grupy „%{tag_group_name}”'
+      missing_parent_tag: 'Wymaga znacznika „%{parent_tag_name}”, aby używać znaczników z grupy „%{tag_group_name}”'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tag "%{tags}" nie może być użyty w kategorii "%{category}". Usuń go.'
         few: 'Następujące tagi nie mogą być używane w kategorii "%{category}": %{tags}. Usuń je.'
@@ -5435,7 +5467,7 @@ pl_PL:
       quoted: '%{username} cytuje cie w "%{topic}" - %{site_title}'
       replied: '%{username} odpowiada na twój wpis w "%{topic}" - %{site_title}'
       posted: '%{username} pisze w "%{topic}" - %{site_title}'
-      private_message: '%{username} wysłał Ci osobistą wiadomość w „%{topic}” - %{site_title}'
+      private_message: '%{username} wysłał Ci prywatną wiadomość w „%{topic}” - %{site_title}'
       linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
       watching_first_post: '%{username} utworzył(a) nowy temat „%{topic}” - %{site_title}'
       confirm_title: "Powiadomienia włączone - %{site_title}"

@@ -2458,6 +2458,8 @@ lt:
       upload_description: "įveskite čia nuorodos aprašymą"
       list_item: "Įkelti"
       wrap_modal:
+        attribute_key: "Raktas"
+        attribute_value: "Reikšmė"
         apply: "Kandidatuoti"
       help: "Markdown redagavimo pagalba"
       modal_ok: "OK"
@@ -2498,6 +2500,8 @@ lt:
       reload: "Įkelti iš naujo"
       ignore: "Ignoruoti"
       image: "paveikslėlis"
+      onebox_toolbar:
+        copy: "Nukopijuoti nuorodą"
     notifications:
       tooltip:
         regular:
@@ -2794,6 +2798,27 @@ lt:
         name: "Pakeisti žymas"
       delete_topics:
         name: "Pašalinti"
+      convert_to_private_message:
+        name: "Rašykite asmeninę žinutę"
+    nested_replies:
+      sort:
+        label: "Rūšiuoti pagal"
+        top: "Populiarios"
+        new: "Naujas"
+      load_more_children:
+        one: "dar %{count} atsakymas"
+        few: "dar %{count} atsakymai"
+        many: "dar %{count} atsakymų"
+        other: "dar %{count} atsakymų"
+      collapsed_replies:
+        one: "%{count} atsakymas"
+        few: "%{count} atsakymai"
+        many: "%{count} atsakymai"
+        other: "%{count} atsakymai"
+      collapse: "Suskleisti"
+      no_replies: "Jokių atsakymų nerasta."
+      deleted_post_placeholder: "[ištrinta]"
+      pinned_reply: "Prisegta"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"
@@ -3213,6 +3238,12 @@ lt:
         few: "%{count} žmonėms patinka šis įrašas."
         many: "%{count} žmonėms patinka šis įrašas."
         other: "%{count} žmonėms patinka šis įrašas."
+      likes_popup:
+        title:
+          one: "%{count} patinka"
+          few: "%{count} patinka"
+          many: "%{count} patinka"
+          other: "%{count} patinka"
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
       localizations:
@@ -3220,8 +3251,6 @@ lt:
           actions: "Veiksmai"
           edit: "Redaguoti"
           delete: "Pašalinti"
-        post_language_selector:
-          none: "Nieko"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -3272,8 +3301,6 @@ lt:
           just_the_post: "Ne, tik šį įrašą"
         admin: "įrašo administravimas"
         admin_action: "Administratorius"
-        permanently_delete: "Ištrinti visam laikui"
-        permanently_delete_confirmation: "Ar tikrai norite visam laikui ištrinti šį įrašą? Jūs negalėsite jo susigrąžinti."
         wiki: "Sukurti Wiki"
         unwiki: "Ištrinti Wiki"
         convert_to_moderator: "Pridėk Komandos spalvą"
@@ -3379,6 +3406,7 @@ lt:
       back: "Atgal į kategoriją"
       general: "Bendriniai"
       settings: "Nustatymai"
+      moderation: "Moderavimas"
       tags: "Žymos"
       localization:
         name: "Vardas"
@@ -4158,6 +4186,8 @@ lt:
           admins: "Administratoriai"
           moderators: "Moderatoriai"
           staff: "Personalas"
+        impact_types:
+          other_type: "Kiti"
         filter:
           all: "Visi"
           enabled: "Galimas"
@@ -4230,6 +4260,11 @@ lt:
           sub_pages:
             logs:
               title: "Įrašai"
+        problem_checks:
+          status: "Statusas"
+          ignore: "Ignoruoti"
+          more_options:
+            title: "Daugiau parinkčių"
         reports:
           title: "Pranešimai"
           sub_pages:
@@ -4290,7 +4325,7 @@ lt:
         installed_version: "Įrašyta"
         latest_version: "Naujausia"
         problems_found: "Keletas patarimų, pagrįstų dabartiniais svetainės nustatymais"
-        dismiss_notice: "Praleisti"
+        dismiss_notice: "Ignoruoti"
         new_features:
           learn_more: "Sužinoti daugiau..."
         last_checked: "Paskutinį kartą tikrinta"

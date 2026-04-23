@@ -173,7 +173,7 @@ pl_PL:
               description: "Oflaguj post (jako spam lub do sprawdzenia)"
             notify_author_pm:
               label: "Powiadom autora przez PW"
-              description: "Wyślij osobistą wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
+              description: "Wyślij prywatną wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
             notify_author_pm_user:
               label: "Nadawca PW"
               description: "Użytkownik, który wyśle PW (domyślnie system)"
@@ -181,7 +181,7 @@ pl_PL:
               label: "Treść PW"
               description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
-              label: "Dołącz osobiste wiadomości"
+              label: "Dołącz prywatne wiadomości"
               description: "Skanuj i sortuj również wiadomości prywatne"
             whisper:
               label: "Odpowiedz szeptem"
@@ -377,6 +377,8 @@ pl_PL:
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
         supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
+        translatable_categories: "Kategorie możliwe do przetłumaczenia"
+        translatable_categories_description: "Przetłumaczone zostaną tylko treści z wybranych kategorii. Podkategorie należy dodać osobno."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
@@ -409,6 +411,12 @@ pl_PL:
             few: "%{count} wpisy"
             many: "%{count} wpisów"
             other: "%{count} wpisów"
+        theme_translations:
+          translate:
+            label: "Przetłumacz"
+            title: "Przetłumacz na wszystkie obsługiwane języki, używając wybranego języka jako języka źródłowego"
+            queued: "Tłumaczenie w kolejce"
+            failed: "Nie udało się dodać tłumaczenia do kolejki"
         translations_menu:
           translate:
             label: "Przetłumacz post"
@@ -579,8 +587,8 @@ pl_PL:
         allow_chat_direct_messages_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup będą mogli wysyłać wiadomości bezpośrednie do tego agenta."
         allow_chat_channel_mentions: "Zezwalaj na wzmianki na kanale czatu"
         allow_chat_channel_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tym agencie na kanałach czatu."
-        allow_personal_messages: "Zezwalaj na wiadomości osobiste"
-        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać osobiste wiadomości do tego agenta."
+        allow_personal_messages: "Zezwalaj na prywatne wiadomości"
+        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać prywatne wiadomości do tego agenta."
         allow_topic_mentions: "Zezwalaj na wzmianki o temacie"
         allow_topic_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wspominać o tym agencie w tematach."
         require_approval: "Wymagaj zatwierdzenia narzędzi moderacyjnych"
@@ -923,19 +931,19 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-6: "Najbardziej inteligentny model Anthropic"
+          anthropic-claude-opus-4-7: "Najbardziej inteligentny model Anthropic"
           anthropic-claude-sonnet-4-6: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
           google-gemini-3-pro: "Najinteligentniejszy model Google"
           google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
-          open_ai-gpt-5-2: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
-          open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami"
+          open_ai-gpt-5-4: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
+          open_ai-gpt-5-4-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami"
           open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
           open_router-deepseek-deepseek-v3-2: "Najnowszy, wysokowydajny model firmy DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Multimodalny model Moonshot z funkcjami wizyjnymi"
           open_router-x-ai-grok-4-fast: "Flagowy model xAI z wizją"
-          open_router-minimax-minimax-m2-5: "Multimodalny model MiniMax z dużym kontekstem"
-          open_router-z-ai-glm-5: "Multimodalny model Z-AI z wizją"
+          open_router-minimax-minimax-m2-7: "Multimodalny model MiniMax z dużym kontekstem"
+          open_router-z-ai-glm-5-1: "Multimodalny model Z-AI z wizją"
           open_router-arcee-ai-trinity-large-preview-free: "Darmowy model open-source od Arcee AI"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
@@ -1174,10 +1182,12 @@ pl_PL:
           title: "Wyświetl interakcję AI"
           copy_request: "Prośba o kopiowanie"
           copy_response: "Odpowiedź kopiowania"
-          request_tokens: "Tokeny żądania:"
-          response_tokens: "Tokeny odpowiedzi:"
-          cache_read_tokens: "Tokeny odczytu pamięci podręcznej:"
-          cache_write_tokens: "Tokeny zapisu pamięci podręcznej:"
+          this_turn: "Ta tura:"
+          whole_conversation: "Rozmowa:"
+          tokens_summary: "%{request_tokens} wejście → %{response_tokens} wyjście"
+          cache_both: "(pamięć podręczna %{read} odczyt, %{write} zapis)"
+          cache_read_only: "(odczyt pamięci podręcznej %{read})"
+          cache_write_only: "(zapis pamięci podręcznej %{write})"
           request: "Żądanie"
           response: "Odpowiedź"
           next_log: "Następna"

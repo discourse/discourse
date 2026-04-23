@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}
+    name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -57,8 +57,6 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
@@ -67,34 +65,36 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
-        browser: [Chrome]
-        exclude:
-          - build_type: backend
-            target: themes
-          # Exclude combined plugins from system tests - use split targets instead
-          - build_type: system
-            target: plugins
         include:
-          # Split plugin targets for system tests only
-          - build_type: system
-            target: core-plugins
-            browser: Chrome
-          - build_type: system
-            target: official-plugins
-            browser: Chrome
-          - build_type: system
-            target: chat
-            browser: Chrome
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox Evergreen
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox ESR
+          - target: core
+            build_type: backend
+          - target: core
+            build_type: frontend
+          - target: core
+            build_type: system
+          - target: plugins
+            build_type: backend
+          - target: plugins
+            build_type: frontend
+          - target: core-plugins
+            build_type: system
+          - target: chat
+            build_type: system
+          - target: official-plugins
+            build_type: system
+          - target: themes
+            build_type: frontend
+          - target: themes
+            build_type: system
 
     steps:
+      - name: Enable jemalloc
+        run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
+
+      - name: Verify jemalloc is loaded into Ruby
+        run: |
+          ruby -e 'abort "jemalloc not loaded" unless File.read("/proc/self/maps").include?("libjemalloc")'
+
       - name: Set working directory owner
         run: chown root:root .
 
@@ -289,7 +289,7 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=progress
 
       - name: Ember Build
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
@@ -307,7 +307,7 @@ jobs:
       - name: Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: |
-          bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
+          bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info']
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
@@ -318,7 +318,7 @@ jobs:
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
-        if: always() && matrix.build_type == 'frontend'
+        if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
@@ -331,49 +331,40 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --verbose --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --verbose --format documentation plugins/*/spec/system
 
       - name: Official Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --verbose --format documentation plugins/*/spec/system
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --verbose --format documentation plugins/chat/spec/system
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
-
-      - name: Check for failed system test artifacts
-        id: check-failed-system-test-artifacts
-        if: always() && matrix.build_type == 'system'
-        run: |
-          if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
-        if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
+        if: always() && matrix.build_type == 'system'
         with:
           name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
+          if-no-files-found: ignore
           path: |
             tmp/capybara/*.png
             tmp/capybara/*.zip

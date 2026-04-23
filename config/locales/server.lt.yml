@@ -225,7 +225,17 @@ lt:
   deleted_topic: "Oi! Ši tema buvo ištrinta ir nebepasiekiama."
   delete_topic_failed: "Ištrinant šią temą įvyko klaida. Prašome susisiekti su svetainės administratoriumi."
   reading_time: "Skaitymo laikas"
+  reading_time_minutes:
+    one: "%{count} minutė 🕑"
+    few: "%{count} minutės 🕑"
+    many: "%{count} minučių 🕑"
+    other: "%{count} minučių 🕑"
   likes: "Patikimai"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Pradėti diskusiją"
     continue: "Tęsti diskusiją"
@@ -1453,7 +1463,6 @@ lt:
     errors: "%{errors}"
     not_available: "Negalimas. Gal pabandykite %{suggestion}?"
     omniauth_error_unknown: "Apdorojant jūsų prisijungimo duomenis įvyko klaida. Bandykite dar kartą."
-    omniauth_confirm_title: "Prisijunkite naudodami %{provider}"
     omniauth_confirm_button: "Tęsti"
     authenticator_error_no_valid_email: "El. pašto adresai, susieti su %{account} , neleidžiami. Gali reikėti sukonfigūruoti paskyrą naudojant kitą el. pašto adresą."
     new_registrations_disabled: "Šiuo metu naujų paskyrų registracija neleidžiama."
@@ -2491,7 +2500,6 @@ lt:
     restricted_tag_remove_disallowed: 'Negalite pašalinti žymos „%{tag}“.'
     forbidden:
       in_this_category: '„%{tag_name}“ šioje kategorijoje negali būti naudojamas'
-      synonym: 'Sinonimai neleidžiami. Vietoj to naudokite „%{tag_name}'
       has_synonyms: '„%{tag_name}“ negalima naudoti, nes jis turi sinonimų.'
     invalid_target_tag: "negali būti sinonimo sinonimas"
     synonyms_exist: "neleidžiama, kol yra sinonimų"

@@ -15,17 +15,13 @@ tr_TR:
           name: "Veri Gezgini Sorgu Oluşturucu"
           description: "Doğal dilden Data Explorer için SQL sorguları oluşturur"
       tool_help:
-        validate_sql: "Veri Gezgini'nde kullanılacak bir SQL sorgusunu doğrular"
         run_sql: "Bir SQL sorgusu çalıştırır ve sonuçları döndürür"
       tool_summary:
-        validate_sql: "SQL sorgusunun doğrulanması"
         run_sql: "SQL sorgusu çalıştırma"
       tool_description:
-        validate_sql: "Doğrulanmış SQL sorgusu"
         run_sql: "SQL sorgusu çalıştırıldı"
   discourse_data_explorer:
     ai:
-      generating_name: "Oluşturuluyor..."
       error_agent_not_configured: "Yapay Zeka ajanı yapılandırılmamış. Lütfen AI özellikleri ayarlarını kontrol edin."
       error_no_sql_returned: "AI geçerli bir SQL sorgusu döndürmedi. Lütfen tekrar deneyin veya sorguyu manuel olarak yazın."
   discourse_automation:

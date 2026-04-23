@@ -2288,6 +2288,7 @@ ro:
       list_item: "Element listă"
       toggle_direction: "Comută direcția"
       wrap_modal:
+        attribute_value: "Valoare"
         apply: "Aplică"
       help: "Ajutor pentru formatarea cu Markdown"
       collapse: "Minimizează panoul de compunere"
@@ -2342,6 +2343,9 @@ ro:
         copy: "Copiază legătură"
         remove: "Elimină legătură"
         visit: "Deschide legătură într-o filă externă"
+        link_copied: "Legătură copiată!"
+      onebox_toolbar:
+        copy: "Copiază legătură"
         link_copied: "Legătură copiată!"
     notifications:
       tooltip:
@@ -2583,10 +2587,29 @@ ro:
         name: "Înlocuiește etichete"
       delete_topics:
         name: "Șterge"
+      convert_to_private_message:
+        name: "Transformă în mesaj privat"
       defer:
         name: "Marchează ca necitite"
       update_notifications:
         name: "Actualizează notificări"
+    nested_replies:
+      sort:
+        label: "Sortează după"
+        top: "Top"
+        new: "Nou"
+      load_more_children:
+        one: "Încă un răspuns"
+        few: "Încă %{count} răspunsuri"
+        other: "Încă %{count} de răspunsuri"
+      collapsed_replies:
+        one: "%{count} răspuns"
+        few: "%{count} de răspunsuri"
+        other: "%{count} răspunsuri"
+      collapse: "Colaps"
+      no_replies: "Nici un răspuns încă."
+      deleted_post_placeholder: "[șters]"
+      pinned_reply: "Fixat"
     topic:
       filter_to:
         one: "O postare în subiect"
@@ -2974,8 +2997,6 @@ ro:
           title: "Traduceri pentru postare"
           confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
         success: "Traducerile au fost actualizate cu succes"
-        post_language_selector:
-          none: "Nimic"
         edit_warning:
           action_original: "Editează postarea originală"
           action_translation: "Editează această traducere"
@@ -2989,6 +3010,7 @@ ro:
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
       cancel_composer:
         discard: "Renunță"
+        discard_edit: "Renunță la modificări"
       via_email: "această postare a sosit via email"
       via_auto_generated_email: "Această postare a sosit prin intermediul unui email auto-generat"
       whisper: "această postare este doar pentru moderatori (modul discret)"
@@ -3027,6 +3049,8 @@ ro:
           just_the_post: "Nu, doare această postare"
         admin: "acțiuni administrative pentru postare"
         admin_action: "Administrator"
+        permanently_delete: "Șterge definitiv"
+        permanently_delete_confirm_phrase: "șterge definitiv"
         wiki: "Fă postarea Wiki"
         unwiki: "Nu mai fă Wiki din postare"
         convert_to_moderator: "Adaugă culoare pentru membrii echipei"
@@ -3125,6 +3149,7 @@ ro:
       view: "Arată subiectele din categorie"
       general: "General"
       settings: "Setări"
+      moderation: "Moderare"
       advanced: "Avansat"
       tags: "Etichete"
       localizations: "Localizări"
@@ -3931,6 +3956,8 @@ ro:
           admins: "Admini"
           moderators: "Moderatori"
           staff: "Echipa"
+        impact_types:
+          other_type: "Altele"
         filter:
           all: "Toate"
           enabled: "Activate"
@@ -3946,7 +3973,6 @@ ro:
           header_description: "Furnizează aici informații despre acest site și despre echipa ta, astfel încât oamenii să poată afla despre ce este comunitatea ta, cine se află în spatele acesteia și cum să vă contacteze în cazul în care există o problemă. Afișate pe <a href='%{basePath}/about'>pagina Despre</a>a site-ului tău."
         developer:
           title: "Dezvoltator"
-          header_description: "Setări pentru dezvoltatori pentru a controla limitele ratei, multiplicatorii și calculele, modul sigur și alte funcționalități avansate"
         experimental:
           title: "Experimental"
           header_description: "Activează sau dezactivează funcțiile experimentale pentru site-ul tău, cele mai multe dintre acestea pot fi controlate pe bază de grup"
@@ -4085,6 +4111,12 @@ ro:
           sub_pages:
             logs:
               title: "Jurnale"
+        problem_checks:
+          status: "Stare"
+          last_run_at: "Ultima rulare"
+          ignore: "Ignoră"
+          more_options:
+            title: "Mai multe opțiuni"
         reports:
           title: "Rapoarte"
           sub_pages:
@@ -4223,7 +4255,7 @@ ro:
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."
         installed_version: "Instalată"
         latest_version: "Ultima"
-        dismiss_notice: "Respinge"
+        dismiss_notice: "Ignoră"
         new_features:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."

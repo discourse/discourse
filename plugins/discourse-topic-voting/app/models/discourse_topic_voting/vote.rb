@@ -9,6 +9,8 @@ module DiscourseTopicVoting
 
     scope :active, -> { where(archive: false) }
     scope :archived, -> { where(archive: true) }
+
+    alias_attribute :archived, :archive
   end
 end
 

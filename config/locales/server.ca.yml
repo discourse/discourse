@@ -203,7 +203,13 @@ ca:
     join_group: "Uneix-me al grup"
   deleted_topic: "Oh! Aquest tema s'ha suprimit i ja no està disponible."
   reading_time: "Temps de lectura."
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "'M'agrada'"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Ho sentim, però els usuaris nous estan de moment limitats a %{count} resposta en el mateix tema."
     other: "Ho sentim, però els usuaris nous estan de moment limitats a %{count} respostes en el mateix tema."
@@ -1666,7 +1672,6 @@ ca:
     errors: "%{errors}"
     not_available: "No disponible. Proveu: %{suggestion}"
     something_already_taken: "Alguna cosa ha anat malament. Potser el nom d'usuari o l'adreça de correu ja han estat registrats. Proveu l'enllaç de contrasenya oblidada."
-    omniauth_confirm_title: "Inici de sessió mitjançant %{provider}"
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "No es permeten adreces de correu associades amb %{account}. Potser us cal configurar el compte amb una adreça de correu diferent."
     new_registrations_disabled: "Ara mateix no es permeten els registres de comptes nous."

@@ -7,9 +7,7 @@
 # authors: Alan Tan
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-post-voting
 
-%i[common mobile desktop].each do |type|
-  register_asset "stylesheets/#{type}/post-voting.scss", type
-end
+register_asset "stylesheets/common/post-voting.scss"
 register_asset "stylesheets/common/post-voting-crawler.scss"
 
 enabled_site_setting :post_voting_enabled
@@ -43,7 +41,8 @@ after_initialize do
   require_relative "app/serializers/reviewable_post_voting_comments_serializer"
   require_relative "config/routes"
 
-  register_svg_icon "angle-up"
+  register_svg_icon "vote-up"
+  register_svg_icon "vote-up-filled"
   register_svg_icon "info"
 
   register_post_custom_field_type("vote_history", :json)
@@ -116,6 +115,12 @@ after_initialize do
   TopicView.on_preload do |topic_view|
     next if !topic_view.topic.is_post_voting?
 
+    topic_view.comments = {}
+    topic_view.comments_counts = {}
+    topic_view.posts_user_voted = {}
+    topic_view.comments_user_voted = {}
+    topic_view.posts_voted_on = []
+
     post_ids = topic_view.posts.pluck(:id)
     next if post_ids.blank?
 
@@ -142,7 +147,6 @@ after_initialize do
     AND post_voting_comments.deleted_at IS NULL
     SQL
 
-    topic_view.comments = {}
     PostVotingComment
       .includes(:user)
       .where("id IN (#{comment_ids_sql})")
@@ -153,9 +157,6 @@ after_initialize do
       end
 
     topic_view.comments_counts = PostVotingComment.where(post_id: post_ids).group(:post_id).count
-
-    topic_view.posts_user_voted = {}
-    topic_view.comments_user_voted = {}
 
     if topic_view.guardian.user
       PostVotingVote

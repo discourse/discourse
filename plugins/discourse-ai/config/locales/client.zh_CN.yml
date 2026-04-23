@@ -12,8 +12,8 @@ zh_CN:
           descriptions:
             ai:
               search: "允许 AI 搜索"
-              stream_completion: "允许 AI 代理以流式方式返回生成结果"
-              update_agents: "允许更新 AI agent"
+              stream_completion: "允许流式 AI 智能体补全"
+              update_agents: "允许更新 AI 智能体"
               manage_artifacts: "允许管理 AI 工件（列示、查看、创建、更新、删除）"
       site_settings:
         categories:
@@ -36,9 +36,9 @@ zh_CN:
             create_ai_llm_model: "创建 LLM 模型"
             update_ai_llm_model: "更新 LLM 模型"
             delete_ai_llm_model: "删除 LLM 模型"
-            create_ai_agent: "创建 AI agent"
-            update_ai_agent: "更新 AI agent"
-            delete_ai_agent: "删除 AI agent"
+            create_ai_agent: "创建 AI 智能体"
+            update_ai_agent: "更新 AI 智能体"
+            delete_ai_agent: "删除 AI 智能体"
             create_ai_tool: "创建 AI 工具"
             update_ai_tool: "更新 AI 工具"
             delete_ai_tool: "删除 AI 工具"
@@ -115,8 +115,8 @@ zh_CN:
               label: "Top P"
               description: "用于 LLM 的 Top P。增大该值可以提高生成内容的随机性（留空则使用模型默认值）"
             agent_id:
-              label: "Agent"
-              description: "用于生成报告的 AI agent"
+              label: "智能体"
+              description: "用于生成报告的 AI 智能体"
         ai_tool_action:
           fields:
             tool:
@@ -128,19 +128,19 @@ zh_CN:
         llm_agent_triage:
           fields:
             agent:
-              label: "Agent"
-              description: "用于初步分类的 AI agent（必须设置默认 LLM 和用户）"
+              label: "智能体"
+              description: "用于分类的 AI 智能体（必须设置默认 LLM 和用户）"
             whisper:
               label: "以密语回复"
-              description: "agent 的回答是否应为密语"
+              description: "智能体的回答是否应为密语"
             silent_mode:
               label: "静默模式"
-              description: "在静默模式下，agent 将接收内容但不会在论坛上发布任何内容，这在使用工具进行分类时非常有用"
+              description: "在静默模式下，智能体将接收内容但不会在论坛上发布任何内容，这在使用工具进行分类时非常有用"
         llm_triage:
           fields:
             triage_agent:
-              label: "Agent"
-              description: "用于分类的 agent，请确保它回复一个您可用于触发操作的字词"
+              label: "智能体"
+              description: "用于分类的智能体，请确保它回复一个您可用于触发操作的字词"
             max_post_tokens:
               label: "帖子最大词元数"
               description: "使用 LLM 分类扫描的最大词元数"
@@ -187,8 +187,8 @@ zh_CN:
               label: "以密语回复"
               description: "AI 的回答是否应为密语"
             reply_agent:
-              label: "回复 Agent"
-              description: "用于回复的 AI agent（必须具有默认的 LLM）将优先于预设回复"
+              label: "回复智能体"
+              description: "用于回复的 AI 智能体（必须具有默认的 LLM），将优先于预设回复"
             max_output_tokens:
               label: "最大输出词元数"
               description: "指定后，设置模型可以生成的词元数上限。遵守 LLM 的输出词元数上限"
@@ -198,8 +198,8 @@ zh_CN:
             discover: "让 AI 发现并使用任何站点标签"
           fields:
             tagger_agent:
-              label: "AI Agent"
-              description: "用于分析和标记话题的 AI agent"
+              label: "AI 智能体"
+              description: "用于分析和标记话题的 AI 智能体"
             tag_mode:
               label: "标签选择模式"
               description: "选择 AI 如何选择标签"
@@ -228,18 +228,18 @@ zh_CN:
       title: "AI"
       default_llm:
         title: "默认 LLM 模型"
-        description: "所有 AI agent 使用的默认 LLM 模型。如果功能配置或角色中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
+        description: "所有 AI 智能体使用的默认 LLM 模型。如果功能配置或智能体中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
       llm_selector:
         none: "无"
         saved: "默认 LLM 模型更新成功"
       features:
         short_title: "功能"
-        description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的 agent 和 LLM，并按群组控制访问权限。"
+        description: "这些是您站点的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的智能体和 LLM，并按群组控制访问权限。"
         back: "返回 AI 功能"
         settings_save_error: "某些设置无法保存。"
         disabled: "（已禁用）"
         agent:
-          other: "Agent:"
+          other: "智能体："
         groups: "群组："
         llm:
           other: "LLM："
@@ -264,7 +264,7 @@ zh_CN:
           unconfigured: "未配置"
         filters:
           all: "所有"
-          text: "搜索功能、agent、LLM 或群组…"
+          text: "搜索功能、智能体、LLM 或群组…"
           no_results: "找不到符合您的筛选条件的功能。"
           reset: "重置"
         no_automations: "尚无自动化"
@@ -308,7 +308,7 @@ zh_CN:
             settings: "基本设置"
             topic_criteria: "话题条件"
             post_criteria: "帖子条件"
-            agents: "Agents"
+            agents: "智能体"
         ai_helper:
           edit: "编辑 AI 助手设置"
           name: "AI 助手"
@@ -323,13 +323,13 @@ zh_CN:
           custom_prompt: "自定义提示"
           image_caption: "标题图片"
           translator: "翻译器"
-          post_illustrator: "帖子插图创建器"
+          post_illustrator: "帖子插图创建工具"
           chat_thread_titles: "聊天消息串标题"
           setting_groups:
             access_permissions: "访问与权限"
             enabled_features: "启用的功能"
             automation: "自动化"
-            agents: "Agents"
+            agents: "智能体"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -343,7 +343,7 @@ zh_CN:
           schedule_topic_error: "无法安排翻译。请重试。"
           setting_groups:
             settings: "基本设置"
-            agents: "Agents"
+            agents: "智能体"
             backfill_and_limits: "回填与限制"
         spam:
           name: "垃圾信息"
@@ -365,6 +365,7 @@ zh_CN:
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
         supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
+        translatable_categories: "可翻译类别"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"
@@ -385,6 +386,9 @@ zh_CN:
           tooltip_translated: "%{done} 个非%{language}帖子已翻译，共 %{total} 个"
           bar_done:
             other: "%{count} 个帖子"
+        theme_translations:
+          translate:
+            label: "翻译"
         translations_menu:
           translate:
             label: "翻译帖子"
@@ -397,7 +401,7 @@ zh_CN:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"
         select_llm: "选择 LLM"
-        select_agent: "选择 agent"
+        select_agent: "选择智能体"
         custom_instructions: "自定义指令"
         custom_instructions_help: "特定于您的站点的自定义指令，帮助指导 AI 识别垃圾信息，例如“更积极地扫描非英语帖子”。"
         last_seven_days: "过去 7 天"
@@ -486,39 +490,39 @@ zh_CN:
       ai_agent:
         ai_tools: "工具"
         mcp_servers: "MCP 服务器"
-        mcp_server_tools_help: "选定的 MCP 服务器默认会公开所有工具。您可以针对每个代理筛选工具，以减少令牌使用量并专注于特定工具。"
+        mcp_server_tools_help: "所选 MCP 服务器默认会公开所有工具。您可以针对每个智能体筛选工具，以减少 token 使用量并专注于特定工具。"
         mcp_server_tool_count:
           other: "%{count} 个工具"
         mcp_server_enabled_tool_count:
           other: "%{count} 工具已启用"
         mcp_server_all_tools_enabled: "所有工具均已启用"
         mcp_server_enabled_tools:
-          other: "%{total} 工具中的 %{count} 已启用"
+          other: "%{count} 个工具已启用，共 %{total} 个"
         mcp_server_choose_tools: "选择工具"
         mcp_server_edit_tools: "编辑工具"
         tool_strategies:
           all: "应用于所有回复"
           replies:
             other: "应用于前 %{count} 条回复"
-        back: "返回 agent"
+        back: "返回智能体"
         name: "名称"
         edit: "编辑"
         export: "导出"
         import: "导入"
-        import_error_conflict: "导入 %{name}时检测到冲突，您是否要更新现有代理？"
+        import_error_conflict: "导入 %{name} 时检测到冲突，您是否要更新现有智能体？"
         overwrite: "覆盖"
         description: "描述"
         no_llm_selected: "未选择语言模型"
-        use_parent_llm: "使用代理的语言模型"
+        use_parent_llm: "使用智能体的语言模型"
         max_context_posts: "最大上下文帖子数"
         max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
         execution_mode: "执行模式"
-        execution_mode_help: "控制代理如何管理工具执行和对话上下文。默认设置使用固定的回合/工具限制。Agentic 使用令牌预算和自动上下文压缩，以实现更长时间、更强大的工具使用会话。"
+        execution_mode_help: "控制智能体如何管理工具执行和对话上下文。默认设置使用固定的回合/工具限制。Agentic 使用 token 预算和自动上下文压缩，以实现更长时间、更强大的工具使用会话。"
         execution_mode_options:
-          default: "默认值（固定限制）"
-          agentic: "Agentic (Token 预算)"
-        max_turn_tokens: "最大回合 Tokens"
-        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总令牌数（输入 + 输出）。设置后，将固定的完成/工具限制替换为令牌预算，从而实现更智能的机器人行为。留空则使用默认限制。"
+          default: "默认值（固定限值）"
+          agentic: "Agentic（Token 预算）"
+        max_turn_tokens: "最大回合 Token"
+        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数（输入 + 输出）。设置后，将固定的补全/工具限值替换为 token 预算，从而实现更智能的行为。留空则使用默认限值。"
         compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 启用视觉
@@ -531,78 +535,78 @@ zh_CN:
         show_thinking: 显示思考过程
         show_thinking_help: 将向终端用户显示语言模型的内部思考过程和工具调用。
         mentionable: 允许提及
-        mentionable_help: 如果启用，允许群组中的用户可以在帖子中提及此用户，AI 将以该代理的身份进行回复。
+        mentionable_help: 如果启用，允许群组中的用户可以在帖子中提及此用户，AI 将以此智能体的身份进行回复。
         user: 用户
         create_user: 创建用户
-        create_user_help: 您可以选择为此角色附加一个用户。如果这样做，AI 将使用此用户来回复请求。
+        create_user_help: 您可以选择为此智能体附加一个用户。如果这样做，AI 将使用此用户来回复请求。
         default_llm: 默认语言模型
-        default_llm_help: 用于此角色的默认语言模型。如果您希望在公开帖子中提及该角色，则为必选项。
+        default_llm_help: 用于此智能体的默认语言模型。如果您希望在公开帖子中提及该智能体，则为必选项。
         system_prompt: 系统提示
         forced_tool_strategy: 强制工具策略
         allow_chat_direct_messages: "允许聊天直接消息"
-        allow_chat_direct_messages_help: "如果启用，允许群组中的用户可以向此代理发送直接消息。"
+        allow_chat_direct_messages_help: "如果启用，允许群组中的用户可以向此智能体发送直接消息。"
         allow_chat_channel_mentions: "允许聊天频道提及"
-        allow_chat_channel_mentions_help: "如果启用此功能，允许群组中的用户可以在聊天频道中提及此代理。"
+        allow_chat_channel_mentions_help: "如果启用，允许群组中的用户可以在聊天频道中提及此智能体。"
         allow_personal_messages: "允许个人消息"
-        allow_personal_messages_help: "如果启用，允许群组中的用户可以向此代理发送私人消息。"
+        allow_personal_messages_help: "如果启用，允许群组中的用户可以向此智能体发送私人消息。"
         allow_topic_mentions: "允许话题提及"
-        allow_topic_mentions_help: "如果启用，允许组内的用户可以在主题中提及此代理。"
-        require_approval: "管理工具需要批准"
-        require_approval_help: "如果启用，审核操作(关闭、删除、编辑等)将被发送到审核队列，等待审核员在执行前批准。"
+        allow_topic_mentions_help: "如果启用，允许组内的用户可以在话题中提及此智能体。"
+        require_approval: "审核工具需要审批"
+        require_approval_help: "启用后，审核操作（关闭、删除、编辑等）将发送到审核队列，由版主批准后再执行。"
         force_default_llm: "始终使用默认语言模型"
         save: "保存"
-        saved: "代理已保存"
+        saved: "智能体已保存"
         enabled: "已启用？"
         tools: "启用的工具"
-        tokens: "代币"
+        tokens: "token"
         context_cost: "上下文成本"
         token_usage: "Token 使用情况"
         tool_count: "工具计数"
         tool_count_value:
           other: "%{count} 个工具"
-        tool_tokens_total: "~%{tokens} 代币"
-        mcp_server_cost_name: "%{name} (MCP 服务器)"
+        tool_tokens_total: "~%{tokens} Token"
+        mcp_server_cost_name: "%{name}（MCP 服务器）"
         mcp_server_cost_value:
-          other: "~%{tokens} 代币， %{count} 工具"
-        mcp_server_tokens_only: "~%{tokens} 代币"
+          other: "~%{tokens} token，%{count} 个工具"
+        mcp_server_tokens_only: "~%{tokens} token"
         mcp_tools_modal:
           title: "%{name} 个工具"
-          summary: "默认情况下，此代理可以使用此服务器上的所有工具。选择较小的工具集可以限制访问权限并降低请求成本。"
+          summary: "默认情况下，此智能体可以使用此服务器上的所有工具。选择较小的工具集可以限制访问权限并降低请求成本。"
           filter_placeholder: "筛选工具"
           select_all: "全选"
           clear_all: "全部清除"
           selection_summary:
-            other: "已选择 %{total} 个工具中的 %{count} 个"
+            other: "已选择 %{count} 个工具，共 %{total} 个"
           empty: "没有工具符合此筛选条件。"
         tool_severity_medium: "中等容量"
         tool_severity_high: "高容量"
-        tool_severity_too_many: "工具太多了"
-        tool_tokens_warning: "过多的工具会占用宝贵的对话内存，从而降低人工智能的性能。请考虑移除非必要的工具。"
-        tool_count_warning: "每个工具的定义都会在每次请求时发送给模型。工具过多会增加令牌的使用量，并可能使模型感到困惑，从而导致工具选择质量下降。因此，请仅保留代理实际需要的工具。"
+        tool_severity_too_many: "工具过多"
+        tool_tokens_warning: "过多的工具会占用宝贵的对话内存，从而降低 AI 的性能。请考虑移除非必要的工具。"
+        tool_count_warning: "每个工具的定义都会在每次请求时发送给模型。工具过多会增加 token 的使用量，并可能使模型感到困惑，从而导致工具选择质量下降。因此，请仅保留此智能体实际需要的工具。"
         forced_tools: "强制工具"
         allowed_groups: "允许的群组"
-        confirm_delete: "您确定要删除此代理吗？"
-        new: "新建代理"
-        no_agents: "您尚未创建任何代理。"
-        title: "代理"
-        short_title: "代理"
+        confirm_delete: "确定要删除此智能体吗？"
+        new: "新建智能体"
+        no_agents: "您尚未创建任何智能体。"
+        title: "智能体"
+        short_title: "智能体"
         delete: "删除"
-        temperature: "温度"
-        temperature_help: "用于 LLM 的温度。增大该值可以提升创造力（留空将使用模型默认值，通常为 0.0 到 2.0 之间的值）"
+        temperature: "Temperature"
+        temperature_help: "用于 LLM 的 Temperature。增大该值可以提升创造力（留空将使用模型默认值，通常为 0.0 到 2.0 之间的值）"
         top_p: "Top P"
         top_p_help: "用于 LLM 的 Top P，增大该值可以提升随机性（留空将使用模型默认值，通常为 0.0 到 1.0 之间的值）"
-        priority: "优先"
-        priority_help: "优先级较高的客服人员会显示在客服人员列表的顶部。如果有多位客服人员优先级相同，则会按字母顺序排列。"
+        priority: "优先级"
+        priority_help: "优先级较高的智能体会显示在智能体列表的顶部。如果有多个智能体的优先级相同，则会按字母顺序排列。"
         tool_options: "工具选项"
         rag_conversation_chunks: "搜索对话分块"
-        rag_conversation_chunks_help: "用于 RAG 模型搜索使用的分块数。增加分块数会增加 AI 可以使用的上下文数量。"
-        agent_description: "代理是一项强大的功能，可让您自定义 Discourse 论坛中 AI 引擎的行为。它们充当“系统消息”，指导 AI 的响应和交互，从而帮助创建更加个性化和引人入胜的用户体验。"
+        rag_conversation_chunks_help: "用于 RAG 模型搜索的分块数。增加分块数会增加 AI 可以使用的上下文数量。"
+        agent_description: "智能体是一项强大的功能，可让您自定义 Discourse 论坛中 AI 引擎的行为。它们充当“系统消息”，指导 AI 的回答和交互，从而帮助创建更加个性化和引人入胜的用户体验。"
         response_format:
           title: "JSON 回答格式"
           no_format: "未指定 JSON 格式"
           open_modal: "编辑"
           modal:
-            root_title: "响应结构"
+            root_title: "回答结构"
             key_title: "键"
         examples:
           title: 示例
@@ -611,16 +615,16 @@ zh_CN:
           remove: 删除示例
           collapsable_title: "示例 #%{number}"
           user: "用户消息"
-          model: "模型响应"
+          model: "模型回答"
         list:
           enabled: "AI 机器人？"
         ai_bot:
           title: "AI 机器人选项"
-          save_first: "保存代理后，将解锁更多人工智能机器人选项。"
+          save_first: "保存智能体后，将解锁更多 AI 机器人选项。"
         filters:
-          text: "查找代理"
+          text: "查找智能体"
           reset: "重置"
-          no_results: "没有找到符合您筛选条件的代理。"
+          no_results: "找不到符合您的筛选条件的智能体。"
           all_features: "任何功能"
         features_list:
           other: "功能："
@@ -650,7 +654,7 @@ zh_CN:
       tools:
         back: "返回工具"
         short_title: "工具"
-        keywords: "mcp|mcp 服务器|模型上下文协议"
+        keywords: "mcp|mcp 服务器|model context protocol"
         script_tools: "脚本工具"
         export: "导出"
         import: "导入"
@@ -661,17 +665,17 @@ zh_CN:
         name_help: "名称将显示在 Discourse UI 中，是您用来在各种设置中查找该工具的简短标识符，它应当独一无二（必填项）"
         new: "新工具"
         tool_name: "工具名称"
-        tool_name_help: "工具名称会呈现给大型语言模型。它本身并不唯一，但每个代理的工具名称都是唯一的。（代理会在保存时进行验证）"
+        tool_name_help: "工具名称会呈现给大语言模型。它本身并不唯一，但每个智能体的工具名称都是唯一的。（智能体会在保存时进行验证）"
         description: "描述"
         description_help: "向语言模型介绍工具用途的清晰描述"
-        subheader_description: "工具和 MCP 服务器扩展了 AI 代理的功能。"
+        subheader_description: "工具和 MCP 服务器扩展了 AI 智能体的功能。"
         summary: "摘要"
         summary_help: "显示给最终用户的工具用途摘要"
         script: "脚本"
         parameters: "参数"
         save: "保存"
         parameter_type: "参数类型"
-        parameter_item_type: "项目类型"
+        parameter_item_type: "条目类型"
         add_parameter: "添加参数"
         remove_parameter: "移除"
         parameter_required: "必选"
@@ -731,18 +735,18 @@ zh_CN:
         auth_type: "身份验证"
         auth_types:
           none: "无身份验证"
-          header_secret: "请求头凭据"
+          header_secret: "头凭据"
           oauth: "OAuth"
         secret: "凭据"
-        auth_header: "认证请求头名称"
-        auth_scheme: "认证方案"
+        auth_header: "身份验证头"
+        auth_scheme: "身份验证方案"
         oauth_client_registration: "OAuth 客户端注册"
         oauth_client_registration_types:
           client_metadata_document: "客户端元数据文档"
           manual: "手动客户端凭据"
-        oauth_client_id: "OAuth客户端ID"
+        oauth_client_id: "OAuth 客户端 ID"
         oauth_client_secret: "OAuth 客户端密钥"
-        oauth_scopes: "OAuth 范围"
+        oauth_scopes: "OAuth 作用域"
         oauth_authorization_params: "OAuth授权参数"
         oauth_authorization_params_help: "可选的 JSON 对象，已合并到授权请求中。使用 null 可移除默认参数。"
         oauth_authorization_params_placeholder: '{"access_type": "offline"}。'
@@ -757,25 +761,25 @@ zh_CN:
         oauth_connection: "OAuth 连接"
         oauth_status: "OAuth 状态"
         oauth_statuses:
-          disconnected: "断开连接"
-          connected: "（已连接）"
-          refresh_failed: "刷新页面"
+          disconnected: "已断开连接"
+          connected: "已连接"
+          refresh_failed: "刷新失败"
           error: "需要关注"
         oauth_connect: "连接"
         oauth_reconnect: "重新连接"
         oauth_disconnect: "断开连接"
-        oauth_connect_help: "使用 \"连接 \"保存服务器并进行授权。"
+        oauth_connect_help: "使用“连接”保存服务器并为其授权。"
         oauth_client_metadata_url: "客户端元数据 URL"
-        oauth_granted_scopes: "已授予范围"
-        oauth_access_token_expires_at: "访问令牌的过期时间为"
+        oauth_granted_scopes: "授予的作用域"
+        oauth_access_token_expires_at: "访问令牌的到期时间为"
         oauth_authorization_endpoint: "授权端点"
         oauth_token_endpoint: "令牌端点"
         oauth_revocation_endpoint: "撤销端点"
-        oauth_issuer: "发行人"
+        oauth_issuer: "颁发者"
         oauth_last_error: "最后一次 OAuth 错误"
-        oauth_show_details: "显示详情"
+        oauth_show_details: "显示详细信息"
         oauth_hide_details: "隐藏详细信息"
-        timeout_seconds: "请求超时时间（秒）"
+        timeout_seconds: "请求超时（秒）"
         timeout_seconds_tooltip: "Discourse 在请求失败前会等待 MCP 服务器多长时间。除非服务器持续运行缓慢，否则请保持此值为 30 秒。"
         enabled: "已启用"
         save: "保存"
@@ -783,23 +787,23 @@ zh_CN:
         delete: "删除"
         test: "测试连接"
         saved: "MCP 服务器已保存"
-        confirm_delete: "您确定要删除此 MCP 服务器吗？"
+        confirm_delete: "确定要删除此 MCP 服务器吗？"
         back: "返回工具"
-        health: "健康"
-        healthy: "健康的"
+        health: "运行状况"
+        healthy: "健康"
         unhealthy: "需要关注"
         tool_count:
           other: "%{count} 个工具"
         tools_modal:
           title: "%{name} 个工具"
           summary:
-            other: "此服务器目前公开了 %{count} 工具。"
+            other: "此服务器目前公开了 %{count} 个工具。"
           parameters: "参数"
           required: "必选"
           no_parameters: "此工具不需要任何参数。"
         test_result: "连接结果"
         test_summary:
-          other: "发现了使用协议 %{version} 的 %{count} 工具。"
+          other: "发现了 %{count} 个使用协议 %{version} 的工具。"
       llms:
         short_title: "LLM"
         no_llms: "暂无 LLM"
@@ -855,7 +859,7 @@ zh_CN:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{agent})"
           ai_helper_image_caption: "图片标题"
-          ai_agent: "代理（%{agent}）"
+          ai_agent: "智能体（%{agent}）"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"
           ai_spam: "垃圾信息"
@@ -864,19 +868,19 @@ zh_CN:
           other: "此模型目前的使用者为 %{settings}。如果配置错误，功能将无法按预期运行。"
         model_description:
           none: "适用于大多数语言模型的常规设置"
-          anthropic-claude-opus-4-6: "Anthropic 最智能的模型"
+          anthropic-claude-opus-4-7: "Anthropic 最智能的模型"
           anthropic-claude-sonnet-4-6: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-pro: "Google 最智能的模型"
           google-gemini-3-flash: "快速且经济实惠，并具备多模态推理能力"
-          open_ai-gpt-5-2: "OpenAI 的旗舰模型，非常适合跨领域解决问题"
-          open_ai-gpt-5-mini: "在智能、速度和成本之间取得平衡"
+          open_ai-gpt-5-4: "OpenAI 的旗舰模型，非常适合跨领域解决问题"
+          open_ai-gpt-5-4-mini: "在智能、速度和成本之间取得平衡"
           open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型"
           open_router-deepseek-deepseek-v3-2: "DeepSeek 的最新高性能模型"
           open_router-moonshotai-kimi-k2-5: "Moonshot 具有视觉能力的多模态模型"
           open_router-x-ai-grok-4-fast: "xAI 的旗舰视觉模型"
-          open_router-minimax-minimax-m2-5: "MiniMax 带大上下文的多模态模型"
-          open_router-z-ai-glm-5: "Z-AI 的多模态视觉模型"
+          open_router-minimax-minimax-m2-7: "MiniMax 带大上下文的多模态模型"
+          open_router-z-ai-glm-5-1: "Z-AI 的多模态视觉模型"
           open_router-arcee-ai-trinity-large-preview-free: "来自 Arcee AI 的免费开源模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
@@ -941,9 +945,9 @@ zh_CN:
           reasoning_effort: "推理工作（仅适用于推理模型）"
           service_tier: "服务层级（灵活层级 = 成本更低/延迟更高，优先层级 = 处理速度更快）"
           enable_reasoning: "启用推理（仅适用于推理模型）"
-          adaptive_thinking: "启用自适应思维（推荐用于 Claude 4.6 型号）"
-          enable_thinking: "启用思考(Gemini 2.5模型-使用令牌预算)"
-          thinking_level: "思考级别(Gemini 3 模型-控制推理深度)"
+          adaptive_thinking: "启用自适应思考（推荐用于 Claude 4.6 模型）"
+          enable_thinking: "启用思考（Gemini 2.5模型 - 使用 token 预算）"
+          thinking_level: "思考级别（Gemini 3 模型 - 控制推理深度）"
           thinking_tokens: "用于思考的词元数量"
           reasoning_tokens: "用于推理的词元数量"
           disable_temperature: "禁用温度（某些思考模型不支持温度）"
@@ -1014,7 +1018,7 @@ zh_CN:
         model_used: "使用的模型："
         accuracy: "准确性："
         ai_tool_action:
-          agent: "代理"
+          agent: "智能体"
           tool: "工具"
           parameters: "参数"
           post: "触发帖子"
@@ -1022,7 +1026,7 @@ zh_CN:
         short_title: "嵌入向量"
         description: "嵌入向量是捕捉意义和关系的数据的数值表示，使 Discourse AI 功能（如相关主题和 AI 搜索）能够理解和连接内容。"
         new: "新建嵌入向量"
-        back: "返回嵌入"
+        back: "返回嵌入向量"
         save: "保存"
         saved: "嵌入向量配置已保存"
         delete: "删除"
@@ -1091,7 +1095,7 @@ zh_CN:
         click_to_run_label: "运行工件"
       ai_bot:
         title: "AI 机器人"
-        agent: "代理"
+        agent: "智能体"
         llm: "模型"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
@@ -1109,10 +1113,6 @@ zh_CN:
           title: "查看 AI 互动"
           copy_request: "复制请求"
           copy_response: "复制回答"
-          request_tokens: "请求词元："
-          response_tokens: "回答词元："
-          cache_read_tokens: "缓存读取词元数："
-          cache_write_tokens: "缓存写入词元数："
           request: "请求"
           response: "回答"
           next_log: "下一步"
@@ -1232,9 +1232,9 @@ zh_CN:
     review:
       statuses:
         approved_tool_action:
-          title: "工具已获批准"
+          title: "已批准工具"
         rejected_tool_action:
-          title: "工具被拒绝"
+          title: "已拒绝工具"
       types:
         reviewable_ai_post:
           title: "AI 标记的帖子"

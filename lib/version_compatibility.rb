@@ -26,7 +26,7 @@ module Discourse
 
     begin
       version_list = YAML.safe_load(version_list)
-    rescue Psych::SyntaxError, Psych::DisallowedClass => e
+    rescue Psych::SyntaxError, Psych::DisallowedClass
     end
 
     raise InvalidVersionListError unless version_list.is_a?(Hash)
@@ -35,7 +35,7 @@ module Discourse
       version_list
         .transform_keys do |v|
           Gem::Requirement.parse(v)
-        rescue Gem::Requirement::BadRequirementError => e
+        rescue Gem::Requirement::BadRequirementError
           raise InvalidVersionListError, "Invalid version specifier: #{v}"
         end
         .sort_by do |parsed_requirement, _|
@@ -129,7 +129,7 @@ module Discourse
       )
 
     Discourse.find_compatible_resource(compat_resource)
-  rescue InvalidVersionListError => e
+  rescue InvalidVersionListError
     $stderr.puts "Invalid version list in #{path}"
   rescue Discourse::Utils::CommandError
   end

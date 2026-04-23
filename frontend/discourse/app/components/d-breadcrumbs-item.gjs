@@ -33,9 +33,11 @@ export default class DBreadcrumbsItem extends Component {
             {{label}}
           </a>
         {{/if}}
-        <span class="separator">
-          {{~icon "angle-right"~}}
-        </span>
+        {{#unless @isLast}}
+          <span class="separator">
+            {{~icon "angle-right"~}}
+          </span>
+        {{/unless}}
       </li>
     </template>;
   }

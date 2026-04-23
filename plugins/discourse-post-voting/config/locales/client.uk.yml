@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 uk:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Допис опитування
   post_voting:
     reviewables:
       comment_already_handled: "Дякуємо, але ми вже переглянули цей коментар і вирішили, що його не потрібно позначати повторно."
@@ -39,6 +35,7 @@ uk:
       already_voted: "Ви можете проголосувати лише один раз за кожне питання."
       user_over_limit: "Ви не можете перевищити кількість голосів для вашого рівня довіри."
       one_vote_per_post: "Ви можете проголосувати лише один раз за кожну публікацію."
+      toggle_voters: "Покажіть, хто проголосував"
     last_answer_lowercase: остання відповідь
     answer_lowercase:
       one: відповідь
@@ -68,6 +65,8 @@ uk:
           edit: "редагувати"
           cancel: "скасувати"
           add: "Додати коментар"
+          actions:
+            delete: "Видалити коментар"
           show:
             one: Показати ще %{count} коментар
             few: Показати ще %{count} коментарі

@@ -12,6 +12,12 @@ es:
         categories:
           discourse_post_event: "Evento de Discourse"
           discourse_calendar: "Calendario y eventos"
+      web_hooks:
+        calendar_event:
+          group_name: "Evento del calendario"
+          calendar_event_created: "Se ha creado el evento en el calendario"
+          calendar_event_updated: "Se ha actualizado el evento en el calendario"
+          calendar_event_destroyed: "Se ha destruido el evento en el calendario"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ es:
               label: ID del tema
     discourse_calendar:
       invite_user_notification: "%{username} te invitó a: %{description}"
+      preferences:
+        all_events: "Calendario de Discourse - Todos los eventos"
+        all_events_description: "Todos los eventos del foro"
+        my_events: "Calendario de Discourse - Mis eventos"
+        my_events_description: "Eventos a los que vas a asistir o que te interesan"
       on_holiday: "De vacaciones"
       disable_holiday: "Desactivar"
       enable_holiday: "Activar"
@@ -36,6 +47,7 @@ es:
         header_title: "Días festivos"
         pick_region_description: "Elija una región para ver los días festivos de esa región."
         disabled_holidays_description: "Los días festivos para discapacitados se excluirán del calendario de días festivos del personal."
+        header_description: "Selecciona una región para ver los días festivos de esa región. Los días festivos desactivados se excluirán del calendario de días festivos del personal."
       date: "Fecha"
       add_to_calendar: "Añadir a Google Calendar"
       toggle_timezone_offset_title: "Alternar el desfase de zona horaria"
@@ -328,6 +340,9 @@ es:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} ha establecido automáticamente tu asistencia y te ha invitado a %{eventName}"
         an_event: "un evento"
+      event_description:
+        show_more: "Mostrar más"
+        show_less: "Mostrar menos"
       edit_reason: "Evento actualizado"
       edit_reason_closed: "Evento cerrado"
       edit_reason_opened: "Evento abierto"
@@ -350,6 +365,7 @@ es:
       bulk_invite: "Invitaciones en masa"
       close_event: "Cerrar evento"
       open_event: "Abrir evento"
+      destroy_event: "Evento de destrucción"
       invitees_modal:
         title_invited: "Participación en eventos"
         title_participated: "Lista de usuarios que participaron"
@@ -426,6 +442,12 @@ es:
             private:
               title: "Privado"
               description: "Solo los usuarios invitados pueden unirse a un evento privado."
+      composer:
+        name_placeholder: "Evento"
+        end_date_placeholder: "Establecer fecha de finalización"
+        location_placeholder: "Añadir ubicación o URL"
+        max_attendees_placeholder: "Establecer número máximo de asistentes"
+        description_placeholder: "Añadir descripción del evento"
       builder_modal:
         custom_fields:
           label: "Campos personalizados"
@@ -446,6 +468,9 @@ es:
         timezone:
           label: Zona horaria
           remove_timezone: Sin zona horaria (UTC)
+        all_day:
+          label: "Evento de todo el día"
+          description: "Un evento de todo el día no tendrá horas específicas, solo una fecha. El evento durará desde el principio hasta el final del día."
         reminders:
           label: "Recordatorios"
           types:
@@ -495,6 +520,7 @@ es:
           label: "Grupos invitados"
         status:
           label: "Estado"
+        delete_confirmation_message: "¿Eliminar este evento?"
       invite_user_or_group:
         title: "Notificar a usuario(s) o grupo(s)"
         invite: "Enviar"

@@ -12,13 +12,15 @@ ug:
     topic_voting:
       vote_title: "بېلەت تاشلاش"
       vote_title_plural: "بېلەت"
-      voting_closed_title: "تاقالدى"
       votes:
         one: "%{count} بېلەت"
         other: "%{count} بېلەت"
       anonymous_button:
         one: "بېلەت تاشلاش"
         other: "بېلەت"
+      and_more_voters: "ۋە باشقا %{count}..."
+      show_voters: "بېلەت تاشلىغانلارنى كۆرسەت"
+      vote_count_thousands: "%{count} مىڭ"
     filters:
       votes:
         title: "بېلەت"

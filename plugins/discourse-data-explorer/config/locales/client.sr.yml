@@ -12,6 +12,7 @@ sr:
       create: "Kreiraj"
       ai:
         generate: "Generiši"
+        optional: "opciono"
       types:
         bool:
           yes: "Da"

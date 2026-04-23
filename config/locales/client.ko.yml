@@ -2102,6 +2102,8 @@ ko:
       upload_description: "여기에 업로드 설명을 입력하세요"
       list_item: "목록 항목"
       wrap_modal:
+        attribute_key: "키"
+        attribute_value: "값"
         apply: "적용"
       help: "Markdown 편집 도움말"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
@@ -2152,6 +2154,8 @@ ko:
       image: "이미지"
       delete_image_button: 이미지 삭제
       link_toolbar:
+        copy: "링크 복사"
+      onebox_toolbar:
         copy: "링크 복사"
     notifications:
       tooltip:
@@ -2462,8 +2466,23 @@ ko:
         name: "태그 바꾸기"
       delete_topics:
         name: "삭제하기"
+      convert_to_private_message:
+        name: "개인 메시지 작성"
       update_notifications:
         name: "업데이트 알림"
+    nested_replies:
+      sort:
+        label: "정렬 기준"
+        top: "인기글"
+        new: "신규"
+      load_more_children:
+        other: "추가 %{count} 개 댓글"
+      collapsed_replies:
+        other: "%{count} 댓글"
+      collapse: "축소"
+      no_replies: "아직 댓글이 없습니다."
+      deleted_post_placeholder: "[삭제됨]"
+      pinned_reply: "핀 지정됨"
     topic:
       filter_to:
         other: "이 글의 댓글 %{count}개"
@@ -2861,6 +2880,9 @@ ko:
         other: "나와 %{count}명이 이 게시물을 좋아합니다"
       sr_post_like_count_button:
         other: "%{count}명이 이 글을 좋아합니다."
+      likes_popup:
+        title:
+          other: "좋아요 %{count}"
       filtered_replies_hint:
         other: "이 게시물과 %{count}개의 댓글 보기"
       filtered_replies_viewing:
@@ -2872,8 +2894,6 @@ ko:
           actions: "작업"
           edit: "편집"
           delete: "삭제"
-        post_language_selector:
-          none: "없음"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -2922,8 +2942,6 @@ ko:
           just_the_post: "아니요, 이 게시물만 삭제합니다"
         admin: "게시물 관리자 작업"
         admin_action: "관리자"
-        permanently_delete: "영구 삭제"
-        permanently_delete_confirmation: "이 게시물을 영구적으로 삭제할까요? 삭제된 게시물은 복구할 수 없습니다."
         wiki: "위키 만들기"
         unwiki: "위키 제거"
         convert_to_moderator: "운영진 색상 추가"
@@ -3042,6 +3060,7 @@ ko:
       back: "카테고리로 돌아가기"
       general: "일반"
       settings: "설정"
+      moderation: "관리"
       tags: "태그"
       localization:
         name: "그룹명"
@@ -3815,6 +3834,8 @@ ko:
           admins: "관리자"
           moderators: "관리자"
           staff: "스태프"
+        impact_types:
+          other_type: "기타"
         filter:
           all: "모두"
           enabled: "활성화"
@@ -3896,6 +3917,12 @@ ko:
           sub_pages:
             logs:
               title: "로그"
+        problem_checks:
+          status: "상태"
+          last_run_at: "마지막 실행"
+          ignore: "무시"
+          more_options:
+            title: "추가 옵션"
         reports:
           title: "보고서"
           sub_pages:
@@ -3963,7 +3990,7 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
-        dismiss_notice: "읽음으로 표시"
+        dismiss_notice: "무시"
         new_features:
           learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"

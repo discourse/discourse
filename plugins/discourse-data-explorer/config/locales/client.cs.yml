@@ -12,6 +12,7 @@ cs:
       create: "Vytvořit"
       ai:
         generate: "Vygenerovat API klíč"
+        optional: "volitelné"
       import:
         label: "Import"
       help:

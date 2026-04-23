@@ -2757,6 +2757,8 @@ vi:
         name_label: "Tên bọc"
         attributes_label: "Thuộc tính"
         add_attribute: "Thêm thuộc tính"
+        attribute_key: "Phím"
+        attribute_value: "Giá trị"
         remove_attribute: "Xóa thuộc tính"
         apply: "Áp dụng"
         unwrap: "Mở bọc"
@@ -2845,6 +2847,9 @@ vi:
         copy: "Sao chép link"
         remove: "Gỡ link"
         visit: "Mở link trong tab mới"
+        link_copied: "Đã sao chép link!"
+      onebox_toolbar:
+        copy: "Sao chép link"
         link_copied: "Đã sao chép link!"
       unsupported_token: "Trình soạn thảo rich text không hỗ trợ tất cả các tính năng được sử dụng trong tút này; chuyển sang trình soạn thảo Markdown."
     notifications:
@@ -3250,12 +3255,29 @@ vi:
         name: "Xóa"
       update_category:
         name: "Cập nhật chuyên mục"
+      convert_to_public_topic:
+        name: "Đăng chủ đề công khai…"
+      convert_to_private_message:
+        name: "Gửi tin nhắn cá nhân"
       reset_bump_dates:
         name: "Đặt lại ngày đẩy"
       defer:
         name: "Đánh dấu là Chưa đọc"
       update_notifications:
         name: "Cập nhật thông báo"
+    nested_replies:
+      sort:
+        label: "Sắp xếp theo"
+        top: "Top"
+        new: "Chủ đề mới"
+      load_more_children:
+        other: "còn %{count} câu trả lời"
+      collapsed_replies:
+        other: "%{count} trả lời"
+      collapse: "Thu gọn"
+      no_replies: "Chưa có trả lời."
+      deleted_post_placeholder: "[đã xóa]"
+      pinned_reply: "Đã ghim"
     topic:
       filter_to:
         other: "%{count} tút trong chủ đề"
@@ -3751,6 +3773,9 @@ vi:
         other: "bạn và %{count} người khác đã thích tút này"
       sr_post_like_count_button:
         other: "%{count} người thích bài viết này."
+      likes_popup:
+        title:
+          other: "%{count} lượt thích"
       sr_post_read_count_button:
         other: "%{count} người đã đọc tút này."
       filtered_replies_hint:
@@ -3776,8 +3801,7 @@ vi:
           confirm_delete: "Bạn có chắc muốn xóa các bản dịch cho '%{languageCode}'?"
         success: "Bản dịch đã được cập nhật thành công."
         post_language_selector:
-          title: "Ngôn ngữ tút"
-          none: "Không"
+          none: "Chưa đặt"
         edit_warning:
           message: "Đây là tút đã được dịch.<br><br>Bạn có muốn chỉnh sửa tút gốc trong %{language} hay chỉnh sửa bản dịch này?"
           action_original: "Chỉnh sửa tút gốc"
@@ -3801,6 +3825,7 @@ vi:
       cancel_composer:
         confirm: "Bạn có chắc muốn hủy bỏ tút này?"
         discard: "Hủy bỏ"
+        discard_edit: "Hủy bỏ các thay đổi"
       via_email: "Tút này đăng bằng email"
       via_auto_generated_email: "tút này đến qua một email được tạo tự động"
       whisper: "tút này là lời nhắn từ kiểm duyệt viên"
@@ -3842,7 +3867,7 @@ vi:
         admin: "Quản lý tút"
         admin_action: "Quản trị"
         permanently_delete: "Xóa vĩnh viễn"
-        permanently_delete_confirmation: "Bạn có chắc muốn xóa vĩnh viễn tút này? Bạn sẽ không thể khôi phục nó."
+        permanently_delete_confirm_phrase: "xóa vĩnh viễn"
         wiki: "Tạo Wiki"
         unwiki: "Xóa Wiki"
         convert_to_moderator: "Thêm màu Nhân viên"
@@ -3981,6 +4006,7 @@ vi:
       back: "Quay lại chuyên mục"
       general: "Chung"
       settings: "Cấu hình"
+      moderation: "Người kiểm duyệt"
       advanced: "Nâng cao"
       show_advanced: "Cài đặt nâng cao"
       topic_template: "Template"
@@ -5224,6 +5250,9 @@ vi:
           staff: "Nhân viên"
           all_members: "Tất cả thành viên"
           developers: "Nhà phát triển"
+        impact_types:
+          feature_type: "Tính năng"
+          other_type: "Khác"
         filter:
           search_placeholder: "Lọc theo tên, mô tả hoặc plugin..."
           no_results: "Không có thay đổi sắp tới nào phù hợp với bộ lọc của bạn"
@@ -5254,7 +5283,6 @@ vi:
           header_description: "Hãy cung cấp thông tin ở đây về trang web này và nhóm của bạn để mọi người có thể hiểu cộng đồng của bạn là gì, ai đứng sau nó và cách liên hệ với bạn trong trường hợp có vấn đề. Thông tin này sẽ được hiển thị trên trang <a href='%{basePath}/about'>Giới thiệu</a>của trang web của bạn."
         developer:
           title: "Nhà phát triển"
-          header_description: "Cài đặt cho nhà phát triển để kiểm soát giới hạn tốc độ, hệ số nhân, tính toán, chế độ an toàn và các tính năng nâng cao khác."
         experimental:
           title: "Thí nghiệm"
           header_description: "Bật hoặc tắt các tính năng thử nghiệm cho trang web của bạn, hầu hết các tính năng này có thể được kiểm soát theo nhóm."
@@ -5499,6 +5527,11 @@ vi:
             logs:
               title: "Log"
               header_description: "Xem và quản lý nhật ký cho các tác vụ sao lưu, khôi phục và tải lên."
+        problem_checks:
+          status: "Trạng thái"
+          ignore: "Bỏ qua"
+          more_options:
+            title: "Nhiều tùy chọn hơn"
         reports:
           title: "Báo cáo"
           header_description: "Báo cáo là công cụ mạnh mẽ giúp bạn hiểu rõ những gì đang diễn ra trên trang web của mình. Chúng có thể giúp bạn nhận diện xu hướng, phát hiện vấn đề và đưa ra quyết định dựa trên dữ liệu."
@@ -5678,7 +5711,6 @@ vi:
         new_features:
           title: "Có gì mới?"
           subtitle: "Chúng tôi liên tục phát hành các tính năng và cải tiến mới. Trang này nêu bật những điểm chính, nhưng bạn có thể nhấn vào 'Tìm hiểu thêm' để xem ghi chú phát hành chi tiết."
-          no_new_features_error: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
           learn_more: "Tìm hiểu thêm..."
         last_checked: "Kiểm tra lần cuối"
         refresh_problems: "Làm mới"

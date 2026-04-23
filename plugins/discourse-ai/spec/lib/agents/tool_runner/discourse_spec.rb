@@ -114,6 +114,106 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
       end
     end
 
+    context "when using the topic filter API" do
+      it "filters topics matching the query and returns serialized fields" do
+        matching_topic =
+          Fabricate(:topic, category: category, title: "NDA checklist guidance topic")
+        matching_post = Fabricate(:post, topic: matching_topic, raw: "NDA checklist details")
+        matching_topic.tags << tag1
+        other_matching_topic =
+          Fabricate(:topic, category: category, title: "How to review a contract safely")
+        other_matching_post =
+          Fabricate(:post, topic: other_matching_topic, raw: "Contract review details")
+        Fabricate(:topic, title: "Outside category knowledge topic")
+
+        script = <<~JS
+          function invoke(params) {
+            return discourse.filterTopics({
+              q: "category:" + params.category,
+              limit: params.limit
+            });
+          }
+        JS
+
+        tool = create_tool(script: script)
+        runner =
+          tool.runner({ "category" => category.slug, "limit" => 10 }, llm: nil, bot_user: nil)
+
+        result = runner.invoke
+        topics = result["topics"]
+
+        expect(result["query"]).to eq("category:#{category.slug}")
+        expect(result["limit"]).to eq(10)
+        expect(topics.map { |topic| topic["id"] }).to contain_exactly(
+          matching_topic.id,
+          other_matching_topic.id,
+        )
+        expect(topics.map { |topic| topic["category_slug"] }.uniq).to eq([category.slug])
+        expect(topics.map { |topic| topic["first_post_id"] }).to contain_exactly(
+          matching_post.id,
+          other_matching_post.id,
+        )
+        expect(topics.find { |topic| topic["id"] == matching_topic.id }["tags"]).to contain_exactly(
+          tag1.name,
+        )
+      end
+
+      it "respects the limit parameter" do
+        3.times do |i|
+          Fabricate(:topic, category: category, title: "Legal knowledge topic number #{i}")
+        end
+
+        script = <<~JS
+          function invoke(params) {
+            return discourse.filterTopics({ q: params.q, limit: params.limit });
+          }
+        JS
+
+        tool = create_tool(script: script)
+        runner =
+          tool.runner({ "q" => "category:#{category.slug}", "limit" => 2 }, llm: nil, bot_user: nil)
+
+        result = runner.invoke
+
+        expect(result["topics"].size).to eq(2)
+      end
+
+      it "requires with_private to include private categories" do
+        private_category =
+          Fabricate(
+            :private_category,
+            group: Fabricate(:group),
+            slug: "private-legal-kb",
+            name: "Private Legal KB",
+          )
+        private_topic =
+          Fabricate(:topic, category: private_category, title: "Private legal playbook topic")
+
+        script = <<~JS
+          function invoke(params) {
+            return discourse.filterTopics({
+              q: "category:" + params.category,
+              with_private: params.with_private
+            });
+          }
+        JS
+
+        tool = create_tool(script: script)
+
+        public_result =
+          tool.runner({ "category" => private_category.slug }, llm: nil, bot_user: nil).invoke
+        private_result =
+          tool.runner(
+            { "category" => private_category.slug, "with_private" => true },
+            llm: nil,
+            bot_user: nil,
+          ).invoke
+
+        expect(public_result["topics"]).to eq([])
+        expect(private_result["topics"].map { |topic| topic["id"] }).to eq([private_topic.id])
+      end
+    end
+
     context "when using the post API" do
       it "can fetch post details" do
         script = <<~JS

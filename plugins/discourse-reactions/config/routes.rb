@@ -17,4 +17,6 @@ DiscourseReactions::Engine.routes.draw do
   get "/discourse-reactions/posts/:id/reactions-users-list" =>
         "custom_reactions#reactions_users_list",
       :as => "reactions_users_list"
+  get "/discourse-reactions/posts/:id/reactions-users" => "custom_reactions#post_reactions_users",
+      :as => "post_reactions_users"
 end

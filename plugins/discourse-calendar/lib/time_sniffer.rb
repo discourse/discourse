@@ -302,7 +302,7 @@ class TimeSniffer
       if match
         begin
           result = instance_exec(match, &blk)
-        rescue Exception => e
+        rescue Exception
           raise if @raise_errors
         else
           return result if result

@@ -12,6 +12,7 @@ zh_TW:
       create: "創建"
       ai:
         generate: "產生"
+        optional: "可選"
       import:
         label: "匯入"
       help:

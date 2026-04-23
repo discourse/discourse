@@ -425,6 +425,7 @@ export default class QueryResult extends Component {
             </table>
           </div>
         {{/if}}
+
       </section>
     </article>
   </template>

@@ -2794,6 +2794,8 @@ it:
       list_item: "Elemento lista"
       toggle_direction: "Cambia direzione"
       wrap_modal:
+        attribute_key: "Chiave"
+        attribute_value: "Valore"
         apply: "Applica"
       help: "Aiuto Inserimento Markdown"
       exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
@@ -2862,6 +2864,9 @@ it:
         copy: "Copia link"
         remove: "Rimuovi link"
         visit: "Apri il link in una scheda esterna"
+        link_copied: "Link copiato!"
+      onebox_toolbar:
+        copy: "Copia link"
         link_copied: "Link copiato!"
     notifications:
       tooltip:
@@ -3286,12 +3291,31 @@ it:
         name: "Elimina"
       update_category:
         name: "Aggiorna categoria"
+      convert_to_public_topic:
+        name: "Rendi l'argomento pubblico…"
+      convert_to_private_message:
+        name: "Rendi Messaggio Personale"
       reset_bump_dates:
         name: "Reimposta date di riproposizione"
       defer:
         name: "Contrassegna come non letto"
       update_notifications:
         name: "Aggiorna notifiche"
+    nested_replies:
+      sort:
+        label: "Ordina per"
+        top: "Popolari"
+        new: "Nuovo"
+      load_more_children:
+        one: "%{count} ulteriore risposta"
+        other: "%{count} ulteriori risposte"
+      collapsed_replies:
+        one: "%{count} risposta"
+        other: "%{count} risposte"
+      collapse: "Comprimi"
+      no_replies: "Ancora nessuna risposta."
+      deleted_post_placeholder: "[eliminato]"
+      pinned_reply: "Appuntato"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -3792,6 +3816,10 @@ it:
       sr_post_like_count_button:
         one: "A %{count} persona piace questo messaggio."
         other: "A %{count} persone piace questo messaggio."
+      likes_popup:
+        title:
+          one: "%{count} \"Mi piace\""
+          other: "%{count} \"Mi piace\""
       sr_post_read_count_button:
         one: "%{count} persona ha letto a questo messaggio."
         other: "%{count} persone hanno letto questo messaggio."
@@ -3819,7 +3847,7 @@ it:
           confirm_delete: "Vuoi davvero eliminare le traduzioni per '%{languageCode}'?"
         success: "Le traduzioni sono state aggiornate con successo"
         post_language_selector:
-          none: "Nessuna"
+          none: "Non impostato"
         edit_warning:
           action_original: "Modifica il messaggio originale"
           action_translation: "Modifica questa traduzione"
@@ -3842,6 +3870,7 @@ it:
         attachment_download_requires_login: "Spiacenti, devi effettuare l'accesso per poter scaricare gli allegati."
       cancel_composer:
         discard: "Elimina"
+        discard_edit: "Annulla modifiche"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
@@ -3885,7 +3914,7 @@ it:
         admin: "azioni post-amministrazione"
         admin_action: "Amministrazione"
         permanently_delete: "Elimina definitivamente"
-        permanently_delete_confirmation: "Sicuro di voler eliminare definitivamente questo messaggio? Non sarà possibile recuperarlo."
+        permanently_delete_confirm_phrase: "elimina definitivamente"
         wiki: "Rendi Wiki"
         unwiki: "Rimuovi Wiki"
         convert_to_moderator: "Aggiungi Colore Staff"
@@ -4030,6 +4059,7 @@ it:
       back: "Torna alla categoria"
       general: "Generale"
       settings: "Impostazioni"
+      moderation: "Moderazione"
       advanced: "Avanzato"
       topic_template: "Modello"
       tags: "Etichette"
@@ -5210,6 +5240,9 @@ it:
           admins: "Amministratori"
           moderators: "Moderatori"
           staff: "Staff"
+        impact_types:
+          feature_type: "Funzionalità"
+          other_type: "Altri"
         filter:
           all: "Tutte"
           enabled: "Abilitato"
@@ -5226,7 +5259,6 @@ it:
           header_description: "Fornisci qui informazioni su questo sito e sul tuo team in modo che le persone possano scoprire di cosa si occupa la tua community, chi c'è dietro e come contattarti in caso di problemi. I dati verranno visualizzati sulla pagina <a href='%{basePath}/about'>Informazioni</a> del tuo sito."
         developer:
           title: "Sviluppatore"
-          header_description: "Impostazioni da sviluppatore per controllare limiti di velocità, moltiplicatori e calcoli, modalità provvisoria e altre funzionalità avanzate"
         experimental:
           title: "Sperimentale"
           header_description: "Attiva o disattiva le funzionalità sperimentali per il tuo sito: la maggior parte di queste può essere controllata a livello di gruppo"
@@ -5421,6 +5453,13 @@ it:
             logs:
               title: "Log"
               header_description: "Visualizza e gestisci i log per backup, ripristini e caricamenti"
+        problem_checks:
+          priority: "Priorità"
+          status: "Stato"
+          last_run_at: "Ultima esecuzione"
+          ignore: "Ignora"
+          more_options:
+            title: "Altre opzioni"
         reports:
           title: "Report"
           header_description: "I report sono uno strumento potente per aiutarti a capire cosa sta succedendo sul tuo sito. Possono aiutarti a identificare tendenze, individuare problemi e prendere decisioni basate sui dati."

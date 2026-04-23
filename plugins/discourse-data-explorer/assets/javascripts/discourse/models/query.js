@@ -74,13 +74,9 @@ export default class Query extends RestModel {
 
   createProperties() {
     if (this.sql) {
-      // Importing
+      // Importing or saving with SQL
       return this.updateProperties();
     }
-    const props = this.getProperties("name", "description");
-    if (this.ai_description) {
-      props.ai_description = this.ai_description;
-    }
-    return props;
+    return this.getProperties("name", "description");
   }
 }
