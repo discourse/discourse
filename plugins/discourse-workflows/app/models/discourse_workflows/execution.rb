@@ -23,13 +23,7 @@ module DiscourseWorkflows
 
     scope :expired_waiting, -> { where(status: :waiting).where("waiting_until < ?", Time.current) }
 
-    scope :waiting_with_type,
-          ->(type) { where(status: :waiting).where("waiting_config->>'wait_type' = ?", type.to_s) }
-
-    scope :by_resume_token,
-          ->(token) do
-            where(status: :waiting).where("waiting_config->>'resume_token' = ?", token.to_s)
-          end
+    scope :by_resume_token, ->(token) { where(status: :waiting, resume_token: token.to_s) }
 
     def self.compute_run_time_ms(steps)
       waiting_types = NodeType.waiting_identifiers
@@ -62,8 +56,8 @@ module DiscourseWorkflows
           finished_at: Time.current,
           waiting_node_id: nil,
           waiting_until: nil,
-          waiting_config: {
-          },
+          resume_token: nil,
+          timeout_action: nil,
         }
 
         if execution_data
