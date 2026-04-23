@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 uk:
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Читати стрічку подій календаря"
   reports:
     currently_away:
       title: Користувачі зараз відсутні
@@ -64,6 +67,9 @@ uk:
     sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
     calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
   discourse_calendar:
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Усі події"
+      my_events_feed_name: "%{site_title} - Мої події"
     invite_user_notification: "%{username} запросили Вас на: %{description}"
     calendar_must_be_in_first_post: "Тег календаря можна використовувати лише в першому дописі теми."
     more_than_one_calendar: "Ви не можете мати більше одного календаря в публікації."

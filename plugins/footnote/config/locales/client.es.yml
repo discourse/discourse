@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Notas a pie de página de Discourse"
   js:
     footnote:
+      title: "Notas a pie de página"
       add: "Añadir nota al pie de página"

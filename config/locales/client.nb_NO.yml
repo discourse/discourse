@@ -143,6 +143,9 @@ nb_NO:
       placeholder: dato
       from_placeholder: "fra dato"
       to_placeholder: "til dato"
+    languages:
+      be:
+        name: Hviterussisk
     share:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber} av @%{username}"
@@ -2443,6 +2446,7 @@ nb_NO:
       upload_description: "beskriv bildet her"
       list_item: "Listeelement"
       wrap_modal:
+        attribute_value: "Verdi"
         apply: "Bruk"
       help: "Hjelp for redigering i Markdown"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
@@ -2501,6 +2505,8 @@ nb_NO:
       delete_image_button: Slett bilde
       toggle_image_grid: Veksle mellom bilderutenett
       link_toolbar:
+        link_copied: "Lenk kopiert!"
+      onebox_toolbar:
         link_copied: "Lenk kopiert!"
     notifications:
       tooltip:
@@ -2906,12 +2912,31 @@ nb_NO:
         name: "Slett"
       update_category:
         name: "Oppdater kategori"
+      convert_to_public_topic:
+        name: "Gjør emne offentlig"
+      convert_to_private_message:
+        name: "Gjør om til personlig melding"
       reset_bump_dates:
         name: "Tilbakestill støtdatoer"
       defer:
         name: "Merk ulest"
       update_notifications:
         name: "Oppdater varsler"
+    nested_replies:
+      sort:
+        label: "Sorter etter"
+        top: "Aktive"
+        new: "Ny"
+      load_more_children:
+        one: "%{count} svar til"
+        other: "%{count} svar til"
+      collapsed_replies:
+        one: "%{count} svar"
+        other: "%{count} svar"
+      collapse: "Fold sammen"
+      no_replies: "Ingen svar ennå."
+      deleted_post_placeholder: "[slettet]"
+      pinned_reply: "Fastsatt"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -3406,7 +3431,7 @@ nb_NO:
           edit: "Endre"
           delete: "Slett"
         post_language_selector:
-          none: "Ingen"
+          none: "Ikke angitt"
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
@@ -3463,8 +3488,6 @@ nb_NO:
           just_the_post: "Nei, kun dette innlegget"
         admin: "Innleggsadministrasjon"
         admin_action: "Admin"
-        permanently_delete: "Slett permanent"
-        permanently_delete_confirmation: "Er du sikker på at du vil slette dette innlegget permanent? Du vil ikke kunne gjenopprette det."
         wiki: "Opprett wiki"
         unwiki: "Fjern wiki"
         convert_to_moderator: "Legg til stabsfarge"
@@ -3601,6 +3624,7 @@ nb_NO:
       back: "Tilbake til kategori"
       general: "Generelt"
       settings: "Innstillinger"
+      moderation: "Moderering"
       topic_template: "Mal"
       tags: "Stikkord"
       localization:
@@ -4356,6 +4380,8 @@ nb_NO:
           admins: "Adminer"
           moderators: "Moderatorer"
           staff: "Stab"
+        impact_types:
+          other_type: "Annet"
         filter:
           all: "Alle"
           enabled: "Aktivert"
@@ -4419,6 +4445,11 @@ nb_NO:
           sub_pages:
             logs:
               title: "Logger"
+        problem_checks:
+          status: "Status"
+          ignore: "Ignorer"
+          more_options:
+            title: "Flere valg"
         reports:
           title: "Rapporter"
           sub_pages:
@@ -4485,7 +4516,7 @@ nb_NO:
         installed_version: "Installert"
         latest_version: "Siste"
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"
-        dismiss_notice: "Avslå"
+        dismiss_notice: "Ignorer"
         new_features:
           learn_more: "Finn ut mer..."
         last_checked: "Sist sjekket"

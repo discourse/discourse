@@ -3198,6 +3198,8 @@ cs:
         name_label: "Název obalení"
         attributes_label: "Atributy"
         add_attribute: "Přidat atribut"
+        attribute_key: "Klíč"
+        attribute_value: "Hodnota"
         remove_attribute: "Odstranit atribut"
         apply: "Použít"
         unwrap: "Rozbalit"
@@ -3286,6 +3288,9 @@ cs:
         copy: "Kopírovat odkaz"
         remove: "Odebrat odkaz"
         visit: "Otevřít odkaz na novém panelu"
+        link_copied: "Odkaz zkopírován!"
+      onebox_toolbar:
+        copy: "Kopírovat odkaz"
         link_copied: "Odkaz zkopírován!"
       unsupported_token: "Editor formátovaného textu nepodporuje všechny funkce použité v tomto příspěvku; přepínám vás na editor Markdown."
     notifications:
@@ -3799,12 +3804,35 @@ cs:
         name: "Smazat"
       update_category:
         name: "Aktualizovat kategorii"
+      convert_to_public_topic:
+        name: "Zveřejnit jako téma…"
+      convert_to_private_message:
+        name: "Konvertovat na soukromou zprávu"
       reset_bump_dates:
         name: "Resetovat data pošťouchnutí"
       defer:
         name: "Označit jako nepřečtené"
       update_notifications:
         name: "Aktualizovat upozornění"
+    nested_replies:
+      sort:
+        label: "Řadit podle"
+        top: "Nejlepší"
+        new: "Nový"
+      load_more_children:
+        one: "%{count} další odpověď"
+        few: "%{count} další odpověďi"
+        many: "%{count} dalších odpověďí"
+        other: "%{count} dalších odpověďí"
+      collapsed_replies:
+        one: "%{count} odpověď"
+        few: "%{count} odpovědí"
+        many: "%{count} odpovědí"
+        other: "%{count} odpovědí"
+      collapse: "Sbalit"
+      no_replies: "Zatím žádné odpovědi."
+      deleted_post_placeholder: "[smazáno]"
+      pinned_reply: "Připnuto"
     topic:
       filter_to:
         one: "%{count} příspěvek v tématu"
@@ -4396,6 +4424,12 @@ cs:
         few: "%{count} lidem se líbí tento příspěvek."
         many: "%{count} lidem se líbí tento příspěvek."
         other: "%{count} lidem se líbí tento příspěvek."
+      likes_popup:
+        title:
+          one: "%{count} líbí se"
+          few: "%{count} líbí se"
+          many: "%{count} líbí se"
+          other: "%{count} líbí se"
       sr_post_read_count_button:
         one: "Tento příspěvek si přečetla %{count} osoba."
         few: "Tento příspěvek si přečetly %{count} osoby."
@@ -4436,8 +4470,7 @@ cs:
           confirm_delete: "Opravdu chcete smazat překlady pro '%{languageCode}'?"
         success: "Překlady byly úspěšně aktualizovány"
         post_language_selector:
-          title: "Jazyk příspěvku"
-          none: "Žádná"
+          none: "Nenastaveno"
         edit_warning:
           message: "Tento příspěvek je přeložený.<br><br>Chcete upravit původní příspěvek v %{language} nebo upravit tento konkrétní překlad?"
           action_original: "Upravit původní příspěvek"
@@ -4464,6 +4497,7 @@ cs:
       cancel_composer:
         confirm: "Chcete svůj příspěvek zahodit?"
         discard: "Zahodit"
+        discard_edit: "Zahodit změny"
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
@@ -4510,8 +4544,8 @@ cs:
           just_the_post: "Ne, pouze tento příspěvek"
         admin: "Akce administrátora"
         admin_action: "Administrace"
-        permanently_delete: "Trvale smazat"
-        permanently_delete_confirmation: "Jste si jistý, že chcete tento příspěvek trvale smazat? Nebudete jej moci obnovit."
+        permanently_delete: "Trvale odstranit"
+        permanently_delete_confirm_phrase: "trvale odstranit"
         wiki: "Převést na wiki"
         unwiki: "Odstranit Wiki"
         convert_to_moderator: "Barevně zvýraznit"
@@ -4671,6 +4705,7 @@ cs:
       back: "Zpět na kategorii"
       general: "Obecné"
       settings: "Nastavení"
+      moderation: "Moderování"
       advanced: "Pokročilé"
       show_advanced: "Pokročilá nastavení"
       topic_template: "Šablona"
@@ -6052,6 +6087,9 @@ cs:
           staff: "Redakce"
           all_members: "Všichni členové"
           developers: "Vývojáři"
+        impact_types:
+          feature_type: "Funkce"
+          other_type: "Ostatní"
         filter:
           search_placeholder: "Filtrovat podle názvu, popisu nebo pluginu..."
           no_results: "Vašemu filtru neodpovídají žádné nadcházející změny."
@@ -6081,7 +6119,6 @@ cs:
           header_description: "Zde uveďte informace o tomto webu a svém týmu, aby se lidé dozvěděli, o čem je vaše komunita, kdo za ní stojí a jak vás kontaktovat v případě problému. Zobrazeno na stránce <a href='%{basePath}/about'>O tomto webu</a>."
         developer:
           title: "Vývojáři"
-          header_description: "Vývojářská nastavení pro kontrolu limitů, multiplikátorů a výpočtů, bezpečného režimu a dalších pokročilých funkcí"
         experimental:
           title: "Experimentální"
           header_description: "Zapněte nebo vypněte experimentální funkce pro svůj web, většinu z nich lze ovládat pomocí skupin"
@@ -6330,6 +6367,11 @@ cs:
             logs:
               title: "Protokoly"
               header_description: "Zobrazení a správa protokolů pro zálohování, obnovení záloh a nahrávání souborů"
+        problem_checks:
+          status: "Stav"
+          ignore: "ignorovat"
+          more_options:
+            title: "Více možností"
         reports:
           title: "Sestavy"
           header_description: "Sestavy jsou mocným nástrojem, který vám pomůže pochopit, co se děje na vašich stránkách. Mohou vám pomoci rozpoznat trendy, problémy a činit rozhodnutí na základě dat."
@@ -6508,11 +6550,10 @@ cs:
         installed_version: "Nainstalováno"
         latest_version: "Poslední verze"
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
-        dismiss_notice: "Označit jako přečtené"
+        dismiss_notice: "ignorovat"
         new_features:
           title: "Co je nového?"
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
-          no_new_features_error: "Při načítání zdroje došlo k chybě. Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>komunitě Discourse Meta</a>."
           learn_more: "Více informací..."
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"

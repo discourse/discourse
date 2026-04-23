@@ -25,6 +25,7 @@ ko:
       description_placeholder: "여기에 설명을 입력하세요"
       ai:
         generate: "API 키 생성"
+        optional: "선택 사항"
       import:
         label: "가져오기"
       help:

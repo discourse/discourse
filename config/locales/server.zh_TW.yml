@@ -201,7 +201,11 @@ zh_TW:
   not_in_group:
     join_group: "加入團隊"
   reading_time: "閱讀時間"
+  reading_time_minutes:
+    other: "%{count} 分鐘 🕑"
   likes: "個讚"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "我們非常抱歉，新使用者被臨時限制在同一個主題上，只能回覆 %{count} 次"
   max_consecutive_replies:

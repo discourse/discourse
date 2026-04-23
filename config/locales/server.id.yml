@@ -291,7 +291,11 @@ id:
   deleted_topic: "Ups! Topik ini telah dihapus dan tidak lagi tersedia."
   delete_topic_failed: "Terjadi kesalahan saat menghapus topik itu. Silakan hubungi administrator situs."
   reading_time: "Waktu bacaan"
+  reading_time_minutes:
+    other: "%{count} menit 🕑"
   likes: "Suka"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "Maaft, bagi pengguna baru sementara ini hanya dibatasi hingga %{count} jawaban dalam topik yang sama."
   max_consecutive_replies:

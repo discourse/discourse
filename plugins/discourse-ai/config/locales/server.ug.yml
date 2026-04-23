@@ -9,7 +9,7 @@ ug:
     overall_sentiment:
       yaxis: "چېسلا"
     emotion_neutral:
-      title: "\U0001F610 بىتەرەپ"
+      title: "😐 بىتەرەپ"
   discourse_ai:
     tools:
       presets:
@@ -125,7 +125,7 @@ ug:
     sentiment:
       reports:
         post_emotion:
-          neutral: "بىتەرەپ \U0001F610"
+          neutral: "بىتەرەپ 😐"
         sentiment_analysis:
           positive: "ئىجابىي"
           negative: "سەلبىي"

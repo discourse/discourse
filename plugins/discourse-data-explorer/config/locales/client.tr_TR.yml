@@ -29,15 +29,14 @@ tr_TR:
       create_placeholder: "Sorgu adı ..."
       description_placeholder: "Buraya bir açıklama girin"
       ai:
-        or_divider: "VEYA"
         description_title: "AI ile oluştur"
         description_hint: "Ne istediğinizi basit bir dille açıklayın. SQL sorgusunu, adı ve açıklamayı sizin için biz oluşturacağız."
         description_placeholder: "Örneğin: Zaman içindeki kayıtları göster"
         generate: "Oluştur"
-        generating_name: "Oluşturuluyor..."
         generating: "AI ile sorgu oluşturuluyor..."
         generation_timeout: "AI sorgu oluşturma işlemi zaman aşımına uğradı. SQL sorgusunu manuel olarak yazabilirsiniz."
         generation_error: "Sorgu oluşturulurken bir hata oluştu."
+        optional: "i̇steğe bağlı"
       import:
         label: "İçe Aktar"
         unparseable_json: "Ayrıştırılamayan JSON dosyası."

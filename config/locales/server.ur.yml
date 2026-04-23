@@ -303,7 +303,13 @@ ur:
   deleted_topic: "افوہ! یہ موضوع مٹا دیا گیا ہے اور اب دستیاب نہیں۔"
   delete_topic_failed: "اس موضوع کو مٹانے میں ایک خامی تھی۔ براہ کرم سائٹ کے منتظم سے رابطہ کریں۔"
   reading_time: "پڑھنے کیلئے وقت"
+  reading_time_minutes:
+    one: "%{count} منٹ 🕑"
+    other: "%{count} منٹ 🕑"
   likes: "پسندیدگیاں"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "ہم معذرت خواہ ہیں، لیکن نئے صارفین کو عارضی طور پر ایک ٹاپک میں %{count} جواب تک محدود کیا گیا ہے۔"
     other: "ہم معذرت خواہ ہیں، لیکن نئے صارفین کو عارضی طور پر ایک ٹاپک میں %{count} جوابات تک محدود کیا گیا ہے۔"
@@ -2030,7 +2036,6 @@ ur:
     errors: "%{errors}"
     not_available: "دستیاب نہیں۔ اِستعمال کریں %{suggestion}؟"
     something_already_taken: "کچھ غلط ہو گیا، شاید اسمِ صارف یا ای میل پہلے یہ سے رجسٹرڈ ہے۔ پاسورڈ بھول گیا والا لنک اِستعمال کر کے دیکھیں۔"
-    omniauth_confirm_title: "بذریعہ %{provider} لاگ اِن کریں۔"
     omniauth_confirm_button: "جاری رکھی"
     authenticator_error_no_valid_email: "%{account} سے وابستہ کسی ای میل پتہ کی اجازت نہیں ہے۔ آپ کو اپنے اکاؤنٹ کو کسی مختلف ای میل ایڈریس کے ساتھ ترتیب دینے کی ضرورت ہوسکتی ہے۔"
     new_registrations_disabled: "اِس وقت کسی بھی نئے اکاؤنٹ کی رجسٹریشن کی اجازت نہیں ہے۔"

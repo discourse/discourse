@@ -35,11 +35,6 @@ tr_TR:
   discourse_post_voting:
     reviewables:
       actions:
-        comment_actions:
-          bundle_title: "Yorumla ne yapmak istiyorsunuz?"
-        no_action_comment:
-          title: "Eylem yok"
-          description: "Yorumu olduğu gibi bırakın."
         agree_and_keep_comment:
           title: "Yorumu tut"
           description: "Bayrağı kabul edin ve yorumu değiştirmeyin."

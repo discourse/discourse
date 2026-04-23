@@ -29,15 +29,14 @@ ru:
       create_placeholder: "Имя запроса..."
       description_placeholder: "Введите описание"
       ai:
-        or_divider: "ИЛИ"
         description_title: "Генерация с помощью ИИ"
         description_hint: "Опишите свои потребности простым языком. Мы сгенерируем для вас SQL-запрос, название и описание."
         description_placeholder: "Например, показать мне количество регистраций за определенный период времени."
         generate: "Сгенерировать"
-        generating_name: "Генерация..."
         generating: "Генерация запросов с помощью ИИ..."
         generation_timeout: "Истекло время ожидания генерации запроса ИИ. Вы можете написать SQL-запрос вручную."
         generation_error: "При формировании запроса произошла ошибка."
+        optional: "необязательно"
       import:
         label: "Импорт"
         unparseable_json: "Невозможно распарсить JSON-файл."

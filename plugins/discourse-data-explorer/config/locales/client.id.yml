@@ -10,6 +10,8 @@ id:
       default_query: "Asal"
       or: "atau"
       create: "Buat"
+      ai:
+        optional: "opsional"
       help:
         label: "Bantuan"
       schema:

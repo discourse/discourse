@@ -295,7 +295,6 @@ he:
       retry_staged_message:
         title: "שגיאת רשת"
         action: "לשלוח שוב?"
-      unreliable_network: "הרשת אינה אמינה, ייתכן ששליחת הודעות ושמירת טיוטה לא תפעלנה"
       bookmark_message: "סימנייה"
       bookmark_message_edit: "עריכת סימנייה"
       restore: "שחזור הודעה שנמחקה"

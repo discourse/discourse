@@ -179,7 +179,13 @@ nb_NO:
   not_in_group:
     join_group: "Bli medlem av gruppe"
   reading_time: "Lesetid"
+  reading_time_minutes:
+    one: "%{count} minutt 🕑"
+    other: "%{count} minutter 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme tråden."
     other: "Vi beklager, men for nye brukere er det en midlertidig begrenset på %{count} svar i samme emne."

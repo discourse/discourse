@@ -12,6 +12,7 @@ gl:
       create: "Crear"
       ai:
         generate: "Xerar"
+        optional: "opcional"
       import:
         label: "Importar"
       help:

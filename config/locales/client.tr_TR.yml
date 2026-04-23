@@ -671,6 +671,8 @@ tr_TR:
       allow_access: "Erişime İzin Ver"
       continue_as_guest: "Misafir olarak devam et"
       be_first_to_reply: "İlk yanıtı siz verin!"
+      replying_to: "%{username}'e yanıt veriliyor"
+      reply_placeholder: "Yanıt yaz..."
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -2965,6 +2967,7 @@ tr_TR:
       title: "Veya %{modifier}Enter tuşuna basın"
       save_and_close: "Kaydet ve kapat"
       discard: "Kapat"
+      cancel_edit: "Düzenlemeyi iptal et"
       draft_saved: "Taslak kaydedildi!"
       users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
@@ -2984,6 +2987,7 @@ tr_TR:
       uploading: "Yükleniyor…"
       show_preview: "ön izlemeyi göster"
       hide_preview: "ön izlemeyi gizle"
+      resize: "Composer'ın boyutunu değiştir"
       switch_to_markdown: "Standart Markdown düzenleyicisine geçin (%{keyboardShortcut})"
       switch_to_rich_text: "Yeni zengin metin düzenleyicisine geçin (%{keyboardShortcut})"
       quote_post_title: "Tüm gönderiyi alıntıla"
@@ -3027,6 +3031,8 @@ tr_TR:
         name_label: "Sargı Adı"
         attributes_label: "Özellikler"
         add_attribute: "Öznitelik ekle"
+        attribute_key: "Anahtar"
+        attribute_value: "Değer"
         remove_attribute: "Özniteliği kaldır"
         apply: "Uygula"
         unwrap: "Paketi aç"
@@ -3116,6 +3122,13 @@ tr_TR:
         copy: "Bağlantıyı kopyala"
         remove: "Bağlantıyı kaldır"
         visit: "Bağlantıyı harici sekmede aç"
+        link_copied: "Bağlantı kopyalandı!"
+        load_preview: "Önizlemeyi yükle"
+        preview_failed: "Önizleme yüklenemedi"
+      onebox_toolbar:
+        copy: "Bağlantıyı kopyala"
+        visit: "Bağlantıyı aç"
+        remove_preview: "Önizlemeyi kaldır"
         link_copied: "Bağlantı kopyalandı!"
       unsupported_token: "Zengin metin düzenleyici bu yazıda kullanılan tüm özellikleri desteklemiyor; sizi Markdown düzenleyicisine yönlendiriyor."
     notifications:
@@ -3400,6 +3413,11 @@ tr_TR:
     not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
     current_user: "kullanıcı sayfanıza gidin"
     view_all: "tümünü görüntüle %{tab}"
+    permanently_delete:
+      title: "Bundan kesinlikle emin misin?"
+      confirm_instruction: "Onaylamak için lütfen aşağıya <b>%{phrase}</b> yazın:"
+      controls:
+        delete: "Sonuçlarının farkındayım, kalıcı olarak sil"
     user_menu:
       generic_no_items: "Bu listede öge yok."
       sr_menu_tabs: "Kullanıcı menüsü sekmeleri"
@@ -3460,6 +3478,8 @@ tr_TR:
         clear_all: "Tümünü Temizle"
         unlist_topics: "Konuları gizle"
         relist_topics: "Konuları yeniden listele"
+        pin_topics: "Bu konuları öne çıkarın"
+        unpin_topics: "Konuların Sabitlemesini Kaldır"
         reset_bump_dates: "Üste sıçratma tarihlerini sıfırla"
         defer: "Okunmamış olarak işaretle"
         delete: "Konuları sil"
@@ -3506,6 +3526,8 @@ tr_TR:
         archive_topics: "Konuları arşivle"
         move_messages_to_inbox: "Gelen kutusuna taşı"
         archive_messages: "Arşive taşı"
+        convert_to_public_topic: "Konuları herkese açık hale getir"
+        convert_to_private_message: "Kişisel mesajlar oluşturun"
         notification_level: "Bildirimleri güncelle"
         change_notification_level: "Bildirim Seviyesini Değiştir"
         choose_new_category: "Konular için yeni kategoriyi seç:"
@@ -3524,6 +3546,9 @@ tr_TR:
         confirm_remove_tags:
           one: "Bu konudan tüm etiketler kaldırılacak. Emin misiniz?"
           other: "%{count} konudan tüm etiketler kaldırılacak. Emin misiniz?"
+        confirm_unpin_topics:
+          one: "%{count} konuyu sabitlemekten vazgeç"
+          other: "%{count} konuyu sabitlemekten vazgeç"
         confirm_update_topics:
           one: "%{count} konuyu güncelle"
           other: "%{count} konuyu güncelle"
@@ -3619,6 +3644,12 @@ tr_TR:
       update_category:
         name: "Kategoriyi Güncelle"
         description: "Seçili tüm konuları aşağıdaki kategoriye taşı:"
+      convert_to_public_topic:
+        name: "Herkese Açık Konu yap…"
+        description: "Seçilen kişisel mesajları aşağıdaki kategorideki genel bir konuya taşıyın:"
+      convert_to_private_message:
+        name: "Kişisel Mesaj Yap"
+        description: "Seçilen genel konuları kişisel mesajlara dönüştür."
       reset_bump_dates:
         name: "Üste Sıçratma Tarihlerini sıfırla"
         description: "Gönderilerin öne çıkarılma tarihlerini en son oluşturulma tarihine göre güncellemek ister misiniz? Bu, konu listesindeki sıralamalarını etkileyebilir."
@@ -3627,6 +3658,49 @@ tr_TR:
       update_notifications:
         name: "Bildirimleri güncelle"
         description: "Seçilen konular için kişisel bildirim düzeyinizi şu şekilde güncelleyin:"
+      pin_topics:
+        name: "Sabitle"
+      unpin_topics:
+        name: "Sabitlemeyi kaldır"
+        description: "Bir kategoriye veya genel olarak sabitlenmiş olan tüm seçili konuların sabitlemesini kaldır"
+    nested_replies:
+      nested_view: "İç içe geçmiş görünüm"
+      flat_view: "Düz görünüm"
+      view_as_nested: "İç içe geçmiş olarak görüntüle"
+      view_as_flat: "Düz olarak görüntüle"
+      sort:
+        label: "Sıralama ölçütü"
+        top: "En iyi"
+        new: "Yeni"
+        old: "Eski"
+      load_more_children:
+        one: "%{count} yanıt daha"
+        other: "%{count} yanıt daha"
+      load_more_children_generic: "Daha fazla yanıt"
+      continue_thread: "Bu konuyu devam ettir"
+      new_replies:
+        one: "%{count} yeni yanıt"
+        other: "%{count} yeni yanıt"
+      collapsed_replies:
+        one: "%{count} yanıt"
+        other: "%{count} yanıt"
+      collapse: "Daralt"
+      collapse_parent: "Üst düzeydeki iş parçacığını daralt"
+      category_settings:
+        default_nested_view: "Bu kategorideki başlıklar için varsayılan olarak iç içe geçmiş görünümü kullan"
+      no_replies: "Henüz yanıt yok."
+      deleted_post_placeholder: "[silindi]"
+      op_badge: "OP"
+      pinned_reply: "Sabitlendi"
+      pin_reply: "En üste sabitle"
+      unpin_reply: "Sabitlemeyi kaldır"
+      topic_admin_menu:
+        enable_nested_replies: "İç içe geçmiş yanıtları etkinleştir"
+        disable_nested_replies: "İç içe geçmiş yanıtları devre dışı bırak"
+      context:
+        banner: "Bu konudan tek bir başlığı görüntülüyorsunuz."
+        view_full_topic: "Konunun tamamını görüntüle"
+        view_parent_context: "Üst bağlamı görüntüle"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -3760,6 +3834,7 @@ tr_TR:
         publish_to: "Şuraya Yayınla:"
         when: "Ne zaman:"
         time_frame_required: "Lütfen bir zaman aralığı seçin"
+        category_required: "Lütfen bir kategori seçin"
         min_duration: "Süre 0'dan büyük olmalıdır"
         max_duration: "Süre 20 yıldan az olmalıdır"
         duration: "Süre"
@@ -3941,6 +4016,12 @@ tr_TR:
         banner_note: "Kullanıcılar bu banner'ı kapatarak yok sayabilirler. Herhangi bir zamanda yalnızca bir konu banner yapılabilir."
         no_banner_exists: "Banner konusu yok."
         banner_exists: "Şu anda bir banner konusu <strong class='badge badge-notification unread'>var</strong>."
+      bulk_feature_topic:
+        pin: "Bu konuların, şu tarihe kadar ilgili kategorinin en üstünde görünmesini sağlayın"
+        pin_note: "Kullanıcılar, konuları kendileri için tek tek sabitlemekten vazgeçebilirler."
+        pin_globally: "Bu konular, şu tarihe kadar tüm konu listelerinin en üstünde görünsün"
+        pin_button: "Konuları sabitle"
+        pin_globally_button: "Konuları global olarak sabitle"
       inviting: "Davet Ediliyor…"
       automatically_add_to_groups: "Bu davet aynı zamanda şu gruplara erişim sağlar:"
       invite_private:
@@ -4158,6 +4239,10 @@ tr_TR:
       sr_post_like_count_button:
         one: "%{count} kişi bu gönderiyi beğendi."
         other: "%{count} kişi bu gönderiyi beğendi."
+      likes_popup:
+        title:
+          one: "%{count} beğeni"
+          other: "%{count} beğeni"
       sr_post_read_count_button:
         one: "%{count} kişi bu gönderiyi okudu."
         other: "%{count} kişi bu gönderiyi okudu."
@@ -4188,8 +4273,9 @@ tr_TR:
           confirm_delete: "\"%{languageCode}\" için çevirileri silmek istediğinizden emin misiniz?"
         success: "Çeviriler başarıyla güncellendi"
         post_language_selector:
-          title: "Gönderi Dili"
-          none: "Yok"
+          title: "Gönderinin dili"
+          header: "Bu gönderi… içindedir"
+          none: "Ayarlanmamış"
         edit_warning:
           message: "Bu, çevrilmiş bir gönderidir.<br><br>Orijinal gönderiyi %{language} dilinde mi düzenlemek istiyorsunuz, yoksa bu çeviriyi mi düzenlemek istiyorsunuz?"
           action_original: "Orijinal gönderiyi düzenle"
@@ -4213,7 +4299,9 @@ tr_TR:
         attachment_download_requires_login: "Üzgünüz, ekleri indirebilmek için giriş yapmanız gerekiyor."
       cancel_composer:
         confirm: "Gönderinizi silmek istiyor musunuz?"
+        confirm_edit: "Değişikliklerinizi silmek istiyor musunuz?"
         discard: "Kapat"
+        discard_edit: "Değişiklikleri sil"
       via_email: "bu gönderi e-posta yoluyla geldi"
       via_auto_generated_email: "bu gönderi otomatik olarak oluşturulmuş bir e-posta yoluyla geldi"
       whisper: "bu gönderi moderatörler için özel bir fısıltıdır"
@@ -4239,6 +4327,7 @@ tr_TR:
         delete: "bu gönderiyi sil"
         undelete_action: "Silinen gönderiyi geri al"
         undelete: "bu gönderiyi silme işlemini geri al"
+        view_deleted: "silinmiş gönderinin içeriğini görüntüle"
         share_action: "Paylaş"
         share: "bu gönderiye bir bağlantı paylaş"
         copy_action: "Bağlantıyı kopyala"
@@ -4256,14 +4345,20 @@ tr_TR:
           just_the_post: "Hayır, yalnızca bu gönderi"
         admin: "gönderi yönetici eylemleri"
         admin_action: "Yönetici"
-        permanently_delete: "Kalıcı Olarak Sil"
-        permanently_delete_confirmation: "Bu gönderiyi kalıcı olarak silmek istediğinizden emin misiniz? Gönderiyi geri kurtaramazsınız."
+        permanently_delete: "Kalıcı olarak sil"
+        permanently_delete_post_confirmation: "Bu işlem <b>geri alınamaz</b>. Bu işlem, <b>bu gönderiyi kalıcı olarak silecek</b> ve veritabanından kaldıracaktır."
+        permanently_delete_topic_confirmation: "Bu işlem <b>geri alınamaz</b>. Bu işlem, <b>bu konuyu kalıcı olarak silecek</b> ve veritabanından kaldıracaktır."
+        permanently_delete_confirm_phrase: "kalıcı olarak sil"
         wiki: "Wiki Yap"
+        wiki_description: "izin verilen grupların bu gönderiyi düzenlemesine izin ver"
         unwiki: "Wiki'yi Kaldır"
         convert_to_moderator: "Personel Rengi Ekle"
+        convert_to_moderator_description: "bu gönderinin içeriğini vurgulayın"
         revert_to_regular: "Personel Rengini Kaldır"
         rebake: "HTML'yi yeniden oluştur"
+        rebake_description: "Bu gönderiyi biçimlendirme veya gömülü öğeleri düzeltmek için yeniden düzenleyin"
         publish_page: "Sayfa Yayınlama"
+        publish_page_description: "bu konuyu ayrı bir sayfa olarak yayınla"
         unhide: "Göster"
         change_owner: "Sahipliğini değiştir…"
         grant_badge: "Rozet ver…"
@@ -4271,6 +4366,7 @@ tr_TR:
         lock_post_description: "gönderi sahibinin bu gönderiyi düzenlemesini engelle"
         unlock_post: "Gönderinin Kilidini Aç"
         unlock_post_description: "gönderi sahibinin bu gönderiyi düzenlemesine izin ver"
+        add_post_notice_description: "Bu gönderinin üstüne vurgulanan bir uyarı ekle"
         delete_topic_disallowed_modal: "Bu konuyu silme izniniz yok. Gerçekten silinmesini istiyorsanız gerekçesiyle birlikte moderatörün dikkatine bir bayrak ekleyin."
         delete_topic_disallowed: "bu konuyu silme izniniz yok"
         delete_topic_confirm_modal:
@@ -4405,6 +4501,7 @@ tr_TR:
       back: "Kategoriye dön"
       general: "Genel"
       settings: "Ayarlar"
+      moderation: "Moderasyon"
       advanced: "Gelişmiş"
       show_advanced: "Gelişmiş ayarlar"
       topic_template: "Şablon"
@@ -4551,11 +4648,15 @@ tr_TR:
       require_reply_approval: "Tüm yeni yanıtlar için moderatör onayı gerektir"
       require_topic_approval_for: "...için yeni başlıkların moderatör onayı gerektirir"
       require_reply_approval_for: "Şu durumlarda yeni yanıtların moderatör onayı gerektirsin..."
+      new_topic_approval: "Yeni konu onayı"
+      new_reply_approval: "Yeni yanıt onayı"
       posting_review_modes:
         no_one: "Hiç kimse"
         everyone: "Herkes"
         everyone_except: "Belirli gruplar hariç herkes"
         no_one_except: "Seçilmiş gruplar dışında kimse"
+      posting_review_groups_require_approval: "Onay gerektiren gruplar"
+      posting_review_groups_no_approval: "Onay gerektirmeyen gruplar"
       posting_review_groups_placeholder: "Grupları seçin..."
       this_year: "bu yıl"
       position: "Kategoriler sayfasındaki pozisyon:"
@@ -5728,6 +5829,8 @@ tr_TR:
         permanent_no_group_selection: "Yok, kalıcı değişiklikler tüm gruplar için geçerlidir."
         no_changes: "Şu anda yaklaşan bir değişiklik yoktur."
         preview: "Ön izle"
+        default_warning: "Bu ayarın varsayılan değeri, <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>yakında yapılacak bir değişiklik</a> nedeniyle %{oldDefaultValue}'den %{newDefaultValue}'ye değiştirilmiştir."
+        default_warning_short: "Bu ayarın varsayılan değeri değiştirildi; bu konuyla ilgili daha fazla bilgiyi <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>yakında gelecek değişiklikler</a> sayfasında bulabilirsiniz."
         enabled_for_options:
           no_one: "Hiç kimse"
           everyone: "Herkes"
@@ -5753,6 +5856,10 @@ tr_TR:
           staff: "Personel"
           all_members: "Tüm Üyeler"
           developers: "Geliştiriciler"
+        impact_types:
+          feature_type: "Özellik"
+          other_type: "Diğer"
+          site_setting_default_type: "Varsayılan ayar"
         filter:
           search_placeholder: "Ad, açıklama veya eklentiye göre filtrele..."
           no_results: "Yaklaşan değişiklikler filtrelerinize uymuyor"
@@ -5765,6 +5872,7 @@ tr_TR:
           impact_type_all: "Tüm darbe türleri"
           impact_type_feature: "Özellik"
           impact_type_other: "Diğer"
+          impact_type_site_setting_default: "Varsayılan ayar"
           status_all: "Tüm durumlar"
           status_conceptual: "Kavramsal"
           status_experimental: "Deneysel"
@@ -5784,7 +5892,7 @@ tr_TR:
           header_description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href='%{basePath}/about'>Hakkında sayfasında</a> gösterilir."
         developer:
           title: "Geliştirici"
-          header_description: "Hız limitlerini, çarpanları ve hesaplamaları, güvenli modu ve diğer gelişmiş özellikleri kontrol etmek için geliştirici ayarları"
+          header_description: "Güvenli modu ve diğer gelişmiş özellikleri yönetmek için geliştirici ayarları"
         experimental:
           title: "Deneysel"
           header_description: "Siteniz için deneysel özellikleri açın veya kapatın, bunların çoğu grup bazında kontrol edilebilir"
@@ -6032,6 +6140,13 @@ tr_TR:
             logs:
               title: "Günlükler"
               header_description: "Yedeklemeler, geri yüklemeler ve yüklemeler için günlükleri görüntüleme ve yönetme"
+        problem_checks:
+          priority: "Öncelik"
+          status: "Durum"
+          last_run_at: "Son çalıştırma"
+          ignore: "Yok say"
+          more_options:
+            title: "Daha fazla seçenek"
         reports:
           title: "Raporlar"
           header_description: "Raporlar, sitenizde neler olup bittiğini anlamanıza yardımcı olacak güçlü bir araçtır. Eğilimleri belirlemenize, sorunları tespit etmenize ve verilere dayalı kararlar almanıza yardımcı olabilirler."
@@ -6211,12 +6326,12 @@ tr_TR:
         installed_version: "Yüklendi"
         latest_version: "En son"
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
-        dismiss_notice: "Kapat"
+        dismiss_notice: "Yok say"
         new_features:
           title: "Yenilikler"
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
-          no_new_features_found: "Feed'de hiçbir öğe bulunmuyor veya seçtiğiniz filtre hiçbir sonuç vermedi. Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta topluluğunda</a> görebilirsiniz."
-          no_new_features_error: "Feed yüklenirken bir hata oluştu. Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta topluluğunda</a> görebilirsiniz."
+          no_new_features_found: "Akışta hiçbir öğe bulunmuyor veya seçtiğiniz filtreye göre sonuç bulunamadı. Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Sürümleri sitesinde</a> görebilirsiniz."
+          no_new_features_error: "Besleme yüklenirken bir hata oluştu. Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Sürümleri sitesinde</a> görebilirsiniz."
           learn_more: "Daha fazla bilgi edinin..."
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
@@ -7231,7 +7346,7 @@ tr_TR:
             button: "Kaynağı değiştir"
             title: "Tema Kaynağını Değiştir"
             repository_url: "Depo URL'si"
-            branch: "Dal (isteğe bağlı)"
+            branch: "Dal"
             updating: "Tema kaynağı güncelleniyor…"
             update: "Kaynağı güncelle"
             has_existing_key: "Bu temada önceden yapılandırılmış bir SSH anahtarı bulunmaktadır."
@@ -8387,6 +8502,7 @@ tr_TR:
           groups: "Gruplar"
           dashboard: "Pano"
           navigation: "Navigasyon"
+          nested_replies: "İç içe geçmiş yanıtlar"
           experimental: "Deneysel"
         secret_list:
           invalid_input: "Girdi alanları boş olamaz veya dikey çubuk karakteri içeremez."
@@ -8429,6 +8545,8 @@ tr_TR:
           clean_up_inactive_users_after_days:
             prompt: "Bu değeri 0 dışında bir değere ayarlamak, o kadar gün boyunca aktif olmayan kullanıcıların kalıcı olarak silinmesine neden olacaktır. Devam etmek istediğinizden emin misiniz?"
             confirm: "Evet, bu değeri 0 olarak ayarlamadığım sürece, aktif olmayan kullanıcıların kalıcı olarak silineceğini anlıyorum."
+          can_permanently_delete:
+            prompt: "Bu seçeneği etkinleştirdiğinizde, yöneticiler gönderileri, konuları ve gönderi revizyonlarını kalıcı olarak silebilir. Kalıcı olarak silinen veriler geri getirilemez. Bu durum veri bütünlüğünü etkileyebilir ve mevcut bağlantıların bozulmasına neden olabilir."
         job_status:
           completed: "Güncelleme tamamlandı"
           enqueued: "Güncelleme devam ediyor"

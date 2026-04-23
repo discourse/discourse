@@ -11,4 +11,4 @@ hr:
         draft: "Skica"
         open: "Otvori"
         approved: "Odobrio/la"
-        closed: "\U0001F510"
+        closed: "🔐"
