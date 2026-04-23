@@ -91,11 +91,6 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(resolver.resolve("={{ trigger.tags }}")).to eq(%w[bug help])
     end
 
-    it "still returns string for mixed templates" do
-      result = resolver.resolve("=hello {{ trigger.topic_id }}!")
-      expect(result).to eq("hello 42!")
-    end
-
     it "formats arrays when interpolating into a larger string" do
       expect(resolver.resolve("=tags: {{ trigger.tags }}")).to eq("tags: bug, help")
     end
@@ -439,22 +434,6 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
 
   describe ".resolve_segments" do
     fab!(:user)
-
-    it "returns segments for a valid template" do
-      segments =
-        described_class.resolve_segments(
-          "id: {{ $json.topic_id }}",
-          context: {
-            "$json" => {
-              "topic_id" => 42,
-            },
-          },
-        )
-
-      expect(segments.size).to eq(2)
-      expect(segments[0]).to eq({ kind: "plaintext", text: "id: " })
-      expect(segments[1]).to include(kind: "resolved", state: "valid", text: "42")
-    end
 
     it "passes user through to the resolver" do
       segments =

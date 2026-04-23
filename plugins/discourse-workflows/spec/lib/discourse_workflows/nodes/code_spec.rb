@@ -220,10 +220,21 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
       expect(result.first["json"]["data"]).to eq("visible")
     end
 
-    it "processes multiple items without creating a sandbox per item" do
+    it "uses a single sandbox for all input items" do
       items = (1..5).map { |i| { "json" => { "x" => i } } }
-      result = execute_code("return { val: $json.x * 2 };", items: items)
+      action = described_class.new(configuration: { "code" => "return { val: $json.x * 2 };" })
+      exec_ctx = build_exec_ctx(items)
+      sandbox_calls = 0
+      original_with_sandbox = exec_ctx.method(:with_sandbox)
 
+      exec_ctx.define_singleton_method(:with_sandbox) do |*args, **kwargs, &block|
+        sandbox_calls += 1
+        original_with_sandbox.call(*args, **kwargs, &block)
+      end
+
+      result = action.execute(exec_ctx)[0]
+
+      expect(sandbox_calls).to eq(1)
       expect(result.map { |r| r["json"]["val"] }).to eq([2, 4, 6, 8, 10])
     end
 
