@@ -20,6 +20,24 @@ RSpec.describe WebArtifactKeyValuesController do
       expect(json["key_values"].length).to eq(1)
       expect(json["key_values"][0]["key"]).to eq(kv.key)
     end
+
+    it "returns 404 for non-public artifact when user cannot see the post" do
+      pm_topic = Fabricate(:private_message_topic, user: admin)
+      pm_post = Fabricate(:post, topic: pm_topic, user: admin)
+      private_artifact = Fabricate(:web_artifact, post: pm_post, user: admin)
+
+      sign_in(user)
+      get "/web-artifact-key-values/#{private_artifact.id}.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for orphaned non-public artifact (null post_id)" do
+      orphan = Fabricate(:web_artifact, post: nil, user: admin)
+
+      sign_in(user)
+      get "/web-artifact-key-values/#{orphan.id}.json"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "#set" do

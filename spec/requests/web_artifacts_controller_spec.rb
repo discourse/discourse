@@ -28,6 +28,14 @@ RSpec.describe WebArtifactsController do
       expect(response.status).to eq(404)
     end
 
+    it "returns 404 for orphaned non-public artifact (null post_id)" do
+      orphan = Fabricate(:web_artifact, user: user, post: nil)
+      other_user = Fabricate(:user)
+      sign_in(other_user)
+      get "/w/#{orphan.id}"
+      expect(response.status).to eq(404)
+    end
+
     it "shows artifact when user can see the post" do
       sign_in(user)
       get "/w/#{artifact.id}"
