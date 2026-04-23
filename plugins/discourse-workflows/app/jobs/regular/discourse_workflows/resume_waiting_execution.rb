@@ -15,14 +15,10 @@ module Jobs
         return if execution.nil?
         return if execution.waiting_until.present? && execution.waiting_until > Time.current
 
-        config = execution.waiting_config || {}
-        timeout_action = config["timeout_action"]
-
-        if timeout_action == "fail"
+        if execution.timeout_action == "fail"
           execution.fail_with_timeout!
         else
-          response_items = config["timeout_response_items"] || execution.waiting_step_input_items
-          ::DiscourseWorkflows::Executor.resume(execution, response_items)
+          ::DiscourseWorkflows::Executor.resume(execution, execution.waiting_step_input_items)
         end
       end
     end

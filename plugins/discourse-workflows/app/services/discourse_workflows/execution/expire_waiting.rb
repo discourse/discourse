@@ -18,14 +18,10 @@ module DiscourseWorkflows
     end
 
     def expire_execution(expired_execution:)
-      config = expired_execution.waiting_config || {}
-      timeout_action = config["timeout_action"]
-
-      if timeout_action == "fail"
+      if expired_execution.timeout_action == "fail"
         expired_execution.fail_with_timeout!
       else
-        response_items =
-          config["timeout_response_items"] || expired_execution.waiting_step_input_items
+        response_items = expired_execution.waiting_step_input_items
         Executor.resume(expired_execution, response_items)
       end
     end

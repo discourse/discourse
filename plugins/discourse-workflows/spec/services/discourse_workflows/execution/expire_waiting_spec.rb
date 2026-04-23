@@ -6,12 +6,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
 
     fab!(:user)
 
-    def create_waiting_execution(
-      timeout_minutes: nil,
-      timeout_action: nil,
-      timeout_response_items: nil,
-      limit_wait_time: true
-    )
+    def create_waiting_execution(timeout_minutes: nil, timeout_action: nil, limit_wait_time: true)
       configuration = { "resume" => "webhook", "limit_wait_time" => limit_wait_time }
       if limit_wait_time
         configuration["timeout_amount"] = timeout_minutes
@@ -27,10 +22,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
 
       execution = DiscourseWorkflows::Executor.new(workflow, "trigger-1", {}).run
-      extras = {}
-      extras["timeout_action"] = timeout_action if timeout_action
-      extras["timeout_response_items"] = timeout_response_items if timeout_response_items
-      execution.update!(waiting_config: execution.waiting_config.merge(extras))
+      execution.update!(timeout_action: timeout_action) if timeout_action
       execution
     end
 
@@ -60,28 +52,6 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
       end
     end
 
-    context "when timeout_action is deny" do
-      it "resumes the expired execution with timeout_response_items" do
-        freeze_time
-
-        execution =
-          create_waiting_execution(
-            timeout_minutes: 30,
-            timeout_action: "deny",
-            timeout_response_items: [{ "json" => { "approved" => false, "timed_out" => true } }],
-          )
-        expect(execution.status).to eq("waiting")
-
-        freeze_time(31.minutes.from_now)
-        result
-
-        execution.reload
-        expect(execution.status).to eq("success")
-        expect(execution.execution_data.context_data["Wait"].first["json"]["approved"]).to be(false)
-        expect(execution.execution_data.context_data["Wait"].first["json"]["timed_out"]).to be(true)
-      end
-    end
-
     context "when wait_type is timer" do
       it "handles expired timer waits with the generic timeout logic" do
         freeze_time
@@ -92,10 +62,7 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
             status: :waiting,
             waiting_until: 1.minute.ago,
             waiting_node_id: "wait-1",
-            waiting_config: {
-              "wait_type" => "timer",
-              "timeout_action" => "fail",
-            },
+            timeout_action: "fail",
           )
 
         result
