@@ -338,11 +338,16 @@ class PostRevisionSerializer < ApplicationSerializer
 
     target = Post.where(topic_id: topic.id, post_number: post_number).first
     info = { post_number: post_number }
-    if target&.user
+
+    # Only enrich with the target's author if the current viewer can see
+    # that post. Deleted posts, whispers, and posts in restricted
+    # categories must not leak their author through the revision history.
+    if target && scope.can_see?(target) && target.user
       info[:username] = target.user.username_lower
       info[:display_username] = target.user.username
       info[:avatar_template] = target.user.avatar_template
     end
+
     info
   end
 end

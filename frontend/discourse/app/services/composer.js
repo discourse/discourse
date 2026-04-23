@@ -564,7 +564,7 @@ export default class ComposerService extends Service {
         })
       );
 
-      if (this.canAddReplyToTarget) {
+      if (this.canOpenReplyToModal) {
         options.push(
           this._setupPopupMenuOption({
             name: "change-reply-to",
@@ -597,14 +597,14 @@ export default class ComposerService extends Service {
     }
   }
 
-  get canAddReplyToTarget() {
+  // Exposed via the composer toolbar popup as a fallback entry point for
+  // the reply-target picker. Needed in contexts where the reply indicator
+  // isn't rendered next to the title (mobile) or is suppressed (e.g.
+  // `suppress_reply_when_quoting`), regardless of whether a target already
+  // exists.
+  get canOpenReplyToModal() {
     const model = this.model;
-    return (
-      model?.action === EDIT &&
-      !!model?.post?.can_edit &&
-      !!model?.topic &&
-      !model?.reply_to_post_number
-    );
+    return model?.action === EDIT && !!model?.post?.can_edit && !!model?.topic;
   }
 
   @action

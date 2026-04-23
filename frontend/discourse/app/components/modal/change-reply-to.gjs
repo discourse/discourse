@@ -68,19 +68,32 @@ export default class ChangeReplyTo extends Component {
     }
   }
 
-  async captureSelectionForIndex(streamIndex) {
+  async captureSelectionForIndex(timelineIndex) {
     const postStream = this.topic?.postStream;
-    if (!postStream) {
+    if (!postStream || !timelineIndex) {
       return;
     }
-    const postId = postStream.stream[streamIndex - 1];
-    if (!postId) {
-      return;
-    }
+
     try {
-      let post = postStream.findLoadedPost(postId);
+      let post;
+      if (postStream.isMegaTopic) {
+        // On mega topics the timeline's `current` / jump callbacks are
+        // post numbers, not stream positions — see `filteredPostsCount`.
+        post =
+          postStream.postForPostNumber(timelineIndex) ||
+          (await postStream.loadPostByPostNumber(timelineIndex));
+      } else {
+        const postId = postStream.stream[timelineIndex - 1];
+        if (!postId) {
+          return;
+        }
+        post =
+          postStream.findLoadedPost(postId) ||
+          (await postStream.loadPost(postId));
+      }
+
       if (!post) {
-        post = await postStream.loadPost(postId);
+        return;
       }
       if (post.post_number >= this.editingPostNumber) {
         this.flash = i18n("composer.change_reply_to.invalid_target");
