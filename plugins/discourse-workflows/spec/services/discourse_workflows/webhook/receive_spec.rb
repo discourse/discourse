@@ -46,29 +46,40 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
     context "when resuming a waiting execution" do
       let(:resume_token) { "my-hook" }
-      let(:webhook_suffix) { nil }
+      let(:webhook_suffix) { "" }
+      let(:response_mode) { "immediately" }
+      let(:response_code) { "200" }
+      let(:wait_http_method) { "POST" }
 
-      fab!(:waiting_execution) do
-        Fabricate(
-          :discourse_workflows_execution,
-          workflow: workflow,
-          status: :waiting,
-          trigger_node_id: "webhook-1",
-          waiting_node_id: "wait-1",
-          waiting_config: {
-            "resume_token" => "my-hook",
-            "wait_type" => "webhook",
-            "http_method" => "POST",
-            "response_mode" => "immediately",
-          },
-        )
+      let(:waiting_workflow) do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
+            g.node "wait-1",
+                   "flow:wait",
+                   configuration: {
+                     "resume" => "webhook",
+                     "http_method" => wait_http_method,
+                     "response_mode" => response_mode,
+                     "response_code" => response_code,
+                     "webhook_suffix" => webhook_suffix,
+                   }
+            g.chain "trigger-1", "wait-1"
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: admin, enabled: true, **graph)
+      end
+
+      let(:waiting_execution) do
+        execution = DiscourseWorkflows::Executor.new(waiting_workflow, "trigger-1", {}).run
+        execution.update!(resume_token: resume_token)
+        execution
       end
 
       let(:params) do
         {
           execution_id: waiting_execution.id,
           token: resume_token,
-          webhook_suffix: webhook_suffix.to_s,
+          webhook_suffix: webhook_suffix,
           http_method: "POST",
           body: {
             "foo" => "bar",
@@ -80,13 +91,6 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
             "source" => "test",
           },
         }
-      end
-
-      before do
-        waiting_execution.update!(
-          waiting_config:
-            waiting_execution.waiting_config.merge("webhook_suffix" => webhook_suffix).compact,
-        )
       end
 
       context "when HTTP method does not match waiting execution" do
@@ -133,20 +137,12 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
       end
 
       context "when response mode is synchronous" do
+        let(:response_mode) { "when_last_node_finishes" }
+        let(:response_code) { "200" }
+
         fab!(:resumed_execution) { Fabricate(:discourse_workflows_execution, workflow: workflow) }
 
-        before do
-          waiting_execution.update!(
-            waiting_config: {
-              "resume_token" => "my-hook",
-              "wait_type" => "webhook",
-              "http_method" => "POST",
-              "response_mode" => "when_last_node_finishes",
-              "response_code" => "200",
-            },
-          )
-          DiscourseWorkflows::Executor.stubs(:resume).returns(resumed_execution)
-        end
+        before { DiscourseWorkflows::Executor.stubs(:resume).returns(resumed_execution) }
 
         it { is_expected.to run_successfully }
 

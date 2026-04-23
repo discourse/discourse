@@ -80,15 +80,20 @@ module DiscourseWorkflows
       return nil if params.execution_id.blank? || params.token.blank?
 
       execution =
-        DiscourseWorkflows::Execution.where(status: :waiting).find_by(id: params.execution_id)
+        DiscourseWorkflows::Execution
+          .where(status: :waiting)
+          .where(resume_token: params.token)
+          .find_by(id: params.execution_id)
       return nil unless execution
+      unless ActiveSupport::SecurityUtils.secure_compare(execution.resume_token, params.token)
+        return nil
+      end
 
-      stored_token = execution.waiting_config&.dig("resume_token")
-      return nil if stored_token.blank?
-      return nil unless ActiveSupport::SecurityUtils.secure_compare(stored_token, params.token)
+      waiting_node = execution.workflow.find_node(execution.waiting_node_id)
+      return nil unless waiting_node
 
       suffix = params.webhook_suffix.to_s
-      stored_suffix = (execution.waiting_config&.dig("webhook_suffix") || "").to_s
+      stored_suffix = waiting_node.dig("configuration", "webhook_suffix").to_s
       return nil unless suffix == stored_suffix
 
       execution.lock!("FOR UPDATE SKIP LOCKED")
@@ -104,15 +109,16 @@ module DiscourseWorkflows
     end
 
     def validate_waiting_http_method(waiting_execution:, params:)
-      unless waiting_execution.waiting_config["http_method"] == params.http_method
+      node = waiting_execution.workflow.find_node(waiting_execution.waiting_node_id)
+      unless node&.dig("configuration", "http_method") == params.http_method
         fail!("HTTP method mismatch")
       end
     end
 
     def async_resume?(waiting_execution:)
+      node = waiting_execution.workflow.find_node(waiting_execution.waiting_node_id)
       response_mode =
-        waiting_execution.waiting_config["response_mode"] ||
-          Schemas::Webhook::RESPONSE_MODE_IMMEDIATELY
+        node&.dig("configuration", "response_mode") || Schemas::Webhook::RESPONSE_MODE_IMMEDIATELY
       response_mode == Schemas::Webhook::RESPONSE_MODE_IMMEDIATELY
     end
 
@@ -129,7 +135,8 @@ module DiscourseWorkflows
     end
 
     def resume_execution_synchronously(waiting_execution:, params:)
-      config = waiting_execution.waiting_config
+      node = waiting_execution.workflow.find_node(waiting_execution.waiting_node_id)
+      config = node&.dig("configuration") || {}
 
       context[:sync_execution] = DiscourseWorkflows::Executor.resume(
         waiting_execution,
