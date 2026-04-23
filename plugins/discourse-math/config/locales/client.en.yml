@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_math: "Discourse Math"
   js:
     discourse_math:
       edit_math: "Edit math"

@@ -1,8 +1,9 @@
 en:
   admin_js:
-    site_settings:
-      categories:
-        post_voting: Post Voting
+    admin:
+      site_settings:
+        categories:
+          discourse_post_voting: "Discourse Post Voting"
   post_voting:
     reviewables:
       comment_already_handled: "Thanks, but we've already reviewed this comment and determined it does not need to be flagged again."
