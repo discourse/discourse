@@ -1,5 +1,6 @@
 import { trackedMap } from "@ember/reactive/collections";
 import Service from "@ember/service";
+import { isSettingValueTrue } from "discourse/admin/models/site-setting";
 
 function normalize(value) {
   return (value ?? "").toLowerCase().replace(/_/g, " ").trim();
@@ -20,13 +21,13 @@ export default class SiteSettingStore extends Service {
   byName = trackedMap();
 
   register(settings) {
-    settings.forEach((s) => this.byName.set(s.setting, s));
+    settings.forEach((setting) => {
+      this.byName.set(setting.setting, setting);
 
-    settings.forEach((s) => {
-      if (s.depends_behavior === "hidden" && s.depends_on?.length) {
-        s.revealed = s.depends_on.every((name) => {
+      if (setting.depends_behavior === "hidden" && setting.depends_on?.length) {
+        setting.revealed = setting.depends_on.every((name) => {
           const parent = this.byName.get(name);
-          return parent ? String(parent.value) === "true" : true;
+          return parent ? isSettingValueTrue(parent.value) : true;
         });
       }
     });
@@ -37,9 +38,12 @@ export default class SiteSettingStore extends Service {
   }
 
   reveal(name) {
-    this.byName.forEach((s) => {
-      if (s.depends_behavior === "hidden" && s.depends_on?.includes(name)) {
-        s.revealed = true;
+    this.byName.forEach((setting) => {
+      if (
+        setting.depends_behavior === "hidden" &&
+        setting.depends_on?.includes(name)
+      ) {
+        setting.revealed = true;
       }
     });
   }

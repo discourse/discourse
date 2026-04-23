@@ -13,7 +13,9 @@ import { isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
-import SiteSetting from "discourse/admin/models/site-setting";
+import SiteSetting, {
+  isSettingValueTrue,
+} from "discourse/admin/models/site-setting";
 import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -376,7 +378,7 @@ export default class SiteSettingComponent extends Component {
     return (
       this.setting.depends_on?.some((name) => {
         const parent = this.siteSettingStore.get(name);
-        return parent && String(parent.buffered.get("value")) !== "true";
+        return parent && !isSettingValueTrue(parent.buffered.get("value"));
       }) ?? false
     );
   }
@@ -450,7 +452,7 @@ export default class SiteSettingComponent extends Component {
   @action
   changeValueCallback(value) {
     this.buffered.set("value", value);
-    if (String(value) === "true") {
+    if (isSettingValueTrue(value)) {
       this.siteSettingStore.reveal(this.setting.setting);
     }
   }
@@ -470,7 +472,7 @@ export default class SiteSettingComponent extends Component {
   resetDefault() {
     this.buffered.set("value", this.setting.default);
     this.setting.validationMessage = null;
-    if (String(this.setting.default) === "true") {
+    if (isSettingValueTrue(this.setting.default)) {
       this.siteSettingStore.reveal(this.setting.setting);
     }
   }

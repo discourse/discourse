@@ -11,7 +11,7 @@ export default class AdminSiteSettingsCategoryController extends Controller {
   @dependentKeyCompat
   get filteredSiteSettings() {
     const filter = this.adminSiteSettings.activeFilter;
-    return this.model?.filter((s) => isSettingVisible(s, filter));
+    return this.model?.filter((setting) => isSettingVisible(setting, filter));
   }
 
   set filteredSiteSettings(value) {

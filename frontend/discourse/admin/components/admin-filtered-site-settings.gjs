@@ -30,8 +30,8 @@ export default class AdminFilteredSiteSettings extends Component {
   }
 
   get visibleSettings() {
-    return this.matchedSettings?.filter((s) =>
-      isSettingVisible(s, this.activeFilter)
+    return this.matchedSettings?.filter((setting) =>
+      isSettingVisible(setting, this.activeFilter)
     );
   }
 
