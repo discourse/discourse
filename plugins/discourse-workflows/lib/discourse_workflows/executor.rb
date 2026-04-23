@@ -307,13 +307,7 @@ module DiscourseWorkflows
       resolved = waiting_until.blank? ? ceiling : [waiting_until, ceiling].min
 
       execution =
-        @store.pause_waiting_execution!(
-          node: @waiting_node,
-          waiting_until: resolved,
-          waiting_config: {
-          },
-          steps: @steps,
-        )
+        @store.pause_waiting_execution!(node: @waiting_node, waiting_until: resolved, steps: @steps)
 
       duration = [resolved - now, 0].max
       Jobs.enqueue_in(

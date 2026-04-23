@@ -7,30 +7,6 @@ module DiscourseWorkflows
 
       MAX_EXECUTION_DATA_SIZE = 5.megabytes
 
-      def self.create_waiting_for_trigger(workflow:, trigger_node_id:)
-        resume_token = SecureRandom.uuid
-
-        execution =
-          DiscourseWorkflows::Execution.create!(
-            workflow: workflow,
-            trigger_node_id: trigger_node_id.to_s,
-            status: :waiting,
-            trigger_data: {
-            },
-            execution_mode: :normal,
-            started_at: Time.current,
-            waiting_node_id: trigger_node_id.to_s,
-            waiting_until: 1.hour.from_now,
-            waiting_config: {
-              "wait_type" => "form_trigger",
-              "resume_token" => resume_token,
-              "timeout_action" => "fail",
-            },
-          )
-
-        [execution, resume_token]
-      end
-
       delegate :workflow, :trigger_data, to: :@execution_context
 
       attr_reader :trigger_node_id, :execution, :workflow_snapshot_data
@@ -96,12 +72,12 @@ module DiscourseWorkflows
         )
       end
 
-      def pause_waiting_execution!(node:, waiting_until: nil, waiting_config: {}, steps: [])
+      def pause_waiting_execution!(node:, waiting_until: nil, steps: [])
         execution.update!(
           status: :waiting,
           waiting_node_id: node.id,
           waiting_until: waiting_until,
-          waiting_config: base_waiting_config(steps).merge(waiting_config),
+          resume_token: @execution_context.resume_token,
         )
         save!(steps)
         execution
@@ -112,8 +88,8 @@ module DiscourseWorkflows
           status: :running,
           waiting_node_id: nil,
           waiting_until: nil,
-          waiting_config: {
-          },
+          resume_token: nil,
+          timeout_action: nil,
         )
       end
 
@@ -136,12 +112,11 @@ module DiscourseWorkflows
       end
 
       def restore_from!(execution_data)
-        config = execution.waiting_config || {}
         @workflow_snapshot_data =
           execution_data&.workflow_data.presence || WorkflowSnapshot.snapshot(workflow)
         @execution_context.restore!(
           context: execution_data&.context_data || {},
-          node_contexts: config.fetch("node_contexts") { {} },
+          node_contexts: execution_data&.node_contexts || {},
         )
       end
 
@@ -150,14 +125,25 @@ module DiscourseWorkflows
         context = @execution_context.context
 
         ed = execution.execution_data || execution.build_execution_data
-        json_data = { "entries" => entries, "context" => context }.to_json
+        json_data = {
+          "entries" => entries,
+          "context" => context,
+          "node_contexts" => @execution_context.node_contexts,
+        }.to_json
 
         if json_data.bytesize > MAX_EXECUTION_DATA_SIZE
           Rails.logger.warn(
             "discourse-workflows: execution data for execution #{execution.id} " \
               "exceeds #{MAX_EXECUTION_DATA_SIZE} bytes, truncating context",
           )
-          json_data = { "entries" => entries, "context" => { "__truncated" => true } }.to_json
+          json_data = {
+            "entries" => entries,
+            "context" => {
+              "__truncated" => true,
+            },
+            "node_contexts" => {
+            },
+          }.to_json
         end
 
         ed.update!(data: json_data, workflow_data: @workflow_snapshot_data)
@@ -165,10 +151,6 @@ module DiscourseWorkflows
 
       def steps_to_entries(steps)
         steps.group_by(&:node_id).transform_values { |node_steps| node_steps.map(&:to_h) }
-      end
-
-      def base_waiting_config(steps)
-        { "node_contexts" => @execution_context.node_contexts, "step_position" => steps.size }
       end
 
       def trigger_error_workflow(error, steps)

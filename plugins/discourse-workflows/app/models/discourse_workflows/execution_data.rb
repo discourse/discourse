@@ -25,6 +25,10 @@ module DiscourseWorkflows
       parsed_data["context"] || {}
     end
 
+    def node_contexts
+      parsed_data["node_contexts"] || {}
+    end
+
     def steps_array
       all_steps.sort_by { |s| s["position"] || 0 }
     end
