@@ -161,7 +161,7 @@ describe "Composer - ProseMirror - Oneboxing" do
     expect(composer).to have_value(markdown[0..-2])
   end
 
-  xit "creates inline oneboxes for repeated links in different paste events" do
+  it "creates inline oneboxes for repeated links in different paste events" do
     cdp.allow_clipboard
     open_composer
     composer.type_content("Hey ")
