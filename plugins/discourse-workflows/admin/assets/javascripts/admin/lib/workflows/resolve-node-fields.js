@@ -4,7 +4,7 @@ function formFieldKey(field) {
   if (field.field_name) {
     return field.field_name;
   }
-  return field.field_label
+  return (field.field_label ?? "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_|_$/g, "");

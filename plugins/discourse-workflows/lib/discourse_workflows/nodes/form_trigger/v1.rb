@@ -32,14 +32,13 @@ module DiscourseWorkflows
           {
             url_preview: {
               type: :custom,
-              required: true,
+              required: false,
               ui: {
                 control: :url_preview,
               },
             },
             form_title: {
               type: :string,
-              required: true,
             },
             form_description: {
               type: :string,

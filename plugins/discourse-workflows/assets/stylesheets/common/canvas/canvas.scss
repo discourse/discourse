@@ -273,6 +273,48 @@
     }
   }
 
+  &__issues-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--highlight-high);
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    padding: 0;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+    cursor: pointer;
+
+    .d-icon {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  &__issues-list {
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-down-2);
+    list-style: none;
+    max-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+
+    li {
+      margin: 0;
+      color: var(--primary);
+      word-break: break-word;
+      font-family: var(--d-font-family--monospace);
+    }
+  }
+
   &__label {
     margin-top: var(--space-1);
     font-size: var(--font-down-3);

@@ -130,6 +130,9 @@ module DiscourseWorkflows
         return handle_unavailable_node(node, node_type_class, input_items)
       end
 
+      issues = NodeIssues.for_node(node, node_type_class)
+      return handle_node_issues(node, input_items, issues) if issues.any?
+
       step = record_step(node, input_items)
       node_context = @context.node_context_for(node)
       resolver_ctx = build_resolver_context(node, input_items, node_context)
@@ -215,6 +218,14 @@ module DiscourseWorkflows
         "discourse-workflows: node type '#{node.type}' is unavailable " \
           "in workflow #{@context.workflow.id}, passing through node '#{node.name}'",
       )
+      step = record_step(node, input_items)
+      step.skip!(output: input_items, reason: reason)
+      @context.store_node_output(node, input_items)
+      enqueue_downstream(node, "main", input_items)
+    end
+
+    def handle_node_issues(node, input_items, issues)
+      reason = issues.map { |i| "#{i[:path]}: #{i[:message]}" }.join(", ")
       step = record_step(node, input_items)
       step.skip!(output: input_items, reason: reason)
       @context.store_node_output(node, input_items)

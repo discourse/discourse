@@ -510,6 +510,7 @@ en:
         total_time: "Total time:"
         export: "Export"
         error: "Error"
+        reason: "Reason"
         with_value: "with value"
         statuses:
           pending: "Pending"

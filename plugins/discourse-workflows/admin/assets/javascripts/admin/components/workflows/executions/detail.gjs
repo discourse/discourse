@@ -3,6 +3,7 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 function formatJson(data) {
@@ -137,7 +138,8 @@ export default class ExecutionDetail extends Component {
       }
 
       if (step.error) {
-        lines.push(`  Error: ${step.error}`);
+        const label = step.status === "skipped" ? "Reason" : "Error";
+        lines.push(`  ${label}: ${step.error}`);
       }
 
       lines.push("-".repeat(60));
@@ -276,9 +278,15 @@ export default class ExecutionDetail extends Component {
                 <pre>{{formatStepData step.output}}</pre>
               </details>
               {{#if step.error}}
-                <div class="workflows-execution-detail__step-error">
+                <div
+                  class="workflows-execution-detail__step-error --{{step.status}}"
+                >
                   <strong>{{i18n
-                      "discourse_workflows.executions.error"
+                      (if
+                        (eq step.status "skipped")
+                        "discourse_workflows.executions.reason"
+                        "discourse_workflows.executions.error"
+                      )
                     }}:</strong>
                   {{step.error}}
                 </div>

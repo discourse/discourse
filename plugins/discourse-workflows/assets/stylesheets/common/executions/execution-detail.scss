@@ -199,6 +199,11 @@
     color: var(--danger);
     padding: var(--space-2);
     border-radius: 0.25em;
+
+    &.--skipped {
+      background: var(--primary-low);
+      color: var(--primary-high);
+    }
   }
 
   &__footer {

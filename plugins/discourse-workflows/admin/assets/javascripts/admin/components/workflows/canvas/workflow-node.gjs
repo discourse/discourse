@@ -5,9 +5,11 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import getNodeIssues from "../../../lib/workflows/node-issues";
 import {
   nodeTypeIcon,
   nodeTypeIsManuallyTriggerable,
@@ -109,6 +111,14 @@ export default class WorkflowNode extends Component {
     );
   }
 
+  get issues() {
+    const nodeType = this.resolvedNodeType;
+    if (!nodeType || typeof nodeType === "string") {
+      return [];
+    }
+    return getNodeIssues(this.data.configuration, nodeType.property_schema);
+  }
+
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     <div
@@ -179,6 +189,25 @@ export default class WorkflowNode extends Component {
             <span class="workflow-rete-node__icon">
               {{icon (nodeTypeIcon this.resolvedNodeType)}}
             </span>
+          {{/if}}
+
+          {{#if this.issues.length}}
+            <DMenu
+              @identifier="workflow-node-issues"
+              class="workflow-rete-node__issues-badge"
+              {{on "pointerdown" this.stopPropagation}}
+            >
+              <:trigger>
+                {{icon "triangle-exclamation"}}
+              </:trigger>
+              <:content>
+                <ul class="workflow-rete-node__issues-list">
+                  {{#each this.issues as |issue|}}
+                    <li>{{issue.path}}</li>
+                  {{/each}}
+                </ul>
+              </:content>
+            </DMenu>
           {{/if}}
         </div>
 

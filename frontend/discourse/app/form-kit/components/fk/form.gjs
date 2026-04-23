@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
@@ -39,6 +40,8 @@ class FKForm extends Component {
   fields = new Map();
 
   formData = new FKFormData(this.args.data ?? {});
+
+  #pendingRegistrations = new Set();
 
   constructor() {
     super(...arguments);
@@ -229,7 +232,22 @@ class FKForm extends Component {
 
     this.fields.set(name, field);
 
+    if (this.fieldValidationEvent) {
+      this.#pendingRegistrations.add(field);
+      scheduleOnce("afterRender", this, this.validatePendingRegistrations);
+    }
+
     return field;
+  }
+
+  @action
+  async validatePendingRegistrations() {
+    if (this.#pendingRegistrations.size === 0) {
+      return;
+    }
+    const fields = [...this.#pendingRegistrations];
+    this.#pendingRegistrations.clear();
+    await this.validate(fields);
   }
 
   @action
