@@ -140,6 +140,13 @@ module DiscourseWorkflows
           build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
         result = node_type_class.new(configuration: node.configuration).execute(exec_ctx)
 
+        if exec_ctx.waiting?
+          step.mark_waiting!
+          @waiting_node = node
+          @waiting_step = step
+          raise WaitRequested, WaitForResume.new(waiting_until: exec_ctx.waiting_until)
+        end
+
         if result.is_a?(WaitForResume)
           step.mark_waiting!
           @waiting_node = node

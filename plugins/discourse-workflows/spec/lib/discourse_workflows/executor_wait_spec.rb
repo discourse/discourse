@@ -116,6 +116,72 @@ RSpec.describe DiscourseWorkflows::Executor do
         )
       end
     end
+
+    context "when a node signals via exec_ctx.put_execution_to_wait" do
+      let(:ctx_wait_node_class) do
+        Class.new(DiscourseWorkflows::NodeType) do
+          def self.identifier
+            "flow:ctx_wait"
+          end
+
+          def self.name
+            "DiscourseWorkflows::NodeTypes::CtxWaitTest"
+          end
+
+          def self.waits_for_resume?
+            true
+          end
+
+          def self.property_schema
+            {}
+          end
+
+          def execute(exec_ctx)
+            exec_ctx.put_execution_to_wait(1.hour.from_now)
+            [exec_ctx.input_items]
+          end
+        end
+      end
+
+      let(:plugin) do
+        p = Plugin::Instance.new
+        p.enabled_site_setting(:discourse_workflows_enabled)
+        p
+      end
+
+      before do
+        DiscoursePluginRegistry.register_discourse_workflows_node(ctx_wait_node_class, plugin)
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      after do
+        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |h|
+          h[:value] == ctx_wait_node_class
+        end
+        DiscourseWorkflows::Registry.reset_indexes!
+      end
+
+      it "pauses the execution and records the waiting node" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
+            g.node "wait-1", "flow:ctx_wait"
+            g.chain "trigger-1", "wait-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, enabled: true, **graph)
+
+        freeze_time do
+          execution = described_class.new(workflow, "trigger-1", {}).run
+
+          expect(execution).to have_attributes(
+            status: "waiting",
+            waiting_node_id: "wait-1",
+            waiting_until: 1.hour.from_now,
+          )
+        end
+      end
+    end
   end
 
   describe ".resume" do
