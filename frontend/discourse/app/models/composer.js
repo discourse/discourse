@@ -1221,6 +1221,14 @@ export default class Composer extends RestModel {
     return promise
       .then(() => {
         return post.save(props).then((result) => {
+          // The server omits `reply_to_user` from the response when it's
+          // nil, so the post's in-memory value isn't overwritten when the
+          // target is cleared. Mirror the composer's final state onto the
+          // post so reply indicators update without a refresh.
+          post.setProperties({
+            reply_to_post_number: this.reply_to_post_number,
+            reply_to_user: this.reply_to_user,
+          });
           this.clearState();
           return result;
         });
