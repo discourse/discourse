@@ -2793,6 +2793,11 @@ security:
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot|MetaIAB"
+  crawler_asns:
+    hidden: true
+    default: "55967"
+    type: list
+    list_type: compact
   cors_origins:
     default: ""
     type: list

@@ -3,23 +3,6 @@
 module CrawlerDetection
   WAYBACK_MACHINE_URL = "archive.org"
 
-  # Source: https://ipinfo.io/tags/crawler
-  CRAWLER_ASNS =
-    Set.new(
-      [
-        55_967, # Baidu
-        140_577, # Ahrefs
-        210_743, # Babbar
-        7_941, # Internet Archive
-        13_238, # Yandex
-        32_934, # Facebook/Meta
-        15_169, # Google
-        396_982, # Google Cloud
-        8_075, # Microsoft
-        136_907, # Huawei Cloud
-      ],
-    ).freeze
-
   def self.to_matcher(string, type: nil)
     escaped = string.split("|").map { |agent| Regexp.escape(agent) }.join("|")
 
@@ -70,7 +53,9 @@ module CrawlerDetection
 
   def self.crawler_ip?(ip)
     return false if ip.blank?
-    CRAWLER_ASNS.include?(DiscourseIpInfo.get(ip)[:asn])
+    asn = DiscourseIpInfo.get(ip)[:asn]
+    return false if asn.blank?
+    SiteSetting.crawler_asns_map.include?(asn.to_s)
   end
 
   def self.show_browser_update?(user_agent)
