@@ -43,7 +43,11 @@ export default class ChangeReplyTo extends Component {
     if (!post) {
       return 0;
     }
-    return postStream.progressIndexOfPost(post);
+    // `TopicTimeline` treats `@enteredIndex` as 0-based (see how its
+    // `prevEvent.postIndex - 1` branch maps a 1-based event index back
+    // down), while `progressIndexOfPost` returns 1-based. Subtract one
+    // so the scrubber lands exactly on the current target.
+    return Math.max(0, postStream.progressIndexOfPost(post) - 1);
   }
 
   @action
