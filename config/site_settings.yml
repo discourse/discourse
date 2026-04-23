@@ -4329,7 +4329,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
