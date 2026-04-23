@@ -108,13 +108,7 @@ RSpec.describe DiscourseWorkflows::Nodes::DataTable::V1 do
               "data_table_id" => data_table.id.to_s,
               "mapping_mode" => "auto",
             },
-            {
-              "json" => {
-                "email" => "auto@example.com",
-                "score" => 7,
-                "ignored" => "value",
-              },
-            },
+            { "json" => { "email" => "auto@example.com", "score" => 7, "ignored" => "value" } },
           )
 
         expect(items[0]["json"]).to include("email" => "auto@example.com", "score" => 7)
