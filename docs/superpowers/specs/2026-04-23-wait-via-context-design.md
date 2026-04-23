@@ -24,6 +24,10 @@ This matches n8n's `context.putExecutionToWait(waitTill)` in `packages/core/src/
   - executor bookkeeping: `node_contexts`, `step_position`
 - Readers scattered across `app/services/discourse_workflows/webhook/receive.rb`, `form/show.rb`, `form/resume.rb`, `form/submit.rb`, `execution/expire_waiting.rb`, and `app/jobs/regular/discourse_workflows/resume_waiting_execution.rb`.
 
+### `wait_type="form_trigger"` is already dead code
+
+After `d1d8aa2c0e0`, trigger:form forms use a signed `FormTriggerToken` for initial submissions instead of a pre-created waiting execution. `ExecutionStore.create_waiting_for_trigger` has no production callers — only a spec fixture in `spec/services/discourse_workflows/form/submit_spec.rb`. This work removes that path entirely: delete `create_waiting_for_trigger`, delete `Form::Submit#fetch_trigger_execution` and `Form::Submit#validate_initial_submission_token`'s trigger-execution branch (keep the token validation branch), and delete the corresponding submit_spec context.
+
 ## Target design
 
 ### Node contract
@@ -132,7 +136,7 @@ All readers that dig into `waiting_config` move to either the new column or the 
 | `form/show.rb#fetch_waiting_execution` | by_resume_token + `wait_type='form'` | by_resume_token + in-Ruby check `waiting_node.type == "action:form"` |
 | `form/show.rb#build_form_data_from_execution` | reads pre-resolved `form_title`/`description`/`fields` from `waiting_config` | loads `execution_data`, resolves expressions against it using `ExpressionResolver`, reads title/description/fields from paused Form node's config |
 | `form/resume.rb#fetch_execution` | by_resume_token + `wait_type='form'` | by_resume_token + in-Ruby check `waiting_node.type == "action:form"` |
-| `form/submit.rb#fetch_trigger_execution` | `waiting_config->>'resume_token' = ?` + `wait_type='form_trigger'` | `where(resume_token:, workflow:)` + check `waiting_node_id == trigger_node["id"]` |
+| `form/submit.rb#fetch_trigger_execution` | `waiting_config->>'resume_token' = ?` + `wait_type='form_trigger'` | delete (no production writer for this shape after commit `d1d8aa2c0e0`); simplify `validate_initial_submission_token` to only validate the `FormTriggerToken` |
 | `execution/expire_waiting.rb#expire_execution` | reads `waiting_config["timeout_action"]`, `waiting_config["timeout_response_items"]` | reads `execution.timeout_action` column; drop `timeout_response_items` (no writer ever set it) |
 | `resume_waiting_execution.rb` job | same | same rewrite as expire |
 
@@ -213,6 +217,8 @@ Two-step migration to keep the deploy safe:
 
 **Delete**
 - `lib/discourse_workflows/executor/wait_for_resume.rb`
+- `ExecutionStore.create_waiting_for_trigger` (method)
+- `Form::Submit#fetch_trigger_execution` (method)
 
 **New migrations**
 - `db/migrate/YYYYMMDDHHMMSS_add_resume_fields_to_executions.rb` (add columns + backfill)
