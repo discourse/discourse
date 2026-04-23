@@ -3943,6 +3943,8 @@ en:
         default_nested_view: "Use nested view as default for topics in this category"
       no_replies: "No replies yet."
       deleted_post_placeholder: "[deleted]"
+      ignored_post_placeholder: "[ignored]"
+      toggle_ignored_content: "Show ignored content"
       op_badge: "OP"
       pinned_reply: "Pinned"
       pin_reply: "Pin to top"

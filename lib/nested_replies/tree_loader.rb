@@ -32,25 +32,6 @@ module NestedReplies
         end
     end
 
-    def ignored_user_ids
-      return @ignored_user_ids if defined?(@ignored_user_ids)
-
-      @ignored_user_ids =
-        if guardian.user
-          DB.query_single(<<~SQL, current_user_id: guardian.user.id)
-            SELECT ignored_user_id
-            FROM ignored_users as ig
-            INNER JOIN users as u ON u.id = ig.ignored_user_id
-            WHERE ig.user_id = :current_user_id
-              AND ig.ignored_user_id <> :current_user_id
-              AND NOT u.admin
-              AND NOT u.moderator
-          SQL
-        else
-          []
-        end
-    end
-
     def op_post
       @op_post ||= load_posts_for_tree(topic.posts.where(post_number: 1)).first
     end
@@ -104,7 +85,6 @@ module NestedReplies
     def apply_visibility(scope)
       scope = scope.unscope(where: :deleted_at)
       scope = scope.where(post_type: visible_post_types)
-      scope = scope.where.not(user_id: ignored_user_ids) if ignored_user_ids.present?
       scope
     end
 
@@ -120,8 +100,6 @@ module NestedReplies
         last_level = (depth + 1 >= max_depth) || (depth + 1 >= configured_max_depth)
 
         order_expr = NestedReplies::Sort.sql_order_expression(sort)
-        ignored_user_clause =
-          ignored_user_ids.present? ? "AND user_id NOT IN (:ignored_user_ids)" : ""
         child_ids =
           DB.query_single(
             <<~SQL,
@@ -133,7 +111,6 @@ module NestedReplies
                   AND reply_to_post_number IN (:parent_numbers)
                   AND post_type IN (:post_types)
                   AND post_number > 1
-                  #{ignored_user_clause}
               ) ranked
               WHERE rn <= :limit
             SQL
@@ -141,7 +118,6 @@ module NestedReplies
             parent_numbers: parent_numbers,
             limit: PRELOAD_CHILDREN_PER_PARENT,
             post_types: visible_post_types,
-            ignored_user_ids: ignored_user_ids,
           )
 
         break if child_ids.empty?
@@ -175,15 +151,11 @@ module NestedReplies
         order_expr = NestedReplies::Sort.sql_order_expression(sort)
 
         visibility_conditions = +"post_type IN (:post_types) AND post_number > 1"
-        if ignored_user_ids.present?
-          visibility_conditions << " AND user_id NOT IN (:ignored_user_ids)"
-        end
         sql_params = {
           topic_id: topic.id,
           parent_numbers: parent_numbers,
           limit: SIBLINGS_PER_ANCESTOR,
           post_types: visible_post_types,
-          ignored_user_ids: ignored_user_ids,
         }
 
         sibling_ids = DB.query_single(<<~SQL, **sql_params)
@@ -223,8 +195,6 @@ module NestedReplies
     def flat_descendants_scope(parent_post_number, sort:, offset: 0, limit: CHILDREN_PER_PAGE)
       post_types = visible_post_types
       order_expr = NestedReplies::Sort.sql_order_expression(sort)
-      ignored_user_clause =
-        ignored_user_ids.present? ? "AND p.user_id NOT IN (:ignored_user_ids)" : ""
 
       descendant_post_numbers =
         DB.query_single(
@@ -247,7 +217,6 @@ module NestedReplies
           FROM descendants d
           JOIN posts p ON p.post_number = d.post_number AND p.topic_id = :topic_id
           WHERE p.post_type IN (:post_types)
-            #{ignored_user_clause}
           ORDER BY #{order_expr}
           OFFSET :offset
           LIMIT :limit
@@ -258,7 +227,6 @@ module NestedReplies
           offset: offset,
           limit: limit,
           max_cte_depth: 500,
-          ignored_user_ids: ignored_user_ids,
         )
 
       scope =
@@ -273,14 +241,13 @@ module NestedReplies
     def direct_reply_counts(post_numbers)
       return {} if post_numbers.empty?
 
-      scope =
-        Post
-          .with_deleted
-          .where(topic_id: topic.id)
-          .where(reply_to_post_number: post_numbers)
-          .where(post_type: visible_post_types)
-      scope = scope.where.not(user_id: ignored_user_ids) if ignored_user_ids.present?
-      scope.group(:reply_to_post_number).count
+      Post
+        .with_deleted
+        .where(topic_id: topic.id)
+        .where(reply_to_post_number: post_numbers)
+        .where(post_type: visible_post_types)
+        .group(:reply_to_post_number)
+        .count
     end
 
     def total_descendant_counts(post_ids)
