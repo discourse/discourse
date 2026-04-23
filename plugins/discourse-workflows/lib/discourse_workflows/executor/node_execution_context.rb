@@ -63,7 +63,13 @@ module DiscourseWorkflows
 
       def with_sandbox(capture_logs: false)
         sandbox =
-          JsSandbox.new(@resolver_context, user: @user, vars: @vars, capture_logs: capture_logs)
+          JsSandbox.new(
+            @resolver_context,
+            user: @user,
+            vars: @vars,
+            capture_logs: capture_logs,
+            budget_tracker: sandbox_budget_tracker,
+          )
         yield sandbox
       ensure
         @log.merge(sandbox.log) if capture_logs && sandbox&.log
@@ -103,6 +109,10 @@ module DiscourseWorkflows
 
       def with_item(item)
         @resolver.with_item(item["json"]) { yield }
+      end
+
+      def sandbox_budget_tracker
+        @sandbox_budget_tracker ||= DiscourseWorkflows::SandboxBudget.new(@flow_context)
       end
 
       def resolve_parameter(name, schema)

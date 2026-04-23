@@ -366,11 +366,16 @@ module DiscourseWorkflows
           @context.resolver_context,
           user: @options.user,
           vars: preloaded_vars,
+          budget_tracker: sandbox_budget_tracker,
         )
     end
 
     def preloaded_vars
       @preloaded_vars ||= DiscourseWorkflows::Variable.pluck(:key, :value).to_h
+    end
+
+    def sandbox_budget_tracker
+      @sandbox_budget_tracker ||= DiscourseWorkflows::SandboxBudget.new(@context.context)
     end
 
     def rate_limiter

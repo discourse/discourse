@@ -8,10 +8,14 @@ module DiscourseWorkflows
 
     attr_reader :js_context, :workflow_context, :log
 
-    def initialize(workflow_context, user: nil, vars: nil, capture_logs: false)
+    class BudgetExceededError < StandardError
+    end
+
+    def initialize(workflow_context, user: nil, vars: nil, capture_logs: false, budget_tracker: nil)
       @workflow_context = workflow_context
       @user = user
       @vars = vars || DiscourseWorkflows::Variable.pluck(:key, :value).to_h
+      @budget_tracker = budget_tracker
       @site_setting_store = SiteSettingStore.new
       @js_context = create_js_context
       setup_core_environment!
@@ -19,7 +23,10 @@ module DiscourseWorkflows
     end
 
     def eval(code)
+      started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       @js_context.eval(code)
+    ensure
+      finish_eval!(started_at)
     end
 
     def rebind_json(new_json)
@@ -152,6 +159,13 @@ module DiscourseWorkflows
           })
         });
       JS
+    end
+
+    def finish_eval!(started_at)
+      return unless started_at
+
+      elapsed_ms = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000.0
+      @budget_tracker&.charge!(elapsed_ms)
     end
   end
 end

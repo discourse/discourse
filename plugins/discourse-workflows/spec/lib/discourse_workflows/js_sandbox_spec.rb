@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::JsSandbox do
-  subject(:sandbox) { described_class.new(workflow_context, user: user, vars: vars) }
+  subject(:sandbox) do
+    described_class
+      .new(workflow_context, user: user, vars: vars)
+      .tap { |instance| owned_sandboxes << instance }
+  end
 
   fab!(:user)
 
   let(:workflow_context) { { "trigger" => { "topic_id" => 42 } } }
   let(:vars) { { "API_URL" => "https://example.com" } }
+  let(:owned_sandboxes) { [] }
 
-  after { sandbox.dispose }
+  after { owned_sandboxes.each(&:dispose) }
 
   describe "timeout" do
     it "raises when JS execution exceeds the time limit" do
@@ -118,6 +123,39 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
       expect(entries.map { |e| e["level"] }).to eq(%w[info warn error])
     ensure
       capturing_sandbox&.dispose
+    end
+  end
+
+  describe "workflow budget" do
+    it "shares elapsed sandbox time through workflow context" do
+      budget_state = {}
+      first_sandbox =
+        described_class.new(
+          workflow_context,
+          user: user,
+          vars: vars,
+          budget_tracker: DiscourseWorkflows::SandboxBudget.new(budget_state, budget_ms: 100),
+        )
+      second_sandbox =
+        described_class.new(
+          workflow_context,
+          user: user,
+          vars: vars,
+          budget_tracker: DiscourseWorkflows::SandboxBudget.new(budget_state, budget_ms: 100),
+        )
+
+      Process.stubs(:clock_gettime).with(Process::CLOCK_MONOTONIC).returns(0.0, 0.06, 0.06, 0.12)
+
+      first_sandbox.eval("1 + 1")
+
+      expect { second_sandbox.eval("2 + 2") }.to raise_error(
+        described_class::BudgetExceededError,
+        /100ms/,
+      )
+      expect(budget_state[DiscourseWorkflows::SandboxBudget::CONTEXT_KEY]).to be > 100
+    ensure
+      first_sandbox&.dispose
+      second_sandbox&.dispose
     end
   end
 

@@ -7,6 +7,7 @@ module DiscourseWorkflows
         trigger
         __resume_token
         __form_completion
+        __sandbox_elapsed_ms
         __node_contexts
         __execution
         $json
