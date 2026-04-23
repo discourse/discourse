@@ -33,6 +33,19 @@ export default class ChangeReplyTo extends Component {
     return !!this.args.model.currentPostNumber;
   }
 
+  get initialEnteredIndex() {
+    const postNumber = this.args.model.currentPostNumber;
+    if (!postNumber) {
+      return 0;
+    }
+    const postStream = this.topic?.postStream;
+    const post = postStream?.postForPostNumber?.(postNumber);
+    if (!post) {
+      return 0;
+    }
+    return postStream.progressIndexOfPost(post);
+  }
+
   @action
   async handleJumpToIndex(index) {
     await this.captureSelectionForIndex(index);
@@ -117,7 +130,7 @@ export default class ChangeReplyTo extends Component {
         <TopicTimeline
           @model={{this.topic}}
           @fullscreen={{true}}
-          @enteredIndex={{0}}
+          @enteredIndex={{this.initialEnteredIndex}}
           @jumpTop={{this.handleJumpTop}}
           @jumpBottom={{this.handleJumpBottom}}
           @jumpEnd={{this.handleJumpBottom}}
