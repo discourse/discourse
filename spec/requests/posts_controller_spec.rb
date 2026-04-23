@@ -3021,6 +3021,25 @@ RSpec.describe PostsController do
         post.topic.reload
         expect(post.topic.tags.pluck(:name).sort).to eq(%w[tag1 tag2])
       end
+
+      it "supports reverting reply-target-only revisions" do
+        earlier_post = Fabricate(:post, topic: post.topic, post_number: post.post_number - 1)
+        post.update!(reply_to_post_number: nil)
+
+        reply_to_revision =
+          Fabricate(
+            :post_revision,
+            post: post,
+            modifications: {
+              "reply_to_post_number" => [earlier_post.post_number, nil],
+            },
+          )
+
+        put "/posts/#{post_id}/revisions/#{reply_to_revision.number}/revert.json"
+
+        expect(response.status).to eq(200)
+        expect(post.reload.reply_to_post_number).to eq(earlier_post.post_number)
+      end
     end
   end
 
