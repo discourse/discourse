@@ -42,6 +42,7 @@ export default class NestedPost extends Component {
   @tracked lineHighlighted = false;
   @tracked collapsed;
   @tracked showDeletedContent = false;
+  @tracked showIgnoredContent = false;
   @tracked loadingIgnoredContent = false;
 
   restoreScroll = modifier((element) => {
@@ -163,6 +164,10 @@ export default class NestedPost extends Component {
     return this.args.post.ignored_post_placeholder === true;
   }
 
+  get renderIgnoredPlaceholder() {
+    return this.isIgnoredPlaceholder && !this.showIgnoredContent;
+  }
+
   get showContinueThread() {
     return (
       this.atMaxDepth &&
@@ -218,7 +223,7 @@ export default class NestedPost extends Component {
 
   @action
   async revealIgnoredContent() {
-    if (this.loadingIgnoredContent) {
+    if (this.showIgnoredContent || this.loadingIgnoredContent) {
       return;
     }
 
@@ -226,10 +231,8 @@ export default class NestedPost extends Component {
     try {
       this.loadingIgnoredContent = true;
       const result = await ajax(`/posts/${post.id}/cooked.json`);
-      post.setProperties({
-        cooked: result.cooked,
-        ignored_post_placeholder: false,
-      });
+      post.set("cooked", result.cooked);
+      this.showIgnoredContent = true;
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -348,10 +351,11 @@ export default class NestedPost extends Component {
               <div class="nested-post__placeholder-avatar">
                 {{icon "trash-can"}}
               </div>
-            {{else if this.isIgnoredPlaceholder}}
+            {{else if this.renderIgnoredPlaceholder}}
               <button
                 type="button"
                 class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
+                data-post-number={{@post.post_number}}
                 aria-label={{i18n "nested_replies.toggle_ignored_content"}}
                 disabled={{this.loadingIgnoredContent}}
                 {{on "click" this.revealIgnoredContent}}
@@ -404,7 +408,7 @@ export default class NestedPost extends Component {
                 <span class="nested-post__collapsed-username">{{i18n
                     "nested_replies.deleted_post_placeholder"
                   }}</span>
-              {{else if this.isIgnoredPlaceholder}}
+              {{else if this.renderIgnoredPlaceholder}}
                 <span class="nested-post__collapsed-username">{{i18n
                     "nested_replies.ignored_post_placeholder"
                   }}</span>
@@ -461,7 +465,7 @@ export default class NestedPost extends Component {
                 </div>
               {{/if}}
             </div>
-          {{else if this.isIgnoredPlaceholder}}
+          {{else if this.renderIgnoredPlaceholder}}
             <div
               class="nested-post__placeholder nested-post__placeholder--ignored"
               data-post-number={{@post.post_number}}
