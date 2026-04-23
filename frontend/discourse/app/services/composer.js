@@ -7,6 +7,7 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
+import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
@@ -42,6 +43,7 @@ import { parseAttributesString } from "discourse/lib/wrap-utils";
 import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
+  EDIT,
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
   SAVE_ICONS,
@@ -519,7 +521,13 @@ export default class ComposerService extends Service {
     return this.model?.requiredCategoryMissing && this.model?.replyLength === 0;
   }
 
-  @computed("model.composeState", "model.creatingTopic", "model.post")
+  @computed(
+    "model.composeState",
+    "model.creatingTopic",
+    "model.post",
+    "model.action",
+    "model.reply_to_post_number"
+  )
   get popupMenuOptions() {
     if (
       this.model?.composeState === "open" ||
@@ -556,6 +564,17 @@ export default class ComposerService extends Service {
         })
       );
 
+      if (this.canAddReplyToTarget) {
+        options.push(
+          this._setupPopupMenuOption({
+            name: "change-reply-to",
+            action: this.openChangeReplyToModal,
+            icon: "share",
+            label: "composer.change_reply_to.open_from_menu",
+          })
+        );
+      }
+
       const secondaryOptions = [
         this._setupPopupMenuOption({
           name: "toggle-wrap",
@@ -576,6 +595,44 @@ export default class ComposerService extends Service {
         ...secondaryOptions,
       ];
     }
+  }
+
+  get canAddReplyToTarget() {
+    const model = this.model;
+    return (
+      model?.action === EDIT &&
+      !!model?.post?.can_edit &&
+      !!model?.topic &&
+      !model?.reply_to_post_number
+    );
+  }
+
+  @action
+  openChangeReplyToModal() {
+    const model = this.model;
+    if (!model) {
+      return;
+    }
+
+    this.modal.show(ChangeReplyTo, {
+      model: {
+        topic: model.topic,
+        editingPostNumber: model.post?.post_number,
+        currentPostNumber: model.reply_to_post_number,
+        onSelect: (post) => {
+          if (!post) {
+            model.setReplyTo(null, null);
+            return;
+          }
+          model.setReplyTo(post.post_number, {
+            id: post.user_id,
+            username: post.username,
+            name: post.name,
+            avatar_template: post.avatar_template,
+          });
+        },
+      },
+    });
   }
 
   @computed(

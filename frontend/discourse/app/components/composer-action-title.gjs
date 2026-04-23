@@ -6,7 +6,6 @@ import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -34,7 +33,7 @@ export default class ComposerActionTitle extends Component {
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
 
-  @service modal;
+  @service composer;
 
   @computed("model.replyOptions")
   get options() {
@@ -65,26 +64,7 @@ export default class ComposerActionTitle extends Component {
 
   @action
   openChangeReplyToModal() {
-    const model = this.model;
-    this.modal.show(ChangeReplyTo, {
-      model: {
-        topic: model.topic,
-        editingPostNumber: model.post?.post_number,
-        currentPostNumber: model.reply_to_post_number,
-        onSelect: (post) => {
-          if (!post) {
-            model.setReplyTo(null, null);
-            return;
-          }
-          model.setReplyTo(post.post_number, {
-            id: post.user_id,
-            username: post.username,
-            name: post.name,
-            avatar_template: post.avatar_template,
-          });
-        },
-      },
-    });
+    this.composer.openChangeReplyToModal();
   }
 
   @computed("options", "action", "model.tags", "model.category")

@@ -3140,6 +3140,7 @@ en:
         invalid_target: "Choose a post earlier than the one you're editing."
         submit: "Set reply target"
         open: "Change which post this replies to"
+        open_from_menu: "Reply to another post"
         remove: "Remove reply target"
 
       group_mentioned_limit:
