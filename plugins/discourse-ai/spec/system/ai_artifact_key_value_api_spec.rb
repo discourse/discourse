@@ -50,7 +50,7 @@ RSpec.describe "AI Artifact Key-Value API" do
   end
 
   it "provides working key-value API in artifact JavaScript" do
-    visit "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+    visit "/w/#{artifact.id}"
 
     within_frame(find("iframe")) do
       expect(page).to have_selector("#log", wait: 2)

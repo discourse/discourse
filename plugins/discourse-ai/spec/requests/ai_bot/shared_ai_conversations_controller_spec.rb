@@ -366,11 +366,11 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
       end
 
       it "does not share artifacts publicly when previewing a valid conversation" do
-        SiteSetting.ai_artifact_security = "lax"
+        SiteSetting.web_artifact_security = "lax"
         first_post = user_pm_share.posts.first
 
         artifact =
-          AiArtifact.create!(
+          WebArtifact.create!(
             user: bot_user,
             post: first_post,
             name: "test",

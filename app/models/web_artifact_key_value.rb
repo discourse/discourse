@@ -32,3 +32,21 @@ class WebArtifactKeyValue < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: web_artifact_key_values
+#
+#  id              :bigint           not null, primary key
+#  key             :string(50)       not null
+#  public          :boolean          default(FALSE), not null
+#  value           :string(20000)    not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_id         :integer          not null
+#  web_artifact_id :bigint           not null
+#
+# Indexes
+#
+#  index_web_artifact_kv_unique  (web_artifact_id,user_id,key) UNIQUE
+#

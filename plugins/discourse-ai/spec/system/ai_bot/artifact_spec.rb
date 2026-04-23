@@ -45,7 +45,7 @@ RSpec.describe "AI Artifact with Data Attributes" do
     sign_in(user)
     visit "/t/#{topic.slug}/#{topic.id}"
 
-    find(".ai-artifact__click-to-run button").click
+    find(".web-artifact__click-to-run button").click
 
     artifact_element_selector = ".ai-artifact[data-ai-artifact-id='#{ai_artifact.id}']"
     artifact_element = find(artifact_element_selector)

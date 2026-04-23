@@ -106,3 +106,19 @@ class WebArtifact < ActiveRecord::Base
     )
   end
 end
+
+# == Schema Information
+#
+# Table name: web_artifacts
+#
+#  id         :bigint           not null, primary key
+#  css        :string(65535)
+#  html       :string(65535)
+#  js         :string(65535)
+#  metadata   :jsonb
+#  name       :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  post_id    :integer
+#  user_id    :integer          not null
+#
