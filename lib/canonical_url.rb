@@ -34,15 +34,19 @@ module CanonicalURL
     private
 
     def append_content_localization_param(url)
-      return url if !SiteSetting.content_localization_enabled
-      return url if !SiteSetting.content_localization_crawler_param
-      return url if !use_crawler_layout?
+      return url unless SiteSetting.content_localization_enabled
+      return url unless SiteSetting.content_localization_crawler_param
+      return url unless use_crawler_layout?
+
       locale = params[Discourse::LOCALE_PARAM]
       return url if locale.blank?
+
       supported = SiteSetting.content_localization_supported_locales.to_s.split("|")
-      return url if !supported.include?(locale)
-      separator = url.include?("?") ? "&" : "?"
-      "#{url}#{separator}#{Discourse::LOCALE_PARAM}=#{CGI.escape(locale)}"
+      return url if supported.exclude?(locale)
+
+      uri = Addressable::URI.parse(url)
+      uri.query_values = (uri.query_values || {}).merge(Discourse::LOCALE_PARAM => locale)
+      uri.to_s
     end
   end
 
