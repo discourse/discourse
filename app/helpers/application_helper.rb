@@ -779,9 +779,6 @@ module ApplicationHelper
     (itemprop.present? && itemprop != "comment") || hash[:data].present?
   end
 
-  # When a non-first post has no itemscope, its itemprops would leak into the
-  # enclosing Question scope (duplicate datePublished etc.). First posts
-  # legitimately leak into the parent topic scope.
   def crawler_post_emits_microdata?(post, topic)
     post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
   end
