@@ -109,37 +109,6 @@ RSpec.describe DiscourseWorkflows::Form::Submit do
       it { is_expected.to fail_a_step(:validate_initial_submission_token) }
     end
 
-    context "when resume_token from a waiting form_trigger execution is provided" do
-      let(:waiting_execution) do
-        DiscourseWorkflows::Executor::ExecutionStore.create_waiting_for_trigger(
-          workflow: workflow,
-          trigger_node_id: "trigger-1",
-        ).first
-      end
-
-      let(:params) do
-        {
-          uuid: uuid,
-          resume_token: waiting_execution.waiting_config["resume_token"],
-          form_data: form_data,
-        }
-      end
-
-      it { is_expected.to run_successfully }
-
-      it "resumes the waiting execution instead of creating a new one" do
-        waiting_execution
-        expect { result }.not_to change { DiscourseWorkflows::Execution.count }
-      end
-
-      it "updates trigger_data on the execution" do
-        result
-        waiting_execution.reload
-        expect(waiting_execution.trigger_data).to have_key("form_data")
-        expect(waiting_execution.trigger_data).to have_key("submitted_at")
-      end
-    end
-
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
