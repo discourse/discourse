@@ -32,6 +32,10 @@ export default class ChangeReplyTo extends Component {
     this.flash = null;
   }
 
+  get canRemove() {
+    return !!this.args.model.currentPostNumber;
+  }
+
   @action
   async submit() {
     const postNumber = parseInt(this.postNumber, 10);
@@ -53,6 +57,12 @@ export default class ChangeReplyTo extends Component {
     } catch (e) {
       this.flash = extractError(e);
     }
+  }
+
+  @action
+  remove() {
+    this.args.model.onSelect(null);
+    this.args.closeModal();
   }
 
   <template>
@@ -83,6 +93,13 @@ export default class ChangeReplyTo extends Component {
           @disabled={{this.submitDisabled}}
           class="btn-primary"
         />
+        {{#if this.canRemove}}
+          <DButton
+            @action={{this.remove}}
+            @label="composer.change_reply_to.remove"
+            class="btn-danger"
+          />
+        {{/if}}
         <DButton @action={{@closeModal}} @label="cancel" />
       </:footer>
     </DModal>

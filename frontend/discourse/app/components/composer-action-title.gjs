@@ -1,11 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import ChangeReplyTo from "discourse/components/modal/change-reply-to";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -64,11 +64,6 @@ export default class ComposerActionTitle extends Component {
   }
 
   @action
-  removeReplyTo() {
-    this.model?.setReplyTo(null, null);
-  }
-
-  @action
   openChangeReplyToModal() {
     const model = this.model;
     this.modal.show(ChangeReplyTo, {
@@ -77,6 +72,10 @@ export default class ComposerActionTitle extends Component {
         editingPostNumber: model.post?.post_number,
         currentPostNumber: model.reply_to_post_number,
         onSelect: (post) => {
+          if (!post) {
+            model.setReplyTo(null, null);
+            return;
+          }
           model.setReplyTo(post.post_number, {
             id: post.user_id,
             username: post.username,
@@ -119,29 +118,31 @@ export default class ComposerActionTitle extends Component {
         return this._formatEditUserPost(
           this.options.userAvatar,
           this.options.userLink,
-          this.options.postLink,
-          this.options.originalUser
+          this.options.postLink
         );
       }
     }
   }
 
-  _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
-    let editTitle = `
+  @computed("options.originalUser")
+  get replyTargetSegment() {
+    const originalUser = this.options?.originalUser;
+    if (!originalUser) {
+      return null;
+    }
+    return trustHTML(
+      `${iconHTML("share", { class: "reply-to-glyph" })}
+       ${originalUser.avatar}
+       <span class="original-username">${escape(originalUser.username)}</span>`
+    );
+  }
+
+  _formatEditUserPost(userAvatar, userLink, postLink) {
+    return trustHTML(`
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
       ${userAvatar}
       <span class="username">${escape(userLink.anchor)}</span>
-    `;
-
-    if (originalUser) {
-      editTitle += `
-        ${iconHTML("share", { class: "reply-to-glyph" })}
-        ${originalUser.avatar}
-        <span class="original-username">${escape(originalUser.username)}</span>
-      `;
-    }
-
-    return trustHTML(editTitle);
+    `);
   }
 
   _formatReplyToTopic(link) {
@@ -177,26 +178,19 @@ export default class ComposerActionTitle extends Component {
 
       <span class="action-title" role="heading" aria-level="1">
         {{this.actionTitle}}
-      </span>
-
-      {{#if this.canEditReplyTo}}
-        <span class="composer-edit-reply-to">
-          <DButton
-            @icon="pencil"
-            @action={{this.openChangeReplyToModal}}
-            @title="composer.change_reply_to.open"
-            class="btn-flat composer-edit-reply-to__change"
-          />
-          {{#if this.model.reply_to_post_number}}
-            <DButton
-              @icon="xmark"
-              @action={{this.removeReplyTo}}
-              @title="composer.change_reply_to.remove"
-              class="btn-flat composer-edit-reply-to__remove"
-            />
+        {{#if this.replyTargetSegment}}
+          {{#if this.canEditReplyTo}}
+            <button
+              type="button"
+              class="composer-edit-reply-to"
+              title={{i18n "composer.change_reply_to.open"}}
+              {{on "click" this.openChangeReplyToModal}}
+            >{{this.replyTargetSegment}}</button>
+          {{else}}
+            {{this.replyTargetSegment}}
           {{/if}}
-        </span>
-      {{/if}}
+        {{/if}}
+      </span>
     </div>
   </template>
 }

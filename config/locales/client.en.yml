@@ -3139,7 +3139,7 @@ en:
         post_number_label: "Post number"
         submit: "Set reply target"
         open: "Change which post this replies to"
-        remove: "No longer a reply to anyone"
+        remove: "Remove reply target"
         not_found: "No post with that number was found in this topic."
 
       group_mentioned_limit:
