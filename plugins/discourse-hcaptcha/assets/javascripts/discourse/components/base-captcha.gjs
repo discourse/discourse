@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import InputTip from "discourse/components/input-tip";
+import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 
 export default class BaseCaptcha extends Component {
@@ -70,7 +71,18 @@ export default class BaseCaptcha extends Component {
   }
 
   async loadCaptchaScript() {
-    throw new Error("Subclasses must implement 'loadCaptchaScript'");
+    try {
+      window[this.callbackName] = () => {
+        this.captchaApi = window[this.captchaApiName];
+        this.renderCaptcha();
+      };
+
+      await loadScript(this.scriptUrl);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to load ${this.providerName} script:`, error);
+      this.captchaError = this.captchaErrorKey;
+    }
   }
 
   get captchaErrorKey() {
@@ -81,8 +93,16 @@ export default class BaseCaptcha extends Component {
     throw new Error("Subclasses must implement 'scriptUrl'");
   }
 
+  get callbackName() {
+    throw new Error("Subclasses must implement 'callbackName'");
+  }
+
   get captchaApiName() {
     throw new Error("Subclasses must implement 'captchaApiName'");
+  }
+
+  get providerName() {
+    throw new Error("Subclasses must implement 'providerName'");
   }
 
   get containerId() {

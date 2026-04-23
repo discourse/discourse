@@ -13,7 +13,9 @@ enabled_site_setting :discourse_captcha_enabled
 
 register_svg_icon "hand"
 
-extend_content_security_policy(script_src: %w[https://js.hcaptcha.com https://hcaptcha.com])
+extend_content_security_policy(
+  script_src: %w[https://js.hcaptcha.com https://www.google.com/recaptcha],
+)
 
 module ::DiscourseHcaptcha
   PLUGIN_NAME = "discourse-hcaptcha"

@@ -1,4 +1,3 @@
-import loadScript from "discourse/lib/load-script";
 import BaseCaptcha from "./base-captcha";
 
 export default class ReCaptcha extends BaseCaptcha {
@@ -6,20 +5,16 @@ export default class ReCaptcha extends BaseCaptcha {
     return "https://www.google.com/recaptcha/api.js?onload=discourseReCaptchaCallback&render=explicit";
   }
 
-  async loadCaptchaScript() {
-    try {
-      //ReCaptcha calls this once everything has been loaded
-      window.discourseReCaptchaCallback = () => {
-        this.captchaApi = window.grecaptcha;
-        this.renderCaptcha();
-      };
+  get callbackName() {
+    return "discourseReCaptchaCallback";
+  }
 
-      await loadScript(this.scriptUrl);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error("Failed to load reCaptcha script:", error);
-      this.captchaError = this.captchaErrorKey;
-    }
+  get captchaApiName() {
+    return "grecaptcha";
+  }
+
+  get providerName() {
+    return "reCaptcha";
   }
 
   get containerId() {
