@@ -776,7 +776,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.store = this.container.lookup("service:site-setting-store");
+      this.store = this.container.lookup("service:admin-site-setting-store");
       this.parent = SiteSetting.create({
         setting: "parent_flag",
         value: "false",
@@ -830,19 +830,22 @@ module(
         </template>
       );
 
-      assert.false(this.child.revealed);
+      assert.false(this.store.isRevealed(this.child));
       assert
         .dom("[data-setting='child_value']")
         .hasClass("disabled-by-dependency");
 
       await click("[data-setting='parent_flag'] input[type=checkbox]");
-      assert.true(this.child.revealed, "revealed latched on toggle-on");
+      assert.true(
+        this.store.isRevealed(this.child),
+        "revealed latched on toggle-on"
+      );
       assert
         .dom("[data-setting='child_value']")
         .hasNoClass("disabled-by-dependency");
 
       await click("[data-setting='parent_flag'] input[type=checkbox]");
-      assert.true(this.child.revealed, "revealed stays latched");
+      assert.true(this.store.isRevealed(this.child), "revealed stays latched");
       assert
         .dom("[data-setting='child_value']")
         .hasClass("disabled-by-dependency", "disabled again, not re-hidden");
@@ -861,7 +864,7 @@ module(
 
       await click("[data-setting='parent_flag'] .setting-controls__undo");
 
-      assert.true(this.child.revealed);
+      assert.true(this.store.isRevealed(this.child));
       assert
         .dom("[data-setting='child_value']")
         .hasNoClass("disabled-by-dependency");

@@ -78,7 +78,6 @@ export default class SiteSetting extends EmberObject {
 
   @tracked isSaving = false;
   @tracked validationMessage = null;
-  @tracked revealed = false;
   updateExistingUsers = false;
 
   settingObjectHelper = new SettingObjectHelper(this);

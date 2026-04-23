@@ -64,8 +64,8 @@ const CUSTOM_TYPES = [
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
+  @service adminSiteSettingStore;
   @service siteSettingChangeTracker;
-  @service siteSettingStore;
   @service messageBus;
   @service site;
 
@@ -377,7 +377,7 @@ export default class SiteSettingComponent extends Component {
     }
     return (
       this.setting.depends_on?.some((name) => {
-        const parent = this.siteSettingStore.get(name);
+        const parent = this.adminSiteSettingStore.get(name);
         return parent && !isSettingValueTrue(parent.buffered.get("value"));
       }) ?? false
     );
@@ -453,7 +453,7 @@ export default class SiteSettingComponent extends Component {
   changeValueCallback(value) {
     this.buffered.set("value", value);
     if (isSettingValueTrue(value)) {
-      this.siteSettingStore.reveal(this.setting.setting);
+      this.adminSiteSettingStore.reveal(this.setting.setting);
     }
   }
 
@@ -473,7 +473,7 @@ export default class SiteSettingComponent extends Component {
     this.buffered.set("value", this.setting.default);
     this.setting.validationMessage = null;
     if (isSettingValueTrue(this.setting.default)) {
-      this.siteSettingStore.reveal(this.setting.setting);
+      this.adminSiteSettingStore.reveal(this.setting.setting);
     }
   }
 

@@ -2,7 +2,6 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import SiteSetting from "discourse/admin/models/site-setting";
-import { isSettingVisible } from "discourse/admin/services/site-setting-store";
 
 function build(attrs) {
   return SiteSetting.create({
@@ -13,43 +12,57 @@ function build(attrs) {
   });
 }
 
-module("Unit | Service | site-setting-store", function (hooks) {
+module("Unit | Service | admin-site-setting-store", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.store = getOwner(this).lookup("service:site-setting-store");
+    this.store = getOwner(this).lookup("service:admin-site-setting-store");
   });
 
-  module("isSettingVisible", function () {
+  module("isVisible", function () {
     test("non-hidden settings are always visible", function (assert) {
       const s = build({ depends_behavior: null });
-      assert.true(isSettingVisible(s));
-      assert.true(isSettingVisible(s, "anything"));
+      this.store.register([s]);
+      assert.true(this.store.isVisible(s));
+      assert.true(this.store.isVisible(s, "anything"));
     });
 
     test("hidden + revealed is visible", function (assert) {
-      const s = build({ depends_behavior: "hidden", revealed: true });
-      assert.true(isSettingVisible(s));
+      const parent = build({ setting: "parent", value: "true" });
+      const child = build({
+        setting: "child",
+        depends_on: ["parent"],
+        depends_behavior: "hidden",
+      });
+      this.store.register([parent, child]);
+      assert.true(this.store.isVisible(child));
     });
 
     test("hidden + unrevealed is not visible without a matching filter", function (assert) {
       const s = build({
         setting: "voting_limit",
+        depends_on: ["parent"],
         depends_behavior: "hidden",
       });
-      assert.false(isSettingVisible(s));
-      assert.false(isSettingVisible(s, ""));
-      assert.false(isSettingVisible(s, "voting"));
+      this.store.register([build({ setting: "parent", value: "false" }), s]);
+      assert.false(this.store.isVisible(s));
+      assert.false(this.store.isVisible(s, ""));
+      assert.false(this.store.isVisible(s, "voting"));
     });
 
     test("hidden + unrevealed is visible when filter matches name exactly", function (assert) {
       const s = build({
         setting: "voting_limit",
+        depends_on: ["parent"],
         depends_behavior: "hidden",
       });
-      assert.true(isSettingVisible(s, "voting_limit"));
-      assert.true(isSettingVisible(s, "voting limit"), "spaces normalize");
-      assert.true(isSettingVisible(s, " VOTING_LIMIT "), "case + whitespace");
+      this.store.register([build({ setting: "parent", value: "false" }), s]);
+      assert.true(this.store.isVisible(s, "voting_limit"));
+      assert.true(this.store.isVisible(s, "voting limit"), "spaces normalize");
+      assert.true(
+        this.store.isVisible(s, " VOTING_LIMIT "),
+        "case + whitespace"
+      );
     });
   });
 
@@ -74,8 +87,8 @@ module("Unit | Service | site-setting-store", function (hooks) {
       ]);
 
       assert.strictEqual(this.store.get("parent_flag"), parent);
-      assert.true(revealed.revealed);
-      assert.false(hidden.revealed);
+      assert.true(this.store.isRevealed(revealed));
+      assert.false(this.store.isRevealed(hidden));
     });
 
     test("revealed is true when a parent is missing from the store", function (assert) {
@@ -86,7 +99,7 @@ module("Unit | Service | site-setting-store", function (hooks) {
       });
       this.store.register([orphan]);
 
-      assert.true(orphan.revealed);
+      assert.true(this.store.isRevealed(orphan));
     });
 
     test("multi-parent: revealed only if all parents are truthy", function (assert) {
@@ -106,20 +119,19 @@ module("Unit | Service | site-setting-store", function (hooks) {
         allOn,
         oneOff,
       ]);
-      assert.true(allOn.revealed);
+      assert.true(this.store.isRevealed(allOn));
 
-      oneOff.revealed = false;
       this.store.register([
         build({ setting: "a", value: "true" }),
         build({ setting: "b", value: "false" }),
         oneOff,
       ]);
-      assert.false(oneOff.revealed);
+      assert.false(this.store.isRevealed(oneOff));
     });
   });
 
   module("reveal", function () {
-    test("sets revealed=true on hidden-type dependents only", function (assert) {
+    test("reveals hidden-type dependents only", function (assert) {
       const hidden = build({
         setting: "child_a",
         depends_on: ["flag"],
@@ -144,9 +156,15 @@ module("Unit | Service | site-setting-store", function (hooks) {
 
       this.store.reveal("flag");
 
-      assert.true(hidden.revealed, "hidden dependent revealed");
-      assert.false(plain.revealed, "non-hidden dependent untouched");
-      assert.false(unrelated.revealed, "unrelated dependent untouched");
+      assert.true(this.store.isRevealed(hidden), "hidden dependent revealed");
+      assert.false(
+        this.store.isRevealed(plain),
+        "non-hidden dependent untouched"
+      );
+      assert.false(
+        this.store.isRevealed(unrelated),
+        "unrelated dependent untouched"
+      );
     });
   });
 });

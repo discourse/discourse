@@ -14,7 +14,7 @@ import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminAreaSettings extends Component {
-  @service siteSettingStore;
+  @service adminSiteSettingStore;
 
   @tracked settings = [];
   @tracked loading = false;
@@ -51,7 +51,7 @@ export default class AdminAreaSettings extends Component {
       const siteSettings = result.site_settings.map((setting) =>
         SiteSetting.create(setting)
       );
-      this.siteSettingStore.register(siteSettings);
+      this.adminSiteSettingStore.register(siteSettings);
       this.settings = [
         {
           name: "All",

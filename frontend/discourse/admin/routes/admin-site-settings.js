@@ -6,8 +6,8 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsRoute extends DiscourseRoute {
+  @service adminSiteSettingStore;
   @service siteSettingChangeTracker;
-  @service siteSettingStore;
 
   queryParams = {
     filter: {
@@ -33,7 +33,7 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
   async model(params) {
     if (!this._siteSettings) {
       this._siteSettings = await SiteSetting.findAll();
-      this.siteSettingStore.register(
+      this.adminSiteSettingStore.register(
         this._siteSettings.flatMap((category) => category.siteSettings)
       );
     }
