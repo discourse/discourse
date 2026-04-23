@@ -6,11 +6,10 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
 
   def serializable_hash
     hash = { "@type" => "Question" }.merge(super)
-    if accepted_answer.present?
-      hash["acceptedAnswer"] = DiscourseSolved::AnswerSchemaSerializer.new(
-        accepted_answer,
-        root: false,
-      ).serializable_hash
+    if accepted_answers.present?
+      hash["acceptedAnswer"] = accepted_answers.map do |post|
+        DiscourseSolved::AnswerSchemaSerializer.new(post, root: false).serializable_hash
+      end
     end
     if suggested_answers.present?
       hash["suggestedAnswer"] = suggested_answers.map do |post|
@@ -35,7 +34,7 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
   end
 
   def answerCount
-    (accepted_answer.present? ? 1 : 0) + suggested_answers.to_a.size
+    accepted_answers.to_a.size + suggested_answers.to_a.size
   end
 
   def datePublished
@@ -52,8 +51,8 @@ class DiscourseSolved::QuestionSchemaSerializer < ApplicationSerializer
 
   private
 
-  def accepted_answer
-    options[:accepted_answer]
+  def accepted_answers
+    options[:accepted_answers]
   end
 
   def suggested_answers

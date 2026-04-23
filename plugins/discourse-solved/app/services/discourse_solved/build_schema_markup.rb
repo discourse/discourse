@@ -12,7 +12,7 @@ class DiscourseSolved::BuildSchemaMarkup
   model :topic
   policy :accepted_answers_allowed
   policy :schema_markup_enabled
-  model :accepted_answer, optional: true
+  model :accepted_answers, optional: true
   model :suggested_answers, optional: true
   policy :has_answers
   model :html
@@ -31,19 +31,20 @@ class DiscourseSolved::BuildSchemaMarkup
     DiscourseSolved::SchemaUtils.schema_markup_enabled?(topic)
   end
 
-  def has_answers(accepted_answer:, suggested_answers:)
-    accepted_answer.present? || suggested_answers.present?
+  def has_answers(accepted_answers:, suggested_answers:)
+    accepted_answers.present? || suggested_answers.present?
   end
 
-  def fetch_accepted_answer(topic:)
-    post = topic.solved&.answer_posts&.first
-    return unless post.present? && Guardian.new.can_see_post?(post)
-    post if post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
+  def fetch_accepted_answers(topic:)
+    topic.solved&.topic_answers&.filter_map do |ta|
+      post = ta.post
+      next unless post.present? && Guardian.new.can_see_post?(post)
+      post if post.cooked.present? && Nokogiri::HTML5.fragment(post.cooked).text.strip.present?
+    end
   end
 
-  def fetch_suggested_answers(params:, topic:, accepted_answer:)
-    excluded_ids = [topic.first_post.id]
-    excluded_ids << accepted_answer.id if accepted_answer.present?
+  def fetch_suggested_answers(params:, topic:, accepted_answers:)
+    excluded_ids = [topic.first_post.id] + Array(accepted_answers).map(&:id)
     scope = topic.posts.where.not(id: excluded_ids)
     scope = scope.where(id: params.post_ids) if params.post_ids.present?
     scope
@@ -53,12 +54,12 @@ class DiscourseSolved::BuildSchemaMarkup
       .select { |p| p.cooked.present? && Nokogiri::HTML5.fragment(p.cooked).text.strip.present? }
   end
 
-  def fetch_html(topic:, accepted_answer:, suggested_answers:)
+  def fetch_html(topic:, accepted_answers:, suggested_answers:)
     question_json =
       DiscourseSolved::QuestionSchemaSerializer.new(
         topic,
         root: false,
-        accepted_answer: accepted_answer,
+        accepted_answers: accepted_answers,
         suggested_answers: suggested_answers,
       ).serializable_hash
 
