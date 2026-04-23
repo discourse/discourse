@@ -230,6 +230,15 @@ export default class History extends Component {
           await Category.asyncFindById(result.category_id)
         );
       }
+      if (result.post) {
+        // `PostSerializer` omits `reply_to_user` when nil, so the post's
+        // in-memory value isn't cleared after a revert that removes the
+        // reply target. Explicitly mirror the reverted state onto the post.
+        post.setProperties({
+          reply_to_post_number: result.post.reply_to_post_number ?? null,
+          reply_to_user: result.post.reply_to_user ?? null,
+        });
+      }
       this.args.closeModal();
     } catch (e) {
       if (e.jqXHR.responseJSON?.errors?.[0]) {
