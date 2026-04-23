@@ -105,10 +105,9 @@ body.embed-mode {
     }
   }
 
+  // prevent horizontal overflow
   .topic-meta-data {
     @include viewport.until(sm) {
-      // prevent horizontal overflow
-
       .post-infos {
         position: relative;
         overflow: hidden;
@@ -117,6 +116,7 @@ body.embed-mode {
 
       .read-state {
         right: 1px;
+
         svg {
           right: 0;
         }
