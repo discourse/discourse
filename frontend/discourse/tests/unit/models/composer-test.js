@@ -354,6 +354,22 @@ module("Unit | Model | composer", function (hooks) {
     );
   });
 
+  test("reply_to edits are serialized into drafts", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const composer = createComposer.call(this, {
+      action: EDIT,
+      topic: store.createRecord("topic", { id: 1 }),
+      post: store.createRecord("post", { id: 1, post_number: 3 }),
+      reply_to_post_number: 2,
+      reply_to_user: { username: "alice", avatar_template: "/alice.png" },
+    });
+
+    const draft = composer.serializeDraftData();
+
+    assert.strictEqual(draft.reply_to_post_number, 2);
+    assert.strictEqual(draft.reply_to_user.username, "alice");
+  });
+
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
     const composer = openComposer.call(this, {

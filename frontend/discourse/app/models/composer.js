@@ -109,6 +109,8 @@ const CLOSED = "closed",
     original_title: "originalTitle",
     original_tags: "originalTags",
     locale: "locale",
+    reply_to_post_number: "reply_to_post_number",
+    reply_to_user: "reply_to_user",
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -1064,13 +1066,26 @@ export default class Composer extends RestModel {
 
       promise = promise.then(async () => {
         const post = await this.store.find("post", opts.post.id);
+        // When a draft is being restored, `opts` already carries the
+        // composer's saved `reply_to_*` state (see `_draft_serializer`).
+        // Prefer those values so pending reply-target changes survive a
+        // reload or navigation; fall back to the post's stored state
+        // otherwise. `undefined` means the key wasn't in the draft at all.
+        const replyToPostNumber =
+          opts.reply_to_post_number !== undefined
+            ? opts.reply_to_post_number
+            : (post.reply_to_post_number ?? null);
+        const replyToUser =
+          opts.reply_to_user !== undefined
+            ? opts.reply_to_user
+            : (post.reply_to_user ?? null);
         this.setProperties({
           post,
           reply: post.raw,
           originalText: post.raw,
           originalTitle: this.topic.title,
-          reply_to_post_number: post.reply_to_post_number ?? null,
-          reply_to_user: post.reply_to_user ?? null,
+          reply_to_post_number: replyToPostNumber,
+          reply_to_user: replyToUser,
         });
 
         if (post.post_number === 1 && this.canEditTitle) {
