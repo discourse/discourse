@@ -34,11 +34,17 @@ module DiscourseWorkflows
     end
 
     def fetch_execution(params:)
-      DiscourseWorkflows::Execution
-        .by_resume_token(params.resume_token)
-        .where("waiting_config->>'wait_type' = ?", "form")
-        .lock("FOR UPDATE SKIP LOCKED")
-        .first
+      execution =
+        DiscourseWorkflows::Execution
+          .by_resume_token(params.resume_token)
+          .lock("FOR UPDATE SKIP LOCKED")
+          .first
+      return unless execution
+
+      node = execution.workflow.find_node(execution.waiting_node_id)
+      return unless node&.dig("type") == "action:form"
+
+      execution
     end
 
     def fetch_waiting_node(execution:)
