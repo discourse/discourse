@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import { waitForTransitionEnd } from "discourse/lib/animation-utils";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseLater from "discourse/lib/later";
 import Composer from "discourse/models/composer";
@@ -72,6 +73,36 @@ export default class ComposerBody extends Component {
     });
   }
 
+  @observes("composeState")
+  async _onComposerOpen() {
+    // Skip if not opening, unmounted, or already awaiting the open transition —
+    // the in-flight wait will fire (or not) based on state at resolution time.
+    if (
+      !this.element ||
+      this.composeState !== Composer.OPEN ||
+      this._awaitingComposerOpen
+    ) {
+      return;
+    }
+
+    this._awaitingComposerOpen = true;
+    try {
+      await waitForTransitionEnd(this.element, "height");
+
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        this.composeState !== Composer.OPEN
+      ) {
+        return;
+      }
+
+      this.appEvents.trigger("composer:opened");
+    } finally {
+      this._awaitingComposerOpen = false;
+    }
+  }
+
   composerResized() {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -83,17 +114,12 @@ export default class ComposerBody extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    const triggerOpen = () => {
-      if (this.get("composer.composeState") === Composer.OPEN) {
-        this.appEvents.trigger("composer:opened");
-      }
-    };
-    triggerOpen();
+    if (this.composeState === Composer.OPEN) {
+      this.appEvents.trigger("composer:opened");
+    }
 
     this.element.addEventListener("transitionend", (event) => {
-      if (event.propertyName === "height") {
-        triggerOpen();
-      } else if (event.propertyName === "max-width") {
+      if (event.propertyName === "max-width") {
         this.composerResized();
       }
     });
