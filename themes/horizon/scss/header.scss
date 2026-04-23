@@ -2,7 +2,13 @@
 
 .d-header {
   box-shadow: none;
-  background: var(--background-color);
+}
+
+body.has-sidebar-page .d-header {
+  .home-logo-wrapper-outlet,
+  .header-sidebar-toggle {
+    display: none;
+  }
 }
 
 .search-menu .search-input,

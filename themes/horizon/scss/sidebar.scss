@@ -3,23 +3,37 @@
 :root {
   --sidebar-section-wrapper-padding: 0 var(--space-2) var(--space-4)
     var(--space-4);
+  --d-logo-height: 2.667em;
+}
+
+.sidebar-wrapper {
+  margin-top: calc(var(--header-offset) * -1);
+  top: 0;
+  height: 100vh;
+  z-index: z("header") + 1;
+}
+
+.sidebar-home-logo {
+  display: flex;
+  align-items: center;
+  height: var(--header-offset);
+
+  .title {
+    height: var(--d-logo-height);
+    display: flex;
+    align-items: center;
+    animation: fadein 0.5s;
+
+    a {
+      min-width: 0;
+      height: inherit;
+    }
+  }
 }
 
 body.has-full-page-chat .sidebar-wrapper,
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
-  @include viewport.until(lg) {
-    background: var(--secondary);
-
-    .sidebar-footer-wrapper {
-      background: var(--secondary);
-
-      .sidebar-footer-container::before {
-        display: none;
-      }
-    }
-  }
-
   .has-full-page-chat &,
   .has-full-page-chat & .sidebar-footer-wrapper {
     background: transparent;

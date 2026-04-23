@@ -5,8 +5,6 @@
 }
 
 html:not(:has(.has-full-page-chat)) {
-  background-color: var(--background-color);
-
   @include viewport.until(lg) {
     background-color: var(--d-content-background);
   }
@@ -30,6 +28,10 @@ body {
 #main-outlet-wrapper {
   @include viewport.from(lg) {
     gap: var(--main-grid-gap);
+
+    .has-sidebar-page & {
+      padding-left: 0;
+    }
   }
 }
 
@@ -83,7 +85,6 @@ body:not(.has-full-page-chat, .wizard) {
       width: 100%;
       max-width: unset;
       padding-bottom: var(--space-6);
-      border-radius: var(--d-border-radius-large);
       background-color: var(--d-content-background);
 
       @include viewport.until(lg) {
