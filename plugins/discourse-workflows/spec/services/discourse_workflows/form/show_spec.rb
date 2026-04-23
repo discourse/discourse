@@ -145,9 +145,10 @@ RSpec.describe DiscourseWorkflows::Form::Show do
     end
 
     context "with a waiting execution" do
-      before do
-        extra =
+      fab!(:waiting_workflow) do
+        graph =
           build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:manual"
             g.node "form-action-1",
                    "action:form",
                    configuration: {
@@ -157,37 +158,23 @@ RSpec.describe DiscourseWorkflows::Form::Show do
                        { "field_label" => "Feedback", "field_type" => "text", "required" => false },
                      ],
                    }
+            g.chain "trigger-1", "form-action-1"
           end
-        workflow.update!(nodes: workflow.nodes + extra[:nodes])
+        Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
       end
 
       let(:resume_token) { SecureRandom.uuid }
 
-      fab!(:execution) do
-        Fabricate(
-          :discourse_workflows_execution,
-          workflow: workflow,
-          status: :waiting,
-          waiting_node_id: "form-action-1",
-          waiting_config: {
-            "wait_type" => "form",
-            "resume_token" => "placeholder",
-            "form_title" => "Waiting Form",
-            "form_description" => "A waiting form",
-            "form_fields" => [
-              { "field_label" => "Feedback", "field_type" => "text", "required" => false },
-            ],
-          },
-        )
+      let(:execution) do
+        allow(MessageBus).to receive(:publish)
+        exec = DiscourseWorkflows::Executor.new(waiting_workflow, "trigger-1", {}).run
+        exec.update!(resume_token: resume_token)
+        exec
       end
 
       let(:params) { { uuid: uuid, resume_token: resume_token } }
 
-      before do
-        execution.update!(
-          waiting_config: execution.waiting_config.merge("resume_token" => resume_token),
-        )
-      end
+      before { execution }
 
       it { is_expected.to run_successfully }
 
@@ -209,19 +196,49 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         )
         expect(form_data[:response_mode]).to eq("on_received")
         expect(form_data[:has_downstream_form]).to be(false)
+        expect(form_data[:resume_token]).to eq(resume_token)
+      end
+
+      context "when form_description references $execution.resume_url" do
+        fab!(:waiting_workflow) do
+          graph =
+            build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:manual"
+              g.node "form-action-1",
+                     "action:form",
+                     configuration: {
+                       "form_title" => "Waiting Form",
+                       "form_description" => "={{ $execution.resume_url }}",
+                       "form_fields" => [],
+                     }
+              g.chain "trigger-1", "form-action-1"
+            end
+          Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
+        end
+
+        it "resolves $execution.resume_url from the execution context" do
+          expect(result[:form_data][:form_description]).to eq(
+            "#{Discourse.base_url}/workflows/webhooks/#{execution.id}?token=#{resume_token}",
+          )
+        end
       end
 
       context "when a downstream form action exists" do
-        before do
-          extra =
+        fab!(:waiting_workflow) do
+          graph =
             build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:manual"
+              g.node "form-action-1",
+                     "action:form",
+                     configuration: {
+                       "form_title" => "Waiting Form",
+                       "form_description" => "A waiting form",
+                       "form_fields" => [],
+                     }
               g.node "form-action-2", "action:form", configuration: { "form_fields" => [] }
-              g.connect "form-action-1", "form-action-2"
+              g.chain "trigger-1", "form-action-1", "form-action-2"
             end
-          workflow.update!(
-            nodes: workflow.nodes + extra[:nodes],
-            connections: (workflow.connections || []) + extra[:connections],
-          )
+          Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
         end
 
         it "sets has_downstream_form to true" do
@@ -230,17 +247,22 @@ RSpec.describe DiscourseWorkflows::Form::Show do
       end
 
       context "when a non-adjacent downstream form action exists" do
-        before do
-          extra =
+        fab!(:waiting_workflow) do
+          graph =
             build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:manual"
+              g.node "form-action-1",
+                     "action:form",
+                     configuration: {
+                       "form_title" => "Waiting Form",
+                       "form_description" => "A waiting form",
+                       "form_fields" => [],
+                     }
               g.node "action-between", "action:send_message"
               g.node "form-action-2", "action:form", configuration: { "form_fields" => [] }
-              g.chain "form-action-1", "action-between", "form-action-2"
+              g.chain "trigger-1", "form-action-1", "action-between", "form-action-2"
             end
-          workflow.update!(
-            nodes: workflow.nodes + extra[:nodes],
-            connections: (workflow.connections || []) + extra[:connections],
-          )
+          Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
         end
 
         it "detects the downstream form through intermediate nodes" do
@@ -257,12 +279,8 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         end
       end
 
-      context "when execution wait_type is not form" do
-        before do
-          execution.update!(
-            waiting_config: execution.waiting_config.merge("wait_type" => "webhook"),
-          )
-        end
+      context "when the waiting node is not a form action" do
+        before { execution.update!(waiting_node_id: "trigger-1") }
 
         it "falls back to initial form request path" do
           expect(result).to run_successfully

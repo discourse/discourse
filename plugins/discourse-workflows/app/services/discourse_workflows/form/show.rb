@@ -44,10 +44,13 @@ module DiscourseWorkflows
     def fetch_waiting_execution(params:)
       return unless params.resume_token
 
-      DiscourseWorkflows::Execution
-        .by_resume_token(params.resume_token)
-        .where("waiting_config->>'wait_type' = ?", "form")
-        .first
+      execution = DiscourseWorkflows::Execution.by_resume_token(params.resume_token).first
+      return unless execution
+
+      node = execution.workflow.find_node(execution.waiting_node_id)
+      return unless node&.dig("type") == "action:form"
+
+      execution
     end
 
     def fetch_workflow_from_execution(waiting_execution:)
@@ -84,8 +87,8 @@ module DiscourseWorkflows
       params:,
       guardian:
     )
-      wc = waiting_execution.waiting_config
-      resume_token = wc["resume_token"]
+      resume_token = waiting_execution.resume_token
+      context_data = waiting_execution.execution_data&.context_data || {}
 
       exec_context = {
         "__execution" => {
@@ -95,19 +98,25 @@ module DiscourseWorkflows
           "resume_url" =>
             "#{Discourse.base_url}/workflows/webhooks/#{waiting_execution.id}?token=#{resume_token}",
         },
-      }
+      }.merge(context_data)
+
+      config = form_node["configuration"] || {}
 
       {
         uuid: params.uuid,
         form_title:
-          ExpressionResolver.resolve(wc["form_title"], context: exec_context, user: guardian.user),
-        form_description:
           ExpressionResolver.resolve(
-            wc["form_description"],
+            config["form_title"],
             context: exec_context,
             user: guardian.user,
           ),
-        form_fields: Workflow.resolve_field_keys(wc["form_fields"] || []),
+        form_description:
+          ExpressionResolver.resolve(
+            config["form_description"],
+            context: exec_context,
+            user: guardian.user,
+          ),
+        form_fields: Workflow.resolve_field_keys(config["form_fields"] || []),
         response_mode: "on_received",
         has_downstream_form:
           workflow.node_has_reachable_downstream_of_type?(form_node["id"], "action:form"),
