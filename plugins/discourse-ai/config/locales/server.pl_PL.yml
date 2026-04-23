@@ -353,7 +353,7 @@ pl_PL:
         failed_to_share: "Nie udało się udostępnić konwersacji"
         conversation_deleted: "Udostępniona konwersacja została pomyślnie usunięta"
     spam_detection:
-      flag_reason: "Oznaczono jako spam przez <a href='%{url}'>Discourse AI</a>"
+      flag_reason: "Oflagowano jako spam przez <a href='%{url}'>AI Discourse</a>"
       silence_reason: "Użytkownik wyciszony automatycznie przez <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Podano nieprawidłowy typ błędu"
       unexpected: "Wystąpił nieoczekiwany błąd"
