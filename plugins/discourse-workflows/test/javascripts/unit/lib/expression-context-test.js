@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   buildScope,
+  lookupWorkflowMethodDoc,
   resolveVariableId,
   walkScope,
 } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
@@ -42,6 +43,35 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     });
 
     assert.strictEqual(scope.trigger, scope.$json);
+  });
+
+  test("$input.item.json aliases $json", function (assert) {
+    const scope = buildScope({
+      inputFields: [{ key: "title", type: "string" }],
+    });
+
+    assert.strictEqual(scope.$input.item.json, scope.$json);
+    assert.strictEqual(scope.$itemIndex, 0);
+  });
+
+  test("builds $input helpers for current node input", function (assert) {
+    const scope = buildScope({
+      inputFields: [{ key: "title", type: "string" }],
+    });
+
+    assert.strictEqual(scope.$input.all().length, 1);
+    assert.strictEqual(scope.$input.first(), scope.$input.item);
+    assert.strictEqual(scope.$input.last(), scope.$input.item);
+    assert.deepEqual(scope.$input.params, Object.create(null));
+    assert.deepEqual(scope.$input.context, Object.create(null));
+  });
+
+  test("exposes method docs for workflow-owned scope helpers", function (assert) {
+    assert.deepEqual(lookupWorkflowMethodDoc("$input", "all"), {
+      detail: "()",
+      info: "Returns an array of the current node's input items.",
+    });
+    assert.strictEqual(lookupWorkflowMethodDoc("$input", "missing"), null);
   });
 
   test("ancestor node outputs accessible via $()", function (assert) {

@@ -1,5 +1,22 @@
 export const WORKFLOW_VARIABLE_MIME = "application/x-workflow-variable";
 
+const WORKFLOW_METHOD_DOCS = Object.freeze({
+  $input: Object.freeze({
+    all: Object.freeze({
+      detail: "()",
+      info: "Returns an array of the current node's input items.",
+    }),
+    first: Object.freeze({
+      detail: "()",
+      info: "Returns the current node's first input item.",
+    }),
+    last: Object.freeze({
+      detail: "()",
+      info: "Returns the current node's last input item.",
+    }),
+  }),
+});
+
 export function resolveVariableId(variable, itemPrefix = "$json") {
   return variable.id.startsWith("$")
     ? variable.id
@@ -62,9 +79,19 @@ function cleanObject(obj) {
   return clean;
 }
 
-const EMPTY_NODE_OUTPUT = cleanObject({
-  item: cleanObject({ json: Object.create(null) }),
-});
+function buildItem(json) {
+  return cleanObject({ json });
+}
+
+function buildNodeOutput(json) {
+  return cleanObject({ item: buildItem(json) });
+}
+
+const EMPTY_NODE_OUTPUT = buildNodeOutput(Object.create(null));
+
+export function lookupWorkflowMethodDoc(parentPath, methodName) {
+  return WORKFLOW_METHOD_DOCS[parentPath]?.[methodName] || null;
+}
 
 function buildScopeFromFields(fields) {
   if (!fields?.length) {
@@ -133,6 +160,20 @@ function buildExecutionScope(nodes) {
   return scope;
 }
 
+function buildInputScope($json) {
+  const currentItem = buildItem($json);
+  const inputItems = [currentItem];
+
+  return cleanObject({
+    item: currentItem,
+    all: () => inputItems,
+    first: () => currentItem,
+    last: () => currentItem,
+    params: Object.create(null),
+    context: Object.create(null),
+  });
+}
+
 export function buildScope({
   inputFields = [],
   ancestorNodes = [],
@@ -141,16 +182,17 @@ export function buildScope({
   nodes,
 }) {
   const $json = buildScopeFromFields(inputFields);
+  const $input = buildInputScope($json);
 
   const nodeOutputs = Object.create(null);
   for (const ancestor of ancestorNodes) {
     const json = buildScopeFromFields(ancestor.fields);
-    nodeOutputs[ancestor.node.name] = cleanObject({
-      item: cleanObject({ json }),
-    });
+    nodeOutputs[ancestor.node.name] = buildNodeOutput(json);
   }
 
   return cleanObject({
+    $input,
+    $itemIndex: 0,
     $json,
     trigger: $json,
     $site_settings: buildSiteSettingsScope(siteSettings),

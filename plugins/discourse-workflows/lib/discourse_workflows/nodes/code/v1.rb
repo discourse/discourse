@@ -70,11 +70,15 @@ module DiscourseWorkflows
         def execute(exec_ctx)
           code = @configuration["code"].to_s
           mode = @configuration["mode"] || "run_once_for_each_item"
-          all_items_json = exec_ctx.input_items.map { |item| item.fetch("json") { {} } }
 
           items =
             exec_ctx.with_sandbox(capture_logs: true) do |sandbox|
-              setup_code_sandbox!(sandbox, all_items_json)
+              setup_code_sandbox!(
+                sandbox,
+                exec_ctx.input_items,
+                @configuration,
+                DiscourseWorkflows::InputContext.from_node_context(exec_ctx.node_context),
+              )
               if mode == "run_once_for_all_items"
                 execute_all_items(sandbox, code)
               else
@@ -87,9 +91,8 @@ module DiscourseWorkflows
         private
 
         def execute_per_item(sandbox, code, input_items)
-          input_items.map do |item|
-            item_json = item.fetch("json") { {} }
-            sandbox.rebind_code_item(item_json)
+          input_items.each_with_index.map do |item, item_index|
+            sandbox.rebind_code_item(item, item_index:)
             raw = sandbox.eval("(function() { #{code} })()")
             wrap(normalize_code_result(raw))
           end
@@ -106,13 +109,32 @@ module DiscourseWorkflows
           result.deep_stringify_keys
         end
 
-        def setup_code_sandbox!(sandbox, all_items_json)
+        def setup_code_sandbox!(sandbox, input_items, input_params, input_context)
+          sandbox.declare_json("__allInputItems", input_items)
+          sandbox.declare_json("__inputParams", input_params)
+          sandbox.declare_json("__inputContext", input_context)
           sandbox.eval(<<~JS)
-            var $json = {};
             var $input = {
               item: { json: {} },
-              all: function() { return #{all_items_json.to_json}.map(function(j) { return { json: j }; }); }
+              all: function() { return __allInputItems; },
+              first: function() { return __allInputItems[0] || { json: {} }; },
+              last: function() {
+                return __allInputItems[__allInputItems.length - 1] || { json: {} };
+              },
+              params: __inputParams,
+              context: __inputContext
             };
+            var __itemIndex = 0;
+            Object.defineProperty(this, '$json', {
+              get: function() { return $input.item.json; },
+              set: function(value) { $input.item.json = value; },
+              configurable: true
+            });
+            Object.defineProperty(this, '$itemIndex', {
+              get: function() { return __itemIndex; },
+              set: function(value) { __itemIndex = value; },
+              configurable: true
+            });
           JS
         end
       end

@@ -108,11 +108,17 @@ module DiscourseWorkflows
       private
 
       def with_item(item)
-        @resolver.with_item(item["json"]) { yield }
+        @resolver.with_item(item, item_index: item_index_for(item)) { yield }
       end
 
       def sandbox_budget_tracker
         @sandbox_budget_tracker ||= DiscourseWorkflows::SandboxBudget.new(@flow_context)
+      end
+
+      def item_index_for(item)
+        @item_indexes_by_object_id ||=
+          @input_items.each_with_index.to_h { |entry, index| [entry.object_id, index] }
+        @item_indexes_by_object_id.fetch(item.object_id, 0)
       end
 
       def resolve_parameter(name, schema)

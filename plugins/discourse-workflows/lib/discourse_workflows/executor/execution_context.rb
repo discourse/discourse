@@ -10,7 +10,12 @@ module DiscourseWorkflows
         __sandbox_elapsed_ms
         __node_contexts
         __execution
+        __input_item
+        __input_items
+        __input_params
+        __input_context
         $json
+        $itemIndex
       ].freeze
 
       attr_reader :workflow, :trigger_data, :context, :user
@@ -116,8 +121,8 @@ module DiscourseWorkflows
       end
 
       def normalize_node_context_key(node_key)
-        node_id = workflow.find_node(node_key)&.dig("id")
-        return node_id.to_s if node_id.present?
+        node_id = node_key.to_s
+        return node_id if nodes_by_id.key?(node_id)
 
         named_node = nodes_by_name[node_key.to_s]
         return named_node["id"].to_s if named_node
@@ -132,7 +137,7 @@ module DiscourseWorkflows
       end
 
       def resolver_node_key(node_key)
-        workflow.find_node(node_key)&.dig("name").presence || node_key
+        nodes_by_id[node_key.to_s]&.dig("name").presence || node_key
       end
 
       def node_context_key(node)
@@ -150,6 +155,10 @@ module DiscourseWorkflows
               by_name[name] = by_name.key?(name) ? nil : node
             end
             .compact
+      end
+
+      def nodes_by_id
+        @nodes_by_id ||= workflow.nodes.index_by { |node| node["id"].to_s }
       end
     end
   end

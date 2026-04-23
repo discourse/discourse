@@ -131,13 +131,21 @@ module DiscourseWorkflows
       end
 
       step = record_step(node, input_items)
-      resolver_ctx = build_resolver_context(input_items)
+      node_context = @context.node_context_for(node)
+      resolver_ctx = build_resolver_context(node, input_items, node_context)
       resolver = build_resolver(resolver_ctx)
 
       exec_ctx = nil
       begin
         exec_ctx =
-          build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
+          build_node_execution_context(
+            node,
+            input_items,
+            node_context,
+            node_type_class,
+            resolver,
+            resolver_ctx,
+          )
         result = node_type_class.new(configuration: node.configuration).execute(exec_ctx)
 
         if exec_ctx.waiting?
@@ -213,12 +221,19 @@ module DiscourseWorkflows
       enqueue_downstream(node, "main", input_items)
     end
 
-    def build_node_execution_context(node, input_items, node_type_class, resolver, resolver_ctx)
+    def build_node_execution_context(
+      node,
+      input_items,
+      node_context,
+      node_type_class,
+      resolver,
+      resolver_ctx
+    )
       NodeExecutionContext.new(
         input_items: input_items,
         configuration: node.configuration,
         property_schema: node_type_class.property_schema,
-        node_context: @context.node_context_for(node),
+        node_context: node_context,
         user: @options.user,
         run_as_user: run_as_user,
         resolver: resolver,
@@ -350,10 +365,17 @@ module DiscourseWorkflows
 
     # --- Helpers ---
 
-    def build_resolver_context(input_items)
-      base = @context.resolver_context
-      first_json = input_items.first&.dig("json")
-      first_json ? base.merge("$json" => first_json) : base
+    def build_resolver_context(node, input_items, node_context)
+      current_item = input_items.first || { "json" => {} }
+      base =
+        @context.resolver_context(
+          "__input_item" => current_item,
+          "__input_items" => input_items,
+          "__input_params" => node.configuration,
+          "__input_context" => DiscourseWorkflows::InputContext.from_node_context(node_context),
+          "$itemIndex" => 0,
+        )
+      base.merge("$json" => current_item.fetch("json") { {} })
     end
 
     def build_resolver(resolver_ctx)

@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import {
   buildScope,
+  lookupWorkflowMethodDoc,
   resolveVariableId,
   walkScope,
   WORKFLOW_VARIABLE_MIME,
@@ -49,9 +50,17 @@ function buildAnalyzeAtCursor({ cmLanguage, utils }) {
 }
 
 const DOLLAR_VAR_DOCS = {
+  $input: {
+    detail: "object",
+    info: "Current node input helpers. Use $input.item, $input.all(), $input.first(), $input.last(), or $input.params.",
+  },
+  $itemIndex: {
+    detail: "number",
+    info: "Index of the input item currently being processed.",
+  },
   $json: {
     detail: "object",
-    info: "Output data from the previous node. Access fields with dot notation: $json.fieldName",
+    info: "JSON data of the current input item. Shorthand for $input.item.json.",
   },
   trigger: {
     detail: "object",
@@ -78,7 +87,7 @@ const DOLLAR_VAR_DOCS = {
 function buildDollarVars(scope, sections) {
   const groups = [
     {
-      names: ["$json", "trigger"],
+      names: ["$input", "$json", "$itemIndex", "trigger"],
       section: sections.recommended,
       boost: (name) => (name === "$json" ? 10 : 5),
     },
@@ -229,6 +238,19 @@ function buildCompletions(
           for (const name of Object.keys(target)) {
             const value = target[name];
             if (typeof value === "function") {
+              const methodDoc = lookupWorkflowMethodDoc(ctx.object, name);
+              options.push(
+                withMethodApply(
+                  {
+                    label: name,
+                    type: "method",
+                    detail: methodDoc?.detail || "()",
+                    info: methodDoc?.info,
+                    section: sections.methods,
+                  },
+                  cmAutocomplete
+                )
+              );
               continue;
             }
             options.push({
@@ -418,7 +440,9 @@ function buildHoverTooltip({ cmLanguage, cmView, utils }, { scope }) {
           const parentPath = resolveNodeValue(memberExpr.firstChild, doc);
           const parentValue = walkScope(scope, parentPath);
 
-          const methodDoc = lookupMethodDoc(name, parentValue);
+          const methodDoc =
+            lookupWorkflowMethodDoc(parentPath, name) ||
+            lookupMethodDoc(name, parentValue);
           if (methodDoc) {
             return makeTooltip(jsNode, renderTooltipContent(methodDoc));
           }
@@ -524,7 +548,9 @@ function buildArgumentInfo(
     const parentValue = ctx.parentPath
       ? walkScope(scope, ctx.parentPath)
       : null;
-    const doc = lookupMethodDoc(ctx.methodName, parentValue);
+    const doc =
+      lookupWorkflowMethodDoc(ctx.parentPath, ctx.methodName) ||
+      lookupMethodDoc(ctx.methodName, parentValue);
     if (!doc?.info) {
       return null;
     }

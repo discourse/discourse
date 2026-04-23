@@ -22,6 +22,14 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionContext do
 
       expect(Rails.logger).to have_received(:warn).with(/collides with reserved context key/)
     end
+
+    it "warns when storing an internal resolver key" do
+      allow(Rails.logger).to receive(:warn)
+
+      execution_context.store_context("__input_item", [{ "json" => {} }])
+
+      expect(Rails.logger).to have_received(:warn).with(/collides with reserved context key/)
+    end
   end
 
   describe "#resolver_context" do
