@@ -68,7 +68,10 @@ RSpec.describe DiscourseSolved::SolvedTopic do
 
       describe "with multiple solutions enabled" do
         fab!(:post2) { Fabricate(:post, topic: topic) }
-        before { SiteSetting.solved_allow_multiple_solutions = true }
+        before do
+          SiteSetting.solved_allow_multiple_solutions = true
+          SiteSetting.solved_topics_auto_close_hours = 2
+        end
 
         it "only creates one timer" do
           expect(solved.topic_timer).to have_attributes(

@@ -554,13 +554,13 @@ RSpec.describe "Managing Posts solved status" do
 
         notification = user2.notifications.last
         expect(notification.notification_type).to eq(Notification.types[:custom])
-        expect(notification.topic_id).to eq(post.topic_id)
-        expect(notification.post_number).to eq(post.post_number)
+        expect(notification.topic_id).to eq(post2.topic_id)
+        expect(notification.post_number).to eq(post2.post_number)
 
         notification = op.notifications.last
         expect(notification.notification_type).to eq(Notification.types[:custom])
-        expect(notification.topic_id).to eq(post.topic_id)
-        expect(notification.post_number).to eq(post.post_number)
+        expect(notification.topic_id).to eq(post2.topic_id)
+        expect(notification.post_number).to eq(post2.post_number)
       end
 
       it "removes the solution only when the last accepted post is deleted" do
@@ -670,10 +670,10 @@ RSpec.describe "Managing Posts solved status" do
       end
 
       it "triggers multiple webhooks" do
-        Fabricate(:solved_web_hook)
         DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, guardian: user.guardian)
         DiscourseSolved::AcceptAnswer.call!(params: { post_id: p2.id }, guardian: user.guardian)
 
+        Fabricate(:solved_web_hook)
         post "/solution/unaccept.json", params: { id: p1.id }
 
         job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
