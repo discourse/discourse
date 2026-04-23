@@ -12,7 +12,8 @@ module DiscourseWorkflows
                   :log,
                   :execution_id,
                   :resume_token,
-                  :node_id
+                  :node_id,
+                  :waiting_until
 
       def initialize(
         input_items:,
@@ -45,6 +46,8 @@ module DiscourseWorkflows
         @expression_errors = []
         @condition_details = []
         @log = StepLog.new
+        @waiting = false
+        @waiting_until = nil
       end
 
       def get_context(scope = :flow)
@@ -85,6 +88,15 @@ module DiscourseWorkflows
       #   during transition.
       def node_context
         @node_context
+      end
+
+      def put_execution_to_wait(waiting_until = nil)
+        @waiting = true
+        @waiting_until = waiting_until
+      end
+
+      def waiting?
+        @waiting == true
       end
 
       private

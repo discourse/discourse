@@ -22,4 +22,31 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       expect(second).to eq("value" => "ITEM_TWO")
     end
   end
+
+  describe "#put_execution_to_wait" do
+    it "defaults to not waiting" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+      expect(ctx).not_to be_waiting
+      expect(ctx.waiting_until).to be_nil
+    end
+
+    it "flags the context as waiting with the given deadline" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+      deadline = 2.hours.from_now
+
+      ctx.put_execution_to_wait(deadline)
+
+      expect(ctx).to be_waiting
+      expect(ctx.waiting_until).to eq(deadline)
+    end
+
+    it "accepts a nil deadline to request the executor ceiling" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      ctx.put_execution_to_wait(nil)
+
+      expect(ctx).to be_waiting
+      expect(ctx.waiting_until).to be_nil
+    end
+  end
 end
