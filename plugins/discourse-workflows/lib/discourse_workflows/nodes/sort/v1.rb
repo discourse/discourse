@@ -158,7 +158,7 @@ module DiscourseWorkflows
           items = exec_ctx.input_items.map { |item| { "json" => item.fetch("json") { {} } } }
           sorted =
             exec_ctx.with_sandbox(capture_logs: true) do |sandbox|
-              sandbox.eval("var __items = #{items.to_json};")
+              sandbox.declare_json("__items", items)
               sandbox.eval("(function() { return __items.sort(function(a, b) { #{code} }); })()")
             end
 

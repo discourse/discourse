@@ -159,6 +159,17 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
     end
   end
 
+  describe "embedded JSON payloads" do
+    it "rejects payloads larger than MAX_INJECTED_JSON_BYTES" do
+      oversized_payload = { "data" => "x" * described_class::MAX_INJECTED_JSON_BYTES }
+
+      expect { sandbox.declare_json("__huge", oversized_payload) }.to raise_error(
+        described_class::PayloadTooLargeError,
+        /__huge/,
+      )
+    end
+  end
+
   describe ".extract_item_json" do
     it "extracts json from array format" do
       expect(described_class.extract_item_json([{ "json" => { "a" => 1 } }])).to eq({ "a" => 1 })
