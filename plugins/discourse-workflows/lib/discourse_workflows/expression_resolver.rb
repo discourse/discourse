@@ -314,17 +314,27 @@ module DiscourseWorkflows
 
       def expression_setup_js
         <<~JS
-          var $input = {
-            item: __data["__inputItem"],
-            all: function() { return JSON.parse(__fetchInputItems()); },
-            first: function() { return $input.all()[0] || { json: {} }; },
-            last: function() {
-              var items = $input.all();
-              return items[items.length - 1] || { json: {} };
-            },
-            params: __data["__inputParams"],
-            context: __data["__inputContext"]
+          function __WorkflowExpressionInput(item) {
+            this.item = item;
+            this.params = __data["__inputParams"];
+            this.context = __data["__inputContext"];
+          }
+
+          __WorkflowExpressionInput.prototype.all = function() {
+            return JSON.parse(__fetchInputItems());
           };
+
+          __WorkflowExpressionInput.prototype.first = function() {
+            var items = this.all();
+            return items[0] || { json: {} };
+          };
+
+          __WorkflowExpressionInput.prototype.last = function() {
+            var items = this.all();
+            return items[items.length - 1] || { json: {} };
+          };
+
+          var $input = new __WorkflowExpressionInput(__data["__inputItem"]);
           Object.defineProperty(this, '$json', {
             get: function() { return $input.item.json; },
             set: function(value) {

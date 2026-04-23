@@ -51,6 +51,12 @@ RSpec.describe DiscourseWorkflows::ExpressionResolver do
       expect(resolver.resolve("={{ $input.item.json.topic_id }}")).to eq(42)
     end
 
+    it "allows resolving $input without cloning function properties" do
+      result = resolver.resolve("={{ $input }}")
+
+      expect(result["item"]["json"]["topic_id"]).to eq(42)
+    end
+
     it "resolves $site_settings expressions" do
       SiteSetting.title = "My Forum"
       expect(resolver.resolve("={{ $site_settings.title }}")).to eq("My Forum")

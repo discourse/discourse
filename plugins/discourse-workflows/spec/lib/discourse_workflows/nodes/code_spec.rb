@@ -121,6 +121,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
       expect(result.first["json"]).to include("first" => 1, "last" => 2)
     end
 
+    it "allows returning $input without cloning function properties" do
+      items = [{ "json" => { "name" => "Alice" } }]
+      result = execute_code("return $input;", items: items)
+
+      expect(result.first["json"]["item"]["json"]["name"]).to eq("Alice")
+    end
+
     it "exposes $input.params for the current code node" do
       action =
         described_class.new(

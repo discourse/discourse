@@ -114,16 +114,25 @@ module DiscourseWorkflows
           sandbox.declare_json("__inputParams", input_params)
           sandbox.declare_json("__inputContext", input_context)
           sandbox.eval(<<~JS)
-            var $input = {
-              item: { json: {} },
-              all: function() { return __allInputItems; },
-              first: function() { return __allInputItems[0] || { json: {} }; },
-              last: function() {
-                return __allInputItems[__allInputItems.length - 1] || { json: {} };
-              },
-              params: __inputParams,
-              context: __inputContext
+            function __WorkflowCodeInput(item) {
+              this.item = item;
+              this.params = __inputParams;
+              this.context = __inputContext;
+            }
+
+            __WorkflowCodeInput.prototype.all = function() {
+              return __allInputItems;
             };
+
+            __WorkflowCodeInput.prototype.first = function() {
+              return __allInputItems[0] || { json: {} };
+            };
+
+            __WorkflowCodeInput.prototype.last = function() {
+              return __allInputItems[__allInputItems.length - 1] || { json: {} };
+            };
+
+            var $input = new __WorkflowCodeInput({ json: {} });
             var __itemIndex = 0;
             Object.defineProperty(this, '$json', {
               get: function() { return $input.item.json; },
