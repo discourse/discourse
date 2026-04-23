@@ -17,7 +17,6 @@
   --token-color-text-inverse: light-dark(var(--secondary), var(--primary));
 
   // Icon
-  //
   --token-color-icon-default: var(--primary-900);
   --token-color-icon-subtle: var(--primary-700);
   --token-color-icon-subtlest: var(--primary-500);
@@ -31,7 +30,6 @@
 
   // Backgrounds
   // Use as the primary background for the UI.
-  // ---
   --token-color-surface: var(--secondary);
   --token-color-surface-hovered: var(--primary-100);
   --token-color-surface-pressed: var(--primary-200);
@@ -54,12 +52,9 @@
 
   // Sizing
   --token-border-width: 1px;
-  --token-radius-xsmall: 2px;
-  --token-radius-small: 4px;
-  --token-radius-medium: 6px; // interactive elements (buttons, inputs, nav items, etc)
+  --token-radius-small: 2px;
+  --token-radius-normal: 4px;
   --token-radius-large: 8px;
-  --token-radius-xlarge: 12px;
-  --token-radius-xxlarge: 16px;
   --token-radius-full: 9999px;
 
   // font weight

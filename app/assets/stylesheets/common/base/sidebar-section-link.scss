@@ -37,7 +37,7 @@
     width: 100%;
     align-items: center;
     color: var(--d-sidebar-link-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--token-radius-normal);
     gap: var(--d-sidebar-section-link-prefix-margin-right);
 
     &:focus-visible,
@@ -155,7 +155,7 @@
   .dropdown-menu__item .sidebar-section-link {
     height: var(--d-sidebar-row-height);
     padding-inline: var(--d-sidebar-row-horizontal-padding);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--token-radius-normal);
   }
 
   .--link-button {
