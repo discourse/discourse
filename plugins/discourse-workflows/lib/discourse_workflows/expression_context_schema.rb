@@ -3,28 +3,6 @@
 module DiscourseWorkflows
   class ExpressionContextSchema
     ENVIRONMENT_SYMBOLS = {
-      "$input" => {
-        type: :object,
-        fields: {
-          "item" => {
-            type: :object,
-            fields: {
-              "json" => {
-                type: :object,
-              },
-            },
-          },
-          "params" => {
-            type: :object,
-          },
-          "context" => {
-            type: :object,
-          },
-        },
-      },
-      "$itemIndex" => {
-        type: :integer,
-      },
       "$site_settings" => {
         type: :object,
       },

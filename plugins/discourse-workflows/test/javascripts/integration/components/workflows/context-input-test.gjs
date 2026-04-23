@@ -5,20 +5,6 @@ import InputContext from "discourse/plugins/discourse-workflows/admin/components
 
 const EXPRESSION_CONTEXT = {
   environment: {
-    $input: {
-      type: "object",
-      fields: {
-        item: {
-          type: "object",
-          fields: {
-            json: { type: "object" },
-          },
-        },
-        params: { type: "object" },
-        context: { type: "object" },
-      },
-    },
-    $itemIndex: { type: "integer" },
     $site_settings: { type: "object" },
     $vars: { type: "object" },
     $current_user: {
@@ -92,8 +78,6 @@ module("Integration | Component | workflows/context/input", function (hooks) {
       ...envSection.querySelectorAll(".workflows-schema-field__key"),
     ].map((el) => el.textContent.trim());
 
-    assert.true(fieldKeys.includes("input"));
-    assert.true(fieldKeys.includes("itemIndex"));
     assert.true(fieldKeys.includes("site_settings"));
     assert.true(fieldKeys.includes("vars"));
     assert.true(fieldKeys.includes("current_user"));

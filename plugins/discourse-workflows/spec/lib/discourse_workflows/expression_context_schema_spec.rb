@@ -9,22 +9,9 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(schema).to have_key(:item_prefix)
     end
 
-    it "declares current-input and execution environment symbols" do
+    it "declares $site_settings, $vars, $current_user, $execution as environment symbols" do
       symbols = described_class.environment_symbols.keys
-      expect(symbols).to contain_exactly(
-        "$input",
-        "$itemIndex",
-        "$site_settings",
-        "$vars",
-        "$current_user",
-        "$execution",
-      )
-    end
-
-    it "declares $input fields for item, params, and context" do
-      fields = described_class.environment_symbols["$input"][:fields]
-      expect(fields.keys).to contain_exactly("item", "params", "context")
-      expect(fields.dig("item", :fields)&.keys).to contain_exactly("json")
+      expect(symbols).to contain_exactly("$site_settings", "$vars", "$current_user", "$execution")
     end
 
     it "declares $current_user fields matching JsSandbox#build_current_user" do
