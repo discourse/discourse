@@ -1,35 +1,32 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import TopicTimeline from "discourse/components/topic-timeline";
 import { extractError } from "discourse/lib/ajax-error";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ChangeReplyTo extends Component {
-  @tracked postNumber = this.args.model.currentPostNumber ?? "";
-  @tracked flash;
+  @tracked selectedPost = null;
+  @tracked flash = null;
 
-  get maxPostNumber() {
-    return this.args.model.editingPostNumber - 1;
+  noop = () => {};
+
+  get topic() {
+    return this.args.model.topic;
   }
 
-  get submitDisabled() {
-    const n = parseInt(this.postNumber, 10);
-    if (isNaN(n) || n <= 0) {
-      return true;
-    }
-    if (n >= this.args.model.editingPostNumber) {
-      return true;
-    }
-    return false;
+  get editingPostNumber() {
+    return this.args.model.editingPostNumber;
   }
 
-  @action
-  updatePostNumber(event) {
-    this.postNumber = event.target.value;
-    this.flash = null;
+  get canSubmit() {
+    return (
+      !!this.selectedPost &&
+      this.selectedPost.post_number < this.editingPostNumber
+    );
   }
 
   get canRemove() {
@@ -37,26 +34,56 @@ export default class ChangeReplyTo extends Component {
   }
 
   @action
-  async submit() {
-    const postNumber = parseInt(this.postNumber, 10);
-    const postStream = this.args.model.topic?.postStream;
+  async handleJumpToIndex(index) {
+    await this.captureSelectionForIndex(index);
+  }
 
+  @action
+  async handleJumpTop() {
+    await this.captureSelectionForIndex(1);
+  }
+
+  @action
+  async handleJumpBottom() {
+    const total = this.topic?.postStream?.filteredPostsCount;
+    if (total) {
+      await this.captureSelectionForIndex(total);
+    }
+  }
+
+  async captureSelectionForIndex(streamIndex) {
+    const postStream = this.topic?.postStream;
+    if (!postStream) {
+      return;
+    }
+    const postId = postStream.stream[streamIndex - 1];
+    if (!postId) {
+      return;
+    }
     try {
-      let post = postStream?.postForPostNumber(postNumber);
-      if (!post && postStream) {
-        post = await postStream.loadPostByPostNumber(postNumber);
-      }
-
+      let post = postStream.findLoadedPost(postId);
       if (!post) {
-        this.flash = i18n("composer.change_reply_to.not_found");
+        post = await postStream.loadPost(postId);
+      }
+      if (post.post_number >= this.editingPostNumber) {
+        this.flash = i18n("composer.change_reply_to.invalid_target");
+        this.selectedPost = null;
         return;
       }
-
-      this.args.model.onSelect(post);
-      this.args.closeModal();
+      this.flash = null;
+      this.selectedPost = post;
     } catch (e) {
       this.flash = extractError(e);
     }
+  }
+
+  @action
+  submit() {
+    if (!this.canSubmit) {
+      return;
+    }
+    this.args.model.onSelect(this.selectedPost);
+    this.args.closeModal();
   }
 
   @action
@@ -73,24 +100,51 @@ export default class ChangeReplyTo extends Component {
       class="change-reply-to-modal"
     >
       <:body>
-        <p>{{i18n
-            "composer.change_reply_to.description"
-            max=this.maxPostNumber
-          }}</p>
-        <input
-          type="number"
-          min="1"
-          max={{this.maxPostNumber}}
-          value={{this.postNumber}}
-          {{on "input" this.updatePostNumber}}
-          aria-label={{i18n "composer.change_reply_to.post_number_label"}}
+        {{#if this.selectedPost}}
+          <p class="change-reply-to-modal__selection">
+            {{i18n
+              "composer.change_reply_to.current_selection"
+              post_number=this.selectedPost.post_number
+              username=this.selectedPost.username
+            }}
+          </p>
+        {{else}}
+          <p class="change-reply-to-modal__hint">
+            {{i18n "composer.change_reply_to.hint"}}
+          </p>
+        {{/if}}
+
+        <TopicTimeline
+          @model={{this.topic}}
+          @fullscreen={{true}}
+          @enteredIndex={{0}}
+          @jumpTop={{this.handleJumpTop}}
+          @jumpBottom={{this.handleJumpBottom}}
+          @jumpEnd={{this.handleJumpBottom}}
+          @jumpToIndex={{this.handleJumpToIndex}}
+          @jumpToPostPrompt={{this.noop}}
+          @replyToPost={{this.noop}}
+          @showTopReplies={{this.noop}}
+          @toggleMultiSelect={{this.noop}}
+          @showTopicSlowModeUpdate={{this.noop}}
+          @deleteTopic={{this.noop}}
+          @recoverTopic={{this.noop}}
+          @toggleClosed={{this.noop}}
+          @toggleArchived={{this.noop}}
+          @toggleVisibility={{this.noop}}
+          @showTopicTimerModal={{this.noop}}
+          @showFeatureTopic={{this.noop}}
+          @showChangeTimestamp={{this.noop}}
+          @resetBumpDate={{this.noop}}
+          @convertToPublicTopic={{this.noop}}
+          @convertToPrivateMessage={{this.noop}}
         />
       </:body>
       <:footer>
         <DButton
           @action={{this.submit}}
           @label="composer.change_reply_to.submit"
-          @disabled={{this.submitDisabled}}
+          @disabled={{not this.canSubmit}}
           class="btn-primary"
         />
         {{#if this.canRemove}}

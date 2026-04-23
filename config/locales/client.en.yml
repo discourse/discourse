@@ -3135,12 +3135,12 @@ en:
 
       change_reply_to:
         title: "Change reply target"
-        description: "Enter the post number this post should reply to (1–%{max})."
-        post_number_label: "Post number"
+        hint: "Scroll the timeline to find the post you'd like to reply to."
+        current_selection: "Selected: post #%{post_number} by @%{username}"
+        invalid_target: "Choose a post earlier than the one you're editing."
         submit: "Set reply target"
         open: "Change which post this replies to"
         remove: "Remove reply target"
-        not_found: "No post with that number was found in this topic."
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
