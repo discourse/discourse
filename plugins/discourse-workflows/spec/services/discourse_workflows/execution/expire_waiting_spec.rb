@@ -52,8 +52,8 @@ RSpec.describe DiscourseWorkflows::Execution::ExpireWaiting do
       end
     end
 
-    context "when wait_type is timer" do
-      it "handles expired timer waits with the generic timeout logic" do
+    context "when the waiting node is no longer in the workflow" do
+      it "still fails the expired execution with the generic timeout logic" do
         freeze_time
 
         execution =

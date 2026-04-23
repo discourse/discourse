@@ -154,9 +154,8 @@ RSpec.describe DiscourseWorkflows::WebhooksController do
         extra =
           build_workflow_graph do |g|
             g.node "wait-1",
-                   "action:wait",
+                   "flow:wait",
                    configuration: {
-                     "wait_type" => "webhook",
                      "http_method" => "POST",
                      "response_mode" => "immediately",
                      "webhook_suffix" => "after-approval",

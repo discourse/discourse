@@ -260,6 +260,43 @@ RSpec.describe DiscourseWorkflows::Form::Show do
         end
       end
 
+      context "when form_description references a previous node's context" do
+        fab!(:waiting_workflow) do
+          graph =
+            build_workflow_graph do |g|
+              g.node "trigger-1", "trigger:manual", name: "Manual"
+              g.node "form-action-1",
+                     "action:form",
+                     configuration: {
+                       "form_title" => "Waiting Form",
+                       "form_description" => '=Counter was {{ $("Manual").context["counter"] }}',
+                       "form_fields" => [],
+                     }
+              g.chain "trigger-1", "form-action-1"
+            end
+          Fabricate(:discourse_workflows_workflow, enabled: true, **graph)
+        end
+
+        before do
+          ed = execution.execution_data || execution.build_execution_data
+          ed.update!(
+            data: {
+              "entries" => ed.entries,
+              "context" => ed.context_data,
+              "node_contexts" => {
+                "trigger-1" => {
+                  "counter" => 42,
+                },
+              },
+            }.to_json,
+          )
+        end
+
+        it "exposes node_contexts keyed by node name to the resolver" do
+          expect(result[:form_data][:form_description]).to eq("Counter was 42")
+        end
+      end
+
       context "when a downstream form action exists" do
         fab!(:waiting_workflow) do
           graph =

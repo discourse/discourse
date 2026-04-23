@@ -90,8 +90,17 @@ module DiscourseWorkflows
       resume_token = waiting_execution.resume_token
       context_data = waiting_execution.execution_data&.context_data || {}
 
+      node_contexts_by_name =
+        (waiting_execution.execution_data&.node_contexts || {}).each_with_object(
+          {},
+        ) do |(id, value), acc|
+          name = workflow.find_node(id)&.dig("name").presence || id.to_s
+          acc[name] = value
+        end
+
       exec_context =
         context_data.merge(
+          "__node_contexts" => node_contexts_by_name,
           "__execution" => {
             "id" => waiting_execution.id,
             "workflow_id" => workflow.id,
