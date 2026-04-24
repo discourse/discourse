@@ -295,9 +295,15 @@ jobs:
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
         run: script/assemble_ember_build.rb
 
+      - name: Prepare Chrome environment for QUnit
+        if: matrix.build_type == 'frontend'
+        run: |
+          mkdir -p "$HOME/.pki/nssdb" "$HOME/.local/share/pki/nssdb"
+          dbus-daemon --system --fork || true
+
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        run: dbus-run-session -- env QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
       - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
@@ -311,11 +317,11 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake 'plugin:qunit[*]'
+        run: dbus-run-session -- bin/rake 'plugin:qunit[*]'
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+        run: dbus-run-session -- env DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'
