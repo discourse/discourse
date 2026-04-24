@@ -331,6 +331,16 @@ jobs:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
 
+      - name: Upload QUnit debug artifacts
+        if: failure() && matrix.build_type == 'frontend'
+        uses: actions/upload-artifact@v7
+        with:
+          name: qunit-debug-${{ matrix.target }}
+          path: |
+            ./frontend/discourse/testem.log
+            ./tmp/test_server_*.log
+          if-no-files-found: ignore
+
       - name: Install playwright
         if: matrix.build_type == 'system'
         run: pnpm playwright install --with-deps --no-shell chromium

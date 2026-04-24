@@ -12,6 +12,8 @@ class QunitController < ApplicationController
                      ]
   layout false
 
+  around_action :log_theme_qunit_request, only: :theme, if: -> { ENV["CI"] }
+
   def theme
     raise Discourse::NotFound.new if !can_see_theme_qunit?
 
@@ -72,5 +74,19 @@ class QunitController < ApplicationController
 
   def get_param(key)
     params[:"theme_#{key}"] || params[key]
+  end
+
+  def log_theme_qunit_request
+    testem_id = params[:testem_id] || "none"
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    Rails.logger.warn("[theme-qunit] start testem_id=#{testem_id} path=#{request.fullpath}")
+    yield
+  ensure
+    if started
+      elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started) * 1000).round
+      Rails.logger.warn(
+        "[theme-qunit] finish testem_id=#{testem_id} status=#{response&.status} elapsed_ms=#{elapsed_ms}",
+      )
+    end
   end
 end
