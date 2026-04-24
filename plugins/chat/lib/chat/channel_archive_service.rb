@@ -114,7 +114,7 @@ module Chat
 
         chat_channel
           .chat_messages
-          .order("created_at ASC")
+          .order("created_at ASC, id ASC")
           .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |message_batch|
             thread_ids = message_batch.map(&:thread_id).compact.uniq
             threads =
@@ -128,7 +128,7 @@ module Chat
                       .group(:thread_id)
                       .having("count(*) > 1"),
                 )
-                .order("created_at ASC")
+                .order("created_at ASC, id ASC")
                 .to_a
 
             full_batch = (buffer + message_batch + threads).uniq { |msg| msg.id }
