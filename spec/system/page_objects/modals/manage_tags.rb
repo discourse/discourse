@@ -28,15 +28,13 @@ module PageObjects
 
       def has_replace_row_error?(index: 0, text:)
         has_css?(
-          "#{ROOT_SELECTOR} .manage-tags-form__replace-row:nth-of-type(#{index + 1}) .form-kit__errors",
+          "#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors",
           text: text,
         )
       end
 
       def has_no_replace_row_error?(index: 0)
-        has_no_css?(
-          "#{ROOT_SELECTOR} .manage-tags-form__replace-row:nth-of-type(#{index + 1}) .form-kit__errors",
-        )
+        has_no_css?("#{ROOT_SELECTOR} [data-name^='replace_rows.#{index}.'] .form-kit__errors")
       end
 
       def toggle_remove_all
@@ -68,15 +66,11 @@ module PageObjects
       end
 
       def replace_from_selector(index = 0)
-        tag_selector(
-          ".manage-tags-form__replace-row:nth-of-type(#{index + 1}) .tag-chooser:nth-of-type(1)",
-        )
+        tag_selector("[data-name='replace_rows.#{index}.from'] .tag-chooser")
       end
 
       def replace_to_selector(index = 0)
-        tag_selector(
-          ".manage-tags-form__replace-row:nth-of-type(#{index + 1}) .tag-chooser:nth-of-type(2)",
-        )
+        tag_selector("[data-name='replace_rows.#{index}.to'] .tag-chooser")
       end
 
       def select_tags(selector, tag_names)

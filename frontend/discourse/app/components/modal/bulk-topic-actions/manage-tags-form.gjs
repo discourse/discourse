@@ -55,10 +55,13 @@ export default class ManageTagsForm extends Component {
 
       const message = this.#messageForStatus(status);
 
-      if (status === "missing-to") {
+      if (status === "missing-from") {
+        addError(fromName, { title, message });
+      } else if (status === "missing-to") {
         addError(toName, { title, message });
       } else {
         addError(fromName, { title, message });
+        addError(toName, { title, message });
       }
     });
   }
