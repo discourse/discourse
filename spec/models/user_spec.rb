@@ -55,6 +55,33 @@ RSpec.describe User do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
       expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
     end
+
+    context "with granular_anonymous_and_logged_in_groups_permissions enabled" do
+      before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true }
+
+      it "stops returning true for the 'everyone' auto group" do
+        expect(user.in_any_groups?([Group::AUTO_GROUPS[:everyone]])).to eq(false)
+      end
+
+      it "still returns true for the 'logged_in_users' auto group" do
+        expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
+      end
+
+      it "still returns true when the user is explicitly in a custom group" do
+        group.add(user)
+        user.reload
+        expect(user.in_any_groups?([group.id])).to eq(true)
+      end
+
+      it "still returns true for system user against staff/TL auto groups" do
+        GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+        Discourse.system_user.reload
+        expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+        expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(
+          true,
+        )
+      end
+    end
   end
 
   describe "Associations" do

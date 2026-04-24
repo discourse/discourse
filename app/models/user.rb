@@ -544,9 +544,15 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    everyone_or_logged_in =
-      group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
-        group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+    # The :everyone short-circuit means any logged-in user matches a group_list
+    # containing group id 0. This conflates "all logged-in users" with "everyone
+    # including anon" and is gated behind the granular pseudogroups upcoming
+    # change.
+    everyone_shortcut =
+      !SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
+        group_ids.include?(Group::AUTO_GROUPS[:everyone])
+
+    logged_in_shortcut = group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
 
     system_user_in_required_groups =
       (
@@ -560,7 +566,7 @@ class User < ActiveRecord::Base
 
     has_required_groups = (group_ids & belonging_to_group_ids).any?
 
-    everyone_or_logged_in || system_user_in_required_groups || has_required_groups
+    everyone_shortcut || logged_in_shortcut || system_user_in_required_groups || has_required_groups
   end
 
   def belonging_to_group_ids

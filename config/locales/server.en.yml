@@ -2807,6 +2807,7 @@ en:
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
+    granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

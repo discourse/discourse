@@ -4445,3 +4445,13 @@ experimental:
       impact: "feature,all_members"
       status: "beta"
       learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
+  granular_anonymous_and_logged_in_groups_permissions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/121323"
+      disallow_enabled_for_groups: true
