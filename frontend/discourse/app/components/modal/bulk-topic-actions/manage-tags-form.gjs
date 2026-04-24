@@ -3,7 +3,7 @@ import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
-import TagChooser from "discourse/select-kit/components/tag-chooser";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ManageTagsForm extends Component {
@@ -32,15 +32,6 @@ export default class ManageTagsForm extends Component {
   }
 
   @action
-  onReplaceTagChange(field, side, tags) {
-    if (side === "from") {
-      field.set({ from: tags, to: field.value.to });
-    } else {
-      field.set({ from: field.value.from, to: tags });
-    }
-  }
-
-  @action
   removeReplaceRow(collection, index) {
     collection.remove(index);
     // `collection.remove` doesn't re-key row errors, so drop them all.
@@ -48,15 +39,27 @@ export default class ManageTagsForm extends Component {
   }
 
   @action
-  validateReplaceRow(name, value, { addError }) {
-    const status = this.#replaceRowStatus(value);
-    if (status === "valid" || status === "empty") {
-      return;
-    }
+  validateReplaceRows(data, { addError, removeError }) {
+    const title = i18n("topic_bulk_actions.manage_tags.replace.title");
 
-    addError(name, {
-      title: i18n("topic_bulk_actions.manage_tags.replace.title"),
-      message: this.#messageForStatus(status),
+    data.replace_rows.forEach((row, index) => {
+      const fromName = `replace_rows.${index}.from`;
+      const toName = `replace_rows.${index}.to`;
+      removeError(fromName);
+      removeError(toName);
+
+      const status = this.#replaceRowStatus(row);
+      if (status === "valid" || status === "empty") {
+        return;
+      }
+
+      const message = this.#messageForStatus(status);
+
+      if (status === "missing-to") {
+        addError(toName, { title, message });
+      } else {
+        addError(fromName, { title, message });
+      }
     });
   }
 
@@ -121,115 +124,112 @@ export default class ManageTagsForm extends Component {
       @data={{this.initialData}}
       @onSubmit={{this.onSubmit}}
       @onRegisterApi={{this.registerApi}}
+      @validate={{this.validateReplaceRows}}
       class="manage-tags-form"
       as |form transientData|
     >
-      <form.Section
-        @title={{i18n "topic_bulk_actions.manage_tags.remove.title"}}
-        @subtitle={{i18n "topic_bulk_actions.manage_tags.remove.description"}}
-        class="manage-tags-section manage-tags-section--remove"
-      >
-        <:header>
-          <form.Field
-            @name="remove_all_tags"
-            @title={{i18n "topic_bulk_actions.manage_tags.remove.all_toggle"}}
-            @type="toggle"
-            @showOptional={{false}}
-            as |field|
-          >
-            <field.Control />
-          </form.Field>
-        </:header>
 
-        <:default>
-          {{#if transientData.remove_all_tags}}
-            <form.Alert
-              @type="error"
-              class="manage-tags-section__warning"
-            >{{trustHTML
-                (i18n "topic_bulk_actions.manage_tags.remove.all_warning")
-              }}</form.Alert>
-          {{else}}
-            <form.Field
-              @name="remove_tags"
-              @title={{i18n "topic_bulk_actions.manage_tags.remove.title"}}
-              @showTitle={{false}}
-              @type="tag-chooser"
-              @format="full"
-              as |field|
-            >
-              <field.Control />
-            </form.Field>
-          {{/if}}
-        </:default>
-      </form.Section>
-
-      <form.Section
-        @title={{i18n "topic_bulk_actions.manage_tags.add.title"}}
-        @subtitle={{i18n "topic_bulk_actions.manage_tags.add.description"}}
-        class="manage-tags-section manage-tags-section--add"
-      >
+      {{#if transientData.remove_all_tags}}
+        <form.Alert @type="error" class="manage-tags-form__warning">
+          {{trustHTML
+            (i18n "topic_bulk_actions.manage_tags.remove.all_warning")
+          }}
+        </form.Alert>
+      {{else}}
         <form.Field
-          @name="add_tags"
-          @title={{i18n "topic_bulk_actions.manage_tags.add.title"}}
-          @showTitle={{false}}
+          @name="remove_tags"
+          @title={{i18n "topic_bulk_actions.manage_tags.remove.title"}}
+          @description={{i18n
+            "topic_bulk_actions.manage_tags.remove.description"
+          }}
           @type="tag-chooser"
           @format="full"
           as |field|
         >
-          <field.Control @categoryId={{@categoryId}} />
+          <field.Control />
         </form.Field>
-      </form.Section>
+      {{/if}}
 
-      <form.Section
+      <form.Field
+        @name="remove_all_tags"
+        @title={{i18n "topic_bulk_actions.manage_tags.remove.all_toggle"}}
+        @type="toggle"
+        @showOptional={{false}}
+        as |field|
+      >
+        <field.Control />
+      </form.Field>
+
+      <form.Field
+        @name="add_tags"
+        @title={{i18n "topic_bulk_actions.manage_tags.add.title"}}
+        @description={{i18n "topic_bulk_actions.manage_tags.add.description"}}
+        @type="tag-chooser"
+        @format="full"
+        as |field|
+      >
+        <field.Control @categoryId={{@categoryId}} />
+      </form.Field>
+
+      <form.Container
         @title={{i18n "topic_bulk_actions.manage_tags.replace.title"}}
         @subtitle={{i18n "topic_bulk_actions.manage_tags.replace.description"}}
-        class="manage-tags-section manage-tags-section--replace"
+        @format="full"
+        class="manage-tags-form__replace"
       >
         <form.Collection @name="replace_rows" as |collection index|>
-          <form.Container class="manage-tags-replace-row">
-            <collection.Field
-              @title={{i18n "topic_bulk_actions.manage_tags.replace.title"}}
-              @showTitle={{false}}
-              @type="custom"
-              @format="full"
-              @validate={{this.validateReplaceRow}}
-              as |field|
-            >
-              <field.Control>
-                <TagChooser
-                  @tags={{field.value.from}}
-                  @onChange={{fn this.onReplaceTagChange field "from"}}
-                  @options={{hash
-                    maximum=1
-                    filterPlaceholder="topic_bulk_actions.manage_tags.replace.from_placeholder"
-                  }}
-                />
 
-                <span
-                  class="manage-tags-replace-row__arrow"
-                  aria-hidden="true"
+          <form.Row as |row|>
+            <row.Col @size={{5}}>
+              <collection.Field
+                @name="from"
+                @title={{i18n
+                  "topic_bulk_actions.manage_tags.replace.from_placeholder"
+                }}
+                @showTitle={{false}}
+                @type="tag-chooser"
+                @format="full"
+                as |field|
+              >
+                <field.Control
+                  @maximum={{1}}
+                  @placeholder="topic_bulk_actions.manage_tags.replace.from_placeholder"
                 />
+              </collection.Field>
+            </row.Col>
 
-                <TagChooser
-                  @tags={{field.value.to}}
-                  @onChange={{fn this.onReplaceTagChange field "to"}}
+            <row.Col @size={{1}} class="manage-tags-form__replace-arrow">
+              {{icon "arrow-right"}}
+            </row.Col>
+
+            <row.Col @size={{5}}>
+              <collection.Field
+                @name="to"
+                @title={{i18n
+                  "topic_bulk_actions.manage_tags.replace.to_placeholder"
+                }}
+                @showTitle={{false}}
+                @type="tag-chooser"
+                @format="full"
+                as |field|
+              >
+                <field.Control
                   @categoryId={{@categoryId}}
-                  @options={{hash
-                    maximum=1
-                    filterPlaceholder="topic_bulk_actions.manage_tags.replace.to_placeholder"
-                  }}
+                  @maximum={{1}}
+                  @placeholder="topic_bulk_actions.manage_tags.replace.to_placeholder"
                 />
+              </collection.Field>
+            </row.Col>
 
-                <form.Button
-                  @icon="xmark"
-                  @action={{fn this.removeReplaceRow collection index}}
-                  @title="topic_bulk_actions.manage_tags.replace.remove_replacement"
-                  class="btn-transparent manage-tags-replace-row__remove"
-                />
-              </field.Control>
-            </collection.Field>
-          </form.Container>
+            <row.Col @size={{1}}>
+              <form.Button
+                @icon="xmark"
+                @action={{fn this.removeReplaceRow collection index}}
+                @title="topic_bulk_actions.manage_tags.replace.remove_replacement"
+                class="manage-tags-form__replace-row-remove"
+              />
+            </row.Col>
+          </form.Row>
         </form.Collection>
 
         <form.Button
@@ -242,9 +242,9 @@ export default class ManageTagsForm extends Component {
             "replace_rows"
             (hash from=(array) to=(array))
           }}
-          class="btn-default manage-tags-replace-row__add"
+          class="btn-default manage-tags-form__replace-row-add"
         />
-      </form.Section>
+      </form.Container>
     </Form>
   </template>
 }

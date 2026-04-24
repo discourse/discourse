@@ -7,7 +7,7 @@ module PageObjects
       ROOT_SELECTOR = ".manage-tags-form"
 
       def add_tag_selector
-        tag_selector(".manage-tags-section--add .tag-chooser")
+        tag_selector("[data-name='add_tags'] .tag-chooser")
       end
 
       def add_tags(*tag_names)
@@ -28,20 +28,20 @@ module PageObjects
 
       def has_replace_row_error?(index: 0, text:)
         has_css?(
-          "#{ROOT_SELECTOR} .manage-tags-replace-row:nth-of-type(#{index + 1}) .form-kit__errors",
+          "#{ROOT_SELECTOR} .manage-tags-form__replace-row:nth-of-type(#{index + 1}) .form-kit__errors",
           text: text,
         )
       end
 
       def has_no_replace_row_error?(index: 0)
         has_no_css?(
-          "#{ROOT_SELECTOR} .manage-tags-replace-row:nth-of-type(#{index + 1}) .form-kit__errors",
+          "#{ROOT_SELECTOR} .manage-tags-form__replace-row:nth-of-type(#{index + 1}) .form-kit__errors",
         )
       end
 
       def toggle_remove_all
         PageObjects::Components::DToggleSwitch.new(
-          "#{ROOT_SELECTOR} .manage-tags-section--remove .d-toggle-switch__checkbox",
+          "#{ROOT_SELECTOR} [data-name='remove_all_tags'] .d-toggle-switch__checkbox",
         ).toggle
       end
 
@@ -50,11 +50,11 @@ module PageObjects
       end
 
       def has_remove_all_notice?
-        has_css?("#{ROOT_SELECTOR} .manage-tags-section__warning")
+        has_css?("#{ROOT_SELECTOR} .manage-tags-form__warning")
       end
 
       def has_no_remove_tag_selector?
-        has_no_css?("#{ROOT_SELECTOR} .manage-tags-section--remove .tag-chooser")
+        has_no_css?("#{ROOT_SELECTOR} [data-name='remove_tags'] .tag-chooser")
       end
 
       private
@@ -64,18 +64,18 @@ module PageObjects
       end
 
       def remove_tag_selector
-        tag_selector(".manage-tags-section--remove .tag-chooser")
+        tag_selector("[data-name='remove_tags'] .tag-chooser")
       end
 
       def replace_from_selector(index = 0)
         tag_selector(
-          ".manage-tags-replace-row:nth-of-type(#{index + 1}) .tag-chooser:nth-of-type(1)",
+          ".manage-tags-form__replace-row:nth-of-type(#{index + 1}) .tag-chooser:nth-of-type(1)",
         )
       end
 
       def replace_to_selector(index = 0)
         tag_selector(
-          ".manage-tags-replace-row:nth-of-type(#{index + 1}) .tag-chooser:nth-of-type(2)",
+          ".manage-tags-form__replace-row:nth-of-type(#{index + 1}) .tag-chooser:nth-of-type(2)",
         )
       end
 

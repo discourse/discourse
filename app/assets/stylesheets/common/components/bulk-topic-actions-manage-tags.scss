@@ -1,57 +1,46 @@
-@use "lib/viewport";
-
 .manage-tags-form {
-  .select-kit {
-    width: 100%;
-  }
+  position: relative;
 
-  .form-kit__section-header {
-    display: flex;
-    align-items: center;
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  .form-kit__section-heading {
-    flex: 1;
-  }
-
-  .form-kit__section {
-    gap: var(--space-2);
-  }
-
-  .form-kit__section-header .form-kit__field-toggle {
+  #control-remove_all_tags {
+    position: absolute;
+    top: 0;
+    right: 0;
     width: auto;
 
     .form-kit__container-title {
+      color: var(--primary-med-or-secondary-high);
+      font-weight: normal !important;
       white-space: nowrap;
     }
   }
 
-  @include viewport.until(sm) {
-    .form-kit__section-header {
-      align-items: flex-start;
+  &__warning {
+    margin-top: 2rem;
+  }
+
+  .form-kit__errors-summary {
+    z-index: z(
+      "base"
+    ); // One-off overrule for unusual toggle placement in this form
+  }
+
+  &__replace {
+    .form-kit__container-content {
+      flex-direction: column;
+      row-gap: var(--space-2);
+    }
+
+    .form-kit__row {
+      padding-top: 0;
+      align-items: center;
     }
   }
-}
 
-.manage-tags-replace-row {
-  .form-kit__field-custom {
-    width: 100% !important;
+  &__replace-arrow {
+    text-align: center;
   }
 
-  .form-kit__control-custom {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr auto;
-    align-items: center;
-    gap: var(--space-1) var(--space-2);
-  }
-
-  .form-kit__field.has-error .select-kit .select-kit-header {
-    border-color: var(--danger);
-  }
-
-  &__arrow::before {
-    content: "→";
+  &__replace-row-add {
+    width: 100%;
   }
 }

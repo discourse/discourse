@@ -413,7 +413,7 @@ export default class BulkTopicActions extends Component {
     <DModal
       @title={{@model.title}}
       @closeModal={{@closeModal}}
-      class="topic-bulk-actions-modal -large"
+      class="topic-bulk-actions-modal"
     >
       <:body>
         <ConditionalLoadingSection
