@@ -10,15 +10,14 @@ import { Promise } from "rsvp";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import ManageTagsForm from "discourse/components/modal/bulk-topic-actions/manage-tags-form";
 import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
 import RadioButton from "discourse/components/radio-button";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { topicLevels } from "discourse/lib/notification-levels";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import autoFocus from "discourse/modifiers/auto-focus";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
-import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
 
 const _customActions = {};
@@ -32,7 +31,6 @@ export default class BulkTopicActions extends Component {
 
   @tracked activeComponent = null;
   @tracked activeComponentProps = null;
-  @tracked tags = [];
   @tracked categoryId;
   @tracked loading;
   @tracked errors;
@@ -47,7 +45,12 @@ export default class BulkTopicActions extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.model.initialAction === "set-component") {
+    if (this.model.action === "manage-tags") {
+      this.setComponent(ManageTagsForm, {
+        categoryId: this.soleCategoryId,
+        onPerform: this.performAndRefresh,
+      });
+    } else if (this.model.initialAction === "set-component") {
       if (this.model.initialActionLabel in _customActions) {
         _customActions[this.model.initialActionLabel]({
           setComponent: this.setComponent.bind(this),
@@ -108,6 +111,10 @@ export default class BulkTopicActions extends Component {
       operation["message"] = this.closeNote;
     }
 
+    if (operation.type === "manage_tags") {
+      options.asJSON = true;
+    }
+
     const tasks = topicChunks.map((topics) => async () => {
       const result = await Topic.bulkOperation(topics, operation, options);
       this.processedTopicCount += topics.length;
@@ -159,7 +166,6 @@ export default class BulkTopicActions extends Component {
 
   @action
   performAction(opts = {}) {
-    this.loading = true;
     switch (this.model.action) {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
@@ -206,21 +212,6 @@ export default class BulkTopicActions extends Component {
         break;
       case "pin":
         this.performAndRefresh({ type: "pin", ...opts });
-        break;
-      case "append-tags":
-        this.performAndRefresh({
-          type: "append_tags",
-          tag_ids: this.tags?.map((t) => t.id),
-        });
-        break;
-      case "replace-tags":
-        this.performAndRefresh({
-          type: "change_tags",
-          tag_ids: this.tags?.map((t) => t.id),
-        });
-        break;
-      case "remove-tags":
-        this.performAndRefresh({ type: "remove_tags" });
         break;
       case "delete":
         this.performAndRefresh({ type: "delete" });
@@ -304,6 +295,7 @@ export default class BulkTopicActions extends Component {
 
   @action
   async forEachPerformed(operation, cb) {
+    this.loading = true;
     const totalCount = this.model.bulkSelectHelper.selected.length;
     const result = await this.perform(operation);
 
@@ -324,6 +316,7 @@ export default class BulkTopicActions extends Component {
 
   @action
   async performAndRefresh(operation) {
+    this.loading = true;
     const totalCount = this.model.bulkSelectHelper.selected.length;
     const result = await this.perform(operation);
 
@@ -339,13 +332,6 @@ export default class BulkTopicActions extends Component {
         });
       }
     }
-  }
-
-  get isTagAction() {
-    return (
-      this.model.action === "append-tags" ||
-      this.model.action === "replace-tags"
-    );
   }
 
   get isNotificationAction() {
@@ -399,16 +385,6 @@ export default class BulkTopicActions extends Component {
     }
 
     return Category.findById(this.soleCategoryId);
-  }
-
-  get soleCategoryBadgeHTML() {
-    return categoryBadgeHTML(this.soleCategory, {
-      allowUncategorized: true,
-    });
-  }
-
-  get showSoleCategoryTip() {
-    return this.soleCategory && this.isTagAction;
   }
 
   get confirmButtonLabel() {
@@ -480,18 +456,6 @@ export default class BulkTopicActions extends Component {
                 }}</p>
             {{/if}}
 
-            {{#if this.showSoleCategoryTip}}
-              <div class="topic-bulk-actions-modal__selection-info">
-                {{trustHTML
-                  (i18n
-                    "topics.bulk.selected_sole_category"
-                    count=@model.bulkSelectHelper.selected.length
-                  )
-                }}
-                {{trustHTML this.soleCategoryBadgeHTML}}
-              </div>
-            {{/if}}
-
             {{#if this.isCategoryAction}}
               <p>
                 <CategoryChooser
@@ -523,19 +487,14 @@ export default class BulkTopicActions extends Component {
               </div>
             {{/if}}
 
-            {{#if this.isTagAction}}
-              <p><TagChooser
-                  @tags={{this.tags}}
-                  @categoryId={{this.soleCategoryId}}
-                /></p>
-            {{/if}}
-
             {{#if this.activeComponent}}
               {{component
                 this.activeComponent
                 onRegisterAction=this.registerCustomAction
                 topics=this.activeComponentProps.topics
                 afterBulkAction=this.activeComponentProps.afterBulkAction
+                categoryId=this.activeComponentProps.categoryId
+                onPerform=this.activeComponentProps.onPerform
               }}
             {{/if}}
 

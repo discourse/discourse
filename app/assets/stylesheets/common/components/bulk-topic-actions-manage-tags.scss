@@ -1,0 +1,57 @@
+@use "lib/viewport";
+
+.manage-tags-form {
+  .select-kit {
+    width: 100%;
+  }
+
+  .form-kit__section-header {
+    display: flex;
+    align-items: center;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .form-kit__section-heading {
+    flex: 1;
+  }
+
+  .form-kit__section {
+    gap: var(--space-2);
+  }
+
+  .form-kit__section-header .form-kit__field-toggle {
+    width: auto;
+
+    .form-kit__container-title {
+      white-space: nowrap;
+    }
+  }
+
+  @include viewport.until(sm) {
+    .form-kit__section-header {
+      align-items: flex-start;
+    }
+  }
+}
+
+.manage-tags-replace-row {
+  .form-kit__field-custom {
+    width: 100% !important;
+  }
+
+  .form-kit__control-custom {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  .form-kit__field.has-error .select-kit .select-kit-header {
+    border-color: var(--danger);
+  }
+
+  &__arrow::before {
+    content: "→";
+  }
+}

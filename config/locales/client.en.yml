@@ -3781,27 +3781,19 @@ en:
         notification_level: "Update notifications"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
-        selected_sole_category:
-          one: "You have selected <b>%{count}</b> topic from category:"
-          other: "You have selected <b>%{count}</b> topics from category:"
         selected_count:
           one: "%{count} selected"
           other: "%{count} selected"
-        change_tags: "Replace tags"
-        append_tags: "Add tags"
-        choose_new_tags: "Choose new tags for these topics:"
-        choose_append_tags: "Add tags"
-        changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove tags"
-        confirm_remove_tags:
-          one: "All tags will be removed from this topic. Are you sure?"
-          other: "All tags will be removed from %{count} topics. Are you sure?"
+        manage_tags: "Manage tags"
         confirm_unpin_topics:
           one: "Un-pin %{count} topic"
           other: "Un-pin %{count} topics"
         confirm_update_topics:
           one: "Update %{count} topic"
           other: "Update %{count} topics"
+        confirm_apply_to_topics:
+          one: "Apply to %{count} topic"
+          other: "Apply to %{count} topics"
         confirm_close_topics:
           one: "Close %{count} topic"
           other: "Close %{count} topics"
@@ -3881,15 +3873,26 @@ en:
         description: "Unlisted topics are hidden from the topic list but can still be accessed via a direct link. <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>Learn more</a>"
       relist_topics:
         name: "Relist"
-      remove_tags:
-        name: "Remove Tags"
-        description: "Remove all tags from the selected topics."
-      append_tags:
-        name: "Add Tags"
-        description: "Add the following tags to the selected topics:"
-      replace_tags:
-        name: "Replace Tags"
-        description: "Replace all existing tags on the selected topics with the following:"
+      manage_tags:
+        name: "Manage tags"
+        add:
+          title: "Add tags"
+          description: "Added to all selected topics"
+        remove:
+          title: "Remove tags"
+          description: "Removed whenever present"
+          all_toggle: "Remove all tags"
+          all_warning: "<strong>All existing tags</strong> will be removed from the selected topics. This cannot be undone."
+        replace:
+          title: "Replace tags"
+          description: "Swaps one tag for another"
+          add_replacement: "Add replacement"
+          remove_replacement: "Remove replacement"
+          from_placeholder: "Tag to replace"
+          to_placeholder: "Replacement tag"
+          missing_from: "A source tag is required"
+          missing_to: "A replacement tag is required"
+          same_tag: "Source and replacement tags must differ"
       delete_topics:
         name: "Delete"
         description: "Permanently delete the selected topics. This action cannot be undone."

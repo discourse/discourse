@@ -27,6 +27,7 @@ class TopicsBulkAction
       change_tags
       append_tags
       remove_tags
+      manage_tags
       relist
       dismiss_topics
       reset_bump_dates
@@ -301,47 +302,70 @@ class TopicsBulkAction
 
   def change_tags
     tags = resolve_tag_names || []
-
-    topics_with_tags.each do |t|
-      next unless guardian.can_edit?(t)
-      next unless t.first_post
-
-      if t.first_post.revise(@user, { tags: tags }, bulk_tag_opts)
-        @changed_ids << t.id
-      else
-        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-      end
-    end
+    topics_with_tags.each { |t| apply_tag_revision(t, tags) }
   end
 
   def append_tags
     tags = resolve_tag_names || []
-
     return if tags.blank?
 
     topics_with_tags.each do |t|
-      next unless guardian.can_edit?(t)
-      next unless t.first_post
-
       merged = t.tags.map(&:name) | tags
-      if t.first_post.revise(@user, { tags: merged }, bulk_tag_opts)
-        @changed_ids << t.id
-      else
-        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-      end
+      apply_tag_revision(t, merged)
     end
   end
 
   def remove_tags
-    topics_with_tags.each do |t|
-      next unless guardian.can_edit?(t)
-      next unless t.first_post
+    topics_with_tags.each { |t| apply_tag_revision(t, []) }
+  end
 
-      if t.first_post.revise(@user, { tags: [] }, bulk_tag_opts)
-        @changed_ids << t.id
-      else
-        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-      end
+  def manage_tags
+    add_names = resolve_tag_id_list(@operation[:add_tag_ids])
+    remove_names = resolve_tag_id_list(@operation[:remove_tag_ids])
+    replace_map = build_replace_map(@operation[:replace_tags])
+
+    topics_with_tags.each do |t|
+      current = t.tags.map(&:name)
+      base = @operation[:remove_all_tags] ? [] : current - remove_names
+      with_adds = base | add_names
+      final = with_adds.map { |name| replace_map[name] || name }
+
+      next if final.sort == current.sort
+
+      apply_tag_revision(t, final)
+    end
+  end
+
+  def resolve_tag_id_list(ids)
+    return [] if ids.blank?
+    Tag.where(id: ids).pluck(:name)
+  end
+
+  def build_replace_map(replace_entries)
+    entries = replace_entries || []
+    ids = entries.flat_map { |e| [e[:from_tag_id], e[:to_tag_id]] }.compact
+    return {} if ids.empty?
+
+    names_by_id = Tag.where(id: ids).pluck(:id, :name).to_h
+
+    entries.each_with_object({}) do |entry, map|
+      from_name = names_by_id[entry[:from_tag_id].to_i]
+      to_name = names_by_id[entry[:to_tag_id].to_i]
+      next unless from_name && to_name
+      map[from_name] ||= to_name
+    end
+  end
+
+  def apply_tag_revision(topic, tag_names)
+    return false unless guardian.can_edit?(topic)
+    return false unless topic.first_post
+
+    if topic.first_post.revise(@user, { tags: tag_names }, bulk_tag_opts)
+      @changed_ids << topic.id
+      true
+    else
+      topic.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      false
     end
   end
 
