@@ -6141,10 +6141,17 @@ tr_TR:
               title: "Günlükler"
               header_description: "Yedeklemeler, geri yüklemeler ve yüklemeler için günlükleri görüntüleme ve yönetme"
         problem_checks:
+          title: "Hata denetimleri"
+          header_description: "Kayıtlı tüm sorun kontrollerini ve bunların güncel durumlarını görüntüleyin."
+          identifier: "Kontrol et"
+          target: "Hedef"
           priority: "Öncelik"
           status: "Durum"
+          passing: "Geçiş"
+          failing: "Başarısızlık"
           last_run_at: "Son çalıştırma"
           ignore: "Yok say"
+          watch: "İzle"
           more_options:
             title: "Daha fazla seçenek"
         reports:
@@ -8435,6 +8442,9 @@ tr_TR:
       site_settings:
         title: "Site ayarları"
         description: "Discourse sitenizin görünümünü, işlevselliğini ve kullanıcı deneyimini özelleştirmek için ayarları yapılandırın."
+        depends_on_notice:
+          one: "Bu ayar yalnızca %{dependencyLinks} etkinleştirildiğinde uygulanır."
+          other: "Bu ayar yalnızca %{dependencyLinks} etkinleştirildiğinde uygulanır."
         discard:
           one: "Değişikliği sil"
           other: "Değişiklikleri sil"
@@ -8547,6 +8557,7 @@ tr_TR:
             confirm: "Evet, bu değeri 0 olarak ayarlamadığım sürece, aktif olmayan kullanıcıların kalıcı olarak silineceğini anlıyorum."
           can_permanently_delete:
             prompt: "Bu seçeneği etkinleştirdiğinizde, yöneticiler gönderileri, konuları ve gönderi revizyonlarını kalıcı olarak silebilir. Kalıcı olarak silinen veriler geri getirilemez. Bu durum veri bütünlüğünü etkileyebilir ve mevcut bağlantıların bozulmasına neden olabilir."
+            confirm: "Anlıyorum"
         job_status:
           completed: "Güncelleme tamamlandı"
           enqueued: "Güncelleme devam ediyor"

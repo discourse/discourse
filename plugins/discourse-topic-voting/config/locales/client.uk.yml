@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_topic_voting: "Голосування за тему"
   js:
     category:
       sort_options:
