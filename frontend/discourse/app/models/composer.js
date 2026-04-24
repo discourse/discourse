@@ -1071,14 +1071,27 @@ export default class Composer extends RestModel {
         // Prefer those values so pending reply-target changes survive a
         // reload or navigation; fall back to the post's stored state
         // otherwise. `undefined` means the key wasn't in the draft at all.
+        //
+        // `post.reply_to_user` is a rich `User` model instance with
+        // circular back-refs (via `statusManager`), so we extract a plain
+        // snapshot — otherwise `JSON.stringify` during periodic draft saves
+        // throws "Converting circular structure to JSON".
         const replyToPostNumber =
           opts.reply_to_post_number !== undefined
             ? opts.reply_to_post_number
             : (post.reply_to_post_number ?? null);
+        const postReplyToUser = post.reply_to_user;
         const replyToUser =
           opts.reply_to_user !== undefined
             ? opts.reply_to_user
-            : (post.reply_to_user ?? null);
+            : postReplyToUser
+              ? {
+                  id: postReplyToUser.id,
+                  username: postReplyToUser.username,
+                  name: postReplyToUser.name,
+                  avatar_template: postReplyToUser.avatar_template,
+                }
+              : null;
         this.setProperties({
           post,
           reply: post.raw,
