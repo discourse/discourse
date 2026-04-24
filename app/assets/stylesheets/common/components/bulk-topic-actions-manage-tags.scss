@@ -32,12 +32,15 @@
 
     .form-kit__row {
       padding-top: 0;
-      align-items: center;
     }
   }
 
   &__replace-arrow {
     text-align: center;
+    height: 2.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__replace-row-add {
