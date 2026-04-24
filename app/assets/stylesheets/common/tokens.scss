@@ -1,0 +1,64 @@
+:root {
+  // Text
+  --token-color-text-default: var(--primary-900);
+  --token-color-text-subtle: var(--primary-800);
+  --token-color-text-subtlest: var(--primary-600);
+  --token-color-text-accent: light-dark(
+    var(--tertiary-800),
+    var(--tertiary-300)
+  );
+  --token-color-text-accent-bolder: light-dark(
+    var(--tertiary-900),
+    var(--tertiary-200)
+  );
+
+  // for use on "bold" backgrounds
+  --token-color-text-inverse: light-dark(var(--secondary), var(--primary));
+
+  // Icon
+  --token-color-icon-default: var(--primary-800);
+  --token-color-icon-subtle: var(--primary-500);
+  --token-color-icon-subtlest: var(--primary-400);
+  --token-color-icon-danger: var(--danger);
+
+  // Border
+  --token-color-border-input: var(--primary-300);
+  --token-color-border-default: var(--primary-low);
+  --token-color-border-focused: var(--tertiary);
+  --token-color-border-accent: var(--tertiary-400);
+
+  // Backgrounds
+  // Use as the primary background for the UI.
+  --token-color-surface: var(--secondary);
+  --token-color-surface-hovered: var(--primary-100);
+  --token-color-surface-pressed: var(--primary-200);
+  --token-color-background-input: var(--secondary);
+  --token-color-surface-selected: var(--d-selected);
+
+  // Accents
+  --token-color-background-accent-subtlest: var(--tertiary-200);
+  --token-color-background-accent-subtlest-hovered: var(--tertiary-300);
+  --token-color-background-accent-subtlest-pressed: var(--tertiary-400);
+  --token-color-background-accent-subtler: var(--tertiary-400);
+  --token-color-background-accent-subtler-hovered: var(--tertiary-500);
+  --token-color-background-accent-subtler-pressed: var(--tertiary-600);
+  --token-color-background-accent-subtle: var(--tertiary-600);
+  --token-color-background-accent-subtle-hovered: var(--tertiary-700);
+  --token-color-background-accent-subtle-pressed: var(--tertiary-800);
+  --token-color-background-accent-bolder: var(--tertiary);
+  --token-color-background-accent-bolder-hovered: var(--tertiary-high);
+  --token-color-background-accent-bolder-pressed: var(--tertiary-very-high);
+
+  // Sizing
+  --token-border-width: 1px;
+  --token-radius-small: 2px;
+  --token-radius-normal: 4px;
+  --token-radius-large: 8px;
+  --token-radius-full: 9999px;
+
+  // font weight
+  --token-font-weight-bold: 650;
+  --token-font-weight-semibold: 600;
+  --token-font-weight-medium: 500;
+  --token-font-weight-regular: normal;
+}

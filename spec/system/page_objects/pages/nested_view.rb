@@ -155,7 +155,7 @@ module PageObjects
 
       def has_sort_active?(sort)
         has_css?(
-          ".nested-sort-selector__option--active",
+          ".nested-sort-selector button.active",
           text: I18n.t("js.nested_replies.sort.#{sort}"),
         )
       end
@@ -333,7 +333,7 @@ module PageObjects
       end
 
       def click_sort(sort)
-        find(".nested-sort-selector__option", text: I18n.t("js.nested_replies.sort.#{sort}")).click
+        find(".nested-sort-selector button", text: I18n.t("js.nested_replies.sort.#{sort}")).click
         self
       end
 

@@ -8,7 +8,8 @@ module DiscourseAi
       # Also returns aggregate counts for total eligible posts and posts with detected locale.
       # @return [Hash] a hash with keys :translation_progress (array), :total (integer), and :posts_with_detected_locale (integer)
       def self.get_completion_all_locales
-        completion_all_locales
+        cache_key = "ai-translations-progress-#{SiteSetting.content_localization_supported_locales}"
+        Discourse.cache.fetch(cache_key, expires_in: 30.minutes) { completion_all_locales }
       end
 
       def self.needs_localization(limit:)

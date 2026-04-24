@@ -142,7 +142,7 @@ GEM
     diffy (3.4.4)
     digest (3.2.1)
     digest-xxhash (0.2.9)
-    discourse-emojis (1.0.45)
+    discourse-emojis (1.0.46)
     discourse-fonts (0.0.19)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -311,7 +311,7 @@ GEM
     mini_sql (1.6.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
-    minio_runner (1.0.0)
+    minio_runner (1.0.1)
     minitest (6.0.5)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -488,14 +488,13 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     raindrops (0.20.1)
-    rake (13.4.1)
-    rake-compiler-dock (1.11.0)
+    rake (13.4.2)
+    rake-compiler-dock (1.12.0)
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
-    rb_sys (0.9.126)
-      json (>= 2)
-      rake-compiler-dock (= 1.11.0)
+    rb_sys (0.9.127)
+      rake-compiler-dock (= 1.12.0)
     rbs (4.0.2)
       logger
       prism (>= 1.6.0)
@@ -989,7 +988,7 @@ CHECKSUMS
   diffy (3.4.4) sha256=79384ab5ca82d0e115b2771f0961e27c164c456074bd2ec46b637ebf7b6e47e3
   digest (3.2.1) sha256=ab3312b4e272d7d5dc41c564c86a25861a1f34ac5153374199a0b74861395947
   digest-xxhash (0.2.9) sha256=a989d8309c03c4136a4bea9981ec0a146a2750de7f3dfb7b5624a3038aa598d7
-  discourse-emojis (1.0.45) sha256=d4b512eb140475eb67fddc8c1f089d4bcd00a43517ead77758a7384713019bcf
+  discourse-emojis (1.0.46) sha256=e986526ec835eb8de1640da6a853767272a3fc15b756666f072ab95103f3c93c
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
   discourse_ai-tokenizers (0.4.2) sha256=61c2f254582a3ae69255115b2b072904361003612b5b0f52aa64773817aae413
@@ -1085,7 +1084,7 @@ CHECKSUMS
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7
-  minio_runner (1.0.0) sha256=ca0fc56a90c63b65a26cda632938c9075046835d41f4b9d1e165b0550eae0538
+  minio_runner (1.0.1) sha256=3675ad7abd79177b3fdd9f37e20fe46f7d4dcbb41f3f30a53db2207277241795
   minitest (6.0.5) sha256=f007d7246bf4feea549502842cd7c6aba8851cdc9c90ba06de9c476c0d01155c
   mocha (3.1.0) sha256=75f42d69ebfb1f10b32489dff8f8431d37a418120ecdfc07afe3bc183d4e1d56
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
@@ -1162,11 +1161,11 @@ CHECKSUMS
   railties (8.0.5) sha256=ad98c6e9a096b7e8cf63c70872b60ec6c1d4152be2a4ffa63483ec02a837a9d5
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
-  rake (13.4.1) sha256=b4e81bd6a748308a6799619d824ec6a23cd1acd07d9ec41e5f2ebfb2294447c8
-  rake-compiler-dock (1.11.0) sha256=eab51f2cd533eb35cea6b624a75281f047123e70a64c58b607471bb49428f8c2
+  rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
+  rake-compiler-dock (1.12.0) sha256=f13205c2738f3d2053afcd03491a9e4541b22a59a0bfc53fc8bc883bd8188023
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
-  rb_sys (0.9.126) sha256=ba958e0b8b4b89eeae0b3d24b64c809eb2c37e0ab0773a49e9b1c2e22c95aef8
+  rb_sys (0.9.127) sha256=e9f90df3bb0577472d26d96127d5b5774b98f44de881e7d36aeefd28d6337847
   rbs (4.0.2) sha256=af75671e66cd03434cc546622741ebf83f6197ec4328375805306330bf78ef25
   rbtrace (0.5.3) sha256=c432292f305d9ab12fd47d9722e0d5210d983758a951fe6107c36cc955cb923f
   rchardet (1.10.0) sha256=d5ea2ed61a720a220f1914778208e718a0c7ed2a484b6d357ba695aa7001390f

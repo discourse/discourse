@@ -189,6 +189,7 @@ describe DiscourseAi::Translation::PostCandidates do
     fab!(:target_category, :category)
 
     before do
+      Discourse.cache.clear
       SiteSetting.content_localization_supported_locales = "en_GB|pt|es"
       SiteSetting.ai_translation_backfill_max_age_days = 30
       SiteSetting.ai_translation_target_categories = target_category.id.to_s

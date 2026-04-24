@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse Veri Gezgini"
   js:
     discourse_ai:
       features:
@@ -33,9 +38,13 @@ tr_TR:
         description_hint: "Ne istediğinizi basit bir dille açıklayın. SQL sorgusunu, adı ve açıklamayı sizin için biz oluşturacağız."
         description_placeholder: "Örneğin: Zaman içindeki kayıtları göster"
         generate: "Oluştur"
+        regenerate: "Yeniden oluştur"
         generating: "AI ile sorgu oluşturuluyor..."
         generation_timeout: "AI sorgu oluşturma işlemi zaman aşımına uğradı. SQL sorgusunu manuel olarak yazabilirsiniz."
         generation_error: "Sorgu oluşturulurken bir hata oluştu."
+        save_query: "Sorguyu kaydet"
+        write_manually: "SQL'i elle yazın"
+        sql_label: "SQL"
         optional: "i̇steğe bağlı"
       import:
         label: "İçe Aktar"

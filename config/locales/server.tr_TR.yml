@@ -2491,6 +2491,7 @@ tr_TR:
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
     enable_new_checkbox_style: "FormKit onay kutuları için yeniden tasarlanan onay kutusu stilini etkinleştirin."
+    enable_new_post_reactions_menu: "Sonsuz kaydırma özelliği ve mobil cihazlara özel bir deneyim sunan, yeniden tasarlanan gönderi beğenileri ve tepkileri menüsünü etkinleştirin."
     impersonate_without_logout: "Yöneticilerin, yönetici hesaplarından çıkış yapmadan bir kullanıcıyı taklit etmelerine izin verin."
     experimental_impersonation_time_limit_minutes: "Taklit oturumu otomatik olarak sonlandırılmadan önce geçen süre."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."

@@ -238,30 +238,6 @@
   }
 }
 
-// ── Sort selector ──────────────────────────────────────────────────
-.nested-sort-selector {
-  display: flex;
-  align-items: center;
-  gap: 0.25em;
-
-  &__label {
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    margin-right: 0.25em;
-  }
-
-  &__option {
-    font-size: var(--font-down-1);
-    padding: 0.25em 0.5em;
-    color: var(--primary-medium);
-
-    &--active {
-      color: var(--tertiary);
-      font-weight: bold;
-    }
-  }
-}
-
 // ── Nested post (single comment in tree) ───────────────────────────
 .nested-post {
   // Avatar size for the "small" PostAvatar used in nested posts.
