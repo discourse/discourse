@@ -610,8 +610,10 @@ class Middleware::RequestTracker
 
     # An embedded pageview is either an initial HTML load carrying `?embed_mode=true`,
     # or a subsequent XHR from inside the embed iframe which sets the header below.
+    # Use `request.GET` (query-string only) rather than `request.params` so a missing
+    # or malformed request body cannot raise from here.
     is_embed =
-      request.params["embed_mode"] == "true" ||
+      request.GET["embed_mode"] == "true" ||
         %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
 
     {

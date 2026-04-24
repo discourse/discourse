@@ -357,6 +357,22 @@ RSpec.describe Middleware::RequestTracker do
         expect(ApplicationRequest.page_view_anon_browser_beacon.sum(:count)).to eq(0)
       end
 
+      it "survives requests with a missing or unreadable body" do
+        # POST without a rack.input must not raise while detecting `is_embed` —
+        # we only care about the query string, not the body.
+        expect {
+          Middleware::RequestTracker.get_data(
+            env(
+              "REQUEST_METHOD" => "POST",
+              :path => "/srv/something?embed_mode=true",
+              "rack.input" => nil,
+            ),
+            ["200", {}],
+            0.1,
+          )
+        }.not_to raise_error
+      end
+
       it "still counts crawlers as page_view_crawler even on embed URLs" do
         data =
           Middleware::RequestTracker.get_data(
