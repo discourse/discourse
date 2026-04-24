@@ -96,6 +96,9 @@ class Middleware::RequestTracker
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
+      elsif data[:is_embed]
+        # Embed pageviews are counted in the browser/beacon branches below so
+        # community-traffic counters stay unpolluted by iframe traffic.
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
@@ -106,7 +109,10 @@ class Middleware::RequestTracker
     end
 
     if data[:browser_page_view] && !data[:is_crawler] && !data[:is_beacon]
-      if data[:has_auth_cookie]
+      if data[:is_embed]
+        ApplicationRequest.increment!(:page_view_embed)
+        trigger_browser_pageview_event(data)
+      elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
@@ -132,7 +138,10 @@ class Middleware::RequestTracker
     end
 
     if data[:is_beacon] && !data[:is_crawler]
-      if data[:has_auth_cookie]
+      if data[:is_embed]
+        ApplicationRequest.increment!(:page_view_embed)
+        trigger_beacon_browser_pageview_event(data)
+      elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
         if data[:is_mobile]
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile_beacon)
@@ -599,12 +608,19 @@ class Middleware::RequestTracker
       env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]&.slice(0, MAX_SESSION_ID_LENGTH)
     user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
 
+    # An embedded pageview is either an initial HTML load carrying `?embed_mode=true`,
+    # or a subsequent XHR from inside the embed iframe which sets the header below.
+    is_embed =
+      request.params["embed_mode"] == "true" ||
+        %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
+
     {
       track_view: track_view,
       explicit_track_view: explicit_track_view,
       deferred_track_view: deferred_track_view,
       implicit_track_view: implicit_track_view,
       browser_page_view: browser_page_view,
+      is_embed: is_embed,
       topic_id: topic_id,
       tracking_url: tracking_url,
       tracking_referrer: tracking_referrer,
@@ -633,6 +649,7 @@ class Middleware::RequestTracker
     tracking_referrer = data["referrer"]&.slice(0, MAX_URL_LENGTH)
     tracking_session_id = data["session_id"]&.slice(0, MAX_SESSION_ID_LENGTH)
     user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
+    is_embed = data["embed"] == true
 
     {
       track_view: false,
@@ -641,6 +658,7 @@ class Middleware::RequestTracker
       implicit_track_view: false,
       browser_page_view: true,
       is_beacon: true,
+      is_embed: is_embed,
       topic_id: topic_id,
       tracking_url: tracking_url,
       tracking_referrer: tracking_referrer,
