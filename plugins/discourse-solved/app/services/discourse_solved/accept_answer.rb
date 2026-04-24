@@ -50,6 +50,7 @@ class DiscourseSolved::AcceptAnswer
   end
 
   def should_revoke_previous(topic:)
+    topic.reload
     !SiteSetting.solved_allow_multiple_solutions && topic.solved&.topic_answers&.any?
   end
 
