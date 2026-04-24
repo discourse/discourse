@@ -39,6 +39,7 @@
     position: sticky;
     top: 0;
     background: var(--secondary);
+    z-index: z("base");
   }
 
   &__header {
