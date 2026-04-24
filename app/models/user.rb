@@ -544,9 +544,23 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
-      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
-      (group_ids & belonging_to_group_ids).any?
+    everyone_or_logged_in =
+      group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+        group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+
+    system_user_in_required_groups =
+      (
+        is_system_user? &&
+          (
+            (
+              Group.auto_groups_between(:admins, :trust_level_4) - [Group::AUTO_GROUPS[:anonymous]]
+            ) & group_ids
+          ).any?
+      )
+
+    has_required_groups = (group_ids & belonging_to_group_ids).any?
+
+    everyone_or_logged_in || system_user_in_required_groups || has_required_groups
   end
 
   def belonging_to_group_ids

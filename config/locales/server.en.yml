@@ -671,6 +671,8 @@ en:
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
+      anonymous: "anonymous"
+      logged_in_users: "logged_in_users"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
@@ -679,6 +681,8 @@ en:
     default_descriptions:
       everyone: "Automatic group including all members"
       staff: "Automatic group including admins and moderators"
+      anonymous: "Automatic pseudogroup representing unauthenticated visitors"
+      logged_in_users: "Automatic pseudogroup including every logged-in user"
       admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
       moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
       trust_level_0: "New members with limited abilities, who are learning community norms and functionality"

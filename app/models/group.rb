@@ -104,6 +104,8 @@ class Group < ActiveRecord::Base
     admins: 1,
     moderators: 2,
     staff: 3,
+    anonymous: 4,
+    logged_in_users: 5,
     trust_level_0: 10,
     trust_level_1: 11,
     trust_level_2: 12,
@@ -528,10 +530,11 @@ class Group < ActiveRecord::Base
       group.name = default_name
     end
 
-    # the everyone group is special, it can include non-users so there is no
-    # way to have the membership in a table
+    # the everyone, anonymous, and logged_in_users groups are special — they
+    # represent implicit populations (unauthenticated visitors, or all logged-in
+    # users) that cannot be enumerated via group_users rows.
     case name
-    when :everyone
+    when :everyone, :anonymous, :logged_in_users
       group.visibility_level = Group.visibility_levels[:staff]
       group.save!
       return group

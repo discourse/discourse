@@ -301,6 +301,8 @@ RSpec.describe Group do
         1,
         2,
         3,
+        4,
+        5,
         10,
       )
     end
@@ -406,6 +408,18 @@ RSpec.describe Group do
     it "makes sure the everyone group is not visible except to staff" do
       g = Group.refresh_automatic_group!(:everyone)
       expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
+    end
+
+    it "makes sure the anonymous and logged_in_users pseudogroups are hidden and have no members" do
+      anon = Group.refresh_automatic_group!(:anonymous)
+      expect(anon.id).to eq(Group::AUTO_GROUPS[:anonymous])
+      expect(anon.visibility_level).to eq(Group.visibility_levels[:staff])
+      expect(GroupUser.where(group_id: anon.id).count).to eq(0)
+
+      logged_in = Group.refresh_automatic_group!(:logged_in_users)
+      expect(logged_in.id).to eq(Group::AUTO_GROUPS[:logged_in_users])
+      expect(logged_in.visibility_level).to eq(Group.visibility_levels[:staff])
+      expect(GroupUser.where(group_id: logged_in.id).count).to eq(0)
     end
 
     it "makes sure automatic groups are visible to logged on users" do
