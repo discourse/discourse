@@ -30,6 +30,9 @@ acceptance("Composer - Reply target picker", function (needs) {
 
   async function openEditForReplyPost() {
     await visit("/t/internationalization-localization/280");
+    // Post 6 isn't the current user's, so the edit button is collapsed into
+    // the "show more" overflow by default — expand it first.
+    await click("article#post_6 button.show-more-actions");
     await click("article#post_6 button.edit");
     await waitFor(".d-editor-input");
   }
