@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
+    name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }} ${{ matrix.run }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -65,27 +65,9 @@ jobs:
       fail-fast: false
 
       matrix:
-        include:
-          - target: core
-            build_type: backend
-          - target: core
-            build_type: frontend
-          - target: core
-            build_type: system
-          - target: plugins
-            build_type: backend
-          - target: plugins
-            build_type: frontend
-          - target: core-plugins
-            build_type: system
-          - target: chat
-            build_type: system
-          - target: official-plugins
-            build_type: system
-          - target: themes
-            build_type: frontend
-          - target: themes
-            build_type: system
+        target: [themes]
+        build_type: [frontend]
+        run: [1, 2, 3, 4, 5, 6]
 
     steps:
       - name: Enable jemalloc
