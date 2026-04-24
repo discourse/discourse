@@ -4,31 +4,33 @@ import { prefersReducedMotion } from "discourse/lib/utilities";
 
 // Resolves on the animationend/transitionend event, or on a timeout if the event never triggers.
 function waitForEndEvent(element, eventName, styleKey, filter) {
-  return new Promise((resolve) => {
-    const style = window.getComputedStyle(element);
-    const duration = parseFloat(style[`${styleKey}Duration`]) * 1000 || 0;
-    const delay = parseFloat(style[`${styleKey}Delay`]) * 1000 || 0;
+  return waitForPromise(
+    new Promise((resolve) => {
+      const style = window.getComputedStyle(element);
+      const duration = parseFloat(style[`${styleKey}Duration`]) * 1000 || 0;
+      const delay = parseFloat(style[`${styleKey}Delay`]) * 1000 || 0;
 
-    const handler = (event) => {
-      if (filter && !filter(event)) {
-        return;
-      }
+      const handler = (event) => {
+        if (filter && !filter(event)) {
+          return;
+        }
 
-      clearTimeout(timeoutId);
-      element.removeEventListener(eventName, handler);
-      resolve();
-    };
-
-    const timeoutId = setTimeout(
-      () => {
+        clearTimeout(timeoutId);
         element.removeEventListener(eventName, handler);
         resolve();
-      },
-      Math.max(duration + delay + 50, 50)
-    );
+      };
 
-    element.addEventListener(eventName, handler);
-  });
+      const timeoutId = setTimeout(
+        () => {
+          element.removeEventListener(eventName, handler);
+          resolve();
+        },
+        Math.max(duration + delay + 50, 50)
+      );
+
+      element.addEventListener(eventName, handler);
+    })
+  );
 }
 
 export function waitForAnimationEnd(element) {
@@ -50,7 +52,7 @@ export async function animateClosing(element, className = "-closing") {
   }
   element.classList.add(className);
 
-  await waitForPromise(waitForAnimationEnd(element));
+  await waitForAnimationEnd(element);
 
   element.classList.remove(className);
 }
