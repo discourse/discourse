@@ -15,21 +15,56 @@ export default class DiscourseReactionsUsersMenu extends Component {
   @tracked activeFilter = null;
 
   fetchUsers = async (page, pageSize) => {
+    const filter = this.activeFilter;
+    const isFirstPage = page === 0;
+    const isUnfiltered = filter === null;
+    const offset = page * pageSize;
+    const nextOffset = offset + pageSize;
+    const entry = this.#tabCache.get(filter);
+
+    if (entry) {
+      const haveRequestedPage = entry.users.length >= nextOffset;
+      const haveLastPartialPage =
+        !entry.canLoadMore && entry.users.length > offset;
+      if (haveRequestedPage || haveLastPartialPage) {
+        return {
+          users: entry.users.slice(offset, nextOffset),
+          canLoadMore: entry.users.length > nextOffset || entry.canLoadMore,
+        };
+      }
+    }
+
     const result = await CustomReaction.fetchReactionsUsersList(
       this.post.id,
       page,
       pageSize,
-      this.activeFilter
+      filter
     );
-
-    const loadedSoFar = page * pageSize + (result.users?.length ?? 0);
+    const users = result.users ?? [];
+    const isCompleteResult = users.length === result.total_rows;
     const canLoadMore = result.total_rows
-      ? loadedSoFar < result.total_rows
-      : (result.users?.length ?? 0) >= pageSize;
+      ? offset + users.length < result.total_rows
+      : users.length >= pageSize;
 
-    return { users: result.users ?? [], canLoadMore };
+    const existing = entry?.users ?? [];
+    this.#tabCache.set(filter, {
+      users: [...existing.slice(0, offset), ...users],
+      canLoadMore,
+    });
+
+    if (isFirstPage && isUnfiltered && isCompleteResult) {
+      for (const reaction of this.reactions) {
+        this.#tabCache.set(reaction.id, {
+          users: users.filter((u) => u.reaction === reaction.id),
+          canLoadMore: false,
+        });
+      }
+    }
+
+    return { users, canLoadMore };
   };
   #resetCallback = null;
+  #tabCache = new Map();
 
   get post() {
     return this.args.data.post;
