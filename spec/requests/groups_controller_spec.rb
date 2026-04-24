@@ -338,7 +338,7 @@ RSpec.describe GroupsController do
         expect(group_body["is_group_owner"]).to eq(true)
         expect(group_ids).to include(group.id, staff_group.id)
         expect(body["load_more_groups"]).to eq("/groups?page=1")
-        expect(body["total_rows_groups"]).to eq(12)
+        expect(body["total_rows_groups"]).to eq(10)
 
         expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
           described_class::TYPE_FILTERS.keys - [:non_automatic],
@@ -379,7 +379,15 @@ RSpec.describe GroupsController do
 
         describe "automatic groups" do
           it "should return the right response" do
-            expect_type_to_return_right_groups("automatic", Group::AUTO_GROUP_IDS.keys - [0])
+            expect_type_to_return_right_groups(
+              "automatic",
+              Group::AUTO_GROUP_IDS.keys -
+                [
+                  Group::AUTO_GROUPS[:everyone],
+                  Group::AUTO_GROUPS[:anonymous],
+                  Group::AUTO_GROUPS[:logged_in_users],
+                ],
+            )
           end
         end
 
@@ -490,6 +498,8 @@ RSpec.describe GroupsController do
 
           groups = Group::AUTO_GROUPS.keys
           groups.delete(:everyone)
+          groups.delete(:anonymous)
+          groups.delete(:logged_in_users)
           groups.push(group.name)
 
           expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
