@@ -160,7 +160,6 @@ module TestSetup
       unique_posts_mins: 0,
       max_consecutive_replies: 0,
       allow_uncategorized_topics: true,
-      educate_until_posts: 0,
     }.each { |k, v| SiteSetting.set(k, v) }
 
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
@@ -872,6 +871,11 @@ RSpec.configure do |config|
     setup_system_test
 
     BlockRequestsMiddleware.current_example_location = example.location
+
+    # Suppress the "Before you post, please select a category or tag" education
+    # popup — it intercepts pointer events and makes system specs flaky when
+    # they click things in the composer.
+    SiteSetting.educate_until_posts = 0
 
     if example.metadata[:video]
       Capybara.current_session.driver.on_save_screenrecord do |video|
