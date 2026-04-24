@@ -3284,6 +3284,9 @@ embedding:
     default: false
     client: true
     area: "embedding"
+  suppress_third_party_analytics_in_embed:
+    default: true
+    area: "embedding"
   embed_by_username:
     default: ""
     type: username
