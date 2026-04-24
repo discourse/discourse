@@ -56,6 +56,10 @@ export default class ComboBoxField extends Component {
     return this.controlOptions.resets || [];
   }
 
+  get castInteger() {
+    return fieldType(this.args.schema) === "integer";
+  }
+
   get options() {
     if (this.metadataOptions) {
       return this.metadataOptions.map((option) => ({
@@ -123,7 +127,11 @@ export default class ComboBoxField extends Component {
         @value={{@field.value}}
         @valueProperty="id"
         @onChange={{this.handleChange}}
-        @options={{hash filterable=this.filterable none=this.none}}
+        @options={{hash
+          filterable=this.filterable
+          none=this.none
+          castInteger=this.castInteger
+        }}
       />
     </ExpressionWrapper>
   </template>

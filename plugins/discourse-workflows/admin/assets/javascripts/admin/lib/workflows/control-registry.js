@@ -51,6 +51,7 @@ const CONTROL_REGISTRY = {
   },
   select: { kind: "field", type: "select", renderer: SelectControl },
   icon: { kind: "field", type: "icon", renderer: IconControl },
+  textarea: { kind: "field", type: "textarea", renderer: DefaultInputControl },
 
   default: {
     kind: "field",

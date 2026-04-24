@@ -42,17 +42,27 @@ if defined?(DiscourseWorkflows)
               agent_id: {
                 type: :integer,
                 required: true,
-                options:
-                  ::AiAgent
-                    .where(enabled: true)
-                    .order(:name)
-                    .pluck(:id, :name)
-                    .map { |id, name| { value: id, label: name } },
+                options_source: "agents",
                 ui: {
-                  control: :select,
+                  control: :combo_box,
+                  expression: false,
+                },
+                control_options: {
+                  filterable: true,
+                  value_property: :id,
+                  name_property: :name,
+                  patch_from_option: {
+                    agent_name: "name",
+                  },
                 },
               },
-              input: {
+              agent_name: {
+                type: :string,
+                ui: {
+                  hidden: true,
+                },
+              },
+              prompt: {
                 type: :string,
                 ui: {
                   control: :textarea,
@@ -82,7 +92,7 @@ if defined?(DiscourseWorkflows)
             config = exec_ctx.get_parameters(item)
 
             agent_id = config["agent_id"]
-            input = config["input"]
+            prompt = config["prompt"]
 
             agent_record =
               ::AiAgent.find_by(id: agent_id) || raise("AI Agent with id #{agent_id} not found")
@@ -91,7 +101,7 @@ if defined?(DiscourseWorkflows)
 
             log.info("Agent: #{agent_record.name}")
             log.info("LLM: #{agent_record.default_llm_id}")
-            log.info("Input: #{input.to_s[0..200]}")
+            log.info("Prompt: #{prompt.to_s[0..200]}")
 
             agent_instance = agent_record.class_instance.new
             bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent_instance)
@@ -99,7 +109,7 @@ if defined?(DiscourseWorkflows)
             bot_context =
               DiscourseAi::Agents::BotContext.new(
                 user: Discourse.system_user,
-                messages: [{ type: :user, content: input }],
+                messages: [{ type: :user, content: prompt }],
                 feature_name: "workflow",
               )
 

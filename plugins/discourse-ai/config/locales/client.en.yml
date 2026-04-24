@@ -235,7 +235,7 @@ en:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
-          input: "Input"
+          prompt: "Prompt"
           select_agent: "Select an agent..."
 
       default_llm:
