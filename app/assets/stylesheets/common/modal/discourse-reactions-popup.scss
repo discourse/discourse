@@ -136,15 +136,10 @@
     }
   }
 
-  &__avatar-link {
-    flex-shrink: 0;
-    display: flex;
-
-    .avatar {
-      @include viewport.until(sm) {
-        width: 32px;
-        height: 32px;
-      }
+  .avatar {
+    @include viewport.until(sm) {
+      width: 32px;
+      height: 32px;
     }
   }
 
