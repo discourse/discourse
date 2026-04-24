@@ -47,7 +47,7 @@ acceptance("Composer - Reply target picker", function (needs) {
 
   test("the toolbar options menu exposes a 'Reply to another post' entry", async function (assert) {
     await openEditForReplyPost();
-    await click(".d-editor-button-bar .fk-d-menu__trigger");
+    await click(".toolbar-menu__options-trigger");
 
     assert
       .dom("[data-name='change-reply-to']")
