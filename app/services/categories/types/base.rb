@@ -98,10 +98,21 @@ module Categories
         end
 
         # Configure any category-specific settings or custom fields that are
-        # specific to this category type.
+        # specific to this category type, including whatever setting or custom
+        # field values make this category type unique.
         #
         # This SHOULD be overridden by category types.
         def configure_category(category, guardian:, configuration_values: {})
+          raise NotImplementedError
+        end
+
+        # Reverse whatever configure_category does to mark this category as
+        # a specific type. E.g. if there is a custom field that is set to true,
+        # remove_type should set it to false.
+        #
+        # This SHOULD be overridden by category types.
+        def remove_type(category, guardian:)
+          raise NotImplementedError
         end
 
         # Returns a hash describing the configuration schema for this category type.

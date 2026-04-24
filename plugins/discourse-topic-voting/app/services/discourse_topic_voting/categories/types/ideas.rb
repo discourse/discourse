@@ -29,6 +29,11 @@ module DiscourseTopicVoting
             category.discourse_topic_voting_category_setting.save!
           end
 
+          def remove_type(category, guardian:)
+            category.discourse_topic_voting_category_setting.destroy!
+            Category.reset_voting_cache
+          end
+
           def configuration_schema
             {
               general_category_settings: {

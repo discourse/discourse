@@ -271,6 +271,37 @@ class CategoriesController < ApplicationController
             settings: category_type_settings,
           },
         )
+
+        # Category types can be added/removed in the UI as well.
+        #
+        # We need to remove old types first that arent in the array
+        #
+        # Then we only need to call Configure for the new types,
+        # which we can check by calling type_klass.category_matches?(category)
+        # for each known type.
+        params[:category_types]&.each do |category_type|
+          # Categories::Configure.call(
+          #   guardian:,
+          #   params: {
+          #     category_id: @category.id,
+          #     category_type:,
+          #   },
+          # ) do |result|
+          #   on_failed_policy(:type_is_available) do
+          #     return(
+          #       render json: {
+          #                errors: [
+          #                  I18n.t(
+          #                    "category_types.not_available",
+          #                    type_name: category_type.capitalize,
+          #                  ),
+          #                ],
+          #              },
+          #              status: :unprocessable_entity
+          #     )
+          #   end
+          # end
+        end
       end
 
       # properly null the value so the database constraint doesn't catch us
