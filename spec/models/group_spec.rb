@@ -947,6 +947,39 @@ RSpec.describe Group do
       ).to eq(false)
     end
 
+    it "includes logged_in_users, anonymous and everyone groups when include_pseudogroups is true" do
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(true)
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true)
+          .where(id: Group::AUTO_GROUPS[:anonymous])
+          .exists?,
+      ).to eq(true)
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true)
+          .where(id: Group::AUTO_GROUPS[:logged_in_users])
+          .exists?,
+      ).to eq(true)
+    end
+
+    it "does not include logged_in_users, anonymous and everyone groups by default" do
+      expect(
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:everyone]).exists?,
+      ).to eq(false)
+      expect(
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:anonymous]).exists?,
+      ).to eq(false)
+      expect(
+        Group.visible_groups(admin, []).where(id: Group::AUTO_GROUPS[:logged_in_users]).exists?,
+      ).to eq(false)
+    end
+
     it "correctly restricts group visibility" do
       group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
       logged_on_user = Fabricate(:user)

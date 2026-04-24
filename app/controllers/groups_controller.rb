@@ -686,12 +686,17 @@ class GroupsController < ApplicationController
   end
 
   def search
-    include_everyone = params[:include_everyone] == "true"
+    include_everyone =
+      (params[:include_everyone] == "true" || params[:include_pseudogroups] == "true")
+    include_pseudogroups = params[:include_pseudogroups] == "true"
     order = ["name"]
     groups =
-      Group.visible_groups(current_user, order, include_everyone: include_everyone).includes(
-        :flair_upload,
-      )
+      Group.visible_groups(
+        current_user,
+        order,
+        include_everyone: include_everyone,
+        include_pseudogroups: include_pseudogroups,
+      ).includes(:flair_upload)
 
     if (term = params[:term]).present?
       groups =
