@@ -289,7 +289,7 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format=progress
+        run: bin/turbo_rspec --use-runtime-info --format=progress
 
       - name: Ember Build
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
@@ -307,7 +307,7 @@ jobs:
       - name: Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: |
-          bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info']
+          bin/rake plugin:turbo_spec['*','--format=progress --use-runtime-info']
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
@@ -331,33 +331,33 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --verbose --format documentation spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --verbose --format documentation plugins/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system
 
       - name: Official Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --verbose --format documentation plugins/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --format documentation plugins/*/spec/system
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --verbose --format documentation plugins/chat/spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation plugins/chat/spec/system
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
