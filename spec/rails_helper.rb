@@ -160,6 +160,7 @@ module TestSetup
       unique_posts_mins: 0,
       max_consecutive_replies: 0,
       allow_uncategorized_topics: true,
+      educate_until_posts: 0,
     }.each { |k, v| SiteSetting.set(k, v) }
 
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
