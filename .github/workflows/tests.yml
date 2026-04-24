@@ -299,11 +299,13 @@ jobs:
         if: matrix.build_type == 'frontend'
         run: |
           mkdir -p "$HOME/.pki/nssdb" "$HOME/.local/share/pki/nssdb"
-          dbus-daemon --system --fork || true
+          dbus-daemon --system --fork 2>/dev/null || true
+          bus_addr=$(dbus-daemon --session --fork --print-address 2>/dev/null)
+          echo "DBUS_SESSION_BUS_ADDRESS=$bus_addr" >> "$GITHUB_ENV"
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        run: dbus-run-session -- env QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
       - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
@@ -317,11 +319,11 @@ jobs:
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: dbus-run-session -- bin/rake 'plugin:qunit[*]'
+        run: bin/rake 'plugin:qunit[*]'
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-        run: dbus-run-session -- env DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'
