@@ -25,6 +25,7 @@ module Reports::SiteTraffic
               SUM(CASE WHEN req_type = :page_view_logged_in_browser THEN count ELSE 0 END) AS page_view_logged_in_browser,
               SUM(CASE WHEN req_type = :page_view_anon_browser THEN count ELSE 0 END) AS page_view_anon_browser,
               SUM(CASE WHEN req_type = :page_view_crawler THEN count ELSE 0 END) AS page_view_crawler,
+              SUM(CASE WHEN req_type = :page_view_embed THEN count ELSE 0 END) AS page_view_embed,
               SUM(
                 CASE WHEN req_type = :page_view_anon THEN count
                     WHEN req_type = :page_view_logged_in THEN count
@@ -46,6 +47,7 @@ module Reports::SiteTraffic
           page_view_logged_in: ApplicationRequest.req_types[:page_view_logged_in],
           page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
           page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
+          page_view_embed: ApplicationRequest.req_types[:page_view_embed],
           first_browser_pageview_date: first_browser_pageview_date,
         )
 
@@ -67,6 +69,12 @@ module Reports::SiteTraffic
           label: I18n.t("reports.site_traffic.xaxis.page_view_crawler"),
           color: report.colors[:purple],
           data: data.map { |row| { x: row.date, y: row.page_view_crawler } },
+        },
+        {
+          req: "page_view_embed",
+          label: I18n.t("reports.site_traffic.xaxis.page_view_embed"),
+          color: report.colors[:yellow],
+          data: data.map { |row| { x: row.date, y: row.page_view_embed } },
         },
         {
           req: "page_view_other",

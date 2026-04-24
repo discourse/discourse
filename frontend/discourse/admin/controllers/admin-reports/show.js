@@ -25,7 +25,11 @@ export default class AdminReportsShowController extends Controller {
 
     if (this.model?.type === "site_traffic") {
       options.stackedChart = {
-        hiddenLabels: ["page_view_other", "page_view_crawler"],
+        hiddenLabels: [
+          "page_view_other",
+          "page_view_crawler",
+          "page_view_embed",
+        ],
       };
     }
 

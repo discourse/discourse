@@ -1608,6 +1608,50 @@ RSpec.describe Report do
     end
   end
 
+  describe "site_traffic" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:reports) { Report.find("site_traffic") }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each { |report| expect(report[:data]).to be_empty }
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        CachedCounting.reset
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "exposes embedded pageviews as their own series without polluting other series" do
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        3.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        4.times { ApplicationRequest.increment!(:page_view_embed) }
+        CachedCounting.flush
+
+        embed_series = reports.data.find { |r| r[:req] == "page_view_embed" }
+        other_series = reports.data.find { |r| r[:req] == "page_view_other" }
+
+        expect(embed_series[:data][0][:y]).to eq(4)
+        expect(other_series[:data][0][:y]).to eq(2)
+      end
+    end
+  end
+
   describe "consolidated_page_views" do
     before do
       freeze_time(Time.now.at_midnight)
