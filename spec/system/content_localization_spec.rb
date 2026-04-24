@@ -241,21 +241,16 @@ describe "Content Localization" do
     end
 
     context "when transitioning from anonymous to logged-in" do
-      let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
+      let(:language_switcher) { PageObjects::Components::LanguageSwitcher.new }
 
       before do
         SiteSetting.set_locale_from_cookie = true
         SiteSetting.content_localization_language_switcher = "all"
       end
 
-      def select_language(locale)
-        switcher.expand
-        switcher.option("[data-menu-option-id='#{locale}']").click
-      end
-
       it "ignores the show-original cookie for logged-in users" do
         visit("/")
-        select_language("ja")
+        language_switcher.select_language("ja")
 
         visit("/t/#{topic.id}")
         expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
