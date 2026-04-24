@@ -64,30 +64,31 @@
     font-size: var(--font-down-1);
     color: var(--primary-high-or-secondary-low);
   }
+}
 
-  .form-kit__container-title,
-  .form-kit__container-description,
-  .form-kit__container-content {
-    &.--small {
-      width: var(--form-kit-small-input) !important;
-    }
+.form-kit__container,
+.form-kit__container-title,
+.form-kit__container-description,
+.form-kit__container-content {
+  &.--small {
+    width: var(--form-kit-small-input) !important;
+  }
 
-    &.--medium {
-      width: var(--form-kit-medium-input);
-    }
+  &.--medium {
+    width: var(--form-kit-medium-input);
+  }
 
-    &.--large {
-      width: var(--form-kit-large-input);
-    }
+  &.--large {
+    width: var(--form-kit-large-input);
+  }
 
-    &.--max {
-      max-width: var(--form-kit-max-input);
-      width: 100%;
-    }
+  &.--max {
+    max-width: var(--form-kit-max-input);
+    width: 100%;
+  }
 
-    &.--full {
-      width: 100% !important;
-      min-width: var(--form-kit-small-input);
-    }
+  &.--full {
+    width: 100% !important;
+    min-width: var(--form-kit-small-input);
   }
 }
