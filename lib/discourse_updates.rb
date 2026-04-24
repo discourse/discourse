@@ -164,6 +164,7 @@ module DiscourseUpdates
     def update_new_features(response_json = nil)
       response_json ||= new_features_response_json
       Discourse.redis.set(new_features_key, response_json)
+      Discourse.redis.del(latest_new_feature_created_at_key)
     end
 
     def new_features_response_json
@@ -234,27 +235,44 @@ module DiscourseUpdates
     end
 
     def has_unseen_features?(user_id)
+      latest_ts = latest_new_feature_created_at
+      return false if latest_ts.nil?
+
+      last_seen = new_features_last_seen(user_id)
+      return true if last_seen.nil?
+
+      latest_ts.to_i > last_seen.to_i
+    end
+
+    def latest_new_feature_created_at
+      cached = Discourse.redis.get(latest_new_feature_created_at_key)
+      return Time.zone.parse(cached) if cached.present?
+
       entries =
         merge_new_features_with_upcoming_changes(
           new_features&.map { |item| item.symbolize_keys } || [],
         )
-      return false if entries.nil?
+      return nil if entries.blank?
 
-      last_seen = new_features_last_seen(user_id)
-
-      if last_seen.present?
-        entries.select! do |item|
-          created_at =
-            if item[:created_at].is_a?(String)
-              Time.zone.parse(item[:created_at])
-            else
-              item[:created_at]
-            end
-          created_at.to_i > last_seen.to_i
+      max_entry =
+        entries.max_by do |item|
+          val = item[:created_at]
+          val.is_a?(String) ? Time.zone.parse(val).to_i : val.to_i
         end
-      end
 
-      entries.size > 0
+      max_created_at =
+        if max_entry[:created_at].is_a?(String)
+          Time.zone.parse(max_entry[:created_at])
+        else
+          max_entry[:created_at]
+        end
+
+      Discourse.redis.set(latest_new_feature_created_at_key, max_created_at.iso8601)
+      max_created_at
+    end
+
+    def clear_latest_new_feature_created_at_cache
+      Discourse.redis.del(latest_new_feature_created_at_key)
     end
 
     def new_features_last_seen(user_id)
@@ -301,6 +319,7 @@ module DiscourseUpdates
         missing_versions_list_key,
         new_features_key,
         last_viewed_feature_dates_for_users_key,
+        latest_new_feature_created_at_key,
         *Discourse.redis.keys("#{missing_versions_key_prefix}*"),
         *Discourse.redis.keys(new_features_last_seen_key("*")),
       )
@@ -357,6 +376,10 @@ module DiscourseUpdates
 
     def new_features_last_seen_key(user_id)
       "new_features_last_seen_user_#{user_id}"
+    end
+
+    def latest_new_feature_created_at_key
+      "latest_new_feature_created_at"
     end
 
     def last_viewed_feature_dates_for_users_key
