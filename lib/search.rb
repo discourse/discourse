@@ -953,7 +953,7 @@ class Search
     else
       tags = resolve_tag_synonyms(match.split(","))
       tag_ids = Tag.where_name(tags).pluck(:id)
-      return positive ? posts.where("1=0") : posts if tag_ids.empty?
+      return positive ? posts.none : posts if tag_ids.empty?
 
       posts.where(
         "#{modifier} EXISTS (
