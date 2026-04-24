@@ -1598,6 +1598,11 @@ en:
       xaxis: "Day"
       yaxis: "Logged In Browser Pageviews"
       description: "Number of pageviews by logged-in visitors using real browsers."
+    page_view_embed_reqs:
+      title: "Embedded pageviews"
+      xaxis: "Day"
+      yaxis: "Embedded pageviews"
+      description: "Number of pageviews served inside the full app embed iframe."
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
