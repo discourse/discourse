@@ -264,7 +264,6 @@ module.exports = {
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
   parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
-  debug: process.env.CI ? "testem.log" : false,
   socket_server_options: {
     maxHttpBufferSize: 1e8, // 100MB
   },
@@ -284,8 +283,6 @@ module.exports = {
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
       "--disable-background-networking",
-      process.env.CI ? "--enable-logging=stderr" : null,
-      process.env.CI ? "--log-level=2" : null,
     ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
@@ -300,8 +297,6 @@ module.exports = {
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
       "--disable-background-networking",
-      process.env.CI ? "--enable-logging=stderr" : null,
-      process.env.CI ? "--log-level=2" : null,
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },
