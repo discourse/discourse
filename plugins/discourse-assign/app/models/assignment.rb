@@ -95,8 +95,6 @@ class Assignment < ActiveRecord::Base
     )
   end
 
-  private
-
   def publish_topic_assignment
     return if !assigned_to
 
@@ -106,8 +104,8 @@ class Assignment < ActiveRecord::Base
       {
         type: "assigned",
         topic_id: topic_id,
-        post_id: target.is_a?(Post) ? target.id : nil,
-        post_number: target.is_a?(Post) ? target.post_number : nil,
+        post_id: target.is_a?(Post) && target.id,
+        post_number: target.is_a?(Post) && target.post_number,
         assigned_type: assigned_to_type,
         assigned_to: serializer_class.new(assigned_to, scope: Guardian.new, root: false).as_json,
         assignment_note: note,
@@ -116,6 +114,8 @@ class Assignment < ActiveRecord::Base
       user_ids: User.assign_allowed.pluck(:id),
     )
   end
+
+  private
 
   def default_status
     self.status ||= Assignment.default_status if SiteSetting.enable_assign_status
