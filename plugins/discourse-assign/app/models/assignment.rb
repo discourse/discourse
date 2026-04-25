@@ -98,6 +98,8 @@ class Assignment < ActiveRecord::Base
   private
 
   def publish_topic_assignment
+    return if !assigned_to
+
     serializer_class = assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
     MessageBus.publish(
       "/staff/topic-assignment",
