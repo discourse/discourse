@@ -202,6 +202,32 @@ export function createData(store) {
         posters: [],
       },
     ],
+    suggested_topics: [
+      {
+        id: 200006,
+        title: "Suggested Topic A",
+        fancy_title: "Suggested Topic A",
+        slug: "suggested-a",
+        posts_count: 6,
+        views: 120,
+        like_count: 3,
+        created_at: "2017-03-06T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+      {
+        id: 200007,
+        title: "Suggested Topic B",
+        fancy_title: "Suggested Topic B",
+        slug: "suggested-b",
+        posts_count: 4,
+        views: 80,
+        like_count: 2,
+        created_at: "2017-03-07T12:30:00.000Z",
+        visible: true,
+        posters: [],
+      },
+    ],
   });
 
   const bunchOfTopics = [
