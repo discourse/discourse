@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }} ${{ matrix.run }}
+    name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -65,9 +65,27 @@ jobs:
       fail-fast: false
 
       matrix:
-        target: [themes]
-        build_type: [frontend]
-        run: [1, 2, 3, 4, 5, 6]
+        include:
+          - target: core
+            build_type: backend
+          - target: core
+            build_type: frontend
+          - target: core
+            build_type: system
+          - target: plugins
+            build_type: backend
+          - target: plugins
+            build_type: frontend
+          - target: core-plugins
+            build_type: system
+          - target: chat
+            build_type: system
+          - target: official-plugins
+            build_type: system
+          - target: themes
+            build_type: frontend
+          - target: themes
+            build_type: system
 
     steps:
       - name: Enable jemalloc
@@ -312,16 +330,6 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
-
-      - name: Upload QUnit debug artifacts
-        if: failure() && matrix.build_type == 'frontend'
-        uses: actions/upload-artifact@v7
-        with:
-          name: qunit-debug-${{ matrix.target }}
-          path: |
-            ./frontend/discourse/testem.log
-            ./tmp/test_server_*.log
-          if-no-files-found: ignore
 
       - name: Install playwright
         if: matrix.build_type == 'system'
