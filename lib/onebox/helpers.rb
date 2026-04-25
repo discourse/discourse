@@ -99,8 +99,11 @@ module Onebox
 
         size_bytes = Onebox.options.max_download_kb * 1024
         http.request(request) do |response|
-          if cookie = response.get_fields("set-cookie")
-            headers["Cookie"] = cookie.join("; ") if allow_cross_domain_cookies
+          if set_cookies = response.get_fields("set-cookie")
+            cookie_header =
+              set_cookies.map { |c| c.split(";", 2).first.strip }.reject(&:empty?).join("; ")
+
+            headers["Cookie"] = cookie_header if allow_cross_domain_cookies
 
             if redirect_location = response["location"]
               redirect_uri = Addressable::URI.parse(redirect_location)
@@ -110,7 +113,7 @@ module Onebox
                   redirect_uri,
                 ) if !redirect_uri.host
 
-              redirect_header = { "Cookie" => cookie.join("; ") } if redirect_uri.host == uri.host
+              redirect_header = { "Cookie" => cookie_header } if redirect_uri.host == uri.host
             end
           end
 
