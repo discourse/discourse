@@ -17,17 +17,9 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
   end
   fab!(:llm_model)
   fab!(:ai_secret)
-  fab!(:tag1) { Fabricate(:tag, name: "tag1") }
-  fab!(:tag2) { Fabricate(:tag, name: "tag2") }
-  fab!(:category) { Fabricate(:category, name: "Test Category", slug: "test-category") }
-  fab!(:topic) { Fabricate(:topic, category: category) }
-  fab!(:pm_topic, :private_message_topic)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model.id) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.tagging_enabled = true
-  end
+  before { enable_current_plugin }
 
   describe "#invoke" do
     it "can execute a simple script" do
@@ -95,8 +87,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
 
       expect(result["key"]).to eq(ai_secret.secret)
     end
-
-    it "can set tags on a topic" do
+it "can set tags on a topic" do
       tool.update!(
         script:
           "function invoke(params) { return discourse.editTopic(params.topic_id, { tags: ['tag1', 'tag2'] }); }",
@@ -886,107 +877,6 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
         JS
       runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
       expect(runner.custom_system_message).to be_nil
-    end
-  end
-
-  describe "#rag_get_file" do
-    before { SiteSetting.authorized_extensions = "md|txt" }
-
-    it "returns full file content in fragment order" do
-      upload = Fabricate(:upload, original_filename: "skill.md")
-      UploadReference.create!(upload: upload, target: tool)
-
-      RagDocumentFragment.create!(
-        target: tool,
-        upload: upload,
-        fragment: "Part 2",
-        fragment_number: 2,
-      )
-      RagDocumentFragment.create!(
-        target: tool,
-        upload: upload,
-        fragment: "Part 1",
-        fragment_number: 1,
-      )
-      RagDocumentFragment.create!(
-        target: tool,
-        upload: upload,
-        fragment: "Part 3",
-        fragment_number: 3,
-      )
-
-      tool.update!(
-        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
-      )
-
-      runner =
-        described_class.new(
-          parameters: {
-            "filename" => "skill.md",
-          },
-          llm: llm,
-          bot_user: bot_user,
-          tool: tool,
-        )
-      result = runner.invoke
-
-      expect(result["content"]).to eq("Part 1\nPart 2\nPart 3")
-    end
-
-    it "returns null for non-existent file" do
-      tool.update!(
-        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
-      )
-
-      runner =
-        described_class.new(
-          parameters: {
-            "filename" => "nonexistent.md",
-          },
-          llm: llm,
-          bot_user: bot_user,
-          tool: tool,
-        )
-      result = runner.invoke
-
-      expect(result["content"]).to be_nil
-    end
-
-    it "picks the latest upload when duplicate filenames exist" do
-      old_upload = Fabricate(:upload, original_filename: "skill.md")
-      new_upload = Fabricate(:upload, original_filename: "skill.md")
-      UploadReference.create!(upload: old_upload, target: tool)
-      UploadReference.create!(upload: new_upload, target: tool)
-
-      RagDocumentFragment.create!(
-        target: tool,
-        upload: old_upload,
-        fragment: "old content",
-        fragment_number: 1,
-      )
-      RagDocumentFragment.create!(
-        target: tool,
-        upload: new_upload,
-        fragment: "new content",
-        fragment_number: 1,
-      )
-
-      tool.update!(
-        script: "function invoke(params) { return { content: index.getFile(params.filename) }; }",
-      )
-
-      runner =
-        described_class.new(
-          parameters: {
-            "filename" => "skill.md",
-          },
-          llm: llm,
-          bot_user: bot_user,
-          tool: tool,
-        )
-      result = runner.invoke
-
-      expect(result["content"]).to eq("new content")
     end
   end
 end

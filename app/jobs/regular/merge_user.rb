@@ -3,9 +3,6 @@
 module Jobs
   class MergeUser < ::Jobs::Base
     def execute(args)
-      target_user_id = args[:target_user_id]
-      current_user_id = args[:current_user_id]
-
       user = User.find_by(id: args[:user_id])
       target_user = User.find_by(id: args[:target_user_id])
       current_user = User.find_by(id: args[:current_user_id])

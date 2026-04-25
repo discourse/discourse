@@ -133,7 +133,7 @@ export default class DiscoursePostEventStatus extends Component {
               }}
             >
               <DButton
-                class="going-button"
+                class="btn-default going-button"
                 @disabled={{and
                   @event.atCapacity
                   (not (eq this.watchingInviteeStatus "going"))
@@ -161,7 +161,7 @@ export default class DiscoursePostEventStatus extends Component {
             }}
           >
             <DButton
-              class="interested-button"
+              class="btn-default interested-button"
               @icon="star"
               @label="discourse_post_event.models.invitee.status.interested"
               @action={{fn this.changeWatchingInviteeStatus "interested"}}
@@ -179,7 +179,7 @@ export default class DiscoursePostEventStatus extends Component {
               }}
             >
               <DButton
-                class="not-going-button"
+                class="btn-default not-going-button"
                 @icon="xmark"
                 @label="discourse_post_event.models.invitee.status.not_going"
                 @action={{fn this.changeWatchingInviteeStatus "not_going"}}

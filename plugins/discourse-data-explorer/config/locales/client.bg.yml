@@ -12,6 +12,7 @@ bg:
       create: "Създай"
       ai:
         generate: "Генраирай"
+        optional: "по избор"
       import:
         label: "Импорт"
       help:

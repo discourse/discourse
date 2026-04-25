@@ -483,6 +483,41 @@ export default class UpsertCategoryGeneral extends Component {
     return rDiff + gDiff + bDiff;
   }
 
+  @action
+  validateColor(name, color, { addError }) {
+    color = color.trim();
+
+    let title;
+    if (name === "color") {
+      title = i18n("category.background_color");
+    } else {
+      throw new Error(`unknown title for category attribute ${name}`);
+    }
+
+    if (!color) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.cant_be_empty"),
+      });
+      return;
+    }
+
+    if (color.length !== 3 && color.length !== 6) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.incorrect_length"),
+      });
+      return;
+    }
+
+    if (!/^[0-9A-Fa-f]+$/.test(color)) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.non_hexdecimal"),
+      });
+    }
+  }
+
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
   }
@@ -530,6 +565,7 @@ export default class UpsertCategoryGeneral extends Component {
         @title={{i18n "category.background_color"}}
         @format="max"
         @validation="required"
+        @validate={{this.validateColor}}
         @onSet={{this.onBackgroundColorSet}}
         @type="color"
         as |field|

@@ -62,6 +62,8 @@ class Category < ActiveRecord::Base
            :require_topic_approval,
            :require_topic_approval=,
            :require_topic_approval?,
+           :nested_replies_default,
+           :nested_replies_default=,
            :topic_posting_review_mode,
            :topic_posting_review_mode=,
            :reply_posting_review_mode,

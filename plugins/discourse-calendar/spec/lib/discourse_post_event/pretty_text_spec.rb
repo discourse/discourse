@@ -94,6 +94,19 @@ describe PrettyText do
           expect(result).to include("https://example.com/meeting")
         end
       end
+
+      context "when the event has an image" do
+        fab!(:upload)
+        let(:post_1) { create_post_with_event(user_1, "image=\"#{upload.short_url}\"") }
+
+        it "displays the image" do
+          cooked = PrettyText.cook(post_1.raw)
+          result = PrettyText.format_for_email(cooked, post_1)
+
+          expect(result).to include("<img")
+          expect(result).to include(upload.url)
+        end
+      end
     end
   end
 end

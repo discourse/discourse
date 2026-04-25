@@ -101,7 +101,7 @@ pl_PL:
     ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
-    ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
+    ai_embeddings_generate_for_pms: "Generuj osadzenia dla prywatnych wiadomości."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
     ai_embeddings_semantic_related_topics: "Maksymalna liczba tematów do wyświetlenia w sekcji powiązanych tematów."
     ai_embeddings_backfill_batch_size: "Liczba osadzań do uzupełnienia co 15 minut."
@@ -138,7 +138,7 @@ pl_PL:
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
     ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
     ai_translation_target_categories: "Tłumaczone będą tylko treści z wybranych kategorii. Podkategorie należy dodać osobno. Pozostaw puste, aby wyłączyć tłumaczenie tematów w kategoriach."
-    ai_translation_personal_messages: "Kontroluje, które wiadomości osobiste są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
+    ai_translation_personal_messages: "Kontroluje, które prywatne wiadomości są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
     ai_translation_include_bot_content: "Po włączeniu tej opcji treści tworzone przez boty (identyfikatory użytkowników poniżej 0) będą również wysyłane do tłumaczenia."
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
@@ -160,88 +160,88 @@ pl_PL:
       xaxis: "Pozytywny(%)"
       yaxis: "Data"
     emotion_admiration:
-      title: "\U0001F929 Podziw"
+      title: "🤩 Podziw"
       description: "Posty sklasyfikowane pod kątem podziwu emocjonalnego za pośrednictwem sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_amusement:
-      title: "\U0001F604 Rozrywka"
+      title: "😄 Rozrywka"
       description: "Posty sklasyfikowane pod kątem emocji rozrywki za pomocą sztucznej inteligencji, przy użyciu modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
-      title: "\U0001F620 Gniew"
+      title: "😠 Gniew"
       description: "Posty sklasyfikowane według emocji gniew za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_annoyance:
-      title: "\U0001F612 Irytacja"
+      title: "😒 Irytacja"
       description: "Posty sklasyfikowane pod kątem emocji irytacji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_approval:
-      title: "\U0001F44DAprobata"
+      title: "👍Aprobata"
       description: "Posty sklasyfikowane na podstawie akceptacji emocji przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_caring:
-      title: "\U0001F917 Troskliwy"
+      title: "🤗 Troskliwy"
       description: "Posty klasyfikowane pod kątem emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_confusion:
-      title: "\U0001F615 Zamieszanie"
+      title: "😕 Zamieszanie"
       description: "Posty sklasyfikowane pod kątem emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_curiosity:
-      title: "\U0001F914 Ciekawość"
+      title: "🤔 Ciekawość"
       description: "Posty klasyfikowane pod kątem ciekawości emocjonalnej za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_desire:
-      title: "\U0001F60D Pragnienie"
+      title: "😍 Pragnienie"
       description: "Posty sklasyfikowane według pożądanej emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_disappointment:
-      title: "\U0001F61E Rozczarowanie"
+      title: "😞 Rozczarowanie"
       description: "Posty sklasyfikowane pod kątem emocji rozczarowania przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_disapproval:
-      title: "\U0001F44E Niezadowolenie"
+      title: "👎 Niezadowolenie"
       description: "Posty sklasyfikowane pod kątem emocji dezaprobaty przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_disgust:
-      title: "\U0001F922 Niesmak"
+      title: "🤢 Niesmak"
       description: "Posty sklasyfikowane za pomocą sztucznej inteligencji z emocją wstrętu, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_embarrassment:
-      title: "\U0001F633 Zażenowanie"
+      title: "😳 Zażenowanie"
       description: "Posty sklasyfikowane pod kątem emocji zażenowania przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_excitement:
-      title: "\U0001F92A Podniecenie"
+      title: "🤪 Podniecenie"
       description: "Posty klasyfikowane według emocji wywołanych przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_fear:
-      title: "\U0001F628 Strach"
+      title: "😨 Strach"
       description: "Posty sklasyfikowane za pomocą sztucznej inteligencji, z uwzględnieniem emocji strachu, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_gratitude:
-      title: "\U0001F64F Wdzięczność"
+      title: "🙏 Wdzięczność"
       description: "Posty sklasyfikowane pod kątem wdzięczności za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_grief:
-      title: "\U0001F622 Żal"
+      title: "😢 Żal"
       description: "Posty sklasyfikowane pod kątem emocji żałoby za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_joy:
-      title: "\U0001F60A Radość"
+      title: "😊 Radość"
       description: "Posty sklasyfikowane według emocji „radość” za pomocą sztucznej inteligencji, wykorzystując model „SamLowe/roberta-base-go_emotions”."
     emotion_love:
       title: '❤️ Miłość'
       description: "Posty sklasyfikowane według emocji „miłość” za pomocą sztucznej inteligencji, wykorzystując model „SamLowe/roberta-base-go_emotions”."
     emotion_nervousness:
-      title: "\U0001F630 Nerwowość"
+      title: "😰 Nerwowość"
       description: "Posty sklasyfikowane pod kątem emocji związanych z nerwowością za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_neutral:
-      title: "\U0001F610 Neutralne"
+      title: "😐 Neutralne"
       description: "Posty sklasyfikowane jako neutralne emocjonalnie przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_optimism:
-      title: "\U0001F31F Optymizm"
+      title: "🌟 Optymizm"
       description: "Posty sklasyfikowane pod kątem optymizmu emocjonalnego za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_pride:
-      title: "\U0001F981 Duma"
+      title: "🦁 Duma"
       description: "Posty sklasyfikowane za pomocą sztucznej inteligencji z emocją dumy, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_realization:
-      title: "\U0001F4A1 Uświadomienie"
+      title: "💡 Uświadomienie"
       description: "Posty sklasyfikowane pod kątem realizacji emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_relief:
-      title: "\U0001F60C Ulga"
+      title: "😌 Ulga"
       description: "Posty sklasyfikowane pod kątem ulgi emocjonalnej za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_remorse:
-      title: "\U0001F614 Wyrzuty sumienia"
+      title: "😔 Wyrzuty sumienia"
       description: "Posty sklasyfikowane pod kątem wyrzutów sumienia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_sadness:
-      title: "\U0001F62D Smutek"
+      title: "😭 Smutek"
       description: "Posty sklasyfikowane według emocji smutek za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_surprise:
-      title: "\U0001F632 Niespodzianka"
+      title: "😲 Niespodzianka"
       description: "Posty sklasyfikowane według emocji zaskoczenia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
   discourse_ai:
     ai_artifact:
@@ -356,12 +356,12 @@ pl_PL:
       title: "%{title} - Rozmowa AI - %{site_name}"
       errors:
         not_allowed: "Nie masz uprawnień do udostępniania tego tematu"
-        other_people_in_pm: "Wiadomości osobiste przekazywane innym osobom nie mogą być udostępniane publicznie"
-        other_content_in_pm: "Wiadomości osobiste zawierające wpisy innych osób nie mogą być udostępniane publicznie"
+        other_people_in_pm: "Prywatne wiadomości przekazywane innym osobom nie mogą być udostępniane publicznie"
+        other_content_in_pm: "Prywatne wiadomości zawierające wpisy innych osób nie mogą być udostępniane publicznie"
         failed_to_share: "Nie udało się udostępnić konwersacji"
         conversation_deleted: "Udostępniona konwersacja została pomyślnie usunięta"
     spam_detection:
-      flag_reason: "Oznaczono jako spam przez <a href='%{url}'>Discourse AI</a>"
+      flag_reason: "Oflagowano jako spam przez <a href='%{url}'>AI Discourse</a>"
       silence_reason: "Użytkownik wyciszony automatycznie przez <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Podano nieprawidłowy typ błędu"
       unexpected: "Wystąpił nieoczekiwany błąd"
@@ -857,13 +857,13 @@ pl_PL:
       reports:
         overall_sentiment: "Ogólny nastrój (pozytywny - negatywny)"
         post_emotion:
-          sadness: "Smutek \U0001F622"
-          surprise: "Niespodzianka \U0001F631"
-          neutral: "Neutralne \U0001F610"
-          fear: "Strach \U0001F628"
-          anger: "Gniew \U0001F621"
-          joy: "Radość \U0001F600"
-          disgust: "Niesmak \U0001F922"
+          sadness: "Smutek 😢"
+          surprise: "Niespodzianka 😱"
+          neutral: "Neutralne 😐"
+          fear: "Strach 😨"
+          anger: "Gniew 😡"
+          joy: "Radość 😀"
+          disgust: "Niesmak 🤢"
         sentiment_analysis:
           positive: "Pozytywne"
           negative: "Negatywne"

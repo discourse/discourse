@@ -62,8 +62,9 @@ module ImportExport
       @groups.each do |group_data|
         g = group_data.dup
         user_ids = g.delete(:user_ids)
-        external_id = g.delete(:id)
+        g.delete(:id) # external_id
         new_group = Group.find_by_name(g[:name]) || Group.create!(g)
+
         user_ids.each do |external_user_id|
           begin
             new_group.add(User.find(new_user_id(external_user_id)))

@@ -31,7 +31,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       get "/admin/plugins/discourse-ai/ai-agents.json"
       tools = response.parsed_body["meta"]["tools"]
       tool_ids = tools.map { |t| t["id"] }
-      expect(tool_ids).to include("ValidateSql")
       expect(tool_ids).to include("RunSql")
     end
 

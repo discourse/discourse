@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "tool_runner/http"
+require_relative "tool_runner/llm"
+require_relative "tool_runner/index"
+require_relative "tool_runner/upload"
+require_relative "tool_runner/discourse"
+require_relative "tool_runner/crypto"
+
 module DiscourseAi
   module Agents
     class ToolRunner
@@ -20,6 +27,13 @@ module DiscourseAi
       MAX_CUSTOM_FIELD_VALUE_LENGTH = 1024
 
       CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
+
+      include HTTP
+      include Llm
+      include Index
+      include Upload
+      include Discourse
+      include Crypto
 
       def initialize(
         parameters:,
@@ -50,34 +64,7 @@ module DiscourseAi
       end
 
       def system_guardian
-        @system_guardian ||= Guardian.new(Discourse.system_user)
-      end
-
-      def resolve_user(username)
-        if username.present?
-          User.find_by(username: username)
-        else
-          @bot_user || Discourse.system_user
-        end
-      end
-
-      def resolve_guardian(username)
-        user = resolve_user(username)
-        return nil, nil if user.nil?
-        guardian = user.staged? ? system_guardian : Guardian.new(user)
-        [user, guardian]
-      end
-
-      def resolve_category(category_id_or_name)
-        if category_id_or_name.is_a?(Integer) ||
-             category_id_or_name.to_i.to_s == category_id_or_name.to_s
-          Category.find_by(id: category_id_or_name.to_i)
-        else
-          Category
-            .where(name: category_id_or_name)
-            .or(Category.where(slug: category_id_or_name))
-            .first
-        end
+        @system_guardian ||= Guardian.new(::Discourse.system_user)
       end
 
       def mini_racer_context
@@ -94,6 +81,7 @@ module DiscourseAi
             attach_upload(ctx)
             attach_chain(ctx)
             attach_secrets(ctx)
+            attach_crypto(ctx)
             attach_sleep(ctx)
             attach_discourse(ctx)
             ctx.eval(framework_script)
@@ -151,8 +139,74 @@ module DiscourseAi
           },
         };
 
+        const crypto = {
+          hmacSha256: function(key, data) {
+            return _crypto_hmac_sha256_hex(key, data);
+          },
+          hmacSha1: function(key, data) {
+            return _crypto_hmac_sha1_hex(key, data);
+          },
+          hmacSha256Base64: function(key, data) {
+            return _crypto_hmac_sha256_base64(key, data);
+          },
+          hmacSha1Base64: function(key, data) {
+            return _crypto_hmac_sha1_base64(key, data);
+          },
+          hmacSha256Bytes: function(key, data) {
+            return _crypto_hmac_sha256_bytes(key, data);
+          },
+          hmacSha1Bytes: function(key, data) {
+            return _crypto_hmac_sha1_bytes(key, data);
+          },
+          sha256: function(data) {
+            return _crypto_sha256_hex(data);
+          },
+          sha1: function(data) {
+            return _crypto_sha1_hex(data);
+          },
+          md5: function(data) {
+            return _crypto_md5_hex(data);
+          },
+          sha256Base64: function(data) {
+            return _crypto_sha256_base64(data);
+          },
+          sha1Base64: function(data) {
+            return _crypto_sha1_base64(data);
+          },
+          md5Base64: function(data) {
+            return _crypto_md5_base64(data);
+          },
+          sha256Bytes: function(data) {
+            return _crypto_sha256_bytes(data);
+          },
+          sha1Bytes: function(data) {
+            return _crypto_sha1_bytes(data);
+          },
+          base64Encode: function(text) {
+            return _crypto_base64_encode(text);
+          },
+          base64Decode: function(base64) {
+            return _crypto_base64_decode(base64);
+          },
+          base64UrlEncode: function(text) {
+            return _crypto_base64_url_encode(text);
+          },
+          base64UrlDecode: function(base64) {
+            return _crypto_base64_url_decode(base64);
+          },
+          signRsaSha256: function(pemPrivateKey, data) {
+            return _crypto_sign_rsa_sha256(pemPrivateKey, data);
+          },
+          signRsaSha1: function(pemPrivateKey, data) {
+            return _crypto_sign_rsa_sha1(pemPrivateKey, data);
+          },
+          randomBytes: function(length) {
+            return _crypto_random_bytes(length);
+          },
+        };
+
         const discourse = {
-          baseUrl: #{Discourse.base_url.to_json},
+          baseUrl: #{::Discourse.base_url.to_json},
           search: function(params) {
             return _discourse_search(params);
           },
@@ -166,6 +220,13 @@ module DiscourseAi
           getPost: _discourse_get_post,
           getTopic: _discourse_get_topic,
           getCategory: _discourse_get_category,
+          filterTopics: function(params) {
+            const result = _discourse_filter_topics(params || {});
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
           getUser: _discourse_get_user,
           getAgent: function(name) {
             const agentDetails = _discourse_get_agent(name);
@@ -313,7 +374,7 @@ module DiscourseAi
         source_bindings = @secret_bindings || tool.secret_bindings
         missing_aliases = tool.missing_secret_aliases(bindings: source_bindings)
         if missing_aliases.present?
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t(
                     "discourse_ai.tools.secret_runtime.missing_required_aliases",
                     aliases: missing_aliases.join(", "),
@@ -380,106 +441,6 @@ module DiscourseAi
           end
         secret_ids = secret_ids.map(&:to_i).uniq
         @secrets_cache = secret_ids.present? ? AiSecret.where(id: secret_ids).index_by(&:id) : {}
-      end
-
-      def rag_search(query, filenames: nil, limit: 10)
-        RagDocumentFragment
-          .search(
-            target_id: tool.id,
-            target_type: "AiTool",
-            query: query,
-            filenames: filenames,
-            limit: limit,
-          )
-          .map { |fragment| { fragment: fragment[:fragment], metadata: fragment[:metadata] } }
-      end
-
-      def rag_get_file(filename)
-        RagDocumentFragment.read_file(target_id: tool.id, target_type: "AiTool", filename: filename)
-      end
-
-      def attach_truncate(mini_racer_context)
-        mini_racer_context.attach(
-          "_llm_truncate",
-          ->(text, length) do
-            @llm.tokenizer.truncate(text, length, strict: SiteSetting.ai_strict_token_counting)
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_llm_generate",
-          ->(prompt, options) do
-            in_attached_function do
-              options ||= {}
-              response_format = options["response_format"]
-
-              response_format = { "type" => "json_object" } if options["json"]
-
-              if response_format && !response_format.is_a?(Hash)
-                raise Discourse::InvalidParameters.new("response_format must be a hash")
-              end
-              @llm.generate(
-                convert_js_prompt_to_ruby(prompt),
-                user: llm_user,
-                feature_name: "custom_tool_#{tool.name}",
-                response_format: response_format,
-                temperature: options["temperature"],
-                top_p: options["top_p"],
-                max_tokens: options["max_tokens"],
-                stop_sequences: options["stop_sequences"],
-              )
-            end
-          end,
-        )
-      end
-
-      def convert_js_prompt_to_ruby(prompt)
-        if prompt.is_a?(String)
-          prompt
-        elsif prompt.is_a?(Hash)
-          messages = prompt["messages"]
-          if messages.blank? || !messages.is_a?(Array)
-            raise Discourse::InvalidParameters.new("Prompt must have messages")
-          end
-          messages.each(&:symbolize_keys!)
-          messages.each { |message| message[:type] = message[:type].to_sym }
-          DiscourseAi::Completions::Prompt.new(messages: prompt["messages"])
-        else
-          raise Discourse::InvalidParameters.new("Prompt must be a string or a hash")
-        end
-      end
-
-      def llm_user
-        @llm_user ||=
-          begin
-            post&.user || @bot_user
-          end
-      end
-
-      def post
-        return @post if defined?(@post)
-        post_id = @context.post_id
-        @post = post_id && Post.find_by(id: post_id)
-      end
-
-      def attach_index(mini_racer_context)
-        mini_racer_context.attach(
-          "_index_search",
-          ->(*params) do
-            in_attached_function do
-              query, options = params
-              self.running_attached_function = true
-              options ||= {}
-              options = options.symbolize_keys
-              self.rag_search(query, **options)
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
-          "_index_get_file",
-          ->(filename) { in_attached_function { rag_get_file(filename) } },
-        )
       end
 
       def attach_chain(mini_racer_context)
@@ -1300,7 +1261,6 @@ module DiscourseAi
       def find_model_by_type(type, id)
         CUSTOM_FIELD_MODELS[type]&.find_by(id: id)
       end
-
       def resolve_tool_secret!(alias_name)
         value, error =
           tool.resolve_secret(
@@ -1313,19 +1273,19 @@ module DiscourseAi
         when nil
           value
         when :alias_not_declared
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.alias_not_declared", alias: alias_name),
                 )
         when :missing_binding
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.missing_binding", alias: alias_name),
                 )
         when :secret_not_found
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.secret_not_found", alias: alias_name),
                 )
         else
-          raise Discourse::InvalidParameters.new(
+          raise ::Discourse::InvalidParameters.new(
                   I18n.t("discourse_ai.tools.secret_runtime.unknown_error"),
                 )
         end

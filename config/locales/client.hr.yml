@@ -2936,6 +2936,8 @@ hr:
       list_item: "Predmet popisa"
       toggle_direction: "Uključi/isključi smjer"
       wrap_modal:
+        attribute_key: "Ključ"
+        attribute_value: "Vrijednost"
         apply: "Primijeni"
       help: "Markdown pomoć pri izmjenama"
       collapse: "Smanji površinu uređivača"
@@ -3012,6 +3014,9 @@ hr:
         copy: "Kopiraj poveznicu"
         remove: "Uklonite poveznicu"
         visit: "Otvorite poveznicu u vanjskoj kartici"
+        link_copied: "Poveznica kopirana!"
+      onebox_toolbar:
+        copy: "Kopirajte poveznicu"
         link_copied: "Poveznica kopirana!"
     notifications:
       tooltip:
@@ -3470,12 +3475,33 @@ hr:
         name: "Pobriši"
       update_category:
         name: "Ažuriraj kategoriju"
+      convert_to_public_topic:
+        name: "Objavite temu"
+      convert_to_private_message:
+        name: "Izradite osobnu poruku"
       reset_bump_dates:
         name: "Poništite datume isticanja"
       defer:
         name: "Označi kao nepročitano"
       update_notifications:
         name: "Ažurirajte obavijesti"
+    nested_replies:
+      sort:
+        label: "Sortiraj po"
+        top: "Najaktivnije"
+        new: "Novo"
+      load_more_children:
+        one: "još %{count} odgovor"
+        few: "još %{count} odgovora"
+        other: "još %{count} odgovora"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
+      collapse: "Sakrij"
+      no_replies: "Još nema odgovora."
+      deleted_post_placeholder: "[izbrisao]"
+      pinned_reply: "Zakvačeno"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -3673,7 +3699,7 @@ hr:
           mailing_list_mode: "Imate način mailing liste omogućen, tako da ćete biti obaviješteni o odgovorima na ovu temu putem e-maila."
           "3_10": "Primat ćete obavijesti jer gledate oznaku na ovu temu."
           "3_10_stale": "Primit ćete obavijesti jer ste u prošlosti gledali oznaku na ovu temu."
-          "3_6": "Primati će te obavijesti jer promatrate ovu kategoriju."
+          "3_6": "Primat ćete obavijesti jer promatrate ovu kategoriju."
           "3_6_stale": "Dobit ćete obavijesti jer ste ovu kategoriju gledali u prošlosti."
           "3_5": "Primat će te obavijesti jer ste automatski počeli promatrati temu."
           "3_2": "Primat ćete obavijest jer promatrate temu."
@@ -4006,6 +4032,11 @@ hr:
         one: "Objava se sviđa %{count} osobi."
         few: "%{count} se sviđa objava."
         other: "%{count} se sviđa objava."
+      likes_popup:
+        title:
+          one: "%{count} lajk"
+          few: "%{count} lajka"
+          other: "%{count} lajkova"
       sr_post_read_count_button:
         one: "%{count} osoba je pročitala ovu objavu."
         few: "%{count} osobe su pročitale ovu objavu."
@@ -4037,7 +4068,7 @@ hr:
           confirm_delete: "Jeste li sigurni da želite izbrisati prijevode za '%{languageCode}'?"
         success: "Prijevodi su uspješno ažurirani"
         post_language_selector:
-          none: "Ništa"
+          none: "Nije postavljeno"
         edit_warning:
           action_original: "Uredite originalnu objavu"
           action_translation: "Uredite ovaj prijevod"
@@ -4105,8 +4136,8 @@ hr:
           just_the_post: "Ne, samo ovu objavu"
         admin: "Objavi administratorske radnje"
         admin_action: "Administrator"
-        permanently_delete: "Trajno izbriši"
-        permanently_delete_confirmation: "Jeste li sigurni da trajno želite izbrisati ovu objavu? Nećete je moći vratiti."
+        permanently_delete: "Trajno brisanje"
+        permanently_delete_confirm_phrase: "trajno brisanje"
         wiki: "Pretvori u Wiki"
         unwiki: "Ukloni Wiki"
         convert_to_moderator: "Dodaj boje osoblja"
@@ -4259,6 +4290,7 @@ hr:
       back: "Natrag u kategoriju"
       general: "Općenito"
       settings: "Postavke"
+      moderation: "Moderiranje"
       advanced: "Napredno"
       topic_template: "Predložak"
       tags: "Oznake"
@@ -5481,6 +5513,8 @@ hr:
           admins: "Admini"
           moderators: "Moderatori"
           staff: "Osoblje"
+        impact_types:
+          other_type: "Ostalo"
         filter:
           all: "Sve"
           enabled: "Omogućeno"
@@ -5496,7 +5530,6 @@ hr:
           header_description: "Ovdje navedite informacije o ovoj stranici i svom timu kako bi ljudi mogli saznati o čemu se radi u vašoj zajednici, tko stoji iza nje i kako vas kontaktirati u slučaju problema. Prikazano na stranici <a href='%{basePath}/about'>O nama</a>vaše stranice."
         developer:
           title: "Programer"
-          header_description: "Postavke programera za kontrolu ograničenja brzine, množitelja i proračuna, sigurnog načina rada i drugih naprednih značajki"
         experimental:
           title: "Eksperimentalno"
           header_description: "Uključite ili isključite eksperimentalne značajke za svoju web stranicu, većinu njih možete kontrolirati na grupnoj osnovi"
@@ -5679,6 +5712,11 @@ hr:
           sub_pages:
             logs:
               title: "Zapisi"
+        problem_checks:
+          status: "Statust"
+          ignore: "Zanemari"
+          more_options:
+            title: "Više opcija"
         reports:
           title: "Izvještaji"
           sub_pages:
@@ -5797,7 +5835,7 @@ hr:
         installed_version: "Instalirano"
         latest_version: "Posljednje"
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
-        dismiss_notice: "Skloni"
+        dismiss_notice: "Zanemari"
         new_features:
           title: "Što je novo?"
           subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."

@@ -3,7 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Unit | Models | chat-channel", function (hooks) {
+module("Unit | Models | chat-channel", function (hooks) {
   setupTest(hooks);
 
   module("unreadThreadsCount", function () {

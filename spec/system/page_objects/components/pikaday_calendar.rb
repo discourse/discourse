@@ -75,9 +75,6 @@ module PageObjects
       end
 
       def select_year(year)
-        # visible: false is here because pikaday sets the controls
-        # to opacity: 0 for some reason.
-        select_element = visible_pikaday.find(".pika-select-year", visible: false)
         page.driver.with_playwright_page do |playwright_page|
           playwright_page.eval_on_selector(
             ".pika-select-year",

@@ -8,7 +8,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatChannelRow from "discourse/plugins/chat/discourse/components/chat-channel-row";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | chat-channel-row", function (hooks) {
+module("Component | chat-channel-row", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

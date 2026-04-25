@@ -102,88 +102,88 @@ sk:
       xaxis: "Pozitívne (%)"
       yaxis: "Dátum"
     emotion_admiration:
-      title: "\U0001F929 Obdiv"
+      title: "🤩 Obdiv"
       description: "Príspevky klasifikované emóciou obdiv prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
-      title: "\U0001F604 Zábava"
+      title: "😄 Zábava"
       description: "Príspevky klasifikované pomocou emócie amusement prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
-      title: "\U0001F620 Hnev"
+      title: "😠 Hnev"
       description: "Príspevky klasifikované emóciou hnev pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
-      title: "\U0001F612 Otravnosť"
+      title: "😒 Otravnosť"
       description: "Príspevky klasifikované pomocou emócie otravnosti pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
-      title: "\U0001F44D Schválenie"
+      title: "👍 Schválenie"
       description: "Príspevky klasifikované so schválením emócie pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
-      title: "\U0001F917 Starostlivosť"
+      title: "🤗 Starostlivosť"
       description: "Príspevky klasifikované pomocou emócie starostlivosť prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
-      title: "\U0001F615 Zmätok"
+      title: "😕 Zmätok"
       description: "Príspevky klasifikované pomocou zámeny emócií pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
-      title: "\U0001F914 Zvedavosť"
+      title: "🤔 Zvedavosť"
       description: "Príspevky klasifikované pomocou emócie zvedavosť prostredníctvom AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
-      title: "\U0001F60D Túžba"
+      title: "😍 Túžba"
       description: "Príspevky klasifikované pomocou emócie túžby pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
-      title: "\U0001F61E Sklamanie"
+      title: "😞 Sklamanie"
       description: "Príspevky klasifikované pomocou emócie sklamanie pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
-      title: "\U0001F44E Nesúhlas"
+      title: "👎 Nesúhlas"
       description: "Príspevky klasifikované emóciou nesúhlasu pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
-      title: "\U0001F922 Znechutenie"
+      title: "🤢 Znechutenie"
       description: "Príspevky klasifikované emóciou znechutenia pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
-      title: "\U0001F633 Rozpaky"
+      title: "😳 Rozpaky"
       description: "Príspevky klasifikované emóciou rozpaky pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
-      title: "\U0001F92A Vzrušenie"
+      title: "🤪 Vzrušenie"
       description: "Príspevky klasifikované pomocou emócie vzrušenie pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
-      title: "\U0001F628 Strach"
+      title: "😨 Strach"
       description: "Príspevky klasifikované emóciou strach pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
-      title: "\U0001F64F Vďačnosť"
+      title: "🙏 Vďačnosť"
       description: "Príspevky klasifikované pomocou emócie vďačnosti pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
-      title: "\U0001F622 Smútok"
+      title: "😢 Smútok"
       description: "Príspevky klasifikované emóciou smútok pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
-      title: "\U0001F60A Radosť"
+      title: "😊 Radosť"
       description: "Príspevky klasifikované s emóciou radosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_love:
       title: '❤️ Láska'
       description: "Príspevky klasifikované s emóciou láska prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_nervousness:
-      title: "\U0001F630 Nervozita"
+      title: "😰 Nervozita"
       description: "Príspevky klasifikované emóciou nervozita pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
-      title: "\U0001F610 Neutrálna"
+      title: "😐 Neutrálna"
       description: "Príspevky klasifikované pomocou AI s neutrálnou emóciou pomocou modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
-      title: "\U0001F31F Optimizmus"
+      title: "🌟 Optimizmus"
       description: "Príspevky klasifikované pomocou emócie optimizmus pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
-      title: "\U0001F981 Hrdosť"
+      title: "🦁 Hrdosť"
       description: "Príspevky klasifikované s emóciou hrdosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_realization:
-      title: "\U0001F4A1 Realizácia"
+      title: "💡 Realizácia"
       description: "Príspevky klasifikované pomocou realizácie emócií pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
-      title: "\U0001F60C Úľava"
+      title: "😌 Úľava"
       description: "Príspevky klasifikované s úľavou od emócií prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_remorse:
-      title: "\U0001F614 Výčitky svedomia"
+      title: "😔 Výčitky svedomia"
       description: "Príspevky klasifikované s emóciou ľútosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_sadness:
-      title: "\U0001F62D Smútok"
+      title: "😭 Smútok"
       description: "Príspevky klasifikované pomocou emócie smútku pomocou AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
     emotion_surprise:
-      title: "\U0001F632 Prekvapenie"
+      title: "😲 Prekvapenie"
       description: "Príspevky klasifikované s emóciou prekvapenia prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
   discourse_ai:
     ai_artifact:
@@ -555,13 +555,13 @@ sk:
       reports:
         overall_sentiment: "Celkový sentiment (pozitívny - negatívny)"
         post_emotion:
-          sadness: "Smútok \U0001F622"
-          surprise: "Prekvapenie \U0001F631"
-          neutral: "Neutrálna \U0001F610"
-          fear: "Strach \U0001F628"
-          anger: "Hnev \U0001F621"
-          joy: "Radosť \U0001F600"
-          disgust: "Znechutenie \U0001F922"
+          sadness: "Smútok 😢"
+          surprise: "Prekvapenie 😱"
+          neutral: "Neutrálna 😐"
+          fear: "Strach 😨"
+          anger: "Hnev 😡"
+          joy: "Radosť 😀"
+          disgust: "Znechutenie 🤢"
         sentiment_analysis:
           positive: "Pozitívne"
           negative: "Negatívne"

@@ -36,6 +36,8 @@ pl_PL:
       topic_search_placeholder: "Szukaj tematów według tytułu lub treści"
       sidebar_name_filter_placeholder: "Imię/Nazwa użytkownika"
       assigned: "Przypisany"
+      group_no_assignments_title: "Brak przypisań"
+      group_no_assignments_body: "Obecnie nie ma aktywnych przypisań dla tej grupy."
       group_everyone: "Wszyscy"
       assigned_to: "Przypisany do"
       assigned_topic_to: "Przypisano temat do <a href='%{path}'>%{username}</a>"
@@ -138,6 +140,22 @@ pl_PL:
           unassigned: "jest nieprzypisany"
         assigned:
           label: "Przypisany do"
+    topics:
+      bulk:
+        unassign: "Cofnij przypisanie tematów"
+        assign: "Przypisz temat"
+        assign_description: "Przypisz wybrane tematy następującemu użytkownikowi:"
+        unassign_description: "Czy chcesz usunąć zaznaczone tematy?"
+        confirm_assign_topics:
+          one: "Przypisz %{count} temat"
+          few: "Przypisz %{count} tematy"
+          many: "Przypisz %{count} tematów"
+          other: "Przypisz %{count} tematów"
+        confirm_unassign_topics:
+          one: "Usuń przypisanie %{count} tematu"
+          few: "Usuń przypisanie %{count} tematów"
+          many: "Usuń przypisanie %{count} tematów"
+          other: "Usuń przypisanie %{count} tematów"
     discourse_automation:
       scriptables:
         random_assign:

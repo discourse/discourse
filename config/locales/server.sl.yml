@@ -120,7 +120,17 @@ sl:
   not_in_group:
     join_group: "Pridruži se skupini"
   reading_time: "Čas branja"
+  reading_time_minutes:
+    one: "%{count} minuto 🕑"
+    two: "%{count} minuti 🕑"
+    few: "%{count} minute 🕑"
+    other: "%{count} minut 🕑"
   likes: "Všečki"
+  likes_count:
+    one: "%{count} ❤"
+    two: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Novi uporabniki so začasno omejeni na %{count} odgovor v isti temi."
     two: "Novi uporabniki so začasno omejeni na %{count} odgovora v isti temi."

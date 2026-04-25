@@ -2812,6 +2812,8 @@ fr:
       list_item: "Élément"
       toggle_direction: "Basculer la section"
       wrap_modal:
+        attribute_key: "Clé"
+        attribute_value: "Valeur"
         apply: "Appliquer"
       help: "Aide à l'édition Markdown"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
@@ -2880,6 +2882,9 @@ fr:
         copy: "Copier le lien"
         remove: "Supprimer le lien"
         visit: "Ouvrir le lien dans un onglet externe"
+        link_copied: "Lien copié !"
+      onebox_toolbar:
+        copy: "Copier le lien"
         link_copied: "Lien copié !"
     notifications:
       tooltip:
@@ -3304,12 +3309,31 @@ fr:
         name: "Supprimer"
       update_category:
         name: "Mettre à jour la catégorie"
+      convert_to_public_topic:
+        name: "Rendre le sujet public…"
+      convert_to_private_message:
+        name: "Transformer en message direct"
       reset_bump_dates:
         name: "Réinitialiser la date d'actualisation"
       defer:
         name: "Marquer comme non lu"
       update_notifications:
         name: "Mettre à jour les notifications"
+    nested_replies:
+      sort:
+        label: "Trier par"
+        top: "Top"
+        new: "Nouveau"
+      load_more_children:
+        one: "%{count} réponse supplémentaire"
+        other: "%{count} réponses supplémentaires"
+      collapsed_replies:
+        one: "%{count} réponse"
+        other: "%{count} réponses"
+      collapse: "Réduire"
+      no_replies: "Pas encore de réponse."
+      deleted_post_placeholder: "[supprimés]"
+      pinned_reply: "Épinglé"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -3821,6 +3845,10 @@ fr:
       sr_post_like_count_button:
         one: "%{count} personne a aimé cette publication."
         other: "%{count} personnes ont aimé cette publication."
+      likes_popup:
+        title:
+          one: "%{count} « J'aime »"
+          other: "%{count} « J'aime »"
       sr_post_read_count_button:
         one: "%{count} personne a lu cette publication."
         other: "%{count} personnes ont lu cette publication."
@@ -3848,7 +3876,7 @@ fr:
           confirm_delete: "Voulez-vous vraiment supprimer les traductions de « %{languageCode} » ?"
         success: "Les traductions ont été mises à jour avec succès"
         post_language_selector:
-          none: "Aucune"
+          none: "Non défini"
         edit_warning:
           action_original: "Modifier la publication originale"
           action_translation: "Modifier cette traduction"
@@ -3871,6 +3899,7 @@ fr:
         attachment_download_requires_login: "Nous sommes désolés, vous devez être connecté(e) pour télécharger une pièce jointe."
       cancel_composer:
         discard: "Abandonner"
+        discard_edit: "Annuler les modifications"
       via_email: "ce message est arrivé par e-mail"
       via_auto_generated_email: "ce message est arrivé via un e-mail généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
@@ -3914,7 +3943,7 @@ fr:
         admin: "actions d'administration sur le message"
         admin_action: "Administrateur"
         permanently_delete: "Supprimer définitivement"
-        permanently_delete_confirmation: "Voulez-vous vraiment supprimer définitivement ce message ? Vous ne pourrez plus le récupérer."
+        permanently_delete_confirm_phrase: "supprimer définitivement"
         wiki: "Basculer en mode wiki"
         unwiki: "Retirer le mode wiki"
         convert_to_moderator: "Ajouter la couleur modérateur"
@@ -4059,6 +4088,7 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
+      moderation: "Modération"
       advanced: "Avancé"
       topic_template: "Modèle"
       tags: "Étiquettes"
@@ -5239,6 +5269,9 @@ fr:
           admins: "Administrateurs "
           moderators: "Modérateurs"
           staff: "Responsable"
+        impact_types:
+          feature_type: "Fonctionnalité"
+          other_type: "Autre"
         filter:
           all: "Tout"
           enabled: "Activé"
@@ -5255,7 +5288,6 @@ fr:
           header_description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui la soutient et comment vous contacter en cas de problème. Ce contenu est affiché sur la page <a href='%{basePath}/about'>À propos</a> de votre site."
         developer:
           title: "Développeur"
-          header_description: "Paramètres du développeur pour contrôler les limites de débit, les multiplicateurs et les calculs, le mode sans échec et d'autres fonctionnalités avancées"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
@@ -5450,6 +5482,13 @@ fr:
             logs:
               title: "Journaux"
               header_description: "Affichez et gérez les journaux pour les sauvegardes, les restaurations et les téléversements"
+        problem_checks:
+          priority: "Priorité"
+          status: "Statut"
+          last_run_at: "Dernière exécution"
+          ignore: "Ignorer"
+          more_options:
+            title: "Plus d'options"
         reports:
           title: "Rapports"
           header_description: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
@@ -5623,7 +5662,7 @@ fr:
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
-        dismiss_notice: "Rejeter"
+        dismiss_notice: "Ignorer"
         new_features:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."

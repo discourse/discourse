@@ -252,7 +252,13 @@ pt:
   deleted_topic: "Oops! Este tópico foi excluído e não está mais disponível."
   delete_topic_failed: "Ocorreu um erro ao excluir esse tópico. Entre em contato com o administrador do site."
   reading_time: "Tempo de leitura"
+  reading_time_minutes:
+    one: "%{count} minuto 🕑"
+    other: "%{count} minutos 🕑"
   likes: "Gostos"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} resposta no mesmo tópico."
     other: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico."

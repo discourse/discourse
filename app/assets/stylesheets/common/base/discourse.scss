@@ -771,7 +771,7 @@ textarea {
 
         &.active {
           font-weight: bold;
-          color: var(--primary);
+          color: var(--d-selected-text-color);
           background: var(--d-selected);
         }
       }

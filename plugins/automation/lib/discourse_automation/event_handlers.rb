@@ -309,7 +309,7 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_topic_closed(topic)
+    def self.handle_topic_closed(topic, status)
       name = DiscourseAutomation::Triggers::TOPIC_CLOSED
 
       DiscourseAutomation::Automation
@@ -318,6 +318,7 @@ module DiscourseAutomation
           automation.trigger!(
             "kind" => name,
             "topic" => topic,
+            "status" => status,
             "placeholders" => {
               "topic_url" => topic.relative_url,
               "topic_title" => topic.title,

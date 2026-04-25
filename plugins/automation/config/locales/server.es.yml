@@ -22,6 +22,9 @@ es:
         invalid_field: El componente del campo «%{component}» no es utilizable en «%{target}:%{target_name}».
         invalid_metadata: Los datos de «%{field}» no son válidos o el componente «%{component}» es desconocido.
     triggerables:
+      post_flag_created:
+        title: Se ha creado la denuncia de la publicación
+        description: Activa una automatización cuando se denuncia una publicación
       errors:
         custom_fields_or_user_profile_required: "Debe proporcionarse al menos uno de los campos «custom_fields» o «user_profile»."
       user_badge_granted:
@@ -69,6 +72,7 @@ es:
         description: Cuando se cambien las etiquetas de un tema, se activará la automatización.
       topic:
         title: Tema
+        description: El script asociado solo se utilizará en el tema especificado. Por ejemplo, esto es útil para los scripts que hacen validaciones.
       topic_closed:
         title: Al cerrar un tema
         description: Activa un script cuando se cierra un tema.
@@ -79,6 +83,24 @@ es:
         title: Después de actualizar el usuario
         description: Cuando un usuario actualiza cualquier información, se activará la automatización.
     scriptables:
+      email_on_flagged_post:
+        title: Correo electrónico en la publicación denunciada
+        description: Envía un correo electrónico personalizado cada vez que se cree una denuncia en una publicación.
+        subject: "Publicación denunciada: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Se ha denunciado un mensaje.
+
+          Tema: {{topic_title}} ({{topic_url}})
+          Publicación: {{post_url}} (#{{post_number}})
+          Tipo de denuncia: {{flag_type}}
+          Usuario denunciado: {{flagged_username}}
+          Denunciado por: {{flagger_username}}
+          Categoría: {{category}}
+          Etiquetas: {{tags}}
+
+          --------
+          Extracto de la publicación:
+          {{post_excerpt}}
       post:
         title: Crear una publicación
         description: Crear una publicación sobre un tema específico
@@ -109,6 +131,10 @@ es:
         title: Amigo invisible
         description: Permite emparejar de forma anónima a los usuarios de un grupo para que se envíen un regalo entre ellos.
         doc: El amigo invisible (intercambio de regalos) requiere un grupo existente con al menos 3 usuarios. En la fecha elegida, se emparejará a cada usuario con una persona a la que regalar (y otra distinta que le regalará).
+      remove_upload_markup_from_deleted_posts:
+        title: Eliminar la marca de subida en las publicaciones eliminadas
+        description: Actúa como usuario del sistema y añade una revisión a los mensajes eliminados en la que se elimina la marca de subida. Junto con la tarea «clean up uploads», esto da como resultado la eliminación permanente de las subidas en los mensajes eliminados. ¡Utilízalo con precaución!
+        edit_reason: La automatización ha eliminado la marca de subida del mensaje eliminado
       send_pms:
         title: Enviar mensajes privados
         description: Permite enviar MPs (posiblemente con retardo).
@@ -164,3 +190,4 @@ es:
         description: "Asignar temas aleatoriamente a un grupo"
       set_topic_timer:
         title: "Establecer temporizador de tema"
+        description: "Establecer un temporizador de tema en un tema"

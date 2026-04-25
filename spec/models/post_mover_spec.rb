@@ -3057,6 +3057,58 @@ RSpec.describe PostMover do
         ).to be_present
       end
 
+      it "does not collide with a soft-deleted post at the tail of the source on full move" do
+        # The unique index on (topic_id, post_number) is not partial, so a
+        # soft-deleted post still occupies its slot. Regression for
+        # `PG::UniqueViolation` when computing the split_topic post number.
+        deleted_tail = Fabricate(:post, topic: original_topic)
+        deleted_tail.trash!
+
+        expect {
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [op.id, first_post.id, second_post.id, third_post.id],
+            options: {
+              freeze_original: true,
+            },
+          ).to_topic(destination_topic.id)
+        }.not_to raise_error
+
+        expect(
+          original_topic.ordered_posts.where(
+            post_type: Post.types[:small_action],
+            action_code: "split_topic",
+          ),
+        ).to be_present
+      end
+
+      it "does not collide with a soft-deleted post above the shift range on partial move" do
+        deleted_between = Fabricate(:post, topic: original_topic)
+        original_deleted_post_number = deleted_between.post_number
+        deleted_between.trash!
+        tail_post = Fabricate(:post, topic: original_topic)
+        original_tail_post_number = tail_post.post_number
+
+        expect {
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [first_post.id, second_post.id],
+            options: {
+              freeze_original: true,
+            },
+          ).to_topic(destination_topic.id)
+        }.not_to raise_error
+
+        # The soft-deleted post should have been shifted along with the visible
+        # ones so the slot for the split_topic post is free.
+        expect(Post.with_deleted.find(deleted_between.id).post_number).to eq(
+          original_deleted_post_number + 1,
+        )
+        expect(tail_post.reload.post_number).to eq(original_tail_post_number + 1)
+      end
+
       context "with `post_mover_create_moderator_post` modifier" do
         fab!(:topic_1, :topic)
         fab!(:topic_2, :topic)

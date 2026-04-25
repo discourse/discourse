@@ -145,7 +145,13 @@ bg:
   not_in_group:
     join_group: "Присъедини се към група"
   reading_time: "Време за четене"
+  reading_time_minutes:
+    one: "%{count} минута 🕑"
+    other: "%{count} минути 🕑"
   likes: "Харесвания"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговор във същата публикация."
     other: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговори в същата публикация."

@@ -163,11 +163,13 @@ class Notification < ActiveRecord::Base
         chat_watched_thread: 40,
         upcoming_change_available: 41,
         upcoming_change_automatically_promoted: 42,
+        boost: 43, # Used by https://github.com/discourse/discourse-boosts
+        suggested_edit_created: 44, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
+        suggested_edit_accepted: 45, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
         circles_activity: 900, # Used by https://github.com/discourse/discourse-circles
-        boost: 43, # Used by https://github.com/discourse/discourse-boosts
       )
   end
 

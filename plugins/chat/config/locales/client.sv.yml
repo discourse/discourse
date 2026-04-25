@@ -255,7 +255,6 @@ sv:
       retry_staged_message:
         title: "Nätverksfel"
         action: "Skicka igen?"
-      unreliable_network: "Nätverket är opålitligt, det fungerar kanske inte att skicka meddelanden och spara utkast"
       bookmark_message: "Bokmärk"
       bookmark_message_edit: "Redigera bokmärke"
       restore: "Återställ raderat meddelande"

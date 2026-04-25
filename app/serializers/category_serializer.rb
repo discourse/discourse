@@ -8,6 +8,7 @@ class CategorySerializer < SiteCategorySerializer
                :num_auto_bump_daily,
                :require_reply_approval,
                :require_topic_approval,
+               :nested_replies_default,
                :topic_posting_review_mode,
                :reply_posting_review_mode
   end

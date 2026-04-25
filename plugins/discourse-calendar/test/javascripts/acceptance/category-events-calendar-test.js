@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
-acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
+acceptance("Category Events Calendar", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,

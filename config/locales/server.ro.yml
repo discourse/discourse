@@ -211,7 +211,15 @@ ro:
   not_in_group:
     join_group: "Alătură-te grupului"
   reading_time: "Durata citirii"
+  reading_time_minutes:
+    one: "%{count} minut 🕑"
+    few: "%{count} minute 🕑"
+    other: "%{count} de minute 🕑"
   likes: "Aprecieri"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspuns pe discuție."
     few: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție."

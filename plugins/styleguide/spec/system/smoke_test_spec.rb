@@ -48,6 +48,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/organisms/basic-topic-list", title: "Basic Topic List" },
       { href: "/organisms/categories-list", title: "Categories List" },
       { href: "/organisms/chat", title: "Chat" },
+      { href: "/organisms/docked-composer", title: "Docked Composer" },
       { href: "/organisms/modal", title: "Modal" },
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
@@ -96,8 +97,8 @@ RSpec.describe "Styleguide Smoke Test" do
     end
   end
 
-  it "renders the index page correctly on a site with no default theme" do
-    SiteSetting.default_theme_id = nil
+  it "renders the index page correctly on a site with no default color schemes" do
+    SiteSetting.default_theme_id = Fabricate(:theme).id
     visit "/styleguide"
 
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")

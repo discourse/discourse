@@ -52,24 +52,28 @@ module DiscourseAi
       end
 
       def total_input_spending
-        model_costs.sum { |row| row.input_cost.to_f * row.total_request_tokens.to_i / 1_000_000.0 }
+        spending_component_total(:input)
       end
 
       def total_output_spending
-        model_costs.sum do |row|
-          row.output_cost.to_f * row.total_response_tokens.to_i / 1_000_000.0
-        end
+        spending_component_total(:output)
       end
 
       def total_cache_read_spending
-        model_costs.sum do |row|
-          row.cached_input_cost.to_f * row.total_cache_read_tokens.to_i / 1_000_000.0
-        end
+        spending_component_total(:cache_read)
       end
 
       def total_cache_write_spending
+        spending_component_total(:cache_write)
+      end
+
+      def spending_component_total(component)
+        info = LlmModel::COST_COMPONENTS.fetch(component)
+        cost_attr = info[:cost]
+        tokens_attr = "total_#{info[:tokens]}"
+
         model_costs.sum do |row|
-          row.cache_write_cost.to_f * row.total_cache_write_tokens.to_i / 1_000_000.0
+          row.public_send(cost_attr).to_f * row.public_send(tokens_attr).to_i / 1_000_000.0
         end
       end
 
@@ -242,13 +246,12 @@ module DiscourseAi
       end
 
       def token_count_and_total_columns
-        [
-          *token_total_columns,
-          "SUM(COALESCE(request_tokens, 0) * COALESCE(llm_models.input_cost, 0))  / 1000000.0 as input_spending",
-          "SUM(COALESCE(response_tokens, 0) * COALESCE(llm_models.output_cost, 0)) / 1000000.0 as output_spending",
-          "SUM(COALESCE(cache_read_tokens, 0) * COALESCE(llm_models.cached_input_cost, 0)) / 1000000.0 as cache_read_spending",
-          "SUM(COALESCE(cache_write_tokens, 0) * COALESCE(llm_models.cache_write_cost, 0)) / 1000000.0 as cache_write_spending",
-        ]
+        spending_columns =
+          LlmModel::COST_COMPONENTS.keys.map do |component|
+            expr = LlmModel.spending_component_sql(component, :ai_api_request_stats)
+            "SUM(#{expr}) / 1000000.0 as #{component}_spending"
+          end
+        [*token_total_columns, *spending_columns]
       end
     end
   end

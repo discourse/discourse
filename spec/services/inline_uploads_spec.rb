@@ -613,7 +613,7 @@ RSpec.describe InlineUploads do
         [test3|attachment](#{upload.short_url})
         [test3|attachment](#{upload2.short_url})[test3|attachment](#{upload3.short_url})
 
-        [This is some _test_ here|attachment](#{upload3.short_url})
+        [This is some \\_test\\_ here|attachment](#{upload3.short_url})
         MD
       end
 
@@ -762,7 +762,7 @@ RSpec.describe InlineUploads do
             image_upload
           end
 
-        expect(raw).to eq("look at this:\n![image1](#{image_upload.short_url})")
+        expect(raw).to eq("look at this:\n![image\\]1](#{image_upload.short_url})")
       end
     end
   end

@@ -158,7 +158,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
         end
 
         it "shows all purchases if campaign product not set" do
-          SiteSetting.discourse_subscriptions_campaign_product = nil
+          SiteSetting.discourse_subscriptions_campaign_product = ""
 
           get "/s/contributors.json"
 

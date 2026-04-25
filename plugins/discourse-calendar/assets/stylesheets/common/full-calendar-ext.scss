@@ -2,6 +2,11 @@
 
 .fc {
   padding-bottom: 5px;
+
+  .fc-button .fc-icon {
+    font-size: 1.2em;
+    line-height: 0.8;
+  }
 }
 
 .fc-button,
@@ -12,6 +17,10 @@
 .fc-button:focus {
   background: var(--d-button-default-bg-color--hover) !important;
   color: var(--d-button-default-text-color--hover) !important;
+}
+
+.fc-button:not([disabled]):hover {
+  --fc-button-text-color: var(--d-button-default-text-color--hover) !important;
 }
 
 .fc-button-active {

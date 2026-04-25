@@ -124,6 +124,28 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["silence_reason"]).to eq("because I said so")
       end
 
+      it "does not leak the message body in the public silence_reason" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              reason: "because I said so",
+              message: "private email body",
+              post_action: "delete",
+              silenced_till: 2.days.from_now,
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence"]["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["silence"]["full_silence_reason"]).to eq(
+          "because I said so\n\nprivate email body",
+        )
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["full_silence_reason"]).to eq(
+          "because I said so<br><br>private email body",
+        )
+      end
+
       context "with a non-existing user" do
         it "returns 404 error" do
           get "/admin/users/0.json"

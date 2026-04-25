@@ -2124,6 +2124,8 @@ bg:
       upload_description: "причина за качването"
       list_item: "Списък"
       wrap_modal:
+        attribute_key: "Ключ"
+        attribute_value: "Стойност"
         apply: "Приложи"
       help: "Помощ с Markdown"
       modal_ok: "Ок"
@@ -2401,6 +2403,21 @@ bg:
         name: "Замени етикетите"
       delete_topics:
         name: "Изтрий"
+    nested_replies:
+      sort:
+        label: "Сортирай по"
+        top: "Топ"
+        new: "Нов"
+      load_more_children:
+        one: "още един отговор"
+        other: "%{count} повече отговори"
+      collapsed_replies:
+        one: "%{count} отговор"
+        other: "%{count} отговора"
+      collapse: "Намали"
+      no_replies: "Все още няма отговори."
+      deleted_post_placeholder: "[изтрита]"
+      pinned_reply: "Закована"
     topic:
       create: "Нова тема"
       open_draft: "Довърши ревизия"
@@ -2775,7 +2792,7 @@ bg:
           edit: "Редактирай"
           delete: "Изтрий"
         post_language_selector:
-          none: "Без"
+          none: "Не е зададено"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
         edit: "Съжаляваме, възникна грешка при редактирането на публикацията. Моля, опитайте отново. "
@@ -3453,6 +3470,8 @@ bg:
           admins: "Админи"
           moderators: "Модератори"
           staff: "Персонал"
+        impact_types:
+          other_type: "Други"
         filter:
           all: "Всички"
           enabled: "Да е включен"
@@ -3512,6 +3531,9 @@ bg:
           sub_pages:
             logs:
               title: "Логове"
+        problem_checks:
+          status: "Статус"
+          ignore: "Игнорирай"
         reports:
           sub_pages:
             settings:
@@ -3563,7 +3585,7 @@ bg:
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
         installed_version: "Инсталирани"
         latest_version: "Последни"
-        dismiss_notice: "Отмени"
+        dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."
         last_checked: "Последна проверка"

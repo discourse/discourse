@@ -131,3 +131,11 @@ discourse_calendar:
     enum: "CalendarUpcomingEventsDefaultView"
     default: month
     client: true
+  enable_events_category_type_setup:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/401309"

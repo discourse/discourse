@@ -51,9 +51,6 @@ class MetadataController < ApplicationController
     end
 
     scheme_id = view_context.scheme_id
-    primary_color = ColorScheme.hex_for_name("primary", scheme_id)
-    icon_url_base =
-      UrlHelper.absolute("/svg-sprite/#{Discourse.current_hostname}/icon/#{primary_color}")
 
     manifest = {
       name: SiteSetting.title,

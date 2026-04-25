@@ -25,6 +25,7 @@ sl:
       description_placeholder: "Vnesite opis tukaj"
       ai:
         generate: "Ustvari"
+        optional: "neobvezno"
       import:
         label: "Uvozi"
       help:

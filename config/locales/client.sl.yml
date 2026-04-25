@@ -2064,6 +2064,7 @@ sl:
       upload_description: "vnesite opis prenosa tukaj"
       list_item: "Element seznama"
       wrap_modal:
+        attribute_value: "Stanje"
         apply: "Uporabi"
       help: "pomoč pri Markdown urejanju"
       modal_ok: "V redu"
@@ -2100,6 +2101,8 @@ sl:
       ignore: "Prezri"
       image: "slika"
       link_toolbar:
+        link_copied: "Povezava kopirana!"
+      onebox_toolbar:
         link_copied: "Povezava kopirana!"
     notifications:
       tooltip:
@@ -2367,6 +2370,29 @@ sl:
         name: "Zamenjaj oznake"
       delete_topics:
         name: "Izbriši"
+      convert_to_public_topic:
+        name: "Spremeni v javno temo…"
+      convert_to_private_message:
+        name: "Spremeni v ZS"
+    nested_replies:
+      sort:
+        label: "Uredi po"
+        top: "Najboljše"
+        new: "Novi"
+      load_more_children:
+        one: "%{count} drug odgovor"
+        two: "%{count} druga odgovora"
+        few: "%{count} drugi odgovori"
+        other: "%{count} drugih odgovorov"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        two: "%{count} odgovora"
+        few: "%{count} odgovori"
+        other: "%{count} odgovorov"
+      collapse: "Skrči"
+      no_replies: "Ni odgovorov."
+      deleted_post_placeholder: "[izbrisano]"
+      pinned_reply: "Pripeto"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"
@@ -2796,6 +2822,12 @@ sl:
         two: "%{count} uporabnikoma je prispevek všeč."
         few: "%{count} uporabnikom je prispevek všeč."
         other: "%{count} uporabnikom je prispevek všeč."
+      likes_popup:
+        title:
+          one: "%{count} všeček"
+          two: "%{count} všečka"
+          few: "%{count} všečke"
+          other: "%{count} všečkov"
       filtered_replies_hint:
         one: "Oglejte si to objavo in njen odgovor"
         two: "Oglejte si to objavo in njena %{count} odgovora"
@@ -2808,7 +2840,7 @@ sl:
           edit: "Uredi"
           delete: "Izbriši"
         post_language_selector:
-          none: "Brez"
+          none: "Ni nastavljeno"
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
@@ -2861,7 +2893,6 @@ sl:
           just_the_post: "Ne, samo ta prispevek"
         admin: "ukrepi administratorja"
         admin_action: "Admin"
-        permanently_delete: "Trajno izbriši"
         wiki: "Naredi wiki"
         unwiki: "Odstrani wiki"
         convert_to_moderator: "Dodaj barvo osebja"
@@ -2965,6 +2996,7 @@ sl:
       view: "Poglej teme v kategoriji"
       general: "Splošno"
       settings: "Nastavitve"
+      moderation: "Moderiranje"
       tags: "Oznake"
       localization:
         name: "Ime"
@@ -3753,6 +3785,8 @@ sl:
           admins: "Administratorji"
           moderators: "Moderatorji"
           staff: "Osebje"
+        impact_types:
+          other_type: "Drugo"
         filter:
           all: "Vsi"
           enabled: "Vključeno"
@@ -3818,6 +3852,10 @@ sl:
           sub_pages:
             logs:
               title: "Dnevniki"
+        problem_checks:
+          status: "Status"
+          last_run_at: "Zadnja izvedba"
+          ignore: "Prezri"
         reports:
           title: "Poročila"
           sub_pages:
@@ -3873,7 +3911,7 @@ sl:
         installed_version: "Nameščeno"
         latest_version: "Najnovejše"
         problems_found: "Nekaj priporočil glede na vaše trenutne nastavitve strani"
-        dismiss_notice: "Opusti"
+        dismiss_notice: "Prezri"
         new_features:
           learn_more: "Več o tem..."
         last_checked: "Nazadnje preverjeno"

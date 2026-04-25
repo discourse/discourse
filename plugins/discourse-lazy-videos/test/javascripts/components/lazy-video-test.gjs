@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import LazyVideo from "../discourse/components/lazy-video";
 
-module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
+module("Component | lazy-video", function (hooks) {
   setupRenderingTest(hooks);
 
   this.attributes = {

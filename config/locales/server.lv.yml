@@ -64,6 +64,10 @@ lv:
       exclusion: ir rezervēts
   not_in_group:
     join_group: "Pievienoties grupai"
+  reading_time_minutes:
+    zero: "%{count} minūtes 🕑"
+    one: "%{count} minūtes 🕑"
+    other: "%{count} minūtes 🕑"
   likes: "Patīk"
   embed:
     start_discussion: "Sākt Diskusiju"

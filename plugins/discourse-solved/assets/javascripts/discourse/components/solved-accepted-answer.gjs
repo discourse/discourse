@@ -112,7 +112,7 @@ export default class SolvedAcceptedAnswer extends Component {
         <div class="d-solved-answer__header">
           <h3 class="d-solved-answer__title">
             {{icon "far-square-check"}}
-            Solved</h3>
+            {{i18n "solved.title"}}</h3>
           <div class="d-solved-answer__controls">
             {{#if this.content}}
               <DButton

@@ -436,6 +436,8 @@ Discourse::Application.routes.draw do
           get "login-and-authentication/#{location}" => "site_settings#index"
         end
 
+        # Needed for back-end routing to work.
+        #
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -505,6 +507,11 @@ Discourse::Application.routes.draw do
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+      resources :problem_checks, only: %i[index], constraints: AdminConstraint.new do
+        put "ignore" => "problem_checks#ignore"
+        put "watch" => "problem_checks#watch"
+      end
+      get "problem-checks" => "problem_checks#index"
 
       delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace
@@ -1272,6 +1279,8 @@ Discourse::Application.routes.draw do
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
       delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
+      get "permanently_delete_check" => "posts#permanently_delete_check",
+          :constraints => AdminConstraint.new
       put "recover"
       collection do
         delete "destroy_many"
@@ -1413,6 +1422,19 @@ Discourse::Application.routes.draw do
     get "search/query" => "search#query"
     get "search" => "search#show"
     post "search/click" => "search#click"
+
+    # Nested replies routes
+    scope "n/:slug/:topic_id", constraints: { topic_id: /\d+/ } do
+      get "/children/:post_number" => "nested_topics#children",
+          :constraints => {
+            post_number: /\d+/,
+          }
+      get "/context/:post_number" => "nested_topics#context", :constraints => { post_number: /\d+/ }
+      put "/pin" => "nested_topics#pin"
+      put "/toggle" => "nested_topics#toggle"
+      get "/:post_number" => "nested_topics#context", :constraints => { post_number: /\d+/ }
+      get "/" => "nested_topics#show"
+    end
 
     # Topics resource
     get "t/:id" => "topics#show"

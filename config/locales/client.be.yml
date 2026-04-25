@@ -304,7 +304,7 @@ be:
       twitter: "Абагуліць у X"
       facebook: "Абагуліць у Facebook"
       email: "Адправіць па электроннай пошце"
-      url: "Скапіяваць і абагуліць URL-адрас"
+      url: "Скапіраваць і абагуліць URL-адрас"
     word_connector:
       comma: ", "
       last_item: "і"
@@ -1351,6 +1351,7 @@ be:
       upload_description: "Увядзіце апісанне запампоўкі"
       list_item: "Элемент спіса"
       wrap_modal:
+        attribute_value: "значэнне"
         apply: "Прымяніць"
       help: "Даведка па рэдагаванні Markdown"
       modal_ok: "ОК"
@@ -1465,6 +1466,14 @@ be:
         name: "Ва Уваходныя"
       delete_topics:
         name: "Выдаліць"
+      convert_to_private_message:
+        name: "Стварыць асабістае паведамленне"
+    nested_replies:
+      sort:
+        label: "сартаваць па"
+        top: "Топ тэм"
+        new: "Новы"
+      pinned_reply: "Замацаваныя"
     topic:
       create: "Новая тэма"
       archive_message:
@@ -1634,6 +1643,7 @@ be:
       view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
       settings: "Налады"
+      moderation: "Мадэрацыя"
       topic_template: "Шаблон"
       tags: "Тэгі"
       localization:
@@ -1767,6 +1777,7 @@ be:
         topics: "Тэмы"
         replies: "Адказы"
       posted:
+        title: "Мае допісы"
         help: "тэмы, у якіх ёсць вашы допісы"
       bookmarks:
         title: "Закладкі"
@@ -1934,6 +1945,7 @@ be:
           links:
             about:
               content: "Пра сайт"
+              title: "Больш падрабязнасцей пра гэты сайт"
             admin:
               content: "Адміністратар"
             badges:
@@ -1942,6 +1954,7 @@ be:
               content: "Фільтр"
             topics:
               content: "Тэмы"
+              title: "Усе тэмы"
             faq:
               content: "Частыя пытанні"
             guidelines:
@@ -1950,8 +1963,14 @@ be:
               content: "Групы"
             users:
               content: "Карыстальнікі"
+            my_posts:
+              content: "Мае допісы"
+              content_drafts: "Мае чарнавікі"
             review:
               content: "Разгляд"
+            my_messages:
+              content: "Мае паведамленні"
+              title: "Мае асабістыя паведамленні"
       search: "Пошук"
       footer:
         interface_color_selector:
@@ -2014,6 +2033,8 @@ be:
           admins: "Адміністратары"
           moderators: "Мадэратары"
           staff: "Персанал"
+        impact_types:
+          other_type: "Іншае"
         filter:
           all: "Усе"
           disabled: "Адключана"
@@ -2074,6 +2095,9 @@ be:
           sub_pages:
             logs:
               title: "Журналы"
+        problem_checks:
+          status: "Статус"
+          ignore: "Ігнараваць"
         reports:
           title: "Справаздачы"
           sub_pages:
@@ -2125,6 +2149,7 @@ be:
         stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
         installed_version: "Усталяваная"
         latest_version: "Апошняя"
+        dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."
         last_checked: "Апошняя праверка"
@@ -2183,249 +2208,249 @@ be:
         title: "Групы"
         edit: "Рэдагаваць групы"
         refresh: "Абнавіць"
-        about: "Edit your group membership and names here"
+        about: "Змяніце тут членства ў групе і імёны"
         group_members: "Удзельнікі групы"
-        delete: "выдаліць"
-        delete_failed: "Не атрымалася выдаліць групу. Калі гэта - аўтаматычная група, яе немагчыма знішчыць."
-        add: "дадаць"
+        delete: "Выдаліць"
+        delete_failed: "Не ўдалося выдаліць групу. Калі гэта аўтаматычная група, яе немагчыма знішчыць."
+        add: "Дадаць"
       api_keys:
-        edit: "рэдагаваць"
-        save: "захаваць"
-        cancel: "адмяніць"
+        edit: "Рэдагаваць"
+        save: "Захаваць"
+        cancel: "Скасаваць"
         continue: "Працягнуць"
-        copy_key: "капіяваць"
-        revoke: "адклікаць"
+        copy_key: "Капіраваць"
+        revoke: "Адклікаць"
       api:
-        generate_master: "Згенераваць Галоўны ключ API"
+        generate_master: "Згенерыраваць галоўны ключ API"
         none: "Пакуль няма ніводнага актыўнага ключа API."
         user: "Карыстальнік"
         title: "API"
-        never_used: ніколі
-        generate: "згенераваць"
-        revoke: "Адклікнуць"
-        active_keys: "Актыўныя API ключы"
-        manage_keys: Кіраваць ключамі
-        show_details: Дэталі
+        never_used: Ніколі
+        generate: "Згенерыраваць"
+        revoke: "Адклікаць"
+        active_keys: "Актыўныя ключы API"
+        manage_keys: Кіраванне ключамі
+        show_details: Падрабязнасці
         description: Апісанне
         save: Захаваць
         continue: Працягнуць
         scopes:
-          action: дзеянне
+          action: Дзеянне
           descriptions:
             topics:
               delete: Выдаліць тэму.
             posts:
-              delete: Выдаліць паведамленне.
+              delete: Выдаліць допіс.
             invites:
-              create: Адправіць запрашэнні па электроннай пошце альбо стварыць спасылкі для запрашэнняў.
+              create: Адправіць запрашэнні па электроннай пошце або стварыць спасылкі для запрашэння.
       web_hooks:
-        create: "стварыць"
-        edit: "рэдагаваць"
-        save: "стварыць..."
-        delete: "выдаляць"
-        cancel: "адмяніць"
-        secret: "сакрэт"
-        active: "актыўны"
+        create: "Стварыць"
+        edit: "Рэдагаваць"
+        save: "Захаваць"
+        delete: "Выдаліць"
+        cancel: "Скасаваць"
+        secret: "Сакрэт"
+        active: "Актыўны"
         delivery_status:
-          title: "стан дастаўкі"
-          failed: "памылка"
-          successful: "паспяхова"
+          title: "Стан дастаўкі"
+          failed: "Няўдалая"
+          successful: "Паспяховая"
           disabled: "Адключана"
         events:
-          request: "запыт"
-          headers: "загалоўкі"
-          body: "цела"
+          request: "Запыт"
+          headers: "Загалоўкі"
+          body: "Змест"
           timestamp: "Створана"
-          actions: "загалоўкі....................."
+          actions: "Дзеянні"
           filter_status:
-            failed: "памылка"
+            failed: "Няўдалыя"
       home:
-        title: "дома"
+        title: "Галоўная старонка"
       account:
-        title: "Аккаўнт"
+        title: "Уліковы запіс"
         sidebar_link:
-          backups: "Бэкапы"
+          backups: "Рэзервовыя копіі"
       community:
-        title: "супольнасць"
+        title: "Супольнасць"
         sidebar_link:
-          badges: "значкі"
-          notifications: "Натыфікацыі"
-          permalinks: "Сталыя спасылкі"
-          users: "карыстальнікаў"
-          groups: "групы"
-          legal: "Legal"
+          badges: "Значкі"
+          notifications: "Апавяшчэнні"
+          permalinks: "Пастаянныя спасылкі"
+          users: "Карыстальнікі"
+          groups: "Групы"
+          legal: "Юрыдычная інфармацыя"
           moderation_flags:
             title: "Мадэрацыя"
       appearance:
         sidebar_link:
-          emoji: "Emoji"
-          navigation: "рух"
+          emoji: "Эмодзі"
+          navigation: "Навігацыя"
           themes_and_components:
             keywords: "пашырэнне"
       security:
         title: "Бяспека"
       section_landing_pages:
         account:
-          title: "Аккаўнт"
+          title: "Уліковы запіс"
           backups:
-            title: "Бэкапы"
+            title: "Рэзервовыя копіі"
       config_areas:
         about:
-          company_name: "імя"
+          company_name: "Назва"
           extra_groups:
-            groups: "групы"
+            groups: "Групы"
           saved: "захавана!"
         flags:
           description: "Апісанне"
-          edit: "рэдагаваць"
+          edit: "Рэдагаваць"
           delete: "Выдаліць"
-          flags_tab: "сцягі"
+          flags_tab: "Скаргі"
           form:
-            save: "захаваць"
-            name: "імя"
+            save: "Захаваць"
+            name: "Назва"
             description: "Апісанне"
-            invalid_applies_to: "абавязковыя"
+            invalid_applies_to: "Абавязкова"
             topic: "тэмы"
-            post: "паведамленняў"
+            post: "допісы"
         permalinks:
-          edit: "рэдагаваць"
-          delete: "выдаляць"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
         embeddable_host:
-          edit: "рэдагаваць"
-          delete: "выдаляць"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
         themes_and_components:
-          breadcrumb_title: "Кастамізаваць"
+          breadcrumb_title: "Дапасаваць"
           components:
-            name: "імя"
-            edit: "рэдагаваць"
-            preview: "Папярэдні прагляд"
-            export: "экспарт"
-            delete: "выдаляць"
-            filter_by_all: "Усё"
+            name: "Назва"
+            edit: "Рэдагаваць"
+            preview: "Перадпрагляд"
+            export: "Экспарт"
+            delete: "Выдаліць"
+            filter_by_all: "Усе"
         user_fields:
           type: "Тып"
-          delete: "выдаляць"
+          delete: "Выдаліць"
         color_palettes:
-          palette_name: "імя"
-          delete: "выдаляць"
+          palette_name: "Назва"
+          delete: "Выдаліць"
           colors:
-            title: "<......"
+            title: "Колеры"
       plugins:
-        title: "Плагіны"
+        title: "Убудовы"
         name: "Назва"
-        version: "версія"
+        version: "Версія"
         change_settings_short: "Налады"
         filters:
-          all: "усе"
-          disabled: "Адключана"
-          reset: "скінуць"
+          all: "Усе"
+          disabled: "Адключаныя"
+          reset: "Скінуць"
       backups:
-        title: "Бэкапы"
+        title: "Рэзервовыя копіі"
         menu:
-          backups: "Бэкапы"
-          logs: "Логі"
-        none: "No backup available"
+          backups: "Рэзервовыя копіі"
+          logs: "Журналы"
+        none: "Няма даступных рэзервовых копій"
         read_only:
           enable:
-            title: "Ўключыць рэжым толькі для чытання"
-            label: "Ўключыць Толькі для чытання"
-            confirm: "Вы ўпэўненыя, што жадаеце ўключыць рэжым толькі для чытання?"
+            title: "Уключыць рэжым \"Толькі для чытання\""
+            label: "Уключыць \"Толькі для чытання\""
+            confirm: "Вы ўпэўнены, што хочаце ўключыць рэжым \"Толькі для чытання\"?"
           disable:
-            title: "Адключыць рэжым Толькі для чытання"
-            label: "Адключыць Толькі для чытання"
+            title: "Адключыць рэжым \"Толькі для чытання\""
+            label: "Адключыць \"Толькі для чытання\""
         columns:
-          filename: "Назва файлу"
-          size: "Size"
+          filename: "Назва файла"
+          size: "Памер"
         upload:
-          label: "Загрузіць"
+          label: "Запампаваць"
         settings: "Налады"
         operations:
           cancel:
-            label: "Адмяніць"
-            title: "Cancel the current operation"
-            confirm: "Are you sure you want to cancel the current operation?"
+            label: "Скасаваць"
+            title: "Скасаваць бягучую аперацыю"
+            confirm: "Вы ўпэўнены, што хочаце скасаваць бягучую аперацыю?"
           backup:
-            label: "Backup"
-            title: "Create a backup"
+            label: "Рэзервовая копія"
+            title: "Стварыць рэзервовую копію"
           download:
-            label: "спампаваць"
+            label: "Спампаваць"
           destroy:
-            title: "выдаляць"
-            confirm: "Are you sure you want to destroy this backup?"
+            title: "Выдаліць"
+            confirm: "Вы ўпэўнены, што хочаце знішчыць гэту рэзервовую копію?"
           restore:
-            label: "Restore"
-            title: "Restore the backup"
+            label: "Аднавіць"
+            title: "Аднавіць рэзервовую копію"
           rollback:
-            label: "Rollback"
-            title: "Rollback the database to previous working state"
+            label: "Адкаціць"
+            title: "Адкаціць базу даных да папярэдняга працоўнага стану"
       export_csv:
-        button_text: "экспарт"
+        button_text: "Экспарт"
       export_json:
-        button_text: "экспарт"
+        button_text: "Экспарт"
       customize:
-        title: "Кастамізаваць"
-        preview: "preview"
-        save: "Save"
-        new: "Новая"
-        new_style: "New Style"
+        title: "Дапасаваць"
+        preview: "перадпрагляд"
+        save: "Захаваць"
+        new: "Новы"
+        new_style: "Новы стыль"
         delete: "Выдаліць"
-        color: "колер"
-        opacity: "непразрыстасць"
+        color: "Колер"
+        opacity: "Непразрыстасць"
         email_templates:
           title: "Электронная пошта"
-          subject: "тэма"
-          body: "цела"
-          revert: "вярнуць змены"
-          revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
+          subject: "Тэма"
+          body: "Змест"
+          revert: "Скасаваць змены"
+          revert_confirm: "Вы ўпэўнены, што хочаце скасаваць змены?"
           edit: "Рэдагаваць"
         component:
-          all_filter: "Усё"
+          all_filter: "Усе"
           disabled_filter: "Адключана"
         theme:
-          theme: "тэма"
-          filter_all: "усе"
-          customize_desc: "Кастамізаваць:"
-          create: "стварыць"
-          create_type: "тып"
+          theme: "Тэма"
+          filter_all: "Усе"
+          customize_desc: "Дапасаваць:"
+          create: "Стварыць"
+          create_type: "Тып"
           create_name: "Назва"
-          save: "захаваць"
-          edit: "рэдагаваць"
-          mobile: "Мабільны"
-          preview: "папярэдні прагляд"
-          cancel: "адмяніць"
-          uploads: "Загрузкі"
-          upload: "Загрузіць"
-          installed: "устаноўленая"
-          install_popular: "папулярны"
-          about_theme: "Аб тэме"
-          version: "версія:"
+          save: "Захаваць"
+          edit: "Рэдагаваць"
+          mobile: "Мабільная"
+          preview: "Перадпрагляд"
+          cancel: "Скасаваць"
+          uploads: "Запампоўкі"
+          upload: "Запампаваць"
+          installed: "Усталяваная"
+          install_popular: "Папулярныя"
+          about_theme: "Пра тэму"
+          version: "Версія:"
           enable: "Уключыць"
           disable: "Адключыць"
           add: "Дадаць"
-          all_filter: "Усё"
-          active_filter: "актыўныя"
+          all_filter: "Усе"
+          active_filter: "Актыўныя"
         schema:
           fields:
             required: "*абавязковыя"
             number:
-              too_large: "павінен быць менш або роўны %{count}"
+              too_large: "павінна быць менш за або роўна %{count}"
         colors:
-          light: "святло"
-          dark: "цёмна"
-          title: "<......"
+          light: "светлая"
+          dark: "цёмная"
+          title: "Колеры"
           edit: "Рэдагаваць"
           filters:
-            all: "усе"
-          copy_name_prefix: "капіяваць з"
-          undo: "Адмяніць"
-          undo_title: "Адмяніць вашыя змены гэтага колеру з часу апошняга захавання."
+            all: "Усе"
+          copy_name_prefix: "Копія"
+          undo: "Адрабіць"
+          undo_title: "Адрабіць вашы змены гэтага колеру з часу апошняга захавання."
           revert: "Вярнуць"
           primary:
-            name: "асноўнай"
+            name: "асноўны"
           secondary:
             name: "другасны"
           tertiary:
-            name: "троесны"
+            name: "дадатковы"
           header_background:
             name: "фон загалоўка"
           highlight:

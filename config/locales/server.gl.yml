@@ -248,6 +248,9 @@ gl:
   delete_topic_failed: "Houbo un erro ao eliminar este tema. Contacte co administrador do sitio."
   reading_time: "Tempo de lectura"
   likes: "Gústame"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Sentímolo, mais os novos usuarios teñen temporalmente un límite de %{count} resposta no mesmo tema."
     other: "Sentímolo, mais os novos usuarios teñen temporalmente un límite de %{count} resposta no mesmo tema."
@@ -1872,7 +1875,6 @@ gl:
     not_available: "Non dispoñíbel. Tentar %{suggestion}?"
     something_already_taken: "Algo foi mal, quizais o nome de usuario ou o correo electrónico xa están rexistrados. Probe coa ligazón de Esquecín o contrasinal."
     omniauth_error_unknown: "Produciuse un erro ao procesar o seu rexistro. Ténteo de novo, por favor."
-    omniauth_confirm_title: "Iniciar sesión usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Non hai ningún enderezo electrónico asociado con %{account} que estea permitido. Debe configurar a súa conta cun enderezo electrónico diferente."
     new_registrations_disabled: "Neste momento non se permite o rexistro de novas contas."
@@ -3372,7 +3374,6 @@ gl:
       restricted_to:
         one: '«%{tag_name}» está restrinxida á categoría «%{category_names}»'
         other: '"%{tag_name}" está restrinxida ás seguintes categorías: %{category_names}'
-      synonym: 'Non están permitidos os sinónimos. Utilice "%{tag_name}" no seu lugar.'
       has_synonyms: '"%{tag_name}" non se pode utilizar porque ten sinónimos.'
     invalid_target_tag: "non pode ser o sinónimo dun sinónimo"
     synonyms_exist: "non está permitido mentres existan sinónimos"
