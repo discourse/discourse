@@ -106,18 +106,12 @@ module Onebox
             headers["Cookie"] = cookie_header if allow_cross_domain_cookies
 
             if redirect_location = response["location"]
-              redirect_uri = Addressable::URI.parse(redirect_location)
-              redirect_uri =
-                Addressable::URI.join(
-                  "#{uri.scheme}://#{uri.host}",
-                  redirect_uri,
-                ) if !redirect_uri.host
-
-              redirect_header = { "Cookie" => cookie_header } if redirect_uri.host == uri.host
+              redirect_host = Addressable::URI.parse(redirect_location).host
+              if redirect_host.nil? || redirect_host == uri.host
+                redirect_header = { "Cookie" => cookie_header }
+              end
             end
           end
-
-          redirect_header = nil unless redirect_header.is_a? Hash
 
           code = response.code.to_i
           unless code === 200
