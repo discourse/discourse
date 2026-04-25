@@ -81,6 +81,7 @@ class Assignment < ActiveRecord::Base
     return unless target
     update!(active: true)
     Jobs.enqueue(:assign_notification, assignment_id: id)
+    publish_topic_assignment
   end
 
   def deactivate!
@@ -95,6 +96,24 @@ class Assignment < ActiveRecord::Base
   end
 
   private
+
+  def publish_topic_assignment
+    serializer_class = assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
+    MessageBus.publish(
+      "/staff/topic-assignment",
+      {
+        type: "assigned",
+        topic_id: topic_id,
+        post_id: target.is_a?(Post) ? target.id : nil,
+        post_number: target.is_a?(Post) ? target.post_number : nil,
+        assigned_type: assigned_to_type,
+        assigned_to: serializer_class.new(assigned_to, scope: Guardian.new, root: false).as_json,
+        assignment_note: note,
+        assignment_status: status,
+      },
+      user_ids: User.assign_allowed.pluck(:id),
+    )
+  end
 
   def default_status
     self.status ||= Assignment.default_status if SiteSetting.enable_assign_status
