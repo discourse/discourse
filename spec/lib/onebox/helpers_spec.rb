@@ -193,8 +193,6 @@ RSpec.describe Onebox::Helpers do
       end
 
       it "does not send cookies to the wrong domain" do
-        skip("unimplemented")
-
         stub_request(:get, "https://httpbin.org/cookies/set/a/b").to_return(
           status: 302,
           headers: {
@@ -203,13 +201,13 @@ RSpec.describe Onebox::Helpers do
           },
         )
 
-        stub_request(:get, "https://evil.com/show_cookies").with(
-          headers: {
-            cookie: nil,
-          },
-        ).to_return(status: 200, body: "success, cookie readback not implemented")
+        stub_request(:get, "https://evil.com/show_cookies").to_return(status: 200, body: "ok")
 
         described_class.fetch_response("https://httpbin.org/cookies/set/a/b")
+
+        expect(WebMock).to have_requested(:get, "https://evil.com/show_cookies").with { |req|
+          !req.headers.key?("Cookie")
+        }
       end
     end
   end
