@@ -33,7 +33,11 @@ class SiteSettings::TypeSupervisor
   # For plugins, so they can tell if a feature is supported
   SUPPORTED_TYPES = %i[email username list enum].freeze
 
-  REQUIRES_CONFIRMATION_TYPES = { simple: "simple", user_option: "user_option" }.freeze
+  REQUIRES_CONFIRMATION_TYPES = {
+    simple: "simple",
+    simple_on_enable: "simple_on_enable",
+    user_option: "user_option",
+  }.freeze
 
   def self.types
     @types ||=
@@ -211,7 +215,6 @@ class SiteSettings::TypeSupervisor
   def type_hash(name)
     name = name.to_sym
     type = get_type(name)
-    list_type = get_list_type(name)
     result = { type: type.to_s }
 
     if type == :enum || (type == :list && get_enum_class(name))

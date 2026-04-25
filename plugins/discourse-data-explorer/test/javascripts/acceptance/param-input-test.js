@@ -8,7 +8,7 @@ async function runQuery() {
   await click("form.query-run button");
 }
 
-acceptance("Data Explorer Plugin | Param Input", function (needs) {
+acceptance("Param Input", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
 

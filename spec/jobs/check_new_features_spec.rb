@@ -16,7 +16,7 @@ RSpec.describe Jobs::CheckNewFeatures do
   end
 
   def stub_new_features_endpoint(*features)
-    stub_request(:get, DiscourseUpdates.new_features_endpoint).to_return(
+    stub_request(:get, DiscourseUpdates.new_features_full_endpoint_url).to_return(
       status: 200,
       body: JSON.dump(features),
       headers: {

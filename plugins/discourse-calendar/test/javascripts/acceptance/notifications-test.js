@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance("Discourse Calendar - Notifications", function (needs) {
+acceptance("Notifications", function (needs) {
   needs.user({ redesigned_user_menu_enabled: true });
   needs.settings({ calendar_enabled: true });
 

@@ -2985,6 +2985,8 @@ pt_BR:
         name_label: "Aplicar wrap no nome"
         attributes_label: "Atributos"
         add_attribute: "Adicionar atributo"
+        attribute_key: "Chave"
+        attribute_value: "Valor"
         remove_attribute: "Remover atributo"
         apply: "Aplicar"
         unwrap: "Remover wrap"
@@ -3073,6 +3075,9 @@ pt_BR:
         copy: "Copiar link"
         remove: "Remover link"
         visit: "Abrir link em uma aba externa"
+        link_copied: "Link copiado!"
+      onebox_toolbar:
+        copy: "Copiar link"
         link_copied: "Link copiado!"
       unsupported_token: "O editor avançado não oferece suporte a todos os recursos usados nesta postagem; mudando para o editor de Markdown."
     notifications:
@@ -3526,12 +3531,31 @@ pt_BR:
         name: "Excluir"
       update_category:
         name: "Atualizar Categoria"
+      convert_to_public_topic:
+        name: "Tornar tópico público…"
+      convert_to_private_message:
+        name: "Crie uma mensagem pessoal"
       reset_bump_dates:
         name: "Redefinir datas de promoção"
       defer:
         name: "Marcar não lido"
       update_notifications:
         name: "Atualizar notificações"
+    nested_replies:
+      sort:
+        label: "Ordenar por"
+        top: "Melhores"
+        new: "Nova"
+      load_more_children:
+        one: "%{count} resposta a mais"
+        other: "%{count} respostas a mais"
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} respostas"
+      collapse: "Recolher"
+      no_replies: "Nenhuma resposta ainda."
+      deleted_post_placeholder: "[excluído]"
+      pinned_reply: "Fixada"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -4060,6 +4084,10 @@ pt_BR:
       sr_post_like_count_button:
         one: "%{count} pessoa curtiu esta postagem."
         other: "%{count} pessoas curtiram esta postagem."
+      likes_popup:
+        title:
+          one: "%{count} curtida"
+          other: "%{count} curtidas"
       sr_post_read_count_button:
         one: "%{count} pessoa leu esta postagem."
         other: "%{count} pessoas leram esta postagem."
@@ -4090,8 +4118,7 @@ pt_BR:
           confirm_delete: "Tem certeza de que deseja excluir as traduções para \"%{languageCode}\"?"
         success: "As traduções foram atualizadas"
         post_language_selector:
-          title: "Idioma da postagem"
-          none: "Nenhum"
+          none: "Não configurado"
         edit_warning:
           message: "Esta é uma postagem traduzida.<br><br> Você quer editar a postagem original em %{language} ou editar essa tradução específica?"
           action_original: "Editar a postagem original"
@@ -4116,6 +4143,7 @@ pt_BR:
       cancel_composer:
         confirm: "Você deseja excluir sua postagem?"
         discard: "Descartar"
+        discard_edit: "Descartar alterações"
       via_email: "postagem recebida via e-mail"
       via_auto_generated_email: "esta mensagem chegou por um e-mail gerado automaticamente"
       whisper: "esta mensagem é um sussuro privado para a moderação"
@@ -4159,7 +4187,7 @@ pt_BR:
         admin: "ações administrativas da postagem"
         admin_action: "Administração"
         permanently_delete: "Excluir permanentemente"
-        permanently_delete_confirmation: "Tem certeza de que deseja excluir permanentemente esta postagem? Não será possível recuperá-la."
+        permanently_delete_confirm_phrase: "excluir permanentemente"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar cor da equipe"
@@ -4305,6 +4333,7 @@ pt_BR:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
+      moderation: "Moderação"
       advanced: "Avançado"
       show_advanced: "Configurações avançadas"
       topic_template: "Modelo"
@@ -5626,6 +5655,9 @@ pt_BR:
           staff: "Equipe"
           all_members: "Todos os membros"
           developers: "Desenvolvedores"
+        impact_types:
+          feature_type: "Recurso"
+          other_type: "Outras"
         filter:
           search_placeholder: "Filtrar por nome, descrição ou plugin..."
           no_results: "Nenhuma alteração prevista corresponde ao seu filtro."
@@ -5657,7 +5689,6 @@ pt_BR:
           header_description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
         developer:
           title: "Desenvolvedor(a)"
-          header_description: "Configurações do(a) desenvolvedor(a) para controlar limites de frequência, multiplicadores e cálculos, modo de segurança e outros recursos avançados"
         experimental:
           title: "Experimental"
           header_description: "Ative ou desative os recursos experimentais para seu site, a maioria deles pode ser controlado em grupo"
@@ -5905,6 +5936,13 @@ pt_BR:
             logs:
               title: "Registros"
               header_description: "Visualizar e gerenciar logs de backups, restaurações e uploads"
+        problem_checks:
+          priority: "Prioridade"
+          status: "Status"
+          last_run_at: "Última execução"
+          ignore: "Ignorar"
+          more_options:
+            title: "Mais opções"
         reports:
           title: "Relatórios"
           header_description: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
@@ -6084,12 +6122,10 @@ pt_BR:
         installed_version: "Instalado"
         latest_version: "Última versão"
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
-        dismiss_notice: "Descartar"
+        dismiss_notice: "Ignorar"
         new_features:
           title: "Novidades?"
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
-          no_new_features_found: "Não há itens no feed ou o filtro que você selecionou não retornou nenhum resultado. Você pode ver anúncios anteriores de novos recursos na <a href='%{url}' target='_blank'>comunidade Discourse Meta</a>."
-          no_new_features_error: "Houve um erro ao carregar o feed. Você pode ver os anúncios anteriores de novos recursos na <a href='%{url}' target='_blank'>comunidade Discourse Meta</a>."
           learn_more: "Saiba mais..."
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"

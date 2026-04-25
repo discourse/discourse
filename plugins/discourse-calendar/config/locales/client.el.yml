@@ -12,6 +12,12 @@ el:
         categories:
           discourse_post_event: "Εκδήλωση Discourse"
           discourse_calendar: "Ημερολόγιο και Εκδηλώσεις"
+      web_hooks:
+        calendar_event:
+          group_name: "Εκδήλωση ημερολογίου"
+          calendar_event_created: "Εκδήλωση ημερολογίου δημιουργήθηκε"
+          calendar_event_updated: "Εκδήλωση ημερολογίου ενημερώθηκε"
+          calendar_event_destroyed: "Εκδήλωση ημερολογίου καταστράφηκε"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ el:
               label: ID Θέματος
     discourse_calendar:
       invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
+      preferences:
+        all_events: "Ημερολόγιο Discourse - Όλες οι Εκδηλώσεις"
+        all_events_description: "Όλες οι εκδηλώσεις του φόρουμ"
+        my_events: "Ημερολόγιο Discourse - Οι Εκδηλώσεις μου"
+        my_events_description: "Εκδηλώσεις στις οποίες θα παραστείτε ή ενδιαφέρεστε"
       disable_holiday: "Απενεργοποίηση"
       enable_holiday: "Ενεργοποίηση"
       holidays:
@@ -225,6 +236,9 @@ el:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "Ο/Η %{username} έχει ορίσει αυτόματα την παρουσία σας και σας έχει προσκαλέσει στο %{eventName}"
         an_event: "μια εκδήλωση"
+      event_description:
+        show_more: "Δείτε περισσότερα"
+        show_less: "Δείξε λιγότερα"
       edit_reason: "Η εκδήλωση ενημερώθηκε"
       edit_reason_closed: "Η εκδήλωση έκλεισε"
       edit_reason_opened: "Η εκδήλωση άνοιξε"
@@ -350,6 +364,9 @@ el:
         timezone:
           label: Ζώνη ώρας
           remove_timezone: Χωρίς ζώνη ώρας (UTC)
+        all_day:
+          label: "Ολοήμερη εκδήλωση"
+          description: "Μια ολοήμερη εκδήλωση δεν θα έχει συγκεκριμένες ώρες, μόνο ημερομηνία. Η εκδήλωση θα διαρκέσει από την αρχή έως το τέλος της ημέρας."
         reminders:
           label: "Υπενθυμίσεις"
           types:

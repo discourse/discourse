@@ -381,6 +381,8 @@ en:
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
         supported_locales_description: "This site setting also allows visitors to contribute post translations."
+        translatable_categories: "Translatable categories"
+        translatable_categories_description: "Only content in the selected categories will be translated. Subcategories must be added separately."
         admin_actions:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"
@@ -405,6 +407,12 @@ en:
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
+        theme_translations:
+          translate:
+            label: "Translate"
+            title: "Translate to all supported languages using the selected language as the source"
+            queued: "Translation queued"
+            failed: "Failed to queue translation"
         translations_menu:
           translate:
             label: "Translate post"
@@ -911,19 +919,19 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-6: "Anthropic's most intelligent model"
+          anthropic-claude-opus-4-7: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
-          open_ai-gpt-5-2: "OpenAI's flagship model, well suited for problem solving across domains"
-          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost"
+          open_ai-gpt-5-4: "OpenAI's flagship model, well suited for problem solving across domains"
+          open_ai-gpt-5-4-mini: "Provides a balance between intelligence, speed, and cost"
           open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model"
           open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
           open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
           open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
-          open_router-minimax-minimax-m2-5: "MiniMax's multimodal model with large context"
-          open_router-z-ai-glm-5: "Z-AI's multimodal model with vision"
+          open_router-minimax-minimax-m2-7: "MiniMax's multimodal model with large context"
+          open_router-z-ai-glm-5-1: "Z-AI's multimodal model with vision"
           open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
@@ -1171,10 +1179,12 @@ en:
           title: "View AI interaction"
           copy_request: "Copy request"
           copy_response: "Copy response"
-          request_tokens: "Request tokens:"
-          response_tokens: "Response tokens:"
-          cache_read_tokens: "Cache read tokens:"
-          cache_write_tokens: "Cache write tokens:"
+          this_turn: "This turn:"
+          whole_conversation: "Conversation:"
+          tokens_summary: "%{request_tokens} in → %{response_tokens} out"
+          cache_both: "(cache %{read} read, %{write} write)"
+          cache_read_only: "(cache %{read} read)"
+          cache_write_only: "(cache %{write} write)"
           request: "Request"
           response: "Response"
           next_log: "Next"

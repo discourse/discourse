@@ -72,7 +72,7 @@ module DiscourseAi
                 @failed_searches << { section: section, search: block[:search] }
                 # TODO, we may need to inform caller here, LLM made a mistake which it
                 # should correct
-                puts "Failed to find search: #{block[:search]}"
+                Rails.logger.warn("Failed to find search: #{block[:search]}")
               end
             end
             updated_content[section == :javascript ? :js : section] = content

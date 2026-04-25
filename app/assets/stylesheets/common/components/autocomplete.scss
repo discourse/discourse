@@ -43,6 +43,7 @@
 
         &.selected {
           background-color: var(--d-selected);
+          color: var(--d-selected-text-color);
         }
 
         .avatar {

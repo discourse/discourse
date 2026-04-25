@@ -23,6 +23,4 @@ Rails.application.config.to_prepare do
 
     PushSubscription.delete_all if ActiveRecord::Base.connection.table_exists?(:push_subscriptions)
   end
-
-  DiscourseEvent.on(:user_logged_out) { |user| PushNotificationPusher.clear_subscriptions(user) }
 end

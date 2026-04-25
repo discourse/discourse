@@ -29,6 +29,7 @@ class UserSuspender
           post_id: @post_id,
         )
     end
+    PushNotificationPusher.clear_subscriptions(@user)
     @user.logged_out
 
     if @message.present?

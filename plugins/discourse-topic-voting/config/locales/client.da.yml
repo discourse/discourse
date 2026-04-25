@@ -12,14 +12,10 @@ da:
     topic_voting:
       reached_limit: "Du kan ikke afgive flere stemmer, fjern venligst en og prøv igen!"
       list_votes: "Vis dine stemmer"
-      votes_nav_help: "emner med flest stemmer"
       voted: "Du stemte i dette emne"
       allow_topic_voting: "Tillad brugere at stemme på emner i denne kategori"
       vote_title: "Stemmeafgivelse"
       vote_title_plural: "Stemmer"
-      voted_title: "Stemte"
-      voting_closed_title: "Lukket"
-      voting_limit: "Begrænset"
       votes:
         one: "%{count} stemme"
         other: "%{count} stemmer"
@@ -27,11 +23,13 @@ da:
         one: "Stemmeafgivelse"
         other: "Stemmer"
       remove_vote: "Fjern stemme"
+      and_more_voters: "og %{count} mere..."
+      show_voters: "Vis hvem der stemte"
+      vote_count_thousands: "%{count}k"
       no_votes_title_self: "Du har endnu ikke stemt på noget emne."
     filters:
       votes:
         title: "Stemmer"
-        help: "emner med flest stemmer"
       my_votes:
         title: "Mine Stemmer"
         help: "emner, du stemte på"

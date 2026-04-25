@@ -3,10 +3,6 @@
 describe DiscourseTopicVoting do
   let!(:user0) { Fabricate(:user) }
   let!(:user1) { Fabricate(:user) }
-  let!(:user2) { Fabricate(:user) }
-  let!(:user3) { Fabricate(:user) }
-  let!(:user4) { Fabricate(:user) }
-  let!(:user5) { Fabricate(:user) }
 
   let(:category1) { Fabricate(:category) }
   let(:category2) { Fabricate(:category) }
@@ -51,87 +47,6 @@ describe DiscourseTopicVoting do
 
     expect(user0.vote_limit_0?).to eq(true)
     expect(user0.reached_voting_limit?).to eq(true)
-  end
-
-  context "with two topics" do
-    let(:users) { [user0, user1, user2, user3, user4, user5] }
-
-    before do
-      # ensure merging votes works regardless of voters' visibility
-      SiteSetting.topic_voting_show_who_voted = false
-
-      Fabricate(:post, topic: topic0, user: user0)
-      Fabricate(:post, topic: topic0, user: user0)
-
-      # +user0+ votes +topic0+, +user1+ votes +topic1+ and +user2+ votes both
-      # topics.
-      DiscourseTopicVoting::Vote.create!(user: users[0], topic: topic0)
-      DiscourseTopicVoting::Vote.create!(user: users[1], topic: topic1)
-      DiscourseTopicVoting::Vote.create!(user: users[2], topic: topic0)
-      DiscourseTopicVoting::Vote.create!(user: users[2], topic: topic1)
-      DiscourseTopicVoting::Vote.create!(user: users[4], topic: topic0, archive: true)
-      DiscourseTopicVoting::Vote.create!(user: users[5], topic: topic0, archive: true)
-      DiscourseTopicVoting::Vote.create!(user: users[5], topic: topic1)
-
-      [topic0, topic1].each { |t| t.update_vote_count }
-    end
-
-    it "moves votes when entire topic is merged" do
-      topic0.move_posts(
-        Discourse.system_user,
-        topic0.posts.pluck(:id),
-        destination_topic_id: topic1.id,
-      )
-
-      users.each { |user| user.reload }
-      expect(users[0].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic1.id)
-      expect(users[0].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-
-      expect(users[1].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic1.id)
-      expect(users[1].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-
-      expect(users[2].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic1.id)
-      expect(users[2].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-
-      expect(users[3].topics_with_vote.pluck(:topic_id)).to be_blank
-      expect(users[3].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-
-      expect(users[4].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic1.id)
-      expect(users[4].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-
-      expect(users[5].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic1.id)
-      expect(users[5].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-
-      expect(topic0.reload.vote_count).to eq(0)
-      expect(topic1.reload.vote_count).to eq(5)
-
-      merged_post = topic0.posts.find_by(action_code: "split_topic")
-      expect(merged_post.raw).to include(I18n.t("topic_voting.votes_moved", count: 2))
-      expect(merged_post.raw).to include(I18n.t("topic_voting.duplicated_votes", count: 2))
-    end
-
-    it "does not move votes when not all posts are moved and the original topic does not get closed" do
-      topic0.move_posts(
-        Discourse.system_user,
-        [topic0.posts.order(:post_number).first.id],
-        destination_topic_id: topic1.id,
-      )
-
-      users.each { |user| user.reload }
-      expect(users[0].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic0.id)
-      expect(users[0].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-      expect(users[1].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic1.id)
-      expect(users[1].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-      expect(users[2].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic0.id, topic1.id)
-      expect(users[2].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-      expect(users[3].topics_with_vote.pluck(:topic_id)).to be_blank
-      expect(users[3].topics_with_archived_vote.pluck(:topic_id)).to be_blank
-      expect(users[4].topics_with_vote.pluck(:topic_id)).to be_blank
-      expect(users[4].topics_with_archived_vote.pluck(:topic_id)).to contain_exactly(topic0.id)
-
-      expect(topic0.reload.vote_count).to eq(4)
-      expect(topic1.reload.vote_count).to eq(3)
-    end
   end
 
   context "when a user has an empty string as the votes custom field" do

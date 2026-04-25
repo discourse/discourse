@@ -244,6 +244,7 @@ export default class TopicList extends Component {
             @focusLastVisitedTopic={{@focusLastVisitedTopic}}
             @index={{index}}
             @listContext={{@listContext}}
+            @category={{this.topicTrackingState.filterCategory}}
           />
 
           {{#if (eq topic this.lastVisitedTopic)}}

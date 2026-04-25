@@ -32,15 +32,11 @@ class Discourse::Cors
   end
 
   def self.apply_headers(cors_origins, env, headers)
-    request_method = env["REQUEST_METHOD"]
-
     if headers["Access-Control-Allow-Origin"]
       # Already configured. Probably by ApplicationController#apply_cdn_headers
     elsif cors_origins
-      origin = nil
-      if origin = env["HTTP_ORIGIN"]
-        origin = nil if cors_origins.exclude?(origin)
-      end
+      origin = env["HTTP_ORIGIN"]
+      origin = nil if origin && cors_origins.exclude?(origin)
 
       headers["Access-Control-Allow-Origin"] = origin || cors_origins[0]
       headers[

@@ -30,6 +30,9 @@ de:
       ai_tool_action:
         title: KI-Tool Aktion
         description: Führe ein KI-Tool aus, wenn die Automatisierung ausgelöst wird
+      llm_agent_triage:
+        title: Sichtung von Beiträgen mit einem KI-Agenten
+        description: "Reagiere auf Beiträge mit einem bestimmten KI-Agenten"
       llm_triage:
         title: Beiträge mithilfe von KI sortieren
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
@@ -93,6 +96,8 @@ de:
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
     ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
     post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
+    ai_helper_post_illustrator_agent: "Der Agent, der für die Funktion „Beitrag illustrieren“ des KI-Helfers verwendet werden soll. Hinweis: Du musst auch ein Tool zur Bilderzeugung erstellen (Administration > Plug-ins > KI > Tools), damit diese Funktion funktioniert."
+    ai_helper_chat_thread_title_agent: "Der Agent, der zum Generieren von Chat-Thread-Titeln verwendet wird."
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
     ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
     ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
@@ -106,6 +111,7 @@ de:
     ai_embeddings_semantic_related_age_time_scale: "Zeitskala in Tagen für die Berechnung der Altersstrafe. Themen, die so viele Tage inaktiv sind, erhalten ~50 % Strafe bei \"penalty\"=1,0. Verwende 365 für die jährliche Skala, 90 für die vierteljährliche Skala."
     ai_embeddings_per_post_enabled: Erstelle Einbettungen für jeden Beitrag
     ai_summarization_enabled: "Aktiviere die Zusammenfassungsfunktion"
+    ai_summarization_agent: "Der Agent, der für die Zusammenfassungsfunktion verwendet werden soll"
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
     ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
@@ -119,12 +125,14 @@ de:
     ai_bot_add_to_community_section: "Einen Link im Community-Bereich der Seitenleiste anzeigen, um eine PN mit einem KI-Bot zu starten"
     ai_bot_github_access_token: "GitHub-Zugangstoken für die Verwendung mit den GitHub-KI-Tools (erforderlich für die Suchunterstützung)"
     ai_discover_enabled: "Entdeckungs-Suchfunktion aktivieren"
+    ai_discover_agent: "Der Agent, der für die Entdeckungsfunktion verwendet werden soll"
     ai_google_custom_search_api_key: "API-Schlüssel für die Google Custom Search API, siehe: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX für Google Custom Search API"
     ai_discord_search_enabled: "Aktiviert die Discord-Suchfunktion"
     ai_discord_app_id: "Die ID der Discord-Anwendung, mit der du die Discord-Suche verbinden möchtest"
     ai_discord_app_public_key: "Der öffentliche Schlüssel der Discord-Anwendung, mit der du die Discord-Suche verbinden möchtest"
     ai_discord_search_mode: "Wähle den Suchmodus für die Discord-Suche aus"
+    ai_discord_search_agent: "Der Agent, der für die Discord-Suche verwendet wird."
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
@@ -147,88 +155,88 @@ de:
       xaxis: "Positiv (%)"
       yaxis: "Datum"
     emotion_admiration:
-      title: "\U0001F929 Bewunderung"
+      title: "🤩 Bewunderung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Bewunderung“ klassifiziert wurden."
     emotion_amusement:
-      title: "\U0001F604 Unterhaltung"
+      title: "😄 Unterhaltung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Unterhaltung“ klassifiziert wurden."
     emotion_anger:
-      title: "\U0001F620 Wut"
+      title: "😠 Wut"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Wut“ klassifiziert wurden."
     emotion_annoyance:
-      title: "\U0001F612 Ärgernis"
+      title: "😒 Ärgernis"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Ärgernis“ klassifiziert wurden."
     emotion_approval:
-      title: "\U0001F44D Zustimmung"
+      title: "👍 Zustimmung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Zustimmung“ klassifiziert wurden."
     emotion_caring:
-      title: "\U0001F917 Fürsorge"
+      title: "🤗 Fürsorge"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Fürsorge“ klassifiziert wurden."
     emotion_confusion:
-      title: "\U0001F615 Verwirrung"
+      title: "😕 Verwirrung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Verwirrung“ klassifiziert wurden."
     emotion_curiosity:
-      title: "\U0001F914 Neugierde"
+      title: "🤔 Neugierde"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Neugierde“ klassifiziert wurden."
     emotion_desire:
-      title: "\U0001F60D Wunsch"
+      title: "😍 Wunsch"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Wunsch“ klassifiziert wurden."
     emotion_disappointment:
-      title: "\U0001F61E Enttäuschung"
+      title: "😞 Enttäuschung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Enttäuschung“ klassifiziert wurden."
     emotion_disapproval:
-      title: "\U0001F44E Missbilligung"
+      title: "👎 Missbilligung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Missbilligung“ klassifiziert wurden."
     emotion_disgust:
-      title: "\U0001F922 Ekel"
+      title: "🤢 Ekel"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Ekel“ klassifiziert wurden."
     emotion_embarrassment:
-      title: "\U0001F633 Verlegenheit"
+      title: "😳 Verlegenheit"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Verlegenheit“ klassifiziert wurden."
     emotion_excitement:
-      title: "\U0001F92A Aufregung"
+      title: "🤪 Aufregung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Aufregung“ klassifiziert wurden."
     emotion_fear:
-      title: "\U0001F628 Furcht"
+      title: "😨 Furcht"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Furcht“ klassifiziert wurden."
     emotion_gratitude:
-      title: "\U0001F64F Dankbarkeit"
+      title: "🙏 Dankbarkeit"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Dankbarkeit“ klassifiziert wurden."
     emotion_grief:
-      title: "\U0001F622 Kummer"
+      title: "😢 Kummer"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Kummer“ klassifiziert wurden."
     emotion_joy:
-      title: "\U0001F60A Freude"
+      title: "😊 Freude"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Freude“ klassifiziert wurden."
     emotion_love:
       title: '❤️ Liebe'
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Liebe“ klassifiziert wurden."
     emotion_nervousness:
-      title: "\U0001F630 Nervosität"
+      title: "😰 Nervosität"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Nervosität“ klassifiziert wurden."
     emotion_neutral:
-      title: "\U0001F610 Neutral"
+      title: "😐 Neutral"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Neutral“ klassifiziert wurden."
     emotion_optimism:
-      title: "\U0001F31F Optimismus"
+      title: "🌟 Optimismus"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Optimismus“ klassifiziert wurden."
     emotion_pride:
-      title: "\U0001F981 Stolz"
+      title: "🦁 Stolz"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Stolz“ klassifiziert wurden."
     emotion_realization:
-      title: "\U0001F4A1 Realisierung"
+      title: "💡 Realisierung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Realisierung“ klassifiziert wurden."
     emotion_relief:
-      title: "\U0001F60C Erleichterung"
+      title: "😌 Erleichterung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Erleichterung“ klassifiziert wurden."
     emotion_remorse:
-      title: "\U0001F614 Reue"
+      title: "😔 Reue"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Reue“ klassifiziert wurden."
     emotion_sadness:
-      title: "\U0001F62D Traurigkeit"
+      title: "😭 Traurigkeit"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Traurigkeit“ klassifiziert wurden."
     emotion_surprise:
-      title: "\U0001F632 Überraschung"
+      title: "😲 Überraschung"
       description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Überraschung“ klassifiziert wurden."
   discourse_ai:
     ai_artifact:
@@ -287,14 +295,33 @@ de:
         unknown_error: "Die angeforderte Anmeldedaten konnten nicht ermittelt werden."
     mcp_servers:
       secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht."
+      invalid_url_not_https: "muss eine gültige HTTPS-URL sein"
+      invalid_url_not_reachable: "muss zu einer öffentlich zugänglichen Adresse aufgelöst werden"
+      oauth_client_id_required: "Die OAuth Client-ID ist für die manuelle Client-Registrierung erforderlich."
       errors:
+        invalid_response: "Der MCP-Server hat eine ungültige Antwort zurückgegeben."
+        request_failed: "Die MCP-Serveranfrage ist mit dem Status %{status} fehlgeschlagen."
+        session_expired: "Die MCP-Sitzung ist abgelaufen."
+        timeout: "Die MCP-Serveranfrage ist abgelaufen."
+        oauth_authorization_required: "Bevor dieser MCP-Server verwendet werden kann, ist eine OAuth-Autorisierung erforderlich. Verbinde ihn über die Admin-UI mit %{issuer}."
+        oauth_discovery_failed: "Die OAuth-Autorisierungsdetails für diesen MCP-Server konnten nicht ermittelt werden."
+        oauth_discovery_failed_with_status: "OAuth-Erkennung fehlgeschlagen mit Status %{status}."
+        oauth_not_configured: "OAuth ist für diesen MCP-Server nicht konfiguriert."
+        oauth_refresh_token_missing: "Das OAuth-Aktualisierungstoken fehlt. Verbinde diesen MCP-Server erneut."
+        oauth_save_before_connect: "Speichere den MCP-Server, bevor du die OAuth-Verbindung testest."
+        oauth_state_invalid: "Der OAuth-Autorisierungsstatus ist ungültig oder abgelaufen. Starte die Verbindung erneut."
+        oauth_token_exchange_failed: "Der OAuth-Token-Austausch ist mit dem Status %{status} fehlgeschlagen."
+        oauth_https_required: "OAuth erfordert, dass deine Website über HTTPS bereitgestellt wird."
         oauth_callback_failed: "OAuth-Verbindung fehlgeschlagen: %{message}"
+        oauth_client_metadata_public_https_required: "Die Registrierung von Client-Metadatendokumenten erfordert eine öffentliche HTTPS-Website-URL. Aktuelle Client-Metadaten-URL: %{url}"
         oauth_registration_endpoint_missing: "Der OAuth-Autorisierungsserver bietet keinen Registrierungsendpunkt an."
         oauth_client_registration_failed: "Die dynamische Client-Registrierung ist mit dem Status „%{status}“ fehlgeschlagen."
         oauth_client_registration_failed_no_id: "Die dynamische Client-Registrierung war erfolgreich, aber es wurde keine „client_id“ zurückgegeben."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
+        no_illustrator_agent: "Der Beitragsillustrator-Agent ist nicht konfiguriert. Bitte überprüfe deine Website-Einstellungen."
+        no_image_generation_tool: "Für den Beitragsillustrator-Agenten muss ein Bilderzeugungstool verknüpft sein. Bitte konfiguriere im Administrationsbereich ein Bilderzeugungstool für diesen Agenten."
         no_image_generated: "Das Bild konnte nicht erstellt werden. Bitte versuche es erneut oder überprüfe die Konfiguration deines Tools."
         llm_model_not_configured: "Es ist kein Sprachmodell für die Bilderzeugung konfiguriert. Bitte konfiguriere ein Standard-Sprachmodell in deinen Website-Einstellungen."
         unknown_error: "Beim Erzeugen der Vorschaubilder ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut."
@@ -332,8 +359,11 @@ de:
       reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"
+      tool_pending_approval: "Diese Aktion erfordert die Zustimmung des Moderators, bevor sie ausgeführt werden kann."
       agents:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
+        cannot_delete_system_agent: "System-Agenten können nicht gelöscht werden, bitte deaktiviere ihn stattdessen"
+        cannot_edit_system_agent: "System-Agenten können nur umbenannt werden. Du darfst keine Tools oder die System-Eingabeaufforderung bearbeiten, sondern musst ihn deaktivieren und eine Kopie erstellen"
         cannot_have_duplicate_tools: "Es kann keine doppelten Werkzeuge geben"
         github_helper:
           name: "GitHub-Helfer"
@@ -373,8 +403,10 @@ de:
           description: "KI-Bot, spezialisiert auf die Erstellung interaktiver Web-Artefakte"
         summarizer:
           name: "Zusammenfasser"
+          description: "Standard-Agent für die KI-Zusammenfassungen"
         short_summarizer:
           name: "Zusammenfasser (Kurzform)"
+          description: "Standard-Agent zur Erstellung von KI-Kurzzusammenfassungen für die Elemente der Themenlisten"
         concept_finder:
           name: "Konzept-Finder"
           description: "KI-Bot spezialisiert auf die Identifizierung von Konzepten und Themen in Inhalten"
@@ -386,23 +418,31 @@ de:
           description: "KI-Bot spezialisiert auf das Entfernen von redundanten Daten in Konzepten"
         custom_prompt:
           name: "Benutzerdefinierte Eingabeaufforderung"
+          description: "Standard-Agent für die „Benutzerdefinierte Eingabeaufforderungs“-Funktion des Helfers"
         smart_dates:
           name: "Intelligente Termine"
+          description: "Standard-Agent für die „Intelligente Daten“-Funktion des Helfers"
         markdown_table_generator:
           name: "Markdown-Tabellengenerator"
+          description: "Standard-Agent für die „Generiere Markdown-Tabelle“-Funktion des Helfers"
         post_illustrator:
           name: "Beitragsillustrator"
           description: "Erzeugt Bilder zur Illustration von Beiträgen mithilfe verfügbarer Bilderzeugungstools"
         proofreader:
           name: "Korrekturleser"
+          description: "Standard-Agent für die „Korrekturlesen“-Funktion des Helfers"
         titles_generator:
           name: "Titelgenerator"
+          description: "Standard-Agent für die „Thementitel vorschlagen“-Funktion des Helfers"
         tutor:
           name: "Tutor"
+          description: "Standard-Agent für die „Erklären“-Funktion des Helfers"
         translator:
           name: "Übersetzer"
+          description: "Standard-Agent für die Übersetzerfunktion des Helfers"
         image_captioner:
           name: "Bildbeschriftungen"
+          description: "Standard-Agent für die Bildbeschriftungsfunktion des Helfers"
         locale_detector:
           name: "Sprachdetektor"
           description: "Unterstützt die Übersetzungsfunktion durch Erkennen der Sprache eines bestimmten Textes (Beiträge, Titel usw.)."
@@ -417,14 +457,19 @@ de:
           description: "Betreibt die Übersetzungsfunktion als generischer Textübersetzer, der für kurze Texte wie Kategorienamen oder Schlagwörter verwendet wird."
         spam_detector:
           name: "Spam-Detektor"
+          description: "Standard-Agent, der unsere Spam-Erkennungsfunktion betreibt"
         content_creator:
           name: "Inhaltsersteller"
+          description: "Standard-Agent für die HyDE-Suche"
         report_runner:
           name: "Berichtsausführer"
+          description: "Standard-Agent, der im Automatisierungsskript für Berichte verwendet wird."
         discover:
           name: "Entdecken"
+          description: "Standard-Agent, der in der Entdeckungsfunktion verwendet wird (ergänzende Suche)"
         chat_thread_titler:
           name: "Chat-Thread-Titelgenerator"
+          description: "Standard-Agent für die automatische Generierung von Chat-Thread-Titeln"
       topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
       summarizing: "Thema zusammenfassen"
       searching: "Suche nach: „%{query}“"
@@ -432,6 +477,7 @@ de:
         researcher:
           researcher_llm:
             name: "LLM"
+            description: "Für die Recherche zu verwendendes Sprachmodell (standardmäßig das LLM des aktuellen Agenten)"
           max_tokens_per_batch:
             name: "Maximale Token pro Bündel"
             description: "Maximale Anzahl von Token, die für jedes Bündel in der Recherche verwendet werden"
@@ -482,6 +528,7 @@ de:
             description: "Steuert, ob der Beitrag überprüft, ausgeblendet, gelöscht oder als Spam behandelt wird."
       tool_summary:
         read_artifact: "Ein Web-Artefakt lesen"
+        search_uploaded_documents: "Hochgeladene Dokumente durchsuchen"
         update_artifact: "Aktualisieren eines Web-Artefakts"
         create_artifact: "Web-Artefakt erstellen"
         web_browser: "Web durchsuchen"
@@ -493,15 +540,18 @@ de:
         categories: "Kategorien auflisten"
         flag_post: "Beitrag melden"
         close_topic: "Thema schließen"
+        unlist_topic: "Thema aus der Liste entfernen"
         lock_post: "Beitrag sperren"
         delete_topic: "Thema löschen"
         edit_post: "Beitrag bearbeiten"
         edit_tags: "Schlagwörter bearbeiten"
         edit_category: "Kategorie bearbeiten"
         set_topic_timer: "Themen-Timer einstellen"
-        set_slow_mode: "Aktiviere langsamen Modus"
+        set_slow_mode: "Langsamen Modus aktivieren"
         move_posts: "Beiträge verschieben"
         grant_badge: "Abzeichen verleihen"
+        list_reviewables: "Liste der Warteschlange zur Überprüfung"
+        perform_reviewable_action: "Aktion der Warteschlange zur Überprüfung"
         assign: "Thema zuordnen"
         mark_as_solved: "Als gelöst markieren"
         search: "Suche"
@@ -523,6 +573,7 @@ de:
         researcher_dry_run: "Recherche vorbereiten"
       tool_help:
         read_artifact: "Lesen eines Webartefakts mit dem KI-Bot"
+        search_uploaded_documents: "Suche nach Dokumenten, die zu diesem Agenten hochgeladen wurden"
         update_artifact: "Aktualisiere ein Web-Artefakt mit dem KI-Bot"
         create_artifact: "Erstelle ein Web-Artefakt mit dem KI-Bot"
         web_browser: "Webseite mit dem KI-Bot durchsuchen"
@@ -534,10 +585,20 @@ de:
         categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
         flag_post: "Melde den aktuellen Beitrag zur Überprüfung durch das Team"
         close_topic: "Thema schließen oder öffnen"
+        unlist_topic: "Ein Thema auflisten oder aus der Liste entfernen"
+        lock_post: "Einen Beitrag sperren oder entsperren"
         delete_topic: "Ein Thema löschen"
         edit_post: "Den Inhalt eines Beitrags bearbeiten"
+        edit_tags: "Die Schlagwörter eines Themas bearbeiten"
         edit_category: "Ein Thema in eine andere Kategorie verschieben"
+        set_topic_timer: "Einen Timer für ein Thema setzen, um es zu schließen, zu öffnen, zu löschen oder nach oben zu verschieben"
+        set_slow_mode: "Den langsamen Modus für ein Thema aktivieren oder deaktivieren"
+        move_posts: "Beiträge in ein neues oder vorhandenes Thema verschieben"
         grant_badge: "Einem Benutzer ein Abzeichen verleihen"
+        list_reviewables: "Ausstehende Listeneinträge der Warteschlange zur Überprüfung mit optionaler Filterung"
+        perform_reviewable_action: "Eine Aktion für einen Eintrag in der Warteschlange zur Überprüfung ausführen"
+        assign: "Einem Benutzer oder einer Gruppe ein Thema zuweisen oder die Zuweisung aufheben"
+        mark_as_solved: "Einen Beitrag als akzeptierte Lösung markieren oder die Markierung aufheben"
         search: "Alle öffentlichen Themen im Forum durchsuchen"
         tags: "Alle Schlagwörter im Forum auflisten"
         time: "Zeit in verschiedenen Zeitzonen finden"
@@ -556,6 +617,9 @@ de:
         researcher: "Foreninformationen mit dem KI-Bot recherchieren"
       tool_description:
         read_artifact: "Lesen eines Webartefakts mit dem KI-Bot"
+        search_uploaded_documents:
+          one: "%{count} hochgeladener Dokumentenauszug für „%{query}“ gefunden"
+          other: "%{count} hochgeladene Dokumentenauszüge für „%{query}“ gefunden"
         update_artifact: "Ein Web-Artefakt wurde mit dem KI-Bot aktualisiert"
         create_artifact: "Erstellt ein Web-Artefakt: %{name} - %{specification}"
         web_browser: "<a href='%{url}'>%{url}</a> wird gelesen"
@@ -565,6 +629,21 @@ de:
         github_file_content: "Inhalt von %{file_paths} in %{repo_name}@%{branch} wurde abgerufen"
         random_picker: "Auswahl aus %{options}. Ausgewählt wurde: %{result}"
         flag_post: "Melde Beitrag: %{post_id} (%{flag_post})"
+        close_topic: "Schließen des Themas %{topic_id} (geschlossen: %{closed})"
+        unlist_topic: "Entfernen des Themas %{topic_id} aus der Liste (nicht gelistet: %{unlisted})"
+        lock_post: "Sperren des Beitrags %{post_id} (gesperrt: %{locked})"
+        delete_topic: "Löschen des Themas %{topic_id} (gelöscht: %{deleted})"
+        edit_post: "Bearbeiten des Beitrags %{post_id}"
+        edit_tags: "Bearbeiten der Schlagwörter des Themas %{topic_id}: %{tags}"
+        edit_category: "Verschieben des Themas %{topic_id} in die Kategorie %{category_id}"
+        set_topic_timer: "Einstellung des Timers %{timer_type} zum Thema %{topic_id} (%{duration_hours} Std.)"
+        set_slow_mode: "Einstellen des langsamen Modus des Themas %{topic_id} (%{slow_mode_seconds} Sek.)"
+        move_posts: "Verschieben von Beiträgen %{post_ids} vom Thema %{topic_id}"
+        grant_badge: "Vergabe des Abzeichens '%{badge_name}' an %{username}"
+        list_reviewables: "Auflistung der Einträge der Warteschlange zur Überprüfung (Typ: %{type})"
+        perform_reviewable_action: "Durchführen von %{action} auf zu überprüfendem %{reviewable_id}"
+        assign: "Zuweisung des Themas %{topic_id} (zugewiesen: %{assigned})"
+        mark_as_solved: "Markieren des Beitrags %{post_id} als gelöst (gelöst: %{solved})"
         read: "Wird gelesen: <a href='%{url}'>%{title}</a>"
         time: "Die Uhrzeit in %{timezone} ist %{time}"
         summarize: "<a href='%{url}'>%{title}</a> zusammengefasst"
@@ -614,34 +693,78 @@ de:
       close_topic:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst dieses Thema nicht schließen oder öffnen."
+          no_reason: "Zum Schließen oder Öffnen eines Themas ist eine Begründung erforderlich."
+        success: "Thema erfolgreich aktualisiert."
       unlist_topic:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst dieses Thema nicht auflisten oder aus der Liste entfernen."
+          no_reason: "Um ein Thema aufzulisten oder aus der Liste zu entfernen, ist ein Grund erforderlich."
+        success: "Thema erfolgreich aktualisiert."
+      lock_post:
+        errors:
+          not_found: "Beitrag nicht gefunden."
+          not_allowed: "Du darfst diesen Beitrag weder sperren noch entsperren."
+          no_reason: "Um einen Beitrag zu sperren oder zu entsperren, ist ein Grund erforderlich."
+        success: "Beitrag erfolgreich aktualisiert."
       delete_topic:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst dieses Thema nicht löschen oder wiederherstellen."
+          no_reason: "Zum Löschen oder Wiederherstellen eines Themas ist eine Begründung erforderlich."
+        success: "Thema erfolgreich aktualisiert."
+      edit_post:
+        errors:
+          not_found: "Beitrag nicht gefunden."
+          not_allowed: "Du darfst diesen Beitrag nicht bearbeiten."
+          nothing_to_edit: "Es muss entweder ein Rohtext oder ein Titel angegeben werden."
+          no_reason: "Ein Bearbeitungsgrund ist erforderlich."
+          revision_failed: "Der Beitrag konnte nicht überarbeitet werden."
+        success: "Beitrag erfolgreich bearbeitet."
       edit_tags:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst die Schlagwörter dieses Thema nicht bearbeiten."
+          no_reason: "Zum Bearbeiten der Schlagwörter ist eine Begründung erforderlich."
+          tagging_disabled: "Schlagwörter sind auf dieser Website nicht aktiviert."
+        success: "Schlagwörter erfolgreich aktualisiert."
       edit_category:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst dieses Thema nicht verschieben."
           category_not_found: "Kategorie nicht gefunden."
+          no_reason: "Zum Verschieben eines Themas ist eine Begründung erforderlich."
+          revision_failed: "Das Thema konnte nicht verschoben werden."
+        success: "Thema erfolgreich verschoben."
       set_topic_timer:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst keinen Timer für dieses Thema setzen."
+          no_reason: "Um einen Themen-Timer zu setzen, ist ein Grund erforderlich."
+          invalid_timer_type: "Ungültiger Timer-Typ. Muss einer der folgenden sein: close, open, delete, silent_close, bump."
+        success: "Der Themen-Timer wurde erfolgreich aktualisiert."
       set_slow_mode:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst bei diesem Thema den langsamen Modus nicht einstellen."
+          no_reason: "Für die Aktivierung des langsamen Modus ist eine Begründung erforderlich."
+        success: "Langsamer Modus erfolgreich aktualisiert."
       move_posts:
         errors:
           not_found: "Thema nicht gefunden."
+          not_allowed: "Du darfst Beiträge in diesem Thema nicht verschieben."
+          no_reason: "Zum Verschieben eines Beitrags ist eine Begründung erforderlich."
+          no_posts: "Es wurden keine Beitrags-IDs angegeben."
+          no_destination: "Entweder destination_topic_id oder new_title muss angegeben werden."
           move_failed: "Fehler beim Verschieben der Beiträge."
         success: "Beiträge erfolgreich verschoben."
       grant_badge:
         errors:
           user_not_found: "Benutzer nicht gefunden."
           badge_not_found: "Abzeichen nicht gefunden."
+          not_allowed: "Du darfst keine Abzeichen verleihen."
+          no_reason: "Zum Verleihen eines Abzeichens ist eine Begründung erforderlich."
           badge_disabled: "Das Abzeichen ist nicht aktiviert."
           grant_failed: "Das Abzeichen konnte nicht verliehen werden."
         success: "Abzeichen erfolgreich verliehen."
@@ -658,6 +781,26 @@ de:
         errors:
           plugin_not_installed: "Das Discourse Gelöst Plug-in ist nicht installiert."
           no_reason: "Um ein Thema als gelöst oder ungelöst zu markieren, ist eine Begründung erforderlich."
+          action_failed: "Der Status „Gelöst“ konnte nicht aktualisiert werden."
+        success: "Der Status „Gelöst“ wurde erfolgreich aktualisiert."
+      list_reviewables:
+        errors:
+          not_allowed: "Du darfst die Warteschlange zur Überprüfung nicht sehen"
+          invalid_type: "Ungültiger Typ für ein überprüfbares Element"
+          invalid_status: "Ungültiger Status. Muss einer der folgenden sein: ausstehend, genehmigt, abgelehnt, ignoriert, gelöscht, überprüft, alle."
+        empty: "Keine Einträge in der Warteschlange zur Überprüfung gefunden, die den angegebenen Filtern entsprechen"
+        found:
+          one: "%{count} Eintrag in der Warteschlange zur Überprüfung gefunden"
+          other: "%{count} Einträge in der Warteschlange zur Überprüfung gefunden"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "Du darfst auf die Warteschlange zur Überprüfung nicht zugreifen"
+          not_found: "Eintrag der Warteschlange nicht gefunden"
+          no_reason: "Ein Grund ist erforderlich, um eine Aktion für einen Eintrag in der Warteschlange zur Überprüfung durchzuführen"
+          invalid_action: "Ungültige Aktion '%{action}'. Verfügbare Aktionen: %{available}"
+          conflict: "Dieser Eintrag in der Warteschlange zur Überprüfung wurde von einer anderen Person aktualisiert. Bitte versuche es erneut."
+          action_failed: "Die Aktion konnte nicht ausgeführt werden"
+        success: "Die Ausführung von '%{action}' für den Eintrag %{reviewable_id} in der Warteschlange zur Überprüfung war erfolgreich."
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -665,6 +808,10 @@ de:
           title: "Genehmigen"
         reject:
           title: "Ablehnen"
+        target_missing: "Das Ziel der Tool-Aktion existiert nicht mehr."
+        tool_not_found: "Das Tool '%{tool_name}' ist nicht mehr verfügbar."
+        bot_user_missing: "Der Bot-Benutzer existiert nicht mehr."
+        execution_error: "Tool-Ausführung fehlgeschlagen: %{error}"
     summarization:
       configuration_hint:
         one: "Konfiguriere zunächst die Einstellung `%{setting}`."
@@ -675,13 +822,13 @@ de:
       reports:
         overall_sentiment: "Gesamtstimmung (positiv–negativ)"
         post_emotion:
-          sadness: "Traurigkeit \U0001F622"
-          surprise: "Überraschung \U0001F631"
-          neutral: "Neutral \U0001F610"
-          fear: "Furcht \U0001F628"
-          anger: "Wut \U0001F621"
-          joy: "Freude \U0001F600"
-          disgust: "Ekel \U0001F922"
+          sadness: "Traurigkeit 😢"
+          surprise: "Überraschung 😱"
+          neutral: "Neutral 😐"
+          fear: "Furcht 😨"
+          anger: "Wut 😡"
+          joy: "Freude 😀"
+          disgust: "Ekel 🤢"
         sentiment_analysis:
           positive: "Positiv"
           negative: "Negativ"
@@ -693,6 +840,7 @@ de:
         set_llm_first: "Stelle zuerst %{setting} ein"
         model_unreachable: "Wir konnten keine Antwort von diesem Modell abrufen. Überprüfe zuerst deine Einstellungen."
         invalid_seeded_model: "Du kannst dieses Modell nicht mit dieser Funktion verwenden"
+        invalid_agent_response_format: "Der ausgewählte Agent muss ein Antwortformat mit einem booleschen Feld namens „spam“ haben."
         must_select_model: "Du musst zuerst ein LLM auswählen"
         invalid_llm_id: "Das ausgewählte LLM-Modell ist nicht gültig"
       endpoints:
@@ -738,8 +886,11 @@ de:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
+      no_user_for_agent: Der angegebene Agent hat keinen Benutzer, der mit ihm verbunden ist.
+      agent_not_found: "Der angegebene Agent existiert nicht. Überprüfe die Parameter agent_name oder agent_id (bisher: agent_name oder agent_id)."
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
       user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
+      agent_disabled: "Der angegebene Agent ist deaktiviert. Überprüfe die Parameter agent_name oder agent_id (bisher: agent_name oder agent_id)."
       no_default_llm: Der Agent muss ein default_llm definiert haben.
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       invalid_stream_resume_token: Der resume_token ist ungültig oder abgelaufen.
@@ -767,3 +918,5 @@ de:
       custom_tool_exists:
         one: "Ein benutzerdefiniertes Tool mit dem Namen %{names} existiert bereits."
         other: "Benutzerdefinierte Tools mit dem Namen %{names} existieren bereits."
+      mcp_server_missing: "Die folgenden MCP-Server sind auf dieser Website nicht konfiguriert: %{names}."
+      mcp_server_tools_not_found: "Auf dieser Website sind keine passenden Tools von MCP-Server %{name} verfügbar."

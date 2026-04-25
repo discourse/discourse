@@ -130,6 +130,28 @@
 
     .edit-category-type-schema-fields {
       display: contents;
+
+      &.--site-settings-only > .form-kit__section.emphasis {
+        border: none;
+        padding: 0;
+      }
+
+      .--dependent {
+        display: flex;
+        gap: 0.75em;
+      }
+
+      .--dependent-border {
+        flex: 0 0 1lh;
+        border-right: 3px solid var(--primary-low);
+      }
+
+      .--dependent-fields {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+      }
     }
   }
 

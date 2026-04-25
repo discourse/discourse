@@ -28,6 +28,7 @@ de:
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
       ai:
         generate: "Erzeugen"
+        optional: "optional"
       import:
         label: "Importieren"
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."

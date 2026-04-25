@@ -490,7 +490,9 @@ function initialize(api) {
               }
 
               if (data.post_id) {
+                topic.indirectly_assigned_to ||= {};
                 if (data.type === "assigned") {
+                  topic.indirectly_assigned_to[data.post_id] ||= {};
                   topic.indirectly_assigned_to[data.post_id].assigned_to =
                     data.assigned_to;
                 } else if (data.type === "unassigned") {

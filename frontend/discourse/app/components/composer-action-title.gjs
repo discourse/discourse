@@ -2,10 +2,8 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { computed, set } from "@ember/object";
-import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import PostLanguageSelector from "discourse/components/post-language-selector";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -30,9 +28,6 @@ const TITLES = {
 
 @tagName("")
 export default class ComposerActionTitle extends Component {
-  @service currentUser;
-  @service siteSettings;
-
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
 
@@ -92,16 +87,6 @@ export default class ComposerActionTitle extends Component {
     }
   }
 
-  @computed("action")
-  get showPostLanguageSelector() {
-    const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
-    return (
-      this.currentUser &&
-      this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(this.action)
-    );
-  }
-
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
     let editTitle = `
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
@@ -155,12 +140,6 @@ export default class ComposerActionTitle extends Component {
         {{this.actionTitle}}
       </span>
 
-      {{#if this.showPostLanguageSelector}}
-        <PostLanguageSelector
-          @composerModel={{this.model}}
-          @selectedLanguage={{this.model.locale}}
-        />
-      {{/if}}
     </div>
   </template>
 }

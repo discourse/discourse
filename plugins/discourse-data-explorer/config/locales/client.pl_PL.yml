@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Eksplorator danych Discourse"
   js:
     discourse_ai:
       features:
@@ -29,15 +34,18 @@ pl_PL:
       create_placeholder: "Nazwa zapytania…"
       description_placeholder: "Wprowadź opis zapytania"
       ai:
-        or_divider: "LUB"
         description_title: "Generuj za pomocą AI"
         description_hint: "Opisz, czego potrzebujesz, prostym językiem. Wygenerujemy dla Ciebie kod SQL, nazwę i opis."
         description_placeholder: "np. Pokaż mi zapisy na przestrzeni czasu"
         generate: "Generuj"
-        generating_name: "Generowanie..."
+        regenerate: "Wygeneruj ponownie"
         generating: "Generowanie zapytań za pomocą AI..."
         generation_timeout: "Przekroczono limit czasu generowania zapytania AI. Możesz wpisać kod SQL ręcznie."
         generation_error: "Wystąpił błąd podczas generowania zapytania."
+        save_query: "Zapisz zapytanie"
+        write_manually: "Napisz SQL ręcznie"
+        sql_label: "SQL"
+        optional: "opcjonalne"
       import:
         label: "Import"
         unparseable_json: "Nieprzetwarzalny plik JSON."

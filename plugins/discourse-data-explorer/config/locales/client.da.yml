@@ -25,6 +25,7 @@ da:
       description_placeholder: "Indtast en beskrivelse her"
       ai:
         generate: "Generér"
+        optional: "valgfri"
       import:
         label: "Importer"
       help:

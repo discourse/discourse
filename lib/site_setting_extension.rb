@@ -380,16 +380,6 @@ module SiteSettingExtension
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
 
-        if !is_hidden && type_supervisor.dependencies[setting_name].present? &&
-             type_supervisor.dependencies.behaviors[setting_name] == :hidden
-          # Hidden if any of the dependent settings are not true. Use the getter so upcoming
-          # change settings use their resolved value (promotion status, admin override, etc.).
-          is_hidden =
-            !type_supervisor.dependencies[setting_name].all? do |dependency|
-              respond_to?(dependency) && public_send(dependency)
-            end
-        end
-
         next true if !is_hidden
         next false if !include_hidden
         next true if filter_allowed_hidden.nil?
@@ -496,8 +486,13 @@ module SiteSettingExtension
             requires_confirmation: requires_confirmation_settings[s],
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
-            depends_on: type_supervisor.dependencies[s],
           }
+
+          if depends_on = type_supervisor.dependencies[s]
+            opts_data[:depends_on] = depends_on
+            opts_data[:depends_on_humanized_names] = depends_on.map { |dep| humanized_names(dep) }
+            opts_data[:depends_behavior] = type_supervisor.dependencies.behaviors[s]
+          end
 
           if upcoming_change_default_override_metadata
             opts_data[
@@ -572,11 +567,23 @@ module SiteSettingExtension
         # store site settings. In this case, we should not consider this
         # setting to be modified.
         #
-        # The only exception is for upcoming changes, which have automatic
-        # promotion systems, and admins need to be able to manually opt out
-        # even if the default itself isn't changing.
+        # There are two exceptions, both tied to upcoming changes:
+        #
+        # 1. Upcoming change settings themselves — admins need to be able
+        #    to manually opt out of an auto-promoted change even when the
+        #    DB value matches the YAML default.
+        #
+        # 2. Target settings of an upcoming_change_default_override — the
+        #    "clean" defaults_view here is computed without overrides
+        #    applied, so it still reports the original YAML default.
+        #
+        #    When an override is active, the *effective* default is different,
+        #    and the admin's explicit DB value (even if it equals the
+        #    original default) is a deliberate opt-out that must survive
+        #    refresh!. Without this exception, the override loop below
+        #    would re-clobber the admin's choice.
         new_modified.reject! do |name, val|
-          if UpcomingChanges.exists?(name)
+          if UpcomingChanges.exists?(name) || upcoming_change_default_overrides.key?(name)
             false
           else
             val.to_s == defaults_view[name].to_s

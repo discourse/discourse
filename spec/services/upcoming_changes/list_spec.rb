@@ -102,8 +102,6 @@ RSpec.describe UpcomingChanges::List do
             )
           end
 
-          after { clear_mocked_upcoming_change_default_overrides }
-
           it "includes the related setting name" do
             results = result.upcoming_changes
             mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }

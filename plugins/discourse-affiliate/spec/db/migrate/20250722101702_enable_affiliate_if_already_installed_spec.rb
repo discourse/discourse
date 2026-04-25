@@ -5,6 +5,8 @@ require_relative "../../../db/migrate/20250722101702_enable_affiliate_if_already
 RSpec.describe EnableAffiliateIfAlreadyInstalled do
   let(:connection) { ActiveRecord::Base.connection }
 
+  around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
+
   before do
     @provider = SiteSetting.provider
     SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)

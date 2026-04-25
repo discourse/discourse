@@ -109,81 +109,6 @@ html.discourse-reactions-no-select {
   }
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    visibility: visible;
-    opacity: 1;
-  }
-}
-
-.discourse-reactions-picker {
-  z-index: calc(z("composer", "content") - 1);
-  position: absolute;
-  visibility: hidden;
-  padding: 15px 0;
-  width: max-content;
-  top: 0;
-
-  &.is-expanded {
-    visibility: visible;
-  }
-
-  .discourse-reactions-picker-container {
-    margin: 0.25em;
-    box-shadow: var(--shadow-card);
-    background-color: var(--secondary);
-    z-index: 1;
-    border-radius: 8px;
-    display: grid;
-    gap: 0.25em;
-
-    @for $i from 1 through 8 {
-      &.col-#{$i} {
-        grid-template-columns: repeat($i, 1fr);
-      }
-    }
-  }
-
-  .pickable-reaction {
-    // TODO fix this in core
-    padding: 0.25em !important;
-    margin: 0.25em !important;
-    border: 1px solid transparent !important;
-    cursor: not-allowed;
-    border-radius: 8px;
-
-    .emoji {
-      pointer-events: none;
-      height: 1.2em;
-      width: 1.2em;
-    }
-
-    &:not(.can-undo) {
-      background: var(--primary-very-low);
-    }
-
-    &.can-undo {
-      cursor: pointer;
-
-      .discourse-no-touch & {
-        &:hover {
-          background: none !important;
-          border-color: transparent !important;
-          transform: scale(1.5);
-        }
-      }
-    }
-
-    &.is-used {
-      border-color: var(--tertiary-low) !important;
-    }
-  }
-}
-
 .discourse-reactions-counter .discourse-reactions-state-panel {
   cursor: default;
   z-index: z("usercard") - 2;
@@ -325,6 +250,81 @@ html.discourse-reactions-no-select {
     color: var(--primary);
     font-size: $font-up-1;
     margin-left: 0.5em;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.discourse-reactions-picker {
+  z-index: calc(z("composer", "content") - 1);
+  position: absolute;
+  visibility: hidden;
+  padding: 15px 0;
+  width: max-content;
+  top: 0;
+
+  &.is-expanded {
+    visibility: visible;
+  }
+
+  .discourse-reactions-picker-container {
+    margin: 0.25em;
+    box-shadow: var(--shadow-card);
+    background-color: var(--secondary);
+    z-index: 1;
+    border-radius: 8px;
+    display: grid;
+    gap: 0.25em;
+
+    @for $i from 1 through 8 {
+      &.col-#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+      }
+    }
+  }
+
+  .pickable-reaction {
+    // TODO fix this in core
+    padding: 0.25em !important;
+    margin: 0.25em !important;
+    border: 1px solid transparent !important;
+    cursor: not-allowed;
+    border-radius: 8px;
+
+    .emoji {
+      pointer-events: none;
+      height: 1.2em;
+      width: 1.2em;
+    }
+
+    &:not(.can-undo) {
+      background: var(--primary-very-low);
+    }
+
+    &.can-undo {
+      cursor: pointer;
+
+      .discourse-no-touch & {
+        &:hover {
+          background: none !important;
+          border-color: transparent !important;
+          transform: scale(1.5);
+        }
+      }
+    }
+
+    &.is-used {
+      border-color: var(--tertiary-low) !important;
+    }
   }
 }
 

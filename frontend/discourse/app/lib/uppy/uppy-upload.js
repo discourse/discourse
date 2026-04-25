@@ -121,16 +121,16 @@ export default class UppyUpload {
       "change",
       this.#fileInputEventListener
     );
-    this.appEvents.off(
-      `upload-mixin:${this.config.id}:add-files`,
-      this.addFiles
-    );
-    this.appEvents.off(
-      `upload-mixin:${this.config.id}:cancel-upload`,
-      this.cancelSingleUpload
-    );
-    if (this.uppyWrapper.uppyInstance?.close) {
-      this.uppyWrapper.uppyInstance.close();
+    if (this.uppyWrapper.uppyInstance) {
+      this.appEvents.off(
+        `upload-mixin:${this.config.id}:add-files`,
+        this.addFiles
+      );
+      this.appEvents.off(
+        `upload-mixin:${this.config.id}:cancel-upload`,
+        this.cancelSingleUpload
+      );
+      this.uppyWrapper.uppyInstance.close?.();
     }
   }
 

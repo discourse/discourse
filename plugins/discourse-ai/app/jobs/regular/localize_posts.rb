@@ -7,10 +7,8 @@ module Jobs
     REDIS_KEY = "discourse-ai:localize_posts:in_progress"
 
     def execute(args)
-      limit = args[:limit]
-      raise Discourse::InvalidParameters.new(:limit) if limit.blank? || limit <= 0
-
-      offset = args[:offset].to_i
+      pairs = args[:pairs]
+      raise Discourse::InvalidParameters.new(:pairs) if pairs.blank?
 
       return if !DiscourseAi::Translation.backfill_enabled?
 
@@ -24,43 +22,39 @@ module Jobs
       llm_model = find_llm_model_for_agent(SiteSetting.ai_translation_post_raw_translator_agent)
       return if llm_model.blank?
 
-      locales = DiscourseAi::Translation.locales
-      return if locales.blank?
+      post_ids = pairs.map(&:first).uniq
+      posts_by_id = Post.where(id: post_ids).index_by(&:id)
 
-      locales.each do |locale|
-        base_locale = locale.split("_").first
+      translated = 0
+      pairs.each do |post_id, target_locale|
+        post = posts_by_id[post_id]
+        next if post.nil?
 
-        posts =
-          DiscourseAi::Translation::PostCandidates
-            .get
-            .joins(
-              "LEFT JOIN post_localizations pl ON pl.post_id = posts.id AND pl.locale LIKE '#{base_locale}%'",
-            )
-            .where.not(locale: nil)
-            .where("posts.locale NOT LIKE '#{base_locale}%'")
-            .where("pl.id IS NULL")
-            .order(updated_at: :desc)
-            .offset(offset)
-            .limit(limit)
-
-        next if posts.empty?
-
-        posts.each do |post|
-          Discourse.redis.expire(REDIS_KEY, 15.minutes.to_i)
-          next unless DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, locale)
-
-          begin
-            DiscourseAi::Translation::PostLocalizer.localize(post, locale, llm_model: llm_model)
-          rescue FinalDestination::SSRFDetector::LookupFailedError
-            # do nothing, there are too many sporadic lookup failures
-          rescue => e
-            DiscourseAi::Translation::VerboseLogger.log(
-              "Failed to translate post #{post.id} to #{locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-            )
-          end
+        Discourse.redis.expire(REDIS_KEY, 15.minutes.to_i)
+        unless DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, target_locale)
+          next
         end
 
-        DiscourseAi::Translation::VerboseLogger.log("Translated #{posts.size} posts to #{locale}")
+        begin
+          DiscourseAi::Translation::PostLocalizer.localize(
+            post,
+            target_locale,
+            llm_model: llm_model,
+          )
+          translated += 1
+        rescue FinalDestination::SSRFDetector::LookupFailedError
+          # do nothing, there are too many sporadic lookup failures
+        rescue => e
+          DiscourseAi::Translation::VerboseLogger.log(
+            "Failed to translate post #{post.id} to #{target_locale}: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+          )
+        end
+      end
+
+      if translated > 0
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Translated #{translated}/#{pairs.size} post localizations: #{pairs.map { |id, loc| "#{id}:#{loc}" }.join(", ")}",
+        )
       end
     ensure
       remaining = Discourse.redis.decr(REDIS_KEY)

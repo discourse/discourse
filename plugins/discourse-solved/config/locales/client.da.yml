@@ -22,7 +22,6 @@ da:
       solution_summary:
         one: "løsning"
         other: "løsninger"
-      accepted_answer_solver_info: "Løst af %{user} i %{post}"
       accepted_answer_post_number: "indlæg %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -32,7 +31,6 @@ da:
       no_solved_topics_title: "Du har ikke løst nogen emner endnu"
       no_solved_topics_title_others: "%{username} har endnu ikke løst nogen emner"
       no_solved_topics_body: "Når du giver et nyttigt svar på et emne, kan dit svar blive udvalgt som løsningen af emneejeren eller personalet."
-      marked_solved_by: "Markeret som løst af %{user}"
       move_post_cancel: "Annuller"
       confirm_solved_removal_confirm: "Bekræft"
       confirm_solved_removal_cancel: "Annuller"

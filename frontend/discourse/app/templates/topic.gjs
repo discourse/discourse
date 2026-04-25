@@ -11,6 +11,7 @@ import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import DiscourseTopic from "discourse/components/discourse-topic";
+import EmbedModeComposer from "discourse/components/embed-mode-composer";
 import EmbedTopicFooter from "discourse/components/embed-topic-footer";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -627,8 +628,9 @@ export default <template>
           @name="topic-below-suggested"
           @outletArgs={{lazyHash model=@controller.model}}
         />
-        <EmbedTopicFooter @topic={{@controller.model}} />
       {{/if}}
+      <EmbedTopicFooter @topic={{@controller.model}} />
+      <EmbedModeComposer @topic={{@controller.model}} />
     {{else}}
       <div class="container">
         <ConditionalLoadingSpinner @condition={{@controller.noErrorYet}}>

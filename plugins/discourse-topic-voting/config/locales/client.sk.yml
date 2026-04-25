@@ -12,9 +12,6 @@ sk:
     topic_voting:
       vote_title: "Hlasovať"
       vote_title_plural: "Hlasy"
-      voted_title: "Odhlasované"
-      voting_closed_title: "Hlasovanie ukončené"
-      voting_limit: "Limit"
       votes:
         one: "%{count} hlas"
         few: "%{count} hlasy"
@@ -26,6 +23,9 @@ sk:
         many: "Hlasy"
         other: "Hlasy"
       remove_vote: "Odstrániť hlas"
+      and_more_voters: "a %{count} ďalšie..."
+      show_voters: "Ukázať kto hlasoval"
+      vote_count_thousands: "%{count}tis"
     filters:
       votes:
         title: "Hlasy"

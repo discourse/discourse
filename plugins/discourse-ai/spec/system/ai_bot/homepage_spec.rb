@@ -360,8 +360,10 @@ RSpec.describe "AI Bot - Homepage" do
       expect(composer).to be_opened
 
       composer.fill_in(with: "Hello bot replying to you")
-      composer.submit
-      expect(page).to have_content("Hello bot replying to you")
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hello user"]) do
+        composer.submit
+        expect(page).to have_content("Hello bot replying to you")
+      end
     end
 
     it "does not render custom sidebar on non-authored bot pms" do

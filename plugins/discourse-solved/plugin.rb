@@ -91,9 +91,19 @@ after_initialize do
     DiscourseSolved::SchemaUtils.post_schema(post, topic) || schema
   end
 
+  register_modifier(:topic_crawler_skip_post) do |default, post, topic|
+    DiscourseSolved::SchemaUtils.qa_page_schema?(topic) &&
+      post.post_type == Post.types[:small_action]
+  end
+
   register_html_builder("server:topic-main-entity-meta-crawler") do |controller|
     topic_view = controller.instance_variable_get(:@topic_view)
-    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic)
+    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic, topic_view&.crawler_posts)
+  end
+
+  register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
+    topic = controller.instance_variable_get(:@topic_view)&.topic
+    DiscourseSolved::SchemaUtils.post_answer_meta(post, topic) if topic
   end
 
   register_html_builder("server:before-head-close-crawler") do |controller|

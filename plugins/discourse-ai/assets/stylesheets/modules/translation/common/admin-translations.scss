@@ -8,12 +8,14 @@
     margin-top: 2em;
   }
 
-  &__locale-input-row {
+  &__locale-input-row,
+  &__category-input-row {
     display: flex;
     align-items: center;
     gap: 0.5em;
 
-    .multi-select {
+    .multi-select,
+    .category-selector {
       flex: 1;
     }
 

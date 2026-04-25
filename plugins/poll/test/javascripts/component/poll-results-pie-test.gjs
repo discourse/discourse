@@ -11,7 +11,7 @@ const OPTIONS = [
 
 const ID = "23";
 
-module("Poll | Component | poll-results-pie", function (hooks) {
+module("Component | poll-results-pie", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the pie chart Component correctly", async function (assert) {

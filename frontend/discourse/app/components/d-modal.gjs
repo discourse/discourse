@@ -29,6 +29,8 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
+  @service appEvents;
+  @service capabilities;
   @service modal;
   @service site;
 
@@ -46,10 +48,39 @@ export default class DModal extends Component {
 
     lock(el);
 
+    if (this.capabilities.isIOS) {
+      this.lockedScrollY = window.scrollY;
+      this.appEvents.on(
+        "keyboard-visibility-change",
+        this,
+        this.resetDocumentScrollOnIOS
+      );
+    }
+
     return () => {
       unlock(el);
+
+      if (this.capabilities.isIOS) {
+        this.appEvents.off(
+          "keyboard-visibility-change",
+          this,
+          this.resetDocumentScrollOnIOS
+        );
+      }
     };
   });
+
+  @action
+  resetDocumentScrollOnIOS(visible) {
+    // iOS scrolls the page to the focused input when the keyboard opens
+    // as a result when an input is within a dropdown within a modal, the modal is scrolled out of view.
+    // This forces the modal back to the correct visible position.
+    if (!visible) {
+      return;
+    }
+
+    window.scrollTo(0, this.lockedScrollY ?? 0);
+  }
 
   @action
   async setupModal(el) {
@@ -195,8 +226,15 @@ export default class DModal extends Component {
       return;
     }
 
-    // Prevent keyboard events from leaking to elements behind the modal
-    if (!this.wrapperElement.contains(document.activeElement)) {
+    // Prevent keyboard events from leaking to elements behind the modal.
+    // Allow events when focus is inside a float-kit portal (menu/tooltip)
+    // opened from this modal, since those render outside the modal DOM.
+    if (
+      !this.wrapperElement.contains(document.activeElement) &&
+      !document.activeElement?.closest(
+        ".fk-d-menu, .fk-d-menu-modal, .fk-d-tooltip"
+      )
+    ) {
       event.stopPropagation();
       event.preventDefault();
     }

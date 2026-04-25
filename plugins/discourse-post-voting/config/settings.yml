@@ -1,4 +1,4 @@
-plugins:
+discourse_post_voting:
   post_voting_enabled:
     client: true
     default: false

@@ -51,6 +51,13 @@ module CrawlerDetection
     end
   end
 
+  def self.crawler_ip?(ip)
+    return false if ip.blank?
+    asn = DiscourseIpInfo.get(ip)[:asn]
+    return false if asn.blank?
+    SiteSetting.crawler_asns_map.include?(asn.to_s)
+  end
+
   def self.show_browser_update?(user_agent)
     return false if SiteSetting.browser_update_user_agents.blank?
 

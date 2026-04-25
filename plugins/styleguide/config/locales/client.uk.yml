@@ -95,6 +95,8 @@ uk:
           title: "Більше тем"
         post_menu:
           title: "Меню повідомлення"
+        docked_composer:
+          title: "Закріплений редактор"
         modal:
           title: "Модальний"
           header: "Модальний заголовок"
@@ -117,3 +119,5 @@ uk:
         char_counter:
           title: "Лічильник символів"
           placeholder: "Введіть свій текст тут..."
+        segmented_control:
+          title: "Сегментний контроль (група перемикачів кнопки)"
