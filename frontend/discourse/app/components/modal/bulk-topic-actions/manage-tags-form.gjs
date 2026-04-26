@@ -19,6 +19,7 @@ export default class ManageTagsForm extends Component {
   constructor() {
     super(...arguments);
     this.args.onRegisterAction?.(this.triggerSubmit);
+    this.args.setSubmitDisabled?.(true);
   }
 
   @action
@@ -32,10 +33,31 @@ export default class ManageTagsForm extends Component {
   }
 
   @action
+  afterFieldSet(value, { set, name }) {
+    set(name, value);
+    this.args.setSubmitDisabled?.(!this.#hasAction());
+  }
+
+  #hasAction() {
+    const removeAll = this.formApi.get("remove_all_tags") ?? false;
+    const removeTags = this.formApi.get("remove_tags") ?? [];
+    const addTags = this.formApi.get("add_tags") ?? [];
+    const rows = this.formApi.get("replace_rows") ?? [];
+
+    return (
+      removeAll ||
+      addTags.length > 0 ||
+      (!removeAll && removeTags.length > 0) ||
+      rows.some((row) => this.#replaceRowStatus(row) !== "empty")
+    );
+  }
+
+  @action
   removeReplaceRow(collection, index) {
     collection.remove(index);
     // `collection.remove` doesn't re-key row errors, so drop them all.
     this.formApi.removeErrors();
+    this.args.setSubmitDisabled?.(!this.#hasAction());
   }
 
   @action
@@ -147,6 +169,7 @@ export default class ManageTagsForm extends Component {
           }}
           @type="tag-chooser"
           @format="full"
+          @onSet={{this.afterFieldSet}}
           as |field|
         >
           <field.Control />
@@ -158,6 +181,7 @@ export default class ManageTagsForm extends Component {
         @title={{i18n "topic_bulk_actions.manage_tags.remove.all_toggle"}}
         @type="toggle"
         @showOptional={{false}}
+        @onSet={{this.afterFieldSet}}
         as |field|
       >
         <field.Control />
@@ -169,6 +193,7 @@ export default class ManageTagsForm extends Component {
         @description={{i18n "topic_bulk_actions.manage_tags.add.description"}}
         @type="tag-chooser"
         @format="full"
+        @onSet={{this.afterFieldSet}}
         as |field|
       >
         <field.Control @categoryId={{@categoryId}} />
@@ -192,6 +217,7 @@ export default class ManageTagsForm extends Component {
                 @showTitle={{false}}
                 @type="tag-chooser"
                 @format="full"
+                @onSet={{this.afterFieldSet}}
                 as |field|
               >
                 <field.Control
@@ -214,6 +240,7 @@ export default class ManageTagsForm extends Component {
                 @showTitle={{false}}
                 @type="tag-chooser"
                 @format="full"
+                @onSet={{this.afterFieldSet}}
                 as |field|
               >
                 <field.Control

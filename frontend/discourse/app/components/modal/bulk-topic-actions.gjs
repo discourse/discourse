@@ -41,6 +41,7 @@ export default class BulkTopicActions extends Component {
   @tracked skippedTopicCount = 0;
 
   @tracked notificationLevelId = null;
+  @tracked customSubmitDisabled = false;
 
   constructor() {
     super(...arguments);
@@ -401,7 +402,12 @@ export default class BulkTopicActions extends Component {
       return !this.notificationLevelId || this.loading;
     }
 
-    return this.loading;
+    return this.customSubmitDisabled || this.loading;
+  }
+
+  @action
+  setSubmitDisabled(value) {
+    this.customSubmitDisabled = value;
   }
 
   @action
@@ -491,6 +497,7 @@ export default class BulkTopicActions extends Component {
               {{component
                 this.activeComponent
                 onRegisterAction=this.registerCustomAction
+                setSubmitDisabled=this.setSubmitDisabled
                 topics=this.activeComponentProps.topics
                 afterBulkAction=this.activeComponentProps.afterBulkAction
                 categoryId=this.activeComponentProps.categoryId
