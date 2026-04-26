@@ -2712,9 +2712,10 @@ RSpec.describe PostsController do
       end
 
       it "returns the reason when the same admin must wait" do
-        PostDestroyer.new(admin, post).destroy
-
-        get "/posts/#{post.id}/permanently_delete_check.json"
+        freeze_time do
+          PostDestroyer.new(admin, post).destroy
+          get "/posts/#{post.id}/permanently_delete_check.json"
+        end
 
         expect(response.status).to eq(200)
         json = response.parsed_body
