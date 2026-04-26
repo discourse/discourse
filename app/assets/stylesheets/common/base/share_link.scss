@@ -16,10 +16,6 @@
   .invite-link {
     flex: 1 0;
   }
-
-  .mobile-view & {
-    flex-direction: column;
-  }
 }
 
 .link-share-actions {
@@ -34,6 +30,7 @@
 
   .sources {
     display: flex;
+    flex-wrap: wrap;
   }
 
   .new-topic {

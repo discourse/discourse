@@ -425,8 +425,6 @@ sr:
           other: "Napravljeno pre %{count} godina"
     bookmarked:
       title: "Markiraj"
-      edit_bookmark: "Uredi marker"
-      clear_bookmarks: "Očisti markere"
       help:
         bookmark: "Klikni da označite ovu temu"
         edit_bookmark: "Klikni da izmeniš oznaku na postu u ovoj temi"
@@ -443,12 +441,12 @@ sr:
       create: "Označi"
       edit: "Izmeni oznaku"
       not_bookmarked: "obeleži ovu poruku"
+      topic_bookmark: "Tema"
       remove_reminder_keep_bookmark: "Uklonite podsetnik i sačuvajte obeleživač"
       created_with_reminder: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
       created_with_reminder_generic: "Obeležili ste ovu poruku sa podsetnikom %{date}. %{name}"
       delete: "Ukloni obeleživač"
       confirm_delete: "Da li ste sigurni da želite da uklonite ovaj obeleživač? Podsetnik će takođe biti uklonjen."
-      confirm_clear: "Da li ste sigurni da želite da uklonite sve obeleživače sa ove teme?"
       save: "Sačuvaj"
       no_timezone: 'Još niste podesili vremensku zonu. Nećete moći postaviti podsetnike. Podesite sada <a href="%{basePath}/my/preferences/profile">na vašem profilu</a>.'
       invalid_custom_datetime: "Uneti datum i vreme nisu važeći. Pokušajte ponovo."
@@ -1773,6 +1771,7 @@ sr:
       upload_description: "Ovde opišite stvar koju učitavate"
       list_item: "Predmet popisa"
       wrap_modal:
+        attribute_value: "Vriednost"
         apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
@@ -1894,6 +1893,18 @@ sr:
         name: "Arhiviraj"
       delete_topics:
         name: "Obriši"
+    nested_replies:
+      sort:
+        label: "Sortiraj po"
+        top: "Top"
+        new: "Novo"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
+      collapse: "Spusti"
+      no_replies: "Bez odgovora, još uvek."
+      pinned_reply: "Zakvačeno"
     topic:
       create: "Nova Tema"
       archive_message:
@@ -2086,8 +2097,6 @@ sr:
           actions: "Akcije"
           edit: "Izmeni"
           delete: "Obriši"
-        post_language_selector:
-          none: "Ništa"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
@@ -2196,6 +2205,8 @@ sr:
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       review_group_name: "ime grupe"
+      posting_review_modes:
+        everyone: "Svi"
       this_year: "ove godine"
       none_subcategory_text: "Ništa"
       visibility:
@@ -2628,6 +2639,8 @@ sr:
           admins: "Admini"
           moderators: "Moderatori"
           staff: "Osoblje"
+        impact_types:
+          other_type: "Ostalo"
         filter:
           all: "Sve"
           enabled: "Omogućeno"
@@ -2686,6 +2699,11 @@ sr:
           sub_pages:
             logs:
               title: "Logovi"
+        problem_checks:
+          status: "Status"
+          ignore: "Ignoriši"
+          more_options:
+            title: "Više opcija"
         reports:
           sub_pages:
             settings:
@@ -2729,7 +2747,7 @@ sr:
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         installed_version: "Instalirano"
         latest_version: "Poslednje"
-        dismiss_notice: "Odbaci"
+        dismiss_notice: "Ignoriši"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje provereno"

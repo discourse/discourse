@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
-import { action, get } from "@ember/object";
-import { empty, notEmpty, or } from "@ember/object/computed";
+import { action, computed, get } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import EmailPreview from "discourse/admin/models/email-preview";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -12,10 +12,25 @@ export default class AdminEmailPreviewDigestController extends Controller {
   lastSeen = null;
   email = null;
 
-  @empty("email") emailEmpty;
-  @or("emailEmpty", "sendingEmail") sendEmailDisabled;
-  @notEmpty("model.html_content") showSendEmailForm;
-  @empty("model.html_content") htmlEmpty;
+  @computed("email")
+  get emailEmpty() {
+    return isEmpty(this.email);
+  }
+
+  @computed("emailEmpty", "sendingEmail")
+  get sendEmailDisabled() {
+    return this.emailEmpty || this.sendingEmail;
+  }
+
+  @computed("model.html_content")
+  get showSendEmailForm() {
+    return !isEmpty(this.model?.html_content);
+  }
+
+  @computed("model.html_content")
+  get htmlEmpty() {
+    return isEmpty(this.model?.html_content);
+  }
 
   @action
   toggleShowHtml(event) {

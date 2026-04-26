@@ -274,9 +274,28 @@ table.group-reports {
 .query-run {
   margin-top: 25px;
 
+  .query-run-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    flex-wrap: wrap;
+    margin-top: 1em;
+  }
+
+  .query-run-actions__left,
+  .query-run-actions__right {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+
   .query-plan {
-    display: inline-block;
-    margin-left: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-left: 0.25em;
   }
 }
 
@@ -344,20 +363,158 @@ table.group-reports {
   margin: 10px 0;
 }
 
-.query-create {
-  display: flex;
+.query-new--ai-first {
+  max-width: 720px;
 
-  input {
-    margin-right: 0.5em;
+  .query-new__ai-section {
+    margin-bottom: 1em;
+  }
+
+  .query-new__ai-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    font-weight: 700;
+    margin-bottom: 0.25em;
+  }
+
+  .query-new__ai-hint {
+    color: var(--primary-medium);
+    margin-bottom: 0.75em;
+  }
+
+  .query-new__ai-textarea {
+    width: 100%;
+    min-height: 3em;
+    margin-bottom: 0.75em;
+  }
+
+  .query-new__ai-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .query-new__generating-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .query-new__toggle-link {
+    color: var(--tertiary);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  .query-new__divider {
+    margin: 1.5em 0;
+    border-top: 1px solid var(--primary-low-mid);
+  }
+
+  .query-new__sql-editor {
+    height: 200px;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+
+    .ace-wrapper {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  .query-new__field-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.35em;
+    margin-top: 1em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .query-new__optional {
+      font-weight: 400;
+      color: var(--primary-medium);
+    }
+  }
+
+  .query-new__name-input {
+    width: 100%;
     margin-bottom: 0;
+  }
+
+  .query-new__description-input {
+    width: 100%;
+    min-height: 60px;
+  }
+
+  .query-new__actions {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 1em;
   }
 }
 
+.query-ai-generating {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1em;
+  margin-bottom: 0.75em;
+  background: var(--tertiary-very-low);
+  border: 1px solid var(--tertiary-low);
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-1);
+  color: var(--tertiary);
+}
+
 .query-results {
+  .query-result-download-buttons {
+    display: inline-flex;
+    gap: 0.5em;
+
+    .btn {
+      margin: 0;
+    }
+  }
+
+  .result-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75em 1.25em;
+    flex-wrap: wrap;
+  }
+
   section {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    overflow: auto;
-    max-height: 1000px;
+  }
+
+  .query-results-chart {
+    height: clamp(200px, 50vh, 350px);
+    min-width: 0;
+    margin-bottom: 1rem;
+    animation: fadein 2s;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 
   table {
@@ -376,6 +533,21 @@ table.group-reports {
       color: var(--primary);
       background: var(--primary-low);
       z-index: z("base");
+    }
+  }
+
+  .query-results-table-wrapper {
+    overflow: auto;
+    max-height: 300px;
+  }
+
+  .query-results-modes {
+    display: inline-flex;
+    gap: 0.35em;
+    margin: 0.75em 0;
+
+    .btn {
+      margin: 0;
     }
   }
 }
@@ -515,6 +687,13 @@ table.group-reports {
 
 .result-about {
   color: var(--primary-high);
+  float: right;
+}
+
+.cached-result-notice {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  clear: both;
   float: right;
 }
 

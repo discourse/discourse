@@ -870,7 +870,6 @@ end
 
 def mark_upload_posts_for_rebake(post_ids_to_rebake)
   posts_to_rebake = Post.where(id: post_ids_to_rebake)
-  post_rebake_errors = []
   puts "",
        "Marking #{posts_to_rebake.length} posts with affected uploads for rebake. Every 15 minutes, a batch of these will be enqueued for rebaking.",
        ""

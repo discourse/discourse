@@ -247,7 +247,6 @@ hu:
       retry_staged_message:
         title: "Hálózati hiba"
         action: "Újraküldi?"
-      unreliable_network: "A hálózat nem megbízható, az üzenetek küldése és a piszkozat mentése lehet, hogy nem működik."
       bookmark_message: "Könyvjelző"
       bookmark_message_edit: "Könyvjelző szerkesztése"
       restore: "Törölt üzenet helyreállítása"

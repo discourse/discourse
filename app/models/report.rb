@@ -76,7 +76,6 @@ class Report
     trust_level_growth
     user_flagging_ratio
     user_to_user_private_messages
-    web_crawlers
     web_hook_events_daily_aggregate
   ]
 

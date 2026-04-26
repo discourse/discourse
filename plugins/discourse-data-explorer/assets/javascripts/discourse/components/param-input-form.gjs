@@ -248,41 +248,47 @@ export default class ParamInputForm extends Component {
         }
         return value;
       case "date":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(value).format("YYYY-MM-DD");
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
-          return null;
+        const m = value && moment(value, "YYYY-MM-DD", true);
+        if (m?.isValid()) {
+          return m.format("YYYY-MM-DD");
+        } else {
+          return this.formatMoment(
+            info,
+            value,
+            "YYYY-MM-DD",
+            ERRORS.INVALID_DATE
+          );
         }
       case "time":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(new Date(`1970/01/01 ${value}`).toISOString()).format(
-            "HH:mm"
-          );
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
-          return null;
-        }
+        return this.formatMoment(
+          info,
+          value,
+          "HH:mm",
+          ERRORS.INVALID_TIME,
+          `1970/01/01 ${value}`
+        );
       case "datetime":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(new Date(value).toISOString()).format(
-            "YYYY-MM-DD HH:mm"
-          );
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
-          return null;
-        }
+        return this.formatMoment(
+          info,
+          value,
+          "YYYY-MM-DD HH:mm",
+          ERRORS.INVALID_TIME
+        );
       default:
         return value;
+    }
+  }
+
+  formatMoment(info, value, format, errorFn, parseInput = value) {
+    if (!value) {
+      return null;
+    }
+
+    try {
+      return moment(new Date(parseInput).toISOString()).format(format);
+    } catch {
+      this.addError(info.identifier, errorFn(String(value)));
+      return null;
     }
   }
 

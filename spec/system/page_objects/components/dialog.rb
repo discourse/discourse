@@ -28,6 +28,18 @@ module PageObjects
       def click_no
         find(".dialog-footer .btn-default").click
       end
+
+      def has_confirm_button_disabled?
+        has_css?(".dialog-footer .btn-danger[disabled]")
+      end
+
+      def has_no_confirm_button_disabled?
+        has_no_css?(".dialog-footer .btn-danger[disabled]")
+      end
+
+      def fill_in_confirmation_phrase(phrase)
+        find(".dialog-body input.confirmation-phrase").fill_in(with: phrase)
+      end
     end
   end
 end

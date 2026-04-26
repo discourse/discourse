@@ -7,7 +7,7 @@ import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-ico
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
-module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
+module("Component | <ChannelIcon />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel - badge", async function (assert) {

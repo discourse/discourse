@@ -289,8 +289,6 @@ id:
         other: "%{formatted_number} Anggota"
     bookmarked:
       title: "Penandaan"
-      edit_bookmark: "Edit Bookmark"
-      clear_bookmarks: "Bersihkan Penandaan"
       help:
         bookmark: "Klik untuk bookmark topik ini"
         edit_bookmark: "Klik untuk mengedit bookmark pada post di topik ini"
@@ -303,12 +301,12 @@ id:
       create: "Buat penanda"
       edit: "Sunting penanda"
       not_bookmarked: "tandai pos ini"
+      topic_bookmark: "Topik"
       remove_reminder_keep_bookmark: "Hapus pengingat dan simpan penanda"
       created_with_reminder: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
       created_with_reminder_generic: "Anda telah menandai kiriman ini dengan pengingat %{date}. %{name}"
       delete: "Hapus Bookmark"
       confirm_delete: "Yakin ingin menghapus penanda ini? Pengingat juga akan dihapus."
-      confirm_clear: "Yakin ingin menghapus semua penandaan Anda dari topik ini?"
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
       invalid_custom_datetime: "Tanggal dan waktu yang Anda berikan tidak valid, silakan coba lagi."
@@ -1797,6 +1795,16 @@ id:
         name: "Hapus"
       defer:
         name: "Tandai Belum Dibaca"
+    nested_replies:
+      sort:
+        new: "Baru"
+      load_more_children:
+        other: "%{count} jawaban lainnya"
+      collapsed_replies:
+        other: "%{count} balasan"
+      collapse: "Persempit"
+      no_replies: "Belum ada balasan"
+      deleted_post_placeholder: "[dihapus]"
     topic:
       create: "Topik Baru"
       archive_message:
@@ -1907,13 +1915,14 @@ id:
       has_replies:
         other: "%{count} Balasan"
       has_replies_count: "%{count}"
+      likes_popup:
+        title:
+          other: "%{count} suka"
       localizations:
         table:
           actions: "Aksi"
           edit: "Ubah"
           delete: "Hapus"
-        post_language_selector:
-          none: "Tidak ada"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         backup_too_large: "Maaf, file cadangan terlalu besar."
@@ -1979,6 +1988,8 @@ id:
         create: "Buat"
       email_in_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
       review_group_name: "nama grup"
+      posting_review_modes:
+        everyone: "Semua orang"
       none_subcategory_text: "Tidak ada"
       visibility:
         public: "Umum"
@@ -2344,6 +2355,8 @@ id:
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
+        impact_types:
+          other_type: "Lainnya"
         filter:
           all: "Semua"
           enabled: "Diaktifkan"
@@ -2386,6 +2399,9 @@ id:
           sub_pages:
             logs:
               title: "Log"
+        problem_checks:
+          status: "Status"
+          ignore: "Abaikan"
         reports:
           sub_pages:
             settings:
@@ -2406,7 +2422,7 @@ id:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
         latest_version: "Terbaru"
-        dismiss_notice: "Bubar"
+        dismiss_notice: "Abaikan"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
         moderators: "Moderator:"

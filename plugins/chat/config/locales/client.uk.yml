@@ -328,7 +328,6 @@ uk:
       retry_staged_message:
         title: "Помилка мережі"
         action: "Надіслати ще раз?"
-      unreliable_network: "Мережа ненадійна, надсилання повідомлень та збереження чернетки можуть не працювати"
       bookmark_message: "Додати закладку"
       bookmark_message_edit: "Редагувати закладку"
       restore: "Відновити видалене повідомлення"
@@ -344,6 +343,11 @@ uk:
         other: "У вас %{count} непрочитані обговорення"
       scroll_to_bottom: "Прокрутити вниз"
       scroll_to_new_messages: "Переглянути нові повідомлення"
+      new_messages:
+        one: "%{count} нове повідомлення"
+        few: "%{count} нових повідомлення"
+        many: "%{count} нових повідомлень"
+        other: "%{count} нових повідомлень"
       sound:
         title: "Звук сповіщення у чаті"
       sounds:

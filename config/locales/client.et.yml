@@ -285,17 +285,16 @@ et:
           all_time: "kogu aeg"
     bookmarked:
       title: "Järjehoidja"
-      clear_bookmarks: "Kustuta järjehoidjad"
       help:
         unbookmark: "Kliki selle teema kõigi järjehoidjate eemaldamiseks"
     bookmarks:
       created: "Oled selle postituse järjehoidjatesse lisanud. %{name}"
       edit: "Muuda järjehoidjat"
       not_bookmarked: "lisa sellele postitusele järjehoidja"
+      topic_bookmark: "Teema"
       created_with_reminder: "Olete selle postituse järjehoidjatesse lisanud meeldetuletusega %{date}. %{name}"
       delete: "Kustuta järjehoidja"
       confirm_delete: "Kas soovid selle järjehoidja kustutada? Kustutatakse ka meeldetuletus."
-      confirm_clear: "Kas soovid kindlasti sellest teemast kustutada kõik oma järjehoidjad?"
       save: "Salvesta"
       invalid_custom_datetime: "Sisestatud kuupäev ja kellaaeg on valed, palun proovi uuesti."
       list_permission_denied: "Sul pole õigusi selle kasutaja järjehoidjate vaatamiseks."
@@ -1508,6 +1507,7 @@ et:
       upload_description: "sisesta üleslaaditu kirjeldus siia"
       list_item: "Loendi element"
       wrap_modal:
+        attribute_value: "Väärtus"
         apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
@@ -1720,6 +1720,22 @@ et:
         name: "Asenda sildid"
       delete_topics:
         name: "Kustuta"
+      convert_to_private_message:
+        name: "Loo isiklik sõnum"
+    nested_replies:
+      sort:
+        label: "Järjesta"
+        top: "Juhtivad"
+        new: "Uus"
+      load_more_children:
+        one: "veel %{count} vastus"
+        other: "veel %{count} vastust"
+      collapsed_replies:
+        one: "%{count} vastus"
+        other: "%{count} vastust"
+      collapse: "Ahenda"
+      no_replies: "Veel ei ole vastuseid."
+      pinned_reply: "Esiletõstetud"
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -2071,8 +2087,6 @@ et:
           actions: "Tegevused"
           edit: "Muuda"
           delete: "Kustuta"
-        post_language_selector:
-          none: "Pole"
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
@@ -2186,6 +2200,7 @@ et:
       back: "Tagasi kategooriasse"
       general: "Üldine"
       settings: "Sätted"
+      moderation: "Modereerimine"
       tags: "Sildid"
       localization:
         name: "Nimi"
@@ -2241,6 +2256,8 @@ et:
       review_group_name: "rühma nimi"
       require_topic_approval: "Nõua moderaatori heakskiitu kõikidele uutele teemadele"
       require_reply_approval: "Nõua moderaatori heakskiitu kõikidele uutele vastustele"
+      posting_review_modes:
+        everyone: "Kõik"
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
@@ -2748,6 +2765,8 @@ et:
           admins: "Adminnid"
           moderators: "Moderaatorid"
           staff: "Meeskond"
+        impact_types:
+          other_type: "Muu"
         filter:
           all: "Kõik"
           enabled: "Sisse lülitatud"
@@ -2811,6 +2830,9 @@ et:
           sub_pages:
             logs:
               title: "Logid"
+        problem_checks:
+          status: "Staatus"
+          ignore: "Ignoreeri"
         reports:
           sub_pages:
             settings:

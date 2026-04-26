@@ -50,7 +50,7 @@ export default class DataExplorerChart extends Component {
       data: { labels: this.args.labels, datasets: [dataset] },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
         },
@@ -116,7 +116,7 @@ export default class DataExplorerChart extends Component {
       data: { labels: this.args.labels, datasets },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: true, position: "bottom" },
           tooltip: {

@@ -313,8 +313,6 @@ bg:
           today: "днес"
     bookmarked:
       title: "Отметка"
-      edit_bookmark: "Редактиране на отметка"
-      clear_bookmarks: "Изчисти отметките"
       help:
         bookmark: "Кликнете, за да добавите тази тема в отметки"
         edit_bookmark: "Кликнете, за да редактирате отметката на публикация в тази тема"
@@ -327,12 +325,12 @@ bg:
       create: "Създайте отметка"
       edit: "Редактиране на отметката"
       not_bookmarked: "добавете тази публикация в Отметки"
+      topic_bookmark: "Тема"
       remove_reminder_keep_bookmark: "Премахнете напомнянето и запазете отметката"
       created_with_reminder: "Отбелязахте тази публикация с напомняне %{date}. %{name}"
       created_with_reminder_generic: "Записахте това в отметките с напомняне %{date}. %{name}"
       delete: "Изтрийте отметката"
       confirm_delete: "Наистина ли искате да изтриете тази отметка? Напомнянето, свързано с нея, също ще бъде отменено."
-      confirm_clear: "Наистина ли искате да премахните всичките отметки от тази тема?"
       save: "Запази"
       no_timezone: 'Не може да получавате напомняния, защото не сте настроили своята часова зона. Може да го направите <a href="%{basePath}/my/preferences/profile">във Вашия профил</a>.'
       invalid_custom_datetime: "Въведените дата и час не са валидни. Опитайте отново."
@@ -2126,6 +2124,8 @@ bg:
       upload_description: "причина за качването"
       list_item: "Списък"
       wrap_modal:
+        attribute_key: "Ключ"
+        attribute_value: "Стойност"
         apply: "Приложи"
       help: "Помощ с Markdown"
       modal_ok: "Ок"
@@ -2403,6 +2403,21 @@ bg:
         name: "Замени етикетите"
       delete_topics:
         name: "Изтрий"
+    nested_replies:
+      sort:
+        label: "Сортирай по"
+        top: "Топ"
+        new: "Нов"
+      load_more_children:
+        one: "още един отговор"
+        other: "%{count} повече отговори"
+      collapsed_replies:
+        one: "%{count} отговор"
+        other: "%{count} отговора"
+      collapse: "Намали"
+      no_replies: "Все още няма отговори."
+      deleted_post_placeholder: "[изтрита]"
+      pinned_reply: "Закована"
     topic:
       create: "Нова тема"
       open_draft: "Довърши ревизия"
@@ -2777,7 +2792,7 @@ bg:
           edit: "Редактирай"
           delete: "Изтрий"
         post_language_selector:
-          none: "Без"
+          none: "Не е зададено"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
         edit: "Съжаляваме, възникна грешка при редактирането на публикацията. Моля, опитайте отново. "
@@ -2950,6 +2965,8 @@ bg:
       subcategory_list_style: "Стил на списъка с подкатегориите:"
       allow_badges_label: "Разрешете използването на значки в тази категория. "
       review_group_name: "име на групата"
+      posting_review_modes:
+        everyone: "Всички"
       this_year: "тази година "
       minimum_required_tags: "Минимален брой етикети на тема"
       none_subcategory_text: "Без"
@@ -3453,6 +3470,8 @@ bg:
           admins: "Админи"
           moderators: "Модератори"
           staff: "Персонал"
+        impact_types:
+          other_type: "Други"
         filter:
           all: "Всички"
           enabled: "Да е включен"
@@ -3512,6 +3531,9 @@ bg:
           sub_pages:
             logs:
               title: "Логове"
+        problem_checks:
+          status: "Статус"
+          ignore: "Игнорирай"
         reports:
           sub_pages:
             settings:
@@ -3563,7 +3585,7 @@ bg:
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
         installed_version: "Инсталирани"
         latest_version: "Последни"
-        dismiss_notice: "Отмени"
+        dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."
         last_checked: "Последна проверка"

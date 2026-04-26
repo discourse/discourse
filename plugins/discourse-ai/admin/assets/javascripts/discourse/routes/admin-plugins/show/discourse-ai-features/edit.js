@@ -14,8 +14,6 @@ export default class AdminPluginsShowDiscourseAiFeaturesEdit extends DiscourseRo
     const { site_settings } = await ajax("/admin/config/site_settings.json", {
       data: {
         filter_area: `ai-features/${currentFeature.module_name}`,
-        plugin: "discourse-ai",
-        category: "discourse_ai",
       },
     });
 

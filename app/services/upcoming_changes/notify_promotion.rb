@@ -58,7 +58,7 @@ class UpcomingChanges::NotifyPromotion
   end
 
   def admin_has_not_manually_toggled(params:)
-    !SiteSetting.modified.key?(params.setting_name)
+    !SiteSetting.setting_modified_from_default?(params.setting_name)
   end
 
   def should_notify_admins(params:)

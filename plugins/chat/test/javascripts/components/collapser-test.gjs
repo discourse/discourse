@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
 
-module("Discourse Chat | Component | collapser", function (hooks) {
+module("Component | collapser", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders header", async function (assert) {

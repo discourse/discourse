@@ -224,6 +224,20 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
         expect(adapter.convert).to be false
       end
     end
+it "uses S3Helper.s3_credentials for client credentials" do
+      upload.update!(
+        url: "//#{s3_bucket}.s3.#{s3_region}.amazonaws.com/uploads/default/original/test.mp4",
+        original_filename: "test.mp4",
+      )
+      allow(mediaconvert_job).to receive(:id).and_return(job_id)
+      allow(mediaconvert_client).to receive(:create_job).and_return(mediaconvert_job_response)
+
+      allow(S3Helper).to receive(:s3_credentials).with(SiteSetting).and_call_original
+
+      adapter.convert
+
+      expect(S3Helper).to have_received(:s3_credentials).with(SiteSetting)
+    end
   end
 
   describe "#check_status" do

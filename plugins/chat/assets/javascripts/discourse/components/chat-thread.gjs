@@ -44,7 +44,6 @@ import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatThread extends Component {
   @service capabilities;
-  @service chat;
   @service chatApi;
   @service chatDraftsManager;
   @service chatThreadComposer;
@@ -149,7 +148,9 @@ export default class ChatThread extends Component {
     this.atBottom = state.atBottom;
 
     if (state.atBottom) {
-      this.paneState.clearPendingMessages();
+      if (this.paneState.userIsPresent) {
+        this.paneState.clearPendingMessages();
+      }
       this.fetchMoreMessages({ direction: FUTURE });
     } else {
       this.paneState.updatePendingContentFromScrollState({
@@ -532,7 +533,6 @@ export default class ChatThread extends Component {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
       } else {
-        this.chat.markNetworkAsUnreliable();
         stagedMessage.error = "network_error";
       }
     }

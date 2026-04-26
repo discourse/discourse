@@ -639,7 +639,7 @@ export default <template>
         <div class="controls">
           <b>{{i18n "admin.user.silence_reason"}}</b>:
           <div class="full-reason">{{trustHTML
-              @controller.model.silence_reason
+              @controller.model.full_silence_reason
             }}</div>
         </div>
       </div>

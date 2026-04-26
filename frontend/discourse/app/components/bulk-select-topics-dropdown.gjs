@@ -93,6 +93,20 @@ export default class BulkSelectTopicsDropdown extends Component {
         name: i18n("topic_bulk_actions.close_topics.name"),
       },
       {
+        id: "pin-topics",
+        icon: "thumbtack",
+        name: i18n("topic_bulk_actions.pin_topics.name"),
+        visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
+      },
+      {
+        id: "unpin-topics",
+        icon: "thumbtack",
+        name: i18n("topic_bulk_actions.unpin_topics.name"),
+        visible: ({ topics }) =>
+          topics.some((t) => t.pinned || t.unpinned) &&
+          !topics.some((t) => t.isPrivateMessage),
+      },
+      {
         id: "archive-topics",
         icon: "folder",
         name: i18n("topic_bulk_actions.archive_topics.name"),
@@ -109,6 +123,20 @@ export default class BulkSelectTopicsDropdown extends Component {
         icon: "envelope",
         name: i18n("topic_bulk_actions.move_messages_to_inbox.name"),
         visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
+      },
+      {
+        id: "convert-to-public-topic",
+        icon: "comments",
+        name: i18n("topic_bulk_actions.convert_to_public_topic.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => t.isPrivateMessage),
+      },
+      {
+        id: "convert-to-private-message",
+        icon: "envelope",
+        name: i18n("topic_bulk_actions.convert_to_private_message.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => !t.isPrivateMessage),
       },
       {
         id: "unlist-topics",
@@ -218,6 +246,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         allowSilent,
         initialAction,
         initialActionLabel,
+        showFooter: opts.showFooter !== false,
       },
     });
   }
@@ -281,6 +310,15 @@ export default class BulkSelectTopicsDropdown extends Component {
           }
         );
         break;
+      case "convert-to-public-topic":
+      case "convert-to-private-message":
+        const actionName = actionId.replaceAll("-", "_");
+        this.showBulkTopicActionsModal(actionId, actionName, {
+          allowSilent: true,
+          description: i18n(`topic_bulk_actions.${actionName}.description`),
+          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+        });
+        break;
       case "unlist-topics":
         this.showBulkTopicActionsModal("unlist", "unlist_topics", {
           description: i18n(`topic_bulk_actions.unlist_topics.description`),
@@ -320,6 +358,17 @@ export default class BulkSelectTopicsDropdown extends Component {
         this.showBulkTopicActionsModal(actionId, "reset_bump_dates", {
           description: i18n(`topic_bulk_actions.reset_bump_dates.description`),
           confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+        });
+        break;
+      case "pin-topics":
+        this.showBulkTopicActionsModal("pin", "pin_topics", {
+          showFooter: false,
+        });
+        break;
+      case "unpin-topics":
+        this.showBulkTopicActionsModal("unpin", "unpin_topics", {
+          description: i18n("topic_bulk_actions.unpin_topics.description"),
+          confirmButtonTranslationKey: "topics.bulk.confirm_unpin_topics",
         });
         break;
       case "defer":

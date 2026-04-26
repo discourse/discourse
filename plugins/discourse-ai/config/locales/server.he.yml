@@ -128,88 +128,88 @@ he:
       xaxis: "חיובי(%)"
       yaxis: "תאריך"
     emotion_admiration:
-      title: "\U0001F929 הערצה"
+      title: "🤩 הערצה"
       description: "פוסטים שסווגו עם הרגש הערצה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_amusement:
-      title: "\U0001F604 שעשוע"
+      title: "😄 שעשוע"
       description: "פוסטים שסווגו עם הרגש שעשוע באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_anger:
-      title: "\U0001F620 כעס"
+      title: "😠 כעס"
       description: "פוסטים שסווגו עם הרגש כעס באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_annoyance:
-      title: "\U0001F612 מורת רוח"
+      title: "😒 מורת רוח"
       description: "פוסטים שסווגו עם הרגש מורת רוח באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_approval:
-      title: "\U0001F44D הסכמה"
+      title: "👍 הסכמה"
       description: "פוסטים שסווגו עם הרגש הסכמה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_caring:
-      title: "\U0001F917 אכפתיות"
+      title: "🤗 אכפתיות"
       description: "פוסטים שסווגו עם הרגש אכפתיות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_confusion:
-      title: "\U0001F615 בלבול"
+      title: "😕 בלבול"
       description: "פוסטים שסווגו עם הרגש בלבול באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_curiosity:
-      title: "\U0001F914 סקרנות"
+      title: "🤔 סקרנות"
       description: "פוסטים שסווגו עם הרגש סקרנות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_desire:
-      title: "\U0001F60D תשוקה"
+      title: "😍 תשוקה"
       description: "פוסטים שסווגו עם הרגש תשוקה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_disappointment:
-      title: "\U0001F61E אכזבה"
+      title: "😞 אכזבה"
       description: "פוסטים שסווגו עם הרגש אכזבה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_disapproval:
-      title: "\U0001F44E אי־הסכמה"
+      title: "👎 אי־הסכמה"
       description: "פוסטים שסווגו עם הרגש אי־הסכמה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_disgust:
-      title: "\U0001F922 גועל"
+      title: "🤢 גועל"
       description: "פוסטים שסווגו עם הרגש גועל באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_embarrassment:
-      title: "\U0001F633 מבוכה"
+      title: "😳 מבוכה"
       description: "פוסטים שסווגו עם הרגש מבוכה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_excitement:
-      title: "\U0001F92A התרגשות"
+      title: "🤪 התרגשות"
       description: "פוסטים שסווגו עם הרגש התרגשות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_fear:
-      title: "\U0001F628 פחד"
+      title: "😨 פחד"
       description: "פוסטים שסווגו עם הרגש פחד באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_gratitude:
-      title: "\U0001F64F הכרת תודה"
+      title: "🙏 הכרת תודה"
       description: "פוסטים שסווגו עם הרגש הכרת תודה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_grief:
-      title: "\U0001F622 צער"
+      title: "😢 צער"
       description: "פוסטים שסווגו עם הרגש צער באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_joy:
-      title: "\U0001F60A הנאה"
+      title: "😊 הנאה"
       description: "פוסטים שסווגו עם הרגש הנאה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_love:
       title: '❤️ אהבה'
       description: "פוסטים שסווגו עם הרגש אהבה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_nervousness:
-      title: "\U0001F630 עצבנות"
+      title: "😰 עצבנות"
       description: "פוסטים שסווגו עם הרגש עצבנות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_neutral:
-      title: "\U0001F610 נייטרלי"
+      title: "😐 נייטרלי"
       description: "פוסטים שסווגו עם הרגש נייטרלי באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_optimism:
-      title: "\U0001F31F אופטימיות"
+      title: "🌟 אופטימיות"
       description: "פוסטים שסווגו עם הרגש אופטימיות באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_pride:
-      title: "\U0001F981 גאווה"
+      title: "🦁 גאווה"
       description: "פוסטים שסווגו עם הרגש גאווה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_realization:
-      title: "\U0001F4A1 תובנה"
+      title: "💡 תובנה"
       description: "פוסטים שסווגו עם הרגש תובנה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_relief:
-      title: "\U0001F60C הקלה"
+      title: "😌 הקלה"
       description: "פוסטים שסווגו עם הרגש הקלה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_remorse:
-      title: "\U0001F614 חרטה"
+      title: "😔 חרטה"
       description: "פוסטים שסווגו עם הרגש חרטה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_sadness:
-      title: "\U0001F62D עצב"
+      title: "😭 עצב"
       description: "פוסטים שסווגו עם הרגש עצב באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
     emotion_surprise:
-      title: "\U0001F632 הפתעה"
+      title: "😲 הפתעה"
       description: "פוסטים שסווגו עם הרגש הפתעה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
   discourse_ai:
     ai_artifact:
@@ -589,13 +589,13 @@ he:
       reports:
         overall_sentiment: "חוויה כוללת (חיובית - שלילית)"
         post_emotion:
-          sadness: "עצב \U0001F622"
-          surprise: "הפתעה \U0001F631"
-          neutral: "נייטרלי \U0001F610"
-          fear: "פחד \U0001F628"
-          anger: "כעס \U0001F621"
-          joy: "הנאה \U0001F600"
-          disgust: "גועל \U0001F922"
+          sadness: "עצב 😢"
+          surprise: "הפתעה 😱"
+          neutral: "נייטרלי 😐"
+          fear: "פחד 😨"
+          anger: "כעס 😡"
+          joy: "הנאה 😀"
+          disgust: "גועל 🤢"
         sentiment_analysis:
           positive: "חיובי"
           negative: "שלילי"

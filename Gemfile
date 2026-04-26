@@ -64,6 +64,7 @@ gem "fastimage"
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-core", "~> 3.231", require: false
 gem "aws-sdk-sns", require: false
+gem "aws-sdk-sts", require: false
 gem "aws-sdk-mediaconvert", require: false
 gem "aws-sdk-bedrockruntime", require: false
 gem "excon"
@@ -225,8 +226,7 @@ gem "rotp", require: false
 
 gem "rqrcode"
 
-# can't upgrade to 3.x due to d-token-gate
-gem "rubyzip", "~> 2.0", require: false
+gem "rubyzip", require: false
 
 gem "sshkey", require: false
 

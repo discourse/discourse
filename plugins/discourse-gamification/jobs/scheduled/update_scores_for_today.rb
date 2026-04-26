@@ -5,7 +5,7 @@ module Jobs
     every 1.hour
 
     def execute(args = nil)
-      DiscourseGamification::GamificationScore.calculate_scores
+      DiscourseGamification::GamificationLeaderboardScore.calculate_all
 
       DiscourseGamification::LeaderboardCachedView.purge_all_stale
       DiscourseGamification::LeaderboardCachedView.refresh_all

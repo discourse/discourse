@@ -93,6 +93,8 @@ export default class ComposerBody extends Component {
     this.element.addEventListener("transitionend", (event) => {
       if (event.propertyName === "height") {
         triggerOpen();
+      } else if (event.propertyName === "max-width") {
+        this.composerResized();
       }
     });
   }

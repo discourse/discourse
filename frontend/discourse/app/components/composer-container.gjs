@@ -421,17 +421,17 @@ export default class ComposerContainer extends Component {
                   <DButton
                     @action={{this.composer.cancel}}
                     class="discard-button btn-transparent"
-                    @title="composer.discard"
-                    @label="composer.discard"
+                    @title={{this.composer.cancelLabel}}
+                    @label={{this.composer.cancelLabel}}
                   />
                 {{/unless}}
 
                 {{#if this.site.mobileView}}
                   <DButton
                     @action={{this.composer.cancel}}
-                    @icon="trash-can"
+                    @icon={{this.composer.cancelIcon}}
                     class="discard-button btn-transparent"
-                    @title="composer.discard"
+                    @title={{this.composer.cancelLabel}}
                   />
 
                   {{#if this.composer.model.noBump}}

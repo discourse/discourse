@@ -433,7 +433,13 @@ fi:
   deleted_topic: "Ketju on poistettu eikä ole enää saatavilla."
   delete_topic_failed: "Ketjun poistaminen epäonnistui. Ota yhteyttä sivuston ylläpitoon."
   reading_time: "Lukuaika"
+  reading_time_minutes:
+    one: "%{count} minuutti 🕑"
+    other: "%{count} minuuttia 🕑"
   likes: "Tykkäykset"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Olet jo suorittanut tämän toiminnon. Voitko kokeilla päivittää sivun?"
   too_many_replies:
     one: "Uudet käyttäjät voivat tilapäisesti kirjoittaa vain %{count} vastauksen samaan ketjuun."
@@ -822,7 +828,6 @@ fi:
       one: "%{count} tykkäys"
       other: "%{count} tykkäystä"
     cannot_permanently_delete:
-      many_posts: "Tässä ketjussa on poistamattomia viestejä. Poista ne pysyvästi ennen kuin poistat ketjun pysyvästi."
       wait_or_different_admin: "Sinun täytyy odottaa %{time_left} ennen kuin poistat tämän viestin pysyvästi, tai toisen järjestelmänvalvojan on tehtävä se."
   rate_limiter:
     slow_down: "Olet suorittanut toiminnon liian monta kertaa. Kokeile myöhemmin uudelleen."
@@ -2372,7 +2377,6 @@ fi:
     create_revision_on_bulk_topic_moves: "Luo revisio ensimmäisille viesteille, kun ketjut siirretään uuteen alueeseen joukkona."
     allow_changing_staged_user_tracking: "Salli ylläpitäjäkäyttäjän muuttaa esikäyttäjän alue- ja tunnisteilmoitusasetuksia."
     use_email_for_username_and_name_suggestions: "Käytä sähköpostiosoitteiden alkuosaa käyttäjätunnus- ja nimiehdotuksia varten. Varoitus: Tämä voi helpottaa pahantekijöitä saamaan selville jäsentesi sähköpostiosoitteet (koska monet ihmiset käyttävät yleisiä sähköpostipalveluntarjoajia, kuten gmail.comia)."
-    use_name_for_username_suggestions: "Käytä käyttäjän koko nimeä käyttäjätunnusten ehdottamiseen."
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
     show_bottom_topic_map: "Näyttää ketjukartan ketjun alaosassa, kun siinä on vähintään 10 vastausta."
     show_topic_map_in_topics_without_replies: "Näyttää ketjukartan, vaikka ketjussa ei olisi vastauksia."
@@ -2687,7 +2691,6 @@ fi:
       request_error: "Todennuksen aloittamisessa tapahtui virhe. Yritä uudelleen."
       invalid_iat: "Todennustunnuksen vahvistaminen ei onnistu palvelimen aikaeron takia. Yritä uudelleen."
     omniauth_error_unknown: "Jokin meni vikaan kirjautumisesi käsittelyssä, yritä uudelleen."
-    omniauth_confirm_title: "Kirjaudu tavalla %{provider}"
     omniauth_confirm_button: "Jatka"
     authenticator_error_no_valid_email: "Mikään tiliin %{account} liittyvistä sähköpostiosoitteista ei ole sallittu. Voit joutua määrittämään tilisi eri sähköpostiosoitteella."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
@@ -4691,7 +4694,6 @@ fi:
       restricted_to:
         one: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan alueella %{category_names}'
         other: 'Tunnistetta "%{tag_name}" voi käyttää ainoastaan seuraavilla alueilla: %{category_names}'
-      synonym: 'Synonyymit kielletty. Käytä sen sijaan tunnistetta "%{tag_name}".'
       has_synonyms: 'Tunnistetta "%{tag_name}" ei voi käyttää, koska sillä on synonyymejä.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Tunnistetta "%{tags}" ei voi käyttää alueella "%{category}". Poista se.'

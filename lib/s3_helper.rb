@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "aws-sdk-s3"
+require "aws-sdk-sts"
 require "global_aws_credentials"
 require "site_aws_credentials"
 
@@ -84,6 +85,14 @@ class S3Helper
           options[:body] = file
           obj.put(options).etag
         end
+      rescue Aws::S3::Errors::MetadataTooLarge
+        if options[:content_disposition].present?
+          options.delete(:content_disposition)
+          file.rewind if file.respond_to?(:rewind)
+          retry
+        else
+          raise
+        end
       end
 
     [path, etag.gsub('"', "")]
@@ -113,7 +122,19 @@ class S3Helper
   end
 
   def delete_objects(keys)
-    s3_bucket.delete_objects({ delete: { objects: keys.map { |k| { key: k } }, quiet: true } })
+    return if keys.empty?
+
+    response =
+      s3_bucket.delete_objects({ delete: { objects: keys.map { |k| { key: k } }, quiet: false } })
+
+    if response.errors.any?
+      error_codes = response.errors.map(&:code).tally.map { |code, n| "#{code} (#{n})" }.join(", ")
+      sample = response.errors.first(5).map { |err| "  #{err.key}: #{err.code} - #{err.message}" }
+      sample << "  ... and #{response.errors.size - 5} more" if response.errors.size > 5
+      raise "Failed to delete #{response.errors.size} S3 objects: #{error_codes}\n#{sample.join("\n")}"
+    end
+
+    response
   end
 
   def copy(source, destination, options: {})
@@ -273,6 +294,7 @@ class S3Helper
     s3_bucket.object(get_path_for_s3_upload(path))
   end
 
+​
   def download_file(filename, destination_path, failure_message = nil)
     object(filename).download_file(destination_path)
   rescue => err

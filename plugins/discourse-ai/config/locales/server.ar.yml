@@ -34,6 +34,9 @@ ar:
       ai_tool_action:
         title: إجراء أداة الذكاء الاصطناعي
         description: تشغيل أداة الذكاء الاصطناعي عند تفعيل الأتمتة
+      llm_agent_triage:
+        title: فرز المنشورات باستخدام وكيل الذكاء الاصطناعي
+        description: "الرد على المنشورات باستخدام وكيل ذكاء اصطناعي محدد"
       llm_triage:
         title: فرز المنشورات باستخدام الذكاء الاصطناعي
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
@@ -97,6 +100,8 @@ ar:
     ai_helper_automatic_chat_thread_title: "تعيين عناوين سلسلة الدردشة تلقائيًا بناءً على محتويات السلسلة."
     ai_helper_enabled_features: "حدِّد الميزات التي تريد تفعيلها في مساعد الذكاء الاصطناعي."
     post_ai_helper_allowed_groups: "مجموعات المستخدمين المسموح لها بالوصول إلى ميزات مساعد الذكاء الاصطناعي في المنشورات"
+    ai_helper_post_illustrator_agent: "الوكيل المراد استخدامه لميزة توضيح المنشور الخاصة بمساعد الذكاء الاصطناعي. ملاحظة: يجب عليك أيضًا إنشاء أداة لإنشاء الصور (المسؤول > المكوّنات الإضافية > Discourse AI > الأدوات) لكي تعمل هذه الميزة."
+    ai_helper_chat_thread_title_agent: "الوكيل الذي سيتم استخدامه لإنشاء عناوين سلاسل المحادثات."
     ai_embeddings_selected_model: "استخدم النموذج المُحدَّد لتوليد التضمينات."
     ai_embeddings_generate_for_pms: "إنشاء تضمينات للرسائل الشخصية."
     ai_embeddings_semantic_related_topics_enabled: "استخدام البحث الدلالي للموضوعات ذات الصلة."
@@ -110,6 +115,7 @@ ar:
     ai_embeddings_semantic_related_age_time_scale: "النطاق الزمني المقدر بالأيام والمستخدم في احتساب معامل خفض القيمة بناءً على العمر؛ فالمواضيع التي تظل غير نشطة طوال هذه المدة تخضع لخفض قدره 50% تقريبًا في حال ضبط الخفض عند 1.0. يمكن تعيين القيمة 365 لاعتماد مقياس سنوي، أو القيمة 90 لاعتماد مقياس ربع سنوي."
     ai_embeddings_per_post_enabled: إنشاء التضمينات لكل منشور
     ai_summarization_enabled: "تفعيل ميزة التلخيص"
+    ai_summarization_agent: "الوكيل المستخدم لميزة التلخيص"
     ai_pm_summarization_allowed_groups: "المجموعات المسموح لها بإنشاء الملخصات وعرضها في الرسائل الخاصة"
     ai_summary_gists_enabled: "إنشاء ملخصات قصيرة لأحدث الردود في الموضوعات تلقائيًا"
     ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المطلوب ملؤها في الساعة."
@@ -123,12 +129,14 @@ ar:
     ai_bot_add_to_community_section: "عرض رابط في قسم المجتمع في الشريط الجانبي لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
     ai_bot_github_access_token: "رمز وصول GitHub للاستخدام مع أدوات الذكاء الاصطناعي من GitHub (مطلوب لدعم البحث)"
     ai_discover_enabled: "تفعيل ميزة البحث الاكتشافي"
+    ai_discover_agent: "الوكيل المستخدم في ميزة البحث الاكتشافي"
     ai_google_custom_search_api_key: "مفتاح API لواجهة API الخاصة ببحث Google المخصَّص، راجع: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "معرّف CX لواجهة برمجة تطبيقات البحث المخصص من Google"
     ai_discord_search_enabled: "تفعيل ميزة البحث في Discord"
     ai_discord_app_id: "معرّف تطبيق Discord الذي ترغب في ربط ميزة البحث به"
     ai_discord_app_public_key: "المفتاح العام لتطبيق Discord الذي ترغب في ربط ميزة البحث به"
     ai_discord_search_mode: "حدد وضع البحث الذي تريد استخدامه للبحث في Discord"
+    ai_discord_search_agent: "الوكيل المستخدم في بحث Discord."
     ai_discord_allowed_guilds: "مجتمعات (خوادم) Discord التي يُصرح للروبوت بالبحث فيها"
     ai_translation_enabled: "تفعيل ميزة الترجمة بالذكاء الاصطناعي"
     ai_translation_include_bot_content: "عند التفعيل، سيتم أيضًا إرسال المحتوى المكتوب بواسطة الروبوتات (معرفات المستخدم أقل من 0) للترجمة."
@@ -151,88 +159,88 @@ ar:
       xaxis: "إيجابية (%)"
       yaxis: "التاريخ"
     emotion_admiration:
-      title: "\U0001F929 الإعجاب"
+      title: "🤩 الإعجاب"
       description: "المنشورات المصنَّفة برمز الإعجاب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_amusement:
-      title: "\U0001F604 التسلية"
+      title: "😄 التسلية"
       description: "المنشورات المصنَّفة برمز التسلية عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_anger:
-      title: "\U0001F620 الغضب"
+      title: "😠 الغضب"
       description: "المنشورات المصنَّفة برمز الغضب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_annoyance:
-      title: "\U0001F612 الإزعاج"
+      title: "😒 الإزعاج"
       description: "المنشورات المصنَّفة برمز الإزعاج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_approval:
-      title: "\U0001F44D الموافقة"
+      title: "👍 الموافقة"
       description: "المنشورات المصنَّفة برمز الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_caring:
-      title: "\U0001F917 الاهتمام"
+      title: "🤗 الاهتمام"
       description: "المنشورات المصنَّفة برمز الاهتمام عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_confusion:
-      title: "\U0001F615 الارتباك"
+      title: "😕 الارتباك"
       description: "المنشورات المصنَّفة برمز الارتباك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_curiosity:
-      title: "\U0001F914 الفضول"
+      title: "🤔 الفضول"
       description: "المنشورات المصنَّفة برمز الفضول عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_desire:
-      title: "\U0001F60D الرغبة"
+      title: "😍 الرغبة"
       description: "المنشورات المصنَّفة برمز الرغبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disappointment:
-      title: "\U0001F61E خيبة الأمل"
+      title: "😞 خيبة الأمل"
       description: "المنشورات المصنَّفة برمز خيبة الأمل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disapproval:
-      title: "\U0001F44E عدم الموافقة"
+      title: "👎 عدم الموافقة"
       description: "المنشورات المصنَّفة برمز عدم الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_disgust:
-      title: "\U0001F922 الاشمئزاز"
+      title: "🤢 الاشمئزاز"
       description: "المنشورات المصنَّفة برمز الاشمئزاز عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_embarrassment:
-      title: "\U0001F633 الإحراج"
+      title: "😳 الإحراج"
       description: "المنشورات المصنَّفة برمز الإحراج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_excitement:
-      title: "\U0001F92A الإثارة"
+      title: "🤪 الإثارة"
       description: "المنشورات المصنَّفة برمز الإثارة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_fear:
-      title: "\U0001F628 الخوف"
+      title: "😨 الخوف"
       description: "المنشورات المصنَّفة برمز الخوف عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_gratitude:
-      title: "\U0001F64F الامتنان"
+      title: "🙏 الامتنان"
       description: "المنشورات المصنَّفة برمز الامتنان عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_grief:
-      title: "\U0001F622 الكآبة"
+      title: "😢 الكآبة"
       description: "المنشورات المصنَّفة برمز الكآبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_joy:
-      title: "\U0001F60A المرح"
+      title: "😊 المرح"
       description: "المنشورات المصنَّفة برمز الفرح عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_love:
       title: '❤️ الحب'
       description: "المنشورات المصنَّفة برمز الحب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_nervousness:
-      title: "\U0001F630 التوتر"
+      title: "😰 التوتر"
       description: "المنشورات المصنَّفة برمز التوتر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_neutral:
-      title: "\U0001F610 محايدة"
+      title: "😐 محايدة"
       description: "المنشورات المصنَّفة برمز الحياد عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_optimism:
-      title: "\U0001F31F التفاؤل"
+      title: "🌟 التفاؤل"
       description: "المنشورات المصنَّفة برمز التفاؤل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_pride:
-      title: "\U0001F981 الفخر"
+      title: "🦁 الفخر"
       description: "المنشورات المصنَّفة برمز الفخر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_realization:
-      title: "\U0001F4A1 الإدراك"
+      title: "💡 الإدراك"
       description: "المنشورات المصنَّفة برمز الإدراك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_relief:
-      title: "\U0001F60C الراحة"
+      title: "😌 الراحة"
       description: "المنشورات المصنَّفة برمز الراحة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_remorse:
-      title: "\U0001F614 الندم"
+      title: "😔 الندم"
       description: "المنشورات المصنَّفة برمز الندم عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_sadness:
-      title: "\U0001F62D الحزن"
+      title: "😭 الحزن"
       description: "المنشورات المصنَّفة برمز الحزن عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
     emotion_surprise:
-      title: "\U0001F632 المفاجأة"
+      title: "😲 المفاجأة"
       description: "المنشورات المصنَّفة برمز المفاجأة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"SamLowe/roberta-base-go_emotions\""
   discourse_ai:
     ai_artifact:
@@ -295,9 +303,33 @@ ar:
         unknown_error: "يتعذر حل بيانات الاعتماد المطلوبة."
     mcp_servers:
       secret_not_found: "بيانات الاعتماد المحددة غير موجودة."
+      invalid_url_not_https: "يجب أن يكون عنوان URL بصيغة HTTPS صالحًا"
+      invalid_url_not_reachable: "يجب أن يشير إلى عنوان يمكن الوصول إليه بشكل عام"
+      oauth_client_id_required: "يجب إدخال معرّف عميل OAuth لإتمام التسجيل اليدوي للعميل."
+      errors:
+        invalid_response: "تلقّى النظام استجابة غير صالحة من خادم MCP."
+        request_failed: "فشل طلب خادم MCP مع الحالة %{status}."
+        session_expired: "انتهت صلاحية جلسة MCP."
+        timeout: "انتهت مهلة طلب خادم MCP."
+        oauth_authorization_required: "يلزم إتمام مصادقة OAuth قبل استخدام خادم MCP. يرجى ربطه بـ %{issuer} من خلال واجهة المسؤول."
+        oauth_discovery_failed: "لم يتمكن النظام من اكتشاف تفاصيل مصادقة OAuth لخادم MCP هذا."
+        oauth_discovery_failed_with_status: "فشل اكتشاف OAuth مع الحالة %{status}."
+        oauth_not_configured: "لم يتم إعداد OAuth لهذا الخادم MCP"
+        oauth_refresh_token_missing: "رمز التحديث الخاص بـ OAuth مفقود. يرجى إعادة الاتصال بخادم MCP هذا."
+        oauth_save_before_connect: "احفظ خادم MCP قبل اختبار اتصال OAuth."
+        oauth_state_invalid: "حالة مصادقة OAuth غير صالحة أو انتهت صلاحيتها. يرجى بدء الاتصال من جديد."
+        oauth_token_exchange_failed: "فشل تبادل رمز OAuth مع الحالة %{status}."
+        oauth_https_required: "يتطلب OAuth أن يكون موقعك متاحًا عبر HTTPS."
+        oauth_callback_failed: "فشل اتصال OAuth: %{message}"
+        oauth_client_metadata_public_https_required: "يتطلب تسجيل مستند بيانات تعريف العميل عنوان URL لموقع عام عبر HTTPS. عنوان URL الحالي لبيانات تعريف العميل: %{url}"
+        oauth_registration_endpoint_missing: "لا يعلن خادم مصادقة OAuth عن نقطة نهاية للتسجيل."
+        oauth_client_registration_failed: "فشل تسجيل العميل الديناميكي مع الحالة %{status}."
+        oauth_client_registration_failed_no_id: "نجحت عملية تسجيل العميل الديناميكي، ولكن لم يتم إرجاع معرّف العميل (client_id)."
     ai_helper:
       errors:
         completion_request_failed: "حدث خطأ في أثناء محاولة تقديم اقتراحات. يُرجى إعادة المحاولة."
+        no_illustrator_agent: "لم يتم إعداد وكيل توضيح المنشورات. يُرجى التحقق من إعدادات الموقع."
+        no_image_generation_tool: "يجب أن يكون وكيل توضيح المنشورات مرتبطًا بأداة لإنشاء الصور. يُرجى إعداد أداة لإنشاء الصور لهذا الوكيل من لوحة المسؤول."
         no_image_generated: "فشل إنشاء الصورة. يرجى المحاولة مرة أخرى أو التحقق من إعدادات الأداة."
         llm_model_not_configured: "لا يوجد نموذج لغة مُهيأ لإنشاء الصور. يرجى إعداد نموذج لغة افتراضي في إعدادات الموقع."
         unknown_error: "حدث خطأ غير متوقع أثناء إنشاء الصور المصغرة. يرجى المحاولة مرة أخرى."
@@ -335,8 +367,11 @@ ar:
       reply_error: "عذرًا، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
       thinking: "التفكير"
+      tool_pending_approval: "يتطلب هذا الإجراء موافقة أحد المشرفين قبل تنفيذه."
       agents:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
+        cannot_delete_system_agent: "لا يمكن حذف وكلاء النظام، يُرجى تعطيلها بدلًا من ذلك"
+        cannot_edit_system_agent: "يمكن إعادة تسمية وكلاء النظام فقط، ولا يجوز لك تعديل الأدوات أو رسائل مطالبة النظام. بل يمكنك تعطيلها وإنشاء نسخة منها."
         cannot_have_duplicate_tools: "لا يمكن وجود أدوات مكررة"
         github_helper:
           name: "مساعد GitHub"
@@ -376,8 +411,10 @@ ar:
           description: "روبوت الذكاء الاصطناعي المتخصص في إنشاء أدوات ويب تفاعلية"
         summarizer:
           name: "المُلخّص"
+          description: "الوكيل الافتراضي المستخدم لتشغيل ملخصات الذكاء الاصطناعي"
         short_summarizer:
           name: "ملخّص (نسخة قصيرة)"
+          description: "الوكيل الافتراضي المستخدم لإنشاء ملخصات قصيرة بالذكاء الاصطناعي لعناصر قوائم الموضوعات"
         concept_finder:
           name: "مكتشف المفاهيم"
           description: "روبوت ذكاء اصطناعي متخصص في تحديد المفاهيم والموضوعات في المحتوى"
@@ -389,23 +426,31 @@ ar:
           description: "روبوت ذكاء اصطناعي متخصص في إزالة التكرارات للمفاهيم"
         custom_prompt:
           name: "رسالة مطالبة مخصَّصة"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة المطالبة المخصصة في المساعد"
         smart_dates:
           name: "التواريخ الذكية"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة التواريخ الذكية في المساعد"
         markdown_table_generator:
           name: "مولد جدول Markdown"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة إنشاء جداول Markdown في المساعد"
         post_illustrator:
           name: "مُوضِّح المنشورات"
           description: "تنشئ صورًا بغرض توضيح المنشورات باستخدام أدوات إنشاء الصور المتاحة"
         proofreader:
           name: "مدقق لغوي"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة تدقيق النصوص في المساعد"
         titles_generator:
           name: "مولّد العناوين"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة اقتراح عناوين الموضوعات في المساعد"
         tutor:
           name: "مُدرس خاص"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة الشرح في المساعد"
         translator:
           name: "مترجم"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة الترجمة في المساعد"
         image_captioner:
           name: "تسميات الصور"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة التسميات التوضيحية للصور في المساعد"
         locale_detector:
           name: "كاشف اللغة"
           description: "يشغّل ميزة الترجمة من خلال اكتشاف لغة النص المعطى (المنشورات، والعناوين، وغيرها)"
@@ -420,14 +465,19 @@ ar:
           description: "يشغّل ميزة الترجمة كمترجم نصوص عام، يُستخدم للنصوص القصيرة مثل أسماء الفئات أو الوسوم"
         spam_detector:
           name: "كاشف المحتوى العشوائي"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة اكتشاف المحتوى العشوائي لدينا"
         content_creator:
           name: "مبدع المحتوى"
+          description: "الوكيل الافتراضي المسؤول عن تشغيل بحث HyDE"
         report_runner:
           name: "مشغّل التقارير"
+          description: "الوكيل الافتراضي المستخدم في البرنامج النصي لأتمتة التقارير"
         discover:
           name: "اكتشف"
+          description: "الوكيل الافتراضي المستخدم في ميزة الاكتشافات (البحث التكميلي)"
         chat_thread_titler:
           name: "عنونة سلاسل المحادثات"
+          description: "الوكيل الافتراضي المسؤول عن إنشاء عناوين تلقائية لسلاسل الدردشة"
       topic_not_found: "الملخص غير متوفر، الموضوع غير موجود!"
       summarizing: "جارٍ تلخيص الموضوع"
       searching: "جارٍ البحث عن: '%{query}'"
@@ -435,6 +485,7 @@ ar:
         researcher:
           researcher_llm:
             name: "نموذج اللغة الكبير"
+            description: "نموذج اللغة المستخدم في البحث (يُستخدم افتراضيًا نموذج اللغة الكبير الخاص بالوكيل الحالي)"
           max_tokens_per_batch:
             name: "الحد الأقصى من الرموز لكل دفعة"
             description: "الحد الأقصى لعدد الرموز التي يمكن استخدامها لكل دفعة في البحث"
@@ -485,6 +536,7 @@ ar:
             description: "يتحكم فيما إذا كان سيتم مراجعة المنشور، أو إخفاؤه، أو حذفه، أو اعتباره بريدًا عشوائيًا."
       tool_summary:
         read_artifact: "قراءة أداة ويب"
+        search_uploaded_documents: "البحث في المستندات المُحمّلة"
         update_artifact: "تحديث أداة ويب"
         create_artifact: "إنشاء أداة ويب"
         web_browser: "تصفح الويب"
@@ -495,8 +547,21 @@ ar:
         random_picker: "منتقي عشوائي"
         categories: "إدراج الفئات"
         flag_post: "الإبلاغ عن المنشور"
+        close_topic: "إغلاق الموضوع"
+        unlist_topic: "إزالة الموضوع من القائمة"
+        lock_post: "قفل المنشور"
+        delete_topic: "حذف الموضوع"
         edit_post: "تعديل المنشور"
+        edit_tags: "تعديل الوسوم"
+        edit_category: "تعديل الفئة"
+        set_topic_timer: "تعيين مؤقِّت للموضوع"
+        set_slow_mode: "ضبط الوضع البطيء"
         move_posts: "نقل المنشورات"
+        grant_badge: "منح شارة"
+        list_reviewables: "قائمة انتظار المراجعة"
+        perform_reviewable_action: "إجراءات قائمة انتظار المراجعة"
+        assign: "تعيين موضوع"
+        mark_as_solved: "وضع علامة \"تم الحل\""
         search: "البحث"
         tags: "إدراج الوسوم"
         time: "الوقت"
@@ -516,6 +581,7 @@ ar:
         researcher_dry_run: "إعداد البحث"
       tool_help:
         read_artifact: "قراءة أداة ويب باستخدام روبوت الذكاء الاصطناعي"
+        search_uploaded_documents: "البحث عن المستندات التي تم تحميلها إلى هذا الوكيل"
         update_artifact: "تحديث أداة ويب باستخدام روبوت الذكاء الاصطناعي"
         create_artifact: "إنشاء أداة ويب باستخدام روبوت الذكاء الاصطناعي"
         web_browser: "تصفح صفحة الويب باستخدام روبوت ذكاء اصطناعي"
@@ -526,7 +592,21 @@ ar:
         random_picker: "اختر رقمًا عشوائيًا أو عنصرًا عشوائيًا من القائمة"
         categories: "إدراج جميع الفئات المرئية بشكلٍ عام في المنتدى"
         flag_post: "أبلغ عن المنشور الحالي لمراجعته من قبل فريق العمل"
+        close_topic: "إغلاق الموضوع أو إعادة فتحه"
+        unlist_topic: "إدراج موضوع أو إلغاء إدراجه"
+        lock_post: "قفل منشور أو فتح قفله"
         delete_topic: "حذف موضوع"
+        edit_post: "تعديل محتوى منشور"
+        edit_tags: "تعديل الوسوم الخاصة بموضوع ما"
+        edit_category: "نقل موضوع إلى فئة أخرى"
+        set_topic_timer: "تعيين مؤقت على موضوع لإغلاقه أو فتحه أو حذفه أو رفعه"
+        set_slow_mode: "تفعيل أو تعطيل الوضع البطيء في موضوع"
+        move_posts: "نقل منشورات إلى موضوع جديد أو موجود مسبقًا"
+        grant_badge: "منح شارة لمستخدم"
+        list_reviewables: "عرض عناصر قائمة انتظار المراجعة المعلقة مع إمكانية التصفية"
+        perform_reviewable_action: "تنفيذ إجراء على عنصر في قائمة انتظار المراجعة"
+        assign: "تعيين موضوع أو إلغاء تعيينه لمستخدم أو مجموعة"
+        mark_as_solved: "تحديد المنشور أو إلغاء تحديده كحل معتمد"
         search: "البحث في جميع الموضوعات العامة في المنتدى"
         tags: "إدراج جميع الوسوم في المنتدى"
         time: "البحث عن الوقت في مناطق زمنية مختلفة"
@@ -545,6 +625,13 @@ ar:
         researcher: "البحث عن معلومات المنتدى باستخدام روبوت الذكاء الاصطناعي"
       tool_description:
         read_artifact: "قراءة أداة ويب باستخدام روبوت الذكاء الاصطناعي"
+        search_uploaded_documents:
+          zero: "تم العثور على %{count} من المقتطفات من مستند مُحمّل مطابق للبحث ‘%{query}’"
+          one: "تم العثور على مقتطف واحد (%{count}) من مستند مُحمّل مطابق للبحث ‘%{query}’"
+          two: "تم العثور على مقتطفين (%{count}) من مستند مُحمّل مطابق للبحث ‘%{query}’"
+          few: "تم العثور على %{count} مقتطفات من مستند مُحمّل مطابق للبحث ‘%{query}’"
+          many: "تم العثور على %{count} مقتطفًا من مستند مُحمّل مطابق للبحث ‘%{query}’"
+          other: "تم العثور على %{count} مقتطف من مستند مُحمّل مطابق للبحث ‘%{query}’"
         update_artifact: "تم تحديث أداة ويب باستخدام روبوت الذكاء الاصطناعي"
         create_artifact: "تم إنشاء أداة ويب: %{name} - %{specification}"
         web_browser: "قراءة <a href='%{url}'>%{url}</a>"
@@ -554,6 +641,21 @@ ar:
         github_file_content: "تم استعادة محتوى %{file_paths} من %{repo_name}@%{branch}"
         random_picker: "الاختيار من %{options}، تم اختيار: %{result}"
         flag_post: "الإبلاغ عن المنشور %{post_id} (flag_post: %{flag_post})"
+        close_topic: "إغلاق الموضوع %{topic_id} (مغلق: %{closed})"
+        unlist_topic: "إلغاء إدراج الموضوع %{topic_id} (غير مدرج: %{unlisted})"
+        lock_post: "قفل المنشور %{post_id} (مقفل: %{locked})"
+        delete_topic: "حذف الموضوع %{topic_id} (محذوف: %{deleted})"
+        edit_post: "تعديل المنشور %{post_id}"
+        edit_tags: "تعديل الوسوم المتعلقة بالموضوع %{topic_id}: %{tags}"
+        edit_category: "نقل الموضوع %{topic_id} إلى الفئة %{category_id}"
+        set_topic_timer: "تعيين مؤقت %{timer_type} للموضوع %{topic_id} (%{duration_hours} ساعة)"
+        set_slow_mode: "تعيين الوضع البطيء للموضوع %{topic_id} (%{slow_mode_seconds} ثانية)"
+        move_posts: "نقل المنشورات %{post_ids} من الموضوع %{topic_id}"
+        grant_badge: "منح الشارة ‘%{badge_name}’ للمستخدم %{username}"
+        list_reviewables: "عرض عناصر قائمة انتظار المراجعة (النوع: %{type})"
+        perform_reviewable_action: "تنفيذ الإجراء %{action} على عنصر المراجعة %{reviewable_id}"
+        assign: "تعيين الموضوع %{topic_id} (مُعيّن: %{assigned})"
+        mark_as_solved: "تحديد المنشور %{post_id} كحلّ (تم الحل: %{solved})"
         read: "القراءة: <a href='%{url}'>%{title}</a>"
         time: "الوقت في المنطقة الزمنية %{timezone} هو %{time}"
         summarize: "تم تلخيص <a href='%{url}'>%{title}</a>"
@@ -635,31 +737,118 @@ ar:
       close_topic:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بإغلاق هذا الموضوع أو فتحه."
+          no_reason: "يجب تحديد سبب لإغلاق الموضوع أو فتحه."
+        success: "تم تحديث الموضوع بنجاح."
       unlist_topic:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بإدراج هذا الموضوع أو إلغاء إدراجه."
+          no_reason: "يجب تحديد سبب لإدراج موضوع أو إلغاء إدراجه."
+        success: "تم تحديث الموضوع بنجاح."
+      lock_post:
+        errors:
+          not_found: "المنشور غير موجود."
+          not_allowed: "غير مسموح لك بقفل هذا المنشور أو فتح قفله."
+          no_reason: "يجب تحديد سبب لقفل منشور أو فتح قفله."
+        success: "تم تحديث المنشور بنجاح."
       delete_topic:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بحذف هذا الموضوع أو استعادته."
+          no_reason: "يجب تحديد سبب لحذف موضوع أو استعادته."
+        success: "تم تحديث الموضوع بنجاح."
+      edit_post:
+        errors:
+          not_found: "المنشور غير موجود."
+          not_allowed: "غير مسموح لك بتعديل هذا المنشور."
+          nothing_to_edit: "يجب إدخال المحتوى أو العنوان."
+          no_reason: "يلزم إدخال سبب التعديل."
+          revision_failed: "فشل تعديل المنشور."
+        success: "تم تعديل المنشور بنجاح."
       edit_tags:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بتعديل الوسوم في هذا الموضوع."
+          no_reason: "يجب تحديد سبب لتعديل الوسوم."
+          tagging_disabled: "الوسوم غير مفعّلة في هذا الموقع."
+        success: "تم تحديث الوسوم بنجاح."
       edit_category:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بنقل هذا الموضوع."
           category_not_found: "لم يتم العثور على الفئة."
+          no_reason: "يجب تحديد سبب لنقل الموضوع."
+          revision_failed: "فشل نقل الموضوع."
+        success: "تم نقل الموضوع بنجاح."
       set_topic_timer:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بتعيين مؤقت لهذا الموضوع."
+          no_reason: "يجب تحديد سبب لتعيين مؤقت للموضوع."
+          invalid_timer_type: "نوع المؤقت غير صالح. يجب أن يكون أحد القيم التالية: close، open، delete، silent_close، bump."
+        success: "تم تحديث مؤقت الموضوع بنجاح."
       set_slow_mode:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بتفعيل الوضع البطيء لهذا الموضوع."
+          no_reason: "يجب تحديد سبب لتفعيل الوضع البطيء."
+        success: "تم تحديث الوضع البطيء بنجاح."
       move_posts:
         errors:
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بنقل المنشورات في هذا الموضوع."
+          no_reason: "يجب تحديد سبب لنقل المنشورات."
+          no_posts: "لم يتم تقديم معرّفات للمنشورات."
+          no_destination: "يجب توفير إما destination_topic_id أو new_title."
+          move_failed: "تعذّر نقل المنشورات."
+        success: "تم نقل المنشورات بنجاح."
+      grant_badge:
+        errors:
+          user_not_found: "المستخدم غير موجود."
+          badge_not_found: "الشارة غير موجودة."
+          not_allowed: "غير مسموح لك بمنح الشارات."
+          no_reason: "يجب تحديد سبب لمنح الشارة."
+          badge_disabled: "ميزة الشارات غير مفعّلة."
+          grant_failed: "فشل منح الشارة."
+        success: "تم منح الشارة بنجاح."
       assign:
         errors:
+          plugin_not_installed: "لم يتم تثبيت المكون الإضافي discourse-assign."
           not_found: "الموضوع غير موجود."
+          not_allowed: "غير مسموح لك بتعيين هذا الموضوع."
+          no_reason: "يجب تحديد سبب لتعيين الموضوع أو إلغاء تعيينه."
+          assignee_not_found: "لم يتم العثور على المستخدم أو المجموعة."
+          assign_failed: "فشل تعيين الموضوع."
+        success: "تم تحديث تعيين الموضوع بنجاح."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "لم يتم تثبيت المكون الإضافي discourse-solved."
+          no_reason: "يجب تحديد سبب لتحديد المنشور كحل أو إلغاء ذلك."
+          action_failed: "فشل تحديث حالة الحل."
+        success: "تم تحديث حالة الحل بنجاح."
+      list_reviewables:
+        errors:
+          not_allowed: "غير مسموح لك بالاطلاع على قائمة انتظار المراجعة"
+          invalid_type: "نوع عنصر المراجعة غير صالح"
+          invalid_status: "الحالة غير صالحة. يجب أن تكون إحدى القيم التالية: pending، approved، rejected، ignored، deleted، reviewed، all."
+        empty: "لم يتم العثور على عناصر في قائمة انتظار المراجعة تطابق عوامل التصفية المحددة"
+        found:
+          zero: "تم العثور على %{count} من العناصر في قائمة انتظار المراجعة"
+          one: "تم العثور على عنصر واحد (%{count}) في قائمة انتظار المراجعة"
+          two: "تم العثور على عنصريْن (%{count}) في قائمة انتظار المراجعة."
+          few: "تم العثور على %{count} عناصر في قائمة انتظار المراجعة."
+          many: "تم العثور على %{count} عنصرًا في قائمة انتظار المراجعة."
+          other: "تم العثور على %{count} عنصر في قائمة انتظار المراجعة."
+      perform_reviewable_action:
+        errors:
+          not_allowed: "لا تملك صلاحية الوصول إلى قائمة انتظار المراجعة"
+          not_found: "تعذّر العثور على عنصر في قائمة انتظار المراجعة"
+          no_reason: "يجب تحديد سبب لتنفيذ إجراء على عنصر في قائمة انتظار المراجعة."
+          invalid_action: "الإجراء ‘%{action}’ غير صالح. الإجراءات المتاحة: %{available}"
+          conflict: "تم تحديث هذا العنصر في قائمة انتظار المراجعة بواسطة شخص آخر. يُرجى المحاولة مرة أخرى"
+          action_failed: "فشل تنفيذ الإجراء"
+        success: "تم تنفيذ الإجراء ‘%{action}’ بنجاح على عنصر قائمة انتظار المراجعة %{reviewable_id}"
     reviewables:
       ai_tool_action:
         title: "إجراء أداة الذكاء الاصطناعي"
@@ -667,6 +856,10 @@ ar:
           title: "الموافقة"
         reject:
           title: "رفض"
+        target_missing: "لم يعد العنصر الذي يستهدفه الإجراء موجودًا."
+        tool_not_found: "لم تعد الأداة '%{tool_name}' متاحة."
+        bot_user_missing: "لم يعد مستخدم الروبوت موجودًا."
+        execution_error: "فشل تنفيذ الأداة: %{error}"
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
@@ -681,13 +874,13 @@ ar:
       reports:
         overall_sentiment: "المشاعر العامة (إيجابية - سلبية)"
         post_emotion:
-          sadness: "الحزن \U0001F622"
-          surprise: "المفاجأة \U0001F631"
-          neutral: "محايدة \U0001F610"
-          fear: "الخوف \U0001F628"
-          anger: "الغضب \U0001F621"
-          joy: "المرح \U0001F600"
-          disgust: "الاشمئزاز \U0001F922"
+          sadness: "الحزن 😢"
+          surprise: "المفاجأة 😱"
+          neutral: "محايدة 😐"
+          fear: "الخوف 😨"
+          anger: "الغضب 😡"
+          joy: "المرح 😀"
+          disgust: "الاشمئزاز 🤢"
         sentiment_analysis:
           positive: "إيجابية"
           negative: "سلبية"
@@ -699,6 +892,7 @@ ar:
         set_llm_first: "اضبط %{setting} أولًا"
         model_unreachable: "لم نتمكن من الحصول على رد من هذا النموذج. تحقَّق من إعداداتك أولًا."
         invalid_seeded_model: "لا يمكنك استخدام هذا النموذج مع هذه الميزة"
+        invalid_agent_response_format: "يجب أن يكون لدى الوكيل المحدد تنسيق استجابة يشمل حقلًا منطقيًا باسم \"عشوائي\""
         must_select_model: "يجب عليك تحديد نموذج لغة كبير أولًا"
         invalid_llm_id: "النموذج اللغوي الكبير المحدد غير صالح"
       endpoints:
@@ -752,8 +946,12 @@ ar:
       quota_exceeded: "لقد تجاوزت الحصة المُخصَّصة لهذا النموذج. يُرجى إعادة المحاولة بعد %{relative_time}."
       quota_required: "يجب عليك تحديد الحد الأقصى للرموز أو الاستخدامات لهذا النموذج"
       no_query_specified: معلمة الاستعلام مطلوبة، يُرجى تحديدها.
+      no_user_for_agent: الوكيل المحدد غير مرتبط بأي مستخدم.
+      agent_not_found: "الوكيل المحدد غير موجود. يرجى التحقق من agent_name أو agent_id (المعلمان القديمة: agent_name أو agent_id)."
       no_user_specified: اسم المستخدم أو معلمة user_unique_id مطلوبة، يُرجى تحديدها.
       user_not_found: المستخدم المحدَّد غير موجود. تحقَّق من معلمة username.
+      agent_disabled: "الوكيل المحدد معطّل. يرجى التحقق من agent_name أو agent_id (المعلمان القديمة: agent_name أو agent_id)."
+      no_default_llm: يجب تحديد نموذج لغوي افتراضي للوكيل (default_llm).
       user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
       invalid_stream_resume_token: رمز resume_token غير صالح أو انتهت صلاحيته.
       no_tool_results_specified: المعلمة tool_results مطلوبة عند استئناف الدفق.
@@ -776,6 +974,7 @@ ar:
       stream_reply_state_too_large: "حالة التدفق كبيرة جدًا بحيث لا يمكن الاحتفاظ بها (الحد الأقصى %{max} بايت)."
       stream_reply_unexpected_error: حدث خطأ غير متوقع أثناء تدفق الرد.
       prompt_message_length: تتجاوز الرسالة الحد الأقصى لعدد الحروف، والبالغ 1000 حرف، بمقدار %{idx}.
+      agent_already_exists: يوجد بالفعل وكيل يحمل الاسم %{name}.
       custom_tool_exists:
         zero: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
         one: "هناك أداة مخصصة تحمل الاسم %{names} بالفعل."
@@ -783,3 +982,5 @@ ar:
         few: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
         many: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
         other: "هناك أدوات مخصصة تحمل الأسماء %{names} بالفعل."
+      mcp_server_missing: "خوادم MCP التالية غير مهيأة على هذا الموقع: %{names}"
+      mcp_server_tools_not_found: "لا توجد أدوات مطابقة من خادم MCP المسمى '%{name}' متاحة على هذا الموقع."
