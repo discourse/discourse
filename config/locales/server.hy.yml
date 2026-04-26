@@ -195,7 +195,13 @@ hy:
   read_only_mode_enabled: "Կայքը գտնվում է միայն կարդալու ռեժիմում: Միջամտությունները անջատված են:"
   invalid_grant_badge_reason_link: "Արտաքին կամ անվավեր discourse-ի հղումը թույլատրված չէ կրծքանշանի պատճառի մեջ:"
   reading_time: "Կարդալու ժամանակը"
+  reading_time_minutes:
+    one: "%{count} րոպե 🕑"
+    other: "%{count} րոպե 🕑"
   likes: "Հավանումներ"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Ցավում ենք, սակայն նոր օգտատերերը ժամանակավորապես սահմանափակված են մինչև %{count} պատասխան միևնույն թեմայում:"
     other: "Ցավում ենք, սակայն նոր օգտատերերը ժամանակավորապես սահմանափակված են թողնելու մինչև %{count} պատասխան միևնույն թեմայում:"
@@ -671,6 +677,7 @@ hy:
     read: "կարդացած"
     read_write: "կարդալ/գրել"
     instructions: 'Մենք հենց նոր գեներացրինք նոր օգտատիրոջ API key՝ "%{application_name}" -ի հետ պգտագործելու համար, խնդրում ենք տեղադրել հետևյալ key -ը Ձեր հավելվածում.'
+    copied: "Պատճենված է!"
     otp_confirmation:
       confirm_title: Շարունակել դեպի %{site_name}
       logging_in_as: Մուտք գործել որպես %{username}

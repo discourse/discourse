@@ -263,6 +263,9 @@ nl:
           bar_done:
             one: "%{count} bericht"
             other: "%{count} berichten"
+        theme_translations:
+          translate:
+            label: "Vertalen"
       spam:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
@@ -366,8 +369,6 @@ nl:
         user: Gebruiker
         create_user: Gebruiker maken
         default_llm: Standaard taalmodel
-        question_consolidator_llm: Taalmodel voor Vragenconsolidator
-        question_consolidator_llm_help: Het te gebruiken taalmodel voor de vragenconsolidator. Je kunt een minder krachtig model kiezen om kosten te besparen.
         system_prompt: Systeemprompt
         forced_tool_strategy: Gedwongen toolstrategie
         allow_chat_direct_messages: "Directe chatberichten toestaan"
@@ -378,6 +379,8 @@ nl:
         save: "Opslaan"
         enabled: "Ingeschakeld?"
         tools: "Ingeschakelde tools"
+        mcp_tools_modal:
+          clear_all: "Alles wissen"
         forced_tools: "Geforceerde tools"
         allowed_groups: "Toegestane groepen"
         delete: "Verwijderen"
@@ -450,7 +453,6 @@ nl:
         tool_name: "Toolnaam"
         description: "Beschrijving"
         description_help: "Een duidelijke beschrijving van het doel van de tool voor het taalmodel"
-        subheader_description: "Tools breiden de mogelijkheden van AI-bots uit met door de gebruiker gedefinieerde JavaScript-functies."
         summary: "Samenvatting"
         summary_help: "Samenvatting van de tools die voor eindgebruikers moeten worden weergegeven"
         script: "Script"
@@ -484,6 +486,23 @@ nl:
         delete: "Verwijderen"
         embedding: "Insluiting"
         tool: "Tool"
+      mcp_servers:
+        name: "Naam"
+        description: "Beschrijving"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Verbonden"
+        oauth_connect: "Verbinden"
+        oauth_hide_details: "Details verbergen"
+        enabled: "Ingeschakeld"
+        save: "Opslaan"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        tools_modal:
+          parameters: "Parameters"
+          required: "Vereist"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -539,7 +558,7 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-6: "Het intelligentste model van Antropic"
+          anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
           anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
           open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
@@ -738,8 +757,6 @@ nl:
           title: "AI-interactie weergeven"
           copy_request: "Verzoek kopiëren"
           copy_response: "Antwoord kopiëren"
-          request_tokens: "Verzoektokens:"
-          response_tokens: "Antwoordtokens:"
           request: "Verzoek"
           response: "Antwoord"
           next_log: "Volgende"

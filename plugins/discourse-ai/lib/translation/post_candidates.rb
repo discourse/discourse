@@ -8,7 +8,36 @@ module DiscourseAi
       # Also returns aggregate counts for total eligible posts and posts with detected locale.
       # @return [Hash] a hash with keys :translation_progress (array), :total (integer), and :posts_with_detected_locale (integer)
       def self.get_completion_all_locales
-        completion_all_locales
+        cache_key = "ai-translations-progress-#{SiteSetting.content_localization_supported_locales}"
+        Discourse.cache.fetch(cache_key, expires_in: 30.minutes) { completion_all_locales }
+      end
+
+      def self.needs_localization(limit:)
+        locales = DiscourseAi::Translation.locales
+        return [] if locales.blank?
+
+        locale_map = {}
+        locales.each { |l| locale_map[l.split("_").first] ||= l }
+
+        target_locale_values = locale_map.map { |base, full| "('#{base}', '#{full}')" }.join(", ")
+
+        base_sql = get.where.not(locale: nil).to_sql
+
+        sql = <<~SQL
+          SELECT ep.id AS post_id, target.target_locale
+          FROM (#{base_sql}) ep
+          JOIN (VALUES #{target_locale_values}) AS target(base_locale, target_locale)
+            ON target.base_locale != split_part(ep.locale, '_', 1)
+          WHERE NOT EXISTS (
+            SELECT 1 FROM post_localizations pl
+            WHERE pl.post_id = ep.id
+              AND split_part(pl.locale, '_', 1) = target.base_locale
+          )
+          ORDER BY ep.updated_at DESC, target.target_locale
+          LIMIT #{limit.to_i}
+        SQL
+
+        DB.query(sql).map { |r| [r.post_id, r.target_locale] }
       end
 
       private
@@ -30,21 +59,50 @@ module DiscourseAi
           posts.where("posts.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
         posts = posts.joins(:topic)
-        if SiteSetting.ai_translation_backfill_limit_to_public_content
-          # exclude all PMs
-          # and only include posts from public categories
-          posts =
-            posts
-              .where.not(topics: { archetype: Archetype.private_message })
-              .where(topics: { category_id: Category.where(read_restricted: false).select(:id) })
-        else
-          # all regular topics, and group PMs
+
+        target_category_ids = SiteSetting.ai_translation_target_categories
+        pm_scope = SiteSetting.ai_translation_personal_messages
+
+        # Category filter: include target categories + PMs (PMs filtered in next step)
+        if target_category_ids.present?
+          category_ids = target_category_ids.split("|").map(&:to_i)
           posts =
             posts.where(
-              "topics.archetype != ? OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
-              Archetype.private_message,
+              "topics.category_id IN (:cats) OR topics.archetype = :pm",
+              cats: category_ids,
+              pm: Archetype.private_message,
             )
+        else
+          posts = posts.where(topics: { archetype: Archetype.private_message })
         end
+
+        # PM scope filter
+        case pm_scope
+        when "group"
+          posts =
+            posts.where(
+              "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
+              pm: Archetype.private_message,
+            )
+        when "none", nil
+          posts = posts.where.not(topics: { archetype: Archetype.private_message })
+        end
+
+        # Always include posts from banner topics regardless of age or category filters
+        banner_posts =
+          Post
+            .where(deleted_at: nil)
+            .where.not(raw: [nil, ""])
+            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
+            .joins(:topic)
+            .where(topics: { archetype: Archetype.banner, deleted_at: nil })
+        banner_posts =
+          banner_posts.where(
+            "posts.user_id > 0",
+          ) unless SiteSetting.ai_translation_include_bot_content
+        posts = posts.or(banner_posts)
+
+        posts
       end
 
       def self.completion_all_locales

@@ -57,7 +57,7 @@ chat_integration:
     default: ""
   chat_integration_discord_excerpt_length:
     default: 400
-  
+
 #######################################
 ########## GUILDED SETTINGS ###########
 #######################################
@@ -65,7 +65,7 @@ chat_integration:
     default: false
   chat_integration_guilded_excerpt_length:
     default: 400
-  
+
 
 #######################################
 ######## MATTERMOST SETTINGS ##########
@@ -129,15 +129,6 @@ chat_integration:
 #######################################
   chat_integration_gitter_enabled:
     default: false
-
-#######################################
-########## FLOWDOCK SETTINGS ##########
-#######################################
-  chat_integration_flowdock_enabled:
-    default: false
-  chat_integration_flowdock_excerpt_length:
-    default: 400
-
 
 #######################################
 ########## GROUPME SETTINGS ##########

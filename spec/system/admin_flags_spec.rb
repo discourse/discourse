@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Flags Page", type: :system do
+describe "Admin Flags Page" do
   fab!(:admin)
   fab!(:post)
 

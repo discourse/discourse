@@ -279,7 +279,6 @@ gl:
           today: "hoxe"
     bookmarked:
       title: "Marcador"
-      clear_bookmarks: "Limpar marcadores"
       help:
         unbookmark: "Prema para retirar todos os marcadores deste tema"
     bookmarks:
@@ -287,10 +286,10 @@ gl:
       create: "Crear marcador"
       edit: "Editar marcador"
       not_bookmarked: "marcar esta publicación"
+      topic_bookmark: "Tema"
       created_with_reminder: "Fixou como marcador esta publicación cun recordatorio %{date}. %{name}"
       delete: "Eliminar marcador"
       confirm_delete: "Confirma a eliminación deste marcador? O recordatorio tamén se eliminará."
-      confirm_clear: "Confirma o borrado de todos os marcadores deste tema?"
       save: "Gardar"
       no_timezone: 'Aínda non configurous ningunha zona horaria. Non poderá estabelecer recordatorios. Configure un <a href="%{basePath}/my/preferences/profile">no teu perfil</a>.'
       invalid_custom_datetime: "A data e hora que escribiu non é correcta, ténteo de novo."
@@ -1863,6 +1862,8 @@ gl:
       upload_description: "introducir a descrición da carga aquí"
       list_item: "Elemento da listaxe"
       wrap_modal:
+        attribute_key: "Chave"
+        attribute_value: "Valor"
         apply: "Aplicar"
       help: "Axuda para a edición con Markdown"
       modal_ok: "De acordo"
@@ -2107,9 +2108,6 @@ gl:
         confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Borrar todo"
-        unlist_topics: "Retirar temas da listaxe"
-        relist_topics: "Refacer a listaxe de temas"
-        delete: "Eliminar temas"
         delete_topics_count:
           one: "Eliminar tema"
           other: "Eliminar temas"
@@ -2121,20 +2119,11 @@ gl:
         dismiss_new: "Desbotar novas"
         toggle: "cambiar a selección en bloque dos temas"
         actions: "Accións en bloque"
-        close_topics: "Pechar temas"
-        archive_topics: "Arquivar temas"
         move_messages_to_inbox: "Mover á caixa de entrada"
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
-        selected:
-          one: "Seleccionou <b>%{count}</b> tema."
-          other: "Seleccionou <b>%{count}</b> temas."
-        change_tags: "Substituír etiquetas"
-        append_tags: "Anexar etiquetas"
         choose_new_tags: "Seleccione novas etiquetas para estes temas:"
-        choose_append_tags: "Seleccione novas etiquetas para anexar a estes temas:"
         changed_tags: "As etiquetas deses temas cambiaron."
-        remove_tags: "Retirar etiquetas"
         confirm_remove_tags:
           one: "Retiraranse todas as etiquetas deste tema. Está seguro?"
           other: "Retiraranse todas as etiquetas destes <b>%{count}</b> temas. Está seguro?"
@@ -2165,12 +2154,27 @@ gl:
         name: "Mover á caixa de entrada"
       remove_tags:
         name: "Retirar etiquetas"
-      append_tags:
-        name: "Anexar etiquetas"
       replace_tags:
         name: "Substituír etiquetas"
       delete_topics:
         name: "Eliminar"
+      convert_to_private_message:
+        name: "Facer privada a mensaxe"
+    nested_replies:
+      sort:
+        label: "Ordenar por"
+        top: "Destacados"
+        new: "Novo"
+      load_more_children:
+        one: "%{count} resposta máis"
+        other: "%{count} respostas máis"
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} repostas"
+      collapse: "Pregar"
+      no_replies: "Aínda sen respostas."
+      deleted_post_placeholder: "[eliminado]"
+      pinned_reply: "Fixado"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -2569,6 +2573,10 @@ gl:
       sr_post_like_count_button:
         one: "A %{count} persoa gustoulle esta publicación."
         other: "A %{count} persoas gustoulles esta publicación."
+      likes_popup:
+        title:
+          one: "%{count} gústame"
+          other: "%{count} gústame"
       filtered_replies_hint:
         one: "Ver esta publicación e a súa resposta"
         other: "Ver esta publicación e as súas %{count} respostas"
@@ -2582,8 +2590,6 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
-        post_language_selector:
-          none: "Ningunha"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -2632,7 +2638,6 @@ gl:
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
         admin_action: "Administrador"
-        permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
         convert_to_moderator: "Engadir cor do equipo"
@@ -2748,6 +2753,7 @@ gl:
       back: "Volver á categoría"
       general: "Xeral"
       settings: "Configuración"
+      moderation: "Moderación"
       tags: "Etiquetas"
       localization:
         name: "Nome"
@@ -2814,6 +2820,8 @@ gl:
       review_group_name: "nome do grupo"
       require_topic_approval: "Require a aprobación de todos os temas novos polo moderador"
       require_reply_approval: "Require a aprobación de todas as respostas novas polo moderador"
+      posting_review_modes:
+        everyone: "Todos"
       this_year: "este ano"
       position: "Posición na páxina de categorías:"
       minimum_required_tags: "Número mínimo de etiquetas requiridas nun tema:"
@@ -3421,8 +3429,6 @@ gl:
         sidebar_title: "Informes"
         group_traffic: "Tráfico"
         group_members: "Membros"
-        group_moderation: "Moderación"
-        group_security: "Seguranza"
         group_other: "Outro"
       config_sections:
         account:
@@ -3449,6 +3455,8 @@ gl:
           admins: "Administradores"
           moderators: "Moderadores"
           staff: "Equipo"
+        impact_types:
+          other_type: "Outro"
         filter:
           all: "Todas"
           enabled: "Activado"
@@ -3522,6 +3530,9 @@ gl:
           sub_pages:
             logs:
               title: "Rexistros"
+        problem_checks:
+          status: "Estado"
+          ignore: "Ignorar"
         reports:
           title: "Informes"
           sub_pages:
@@ -3589,7 +3600,7 @@ gl:
         installed_version: "Instalado"
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
-        dismiss_notice: "Desbotar"
+        dismiss_notice: "Ignorar"
         new_features:
           learn_more: "Saber máis..."
         last_checked: "Última comprobación"
@@ -4122,7 +4133,6 @@ gl:
           add_all: "Engadir todos"
           import_web_tip: "Repositorio que contén o tema"
           direct_install_tip: "Confirma que quere instalar <strong>%{name}</strong> desde o repositorio que se lista a seguir?"
-          import_file_tip: "Ficheiro .tar.gz, .zip ou .dcstyle.json que contén o tema"
           is_private: "O tema está nun repositorio privado de git"
           remote_branch: "Nome da ramificación (opcional)"
           public_key: "Conceder á seguinte clave pública acceso ao repositorio:"

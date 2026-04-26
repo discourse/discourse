@@ -111,10 +111,6 @@ pt:
           unassigned: "tiveram atribuição cancelada"
         assigned:
           label: "Atribuído(a) a"
-    topics:
-      bulk:
-        unassign: "Cancelar atribuição de tópico"
-        assign: "Atribuir tópicos"
     discourse_automation:
       scriptables:
         random_assign:

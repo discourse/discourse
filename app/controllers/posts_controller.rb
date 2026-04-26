@@ -63,6 +63,7 @@ class PostsController < ApplicationController
       posts =
         Post
           .private_posts
+          .where(post_type: Topic.visible_post_types(current_user))
           .order(id: :desc)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
@@ -509,6 +510,18 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def permanently_delete_check
+    post = find_post_from_params
+    obj = post.is_first_post? ? post.topic : post
+
+    if guardian.can_permanently_delete?(obj)
+      render json: { can_permanently_delete: true }
+    else
+      reason = obj.cannot_permanently_delete_reason(current_user)
+      render json: { can_permanently_delete: false, reason: }
+    end
+  end
+
   def permanently_delete_revisions
     guardian.ensure_can_permanently_delete_post_revisions!
 
@@ -723,7 +736,7 @@ class PostsController < ApplicationController
 
   def deleted_posts
     params.permit(:offset, :limit)
-    guardian.ensure_can_see_deleted_posts!
+    guardian.ensure_can_see_deleted_posts_for_user!
 
     user = fetch_user_from_params
     offset = [params[:offset].to_i, 0].max
@@ -982,7 +995,11 @@ class PostsController < ApplicationController
     end
 
     PostRevisor.tracked_topic_fields.each_key do |f|
-      params.permit(f => [])
+      if f == :tags
+        params.permit(tags: %i[id name])
+      else
+        params.permit(f => [])
+      end
       result[f] = params[f] if params.has_key?(f)
     end
 
@@ -1049,7 +1066,14 @@ class PostsController < ApplicationController
   end
 
   def display_post(post)
-    post.revert_to(params[:version].to_i) if params[:version].present?
+    if params[:version].present?
+      version = params[:version].to_i
+      post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
+      if post_revision
+        guardian.ensure_can_see!(post_revision)
+        post.revert_to(version)
+      end
+    end
     render_post_json(post)
   end
 

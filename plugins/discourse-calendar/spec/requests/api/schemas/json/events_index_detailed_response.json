@@ -205,6 +205,12 @@
               "null"
             ]
           },
+          "description_html": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "location": {
             "type": [
               "string",
@@ -234,6 +240,12 @@
           },
           "at_capacity": {
             "type": "boolean"
+          },
+          "image_upload": {
+            "type": [
+              "object",
+              "null"
+            ]
           },
           "post": {
             "type": "object",

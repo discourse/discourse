@@ -138,10 +138,6 @@ fr:
           unassigned: "ne sont pas attribués"
         assigned:
           label: "Attribué à"
-    topics:
-      bulk:
-        unassign: "Annuler l'attribution des sujets"
-        assign: "Attribuer les sujets"
     discourse_automation:
       scriptables:
         random_assign:

@@ -71,8 +71,6 @@ export default class DashboardProblems extends Component {
                 @label="admin.dashboard.refresh_problems"
                 class="btn-default"
               />
-              {{i18n "admin.dashboard.last_checked"}}:
-              {{@problemsTimestamp}}
             </p>
           </ConditionalLoadingSection>
         </div>

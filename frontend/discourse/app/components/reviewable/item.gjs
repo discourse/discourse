@@ -4,7 +4,6 @@ import Component from "@ember/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed, set } from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
@@ -39,7 +38,7 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import Topic from "discourse/models/topic";
-import { eq } from "discourse/truth-helpers";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 let _components = {};
@@ -102,15 +101,16 @@ export default class ReviewableItem extends Component {
 
   @tracked disabled = false;
   @tracked activeTab = "timeline";
-
-  @alias("reviewable.claimed_by.automatic") autoClaimed;
+  @tracked insightsOpened = false;
 
   updating = null;
   editing = false;
   _updates = null;
+  _previousReviewableId = null;
 
   constructor() {
     super(...arguments);
+    this._previousReviewableId = this.reviewable?.id;
     this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.subscribe("/reviewable_action", this._updateStatus);
   }
@@ -119,6 +119,24 @@ export default class ReviewableItem extends Component {
     super.willDestroy(...arguments);
     this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
+  }
+
+  didUpdateAttrs() {
+    super.didUpdateAttrs(...arguments);
+    if (this.reviewable?.id !== this._previousReviewableId) {
+      this._previousReviewableId = this.reviewable?.id;
+      this.activeTab = "timeline";
+      this.insightsOpened = false;
+    }
+  }
+
+  @computed("reviewable.claimed_by.automatic")
+  get autoClaimed() {
+    return this.reviewable?.claimed_by?.automatic;
+  }
+
+  set autoClaimed(value) {
+    set(this, "reviewable.claimed_by.automatic", value);
   }
 
   @computed(
@@ -604,6 +622,9 @@ export default class ReviewableItem extends Component {
   switchTab(tabName, event) {
     event.preventDefault();
     this.activeTab = tabName;
+    if (tabName === "insights") {
+      this.insightsOpened = true;
+    }
   }
 
   @action
@@ -826,9 +847,12 @@ export default class ReviewableItem extends Component {
               </HorizontalOverflowNav>
             </div>
 
-            {{#if (eq this.activeTab "insights")}}
-              <ReviewableInsights @reviewable={{this.reviewable}} />
-            {{else if (eq this.activeTab "timeline")}}
+            {{#if this.insightsOpened}}
+              <div hidden={{not (eq this.activeTab "insights")}}>
+                <ReviewableInsights @reviewable={{this.reviewable}} />
+              </div>
+            {{/if}}
+            {{#if (eq this.activeTab "timeline")}}
               <ReviewableTimeline
                 @reviewable={{this.reviewable}}
                 @historyEvents={{this.reviewable.reviewable_histories}}

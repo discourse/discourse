@@ -1178,6 +1178,25 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expect(last_post.user_id).to eq(bot_user.id)
     end
 
+    it "does not send a credit limit error message in silent mode" do
+      seeded_llm = Fabricate(:seeded_model)
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: seeded_llm,
+          daily_credits: 1000,
+          daily_used: 1000,
+        )
+
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Credit limit exceeded", allocation:)
+      allow(LlmCreditAllocation).to receive(:check_credits!).and_raise(exception)
+
+      expect { playground.reply_to(third_post, silent_mode: true) }.not_to raise_error
+
+      expect(pm.reload.posts.count).to eq(3)
+      expect(pm.posts.order(:post_number).last.id).to eq(third_post.id)
+    end
+
     it "sends admin credit limit error message when credit limit is exceeded for admin users" do
       seeded_llm = Fabricate(:seeded_model)
       allocation =

@@ -235,6 +235,7 @@ uk:
       features:
         short_title: "Особливості"
         description: "Це функції штучного інтелекту, доступні відвідувачам вашого сайту. Їх можна налаштувати для використання певних агентів та LLM, а також контролювати доступ за групами."
+        back: "Повернутися до можливостей ШІ"
         settings_save_error: "Деякі налаштування не вдалося зберегти."
         disabled: "(вимкнено)"
         agent:
@@ -318,6 +319,7 @@ uk:
             post_criteria: "Критерії допису"
             agents: "Агенти"
         ai_helper:
+          edit: "Редагувати налаштування помічника ШІ"
           name: "AI Helper"
           description: "Допомагає користувачам у взаємодії зі спільнотою, такій як створення тем, написання постів та читання контенту"
           proofread: Перевірити текст
@@ -375,6 +377,8 @@ uk:
         description: "Автоматично перекладати весь вміст на вашому форумі на бажану мову користувача"
         supported_locales: "Підтримувані мови"
         supported_locales_description: "Це налаштування сайту також дозволяє відвідувачам долучатися до перекладу публікацій."
+        translatable_categories: "Категорії, що перекладаються"
+        translatable_categories_description: "Буде перекладено лише вміст вибраних категорій. Підкатегорії потрібно додавати окремо."
         admin_actions:
           translation_settings: "Налаштування перекладу"
           localization_settings: "Налаштування локалізації"
@@ -407,6 +411,12 @@ uk:
             few: "%{count} дописів"
             many: "%{count} дописи"
             other: "%{count} дописи"
+        theme_translations:
+          translate:
+            label: "Перекласти"
+            title: "Перекладіть усіма підтримуваними мовами, використовуючи вибрану мову як мову оригіналу"
+            queued: "Переклад поставлено в чергу"
+            failed: "Не вдалося додати переклад до черги"
         translations_menu:
           translate:
             label: "Перекласти публікацію"
@@ -507,6 +517,26 @@ uk:
         credit_allocations: "Кредитні асигнування"
       ai_agent:
         ai_tools: "Інструменти"
+        mcp_servers: "Сервери MCP"
+        mcp_server_tools_help: "Вибрані MCP-сервери за замовчуванням надають доступ до всіх своїх інструментів. Звузьте їх для кожного агента, щоб зменшити використання токенів і зосередити вибір інструментів."
+        mcp_server_tool_count:
+          one: "%{count} інструмент"
+          few: "%{count} інструменти"
+          many: "%{count} інструментів"
+          other: "%{count} інструментів"
+        mcp_server_enabled_tool_count:
+          one: "%{count} інструмент увімкнено"
+          few: "%{count} інструменти увімкнено"
+          many: "%{count} інструментів увімкнено"
+          other: "%{count} інструментів увімкнено"
+        mcp_server_all_tools_enabled: "Усі інструменти ввімкнено"
+        mcp_server_enabled_tools:
+          one: "%{count} інструмент з %{total} увімкнено"
+          few: "%{count} інструменти з %{total} увімкнено"
+          many: "%{count} інструментів з %{total} увімкнено"
+          other: "%{count} інструментів з %{total} увімкнено"
+        mcp_server_choose_tools: "Виберіть інструменти"
+        mcp_server_edit_tools: "Інструменти редагування"
         tool_strategies:
           all: "Застосувати до всіх відповідей"
           replies:
@@ -514,6 +544,7 @@ uk:
             few: "Застосувати тільки до перших %{count} відповідей"
             many: "Застосувати тільки до перших %{count} відповідей"
             other: "Застосувати тільки до перших %{count} відповідей"
+        back: "Назад до агентів"
         name: "Імʼя"
         edit: "Редагувати"
         export: "Експорт"
@@ -550,8 +581,6 @@ uk:
         create_user_help: За бажанням, ви можете прив’язати користувача до цього агента. Якщо ви це зробите, ШІ використовуватиме цього користувача для відповіді на запити.
         default_llm: Мовна модель за замовчуванням
         default_llm_help: Мовна модель за замовчуванням, яка використовуватиметься для цього агента. Обов’язково, якщо ви хочете згадати агента в публічних публікаціях.
-        question_consolidator_llm: Мовна модель для Question Consolidator
-        question_consolidator_llm_help: Мовна модель для об’єднання запитань, ви можете вибрати менш потужну модель, щоб заощадити кошти.
         system_prompt: Системний запит
         forced_tool_strategy: Стратегія примусового використання інструментів
         allow_chat_direct_messages: "Дозволити прямі повідомлення в чаті"
@@ -562,6 +591,8 @@ uk:
         allow_personal_messages_help: "Якщо увімкнено, користувачі з дозволених груп можуть надсилати особисті повідомлення цьому агенту."
         allow_topic_mentions: "Дозволити згадки в темах"
         allow_topic_mentions_help: "Якщо увімкнено, користувачі з дозволених груп можуть згадувати цього агента в темах."
+        require_approval: "Вимагати схвалення для інструментів модерації"
+        require_approval_help: "Якщо цю опцію ввімкнено, дії модерації (закриття, видалення, редагування тощо) будуть надіслані до черги на розгляд для затвердження модератором перед виконанням."
         force_default_llm: "Завжди використовувати мовну модель за замовчуванням"
         save: "Зберегти"
         saved: "Агента збережено"
@@ -569,7 +600,33 @@ uk:
         tools: "Увімкнені інструменти"
         tokens: "токени"
         context_cost: "Вартість контексту"
+        token_usage: "Використання токенів"
+        tool_count: "Кількість інструментів"
+        tool_count_value:
+          one: "%{count} інструмент"
+          few: "%{count} інструменти"
+          many: "%{count} інструментів"
+          other: "%{count} інструментів"
         tool_tokens_total: "~%{tokens} Маркери"
+        mcp_server_cost_name: "%{name} (сервер MCP)"
+        mcp_server_cost_value:
+          one: "~%{tokens} токени, %{count} інструмент"
+          few: "~%{tokens} токени, %{count} інструменти"
+          many: "~%{tokens} токени, %{count} інструментів"
+          other: "~%{tokens} токени, %{count} інструментів"
+        mcp_server_tokens_only: "~%{tokens} маркери"
+        mcp_tools_modal:
+          title: "%{name} інструментів"
+          summary: "За замовчуванням цей агент може використовувати всі інструменти з цього сервера. Виберіть менший набір, щоб обмежити доступ і зменшити вартість запиту."
+          filter_placeholder: "Інструменти фільтрації"
+          select_all: "Вибрати все"
+          clear_all: "Очистити все"
+          selection_summary:
+            one: "Вибрано %{count} інструмент з %{total}"
+            few: "Вибрано %{count} інструменти з %{total}"
+            many: "Вибрано %{count} інструментів з %{total}"
+            other: "Вибрано %{count} інструментів з %{total}"
+          empty: "Жоден інструмент не відповідає цьому фільтру."
         tool_severity_medium: "Помірна місткість"
         tool_severity_high: "Висока ємність"
         tool_severity_too_many: "Занадто багато інструментів"
@@ -647,7 +704,10 @@ uk:
           uploading: "Надсилання…"
           remove: "Видалити завантаження"
       tools:
+        back: "Назад до інструментів"
         short_title: "Інструменти"
+        keywords: "mcp|mcp сервер|протокол контексту моделі"
+        script_tools: "Інструменти скриптів"
         export: "Експорт"
         import: "Імпорт"
         import_error_conflict: "Інструмент вже існує, бажаєте його оновити?"
@@ -660,7 +720,7 @@ uk:
         tool_name_help: "Назва інструменту представлена у великій мовній моделі. Вона не є окремою, але є окремою для кожного агента. (агент перевіряє під час збереження)"
         description: "Опис"
         description_help: "Чіткий опис призначення інструменту для мовної моделі"
-        subheader_description: "Інструменти розширюють можливості ботів на базі штучного інтелекту за допомогою визначених користувачем функцій JavaScript."
+        subheader_description: "Інструменти та MCP-сервери розширюють можливості ШІ-агентів."
         summary: "Підсумок"
         summary_help: "Короткий опис призначення інструментів для відображення кінцевим користувачам"
         script: "Скрипт"
@@ -705,6 +765,7 @@ uk:
         no_secrets: "Поки що немає облікових даних"
         new_title: "Нові облікові дані"
         edit_title: "Редагувати облікові дані"
+        back: "Повернутися до облікових даних"
         save: "Зберегти"
         edit: "Редагувати"
         delete: "Видалити"
@@ -713,8 +774,97 @@ uk:
         embedding: "Взаємодія"
         cannot_delete_in_use: "Ці облікові дані не можна видалити, оскільки вони використовуються:"
         tool: "Інструмент"
+        mcp_server: "Сервер MCP"
+        mcp_server_oauth_client_secret: "Секрет клієнта OAuth сервера MCP"
         modal:
           title: "Створити нові облікові дані"
+      mcp_servers:
+        short_title: "Сервери MCP"
+        new: "Новий MCP-сервер"
+        name: "Імʼя"
+        description: "Опис"
+        url: "Посилання"
+        auth_type: "Автентифікація"
+        auth_types:
+          none: "Без автентифікації"
+          header_secret: "Заголовок облікових даних"
+          oauth: "OAuth"
+        secret: "Облікові дані"
+        auth_header: "Заголовок авторизації"
+        auth_scheme: "Схема авторизації"
+        oauth_client_registration: "Реєстрація клієнта OAuth"
+        oauth_client_registration_types:
+          client_metadata_document: "Документ метаданих клієнта"
+          manual: "Ручні облікові дані клієнта"
+        oauth_client_id: "ID клієнта OAuth"
+        oauth_client_secret: "Секрет клієнта OAuth"
+        oauth_scopes: "Області OAuth"
+        oauth_authorization_params: "Параметри авторизації OAuth"
+        oauth_authorization_params_help: "Необов'язковий об’єкт JSON влитий у запит авторизації. Використовуйте null для видалення типового параметру."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "Параметри токена OAuth"
+        oauth_token_params_help: "Необов'язковий JSON-об'єкт, об'єднаний у запити токенів. Використовуйте null, щоб видалити параметр за замовчуванням."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Потрібен токен оновлення"
+        oauth_require_refresh_token_help: "Збій OAuth-з’єднання, якщо постачальник не повертає токен оновлення."
+        oauth_json_object_required: "%{field} має бути об'єктом JSON."
+        oauth_show_advanced_options: "Показати розширені параметри"
+        oauth_hide_advanced_options: "Приховати розширені параметри"
+        oauth_connection: "Підключення OAuth"
+        oauth_status: "Статус OAuth"
+        oauth_statuses:
+          disconnected: "Відключено"
+          connected: "Пов’язаний"
+          refresh_failed: "Не вдалося оновити"
+          error: "Потребує уваги"
+        oauth_connect: "Підключити"
+        oauth_reconnect: "Повторно підключитися"
+        oauth_disconnect: "Відключитися"
+        oauth_connect_help: "Використовуйте Connect, щоб зберегти сервер і авторизуватися на ньому."
+        oauth_client_metadata_url: "URL-адреса метаданих клієнта"
+        oauth_granted_scopes: "Надані області дії"
+        oauth_access_token_expires_at: "Термін дії токену доступу закінчується в"
+        oauth_authorization_endpoint: "Кінцева точка авторизації"
+        oauth_token_endpoint: "Кінцева точка токену"
+        oauth_revocation_endpoint: "Кінцева точка анулювання"
+        oauth_issuer: "Емітент"
+        oauth_last_error: "Остання помилка OAuth"
+        oauth_show_details: "Показати деталі"
+        oauth_hide_details: "Приховати подробиці"
+        timeout_seconds: "Час очікування запиту (в секундах)"
+        timeout_seconds_tooltip: "Як довго Discourse чекає на сервер MCP до того, як запит не буде виконано. Залиште 30, якщо тільки сервер не працює постійно повільно."
+        enabled: "Включено"
+        save: "Зберегти"
+        edit: "Редагувати"
+        delete: "Видалити"
+        test: "Тестове з'єднання"
+        saved: "MCP-сервер збережений"
+        confirm_delete: "Ви впевнені, що хочете видалити цей MCP-сервер?"
+        back: "Назад до інструментів"
+        health: "Здоров'я"
+        healthy: "Здоровий"
+        unhealthy: "Потребує уваги"
+        tool_count:
+          one: "%{count} інструмент"
+          few: "%{count} інструменти"
+          many: "%{count} інструментів"
+          other: "%{count} інструментів"
+        tools_modal:
+          title: "%{name} інструментів"
+          summary:
+            one: "На цьому сервері наразі працює %{count} інструмент."
+            few: "На цьому сервері наразі працює %{count} інструменти."
+            many: "На цьому сервері наразі працює %{count} інструментів."
+            other: "На цьому сервері наразі працює %{count} інструментів."
+          parameters: "Параметри"
+          required: "Обов'язкові"
+          no_parameters: "Цей інструмент не вимагає жодних параметрів."
+        test_result: "Результат підключення"
+        test_summary:
+          one: "Виявлено %{count} інструмент, що використовує протокол %{version}."
+          few: "Виявлено %{count} інструменти, що використовують протокол %{version}."
+          many: "Виявлено %{count} інструментів, що використовують протокол %{version}."
+          other: "Виявлено %{count} інструментів, що використовують протокол %{version}."
       llms:
         short_title: "LLMs"
         no_llms: "Ще немає LLM"
@@ -738,6 +888,7 @@ uk:
         save: "Зберегти"
         edit: "Редагувати"
         saved: "Модель LLM збережена"
+        back: "Повернутися до LLM"
         confirm_delete: Ви впевнені, що хочете видалити цей тип?
         delete: Видалити
         quotas:
@@ -781,19 +932,19 @@ uk:
           other: "Ця модель зараз використовується: %{settings}. У разі неправильного налаштування функція не працюватиме належним чином. "
         model_description:
           none: "Загальні налаштування, що працюють для більшості мовних моделей"
-          anthropic-claude-opus-4-6: "Найрозумніша модель Anthropic"
+          anthropic-claude-opus-4-7: "Найрозумніша модель Anthropic"
           anthropic-claude-sonnet-4-6: "Оптимальний баланс швидкості та витрат"
           anthropic-claude-haiku-4-5: "Швидко та економічно ефективно"
           google-gemini-3-pro: "Найрозумніша модель Google"
           google-gemini-3-flash: "Швидко та економічно ефективно з мультимодальним мисленням"
-          open_ai-gpt-5-2: "Флагманська модель OpenAI, добре підходить для вирішення проблем у різних доменах"
-          open_ai-gpt-5-mini: "Забезпечує баланс між інтелектом, швидкістю та вартістю"
+          open_ai-gpt-5-4: "Флагманська модель OpenAI, добре підходить для вирішення проблем у різних доменах"
+          open_ai-gpt-5-4-mini: "Забезпечує баланс між інтелектом, швидкістю та вартістю"
           open_ai-gpt-5-nano: "Найшвидша та найекономічніша модель GPT-5"
           open_router-deepseek-deepseek-v3-2: "Остання високопродуктивна модель DeepSeek"
           open_router-moonshotai-kimi-k2-5: "Мультимодальна модель Moonshot з можливостями технічного зору"
           open_router-x-ai-grok-4-fast: "Флагманська модель xAI з функцією бачення"
-          open_router-minimax-minimax-m2-5: "Мультимодальна модель MiniMax з широким контекстом"
-          open_router-z-ai-glm-5: "Мультимодальна модель Z-AI із баченням"
+          open_router-minimax-minimax-m2-7: "Мультимодальна модель MiniMax з широким контекстом"
+          open_router-z-ai-glm-5-1: "Мультимодальна модель Z-AI із баченням"
           open_router-arcee-ai-trinity-large-preview-free: "Безкоштовна модель з відкритим вихідним кодом від Arcee AI"
         preseeded_model_description: "Попередньо налаштована модель з відкритим кодом, що використовує %{model}"
         configured:
@@ -827,6 +978,7 @@ uk:
           cost_measure: "$/1 млн токенів"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -844,6 +996,7 @@ uk:
         provider_fields:
           access_key_id: "Ідентифікатор ключа доступу AWS Bedrock"
           role_arn: "AWS Bedrock Role ARN"
+          inference_profile_arn: "Профіль виведення застосунку AWS Bedrock (ARN)"
           region: "Регіон AWS Bedrock"
           organization: "Додатковий ідентифікатор організації OpenAI"
           disable_system_prompt: "Вимкнути системні повідомлення у підказках"
@@ -935,10 +1088,12 @@ uk:
           agent: "Агент"
           tool: "Інструмент"
           parameters: "Параметри"
+          post: "Тригер допису"
       embeddings:
         short_title: "Вбудовування"
         description: "Вбудовування – це числові представлення даних, які фіксують значення та зв’язки, дозволяючи функціям штучного інтелекту Discourse, таким як «Пов’язані теми» та «Пошук за допомогою штучного інтелекту», розуміти та пов’язувати контент."
         new: "Нове вбудовування"
+        back: "Повернутися до вкладень"
         save: "Зберегти"
         saved: "Конфігурацію вбудовування збережено"
         delete: "Видалити"
@@ -995,6 +1150,13 @@ uk:
           no_results: "За цим пошуковим запитом не знайдено результатів ШІ"
         semantic_search_unavailable_tooltip: "Результати пошуку повинні бути відсортовані за релевантністю для відображення результатів ШІ"
         ai_generated_result: "Результат пошуку знайдено за допомогою ШІ"
+        ai_results_notice:
+          no_results: "Точних збігів немає, але є кілька схожих результатів."
+          few_results:
+            one: "знайдено %{count} збіг – показує пов’язані результати."
+            few: "знайдено %{count} збіги – показуються пов’язані результати."
+            many: "знайдено %{count} збігів – показуються пов’язані результати."
+            other: "знайдено %{count} збігів – показуються пов’язані результати."
         quick_search:
           suffix: "у всіх темах і повідомленнях з ШІ"
       ai_artifact:
@@ -1021,10 +1183,12 @@ uk:
           title: "Переглянути взаємодію зі ШІ"
           copy_request: "Скопіювати запит"
           copy_response: "Копіювати відповідь"
-          request_tokens: "Токени запиту:"
-          response_tokens: "Токени відповіді:"
-          cache_read_tokens: "Токени читання кешу:"
-          cache_write_tokens: "Токени запису в кеш:"
+          this_turn: "Цей поворот:"
+          whole_conversation: "Розмова:"
+          tokens_summary: "%{request_tokens} вхід → %{response_tokens} вихід"
+          cache_both: "(кеш %{read} читання, %{write} запис)"
+          cache_read_only: "(кеш %{read} читання)"
+          cache_write_only: "(кеш %{write} запис)"
           request: "Запит"
           response: "відповідь"
           next_log: "Далі"
@@ -1160,6 +1324,11 @@ uk:
       user_preferences:
         empty: "Наразі немає відповідних налаштувань"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Інструмент схвалено"
+        rejected_tool_action:
+          title: "Інструмент відхилено"
       types:
         reviewable_ai_post:
           title: "Повідомлення з позначкою ШІ"

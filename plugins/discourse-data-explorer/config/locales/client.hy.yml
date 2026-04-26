@@ -6,6 +6,10 @@
 
 hy:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Տվյալների Ուսումնասիրում"
     errors:
       explorer:
         no_semicolons: "Հեռացրեք կետ-ստորակատերերը հարցումից"
@@ -18,6 +22,9 @@ hy:
       create: "Ստեղծել"
       create_placeholder: "Հարցման անուն..."
       description_placeholder: "Մուտքագրեք նկարագրություն այստեղ"
+      ai:
+        generate: "Գեներացնել"
+        optional: "ընտրովի"
       import:
         label: "Ներմուծել"
       help:

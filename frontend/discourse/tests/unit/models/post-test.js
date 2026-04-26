@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | post", function (hooks) {
   setupTest(hooks);
@@ -144,6 +145,45 @@ module("Unit | Model | post", function (hooks) {
     });
 
     assert.strictEqual(post.likeAction, null, "likeAction was reset to null");
+  });
+
+  test("undoDeleteState is a no-op when force_destroy", async function (assert) {
+    const user = this.store.createRecord("user", {
+      username: "admin",
+      admin: true,
+      moderator: true,
+    });
+    const post = this.store.createRecord("post", {
+      id: 1,
+      can_delete: true,
+      version: 1,
+      cooked: "original cooked",
+    });
+
+    await post.destroy(user);
+
+    assert.present(post.deleted_at, "post is soft-deleted");
+    const deletedAt = post.deleted_at;
+
+    pretender.delete("/posts/:post_id", () => {
+      return response(403, {
+        errors: ["You must wait 5 minutes"],
+        error_type: "invalid_access",
+      });
+    });
+
+    const opts = { force_destroy: true };
+    try {
+      await post.destroy(user, opts);
+    } catch {
+      post.undoDeleteState(opts);
+    }
+
+    assert.strictEqual(
+      post.deleted_at,
+      deletedAt,
+      "post remains in deleted state after failed permanent delete"
+    );
   });
 
   test("updateFromPost updates localization properties", function (assert) {

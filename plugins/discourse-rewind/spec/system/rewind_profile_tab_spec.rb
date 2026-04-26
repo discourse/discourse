@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseRewind | rewind profile link", type: :system do
+describe "DiscourseRewind | rewind profile link" do
   fab!(:current_user) { Fabricate(:user, created_at: DateTime.parse("2020-01-01")) }
 
   let(:rewind_page) { PageObjects::Pages::Rewind.new }

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminFilteredSiteSettings from "discourse/admin/components/admin-filtered-site-settings";
 import AdminSiteSettingsChangesBanner from "discourse/admin/components/admin-site-settings-changes-banner";
@@ -13,6 +14,8 @@ import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminAreaSettings extends Component {
+  @service adminSiteSettingStore;
+
   @tracked settings = [];
   @tracked loading = false;
 
@@ -45,13 +48,15 @@ export default class AdminAreaSettings extends Component {
           categories: this.args.categories,
         },
       });
+      const siteSettings = result.site_settings.map((setting) =>
+        SiteSetting.create(setting)
+      );
+      this.adminSiteSettingStore.register(siteSettings);
       this.settings = [
         {
           name: "All",
           nameKey: "all_results",
-          siteSettings: result.site_settings.map((setting) =>
-            SiteSetting.create(setting)
-          ),
+          siteSettings,
         },
       ];
     } catch (error) {

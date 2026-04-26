@@ -124,6 +124,19 @@ gl:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporando"
+      mcp_servers:
+        name: "Nome"
+        description: "Descrición"
+        url: "URL"
+        oauth_statuses:
+          connected: "Conectadas"
+        oauth_connect: "Conectar"
+        enabled: "Activado"
+        save: "Gardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        tools_modal:
+          required: "Obrigatorio"
       llms:
         display_name: "Nome"
         provider: "Fornecedor"

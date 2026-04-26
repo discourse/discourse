@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::Translation::PostCandidates do
+  before { SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|") }
+
   describe ".get" do
     it "does not return bot posts" do
       post = Fabricate(:post, user: Discourse.system_user)
+      SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
 
       expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post)
     end
@@ -13,6 +16,7 @@ describe DiscourseAi::Translation::PostCandidates do
         SiteSetting.ai_translation_include_bot_content = true
         bot_post = Fabricate(:post, user: Discourse.system_user)
         regular_post = Fabricate(:post)
+        SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
 
         posts = DiscourseAi::Translation::PostCandidates.get
         expect(posts).to include(bot_post)
@@ -26,12 +30,14 @@ describe DiscourseAi::Translation::PostCandidates do
           :post,
           created_at: SiteSetting.ai_translation_backfill_max_age_days.days.ago - 1.day,
         )
+      SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
 
       expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post)
     end
 
     it "does not return deleted posts" do
       post = Fabricate(:post, deleted_at: Time.now)
+      SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
 
       expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post)
     end
@@ -40,13 +46,16 @@ describe DiscourseAi::Translation::PostCandidates do
       SiteSetting.ai_translation_max_post_length = 100
       short_post = Fabricate(:post, raw: "This is a short post that fits within the limit.")
       long_post = Fabricate(:post, raw: "a" * 50 + " This is a long post. " + "b" * 50)
+      SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
 
       posts = DiscourseAi::Translation::PostCandidates.get
       expect(posts).to include(short_post)
       expect(posts).not_to include(long_post)
     end
 
-    describe "SiteSetting.ai_translation_backfill_limit_to_public_content" do
+    describe "category and PM filtering" do
+      fab!(:target_category, :category)
+      fab!(:non_target_category, :category)
       fab!(:pm_post) { Fabricate(:post, topic: Fabricate(:private_message_topic)) }
       fab!(:group_pm_post) do
         Fabricate(
@@ -54,38 +63,137 @@ describe DiscourseAi::Translation::PostCandidates do
           topic: Fabricate(:private_message_topic, allowed_groups: [Fabricate(:group)]),
         )
       end
-      fab!(:public_post) do
-        Fabricate(
-          :post,
-          topic: Fabricate(:topic, category: Fabricate(:category, read_restricted: false)),
-        )
+      fab!(:target_post) { Fabricate(:post, topic: Fabricate(:topic, category: target_category)) }
+      fab!(:non_target_post) do
+        Fabricate(:post, topic: Fabricate(:topic, category: non_target_category))
       end
 
-      it "excludes PMs and only includes posts from public categories" do
-        SiteSetting.ai_translation_backfill_limit_to_public_content = true
+      it "only includes posts from target categories" do
+        SiteSetting.ai_translation_target_categories = target_category.id.to_s
+        SiteSetting.ai_translation_personal_messages = "none"
 
         posts = DiscourseAi::Translation::PostCandidates.get
+        expect(posts).to include(target_post)
+        expect(posts).not_to include(non_target_post)
         expect(posts).not_to include(pm_post)
         expect(posts).not_to include(group_pm_post)
-        expect(posts).to include(public_post)
       end
 
-      it "includes all regular posts and group PMs but not personal PMs" do
-        SiteSetting.ai_translation_backfill_limit_to_public_content = false
+      it "includes group PMs but not personal PMs when pm_translation_scope is group" do
+        SiteSetting.ai_translation_target_categories = target_category.id.to_s
+        SiteSetting.ai_translation_personal_messages = "group"
 
         posts = DiscourseAi::Translation::PostCandidates.get
+        expect(posts).to include(target_post)
         expect(posts).not_to include(pm_post)
         expect(posts).to include(group_pm_post)
-        expect(posts).to include(public_post)
+      end
+
+      it "includes all PMs when pm_translation_scope is all" do
+        SiteSetting.ai_translation_target_categories = target_category.id.to_s
+        SiteSetting.ai_translation_personal_messages = "all"
+
+        posts = DiscourseAi::Translation::PostCandidates.get
+        expect(posts).to include(target_post)
+        expect(posts).to include(pm_post)
+        expect(posts).to include(group_pm_post)
       end
     end
   end
 
-  describe ".get_completion_all_locales" do
+  describe ".needs_localization" do
+    fab!(:target_category, :category)
+
     before do
+      SiteSetting.ai_translation_backfill_max_age_days = 100
+      SiteSetting.content_localization_supported_locales = "en|ja|de"
+      SiteSetting.ai_translation_target_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "returns [post_id, target_locale] pairs for posts needing localization" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to include([post.id, "en"])
+      expect(pairs).to include([post.id, "ja"])
+      expect(pairs).to include([post.id, "de"])
+    end
+
+    it "excludes posts without a detected locale" do
+      Fabricate(:post, locale: nil, topic: Fabricate(:topic, category: target_category))
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to be_empty
+    end
+
+    it "excludes fully translated posts" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: post, locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja")
+      Fabricate(:post_localization, post: post, locale: "de")
+
+      pairs = described_class.needs_localization(limit: 10)
+      post_ids = pairs.map(&:first)
+      expect(post_ids).not_to include(post.id)
+    end
+
+    it "returns only missing locale pairs for partially translated posts" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: post, locale: "en")
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).not_to include([post.id, "en"])
+      expect(pairs).to include([post.id, "ja"])
+      expect(pairs).to include([post.id, "de"])
+    end
+
+    it "excludes posts whose locale matches all target base locales" do
+      SiteSetting.content_localization_supported_locales = "en"
+      post = Fabricate(:post, locale: "en", topic: Fabricate(:topic, category: target_category))
+
+      pairs = described_class.needs_localization(limit: 10)
+      post_ids = pairs.map(&:first)
+      expect(post_ids).not_to include(post.id)
+    end
+
+    it "handles base-locale deduplication (ja_JP localization covers ja target)" do
+      post = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: post, locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja_JP")
+      Fabricate(:post_localization, post: post, locale: "de_DE")
+
+      pairs = described_class.needs_localization(limit: 10)
+      post_ids = pairs.map(&:first)
+      expect(post_ids).not_to include(post.id)
+    end
+
+    it "respects the limit parameter" do
+      3.times do
+        Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      end
+
+      pairs = described_class.needs_localization(limit: 2)
+      expect(pairs.size).to eq(2)
+    end
+
+    it "returns empty when no locales are configured" do
+      SiteSetting.content_localization_supported_locales = ""
+
+      pairs = described_class.needs_localization(limit: 10)
+      expect(pairs).to be_empty
+    end
+  end
+
+  describe ".get_completion_all_locales" do
+    fab!(:target_category, :category)
+
+    before do
+      Discourse.cache.clear
       SiteSetting.content_localization_supported_locales = "en_GB|pt|es"
       SiteSetting.ai_translation_backfill_max_age_days = 30
-      SiteSetting.ai_translation_backfill_limit_to_public_content = false
+      SiteSetting.ai_translation_target_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "group"
     end
 
     it "returns empty state when no posts exist" do
@@ -100,10 +208,11 @@ describe DiscourseAi::Translation::PostCandidates do
     end
 
     it "returns progress grouped by base locale (of en_GB) and correct totals" do
-      post1 = Fabricate(:post, locale: "en_GB")
-      post2 = Fabricate(:post, locale: "fr")
-      post3 = Fabricate(:post, locale: "es")
-      post_without_locale = Fabricate(:post, locale: nil) # not eligible for translation
+      post1 = Fabricate(:post, locale: "en_GB", topic: Fabricate(:topic, category: target_category))
+      post2 = Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: target_category))
+      post3 = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
+      post_without_locale =
+        Fabricate(:post, locale: nil, topic: Fabricate(:topic, category: target_category))
 
       # add an en_GB localization to a non-en base post
       PostLocalization.create!(
@@ -146,9 +255,20 @@ describe DiscourseAi::Translation::PostCandidates do
 
     it "excludes posts longer than ai_translation_max_post_length from totals" do
       SiteSetting.ai_translation_max_post_length = 100
-      short_post = Fabricate(:post, locale: "en_GB", raw: "This is a short post that fits.")
+      short_post =
+        Fabricate(
+          :post,
+          locale: "en_GB",
+          raw: "This is a short post that fits.",
+          topic: Fabricate(:topic, category: target_category),
+        )
       long_post =
-        Fabricate(:post, locale: "fr", raw: "a" * 50 + " This is a long post. " + "b" * 50)
+        Fabricate(
+          :post,
+          locale: "fr",
+          raw: "a" * 50 + " This is a long post. " + "b" * 50,
+          topic: Fabricate(:topic, category: target_category),
+        )
 
       result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
       expect(result[:total]).to eq(1)

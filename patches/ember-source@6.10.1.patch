@@ -50,6 +50,89 @@ index eef5d6ae929bab0143de25287ff7f9b096e9323c..6bbda75ae1a4b7cf2d6ab4294adbba1a
    });
  }
  function destroyChildren(destroyable) {
+diff --git a/dist/packages/@glimmer/validator/index.js b/dist/packages/@glimmer/validator/index.js
+index 1119353624a19235372b59453c040d2a342aad69..8b1b069800dd981a994c9033995fe0c3a00c3672 100644
+--- a/dist/packages/@glimmer/validator/index.js
++++ b/dist/packages/@glimmer/validator/index.js
+@@ -530,16 +530,17 @@ class TrackedMap {
+   }
+   // **** ALL GETTERS ****
+   entries() {
+-    return consumeTag(this.#collection), this.#vals.entries();
++    return this[Symbol.iterator]();
+   }
+   keys() {
+     return consumeTag(this.#collection), this.#vals.keys();
+   }
+   values() {
+-    return consumeTag(this.#collection), this.#vals.values();
++    let iterator = this[Symbol.iterator]();
++    return { next() { let { value, done } = iterator.next(); return { value: done ? void 0 : value[1], done }; }, [Symbol.iterator]() { return this; } };
+   }
+   forEach(fn) {
+-    consumeTag(this.#collection), this.#vals.forEach(fn);
++    for (let [key, value] of this) fn(value, key, this);
+   }
+   get size() {
+     return consumeTag(this.#collection), this.#vals.size;
+@@ -565,6 +566,9 @@ class TrackedMap {
+           done: false
+         };
+         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
++      },
++      [Symbol.iterator]() {
++        return this;
+       }
+     };
+   }
+@@ -572,11 +576,11 @@ class TrackedMap {
+     return this.#vals[Symbol.toStringTag];
+   }
+   set(key, value) {
+-    let existing = this.#vals.get(key);
+-    return existing && this.#options.equals(existing, value) || (this.#dirtyStorageFor(key), existing || DIRTY_TAG(this.#collection), this.#vals.set(key, value)), this;
++    let existing = this.#vals.has(key);
++    return existing && this.#options.equals(this.#vals.get(key), value) || (this.#dirtyStorageFor(key), existing || DIRTY_TAG(this.#collection), this.#vals.set(key, value)), this;
+   }
+   delete(key) {
+-    return !this.#vals.has(key) || (this.#dirtyStorageFor(key), DIRTY_TAG(this.#collection), this.#storages.delete(key), this.#vals.delete(key));
++    return !!this.#vals.has(key) && (this.#dirtyStorageFor(key), DIRTY_TAG(this.#collection), this.#storages.delete(key), this.#vals.delete(key));
+   }
+   clear() {
+     0 !== this.#vals.size && (this.#storages.forEach(s => DIRTY_TAG(s)), this.#storages.clear(), DIRTY_TAG(this.#collection), this.#vals.clear());
+@@ -711,7 +715,7 @@ class TrackedSet {
+     return this.#dirtyStorageFor(value), this.#vals.add(value), this;
+   }
+   delete(value) {
+-    return !this.#vals.has(value) || (this.#dirtyStorageFor(value), DIRTY_TAG(this.#collection), this.#storages.delete(value), this.#vals.delete(value));
++    return !!this.#vals.has(value) && (this.#dirtyStorageFor(value), DIRTY_TAG(this.#collection), this.#storages.delete(value), this.#vals.delete(value));
+   }
+   // **** ALL SETTERS ****
+   clear() {
+@@ -754,11 +758,11 @@ class TrackedWeakMap {
+     return consumeTag(this.#storageFor(key)), this.#vals.has(key);
+   }
+   set(key, value) {
+-    let existing = this.#vals.get(key);
+-    return existing && this.#options.equals(existing, value) || (this.#dirtyStorageFor(key), this.#vals.set(key, value)), this;
++    let existing = this.#vals.has(key);
++    return existing && this.#options.equals(this.#vals.get(key), value) || (this.#dirtyStorageFor(key), this.#vals.set(key, value)), this;
+   }
+   delete(key) {
+-    return !this.#vals.has(key) || (this.#dirtyStorageFor(key), this.#storages.delete(key), this.#vals.delete(key));
++    return !!this.#vals.has(key) && (this.#dirtyStorageFor(key), this.#storages.delete(key), this.#vals.delete(key));
+   }
+   get [Symbol.toStringTag]() {
+     return this.#vals[Symbol.toStringTag];
+@@ -810,7 +814,7 @@ class TrackedWeakSet {
+     this.#vals.add(value), this.#dirtyStorageFor(value)), this;
+   }
+   delete(value) {
+-    return !this.#vals.has(value) || (this.#dirtyStorageFor(value), this.#storages.delete(value), this.#vals.delete(value));
++    return !!this.#vals.has(value) && (this.#dirtyStorageFor(value), this.#storages.delete(value), this.#vals.delete(value));
+   }
+   get [Symbol.toStringTag]() {
+     return this.#vals[Symbol.toStringTag];
 diff --git a/dist/packages/shared-chunks/array-CVk-fNjW.js b/dist/packages/shared-chunks/array-CVk-fNjW.js
 index c5a84d367d2d2643b395afffb103b7a2136eb5e9..08bce6a08b93dd13b77c099d57e4836f5a0638fe 100644
 --- a/dist/packages/shared-chunks/array-CVk-fNjW.js

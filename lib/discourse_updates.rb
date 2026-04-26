@@ -113,7 +113,7 @@ module DiscourseUpdates
         version_keys = []
         versions[0, 5].each do |v|
           key = "#{missing_versions_key_prefix}:#{v["version"]}"
-          Discourse.redis.mapped_hmset key, v
+          Discourse.redis.mapped_hmset key, v.slice("version", "notes")
           version_keys << key
         end
         Discourse.redis.rpush missing_versions_list_key, version_keys
@@ -131,17 +131,6 @@ module DiscourseUpdates
       last_installed_version || Discourse::VERSION::STRING
     end
 
-    def new_features_payload
-      response =
-        Excon.new(new_features_endpoint).request(expects: [200], method: :Get, read_timeout: 5)
-      response.body
-    end
-
-    def update_new_features(payload = nil)
-      payload ||= new_features_payload
-      Discourse.redis.set(new_features_key, payload)
-    end
-
     def new_features(force_refresh: false)
       update_new_features if force_refresh
 
@@ -151,7 +140,7 @@ module DiscourseUpdates
         rescue StandardError
           nil
         end
-      return nil if entries.nil?
+      return [] if entries.blank?
 
       entries.select! do |item|
         begin
@@ -165,24 +154,126 @@ module DiscourseUpdates
 
           valid_version && valid_plugin_name
         rescue StandardError
-          nil
+          false
         end
       end
 
       entries.sort_by { |item| Time.zone.parse(item["created_at"]).to_i }.reverse
     end
 
-    def has_unseen_features?(user_id)
-      entries = new_features
-      return false if entries.nil?
+    def update_new_features(response_json = nil)
+      response_json ||= new_features_response_json
+      Discourse.redis.set(new_features_key, response_json)
+      Discourse.redis.del(latest_new_feature_created_at_key)
+    end
 
-      last_seen = new_features_last_seen(user_id)
+    def new_features_response_json
+      response =
+        Excon.new(new_features_full_endpoint_url).request(
+          expects: [200],
+          method: :Get,
+          read_timeout: 5,
+        )
+      response.body
+    end
 
-      if last_seen.present?
-        entries.select! { |item| Time.zone.parse(item["created_at"]) > last_seen }
+    def merge_new_features_with_upcoming_changes(new_features)
+      # Any new features that have an upcoming_change_setting_name that is not
+      # in the permanent upcoming changes list are excluded, since sites can
+      # have different versions of Discourse deployed and may not have the
+      # upcoming change or the same status.
+      permanent_upcoming_change_names =
+        UpcomingChanges.permanent_upcoming_changes.map { |uc| uc[:setting].to_s }
+      new_features.reject! do |feature|
+        if feature[:upcoming_change_setting_name].present?
+          !permanent_upcoming_change_names.include?(feature[:upcoming_change_setting_name])
+        else
+          false
+        end
       end
 
-      entries.size > 0
+      return new_features if permanent_upcoming_change_names.blank?
+
+      # Any permanent upcoming changes that have not been overridden/attached
+      # in the new features feed have to be injected into the array.
+      upcoming_changes_to_inject =
+        UpcomingChanges.permanent_upcoming_changes.reject do |permanent_uc|
+          new_features.any? do |feature|
+            feature[:upcoming_change_setting_name] == permanent_uc[:setting].to_s
+          end
+        end
+
+      upcoming_changes_to_inject.each do |permanent_uc|
+        # We track whenever an upcoming change moves from one status to another,
+        # the most logical datetime to use for created/released at in the UI is
+        # the datetime that the upcoming change became permanent on this site.
+        became_permanent_at =
+          UpcomingChanges.current_statuses.dig(permanent_uc[:setting].to_s, :changed_at) ||
+            Time.zone.now
+
+        new_features << {
+          title: permanent_uc[:humanized_name],
+          description: permanent_uc[:description],
+          link: permanent_uc[:upcoming_change][:learn_more_url],
+          created_at: became_permanent_at,
+          updated_at: became_permanent_at,
+          released_at: became_permanent_at,
+          screenshot_url: permanent_uc.dig(:upcoming_change, :image, :url),
+          upcoming_change_setting_name: permanent_uc[:setting],
+        }
+      end
+
+      new_features
+        .sort_by do |item|
+          if item[:created_at].is_a?(String)
+            Time.zone.parse(item[:created_at]).to_i
+          else
+            item[:created_at].to_i
+          end
+        end
+        .reverse
+    end
+
+    def has_unseen_features?(user_id)
+      latest_ts = latest_new_feature_created_at
+      return false if latest_ts.nil?
+
+      last_seen = new_features_last_seen(user_id)
+      return true if last_seen.nil?
+
+      latest_ts.to_i > last_seen.to_i
+    end
+
+    def latest_new_feature_created_at
+      cached = Discourse.redis.get(latest_new_feature_created_at_key)
+      return Time.zone.parse(cached) if cached.present?
+
+      entries =
+        merge_new_features_with_upcoming_changes(
+          new_features&.map { |item| item.symbolize_keys } || [],
+        )
+      return nil if entries.blank?
+
+      max_entry =
+        entries.max_by do |item|
+          val = item[:created_at]
+          val.is_a?(String) ? Time.zone.parse(val).to_i : val.to_i
+        end
+
+      max_created_at =
+        if max_entry[:created_at].is_a?(String)
+          Time.zone.parse(max_entry[:created_at])
+        else
+          max_entry[:created_at]
+        end
+
+      Discourse.redis.set(latest_new_feature_created_at_key, max_created_at.iso8601)
+      max_created_at
+    end
+
+    def clear_latest_new_feature_created_at_cache
+      Discourse.redis.del(latest_new_feature_created_at_key)
+    rescue Redis::CannotConnectError
     end
 
     def new_features_last_seen(user_id)
@@ -193,14 +284,20 @@ module DiscourseUpdates
 
     def mark_new_features_as_seen(user_id)
       entries =
-        begin
-          JSON.parse(Discourse.redis.get(new_features_key))
-        rescue StandardError
-          nil
+        merge_new_features_with_upcoming_changes(
+          new_features&.map { |item| item.symbolize_keys } || [],
+        )
+      return nil if entries.blank?
+
+      last_seen =
+        entries.max_by do |item|
+          val = item.with_indifferent_access[:created_at]
+          val.is_a?(String) ? Time.zone.parse(val).to_i : val.to_i
         end
-      return nil if entries.nil?
-      last_seen = entries.max_by { |x| x["created_at"] }
-      Discourse.redis.set(new_features_last_seen_key(user_id), last_seen["created_at"])
+      Discourse.redis.set(
+        new_features_last_seen_key(user_id),
+        last_seen.with_indifferent_access[:created_at],
+      )
     end
 
     def get_last_viewed_feature_date(user_id)
@@ -223,14 +320,25 @@ module DiscourseUpdates
         missing_versions_list_key,
         new_features_key,
         last_viewed_feature_dates_for_users_key,
+        latest_new_feature_created_at_key,
         *Discourse.redis.keys("#{missing_versions_key_prefix}*"),
         *Discourse.redis.keys(new_features_last_seen_key("*")),
       )
     end
 
+    def new_features_full_endpoint_url
+      "#{new_features_endpoint}#{new_features_endpoint_query_params}"
+    end
+
     def new_features_endpoint
       return "https://meta.discourse.org/new-features.json" if Rails.env.production?
       ENV["DISCOURSE_NEW_FEATURES_ENDPOINT"] || "http://localhost:4200/new-features.json"
+    end
+
+    # We no longer delete new features on Meta, so we need to filter out old ones.
+    # Maybe in future we can show even older ones in a separate Archived tab.
+    def new_features_endpoint_query_params
+      "?released_after=#{5.months.ago.end_of_month.to_date}"
     end
 
     private
@@ -269,6 +377,10 @@ module DiscourseUpdates
 
     def new_features_last_seen_key(user_id)
       "new_features_last_seen_user_#{user_id}"
+    end
+
+    def latest_new_feature_created_at_key
+      "latest_new_feature_created_at"
     end
 
     def last_viewed_feature_dates_for_users_key

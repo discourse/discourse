@@ -1,6 +1,6 @@
+import { trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import { compare } from "@ember/utils";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -12,7 +12,7 @@ export default class UserTips extends Service {
 
   #availableTips = new Set();
   #renderedId;
-  #shouldRenderSet = new TrackedSet();
+  #shouldRenderSet = trackedSet();
 
   #updateRenderedId() {
     if (this.isDestroying || this.isDestroyed) {

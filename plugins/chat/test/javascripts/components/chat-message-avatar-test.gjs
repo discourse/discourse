@@ -6,7 +6,7 @@ import Avatar from "discourse/plugins/chat/discourse/components/chat/message/ava
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
-module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
+module("Component | chat-message-avatar", function (hooks) {
   setupRenderingTest(hooks);
 
   test("chat_webhook_event", async function (assert) {

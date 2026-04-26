@@ -263,6 +263,9 @@ fi:
           bar_done:
             one: "ensimmäisen %{count} viestin"
             other: "ensimmäisen %{count} viestin"
+        theme_translations:
+          translate:
+            label: "Käännä"
       spam:
         short_title: "Roskaposti"
         title: "Määritä roskapostin käsittely"
@@ -366,8 +369,6 @@ fi:
         user: Käyttäjä
         create_user: Luo käyttäjä
         default_llm: Oletuskielimalli
-        question_consolidator_llm: Kielimalli kysymysten yhdistäjälle
-        question_consolidator_llm_help: Kysymysten yhdistäjälle käytettävä kielimalli, voit valita vähemmän tehokkaan mallin kustannusten säästämiseksi.
         system_prompt: Järjestelmäkehote
         forced_tool_strategy: Pakotetun työkalun strategia
         allow_chat_direct_messages: "Salli chat-yksityisviestit"
@@ -378,6 +379,8 @@ fi:
         save: "Tallenna"
         enabled: "Otettu käyttöön?"
         tools: "Käytössä olevat työkalut"
+        mcp_tools_modal:
+          clear_all: "Tyhjennä kaikki"
         forced_tools: "Pakotetut työkalut"
         allowed_groups: "Sallitut ryhmät"
         delete: "Poista"
@@ -450,7 +453,6 @@ fi:
         tool_name: "Työkalun nimi"
         description: "Kuvaus"
         description_help: "Selkeä kuvaus työkalun tarkoituksesta kielimallissa"
-        subheader_description: "Työkalut laajentavat tekoälybottien ominaisuuksia käyttäjän määrittämillä JavaScript-toiminnoilla."
         summary: "Yhteenveto"
         summary_help: "Loppukäyttäjille näytettävä yhteenveto työkalujen tarkoituksesta"
         script: "Skripti"
@@ -484,6 +486,23 @@ fi:
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      mcp_servers:
+        name: "Nimi"
+        description: "Kuvaus"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Yhdistetty"
+        oauth_connect: "Yhdistä"
+        oauth_hide_details: "Piilota tiedot"
+        enabled: "Käytössä"
+        save: "Tallenna"
+        edit: "Muokkaa"
+        delete: "Poista"
+        tools_modal:
+          parameters: "Parametrit"
+          required: "Pakollinen"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"
@@ -539,7 +558,7 @@ fi:
           other: "Tätä mallia käyttää tällä hetkellä seuraavat: %{settings}. Jos se on määritetty väärin, ominaisuus ei toimi odotetulla tavalla. "
         model_description:
           none: "Yleiset asetukset, jotka toimivat useimmissa kielimalleissa"
-          anthropic-claude-opus-4-6: "Anthropicin älykkäin malli"
+          anthropic-claude-opus-4-7: "Anthropicin älykkäin malli"
           anthropic-claude-sonnet-4-6: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
           anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
           open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli"
@@ -738,8 +757,6 @@ fi:
           title: "Näytä tekoälyvuorovaikutus"
           copy_request: "Kopioi pyyntö"
           copy_response: "Kopioi vastaus"
-          request_tokens: "Pyynnön saneet:"
-          response_tokens: "Vastauksen saneet:"
           request: "Pyyntö"
           response: "Vastaus"
           next_log: "Seuraava"

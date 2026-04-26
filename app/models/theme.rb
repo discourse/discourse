@@ -120,6 +120,7 @@ class Theme < ActiveRecord::Base
             :user,
             :locale_fields,
             :theme_translation_overrides,
+            :theme_modifier_set,
             color_scheme: %i[theme color_scheme_colors base_scheme],
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
@@ -249,7 +250,6 @@ class Theme < ActiveRecord::Base
         GlobalSetting.s3_endpoint,
         GlobalSetting.s3_bucket,
         Discourse.current_hostname,
-        ENV["ROLLUP_PLUGIN_COMPILER"],
       ]
       Digest::SHA1.hexdigest(dependencies.join)
     end

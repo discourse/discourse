@@ -63,7 +63,7 @@
         align-items: center;
         font-size: var(--font-up-1-rem);
 
-        .d-icon:first-of-type:not([class*="d-icon-category.restricted"]),
+        .d-icon:first-of-type:not([class*="d-icon-lock"]),
         &.--style-square::before,
         &.--style-emoji .emoji {
           width: 1.25em;
@@ -76,7 +76,7 @@
         }
       }
 
-      [class*="d-icon-category.restricted"] {
+      [class*="d-icon-lock"] {
         order: 1;
       }
     }
@@ -330,7 +330,7 @@
           font-size: var(--font-up-1-rem);
         }
 
-        .d-icon:not([class*="d-icon-category.restricted"]),
+        .d-icon:not([class*="d-icon-lock"]),
         img.emoji {
           aspect-ratio: 1 / 1;
           height: auto;

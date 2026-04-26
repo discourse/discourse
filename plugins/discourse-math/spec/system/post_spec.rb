@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Discourse Math - post", type: :system do
+RSpec.describe "Discourse Math - post" do
   fab!(:current_user, :admin)
 
   before do

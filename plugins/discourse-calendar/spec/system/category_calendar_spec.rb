@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Category calendar", type: :system do
+describe "Category calendar" do
   fab!(:admin)
   fab!(:user)
   fab!(:category)

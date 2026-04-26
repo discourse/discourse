@@ -92,7 +92,7 @@ bin/ember-cli
 **Option 2**: using only one Terminal tab/window:
 
 ```sh
-bin/ember-cli -u # will run the Unicorn server in the background
+bin/ember-cli -u # will run the Pitchfork server in the background
 ```
 
 :tada: You should now be able to navigate to [http://localhost:4200](http://localhost:4200) to see your local Discourse installation. (Note that the first load can take up to a minute as the server is warmed up.)

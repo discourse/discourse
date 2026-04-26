@@ -41,6 +41,13 @@ export default <template>
             />
           {{/if}}
 
+          <DButton
+            @action={{@controller.changeSource}}
+            @icon="code-branch"
+            @label="admin.customize.theme.change_source.button"
+            class="btn-default"
+          />
+
           <span class="status-message">
             {{#if @controller.updatingRemote}}
               {{i18n "admin.customize.theme.updating"}}
@@ -117,110 +124,116 @@ export default <template>
   {{/if}}
 
   {{#unless @controller.model.component}}
-    <section
-      class="form-horizontal theme settings control-unit theme-settings__light-color-scheme"
-    >
-      <div class="row setting">
-        <div class="setting-label">
-          {{i18n "admin.customize.theme.color_scheme"}}
-        </div>
-
-        <div class="setting-value">
-          <div class="color-palette-input-group">
-            <ColorPalettePicker
-              @content={{@controller.colorSchemes}}
-              @value={{@controller.colorSchemeId}}
-              @icon="paintbrush"
-              @options={{hash
-                filterable=true
-                translatedNone=(i18n
-                  "admin.customize.theme.default_light_scheme"
-                )
-              }}
-            />
+    {{#if @controller.showColorSchemePickers}}
+      <section
+        class="form-horizontal theme settings control-unit theme-settings__light-color-scheme"
+      >
+        <div class="row setting">
+          <div class="setting-label">
+            {{i18n "admin.customize.theme.color_scheme"}}
           </div>
 
-          <div class="desc">{{i18n "admin.customize.theme.color_scheme_select"}}
+          <div class="setting-value">
+            <div class="color-palette-input-group">
+              <ColorPalettePicker
+                @content={{@controller.filteredColorSchemes}}
+                @value={{@controller.colorSchemeId}}
+                @icon="paintbrush"
+                @options={{hash
+                  filterable=true
+                  translatedNone=(unless
+                    @controller.model.only_theme_color_schemes
+                    (i18n "admin.customize.theme.default_light_scheme")
+                  )
+                }}
+              />
+            </div>
 
-            {{#if @controller.colorSchemeId}}
-              <LinkTo
-                @route="adminConfig.colorPalettes.show"
-                @model={{@controller.colorSchemeId}}
-              >
-                {{i18n "admin.customize.theme.edit_colors"}}
-              </LinkTo>
+            <div class="desc">{{i18n
+                "admin.customize.theme.color_scheme_select"
+              }}
+
+              {{#if @controller.colorSchemeId}}
+                <LinkTo
+                  @route="adminConfig.colorPalettes.show"
+                  @model={{@controller.colorSchemeId}}
+                >
+                  {{i18n "admin.customize.theme.edit_colors"}}
+                </LinkTo>
+              {{/if}}
+            </div>
+          </div>
+
+          <div class="setting-controls">
+            {{#if @controller.lightColorSchemeChanged}}
+              <DButton
+                @action={{@controller.changeLightScheme}}
+                @icon="check"
+                class="ok submit-light-edit"
+              />
+              <DButton
+                @action={{@controller.cancelChangeLightScheme}}
+                @icon="xmark"
+                class="cancel cancel-light-edit"
+              />
             {{/if}}
           </div>
         </div>
-
-        <div class="setting-controls">
-          {{#if @controller.lightColorSchemeChanged}}
-            <DButton
-              @action={{@controller.changeLightScheme}}
-              @icon="check"
-              class="ok submit-light-edit"
-            />
-            <DButton
-              @action={{@controller.cancelChangeLightScheme}}
-              @icon="xmark"
-              class="cancel cancel-light-edit"
-            />
-          {{/if}}
-        </div>
-      </div>
-    </section>
-    <section
-      class="form-horizontal theme settings control-unit theme-settings__dark-color-scheme"
-    >
-      <div class="row setting">
-        <div class="setting-label">
-          {{i18n "admin.customize.theme.dark_color_scheme"}}
-        </div>
-
-        <div class="setting-value">
-          <div class="color-palette-input-group">
-            <ColorPalettePicker
-              @content={{@controller.colorSchemes}}
-              @value={{@controller.darkColorSchemeId}}
-              @icon="paintbrush"
-              @options={{hash
-                filterable=true
-                translatedNone=(i18n
-                  "admin.customize.theme.default_light_scheme"
-                )
-              }}
-            />
+      </section>
+      <section
+        class="form-horizontal theme settings control-unit theme-settings__dark-color-scheme"
+      >
+        <div class="row setting">
+          <div class="setting-label">
+            {{i18n "admin.customize.theme.dark_color_scheme"}}
           </div>
 
-          <div class="desc">
-            {{i18n "admin.customize.theme.dark_color_scheme_select"}}
+          <div class="setting-value">
+            <div class="color-palette-input-group">
+              <ColorPalettePicker
+                @content={{@controller.filteredColorSchemes}}
+                @value={{@controller.darkColorSchemeId}}
+                @icon="paintbrush"
+                @options={{hash
+                  filterable=true
+                  translatedNone=(unless
+                    @controller.model.only_theme_color_schemes
+                    (i18n "admin.customize.theme.default_light_scheme")
+                  )
+                }}
+              />
+            </div>
 
-            {{#if @controller.darkColorSchemeId}}
-              <LinkTo
-                @route="adminConfig.colorPalettes.show"
-                @model={{@controller.darkColorSchemeId}}
-              >
-                {{i18n "admin.customize.theme.edit_colors"}}
-              </LinkTo>
+            <div class="desc">
+              {{i18n "admin.customize.theme.dark_color_scheme_select"}}
+
+              {{#if @controller.darkColorSchemeId}}
+                <LinkTo
+                  @route="adminConfig.colorPalettes.show"
+                  @model={{@controller.darkColorSchemeId}}
+                >
+                  {{i18n "admin.customize.theme.edit_colors"}}
+                </LinkTo>
+              {{/if}}
+            </div>
+          </div>
+          <div class="setting-controls">
+            {{#if @controller.darkColorSchemeChanged}}
+              <DButton
+                @action={{@controller.changeDarkScheme}}
+                @icon="check"
+                class="ok submit-dark-edit"
+              />
+              <DButton
+                @action={{@controller.cancelChangeDarkScheme}}
+                @icon="xmark"
+                class="cancel cancel-dark-edit"
+              />
             {{/if}}
           </div>
         </div>
-        <div class="setting-controls">
-          {{#if @controller.darkColorSchemeChanged}}
-            <DButton
-              @action={{@controller.changeDarkScheme}}
-              @icon="check"
-              class="ok submit-dark-edit"
-            />
-            <DButton
-              @action={{@controller.cancelChangeDarkScheme}}
-              @icon="xmark"
-              class="cancel cancel-dark-edit"
-            />
-          {{/if}}
-        </div>
-      </div>
-    </section>
+      </section>
+    {{/if}}
   {{/unless}}
 
   {{#if @controller.model.component}}
@@ -396,14 +409,23 @@ export default <template>
         <span class="mini-title">
           {{i18n "admin.customize.theme.theme_translations"}}
         </span>
-        <ComboBox
-          @valueProperty="value"
-          @content={{@controller.availableLocales}}
-          @value={{@controller.locale}}
-          @onChange={{@controller.updateLocale}}
-          @options={{hash filterable=true}}
-          class="translation-selector"
-        />
+        <div class="translation-selector-controls">
+          <PluginOutlet
+            @name="admin-customize-theme-translation-selector"
+            @outletArgs={{lazyHash
+              theme=@controller.model
+              locale=@controller.locale
+            }}
+          />
+          <ComboBox
+            @valueProperty="value"
+            @content={{@controller.availableLocales}}
+            @value={{@controller.locale}}
+            @onChange={{@controller.updateLocale}}
+            @options={{hash filterable=true}}
+            class="translation-selector"
+          />
+        </div>
       </div>
       <ConditionalLoadingSpinner
         @condition={{@controller.model.loadingTranslations}}

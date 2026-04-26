@@ -63,9 +63,9 @@ export default class DiscourseReactionsPicker extends Component {
       }
 
       if (currentUserReaction) {
-        canUndo = currentUserReaction.can_undo && post.likeAction.canToggle;
+        canUndo = currentUserReaction.can_undo && post.likeAction?.canToggle;
       } else {
-        canUndo = post.likeAction.canToggle;
+        canUndo = post.likeAction?.canToggle;
       }
 
       let title;

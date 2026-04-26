@@ -8,7 +8,7 @@ module DiscourseAi
     CREDIT_STATUS_CACHE_TTL = 5.seconds
 
     def status
-      CreditStatusChecker.call(params: status_params) do |result|
+      CreditStatusChecker.call(params: status_params, guardian: guardian) do |result|
         on_success do
           expires_in CREDIT_STATUS_CACHE_TTL, public: false
           render json: {

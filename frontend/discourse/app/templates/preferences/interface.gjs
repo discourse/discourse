@@ -143,6 +143,14 @@ export default <template>
       <label for="locale-selector" class="control-label">{{i18n
           "user.locale.title"
         }}</label>
+      {{#if @controller.siteSettings.content_localization_enabled}}
+        <PreferenceCheckbox
+          @labelKey="user.show_original_content"
+          @checked={{@controller.model.user_option.show_original_content}}
+          data-setting-name="user-show-original-content"
+          class="pref-show-original-content"
+        />
+      {{/if}}
       <div class="controls">
         <ComboBox
           @id="locale-selector"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Assign | Assigning posts", type: :system do
+describe "Assign | Assigning posts" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
   fab!(:staff_user) { Fabricate(:user, groups: [Group[:staff]]) }
@@ -10,8 +10,8 @@ describe "Assign | Assigning posts", type: :system do
   fab!(:post2) { Fabricate(:post, topic: topic) }
 
   before do
-    skip "Tests are broken and need to be fixed. See https://github.com/discourse/discourse/actions/runs/13890376408/job/38861216842"
     SiteSetting.assign_enabled = true
+    SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     SiteSetting.prioritize_full_name_in_ux = false
     # The system tests in this file are flaky and auth token related so turning this on
     SiteSetting.verbose_auth_token_logging = true

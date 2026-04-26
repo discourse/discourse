@@ -25,7 +25,7 @@ const IMAGE_OPTIONS = [
   },
 ];
 
-module("Poll | Component | poll-options", function (hooks) {
+module("Component | poll-options", function (hooks) {
   setupRenderingTest(hooks);
 
   test("single, not selected", async function (assert) {

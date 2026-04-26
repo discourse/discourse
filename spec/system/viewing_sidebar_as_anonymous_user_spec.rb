@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar as anonymous user", type: :system do
+describe "Viewing sidebar as anonymous user" do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   describe "when viewing the tags section" do

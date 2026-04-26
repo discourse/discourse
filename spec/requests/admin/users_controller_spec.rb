@@ -124,6 +124,28 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["silence_reason"]).to eq("because I said so")
       end
 
+      it "does not leak the message body in the public silence_reason" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              reason: "because I said so",
+              message: "private email body",
+              post_action: "delete",
+              silenced_till: 2.days.from_now,
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence"]["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["silence"]["full_silence_reason"]).to eq(
+          "because I said so\n\nprivate email body",
+        )
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["full_silence_reason"]).to eq(
+          "because I said so<br><br>private email body",
+        )
+      end
+
       context "with a non-existing user" do
         it "returns 404 error" do
           get "/admin/users/0.json"
@@ -602,6 +624,23 @@ RSpec.describe Admin::UsersController do
 
       include_examples "suspension of active user possible"
       include_examples "suspension of staff users"
+
+      it "cannot edit an arbitrary static doc post unrelated to the suspended user" do
+        static_doc_post = Fabricate(:post)
+        SiteSetting.tos_topic_id = static_doc_post.topic_id
+
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "reason",
+              post_id: static_doc_post.id,
+              post_action: "edit",
+              post_edit: "edited content",
+            }
+
+        expect(response.status).to eq(200)
+        expect(static_doc_post.reload.raw).not_to eq("edited content")
+      end
     end
 
     context "when logged in as a non-staff user" do

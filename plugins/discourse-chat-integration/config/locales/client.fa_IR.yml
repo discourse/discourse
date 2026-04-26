@@ -14,13 +14,12 @@ fa_IR:
     chat_integration:
       menu_title: "یکپارچگی گفتگو"
       settings: "تنظیم"
+      more_providers: "بیشتر"
       group_mention_template: "اشاره شده: @%{name}"
       group_message_template: "پیغام‌ها به: @%{name}"
       choose_group: "(یک گروه را انتخاب کنید)"
       all_categories: "(تمام دسته‌بندی‌ها)"
-      all_tags: "(تمام برچسب‌ها)"
-      create_rule: "ایجاد قانون"
-      create_channel: "ایجاد کانال"
+      all_tags: "(همه برچسب‌ها)"
       delete_channel: "حذف"
       test_channel: "آزمایش کردن"
       edit_channel: "ویرایش"
@@ -28,13 +27,10 @@ fa_IR:
       test_modal:
         title: "ارسال پیغام آزمایشی"
         topic: "موضوع"
-        send: "ارسال پیغام آزمایشی"
         close: "بستن"
         success: "پیغام با موفقیت ارسال شد"
       type:
         normal: معمولی
-        group_message: پیغام گروه
-        group_mention: اشاره گروهی
       filter:
         mute: 'خاموش'
         follow: 'فقط اولین نوشته'
@@ -53,8 +49,6 @@ fa_IR:
         channel_validation:
           ok: "معتبر"
       edit_rule_modal:
-        title: ویرایش قانون
-        save: ذخیره قانون
         cancel: لغو
         provider: ارائه‌دهنده
         type: نوع
@@ -69,7 +63,6 @@ fa_IR:
           param:
             identifier:
               title: کانال
-              help: "به عنوان مثال #channel، @username."
         telegram:
           title: "تلگرام"
           param:
@@ -95,7 +88,6 @@ fa_IR:
           param:
             identifier:
               title: کانال
-              help: "به عنوان مثال #channel، @username."
         matrix:
           param:
             name:
@@ -108,7 +100,6 @@ fa_IR:
           param:
             identifier:
               title: کانال
-              help: "به عنوان مثال #channel، @username."
         gitter:
           param:
             name:

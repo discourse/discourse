@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Channel thread message echoing", type: :system do
+describe "Channel thread message echoing" do
   fab!(:current_user, :user)
   fab!(:other_user, :user)
 

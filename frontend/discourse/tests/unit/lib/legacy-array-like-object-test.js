@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
@@ -38,7 +38,7 @@ module("Unit | lib | LegacyArrayLikeObject", function (hooks) {
     withSilencedDeprecations(
       "discourse.legacy-array-like-object.proxied-array",
       () => {
-        const arr = new TrackedArray([4, 5]);
+        const arr = trackedArray([4, 5]);
         const obj = LegacyArrayLikeObject.create({ content: arr });
         assert.strictEqual(obj[0], 4);
         assert.strictEqual(obj[1], 5);

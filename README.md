@@ -98,7 +98,7 @@ We look forward to seeing your pull requests!
 
 We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/main/docs/SECURITY.md) for an overview of security measures in Discourse, or if you wish to report a security issue.
 
-Security fixes are listed in the [release notes](https://meta.discourse.org/tags/c/announcements/67/release-notes) for each version.
+Security fixes are listed in the [release notes](https://releases.discourse.org) for each version.
 
 ## The Discourse Team
 

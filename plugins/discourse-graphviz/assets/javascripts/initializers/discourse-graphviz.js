@@ -37,6 +37,7 @@ export default {
             format: "svg",
             engine,
           });
+
           $container.html(svgChart);
         } catch (e) {
           const $error = $(

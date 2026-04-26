@@ -38,8 +38,16 @@ class Category < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
   has_many :category_posting_review_groups, dependent: :destroy
+  has_many :topic_posting_review_records,
+           -> { where(post_type: :topic) },
+           class_name: "CategoryPostingReviewGroup"
+  has_many :reply_posting_review_records,
+           -> { where(post_type: :reply) },
+           class_name: "CategoryPostingReviewGroup"
   has_many :groups, through: :category_groups
   has_many :moderating_groups, through: :category_moderation_groups, source: :group
+  has_many :topic_posting_review_groups, through: :topic_posting_review_records, source: :group
+  has_many :reply_posting_review_groups, through: :reply_posting_review_records, source: :group
   has_many :topic_timers, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
@@ -54,6 +62,12 @@ class Category < ActiveRecord::Base
            :require_topic_approval,
            :require_topic_approval=,
            :require_topic_approval?,
+           :nested_replies_default,
+           :nested_replies_default=,
+           :topic_posting_review_mode,
+           :topic_posting_review_mode=,
+           :reply_posting_review_mode,
+           :reply_posting_review_mode=,
            to: :category_setting,
            allow_nil: true
 
@@ -86,6 +100,7 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
   validate :ensure_slug
   validate :permissions_compatibility_validator
+  validate :posting_review_groups_validator
 
   validates :default_slow_mode_seconds,
             numericality: {
@@ -107,10 +122,12 @@ class Category < ActiveRecord::Base
   before_save :downcase_email
   before_save :downcase_name
   before_save :ensure_category_setting
+  before_save :clear_posting_review_groups_for_non_group_modes
   after_create :create_category_definition
   after_create :delete_category_permalink
   after_update :rename_category_definition, if: :saved_change_to_name?
   after_update :create_category_permalink, if: :saved_change_to_slug?
+  after_update :revise_category_definition, if: :saved_change_to_description?
   after_update :run_plugin_category_update_param_callbacks
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
@@ -464,29 +481,49 @@ class Category < ActiveRecord::Base
          AND (c.topic_count <> COALESCE(x.topic_count, 0) OR c.post_count <> COALESCE(x.post_count, 0))
     SQL
 
-    # Yes, there are a lot of queries happening below.
-    # Performing a lot of queries is actually faster than using one big update
-    # statement with sub-selects on large databases with many categories,
-    # topics, and posts.
-    #
-    # The old method with the one query is here:
-    # https://github.com/discourse/discourse/blob/5f34a621b5416a53a2e79a145e927fca7d5471e8/app/models/category.rb
-    #
-    # If you refactor this, test performance on a large database.
-
-    Category.all.each do |c|
+    Category.find_each do |c|
       topics = c.topics.visible
       topics = topics.where.not(id: c.topic_id) if c.topic_id
-      c.topics_year = topics.created_since(1.year.ago).count
-      c.topics_month = topics.created_since(1.month.ago).count
-      c.topics_week = topics.created_since(1.week.ago).count
-      c.topics_day = topics.created_since(1.day.ago).count
 
-      posts = c.visible_posts
-      c.posts_year = posts.created_since(1.year.ago).count
-      c.posts_month = posts.created_since(1.month.ago).count
-      c.posts_week = posts.created_since(1.week.ago).count
-      c.posts_day = posts.created_since(1.day.ago).count
+      # Combine time-based topic counts into a single query
+      topic_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM topics
+        WHERE category_id = :category_id
+          AND visible = true
+          AND deleted_at IS NULL
+          #{c.topic_id ? "AND id != :topic_id" : ""}
+      SQL
+
+      c.topics_year = topic_counts[0]
+      c.topics_month = topic_counts[1]
+      c.topics_week = topic_counts[2]
+      c.topics_day = topic_counts[3]
+
+      # Combine time-based post counts into a single query
+      post_counts = DB.query_single(<<~SQL, category_id: c.id, topic_id: c.topic_id)
+        SELECT
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 year') AS year,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 month') AS month,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 week') AS week,
+          COUNT(*) FILTER (WHERE posts.created_at >= NOW() - INTERVAL '1 day') AS day
+        FROM posts
+        INNER JOIN topics ON topics.id = posts.topic_id
+        WHERE topics.category_id = :category_id
+          AND topics.visible = true
+          AND posts.deleted_at IS NULL
+          AND posts.user_deleted = false
+          #{c.topic_id ? "AND topics.id != :topic_id" : ""}
+      SQL
+
+      c.posts_year = post_counts[0]
+      c.posts_month = post_counts[1]
+      c.posts_week = post_counts[2]
+      c.posts_day = post_counts[3]
 
       c.save if c.changed?
     end
@@ -530,6 +567,15 @@ class Category < ActiveRecord::Base
 
       t
     end
+  end
+
+  def revise_category_definition
+    return if skip_category_definition
+    return if self.topic.blank? || self.topic.first_post.blank?
+
+    # NOTE: Revising the first post will also update the category description,
+    # see PostRevisor#update_category_description
+    self.topic.first_post.revise(self.user, { raw: self.description }, skip_validations: true)
   end
 
   def trash_category_definition
@@ -1219,6 +1265,36 @@ class Category < ActiveRecord::Base
 
   def ensure_category_setting
     self.build_category_setting if self.category_setting.blank?
+  end
+
+  def group_based_posting_review_mode?(post_type)
+    mode = category_setting&.public_send(:"#{post_type}_posting_review_mode")
+    CategorySetting::GROUP_BASED_MODES.include?(mode)
+  end
+
+  def posting_review_groups_validator
+    %i[topic reply].each do |post_type|
+      next unless group_based_posting_review_mode?(post_type)
+
+      group_ids = public_send(:"#{post_type}_posting_review_group_ids")
+      if group_ids.blank?
+        errors.add(
+          :base,
+          I18n.t(
+            "category.errors.groups_required_for_mode",
+            setting: "#{post_type}_posting_review_mode",
+          ),
+        )
+      end
+    end
+  end
+
+  def clear_posting_review_groups_for_non_group_modes
+    %i[topic reply].each do |post_type|
+      unless group_based_posting_review_mode?(post_type)
+        public_send(:"#{post_type}_posting_review_group_ids=", [])
+      end
+    end
   end
 
   def check_permissions_compatibility(parent_permissions, child_permissions)

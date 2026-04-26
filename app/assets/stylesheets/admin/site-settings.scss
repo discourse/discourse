@@ -6,12 +6,19 @@
   max-width: 300px;
 }
 
-.admin-controls.admin-site-settings-filter-controls .menu-toggle {
-  margin-left: 0.5em;
+.fk-d-menu-modal.admin-site-settings-category-nav-content {
+  .admin-site-settings-category-nav__list a.active {
+    background: var(--d-selected);
+  }
 }
 
 .admin-filtered-site-settings {
   padding: 1em;
+}
+
+body.has-admin-changes-banner #main-outlet {
+  // makes space so banner doesn't overlap content
+  padding-bottom: 6em;
 }
 
 .admin-changes-banner {

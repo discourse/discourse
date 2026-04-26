@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
 import { click, render } from "@ember/test-helpers";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -9,7 +9,7 @@ import Poll from "discourse/plugins/poll/discourse/components/poll";
 
 let requests = 0;
 
-module("Poll | Component | poll", function (hooks) {
+module("Component | poll", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -66,7 +66,7 @@ module("Poll | Component | poll", function (hooks) {
           ],
         },
       }),
-      poll: new TrackedObject({
+      poll: trackedObject({
         name: "poll",
         type: "ranked_choice",
         status: "open",
@@ -113,7 +113,7 @@ module("Poll | Component | poll", function (hooks) {
         },
         user_id: 29,
       }),
-      poll: new TrackedObject({
+      poll: trackedObject({
         name: "poll",
         type: "ranked_choice",
         status: "open",
@@ -183,7 +183,7 @@ module("Poll | Component | poll", function (hooks) {
         },
         user_id: 29,
       }),
-      poll: new TrackedObject({
+      poll: trackedObject({
         name: "poll",
         type: "regular",
         status: "closed",
@@ -214,7 +214,7 @@ module("Poll | Component | poll", function (hooks) {
         },
         user_id: 29,
       }),
-      poll: new TrackedObject({
+      poll: trackedObject({
         name: "poll",
         type: "regular",
         status: "open",
@@ -245,7 +245,7 @@ module("Poll | Component | poll", function (hooks) {
         },
         user_id: 29,
       }),
-      poll: new TrackedObject({
+      poll: trackedObject({
         name: "poll",
         type: "regular",
         status: "open",
@@ -286,7 +286,7 @@ module("Poll | Component | poll", function (hooks) {
         },
         user_id: 29,
       }),
-      poll: new TrackedObject({
+      poll: trackedObject({
         name: "poll",
         type: "regular",
         status: "open",

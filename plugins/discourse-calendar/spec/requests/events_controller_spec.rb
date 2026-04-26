@@ -75,8 +75,14 @@ module DiscoursePostEvent
         )
 
         body = response.body
+        calendar_name =
+          I18n.t(
+            "discourse_calendar.calendar_subscriptions.all_events_feed_name",
+            site_title: SiteSetting.title,
+          )
         expect(body).to include("BEGIN:VCALENDAR")
         expect(body).to include("END:VCALENDAR")
+        expect(body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
         expect(body).to include("BEGIN:VEVENT")
         expect(body).to include("END:VEVENT")
         expect(body).to include("SUMMARY:Test Event 1")
@@ -106,6 +112,31 @@ module DiscoursePostEvent
         expect(body).to include("URL:https://example.com/event-info")
       end
 
+      it "should not HTML-encode ampersands in ics format" do
+        Fabricate(
+          :event,
+          original_starts_at: 1.day.from_now,
+          name: "Tom & Jerry",
+          location: "Room A & B",
+          description: "Q & A session",
+          url: "https://example.com/event?a=1&b=2",
+        )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.body).to include("SUMMARY:Tom & Jerry")
+        expect(response.body).not_to include("&amp;")
+      end
+
+      it "should not HTML-encode topic title used as ics summary" do
+        event = Fabricate(:event, original_starts_at: 1.day.from_now)
+        event.post.topic.update!(title: "Rock & Roll Music Festival 2026")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.body).to include("SUMMARY:Rock & Roll Music Festival 2026")
+      end
+
       it "should handle events without location and description in ics format" do
         event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Simple Event")
 
@@ -119,6 +150,21 @@ module DiscoursePostEvent
         expect(body).to include("END:VEVENT")
       end
 
+      it "should include post url in description when no custom description is set" do
+        event =
+          Fabricate(:event, original_starts_at: 1.day.from_now, name: "Event Without Description")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+
+        description_line = body.lines.find { |l| l.start_with?("DESCRIPTION:") }
+        post_url = "#{Discourse.base_url}#{event.post.url}"
+
+        expect(description_line).to include(post_url)
+      end
+
       it "excludes events older than 3 months from ics feed by default" do
         recent_event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Future Event")
         old_event = Fabricate(:event, original_starts_at: 4.months.ago, name: "Old Event")
@@ -129,6 +175,40 @@ module DiscoursePostEvent
         body = response.body
         expect(body).to include("SUMMARY:Future Event")
         expect(body).not_to include("SUMMARY:Old Event")
+      end
+
+      it "expands recurring events into multiple occurrences" do
+        Fabricate(
+          :event,
+          original_starts_at: 1.day.from_now,
+          original_ends_at: 1.day.from_now + 1.hour,
+          recurrence: "every_week",
+          name: "Weekly Standup",
+        )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+        occurrences = body.scan("SUMMARY:Weekly Standup").size
+        expect(occurrences).to be > 1
+        expect(occurrences).to be <= 52
+      end
+
+      it "gives recurring and non-recurring events unique UIDs" do
+        Fabricate(
+          :event,
+          original_starts_at: 1.day.from_now,
+          recurrence: "every_week",
+          name: "Recurring",
+        )
+        Fabricate(:event, original_starts_at: 2.days.from_now, name: "One-off")
+
+        get "/discourse-post-event/events.ics"
+
+        body = response.body
+        uids = body.scan(/^UID:(.+)$/).flatten
+        expect(uids.size).to eq(uids.uniq.size)
       end
 
       it "skips events with nil starts_at in ics feed" do
@@ -193,6 +273,12 @@ module DiscoursePostEvent
               params: events_params.merge(user_api_key: user_api_key.key)
 
           expect(response.status).to eq(200)
+          calendar_name =
+            I18n.t(
+              "discourse_calendar.calendar_subscriptions.my_events_feed_name",
+              site_title: SiteSetting.title,
+            )
+          expect(response.body).to include("X-WR-CALNAME:#{IcalEncoder.encode(calendar_name)}")
           expect(response.body).to include("SUMMARY:Going Event")
           expect(response.body).to include("SUMMARY:Interested Event")
         end

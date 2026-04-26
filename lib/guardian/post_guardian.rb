@@ -28,11 +28,7 @@ module PostGuardian
     return false if !(can_see_post.nil? && can_see_post?(post)) && !can_see_post
 
     # no warnings except for staff
-    if action_key == :notify_user &&
-         (
-           post.user.blank? ||
-             (!is_staff? && opts[:is_warning].present? && opts[:is_warning] == "true")
-         )
+    if action_key == :notify_user && (post.user.blank? || (!is_staff? && opts[:is_warning]))
       return false
     end
 
@@ -392,6 +388,10 @@ module PostGuardian
   def can_see_deleted_posts?(category = nil)
     is_category_group_moderator?(category) ||
       @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+  end
+
+  def can_see_deleted_posts_for_user?
+    is_staff?
   end
 
   def can_view_raw_email?(post)

@@ -1,15 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { optionalRequire } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
 import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
-
-const ChatChannel = optionalRequire(
-  "discourse/plugins/chat/discourse/models/chat-channel"
-);
 
 const DEFAULT_REMINDER = {
   type: "notification",
@@ -35,6 +31,7 @@ export default class DiscoursePostEventEvent {
   @tracked location;
   @tracked url;
   @tracked description;
+  @tracked descriptionHtml;
   @tracked timezone;
   @tracked showLocalTime;
   @tracked status;
@@ -53,6 +50,7 @@ export default class DiscoursePostEventEvent {
   @tracked recurrence;
   @tracked customFields;
   @tracked channel;
+  @tracked imageUpload;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
@@ -61,6 +59,10 @@ export default class DiscoursePostEventEvent {
   @tracked _reminders;
 
   constructor(args = {}) {
+    const ChatChannel = optionalRequire(
+      "discourse/plugins/chat/discourse/models/chat-channel"
+    );
+
     this.id = args.id;
     this.rrule = args.rrule;
     this.name = args.name;
@@ -74,6 +76,7 @@ export default class DiscoursePostEventEvent {
     this.location = args.location;
     this.url = args.url;
     this.description = args.description;
+    this.descriptionHtml = args.description_html;
     this.timezone = args.timezone;
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
@@ -98,6 +101,7 @@ export default class DiscoursePostEventEvent {
     if (args.channel && ChatChannel) {
       this.channel = ChatChannel.create(args.channel);
     }
+    this.imageUpload = args.image_upload;
   }
 
   get watchingInvitee() {
@@ -115,7 +119,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set sampleInvitees(invitees = []) {
-    this._sampleInvitees = new TrackedArray(
+    this._sampleInvitees = trackedArray(
       invitees.map((i) => DiscoursePostEventInvitee.create(i))
     );
   }
@@ -133,7 +137,7 @@ export default class DiscoursePostEventEvent {
   }
 
   set reminders(reminders = []) {
-    this._reminders = new TrackedArray(reminders);
+    this._reminders = trackedArray(reminders);
   }
 
   get creator() {
@@ -152,6 +156,10 @@ export default class DiscoursePostEventEvent {
     return this.status === "private";
   }
 
+  get imageUrl() {
+    return this.imageUpload?.url;
+  }
+
   updateFromEvent(event) {
     this.name = event.name;
     this.startsAt = event.startsAt;
@@ -163,6 +171,7 @@ export default class DiscoursePostEventEvent {
     this.timezone = event.timezone;
     this.showLocalTime = event.showLocalTime;
     this.description = event.description;
+    this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
     this.isClosed = event.isClosed;
@@ -181,6 +190,7 @@ export default class DiscoursePostEventEvent {
     this.stats = event.stats;
     this.sampleInvitees = event.sampleInvitees || [];
     this.reminders = event.reminders;
+    this.imageUpload = event.imageUpload;
   }
 
   @bind

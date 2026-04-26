@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences | Profile", type: :system do
+describe "User preferences | Profile" do
   fab!(:user) { Fabricate(:user, active: true) }
   let(:user_preferences_profile_page) { PageObjects::Pages::UserPreferencesProfile.new }
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
@@ -66,7 +66,7 @@ describe "User preferences | Profile", type: :system do
     it "client-side redirects to the profile page to fill up required fields" do
       visit("/faq")
 
-      expect(page).to have_current_path("/faq")
+      expect(page).to have_current_path("/guidelines")
 
       click_logo
 

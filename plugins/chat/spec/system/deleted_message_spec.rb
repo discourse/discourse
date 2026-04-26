@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Deleted message", type: :system do
+RSpec.describe "Deleted message" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }

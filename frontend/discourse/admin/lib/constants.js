@@ -7,10 +7,12 @@ export const ADMIN_SEARCH_RESULT_TYPES = [
   "theme",
   "component",
   "report",
+  "upcomingChange",
 ];
 
 export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = {
   simple: "simple",
+  simple_on_enable: "simple_on_enable",
   user_option: "user_option",
 };
 

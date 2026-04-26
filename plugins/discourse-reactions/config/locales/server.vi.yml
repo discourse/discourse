@@ -14,8 +14,6 @@ vi:
     discourse_reactions_excluded_from_like: "Các biểu cảm không được tính là \"Thích\". Bất kỳ biểu cảm nào không có trong danh sách này sẽ được tính là \"Thích\" cho mục đích nhận huy hiệu, báo cáo và các mục đích khác."
     discourse_reactions_like_sync_enabled: "Nếu tùy chọn này được bật, các phản hồi trong quá khứ sẽ được tạo bản ghi Thích tương ứng, ngoại trừ những phản hồi được định nghĩa trong `discourse_reactions_excluded_from_like`. Quá trình đồng bộ này sẽ diễn ra thường xuyên trong nền, và cả khi bạn thay đổi `discourse_reactions_excluded_from_like`."
     discourse_reactions_allow_any_emoji: "Nếu tính năng này được bật, một nút sẽ được thêm vào cho phép người dùng chọn bất kỳ biểu tượng cảm xúc nào trong trình chọn biểu tượng cảm xúc. Thành viên sẽ được phép chọn bất kỳ biểu tượng cảm xúc nào, bao gồm cả biểu tượng cảm xúc tùy chỉnh, cho các biểu tượng cảm xúc. Để giới hạn các biểu tượng cảm xúc có sẵn, hãy sử dụng cài đặt trang web `emoji_deny_list`."
-    errors:
-      invalid_excluded_emoji: "Bạn không thể loại trừ các biểu tượng cảm xúc không nằm trong mục 'phản ứng được kích hoạt trong diễn đàn' và bạn cũng không thể loại trừ biểu tượng cảm xúc được sử dụng cho mục 'phản ứng thích trong diễn đàn'."
   badges:
     first_reaction:
       name: Lần Đầu Biểu Cảm

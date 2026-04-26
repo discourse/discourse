@@ -387,7 +387,9 @@ class GroupsController < ApplicationController
         end
     end
 
-    guardian.ensure_can_invite_to_forum!([group]) if emails.present?
+    if emails.present? && !guardian.can_invite_to_forum?([group])
+      return render_json_error(I18n.t("groups.errors.cannot_add_emails"))
+    end
 
     if users.empty? && emails.empty?
       raise Discourse::InvalidParameters.new(I18n.t("groups.errors.usernames_or_emails_required"))
@@ -411,17 +413,18 @@ class GroupsController < ApplicationController
       )
     else
       notify = params[:notify_users]&.to_s == "true"
+
       uniq_users = users.uniq
-      uniq_users.each { |user| add_user_to_group(group, user, notify) }
+      add_users_to_group(group, uniq_users, notify)
+
+      group_ids = [group.id]
+
+      skip_email = params[:skip_email].to_s == "true"
+      skip_email ||= params.key?(:notify_users) && !notify
 
       emails.each do |email|
         begin
-          Invite.generate(
-            current_user,
-            email: email,
-            group_ids: [group.id],
-            skip_email: params[:skip_email].to_s == "true",
-          )
+          Invite.generate(current_user, email:, group_ids:, skip_email:)
         rescue RateLimiter::LimitExceeded => e
           return(
             render_json_error(
@@ -476,7 +479,7 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidAccess unless group.public_admission
 
     return if group.users.exists?(id: current_user.id)
-    add_user_to_group(group, current_user)
+    add_users_to_group(group, [current_user])
   end
 
   def handle_membership_request
@@ -569,23 +572,25 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidParameters.new("user_ids or usernames or user_emails must be present")
     end
 
-    removed_users = []
-    skipped_users = []
+    removed_user_ids = GroupManager.new(group).remove(users.map(&:id))
+    GroupActionLogger.new(current_user, group).bulk_log_remove_users_from_group(removed_user_ids)
+
+    removed_usernames = []
+    skipped_usernames = []
 
     users.each do |user|
-      if group.remove(user)
-        removed_users << user.username
-        GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
+      if removed_user_ids.include?(user.id)
+        removed_usernames << user.username
       else
         if group.users.exclude? user
-          skipped_users << user.username
+          skipped_usernames << user.username
         else
           raise Discourse::InvalidParameters
         end
       end
     end
 
-    render json: success_json.merge!(usernames: removed_users, skipped_usernames: skipped_users)
+    render json: success_json.merge!(usernames: removed_usernames, skipped_usernames:)
   end
 
   def leave
@@ -656,10 +661,10 @@ class GroupsController < ApplicationController
     user_id = current_user.id
     user_id = params[:user_id] || user_id if guardian.is_staff?
 
-    GroupUser
-      .where(group_id: group.id)
-      .where(user_id: user_id)
-      .update_all(notification_level: notification_level)
+    group_user = GroupUser.find_by(group_id: group.id, user_id: user_id)
+    raise Discourse::InvalidParameters.new(:user_id) if group_user.blank?
+
+    group_user.update!(notification_level: notification_level)
 
     render json: success_json
   end
@@ -727,12 +732,20 @@ class GroupsController < ApplicationController
     params.require(:password)
 
     group = Group.find(params[:group_id])
-    guardian.ensure_can_edit!(group)
+    guardian.ensure_can_admin_group!(group)
 
     RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
 
     settings = params.except(:name, :protocol)
     email_host = params[:host]
+
+    begin
+      FinalDestination::SSRFDetector.lookup_and_filter_ips(email_host)
+    rescue FinalDestination::SSRFDetector::DisallowedIpError
+      raise Discourse::InvalidParameters.new(I18n.t("email_settings.invalid_host"))
+    rescue FinalDestination::SSRFDetector::LookupFailedError
+      raise Discourse::InvalidParameters.new(I18n.t("email_settings.host_resolve_failed"))
+    end
 
     if params[:protocol] != "smtp"
       raise Discourse::InvalidParameters.new("Valid protocol to test is smtp")
@@ -774,14 +787,13 @@ class GroupsController < ApplicationController
 
   private
 
-  def add_user_to_group(group, user, notify = false)
-    group.add(user)
-    GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-    group.notify_added_to_group(user) if notify
-  rescue ActiveRecord::RecordNotUnique
-    # Under concurrency, we might attempt to insert two records quickly and hit a DB
-    # constraint. In this case we can safely ignore the error and act as if the user
-    # was added to the group.
+  def add_users_to_group(group, users, notify = false)
+    user_ids = users.map(&:id)
+    added_user_ids = GroupManager.new(group).add(user_ids)
+    GroupActionLogger.new(current_user, group).bulk_log_add_users_to_group(added_user_ids)
+    if notify && added_user_ids.present?
+      Jobs.enqueue(:notify_users_added_to_group, user_ids: added_user_ids, group_id: group.id)
+    end
   end
 
   def group_params(automatic: false)
@@ -798,7 +810,6 @@ class GroupsController < ApplicationController
 
     if !automatic
       attributes.push(
-        :title,
         :allow_membership_requests,
         :full_name,
         :public_exit,
@@ -821,6 +832,7 @@ class GroupsController < ApplicationController
         :email_username,
         :email_password,
         :email_from_alias,
+        :title,
         :primary_group,
         :name,
         :grant_trust_level,

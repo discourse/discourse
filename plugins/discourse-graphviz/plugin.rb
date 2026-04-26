@@ -13,6 +13,8 @@ register_svg_icon "diagram-project"
 register_asset "stylesheets/common/graphviz.scss"
 
 module ::DiscourseGraphviz
+  ALLOWED_URL_SCHEMES = %w[http https].freeze
+
   def self.context
     context = MiniRacer::Context.new
     context.load("#{Rails.root}/plugins/discourse-graphviz/public/javascripts/viz-3.0.1.js")
@@ -22,6 +24,28 @@ module ::DiscourseGraphviz
   def self.allowed_svg_xpath
     @@allowed_svg_xpath ||=
       "//*[#{UploadCreator::ALLOWED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ")}]"
+  end
+
+  def self.sanitize_svg_links(svg_node)
+    svg_node
+      .css("a")
+      .each do |anchor|
+        href = anchor["href"] || anchor["xlink:href"]
+        next unless href
+
+        begin
+          uri = URI.parse(href)
+          scheme = uri.scheme&.downcase
+
+          if scheme && !ALLOWED_URL_SCHEMES.include?(scheme)
+            anchor.replace(anchor.children)
+          elsif scheme.nil? && href.strip.match?(/\A\s*javascript:/i)
+            anchor.replace(anchor.children)
+          end
+        rescue URI::InvalidURIError
+          anchor.replace(anchor.children)
+        end
+      end
   end
 end
 
@@ -52,6 +76,7 @@ after_initialize do
             new_graph_node = Nokogiri::HTML.fragment(svg_graph).css("svg").first
             # rubocop:enable Discourse/NoNokogiriHtmlFragment
             new_graph_node["class"] = "graphviz-svg-render"
+            DiscourseGraphviz.sanitize_svg_links(new_graph_node)
             new_graph_node.xpath(DiscourseGraphviz.allowed_svg_xpath).remove
             graph.replace new_graph_node
             next

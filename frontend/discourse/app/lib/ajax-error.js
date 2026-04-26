@@ -66,6 +66,8 @@ export function extractErrorInfo(
       parsedError = parsedJSON.message;
     } else if (parsedJSON.failed) {
       parsedError = parsedJSON.failed;
+    } else if (parsedJSON.error_key) {
+      parsedError = i18n(parsedJSON.error_key);
     }
   }
 
@@ -78,6 +80,8 @@ export function extractErrorInfo(
   return {
     html,
     message: parsedError || defaultMessage || i18n("generic_error"),
+    errorKey: parsedJSON?.error_key ?? null,
+    status: error.status ?? null,
   };
 }
 

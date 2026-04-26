@@ -263,6 +263,9 @@ fr:
           bar_done:
             one: "%{count} publication"
             other: "%{count} publications"
+        theme_translations:
+          translate:
+            label: "Traduire"
       spam:
         short_title: "Contenu indésirable"
         title: "Configuration de la gestion du contenu indésirable"
@@ -366,8 +369,6 @@ fr:
         user: Utilisateur
         create_user: Créer un utilisateur
         default_llm: Modèle linguistique par défaut
-        question_consolidator_llm: Modèle linguistique pour l'outil de consolidation des questions
-        question_consolidator_llm_help: Le modèle linguistique à utiliser pour l'outil de consolidation des questions, vous pouvez choisir un modèle moins puissant pour réduire les coûts.
         system_prompt: Invite du système
         forced_tool_strategy: Stratégie d'outil forcé
         allow_chat_direct_messages: "Autoriser les messages directs de discussion"
@@ -378,6 +379,9 @@ fr:
         save: "Enregistrer"
         enabled: "Activé ?"
         tools: "Outils activés"
+        mcp_tools_modal:
+          select_all: "Tout sélectionner"
+          clear_all: "Tout effacer"
         forced_tools: "Outils forcés"
         allowed_groups: "Groupes autorisés"
         delete: "Supprimer"
@@ -450,7 +454,6 @@ fr:
         tool_name: "Nom de l'outil"
         description: "Description"
         description_help: "Une description claire de l'objectif de l'outil pour le modèle linguistique"
-        subheader_description: "Les outils étendent les capacités des robots IA avec des fonctions JavaScript définies par l'utilisateur."
         summary: "Résumé"
         summary_help: "Résumé des outils destinés à être affichés aux utilisateurs finaux"
         script: "Script"
@@ -484,6 +487,23 @@ fr:
         delete: "Supprimer"
         embedding: "Intégration"
         tool: "Outil"
+      mcp_servers:
+        name: "Nom"
+        description: "Description"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Connecté"
+        oauth_connect: "Connecter"
+        oauth_hide_details: "Masquer les détails"
+        enabled: "Activé"
+        save: "Enregistrer"
+        edit: "Modifier"
+        delete: "Supprimer"
+        tools_modal:
+          parameters: "Paramètres"
+          required: "Requis"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"
@@ -539,7 +559,7 @@ fr:
           other: "Ce modèle est actuellement utilisé par %{settings}. Si la configuration est incorrecte, les fonctionnalités ne fonctionneront pas comme prévu. "
         model_description:
           none: "Paramètres généraux qui fonctionnent pour la plupart des modèles linguistiques"
-          anthropic-claude-opus-4-6: "Le modèle le plus intelligent d'Anthropic"
+          anthropic-claude-opus-4-7: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
           open_ai-gpt-5-nano: "Le modèle GPT-5 le plus rapide et le plus économique"
@@ -738,8 +758,6 @@ fr:
           title: "Afficher l'interaction avec l'IA"
           copy_request: "Copier la demande"
           copy_response: "Copier la réponse"
-          request_tokens: "Jetons de demande :"
-          response_tokens: "Jetons de réponse :"
           request: "Requête"
           response: "Réponse"
           next_log: "Suivant"

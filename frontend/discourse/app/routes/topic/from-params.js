@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
@@ -14,11 +15,21 @@ export default class TopicFromParams extends DiscourseRoute {
   @service router;
 
   // Avoid default model hook
-  model(params) {
+  model(params, transition) {
     params = params || {};
     params.track_visit = true;
 
     const topic = this.modelFor("topic");
+
+    // Skip the full post-stream load when we know afterModel will redirect
+    // to the nested route. The nested route handles its own visit tracking.
+    const flatParam =
+      transition?.to?.queryParams?.flat ||
+      transition?.to?.parent?.queryParams?.flat;
+    if (topic.is_nested_view && !flatParam && !topic._forcedFlat) {
+      return params;
+    }
+
     const postStream = topic.postStream;
 
     // I sincerely hope no topic gets this many posts
@@ -40,8 +51,30 @@ export default class TopicFromParams extends DiscourseRoute {
       });
   }
 
-  afterModel(model) {
+  afterModel(model, transition) {
     const topic = this.modelFor("topic");
+
+    if (topic.is_nested_view) {
+      const flatParam =
+        transition?.to?.queryParams?.flat ||
+        transition?.to?.parent?.queryParams?.flat;
+      if (flatParam || topic._forcedFlat) {
+        topic.set("_forcedFlat", true);
+      } else {
+        const postNumber = model.nearPost;
+        if (postNumber && postNumber > 1) {
+          this.router.replaceWith(
+            "nestedPost",
+            topic.slug,
+            topic.id,
+            postNumber
+          );
+        } else {
+          this.router.replaceWith("nested", topic.slug, topic.id);
+        }
+        return;
+      }
+    }
 
     const isLoadingFirstPost =
       topic.postStream.firstPostPresent &&
@@ -109,7 +142,7 @@ export default class TopicFromParams extends DiscourseRoute {
       closestPost.clearBookmark();
     }
 
-    if (!isEmpty(topic.draft)) {
+    if (!isEmpty(topic.draft) && !EmbedMode.enabled) {
       this.composer.open({
         draft: Draft.getLocal(topic.draft_key, topic.draft),
         draftKey: topic.draft_key,

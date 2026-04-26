@@ -465,19 +465,14 @@ module Discourse
 
     plugins.each do |plugin|
       if plugin.js_asset_exists?
-        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
-          if logical_path =
-               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main")
-            assets << {
-              name: logical_path,
-              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
-              plugin: plugin,
-              type_module: true,
-              importmap_name: "discourse/plugins/#{plugin.name}",
-            }
-          end
-        else
-          assets << { name: "plugins/#{plugin.directory_name}", plugin: plugin }
+        if logical_path = Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "main")
+          assets << {
+            name: logical_path,
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "main"),
+            plugin: plugin,
+            type_module: true,
+            importmap_name: "discourse/plugins/#{plugin.name}",
+          }
         end
       end
 
@@ -490,35 +485,26 @@ module Discourse
       end
 
       if args[:include_admin_asset] && plugin.admin_js_asset_exists?
-        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
-          if logical_path =
-               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin")
-            assets << {
-              name: logical_path,
-              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
-              plugin: plugin,
-              type_module: true,
-            }
-          end
-        else
-          assets << { name: "plugins/#{plugin.directory_name}_admin", plugin: plugin }
+        if logical_path =
+             Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "admin")
+          assets << {
+            name: logical_path,
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
+            plugin: plugin,
+            type_module: true,
+          }
         end
       end
 
       if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
            plugin.test_js_asset_exists?
-        if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
-          if logical_path =
-               Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test")
-            assets << {
-              name: logical_path,
-              imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
-              plugin: plugin,
-              type_module: true,
-            }
-          end
-        else
-          assets << { name: "plugins/test/#{plugin.directory_name}_tests", plugin: plugin }
+        if logical_path = Plugin::JsManager.digested_logical_path_for(plugin.directory_name, "test")
+          assets << {
+            name: logical_path,
+            imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
+            plugin: plugin,
+            type_module: true,
+          }
         end
       end
     end
@@ -689,6 +675,10 @@ module Discourse
     nil
   rescue ActionController::RoutingError
     nil
+  end
+
+  def self.beacon_pv_tracking_path
+    "#{Discourse.base_path}/srv/pv"
   end
 
   class << self
@@ -1010,15 +1000,19 @@ module Discourse
     Process.warmup
   end
 
-  def self.after_unicorn_worker_fork
+  # Called in web worker processes after fork to apply worker-specific
+  # database variable overrides (e.g. a stricter statement_timeout for
+  # web requests than for sidekiq jobs). Configured via GlobalSettings
+  # with the `unicorn_worker_db_variables_` prefix.
+  def self.apply_worker_db_variables_overrides
     variables_overrides = {}
-    unicorn_worker_db_variables_prefix = "unicorn_worker_db_variables_"
+    prefix = "unicorn_worker_db_variables_"
 
     GlobalSetting.provider.keys.each do |key|
-      if key.start_with?(unicorn_worker_db_variables_prefix)
-        variables_overrides[
-          key.to_s.sub(unicorn_worker_db_variables_prefix, "").downcase.to_sym
-        ] = GlobalSetting.public_send(key)
+      if key.start_with?(prefix)
+        variables_overrides[key.to_s.sub(prefix, "").downcase.to_sym] = GlobalSetting.public_send(
+          key,
+        )
       end
     end
 

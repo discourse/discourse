@@ -71,7 +71,9 @@ module SvgSprite
         cloud-arrow-down
         cloud-arrow-up
         code
+        code-branch
         comment
+        comments
         compress
         copy
         crosshairs
@@ -109,6 +111,7 @@ module SvgSprite
         ellipsis
         ellipsis-vertical
         envelope
+        expand
         eye
         eye-dropper
         eye-slash
@@ -211,6 +214,9 @@ module SvgSprite
         minus
         mobile-screen-button
         moon
+        nested-circle-minus
+        nested-circle-plus
+        nested-thread
         paintbrush
         palette
         paper-plane

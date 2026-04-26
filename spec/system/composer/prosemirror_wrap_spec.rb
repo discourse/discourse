@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Inline and Block Wrap", type: :system do
+describe "Composer - ProseMirror - Inline and Block Wrap" do
   include_context "with prosemirror editor"
 
   it "supports [wrap] to create a wrap block" do

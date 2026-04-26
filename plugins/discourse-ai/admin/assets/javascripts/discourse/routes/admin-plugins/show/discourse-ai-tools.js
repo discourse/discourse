@@ -4,7 +4,12 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class DiscourseAiToolsRoute extends DiscourseRoute {
   @service store;
 
-  model() {
-    return this.store.findAll("ai-tool");
+  async model() {
+    const [tools, mcpServers] = await Promise.all([
+      this.store.findAll("ai-tool"),
+      this.store.findAll("ai-mcp-server"),
+    ]);
+
+    return { tools, mcpServers };
   }
 }

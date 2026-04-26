@@ -340,6 +340,9 @@ pl_PL:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automatycznie ustawił Twoją obecność i zaprosił Cię do %{eventName}"
         an_event: "zdarzenie"
+      event_description:
+        show_more: "Pokaż więcej"
+        show_less: "Pokaż mniej"
       edit_reason: "Wydarzenie zaktualizowane"
       edit_reason_closed: "Wydarzenie zamknięte"
       edit_reason_opened: "Wydarzenie otwarte"
@@ -475,6 +478,9 @@ pl_PL:
         timezone:
           label: Strefa czasowa
           remove_timezone: Brak strefy czasowej (UTC)
+        all_day:
+          label: "Wydarzenie całodniowe"
+          description: "Wydarzenie całodniowe nie będzie miało konkretnych godzin, tylko datę. Wydarzenie będzie trwało od początku do końca dnia."
         reminders:
           label: "Przypomnienia"
           types:
@@ -525,6 +531,8 @@ pl_PL:
         status:
           label: "Status"
         delete_confirmation_message: "Usunąć to wydarzenie?"
+        image:
+          label: "Obraz zdarzenia"
       invite_user_or_group:
         title: "Powiadom użytkowników lub grupy"
         invite: "Wyślij"

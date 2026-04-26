@@ -7,12 +7,14 @@ describe ListController do
   before { SiteSetting.topic_voting_enabled = true }
 
   it "allow anons to view votes" do
+    archived_topic = Fabricate(:topic)
     DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+    DiscourseTopicVoting::Vote.create!(user: user, topic: archived_topic, archive: true)
 
     get "/topics/voted-by/#{user.username}.json"
-    topic_json = response.parsed_body.dig("topic_list", "topics").first
+    topic_ids = response.parsed_body.dig("topic_list", "topics").pluck("id")
 
-    expect(topic_json["id"]).to eq(topic.id)
+    expect(topic_ids).to eq([topic.id])
   end
 
   it "returns a 404 when we don't show votes on profiles" do

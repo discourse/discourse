@@ -17,7 +17,8 @@ class SharedAiConversation < ActiveRecord::Base
     raise "Target must be a topic for now" if !target.is_a?(Topic)
 
     conversation = find_by(user: user, target: target)
-    conversation_data = build_conversation_data(target, max_posts: max_posts)
+    conversation_data =
+      build_conversation_data(target, max_posts: max_posts, publish_artifacts: true)
 
     conversation =
       if conversation
@@ -91,8 +92,9 @@ class SharedAiConversation < ActiveRecord::Base
     html = +""
     populated_context.each do |post|
       text = PrettyText.excerpt(post.cooked, 400, strip_links: true, strip_details: true)
+      username = ERB::Util.html_escape(post.user.username)
 
-      html << "<p><b>#{post.user.username}</b>: #{text}</p>"
+      html << "<p><b>#{username}</b>: #{text}</p>"
       if html.length > 1000
         html << "<p>...</p>"
         break
@@ -103,6 +105,7 @@ class SharedAiConversation < ActiveRecord::Base
   end
 
   def onebox
+    escaped_title = ERB::Util.html_escape(title)
     <<~HTML
     <div>
       <aside class="onebox allowlistedgeneric" data-onebox-src="#{url}">
@@ -111,7 +114,7 @@ class SharedAiConversation < ActiveRecord::Base
         <a href="#{url}" target="_blank" rel="nofollow ugc noopener" tabindex="-1">#{Discourse.base_uri}</a>
       </header>
       <article class="onebox-body">
-      <h3><a href="#{url}" rel="nofollow ugc noopener" tabindex="-1">#{title}</a></h3>
+      <h3><a href="#{url}" rel="nofollow ugc noopener" tabindex="-1">#{escaped_title}</a></h3>
     #{html_excerpt}
     </article>
     <div style="clear: both"></div>
@@ -133,7 +136,12 @@ class SharedAiConversation < ActiveRecord::Base
     I18n.t("discourse_ai.share_ai.formatted_excerpt", llm_name: llm_name, excerpt: excerpt)
   end
 
-  def self.build_conversation_data(topic, max_posts: DEFAULT_MAX_POSTS, include_usernames: false)
+  def self.build_conversation_data(
+    topic,
+    max_posts: DEFAULT_MAX_POSTS,
+    include_usernames: false,
+    publish_artifacts: false
+  )
     allowed_user_ids = topic.topic_allowed_users.pluck(:user_id)
     ai_bot_participant = DiscourseAi::AiBot::EntryPoint.find_participant_in(allowed_user_ids)
 
@@ -166,7 +174,7 @@ class SharedAiConversation < ActiveRecord::Base
             id: post.id,
             user_id: post.user_id,
             created_at: post.created_at,
-            cooked: cook_artifacts(post),
+            cooked: cook_artifacts(post, publish: publish_artifacts),
           }
 
           mapped[:agent] = agent if ai_bot_participant&.id == post.user_id
@@ -176,7 +184,7 @@ class SharedAiConversation < ActiveRecord::Base
     }
   end
 
-  def self.cook_artifacts(post)
+  def self.cook_artifacts(post, publish: false)
     html = post.cooked
     return html if !%w[lax hybrid strict].include?(SiteSetting.ai_artifact_security)
 
@@ -188,7 +196,7 @@ class SharedAiConversation < ActiveRecord::Base
         version = node["data-ai-artifact-version"]
         version_number = version.to_i if version
         if id > 0
-          AiArtifact.share_publicly(id: id, post: post)
+          AiArtifact.share_publicly(id: id, post: post) if publish
           node.replace(AiArtifact.iframe_for(id, version_number))
         end
       end

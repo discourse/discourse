@@ -13,7 +13,7 @@ GEM
       faraday (~> 2.0)
     ffi (1.17.0)
     ffi (1.17.0-arm64-darwin)
-    json (2.19.1)
+    json (2.19.2)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)

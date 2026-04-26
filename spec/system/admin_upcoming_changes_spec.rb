@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin upcoming changes", type: :system do
+describe "Admin upcoming changes" do
   fab!(:current_user, :admin)
   let(:upcoming_changes_page) { PageObjects::Pages::AdminUpcomingChanges.new }
 
@@ -60,6 +60,50 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+  end
+
+  it "shows the permanent soon notice for stable changes but not for site_setting_default types" do
+    mock_upcoming_change_metadata(
+      {
+        about_page_extra_groups_show_description: {
+          impact: "feature,all_members",
+          status: :stable,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+        enable_upload_debug_mode: {
+          impact: "site_setting_default,all_members",
+          status: :stable,
+          impact_type: "site_setting_default",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+
+    expect(
+      upcoming_changes_page.change_item(:about_page_extra_groups_show_description),
+    ).to have_permanent_soon_notice
+    expect(
+      upcoming_changes_page.change_item(:enable_upload_debug_mode),
+    ).to have_no_permanent_soon_notice
+  end
+
+  it "does not show permanent upcoming changes" do
+    mock_upcoming_change_metadata(
+      {
+        allow_uppercase_posts: {
+          impact: "feature,all_members",
+          status: :permanent,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page).to have_no_change(:allow_uppercase_posts)
   end
 
   # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
@@ -287,6 +331,118 @@ describe "Admin upcoming changes", type: :system do
       expect(upcoming_changes_page.change_item(:enable_upload_debug_mode).enabled_for).to eq(
         Group.find(Group::AUTO_GROUPS[:staff]).name,
       )
+    end
+  end
+
+  context "when the upcoming change has a default override" do
+    let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+      mock_upcoming_change_default_overrides(
+        {
+          suggested_topics_max_days_old: {
+            upcoming_change: :enable_upload_debug_mode,
+            new_default: 1000,
+          },
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+      SiteSetting.refresh!
+    end
+
+    it "shows information about the default override in the site settings UI" do
+      settings_page.visit("suggested_topics_max_days_old")
+      expect(settings_page).to have_upcoming_change_default_warning(
+        :suggested_topics_max_days_old,
+        old_default: 365,
+        new_default: 1000,
+      )
+    end
+  end
+
+  context "when the upcoming change has a boolean default override and the admin opts out" do
+    let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "site_setting_default,all_members",
+            status: :experimental,
+            impact_type: "site_setting_default",
+            impact_role: "all_members",
+          },
+        },
+      )
+      mock_upcoming_change_default_overrides(
+        {
+          limit_suggested_to_category: {
+            upcoming_change: :enable_upload_debug_mode,
+            new_default: true,
+          },
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+      SiteSetting.refresh!
+    end
+
+    after do
+      clear_mocked_upcoming_change_metadata
+      clear_mocked_upcoming_change_default_overrides
+    end
+
+    it "preserves the admin's opt-out across page reload while still showing the override warning" do
+      settings_page.visit("limit_suggested_to_category")
+
+      expect(settings_page).to have_upcoming_change_default_warning(
+        :limit_suggested_to_category,
+        old_default: false,
+        new_default: true,
+      )
+      expect(
+        settings_page.find_setting(:limit_suggested_to_category).find(
+          ".setting-value input[type=checkbox]",
+        ),
+      ).to be_checked
+
+      settings_page.toggle_setting(:limit_suggested_to_category)
+
+      # Wait for the save to land in the DB before forcing the in-process
+      # SiteSetting refresh below — the .overridden class only appears once
+      # the value has been persisted.
+      expect(
+        settings_page.find_setting(:limit_suggested_to_category, overridden: true),
+      ).to be_present
+
+      # Production reproduces the bug because each unicorn worker re-runs
+      # SiteSetting.refresh! via the MessageBus subscriber after another
+      # worker persists a setting change. In a single-process system spec
+      # that subscriber doesn't fire, so we trigger the refresh explicitly
+      # to mirror what happens on the next request in a real deployment.
+      SiteSetting.refresh!
+
+      page.refresh
+
+      expect(settings_page).to have_upcoming_change_default_warning(
+        :limit_suggested_to_category,
+        old_default: false,
+        new_default: true,
+      )
+      expect(
+        settings_page.find_setting(:limit_suggested_to_category).find(
+          ".setting-value input[type=checkbox]",
+        ),
+      ).not_to be_checked
     end
   end
 end

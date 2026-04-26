@@ -29,6 +29,7 @@ class UpcomingChanges::NotifyPromotion
   policy :meets_or_exceeds_status
   policy :change_has_not_already_been_notified_about_promotion
   policy :admin_has_not_manually_toggled
+  policy :should_notify_admins
 
   try do
     step :log_promotion
@@ -57,7 +58,11 @@ class UpcomingChanges::NotifyPromotion
   end
 
   def admin_has_not_manually_toggled(params:)
-    !SiteSetting.modified.key?(params.setting_name)
+    !SiteSetting.setting_modified_from_default?(params.setting_name)
+  end
+
+  def should_notify_admins(params:)
+    UpcomingChanges.should_notify_admins?
   end
 
   def log_promotion(params:, guardian:)

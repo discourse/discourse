@@ -334,9 +334,8 @@ module ExternalUploadHelpers
           status: 422,
         )
       rescue => err
-        Discourse.warn_exception(
-          err,
-          message: "Complete external upload failed unexpectedly for user #{current_user.id}",
+        Rails.logger.error(
+          "Complete external upload failed unexpectedly for user #{current_user.id}: #{err.class} #{err.message}\n#{err.backtrace.join("\n")}",
         )
 
         render_json_error(I18n.t("upload.failed"), status: 422)

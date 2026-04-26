@@ -157,6 +157,14 @@ export default function () {
     );
 
     this.route(
+      "adminProblemChecks",
+      { path: "/problem-checks", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
+      }
+    );
+
+    this.route(
       "adminReports",
       { path: "/reports", resetNamespace: true },
       function () {

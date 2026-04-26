@@ -450,7 +450,6 @@ pt_BR:
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
-      skipped: "A lista de verificação de integração de administradores foi ignorada. Se quiser reativá-la, procure por `enable site owner onboarding` nas configurações do site."
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
       invite_collaborators:
         title: "Convidar colaboradores"
@@ -459,7 +458,6 @@ pt_BR:
       start_posting:
         title: "Comece a postar"
         description: "Dê às pessoas algo sobre o que conversar."
-        action: "Ideias para quebrar o gelo"
         choose_option: "Como você gostaria de começar?"
         predefined_topics: "Modelos para quebrar o gelo"
         predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."
@@ -565,8 +563,6 @@ pt_BR:
           other: "Criado(a) há menos de %{count} anos"
     bookmarked:
       title: "Favorito"
-      edit_bookmark: "Editar favorito"
-      clear_bookmarks: "Limpar favoritos"
       help:
         bookmark: "Clique para adicionar este tópico aos favoritos"
         edit_bookmark: "Clique para editar o favorito numa postagem deste tópico"
@@ -585,12 +581,12 @@ pt_BR:
       clear_reminder: "Limpar lembrete"
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
+      topic_bookmark: "Tópico"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
       created_with_reminder_generic: "Você marcou isso como lembrete em %{date}. %{name}"
       delete: "Excluir favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
-      confirm_clear: "Você tem certeza de que deseja apagar todos os seus favoritos deste tópico?"
       save: "Salvar"
       no_timezone: 'Você ainda não definiu um fuso horário. Você não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       invalid_custom_datetime: "A data e a hora que você informou são inválidas, tente novamente."
@@ -2799,6 +2795,8 @@ pt_BR:
         filter_for_more: Filtre para ver mais…
         categories_admin_dropdown:
           title: "Gerenciar categorias"
+        tag_category_admin_dropdown:
+          edit_tag: "Editar tag"
         bulk_select_topics_dropdown:
           title: "Ações em massa"
         bulk_select_bookmarks_dropdown:
@@ -2829,6 +2827,8 @@ pt_BR:
       medium_dark_tone: Tom de pele médio-escuro
       dark_tone: Tom de pele escuro
       default: Emojis personalizados
+    filter_input:
+      clear: "Limpar filtro"
     shared_drafts:
       title: "Rascunhos compartilhados"
       notice: "Este tópico está visível apenas para quem puder publicar rascunhos compartilhados."
@@ -2985,6 +2985,8 @@ pt_BR:
         name_label: "Aplicar wrap no nome"
         attributes_label: "Atributos"
         add_attribute: "Adicionar atributo"
+        attribute_key: "Chave"
+        attribute_value: "Valor"
         remove_attribute: "Remover atributo"
         apply: "Aplicar"
         unwrap: "Remover wrap"
@@ -3073,6 +3075,9 @@ pt_BR:
         copy: "Copiar link"
         remove: "Remover link"
         visit: "Abrir link em uma aba externa"
+        link_copied: "Link copiado!"
+      onebox_toolbar:
+        copy: "Copiar link"
         link_copied: "Link copiado!"
       unsupported_token: "O editor avançado não oferece suporte a todos os recursos usados nesta postagem; mudando para o editor de Markdown."
     notifications:
@@ -3409,11 +3414,8 @@ pt_BR:
         confirm: "Confirmar"
         select_all: "Selecionar tudo"
         clear_all: "Limpar tudo"
-        unlist_topics: "Remover tópicos da lista"
-        relist_topics: "Reinserir tópicos na lista"
         reset_bump_dates: "Redefinir datas de promoção"
         defer: "Marcar não lido"
-        delete: "Excluir tópicos"
         delete_topics_count:
           one: "Excluir tópico"
           other: "Excluir tópicos"
@@ -3452,36 +3454,27 @@ pt_BR:
           other: "Descartar novos(as) (%{count})"
         toggle: "alternar seleção de tópicos em massa"
         actions: "Ações em massa"
-        change_category: "Definir categoria…"
-        close_topics: "Fechar tópicos"
-        archive_topics: "Arquivar tópicos"
         move_messages_to_inbox: "Mover para caixa de entrada"
         archive_messages: "Mover para o arquivo"
-        notification_level: "Notificações…"
         change_notification_level: "Alterar nível de notificação"
         choose_new_category: "Escolha a nova categoria para os tópicos:"
-        selected:
-          one: "Você selecionou <b>%{count}</b> tópico."
-          other: "Você selecionou <b>%{count}</b> tópicos."
         selected_sole_category:
           one: "Você selecionou <b>%{count}</b> tópico da categoria:"
           other: "Você selecionou <b>%{count}</b> tópicos da categoria:"
         selected_count:
           one: "Selecionou %{count}"
           other: "Selecionou %{count}"
-        change_tags: "Substituir etiquetas"
         append_tags: "Adicionar etiquetas"
         choose_new_tags: "Escolha novas etiquetas para estes tópicos:"
-        choose_append_tags: "Escolha novas etiquetas para adicionar a estes tópicos:"
+        choose_append_tags: "Adicionar etiquetas"
         changed_tags: "As etiquetas destes tópicos foram alteradas."
-        remove_tags: "Remover todas as etiquetas"
         confirm_remove_tags:
           one: "Todas as etiquetas serão removidas deste tópico. Deseja prosseguir?"
           other: "Todas as etiquetas serão removidas de <b>%{count}</b> tópicos. Deseja prosseguir?"
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
-        notify: "Notificar usuários sobre essa alteração."
+        notify: "Notificar usuários sobre essa alteração"
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
         completed_count:
@@ -3519,7 +3512,6 @@ pt_BR:
         name: "Descartar"
       close_topics:
         name: "Fechar"
-        note: "Observação"
         optional: (opcional)
       archive_topics:
         name: "Arquivo"
@@ -3533,24 +3525,37 @@ pt_BR:
         name: "Listar novamente"
       remove_tags:
         name: "Remover tags"
-      append_tags:
-        name: "Adicionar etiquetas"
       replace_tags:
         name: "Substituir etiquetas"
       delete_topics:
         name: "Excluir"
       update_category:
         name: "Atualizar Categoria"
-        description: "Escolha a nova categoria para os tópicos selecionados"
+      convert_to_public_topic:
+        name: "Tornar tópico público…"
+      convert_to_private_message:
+        name: "Crie uma mensagem pessoal"
       reset_bump_dates:
         name: "Redefinir datas de promoção"
-        description: "Redefinir data de promoção do tópico para a data de criação da postagem mais recente, o que afeta a ordem da lista de tópicos"
       defer:
         name: "Marcar não lido"
-        description: "Marcar tópicos como não lidos"
       update_notifications:
         name: "Atualizar notificações"
-        description: "Alterar nível de notificação para Acompanhando, Monitorando, Normal, Silenciado"
+    nested_replies:
+      sort:
+        label: "Ordenar por"
+        top: "Melhores"
+        new: "Nova"
+      load_more_children:
+        one: "%{count} resposta a mais"
+        other: "%{count} respostas a mais"
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} respostas"
+      collapse: "Recolher"
+      no_replies: "Nenhuma resposta ainda."
+      deleted_post_placeholder: "[excluído]"
+      pinned_reply: "Fixada"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"
@@ -4079,6 +4084,10 @@ pt_BR:
       sr_post_like_count_button:
         one: "%{count} pessoa curtiu esta postagem."
         other: "%{count} pessoas curtiram esta postagem."
+      likes_popup:
+        title:
+          one: "%{count} curtida"
+          other: "%{count} curtidas"
       sr_post_read_count_button:
         one: "%{count} pessoa leu esta postagem."
         other: "%{count} pessoas leram esta postagem."
@@ -4109,8 +4118,7 @@ pt_BR:
           confirm_delete: "Tem certeza de que deseja excluir as traduções para \"%{languageCode}\"?"
         success: "As traduções foram atualizadas"
         post_language_selector:
-          title: "Idioma da postagem"
-          none: "Nenhum"
+          none: "Não configurado"
         edit_warning:
           message: "Esta é uma postagem traduzida.<br><br> Você quer editar a postagem original em %{language} ou editar essa tradução específica?"
           action_original: "Editar a postagem original"
@@ -4135,6 +4143,7 @@ pt_BR:
       cancel_composer:
         confirm: "Você deseja excluir sua postagem?"
         discard: "Descartar"
+        discard_edit: "Descartar alterações"
       via_email: "postagem recebida via e-mail"
       via_auto_generated_email: "esta mensagem chegou por um e-mail gerado automaticamente"
       whisper: "esta mensagem é um sussuro privado para a moderação"
@@ -4178,7 +4187,7 @@ pt_BR:
         admin: "ações administrativas da postagem"
         admin_action: "Administração"
         permanently_delete: "Excluir permanentemente"
-        permanently_delete_confirmation: "Tem certeza de que deseja excluir permanentemente esta postagem? Não será possível recuperá-la."
+        permanently_delete_confirm_phrase: "excluir permanentemente"
         wiki: "Tornar Wiki"
         unwiki: "Remover Wiki"
         convert_to_moderator: "Adicionar cor da equipe"
@@ -4324,6 +4333,7 @@ pt_BR:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
+      moderation: "Moderação"
       advanced: "Avançado"
       show_advanced: "Configurações avançadas"
       topic_template: "Modelo"
@@ -4405,6 +4415,8 @@ pt_BR:
       list: "Listar categorias"
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
+      description_expand: "Exibir mais"
+      description_collapse: "Exibir menos"
       already_used: "Esta cor já foi usada para outra categoria"
       color_palette: "Paleta de cores"
       security: "Segurança"
@@ -4450,6 +4462,10 @@ pt_BR:
       review_group_name: "nome do grupo"
       require_topic_approval: "Requer aprovação dos moderadores(as) de todos os novos tópicos"
       require_reply_approval: "Requer aprovação dos moderadores(as) de todas as novas respostas"
+      posting_review_modes:
+        no_one: "Ninguém"
+        everyone: "Todos(as)"
+      posting_review_groups_placeholder: "Selecionar grupos..."
       this_year: "este ano"
       position: "Posição na página de categorias:"
       default_position: "Posição padrão"
@@ -5576,8 +5592,6 @@ pt_BR:
         group_traffic: "Tráfego"
         group_members: "Membros"
         group_content: "Conteúdo e saúde"
-        group_moderation: "Moderação"
-        group_security: "Segurança"
         group_other: "Outras"
         legacy_warning: "Este é um relatório legado. Ele será desativado em breve. Se precisar de ajuda para encontrar o substituto, entre em contato com o suporte."
       config_sections:
@@ -5641,6 +5655,9 @@ pt_BR:
           staff: "Equipe"
           all_members: "Todos os membros"
           developers: "Desenvolvedores"
+        impact_types:
+          feature_type: "Recurso"
+          other_type: "Outras"
         filter:
           search_placeholder: "Filtrar por nome, descrição ou plugin..."
           no_results: "Nenhuma alteração prevista corresponde ao seu filtro."
@@ -5672,7 +5689,6 @@ pt_BR:
           header_description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
         developer:
           title: "Desenvolvedor(a)"
-          header_description: "Configurações do(a) desenvolvedor(a) para controlar limites de frequência, multiplicadores e cálculos, modo de segurança e outros recursos avançados"
         experimental:
           title: "Experimental"
           header_description: "Ative ou desative os recursos experimentais para seu site, a maioria deles pode ser controlado em grupo"
@@ -5920,6 +5936,13 @@ pt_BR:
             logs:
               title: "Registros"
               header_description: "Visualizar e gerenciar logs de backups, restaurações e uploads"
+        problem_checks:
+          priority: "Prioridade"
+          status: "Status"
+          last_run_at: "Última execução"
+          ignore: "Ignorar"
+          more_options:
+            title: "Mais opções"
         reports:
           title: "Relatórios"
           header_description: "Relatórios são uma ferramenta poderosa para ajudar a entender o que acontece no seu site. Ajudam na identificação de tendências, relatam problemas e tomam decisões com base em dados."
@@ -6099,12 +6122,10 @@ pt_BR:
         installed_version: "Instalado"
         latest_version: "Última versão"
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
-        dismiss_notice: "Descartar"
+        dismiss_notice: "Ignorar"
         new_features:
           title: "Novidades?"
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
-          no_new_features_found: "Não há itens no feed ou o filtro que você selecionou não retornou nenhum resultado. Você pode ver anúncios anteriores de novos recursos na <a href='%{url}' target='_blank'>comunidade Discourse Meta</a>."
-          no_new_features_error: "Houve um erro ao carregar o feed. Você pode ver os anúncios anteriores de novos recursos na <a href='%{url}' target='_blank'>comunidade Discourse Meta</a>."
           learn_more: "Saiba mais..."
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
@@ -7076,7 +7097,6 @@ pt_BR:
           import_web_tip: "Repositório contendo tema"
           direct_install_tip: "Tem certeza de que quer instalar <strong>%{name}</strong> do repositório listado abaixo?"
           import_web_advanced: "Avançado…"
-          import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json com o tema"
           is_private: "O tema está em um repositório git privado"
           finish_install: "Concluir a instalação do tema"
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"
@@ -8174,6 +8194,7 @@ pt_BR:
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
         no_results: "Nennhum texto de site correspondente encontrado"
         interpolation_keys: "Chaves de interpolação disponíveis:"
+        interpolation_key_used: "Já utilizado"
         outdated:
           title: "Esta tradução está desatualizada"
           description: "A tradução padrão para esta chave mudou desde que esta substituição foi criada. Verifique abaixo que a sua tradução corresponde a quaisquer alterações feitas na intenção original."
@@ -8293,6 +8314,7 @@ pt_BR:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) administradores(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           password_unique_characters:
+            prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"
             confirm: "Sim, atualizar política de senha"
           block_common_passwords:
             prompt: "Você está prestes a mudar sua política de senha. Isso afetará todos(as) os(as) usuários(as) que mudarem de senha de agora em diante. Deseja mesmo prosseguir?"

@@ -27,12 +27,16 @@
     }
   }
 
-  @include viewport.until(sm) {
-    .form-kit__input-group {
-      flex-flow: column;
-      gap: 1.5em;
-    }
+  .form-kit__input-group {
+    gap: var(--space-3);
 
+    @include viewport.until(sm) {
+      flex-flow: column;
+      gap: var(--space-6);
+    }
+  }
+
+  @include viewport.until(sm) {
     .form-kit__input,
     .form-kit__input-group > :not(:first-child) .form-kit__control-input,
     .form-kit__input-group > :not(:last-child) .form-kit__control-input {

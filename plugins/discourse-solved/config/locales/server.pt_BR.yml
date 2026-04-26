@@ -6,14 +6,6 @@
 
 pt_BR:
   accepted_answer: "Resposta aceita"
-  category_types:
-    support:
-      name: "Apoio"
-      title: "apoio"
-  discourse_solved:
-    category_type:
-      allow_accepted_answers:
-        label: "Permitir que o(a) proprietário(a) do tópico e a equipe marquem uma resposta como a solução"
   site_settings:
     solved_enabled: "Ativar plugin solucionado, permite que usuários(a) selecionem soluções para tópicos"
     allow_solved_on_all_topics: "Permite que os(as) usuários(as) escolham soluções em todos os tópicos (quando esta opção estiver desmarcada, as soluções podem ser ativadas por categoria ou etiqueta)"

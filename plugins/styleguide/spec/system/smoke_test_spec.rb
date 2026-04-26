@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Styleguide Smoke Test", type: :system do
+RSpec.describe "Styleguide Smoke Test" do
   fab!(:admin)
 
   # keep this hash updated when adding, removing or renaming components
@@ -48,6 +48,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/organisms/basic-topic-list", title: "Basic Topic List" },
       { href: "/organisms/categories-list", title: "Categories List" },
       { href: "/organisms/chat", title: "Chat" },
+      { href: "/organisms/docked-composer", title: "Docked Composer" },
       { href: "/organisms/modal", title: "Modal" },
       { href: "/organisms/navigation", title: "Navigation" },
       { href: "/organisms/site-header", title: "Site Header" },
@@ -96,8 +97,8 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
     end
   end
 
-  it "renders the index page correctly on a site with no default theme" do
-    SiteSetting.default_theme_id = nil
+  it "renders the index page correctly on a site with no default color schemes" do
+    SiteSetting.default_theme_id = Fabricate(:theme).id
     visit "/styleguide"
 
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
@@ -113,9 +114,8 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
     sections.each do |section, items|
       items.each do |item|
         it "renders the #{section}: #{item[:title]} page correctly" do
-          # TODO: fix chat and more-topics pages
-          skip_pages = %w[/organisms/chat /organisms/more-topics]
-          skip "Skipping smoke test for #{item[:href]} page" if skip_pages.include?(item[:href])
+          # TODO: fix more-topics page flake
+          skip "Skipping smoke test for more-topics page" if item[:href] == "/organisms/more-topics"
 
           visit "/styleguide/#{item[:href]}"
 

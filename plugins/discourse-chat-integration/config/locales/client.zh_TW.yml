@@ -8,6 +8,8 @@ zh_TW:
   js:
     chat_integration:
       settings: "設定"
+      more_providers: "更多"
+      channels_title: "頻道"
       all_categories: "(所有分類)"
       all_tags: "(所有標記)"
       delete_channel: "刪除"

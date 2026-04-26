@@ -10,6 +10,7 @@ import { Promise } from "rsvp";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import BulkPinOptions from "discourse/components/modal/feature-topic/bulk-pin-options";
 import RadioButton from "discourse/components/radio-button";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { topicLevels } from "discourse/lib/notification-levels";
@@ -157,7 +158,7 @@ export default class BulkTopicActions extends Component {
   }
 
   @action
-  performAction() {
+  performAction(opts = {}) {
     this.loading = true;
     switch (this.model.action) {
       case "close":
@@ -200,6 +201,12 @@ export default class BulkTopicActions extends Component {
           t.set("unlisted", false)
         );
         break;
+      case "unpin":
+        this.forEachPerformed({ type: "unpin" }, (t) => t.set("pinned", false));
+        break;
+      case "pin":
+        this.performAndRefresh({ type: "pin", ...opts });
+        break;
       case "append-tags":
         this.performAndRefresh({
           type: "append_tags",
@@ -221,9 +228,6 @@ export default class BulkTopicActions extends Component {
       case "reset-bump-dates":
         this.performAndRefresh({ type: "reset_bump_dates" });
         break;
-      case "defer":
-        this.performAndRefresh({ type: "destroy_post_timing" });
-        break;
       case "update-notifications":
         this.performAndRefresh({
           type: "change_notification_level",
@@ -238,6 +242,15 @@ export default class BulkTopicActions extends Component {
           },
           (t) => t.set("category_id", this.categoryId)
         );
+        break;
+      case "convert-to-public-topic":
+        this.performAndRefresh({
+          type: "convert_to_public_topic",
+          category_id: this.categoryId,
+        });
+        break;
+      case "convert-to-private-message":
+        this.performAndRefresh({ type: "convert_to_private_message" });
         break;
       default:
         // Plugins can register their own custom actions via onRegisterAction
@@ -340,11 +353,18 @@ export default class BulkTopicActions extends Component {
   }
 
   get isCategoryAction() {
-    return this.model.action === "update-category";
+    return (
+      this.model.action === "update-category" ||
+      this.model.action === "convert-to-public-topic"
+    );
   }
 
   get isCloseAction() {
     return this.model.action === "close";
+  }
+
+  get isPinAction() {
+    return this.model.action === "pin";
   }
 
   @action
@@ -391,6 +411,15 @@ export default class BulkTopicActions extends Component {
     return this.soleCategory && this.isTagAction;
   }
 
+  get confirmButtonLabel() {
+    if (this.model.confirmButtonTranslationKey) {
+      return i18n(this.model.confirmButtonTranslationKey, {
+        count: this.model.bulkSelectHelper.selected.length,
+      });
+    }
+    return i18n("topics.bulk.confirm");
+  }
+
   get disabledSubmit() {
     if (this.isNotificationAction) {
       return !this.notificationLevelId || this.loading;
@@ -407,7 +436,6 @@ export default class BulkTopicActions extends Component {
   <template>
     <DModal
       @title={{@model.title}}
-      @subtitle={{@model.description}}
       @closeModal={{@closeModal}}
       class="topic-bulk-actions-modal -large"
     >
@@ -446,9 +474,14 @@ export default class BulkTopicActions extends Component {
               </ul>
             </div>
           {{else}}
-            <div class="topic-bulk-actions-modal__selection-info">
+            {{#if @model.description}}
+              <p class="topic-bulk-actions-modal__description">{{trustHTML
+                  @model.description
+                }}</p>
+            {{/if}}
 
-              {{#if this.showSoleCategoryTip}}
+            {{#if this.showSoleCategoryTip}}
+              <div class="topic-bulk-actions-modal__selection-info">
                 {{trustHTML
                   (i18n
                     "topics.bulk.selected_sole_category"
@@ -456,16 +489,8 @@ export default class BulkTopicActions extends Component {
                   )
                 }}
                 {{trustHTML this.soleCategoryBadgeHTML}}
-              {{else}}
-                {{trustHTML
-                  (i18n
-                    "topics.bulk.selected"
-                    count=@model.bulkSelectHelper.selected.length
-                  )
-                }}
-
-              {{/if}}
-            </div>
+              </div>
+            {{/if}}
 
             {{#if this.isCategoryAction}}
               <p>
@@ -514,6 +539,13 @@ export default class BulkTopicActions extends Component {
               }}
             {{/if}}
 
+            {{#if this.isPinAction}}
+              <BulkPinOptions
+                @onPin={{this.performAction}}
+                @category={{this.soleCategory}}
+              />
+            {{/if}}
+
             {{#if this.isCloseAction}}
               <div class="bulk-close-note-section">
                 <label>
@@ -541,7 +573,7 @@ export default class BulkTopicActions extends Component {
             class="btn-primary"
             id="bulk-topics-close"
           />
-        {{else}}
+        {{else if @model.showFooter}}
           {{#if @model.allowSilent}}
             <div class="topic-bulk-actions-options">
               <label
@@ -565,8 +597,7 @@ export default class BulkTopicActions extends Component {
           <DButton
             @action={{this.performAction}}
             @disabled={{this.disabledSubmit}}
-            @icon="check"
-            @label="topics.bulk.confirm"
+            @translatedLabel={{this.confirmButtonLabel}}
             id="bulk-topics-confirm"
             class="btn-primary"
           />

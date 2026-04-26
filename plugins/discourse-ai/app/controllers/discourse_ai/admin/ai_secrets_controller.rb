@@ -9,7 +9,12 @@ module DiscourseAi
         secrets =
           AiSecret
             .all
-            .includes(:llm_models, :embedding_definitions, ai_tool_secret_bindings: :ai_tool)
+            .includes(
+              :llm_models,
+              :embedding_definitions,
+              :ai_mcp_servers,
+              ai_tool_secret_bindings: :ai_tool,
+            )
             .order(:name)
 
         render json: {
@@ -27,6 +32,7 @@ module DiscourseAi
           AiSecret.includes(
             :llm_models,
             :embedding_definitions,
+            :ai_mcp_servers,
             ai_tool_secret_bindings: :ai_tool,
           ).find(params[:id])
         render json: AiSecretSerializer.new(secret, scope: { unmask: true })

@@ -251,7 +251,7 @@ export default class AboutPage extends Component {
           <img class="about__banner-img" src={{@model.banner_image}} />
         </div>
       {{/if}}
-      <h3>{{@model.title}}</h3>
+      <h1>{{@model.title}}</h1>
       <p class="short-description">{{@model.description}}</p>
       <PluginOutlet
         @name="about-after-description"
@@ -273,13 +273,13 @@ export default class AboutPage extends Component {
         </div>
 
         {{#if @model.extended_site_description}}
-          <h3>{{i18n "about.simple_title"}}</h3>
+          <h2>{{i18n "about.simple_title"}}</h2>
           <div>{{trustHTML @model.extended_site_description}}</div>
         {{/if}}
 
         {{#if @model.admins.length}}
           <section class="about__admins">
-            <h3>{{i18n "about.our_admins"}}</h3>
+            <h2>{{i18n "about.our_admins"}}</h2>
             <AboutPageUsers @users={{@model.admins}} @truncateAt={{6}} />
           </section>
         {{/if}}
@@ -291,7 +291,7 @@ export default class AboutPage extends Component {
 
         {{#if @model.moderators.length}}
           <section class="about__moderators">
-            <h3>{{i18n "about.our_moderators"}}</h3>
+            <h2>{{i18n "about.our_moderators"}}</h2>
             <AboutPageUsers @users={{@model.moderators}} @truncateAt={{6}} />
           </section>
         {{/if}}
@@ -306,12 +306,12 @@ export default class AboutPage extends Component {
       </div>
 
       <div class="about__right-side">
-        <h3>{{i18n "about.contact"}}</h3>
+        <h2>{{i18n "about.contact"}}</h2>
         {{#if this.contactInfo}}
           <p class="about__contact-info">{{trustHTML this.contactInfo}}</p>
         {{/if}}
         <p>{{i18n "about.report_inappropriate_content"}}</p>
-        <h3>{{i18n "about.site_activity"}}</h3>
+        <h2>{{i18n "about.site_activity"}}</h2>
         <div class="about__activities">
           {{#each this.siteActivities as |activity|}}
             <div class="about__activities-item {{activity.class}}">

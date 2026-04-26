@@ -1,5 +1,4 @@
 import { trustHTML } from "@ember/template";
-import { decode } from "html-entities";
 import highlightHTML from "discourse/lib/highlight-html";
 
 export default function (text, reviewable) {
@@ -31,5 +30,5 @@ export default function (text, reviewable) {
     });
   });
 
-  return trustHTML(decode(elem.innerHTML));
+  return trustHTML(elem.innerHTML);
 }

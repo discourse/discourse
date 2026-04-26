@@ -503,6 +503,97 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
+  describe "#pin" do
+    fab!(:moderator)
+    fab!(:topic_2, :topic)
+
+    it "pins topics in category when user can moderate" do
+      topic_ids =
+        TopicsBulkAction.new(
+          moderator,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: false,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_at).to be_present
+      expect(topic.pinned_globally).to eq(false)
+      expect(topic_2.reload.pinned_at).to be_present
+      expect(topic_2.pinned_globally).to eq(false)
+    end
+
+    it "pins topics globally with pinned_until when provided" do
+      pinned_until = 3.days.from_now.beginning_of_minute.to_s
+
+      topic_ids =
+        TopicsBulkAction.new(
+          moderator,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: true,
+          pinned_until: pinned_until,
+        ).perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_globally).to eq(true)
+      expect(topic.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+      expect(topic_2.reload.pinned_globally).to eq(true)
+      expect(topic_2.pinned_until).to be_within_one_second_of(Time.parse(pinned_until))
+    end
+
+    it "does not pin when user cannot moderate" do
+      topic_ids =
+        TopicsBulkAction.new(
+          user,
+          [topic.id, topic_2.id],
+          type: "pin",
+          pinned_globally: false,
+        ).perform!
+
+      expect(topic_ids).to eq([])
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic_2.reload.pinned_at).to be_nil
+    end
+  end
+
+  describe "#unpin" do
+    fab!(:moderator)
+    fab!(:topic_2, :topic)
+
+    it "unpins multiple pinned topics and clears pinned_until when user can moderate" do
+      topic.update_pinned(true, false, 3.days.from_now.to_s)
+      topic_2.update_pinned(true, true, 5.days.from_now.to_s)
+
+      topic_ids = TopicsBulkAction.new(moderator, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to contain_exactly(topic.id, topic_2.id)
+      expect(topic.reload.pinned_at).to be_nil
+      expect(topic.pinned_until).to be_nil
+      expect(topic_2.reload.pinned_at).to be_nil
+      expect(topic_2.pinned_until).to be_nil
+    end
+
+    it "skips topics that are not pinned" do
+      topic.update_pinned(true, false)
+
+      topic_ids = TopicsBulkAction.new(moderator, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to eq([topic.id])
+    end
+
+    it "does not unpin when user cannot moderate" do
+      topic.update_pinned(true, false)
+      topic_2.update_pinned(true, false)
+
+      topic_ids = TopicsBulkAction.new(user, [topic.id, topic_2.id], type: "unpin").perform!
+
+      expect(topic_ids).to eq([])
+      expect(topic.reload.pinned_at).to be_present
+      expect(topic_2.reload.pinned_at).to be_present
+    end
+  end
+
   describe "change_tags" do
     fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)
@@ -740,6 +831,79 @@ RSpec.describe TopicsBulkAction do
       expect do
         TopicsBulkAction.new(Fabricate(:admin), [topic.id], type: "remove_tags").perform!
       end.to not_change { Notification.where(user: topic_watcher).count }
+    end
+  end
+
+  describe "convert_to_public_topic" do
+    fab!(:admin)
+    fab!(:category)
+    fab!(:pm, :private_message_topic)
+    fab!(:pm_post) { Fabricate(:post, topic: pm, user: pm.user) }
+
+    it "converts PMs and skips non-PMs" do
+      regular = Fabricate(:post).topic
+
+      changed =
+        TopicsBulkAction.new(
+          admin,
+          [pm.id, regular.id],
+          type: "convert_to_public_topic",
+          category_id: category.id,
+        ).perform!
+
+      expect(changed).to eq([pm.id])
+      expect(pm.reload.archetype).to eq(Archetype.default)
+      expect(pm.category_id).to eq(category.id)
+    end
+
+    it "is silent by default" do
+      Jobs.run_immediately!
+      bumped_at = pm.bumped_at
+
+      expect do
+        TopicsBulkAction.new(
+          admin,
+          [pm.id],
+          type: "convert_to_public_topic",
+          category_id: category.id,
+        ).perform!
+      end.to not_change { PostRevision.count }
+
+      expect(pm.reload.bumped_at).to be_within(1.second).of(bumped_at)
+      expect(pm.posts.where(post_type: Post.types[:small_action])).to be_empty
+    end
+  end
+
+  describe "convert_to_private_message" do
+    fab!(:admin)
+    fab!(:public_topic, :topic)
+    fab!(:public_first_post) { Fabricate(:post, topic: public_topic, user: public_topic.user) }
+
+    it "converts public topics and skips PMs" do
+      pm = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: pm, user: pm.user)
+
+      changed =
+        TopicsBulkAction.new(
+          admin,
+          [public_topic.id, pm.id],
+          type: "convert_to_private_message",
+        ).perform!
+
+      expect(changed).to eq([public_topic.id])
+      expect(public_topic.reload.archetype).to eq(Archetype.private_message)
+    end
+
+    it "surfaces errors and does not mark topic as changed when cap is exceeded" do
+      SiteSetting.max_allowed_message_recipients = 1
+      Fabricate(:post, topic: public_topic)
+
+      operator = TopicsBulkAction.new(admin, [public_topic.id], type: "convert_to_private_message")
+      changed = operator.perform!
+
+      expect(changed).to be_empty
+      expect(public_topic.reload.archetype).to eq(Archetype.default)
+      expect(operator.errors).to be_present
     end
   end
 end

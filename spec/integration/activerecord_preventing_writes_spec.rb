@@ -9,8 +9,8 @@ RSpec.describe "When ActiveRecord is preventing writes" do
         target_id: Theme.targets[:common],
         name: "head_tag",
         value: <<~HTML,
-        <script type="text/discourse-plugin" version="0.1">
-          console.log(settings.uploads.imajee);
+        <script>
+          console.log('foo');
         </script>
       HTML
       )

@@ -819,6 +819,7 @@ class TopicQuery
 
     # Start with a list of all topics
     result = Topic.includes(:category)
+    result = result.includes(:nested_topic) if SiteSetting.nested_replies_enabled
 
     if @user
       result =

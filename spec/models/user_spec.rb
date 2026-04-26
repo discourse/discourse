@@ -121,6 +121,50 @@ RSpec.describe User do
         expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
         expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
       end
+
+      describe "the :default_navigation_categories modifier" do
+        fab!(:alternate_category, :category)
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :default_navigation_categories }
+
+        it "lets plugins override the category ids used to seed the sidebar" do
+          block =
+            Proc.new do |_default_categories, opts|
+              expect(opts[:user]).to be_a(User)
+              [alternate_category.id.to_s]
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(
+            SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(
+              :linkable_id,
+            ),
+          ).to contain_exactly(alternate_category.id)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
+
+        it "passes the user to the modifier so plugins can branch on user attributes" do
+          received_users = []
+          block =
+            Proc.new do |default_categories, opts|
+              received_users << opts[:user]
+              default_categories
+            end
+
+          DiscoursePluginRegistry.register_modifier(plugin, modifier, &block)
+
+          user = Fabricate(:user)
+
+          expect(received_users).to contain_exactly(user)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block)
+        end
+      end
     end
 
     describe "#change_display_name" do
@@ -633,6 +677,18 @@ RSpec.describe User do
       expect(Reviewable.where(created_by: user).count).to eq(0)
 
       posts.each { |p| expect(Topic.find_by(id: p.topic_id)).to be_nil if p.is_first_post? }
+    end
+
+    it "deletes reviewables that have notes" do
+      reviewable = Fabricate(:reviewable_queued_post, created_by: user)
+      Fabricate(:reviewable_note, reviewable: reviewable)
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(Post.where(id: post_ids)).to be_empty
+      expect(Reviewable.where(created_by: user).count).to eq(0)
+      expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
     end
 
     it "does not allow non moderators to delete all posts" do
@@ -2054,6 +2110,8 @@ RSpec.describe User do
     end
 
     it "get attributes from the group" do
+      Jobs.run_immediately!
+
       user =
         Fabricate.build(
           :user,
@@ -3742,6 +3800,17 @@ RSpec.describe User do
   describe "#silence_reason" do
     before { user.update!(silenced_till: 1.day.from_now) }
 
+    it "returns only the first line when details contain a message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.silence_reason).to eq("short reason")
+    end
+
     it "returns sanitized silence reason" do
       Fabricate(
         :user_history,
@@ -3764,6 +3833,37 @@ RSpec.describe User do
       expect(user.silence_reason).to eq(
         "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
       )
+    end
+  end
+
+  describe "#full_silence_reason" do
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "returns the full silence reason including message body" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "short reason\n\nprivate email body",
+      )
+
+      expect(user.full_silence_reason).to eq("short reason<br><br>private email body")
+    end
+
+    it "returns sanitized content" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.full_silence_reason).to eq("foo  bar")
+    end
+
+    it "returns nil when user is not silenced" do
+      user.update!(silenced_till: nil)
+      expect(user.full_silence_reason).to be_nil
     end
   end
 

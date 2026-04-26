@@ -1,11 +1,12 @@
 import { fn } from "@ember/helper";
 import DButton from "discourse/components/d-button";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import NavItem from "discourse/components/nav-item";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <ul class="nav nav-pills reviewable-title">
+  <HorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
     <NavItem @route="review.index" @label="review.view_all" />
     <NavItem @route="review.topics" @label="review.grouped_by_topic" />
     {{#if @controller.currentUser.admin}}
@@ -15,7 +16,7 @@ export default <template>
         @icon="wrench"
       />
     {{/if}}
-  </ul>
+  </HorizontalOverflowNav>
 
   <div class="reviewable-settings">
     <h4>{{i18n "review.settings.priorities.title"}}</h4>

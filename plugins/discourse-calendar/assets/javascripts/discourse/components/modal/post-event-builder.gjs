@@ -13,6 +13,7 @@ import DateTimeInputRange from "discourse/components/date-time-input-range";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
+import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
@@ -299,6 +300,16 @@ export default class PostEventBuilder extends Component {
   @action
   setShowLocalTime(e) {
     this.event.showLocalTime = e.target.checked;
+  }
+
+  @action
+  setImage(upload) {
+    this.event.imageUpload = upload;
+  }
+
+  @action
+  removeImage() {
+    this.event.imageUpload = null;
   }
 
   @action
@@ -620,6 +631,19 @@ export default class PostEventBuilder extends Component {
               </EventField>
 
               <EventField
+                @label="discourse_post_event.builder_modal.image.label"
+                class="image"
+              >
+                <UppyImageUploader
+                  @id="post-event-image-uploader"
+                  @imageUrl={{this.event.imageUrl}}
+                  @onUploadDone={{this.setImage}}
+                  @onUploadDeleted={{this.removeImage}}
+                  @type="event_image"
+                />
+              </EventField>
+
+              <EventField
                 class="reminders"
                 @label="discourse_post_event.builder_modal.reminders.label"
               >
@@ -665,7 +689,7 @@ export default class PostEventBuilder extends Component {
                       <DButton
                         @action={{fn @model.event.removeReminder reminder}}
                         @icon="xmark"
-                        class="remove-reminder"
+                        class="btn-default remove-reminder"
                       />
                     </div>
                   {{/each}}
@@ -676,7 +700,7 @@ export default class PostEventBuilder extends Component {
                   @icon="plus"
                   @label="discourse_post_event.builder_modal.add_reminder"
                   @action={{@model.event.addReminder}}
-                  class="add-reminder"
+                  class="btn-default add-reminder"
                 />
               </EventField>
 

@@ -2593,6 +2593,27 @@ HTML
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
     end
 
+    it "handles attachment filenames with markdown characters" do
+      SiteSetting.authorized_extensions = "txt"
+
+      {
+        "_test_file_.txt" => "<em>",
+        "*test*.txt" => "<em>",
+        "**bold**.txt" => "<strong>",
+        "~~strike~~.txt" => "<s>",
+        "`code`.txt" => "<code>",
+      }.each do |filename, bad_tag|
+        upload = Fabricate(:upload, original_filename: filename, extension: "txt")
+        markdown = UploadMarkdown.new(upload).to_markdown
+        cooked = PrettyText.cook(markdown)
+
+        expect(cooked).to include('class="attachment"'),
+        "expected attachment class for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+        expect(cooked).not_to include(bad_tag),
+        "unexpected #{bad_tag} for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+      end
+    end
+
     it "can place a blank image if we can not find the upload" do
       raw = <<~MD
       ![upload](upload://abcABC.png)
@@ -2634,6 +2655,21 @@ HTML
       <iframe src='https://bob.com/abc/def'></iframe>
       <iframe src='https://bob.com/abc/def/../ghi'></iframe>
       <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
+  it "can skip URL-encoded relative paths in allowlist iframes" do
+    SiteSetting.allowed_iframes = "https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def'></iframe>
+      <iframe src='https://bob.com/abc/def/%2e%2e/ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/%2E%2E/ghi'></iframe>
     HTML
 
     html = <<~HTML

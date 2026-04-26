@@ -6,6 +6,10 @@
 
 sk:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Prieskumník údajov"
     errors:
       explorer:
         no_semicolons: "Odstráňte z dotazu bodkočiarky."
@@ -19,6 +23,9 @@ sk:
       create: "Vytvoriť"
       create_placeholder: "Názov dotazu..."
       description_placeholder: "Sem zadajte popis"
+      ai:
+        generate: "Generovať"
+        optional: "voliteľné"
       import:
         label: "Import"
         unparseable_json: "Súbor JSON, ktorý sa nedá rozdeliť."

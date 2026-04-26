@@ -14,13 +14,11 @@ nb_NO:
     chat_integration:
       menu_title: "Sludreintegreringer"
       settings: "Innstillinger"
-      no_providers: "Du må skru på noen tilbydere i proramtilleggsinnstillingene"
+      more_providers: "Mer"
       channels_with_errors: "Noen kanaler for denne tilbyderen mislyktes sist meldinger ble sendt. Klikk på feil-ikon(ene) for å lære mer."
-      choose_group: "(velg en gruppe)"
-      all_categories: "(alle kategorier)"
-      all_tags: "(alle stikkord)"
-      create_rule: "Lag regel"
-      create_channel: "Opprett kanal"
+      choose_group: "(Velg en gruppe)"
+      all_categories: "(Alle kategorier)"
+      all_tags: "(Alle stikkord)"
       delete_channel: "Slett"
       test_channel: "Test"
       edit_channel: "Rediger"
@@ -28,13 +26,10 @@ nb_NO:
       test_modal:
         title: "Send en testmelding"
         topic: "Emne"
-        send: "Send testmelding"
         close: "Lukk"
         success: "Melding sendt"
       type:
         normal: Normal
-        group_message: Gruppemelding
-        group_mention: Gruppeomtale
       filter:
         mute: 'Ignorer'
         follow: 'Kun første innlegg'
@@ -54,8 +49,6 @@ nb_NO:
           ok: "Gyldig"
           fail: "Ugyldig format"
       edit_rule_modal:
-        title: Rediger regel
-        save: Lagre regel
         cancel: Avbryt
         provider: Tilbyder
         type: Type
@@ -70,7 +63,6 @@ nb_NO:
           param:
             identifier:
               title: Kanal
-              help: "f.eks. #kanal, @brukernavn."
         telegram:
           title: "Telegram"
           param:
@@ -92,7 +84,6 @@ nb_NO:
           param:
             identifier:
               title: Kanal
-              help: "f.eks. #kanal, @brukernavn."
         matrix:
           title: "Matrix"
           param:
@@ -115,7 +106,6 @@ nb_NO:
           param:
             identifier:
               title: Kanal
-              help: "f.eks. #kanal, @brukernavn."
           errors:
             invalid_channel: "Den kanalen finnes ikke på Rocket Chat"
         gitter:
@@ -123,7 +113,6 @@ nb_NO:
           param:
             name:
               title: "Navn"
-              help: "Et Gitter-romnavn f.eks. gitterHQ/services."
         teams:
           param:
             name:

@@ -10,6 +10,9 @@ lt:
       default_query: "Numatytasis"
       or: "arba"
       create: "Sukurti"
+      ai:
+        generate: "Generuoti"
+        optional: "pasirinktinai"
       import:
         label: "Importuoti"
       help:

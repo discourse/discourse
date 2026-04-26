@@ -76,7 +76,6 @@ class Report
     trust_level_growth
     user_flagging_ratio
     user_to_user_private_messages
-    web_crawlers
     web_hook_events_daily_aggregate
   ]
 
@@ -153,7 +152,8 @@ class Report
                 :available_filters,
                 :legacy,
                 :default_group_by,
-                :y_axis_title
+                :y_axis_title,
+                :current_user
 
   def self.default_days
     30
@@ -195,6 +195,7 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
+      report.current_user&.id,
     ].compact.map(&:to_s).join(":")
   end
 
@@ -315,6 +316,7 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.current_user = opts[:current_user] if opts[:current_user]
     report.labels = Report.default_labels
 
     report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements

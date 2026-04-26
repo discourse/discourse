@@ -9,7 +9,6 @@ import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -35,6 +34,14 @@ const SERVER_SIDE_ONLY = [
   /^\/pub\//,
   /^\/invites\//,
   /^\/styleguide/,
+  /^\/safe-mode/,
+  /^\/dev-mode/,
+  /^\/theme-qunit/,
+  /^\/llms\.txt$/,
+  /^\/robots\.txt$/,
+  /^\/offline\.html$/,
+  /^\/manifest\.webmanifest$/,
+  /^\/opensearch\.xml$/,
 ];
 
 // The amount of height (in pixels) that we factor in when jumpEnd is called so
@@ -222,11 +229,6 @@ class DiscourseURL extends EmberObject {
       return;
     }
 
-    path = applyValueTransformer("route-to-url", path, { opts });
-    if (isEmpty(path)) {
-      return;
-    }
-
     // In embed mode, open all navigation in new tabs except same-topic navigation
     if (EmbedMode.enabled) {
       const currentTopicMatch = TOPIC_URL_REGEXP.exec(window.location.pathname);
@@ -308,12 +310,16 @@ class DiscourseURL extends EmberObject {
     rewrites.push({ regexp, replacement, opts: opts || {} });
   }
 
-  redirectAbsolute(url) {
+  redirectAbsolute(url, { replace = false } = {}) {
     // Redirects will kill a test runner
     if (isTesting()) {
       return true;
     }
-    window.location = url;
+    if (replace) {
+      window.location.replace(url);
+    } else {
+      window.location = url;
+    }
     return true;
   }
 
@@ -358,7 +364,7 @@ class DiscourseURL extends EmberObject {
 
     const internalPath = url.replace(this.origin, "");
 
-    return internalPath.startsWith("/t/");
+    return internalPath.startsWith("/t/") || internalPath.startsWith("/n/");
   }
 
   /**

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post menu", type: :system do
+describe "Post menu" do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic, reload: true)
@@ -513,6 +513,7 @@ describe "Post menu", type: :system do
     end
 
     it "shows the users who liked when clicking on the like count" do
+      SiteSetting.enable_new_post_reactions_menu = true
       PostActionCreator.like(user, post)
       PostActionCreator.like(admin, post)
 

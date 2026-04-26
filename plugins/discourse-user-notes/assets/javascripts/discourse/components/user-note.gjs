@@ -47,7 +47,10 @@ const UserNote = <template>
           <CookText @rawText={{@note.raw}} />
         </div>
         {{#if @note.post_id}}
-          <a href={{@note.post_url}} class="btn btn-small">
+          <a
+            href={{@note.post_url}}
+            class="btn btn-default btn-small show-post"
+          >
             {{i18n "user_notes.show_post"}}
           </a>
         {{/if}}

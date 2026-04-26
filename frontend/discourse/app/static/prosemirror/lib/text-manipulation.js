@@ -1,8 +1,8 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
+import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import {
@@ -16,6 +16,24 @@ import escapeRegExp from "discourse/lib/escape-regexp";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
+
+function isPlainTextFragment(fragment, schema) {
+  return fragment.content.every((node) => {
+    if (node.isText) {
+      return node.marks.length === 0;
+    }
+
+    if (node.type === schema.nodes.hard_break) {
+      return true;
+    }
+
+    if (node.type === schema.nodes.paragraph) {
+      return isPlainTextFragment(node.content, schema);
+    }
+
+    return false;
+  });
+}
 
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
@@ -37,9 +55,11 @@ export default class ProsemirrorTextManipulation {
   /** @type {AutocompleteHandler} */
   autocompleteHandler;
   /** @type {ToolbarState} */
-  state = new TrackedObject({});
+  state = trackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
+  splitNonEmptyLines;
+  buildListNode;
 
   constructor(
     owner,
@@ -48,6 +68,8 @@ export default class ProsemirrorTextManipulation {
       view,
       convertFromMarkdown,
       convertToMarkdown,
+      splitNonEmptyLines,
+      buildListNode,
       commands,
       customState,
     }
@@ -57,6 +79,8 @@ export default class ProsemirrorTextManipulation {
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.splitNonEmptyLines = splitNonEmptyLines;
+    this.buildListNode = buildListNode;
     this.commands = commands;
     this.customState = customState;
 
@@ -231,7 +255,7 @@ export default class ProsemirrorTextManipulation {
     // Pass null to get the default prefix for parser probing.
     const hval = typeof head === "function" ? head(null) : head;
 
-    if (hval == null) {
+if (hval == null) {
       this.#applyListFallback(head, exampleKey, opts);
       return;
     }

@@ -75,6 +75,10 @@ DiscourseAi::Engine.routes.draw do
     post "/posts/:post_id" => "translation#translate"
     post "/topics/:topic_id" => "translation#schedule_topic"
   end
+
+  scope path: "/mcp/oauth", defaults: { format: :json } do
+    get "client-metadata" => "mcp_oauth#client_metadata"
+  end
 end
 
 Discourse::Application.routes.draw do
@@ -118,6 +122,19 @@ Discourse::Application.routes.draw do
     post "/ai-tools/:id/test", to: "discourse_ai/admin/ai_tools#test"
     get "/ai-tools/:id/export", to: "discourse_ai/admin/ai_tools#export", format: :json
     post "/ai-tools/import", to: "discourse_ai/admin/ai_tools#import"
+    get "/ai-tools/mcp-servers/new", to: "discourse_ai/admin/ai_mcp_servers#new"
+    get "/ai-tools/mcp-servers/:id/edit", to: "discourse_ai/admin/ai_mcp_servers#edit"
+
+    resources :ai_mcp_servers,
+              only: %i[index new create edit update destroy],
+              path: "ai-mcp-servers",
+              controller: "discourse_ai/admin/ai_mcp_servers"
+    post "/ai-mcp-servers/test", to: "discourse_ai/admin/ai_mcp_servers#test"
+    post "/ai-mcp-servers/:id/test", to: "discourse_ai/admin/ai_mcp_servers#test"
+    get "/ai-mcp-servers/:id/oauth/start", to: "discourse_ai/admin/ai_mcp_servers#oauth_start"
+    get "/ai-mcp-servers/oauth/callback", to: "discourse_ai/admin/ai_mcp_servers#oauth_callback"
+    delete "/ai-mcp-servers/:id/oauth/disconnect",
+           to: "discourse_ai/admin/ai_mcp_servers#oauth_disconnect"
 
     post "/rag-document-fragments/files/upload",
          to: "discourse_ai/admin/rag_document_fragments#upload_file"
@@ -132,6 +149,8 @@ Discourse::Application.routes.draw do
     post "/ai-spam/fix-errors", to: "discourse_ai/admin/ai_spam#fix_errors"
 
     get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
+    get "/ai-translations/progress", to: "discourse_ai/admin/ai_translations#progress"
+    post "/ai-theme-translations", to: "discourse_ai/admin/ai_theme_translations#create"
 
     resources :ai_llms,
               only: %i[index new create edit update destroy],

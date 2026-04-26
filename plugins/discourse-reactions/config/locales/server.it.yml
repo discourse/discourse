@@ -13,8 +13,6 @@ it:
     discourse_reactions_desaturated_reaction_panel: "Riduce il disturbo visivo delle reazioni mostrandole desaturate fino al passaggio del mouse."
     discourse_reactions_excluded_from_like: "Reazioni che non contano come Mi piace. Qualsiasi reazione non presente in questo elenco conterà come un Mi piace per distintivi, report e altri scopi."
     discourse_reactions_like_sync_enabled: "Se questa opzione è abilitata, per le reazioni passate verranno creati i corrispondenti record di Mi piace, a eccezione delle reazioni definite in \"discourse_reactions_excluded_from_like\". Questa sincronizzazione avverrà regolarmente in background e anche quando modifichi il valore di \"discourse_reactions_excluded_from_like\"."
-    errors:
-      invalid_excluded_emoji: "Non è possibile escludere emoji che non si trovano in \"discourse reactions enabled reactions\" e non è possibile escludere le emoji utilizzate per \"discourse reactions reaction for like\"."
   badges:
     first_reaction:
       name: Prima reazione

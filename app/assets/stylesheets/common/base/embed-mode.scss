@@ -1,20 +1,220 @@
+@use "lib/viewport";
+
 // Styles for the full Ember app when rendered in embed mode (iframe)
 // Activated when ?embed_mode=true is in the URL
 body.embed-mode {
   // Remove top padding since header is hidden
   #main-outlet {
-    padding-top: 1em;
+    padding-top: 0;
+  }
+
+  #main-outlet-wrapper {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
   }
 
   // Hide elements that don't make sense in embed context
   .signup-cta,
   .suggested-topics,
-  .more-topics__container {
-    display: none;
+  .more-topics__container,
+  #topic-title,
+  .topic-above-footer-buttons-outlet.presence,
+  .above-main-container-outlet,
+  .topic-footer-main-buttons__actions .toggle-admin-menu,
+  .topic-footer-main-buttons__actions .bookmark,
+  .topic-footer-main-buttons__actions .flag-topic,
+  .topic-footer-main-buttons__actions .assign,
+  .topic-notifications-button,
+  nav.post-controls .actions .show-more-actions,
+  .software-update-prompt,
+  .time-gap,
+  .post-stream .gap,
+  .container.posts:not(:has(.post-stream .topic-post ~ .topic-post))
+    ~ #topic-footer-buttons,
+  .topic-post .post-notice.new-user {
+    display: none !important;
   }
 
   // Ensure content fills the width
   #main-outlet-wrapper {
     max-width: 100%;
+  }
+
+  // Hide the standard composer in embed mode — the docked composer replaces it
+  #reply-control {
+    display: none !important;
+  }
+
+  .embed-topic-footer {
+    margin-top: 1.5em;
+    text-align: center;
+
+    &__first-reply {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5em;
+      padding: 2em 1em;
+      color: var(--primary-medium);
+      font-size: var(--font-up-1);
+
+      .d-icon {
+        font-size: var(--font-up-4);
+      }
+    }
+
+    &__powered-by {
+      display: flex;
+      justify-content: center;
+      padding: 1em 0;
+    }
+
+    .powered-by-discourse {
+      grid-area: unset;
+      justify-self: unset;
+    }
+  }
+
+  .topic-timer-info,
+  .post-stream .topic-post:nth-child(2) article .topic-body,
+  .post-stream .topic-post:nth-child(2) article .topic-avatar {
+    border-top: none;
+  }
+
+  .topic-area .posts-wrapper:has(.post-stream .topic-post + .topic-post) {
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  // Single-column grid for embed mode (no timeline sidebar)
+  .container.posts {
+    grid-template-areas: "posts";
+    grid-template-columns: auto;
+  }
+
+  // Position the topic-navigation in the grid so progress bar appears after posts
+  .container.posts .topic-navigation {
+    grid-area: posts;
+    grid-row: 3;
+    display: flex;
+    justify-content: flex-end;
+
+    // Don't use sticky positioning — floating buttons handle the scrolling UX
+    &.with-topic-progress {
+      position: static;
+    }
+  }
+
+  // prevent horizontal overflow
+  .topic-meta-data {
+    @include viewport.until(sm) {
+      .post-infos {
+        position: relative;
+        overflow: hidden;
+        padding-right: 6px;
+      }
+
+      .read-state {
+        right: 1px;
+
+        svg {
+          right: 0;
+        }
+      }
+    }
+  }
+
+  // Hide the docked timeline sidebar (fullscreen timeline still works)
+  .timeline-container:not(.timeline-fullscreen) {
+    display: none !important;
+  }
+
+  // Hide admin menu in the progress bar for embed context
+  #topic-progress-wrapper .topic-admin-menu-trigger,
+  #topic-progress-wrapper .btn-toggle-localized-content {
+    display: none;
+  }
+
+  // Floating timeline button in the bottom-right
+  .embed-floating-buttons {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom) + 1em);
+    right: var(--space-4);
+    z-index: z("timeline");
+
+    .embed-floating-timeline-button {
+      width: 2.75em;
+      height: 2.75em;
+      border-radius: 50%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-dropdown);
+
+      .d-button-label {
+        display: none;
+      }
+
+      .d-icon {
+        margin: 0;
+      }
+    }
+  }
+
+  // Hide OP
+  // Use visibility hidden to prevent issues with jumpy behavior
+  .post-stream .topic-post.topic-owner:first-child {
+    opacity: 0;
+    height: 0;
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .embed-mode-composer {
+    position: sticky;
+    bottom: 0;
+    z-index: z("composer", "content");
+    background: var(--secondary);
+    padding-inline: 0.5em;
+
+    .docked-composer {
+      --docked-composer-input-min-height: 10em;
+      margin-top: 0;
+
+      &::before {
+        left: -0.5em;
+        right: -0.5em;
+      }
+    }
+
+    .embed-floating-buttons {
+      position: absolute;
+      bottom: 100%;
+      right: var(--space-4);
+      z-index: z("timeline");
+      padding-bottom: 0.5em;
+    }
+
+    &__replying-to {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.35em 0.75em;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      border-top: 1px solid var(--primary-low);
+    }
+
+    &__replying-to-text {
+      display: flex;
+      align-items: center;
+      gap: 0.35em;
+    }
+
+    &__replying-to-dismiss {
+      padding: 0.25em;
+    }
   }
 }

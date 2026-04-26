@@ -124,6 +124,7 @@
   .user-notifications-filter {
     display: block;
     width: 100%;
+    padding-bottom: var(--space-2);
     border-bottom: 0.5px solid var(--content-border-color);
   }
 }
@@ -431,12 +432,12 @@
     color: var(--secondary);
     display: flex;
     flex-wrap: wrap;
-    padding: 10px;
-    margin-bottom: 16px;
-    gap: var(--space-2);
+    padding: var(--space-2);
+    margin-bottom: var(--space-4);
+    gap: var(--space-3);
 
-    > div,
-    > div a {
+    a,
+    > div {
       display: flex;
       align-items: baseline;
       flex: 0 1 auto;
@@ -444,9 +445,13 @@
       color: var(--secondary);
 
       span {
-        padding: 0 7px 1px;
-        border-radius: 10px;
+        display: inline-block;
+        min-width: 0.85em; // keep low counts round
+        text-align: center;
+        padding: 0.15em 0.4em;
+        border-radius: 1em;
         margin-right: 5px;
+        font-size: var(--font-down-1);
       }
     }
 
@@ -1068,6 +1073,11 @@
 
   .pref-second-factor {
     margin-top: 0.5em;
+  }
+
+  .pref-show-original-content {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
   }
 }
 

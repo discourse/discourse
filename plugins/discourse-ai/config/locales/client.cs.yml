@@ -120,6 +120,9 @@ cs:
         user: Uživatel
         save: "Uložit"
         enabled: "Zapnuto?"
+        mcp_tools_modal:
+          select_all: "Vybrat vše"
+          clear_all: "Zrušit vše"
         delete: "Smazat"
         response_format:
           open_modal: "Upravit"
@@ -156,6 +159,22 @@ cs:
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
+      mcp_servers:
+        name: "Název"
+        description: "Popis"
+        url: "URL"
+        auth_types:
+          oauth: "OAuth"
+        oauth_statuses:
+          connected: "Připojeno"
+        oauth_connect: "Připojit"
+        oauth_hide_details: "Skrýt podrobnosti"
+        enabled: "Zapnuto"
+        save: "Uložit"
+        edit: "Upravit"
+        delete: "Smazat"
+        tools_modal:
+          required: "Povinné"
       llms:
         display_name: "Název"
         save: "Uložit"
@@ -176,7 +195,7 @@ cs:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-6: "Nejinteligentnější model společnosti Anthropic"
+          anthropic-claude-opus-4-7: "Nejinteligentnější model společnosti Anthropic"
           anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"
@@ -291,8 +310,6 @@ cs:
           title: "Zobrazit interakci s umělou inteligencí"
           copy_request: "Kopírovat požadavek"
           copy_response: "Kopírovat odpověď"
-          request_tokens: "Tokeny požadavku:"
-          response_tokens: "Tokeny odpovědi:"
           request: "Požadavek"
           response: "Odpověď"
           next_log: "Další"

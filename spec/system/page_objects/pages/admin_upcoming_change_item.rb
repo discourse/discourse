@@ -39,6 +39,14 @@ module PageObjects
         find_item(@setting_name).find(".upcoming-change__plugin").has_text?(plugin_name)
       end
 
+      def has_permanent_soon_notice?
+        find_item(@setting_name).has_css?(".upcoming-change__status-notice")
+      end
+
+      def has_no_permanent_soon_notice?
+        find_item(@setting_name).has_no_css?(".upcoming-change__status-notice")
+      end
+
       def select_enabled_for(option)
         enabled_for_dropdown.select(option)
       end

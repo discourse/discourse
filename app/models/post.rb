@@ -11,6 +11,7 @@ class Post < ActiveRecord::Base
   include LimitedEdit
   include Localizable
   include HasPostUploadReferences
+  include HasNestedReplyStats
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
   self.plugin_permitted_create_params = {}
@@ -399,7 +400,7 @@ class Post < ActiveRecord::Base
     hosts = linked_hosts.clone
     allowlisted = allowed_spam_hosts
 
-    hosts.reject! { |h| allowlisted.any? { |w| h.end_with?(w) } }
+    hosts.reject! { |h| allowlisted.any? { |w| h == w || h.end_with?(".#{w}") } }
 
     return hosts if hosts.length == 0
 

@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { trackedSet } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -22,7 +22,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
   @tracked disableFiltering = false;
   @tracked saving = false;
-  @tracked selectedTags = new TrackedSet([...this.currentUser.sidebarTagNames]);
+  @tracked selectedTags = trackedSet([...this.currentUser.sidebarTagNames]);
   @tracked tags = [];
   @tracked tagsLoading = false;
   observer;
@@ -140,7 +140,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
   @action
   resetToDefaults() {
-    this.selectedTags = new TrackedSet(
+    this.selectedTags = trackedSet(
       this.siteSettings.default_navigation_menu_tags.split("|")
     );
   }

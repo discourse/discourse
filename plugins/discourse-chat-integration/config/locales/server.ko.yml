@@ -44,8 +44,6 @@ ko:
     chat_integration_rocketchat_webhook_url: "로켓 채팅 통합 웹 후크의 URL"
     chat_integration_rocketchat_excerpt_length: "로켓 채팅 게시물 발췌 길이"
     chat_integration_gitter_enabled: "Gitter chat 통합 제공자 사용"
-    chat_integration_flowdock_enabled: "Flowdock 채팅 통합 공급자 사용"
-    chat_integration_flowdock_excerpt_length: "Flowdock 포스트 발췌 길이"
   chat_integration:
     all_categories: "(전체 카테고리)"
     deleted_category: "(삭제 된 카테고리)"
@@ -114,5 +112,3 @@ ko:
           category: "* %{name} * 카테고리를 찾을 수 없습니다. 사용 가능한 카테고리 : * %{list} *"
       matrix:
         text_message: "%{title}-%{post_url}에 게시 된 %{user}"
-      flowdock:
-        message_title: "게시"

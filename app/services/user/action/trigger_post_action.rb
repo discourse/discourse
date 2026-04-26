@@ -27,6 +27,7 @@ class User::Action::TriggerPostAction < Service::ActionBase
   end
 
   def edit
+    return unless guardian.can_edit_post?(post)
     # Take what the moderator edited in as gospel
     PostRevisor.new(post).revise!(
       user,

@@ -220,35 +220,32 @@ acceptance("discourse-templates", function (needs) {
   });
 });
 
-acceptance(
-  "discourse-templates - with tags disabled in Settings",
-  function (needs) {
-    needs.settings({
-      discourse_templates_enabled: true,
-      tagging_enabled: false,
-    });
-    needs.user({
-      can_use_templates: true,
-    });
+acceptance("with tags disabled in Settings", function (needs) {
+  needs.settings({
+    discourse_templates_enabled: true,
+    tagging_enabled: false,
+  });
+  needs.user({
+    can_use_templates: true,
+  });
 
-    needs.pretender(templatesPretender);
+  needs.pretender(templatesPretender);
 
-    test("Filtering by tags", async function (assert) {
-      await visit("/");
+  test("Filtering by tags", async function (assert) {
+    await visit("/");
 
-      await click("#create-topic");
-      await selectCategory();
-      await click(".toolbar-menu__options-trigger");
-      await click(`button[title="${i18n("templates.insert_template")}"]`);
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
 
-      assert
-        .dom(".templates-filter-bar .tag-drop")
-        .doesNotExist("tag drop down is not displayed");
-    });
-  }
-);
+    assert
+      .dom(".templates-filter-bar .tag-drop")
+      .doesNotExist("tag drop down is not displayed");
+  });
+});
 
-acceptance("discourse-templates | keyboard shortcut", function (needs) {
+acceptance("keyboard shortcut", function (needs) {
   needs.settings({
     discourse_templates_enabled: true,
     tagging_enabled: true,
@@ -429,7 +426,7 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
   });
 });
 
-acceptance("discourse-templates - buttons on topics", function (needs) {
+acceptance("buttons on topics", function (needs) {
   needs.user();
   needs.settings({
     allow_uncategorized_topics: true,

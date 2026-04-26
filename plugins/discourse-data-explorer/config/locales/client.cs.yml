@@ -10,6 +10,9 @@ cs:
       default_query: "Výchozí"
       or: "nebo"
       create: "Vytvořit"
+      ai:
+        generate: "Vygenerovat API klíč"
+        optional: "volitelné"
       import:
         label: "Import"
       help:

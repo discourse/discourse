@@ -2,26 +2,28 @@
 
 require "lru_redux"
 
-module Migrations::Database
-  class PreparedStatementCache < LruRedux::Cache
-    class PreparedStatementHash < Hash
-      def shift
-        result = super
-        if (stmt = result[1])
-          stmt.close
+module Migrations
+  module Database
+    class PreparedStatementCache < LruRedux::Cache
+      class PreparedStatementHash < Hash
+        def shift
+          result = super
+          if (stmt = result[1])
+            stmt.close
+          end
+          result
         end
-        result
+
+        def clear
+          each_value(&:close)
+          super
+        end
       end
 
-      def clear
-        each_value(&:close)
+      def initialize(*args)
         super
+        @data = PreparedStatementHash.new
       end
-    end
-
-    def initialize(*args)
-      super
-      @data = PreparedStatementHash.new
     end
   end
 end

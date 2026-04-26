@@ -1,34 +1,38 @@
 # frozen_string_literal: true
 
-module Migrations::Converters::Discourse
-  class Tags < ::Migrations::Converters::Base::ProgressStep
-    attr_accessor :source_db
+module Migrations
+  module Converters
+    module Discourse
+      class Tags < Base::ProgressStep
+        attr_accessor :source_db
 
-    def max_progress
-      @source_db.count <<~SQL
-        SELECT COUNT(*) FROM tags
-      SQL
-    end
+        def max_progress
+          @source_db.count <<~SQL
+            SELECT COUNT(*) FROM tags
+          SQL
+        end
 
-    def items
-      @source_db.query <<~SQL
-        SELECT * FROM tags
-      SQL
-    end
+        def items
+          @source_db.query <<~SQL
+            SELECT * FROM tags
+          SQL
+        end
 
-    def process_item(item)
-      IntermediateDB::Tag.create(
-        original_id: item[:id],
-        created_at: item[:created_at],
-        description: item[:description],
-        name: item[:name],
-      )
+        def process_item(item)
+          IntermediateDB::Tag.create(
+            original_id: item[:id],
+            created_at: item[:created_at],
+            description: item[:description],
+            name: item[:name],
+          )
 
-      if item[:target_tag_id]
-        IntermediateDB::TagSynonym.create(
-          synonym_tag_id: item[:id],
-          target_tag_id: item[:target_tag_id],
-        )
+          if item[:target_tag_id]
+            IntermediateDB::TagSynonym.create(
+              synonym_tag_id: item[:id],
+              target_tag_id: item[:target_tag_id],
+            )
+          end
+        end
       end
     end
   end

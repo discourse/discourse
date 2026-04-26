@@ -37,10 +37,6 @@
       font-size: var(--font-up-3);
     }
 
-    .form-kit {
-      padding-bottom: 6em; // space for save footer
-    }
-
     .form-kit__field-toggle {
       flex-direction: column;
       width: 100%;
@@ -54,7 +50,7 @@
 
     .form-kit__conditional-display-content {
       // prevent content shift when changing style options
-      min-height: 2.8em;
+      min-height: 2.6em;
 
       &:has(.badge-category__wrapper) {
         justify-content: center;
@@ -93,23 +89,7 @@
       align-self: start;
     }
 
-    .form-kit__control-icon {
-      .select-kit-row .d-icon,
-      .select-kit-header .d-icon,
-      .select-kit-header-wrapper .d-icon:first-of-type {
-        color: var(--icon-color, currentColor);
-      }
-
-      .select-kit-header-wrapper {
-        gap: var(--space-2);
-      }
-    }
-
-    .form-kit__control-icon .formatted-selection {
-      display: flex !important; // overrides another important
-      flex: 0 1 auto;
-    }
-
+    #control-icon,
     #control-emoji {
       &.form-kit__field .form-kit__container-content {
         width: auto;
@@ -150,6 +130,28 @@
 
     .edit-category-type-schema-fields {
       display: contents;
+
+      &.--site-settings-only > .form-kit__section.emphasis {
+        border: none;
+        padding: 0;
+      }
+
+      .--dependent {
+        display: flex;
+        gap: 0.75em;
+      }
+
+      .--dependent-border {
+        flex: 0 0 1lh;
+        border-right: 3px solid var(--primary-low);
+      }
+
+      .--dependent-fields {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+      }
     }
   }
 
@@ -216,6 +218,57 @@
     .controls {
       flex-direction: row-reverse;
       margin-right: auto;
+    }
+  }
+}
+
+.edit-category-description-container {
+  .readonly-field {
+    width: 100%;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .description-content {
+    &.--collapsed {
+      max-height: calc(4 * 1.5em);
+      overflow: hidden;
+      position: relative;
+
+      &.--overflowing::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1.5em;
+        background: linear-gradient(transparent, var(--secondary, white));
+        pointer-events: none;
+      }
+    }
+  }
+
+  .description-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+
+    .toggle-description {
+      color: var(--primary-medium);
+
+      &:hover {
+        color: var(--primary-high);
+      }
     }
   }
 }

@@ -140,8 +140,8 @@ ru:
           label: "Назначено:"
     topics:
       bulk:
-        unassign: "Снять ответственного"
-        assign: "Назначить ответственного"
+        assign_description: "Назначьте выбранные темы следующему пользователю:"
+        unassign_description: "Вы хотите отменить назначение выбранных тем?"
     discourse_automation:
       scriptables:
         random_assign:

@@ -15,12 +15,12 @@ vi:
       reactions_title: "Cảm xúc"
       state_panel:
         more_users: "và %{count} nữa..."
-      reaction:
-        forbidden: "Biểu cảm đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
       picker:
         react_with: "Bày tỏ cảm xúc: %{reaction}"
         cant_remove_reaction: "Bạn không thể xóa biểu cảm của mình nữa"
         remove_reaction: "Gỡ biểu cảm %{reaction} này"
+      users_popup:
+        all: "Tất cả"
       main_reaction:
         add: "Thích tút này"
         remove: "Bỏ thích"

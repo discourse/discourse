@@ -43,8 +43,6 @@ hy:
     chat_integration_rocketchat_webhook_url: "Rocket Chat ինտեգրման webhook -ի URL -ը"
     chat_integration_rocketchat_excerpt_length: "Rocket Chat գրառման հատվածի երկարություն"
     chat_integration_gitter_enabled: "Միացրեք Gitter զրույցի-ինտեգրումների մատակարարը"
-    chat_integration_flowdock_enabled: "Միացրեք Flowdock զրույցի-ինտեգրումների մատակարարը"
-    chat_integration_flowdock_excerpt_length: "Flowdock գրառման հատվածի երկարություն"
   chat_integration:
     all_categories: "(Բոլոր կատեգորիաները)"
     deleted_category: "(ջնջված կատեգորիա)"
@@ -163,5 +161,3 @@ hy:
           ~~~մեջբերում
           %{excerpt}
           ~~~
-      flowdock:
-        message_title: "հրապարակված"

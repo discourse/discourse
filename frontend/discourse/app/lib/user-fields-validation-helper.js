@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedArray } from "@ember/reactive/collections";
 import { compare, isEmpty } from "@ember/utils";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { i18n } from "discourse-i18n";
 
 const addCustomUserFieldValidationCallbacks = [];
@@ -76,7 +76,7 @@ class TrackedUserField {
 }
 
 export default class UserFieldsValidationHelper {
-  @tracked userFields = new TrackedArray();
+  @tracked userFields = trackedArray();
   @tracked validationVisible = true;
 
   constructor({
@@ -94,7 +94,7 @@ export default class UserFieldsValidationHelper {
     let userFields = this.getUserFields();
     if (userFields) {
       const getValidationVisible = () => this.validationVisible;
-      this.userFields = new TrackedArray(
+      this.userFields = trackedArray(
         userFields
           .sort((a, b) => compare(a?.position, b?.position))
           .map((f) => {

@@ -10,6 +10,9 @@ vi:
       default_query: "Mặc định"
       or: "hoặc"
       create: "Tạo"
+      ai:
+        generate: "Khởi tạo"
+        optional: "tùy chọn"
       import:
         label: "Nhập"
       help:

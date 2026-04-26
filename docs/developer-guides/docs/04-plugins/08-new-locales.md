@@ -34,7 +34,7 @@ You add the new locale by calling `register_locale`.
 
 - The first parameter is required and must be the language code.
 
-- `name` (the English name of the locale) and `nativeName` (the name shown in the user interface) can be omitted, if the language code exists in [`names.yml`](https://github.com/discourse/discourse/blob/master/config/locales/names.yml).
+- `name` (the English name of the locale) and `nativeName` (the name shown in the user interface) can be omitted, if the language code exists in [`names.yml`](https://github.com/discourse/discourse/blob/main/config/locales/names.yml).
 
 - `fallbackLocale` is the language code that should be used as fall back for missing translations and pluralization rules.
 
@@ -94,9 +94,9 @@ You add the new locale by calling `register_locale`.
 
 - The first parameter is required and must be the language code.
 
-- `name` (the English name of the locale) and `nativeName` (the name shown in the user interface) can be omitted, if the language code exists in [`names.yml`](https://github.com/discourse/discourse/blob/master/config/locales/names.yml), otherwise you should set them too.
+- `name` (the English name of the locale) and `nativeName` (the name shown in the user interface) can be omitted, if the language code exists in [`names.yml`](https://github.com/discourse/discourse/blob/main/config/locales/names.yml), otherwise you should set them too.
 
-- `plural` describes the language's pluralization rules. Take a look at [`plurals.rb`](https://github.com/discourse/discourse/blob/master/config/locales/plurals.rb) for inspiration. Also, you can omit this parameter if `plurals.rb` already contains your language code.
+- `plural` describes the language's pluralization rules. Take a look at [`plurals.rb`](https://github.com/discourse/discourse/blob/main/config/locales/plurals.rb) for inspiration. Also, you can omit this parameter if `plurals.rb` already contains your language code.
 
 ```rb
 # name: custom-locales
@@ -126,18 +126,6 @@ The content of `assets/locales/foo.js.erb` is quite simple -- make sure you repl
 ##### Translation files in config/locales
 
 The files `config/locales/client.foo.yml` and `config/locales/server.foo.yml` contain the translations you want to use. You don't need to provide all translations needed by Discourse. The English translations will be used in case of missing translations.
-
-##### message_format/\<locale\>.js
-
-`lib/javascripts/locale/message_format/foo.js` contains the pluralization rules used by the client. The rules should be the same as the ones you used in the `register_locale` method. Take a look at the files in [lib/javascripts/locale](https://github.com/discourse/discourse/tree/master/lib/javascripts/locale) for some inspiration. You can omit this file if that directory already contains a file for your language code.
-
-##### moment_js/\<locale\>.js
-
-`lib/javascripts/locale/moment_js/foo.js` contains the locale file used by [moment.js](https://momentjs.com/). Take a look at the files in [vendor/assets/javascripts/moment-locale](https://github.com/discourse/discourse/tree/master/vendor/assets/javascripts/moment-locale) for some inspiration. You can omit this file if that directory already contains a file for your language code.
-
-##### moment_js_timezones/\<locale\>.js
-
-`lib/javascripts/locale/moment_js_timezones/foo.js` contains the locale file used in the timezone dropdown. Take a look at the files in [vendor/assets/javascripts/moment-timezone-names-locale](https://github.com/discourse/discourse/tree/master/vendor/assets/javascripts/moment-timezone-names-locale) for some inspiration. This file is optional.
 
 ---
 

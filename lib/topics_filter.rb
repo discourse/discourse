@@ -58,6 +58,10 @@ class TopicsFilter
         filter_by_activity(before: filter_values)
       when "activity-after"
         filter_by_activity(after: filter_values)
+      when "bookmarked-after"
+        filter_by_bookmarked(after: filter_values)
+      when "bookmarked-before"
+        filter_by_bookmarked(before: filter_values)
       when "category"
         filter_categories(values: key_prefixes.zip(filter_values))
       when "created-after"
@@ -307,6 +311,16 @@ class TopicsFilter
           { name: "in:", description: I18n.t("filter.description.in"), priority: 1 },
           { name: "in:pinned", description: I18n.t("filter.description.in_pinned") },
           { name: "in:bookmarked", description: I18n.t("filter.description.in_bookmarked") },
+          {
+            name: "bookmarked-before:",
+            description: I18n.t("filter.description.bookmarked_before"),
+            type: "date",
+          },
+          {
+            name: "bookmarked-after:",
+            description: I18n.t("filter.description.bookmarked_after"),
+            type: "date",
+          },
           { name: "in:watching", description: I18n.t("filter.description.in_watching") },
           { name: "in:tracking", description: I18n.t("filter.description.in_tracking") },
           { name: "in:muted", description: I18n.t("filter.description.in_muted") },
@@ -386,8 +400,8 @@ class TopicsFilter
 
   def extract_and_validate_value_for(filter, values)
     case filter
-    when "activity-before", "activity-after", "created-before", "created-after",
-         "latest-post-before", "latest-post-after"
+    when "activity-before", "activity-after", "bookmarked-before", "bookmarked-after",
+         "created-before", "created-after", "latest-post-before", "latest-post-after"
       value = values.last
 
       if match_data = value.match(YYYY_MM_DD_REGEXP)
@@ -414,10 +428,11 @@ class TopicsFilter
   end
 
   def filter_by_topic_range(column_name:, min: nil, max: nil, scope: nil)
-    { min => ">=", max => "<=" }.each do |value, operator|
-      next if !value
-      @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
-    end
+    return @scope if min.nil? && max.nil?
+
+    value = min || max
+    operator = min ? ">=" : "<="
+    @scope = (scope || @scope).where("#{column_name} #{operator} ?", value)
   end
 
   def filter_by_activity(before: nil, after: nil)
@@ -426,6 +441,33 @@ class TopicsFilter
 
   def filter_by_created(before: nil, after: nil)
     filter_by_topic_range(column_name: "topics.created_at", min: after, max: before)
+  end
+
+  def filter_by_bookmarked(before: nil, after: nil)
+    return @scope = @scope.none if !@guardian.authenticated?
+    return @scope if before.nil? && after.nil?
+
+    user_id = @guardian.user.id.to_i
+    value = before || after
+    date_comparison = before ? :lteq : :gteq
+    bookmarks_table = Bookmark.arel_table
+
+    topic_bookmarks =
+      Bookmark
+        .where(user_id: user_id, bookmarkable_type: "Topic")
+        .where(bookmarks_table[:created_at].public_send(date_comparison, value))
+        .select(:bookmarkable_id)
+
+    post_bookmarks =
+      Bookmark
+        .joins(
+          "INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND posts.deleted_at IS NULL",
+        )
+        .where(user_id: user_id, bookmarkable_type: "Post")
+        .where(bookmarks_table[:created_at].public_send(date_comparison, value))
+        .select("posts.topic_id")
+
+    @scope = @scope.where(id: topic_bookmarks).or(@scope.where(id: post_bookmarks))
   end
 
   def filter_by_latest_post(before: nil, after: nil)

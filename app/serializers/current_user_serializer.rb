@@ -27,6 +27,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
+             :can_toggle_nested_mode,
              :can_ignore_users,
              :can_edit_tags,
              :can_delete_all_posts_and_topics,
@@ -83,7 +84,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :effective_locale,
              :can_see_ip,
              :is_impersonating,
-             :can_change_post_owner
+             :can_change_post_owner,
+             :show_site_owner_onboarding
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -163,6 +165,16 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
+  def include_show_site_owner_onboarding?
+    SiteSetting.enable_site_owner_onboarding && object.admin? &&
+      User.where(admin: true).human_users.minimum(:id) == object.id &&
+      Topic.minimum(:created_at)&.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
+  end
+
+  def show_site_owner_onboarding
+    true
+  end
+
   def include_has_unseen_features?
     object.staff?
   end
@@ -188,6 +200,14 @@ class CurrentUserSerializer < BasicUserSerializer
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
   end
 
+  def can_toggle_nested_mode
+    object.in_any_groups?(SiteSetting.nested_replies_toggle_mode_groups_map)
+  end
+
+  def include_can_toggle_nested_mode?
+    SiteSetting.nested_replies_enabled
+  end
+
   def can_ignore_users
     scope.can_ignore_users?
   end
@@ -205,7 +225,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_edit_tags
-    scope.can_edit_tag?
+    scope.can_edit_tag_names?
   end
 
   def can_invite_to_forum

@@ -215,12 +215,7 @@ module DiscourseAi
           feature_context: feature_context,
         )
       rescue => e
-        if Rails.env.test?
-          p e
-          puts e.backtrace[0..10]
-        else
-          raise e
-        end
+        raise e
       end
 
       def initialize(bot)
@@ -635,6 +630,8 @@ module DiscourseAi
 
         reply_post
       rescue LlmCreditAllocation::CreditLimitExceeded => e
+        return if silent_mode
+
         reset_time = e.allocation&.formatted_reset_time || ""
         locale_key = post.user.admin? ? "limit_exceeded_admin" : "limit_exceeded_user"
         error_message =

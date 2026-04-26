@@ -226,6 +226,14 @@ export default <template>
                 @controller.usingDefaultSearchType @controller.customSearchType
               )
             }}
+              <PluginOutlet
+                @name="full-page-search-before-results"
+                @connectorTagName="div"
+                @outletArgs={{lazyHash
+                  model=@controller.model
+                  searchTerm=@controller.searchTerm
+                }}
+              />
               <SearchResultEntries
                 @posts={{@controller.searchResultPosts}}
                 @bulkSelectEnabled={{@controller.bulkSelectEnabled}}

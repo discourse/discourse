@@ -145,6 +145,7 @@ module TestSetup
     NotificationEmailer.disable
     SiteIconManager.disable
     WordWatcher.disable_cache
+    UpcomingChanges.clear_caches!
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
 
@@ -337,6 +338,15 @@ RSpec.configure do |config|
 
     Sidekiq.default_configuration.error_handlers.clear
 
+    # No-op handler to suppress Sidekiq's `p ["!!!!!", ex]` fallback.
+    Sidekiq.default_configuration.error_handlers << ->(_ex, _ctx, _config) {}
+
+    # Quiet seed-fu output produced by specs that call `Model.seed`.
+    SeedFu.quiet = true
+
+    # json-schema's MultiJSON support is deprecated.
+    JSON::Validator.use_multi_json = false
+
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
@@ -424,16 +434,15 @@ RSpec.configure do |config|
         (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
-    module IgnoreUnicornCapturedErrors
+    module IgnoreServerCapturedErrors
       def raise_server_error!
         super
-      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN => e
-        # Ignore these exceptions - caused by client. Handled by unicorn in dev/prod
-        # https://github.com/defunkt/unicorn/blob/d947cb91cf/lib/unicorn/http_server.rb#L570-L573
+      rescue EOFError, Errno::ECONNRESET, Errno::EPIPE, Errno::ENOTCONN
+        # Ignore these exceptions - caused by client. Handled by the app server in dev/prod
       end
     end
 
-    Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
+    Capybara::Session.class_eval { prepend IgnoreServerCapturedErrors }
 
     module CapybaraTimeoutExtension
       class CapybaraTimedOut < StandardError
@@ -488,7 +497,6 @@ RSpec.configure do |config|
         example_file_path = example.metadata[:rerun_file_path]
 
         if example_file_path
-          expanded_example_file_path = Pathname.new(example_file_path).expand_path
           match =
             example_file_path.to_s.match(
               %r{^#{Regexp.escape(Rails.root.to_s)}/(plugins|themes|spec)/([^/]+)/},
@@ -941,6 +949,7 @@ RSpec.configure do |config|
     Discourse.redis.flushdb
     Scheduler::Defer.do_all_work
     clear_mocked_upcoming_change_metadata
+    clear_mocked_upcoming_change_default_overrides
   end
 
   config.after(:each, type: :system) do |example|
@@ -1055,7 +1064,7 @@ RSpec.configure do |config|
       super
     end
 
-    def log_off_user(session, cookies)
+    def log_off_user(session, cookies, push_subscription: nil)
       # Try using the main session as `session` sometimes is a server session
       (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super

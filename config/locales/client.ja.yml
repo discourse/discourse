@@ -461,8 +461,6 @@ ja:
           other: "%{count} 年前に作成"
     bookmarked:
       title: "ブックマーク"
-      edit_bookmark: "ブックマークを編集"
-      clear_bookmarks: "ブックマークをクリア"
       help:
         bookmark: "クリックしてこのトピックをブックマークします"
         edit_bookmark: "クリックしてこのトピックの投稿のブックマークを編集します"
@@ -481,12 +479,12 @@ ja:
       clear_reminder: "リマインダーをクリアする"
       edit: "ブックマークを編集"
       not_bookmarked: "この投稿をブックマークする"
+      topic_bookmark: "トピック"
       remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
       created_with_reminder: "%{date} のリマインダー付きでこの投稿をブックマークしました。%{name}"
       created_with_reminder_generic: "%{date} のリマインダー付きでこれをブックマークしました。%{name}"
       delete: "ブックマークを削除"
       confirm_delete: "このブックマークを削除してもよろしいですか？リマインダーも削除されます。"
-      confirm_clear: "このトピックのすべてのブックマークをクリアしてもよろしいですか?"
       save: "保存"
       no_timezone: 'まだタイムゾーンを設定していないためリマインダーを設定することはできません。<a href="%{basePath}/my/preferences/profile">プロファイル</a>で設定してください。'
       invalid_custom_datetime: "入力された日時が無効です。もう一度お試しください。"
@@ -2608,6 +2606,8 @@ ja:
       medium_dark_tone: ミディアムダークスキントーン
       dark_tone: ダークスキントーン
       default: カスタム絵文字
+    filter_input:
+      clear: "フィルタをクリア"
     shared_drafts:
       title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
@@ -2754,6 +2754,8 @@ ja:
         name_label: "ラップ名"
         attributes_label: "属性"
         add_attribute: "属性を追加する"
+        attribute_key: "キー"
+        attribute_value: "値"
         remove_attribute: "属性を削除する"
         apply: "適用"
         unwrap: "ラップを解除する"
@@ -2842,6 +2844,9 @@ ja:
         copy: "リンクをコピー"
         remove: "リンクの削除"
         visit: "外部タブでリンクを開く"
+        link_copied: "リンクがコピーされました！"
+      onebox_toolbar:
+        copy: "リンクをコピー"
         link_copied: "リンクがコピーされました！"
       unsupported_token: "リッチテキストエディターではこの投稿で使用されているすべての機能がサポートされていないため、Markdown エディターに切り替えます。"
     notifications:
@@ -3154,11 +3159,8 @@ ja:
         confirm: "確認"
         select_all: "すべて選択"
         clear_all: "すべてクリア"
-        unlist_topics: "トピックを非表示"
-        relist_topics: "トピックを表示"
         reset_bump_dates: "バンプ日をリセットする"
         defer: "未読にする"
-        delete: "トピックを削除"
         delete_topics_count:
           other: "トピックを削除"
         delete_posts_count:
@@ -3189,31 +3191,22 @@ ja:
           other: "新規を閉じる (%{count})"
         toggle: "トピックの一括選択を切り替える"
         actions: "一括操作"
-        change_category: "カテゴリを設定…"
-        close_topics: "トピックをクローズ"
-        archive_topics: "トピックをアーカイブ"
         move_messages_to_inbox: "受信トレイに移動"
         archive_messages: "アーカイブに移動"
-        notification_level: "通知…"
         change_notification_level: "通知レベルを変更"
         choose_new_category: "このトピックの新しいカテゴリを選択:"
-        selected:
-          other: "<b>%{count}</b> 件のトピックを選択しました。"
         selected_sole_category:
           other: "カテゴリから <b>%{count} 件</b>のトピックを選択しました:"
         selected_count:
           other: "%{count} 個選択済み"
-        change_tags: "タグを置換"
         append_tags: "タグを追加"
         choose_new_tags: "これらのトピックに新しいタグを選択:"
-        choose_append_tags: "これらのトピックに追加する新しいタグを選択:"
+        choose_append_tags: "タグを追加"
         changed_tags: "トピックのタグが変更されました。"
-        remove_tags: "すべてのタグを削除"
         confirm_remove_tags:
           other: "<b>%{count}</b> 件のトピックからすべてのタグが削除されます。よろしいですか？"
         progress:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
-        notify: "この変更をユーザーに通知します。"
         performing: "一括操作を実行中です。お待ちください…"
         completed: "一括操作が完了しました！"
         error_topic_count:
@@ -3241,7 +3234,6 @@ ja:
         name: "閉じる"
       close_topics:
         name: "閉じる"
-        note: "注意"
         optional: (オプション)
       archive_topics:
         name: "アーカイブ"
@@ -3255,24 +3247,35 @@ ja:
         name: "再掲載"
       remove_tags:
         name: "タグを削除"
-      append_tags:
-        name: "タグを追加"
       replace_tags:
         name: "タグを置換"
       delete_topics:
         name: "削除"
       update_category:
         name: "カテゴリを更新"
-        description: "選択したトピックの新しいカテゴリを選択します"
+      convert_to_public_topic:
+        name: "公開トピックにする…"
+      convert_to_private_message:
+        name: "個人メッセージにする"
       reset_bump_dates:
         name: "バンプ日をリセット"
-        description: "トピックのバンプ日を投稿の最終作成日にリセットします。これにより、トピックリストの順序が変わります。"
       defer:
         name: "未読にする"
-        description: "トピックを未読としてマーク"
       update_notifications:
         name: "通知を更新"
-        description: "通知レベルをウォッチ中、追跡中、通常、またはミュートに変更します"
+    nested_replies:
+      sort:
+        label: "並べ替え"
+        top: "人気"
+        new: "新規"
+      load_more_children:
+        other: "他 %{count} 件の返信"
+      collapsed_replies:
+        other: "返信: %{count} 件"
+      collapse: "折りたたむ"
+      no_replies: "まだ返信はありません。"
+      deleted_post_placeholder: "[削除済み]"
+      pinned_reply: "固定"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -3768,6 +3771,9 @@ ja:
         other: "あなたと他 %{count} 人がこの投稿に「いいね！」しました"
       sr_post_like_count_button:
         other: "%{count} 人がこの投稿に「いいね！」しました."
+      likes_popup:
+        title:
+          other: "「いいね！」 %{count}"
       sr_post_read_count_button:
         other: "%{count} 人がこの投稿を読みました。"
       filtered_replies_hint:
@@ -3793,8 +3799,7 @@ ja:
           confirm_delete: "'%{languageCode}' の翻訳を削除してもよろしいですか？"
         success: "翻訳は正しく更新されました"
         post_language_selector:
-          title: "投稿の言語"
-          none: "なし"
+          none: "未設定"
         edit_warning:
           message: "これは翻訳された投稿です。<br><br>元の%{language}の投稿を編集しますか？またはこの特定の翻訳を編集しますか？"
           action_original: "元の投稿を編集する"
@@ -3818,6 +3823,7 @@ ja:
       cancel_composer:
         confirm: "投稿を破棄しますか？"
         discard: "破棄"
+        discard_edit: "変更を破棄"
       via_email: "これはメールで投稿されました"
       via_auto_generated_email: "この投稿は自動生成メール経由で届きました"
       whisper: "この投稿はモデレーターの非公開のささやきです"
@@ -3859,7 +3865,7 @@ ja:
         admin: "投稿の管理者操作"
         admin_action: "管理"
         permanently_delete: "永久に削除"
-        permanently_delete_confirmation: "この投稿を永久に削除してよろしいですか？復元できなくなります。"
+        permanently_delete_confirm_phrase: "永久に削除"
         wiki: "ウィキにする"
         unwiki: "ウィキから削除"
         convert_to_moderator: "スタッフの色を追加"
@@ -3998,6 +4004,7 @@ ja:
       back: "カテゴリに戻る"
       general: "一般"
       settings: "設定"
+      moderation: "モデレーション"
       advanced: "高度"
       show_advanced: "高度な設定"
       topic_template: "テンプレート"
@@ -4078,6 +4085,8 @@ ja:
       list: "カテゴリをリスト表示"
       no_description: "このカテゴリの説明を追加してください。"
       change_in_category_topic: "説明を編集する"
+      description_expand: "もっと表示"
+      description_collapse: "表示を減らす"
       already_used: "この色は他のカテゴリで使用されています。"
       color_palette: "色パレット"
       security: "セキュリティ"
@@ -4117,6 +4126,10 @@ ja:
       review_group_name: "グループ名"
       require_topic_approval: "すべての新しいトピックにモデレーターの承認を必要とする"
       require_reply_approval: "すべての新しい返信にモデレーターの承認を必要とする"
+      posting_review_modes:
+        no_one: "対象者なし"
+        everyone: "全員"
+      posting_review_groups_placeholder: "グループを選択..."
       this_year: "今年"
       position: "カテゴリページの位置:"
       default_position: "デフォルトの位置"
@@ -5171,8 +5184,6 @@ ja:
         back: "すべてのレポートに戻る"
         group_traffic: "トラフィック"
         group_members: "メンバー"
-        group_moderation: "モデレーション"
-        group_security: "セキュリティ"
         group_other: "その他"
       config_sections:
         account:
@@ -5231,6 +5242,9 @@ ja:
           staff: "スタッフ"
           all_members: "すべてのメンバー"
           developers: "開発者"
+        impact_types:
+          feature_type: "機能"
+          other_type: "その他"
         filter:
           search_placeholder: "名前、説明、またはプラグインでフィルタ..."
           no_results: "フィルタに一致する次回の変更はありません"
@@ -5259,7 +5273,6 @@ ja:
           header_description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
         developer:
           title: "開発者"
-          header_description: "レート制限、乗数と計算、セーフモード、およびその他の高度な機能を制御するための開発者設定"
         experimental:
           title: "実験的"
           header_description: "サイトの実験的機能をオンまたはオフに切り替えます。これらのほとんどは、グループ単位で制御できます。"
@@ -5504,6 +5517,13 @@ ja:
             logs:
               title: "ログ"
               header_description: "バックアップ、復元、およびアップロードのログを表示および管理します"
+        problem_checks:
+          priority: "優先度"
+          status: "ステータス"
+          last_run_at: "最終実行"
+          ignore: "無視"
+          more_options:
+            title: "その他のオプション"
         reports:
           title: "レポート"
           header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の検出、データに基づく決定に役立ちます。"
@@ -5679,11 +5699,10 @@ ja:
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
-        dismiss_notice: "閉じる"
+        dismiss_notice: "無視"
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
-          no_new_features_error: "フィードを読み込み中にエラーが発生しました。以前の新機能の発表は <a href='%{url}' target='_blank'>Discover Meta コミュニティー</a>をご覧ください。"
           learn_more: "もっと詳しく..."
         last_checked: "最終チェック"
         refresh_problems: "更新"
@@ -6639,7 +6658,6 @@ ja:
           import_web_tip: "テーマを含むリポジトリ"
           direct_install_tip: "下にリストされているリポジトリから <strong>%{name}</strong> をインストールしてもよろしいですか？"
           import_web_advanced: "高度…"
-          import_file_tip: "テーマを含む .tar.gz、.zip、または .dcstyle.json ファイル"
           is_private: "テーマはプライベート git リポジトリにあります"
           finish_install: "テーマのインストールを終了"
           last_attempt: "インストールプロセスが終了しませんでした。最終試行:"

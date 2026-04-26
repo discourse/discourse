@@ -136,10 +136,6 @@ sk:
           unassigned: "sú nepriradené"
         assigned:
           label: "Priradené k"
-    topics:
-      bulk:
-        unassign: "Zrušenie priradenia tém"
-        assign: "Priradenie tém"
     discourse_automation:
       scriptables:
         random_assign:

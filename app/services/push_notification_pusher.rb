@@ -97,7 +97,7 @@ class PushNotificationPusher
   end
 
   def self.unsubscribe(user, subscription)
-    PushSubscription.find_by(user: user, data: subscription.to_json)&.destroy!
+    PushSubscription.where(user: user, data: subscription.to_json).delete_all
   end
 
   def self.get_badge

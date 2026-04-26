@@ -7,6 +7,7 @@ class LlmModel < ActiveRecord::Base
 
   FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
+  BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
   ATTACHMENT_TYPE_ALIASES = {
     "md" => "markdown",
@@ -14,6 +15,43 @@ class LlmModel < ActiveRecord::Base
     "htm" => "html",
     "text" => "txt",
   }.freeze
+
+  COST_COMPONENTS = {
+    input: {
+      tokens: :request_tokens,
+      cost: :input_cost,
+    },
+    output: {
+      tokens: :response_tokens,
+      cost: :output_cost,
+    },
+    cache_read: {
+      tokens: :cache_read_tokens,
+      cost: :cached_input_cost,
+    },
+    cache_write: {
+      tokens: :cache_write_tokens,
+      cost: :cache_write_cost,
+    },
+  }.freeze
+
+  def self.spending_component_sql(component, table)
+    info = COST_COMPONENTS.fetch(component)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.#{info[:tokens]}, 0) * COALESCE(llm_models.#{info[:cost]}, 0)"
+  end
+
+  def self.spending_sql(table)
+    COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
+  end
+
+  def spending_for(record)
+    total =
+      COST_COMPONENTS.values.sum do |info|
+        record.public_send(info[:tokens]).to_i * public_send(info[:cost]).to_f
+      end
+    (total / 1_000_000.0).round(6)
+  end
 
   has_many :llm_quotas, dependent: :destroy
   has_one :llm_credit_allocation, dependent: :destroy
@@ -24,7 +62,9 @@ class LlmModel < ActiveRecord::Base
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
-  validates :url, presence: true, unless: -> { provider == BEDROCK_PROVIDER_NAME }
+  validates :url,
+            presence: true,
+            unless: -> { provider.in?([BEDROCK_PROVIDER_NAME, BEDROCK_CONVERSE_PROVIDER_NAME]) }
   validates :name, presence: true
   validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
@@ -58,6 +98,7 @@ class LlmModel < ActiveRecord::Base
         access_key_id: :secret,
         role_arn: :text,
         region: :text,
+        inference_profile_arn: :text,
         enable_reasoning: :checkbox,
         adaptive_thinking: {
           type: :checkbox,
@@ -70,7 +111,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
@@ -89,6 +130,40 @@ class LlmModel < ActiveRecord::Base
           default: "tool_results",
         },
       },
+      aws_bedrock_converse: {
+        access_key_id: :secret,
+        role_arn: :text,
+        region: :text,
+        enable_reasoning: :checkbox,
+        adaptive_thinking: {
+          type: :checkbox,
+          depends_on: :enable_reasoning,
+        },
+        reasoning_tokens: {
+          type: :number,
+          depends_on: :enable_reasoning,
+          hidden_if: :adaptive_thinking,
+        },
+        effort: {
+          type: :enum,
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
+          default: "default",
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: %i[enable_reasoning adaptive_thinking],
+        },
+        disable_top_p: {
+          type: :checkbox,
+          hidden_if: %i[enable_reasoning adaptive_thinking],
+        },
+        prompt_caching: {
+          type: :enum,
+          values: %w[never tool_results always],
+          default: "tool_results",
+        },
+        extra_model_fields: :text,
+      },
       anthropic: {
         enable_reasoning: :checkbox,
         adaptive_thinking: {
@@ -102,7 +177,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
@@ -404,6 +479,8 @@ class LlmModel < ActiveRecord::Base
 
   def api_key_or_secret_present
     return if seeded?
+    # Converse provider supports auto-resolved credentials (env vars, instance profile)
+    return if provider == BEDROCK_CONVERSE_PROVIDER_NAME
     if ai_secret_id.present?
       unless AiSecret.exists?(ai_secret_id)
         errors.add(:ai_secret_id, I18n.t("discourse_ai.llm_models.secret_not_found"))
@@ -415,16 +492,19 @@ class LlmModel < ActiveRecord::Base
   end
 
   def required_provider_params
-    return if provider != BEDROCK_PROVIDER_NAME
+    if provider == BEDROCK_PROVIDER_NAME
+      if lookup_custom_param("region").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      end
 
-    # Region is always required
-    if lookup_custom_param("region").blank?
-      errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
-    end
-
-    # Either access_key_id or role_arn must be present
-    if lookup_custom_param("access_key_id").blank? && lookup_custom_param("role_arn").blank?
-      errors.add(:base, I18n.t("discourse_ai.llm_models.bedrock_missing_auth"))
+      if lookup_custom_param("access_key_id").blank? && lookup_custom_param("role_arn").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.bedrock_missing_auth"))
+      end
+    elsif provider == BEDROCK_CONVERSE_PROVIDER_NAME
+      if lookup_custom_param("region").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      end
+      # access_key_id and role_arn are optional — SDK can auto-resolve credentials
     end
   end
 end

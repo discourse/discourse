@@ -20,7 +20,9 @@ function initialize(api) {
   api.addTrackedPostProperties("can_vote");
   api.addTagsHtmlCallback(
     (topic) => {
-      if (!topic.can_vote) {
+      const router = api.container.lookup("service:router");
+
+      if (!topic.can_vote || router.currentRouteName?.startsWith("topic.")) {
         return;
       }
 
@@ -59,6 +61,7 @@ function initialize(api) {
     (Superclass) =>
       class extends Superclass {
         @tracked votes_exceeded;
+        @tracked vote_limit;
         @tracked votes_left;
       }
   );

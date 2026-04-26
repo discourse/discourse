@@ -8,7 +8,9 @@ id:
   js:
     chat_integration:
       settings: "Pengaturan"
-      all_categories: "(semua kategori)"
+      more_providers: "Selengkapnya"
+      channels_title: "Kanal"
+      all_categories: "(Semua kategori)"
       delete_channel: "Hapus"
       edit_channel: "Ubah"
       test_modal:

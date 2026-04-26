@@ -780,6 +780,38 @@ RSpec.describe ApplicationHelper do
         )
       end
     end
+
+    context "with reading time and likes" do
+      it "uses translated strings for reading time and likes" do
+        result = helper.crawlable_meta_data(read_time: 5, like_count: 10)
+
+        expect(result).to include(
+          "<meta name=\"twitter:label1\" value=\"#{I18n.t("reading_time")}\" />",
+        )
+        expect(result).to include(
+          "<meta name=\"twitter:data1\" value=\"#{I18n.t("reading_time_minutes", count: 5)}\" />",
+        )
+        expect(result).to include("<meta name=\"twitter:label2\" value=\"#{I18n.t("likes")}\" />")
+        expect(result).to include(
+          "<meta name=\"twitter:data2\" value=\"#{I18n.t("likes_count", count: 10)}\" />",
+        )
+      end
+
+      it "handles singular reading time correctly" do
+        result = helper.crawlable_meta_data(read_time: 1, like_count: 1)
+
+        expect(result).to include("1 min 🕑")
+        expect(result).not_to include("1 mins")
+      end
+
+      it "does not include twitter card labels when read_time or like_count is missing" do
+        result = helper.crawlable_meta_data(read_time: 5)
+        expect(result).not_to include("twitter:label1")
+
+        result = helper.crawlable_meta_data(like_count: 10)
+        expect(result).not_to include("twitter:label1")
+      end
+    end
   end
 
   describe "#title_content" do
@@ -1267,6 +1299,33 @@ RSpec.describe ApplicationHelper do
         helper.request.cookies["forced_color_mode"] = nil
         expect(helper.forced_dark_mode?).to eq(false)
       end
+    end
+  end
+
+  describe "#crawler_topic_container_schema" do
+    fab!(:topic)
+
+    it "returns DiscussionForumPosting schema attributes by default" do
+      result = helper.crawler_topic_container_schema(topic)
+      expect(result).to include("itemscope")
+      expect(result).to include('itemtype="http://schema.org/DiscussionForumPosting"')
+    end
+  end
+
+  describe "#crawler_post_schema" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "returns empty string for the first post" do
+      expect(helper.crawler_post_schema(first_post, topic)).to eq("")
+    end
+
+    it "returns Comment schema attributes for reply posts" do
+      result = helper.crawler_post_schema(reply, topic)
+      expect(result).to include('itemprop="comment"')
+      expect(result).to include("itemscope")
+      expect(result).to include('itemtype="http://schema.org/Comment"')
     end
   end
 end

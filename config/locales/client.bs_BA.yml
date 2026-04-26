@@ -297,7 +297,6 @@ bs_BA:
           today: "today"
     bookmarked:
       title: "Zabilješka"
-      clear_bookmarks: "Odstrani zabilješku"
       help:
         unbookmark: "Klikni za uklanjanje svih zabilješki sa ove teme"
     bookmarks:
@@ -305,9 +304,9 @@ bs_BA:
       create: "Stvaranje zabilješke"
       edit: "Izmijeni zabilješku"
       not_bookmarked: "zabilježi objavu"
+      topic_bookmark: "Topic"
       delete: "Izbriši zabilješku"
       confirm_delete: "Jeste li sigurni da želite izbrisati ovu zabilješku? Podsjetnik će takođe biti izbrisan."
-      confirm_clear: "Jeste li sigurni da želite ukloniti sve vaše zabilješke iz ove teme?"
       save: "Sačuvaj"
       no_timezone: 'Još niste postavili vremensku zonu. Nećete moći postavljati podsjetnike. Postavi vremensku zonu <a href="%{basePath}/my/preferences/profile">u svom profilu</a>.'
       invalid_custom_datetime: "Datum i vrijeme koje ste naveli nisu valjani. Pokušajte ponovo."
@@ -1736,6 +1735,8 @@ bs_BA:
       upload_description: "unesi opis učitanog"
       list_item: "Listaj predmet"
       wrap_modal:
+        attribute_key: "Ključ"
+        attribute_value: "Value"
         apply: "Snimi"
       help: "Pomoć za Markdown"
       modal_ok: "OK"
@@ -1953,9 +1954,6 @@ bs_BA:
       bulk:
         select_all: "Označi sve"
         clear_all: "Očisti sve"
-        unlist_topics: "Skini teme sa liste"
-        relist_topics: "Listaj teme"
-        delete: "Obriši teme"
         delete_topics_count:
           one: "Obriši temu"
           few: "Obriši teme"
@@ -1968,18 +1966,9 @@ bs_BA:
         dismiss_new: "Odpusti Nove"
         toggle: "preklopi masovno označavanje tema"
         actions: "Masovno odrađene akcije"
-        close_topics: "Zatvori teme"
-        archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Idi u inbox"
         choose_new_category: "Izaberi novu kategoriju za temu:"
-        selected:
-          one: "Označili ste <b>%{count}</b> temu."
-          few: "Označili ste <b>%{count}</b> teme."
-          other: "Označili ste <b>%{count}</b> teme."
-        change_tags: "Zamijeni oznake"
-        append_tags: "Pripoji oznake"
         choose_new_tags: "Odaberi nove tagove za ove teme:"
-        choose_append_tags: "Odaberi nove oznake kako bi pripojili ovim temama:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
         error_topic_count:
           one: "%{count} tema"
@@ -2003,12 +1992,29 @@ bs_BA:
         name: "Arhiva"
       move_messages_to_inbox:
         name: "Premjesti u Sanduče"
-      append_tags:
-        name: "Pripoji oznake"
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:
         name: "Delete"
+      convert_to_private_message:
+        name: "Pretvori u privatnu poruku"
+    nested_replies:
+      sort:
+        label: "Sortiraj po"
+        top: "Top teme"
+        new: "Novo"
+      load_more_children:
+        one: "još %{count} odgovor"
+        few: "još %{count} odgovora"
+        other: "još %{count} odgovora"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
+      collapse: "Spusti"
+      no_replies: "Bez odgovora."
+      deleted_post_placeholder: "[isbrisano]"
+      pinned_reply: "Zakačena"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2374,8 +2380,6 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
-        post_language_selector:
-          none: "Ništa"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2514,6 +2518,7 @@ bs_BA:
       view: "View Topics in Category"
       general: "General"
       settings: "Postavke"
+      moderation: "Moderacija"
       tags: "Oznake"
       localization:
         name: "Ime"
@@ -2566,6 +2571,8 @@ bs_BA:
       review_group_name: "group name"
       require_topic_approval: "Potrebno je odobrenje moderatora za sve nove teme"
       require_reply_approval: "Potrebno je odobrenje moderatora za sve nove odgovore"
+      posting_review_modes:
+        everyone: "Svatko"
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
@@ -3164,8 +3171,6 @@ bs_BA:
         sidebar_title: "Izvještaji"
         group_traffic: "Promet"
         group_members: "Članovi"
-        group_moderation: "Moderacija"
-        group_security: "Security"
         group_other: "Other"
       config_sections:
         account:
@@ -3192,6 +3197,8 @@ bs_BA:
           admins: "Admins"
           moderators: "Moderators"
           staff: "Staff"
+        impact_types:
+          other_type: "Other"
         filter:
           all: "Sve"
           enabled: "Omogućen"
@@ -3255,6 +3262,9 @@ bs_BA:
           sub_pages:
             logs:
               title: "Logs"
+        problem_checks:
+          status: "Status"
+          ignore: "Zanemari"
         reports:
           title: "Izvještaji"
           sub_pages:
@@ -3320,7 +3330,7 @@ bs_BA:
         installed_version: "Installed"
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
-        dismiss_notice: "Odbaci"
+        dismiss_notice: "Zanemari"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
@@ -3806,7 +3816,6 @@ bs_BA:
           stay: "Ostani"
           delete_upload_confirm: "Izbrisati ovaj upload? (Tematski CSS može prestati raditi!)"
           import_web_tip: "Tema sa spremištem"
-          import_file_tip: ".tar.gz, .zip ili .dcstyle.json datoteka koja sadrži temu"
           is_private: "Tema je u privatnom git repozitoriju"
           remote_branch: "Naziv podružnice (opcionalno)"
           public_key: "Dajte sljedeći pristup javnom ključu repo:"
